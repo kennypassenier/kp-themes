@@ -3832,3 +3832,1407 @@
         clip-path: polygon(3px 0, 100% 0, 100% calc(100% - 3px), calc(100% - 3px) 100%, 0 100%, 0 3px);
     }
 }
+
+/* ── The kpadopt4 components in titanium's grammar: data pieces, empty-state drawings [kpadopt4] ──
+   Titanium's own (themes/titanium/CHARACTER.md): a part is machined, never moulded: square with the chamfer pair (top
+   start and bottom end, cut outwards past the box so a ring or a shadow stays whole, G7), a bright tool edge along its
+   top, engraved Martian Mono for labels and figures (G8); contact is instant and linear, pointing turns the tool edge to
+   bare bright metal, a press drops the part 1 px (G1, G4, G6); the oxide is a cause only: blue is what the system says,
+   gold to cyan is heat, and a loading part is in the anodising bath (G5, G9, G10). Every drawing in an empty state is a
+   part on a machinist's drawing, cut in from the start edge and cooling from the oxide's heat colours to bare metal. */
+@layer kp.signature {
+    [data-theme='titanium'] {
+        /* A counted figure runs one cut: 240 ms (G4). */
+        --kp-tick: 240;
+        --kp-glyph-changed: '\00a0\25aa';
+        /* The milled groove between two rows: a dark cut over a bright lip (G8). */
+        --kp-ti-groove: linear-gradient(var(--background), var(--background)) 0 100% / 100% 1px no-repeat;
+        --kp-ti-engrave: 0 1px 0 hsl(from var(--foreground) h s l / 0.12);
+        /* A pocket milled into a plate: the ground one step down, the shadow inside its top edge. */
+        --kp-ti-pocket: inset 0 2px 3px hsl(from var(--background) h s 0% / 0.55), inset 0 0 0 1px var(--border-strong);
+    }
+
+    /* ── The identity mark: a stamped part tag; a pattern is laser-etched on bare metal ── */
+    [data-theme='titanium'] .kp-idmark {
+        --kp-sig-ti-c: calc(var(--kp-idmark-s) * 0.22);
+        --kp-idmark-radius: 0;
+        font-family: var(--theme-font-mono);
+        font-weight: 700;
+        letter-spacing: 0;
+        text-shadow: var(--kp-ti-engrave);
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(
+            calc(var(--kp-sig-ti-c) + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
+            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-sig-ti-c) + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-idmark--round {
+        border-radius: 50%;
+        clip-path: none;
+    }
+    [data-theme='titanium'] .kp-idmark--pattern {
+        --kp-idmark-ink: var(--background);
+        background: var(--kp-sig-ti-weave), var(--kp-idmark-c);
+    }
+    [data-theme='titanium'] .kp-idmark--glyph::after {
+        box-shadow: none;
+        outline: 1.5px solid var(--card);
+    }
+    [data-theme='titanium'] .kp-idmark[data-kp-idmark-empty] {
+        box-shadow: none;
+    }
+    /* The current mark: the bare-metal ring drawn inside the cut, the second ring in the card's ground (DI2's two channels). */
+    [data-theme='titanium'] .kp-idmark[aria-current]:not([aria-current='false']),
+    [data-theme='titanium'] .kp-idmark[data-kp-idmark-selected] {
+        box-shadow:
+            inset 0 0 0 2px var(--primary),
+            inset 0 0 0 3px var(--card),
+            var(--kp-tool-edge);
+    }
+    [data-theme='titanium'] .kp-idmark-group > .kp-idmark,
+    [data-theme='titanium'] .kp-idmark-group > .kp-idmark-group__more {
+        box-shadow: 0 0 0 2px var(--card);
+    }
+    [data-theme='titanium'] .kp-idmark-group__more {
+        --kp-idmark-radius: 0;
+        font-family: var(--theme-font-mono);
+        clip-path: polygon(
+            calc(var(--kp-idmark-s) * 0.22 + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-idmark-s) * 0.22 - 8px),
+            calc(100% - var(--kp-idmark-s) * 0.22 - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-idmark-s) * 0.22 + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-idmark.kp-skeleton {
+        border-color: var(--border-strong);
+        background: var(--kp-sig-ti-bath), var(--card);
+        border-radius: 0;
+    }
+
+    /* ── The share bar: parts cut from one bar, the seams milled grooves ── */
+    [data-theme='titanium'] .kp-stackbar {
+        --kp-stackbar-radius: 0;
+        --kp-stackbar-gap: 2px;
+    }
+    [data-theme='titanium'] .kp-stackbar__title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-stackbar__total,
+    [data-theme='titanium'] .kp-stackbar__value {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+    [data-theme='titanium'] .kp-stackbar__bar {
+        --kp-sig-ti-c: 5px;
+        background: var(--kp-sig-ti-weave), var(--muted);
+        box-shadow: var(--kp-ti-pocket);
+        clip-path: polygon(
+            calc(var(--kp-sig-ti-c) + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
+            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-sig-ti-c) + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-stackbar[aria-busy='true'] .kp-stackbar__bar {
+        background: var(--card);
+    }
+    [data-theme='titanium'] .kp-stackbar__seg {
+        box-shadow:
+            inset 0 1px 0 hsl(from var(--foreground) h s l / 0.3),
+            inset calc(var(--kp-stackbar-gap, 2px) * -1) 0 0 var(--background);
+    }
+    [data-theme='titanium'] .kp-stackbar__seg:dir(rtl) {
+        box-shadow:
+            inset 0 1px 0 hsl(from var(--foreground) h s l / 0.3),
+            inset var(--kp-stackbar-gap, 2px) 0 0 var(--background);
+    }
+    [data-theme='titanium'] .kp-stackbar__seg[data-kp-stackbar-lit] {
+        box-shadow:
+            inset 0 2px 0 var(--primary),
+            inset calc(var(--kp-stackbar-gap, 2px) * -1) 0 0 var(--background);
+    }
+    [data-theme='titanium'] .kp-stackbar__bar[data-kp-stackbar-full] .kp-stackbar__seg:last-of-type {
+        box-shadow: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.3);
+    }
+    [data-theme='titanium'] .kp-stackbar__mark {
+        background: var(--primary);
+        box-shadow: 1px 0 0 var(--background);
+    }
+    [data-theme='titanium'] .kp-stackbar__swatch {
+        border-radius: 0;
+        clip-path: polygon(3px 0, 100% 0, 100% calc(100% - 3px), calc(100% - 3px) 100%, 0 100%, 0 3px);
+        box-shadow: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.3);
+    }
+    [data-theme='titanium'] .kp-stackbar__item[data-kp-stackbar-rest] .kp-stackbar__swatch {
+        background: var(--muted);
+        box-shadow: var(--kp-ti-pocket);
+    }
+    [data-theme='titanium'] .kp-stackbar__item {
+        border-radius: 0;
+    }
+    [data-theme='titanium'] .kp-stackbar__item[data-kp-stackbar-lit] {
+        background: var(--muted);
+        box-shadow: inset 2px 0 0 var(--primary);
+    }
+    [data-theme='titanium'] .kp-stackbar__note {
+        --kp-sig-ti-c: 0.6rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--kp-sig-ti-weave), var(--card);
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(
+            calc(var(--kp-sig-ti-c) + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
+            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-sig-ti-c) + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-stackbar[data-kp-state='error'] .kp-stackbar__note {
+        box-shadow: inset 0 3px 0 var(--destructive);
+    }
+    [data-theme='titanium'] .kp-stackbar__note-title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.8rem;
+        margin: 0;
+    }
+
+    /* ── Bullet rows: the groove meter is the bar; the figure is a mono count on its plate ── */
+    [data-theme='titanium'] .kp-bullets__row {
+        border-radius: 0;
+    }
+    [data-theme='titanium'] .kp-bullets__figure {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+    [data-theme='titanium'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure,
+    [data-theme='titanium'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        border-radius: 0;
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(3px 0, 100% 0, 100% calc(100% - 3px), calc(100% - 3px) 100%, 0 100%, 0 3px);
+    }
+    [data-theme='titanium'] .kp-bullets__row:has(.kp-bullets__link:hover) {
+        background: var(--muted);
+        box-shadow: inset 2px 0 0 var(--primary);
+    }
+    [data-theme='titanium'] .kp-bullets__row:has(.kp-bullets__link:active) {
+        translate: 0 1px;
+    }
+    [data-theme='titanium'] .kp-bullets__row:has(.kp-bullets__link:hover) .kp-bullets__label {
+        text-decoration-style: dashed;
+        text-decoration-thickness: 1px;
+    }
+    [data-theme='titanium'] :is(.kp-bullets__note-title, .kp-bullets__detail) {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='titanium'] .kp-bullets__detail {
+        font-size: 0.6875rem;
+    }
+
+    /* ── The key-value grid: engraved labels, a milled groove between rows ── */
+    [data-theme='titanium'] .kp-kv__row > dt {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+        letter-spacing: 0.02em;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-kv--lines > .kp-kv__row {
+        border-block-end: 1px solid var(--background);
+        box-shadow: 0 1px 0 hsl(from var(--foreground) h s l / 0.08);
+    }
+    [data-theme='titanium'] .kp-kv--lines > .kp-kv__row:last-child {
+        border-block-end: 0;
+        box-shadow: none;
+    }
+    [data-theme='titanium'] .kp-kv__row[data-kp-changed] > dt::after {
+        color: var(--primary);
+    }
+    [data-theme='titanium'] .kp-kv__row[data-kp-state='error']::before {
+        inline-size: 3px;
+        box-shadow: 1px 0 0 hsl(from var(--foreground) h s l / 0.12);
+    }
+
+    /* ── Form rows: engraved labels; a changed row's bar is bare metal (what the person did), a failed row's bronze ── */
+    [data-theme='titanium'] .kp-formrow__label {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.02em;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-formrow__label > small {
+        font-size: 0.6875rem;
+        text-shadow: none;
+    }
+    [data-theme='titanium'] .kp-formrows--lines > .kp-formrow {
+        border-block-end: 1px solid var(--background);
+        box-shadow: 0 1px 0 hsl(from var(--foreground) h s l / 0.08);
+    }
+    [data-theme='titanium'] .kp-formrows--lines > .kp-formrow:last-child {
+        border-block-end: 0;
+        box-shadow: none;
+    }
+    [data-theme='titanium'] .kp-formrow[data-kp-changed]::before,
+    [data-theme='titanium'] .kp-formrow[data-kp-state='error']::before {
+        inline-size: 3px;
+    }
+    [data-theme='titanium'] .kp-formrow__aside {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+    }
+    [data-theme='titanium'] .kp-formrow__lock::before {
+        border-radius: 0;
+    }
+
+    /* ── Code and commands: a pocket milled into the plate, text in Martian Mono, keys in blue oxide (the system speaks) ── */
+    [data-theme='titanium'] .kp-code,
+    [data-theme='titanium'] .kp-command {
+        --kp-sig-ti-c: 0.6rem;
+        --kp-code-key: var(--chart-1);
+        --kp-command-prompt-ink: var(--chart-1);
+        border-color: var(--border-strong);
+        border-radius: 0;
+        background: var(--kp-sig-ti-weave), var(--card);
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(
+            calc(var(--kp-sig-ti-c) + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
+            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-sig-ti-c) + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-code__head,
+    [data-theme='titanium'] .kp-command__head {
+        border-block-end: 1px solid var(--background);
+        box-shadow: 0 1px 0 hsl(from var(--foreground) h s l / 0.08);
+    }
+    [data-theme='titanium'] .kp-code__title,
+    [data-theme='titanium'] .kp-command__shell {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-code__meta {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+    }
+    [data-theme='titanium'] :is(.kp-code__body, .kp-code__note, .kp-command__code) {
+        background: var(--background);
+        box-shadow: inset 0 2px 3px hsl(from var(--background) h s 0% / 0.6);
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='titanium'] :is(.kp-code__body, .kp-command__code) > code {
+        background: none;
+    }
+    [data-theme='titanium'] .kp-code[data-kp-state='error'] {
+        box-shadow: inset 0 3px 0 var(--destructive);
+    }
+    [data-theme='titanium'] .kp-code__foot,
+    [data-theme='titanium'] .kp-command__where {
+        border-block-start: 1px solid var(--background);
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+    }
+    [data-theme='titanium'] .kp-code[data-kp-code-lines] .kp-code__line::before {
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-command:not([data-kp-command-ready])::before {
+        border-block-end: 1px solid var(--background);
+    }
+
+    /* ── The page header's line: the freshness in Martian Mono ── */
+    [data-theme='titanium'] .kp-page-header__line .kp-ago {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+    }
+
+    /* ── Drawings in an empty state: a part on the machinist's drawing [js/art.js, set "titanium"] ──
+       Each stroke is cut in from the start edge on the theme's curve and cools from the oxide's gold through violet and
+       blue to cyan, then stands as bare metal: the heat of the cut (G1, G2, G9, G11). */
+    [data-theme='titanium'] .kp-art {
+        --kp-art-stroke: 1.5px;
+        --kp-art-rule: var(--primary);
+        --kp-art-line: hsl(from var(--foreground) h s l / 0.22);
+        --kp-art-ink: hsl(from var(--foreground) h s l / 0.78);
+        --kp-art-red: var(--destructive);
+        display: block;
+        margin: 0 0 0.875rem;
+    }
+    [data-theme='titanium'] [data-kp-art] > .kp-button {
+        margin-block-start: 0.875rem;
+    }
+    [data-theme='titanium'] .kp-art > g[data-kp-art-set='titanium'] {
+        display: inline;
+    }
+    [data-theme='titanium'] .kp-art path {
+        stroke-linecap: square;
+        stroke-linejoin: miter;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-art path {
+            stroke-dasharray: 1;
+            animation:
+                kp-sig-titanium-art-cut 400ms var(--kp-sig-ti-ease) both,
+                kp-sig-titanium-art-cool 400ms linear both;
+            animation-delay: calc(var(--kp-art-i, 0) * 80ms);
+        }
+    }
+    @keyframes kp-sig-titanium-art-cut {
+        from {
+            stroke-dashoffset: 1;
+        }
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+    @keyframes kp-sig-titanium-art-cool {
+        0% {
+            stroke: var(--warning-foreground);
+        }
+        25% {
+            stroke: var(--chart-4);
+        }
+        50% {
+            stroke: var(--chart-2);
+        }
+        75% {
+            stroke: var(--chart-1);
+        }
+    }
+}
+
+/* ── The kpadopt4 components in titanium's grammar: rows, tiles, check lists, pipeline, journey, secret, dialog [kpadopt4] ──
+   A row's state is a bar cut along its start edge: bare metal for what is new to the person, blue oxide for what the
+   system is doing, gold for a reservation, bronze for a failure (G5, G6); the lists between rows are milled grooves. A
+   tile of choices is a machined plate whose ticked edge is bare metal; a lane of the pipeline is a plate with an oxide
+   strip along its head; a journey is a rail whose reached stretch is oxide cut in start to end; a secret is fed into its
+   pocket from the start edge and its countdown is the film cooling away (G2, G11); a dialog's danger section is the
+   bronze tool edge along its top (the register's destructive). Every contact is instant and linear, a press drops 1 px. */
+@layer kp.signature {
+    /* ── Action list with a lead ── */
+    [data-theme='titanium'] .kp-action-list--lead > li {
+        border-radius: 0;
+    }
+    [data-theme='titanium'] .kp-action-list--lead > li[data-kp-state='new'] {
+        border-inline-start-color: var(--primary);
+    }
+    [data-theme='titanium'] .kp-action-list--lead > li[data-kp-state='warn'] {
+        border-inline-start-color: var(--warning-foreground);
+    }
+    [data-theme='titanium'] .kp-action-list--lead > li[data-kp-state='next'] {
+        background: var(--muted);
+        box-shadow: inset 0 2px 0 var(--primary);
+    }
+    [data-theme='titanium'] .kp-action-list__title {
+        font-weight: 700;
+    }
+    [data-theme='titanium'] .kp-action-list__meta {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+    }
+    [data-theme='titanium'] .kp-action-list__when {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='titanium'] .kp-action-list > li.kp-action-list__group {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.06em;
+        border-block-end: 1px solid var(--background);
+        box-shadow: 0 1px 0 hsl(from var(--foreground) h s l / 0.08);
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-action-list__more > summary {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+    }
+    [data-theme='titanium'] .kp-action-list__payload {
+        border: 0;
+        border-radius: 0;
+        background: var(--background);
+        box-shadow: inset 0 2px 3px hsl(from var(--background) h s 0% / 0.6);
+    }
+
+    /* ── Check lists: a gold reservation, the fix an instruction in bare metal's start bar ── */
+    [data-theme='titanium'] .kp-statusrow[data-state='warn'] {
+        --kp-statusrow-state-edge: var(--border-strong);
+        box-shadow: inset 0 3px 0 var(--warning-foreground);
+    }
+    [data-theme='titanium'] .kp-statusrow__fix {
+        padding-inline-start: 0.625rem;
+        box-shadow: inset 2px 0 0 var(--primary);
+        font-size: 0.8125rem;
+    }
+
+    /* ── Choices as tiles: machined plates, the ticked one edged in bare metal ── */
+    [data-theme='titanium'] .kp-fieldset[data-kp-layout='tiles'] {
+        --kp-field-tile-radius: 0;
+        --kp-field-tile-ground-checked: var(--muted);
+        --kp-field-tile-edge-checked: var(--primary);
+    }
+    [data-theme='titanium'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+        --kp-sig-ti-c: 0.5rem;
+        border-color: var(--border-strong);
+        background: var(--kp-sig-ti-weave), var(--kp-field-tile-ground, var(--card));
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(
+            calc(var(--kp-sig-ti-c) + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
+            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-sig-ti-c) + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:hover:not(:has(> .kp-field__check:disabled)) {
+        border-color: var(--border-strong);
+        box-shadow: inset 0 2px 0 var(--primary);
+    }
+    [data-theme='titanium'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:active:not(:has(> .kp-field__check:disabled)) {
+        translate: 0 1px;
+    }
+    [data-theme='titanium'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:checked) {
+        background: var(--kp-sig-ti-weave), var(--muted);
+        box-shadow:
+            inset 0 2px 0 var(--primary),
+            inset 0 0 0 1px var(--primary);
+    }
+    [data-theme='titanium'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:focus-visible) {
+        outline: 0;
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 4px var(--focus-ring-contrast);
+    }
+    [data-theme='titanium'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:disabled) {
+        box-shadow: none;
+    }
+    [data-theme='titanium'] .kp-field__option-title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.8125rem;
+        letter-spacing: 0.01em;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-fieldset[data-kp-layout='tiles'][aria-invalid='true'] {
+        outline-width: 3px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+            transition:
+                box-shadow var(--kp-sig-ti-fast) linear,
+                translate var(--kp-sig-ti-fast) linear,
+                background-color var(--kp-sig-ti-fast) linear;
+        }
+    }
+
+    /* ── A card in four data states ── */
+    [data-theme='titanium'] .kp-card__state-title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.8125rem;
+        letter-spacing: 0.01em;
+    }
+
+    /* ── Pipeline: plates in a rack, the stage an oxide strip along the head ── */
+    [data-theme='titanium'] .kp-pipeline__lane {
+        --kp-sig-ti-c: 0.75rem;
+        border-color: var(--border-strong);
+        border-radius: 0;
+        background: var(--kp-sig-ti-weave), var(--muted);
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(
+            calc(var(--kp-sig-ti-c) + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
+            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-sig-ti-c) + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-pipeline__head {
+        border: 0;
+        border-radius: 0;
+        background: var(--card);
+        box-shadow:
+            inset 0 3px 0 var(--kp-pipeline-tone),
+            var(--kp-tool-edge);
+        padding-block-start: calc(var(--kp-space-xs, 0.25rem) + 3px);
+    }
+    [data-theme='titanium'] .kp-pipeline__name {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.02em;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-pipeline__count,
+    [data-theme='titanium'] .kp-pipeline__share,
+    [data-theme='titanium'] .kp-pipeline__meta {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='titanium'] .kp-pipeline__count {
+        font-size: 1rem;
+    }
+    [data-theme='titanium'] .kp-pipeline__card {
+        --kp-sig-ti-c: 0.4rem;
+        border-color: var(--border-strong);
+        border-radius: 0;
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(
+            calc(var(--kp-sig-ti-c) + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
+            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-sig-ti-c) + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-pipeline__card:hover {
+        border-color: var(--border-strong);
+        box-shadow: inset 0 2px 0 var(--primary);
+    }
+    [data-theme='titanium'] .kp-pipeline__card:active {
+        translate: 0 1px;
+    }
+    [data-theme='titanium'] .kp-pipeline__card[aria-current='true'] {
+        border-color: var(--border-strong);
+        background: var(--muted);
+        box-shadow: inset 3px 0 0 var(--primary);
+    }
+    [data-theme='titanium'] .kp-pipeline__card[aria-current='true']:dir(rtl) {
+        box-shadow: inset -3px 0 0 var(--primary);
+    }
+    [data-theme='titanium'] .kp-pipeline__card:focus-visible {
+        outline: 0;
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 4px var(--focus-ring-contrast);
+    }
+    [data-theme='titanium'] .kp-pipeline__mark {
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+        box-shadow: var(--kp-tool-edge);
+    }
+    [data-theme='titanium'] .kp-pipeline__state {
+        --kp-sig-ti-c: 0.6rem;
+        border-radius: 0;
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(
+            calc(var(--kp-sig-ti-c) + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
+            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-sig-ti-c) + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-pipeline__state[data-kp-state='error'] {
+        box-shadow: inset 0 3px 0 var(--destructive);
+    }
+    [data-theme='titanium'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
+        padding-inline-start: 0;
+        border-inline-start: 0;
+        text-align: center;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-pipeline__card {
+            transition:
+                box-shadow var(--kp-sig-ti-fast) linear,
+                translate var(--kp-sig-ti-fast) linear;
+        }
+    }
+
+    /* ── Journey: a rail, the way travelled is oxide, the step it stands at a bare-metal ring ── */
+    [data-theme='titanium'] .kp-steplist--journey {
+        --kp-journey-rule: 3px;
+        --kp-steplist-mark-radius: 0;
+    }
+    [data-theme='titanium'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item::before,
+    [data-theme='titanium'] .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
+        background: var(--background);
+        box-shadow: 0 1px 0 hsl(from var(--foreground) h s l / 0.12);
+    }
+    [data-theme='titanium'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background: var(--kp-step-tone, var(--chart-1));
+        box-shadow: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.4);
+    }
+    [data-theme='titanium'] .kp-steplist--journey .kp-steplist__mark {
+        --kp-sig-ti-c: 0.3rem;
+        border-width: 1px;
+        border-radius: 0;
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(
+            calc(var(--kp-sig-ti-c) + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
+            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-sig-ti-c) + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-steplist--journey .kp-steplist__item[data-state='done']:not([data-kp-tone]) .kp-steplist__mark {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+    [data-theme='titanium'] .kp-steplist--journey .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        border-color: var(--primary);
+        background: radial-gradient(circle, var(--kp-step-tone, var(--primary)) 0 32%, transparent 36%), var(--background);
+        box-shadow:
+            inset 0 0 0 2px var(--primary),
+            inset 0 0 0 3px var(--card);
+    }
+    [data-theme='titanium'] .kp-steplist--journey .kp-steplist__title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.01em;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-steplist--journey .kp-steplist__time {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+    }
+
+    /* ── Moments on the timeline: machined marks; a stretch is oxide ── */
+    [data-theme='titanium'] :is(.kp-gantt__point, .kp-gantt__mark)::before {
+        box-shadow: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.4);
+    }
+    [data-theme='titanium'] .kp-gantt__point {
+        border-radius: 0;
+    }
+    [data-theme='titanium'] .kp-gantt__point:hover::before {
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 4px var(--primary);
+    }
+    [data-theme='titanium'] .kp-gantt__point:active {
+        translate: 0 1px;
+    }
+    [data-theme='titanium'] .kp-gantt__count {
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(2px 0, 100% 0, 100% calc(100% - 2px), calc(100% - 2px) 100%, 0 100%, 0 2px);
+    }
+    [data-theme='titanium'] .kp-gantt__zone[data-kp-lane-zone] {
+        border-radius: 0;
+        background: linear-gradient(90deg, hsl(from var(--kp-gantt-mark) h s l / 0.35), hsl(from var(--kp-gantt-mark) h s l / 0.8));
+    }
+    [data-theme='titanium'] :is(.kp-gantt__zone:not([data-kp-lane-zone]), .kp-gantt__band) {
+        border-inline: 0;
+        border-inline-start: 2px solid var(--kp-gantt-mark);
+        background: linear-gradient(90deg, hsl(from var(--kp-gantt-mark) h s l / 0.24), hsl(from var(--kp-gantt-mark) h s l / 0.06));
+    }
+    [data-theme='titanium'] .kp-gantt__sub {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-gantt__point::before {
+            transition: box-shadow var(--kp-sig-ti-fast) linear;
+        }
+    }
+
+    /* ── Secret field: a pocket the value is fed into from the start edge; the countdown is the film cooling away ── */
+    [data-theme='titanium'] .kp-secret {
+        --kp-secret-drain-size: 3px;
+    }
+    [data-theme='titanium'] .kp-secret__value {
+        border-radius: 0;
+        border-color: var(--border-strong);
+        background: var(--background);
+        box-shadow: inset 0 2px 3px hsl(from var(--background) h s 0% / 0.6);
+    }
+    [data-theme='titanium'] .kp-secret__line {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+    }
+    [data-theme='titanium'] .kp-secret__drain {
+        background: var(--kp-sig-ti-oxide);
+        transform-origin: 100% 50%;
+    }
+    [data-theme='titanium'] .kp-secret__drain:dir(rtl) {
+        transform-origin: 0 50%;
+    }
+    [data-theme='titanium'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        border-inline-start-width: 3px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__text {
+            display: inline-block;
+            animation: kp-sig-titanium-secret-cut 240ms var(--kp-sig-ti-ease) backwards;
+        }
+        [data-theme='titanium'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__text:dir(rtl) {
+            animation-name: kp-sig-titanium-secret-cut-rtl;
+        }
+    }
+    @keyframes kp-sig-titanium-secret-cut {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+        to {
+            clip-path: inset(0);
+        }
+    }
+    @keyframes kp-sig-titanium-secret-cut-rtl {
+        from {
+            clip-path: inset(0 0 0 100%);
+        }
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    /* ── A dialog in sections: milled grooves between them, the danger section's bronze tool edge ── */
+    [data-theme='titanium'] .kp-dialog__section {
+        border-block-start: 1px solid var(--background);
+        box-shadow: 0 -1px 0 hsl(from var(--foreground) h s l / 0.08);
+    }
+    [data-theme='titanium'] .kp-dialog__section:first-child {
+        border-block-start: 0;
+        box-shadow: none;
+    }
+    [data-theme='titanium'] .kp-dialog__heading {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.02em;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-dialog__section--danger {
+        margin-block-start: 0.5rem;
+        padding-inline: var(--kp-space-md, 0.75rem);
+        padding-block: calc(var(--kp-dialog-section-gap, 0.75rem) + 3px) var(--kp-dialog-section-gap, 0.75rem);
+        border: 1px solid var(--border-strong);
+        background: var(--kp-sig-ti-weave), var(--muted);
+        box-shadow: inset 0 3px 0 var(--destructive);
+        clip-path: polygon(0.5rem 0, 100% 0, 100% calc(100% - 0.5rem), calc(100% - 0.5rem) 100%, 0 100%, 0 0.5rem);
+    }
+    [data-theme='titanium'] .kp-dialog__section--danger:first-child {
+        margin-block-start: 0;
+    }
+    [data-theme='titanium'] .kp-dialog__section--danger:last-child {
+        padding-block-end: var(--kp-dialog-section-gap, 0.75rem);
+    }
+    [data-theme='titanium'] .kp-confirm__dependents {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--background);
+        box-shadow: inset 0 2px 3px hsl(from var(--background) h s 0% / 0.6);
+        font-family: var(--theme-font-mono);
+        font-size: 0.8125rem;
+    }
+    [data-theme='titanium'] .kp-type-confirm__loses {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        background: var(--kp-sig-ti-weave), var(--muted);
+        box-shadow: inset 0 3px 0 var(--destructive);
+        clip-path: polygon(0.4rem 0, 100% 0, 100% calc(100% - 0.4rem), calc(100% - 0.4rem) 100%, 0 100%, 0 0.4rem);
+    }
+    [data-theme='titanium'] .kp-type-confirm__loses-title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-type-confirm__name {
+        border-radius: 0;
+        background: var(--background);
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+    [data-theme='titanium'] .kp-type-confirm__status {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+}
+
+/* ── The kpadopt4 components in titanium's grammar: time, cooking and comparison [kpadopt4] ──
+   A time read out is engraved in a pocket in Martian Mono, instant and linear (G1, G8); a running process is blue oxide,
+   what the system says (G6); a finished timer is the bronze tool edge along its top and never breathes (G5); the timer
+   disc is a turned part, its face with turning grain and the time left a sector of bare metal; the wheel is an indexing
+   head that settles on the theme's one curve (G1); a three-way chip is a machined key whose state is a square mark; the
+   quantity's figure and the checklist's amounts are Martian Mono; the compare slider is a parting line with a turned
+   knob. Contact is 60 ms linear, a press drops the part 1 px. */
+@layer kp.signature {
+    [data-theme='titanium'] {
+        --kp-wheel-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    /* ── Uptime strip: machined slats in a pocket; the pointed one is edged in bare metal at once ── */
+    [data-theme='titanium'] .kp-uptime {
+        --kp-uptime-cell-radius: 0;
+    }
+    [data-theme='titanium'] .kp-uptime__title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-uptime__summary,
+    [data-theme='titanium'] .kp-uptime__axis {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+    }
+    [data-theme='titanium'] .kp-uptime__percent {
+        font-size: 0.8125rem;
+    }
+    [data-theme='titanium'] .kp-uptime__summary[data-kp-tone='error'] {
+        border-radius: 0;
+        box-shadow: var(--kp-tool-edge);
+    }
+    [data-theme='titanium'] .kp-uptime__track {
+        --kp-sig-ti-c: 5px;
+        box-sizing: border-box;
+        padding: 2px;
+        background: var(--kp-sig-ti-weave), var(--muted);
+        box-shadow: var(--kp-ti-pocket);
+        clip-path: polygon(
+            calc(var(--kp-sig-ti-c) + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
+            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-sig-ti-c) + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-uptime__cell {
+        border: 0;
+        box-shadow: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.3);
+    }
+    [data-theme='titanium'] .kp-uptime__cell:not([data-kp-tone]) {
+        --kp-uptime-fill: var(--background);
+    }
+    [data-theme='titanium'] .kp-uptime__cell[data-kp-tone='none'] {
+        --kp-uptime-fill: transparent;
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+    [data-theme='titanium'] .kp-uptime__cell:is(:hover, :focus-visible, [aria-expanded='true']) {
+        box-shadow: inset 0 2px 0 var(--primary);
+    }
+    [data-theme='titanium'] .kp-uptime__cell:focus-visible,
+    [data-theme='titanium'] .kp-uptime__cell[aria-expanded='true'] {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 1px;
+    }
+    [data-theme='titanium'] .kp-uptime .kp-uptime__cell.kp-skeleton {
+        block-size: calc(100% - var(--kp-uptime-lift, 0.1875rem));
+        margin: 0;
+        clip-path: none;
+    }
+    [data-theme='titanium'] .kp-uptime__swatch {
+        border: 0;
+        border-radius: 0;
+        box-shadow: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.3);
+    }
+    [data-theme='titanium'] .kp-uptime__info-title,
+    [data-theme='titanium'] .kp-uptime__info-state {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-uptime__cell {
+            transition:
+                block-size var(--kp-sig-ti-fast) linear,
+                box-shadow var(--kp-sig-ti-fast) linear;
+        }
+    }
+
+    /* ── Kitchen timers: the time engraved in a pocket; running is blue oxide; ended is the bronze tool edge ── */
+    [data-theme='titanium'] .kp-timers {
+        --kp-timer-font: var(--theme-font-mono);
+        --kp-timer-size: 2.25rem;
+        --kp-timer-done-ground: var(--card);
+        --kp-timer-done-ink: var(--card-foreground);
+        --kp-timer-done-edge: var(--border-strong);
+    }
+    [data-theme='titanium'] .kp-timer {
+        --kp-sig-ti-c: 0.6rem;
+        border-color: var(--border-strong);
+        border-radius: 0;
+        background: var(--kp-sig-ti-weave), var(--card);
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(
+            calc(var(--kp-sig-ti-c) + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
+            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-sig-ti-c) + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-timer__name {
+        font-family: var(--theme-font-mono);
+        font-size: 0.8125rem;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-timer__state {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+    }
+    [data-theme='titanium'] .kp-timer__time {
+        box-sizing: content-box;
+        padding-inline: 0.5rem;
+        background: var(--background);
+        box-shadow: var(--kp-ti-pocket);
+        text-align: center;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-timer[data-kp-timer-state='running'] .kp-timer__time {
+        box-shadow:
+            var(--kp-ti-pocket),
+            inset 0 -2px 0 var(--chart-1);
+    }
+    [data-theme='titanium'] .kp-timer[data-kp-timer-state='done'] {
+        box-shadow: inset 0 3px 0 var(--destructive);
+    }
+    [data-theme='titanium'] .kp-timer[data-kp-timer-state='done'] .kp-timer__state {
+        color: var(--destructive);
+        font-weight: 700;
+    }
+
+    /* ── Countdown ── */
+    [data-theme='titanium'] .kp-countdown {
+        --kp-sig-ti-c: 0.75rem;
+        --kp-countdown-size: 2.75rem;
+        border-color: var(--border-strong);
+        border-radius: 0;
+        background: var(--kp-sig-ti-weave), var(--card);
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(
+            calc(var(--kp-sig-ti-c) + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
+            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-sig-ti-c) + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-countdown__name,
+    [data-theme='titanium'] .kp-timer-disc__caption {
+        font-family: var(--theme-font-mono);
+        font-size: 0.8125rem;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-countdown__status,
+    [data-theme='titanium'] .kp-timer-disc__status {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+    }
+    [data-theme='titanium'] .kp-countdown__time {
+        padding: 0.125rem 0.75rem;
+        background: var(--background);
+        box-shadow: var(--kp-ti-pocket);
+        font-family: var(--theme-font-mono);
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-countdown[data-kp-countdown-state='running'] .kp-countdown__time {
+        box-shadow:
+            var(--kp-ti-pocket),
+            inset 0 -2px 0 var(--chart-1);
+    }
+    [data-theme='titanium'] .kp-countdown[data-kp-countdown-state='ended'] {
+        box-shadow: inset 0 3px 0 var(--destructive);
+        animation: none;
+    }
+    [data-theme='titanium'] .kp-countdown[data-kp-countdown-state='ended'] .kp-countdown__status,
+    [data-theme='titanium'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__status {
+        color: var(--destructive);
+        font-weight: 700;
+    }
+
+    /* ── Timer disc: a turned part, the time left a sector of bare metal ── */
+    [data-theme='titanium'] .kp-timer-disc {
+        --kp-timer-disc-fill: var(--primary);
+        --kp-timer-disc-marks: var(--foreground);
+        --kp-timer-disc-ring: var(--destructive);
+    }
+    [data-theme='titanium'] .kp-timer-disc__face {
+        border: 0;
+        background:
+            repeating-radial-gradient(circle, hsl(from var(--foreground) h s l / 0.1) 0 1px, transparent 1px 3px),
+            radial-gradient(circle closest-side, var(--accent), var(--muted));
+        box-shadow:
+            inset 0 0 0 1px var(--border-strong),
+            var(--kp-tool-edge);
+    }
+    [data-theme='titanium'] .kp-timer-disc__sector {
+        background:
+            repeating-radial-gradient(circle, hsl(from var(--background) h s l / 0.22) 0 1px, transparent 1px 3px),
+            conic-gradient(var(--kp-timer-disc-fill) calc(var(--kp-timer-disc-left, 1) * 360deg), transparent 0);
+    }
+    [data-theme='titanium'] .kp-timer-disc__hub {
+        border: 0;
+        background: radial-gradient(circle, var(--background) 0 35%, var(--primary) 40%);
+    }
+    [data-theme='titanium'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        box-shadow:
+            inset 0 0 0 1px var(--border-strong),
+            0 0 0 3px var(--destructive);
+        animation: none;
+    }
+
+    /* ── Range picker ── */
+    [data-theme='titanium'] .kp-range__custom[aria-pressed='true'] {
+        border-color: var(--border-strong);
+        background: var(--muted);
+        box-shadow: inset 0 2px 0 var(--primary);
+    }
+    [data-theme='titanium'] .kp-range__label {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+    [data-theme='titanium'] .kp-range__title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-range__time {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='titanium'] .kp-range__panel .kp-field__input[aria-invalid='true'] {
+        box-shadow: inset 0 3px 0 var(--destructive);
+    }
+
+    /* ── The wheel: an indexing head; the hub a turned boss, the pointer a bare-metal detent ── */
+    [data-theme='titanium'] .kp-wheel {
+        --kp-wheel-pointer: var(--primary);
+        --kp-wheel-font: var(--theme-font-mono);
+        --kp-wheel-outcome: 1.25rem;
+        --kp-wheel-hub-ring: 3px;
+    }
+    [data-theme='titanium'] .kp-wheel__stage::before {
+        background: repeating-radial-gradient(circle, hsl(from var(--foreground) h s l / 0.1) 0 1px, transparent 1px 3px), var(--card);
+        box-shadow: 0 0 0 var(--kp-wheel-hub-ring) var(--border-strong);
+    }
+    [data-theme='titanium'] .kp-wheel__disc {
+        box-shadow:
+            0 0 0 1px var(--border-strong),
+            var(--kp-tool-edge);
+    }
+    [data-theme='titanium'] .kp-wheel__segment {
+        stroke: var(--background);
+        stroke-width: 1.4;
+    }
+    [data-theme='titanium'] .kp-wheel__label {
+        font-family: var(--theme-font-mono);
+        font-size: 0.95em;
+    }
+    [data-theme='titanium'] .kp-wheel__rim {
+        stroke: var(--border-strong);
+    }
+    [data-theme='titanium'] .kp-wheel__spin.kp-button {
+        box-shadow: 0 0 0 var(--kp-wheel-hub-ring) var(--border-strong);
+        clip-path: none;
+    }
+    [data-theme='titanium'] .kp-wheel__caption {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+    [data-theme='titanium'] .kp-wheel__outcome:not([data-kp-wheel-note]) {
+        text-shadow: var(--kp-ti-engrave);
+        text-align: center;
+    }
+    [data-theme='titanium'] .kp-wheel__outcome[data-kp-wheel-note] {
+        border-radius: 0;
+    }
+    [data-theme='titanium'] .kp-wheel__result[data-kp-wheel-failed] .kp-wheel__outcome {
+        background: var(--card);
+        color: var(--foreground);
+        box-shadow: inset 0 3px 0 var(--destructive);
+    }
+
+    /* ── Cook mode ── */
+    [data-theme='titanium'] .kp-focus-steps__head {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+    [data-theme='titanium'] .kp-focus-steps__count {
+        font-family: var(--theme-font-mono);
+        font-size: 0.9375rem;
+        white-space: nowrap;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-focus-steps__wake {
+        font-family: var(--theme-font-mono);
+        font-size: 0.6875rem;
+    }
+    [data-theme='titanium'] .kp-focus-steps__wake::before {
+        border-radius: 0;
+    }
+    [data-theme='titanium'] .kp-focus-steps[data-kp-focus-steps-screen='on'] .kp-focus-steps__wake::before {
+        border-color: var(--chart-1);
+        background: var(--chart-1);
+    }
+    [data-theme='titanium'] .kp-focus-steps__needs {
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 0;
+        background: var(--background);
+        box-shadow: var(--kp-ti-pocket);
+    }
+    [data-theme='titanium'] .kp-focus-steps__needs-title {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-focus-steps__amount {
+        font-family: var(--theme-font-mono);
+    }
+
+    /* ── Quantity: the figure in Martian Mono in a pocket, the unit engraved ── */
+    [data-theme='titanium'] .kp-quantity__field {
+        --kp-sig-ti-c: 0.4rem;
+        border-radius: 0;
+        border-color: var(--border-strong);
+        background: var(--background);
+        box-shadow: var(--kp-ti-pocket);
+        clip-path: polygon(
+            calc(var(--kp-sig-ti-c) + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-sig-ti-c) - 8px),
+            calc(100% - var(--kp-sig-ti-c) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-sig-ti-c) + 8px)
+        );
+    }
+    [data-theme='titanium'] .kp-quantity__field:has(.kp-quantity__input:focus-visible) {
+        outline: 0;
+        box-shadow:
+            inset 0 0 0 2px var(--focus-ring),
+            inset 0 0 0 4px var(--focus-ring-contrast);
+    }
+    [data-theme='titanium'] .kp-quantity__field:has(.kp-quantity__input[aria-invalid='true']) {
+        box-shadow:
+            var(--kp-ti-pocket),
+            inset 0 3px 0 var(--destructive);
+    }
+    [data-theme='titanium'] .kp-quantity__input {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='titanium'] .kp-quantity__unit {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+
+    /* ── Checklist: milled grooves between the rows, instant contact ── */
+    [data-theme='titanium'] .kp-checklist__bar {
+        border-block-end: 1px solid var(--background);
+        box-shadow: 0 1px 0 hsl(from var(--foreground) h s l / 0.08);
+    }
+    [data-theme='titanium'] .kp-checklist__status {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+    [data-theme='titanium'] .kp-checklist__head {
+        font-family: var(--theme-font-mono);
+        font-size: 0.8125rem;
+        text-shadow: var(--kp-ti-engrave);
+    }
+    [data-theme='titanium'] .kp-checklist__count,
+    [data-theme='titanium'] .kp-checklist__detail {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+    [data-theme='titanium'] .kp-checklist__list {
+        border-block-start: 1px solid var(--background);
+        box-shadow: 0 -1px 0 hsl(from var(--foreground) h s l / 0.08);
+    }
+    [data-theme='titanium'] .kp-checklist__item {
+        border-block-end: 1px solid var(--background);
+        box-shadow: 0 1px 0 hsl(from var(--foreground) h s l / 0.08);
+    }
+    [data-theme='titanium'] .kp-checklist__row:hover {
+        background: var(--muted);
+        box-shadow: inset 2px 0 0 var(--primary);
+    }
+    [data-theme='titanium'] .kp-checklist__row:active {
+        translate: 0 1px;
+    }
+    [data-theme='titanium'] .kp-checklist__empty,
+    [data-theme='titanium'] .kp-timers__empty {
+        border-radius: 0;
+        border-color: var(--border-strong);
+    }
+    [data-theme='titanium'] .kp-checklist__empty[data-kp-checklist-failed] {
+        border-style: solid;
+        box-shadow: inset 0 3px 0 var(--destructive);
+        border-color: var(--border-strong);
+    }
+
+    /* ── Three-way chips: a machined key; the state is a square mark: bare metal in, bronze out ── */
+    [data-theme='titanium'] .kp-segmented[data-kp-segmented='tri'] {
+        --kp-tri-mark-radius: 0;
+        --kp-tri-out-edge: var(--border-strong);
+        --kp-tri-out-ground: var(--card);
+        --kp-tri-out-ink: var(--foreground);
+    }
+    [data-theme='titanium'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='include'] {
+        box-shadow: inset 0 2px 0 var(--primary);
+    }
+    [data-theme='titanium'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='exclude'] {
+        box-shadow: inset 0 3px 0 var(--destructive);
+    }
+    [data-theme='titanium'] .kp-segmented__summary {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+    }
+    @media (hover: hover) {
+        [data-theme='titanium'] .kp-segmented--chips:not([aria-disabled='true']) > .kp-segmented__item[data-kp-segmented-tri]:hover {
+            box-shadow: inset 0 2px 0 var(--primary);
+        }
+    }
+
+    /* ── Compare slider: a parting line with its tool edge, a turned knob ── */
+    [data-theme='titanium'] .kp-compare {
+        --kp-compare-ink: var(--primary);
+        --kp-compare-line: 2px;
+        --kp-sig-ti-c: 0.75rem;
+        border-color: var(--border-strong);
+        border-radius: 0;
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(
+            var(--kp-sig-ti-c) 0,
+            100% 0,
+            100% calc(100% - var(--kp-sig-ti-c)),
+            calc(100% - var(--kp-sig-ti-c)) 100%,
+            0 100%,
+            0 var(--kp-sig-ti-c)
+        );
+    }
+    [data-theme='titanium'] .kp-compare__divider {
+        box-shadow: 1px 0 0 var(--background);
+    }
+    [data-theme='titanium'] .kp-compare__handle {
+        background:
+            repeating-radial-gradient(circle, hsl(from var(--foreground) h s l / 0.1) 0 1px, transparent 1px 3px),
+            radial-gradient(circle closest-side, var(--accent), var(--muted));
+        box-shadow:
+            var(--kp-tool-edge),
+            0 0 0 1px var(--background);
+    }
+    [data-theme='titanium'] .kp-compare__handle:active {
+        translate: -50% calc(-50% + 1px);
+    }
+    [data-theme='titanium'] .kp-compare__label {
+        --kp-sig-ti-c: 4px;
+        border-radius: 0;
+        font-family: var(--theme-font-mono);
+        text-shadow: var(--kp-ti-engrave);
+        box-shadow: var(--kp-tool-edge);
+        clip-path: polygon(
+            var(--kp-sig-ti-c) 0,
+            100% 0,
+            100% calc(100% - var(--kp-sig-ti-c)),
+            calc(100% - var(--kp-sig-ti-c)) 100%,
+            0 100%,
+            0 var(--kp-sig-ti-c)
+        );
+    }
+    [data-theme='titanium'] .kp-compare__failed {
+        box-shadow: inset 0 3px 0 var(--destructive);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-compare[data-kp-compare-glide] :is(.kp-compare__pane, .kp-compare__divider) {
+            transition:
+                clip-path 240ms var(--kp-sig-ti-ease),
+                margin-inline-start 240ms var(--kp-sig-ti-ease);
+        }
+    }
+}
+
+/* ── kpadopt4 repairs found at 390 px [kpadopt4] ──
+   A label set in this theme's wide letters needs more room than the aside leaves it in a narrow form: below 36rem of the
+   form's own width each row is its own column (label, control, then the aside under it), so no label ever runs into the aside. The countdown's
+   colon takes the room of a monospaced character. */
+@layer kp.signature {
+    @container kp-formrows (max-width: 36rem) {
+        [data-theme='titanium'] .kp-formrow {
+            grid-template-columns: minmax(0, 1fr);
+        }
+        [data-theme='titanium'] .kp-formrow__label {
+            grid-column: 1;
+            grid-row: 1;
+        }
+        [data-theme='titanium'] .kp-formrow__control,
+        [data-theme='titanium'] .kp-formrow--wide .kp-formrow__control {
+            grid-column: 1;
+            grid-row: 2;
+        }
+        [data-theme='titanium'] .kp-formrow__aside {
+            grid-column: 1;
+            grid-row: 3;
+            justify-content: flex-start;
+            margin-block-start: 0.25rem;
+        }
+        [data-theme='titanium'] .kp-formrow__aside:empty {
+            display: none;
+        }
+    }
+    [data-theme='titanium'] .kp-countdown__colon {
+        inline-size: 1ch;
+    }
+}
+
+/* ── A sort the page carries out [kpadopt4]: the sorted header is edged in bare metal (G6) ──
+   What the person chose is bare metal: the sorted header carries the tool edge along its top in `--primary`, at once and
+   linear; pressing a header drops it 1 px; a column that cannot be sorted now is a plain header. */
+@layer kp.signature {
+    [data-theme='titanium'] .kp-table th[data-kp-sort]:is([aria-sort='ascending'], [aria-sort='descending']) {
+        box-shadow: inset 0 2px 0 var(--primary);
+    }
+    [data-theme='titanium'] .kp-table th[data-kp-sort]:not([aria-disabled='true']):active {
+        translate: 0 1px;
+    }
+    [data-theme='titanium'] .kp-table th[data-kp-sort]:is([aria-sort='ascending'], [aria-sort='descending'])::after {
+        font-family: var(--theme-font-mono);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium'] .kp-table th[data-kp-sort] {
+            transition: box-shadow var(--kp-sig-ti-fast) linear;
+        }
+    }
+}
+
+@layer kp.signature {
+    /* Martian Mono's wide cells: a freshness line in a value may break at its spaces in a narrow list. */
+    [data-theme='titanium'] .kp-kv__row .kp-ago {
+        white-space: normal;
+    }
+}
+
+/* Waiting lines the kpadopt4 components draw: the register's line rule holds its lines still, so each of them is named here
+   and the anodising bath runs through it, a beat apart, as in every other waiting part (G10). */
+@layer kp.signature {
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='titanium']
+            :is(.kp-stackbar__wait-line, .kp-bullets__wait, .kp-kv__wait, .kp-pipeline__ghost, .kp-pipeline__count, .kp-uptime__summary)
+            > .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block),
+        [data-theme='titanium'] .kp-pipeline__ghost-count.kp-skeleton,
+        [data-theme='titanium'] .kp-uptime__summary-skeleton.kp-skeleton {
+            animation: kp-sig-titanium-bath var(--kp-sig-ti-loop) linear infinite;
+        }
+        [data-theme='titanium'] :is(.kp-stackbar__item:nth-child(2n), .kp-kv__row:nth-child(2n), .kp-bullets__row:nth-child(2n)) .kp-skeleton {
+            animation-delay: -300ms;
+        }
+        [data-theme='titanium'] :is(.kp-stackbar__item:nth-child(3n), .kp-kv__row:nth-child(3n), .kp-bullets__row:nth-child(3n)) .kp-skeleton {
+            animation-delay: -600ms;
+        }
+    }
+}
+
+@layer kp.signature {
+    /* A dialog's buttons stay whole words in this theme's wide letters: in a narrow dialog they take a second row rather
+       than break inside a word. */
+    [data-theme='titanium'] .kp-dialog__actions {
+        flex-wrap: wrap;
+    }
+    [data-theme='titanium'] .kp-dialog__actions > .kp-button {
+        white-space: nowrap;
+    }
+}
