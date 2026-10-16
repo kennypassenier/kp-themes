@@ -1768,6 +1768,41 @@ helpTourButton.addEventListener('click', () => {
 - `decorate(part, info)` is handed the card's three buttons
   (`tour-next`, `tour-back`, `tour-skip`) each time a tour builds them;
   `strings` overrides the dictionary's `tour…` words for this tour.
+## Rows, cards and choices [kpadopt4-rows]
+
+What Kenny's apps still drew themselves around their lists (the homelab
+Inbox, JobTracker's queue, files, appointments and readiness card, kyu's
+dead letters), built as opt-in options on components the package already
+had. Nothing changes for a page that does not ask for them.
+
+### Choices as tiles
+
+A group of checkboxes or radios where each answer needs a sentence of its
+own: the fieldset and labels of any group, with `data-kp-layout="tiles"`.
+
+```html
+<fieldset class="kp-fieldset" data-kp-layout="tiles">
+    <legend class="kp-field__label">What should the reply do?</legend>
+    <label class="kp-field__option">
+        <input class="kp-field__check" type="checkbox" name="act" value="thank" checked />
+        <span class="kp-field__option-title">Thank them for the interview</span>
+        <span class="kp-field__option-hint">One sentence about Tuesday's talk.</span>
+    </label>
+</fieldset>
+```
+
+The whole tile is the target; the box stays the native input, so Space,
+a radio group's arrows and the form's own submit work unchanged. Tiles
+share one height per row and fall to one column under
+`--kp-field-tiles-min` (14rem). Checked: the primary edge, a 1 px inner
+ring and a 6 % primary plate; focus: the ring around the tile; disabled:
+a dashed edge on the muted ground. An invalid group is the fieldset's own
+outline (`aria-invalid="true"` on the fieldset, the message in a
+`.kp-field__error` after it). Knobs: `--kp-field-tiles-min`,
+`--kp-field-tiles-gap`, `--kp-field-tile-pad`, `--kp-field-tile-radius`,
+`--kp-field-tile-ground`, `--kp-field-tile-ground-checked`,
+`--kp-field-tile-edge-checked`. No script.
+
 ## Tables that fit [TH95, TH96]
 
 A table is the widest thing on most pages, and everything below is about
