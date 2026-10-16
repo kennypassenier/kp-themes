@@ -8504,6 +8504,16 @@
         white-space: nowrap;
     }
 
+    /* Near the end edge the label stands before its rule and ends at it (js/gantt.js marks it), never cut. */
+    .kp-gantt__tick[data-kp-edge] {
+        translate: -100% 0;
+        padding-inline: 0 0.3125rem;
+    }
+
+    .kp-gantt__tick[data-kp-edge]:dir(rtl) {
+        translate: 100% 0;
+    }
+
     .kp-gantt__tick[data-kp-day] {
         color: var(--foreground);
         font-weight: 600;

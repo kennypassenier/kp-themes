@@ -570,3 +570,8 @@ html[data-theme='titanium'] [data-review-look] > [data-for='titanium'] {
     align-items: center;
     gap: var(--kp-space-sm, 0.5rem);
 }
+
+/* A demo's buttons wrap as whole buttons, never inside their label (wide-letter themes at 390 px). */
+.kt-actions .kp-button {
+    white-space: nowrap;
+}

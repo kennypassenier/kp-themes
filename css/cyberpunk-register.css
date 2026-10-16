@@ -6350,6 +6350,13 @@
         }
     }
 
+    /* A phone's timeline keeps its toolbar on one row: the range steps close in a little in these wide letters. */
+    @container kp-gantt (max-width: 22rem) {
+        [data-theme='cyberpunk'] .kp-gantt__ranges {
+            --kp-seg-item-pad-inline: 0.5rem;
+        }
+    }
+
     /* The waiting count's lock blinks: cyan, yellow, cyan, then the void, in hard ticks. */
     @keyframes kp-sig-cyberpunk-blink {
         0% {

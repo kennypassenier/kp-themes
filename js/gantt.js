@@ -474,6 +474,20 @@ function syncDays(c) {
     for (const b of buttons) b.tabIndex = b === stop ? 0 : -1;
 }
 
+/**
+ * A tick label that would run past the axis's end edge (the newest hour entering the window) stands on the other
+ * side of its rule, ending at it, so no label is ever cut by the edge.
+ * @param {GanttModel} c @param {{ from: number, end: number }} w
+ */
+function edgeTicks(c, w) {
+    const room = c.axis.clientWidth;
+    if (!room) return;
+    for (const [t, parts] of c.ticks) {
+        const at = ((t - w.from) / c.span) * room;
+        parts.label.toggleAttribute('data-kp-edge', room - at < parts.label.offsetWidth + 2);
+    }
+}
+
 /** Everything the timeline shows, from the model. @param {GanttModel} c */
 function paint(c) {
     const doc = c.el.ownerDocument;
@@ -728,6 +742,7 @@ function announceWindow(c, why) {
 function tick(c) {
     const w = frame(c);
     syncTicks(c, w);
+    edgeTicks(c, w);
     visible(c);
     refresh(c, c.now());
     syncTabStops(c);

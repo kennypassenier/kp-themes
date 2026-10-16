@@ -2811,6 +2811,7 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
             { name: 'data-kp-state', what: 'On a bar: `queued`, `running`, `ok` or `failed`. On the timeline: `loading`, `empty` or `error`.' },
             { name: 'data-kp-active', what: 'On the selection chip while a range is selected.' },
             { name: 'data-kp-out', what: 'On the now-line when now lies outside the window; it is hidden.' },
+            { name: 'data-kp-edge', what: 'On an axis label whose hour stands too close to the end edge for its name: the label stands before its rule and ends at it, never cut.' },
         ],
         accessibility: [
             'Built in — one tab stop: left and right move along a lane, up and down to the nearest bar of the neighbouring lane, Home and End to the lane’s first and last, Enter and Space open the run; range, Live, Zoom and Clear are buttons.',

@@ -3041,6 +3041,9 @@ var init_effects = __esm({
       "kp-sig-dark-comet": { durationMs: 2400, cycles: Infinity, property: "background-position", luminanceSteps: [] },
       "kp-sig-cyberpunk-blink": { durationMs: 1800, cycles: Infinity, property: "box-shadow", luminanceSteps: [] },
       "kp-sig-cyberpunk-feed": { durationMs: 1800, cycles: Infinity, property: "transform", luminanceSteps: [] },
+      "kp-sig-synthwave-bulb": { durationMs: 900, cycles: Infinity, property: "background-color", luminanceSteps: [] },
+      "kp-sig-synthwave-chase": { durationMs: 900, cycles: Infinity, property: "background-position", luminanceSteps: [] },
+      "kp-sig-synthwave-lane": { durationMs: 600, cycles: Infinity, property: "transform", luminanceSteps: [] },
       "kp-sig-dark-run": { durationMs: 2400, cycles: Infinity, property: "background-position", luminanceSteps: [] },
       "kp-sig-dark-bars": { durationMs: 2400, cycles: Infinity, property: "--kp-sig-dk-ph", luminanceSteps: [] },
       "kp-sig-dark-tap": { durationMs: 220, cycles: 1, property: "background-position", luminanceSteps: [] },
@@ -22538,6 +22541,14 @@ function syncDays(c) {
   const stop = buttons.find((b) => b.dataset.kpGanttDay === c.dayStop) ?? buttons.find((b) => b.dataset.kpGanttDay === picked) ?? buttons[0];
   for (const b of buttons) b.tabIndex = b === stop ? 0 : -1;
 }
+function edgeTicks(c, w) {
+  const room = c.axis.clientWidth;
+  if (!room) return;
+  for (const [t, parts] of c.ticks) {
+    const at = (t - w.from) / c.span * room;
+    parts.label.toggleAttribute("data-kp-edge", room - at < parts.label.offsetWidth + 2);
+  }
+}
 function paint4(c) {
   const doc = c.el.ownerDocument;
   const s2 = c.strings;
@@ -22764,6 +22775,7 @@ function announceWindow(c, why) {
 function tick3(c) {
   const w = frame(c);
   syncTicks(c, w);
+  edgeTicks(c, w);
   visible2(c);
   refresh(c, c.now());
   syncTabStops2(c);
