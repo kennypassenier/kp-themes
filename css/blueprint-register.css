@@ -4489,3 +4489,22 @@
     }
 }
 /* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: a drawing. Open frames with a hatch for a fill, square corners, dashed witness lines. */
+    [data-theme='blueprint'] .kp-week {
+        --kp-week-pill-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-week__pill:not([data-kp-state='off'], [data-kp-state='skipped'], [data-kp-state='reference']) {
+        background-image: repeating-linear-gradient(45deg, hsl(from var(--kp-week-ink) h s l / 0.28) 0 1px, transparent 1px 5px);
+    }
+    [data-theme='blueprint'] .kp-week__col,
+    [data-theme='blueprint'] .kp-gantt__rule {
+        border-inline-style: dashed;
+    }
+    [data-theme='blueprint'] :is(.kp-week__time, .kp-gantt__tick, .kp-week__axis > span) {
+        font-family: var(--theme-font-mono, var(--font-mono, monospace));
+    }
+}

@@ -3828,3 +3828,17 @@
     }
 }
 /* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: label tape. Mono capitals on a 2px-cut strip, a hairline frame, the axis in the same tape face. */
+    [data-theme='nostromo'] .kp-week {
+        --kp-week-pill-radius: var(--kp-sig-no-tape, 2px);
+    }
+    [data-theme='nostromo'] .kp-gantt {
+        --kp-gantt-bar-radius: var(--kp-sig-no-tape, 2px);
+    }
+    [data-theme='nostromo'] :is(.kp-week__pill, .kp-gantt__run, .kp-week__dow, .kp-gantt__tick, .kp-gantt__lane) {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+}

@@ -1,0 +1,111 @@
+/* DEMO CHROME: every class prefixed `kt-` is mock, written for this page only
+   and not part of the package. Inside a stage everything is a package class
+   (.kp-week, .kp-gantt, .kp-button, .kp-menu-button). */
+.kt-page {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    max-inline-size: 76rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) 16px 4rem;
+}
+
+.kt-intro,
+.kt-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.kt-intro h1,
+.kt-intro p,
+.kt-sec__head h2,
+.kt-sec__head p {
+    margin: 0;
+}
+
+.kt-intro p,
+.kt-sec__head p {
+    color: var(--muted-foreground);
+}
+
+.kt-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+/* The "Expected:" block: what to see and what each control does. */
+.kt-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.kt-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.kt-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.kt-label {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 600;
+}
+
+.kt-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* The full width and a phone width (360 px) one under the other: the full
+   width is the whole section, so its columns have room. */
+.kt-cols {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    min-inline-size: 0;
+}
+
+.kt-cols > * {
+    min-inline-size: 0;
+}
+
+.kt-phone {
+    inline-size: min(360px, 100%);
+    padding: var(--kp-space-sm, 0.5rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+    box-sizing: border-box;
+}
+
+.kt-stack {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+}
+
+.kt-log {
+    min-block-size: 3.5rem;
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    overflow: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+    color: var(--muted-foreground);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--kp-text-xs, 0.75rem);
+    white-space: pre-wrap;
+}

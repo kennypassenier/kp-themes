@@ -4319,3 +4319,25 @@
     }
 }
 /* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: an inlay. Pills are a double rule in the series ink, bars a double rule at their ends, the axis in spaced capitals. */
+    [data-theme='deco'] .kp-week {
+        --kp-week-pill-radius: 0;
+    }
+    [data-theme='deco'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+    }
+    [data-theme='deco'] .kp-week__pill:not([data-kp-state='reference']) {
+        border-style: double;
+        border-width: 3px;
+        padding-inline: 0.25rem;
+    }
+    [data-theme='deco'] .kp-gantt__run:not([data-kp-state='queued']) {
+        border-inline-style: double;
+        border-inline-width: 3px;
+    }
+    [data-theme='deco'] :is(.kp-week__dow, .kp-gantt__tick, .kp-gantt__lane) {
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+}

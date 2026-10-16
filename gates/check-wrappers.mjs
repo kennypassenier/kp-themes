@@ -122,6 +122,24 @@ export const REQUIRED = [
         why: 'The matrix scrolls inside its own box and narrows its row headers when that box is narrow; the query reaches only its own grid [kpadopt2-grids].',
     },
     {
+        container: 'kp-week',
+        class: 'kp-week',
+        self: true,
+        why: 'The agenda measures its own width and turns its seven columns into seven rows when narrow; the query reaches only its own parts [kpadopt-time].',
+    },
+    {
+        container: 'kp-gantt',
+        class: 'kp-gantt',
+        self: true,
+        why: 'The timeline measures its own width and narrows its lane labels; the query reaches only its own parts [kpadopt-time].',
+    },
+    {
+        container: 'kp-gantt-run',
+        class: 'kp-gantt__run',
+        self: true,
+        why: 'A bar measures its own width and hides its label when it is too narrow to carry one; the query reaches only its own label [kpadopt-time].',
+    },
+    {
         container: 'kp-help',
         class: 'kp-help',
         self: true,

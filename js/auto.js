@@ -162,6 +162,9 @@ export const NEEDS = [
     { name: 'heat', when: '[data-kp-heat]', load: () => import('./heat.js'), attach: (m, root) => [m.attachHeats(root)] },
     { name: 'matrix', when: '[data-kp-matrix]', load: () => import('./heat.js'), attach: (m, root) => [m.attachMatrices(root)] },
     { name: 'barcell', when: '[data-kp-bar]', load: () => import('./barcell.js'), attach: (m, root) => [m.attachBarCells(root)] },
+    // The week agenda and the run timeline [kpadopt-time]: items placed in the days of a week, and runs as bars on a live time axis.
+    { name: 'week', when: '[data-kp-week]', load: () => import('./week.js'), attach: (m, root) => [m.attachWeeks(root)] },
+    { name: 'gantt', when: '[data-kp-gantt]', load: () => import('./gantt.js'), attach: (m, root) => [m.attachGantts(root)] },
     { name: 'graph', when: '[data-kp-graph]', load: () => import('./graph.js'), attach: (m, root) => [m.attachGraphs(root)] },
     {
         // A theme's loading picture made of pieces (`--kp-loading-pieces`,

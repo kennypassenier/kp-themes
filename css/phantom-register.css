@@ -4337,3 +4337,22 @@
     }
 }
 /* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: slanted plates. Pills and bars lean with the theme's skew, in the display face, as its badges do; the text keeps the lean. */
+    [data-theme='phantom'] .kp-week {
+        --kp-week-pill-radius: 0;
+    }
+    [data-theme='phantom'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+    }
+    [data-theme='phantom'] :is(.kp-week__pill, .kp-gantt__run) {
+        transform: skewX(var(--kp-skew));
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='phantom'] .kp-week__pill:is(button)[data-kp-state='next'] {
+        transform: skewX(var(--kp-skew));
+    }
+}

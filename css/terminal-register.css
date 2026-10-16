@@ -4110,3 +4110,38 @@
     }
 }
 /* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: program output. No plates: the time is in brackets, bars are blocks of the phosphor, the running bar steps instead of gliding, rules are dashed. */
+    [data-theme='terminal'] .kp-week {
+        --kp-week-pill-radius: 0;
+        font-family: var(--theme-font-mono, var(--font-mono, monospace));
+    }
+    [data-theme='terminal'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+        font-family: var(--theme-font-mono, var(--font-mono, monospace));
+    }
+    [data-theme='terminal'] .kp-week__pill {
+        background: transparent;
+    }
+    [data-theme='terminal'] .kp-week__time::before {
+        content: '[';
+    }
+    [data-theme='terminal'] .kp-week__time::after {
+        content: ']';
+    }
+    [data-theme='terminal'] .kp-week__col,
+    [data-theme='terminal'] .kp-gantt__rule {
+        border-inline-style: dashed;
+    }
+    [data-theme='terminal'] .kp-gantt__run[data-kp-state='running'] {
+        animation-timing-function: steps(6, end);
+    }
+    [data-theme='terminal'] .kp-week__now,
+    [data-theme='terminal'] .kp-gantt__now {
+        border-color: var(--primary);
+        box-shadow: var(--kp-bloom);
+    }
+    [data-theme='terminal'] .kp-week {
+        --kp-week-now: var(--primary);
+    }
+}

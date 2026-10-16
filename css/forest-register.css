@@ -4467,3 +4467,21 @@
     }
 }
 /* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: leaves. Two rounded corners and two nearly square on every pill and bar, the way the forest cuts a chip. */
+    [data-theme='forest'] .kp-week {
+        --kp-week-pill-radius: 0.7rem 0.15rem 0.7rem 0.15rem;
+    }
+    [data-theme='forest'] .kp-gantt {
+        --kp-gantt-bar-radius: 0.6rem 0.12rem 0.6rem 0.12rem;
+    }
+    [data-theme='forest'] .kp-week__pill {
+        padding-inline: 0.625rem;
+    }
+    [data-theme='forest'] .kp-gantt__label {
+        padding-inline: 0.625rem;
+    }
+    [data-theme='forest'] .kp-gantt__lane {
+        font-style: italic;
+    }
+}

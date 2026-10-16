@@ -6105,3 +6105,37 @@
     }
 }
 /* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: a HUD readout. One notched corner (cut outwards past the box so the focus ring stays whole), a hard 3px bar on the leading edge, a running bar that burns. */
+    [data-theme='cyberpunk'] .kp-week {
+        --kp-week-pill-radius: 0;
+        --kp-week-now: var(--primary);
+    }
+    [data-theme='cyberpunk'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+        --kp-gantt-now: var(--primary);
+    }
+    [data-theme='cyberpunk'] :is(.kp-week__pill, .kp-gantt__run) {
+        clip-path: polygon(
+            -8px -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--fx-notch-sm) - 8px),
+            calc(100% - var(--fx-notch-sm) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px)
+        );
+    }
+    [data-theme='cyberpunk'] .kp-week__pill {
+        border-color: var(--kp-hairline);
+        border-inline-start: 3px solid var(--kp-week-ink);
+    }
+    [data-theme='cyberpunk'] .kp-week__time {
+        font-family: var(--kp-mono);
+    }
+    [data-theme='cyberpunk'] .kp-gantt__run[data-kp-state='running'] {
+        filter: drop-shadow(0 0 3px var(--kp-gantt-fill));
+    }
+    [data-theme='cyberpunk'] .kp-gantt__tick,
+    [data-theme='cyberpunk'] .kp-week__axis > span {
+        font-family: var(--kp-mono);
+    }
+}

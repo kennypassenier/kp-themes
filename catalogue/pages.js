@@ -105,10 +105,17 @@ export const PAGES = [
             // Kenny, 2026-10-07 04:23: what makes brutalism brutalism, the same way (the analysis in themes/brutalism/CHARACTER.md), eighteen rules of its grammar as questions, each option a live scene, the recommendation first; the sixth theme of the one-by-one series, after solstice.
             // Kenny, 2026-10-07 04:23: what makes grotesk grotesk, the same way (the analysis in themes/grotesk/CHARACTER.md), nineteen rules of its grammar as questions, each option a live scene, the recommendation first; the seventh theme of the one-by-one series, after brutalism. Questions 9 to 12 are the grotesk-only loading demo Kenny asked for on 2026-10-06 21:37, from the graph's Out of register.
             // Kenny, 2026-10-12: "Cyberpunk lijkt af, zie dat dezelfde fouten nu niet terugkomen in andere thema's": every other theme mended so a close is its open backwards with the theme's own effect; only what changed, each block in the themes where it did (research/all-themes).
+            // Kenny, 2026-10-15 (kp-adopt rest, kpa-33): three pieces the homelab dashboard still draws by hand, built into the package first: a top bar that folds what does not fit behind a More menu, a bottom tab bar for phones with a More drawer, and the running-job button.
             {
                 href: 'research/kpadopt-nav/demo.html',
                 label: 'Top bar that folds behind More, bottom tab bar, running-job button',
                 about: 'The dashboard folds its bar by hand, draws its own phone tab bar and its own running-job pill: each is now built into the package, in all 16 themes, with every state, and shown with the real shell in three windows.',
+            },
+            // Kenny, 2026-10-16 (kp-adopt-rest, round 2): eight things the admin dashboard still draws itself (action tiles, status rows, the facet list, the coverage heat grid, the reachability matrix, bars in table cells with data-kp-sort-value, the week agenda, the run timeline), built in the package first as ONE demo, formal only until Kenny approves it.
+            {
+                href: 'research/kpadopt2/demo.html',
+                label: 'Round 2: tiles, status rows, facets, heat grid, matrix, bar cell, week agenda, run timeline',
+                about: 'Eight components the dashboard draws itself, each section judged in one review dialog: .kp-action tiles, .kp-statusrow, .kp-facets, .kp-heat, .kp-matrix, .kp-bar-cell with the table’s data-kp-sort-value, .kp-week, .kp-gantt. Formal first.',
             },
         ],
     },

@@ -136,6 +136,14 @@
             "types": "./js/steplist.d.ts",
             "default": "./js/steplist.js"
         },
+        "./js/week": {
+            "types": "./js/week.d.ts",
+            "default": "./js/week.js"
+        },
+        "./js/gantt": {
+            "types": "./js/gantt.d.ts",
+            "default": "./js/gantt.js"
+        },
         "./js/loading-pieces": {
             "types": "./js/loading-pieces.d.ts",
             "default": "./js/loading-pieces.js"
