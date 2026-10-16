@@ -107,6 +107,13 @@ export const PAGES = [
             // Kenny, 2026-10-12: "Cyberpunk lijkt af, zie dat dezelfde fouten nu niet terugkomen in andere thema's": every other theme mended so a close is its open backwards with the theme's own effect; only what changed, each block in the themes where it did (research/all-themes).
             // Kenny, 2026-10-16 (kp-adopt-rest, round 2): eight things the admin dashboard still draws itself (action tiles, status rows, the facet list, the coverage heat grid, the reachability matrix, bars in table cells with data-kp-sort-value, the week agenda, the run timeline), built in the package first as ONE demo, formal only until Kenny approves it.
             // Kenny, 2026-10-16 (kp-adopt-rest, round 3): six things the dashboard still drew itself, each an opt-in option of an approved component (nav separator, choice-filter value, timeline day buttons and series legend, the week's next-N phone list, facet identity patterns, the heat grid's jump to the latest), formal only.
+            // 2026-10-16 (the AuDHD recipes thread, research/kpadopt4-recipes): six calm components the parked recipe app asked for, built as general kp components, formal only.
+            {
+                href: 'research/kpadopt4-recipes/demo.html',
+                rework: 'the six components are being built one commit each',
+                label: 'Six calm components: wheel, cook mode, timers, quantity, checklist, three-way filter',
+                about: 'The recipe app for someone with AuDHD asked for six things the package lacked: a weighted wheel that picks for you, one step at a time with the screen kept on, named kitchen timers, a quantity with minus and plus, a checklist whose ticked items sink, and filter chips with with, without and either way. Formal only, every state.',
+            },
         ],
     },
     {

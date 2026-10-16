@@ -1023,6 +1023,34 @@ export type Strings = {
     diagnosticsOnlyInStylesheet: (names: string) => string;
     diagnosticsOnlyInScript: (names: string) => string;
     diagnosticsUnknownVersion: string;
+    /**
+     * A three-way filter chip that must be in, as a screen reader hears it after the chip's name (js/segmented.js, `data-kp-segmented="tri"`) [kpadopt4]
+     */
+    triInclude: string;
+    /**
+     * A chip that must not be in [kpadopt4]
+     */
+    triExclude: string;
+    /**
+     * A chip that may or may not be in [kpadopt4]
+     */
+    triAny: string;
+    /**
+     * What a three-way group says after a press, "Chicken: required" [kpadopt4]
+     */
+    triAnnounce: (label: string, state: string) => string;
+    /**
+     * The line under a three-way group while nothing is chosen [kpadopt4]
+     */
+    triHint: string;
+    /**
+     * The same line once something is chosen [kpadopt4]
+     */
+    triSummary: (include: string[], exclude: string[]) => string;
+    /**
+     * What a three-way group says after Clear all [kpadopt4]
+     */
+    triCleared: string;
 };
 /**
  * @typedef {object} Strings
@@ -1375,6 +1403,13 @@ export type Strings = {
  * @property {(names: string) => string} diagnosticsOnlyInStylesheet
  * @property {(names: string) => string} diagnosticsOnlyInScript
  * @property {string} diagnosticsUnknownVersion
+ * @property {string} triInclude  A three-way filter chip that must be in, as a screen reader hears it after the chip's name (js/segmented.js, `data-kp-segmented="tri"`) [kpadopt4]
+ * @property {string} triExclude  A chip that must not be in [kpadopt4]
+ * @property {string} triAny  A chip that may or may not be in [kpadopt4]
+ * @property {(label: string, state: string) => string} triAnnounce  What a three-way group says after a press, "Chicken: required" [kpadopt4]
+ * @property {string} triHint  The line under a three-way group while nothing is chosen [kpadopt4]
+ * @property {(include: string[], exclude: string[]) => string} triSummary  The same line once something is chosen [kpadopt4]
+ * @property {string} triCleared  What a three-way group says after Clear all [kpadopt4]
  */
 /**
  * The defaults. English, by Kenny's decision of 2026-09-04 — the package

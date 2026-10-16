@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="kpadopt4-recipes" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Six calm components for a recipe app: wheel, cook mode, timers, quantity, checklist, three-way filter · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k4-page">
+            <header class="k4-intro">
+                <h1>Six calm components for a recipe app</h1>
+                <p class="cat-intro">
+                    The recipe app (parked, its concept still open) is for someone with AuDHD: calm, predictable, little to hold in mind, big targets,
+                    no motion that surprises, every state said in words and shapes as well as colour. It asked for six things the package did not
+                    have. Each is built here as a general kp component, useful beyond recipes, <b>formal only</b> until you approve it. Every section
+                    says what you should see under <b>Expected</b>. Everything with a <code>kp-</code> class and every script under
+                    <code>js/</code> is the package; the sample data, the frames, the event logs and the buttons that drive a section are this page’s.
+                </p>
+            </header>
+
+            <section
+                class="k4-sec"
+                id="tri"
+                data-review-item="tri"
+                data-review-topic="filters"
+                data-review-topic-title="Three-way filter chips"
+                data-review-components="segmented"
+                data-review-title="6 · Three-way filter chips"
+                aria-labelledby="h-tri"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-tri">6 · Three-way filter chips: with, without, either way</h2>
+                    <p>
+                        An option of the segmented chips you approved, not a new component: <code>data-kp-segmented="tri"</code> on a
+                        <code>kp-segmented--chips</code> group. Each chip is either way, must be in, or must not be in (“with chicken, without
+                        mushrooms”). The facet list stays a list of checkboxes; a third state there would turn a checkbox into a riddle.
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Every chip starts with a mark at its start: a hollow ring means <b>either way</b>. Chicken is already <b>in</b>: the chip
+                            filled in formal’s navy ink, the ring filled with a check. Mushrooms is <b>out</b>: a red edge, the ring a red plate with
+                            a cross, the word struck through in red. Shape, word and colour each say it on their own.
+                        </li>
+                        <li>
+                            Click a chip: either way → in → out → either way. The chip never changes width and nothing beside it moves. The line under
+                            the group says what is chosen (“With chicken, without mushrooms”); with nothing chosen it says how it works.
+                        </li>
+                        <li>
+                            <b>Clear all</b> at the end lets every chip go; it is dimmed and does nothing while nothing is chosen. The button under
+                            the group does the same from outside (<code>resetSegmented()</code>).
+                        </li>
+                        <li>
+                            Keyboard: Tab reaches the group once; the arrows move between chips; Space or Enter turns the focused chip; Delete or
+                            Backspace lets it go at once. A screen reader hears “Chicken, required, button” and, after a press, “Chicken: left out”.
+                        </li>
+                        <li>
+                            The long chip is cut with an ellipsis (its full name is its tooltip). The 360 px frame wraps the chips onto more lines.
+                            The disabled group and the disabled chip are dimmed and cannot be pressed. In the loading group the counts are quiet bars
+                            that breathe until the numbers arrive (2.4 s), and nothing moves when they do.
+                        </li>
+                        <li>The log shows each <code>kp-segmented-change</code> with its <code>include</code> and <code>exclude</code> lists.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Turn one chip through all three states and watch that it keeps its width; then try the keys.</p>
+                </div>
+                <div>
+                    <p class="k4-label">Ingredients (1280: one line)</p>
+                    <div
+                        class="kp-segmented kp-segmented--chips"
+                        id="k4-tri"
+                        data-kp-segmented="tri"
+                        data-kp-segmented-summary
+                        aria-label="Ingredients"
+                    >
+                        <button type="button" class="kp-segmented__item" data-value="chicken" data-kp-segmented-tri="include">
+                            <span class="kp-segmented__label">Chicken</span>
+                        </button>
+                        <button type="button" class="kp-segmented__item" data-value="rice"><span class="kp-segmented__label">Rice</span></button>
+                        <button type="button" class="kp-segmented__item" data-value="mushrooms" data-kp-segmented-tri="exclude">
+                            <span class="kp-segmented__label">Mushrooms</span>
+                        </button>
+                        <button type="button" class="kp-segmented__item" data-value="paprika">
+                            <span class="kp-segmented__label">Paprika</span>
+                        </button>
+                        <button type="button" class="kp-segmented__item" data-value="coriander">
+                            <span class="kp-segmented__label">Coriander</span>
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-segmented__item"
+                            data-value="roots"
+                            title="Sweet potato, celeriac and every other root that takes long in the oven"
+                        >
+                            <span class="kp-segmented__label">Sweet potato, celeriac and every other root that takes long in the oven</span>
+                        </button>
+                        <button type="button" class="kp-segmented__item" data-kp-segmented-all>
+                            <span class="kp-segmented__label">Clear all</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="k4-actions">
+                    <button type="button" class="kp-button" id="k4-tri-clear">Clear from outside (resetSegmented)</button>
+                </div>
+                <pre class="k4-log" id="k4-tri-log" aria-label="Events"></pre>
+                <div class="k4-grid">
+                    <div>
+                        <p class="k4-label">360 px, the chips wrap</p>
+                        <div class="k4-frame k4-frame--phone">
+                            <div
+                                class="kp-segmented kp-segmented--chips"
+                                data-kp-segmented="tri"
+                                data-kp-segmented-summary
+                                aria-label="Ingredients, phone"
+                            >
+                                <button type="button" class="kp-segmented__item" data-value="chicken" data-kp-segmented-tri="include">
+                                    <span class="kp-segmented__label">Chicken</span>
+                                </button>
+                                <button type="button" class="kp-segmented__item" data-value="rice">
+                                    <span class="kp-segmented__label">Rice</span>
+                                </button>
+                                <button type="button" class="kp-segmented__item" data-value="mushrooms" data-kp-segmented-tri="exclude">
+                                    <span class="kp-segmented__label">Mushrooms</span>
+                                </button>
+                                <button type="button" class="kp-segmented__item" data-value="paprika">
+                                    <span class="kp-segmented__label">Paprika</span>
+                                </button>
+                                <button type="button" class="kp-segmented__item" data-value="coriander">
+                                    <span class="kp-segmented__label">Coriander</span>
+                                </button>
+                                <button type="button" class="kp-segmented__item" data-kp-segmented-all>
+                                    <span class="kp-segmented__label">Clear all</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="k4-label">Disabled group, and one disabled chip</p>
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="tri" aria-disabled="true" aria-label="Diet, disabled">
+                            <button type="button" class="kp-segmented__item" data-value="meat" data-kp-segmented-tri="include">
+                                <span class="kp-segmented__label">Meat</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="fish" data-kp-segmented-tri="exclude">
+                                <span class="kp-segmented__label">Fish</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="dairy">
+                                <span class="kp-segmented__label">Dairy</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="tri" aria-label="Kitchen">
+                            <button type="button" class="kp-segmented__item" data-value="oven"><span class="kp-segmented__label">Oven</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="wok" disabled>
+                                <span class="kp-segmented__label">Wok (not in this kitchen)</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="pan">
+                                <span class="kp-segmented__label">One pan</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="k4-label">Loading: the counts are on their way</p>
+                        <div class="kp-segmented kp-segmented--chips" id="k4-tri-busy" data-kp-segmented="tri" aria-busy="true" aria-label="Kind">
+                            <button type="button" class="kp-segmented__item" data-value="vegetarian">
+                                <span class="kp-segmented__label">Vegetarian</span><span class="kp-segmented__count"></span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="quick">
+                                <span class="kp-segmented__label">Under 30 min</span><span class="kp-segmented__count"></span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="spicy">
+                                <span class="kp-segmented__label">Spicy</span><span class="kp-segmented__count"></span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="oven">
+                                <span class="kp-segmented__label">Oven</span><span class="kp-segmented__count"></span>
+                            </button>
+                        </div>
+                        <div class="k4-actions">
+                            <button type="button" class="kp-button kp-button--sm" id="k4-tri-reload">Load the counts again</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTIONS -->
+        </main>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

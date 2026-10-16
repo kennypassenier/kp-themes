@@ -387,6 +387,13 @@
  * @property {(names: string) => string} diagnosticsOnlyInStylesheet
  * @property {(names: string) => string} diagnosticsOnlyInScript
  * @property {string} diagnosticsUnknownVersion
+ * @property {string} triInclude  A three-way filter chip that must be in, as a screen reader hears it after the chip's name (js/segmented.js, `data-kp-segmented="tri"`) [kpadopt4]
+ * @property {string} triExclude  A chip that must not be in [kpadopt4]
+ * @property {string} triAny  A chip that may or may not be in [kpadopt4]
+ * @property {(label: string, state: string) => string} triAnnounce  What a three-way group says after a press, "Chicken: required" [kpadopt4]
+ * @property {string} triHint  The line under a three-way group while nothing is chosen [kpadopt4]
+ * @property {(include: string[], exclude: string[]) => string} triSummary  The same line once something is chosen [kpadopt4]
+ * @property {string} triCleared  What a three-way group says after Clear all [kpadopt4]
  */
 
 /**
@@ -871,6 +878,19 @@ export const DEFAULT_STRINGS = Object.freeze({
     diagnosticsOnlyInStylesheet: (names) => `Only the stylesheet has: ${names}`,
     diagnosticsOnlyInScript: (names) => `Only the JavaScript has: ${names}`,
     diagnosticsUnknownVersion: 'not declared',
+    // A three-way filter chip (js/segmented.js, `data-kp-segmented="tri"`) [kpadopt4].
+    triInclude: 'required',
+    triExclude: 'left out',
+    triAny: 'either way',
+    triAnnounce: (label, state) => `${label}: ${state}`,
+    triHint: 'Tap a chip once to require it, twice to leave it out, a third time to let it go.',
+    triSummary: (include, exclude) => {
+        const line = [include.length ? `with ${include.join(', ')}` : '', exclude.length ? `without ${exclude.join(', ')}` : '']
+            .filter(Boolean)
+            .join(', ');
+        return line.charAt(0).toUpperCase() + line.slice(1);
+    },
+    triCleared: 'Every filter is let go.',
 });
 
 // STRINGS_NL was removed in 4.0.0 [D3]. Kenny decided that on

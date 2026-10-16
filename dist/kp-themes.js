@@ -522,7 +522,18 @@ var init_strings = __esm({
       diagnosticsNoVersion: "The stylesheet declares no version, so it was generated before 3.2.0 \u2014 older than the JavaScript beside it, whatever that one says.",
       diagnosticsOnlyInStylesheet: (names) => `Only the stylesheet has: ${names}`,
       diagnosticsOnlyInScript: (names) => `Only the JavaScript has: ${names}`,
-      diagnosticsUnknownVersion: "not declared"
+      diagnosticsUnknownVersion: "not declared",
+      // A three-way filter chip (js/segmented.js, `data-kp-segmented="tri"`) [kpadopt4].
+      triInclude: "required",
+      triExclude: "left out",
+      triAny: "either way",
+      triAnnounce: (label, state) => `${label}: ${state}`,
+      triHint: "Tap a chip once to require it, twice to leave it out, a third time to let it go.",
+      triSummary: (include, exclude) => {
+        const line = [include.length ? `with ${include.join(", ")}` : "", exclude.length ? `without ${exclude.join(", ")}` : ""].filter(Boolean).join(", ");
+        return line.charAt(0).toUpperCase() + line.slice(1);
+      },
+      triCleared: "Every filter is let go."
     });
     current = DEFAULT_STRINGS;
     CIPHER = "#&$?%@/";
@@ -19226,13 +19237,17 @@ __export(segmented_exports, {
   SEGMENTED_EVENT: () => SEGMENTED_EVENT,
   SEGMENTED_ITEM: () => SEGMENTED_ITEM,
   THUMB_ATTRIBUTE: () => THUMB_ATTRIBUTE,
+  TRI_ATTRIBUTE: () => TRI_ATTRIBUTE,
+  TRI_STATES: () => TRI_STATES,
   attachSegmented: () => attachSegmented,
+  getSegmentedTri: () => getSegmentedTri,
   getSegmentedValues: () => getSegmentedValues,
   itemsOf: () => itemsOf,
   layout: () => layout,
   resetSegmented: () => resetSegmented,
   setSegmentedCounts: () => setSegmentedCounts,
   setSegmentedItems: () => setSegmentedItems,
+  setSegmentedTri: () => setSegmentedTri,
   setSegmentedValues: () => setSegmentedValues,
   valueOf: () => valueOf
 });
@@ -19248,9 +19263,19 @@ function valueOf(item) {
   return (item.querySelector(".kp-segmented__label") ?? item).textContent?.trim() ?? "";
 }
 function getSegmentedValues(group) {
-  return itemsOf(group).filter((item) => isOn(group, item) && !(isMulti(group) && isAll(item))).map(valueOf);
+  return itemsOf(group).filter((item) => isOn(group, item) && !((isMulti(group) || isTri(group)) && isAll(item))).map(valueOf);
 }
 function paint2(group, values) {
+  if (isTri(group)) {
+    const include = new Set(values);
+    for (const item of itemsOf(group)) {
+      if (isAll(item)) continue;
+      const was = triOf(item);
+      writeTri(item, include.has(valueOf(item)) ? "include" : was === "exclude" ? "exclude" : "any");
+    }
+    paintTri(group);
+    return;
+  }
   const multi = isMulti(group);
   const items = itemsOf(group);
   const others = items.filter((item) => !isAll(item));
@@ -19280,6 +19305,86 @@ function roving(group) {
   for (const item of items) item.tabIndex = item === stop ? 0 : -1;
   if (stop) STOP.set(group, stop);
 }
+function writeTri(item, state) {
+  if (state === "any") item.removeAttribute(TRI_ATTRIBUTE);
+  else item.setAttribute(TRI_ATTRIBUTE, state);
+  let mark = item.querySelector(":scope > .kp-segmented__mark");
+  if (!mark) {
+    mark = document.createElement("span");
+    mark.className = "kp-segmented__mark";
+    mark.setAttribute("aria-hidden", "true");
+    item.prepend(mark);
+  }
+  let word = item.querySelector(":scope > .kp-segmented__state");
+  if (!word) {
+    word = document.createElement("span");
+    word.className = "kp-sr-only kp-segmented__state";
+    item.append(word);
+  }
+  const strings = getStrings();
+  word.textContent = `, ${state === "include" ? strings.triInclude : state === "exclude" ? strings.triExclude : strings.triAny}`;
+}
+function paintTri(group) {
+  const { include, exclude } = getSegmentedTri(group);
+  const chosen = include.length + exclude.length > 0;
+  for (const item of itemsOf(group)) {
+    if (!isAll(item)) continue;
+    item.setAttribute("aria-disabled", String(!chosen));
+  }
+  summaryOf(group, chosen);
+  roving(group);
+}
+function summaryOf(group, chosen) {
+  if (!group.hasAttribute("data-kp-segmented-summary")) return;
+  const next = group.nextElementSibling;
+  let line;
+  if (next instanceof HTMLElement && next.classList.contains("kp-segmented__summary")) line = next;
+  else {
+    line = document.createElement("p");
+    line.className = "kp-segmented__summary";
+    group.after(line);
+  }
+  const names = (state) => itemsOf(group).filter((item) => !isAll(item) && triOf(item) === state).map((item) => (item.querySelector(".kp-segmented__label") ?? item).textContent?.trim() ?? "");
+  const text = chosen ? getStrings().triSummary(names("include"), names("exclude")) : group.getAttribute("data-kp-segmented-summary") || getStrings().triHint;
+  line.textContent = text;
+  line.title = text;
+  line.toggleAttribute("data-kp-chosen", chosen);
+}
+function sayTri(group, message) {
+  let region = group.parentElement?.querySelector(`:scope > .kp-segmented__live[data-for="${CSS.escape(group.id || "")}"]`) ?? null;
+  if (!region) {
+    if (!group.id) group.id = `kp-segmented-${Math.random().toString(36).slice(2, 9)}`;
+    region = document.createElement("span");
+    region.className = "kp-sr-only kp-segmented__live";
+    region.setAttribute("role", "status");
+    region.setAttribute("data-for", group.id);
+    const summary = group.nextElementSibling?.classList.contains("kp-segmented__summary") ? group.nextElementSibling : group;
+    summary.after(region);
+  }
+  const target = region;
+  target.textContent = "";
+  setTimeout(() => target.textContent = message, 60);
+}
+function getSegmentedTri(group) {
+  const out = { include: [], exclude: [] };
+  for (const item of itemsOf(group)) {
+    if (isAll(item)) continue;
+    const state = triOf(item);
+    if (state !== "any") out[state].push(valueOf(item));
+  }
+  return out;
+}
+function setSegmentedTri(group, { include = [], exclude = [] }) {
+  enhance(group);
+  const inc = new Set(include);
+  const exc = new Set(exclude);
+  for (const item of itemsOf(group)) {
+    if (isAll(item)) continue;
+    const value = valueOf(item);
+    writeTri(item, inc.has(value) ? "include" : exc.has(value) ? "exclude" : "any");
+  }
+  paintTri(group);
+}
 function layout(group) {
   if (!(group instanceof HTMLElement)) return;
   const chips = group.classList.contains("kp-segmented--chips");
@@ -19301,7 +19406,7 @@ function enhance(group) {
   const multi = isMulti(group);
   if (!ENHANCED.has(group)) {
     ENHANCED.add(group);
-    if (!group.hasAttribute("role")) group.setAttribute("role", multi ? "group" : "radiogroup");
+    if (!group.hasAttribute("role")) group.setAttribute("role", multi || isTri(group) ? "group" : "radiogroup");
     if (typeof ResizeObserver !== "undefined" && group instanceof HTMLElement) {
       const observer2 = new ResizeObserver(() => layout(group));
       observer2.observe(group);
@@ -19312,13 +19417,21 @@ function enhance(group) {
   const observer = WATCH.get(group);
   for (const item of itemsOf(group)) {
     if (item instanceof HTMLButtonElement && !item.hasAttribute("type")) item.type = "button";
-    if (!multi && !item.hasAttribute("role")) item.setAttribute("role", "radio");
+    if (!multi && !isTri(group) && !item.hasAttribute("role")) item.setAttribute("role", "radio");
+    if (isTri(group) && !isAll(item)) writeTri(item, triOf(item));
     observer?.observe(item);
   }
-  paint2(group, getSegmentedValues(group));
+  if (isTri(group)) paintTri(group);
+  else paint2(group, getSegmentedValues(group));
 }
 function choose(group, item) {
   if (groupDisabled(group) || itemDisabled(item)) return;
+  if (isTri(group)) {
+    if (isAll(item)) return resetSegmented(group);
+    const from = triOf(item);
+    turnTri(group, item, TRI_STATES[(TRI_STATES.indexOf(from) + 1) % TRI_STATES.length]);
+    return;
+  }
   const before = getSegmentedValues(group);
   const value = valueOf(item);
   let next;
@@ -19334,6 +19447,18 @@ function choose(group, item) {
   if (!changed2) return;
   group.dispatchEvent(new CustomEvent(SEGMENTED_EVENT, { bubbles: true, detail: { value, values: after, item } }));
 }
+function turnTri(group, item, state) {
+  if (triOf(item) === state) return;
+  writeTri(item, state);
+  paintTri(group);
+  const strings = getStrings();
+  const label = (item.querySelector(".kp-segmented__label") ?? item).textContent?.trim() ?? "";
+  sayTri(group, strings.triAnnounce(label, state === "include" ? strings.triInclude : state === "exclude" ? strings.triExclude : strings.triAny));
+  const { include, exclude } = getSegmentedTri(group);
+  group.dispatchEvent(
+    new CustomEvent(SEGMENTED_EVENT, { bubbles: true, detail: { value: valueOf(item), values: include, include, exclude, state, item } })
+  );
+}
 function setSegmentedValues(group, values) {
   enhance(group);
   paint2(group, [...values]);
@@ -19341,6 +19466,19 @@ function setSegmentedValues(group, values) {
 function resetSegmented(group) {
   enhance(group);
   if (groupDisabled(group)) return;
+  if (isTri(group)) {
+    const before2 = getSegmentedTri(group);
+    if (before2.include.length + before2.exclude.length === 0) return;
+    setSegmentedTri(group, {});
+    sayTri(group, getStrings().triCleared);
+    group.dispatchEvent(
+      new CustomEvent(SEGMENTED_EVENT, {
+        bubbles: true,
+        detail: { value: null, values: [], include: [], exclude: [], state: "any", item: null }
+      })
+    );
+    return;
+  }
   const before = getSegmentedValues(group);
   if (before.length === 0 && isMulti(group)) return;
   paint2(group, []);
@@ -19364,6 +19502,8 @@ function setSegmentedCounts(group, counts) {
 function setSegmentedItems(group, items) {
   enhance(group);
   const multi = isMulti(group);
+  const tri = isTri(group);
+  const kept = new Map(itemsOf(group).map((item) => [valueOf(item), triOf(item)]));
   const on = getSegmentedValues(group).filter((value) => items.some((item) => item.value === value));
   const active = group.ownerDocument.activeElement;
   const focused = active instanceof HTMLElement && group.contains(active) ? valueOf(active) : null;
@@ -19373,7 +19513,9 @@ function setSegmentedItems(group, items) {
     item.className = "kp-segmented__item";
     item.dataset.value = spec.value;
     if (spec.all) item.setAttribute("data-kp-segmented-all", "");
-    if (!multi) item.setAttribute("role", "radio");
+    if (!multi && !tri) item.setAttribute("role", "radio");
+    const state = spec.state ?? kept.get(spec.value) ?? "any";
+    if (tri && !spec.all && state !== "any") item.setAttribute(TRI_ATTRIBUTE, state);
     if (spec.hint) item.title = spec.hint;
     if (spec.disabled) item.disabled = true;
     const label = document.createElement("span");
@@ -19391,7 +19533,8 @@ function setSegmentedItems(group, items) {
   STOP.delete(group);
   group.replaceChildren(...made2);
   enhance(group);
-  paint2(group, on);
+  if (tri) paintTri(group);
+  else paint2(group, on);
   if (focused !== null) made2.find((item) => valueOf(item) === focused)?.focus();
 }
 function stepFor(event, group) {
@@ -19428,6 +19571,13 @@ function attachSegmented(root = document) {
     const at = items.indexOf(item);
     if (at < 0) return;
     let to = -1;
+    if (isTri(group) && (event.key === "Delete" || event.key === "Backspace") && !isAll(item)) {
+      HANDLED.add(event);
+      event.preventDefault();
+      enhance(group);
+      if (!groupDisabled(group) && !itemDisabled(item)) turnTri(group, item, "any");
+      return;
+    }
     if (event.key === "Home") to = 0;
     else if (event.key === "End") to = items.length - 1;
     else {
@@ -19442,7 +19592,7 @@ function attachSegmented(root = document) {
     STOP.set(group, next);
     roving(group);
     next.focus();
-    if (!isMulti(group)) choose(group, next);
+    if (!isMulti(group) && !isTri(group)) choose(group, next);
   };
   const onFocus = (event) => {
     const item = event.target instanceof Element ? event.target.closest(SEGMENTED_ITEM) : null;
@@ -19499,23 +19649,32 @@ function attachSegmented(root = document) {
     }
   };
 }
-var SEGMENTED, SEGMENTED_EVENT, SEGMENTED_ITEM, THUMB_ATTRIBUTE, GLIDE_ATTRIBUTE, OVERFLOW_ATTRIBUTE, ENHANCED, STOP, WATCH, HANDLED, isMulti, isAll, isOn, groupDisabled, itemDisabled;
+var SEGMENTED, SEGMENTED_EVENT, SEGMENTED_ITEM, THUMB_ATTRIBUTE, GLIDE_ATTRIBUTE, TRI_ATTRIBUTE, TRI_STATES, OVERFLOW_ATTRIBUTE, ENHANCED, STOP, WATCH, HANDLED, isMulti, isTri, triOf, isAll, isOn, groupDisabled, itemDisabled;
 var init_segmented = __esm({
   "js/segmented.js"() {
     "use strict";
+    init_strings();
     SEGMENTED = "[data-kp-segmented]";
     SEGMENTED_EVENT = "kp-segmented-change";
     SEGMENTED_ITEM = ".kp-segmented__item";
     THUMB_ATTRIBUTE = "data-kp-segmented-thumb";
     GLIDE_ATTRIBUTE = "data-kp-segmented-glide";
+    TRI_ATTRIBUTE = "data-kp-segmented-tri";
+    TRI_STATES = /** @type {const} */
+    ["any", "include", "exclude"];
     OVERFLOW_ATTRIBUTE = "data-kp-segmented-overflow";
     ENHANCED = /* @__PURE__ */ new WeakSet();
     STOP = /* @__PURE__ */ new WeakMap();
     WATCH = /* @__PURE__ */ new WeakMap();
     HANDLED = /* @__PURE__ */ new WeakSet();
     isMulti = (group) => group.getAttribute("data-kp-segmented") === "multi";
+    isTri = (group) => group.getAttribute("data-kp-segmented") === "tri";
+    triOf = (item) => {
+      const state = item.getAttribute(TRI_ATTRIBUTE);
+      return state === "include" || state === "exclude" ? state : "any";
+    };
     isAll = (item) => item.hasAttribute("data-kp-segmented-all");
-    isOn = (group, item) => item.getAttribute(isMulti(group) ? "aria-pressed" : "aria-checked") === "true";
+    isOn = (group, item) => isTri(group) ? triOf(item) === "include" : item.getAttribute(isMulti(group) ? "aria-pressed" : "aria-checked") === "true";
     groupDisabled = (group) => group.getAttribute("aria-disabled") === "true";
     itemDisabled = (item) => item.hasAttribute("disabled") || item.getAttribute("aria-disabled") === "true";
   }
@@ -25880,6 +26039,8 @@ export {
   TREE_EXPAND_EVENT,
   TREE_SELECT_EVENT,
   TREND_CHART,
+  TRI_ATTRIBUTE,
+  TRI_STATES,
   UNDO_EVENT,
   UNDO_MS,
   UNKNOWN_EVENT,
@@ -26049,6 +26210,7 @@ export {
   freshness_exports as freshnessExports,
   gantt_exports as ganttExports,
   getFacetValues,
+  getSegmentedTri,
   getSegmentedValues,
   getStrings,
   glideGroup,
@@ -26195,6 +26357,7 @@ export {
   setMeter,
   setSegmentedCounts,
   setSegmentedItems,
+  setSegmentedTri,
   setSegmentedValues,
   setStateWord,
   setStatus,
