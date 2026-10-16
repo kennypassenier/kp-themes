@@ -180,6 +180,10 @@
             "types": "./js/facets.d.ts",
             "default": "./js/facets.js"
         },
+        "./js/timer": {
+            "types": "./js/timer.d.ts",
+            "default": "./js/timer.js"
+        },
         "./js/checklist": {
             "types": "./js/checklist.d.ts",
             "default": "./js/checklist.js"

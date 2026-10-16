@@ -1115,6 +1115,62 @@ export type Strings = {
      * Said when an item is unticked [kpadopt4]
      */
     checklistOpen: (label: string) => string;
+    /**
+     * A kitchen timer's state word while it runs (js/timer.js) [kpadopt4]
+     */
+    timerRunning: string;
+    /**
+     * Its state word while paused [kpadopt4]
+     */
+    timerPaused: string;
+    /**
+     * Its state word once it has ended [kpadopt4]
+     */
+    timerDoneWord: string;
+    /**
+     * The large line on an ended timer, its notification and its alert, "Rice is done" [kpadopt4]
+     */
+    timerDone: (name: string) => string;
+    /**
+     * The button that pauses a timer [kpadopt4]
+     */
+    timerPause: string;
+    /**
+     * The button that resumes it [kpadopt4]
+     */
+    timerResume: string;
+    /**
+     * The button on an ended timer that stops it and takes it away [kpadopt4]
+     */
+    timerStopRing: string;
+    /**
+     * The button that adds a minute, "+1 min" [kpadopt4]
+     */
+    timerAddMinute: string;
+    /**
+     * That button's accessible name [kpadopt4]
+     */
+    timerAddMinuteTo: (name: string) => string;
+    /**
+     * The remove button's accessible name and tooltip [kpadopt4]
+     */
+    timerRemove: (name: string) => string;
+    /**
+     * A list with no timer [kpadopt4]
+     */
+    timerEmpty: string;
+    /**
+     * Said once when a timer has a minute left [kpadopt4]
+     */
+    timerLastMinute: (name: string) => string;
+    /**
+     * Said when a timer starts [kpadopt4]
+     */
+    timerStarted: (name: string, clock: string) => string;
+    /**
+     * Said when a starter is pressed while its timer runs [kpadopt4]
+     */
+    timerAlready: (name: string) => string;
 };
 /**
  * @typedef {object} Strings
@@ -1490,6 +1546,20 @@ export type Strings = {
  * @property {(label: string) => string} checklistDone  Said when an item is ticked [kpadopt4]
  * @property {(label: string) => string} checklistDoneMoved  Said when an item is ticked with the keyboard and sank [kpadopt4]
  * @property {(label: string) => string} checklistOpen  Said when an item is unticked [kpadopt4]
+ * @property {string} timerRunning  A kitchen timer's state word while it runs (js/timer.js) [kpadopt4]
+ * @property {string} timerPaused  Its state word while paused [kpadopt4]
+ * @property {string} timerDoneWord  Its state word once it has ended [kpadopt4]
+ * @property {(name: string) => string} timerDone  The large line on an ended timer, its notification and its alert, "Rice is done" [kpadopt4]
+ * @property {string} timerPause  The button that pauses a timer [kpadopt4]
+ * @property {string} timerResume  The button that resumes it [kpadopt4]
+ * @property {string} timerStopRing  The button on an ended timer that stops it and takes it away [kpadopt4]
+ * @property {string} timerAddMinute  The button that adds a minute, "+1 min" [kpadopt4]
+ * @property {(name: string) => string} timerAddMinuteTo  That button's accessible name [kpadopt4]
+ * @property {(name: string) => string} timerRemove  The remove button's accessible name and tooltip [kpadopt4]
+ * @property {string} timerEmpty  A list with no timer [kpadopt4]
+ * @property {(name: string) => string} timerLastMinute  Said once when a timer has a minute left [kpadopt4]
+ * @property {(name: string, clock: string) => string} timerStarted  Said when a timer starts [kpadopt4]
+ * @property {(name: string) => string} timerAlready  Said when a starter is pressed while its timer runs [kpadopt4]
  */
 /**
  * The defaults. English, by Kenny's decision of 2026-09-04 — the package

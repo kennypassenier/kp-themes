@@ -4,3 +4,4 @@
 import './sec-tri.js';
 import './sec-quantity.js';
 import './sec-checklist.js';
+import './sec-timers.js';

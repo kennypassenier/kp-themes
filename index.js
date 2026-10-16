@@ -195,6 +195,29 @@ export {
 /** @typedef {import('./js/statusrow.js').StatusRow} StatusRow */
 export { FACETS, FACET_EVENT, attachFacets, getFacetValues, setFacetCounts, setFacetItems, setFacetValues } from './js/facets.js';
 /** @typedef {import('./js/facets.js').FacetItem} FacetItem */
+// Kitchen timers: named countdowns that keep running [kpadopt4].
+export {
+    TIMERS,
+    TIMER_CHANGE_EVENT,
+    TIMER_DONE_EVENT,
+    TIMER_START,
+    TIMER_START_EVENT,
+    TIMER_STOP_EVENT,
+    TIMER_TICK_MS,
+    addTimerTime,
+    askTimerNotifications,
+    attachTimers,
+    formatClock,
+    getTimers,
+    parseDuration,
+    pauseTimer,
+    restoreTimers,
+    resumeTimer,
+    startTimer,
+    stopTimer,
+    stopTimerRing,
+} from './js/timer.js';
+/** @typedef {import('./js/timer.js').TimerState} TimerState */
 // A checklist whose ticked items sink [kpadopt4].
 export {
     CHECKLIST,

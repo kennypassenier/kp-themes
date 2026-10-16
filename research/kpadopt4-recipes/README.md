@@ -13,3 +13,4 @@ AuDHD-recipes thread listed six components kp-themes lacked, each with its optio
 | 6 · three-way filter | `data-kp-segmented="tri"` on the segmented chips (js/segmented.js) | an opt-in mode of an approved one                                                       |
 | 4 · quantity         | `.kp-quantity`, js/quantity.js                                     | new, from `.kp-button` and the field                                                    |
 | 5 · checklist        | `.kp-checklist`, js/checklist.js                                   | new, from the field's checkbox, `.kp-button`, the busy card and the theme's size motion |
+| 3 · timers           | `.kp-timers`, `.kp-timer`, js/timer.js                             | new, from `.kp-button`, the progress bar and the theme's arrival and leave              |

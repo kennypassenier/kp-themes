@@ -18,6 +18,8 @@
         "kp-statusrow",
         "kp-steplist",
         "kp-tabbar",
+        "kp-timer",
+        "kp-timers",
         "kp-toolbar",
         "kp-week"
     ]

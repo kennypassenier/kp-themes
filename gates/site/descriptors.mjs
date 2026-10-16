@@ -3054,6 +3054,36 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
         ],
     },
     {
+        id: 'timer',
+        title: 'Kitchen timers',
+        group: 'Feedback',
+        classes: ['kp-timers', 'kp-timer'],
+        exports: [],
+        intro: 'Named countdowns that keep running side by side, each a card with its name, the time left large, the theme’s progress bar, Pause or Resume, +1 min and Remove. `data-kp-timers` on the list; js/timer.js (`startTimer`, `pauseTimer`, `resumeTimer`, `addTimerTime`, `stopTimer`, `getTimers`, `restoreTimers`, `askTimerNotifications`, `attachTimers`) counts from each end time, so a page in the background or a phone that locked shows the right time again, and ends a timer with the done plate, a soft chime, a buzz and a system notification when allowed. A button with `data-kp-timer-start="10m"` anywhere in the page starts one.',
+        whenToUse: 'For clocks a person starts and keeps an eye on (cooking, a break, a session). For a notice that closes by itself use the alarm in its timed mode.',
+        examples: [
+            {
+                title: 'A list and a starter in a sentence',
+                why: 'The list draws its cards; the starter names the duration and the timer.',
+                markup: `
+<div class="kp-timers" data-kp-timers id="timers" aria-label="Kitchen timers"></div>
+<p>Let the sauce simmer for <button type="button" class="kp-button kp-button--sm" data-kp-timer-start="10m" data-kp-timer-name="Sauce" data-kp-timer-for="timers">10 minutes</button>.</p>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-timers-ring', what: 'How long an ended timer chimes, in seconds (60; 0 is once).' },
+            { name: 'data-kp-timers-sound="off"', what: 'No chime.' },
+            { name: 'data-kp-timers-notify="false"', what: 'No system notification even with the permission.' },
+            { name: 'data-kp-timers-empty', what: 'The sentence of an empty list.' },
+        ],
+        accessibility: [
+            'Built in — each card is named by its timer; the time is a `timer` region that is read on demand, never every second.',
+            'Built in — a start and the last minute are said politely, the end at once.',
+            'Yours — ask for notifications from a press, and keep what getTimers() gives across a reload.',
+        ],
+    },
+    {
         id: 'steplist',
         title: 'Step list',
         group: 'Feedback',

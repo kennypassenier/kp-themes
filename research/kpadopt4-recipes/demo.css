@@ -129,3 +129,9 @@
     padding-inline: 0.2em;
     box-decoration-break: clone;
 }
+
+.k4-recipe {
+    max-inline-size: 70ch;
+    margin: 0;
+    line-height: 2;
+}

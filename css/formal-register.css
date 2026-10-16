@@ -4248,3 +4248,22 @@
     }
 }
 /* ── end heat grid, matrix, bar cell ── */
+
+/* ── kitchen timers [kpadopt4] ──
+   G8: an ended timer needs the eye, so it is a red-ink entry: ruled off along
+   its start edge in red ink, the ground stays paper, the name in Fraunces in
+   the figure's place, the state word in red small capitals. */
+@layer kp.register {
+    [data-theme='formal'] .kp-timer[data-kp-timer-state='done'] {
+        --kp-timer-done-ground: var(--card);
+        --kp-timer-done-ink: var(--card-foreground);
+        --kp-timer-done-edge: var(--border);
+        border-inline-start: 3px solid var(--destructive);
+    }
+    [data-theme='formal'] .kp-timer[data-kp-timer-state='done'] .kp-timer__state {
+        color: var(--destructive);
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+    }
+}
+/* ── end kitchen timers ── */

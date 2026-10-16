@@ -410,6 +410,20 @@
  * @property {(label: string) => string} checklistDone  Said when an item is ticked [kpadopt4]
  * @property {(label: string) => string} checklistDoneMoved  Said when an item is ticked with the keyboard and sank [kpadopt4]
  * @property {(label: string) => string} checklistOpen  Said when an item is unticked [kpadopt4]
+ * @property {string} timerRunning  A kitchen timer's state word while it runs (js/timer.js) [kpadopt4]
+ * @property {string} timerPaused  Its state word while paused [kpadopt4]
+ * @property {string} timerDoneWord  Its state word once it has ended [kpadopt4]
+ * @property {(name: string) => string} timerDone  The large line on an ended timer, its notification and its alert, "Rice is done" [kpadopt4]
+ * @property {string} timerPause  The button that pauses a timer [kpadopt4]
+ * @property {string} timerResume  The button that resumes it [kpadopt4]
+ * @property {string} timerStopRing  The button on an ended timer that stops it and takes it away [kpadopt4]
+ * @property {string} timerAddMinute  The button that adds a minute, "+1 min" [kpadopt4]
+ * @property {(name: string) => string} timerAddMinuteTo  That button's accessible name [kpadopt4]
+ * @property {(name: string) => string} timerRemove  The remove button's accessible name and tooltip [kpadopt4]
+ * @property {string} timerEmpty  A list with no timer [kpadopt4]
+ * @property {(name: string) => string} timerLastMinute  Said once when a timer has a minute left [kpadopt4]
+ * @property {(name: string, clock: string) => string} timerStarted  Said when a timer starts [kpadopt4]
+ * @property {(name: string) => string} timerAlready  Said when a starter is pressed while its timer runs [kpadopt4]
  */
 
 /**
@@ -925,6 +939,21 @@ export const DEFAULT_STRINGS = Object.freeze({
     checklistDone: (label) => `${label} done`,
     checklistDoneMoved: (label) => `${label} done, moved to the end. Next item.`,
     checklistOpen: (label) => `${label} back on the list`,
+    // Kitchen timers (js/timer.js) [kpadopt4].
+    timerRunning: 'Running',
+    timerPaused: 'Paused',
+    timerDoneWord: 'Done',
+    timerDone: (name) => `${name} is done`,
+    timerPause: 'Pause',
+    timerResume: 'Resume',
+    timerStopRing: 'Stop',
+    timerAddMinute: '+1 min',
+    timerAddMinuteTo: (name) => `One more minute for ${name}`,
+    timerRemove: (name) => `Remove ${name}`,
+    timerEmpty: 'No timers running.',
+    timerLastMinute: (name) => `${name}: one minute left`,
+    timerStarted: (name, clock) => `${name} started, ${clock}`,
+    timerAlready: (name) => `${name} is already running`,
 });
 
 // STRINGS_NL was removed in 4.0.0 [D3]. Kenny decided that on

@@ -44,6 +44,87 @@
 
             <section
                 class="k4-sec"
+                id="timers"
+                data-review-item="timers"
+                data-review-topic="timers"
+                data-review-topic-title="Kitchen timers"
+                data-review-components="timer"
+                data-review-title="3 · Kitchen timers"
+                aria-labelledby="h-timers"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-timers">3 · Kitchen timers</h2>
+                    <p>
+                        <code>.kp-timers</code> with <code>js/timer.js</code>: named countdowns that keep running side by side. Not the alarm (a
+                        notice that counts down until it closes): a clock you start and that goes on until it is done.
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Three cards of one height: <b>Rice</b> running, <b>Preheat the oven</b> paused (its time grey, its word “Paused”), and a
+                            timer with a long name, cut with an ellipsis (the full name is its tooltip). The time is large, in Fraunces, in figures of
+                            one width; the bar under it is formal’s own progress bar, filling as time passes. Nothing in a card moves while it ticks.
+                        </li>
+                        <li>
+                            <b>Pause</b> and <b>Resume</b> swap in the same button, which keeps its size. <b>+1 min</b> adds a minute. <b>✕</b> takes
+                            the card away the theme’s way; the focus goes to the next card.
+                        </li>
+                        <li>
+                            In the recipe line, press <b>10 minutes</b>: a new card “Simmer the sauce” arrives the theme’s way. Press it again: no
+                            second timer; the focus goes to the one that runs.
+                        </li>
+                        <li>
+                            <b>Start a 5-second timer</b>: after 5 s the card becomes formal’s red-ink entry (a red rule along its start, paper
+                            ground) with “Soft-boiled egg is done” large in the time’s place and a primary <b>Stop</b>; a soft two-note chime plays
+                            every 4 s for a minute. Stop ends the chime and takes the card away; +1 min starts it again for a minute.
+                        </li>
+                        <li>
+                            <b>Allow notifications</b> asks the browser once; allowed, an ended timer also shows a system notification. Switch to
+                            another tab during a timer and come back: the time is right at once. The empty list says so in a dashed line.
+                        </li>
+                        <li>A screen reader hears a start, “one minute left” and the end, never every second. The log shows every event.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Start the 5-second timer and watch it end; press the starter in the recipe line twice.</p>
+                </div>
+                <p class="k4-recipe">
+                    Bring the tomatoes to a boil, turn the heat down and let the sauce simmer for
+                    <button
+                        type="button"
+                        class="kp-button kp-button--sm"
+                        data-kp-timer-start="10m"
+                        data-kp-timer-name="Simmer the sauce"
+                        data-kp-timer-for="k4-timers"
+                    >
+                        10 minutes</button
+                    >, stirring now and then.
+                </p>
+                <div class="kp-timers" id="k4-timers" data-kp-timers aria-label="Kitchen timers"></div>
+                <div class="k4-actions">
+                    <button type="button" class="kp-button kp-button--sm" id="k4-t-five">Start a 5-second timer</button>
+                    <button type="button" class="kp-button kp-button--sm" id="k4-t-allow">Allow notifications</button>
+                    <button type="button" class="kp-button kp-button--sm" id="k4-t-state">Write the saved state to the log</button>
+                </div>
+                <div class="k4-grid">
+                    <div>
+                        <p class="k4-label">An empty list</p>
+                        <div class="kp-timers" data-kp-timers aria-label="No timers"></div>
+                    </div>
+                    <div>
+                        <p class="k4-label">One timer in a 360 px frame</p>
+                        <div class="k4-frame k4-frame--phone">
+                            <div class="kp-timers" id="k4-timers-phone" data-kp-timers data-kp-timers-sound="off" aria-label="Timers, phone"></div>
+                        </div>
+                    </div>
+                </div>
+                <pre class="k4-log" id="k4-t-log" aria-label="Events"></pre>
+            </section>
+
+            <section
+                class="k4-sec"
                 id="quantity"
                 data-review-item="quantity"
                 data-review-topic="inputs"

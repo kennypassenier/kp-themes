@@ -13509,6 +13509,146 @@
             --kp-checklist-row: 3rem;
         }
     }
+
+    /* --- Kitchen timers [kpadopt4] ----------------------------------------
+ *
+ * Named countdowns side by side, each a card of one height: its name and a
+ * state word, the time left large in figures of one width (the theme's
+ * display face), the theme's own progress bar, and three buttons a
+ * fingertip high. Ended, a card turns to the done plate (the warning pair by
+ * default, `--kp-timer-done-ground` / `-ink`) with the name large in the
+ * time's place and one primary Stop. Nothing in a card changes size as the
+ * clock runs or the state changes: the time box is one line of its size,
+ * the state word holds the width of its longest word, the first button the
+ * room of its column. */
+    .kp-timers {
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-timers__list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(var(--kp-timer-min, 16rem), 100%), 1fr));
+        gap: var(--kp-space-md, 0.75rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-timers__empty {
+        margin: 0;
+        padding: var(--kp-space-lg, 1.5rem);
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        color: var(--muted-foreground);
+        text-align: center;
+    }
+
+    .kp-timer {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        padding: var(--kp-space-md, 0.75rem) var(--kp-space-md, 0.75rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    .kp-timer__head {
+        display: flex;
+        align-items: baseline;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-timer__name {
+        flex: 1 1 auto;
+        min-inline-size: 0;
+        overflow: hidden;
+        font-weight: 600;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    /* The state word holds the width of its longest word (`data-kp-words`). */
+    .kp-timer__state {
+        display: inline-flex;
+        flex: none;
+        flex-direction: column;
+        align-items: flex-end;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-timer__state::after {
+        content: attr(data-kp-words);
+        block-size: 0;
+        overflow: hidden;
+        visibility: hidden;
+        white-space: pre;
+    }
+
+    .kp-timer__time {
+        overflow: hidden;
+        block-size: 1.15em;
+        font-family: var(--kp-timer-font, var(--theme-font-display, inherit));
+        font-size: var(--kp-timer-size, 2.75rem);
+        font-weight: 600;
+        line-height: 1.15;
+        font-variant-numeric: tabular-nums lining-nums;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .kp-timer[data-kp-timer-state='paused'] .kp-timer__time {
+        color: var(--muted-foreground);
+    }
+
+    .kp-timer__actions {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-timer__actions > .kp-button {
+        min-block-size: var(--kp-timer-target, 2.75rem);
+    }
+
+    .kp-timer__remove.kp-button {
+        inline-size: var(--kp-timer-target, 2.75rem);
+        padding: 0;
+    }
+
+    .kp-timer__remove-glyph::before {
+        content: var(--kp-glyph-close, '✕');
+    }
+
+    .kp-timer[data-kp-timer-state='done'] {
+        border-color: var(--kp-timer-done-edge, var(--warning));
+        background: var(--kp-timer-done-ground, var(--warning));
+        color: var(--kp-timer-done-ink, var(--warning-foreground));
+    }
+
+    .kp-timer[data-kp-timer-state='done'] .kp-timer__state {
+        color: inherit;
+        font-weight: 600;
+    }
+
+    /* Ended: the name, large, in the time's own box. */
+    .kp-timer[data-kp-timer-state='done'] .kp-timer__time {
+        font-size: calc(var(--kp-timer-size, 2.75rem) * 0.62);
+        block-size: calc(1.15em / 0.62);
+        line-height: calc(1.15 / 0.62);
+    }
+
+    @media (pointer: coarse) {
+        .kp-timers {
+            --kp-timer-target: 3rem;
+        }
+    }
 }
 
 /* The tour's dim is the target's box-shadow, and a register that gives the part a shadow of its own (a card's rim) wins over
