@@ -3321,7 +3321,9 @@
     [data-theme='grotesk'] .kp-action__title:dir(rtl)::after {
         transform-origin: right center;
     }
-    [data-theme='grotesk'] .kp-action:is(:hover, :focus-visible):not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) .kp-action__title::after {
+    [data-theme='grotesk']
+        .kp-action:is(:hover, :focus-visible):not(:is(:disabled, [aria-disabled='true'], [aria-busy='true']))
+        .kp-action__title::after {
         scale: 1 1;
     }
     [data-theme='grotesk'] .kp-action:active:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) .kp-action__title {
@@ -3602,5 +3604,69 @@
        drops under the first and out of the timeline onto the legend. */
     [data-theme='grotesk'] .kp-gantt__ghost .kp-gantt__run.kp-skeleton {
         position: absolute;
+    }
+}
+
+/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──
+   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and
+   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).
+   Grotesk's own (themes/grotesk/CHARACTER.md): the separator is the divider's razor tear stood upright,
+   two black rules with the red hairline exactly between them; lying down across the phone's list it is the tear itself.
+   A day on the axis takes the red baseline under the pointer; pressed it is inverted, the black block with the date in
+   the paper's white. A series' finished run has a hard leading rule in its colour; the upcoming list's day rule is a
+   2 px black line; the facet pattern is a plain square. */
+@layer kp.signature {
+    [data-theme='grotesk'] .kp-nav__sep {
+        inline-size: 7px;
+        border-inline-start: 0;
+        background: linear-gradient(
+            90deg,
+            var(--foreground) 0 2px,
+            transparent 2px 3px,
+            var(--primary) 3px 4px,
+            transparent 4px 5px,
+            var(--foreground) 5px 7px
+        );
+    }
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='grotesk'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            inline-size: auto;
+            block-size: 7px;
+            border-block-start: 0;
+            background: linear-gradient(
+                to bottom,
+                var(--foreground) 0 2px,
+                transparent 2px 3px,
+                var(--primary) 3px 4px,
+                transparent 4px 5px,
+                var(--foreground) 5px 7px
+            );
+        }
+    }
+
+    [data-theme='grotesk'] .kp-gantt__tick:is(button) {
+        border-radius: 0;
+        text-decoration: none;
+    }
+    [data-theme='grotesk'] .kp-gantt__tick:is(button):hover {
+        color: var(--foreground);
+        box-shadow: inset 0 -3px 0 var(--primary);
+    }
+    [data-theme='grotesk'] .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: var(--foreground);
+        color: var(--background);
+        box-shadow: none;
+    }
+    [data-theme='grotesk'] .kp-gantt__run[data-kp-state='ok'][data-kp-series] {
+        box-shadow: inset 3px 0 0 var(--kp-gantt-series);
+    }
+    [data-theme='grotesk'] .kp-week__next {
+        border-block-end-width: 2px;
+    }
+    [data-theme='grotesk'] .kp-week__next:not(:has(+ .kp-week__next:not([data-kp-day-start]))) {
+        border-block-end-color: var(--foreground);
+    }
+    [data-theme='grotesk'] .kp-facet__swatch[data-kp-facet-pattern] {
+        border-radius: 0;
     }
 }
