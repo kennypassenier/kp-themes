@@ -180,6 +180,10 @@
             "types": "./js/facets.d.ts",
             "default": "./js/facets.js"
         },
+        "./js/wheel": {
+            "types": "./js/wheel.d.ts",
+            "default": "./js/wheel.js"
+        },
         "./js/focus-steps": {
             "types": "./js/focus-steps.d.ts",
             "default": "./js/focus-steps.js"

@@ -17210,6 +17210,208 @@
     .kp-focus-steps__next[data-kp-focus-steps-last] .kp-focus-steps__glyph--next::before {
         content: var(--kp-glyph-check, '✓');
     }
+
+    /* --- A wheel that picks [kpadopt4] ------------------------------------
+ *
+ * A round wheel of soft segments in the theme's five chart colours, a still
+ * pointer at the top, the theme's primary button in the middle, and under it
+ * the outcome in two reserved lines, so nothing below moves when it is said.
+ * The wheel is square and keeps its size in every state (`--kp-wheel-size`);
+ * it turns on `--kp-wheel-ease` (js/wheel.js), a long even settle, never an
+ * overshoot. The chosen segment is filled deeper and the others step back. */
+    .kp-wheel {
+        display: grid;
+        justify-items: center;
+        gap: var(--kp-space-md, 0.75rem);
+        box-sizing: border-box;
+        inline-size: var(--kp-wheel-size, min(24rem, 100%));
+        max-inline-size: 100%;
+    }
+
+    .kp-wheel__stage {
+        position: relative;
+        inline-size: 100%;
+        aspect-ratio: 1;
+    }
+
+    /* The disc turns as a square: round and out of the pointer's way, so its corners never cover what stands beside it. */
+    /* An opaque plate under the hub, so a dimmed Spin never shows the segments through it. */
+    .kp-wheel__stage::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        top: 50%;
+        left: 50%;
+        box-sizing: border-box;
+        inline-size: var(--kp-wheel-hub, 30%);
+        min-inline-size: 4.5rem;
+        aspect-ratio: 1;
+        translate: -50% -50%;
+        border-radius: 50%;
+        background: var(--card);
+        box-shadow: 0 0 0 var(--kp-wheel-hub-ring, 4px) var(--card);
+    }
+
+    .kp-wheel__disc {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .kp-wheel__face {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        overflow: visible;
+    }
+
+    .kp-wheel__segment {
+        --kp-wheel-tone: var(--chart-1);
+        fill: color-mix(in oklab, var(--kp-wheel-tone) var(--kp-wheel-tint, 30%), var(--card));
+        stroke: var(--card);
+        stroke-width: 1.2;
+    }
+
+    .kp-wheel__segment[data-tone='2'] {
+        --kp-wheel-tone: var(--chart-2);
+    }
+
+    .kp-wheel__segment[data-tone='3'] {
+        --kp-wheel-tone: var(--chart-3);
+    }
+
+    .kp-wheel__segment[data-tone='4'] {
+        --kp-wheel-tone: var(--chart-4);
+    }
+
+    .kp-wheel__segment[data-tone='5'] {
+        --kp-wheel-tone: var(--chart-5);
+    }
+
+    .kp-wheel__segment[data-kp-wheel-chosen] {
+        fill: color-mix(in oklab, var(--kp-wheel-tone) var(--kp-wheel-tint-chosen, 62%), var(--card));
+    }
+
+    .kp-wheel__segment[data-kp-wheel-other] {
+        opacity: var(--kp-wheel-other, 0.45);
+    }
+
+    .kp-wheel__label {
+        fill: var(--foreground);
+        font-family: inherit;
+        font-weight: 500;
+        pointer-events: none;
+    }
+
+    .kp-wheel__label[data-kp-wheel-chosen] {
+        font-weight: 700;
+    }
+
+    .kp-wheel__rim {
+        fill: none;
+        stroke: var(--border-strong);
+        stroke-width: 1.5;
+    }
+
+    .kp-wheel__ghost {
+        fill: var(--muted);
+        stroke: var(--border-strong);
+        stroke-width: 1;
+        stroke-dasharray: 4 3;
+    }
+
+    .kp-wheel__pointer {
+        position: absolute;
+        inset-block-start: -1.5%;
+        left: 50%;
+        inline-size: 9%;
+        translate: -50% 0;
+        fill: var(--kp-wheel-pointer, var(--primary));
+        stroke: var(--card);
+        stroke-width: 1.5;
+        stroke-linejoin: round;
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    .kp-wheel__spin.kp-button {
+        position: absolute;
+        z-index: 1;
+        top: 50%;
+        left: 50%;
+        box-sizing: border-box;
+        inline-size: var(--kp-wheel-hub, 30%);
+        min-inline-size: 4.5rem;
+        aspect-ratio: 1;
+        padding: 0;
+        translate: -50% -50%;
+        /* Round in every theme: a register's button corner (kp.register) would square the hub off and lay its corners
+           over the labels. The register keeps every other part of its button. */
+        border-radius: 50% !important;
+        box-shadow: 0 0 0 var(--kp-wheel-hub-ring, 4px) var(--card);
+        font-size: var(--kp-text-md, 1rem);
+        font-weight: 700;
+    }
+
+    .kp-wheel__spin[aria-disabled='true'] {
+        opacity: 0.55;
+        cursor: not-allowed;
+    }
+
+    /* The outcome: a caption and the name in two reserved lines. */
+    .kp-wheel__result {
+        display: grid;
+        justify-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        inline-size: 100%;
+        text-align: center;
+    }
+
+    .kp-wheel__caption {
+        max-inline-size: 100%;
+        margin: 0;
+        min-block-size: 1lh;
+        overflow: hidden;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    /* Two lines of the outcome's size, always: the name, or a sentence (empty, failed) in the reading size. */
+    .kp-wheel__outcome {
+        display: -webkit-box;
+        box-sizing: border-box;
+        block-size: calc(2.5 * var(--kp-wheel-outcome, 1.5rem));
+        margin: 0;
+        overflow: hidden;
+        font-family: var(--kp-wheel-font, var(--theme-font-display, inherit));
+        font-size: var(--kp-wheel-outcome, 1.5rem);
+        font-weight: 600;
+        line-height: 1.25;
+        overflow-wrap: anywhere;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+
+    .kp-wheel__outcome[data-kp-wheel-note] {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-inline: var(--kp-space-sm, 0.5rem);
+        border-radius: var(--radius, 0.5rem);
+        color: var(--muted-foreground);
+        font-family: inherit;
+        font-size: var(--kp-text-md, 1rem);
+        font-weight: 400;
+    }
+
+    .kp-wheel__result[data-kp-wheel-failed] .kp-wheel__outcome {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
 }
 
 /* The tour's dim is the target's box-shadow, and a register that gives the part a shadow of its own (a card's rim) wins over
@@ -84981,6 +85183,18 @@
     }
 }
 /* ── end kitchen timers ── */
+
+/* ── wheel [kpadopt4] ──
+   The anchor: the outcome is the account closed, a navy rule under the name
+   with the thinner second rule under it (the double rule). */
+@layer kp.register {
+    [data-theme='formal'] .kp-wheel__outcome:not(:empty, [data-kp-wheel-note]) {
+        text-decoration: underline double var(--primary);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.3em;
+    }
+}
+/* ── end wheel ── */
 
 /* Pointing and pressing run on one number each [Kenny, 2026-10-07]: 0 at
    rest, 1 at the end of the unit. Registered so the browser can transition

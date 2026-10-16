@@ -22,6 +22,7 @@
         "kp-timer",
         "kp-timers",
         "kp-toolbar",
-        "kp-week"
+        "kp-week",
+        "kp-wheel"
     ]
 }

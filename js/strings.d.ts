@@ -1227,6 +1227,42 @@ export type Strings = {
      * Steps that could not be read, when the page gives no message [kpadopt4]
      */
     focusFailed: string;
+    /**
+     * The button in the middle of a wheel that picks (js/wheel.js) [kpadopt4]
+     */
+    wheelSpin: string;
+    /**
+     * The same button once the wheel has chosen [kpadopt4]
+     */
+    wheelSpinAgain: string;
+    /**
+     * The line under a wheel that has not spun yet [kpadopt4]
+     */
+    wheelIdle: string;
+    /**
+     * The line over the outcome, "The wheel chose" [kpadopt4]
+     */
+    wheelChose: string;
+    /**
+     * The line while it turns [kpadopt4]
+     */
+    wheelSpinning: string;
+    /**
+     * The line over the outcome when there was only one choice [kpadopt4]
+     */
+    wheelOnlyOne: string;
+    /**
+     * A wheel with no choices, when the page gives no sentence [kpadopt4]
+     */
+    wheelEmpty: string;
+    /**
+     * The words under its spinner while the choices load [kpadopt4]
+     */
+    wheelLoading: string;
+    /**
+     * Choices that could not be read, when the page gives no message [kpadopt4]
+     */
+    wheelFailed: string;
 };
 /**
  * @typedef {object} Strings
@@ -1630,6 +1666,15 @@ export type Strings = {
  * @property {string} focusEmpty  A view with no steps [kpadopt4]
  * @property {string} focusLoading  The words under its spinner while the steps load [kpadopt4]
  * @property {string} focusFailed  Steps that could not be read, when the page gives no message [kpadopt4]
+ * @property {string} wheelSpin  The button in the middle of a wheel that picks (js/wheel.js) [kpadopt4]
+ * @property {string} wheelSpinAgain  The same button once the wheel has chosen [kpadopt4]
+ * @property {string} wheelIdle  The line under a wheel that has not spun yet [kpadopt4]
+ * @property {string} wheelChose  The line over the outcome, "The wheel chose" [kpadopt4]
+ * @property {string} wheelSpinning  The line while it turns [kpadopt4]
+ * @property {string} wheelOnlyOne  The line over the outcome when there was only one choice [kpadopt4]
+ * @property {string} wheelEmpty  A wheel with no choices, when the page gives no sentence [kpadopt4]
+ * @property {string} wheelLoading  The words under its spinner while the choices load [kpadopt4]
+ * @property {string} wheelFailed  Choices that could not be read, when the page gives no message [kpadopt4]
  */
 /**
  * The defaults. English, by Kenny's decision of 2026-09-04 — the package

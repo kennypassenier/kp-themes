@@ -195,6 +195,20 @@ export {
 /** @typedef {import('./js/statusrow.js').StatusRow} StatusRow */
 export { FACETS, FACET_EVENT, attachFacets, getFacetValues, setFacetCounts, setFacetItems, setFacetValues } from './js/facets.js';
 /** @typedef {import('./js/facets.js').FacetItem} FacetItem */
+// A wheel that picks for you, by weight [kpadopt4].
+export {
+    WHEEL,
+    WHEEL_RESULT_EVENT,
+    WHEEL_SPIN_EVENT,
+    attachWheels,
+    getWheelResult,
+    pickWeighted,
+    setWheelItems,
+    setWheelState,
+    spinWheel,
+    wheelAngles,
+} from './js/wheel.js';
+/** @typedef {import('./js/wheel.js').WheelItem} WheelItem */
 // One step at a time, with the screen kept on: cook mode [kpadopt4].
 export {
     FOCUS_STEPS,

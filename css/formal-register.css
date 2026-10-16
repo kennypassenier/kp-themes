@@ -4267,3 +4267,15 @@
     }
 }
 /* ── end kitchen timers ── */
+
+/* ── wheel [kpadopt4] ──
+   The anchor: the outcome is the account closed, a navy rule under the name
+   with the thinner second rule under it (the double rule). */
+@layer kp.register {
+    [data-theme='formal'] .kp-wheel__outcome:not(:empty, [data-kp-wheel-note]) {
+        text-decoration: underline double var(--primary);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.3em;
+    }
+}
+/* ── end wheel ── */

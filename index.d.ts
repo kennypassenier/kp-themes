@@ -70,6 +70,9 @@ export type StatusRow = import('./js/statusrow.js').StatusRow;
 export { FACETS, FACET_EVENT, attachFacets, getFacetValues, setFacetCounts, setFacetItems, setFacetValues } from './js/facets.js';
 export type FacetItem = import('./js/facets.js').FacetItem;
 /** @typedef {import('./js/facets.js').FacetItem} FacetItem */
+export { WHEEL, WHEEL_RESULT_EVENT, WHEEL_SPIN_EVENT, attachWheels, getWheelResult, pickWeighted, setWheelItems, setWheelState, spinWheel, wheelAngles, } from './js/wheel.js';
+export type WheelItem = import('./js/wheel.js').WheelItem;
+/** @typedef {import('./js/wheel.js').WheelItem} WheelItem */
 export { FOCUS_STEPS, FOCUS_STEPS_DONE_EVENT, FOCUS_STEPS_EVENT, FOCUS_STEPS_WAKE_EVENT, SWIPE_DISTANCE, attachFocusSteps, getStepIndex, goToStep, setFocusSteps, setFocusStepsState, } from './js/focus-steps.js';
 export type FocusStep = import('./js/focus-steps.js').FocusStep;
 export type FocusIngredient = import('./js/focus-steps.js').FocusIngredient;

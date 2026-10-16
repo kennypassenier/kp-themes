@@ -135,3 +135,7 @@
     margin: 0;
     line-height: 2;
 }
+
+#k4-wheel-filter {
+    margin-block-end: var(--kp-space-md, 0.75rem);
+}

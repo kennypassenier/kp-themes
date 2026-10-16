@@ -3113,6 +3113,36 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
         ],
     },
     {
+        id: 'wheel',
+        title: 'Wheel',
+        group: 'Data',
+        classes: ['kp-wheel'],
+        exports: [],
+        intro: 'A wheel that picks for you: a segment per choice, sized by its weight, a pointer at the top and Spin in the middle. `data-kp-wheel` on the root; js/wheel.js (`setWheelItems`, `spinWheel`, `setWheelState`, `getWheelResult`, `pickWeighted`, `attachWheels`) draws the outcome by the weights first and then turns the wheel to it, never lands on the same choice twice in a row, takes the short way for a reader who asked for less motion, and says the outcome once. `kp-wheel-spin` and `kp-wheel-result` carry the item.',
+        whenToUse: 'To take a small choice off someone’s hands (what to eat, who goes first) where any outcome is acceptable. For a choice a person makes use a list or a segmented control.',
+        examples: [
+            {
+                title: 'Tonight’s dinner',
+                why: 'The module draws the wheel from the items it is given.',
+                markup: `
+<div class="kp-wheel" data-kp-wheel aria-label="Tonight’s dinner"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-wheel-duration', what: 'How long a spin takes, in ms (3600).' },
+            { name: 'data-kp-wheel-turns', what: 'Whole turns before it settles (4).' },
+            { name: 'data-kp-wheel-reduced-ms', what: 'The short turn under reduced motion, in ms (600; 0 places it at once).' },
+            { name: 'data-kp-wheel-repeat="true"', what: 'Spin again may land on the same choice.' },
+            { name: 'data-kp-wheel-empty', what: 'The sentence when nothing fits.' },
+        ],
+        accessibility: [
+            'Built in — Spin is a real button (Space, Enter); the outcome is a status region said once, after the turn.',
+            'Built in — reduced motion takes the short way, or none.',
+            'Yours — give the wheel a name, and offer the outcome as a choice the person can refuse.',
+        ],
+    },
+    {
         id: 'steplist',
         title: 'Step list',
         group: 'Feedback',

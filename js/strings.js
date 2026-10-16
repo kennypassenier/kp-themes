@@ -438,6 +438,15 @@
  * @property {string} focusEmpty  A view with no steps [kpadopt4]
  * @property {string} focusLoading  The words under its spinner while the steps load [kpadopt4]
  * @property {string} focusFailed  Steps that could not be read, when the page gives no message [kpadopt4]
+ * @property {string} wheelSpin  The button in the middle of a wheel that picks (js/wheel.js) [kpadopt4]
+ * @property {string} wheelSpinAgain  The same button once the wheel has chosen [kpadopt4]
+ * @property {string} wheelIdle  The line under a wheel that has not spun yet [kpadopt4]
+ * @property {string} wheelChose  The line over the outcome, "The wheel chose" [kpadopt4]
+ * @property {string} wheelSpinning  The line while it turns [kpadopt4]
+ * @property {string} wheelOnlyOne  The line over the outcome when there was only one choice [kpadopt4]
+ * @property {string} wheelEmpty  A wheel with no choices, when the page gives no sentence [kpadopt4]
+ * @property {string} wheelLoading  The words under its spinner while the choices load [kpadopt4]
+ * @property {string} wheelFailed  Choices that could not be read, when the page gives no message [kpadopt4]
  */
 
 /**
@@ -983,6 +992,16 @@ export const DEFAULT_STRINGS = Object.freeze({
     focusEmpty: 'This recipe has no steps yet.',
     focusLoading: 'Loading the steps…',
     focusFailed: 'The steps could not be read.',
+    // A wheel that picks (js/wheel.js) [kpadopt4].
+    wheelSpin: 'Spin',
+    wheelSpinAgain: 'Again',
+    wheelIdle: 'Press Spin to let the wheel choose.',
+    wheelChose: 'The wheel chose',
+    wheelSpinning: 'Turning…',
+    wheelOnlyOne: 'Only one fits: nothing to spin',
+    wheelEmpty: 'Nothing fits these filters.',
+    wheelLoading: 'Loading the choices…',
+    wheelFailed: 'The choices could not be read.',
 });
 
 // STRINGS_NL was removed in 4.0.0 [D3]. Kenny decided that on

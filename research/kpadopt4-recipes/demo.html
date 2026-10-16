@@ -44,6 +44,91 @@
 
             <section
                 class="k4-sec"
+                id="wheel"
+                data-review-item="wheel"
+                data-review-topic="wheel"
+                data-review-topic-title="A wheel that picks"
+                data-review-components="wheel"
+                data-review-title="1 · A wheel that picks"
+                aria-labelledby="h-wheel"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-wheel">1 · A wheel that picks</h2>
+                    <p>
+                        <code>.kp-wheel</code> with <code>js/wheel.js</code>: it takes the choosing away. The outcome is drawn by the weights first
+                        and the wheel turns to it, so the motion is honest; the person says yes or spins again.
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            A round wheel of soft segments in formal’s chart colours, each a dish; “Lentil soup” (not eaten for weeks) has the largest
+                            segment, “Pasta pesto” (yesterday) the smallest. Labels read outward on the right and inward on the left, never upside
+                            down; the long name is cut with an ellipsis on its segment. A navy pointer at the top, a round navy <b>Spin</b> in the
+                            middle, and under the wheel “Press Spin to let the wheel choose.”
+                        </li>
+                        <li>
+                            Press <b>Spin</b> (or Tab to it and press Space): the line says “Turning…”, the wheel turns four times and slows evenly to
+                            a stop with no bounce, about 3.6 s. The chosen segment is filled deeper, the others step back, and under the wheel “The
+                            wheel chose” and the full name in Fraunces over formal’s double rule. The button now says <b>Again</b>; the next spin
+                            never lands on the same dish.
+                        </li>
+                        <li>
+                            The filter chips change the dishes: the segments grow and shrink to their new size in formal’s time; the wheel and the
+                            page do not move. With <b>Only one</b> the outcome is there at once and Spin is dimmed (“Only one fits: nothing to spin”).
+                            <b>Nothing fits</b> shows a dashed grey disc and the sentence where the name goes.
+                        </li>
+                        <li>
+                            <b>Load again</b> lays formal’s busy card over the wheel (2.5 s, the spinner turning); <b>Fail</b> puts the message on a
+                            red plate where the outcome goes. Under reduced motion a spin is a short turn of 0.6 s with no whole turns.
+                        </li>
+                        <li>The 360 px frame is the same wheel at a phone’s width. The log shows each <code>kp-wheel-spin</code> and result.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Spin three times; then press Vegetarian and watch the segments resize; then Only one.</p>
+                </div>
+                <div class="k4-grid">
+                    <div>
+                        <div
+                            class="kp-segmented kp-segmented--chips"
+                            id="k4-wheel-filter"
+                            data-kp-segmented="single"
+                            role="radiogroup"
+                            aria-label="Which dishes"
+                        >
+                            <button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">Every dish</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="veg" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Vegetarian</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="one" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Only one</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="none" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Nothing fits</span>
+                            </button>
+                        </div>
+                        <div class="kp-wheel" id="k4-wheel" data-kp-wheel aria-label="Tonight’s dinner"></div>
+                        <div class="k4-actions">
+                            <button type="button" class="kp-button kp-button--sm" id="k4-wheel-load">Load again</button>
+                            <button type="button" class="kp-button kp-button--sm" id="k4-wheel-fail">Fail</button>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="k4-label">A phone (360 px)</p>
+                        <div class="k4-frame k4-frame--phone">
+                            <div class="kp-wheel" id="k4-wheel-phone" data-kp-wheel aria-label="Tonight’s dinner, phone"></div>
+                        </div>
+                    </div>
+                </div>
+                <pre class="k4-log" id="k4-wheel-log" aria-label="Events"></pre>
+            </section>
+
+            <section
+                class="k4-sec"
                 id="cook"
                 data-review-item="cook"
                 data-review-topic="cook"
