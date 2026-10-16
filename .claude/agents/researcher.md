@@ -57,6 +57,9 @@ with `openBusyCard()` from `js/busy-card.js`, keep the frame steady under it and
 `gates/check-busy-card.mjs` refuses a module in `js/` that takes a loading state and is not classified there; check the
 loading state in Firefox in the review dialog before you hand a demo over.
 
+A failed, empty or loading state fills the component's full normal footprint, the size it has with its data, with a normal-size action
+(Retry) where one applies [Kenny, 2026-10-16: "voortaan de hele grootte van de component gebruiken"]; measure each state's height in Firefox.
+
 Measure before you claim: a byte count comes from `wc -c`, a class name
 from grep. Finish with the absolute paths and a five-line summary.
 

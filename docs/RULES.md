@@ -539,3 +539,7 @@ it, matched against the markup as written. So a change to `js/sidenav.js`
 asks the five blocks that hold a side navigation, not the eighteen that hold
 some navigation. What the loader does not attach by selector stays in the
 component's own digest.
+
+## Kenny's answer of 2026-10-16 — a state fills the component's full size
+
+Failed, empty ("nothing due") and loading states take the component's full normal footprint, the size it has with its data, with a normal-size action (Retry) where one applies, for every component from now on (Kenny, kpadopt4 round 1: "bij failed en nothing due zou ik graag hebben dat je voortaan probeert om de hele grootte van de component te gebruiken"); discipline-enforced, checked in Firefox per state.
