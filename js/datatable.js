@@ -83,6 +83,10 @@
 //   data-kp-server           the rows come from the consumer's `load`, stale answers dropped
 //   th data-kp-edit          a value is edited in its cell; the app hears it and may refuse it
 //   td data-kp-sort-value    the value a cell sorts and range/date-filters by in place of the text it shows
+//   data-kp-sort-external    the page sorts [kpadopt4]: a header press draws the arrow, aria-sort, the key
+//                            numbers, the summary and Reset, remembers the sort and fires kp-datatable-sort,
+//                            and the rows stay in the order the page renders them (it reorders, then calls
+//                            refresh()); th aria-disabled="true" is a column that cannot be sorted now
 //   td data-kp-filter-value  the word a choice filter lists and matches a cell by in place of the text it shows [kpadopt3]
 //                            (on a header the same attribute is the filter the page opens with)
 //   data-kp-grid             a roving focus grid: arrows, Home/End, Page Up/Down
@@ -704,6 +708,7 @@ let instances = 0;
  * @property {number} [debounceMs]  Default 0, and 300 for a server-backed table.
  * @property {'two' | 'three'} [sortCycle]
  * @property {boolean | 'click'} [multiSort]  Shift + click adds a sort key; 'click': a plain click adds it and Shift + click sorts on the column alone. Default false; per table `data-kp-sort-multi` (`="click"`).
+ * @property {boolean} [sortExternal]  The page sorts: the table draws and announces the sort, the rows keep the order the page renders [kpadopt4]. Default false; per table `data-kp-sort-external`.
  * @property {'panel' | 'add'} [filterMode]  How the header-declared filters are set: a panel of every filter, or "+ Add filter" with one pill per filter. Default panel; per table `data-kp-filter-mode`.
  * @property {string} [pagerClassName]
  * @property {(at: number, of: number) => string} [pageLabel]
@@ -748,6 +753,7 @@ export function attachDataTables(
         debounceMs,
         sortCycle = 'two',
         multiSort = false,
+        sortExternal = false,
         filterMode = 'panel',
         // The theme's own button, not the ghost: a ghost is text alone at rest
         // in eleven of the twenty-two themes, so the pager did not read as
@@ -822,6 +828,8 @@ export function attachDataTables(
         let size = Number.parseInt(wrap.dataset.kpPageSize ?? '', 10) || PAGE_SIZE;
         const locale = resolveLocale(wrap.dataset.kpLocale ?? localeOption, wrap);
         const serverMode = wrap.dataset.kpServer !== undefined;
+        // The page owns the order [kpadopt4]: everything about the sort but the moving of rows.
+        const externalSort = wrap.dataset.kpSortExternal === undefined ? sortExternal : wrap.dataset.kpSortExternal !== 'false';
         const debounce = Number.parseInt(wrap.dataset.kpDebounce ?? '', 10) || debounceMs || (serverMode ? SERVER_DEBOUNCE_MS : 0);
         const cycle = wrap.dataset.kpSortCycle ?? sortCycle;
         const cycleName = cycle === 'three' ? 'three' : 'two';
@@ -2629,6 +2637,12 @@ export function attachDataTables(
             return 0;
         };
         const applySorts = () => {
+            if (externalSort) {
+                // The order the page rendered, which it changes itself on kp-datatable-sort and then refresh().
+                const keep = new Set(shownRows);
+                shownRows = arrange(all.filter((row) => keep.has(row)));
+                return;
+            }
             if (sorts.length === 0) {
                 // Back to the rendered order, filtered.
                 const keep = new Set(shownRows);
@@ -2869,6 +2883,8 @@ export function attachDataTables(
         const toggleSort = (header, addKey) => {
             const at = headers.indexOf(header);
             if (at === -1) return;
+            // A column that cannot be sorted now (aria-disabled) keeps the sort as it is [kpadopt4].
+            if (header.getAttribute('aria-disabled') === 'true') return;
             const next = nextSorts(sorts, at, { add: multi && (addOnClick ? !addKey : addKey), cycle: cycleName });
             if (next.length === 0) commitSorts([], { column: at, direction: 'none' });
             else commitSorts(next);

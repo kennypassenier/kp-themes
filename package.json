@@ -204,6 +204,14 @@
             "types": "./js/tick.d.ts",
             "default": "./js/tick.js"
         },
+        "./js/art": {
+            "types": "./js/art.d.ts",
+            "default": "./js/art.js"
+        },
+        "./js/pipeline": {
+            "types": "./js/pipeline.d.ts",
+            "default": "./js/pipeline.js"
+        },
         "./js/heat": {
             "types": "./js/heat.d.ts",
             "default": "./js/heat.js"

@@ -5,8 +5,8 @@ export declare const STEP_ID_ATTRIBUTE = "data-kp-step-id";
 /** Fired on the list, bubbling, when a step changed state after attach: `{ item, id, state, previous }`. */
 export declare const STEPLIST_EVENT = "kp-steplist-step";
 /** The states a step can be in. */
-export declare const STEP_STATES: readonly ['pending', 'running', 'done', 'failed', 'skipped'];
-export type StepState = 'pending' | 'running' | 'done' | 'failed' | 'skipped';
+export declare const STEP_STATES: readonly ['pending', 'running', 'done', 'failed', 'skipped', 'current'];
+export type StepState = 'pending' | 'running' | 'done' | 'failed' | 'skipped' | 'current';
 export type StepRow = {
     /**
      * names the step for setStep(); defaults to its index
@@ -22,9 +22,13 @@ export type StepRow = {
      */
     state?: StepState;
     /**
-     * how long it took, as the page prints it
+     * how long it took, as the page prints it (in a journey: the date the step was reached)
      */
     time?: string;
+    /**
+     * the step's own colour, `--chart-1` … `--chart-5` (`data-kp-tone`) [kpadopt4]
+     */
+    tone?: 1 | 2 | 3 | 4 | 5;
 };
 /**
  * Build a step list from rows. The result still needs attachSteplists() (on

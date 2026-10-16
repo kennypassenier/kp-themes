@@ -119,6 +119,12 @@ export const PAGES = [
                 label: 'Rows, cards and choices: inbox rows, a card in four states, check lists, choice tiles',
                 about: 'Rows with a lead for an inbox, a message backlog, a file list and appointments (.kp-action-list--lead, setRowBusy, removeRow, j/k), a card in four data states (.kp-card[data-kp-state], js/card-state.js), status rows with warn and the fix written out, and choices as tiles (data-kp-layout="tiles"). Formal only.',
             },
+            // Kenny, 2026-10-16 (component survey, round 4: flows and records): seven needs of homelab, JobTracker, chassis, kyu and almanac, built in the package, formal only.
+            {
+                href: 'research/kpadopt4-flows/demo.html',
+                label: 'Flows and records: secret field, dialog sections, page-owned sort, pipeline, journey, contact timeline, drawings',
+                about: 'Seven parts the apps still draw themselves, now in the package, formal only: .kp-secret (reveal with a countdown, copy without showing), .kp-dialog sections with a confirmation that lists what still depends on a thing, data-kp-sort-external on the data table, .kp-pipeline, the .kp-steplist--journey stepper over a .kp-gantt--line, point events on the run timeline, and data-kp-art drawings for an empty state.',
+            },
         ],
     },
     {

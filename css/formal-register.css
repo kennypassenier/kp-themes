@@ -4248,3 +4248,352 @@
     }
 }
 /* ── end heat grid, matrix, bar cell ── */
+
+/* ── Flows and records [kpadopt4]: secret field ── */
+@layer kp.register {
+    /* Secret field — formal: a figure kept under a cover in the ledger. The box is paper with a hairline (G7), its value in the
+       ledger's own hand; shown, the value is ruled in from the start at the ruling pace (G1, G13: 400 ms, linear), and the
+       countdown is a navy rule ruled off from its end at an even pace (G1, G11), square-ended (G6). The countdown words are a
+       caption in small capitals (G18); a failure is the red-ink entry (G8). */
+    [data-theme='formal'] .kp-secret {
+        --kp-secret-drain: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-secret__value {
+        border-color: var(--border);
+        border-radius: calc(var(--radius) / 2);
+        background: var(--card);
+        font-family: var(--theme-font-body);
+    }
+
+    [data-theme='formal'] .kp-secret[data-kp-secret-state='disabled'] .kp-secret__value {
+        background: transparent;
+    }
+
+    [data-theme='formal'] .kp-secret__line {
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    [data-theme='formal'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        font-variant-caps: normal;
+        letter-spacing: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__text {
+            display: inline-block;
+            animation: kp-formal-secret-ruled 400ms linear;
+        }
+
+        [data-theme='formal'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__text:dir(rtl) {
+            animation-name: kp-formal-secret-ruled-rtl;
+        }
+    }
+
+    @keyframes kp-formal-secret-ruled {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-formal-secret-ruled-rtl {
+        from {
+            clip-path: inset(0 0 0 100%);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+}
+/* ── end flows and records ── */
+
+/* ── Flows and records [kpadopt4]: a dialog in sections, a confirmation that depends on something ── */
+@layer kp.register {
+    /* Formal: the dialog is a ledger page. Its sections are divided by the docket cut (G19: a hairline with a short navy tick
+       at its start), their headings are labels in small capitals (G18), and the danger section is the red-ink entry (G8: a
+       3 px red rule along its start edge, the words in the ledger's ink). What still uses a thing is a list on the muted
+       paper inside a hairline, square-cornered as a plate inside a rule (G6). */
+    [data-theme='formal'] .kp-dialog__section {
+        position: relative;
+    }
+
+    [data-theme='formal'] .kp-dialog__section:not(:first-child)::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -1px;
+        inset-inline-start: 0;
+        inline-size: 1.5rem;
+        block-size: 2px;
+        background: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-dialog__section--danger:not(:first-child)::before {
+        inset-inline-start: -3px;
+        background: var(--destructive);
+    }
+
+    [data-theme='formal'] :is(.kp-dialog__heading, .kp-confirm__dependents .kp-dialog__heading) {
+        font-family: var(--theme-font-body);
+        font-variant-caps: all-small-caps;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        color: var(--foreground);
+    }
+
+    [data-theme='formal'] .kp-confirm__dependents {
+        border-radius: 0;
+    }
+}
+/* ── end flows and records: dialog ── */
+
+/* ── Flows and records [kpadopt4]: moments on the timeline, the dated line ── */
+@layer kp.register {
+    /* Formal: a moment is a mark in the ledger's margin, and a stretch is a rule. A lane's waiting stretch is a 2 px rule with
+       square ends (G6), in red ink when it needs the eye (G5: a warning is red ink, never a tinted plate); the plot's band is
+       the faint ledger ground with the red-ink rule along its start edge (G8). The count beside a crowded mark is a square
+       plate inside a hairline (G6). Pointing at a mark rules a navy line under it (G15). */
+    [data-theme='formal'] :is(.kp-gantt__zone, .kp-gantt__band)[data-kp-tone='warning'] {
+        --kp-gantt-mark: var(--destructive);
+    }
+
+    [data-theme='formal'] .kp-gantt__zone,
+    [data-theme='formal'] .kp-gantt__band {
+        border-inline: 0;
+        border-inline-start: 3px solid var(--kp-gantt-mark);
+        background: hsl(from var(--kp-gantt-mark) h s l / 0.07);
+    }
+
+    [data-theme='formal'] .kp-gantt__zone[data-kp-lane-zone] {
+        block-size: 2px;
+        inset-block-start: calc(var(--kp-gantt-pad) + (var(--kp-gantt-row, 1.75rem) - 2px) / 2);
+        border: 0;
+        border-radius: 0;
+        background: var(--kp-gantt-mark);
+    }
+
+    [data-theme='formal'] .kp-gantt__count {
+        border-color: var(--border-strong);
+        border-radius: 0;
+        font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    [data-theme='formal'] .kp-gantt__point:hover::before {
+        box-shadow: none;
+    }
+
+    [data-theme='formal'] .kp-gantt__point:hover::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0.125rem;
+        inset-block-end: 0;
+        block-size: 2px;
+        background: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-gantt__sub {
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+    }
+}
+/* ── end flows and records: timeline ── */
+
+/* ── Flows and records [kpadopt4]: the journey ── */
+@layer kp.register {
+    /* Formal: a journey is a ruled path through the ledger. The steps stand on no plate and under no hairline (the step list's
+       ledger lines are for a list, not a path); the rule into a reached step is ruled in navy (G5: navy does every acting),
+       or in the step's own colour, square-ended (G6); a step to come is joined by the faint ledger line (G7). The step it
+       stands at is framed by the double rule, round (G7, G12: a hairline ring with a thinner ring inside it); a closed path
+       ends in red ink (G5, G8). Names are labels in small capitals, dates in tabular figures (G18). */
+    [data-theme='formal'] .kp-steplist--journey > .kp-steplist__item {
+        border: 0;
+        background: transparent;
+    }
+
+    [data-theme='formal'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item::before {
+        background: var(--border);
+    }
+
+    [data-theme='formal'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background: var(--kp-step-tone, var(--primary));
+    }
+
+    [data-theme='formal'] .kp-steplist--journey > .kp-steplist__item[data-state='failed']::before {
+        background: repeating-linear-gradient(90deg, var(--destructive) 0 0.375rem, transparent 0.375rem 0.625rem);
+    }
+
+    [data-theme='formal'] .kp-steplist--journey .kp-steplist__item[data-state='done']:not([data-kp-tone]) .kp-steplist__mark {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='formal'] .kp-steplist--journey .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        border: 1px solid var(--kp-step-tone, var(--primary));
+        background: var(--card);
+        box-shadow:
+            inset 0 0 0 2px var(--card),
+            inset 0 0 0 3px var(--kp-step-tone, var(--primary)),
+            inset 0 0 0 5px var(--card),
+            inset 0 0 0 20px var(--kp-step-tone, var(--primary));
+    }
+
+    [data-theme='formal'] .kp-steplist--journey .kp-steplist__title {
+        font-family: var(--theme-font-body);
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        font-size: var(--kp-text-base, 0.9375rem);
+    }
+
+    [data-theme='formal'] .kp-steplist--journey .kp-steplist__time {
+        font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    @container kp-journey (max-width: 30rem) {
+        [data-theme='formal'] .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
+            background: var(--border);
+        }
+
+        [data-theme='formal']
+            .kp-steplist--journey
+            > .kp-steplist__item:has(+ .kp-steplist__item:is([data-state='done'], [data-state='current']))::after {
+            background: var(--kp-step-tone, var(--primary));
+        }
+
+        [data-theme='formal'] .kp-steplist--journey > .kp-steplist__item:has(+ .kp-steplist__item[data-state='failed'])::after {
+            background: repeating-linear-gradient(180deg, var(--destructive) 0 0.25rem, transparent 0.25rem 0.4375rem);
+        }
+    }
+}
+/* ── end flows and records: journey ── */
+
+/* ── Flows and records [kpadopt4]: the pipeline ── */
+@layer kp.register {
+    /* Formal: the pipeline is a ledger opened at its columns. Each lane is a column on paper inside a hairline (G7), its head
+       an engraved plate (the tiles' tone pick): the stage's colour as a wash, closed under it by the double rule, the name a
+       label in small capitals and the count a Fraunces figure (G18). The share is a caption. A card is an entry on the card
+       stock; pointing at it draws the inner rule 2 px inside (G15), a press doubles it (G17), the open one is ruled along
+       its start edge in navy (G5). The mark is a square plate in a hairline (G6). The board's sentence is a plate framed by
+       the double rule (G7); a failure is the red-ink entry (G8). */
+    [data-theme='formal'] .kp-pipeline__lane {
+        border-color: var(--border);
+        border-radius: var(--radius);
+        background: var(--card);
+    }
+
+    [data-theme='formal'] .kp-pipeline__head {
+        border: 0;
+        border-block-end: 3px double var(--border-strong);
+        border-radius: 0;
+        background: color-mix(in oklab, var(--kp-pipeline-tone) 14%, var(--card));
+    }
+
+    [data-theme='formal'] .kp-pipeline__name {
+        font-family: var(--theme-font-body);
+        font-variant-caps: all-small-caps;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        font-size: var(--kp-text-base, 0.9375rem);
+    }
+
+    [data-theme='formal'] .kp-pipeline__count {
+        font-family: var(--theme-font-display);
+        font-variant-numeric: tabular-nums lining-nums;
+        font-weight: 600;
+    }
+
+    [data-theme='formal'] .kp-pipeline__share {
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    [data-theme='formal'] .kp-pipeline__card {
+        border-radius: calc(var(--radius) / 2);
+        background: var(--background);
+    }
+
+    [data-theme='formal'] .kp-pipeline__card:hover {
+        border-color: var(--border);
+        outline: 1px solid var(--primary);
+        outline-offset: -3px;
+    }
+
+    [data-theme='formal'] .kp-pipeline__card:active {
+        outline-offset: -3px;
+        box-shadow:
+            inset 0 0 0 3px var(--background),
+            inset 0 0 0 4px var(--primary);
+    }
+
+    [data-theme='formal'] .kp-pipeline__card[aria-current='true'] {
+        border-color: var(--border);
+        box-shadow: inset 3px 0 0 var(--primary);
+    }
+
+    [data-theme='formal'] .kp-pipeline__card[aria-current='true']:dir(rtl) {
+        box-shadow: inset -3px 0 0 var(--primary);
+    }
+
+    [data-theme='formal'] .kp-pipeline__mark {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        text-transform: none;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    [data-theme='formal'] .kp-pipeline__meta {
+        font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    [data-theme='formal'] .kp-pipeline__state {
+        border: 3px double var(--border-strong);
+        border-radius: var(--radius);
+    }
+}
+/* ── end flows and records: pipeline ── */
+
+/* ── Flows and records [kpadopt4]: drawings for an empty state ── */
+@layer kp.register {
+    /* Formal draws the ledger set (js/art.js): a ruled page, an entry struck through in red ink, the account closed with the
+       double rule (G7, G8, G19). Every stroke is ruled in on arrival at the ruling pace, 400 ms each and 60 ms apart, top
+       down, linear with a dead stop (G1, G2, G4, G13); the reduced pose is the drawing ruled (G20). */
+    [data-theme='formal'] .kp-art {
+        display: block;
+    }
+
+    [data-theme='formal'] .kp-art > g[data-kp-art-set='ledger'] {
+        display: inline;
+    }
+
+    [data-theme='formal'] .kp-art path {
+        stroke-linecap: butt;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] .kp-art path {
+            stroke-dasharray: 1;
+            animation: kp-formal-art-ruled 400ms linear both;
+            animation-delay: calc(var(--kp-art-i, 0) * 60ms);
+        }
+    }
+
+    @keyframes kp-formal-art-ruled {
+        from {
+            stroke-dashoffset: 1;
+        }
+
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+}
+/* ── end flows and records: drawings ── */

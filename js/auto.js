@@ -102,7 +102,7 @@ export const NEEDS = [
     },
     {
         name: 'patterns',
-        when: '[data-kp-copy], [data-kp-undo-action]',
+        when: '[data-kp-copy], [data-kp-undo-action], [data-kp-secret]',
         load: () => import('./patterns.js'),
         attach: (m, root) => [m.attachPatterns(root)],
     },
@@ -175,6 +175,10 @@ export const NEEDS = [
     // The week agenda and the run timeline [kpadopt-time]: items placed in the days of a week, and runs as bars on a live time axis.
     { name: 'week', when: '[data-kp-week]', load: () => import('./week.js'), attach: (m, root) => [m.attachWeeks(root)] },
     { name: 'gantt', when: '[data-kp-gantt]', load: () => import('./gantt.js'), attach: (m, root) => [m.attachGantts(root)] },
+    // The drawing at the top of an empty state, in the theme's own hand [kpadopt4].
+    { name: 'art', when: '[data-kp-art]', load: () => import('./art.js'), attach: (m, root) => [m.attachArt(root)] },
+    // The pipeline [kpadopt4]: a read-only board, a lane per stage with its cards.
+    { name: 'pipeline', when: '[data-kp-pipeline]', load: () => import('./pipeline.js'), attach: (m, root) => [m.attachPipelines(root)] },
     { name: 'graph', when: '[data-kp-graph]', load: () => import('./graph.js'), attach: (m, root) => [m.attachGraphs(root)] },
     {
         // A theme's loading picture made of pieces (`--kp-loading-pieces`,

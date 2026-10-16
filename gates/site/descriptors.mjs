@@ -262,6 +262,14 @@ export const DESCRIPTORS = [
 `,
             },
             {
+                title: 'A removal that depends on something',
+                why: 'The confirmation lists what still uses the thing (`data-kp-confirm-dependents`, one name per `;`, under a heading with the exact count). `data-kp-confirm-blocked` makes it a notice with one Close button and the sentence that says what to do first; `data-kp-confirm-type` offers Confirm only once that name is typed.',
+                markup: `
+<button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Delete the calendar Household?" data-kp-confirm-dependents="kyu-runner; Home Assistant" data-kp-confirm-blocked="Delete those two sources first, on the Sources page.">Delete</button>
+<button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Delete the calendar Holidays and everything on it?" data-kp-confirm-type="Holidays">Delete</button>
+`,
+            },
+            {
                 title: 'A row action that acts at once and offers the way back',
                 why: 'The optimistic half: the row goes away immediately, an undo appears beside it, and the action commits only when the window closes. The consumer hears both outcomes as events.',
                 markup: `
@@ -305,6 +313,9 @@ export const DESCRIPTORS = [
                 name: '.kp-confirm',
                 what: 'The dialog the confirmation opens, on top of `.kp-dialog`. It also carries `data-kp-confirm-dialog`, which is what a consumer reaches it by.',
             },
+            { name: 'data-kp-confirm-dependents', what: 'What still uses the thing, one name per `;`: listed in the confirmation (`.kp-confirm__dependents`, `.kp-confirm__list`) under a heading with the exact count.' },
+            { name: 'data-kp-confirm-blocked', what: 'The removal may not go ahead: the confirmation says this sentence (empty: the dictionary’s) and offers only Close.' },
+            { name: 'data-kp-confirm-type', what: 'Confirm is offered only once this word is typed into the field the confirmation shows (`.kp-confirm__type`); Enter in the field confirms.' },
             { name: ':hover / :active', what: 'Both are derived colours; on a theme that lifts its controls the button also rises, and by nothing at all where the theme answers zero.' },
             { name: ':disabled', what: 'A dimmed ground and a refusing cursor. DI8 records the decision that a disabled control may fall below the contrast floor.' },
             {
@@ -1074,6 +1085,10 @@ export const DESCRIPTORS = [
             { name: '.kp-datatable__pager / __page', what: 'The page controls and the “page m of n” label, in same-width digits.' },
             { name: '.kp-datatable__page-size', what: 'The rows-per-page control, before the pager.' },
             { name: '.kp-datatable__sort-order / __sort-summary', what: 'With `data-kp-sort-multi`: each sorted header’s place in the sort, and the sort said in words above the table.' },
+            {
+                name: 'data-kp-sort-external',
+                what: 'The page sorts: a header press draws the arrow, `aria-sort`, the key numbers, the summary and Reset, remembers the sort and fires `kp-datatable-sort`; the rows keep the order the page renders, which it changes and then calls `refresh()` (`view().sorts` has every key). A sortable header with `aria-disabled="true"` cannot be pressed now and keeps an arrow it already has. Also the `sortExternal` option.',
+            },
             { name: '.kp-datatable__columns / __column-option', what: 'With `data-kp-column-menu`: the menu of columns, on the popover layer, and one checkbox per column; the key column is locked.' },
             { name: '.kp-datatable__expand / __detail', what: 'With `data-kp-expandable`: the button that opens a row, and the detail row under it that spans every column.' },
             { name: 'fixed columns', what: 'With `data-kp-fixed-columns`: the key column stays at the left edge on an opaque ground, with a hairline, while the box scrolls sideways.' },
@@ -1357,6 +1372,59 @@ export const DESCRIPTORS = [
         ],
     },
     {
+        id: 'secret',
+        title: 'Secret field',
+        group: 'Data',
+        classes: ['kp-secret'],
+        exports: [],
+        aliases: ['secret'],
+        intro: 'A token, a password or a key, shown as a mask, shown in full on request for a few seconds and then hidden again, and copied without being shown. `attachPatterns()` (js/patterns.js, also through js/auto.js) builds what the markup leaves out: the value box, Reveal and Copy, and one line under them for the countdown, the reason the field is off, or why it could not be read. The value is read when it is needed (`kp-secret-request`, or the `secretLoad` option), so it is in the page only while it is shown; `revealSecret(field)` and `hideSecret(field)` do what the button does.',
+        whenToUse:
+            'For a value a person must sometimes read or paste but should not see by accident: an API token, a client secret, a password a service generated. Not for an identifier everyone may see (use the copyable value).',
+        examples: [
+            {
+                title: 'A token that hides itself after 30 seconds',
+                why: 'The markup is the empty field; the script builds the mask, the buttons and the line under them, which always keeps its room so nothing moves when it fills.',
+                markup: `
+<div class="kp-secret" data-kp-secret data-kp-secret-ttl="30" data-kp-secret-label="API token" data-kp-secret-value="kp_live_7Hq2v9XcLm4TzR8sWb3N"></div>
+`,
+            },
+            {
+                title: 'Shown only while held, and a field the reader may not open',
+                why: 'Hold to reveal suits a value read over someone’s shoulder; a disabled field says why under its buttons.',
+                markup: `
+<div class="kp-secret" data-kp-secret data-kp-secret-reveal-on="hold" data-kp-secret-label="Root password" data-kp-secret-value="correct-horse-battery"></div>
+<div class="kp-secret" data-kp-secret data-kp-secret-label="Signing key" data-kp-secret-disabled="Only the owner can read the signing key."></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-secret', what: 'Marks the field; `attachPatterns` builds its parts.' },
+            { name: 'data-kp-secret-ttl', what: 'Seconds a shown value stays (30 by default); `0` keeps it until Hide is pressed.' },
+            { name: 'data-kp-secret-label', what: 'The field’s name for a screen reader and in the copied announcement.' },
+            { name: 'data-kp-secret-mask', what: 'The mask’s length in characters (12); `data-kp-secret-mask-char` its character (•).' },
+            { name: 'data-kp-secret-mask-char', what: 'The mask’s character.' },
+            { name: 'data-kp-secret-reveal-on', what: '`hold`: shown only while the button is held, by pointer or with Space or Enter held down.' },
+            { name: 'data-kp-secret-copy', what: '`false`: no Copy button.' },
+            { name: 'data-kp-secret-wrap', what: '`wrap`: a long value wraps, the box keeping `data-kp-secret-lines` lines of room; by default it stays on one line and scrolls inside its box, a fade at its end saying there is more.' },
+            { name: 'data-kp-secret-lines', what: 'With `wrap`, the lines of room the box keeps (2).' },
+            { name: 'data-kp-secret-disabled', what: 'Both buttons off; its words are the sentence under them that says why. Followed when it changes.' },
+            { name: 'data-kp-secret-value', what: 'The value itself, for a page that has it anyway. A page that does not answers `kp-secret-request` instead.' },
+            { name: 'data-kp-secret-state', what: 'Written: `hidden`, `loading`, `shown`, `error` or `disabled`.' },
+            { name: 'data-kp-secret-paused', what: 'Written while the countdown waits because the reader selects the value or holds the focus in it.' },
+            { name: 'data-kp-secret-overflow', what: 'Written while a shown value is longer than its box.' },
+            { name: 'data-kp-secret-reveal', what: 'On the Reveal button, when the markup brings its own.' },
+            { name: 'kp-secret', what: 'Fired on the field when it is shown or hidden: `{ shown, reason }`, reason `press`, `hold`, `timer`, `away` (the tab went to the background) or `call`.' },
+            { name: 'kp-secret-request', what: 'Fired, cancelable, when the field needs its value: call `preventDefault()` and answer with `detail.respond(value)` or `detail.fail(reason)`; `detail.purpose` is `reveal` or `copy`.' },
+        ],
+        accessibility: [
+            'Built in — the field is a named group; Reveal says whether the value is shown (`aria-expanded`), and a polite region says “Shown. Hides in 30 s.”, “Hides in 10 s” and “Hidden again”, never every second.',
+            'Built in — the countdown pauses while the value is selected or holds the focus, and the value hides at once when the tab goes to the background.',
+            'Built in — Copy works while the value is hidden and never puts it in an event or an announcement.',
+            'Yours — read the value from the server when it is asked for, so it is not in the page before it is shown.',
+        ],
+    },
+    {
         id: 'data-formatting',
         title: 'Showing data',
         group: 'Data',
@@ -1398,7 +1466,8 @@ export const DESCRIPTORS = [
         id: 'empty-state',
         title: 'Empty state',
         group: 'Data',
-        classes: ['kp-empty'],
+        classes: ['kp-empty', 'kp-art'],
+        aliases: ['art'],
         exports: ['EmptyState'],
         intro: 'A bordered box that says a list is empty, and which emptiness it is: nothing yet, or nothing that matched. A blank area says the page is broken instead.',
         whenToUse:
@@ -1420,6 +1489,16 @@ export const DESCRIPTORS = [
 </div>
 `,
             },
+            {
+                title: 'With a drawing of what kind of empty it is',
+                why: '`data-kp-art` puts a small line drawing at the top, in the theme’s own hand: none, nomatch, error, offline, done or locked. It is a picture only; the title and the sentence carry the meaning. A theme shows its own set, and a theme without one shows none.',
+                markup: `
+<div class="kp-empty" data-kp-art="done">
+<p class="kp-empty__title">All clear</p>
+<p class="kp-empty__body">No follow-up is due this week.</p>
+</div>
+`,
+            },
         ],
         variants: [
             { name: '.kp-empty', what: 'The box on its own: a dashed boundary and quiet ink, for a one-line emptiness with nothing to offer.' },
@@ -1427,6 +1506,8 @@ export const DESCRIPTORS = [
             { name: '.kp-empty__body', what: 'One sentence under it, saying what would put something here.' },
             { name: 'filtered', what: 'The same box in its other state, with the action that clears the filter instead of the one that creates a first item.' },
             { name: 'as a heading', what: 'The title can be rendered as a real heading where the empty state stands for a whole section.' },
+            { name: 'data-kp-art', what: 'A drawing at the top (`.kp-art`, js/art.js `attachArt`): `none`, `nomatch`, `error`, `offline`, `done` or `locked`, in the theme’s own set (`data-kp-art-set`; formal’s is the ledger), ruled in on arrival where the theme moves. `data-kp-art-kind` on the drawing says which.' },
+            { name: 'data-kp-art-size', what: '`sm` (5rem) or `lg` (10rem) instead of 7.5rem.' },
         ],
         accessibility: [
             'Built in — the title is text in the page’s own ink rather than a picture of a shrug, so it is read out like any other message.',
@@ -3095,7 +3176,7 @@ setWeekEvents(agenda, events);
         title: 'Run timeline',
         group: 'Data',
         classes: ['kp-gantt'],
-        aliases: ['active', 'out'],
+        aliases: ['active', 'out', 'cluster', 'clustered', 'lane-key', 'lane-zone', 'name', 'planned', 'shape', 'zone'],
         exports: [],
         intro: 'One bar per run on a time axis, a lane per job, stack or host, and a line for now. `attachGantts(root)` in js/gantt.js fills `section.kp-gantt[data-kp-gantt]` with range buttons (`data-kp-gantt-ranges`, the one in force in `data-kp-gantt-range`), a Live button and the selected range; the page gives the lanes and the runs (`setGanttRuns`) and the state of the whole (`setGanttState`). A run is `queued` (dashed and hollow, from queueing to now), `running` (striped and growing to now), `ok` (solid) or `failed` (solid, taller, with a cap and a cross): the tone is never the only carrier. A running bar is placed by one custom property that moves every second, so the page repaints nothing. While the window is Live its right edge follows now (`data-kp-gantt-live`); dragging across the plot selects a range, shown in a chip with Zoom and Clear (`data-kp-gantt-zoom`, `data-kp-gantt-clear`). `data-kp-gantt-ghosts="2 3 2 1"` sets the rows of the loading lanes so loading and loaded are as tall.',
         whenToUse:
@@ -3194,11 +3275,57 @@ setGanttState(timeline, 'loading');
             { name: 'setGanttRuns / setGanttState / setGanttWindow / setGanttSelection', what: 'The page’s calls: the lanes and runs (repainted in place by id), the state of the whole, the window (`{ span, live, to }`, no event) and a selected range (`{ from, to }` or null).' },
             { name: 'the busy card', what: 'While loading, the data table’s loading card (`js/busy-card.js`) stands centred over the lanes, flat over a short area, and the runs are drawn once it has left.' },
             { name: 'a register’s repairs', what: 'A register may hang the end-edge axis label inside the plot (the flip knob) and give an empty or failed timeline’s sentence a plate of its own (the state-ground knob); both are in the knobs below, and formal leaves them as they were approved.' },
+            { name: 'setGanttPoints / setGanttKinds / setGanttZones', what: 'Moments instead of runs [kpadopt4]: a point (`id`, `lane`, `at`, `kind`, `label`, `detail`, `planned`) is a `.kp-gantt__point` mark in its lane, in the colour and shape of its kind (`data-kp-shape` dot, diamond, square, triangle or ring; `data-kp-series` or `data-kp-tone`), hollow when `data-kp-planned`. A kind is named in the legend (`.kp-gantt__mark`); the run states leave the legend when there are no runs. A zone is a thin band in its lane (`data-kp-lane-zone`) or a band behind every lane, named in the legend (`.kp-gantt__band`); `data-kp-zone` carries its id.' },
+            { name: 'data-kp-cluster / data-kp-clustered', what: 'Marks closer than the eye can tell apart: the first carries the number it stands for and a count plate (`.kp-gantt__count`, “+2”), its name and card name them all; the others are `data-kp-clustered` and step aside. Opening it reports every point in `points`.' },
+            { name: 'data-kp-name / data-kp-card', what: 'Written on a mark: its own accessible name and card words, which a mark with a count joins.' },
+            { name: 'data-kp-gantt-points', what: 'On the timeline: its hint speaks of marks, not bars.' },
+            { name: 'all', what: 'A range word: the window fits everything on the timeline and now, and stays fitted while the data changes.' },
+            { name: 'href / sub', what: 'A lane with `href` is a link (`.kp-gantt__lane-link`); `sub` is a second line under its name (`.kp-gantt__sub`), and the lanes grow to hold it. `data-kp-lane-key` on the name is what it was drawn from.' },
+            { name: '.kp-gantt--line', what: 'One lane, no toolbar, no lane names, no hint and no brush, the axis under the line, fitted to its data: the dated line under a journey stepper.' },
         ],
         accessibility: [
             'Built in — one tab stop: left and right move along a lane, up and down to the nearest bar of the neighbouring lane, Home and End to the lane’s first and last, Enter and Space open the run; range, Live, Zoom and Clear are buttons.',
             'Built in — every bar has an accessible name with its label, state and times; a run that changes state is announced in a polite status region.',
             'Yours — give the timeline a name (`aria-label`), name every run so it reads without its colour, and give the new runs when the window moves.',
+        ],
+    },
+    {
+        id: 'pipeline',
+        title: 'Pipeline',
+        group: 'Data',
+        classes: ['kp-pipeline'],
+        aliases: ['dimmed', 'lane'],
+        exports: [],
+        intro: 'Where each item stands, a lane per stage: a read-only board, not a drag-and-drop one. `attachPipelines(root)` in js/pipeline.js fills `section.kp-pipeline[data-kp-pipeline]`; the page gives the lanes and the cards with `setPipeline(el, { lanes, cards })` and the state of the whole with `setPipelineState`. Each lane has a plate with its name and exact count in the stage’s colour (`tone` 1 to 5), its share of all, and its cards (a link with `href`, else a button; `mark`, `sub` and `meta` under the title). A lane marked `closed` stands under the board across its width. `data-kp-pipeline-limit="4"` keeps four cards per lane behind “+N more”; `data-kp-pipeline-share="false"` leaves the share out. Under 40rem of its own width the lanes turn to rows.',
+        whenToUse:
+            'When a reader asks how many items stand at each stage of one process and which: applications from draft to offer, deployments from queued to live. Not for moving items between stages (that is a form), and not for counts alone (use key figures).',
+        examples: [
+            {
+                title: 'Applications by stage',
+                why: 'The markup is the empty board; the script draws the lanes and cards from what the page hands over, keeping cards by id so a refresh moves nothing that stayed.',
+                markup: `
+<section class="kp-pipeline" data-kp-pipeline data-kp-pipeline-limit="4" id="doc-pipeline" aria-label="Applications by stage"></section>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-pipeline', what: 'Marks the board; `attachPipelines` fills it.' },
+            { name: 'data-kp-pipeline-limit', what: 'Cards per lane before “+N more” (a toggle, `aria-expanded`; `data-kp-pipeline-more` names its lane); 0 or none shows every card.' },
+            { name: 'data-kp-pipeline-share', what: '`false`: no share of all under the lane’s plate.' },
+            { name: 'data-kp-pipeline-more', what: 'On a lane’s “+N more” button: the lane it opens.' },
+            { name: 'data-kp-lane', what: 'On a lane: its key.' },
+            { name: 'data-kp-tone', what: 'On a lane and its cards: the stage’s colour, 1 to 5.' },
+            { name: 'data-kp-dimmed', what: 'On a card filtered out but kept in its place: quieter ink and a dashed edge.' },
+            { name: 'data-kp-state', what: 'On the board: `loading` (the lanes kept, the table’s loading card over them, cards drawn once it has gone), `ready`, `empty` (every lane says none, one sentence on a plate above the lanes) or `error` (the reason with Try again).' },
+            { name: 'kp-pipeline-open', what: 'A card was opened: `{ id, card, source }`; a link is still followed.' },
+            { name: 'kp-pipeline-retry', what: 'Try again on a failed board was pressed.' },
+            { name: 'kp-pipeline-more', what: 'A lane shows more or fewer: `{ lane, open }`.' },
+            { name: 'setPipelineSelected', what: 'Marks the open card (`aria-current`), or none.' },
+        ],
+        accessibility: [
+            'Built in — the board is a list of lanes named by their plates, each a list of cards; a count is the exact number.',
+            'Built in — one tab stop: left and right to the neighbouring lane, up and down along a lane, Home and End to its first and last; Enter follows a link or presses a button.',
+            'Yours — name the board (`aria-label`), and give a card a title that says what it is without its colour.',
         ],
     },
     {
@@ -3581,10 +3708,24 @@ document.getElementById('doc-steps-run').addEventListener('click', async (event)
 });
 `,
             },
+            {
+                title: 'A journey: where an application stands',
+                why: 'The same list laid along one path. `current` is the step it stands at now, reached steps are `done`, a closed path ends with a `failed` step; `data-kp-tone` gives a step its own colour and the time column holds the date it was reached. Under 30rem of its own width the path turns to a column.',
+                markup: `
+<ol class="kp-steplist kp-steplist--journey" aria-label="Where the application stands">
+<li class="kp-steplist__item" data-state="done" data-kp-tone="1"><span class="kp-steplist__mark" aria-hidden="true"></span><span class="kp-steplist__body"><span class="kp-steplist__title">Draft</span></span><time class="kp-steplist__time">28/09</time></li>
+<li class="kp-steplist__item" data-state="done" data-kp-tone="2"><span class="kp-steplist__mark" aria-hidden="true"></span><span class="kp-steplist__body"><span class="kp-steplist__title">Sent</span></span><time class="kp-steplist__time">02/10</time></li>
+<li class="kp-steplist__item" data-state="current" data-kp-tone="3"><span class="kp-steplist__mark" aria-hidden="true"></span><span class="kp-steplist__body"><span class="kp-steplist__title">Interview</span></span><time class="kp-steplist__time">09/10</time></li>
+<li class="kp-steplist__item" data-state="pending"><span class="kp-steplist__mark" aria-hidden="true"></span><span class="kp-steplist__body"><span class="kp-steplist__title">Offer</span></span><time class="kp-steplist__time"></time></li>
+</ol>
+`,
+            },
         ],
         variants: [
-            { name: 'data-state', what: '`pending`, `running`, `done`, `failed` or `skipped`: the mark, the colour and the word follow it.' },
-            { name: '.kp-steplist__time', what: 'How long the step took, as the page prints it.' },
+            { name: 'data-state', what: '`pending`, `running`, `done`, `failed`, `skipped` or `current` (the step a journey stands at now: a ring with a dot, no spinner): the mark, the colour and the word follow it.' },
+            { name: '.kp-steplist--journey', what: 'The steps side by side on one path, joined by a rule drawn in the step’s colour once reached; a column under 30rem of its own width.' },
+            { name: 'data-kp-tone', what: 'A step’s own colour, `1` to `5` (`--chart-N`), or any value with the page’s own step colour set on the item: the reached mark and the rule into it wear it.' },
+            { name: '.kp-steplist__time', what: 'How long the step took, as the page prints it; in a journey, the date it was reached.' },
             { name: '.kp-steplist__note', what: 'The one-line description under the title.' },
             { name: 'buildSteplist(rows, { label })', what: 'Builds the `ol` from rows `{ id, title, note, state, time }`; attach it afterwards. `data-kp-step-id` carries each id.' },
             { name: 'setStep(list, id, change)', what: 'Changes one step (`state`, `title`, `note`, `time`) and says so once in the status region; the id is `data-kp-step-id` or the step’s index.' },
@@ -4799,6 +4940,34 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
 `,
             },
             {
+                title: 'A dialog that manages one thing, in sections',
+                why: 'The head holds the title, a state badge and the description; the body holds sections with a heading and a note, the danger section last. The wide variant takes its full width at once, so a section that fills later moves nothing sideways.',
+                markup: `
+<dialog class="kp-dialog kp-dialog--wide" open aria-labelledby="doc-manage-title">
+<div class="kp-dialog__head">
+<h2 class="kp-dialog__title" id="doc-manage-title">home-assistant</h2>
+<span class="kp-badge kp-badge--success">active</span>
+<p class="kp-dialog__description">Issued 02/10/2026 09:14 · last used 16/10/2026 18:40 (412×)</p>
+</div>
+<div class="kp-dialog__body">
+<section class="kp-dialog__section">
+<h3 class="kp-dialog__heading">Token</h3>
+<div class="kp-secret" data-kp-secret data-kp-secret-label="Token of home-assistant" data-kp-secret-value="kp_live_7Hq2v9XcLm4TzR8sWb3N"></div>
+<p class="kp-dialog__note">Hides itself again after 30 seconds.</p>
+</section>
+<section class="kp-dialog__section kp-dialog__section--danger">
+<h3 class="kp-dialog__heading">Danger zone</h3>
+<button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Revoke this token?">Revoke</button>
+<p class="kp-dialog__note">Revoking keeps the row and its history; deleting does not.</p>
+</section>
+</div>
+<div class="kp-dialog__actions">
+<button type="button" class="kp-button">Close</button>
+</div>
+</dialog>
+`,
+            },
+            {
                 title: 'The parts, with the dialog left open',
                 why: 'Printed open so the pieces can be seen at rest: the title, the description under it, the close in the corner and the actions at the end.',
                 markup: `
@@ -4824,6 +4993,10 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
             { name: '.kp-dialog__title / __description', what: 'The heading and the sentence under it, which are also what name and describe the dialog.' },
             { name: '.kp-dialog__close', what: 'The close in the corner, on top of the padding rather than in the flow.' },
             { name: '.kp-dialog__actions', what: 'The buttons at the end, pushed to the trailing edge, primary last.' },
+            { name: '.kp-dialog--wide', what: 'A dialog that manages one thing: 42rem wide at once, so a section that fills later moves nothing sideways.' },
+            { name: '.kp-dialog__head', what: 'The title with a state badge beside it and the description under both.' },
+            { name: '.kp-dialog__section / __heading / __note', what: 'One part of the body under its heading, with an optional note under it; sections are divided by a rule.' },
+            { name: '.kp-dialog__section--danger', what: 'The last section, for what cannot be undone: ruled along its start edge in the destructive colour.' },
             { name: 'backdrop', what: 'A dimming rather than a theme colour: a tinted backdrop paints the page instead of pushing it back.' },
             { name: 'pastel', what: 'In pastel a dialog is printed twice and stuck on: its second pass, a flat silhouette in the second ink drawn by its ::backdrop and placed on it by anchor positioning, springs into its rest 6 px off register, then the dialog swings down onto it from its top-start corner on the soft landing (one 8 % overshoot, settled once); a strip of washi tape crosses its top-start corner, and the modal’s dim is the backdrop’s border, so a click outside still reaches it. The close is that opening played backwards. Without anchor positioning the pass rests as a flat shadow and the dialog opens with the swing alone; under reduced motion it is simply there.' },
         ],

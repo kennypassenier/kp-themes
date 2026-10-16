@@ -9025,6 +9025,94 @@
         padding-inline-end: calc(var(--kp-dialog-close-size, 2.25rem) + var(--kp-space-sm, 0.5rem) + 0.5rem);
     }
 
+    /* A dialog in sections [kpadopt4; chassis's client dialog, almanac's calendars]: a head that holds the title, a state
+ * badge beside it and the description under both; a body of sections, each with a heading and an optional note, the
+ * last one the danger section; and a wide variant for a dialog that manages one thing. The wide dialog takes its full
+ * width at once, so a section that fills later (a revealed token, a list of requests) moves nothing sideways. Knobs
+ * [KT6]: `--kp-dialog-wide` (42rem), `--kp-dialog-section-gap` (the room between sections, 0.75rem). */
+    .kp-dialog--wide {
+        --kp-dialog-max-width: min(var(--kp-dialog-wide, 42rem), calc(100vw - 2rem));
+        inline-size: var(--kp-dialog-max-width);
+        box-sizing: border-box;
+    }
+
+    .kp-dialog__head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        margin-block-end: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-dialog__head > .kp-dialog__title {
+        margin: 0;
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-dialog__head > .kp-dialog__description {
+        flex-basis: 100%;
+        margin: 0;
+    }
+
+    .kp-dialog:has(> .kp-dialog__close) > .kp-dialog__head {
+        padding-inline-end: calc(var(--kp-dialog-close-size, 2.25rem) + var(--kp-space-sm, 0.5rem) + 0.5rem);
+    }
+
+    .kp-dialog__section {
+        padding-block: var(--kp-dialog-section-gap, 0.75rem);
+        border-block-start: 1px solid var(--border);
+    }
+
+    .kp-dialog__section:first-child {
+        padding-block-start: 0;
+        border-block-start: 0;
+    }
+
+    .kp-dialog__section:last-child {
+        padding-block-end: 0;
+    }
+
+    .kp-dialog__heading {
+        margin: 0 0 var(--kp-space-sm, 0.5rem);
+        font-size: var(--kp-text-sm, 0.875rem);
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+    .kp-dialog__note {
+        margin: var(--kp-space-sm, 0.5rem) 0 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    /* The danger section: an entry ruled off along its start edge in the destructive ink, its words in the page's own ink. */
+    .kp-dialog__section--danger {
+        padding-inline-start: var(--kp-space-md, 0.75rem);
+        border-inline-start: 3px solid var(--destructive);
+    }
+
+    /* What still uses the thing a confirmation would remove [kpadopt4], and the field a name is typed into. */
+    .kp-confirm__dependents {
+        margin: 0 0 var(--kp-space-md, 0.75rem);
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--muted);
+    }
+
+    .kp-confirm__list {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin: 0;
+        padding-inline-start: 1.25rem;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-confirm__type {
+        margin-block-end: var(--kp-space-sm, 0.5rem);
+    }
+
     .kp-menu__separator {
         margin: var(--kp-space-xs) 0;
         border: 0;
@@ -11030,6 +11118,16 @@
         opacity: 1;
     }
 
+    /* A column that cannot be sorted now [kpadopt4] (`aria-disabled="true"`): no pointer, no sortable mark; a sort it
+ * already carries keeps its arrow. */
+    .kp-table th[data-kp-sort][aria-disabled='true'] {
+        cursor: default;
+    }
+
+    .kp-table th[data-kp-sort][aria-disabled='true']:not([aria-sort='ascending'], [aria-sort='descending'])::after {
+        content: none;
+    }
+
     .kp-datatable__status {
         margin: 0;
         color: var(--muted-foreground);
@@ -11338,6 +11436,64 @@
         margin: 0 0 0.75rem;
     }
 
+    /* A drawing at the top of an empty state [kpadopt4] (`data-kp-art`, js/art.js): a picture only, the words carry the
+ * meaning. Every theme draws its own set and its register shows it; a theme without one shows none, so the drawing is
+ * hidden here. Knobs [KT6]: `--kp-art-size` (7.5rem wide; `data-kp-art-size` sm 5rem, lg 10rem), `--kp-art-stroke`
+ * (1.5px), `--kp-art-rule` (the acting colour), `--kp-art-line` (the faint ruled lines), `--kp-art-ink`, `--kp-art-red`. */
+    .kp-art {
+        display: none;
+        box-sizing: content-box;
+        inline-size: var(--kp-art-size, 7.5rem);
+        block-size: auto;
+        aspect-ratio: 120 / 72;
+        margin: 0 auto var(--kp-space-sm, 0.5rem);
+        overflow: visible;
+    }
+
+    .kp-art > g {
+        display: none;
+    }
+
+    .kp-art path {
+        fill: none;
+        stroke-width: var(--kp-art-stroke, 1.5px);
+        stroke-linecap: square;
+        stroke-linejoin: miter;
+        vector-effect: non-scaling-stroke;
+    }
+
+    .kp-art__rule {
+        stroke: var(--kp-art-rule, var(--primary));
+    }
+
+    .kp-art path.kp-art__rule {
+        stroke-width: calc(var(--kp-art-stroke, 1.5px) + 0.5px);
+    }
+
+    .kp-art__line {
+        stroke: var(--kp-art-line, var(--border-strong));
+    }
+
+    .kp-art path.kp-art__line {
+        stroke-width: 1px;
+    }
+
+    .kp-art__ink {
+        stroke: var(--kp-art-ink, var(--muted-foreground));
+    }
+
+    .kp-art__red {
+        stroke: var(--kp-art-red, var(--destructive));
+    }
+
+    [data-kp-art-size='sm'] > .kp-art {
+        --kp-art-size: 5rem;
+    }
+
+    [data-kp-art-size='lg'] > .kp-art {
+        --kp-art-size: 10rem;
+    }
+
     /* Copyable value [TH53] */
     .kp-copyable {
         display: inline-flex;
@@ -11376,6 +11532,155 @@
         border-color: var(--destructive);
         border-style: dashed;
         color: var(--destructive);
+    }
+
+    /* Secret field [kpadopt4] -----------------------------------------------
+ * `.kp-secret[data-kp-secret]` (js/patterns.js): a masked value, Reveal and
+ * Copy, and one line under them for the countdown, the reason a field is off
+ * or why it could not be read. The value box has the control height and the
+ * row's width whatever it holds, and the line under it always keeps its
+ * room, so showing, hiding, loading or failing moves nothing. A long value
+ * stays on one line and scrolls inside its box (a fade at the end says there
+ * is more) unless `data-kp-secret-wrap="wrap"`, which keeps
+ * `data-kp-secret-lines` lines of room. Knobs [KT6]: `--kp-secret-min`
+ * (16rem, the value box's least width before the buttons go under it),
+ * `--kp-secret-lines` (2), `--kp-secret-drain` (the rule that runs out with
+ * the countdown, `--primary`), `--kp-secret-drain-size` (2px). */
+    .kp-secret {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        max-inline-size: 100%;
+    }
+
+    .kp-secret__value {
+        box-sizing: border-box;
+        display: block;
+        flex: 1 1 var(--kp-secret-min, 16rem);
+        min-inline-size: 0;
+        block-size: var(--kp-control-height, 2.25rem);
+        margin: 0;
+        padding: 0 var(--kp-space-sm, 0.5rem);
+        overflow-x: auto;
+        overflow-y: hidden;
+        border: 1px solid var(--border);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--muted);
+        color: var(--foreground);
+        font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        line-height: calc(var(--kp-control-height, 2.25rem) - 2px);
+        white-space: nowrap;
+        scrollbar-width: none;
+    }
+
+    .kp-secret__value.kp-masked {
+        color: var(--muted-foreground);
+        user-select: none;
+    }
+
+    .kp-secret[data-kp-secret-overflow] .kp-secret__value {
+        mask-image: linear-gradient(to left, transparent, var(--foreground) 1.5rem);
+    }
+
+    .kp-secret[data-kp-secret-overflow] .kp-secret__value:dir(rtl) {
+        mask-image: linear-gradient(to right, transparent, var(--foreground) 1.5rem);
+    }
+
+    .kp-secret[data-kp-secret-wrap='wrap'] .kp-secret__value {
+        block-size: auto;
+        min-block-size: calc(var(--kp-secret-lines, 2) * 1.5em + 2 * var(--kp-space-xs, 0.25rem) + 2px);
+        padding-block: var(--kp-space-xs, 0.25rem);
+        overflow: visible;
+        line-height: 1.5;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-secret__actions {
+        display: flex;
+        flex: none;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* The reveal button keeps the width of its longest word, so Reveal, Hide and Try again move nothing. */
+    .kp-secret__reveal {
+        min-inline-size: 6.5em;
+    }
+
+    .kp-secret__line {
+        display: grid;
+        grid-template-rows: var(--kp-secret-drain-size, 2px) auto;
+        flex: 1 0 100%;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin: 0;
+        min-block-size: calc(var(--kp-secret-drain-size, 2px) + var(--kp-space-xs, 0.25rem) + 1.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        line-height: 1.25rem;
+    }
+
+    .kp-secret__words {
+        grid-row: 2;
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-secret__spinner {
+        --kp-spinner-size: 0.875rem;
+        flex: none;
+    }
+
+    .kp-secret__drain {
+        grid-row: 1;
+        display: block;
+        block-size: var(--kp-secret-drain-size, 2px);
+        background: var(--kp-secret-drain, var(--primary));
+        transform-origin: 0 50%;
+        visibility: hidden;
+    }
+
+    .kp-secret__drain:dir(rtl) {
+        transform-origin: 100% 50%;
+    }
+
+    /* Why it could not be read: an entry ruled off along its start edge, in the page's ink [fix-70]. */
+    .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        padding-inline-start: var(--kp-space-sm, 0.5rem);
+        border-inline-start: 3px solid var(--destructive);
+        color: var(--foreground);
+    }
+
+    .kp-secret[data-kp-secret-state='disabled'] .kp-secret__value {
+        border-style: dashed;
+        background: transparent;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-secret:not([data-kp-secret-ttl='0'], [data-kp-secret-reveal-on='hold'])[data-kp-secret-state='shown'] .kp-secret__drain {
+            visibility: visible;
+            animation: kp-secret-drain var(--kp-secret-ttl, 30s) linear forwards;
+        }
+
+        .kp-secret[data-kp-secret-paused] .kp-secret__drain {
+            animation-play-state: paused;
+        }
+    }
+
+    @keyframes kp-secret-drain {
+        from {
+            scale: 1 1;
+        }
+
+        to {
+            scale: 0 1;
+        }
     }
 
     /* Status parts [TH52] */
@@ -11587,6 +11892,169 @@
 
     .kp-steplist__item[data-state='skipped'] .kp-steplist__mark::after {
         content: var(--kp-glyph-skipped, '–');
+    }
+
+    /* The step a process stands at now, neither running nor done [kpadopt4]: a ring with a dot, the title in weight. */
+    .kp-steplist__item[data-state='current'] {
+        border-color: var(--kp-step-tone, var(--primary));
+    }
+
+    .kp-steplist__item[data-state='current'] .kp-steplist__title {
+        font-weight: 600;
+    }
+
+    .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        border-color: var(--kp-step-tone, var(--primary));
+        background: radial-gradient(circle, var(--kp-step-tone, var(--primary)) 0 34%, transparent 38%);
+    }
+
+    .kp-steplist__item[data-kp-tone='1'] {
+        --kp-step-tone: var(--chart-1);
+    }
+
+    .kp-steplist__item[data-kp-tone='2'] {
+        --kp-step-tone: var(--chart-2);
+    }
+
+    .kp-steplist__item[data-kp-tone='3'] {
+        --kp-step-tone: var(--chart-3);
+    }
+
+    .kp-steplist__item[data-kp-tone='4'] {
+        --kp-step-tone: var(--chart-4);
+    }
+
+    .kp-steplist__item[data-kp-tone='5'] {
+        --kp-step-tone: var(--chart-5);
+    }
+
+    /* A step with its own colour (`data-kp-tone` 1 to 5, or any value with `--kp-step-tone` set by the page) wears it when
+ * reached; the tick is drawn in the card's ground on it. */
+    .kp-steplist__item[data-kp-tone][data-state='done'] .kp-steplist__mark {
+        border-color: var(--kp-step-tone);
+        background: var(--kp-step-tone);
+        color: var(--card);
+    }
+
+    /* A journey [kpadopt4] (`.kp-steplist--journey`): the steps side by side on one path, a mark over each name, the date it
+ * was reached under it, joined by a rule that is drawn in the step's colour once the step is reached. Under 30rem of its
+ * own width the path turns to a column, the rule down the marks. Every step has the same width, so a long name wraps
+ * under its own mark and never reaches the next. Knob: `--kp-journey-rule` (2px). */
+    .kp-steplist--journey {
+        container: kp-journey / inline-size;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0;
+    }
+
+    .kp-steplist--journey > .kp-steplist__item {
+        position: relative;
+        flex: 1 1 0;
+        min-inline-size: 0;
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: auto auto auto;
+        justify-items: center;
+        align-content: start;
+        gap: var(--kp-space-xs, 0.25rem);
+        padding: 0 var(--kp-space-xs, 0.25rem);
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        text-align: center;
+    }
+
+    .kp-steplist--journey .kp-steplist__mark {
+        position: relative;
+        z-index: 1;
+        background-color: var(--card);
+    }
+
+    .kp-steplist--journey .kp-steplist__body {
+        justify-items: center;
+    }
+
+    .kp-steplist--journey .kp-steplist__title {
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: break-word;
+        hyphens: auto;
+    }
+
+    .kp-steplist--journey .kp-steplist__time {
+        min-inline-size: 0;
+        text-align: center;
+    }
+
+    .kp-steplist--journey .kp-steplist__time:empty {
+        display: none;
+    }
+
+    /* The rule into a step, from the previous mark to this one. */
+    .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item::before {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(var(--kp-steplist-mark, 1.375rem) / 2 - var(--kp-journey-rule, 2px) / 2);
+        inset-inline: calc(-50% + var(--kp-steplist-mark, 1.375rem) / 2) calc(50% + var(--kp-steplist-mark, 1.375rem) / 2);
+        block-size: var(--kp-journey-rule, 2px);
+        background: var(--border-strong);
+    }
+
+    .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background: var(--kp-step-tone, var(--success));
+    }
+
+    .kp-steplist--journey > .kp-steplist__item[data-state='failed']::before {
+        background: repeating-linear-gradient(90deg, var(--destructive) 0 0.375rem, transparent 0.375rem 0.625rem);
+    }
+
+    .kp-steplist--journey > .kp-steplist__item:not([data-state='current']) .kp-steplist__title {
+        font-weight: 400;
+    }
+
+    .kp-steplist--journey > .kp-steplist__item[data-state='current'] .kp-steplist__title {
+        font-weight: 600;
+    }
+
+    @container kp-journey (max-width: 30rem) {
+        .kp-steplist--journey > .kp-steplist__item {
+            flex-basis: 100%;
+            grid-template-columns: var(--kp-steplist-mark, 1.375rem) minmax(0, 1fr) auto;
+            grid-template-rows: auto;
+            justify-items: stretch;
+            align-items: start;
+            gap: var(--kp-space-md, 0.75rem);
+            padding: 0 0 var(--kp-space-md, 0.75rem);
+            text-align: start;
+        }
+
+        .kp-steplist--journey .kp-steplist__body {
+            justify-items: start;
+        }
+
+        .kp-steplist--journey .kp-steplist__time {
+            text-align: end;
+        }
+
+        /* Down the column the rule leaves each mark for the next one, in this step's colour once the next is reached. */
+        .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item::before {
+            content: none;
+        }
+
+        .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            inset-block: var(--kp-steplist-mark, 1.375rem) 0;
+            inset-inline-start: calc(var(--kp-steplist-mark, 1.375rem) / 2 - var(--kp-journey-rule, 2px) / 2);
+            inline-size: var(--kp-journey-rule, 2px);
+            background: var(--border-strong);
+        }
+
+        .kp-steplist--journey > .kp-steplist__item:has(+ .kp-steplist__item:is([data-state='done'], [data-state='current']))::after {
+            background: var(--kp-step-tone, var(--success));
+        }
+
+        .kp-steplist--journey > .kp-steplist__item:has(+ .kp-steplist__item[data-state='failed'])::after {
+            background: repeating-linear-gradient(180deg, var(--destructive) 0 0.25rem, transparent 0.25rem 0.4375rem);
+        }
     }
 
     /* --- Week agenda: seven days, the items of the week placed in time -----
@@ -12315,6 +12783,11 @@
         translate: calc(100% * var(--kp-gantt-tick-flip, 1)) 0;
     }
 
+    /* An end-edge label that would run into the label before it is not drawn [kpadopt4]. */
+    .kp-gantt__tick[data-kp-gantt-crowded]:not(button) {
+        visibility: hidden;
+    }
+
     .kp-gantt__tick[data-kp-day] {
         color: var(--foreground);
         font-weight: 600;
@@ -12714,6 +13187,571 @@
 
         .kp-gantt__lane {
             font-size: var(--kp-text-xs, 0.75rem);
+        }
+    }
+
+    /* Point events on the run timeline [kpadopt4] (setGanttPoints, setGanttKinds, setGanttZones in js/gantt.js): a moment is a
+ * small mark in its lane, in the colour and shape of its kind (the shape is the second carrier [DI4]); a planned one is
+ * hollow; marks too close to tell apart are one mark with a count on a small plate beside it. A stretch is a thin band in
+ * its lane, or a band behind every lane. The mark's button is larger than the mark, so it is easy to hit. Knobs [KT6]:
+ * `--kp-gantt-mark-size` (0.75rem), `--kp-gantt-hit` (1.375rem, the button), `--kp-gantt-zone` (0.375rem, a lane's band),
+ * `--kp-gantt-row-sub` (2.5rem, a lane's row when lanes carry a second line). */
+    .kp-gantt__point {
+        --kp-gantt-mark: var(--primary);
+        position: absolute;
+        z-index: 1;
+        box-sizing: border-box;
+        display: grid;
+        place-items: center;
+        inset-block-start: calc(var(--kp-gantt-pad) + (var(--kp-gantt-row, 1.75rem) - var(--kp-gantt-hit, 1.375rem)) / 2);
+        inset-inline-start: calc((var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100% - var(--kp-gantt-hit, 1.375rem) / 2);
+        inline-size: var(--kp-gantt-hit, 1.375rem);
+        block-size: var(--kp-gantt-hit, 1.375rem);
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: transparent;
+        color: var(--foreground);
+        font: inherit;
+        cursor: pointer;
+    }
+
+    .kp-gantt__point[hidden],
+    .kp-gantt__point[data-kp-clustered] {
+        display: none;
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark)::before {
+        content: '';
+        grid-area: 1 / 1;
+        box-sizing: border-box;
+        inline-size: var(--kp-gantt-mark-size, 0.75rem);
+        block-size: var(--kp-gantt-mark-size, 0.75rem);
+        border: 2px solid var(--kp-gantt-mark);
+        border-radius: 50%;
+        background: var(--kp-gantt-mark);
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-shape='square']::before {
+        border-radius: 1px;
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-shape='diamond']::before {
+        border-radius: 1px;
+        rotate: 45deg;
+        scale: 0.85;
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-shape='triangle']::before {
+        border: 0;
+        border-radius: 0;
+        clip-path: polygon(50% 4%, 100% 96%, 0 96%);
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-shape='ring']::before,
+    .kp-gantt__point[data-kp-planned]::before {
+        background: var(--card);
+    }
+
+    /* A planned triangle has no border to keep: its hollow is the card's ground inside an edge of its own colour. */
+    .kp-gantt__point[data-kp-planned][data-kp-shape='triangle']::before {
+        padding: 0.25rem 0.1875rem 0.125rem;
+        background:
+            linear-gradient(var(--card), var(--card)) content-box,
+            var(--kp-gantt-mark) border-box;
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-series] {
+        --kp-gantt-mark: var(--chart-1);
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-series='2'] {
+        --kp-gantt-mark: var(--chart-2);
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-series='3'] {
+        --kp-gantt-mark: var(--chart-3);
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-series='4'] {
+        --kp-gantt-mark: var(--chart-4);
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-series='5'] {
+        --kp-gantt-mark: var(--chart-5);
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark, .kp-gantt__zone, .kp-gantt__band)[data-kp-tone='success'] {
+        --kp-gantt-mark: var(--success);
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark, .kp-gantt__zone, .kp-gantt__band)[data-kp-tone='warning'] {
+        --kp-gantt-mark: var(--warning);
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-tone='destructive'] {
+        --kp-gantt-mark: var(--destructive);
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark, .kp-gantt__zone, .kp-gantt__band)[data-kp-tone='info'] {
+        --kp-gantt-mark: var(--info);
+    }
+
+    :is(.kp-gantt__point, .kp-gantt__mark, .kp-gantt__zone, .kp-gantt__band)[data-kp-tone='muted'] {
+        --kp-gantt-mark: var(--muted-foreground);
+    }
+
+    .kp-gantt__point:hover::before {
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 4px var(--foreground);
+    }
+
+    .kp-gantt__count {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: calc(50% + var(--kp-gantt-mark-size, 0.75rem) / 2 + 0.125rem);
+        translate: 0 -50%;
+        padding: 0.0625rem 0.1875rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--card);
+        color: var(--foreground);
+        font-size: 0.625rem;
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        line-height: 1;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    .kp-gantt__count:empty {
+        display: none;
+    }
+
+    .kp-gantt__zone {
+        --kp-gantt-mark: var(--warning);
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc((var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inline-size: calc((var(--kp-g-e, 0) - var(--kp-g-s, 0)) / var(--kp-g-span, 21600) * 100%);
+        border-inline: 1px dashed var(--kp-gantt-mark);
+        background: hsl(from var(--kp-gantt-mark) h s l / 0.14);
+        pointer-events: none;
+    }
+
+    .kp-gantt__zone[data-kp-lane-zone] {
+        inset-block: auto;
+        inset-block-start: calc(var(--kp-gantt-pad) + (var(--kp-gantt-row, 1.75rem) - var(--kp-gantt-zone, 0.375rem)) / 2);
+        block-size: var(--kp-gantt-zone, 0.375rem);
+        border: 0;
+        border-radius: var(--kp-radius-pill, 999px);
+        background: hsl(from var(--kp-gantt-mark) h s l / 0.55);
+    }
+
+    .kp-gantt__mark {
+        --kp-gantt-mark: var(--primary);
+        display: inline-grid;
+        place-items: center;
+        inline-size: 1rem;
+        block-size: 1rem;
+    }
+
+    .kp-gantt__band {
+        --kp-gantt-mark: var(--warning);
+        box-sizing: border-box;
+        inline-size: 1.25rem;
+        block-size: 0.625rem;
+        border-inline: 1px dashed var(--kp-gantt-mark);
+        background: hsl(from var(--kp-gantt-mark) h s l / 0.14);
+    }
+
+    .kp-gantt__legend > li[hidden] {
+        display: none;
+    }
+
+    /* A lane's name as a link, and a second line under it. */
+    .kp-gantt__lane > a {
+        min-inline-size: 0;
+    }
+
+    .kp-gantt__lane-link {
+        color: inherit;
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.2em;
+    }
+
+    .kp-gantt__words,
+    .kp-gantt__words > .kp-gantt__lane-link {
+        display: grid;
+        min-inline-size: 0;
+        line-height: 1.25;
+    }
+
+    :is(.kp-gantt__name, .kp-gantt__sub) {
+        display: block;
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-gantt__sub {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-gantt__body[data-kp-gantt-subs] {
+        --kp-gantt-row: var(--kp-gantt-row-sub, 2.5rem);
+    }
+
+    /* The dated line [kpadopt4] (`.kp-gantt--line`): one lane, no toolbar, no lane names, no hint, the axis under the line. */
+    .kp-gantt--line :is(.kp-gantt__bar, .kp-gantt__hint) {
+        display: none;
+    }
+
+    .kp-gantt--line .kp-gantt__body {
+        --kp-gantt-row: 2.25rem;
+        grid-template-columns: 0 minmax(0, 1fr);
+    }
+
+    .kp-gantt--line .kp-gantt__lane {
+        visibility: hidden;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .kp-gantt--line :is(.kp-gantt__corner, .kp-gantt__axis) {
+        grid-row: 3;
+        position: relative;
+        border-block-end: 0;
+        border-block-start: 1px solid var(--border-strong);
+    }
+
+    .kp-gantt--line .kp-gantt__track {
+        border-block-end: 0;
+    }
+
+    .kp-gantt--line .kp-gantt__state {
+        inset: 0 0 var(--kp-gantt-axis, 1.75rem);
+    }
+
+    /* A timeline of moments [kpadopt4] gives its sentence the card's ground, so no rule of the axis runs through it. */
+    .kp-gantt[data-kp-gantt-points]:not([data-kp-state='loading']) .kp-gantt__state:not(:empty) {
+        box-sizing: border-box;
+        display: block;
+        inline-size: fit-content;
+        max-inline-size: calc(100% - 2 * var(--kp-space-md, 0.75rem));
+        block-size: fit-content;
+        margin: auto;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--card);
+    }
+
+    /* --- Pipeline: where each item stands, a lane per stage [kpadopt4] ------
+ * `section.kp-pipeline[data-kp-pipeline]` (js/pipeline.js). A read-only board: lanes side by side at one width, each as
+ * tall as the tallest, a plate with the stage's name and its exact count in the stage's colour (a tint of the chart
+ * colour, the words in the page's ink [fix-70]), the share of all under it, and the cards. A closed lane stands under the
+ * board across its width. Under 40rem of the board's own width the lanes turn to rows. The sentence of an empty or a
+ * failed board stands on its own plate above the lanes, which keep their place and are covered by nothing. Knobs [KT6]: `--kp-pipeline-gap`
+ * (0.75rem), `--kp-pipeline-min` (12rem, the board's least height), `--kp-pipeline-card-min` (12rem, a card's least
+ * width where cards flow in a row), `--kp-pipeline-mark` (1.75rem), `--kp-pipeline-tone` (the stage's colour). */
+    .kp-pipeline {
+        container: kp-pipeline / inline-size;
+        display: grid;
+        gap: var(--kp-pipeline-gap, 0.75rem);
+        min-inline-size: 0;
+    }
+
+    .kp-pipeline__frame {
+        position: relative;
+        min-inline-size: 0;
+    }
+
+    .kp-pipeline__board {
+        display: grid;
+        grid-template-columns: repeat(var(--kp-pipeline-lanes, 4), minmax(0, 1fr));
+        gap: var(--kp-pipeline-gap, 0.75rem);
+        align-items: stretch;
+        min-block-size: var(--kp-pipeline-min, 12rem);
+    }
+
+    .kp-pipeline__lane {
+        --kp-pipeline-tone: var(--muted-foreground);
+        display: grid;
+        grid-template-rows: auto auto 1fr;
+        align-content: start;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        padding: var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--muted);
+        color: var(--foreground);
+    }
+
+    :is(.kp-pipeline__lane, .kp-pipeline__card)[data-kp-tone='1'] {
+        --kp-pipeline-tone: var(--chart-1);
+    }
+
+    :is(.kp-pipeline__lane, .kp-pipeline__card)[data-kp-tone='2'] {
+        --kp-pipeline-tone: var(--chart-2);
+    }
+
+    :is(.kp-pipeline__lane, .kp-pipeline__card)[data-kp-tone='3'] {
+        --kp-pipeline-tone: var(--chart-3);
+    }
+
+    :is(.kp-pipeline__lane, .kp-pipeline__card)[data-kp-tone='4'] {
+        --kp-pipeline-tone: var(--chart-4);
+    }
+
+    :is(.kp-pipeline__lane, .kp-pipeline__card)[data-kp-tone='5'] {
+        --kp-pipeline-tone: var(--chart-5);
+    }
+
+    .kp-pipeline__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--kp-pipeline-tone);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: color-mix(in oklab, var(--kp-pipeline-tone) 22%, var(--card));
+        color: var(--foreground);
+    }
+
+    .kp-pipeline__name {
+        min-inline-size: 0;
+        margin: 0;
+        overflow: hidden;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        line-height: 1.4;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-pipeline__count {
+        flex: none;
+        min-inline-size: 1.5rem;
+        font-size: 1.125rem;
+        font-variant-numeric: tabular-nums;
+        font-weight: 700;
+        line-height: 1.4;
+        text-align: end;
+    }
+
+    .kp-pipeline__ghost-count {
+        display: inline-block;
+        inline-size: 1.25rem;
+        block-size: 1rem;
+        vertical-align: middle;
+    }
+
+    .kp-pipeline__share {
+        min-block-size: 1.25rem;
+        margin: 0;
+        padding-inline: var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        line-height: 1.25rem;
+    }
+
+    .kp-pipeline__cards {
+        display: grid;
+        align-content: start;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-pipeline__card {
+        box-sizing: border-box;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-areas:
+            'mark title'
+            'mark sub'
+            'mark meta';
+        align-items: center;
+        column-gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        margin: 0;
+        padding: var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--border);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+        font: inherit;
+        text-align: start;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .kp-pipeline__card:hover {
+        border-color: var(--border-strong);
+    }
+
+    .kp-pipeline__card[aria-current='true'] {
+        border-color: var(--primary);
+        box-shadow: inset 0 0 0 1px var(--primary);
+    }
+
+    /* Filtered out, kept in its place: quieter by ink and a dashed edge, not by opacity, so its words keep their contrast. */
+    .kp-pipeline__card[data-kp-dimmed] {
+        border-style: dashed;
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    .kp-pipeline__mark {
+        grid-area: mark;
+        display: grid;
+        place-items: center;
+        inline-size: var(--kp-pipeline-mark, 1.75rem);
+        block-size: var(--kp-pipeline-mark, 1.75rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: color-mix(in oklab, var(--kp-pipeline-tone, var(--muted-foreground)) 30%, var(--card));
+        color: var(--foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+    }
+
+    .kp-pipeline__mark[hidden],
+    .kp-pipeline__sub[hidden],
+    .kp-pipeline__meta[hidden] {
+        display: none;
+    }
+
+    :is(.kp-pipeline__title, .kp-pipeline__sub, .kp-pipeline__meta) {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-pipeline__title {
+        grid-area: title;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+    }
+
+    .kp-pipeline__sub {
+        grid-area: sub;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-pipeline__meta {
+        grid-area: meta;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-pipeline__card[data-kp-dimmed] :is(.kp-pipeline__sub, .kp-pipeline__meta) {
+        color: inherit;
+    }
+
+    .kp-pipeline__ghost {
+        grid-template-areas: none;
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: var(--kp-space-xs, 0.25rem);
+        block-size: 3.5rem;
+        align-content: center;
+        cursor: default;
+    }
+
+    .kp-pipeline__ghost > .kp-skeleton {
+        block-size: 0.75rem;
+        inline-size: 75%;
+    }
+
+    .kp-pipeline__ghost > .kp-skeleton + .kp-skeleton {
+        inline-size: 45%;
+    }
+
+    .kp-pipeline__none {
+        margin: 0;
+        padding: var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-pipeline__more {
+        justify-self: start;
+    }
+
+    .kp-pipeline__closed {
+        display: grid;
+        gap: var(--kp-pipeline-gap, 0.75rem);
+    }
+
+    .kp-pipeline__closed[hidden] {
+        display: none;
+    }
+
+    .kp-pipeline__lane--closed .kp-pipeline__cards {
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--kp-pipeline-card-min, 12rem)), 1fr));
+    }
+
+    .kp-pipeline__state {
+        box-sizing: border-box;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        margin-block-end: var(--kp-pipeline-gap, 0.75rem);
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+        text-align: center;
+    }
+
+    .kp-pipeline__state[hidden] {
+        display: none;
+    }
+
+    .kp-pipeline__words {
+        margin: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
+        padding-inline-start: var(--kp-space-sm, 0.5rem);
+        border-inline-start: 3px solid var(--destructive);
+        text-align: start;
+    }
+
+    .kp-pipeline__retry[hidden] {
+        display: none;
+    }
+
+    @container kp-pipeline (max-width: 40rem) {
+        .kp-pipeline__board {
+            grid-template-columns: minmax(0, 1fr);
+            min-block-size: 0;
+        }
+
+        .kp-pipeline__cards {
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--kp-pipeline-card-min, 12rem)), 1fr));
+        }
+
+        .kp-pipeline__more,
+        .kp-pipeline__none {
+            grid-column: 1 / -1;
         }
     }
 
@@ -85855,6 +86893,355 @@
     }
 }
 /* ── end heat grid, matrix, bar cell ── */
+
+/* ── Flows and records [kpadopt4]: secret field ── */
+@layer kp.register {
+    /* Secret field — formal: a figure kept under a cover in the ledger. The box is paper with a hairline (G7), its value in the
+       ledger's own hand; shown, the value is ruled in from the start at the ruling pace (G1, G13: 400 ms, linear), and the
+       countdown is a navy rule ruled off from its end at an even pace (G1, G11), square-ended (G6). The countdown words are a
+       caption in small capitals (G18); a failure is the red-ink entry (G8). */
+    [data-theme='formal'] .kp-secret {
+        --kp-secret-drain: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-secret__value {
+        border-color: var(--border);
+        border-radius: calc(var(--radius) / 2);
+        background: var(--card);
+        font-family: var(--theme-font-body);
+    }
+
+    [data-theme='formal'] .kp-secret[data-kp-secret-state='disabled'] .kp-secret__value {
+        background: transparent;
+    }
+
+    [data-theme='formal'] .kp-secret__line {
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    [data-theme='formal'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        font-variant-caps: normal;
+        letter-spacing: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__text {
+            display: inline-block;
+            animation: kp-formal-secret-ruled 400ms linear;
+        }
+
+        [data-theme='formal'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__text:dir(rtl) {
+            animation-name: kp-formal-secret-ruled-rtl;
+        }
+    }
+
+    @keyframes kp-formal-secret-ruled {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    @keyframes kp-formal-secret-ruled-rtl {
+        from {
+            clip-path: inset(0 0 0 100%);
+        }
+
+        to {
+            clip-path: inset(0);
+        }
+    }
+}
+/* ── end flows and records ── */
+
+/* ── Flows and records [kpadopt4]: a dialog in sections, a confirmation that depends on something ── */
+@layer kp.register {
+    /* Formal: the dialog is a ledger page. Its sections are divided by the docket cut (G19: a hairline with a short navy tick
+       at its start), their headings are labels in small capitals (G18), and the danger section is the red-ink entry (G8: a
+       3 px red rule along its start edge, the words in the ledger's ink). What still uses a thing is a list on the muted
+       paper inside a hairline, square-cornered as a plate inside a rule (G6). */
+    [data-theme='formal'] .kp-dialog__section {
+        position: relative;
+    }
+
+    [data-theme='formal'] .kp-dialog__section:not(:first-child)::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -1px;
+        inset-inline-start: 0;
+        inline-size: 1.5rem;
+        block-size: 2px;
+        background: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-dialog__section--danger:not(:first-child)::before {
+        inset-inline-start: -3px;
+        background: var(--destructive);
+    }
+
+    [data-theme='formal'] :is(.kp-dialog__heading, .kp-confirm__dependents .kp-dialog__heading) {
+        font-family: var(--theme-font-body);
+        font-variant-caps: all-small-caps;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        color: var(--foreground);
+    }
+
+    [data-theme='formal'] .kp-confirm__dependents {
+        border-radius: 0;
+    }
+}
+/* ── end flows and records: dialog ── */
+
+/* ── Flows and records [kpadopt4]: moments on the timeline, the dated line ── */
+@layer kp.register {
+    /* Formal: a moment is a mark in the ledger's margin, and a stretch is a rule. A lane's waiting stretch is a 2 px rule with
+       square ends (G6), in red ink when it needs the eye (G5: a warning is red ink, never a tinted plate); the plot's band is
+       the faint ledger ground with the red-ink rule along its start edge (G8). The count beside a crowded mark is a square
+       plate inside a hairline (G6). Pointing at a mark rules a navy line under it (G15). */
+    [data-theme='formal'] :is(.kp-gantt__zone, .kp-gantt__band)[data-kp-tone='warning'] {
+        --kp-gantt-mark: var(--destructive);
+    }
+
+    [data-theme='formal'] .kp-gantt__zone,
+    [data-theme='formal'] .kp-gantt__band {
+        border-inline: 0;
+        border-inline-start: 3px solid var(--kp-gantt-mark);
+        background: hsl(from var(--kp-gantt-mark) h s l / 0.07);
+    }
+
+    [data-theme='formal'] .kp-gantt__zone[data-kp-lane-zone] {
+        block-size: 2px;
+        inset-block-start: calc(var(--kp-gantt-pad) + (var(--kp-gantt-row, 1.75rem) - 2px) / 2);
+        border: 0;
+        border-radius: 0;
+        background: var(--kp-gantt-mark);
+    }
+
+    [data-theme='formal'] .kp-gantt__count {
+        border-color: var(--border-strong);
+        border-radius: 0;
+        font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    [data-theme='formal'] .kp-gantt__point:hover::before {
+        box-shadow: none;
+    }
+
+    [data-theme='formal'] .kp-gantt__point:hover::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0.125rem;
+        inset-block-end: 0;
+        block-size: 2px;
+        background: var(--primary);
+    }
+
+    [data-theme='formal'] .kp-gantt__sub {
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+    }
+}
+/* ── end flows and records: timeline ── */
+
+/* ── Flows and records [kpadopt4]: the journey ── */
+@layer kp.register {
+    /* Formal: a journey is a ruled path through the ledger. The steps stand on no plate and under no hairline (the step list's
+       ledger lines are for a list, not a path); the rule into a reached step is ruled in navy (G5: navy does every acting),
+       or in the step's own colour, square-ended (G6); a step to come is joined by the faint ledger line (G7). The step it
+       stands at is framed by the double rule, round (G7, G12: a hairline ring with a thinner ring inside it); a closed path
+       ends in red ink (G5, G8). Names are labels in small capitals, dates in tabular figures (G18). */
+    [data-theme='formal'] .kp-steplist--journey > .kp-steplist__item {
+        border: 0;
+        background: transparent;
+    }
+
+    [data-theme='formal'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item::before {
+        background: var(--border);
+    }
+
+    [data-theme='formal'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background: var(--kp-step-tone, var(--primary));
+    }
+
+    [data-theme='formal'] .kp-steplist--journey > .kp-steplist__item[data-state='failed']::before {
+        background: repeating-linear-gradient(90deg, var(--destructive) 0 0.375rem, transparent 0.375rem 0.625rem);
+    }
+
+    [data-theme='formal'] .kp-steplist--journey .kp-steplist__item[data-state='done']:not([data-kp-tone]) .kp-steplist__mark {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='formal'] .kp-steplist--journey .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        border: 1px solid var(--kp-step-tone, var(--primary));
+        background: var(--card);
+        box-shadow:
+            inset 0 0 0 2px var(--card),
+            inset 0 0 0 3px var(--kp-step-tone, var(--primary)),
+            inset 0 0 0 5px var(--card),
+            inset 0 0 0 20px var(--kp-step-tone, var(--primary));
+    }
+
+    [data-theme='formal'] .kp-steplist--journey .kp-steplist__title {
+        font-family: var(--theme-font-body);
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        font-size: var(--kp-text-base, 0.9375rem);
+    }
+
+    [data-theme='formal'] .kp-steplist--journey .kp-steplist__time {
+        font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    @container kp-journey (max-width: 30rem) {
+        [data-theme='formal'] .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
+            background: var(--border);
+        }
+
+        [data-theme='formal']
+            .kp-steplist--journey
+            > .kp-steplist__item:has(+ .kp-steplist__item:is([data-state='done'], [data-state='current']))::after {
+            background: var(--kp-step-tone, var(--primary));
+        }
+
+        [data-theme='formal'] .kp-steplist--journey > .kp-steplist__item:has(+ .kp-steplist__item[data-state='failed'])::after {
+            background: repeating-linear-gradient(180deg, var(--destructive) 0 0.25rem, transparent 0.25rem 0.4375rem);
+        }
+    }
+}
+/* ── end flows and records: journey ── */
+
+/* ── Flows and records [kpadopt4]: the pipeline ── */
+@layer kp.register {
+    /* Formal: the pipeline is a ledger opened at its columns. Each lane is a column on paper inside a hairline (G7), its head
+       an engraved plate (the tiles' tone pick): the stage's colour as a wash, closed under it by the double rule, the name a
+       label in small capitals and the count a Fraunces figure (G18). The share is a caption. A card is an entry on the card
+       stock; pointing at it draws the inner rule 2 px inside (G15), a press doubles it (G17), the open one is ruled along
+       its start edge in navy (G5). The mark is a square plate in a hairline (G6). The board's sentence is a plate framed by
+       the double rule (G7); a failure is the red-ink entry (G8). */
+    [data-theme='formal'] .kp-pipeline__lane {
+        border-color: var(--border);
+        border-radius: var(--radius);
+        background: var(--card);
+    }
+
+    [data-theme='formal'] .kp-pipeline__head {
+        border: 0;
+        border-block-end: 3px double var(--border-strong);
+        border-radius: 0;
+        background: color-mix(in oklab, var(--kp-pipeline-tone) 14%, var(--card));
+    }
+
+    [data-theme='formal'] .kp-pipeline__name {
+        font-family: var(--theme-font-body);
+        font-variant-caps: all-small-caps;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        font-size: var(--kp-text-base, 0.9375rem);
+    }
+
+    [data-theme='formal'] .kp-pipeline__count {
+        font-family: var(--theme-font-display);
+        font-variant-numeric: tabular-nums lining-nums;
+        font-weight: 600;
+    }
+
+    [data-theme='formal'] .kp-pipeline__share {
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    [data-theme='formal'] .kp-pipeline__card {
+        border-radius: calc(var(--radius) / 2);
+        background: var(--background);
+    }
+
+    [data-theme='formal'] .kp-pipeline__card:hover {
+        border-color: var(--border);
+        outline: 1px solid var(--primary);
+        outline-offset: -3px;
+    }
+
+    [data-theme='formal'] .kp-pipeline__card:active {
+        outline-offset: -3px;
+        box-shadow:
+            inset 0 0 0 3px var(--background),
+            inset 0 0 0 4px var(--primary);
+    }
+
+    [data-theme='formal'] .kp-pipeline__card[aria-current='true'] {
+        border-color: var(--border);
+        box-shadow: inset 3px 0 0 var(--primary);
+    }
+
+    [data-theme='formal'] .kp-pipeline__card[aria-current='true']:dir(rtl) {
+        box-shadow: inset -3px 0 0 var(--primary);
+    }
+
+    [data-theme='formal'] .kp-pipeline__mark {
+        border: 1px solid var(--border-strong);
+        border-radius: 0;
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.06em;
+        text-transform: none;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    [data-theme='formal'] .kp-pipeline__meta {
+        font-variant-numeric: tabular-nums lining-nums;
+    }
+
+    [data-theme='formal'] .kp-pipeline__state {
+        border: 3px double var(--border-strong);
+        border-radius: var(--radius);
+    }
+}
+/* ── end flows and records: pipeline ── */
+
+/* ── Flows and records [kpadopt4]: drawings for an empty state ── */
+@layer kp.register {
+    /* Formal draws the ledger set (js/art.js): a ruled page, an entry struck through in red ink, the account closed with the
+       double rule (G7, G8, G19). Every stroke is ruled in on arrival at the ruling pace, 400 ms each and 60 ms apart, top
+       down, linear with a dead stop (G1, G2, G4, G13); the reduced pose is the drawing ruled (G20). */
+    [data-theme='formal'] .kp-art {
+        display: block;
+    }
+
+    [data-theme='formal'] .kp-art > g[data-kp-art-set='ledger'] {
+        display: inline;
+    }
+
+    [data-theme='formal'] .kp-art path {
+        stroke-linecap: butt;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] .kp-art path {
+            stroke-dasharray: 1;
+            animation: kp-formal-art-ruled 400ms linear both;
+            animation-delay: calc(var(--kp-art-i, 0) * 60ms);
+        }
+    }
+
+    @keyframes kp-formal-art-ruled {
+        from {
+            stroke-dashoffset: 1;
+        }
+
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+}
+/* ── end flows and records: drawings ── */
 
 /* Pointing and pressing run on one number each [Kenny, 2026-10-07]: 0 at
    rest, 1 at the end of the unit. Registered so the browser can transition

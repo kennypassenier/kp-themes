@@ -99,6 +99,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/timeline.html">Timeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/diff.html">Diff</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/copyable.html">Copyable value</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/secret.html">Secret field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/data-formatting.html">Showing data</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/empty-state.html">Empty state</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/log.html">Log</a></li>
@@ -117,6 +118,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/bar-cell.html">Bar in a table cell</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/week.html">Week agenda</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/gantt.html" aria-current="page">Run timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toolbar.html">List toolbar</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/facets.html">Facet list</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/idmark.html">Identity mark</a></li>
@@ -331,6 +333,8 @@ setGanttState(timeline, <span class="kp-code__string">'loading'</span>);</code><
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>data-kp-active</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-cluster</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-clustered</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-gantt</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-gantt-clear</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-gantt-crowded</code></td><td>selector, written</td></tr>
@@ -340,10 +344,18 @@ setGanttState(timeline, <span class="kp-code__string">'loading'</span>);</code><
                             <tr><td><code>data-kp-gantt-ghosts</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-gantt-id</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-gantt-live</code></td><td>written, read</td></tr>
+                            <tr><td><code>data-kp-gantt-points</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-gantt-range</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-gantt-ranges</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-gantt-subs</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-gantt-zoom</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-lane-key</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-lane-zone</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-name</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-out</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-planned</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-shape</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-zone</code></td><td>written</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
@@ -385,15 +397,21 @@ setGanttState(timeline, <span class="kp-code__string">'loading'</span>);</code><
                             <tr><td><code>--kp-gantt-bar-radius</code></td><td><code>var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2))</code></td></tr>
                             <tr><td><code>--kp-gantt-fill</code></td><td><code></code></td></tr>
                             <tr><td><code>--kp-gantt-height</code></td><td><code>22rem</code></td></tr>
+                            <tr><td><code>--kp-gantt-hit</code></td><td><code>1.375rem</code></td></tr>
                             <tr><td><code>--kp-gantt-ink</code></td><td><code></code></td></tr>
                             <tr><td><code>--kp-gantt-label</code></td><td><code>9rem</code></td></tr>
+                            <tr><td><code>--kp-gantt-mark</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-gantt-mark-size</code></td><td><code>0.75rem</code></td></tr>
                             <tr><td><code>--kp-gantt-now</code></td><td><code>var(--destructive)</code></td></tr>
                             <tr><td><code>--kp-gantt-pad</code></td><td><code></code></td></tr>
                             <tr><td><code>--kp-gantt-row</code></td><td><code>1.75rem</code></td></tr>
+                            <tr><td><code>--kp-gantt-row-sub</code></td><td><code>2.5rem</code></td></tr>
                             <tr><td><code>--kp-gantt-series</code></td><td><code></code></td></tr>
                             <tr><td><code>--kp-gantt-tick-flip</code></td><td><code>1</code></td></tr>
                             <tr><td><code>--kp-gantt-words</code></td><td><code>0px</code></td></tr>
+                            <tr><td><code>--kp-gantt-zone</code></td><td><code>0.375rem</code></td></tr>
                             <tr><td><code>--kp-glyph-failed</code></td><td><code>'✕'</code></td></tr>
+                            <tr><td><code>--kp-radius-pill</code></td><td><code>999px</code></td></tr>
                             <tr><td><code>--kp-radius-sm</code></td><td><code>calc(var(--radius, 0.5rem) / 2)</code></td></tr>
                             <tr><td><code>--kp-space-md</code></td><td><code>1rem</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
@@ -430,6 +448,13 @@ setGanttState(timeline, <span class="kp-code__string">'loading'</span>);</code><
                             <tr><td><code>setGanttRuns / setGanttState / setGanttWindow / setGanttSelection</code></td><td>The page’s calls: the lanes and runs (repainted in place by id), the state of the whole, the window (`{ span, live, to }`, no event) and a selected range (`{ from, to }` or null).</td></tr>
                             <tr><td><code>the busy card</code></td><td>While loading, the data table’s loading card (`js/busy-card.js`) stands centred over the lanes, flat over a short area, and the runs are drawn once it has left.</td></tr>
                             <tr><td><code>a register’s repairs</code></td><td>A register may hang the end-edge axis label inside the plot (the flip knob) and give an empty or failed timeline’s sentence a plate of its own (the state-ground knob); both are in the knobs below, and formal leaves them as they were approved.</td></tr>
+                            <tr><td><code>setGanttPoints / setGanttKinds / setGanttZones</code></td><td>Moments instead of runs [kpadopt4]: a point (`id`, `lane`, `at`, `kind`, `label`, `detail`, `planned`) is a `.kp-gantt__point` mark in its lane, in the colour and shape of its kind (`data-kp-shape` dot, diamond, square, triangle or ring; `data-kp-series` or `data-kp-tone`), hollow when `data-kp-planned`. A kind is named in the legend (`.kp-gantt__mark`); the run states leave the legend when there are no runs. A zone is a thin band in its lane (`data-kp-lane-zone`) or a band behind every lane, named in the legend (`.kp-gantt__band`); `data-kp-zone` carries its id.</td></tr>
+                            <tr><td><code>data-kp-cluster / data-kp-clustered</code></td><td>Marks closer than the eye can tell apart: the first carries the number it stands for and a count plate (`.kp-gantt__count`, “+2”), its name and card name them all; the others are `data-kp-clustered` and step aside. Opening it reports every point in `points`.</td></tr>
+                            <tr><td><code>data-kp-name / data-kp-card</code></td><td>Written on a mark: its own accessible name and card words, which a mark with a count joins.</td></tr>
+                            <tr><td><code>data-kp-gantt-points</code></td><td>On the timeline: its hint speaks of marks, not bars.</td></tr>
+                            <tr><td><code>all</code></td><td>A range word: the window fits everything on the timeline and now, and stays fitted while the data changes.</td></tr>
+                            <tr><td><code>href / sub</code></td><td>A lane with `href` is a link (`.kp-gantt__lane-link`); `sub` is a second line under its name (`.kp-gantt__sub`), and the lanes grow to hold it. `data-kp-lane-key` on the name is what it was drawn from.</td></tr>
+                            <tr><td><code>.kp-gantt--line</code></td><td>One lane, no toolbar, no lane names, no hint and no brush, the axis under the line, fitted to its data: the dated line under a journey stepper.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

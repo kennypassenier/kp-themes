@@ -99,6 +99,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/timeline.html">Timeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/diff.html">Diff</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/copyable.html">Copyable value</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/secret.html">Secret field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/data-formatting.html">Showing data</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/empty-state.html">Empty state</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/log.html">Log</a></li>
@@ -117,6 +118,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/bar-cell.html">Bar in a table cell</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/week.html">Week agenda</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/gantt.html">Run timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toolbar.html">List toolbar</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/facets.html">Facet list</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/idmark.html">Identity mark</a></li>
@@ -218,6 +220,56 @@
     &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__actions&quot;</span>&gt;
         &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-kp-dialog-close</span>&gt;Cancel&lt;/<span class="kp-code__keyword">button</span>&gt;
         &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive&quot;</span> <span class="kp-code__keyword">data-kp-dialog-close</span>&gt;Delete&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">dialog</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A dialog that manages one thing, in sections</figcaption>
+                        <p class="kp-text-muted">The head holds the title, a state badge and the description; the body holds sections with a heading and a note, the danger section last. The wide variant takes its full width at once, so a section that fills later moves nothing sideways.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<dialog class="kp-dialog kp-dialog--wide" open aria-labelledby="doc-manage-title">
+    <div class="kp-dialog__head">
+        <h2 class="kp-dialog__title" id="doc-manage-title">home-assistant</h2>
+        <span class="kp-badge kp-badge--success">active</span>
+        <p class="kp-dialog__description">Issued 02/10/2026 09:14 · last used 16/10/2026 18:40 (412×)</p>
+    </div>
+    <div class="kp-dialog__body">
+        <section class="kp-dialog__section">
+            <h3 class="kp-dialog__heading">Token</h3>
+            <div class="kp-secret" data-kp-secret data-kp-secret-label="Token of home-assistant" data-kp-secret-value="kp_live_7Hq2v9XcLm4TzR8sWb3N"></div>
+            <p class="kp-dialog__note">Hides itself again after 30 seconds.</p>
+        </section>
+        <section class="kp-dialog__section kp-dialog__section--danger">
+            <h3 class="kp-dialog__heading">Danger zone</h3>
+            <button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Revoke this token?">Revoke</button>
+            <p class="kp-dialog__note">Revoking keeps the row and its history; deleting does not.</p>
+        </section>
+    </div>
+    <div class="kp-dialog__actions">
+        <button type="button" class="kp-button">Close</button>
+    </div>
+</dialog>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">dialog</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog kp-dialog--wide&quot;</span> <span class="kp-code__keyword">open</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;doc-manage-title&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__head&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">h2</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__title&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-manage-title&quot;</span>&gt;home-assistant&lt;/<span class="kp-code__keyword">h2</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge kp-badge--success&quot;</span>&gt;active&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__description&quot;</span>&gt;Issued 02/10/2026 09:14 · last used 16/10/2026 18:40 (412×)&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__body&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__section&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__heading&quot;</span>&gt;Token&lt;/<span class="kp-code__keyword">h3</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-secret&quot;</span> <span class="kp-code__keyword">data-kp-secret</span> <span class="kp-code__keyword">data-kp-secret-label</span><span class="kp-code__string">=&quot;Token of home-assistant&quot;</span> <span class="kp-code__keyword">data-kp-secret-value</span><span class="kp-code__string">=&quot;kp_live_7Hq2v9XcLm4TzR8sWb3N&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__note&quot;</span>&gt;Hides itself again after 30 seconds.&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;/<span class="kp-code__keyword">section</span>&gt;
+        &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__section kp-dialog__section--danger&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__heading&quot;</span>&gt;Danger zone&lt;/<span class="kp-code__keyword">h3</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive&quot;</span> <span class="kp-code__keyword">data-kp-destructive</span> <span class="kp-code__keyword">data-kp-confirm</span><span class="kp-code__string">=&quot;Revoke this token?&quot;</span>&gt;Revoke&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__note&quot;</span>&gt;Revoking keeps the row and its history; deleting does not.&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;/<span class="kp-code__keyword">section</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__actions&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;Close&lt;/<span class="kp-code__keyword">button</span>&gt;
     &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">dialog</span>&gt;</code></pre>
                     </figure>
@@ -1851,11 +1903,16 @@ Delete incident
                             <tr><td><code>--kp-dialog-description-size</code></td><td><code>0.875rem</code></td></tr>
                             <tr><td><code>--kp-dialog-max-height</code></td><td><code>calc(100dvh - 2rem)</code></td></tr>
                             <tr><td><code>--kp-dialog-max-width</code></td><td><code>min(32rem, calc(100vw - 2rem))</code></td></tr>
+                            <tr><td><code>--kp-dialog-section-gap</code></td><td><code>0.75rem</code></td></tr>
                             <tr><td><code>--kp-dialog-title-size</code></td><td><code>1.25rem</code></td></tr>
+                            <tr><td><code>--kp-dialog-wide</code></td><td><code>42rem</code></td></tr>
                             <tr><td><code>--kp-heading-line-height</code></td><td><code>1.1</code></td></tr>
                             <tr><td><code>--kp-resize-dur</code></td><td><code>300ms</code></td></tr>
                             <tr><td><code>--kp-space-md</code></td><td><code>1rem</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
+                            <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
+                            <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
+                            <tr><td><code>--kp-text-xs</code></td><td><code>0.75rem</code></td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="a11y" id="a11y">
@@ -1876,6 +1933,10 @@ Delete incident
                             <tr><td><code>.kp-dialog__title / __description</code></td><td>The heading and the sentence under it, which are also what name and describe the dialog.</td></tr>
                             <tr><td><code>.kp-dialog__close</code></td><td>The close in the corner, on top of the padding rather than in the flow.</td></tr>
                             <tr><td><code>.kp-dialog__actions</code></td><td>The buttons at the end, pushed to the trailing edge, primary last.</td></tr>
+                            <tr><td><code>.kp-dialog--wide</code></td><td>A dialog that manages one thing: 42rem wide at once, so a section that fills later moves nothing sideways.</td></tr>
+                            <tr><td><code>.kp-dialog__head</code></td><td>The title with a state badge beside it and the description under both.</td></tr>
+                            <tr><td><code>.kp-dialog__section / __heading / __note</code></td><td>One part of the body under its heading, with an optional note under it; sections are divided by a rule.</td></tr>
+                            <tr><td><code>.kp-dialog__section--danger</code></td><td>The last section, for what cannot be undone: ruled along its start edge in the destructive colour.</td></tr>
                             <tr><td><code>backdrop</code></td><td>A dimming rather than a theme colour: a tinted backdrop paints the page instead of pushing it back.</td></tr>
                             <tr><td><code>pastel</code></td><td>In pastel a dialog is printed twice and stuck on: its second pass, a flat silhouette in the second ink drawn by its ::backdrop and placed on it by anchor positioning, springs into its rest 6 px off register, then the dialog swings down onto it from its top-start corner on the soft landing (one 8 % overshoot, settled once); a strip of washi tape crosses its top-start corner, and the modal’s dim is the backdrop’s border, so a click outside still reaches it. The close is that opening played backwards. Without anchor positioning the pass rests as a flat shadow and the dialog opens with the swing alone; under reduced motion it is simply there.</td></tr>
                     </tbody></table></div>

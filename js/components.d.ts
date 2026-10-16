@@ -44,17 +44,30 @@ export declare const CONFIRM_OWNED = "[data-kp-confirm-owner]";
  * confirmations and the skip links with it. `gates/check-closure.mjs`
  * holds that closure at six.
  *
+ * Three opt-in checks for a removal that depends on something [kpadopt4]:
+ * `dependents` lists what still uses the thing under the description (a
+ * heading with the exact count, then one line each); `blocked` (the sentence
+ * that says what to do first) makes it a notice instead of a question, with
+ * one Close button and no Confirm; `typeToConfirm` offers Confirm only once
+ * that word is typed into a field in the dialog. Each also comes from the
+ * button: `data-kp-confirm-dependents` (one name per `;`),
+ * `data-kp-confirm-blocked` (empty: the dictionary's sentence) and
+ * `data-kp-confirm-type`.
+ *
  * @param {HTMLElement} button the control the confirmation belongs to
- * @param {{ phrase?: string, strings?: Partial<import('./strings.js').Strings>, onAccept?: () => void, onCancel?: () => void, className?: string, initialFocus?: 'cancel' | 'accept' }} [options]
+ * @param {{ phrase?: string, strings?: Partial<import('./strings.js').Strings>, onAccept?: () => void, onCancel?: () => void, className?: string, initialFocus?: 'cancel' | 'accept', dependents?: readonly string[], blocked?: string | boolean, typeToConfirm?: string }} [options]
  * @returns {HTMLDialogElement} the dialog, so a consumer can reach the state this set [KT6]
  */
-export declare function openConfirmation(button: HTMLElement, { phrase, strings, onAccept, onCancel, className, initialFocus }?: {
+export declare function openConfirmation(button: HTMLElement, { phrase, strings, onAccept, onCancel, className, initialFocus, dependents, blocked, typeToConfirm }?: {
     phrase?: string;
     strings?: Partial<import('./strings.js').Strings>;
     onAccept?: () => void;
     onCancel?: () => void;
     className?: string;
     initialFocus?: 'cancel' | 'accept';
+    dependents?: readonly string[];
+    blocked?: string | boolean;
+    typeToConfirm?: string;
 }): HTMLDialogElement;
 /** Markup the consumer excludes from enforcement: `data-kp-contract-ignore`. */
 export declare const EXEMPT = "[data-kp-contract-ignore]";

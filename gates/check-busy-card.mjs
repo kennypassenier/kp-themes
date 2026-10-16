@@ -30,7 +30,7 @@ import process from 'node:process';
 const ROOT = fileURLToPath(new URL('../', import.meta.url));
 
 /** Data components whose loading state lays the busy card. */
-export const CARD = ['js/datatable.js', 'js/week.js', 'js/heat.js', 'js/gantt.js', 'js/bullets.js', 'js/code.js', 'js/card-state.js'];
+export const CARD = ['js/datatable.js', 'js/week.js', 'js/heat.js', 'js/gantt.js', 'js/bullets.js', 'js/code.js', 'js/card-state.js', 'js/pipeline.js'];
 
 /** Approved before the rule, each with its own central loading picture. @type {Record<string, string>} */
 export const OWN = {
@@ -54,6 +54,7 @@ export const NOT_DATA = {
     'js/menu-button.js': "a menu's loading items, inside the menu's own plate",
     'js/segmented.js': "a segment's busy mark",
     'js/tabbar.js': "a tab's busy mark",
+    'js/patterns.js': "a secret field's own one-line spinner while its one value is read (`.kp-secret`) [kpadopt4]",
     'js/auto.js': 'the loader that attaches the modules',
     'js/effects.js': "the effects' timing table",
     'js/motion.js': 'the motion a loading state arrives and leaves with',

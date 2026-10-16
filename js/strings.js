@@ -60,6 +60,7 @@
  * @property {string} stepDone  A finished step
  * @property {string} stepFailed  A step that failed
  * @property {string} stepSkipped  A step that was left out
+ * @property {string} stepCurrent  The step a journey stands at now, neither running nor done (`data-state="current"`) [kpadopt4]
  * @property {(title: string, state: string) => string} stepAnnounce  What the list's status region says when a step changes, "Pull the images: running"
  * @property {string} statusOk  A status row that is fine, as a screen reader hears it (js/statusrow.js)
  * @property {string} statusLoading  A status row still being read
@@ -258,6 +259,20 @@
  * @property {string} copyBlockedAnnouncement
  * @property {string} undo
  * @property {string} deleted
+ * @property {string} secretLabel  A secret field's name when the page gives none (js/patterns.js, `.kp-secret`) [kpadopt4]
+ * @property {string} secretReveal  The button that shows a secret
+ * @property {string} secretHide  The same button while the secret is shown
+ * @property {string} secretHold  The button of a secret shown only while it is held (`data-kp-secret-reveal-on="hold"`)
+ * @property {string} secretCopy  The button that copies a secret without showing it
+ * @property {string} secretReading  The words beside the spinner while a secret is fetched
+ * @property {string} secretRetry  The reveal button's words after a secret could not be read
+ * @property {(seconds: number) => string} secretHidesIn  The countdown under a shown secret, "Hides in 28 s"
+ * @property {string} secretPaused  The countdown's words while the reader selects or holds the focus in the value
+ * @property {string} secretStaysShown  The line under a shown secret that hides only when asked (`data-kp-secret-ttl="0"`)
+ * @property {(seconds: number) => string} secretShown  What a screen reader hears when a secret is shown, "Shown. Hides in 30 s."
+ * @property {string} secretHidden  What it hears when the secret is hidden again
+ * @property {(reason: string) => string} secretFailed  The line under a secret that could not be read
+ * @property {string} secretNoSource  The reason when a secret has no value, loader or listener to read it from
  * @property {string} splitLabel
  * @property {(name: string) => string} reorderHandle
  * @property {(name: string, at: number, of: number) => string} reorderMoved
@@ -274,6 +289,10 @@
  * @property {string} confirmAccept
  * @property {string} confirmCancel
  * @property {string} confirmDescription
+ * @property {(count: number) => string} confirmDependents  The heading over what still uses the thing a confirmation would remove, "Still in use by 2" (`data-kp-confirm-dependents`) [kpadopt4]
+ * @property {string} confirmBlocked  What a confirmation that may not go ahead says when the page gives no sentence (`data-kp-confirm-blocked`) [kpadopt4]
+ * @property {string} confirmClose  The one button of a confirmation that may not go ahead [kpadopt4]
+ * @property {(word: string) => string} confirmTypeLabel  The label of the field a person types the name into before Confirm is offered, "Type Household to confirm" (`data-kp-confirm-type`) [kpadopt4]
  * @property {string} alarmAction  The button that closes an alarm that must be acknowledged, when the caller names none [scope-94]
  * @property {string} alarmKeepOpen  The button that stops an alarm's countdown and keeps it open [scope-94]
  * @property {string} alarmHint  The key hint beside the acknowledge button; hidden from a screen reader [scope-94]
@@ -388,6 +407,21 @@
  * @property {string} ganttZoomTitle  Its title
  * @property {(seconds: number) => string} ganttDuration  A length of time as a person reads it, "14 min", "1 h 5 min", "45 s"
  * @property {string} ganttHint  The one-line hint under the timeline on how to read and use it
+ * @property {string} ganttAll  The range button that fits the window to everything on the timeline (`all` in `data-kp-gantt-ranges`) [kpadopt4]
+ * @property {string} ganttAllTitle  Its title
+ * @property {(label: string, when: string) => string} ganttPoint  A point event's name, "Applied, 02/10/2026" [kpadopt4]
+ * @property {string} ganttPlanned  The word after a planned point's name, still to come
+ * @property {(count: number, labels: string) => string} ganttCluster  The name of marks too close to tell apart, "3 events: Applied, Mail, Call"
+ * @property {(more: number) => string} ganttClusterMore  The count on such a mark, "+2"
+ * @property {string} ganttPointsHint  The hint under a timeline of point events
+ * @property {string} pipelineLoading  The words on a pipeline's loading card (js/pipeline.js) [kpadopt4]
+ * @property {string} pipelineEmpty  The sentence over a pipeline with no cards, when the page gives none
+ * @property {(reason: string) => string} pipelineFailed  The sentence over a pipeline that could not be read
+ * @property {string} pipelineRetry  Its Try again button
+ * @property {string} pipelineNone  The word in a lane with no cards
+ * @property {(more: number) => string} pipelineMore  The button under a lane's first cards, "+4 more"
+ * @property {string} pipelineLess  The same button while the lane shows every card
+ * @property {(percent: number) => string} pipelineShare  A lane's share of all cards, "25 % of all"
  * @property {string} graphShowAll  The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
  * @property {string} graphShowAllTitle  Its title [scope-143]
  * @property {string} graphHint  The hint under the graph, and the second half of its picture's accessible name: what a pointer, a click and the keys do [scope-143]
@@ -458,6 +492,7 @@ export const DEFAULT_STRINGS = Object.freeze({
     stepDone: 'done',
     stepFailed: 'failed',
     stepSkipped: 'skipped',
+    stepCurrent: 'current',
     stepAnnounce: (title, state) => `${title}: ${state}`,
     // A status row's states, its Retry and its announcement (js/statusrow.js).
     statusOk: 'ok',
@@ -732,6 +767,21 @@ export const DEFAULT_STRINGS = Object.freeze({
     copyBlockedAnnouncement: 'Copying is blocked in this browser',
     undo: 'Undo',
     deleted: 'Deleted.',
+    // The secret field [kpadopt4]: a masked value shown on request for a few seconds, copied without being shown.
+    secretLabel: 'Secret',
+    secretReveal: 'Reveal',
+    secretHide: 'Hide',
+    secretHold: 'Hold to reveal',
+    secretCopy: 'Copy',
+    secretReading: 'Reading…',
+    secretRetry: 'Try again',
+    secretHidesIn: (seconds) => `Hides in ${seconds} s`,
+    secretPaused: 'Paused while you select it',
+    secretStaysShown: 'Shown until you hide it',
+    secretShown: (seconds) => (seconds > 0 ? `Shown. Hides in ${seconds} s.` : 'Shown.'),
+    secretHidden: 'Hidden again',
+    secretFailed: (reason) => `Could not read it: ${reason}`,
+    secretNoSource: 'there is nothing to read it from',
     splitLabel: 'Resize the panes',
     reorderHandle: (name) => `Move ${name}`,
     /** Announced after a keyboard or pointer move. @param {string} name @param {number} at @param {number} of */
@@ -750,6 +800,10 @@ export const DEFAULT_STRINGS = Object.freeze({
     confirmAccept: 'Yes, do it',
     confirmCancel: 'Cancel',
     confirmDescription: 'This cannot be undone. Cancel leaves everything as it is.',
+    confirmDependents: (count) => `Still in use by ${count}`,
+    confirmBlocked: 'Remove what uses it first, then try again.',
+    confirmClose: 'Close',
+    confirmTypeLabel: (word) => `Type ${word} to confirm`,
     // The alarm [scope-94]. The headline, the detail and the code line are
     // the caller's words; these are the ones the component adds itself. The
     // countdown and the key hint are hidden from a screen reader, which hears
@@ -887,6 +941,21 @@ export const DEFAULT_STRINGS = Object.freeze({
         return rest ? `${hours} h ${rest} min` : `${hours} h`;
     },
     ganttHint: 'Click a bar to open it · drag across the time to select a range',
+    ganttAll: 'All',
+    ganttAllTitle: 'Show everything on the timeline',
+    ganttPoint: (label, when) => `${label}, ${when}`,
+    ganttPlanned: 'planned',
+    ganttCluster: (count, labels) => `${count} events: ${labels}`,
+    ganttClusterMore: (more) => `+${more}`,
+    ganttPointsHint: 'Point at a mark to read it · arrows walk the marks · Enter opens one',
+    pipelineLoading: 'Reading the board',
+    pipelineEmpty: 'Nothing on the board yet.',
+    pipelineFailed: (reason) => (reason ? `Could not read the board: ${reason}` : 'Could not read the board.'),
+    pipelineRetry: 'Try again',
+    pipelineNone: 'none',
+    pipelineMore: (more) => `+${more} more`,
+    pipelineLess: 'Show fewer',
+    pipelineShare: (percent) => `${percent} % of all`,
     // The network graph [scope-143]: its own words; the nodes, kinds and
     // the sentences of its states are the page's.
     graphShowAll: 'Show all',

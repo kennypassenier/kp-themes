@@ -96,13 +96,45 @@ let dialogSeq = 0;
  * confirmations and the skip links with it. `gates/check-closure.mjs`
  * holds that closure at six.
  *
+ * Three opt-in checks for a removal that depends on something [kpadopt4]:
+ * `dependents` lists what still uses the thing under the description (a
+ * heading with the exact count, then one line each); `blocked` (the sentence
+ * that says what to do first) makes it a notice instead of a question, with
+ * one Close button and no Confirm; `typeToConfirm` offers Confirm only once
+ * that word is typed into a field in the dialog. Each also comes from the
+ * button: `data-kp-confirm-dependents` (one name per `;`),
+ * `data-kp-confirm-blocked` (empty: the dictionary's sentence) and
+ * `data-kp-confirm-type`.
+ *
  * @param {HTMLElement} button the control the confirmation belongs to
- * @param {{ phrase?: string, strings?: Partial<import('./strings.js').Strings>, onAccept?: () => void, onCancel?: () => void, className?: string, initialFocus?: 'cancel' | 'accept' }} [options]
+ * @param {{ phrase?: string, strings?: Partial<import('./strings.js').Strings>, onAccept?: () => void, onCancel?: () => void, className?: string, initialFocus?: 'cancel' | 'accept', dependents?: readonly string[], blocked?: string | boolean, typeToConfirm?: string }} [options]
  * @returns {HTMLDialogElement} the dialog, so a consumer can reach the state this set [KT6]
  */
-export function openConfirmation(button, { phrase, strings, onAccept, onCancel, className = '', initialFocus = 'cancel' } = {}) {
+export function openConfirmation(
+    button,
+    { phrase, strings, onAccept, onCancel, className = '', initialFocus = 'cancel', dependents, blocked, typeToConfirm } = {},
+) {
     const s = { ...getStrings(), ...strings };
     const text = phrase ?? button.getAttribute('data-kp-confirm') ?? s.confirm;
+    const users = (
+        dependents ??
+        (button.getAttribute('data-kp-confirm-dependents') ?? '')
+            .split(';')
+            .map((name) => name.trim())
+            .filter(Boolean)
+    ).slice();
+    const blockedAttribute = button.getAttribute('data-kp-confirm-blocked');
+    const stop =
+        blocked === undefined
+            ? blockedAttribute === null
+                ? null
+                : blockedAttribute.trim() || s.confirmBlocked
+            : blocked === false
+              ? null
+              : blocked === true
+                ? s.confirmBlocked
+                : blocked;
+    const word = (typeToConfirm ?? button.getAttribute('data-kp-confirm-type') ?? '').trim();
 
     // showModal() light-dismisses every open `popover="auto"` — measured
     // for AR28: the menu goes open → closed, the button stays connected
@@ -126,13 +158,13 @@ export function openConfirmation(button, { phrase, strings, onAccept, onCancel, 
     const description = document.createElement('p');
     description.className = 'kp-dialog__description';
     description.id = `${id}-description`;
-    description.textContent = s.confirmDescription;
+    description.textContent = stop ?? s.confirmDescription;
 
     const cancel = document.createElement('button');
     cancel.type = 'button';
     cancel.className = 'kp-button';
     cancel.setAttribute('data-kp-confirm-cancel', '');
-    cancel.textContent = s.confirmCancel;
+    cancel.textContent = stop === null ? s.confirmCancel : s.confirmClose;
     cancel.addEventListener('click', () => dialog.close(''));
 
     const accept = document.createElement('button');
@@ -144,8 +176,64 @@ export function openConfirmation(button, { phrase, strings, onAccept, onCancel, 
 
     const actions = document.createElement('div');
     actions.className = 'kp-dialog__actions';
-    actions.append(cancel, accept);
-    dialog.append(title, description, actions);
+    // A removal something still depends on is a notice: one way out, nothing to confirm [kpadopt4].
+    if (stop === null) actions.append(cancel, accept);
+    else actions.append(cancel);
+    dialog.append(title, description);
+
+    if (users.length > 0) {
+        const block = document.createElement('section');
+        block.className = 'kp-confirm__dependents';
+        block.setAttribute('aria-labelledby', `${id}-dependents`);
+        const heading = document.createElement('h3');
+        heading.className = 'kp-dialog__heading';
+        heading.id = `${id}-dependents`;
+        heading.textContent = s.confirmDependents(users.length);
+        const list = document.createElement('ul');
+        list.className = 'kp-confirm__list';
+        for (const name of users) {
+            const item = document.createElement('li');
+            item.textContent = name;
+            list.append(item);
+        }
+        block.append(heading, list);
+        dialog.append(block);
+        dialog.setAttribute('aria-describedby', `${id}-description ${id}-dependents`);
+    }
+
+    /** @type {HTMLInputElement | null} */
+    let typed = null;
+    if (word !== '' && stop === null) {
+        const field = document.createElement('div');
+        field.className = 'kp-field kp-confirm__type';
+        const label = document.createElement('label');
+        label.className = 'kp-field__label';
+        label.htmlFor = `${id}-type`;
+        label.textContent = s.confirmTypeLabel(word);
+        const input = document.createElement('input');
+        input.className = 'kp-field__input';
+        input.id = `${id}-type`;
+        input.type = 'text';
+        input.autocomplete = 'off';
+        input.spellcheck = false;
+        field.append(label, input);
+        dialog.append(field);
+        typed = input;
+        const sync = () => {
+            const match = input.value.trim() === word;
+            accept.disabled = !match;
+            accept.setAttribute('aria-disabled', String(!match));
+        };
+        input.addEventListener('input', sync);
+        input.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' && !accept.disabled) {
+                event.preventDefault();
+                dialog.close('accept');
+            }
+        });
+        sync();
+    }
+    dialog.append(actions);
     document.body.append(dialog);
 
     dialog.addEventListener('close', () => {
@@ -162,7 +250,9 @@ export function openConfirmation(button, { phrase, strings, onAccept, onCancel, 
     dialog.showModal();
     // The destructive answer must not be the one a stray Enter takes.
     // A consumer whose confirmation is not destructive says so [KT6].
-    (initialFocus === 'accept' ? accept : cancel).focus();
+    // A typed confirmation starts in its field; a notice on its one button.
+    if (typed !== null) typed.focus();
+    else (initialFocus === 'accept' && stop === null ? accept : cancel).focus();
     return dialog;
 }
 

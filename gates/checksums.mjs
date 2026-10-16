@@ -164,6 +164,8 @@ export const FILES = [
     'js/bullets.js',
     'js/code.js',
     'js/tick.js',
+    'js/pipeline.js',
+    'js/art.js',
     'js/toolbar.js',
     'js/keys.js',
     'js/heat.js',

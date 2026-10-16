@@ -99,6 +99,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/timeline.html">Timeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/diff.html">Diff</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/copyable.html">Copyable value</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/secret.html">Secret field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/data-formatting.html">Showing data</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/empty-state.html">Empty state</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/log.html">Log</a></li>
@@ -117,6 +118,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/bar-cell.html">Bar in a table cell</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/week.html">Week agenda</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/gantt.html">Run timeline</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toolbar.html">List toolbar</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/facets.html">Facet list</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/idmark.html">Identity mark</a></li>
@@ -7223,6 +7225,7 @@ data-cat-server
                             <tr><td><code>data-kp-server</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-sort</code></td><td>selector, written, read</td></tr>
                             <tr><td><code>data-kp-sort-cycle</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-sort-external</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-sort-multi</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-sort-order</code></td><td>written, read</td></tr>
                             <tr><td><code>data-kp-sort-priority</code></td><td>read, written</td></tr>
@@ -7423,6 +7426,7 @@ data-cat-server
                             <tr><td><code>.kp-datatable__pager / __page</code></td><td>The page controls and the “page m of n” label, in same-width digits.</td></tr>
                             <tr><td><code>.kp-datatable__page-size</code></td><td>The rows-per-page control, before the pager.</td></tr>
                             <tr><td><code>.kp-datatable__sort-order / __sort-summary</code></td><td>With `data-kp-sort-multi`: each sorted header’s place in the sort, and the sort said in words above the table.</td></tr>
+                            <tr><td><code>data-kp-sort-external</code></td><td>The page sorts: a header press draws the arrow, `aria-sort`, the key numbers, the summary and Reset, remembers the sort and fires `kp-datatable-sort`; the rows keep the order the page renders, which it changes and then calls `refresh()` (`view().sorts` has every key). A sortable header with `aria-disabled=&quot;true&quot;` cannot be pressed now and keeps an arrow it already has. Also the `sortExternal` option.</td></tr>
                             <tr><td><code>.kp-datatable__columns / __column-option</code></td><td>With `data-kp-column-menu`: the menu of columns, on the popover layer, and one checkbox per column; the key column is locked.</td></tr>
                             <tr><td><code>.kp-datatable__expand / __detail</code></td><td>With `data-kp-expandable`: the button that opens a row, and the detail row under it that spans every column.</td></tr>
                             <tr><td><code>fixed columns</code></td><td>With `data-kp-fixed-columns`: the key column stays at the left edge on an opaque ground, with a hairline, while the box scrolls sideways.</td></tr>

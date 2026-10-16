@@ -27,7 +27,7 @@ export { PAGE_SIZE, SELECT_EVENT as DATATABLE_SELECT_EVENT, VIEW_EVENT as DATATA
 export { WRAP_SELECTOR as TABLE_WRAP_SELECTOR, attachTableRegions } from './js/tables.js';
 export { VALID_EVENT as FORM_VALID_EVENT, DONE_EVENT as FORM_DONE_EVENT, attachForms, attachSwitches } from './js/forms.js';
 export { Copyable, Diff, EmptyState, Health, Timeline } from './components/patterns.jsx';
-export { COMMIT_EVENT as ACTION_COMMIT_EVENT, UNDO_EVENT as ACTION_UNDO_EVENT, UNDO_MS, attachPatterns } from './js/patterns.js';
+export { COMMIT_EVENT as ACTION_COMMIT_EVENT, UNDO_EVENT as ACTION_UNDO_EVENT, UNDO_MS, SECRET, SECRET_EVENT, SECRET_MASK, SECRET_REQUEST_EVENT, SECRET_TTL, attachPatterns, attachSecrets, hideSecret, revealSecret, } from './js/patterns.js';
 export { REORDER_EVENT, SPLIT_EVENT, attachStructure } from './js/structure.js';
 export { REMEMBER_ATTRIBUTE, REMEMBER_CLASH_EVENT, REMEMBER_HOLD_ATTRIBUTE, REMEMBER_PREFIX, attachRemembered, configureRemember, forgetClaims, forgetRememberedExcept, memoryFor, paintRemembered, restoreRemembered, } from './js/remember.js';
 export { DATE_EVENT, attachDatePickers, parseDate, toDutch, toISO } from './js/datepicker.js';
@@ -36,7 +36,7 @@ export { STEP_EVENT as WIZARD_STEP_EVENT, attachWizards } from './js/wizard.js';
 export { attachProgressbars, buildProgressbar, setIndeterminate as setProgressbarIndeterminate, setProgress as setProgressbar, syncProgressbar, } from './js/progressbar.js';
 export { STEPLIST_EVENT, STEP_ID_ATTRIBUTE, STEP_STATES, attachSteplists, buildSteplist, setStep } from './js/steplist.js';
 export { WEEK, WEEK_OPEN_EVENT, WEEK_RANGE_EVENT, WEEK_TICK_MS, attachWeeks, pillCapacity, setWeekEvents, setWeekLegend, setWeekStart, setWeekState, stackPills, } from './js/week.js';
-export { GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_STEPS, GANTT_TICK_MS, GANTT_WINDOW_EVENT, attachGantts, axisStep, packRows, rangeSeconds, setGanttRuns, setGanttSelection, setGanttState, setGanttWindow, } from './js/gantt.js';
+export { GANTT, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT, GANTT_STEPS, GANTT_TICK_MS, GANTT_WINDOW_EVENT, attachGantts, axisStep, packRows, rangeSeconds, setGanttKinds, setGanttLegend, setGanttPoints, setGanttRuns, setGanttSelection, setGanttState, setGanttWindow, setGanttZones, } from './js/gantt.js';
 export { BUSY_CARD, openBusyCard } from './js/busy-card.js';
 export type BusyCard = import('./js/busy-card.js').BusyCard;
 export type BusyCardOptions = import('./js/busy-card.js').BusyCardOptions;
@@ -71,7 +71,13 @@ export { CARD_RETRY_EVENT, CARD_STATE, CARD_STATES, CARD_STATE_EVENT, attachCard
 export type CardStateOptions = import('./js/card-state.js').CardStateOptions;
 /** @typedef {import('./js/card-state.js').CardStateOptions} CardStateOptions */
 export { FACETS, FACET_EVENT, attachFacets, getFacetValues, setFacetCounts, setFacetItems, setFacetValues } from './js/facets.js';
+export { ART, ART_KINDS, ART_SETS, attachArt, drawArt } from './js/art.js';
+export { PIPELINE, PIPELINE_MORE_EVENT, PIPELINE_OPEN_EVENT, PIPELINE_RETRY_EVENT, attachPipelines, setPipeline, setPipelineSelected, setPipelineState, } from './js/pipeline.js';
+export type PipelineLane = import('./js/pipeline.js').PipelineLane;
+export type PipelineCard = import('./js/pipeline.js').PipelineCard;
 export type FacetItem = import('./js/facets.js').FacetItem;
+/** @typedef {import('./js/pipeline.js').PipelineLane} PipelineLane */
+/** @typedef {import('./js/pipeline.js').PipelineCard} PipelineCard */
 /** @typedef {import('./js/facets.js').FacetItem} FacetItem */
 export { IDMARK, IDMARK_GLYPHS, IDMARK_SLOTS, attachIdmarks, idmarkColours, idmarkFor, idmarkLetters, setIdmark } from './js/idmark.js';
 export { STACKBAR, STACKBAR_PICK_EVENT, attachStackbars, setStackbar, shareText, stackbarParts } from './js/stackbar.js';
