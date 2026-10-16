@@ -21,6 +21,27 @@ the admin dashboard still draws itself (docs/admin/KP_THEMES_ADOPTION.md), built
 | Week agenda         | seven days, items at their time, now-line, `+N`       | `sch-week`, `sch-pill` | `.kp-week`, `js/week.js`                                                    | medium | Adopt          |
 | Run timeline        | bars per job on a live axis, a brushed selection      | `ac-tl`                | `.kp-gantt`, `js/gantt.js`; the selected range is a chip in the toolbar row | large  | Adopt          |
 
+## Round 2 of the page (2026-10-16-r2): the four still open
+
+Kenny approved seven sections in round 1 (`VERDICTS.json`); the page now builds only the matrix, the bar cell, the week agenda and its
+states (`OPEN` in `build.mjs`; the other parts stay in `parts/`, and the demo scripts wire a section only when it is on the page). His
+general note: build from the package's own parts and each theme's spirit. What changed, at the root:
+
+- **Matrix:** a column header had no `gap` between its colour mark and its name (only the row header had one); both now share one
+  rule, `--kp-matrix-mark-gap` and `--kp-matrix-head-pad` (`--kp-space-sm`, `--kp-space-xs` in a box under 36rem). The demo's state
+  buttons are the package's segmented control.
+- **Bar cell:** loading did animate (formal's ledger rule in the groove) but read as empty rows. The figure now waits too, as a skeleton
+  line (`.kp-bar-cell__ghost`), and the demo's Show loading puts the table in its own loading state with its busy panel and the
+  theme's spinner (`dataTable().busy({ overlay: true })`).
+- **Week agenda:** the steps are one control in the theme's segmented track (chevron back, Today, chevron on, named by the dictionary's own
+  Previous and Next; Today is `aria-disabled` while the range starts today), the title in the theme's display face. An agenda that can load or move lets what
+  comes later arrive the theme's way (`js/motion.js` `easeSize()`, attached on its first loading state or by its week buttons); a new
+  range waits in its loading ghosts in the demo, then its items arrive. In rows (below 40rem) the state sentence stays in the items'
+  column, clear of the day names it ran over at 390 px, and stands on a plate of the card's ground so no day's rule runs through it.
+- **Week states:** "Make it load, then arrive" drove the agenda of the other section (`weekWide`), off screen in the review dialog; it
+  now drives this section's loading agenda, as the package's running-job button (`kp-button--live` with the theme's spinner) while it
+  waits.
+
 ## Decisions to judge
 
 - Tiles: the "only" button of the facet list is a sibling of the label, always shown on touch; a status row keeps one detail line (`--kp-statusrow-detail-lines: 2` for more); the tile reserves a mark column so a spinner never moves the title.

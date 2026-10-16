@@ -1,0 +1,34 @@
+{
+    "demo": "kpadopt2",
+    "rounds": [
+        {
+            "round": "1",
+            "page": "2026-10-16-r1",
+            "allJudged": true,
+            "notApproved": [
+                {
+                    "item": "matrix",
+                    "theme": "formal",
+                    "note": "de bovenste balk heeft tekst die tegen het icoon plakt, de verticale balk heeft dit niet, dus ik snap niet goed hoe dit mogelijk is? dit is ook een veel voorkomend probleem. tekst moet, buiten misschien uitzonderlijke gevallen, altijd wat marge hebben en niet tegen een ander element plakken"
+                },
+                {
+                    "item": "barcell",
+                    "theme": "formal",
+                    "note": "show loading toont enkel lege rijen en geen load animatie? is dat niet de bedoeling?"
+                },
+                {
+                    "item": "week",
+                    "theme": "formal",
+                    "note": "is op zich in orde, maar de knoppen met Prev, Next, Today zijn basic en lelijk en niet volgens het thema"
+                },
+                {
+                    "item": "week-states",
+                    "theme": "formal",
+                    "note": "make it load, then arrive doet niks?"
+                }
+            ],
+            "generalNote": "in the second demo the base was there, but e.g. the buttons were not per theme. When you build these components, take the existing elements/components/spirit/animations of the themes into the design."
+        }
+    ],
+    "reopened": []
+}

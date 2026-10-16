@@ -24,8 +24,9 @@
 // one; the number carries a word as well for a screen reader (the meter's
 // own `aria-valuetext`). A share of null is "not measured": the track stays,
 // empty, and the number says why (`text`, "not read"); the cell keeps its
-// size, so a row that arrives later moves nothing. `loading` pulses the
-// track at the same size.
+// size, so a row that arrives later moves nothing. `loading` shows the
+// meter's loading picture at the same size and a skeleton line in place of
+// the figure, both the register's own.
 //
 // Nothing runs on import. attachBarCells(root) fills every `[data-kp-bar]`
 // under it and again whenever `data-kp-bar`, `data-kp-bar-text` or
@@ -82,7 +83,14 @@ export function setBarCell(el, { value = null, text, tone, warnAt = 0.75, badAt 
             ? 'warning'
             : null;
     setMeter(meter, { value: measured ? value : null, mark, tone: tone === undefined ? auto : tone, label, markLabel, loading });
-    number.textContent = text ?? (measured ? `${Math.round(/** @type {number} */ (value) * 100)}%` : '');
+    // While it loads the figure waits too, in the theme's own loading picture (a skeleton line of the column's width),
+    // so the row never reads as empty (Kenny, 2026-10-16: "show loading toont enkel lege rijen en geen load animatie").
+    if (loading) {
+        const ghost = el.ownerDocument.createElement('span');
+        ghost.className = 'kp-skeleton kp-bar-cell__ghost';
+        ghost.setAttribute('aria-hidden', 'true');
+        number.replaceChildren(ghost);
+    } else number.textContent = text ?? (measured ? `${Math.round(/** @type {number} */ (value) * 100)}%` : '');
     el.toggleAttribute('data-kp-loading', loading);
     const sort =
         sortValue === undefined

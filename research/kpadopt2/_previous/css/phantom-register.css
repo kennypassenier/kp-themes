@@ -905,6 +905,39 @@
         content: none;
     }
 
+    /* Nor is the folding bar's More menu: it floats out of its button in the
+       top layer, wherever the bar stands, so it keeps the plate, the edge,
+       the cut and the red fold of phantom's own menu. Without this a bar
+       inside any dialog, the review dialog's stage included, lost them to
+       the rule above and the page read through the entries (Kenny,
+       2026-10-16: "het geopende menu heeft geen achtergrond"). A rule of its
+       own, on that menu alone, so nothing approved changes;
+       gates/check-raised-plate.mjs refuses the next rule that strips a
+       raised menu's plate. */
+    [data-theme='phantom'] :is(.kp-dialog, .kp-popover, .kp-toast, .kp-confirm, .kp-datepicker__panel, .kp-palette) .kp-menu.kp-nav__more-menu {
+        background: var(--popover);
+        border-left: 4px solid var(--primary);
+        clip-path: polygon(
+            0 var(--kp-cut-size),
+            var(--kp-cut-size) 0,
+            100% 0,
+            100% var(--kp-sig-ph-d),
+            calc(100% + var(--kp-sig-ph-d)) var(--kp-sig-ph-d),
+            calc(100% + var(--kp-sig-ph-d)) calc(100% - var(--kp-cut-size) + var(--kp-sig-ph-d)),
+            calc(100% - var(--kp-cut-size) + var(--kp-sig-ph-d)) calc(100% + var(--kp-sig-ph-d)),
+            var(--kp-sig-ph-d) calc(100% + var(--kp-sig-ph-d)),
+            var(--kp-sig-ph-d) 100%,
+            0 100%
+        );
+        box-shadow: var(--kp-hard);
+    }
+
+    [data-theme='phantom']
+        :is(.kp-dialog, .kp-popover, .kp-toast, .kp-confirm, .kp-datepicker__panel, .kp-palette)
+        .kp-menu.kp-nav__more-menu::after {
+        content: '';
+    }
+
     /* The theme menu's wrapper is not a surface [scope-107]. Kenny,
        2026-09-16, on the React theme menu: "niet veel te zien? Ook het
        vorige item heb ik te snel approved" — both theme-menu blocks in the

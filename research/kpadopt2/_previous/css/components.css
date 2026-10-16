@@ -7786,19 +7786,53 @@
         min-inline-size: 0;
     }
 
+    /* The range's title on the start side, the steps on the end side, on one line; the title in the theme's display
+     * face, as a page's section title. The steps are the package's segmented track (`.kp-segmented.kp-week__steps`,
+     * dressed by every register) used as a group of actions: nothing in it is chosen, so no plate; a chevron back,
+     * Today, a chevron on. Today is `aria-disabled` while the range already starts today.
+     * Knobs: --kp-week-title-size (1.25rem), --kp-week-step-pad (the chevrons' inline padding, --kp-space-sm). */
     .kp-week__nav {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        gap: var(--kp-space-sm, 0.5rem);
+        justify-content: space-between;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+        margin-block-end: var(--kp-space-sm, 0.5rem);
     }
 
     .kp-week__title {
         flex: 1 1 auto;
+        min-inline-size: 0;
         margin: 0;
-        font-size: var(--kp-text-base, 1rem);
+        font-family: var(--theme-font-display, inherit);
+        font-size: var(--kp-week-title-size, 1.25rem);
+        line-height: 1.25;
         font-variant-numeric: tabular-nums;
-        text-align: center;
+        text-align: start;
+    }
+
+    /* Two classes: the segmented track is written later in this layer and gives its items equal columns. */
+    .kp-segmented.kp-week__steps {
+        flex: none;
+        grid-auto-columns: auto;
+    }
+
+    .kp-segmented__item.kp-week__step--icon {
+        padding-inline: var(--kp-week-step-pad, var(--kp-space-sm, 0.5rem));
+    }
+
+    .kp-week__chevron {
+        inline-size: 1rem;
+        block-size: 1rem;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    .kp-week__steps:dir(rtl) .kp-week__chevron {
+        scale: -1 1;
     }
 
     .kp-week__frame {
@@ -8072,6 +8106,13 @@
         pointer-events: none;
     }
 
+    .kp-week__state-words {
+        max-inline-size: 36rem;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--kp-week-state-ground, var(--card));
+    }
+
     .kp-week__state:empty {
         display: none;
     }
@@ -8126,15 +8167,9 @@
             padding-block-end: 0;
         }
 
-        .kp-week__nav {
-            display: grid;
-            grid-template-columns: auto auto auto;
-            justify-content: start;
-        }
-
         .kp-week__title {
-            grid-column: 1 / -1;
-            grid-row: 1;
+            flex-basis: 100%;
+            font-size: var(--kp-week-title-size-narrow, 1.0625rem);
         }
 
         .kp-week__axis,
@@ -8181,6 +8216,11 @@
             min-block-size: var(--kp-week-pill, 1.5rem);
             border: 0;
             background: none;
+        }
+
+        /* In rows the sentence stays in the items' column, clear of the day names it would otherwise run over. */
+        .kp-week__state {
+            inset-inline-start: calc(var(--kp-week-day-label, 5.5rem) + var(--kp-space-sm, 0.5rem));
         }
 
         .kp-week__day[data-kp-today] .kp-week__col {
@@ -10648,7 +10688,8 @@
  * being read marks the cells it touches (`data-kp-mark`).
  * Knobs: --kp-matrix-cols (set by the script), --kp-matrix-head (6.5rem, 4.6rem
  * in a box under 36rem), --kp-matrix-cell-min (3.5rem), --kp-matrix-cell-height
- * (44px), --kp-matrix-gap (4px), --kp-matrix-ground (the card colour: what the
+ * (44px), --kp-matrix-gap (4px), --kp-matrix-mark-gap and --kp-matrix-head-pad (--kp-space-sm: a header's
+ * name from its mark and from its edges), --kp-matrix-ground (the card colour: what the
  * sticky headers are painted with), --kp-matrix-dim (0.4). */
     .kp-matrix {
         --kp-matrix-ground: var(--card);
@@ -10679,6 +10720,7 @@
         .kp-matrix__grid {
             --kp-matrix-head: 4.6rem;
             --kp-matrix-gap: 3px;
+            --kp-matrix-head-pad: var(--kp-space-xs, 0.25rem);
         }
     }
 
@@ -10688,7 +10730,7 @@
         z-index: 3;
         display: flex;
         align-items: flex-end;
-        padding: 4px 2px;
+        padding: 4px var(--kp-matrix-head-pad, var(--kp-space-sm, 0.5rem));
         background: var(--kp-matrix-ground);
         color: var(--muted-foreground);
         box-shadow: 0 var(--kp-matrix-gap, 4px) 0 var(--kp-matrix-ground);
@@ -10709,6 +10751,13 @@
         cursor: pointer;
     }
 
+    /* A header's name keeps the same room from its colour mark and from its edges, along the top as down the side
+     * (Kenny, 2026-10-16: the top row's text stuck to its mark while the side's did not). */
+    :is(.kp-matrix__col, .kp-matrix__row):has(> .kp-matrix__name) {
+        gap: var(--kp-matrix-mark-gap, var(--kp-space-sm, 0.5rem));
+        padding-inline: var(--kp-matrix-head-pad, var(--kp-space-sm, 0.5rem));
+    }
+
     .kp-matrix__col {
         position: sticky;
         inset-block-start: 0;
@@ -10716,7 +10765,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 4px 2px;
+        padding-block: 4px;
         box-shadow: 0 var(--kp-matrix-gap, 4px) 0 var(--kp-matrix-ground);
     }
 
@@ -10726,8 +10775,7 @@
         z-index: 1;
         display: flex;
         align-items: center;
-        gap: var(--kp-space-xs, 0.375rem);
-        padding: 0 6px;
+        padding-block: 0;
         color: var(--foreground);
         text-align: start;
         box-shadow: var(--kp-matrix-gap, 4px) 0 0 var(--kp-matrix-ground);
@@ -10938,6 +10986,20 @@
         align-items: center;
         gap: var(--kp-bar-cell-gap, var(--kp-space-sm, 0.5rem));
         min-inline-size: 0;
+    }
+
+    /* The figure's column while it loads: one skeleton line, the column's width, the line's height. */
+    .kp-bar-cell[data-kp-loading] > .kp-bar-cell__value {
+        display: grid;
+        align-items: center;
+        align-self: stretch;
+    }
+
+    .kp-bar-cell__ghost.kp-skeleton {
+        display: block;
+        inline-size: 100%;
+        min-inline-size: 2ch;
+        block-size: var(--kp-bar-cell-ghost-height, 0.625rem);
     }
 
     .kp-bar-cell--start {

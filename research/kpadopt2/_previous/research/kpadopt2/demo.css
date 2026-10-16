@@ -562,3 +562,11 @@ html[data-theme='titanium'] [data-review-look] > [data-for='titanium'] {
 .r2-intro :is(h1, p) {
     margin: 0;
 }
+
+/* A label and the control it names stay together when the bar wraps. */
+.gd-field {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}

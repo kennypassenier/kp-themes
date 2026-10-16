@@ -13,6 +13,7 @@ import {
     MATRIX_LIGHT_EVENT,
 } from '../../js/heat.js';
 import { setBarCell } from '../../js/barcell.js';
+import { dataTable } from '../../js/datatable.js';
 import { setKeys } from '../../js/keys.js';
 
 const $ = (/** @type {string} */ sel, /** @type {ParentNode} */ root = document) => /** @type {HTMLElement} */ (root.querySelector(sel));
@@ -96,114 +97,117 @@ function heatSpec() {
     return { columns, summary, rows, label: 'Snapshots per stack per night', toggle: true };
 }
 
-/* ------------------------------------------------------------------ heat grid */
+// Each part runs only when its section is on the page: a re-review round shows only the open sections.
+if ($('[data-gd-heat="main"]')) {
+    /* ------------------------------------------------------------------ heat grid */
 
-const main = $('[data-gd-heat="main"]');
-let heatState = 'ready';
-function paintMain() {
-    setHeat(main, {
-        ...heatSpec(),
-        state: /** @type {any} */ (heatState),
-        skeleton: { rows: STACKS.length, columns: NIGHTS },
-        message:
-            heatState === 'error'
-                ? 'The backup repositories could not be read. Try again in a minute.'
-                : 'No stack is shown: every stack is filtered out.',
-    });
-    $('[data-gd-range]').textContent = `${shortDate(nights()[0])} – ${shortDate(nights()[NIGHTS - 1])}`;
-    $('[data-gd-later]').toggleAttribute('disabled', offset === 0);
-}
-paintMain();
-setKeys($('[data-gd-keys="heat"]'), [
-    [['←', '→', '↑', '↓'], 'move'],
-    ['Enter', 'pin the night'],
-    [['Page Up', 'Page Down'], 'earlier or later'],
-    ['Esc', 'unpin'],
-]);
-
-const detail = $('[data-gd-heat-detail]');
-main.addEventListener(HEAT_PICK_EVENT, (e) => {
-    const d = /** @type {CustomEvent} */ (e).detail;
-    if (!d.picked) {
-        detail.textContent = 'No night pinned. Press a cell to pin its night.';
-        return;
+    const main = $('[data-gd-heat="main"]');
+    let heatState = 'ready';
+    function paintMain() {
+        setHeat(main, {
+            ...heatSpec(),
+            state: /** @type {any} */ (heatState),
+            skeleton: { rows: STACKS.length, columns: NIGHTS },
+            message:
+                heatState === 'error'
+                    ? 'The backup repositories could not be read. Try again in a minute.'
+                    : 'No stack is shown: every stack is filtered out.',
+        });
+        $('[data-gd-range]').textContent = `${shortDate(nights()[0])} – ${shortDate(nights()[NIGHTS - 1])}`;
+        $('[data-gd-later]').toggleAttribute('disabled', offset === 0);
     }
-    const col = nights().indexOf(d.colKey);
-    const missed = heatSpec()
-        .rows.filter((r) => r.cells[col]?.tone === 'bad')
-        .map((r) => r.key);
-    detail.textContent = `${shortDate(d.colKey)} pinned: ${missed.length ? `missed by ${missed.join(', ')}.` : 'every stack that keeps data was backed up.'}`;
-});
-const filtered = $('[data-gd-heat-filter]');
-main.addEventListener(HEAT_ROW_EVENT, (e) => {
-    const d = /** @type {CustomEvent} */ (e).detail;
-    filtered.textContent = d.keys.length
-        ? `Showing only: ${d.keys.join(', ')} (the page filters; the grid only reports).`
-        : 'All stacks shown. Press stack names to show only them.';
-});
-main.addEventListener(HEAT_PAGE_EVENT, (e) => {
-    const d = /** @type {CustomEvent} */ (e).detail;
-    offset = Math.max(0, offset + (d.direction === 'earlier' ? NIGHTS : -NIGHTS));
     paintMain();
-});
-$('[data-gd-earlier]').addEventListener('click', () => {
-    offset += NIGHTS;
-    paintMain();
-});
-$('[data-gd-later]').addEventListener('click', () => {
-    offset = Math.max(0, offset - NIGHTS);
-    paintMain();
-});
-$('[data-gd-today]').addEventListener('click', () => {
-    offset = 0;
-    setHeatPick(main, null);
-    paintMain();
-});
-for (const b of $$('[data-gd-state]')) {
-    b.addEventListener('click', () => {
-        heatState = /** @type {string} */ (b.dataset.gdState);
-        for (const o of $$('[data-gd-state]')) o.setAttribute('aria-pressed', String(o === b));
+    setKeys($('[data-gd-keys="heat"]'), [
+        [['←', '→', '↑', '↓'], 'move'],
+        ['Enter', 'pin the night'],
+        [['Page Up', 'Page Down'], 'earlier or later'],
+        ['Esc', 'unpin'],
+    ]);
+
+    const detail = $('[data-gd-heat-detail]');
+    main.addEventListener(HEAT_PICK_EVENT, (e) => {
+        const d = /** @type {CustomEvent} */ (e).detail;
+        if (!d.picked) {
+            detail.textContent = 'No night pinned. Press a cell to pin its night.';
+            return;
+        }
+        const col = nights().indexOf(d.colKey);
+        const missed = heatSpec()
+            .rows.filter((r) => r.cells[col]?.tone === 'bad')
+            .map((r) => r.key);
+        detail.textContent = `${shortDate(d.colKey)} pinned: ${missed.length ? `missed by ${missed.join(', ')}.` : 'every stack that keeps data was backed up.'}`;
+    });
+    const filtered = $('[data-gd-heat-filter]');
+    main.addEventListener(HEAT_ROW_EVENT, (e) => {
+        const d = /** @type {CustomEvent} */ (e).detail;
+        filtered.textContent = d.keys.length
+            ? `Showing only: ${d.keys.join(', ')} (the page filters; the grid only reports).`
+            : 'All stacks shown. Press stack names to show only them.';
+    });
+    main.addEventListener(HEAT_PAGE_EVENT, (e) => {
+        const d = /** @type {CustomEvent} */ (e).detail;
+        offset = Math.max(0, offset + (d.direction === 'earlier' ? NIGHTS : -NIGHTS));
         paintMain();
     });
-}
-let matrixState = 'ready';
-for (const b of $$('[data-gd-mstate]')) {
-    b.addEventListener('click', () => {
-        matrixState = /** @type {string} */ (b.dataset.gdMstate);
-        for (const o of $$('[data-gd-mstate]')) o.setAttribute('aria-pressed', String(o === b));
-        paintMatrix();
+    $('[data-gd-earlier]').addEventListener('click', () => {
+        offset += NIGHTS;
+        paintMain();
     });
+    $('[data-gd-later]').addEventListener('click', () => {
+        offset = Math.max(0, offset - NIGHTS);
+        paintMain();
+    });
+    $('[data-gd-today]').addEventListener('click', () => {
+        offset = 0;
+        setHeatPick(main, null);
+        paintMain();
+    });
+    for (const b of $$('[data-gd-state]')) {
+        b.addEventListener('click', () => {
+            heatState = /** @type {string} */ (b.dataset.gdState);
+            for (const o of $$('[data-gd-state]')) o.setAttribute('aria-pressed', String(o === b));
+            paintMain();
+        });
+    }
+    for (const swatch of $$('[data-gd-level]')) swatch.style.setProperty('--kp-heat-level', swatch.dataset.gdLevel ?? '0');
+
+    // The small states, side by side.
+    setHeat($('[data-gd-heat="loading"]'), { state: 'loading', label: 'Loading', skeleton: { rows: 3, columns: 24 } });
+    setHeat($('[data-gd-heat="empty"]'), { state: 'empty', label: 'Empty', message: 'No stack is shown: every stack is filtered out.' });
+    setHeat($('[data-gd-heat="error"]'), { state: 'error', label: 'Failed', message: 'The backup repositories could not be read.' });
 }
 
-// A value-toned grid: requests per hour.
-const SERVICES = ['proxy', 'web', 'api', 'media', 'backup'];
-const levelGrid = $('[data-gd-heat="level"]');
-setHeat(levelGrid, {
-    label: 'Requests per service per hour',
-    every: 3,
-    columns: Array.from({ length: 24 }, (_, h) => ({ key: String(h), label: String(h).padStart(2, '0') })),
-    rows: SERVICES.map((s, r) => ({
-        key: s,
-        label: s,
-        cells: Array.from({ length: 24 }, (_, h) => {
-            const peak = Math.max(0, Math.sin(((h - 6 - r) / 24) * Math.PI * 2) * 0.5 + 0.5);
-            const level = Math.min(1, peak * (0.55 + rnd(r, h) * 0.45));
-            return {
-                tone: 'level',
-                level,
-                label: `${Math.round(level * 1200)} requests`,
-                tip: `${s} at ${String(h).padStart(2, '0')}:00: ${Math.round(level * 1200)} requests.`,
-            };
-        }),
-    })),
+let matrixState = 'ready';
+// The package's segmented control picks the state (js/segmented.js, attached by auto.js).
+$('[data-gd-mstates]').addEventListener('kp-segmented-change', (e) => {
+    matrixState = /** @type {CustomEvent} */ (e).detail.value ?? 'ready';
+    paintMatrix();
 });
 
-for (const swatch of $$('[data-gd-level]')) swatch.style.setProperty('--kp-heat-level', swatch.dataset.gdLevel ?? '0');
-
-// The small states, side by side.
-setHeat($('[data-gd-heat="loading"]'), { state: 'loading', label: 'Loading', skeleton: { rows: 3, columns: 24 } });
-setHeat($('[data-gd-heat="empty"]'), { state: 'empty', label: 'Empty', message: 'No stack is shown: every stack is filtered out.' });
-setHeat($('[data-gd-heat="error"]'), { state: 'error', label: 'Failed', message: 'The backup repositories could not be read.' });
+// A value-toned grid: requests per hour (the heat section's).
+const levelGrid = $('[data-gd-heat="level"]');
+if (levelGrid) {
+    const SERVICES = ['proxy', 'web', 'api', 'media', 'backup'];
+    setHeat(levelGrid, {
+        label: 'Requests per service per hour',
+        every: 3,
+        columns: Array.from({ length: 24 }, (_, h) => ({ key: String(h), label: String(h).padStart(2, '0') })),
+        rows: SERVICES.map((s, r) => ({
+            key: s,
+            label: s,
+            cells: Array.from({ length: 24 }, (_, h) => {
+                const peak = Math.max(0, Math.sin(((h - 6 - r) / 24) * Math.PI * 2) * 0.5 + 0.5);
+                const level = Math.min(1, peak * (0.55 + rnd(r, h) * 0.45));
+                return {
+                    tone: 'level',
+                    level,
+                    label: `${Math.round(level * 1200)} requests`,
+                    tip: `${s} at ${String(h).padStart(2, '0')}:00: ${Math.round(level * 1200)} requests.`,
+                };
+            }),
+        })),
+    });
+}
 
 /* --------------------------------------------------------------------- matrix */
 
@@ -318,6 +322,10 @@ for (const b of $$('[data-gd-bar-load]')) {
     b.addEventListener('click', () => {
         const on = b.getAttribute('aria-pressed') !== 'true';
         b.setAttribute('aria-pressed', String(on));
+        // The table says it is reading over its rows, in its busy panel with the theme's spinner, and keeps the rows.
+        const table = dataTable(/** @type {HTMLElement} */ (capBody.closest('[data-kp-datatable]')));
+        if (on) table?.busy({ text: 'Reading CPU, memory and disk', overlay: true });
+        table?.state(on ? 'loading' : 'ready');
         for (const span of $$('.kp-bar-cell', capBody)) {
             const td = /** @type {HTMLElement} */ (span.closest('td'));
             const was = span.querySelector('.kp-meter');

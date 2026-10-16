@@ -91,7 +91,8 @@ export const WEEK_TICK_MS = 30_000;
  *   more: HTMLElement | null, moreButton: HTMLButtonElement | null, ghosts: HTMLElement[], hidden: WeekItem[] }} WeekDay
  * @typedef {{ el: HTMLElement, zone: string, locale: string, now: () => number, strings: Strings, decorate?: WeekOptions['decorate'],
  *   start: string, days: number, events: WeekEvent[], state: WeekState, active: string | null, grid: HTMLElement,
- *   axis: HTMLElement, cols: WeekDay[], stateLine: HTMLElement, title: HTMLElement | null, legend: HTMLElement,
+ *   axis: HTMLElement, cols: WeekDay[], stateLine: HTMLElement, title: HTMLElement | null, today: HTMLButtonElement | null, legend: HTMLElement,
+ *   motion: { gone: boolean, stop: (() => void) | null, asked: boolean },
  *   pills: Map<string, HTMLButtonElement>, timer: number, observer: ResizeObserver | null, mode: 'grid' | 'list' }} WeekModel
  */
 
@@ -191,6 +192,43 @@ function timeOfDay(c, ms) {
     return { hhmm: `${two(w.hour)}:${two(w.minute)}`, at: (w.hour * 60 + w.minute) / 1440 };
 }
 
+/**
+ * A step of the week's track: a chevron drawn in the ink of the item, named for a screen reader and in a tooltip.
+ * @param {Document} doc @param {string} name @param {string} path the chevron, in a 24 px box
+ * @returns {HTMLButtonElement}
+ */
+function stepButton(doc, name, path) {
+    const button = make(doc, 'button', 'kp-segmented__item kp-week__step kp-week__step--icon');
+    button.type = 'button';
+    button.setAttribute('aria-label', name);
+    button.title = name;
+    const svg = doc.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('focusable', 'false');
+    svg.setAttribute('class', 'kp-week__chevron');
+    const line = doc.createElementNS('http://www.w3.org/2000/svg', 'path');
+    line.setAttribute('d', path);
+    svg.append(line);
+    button.append(svg);
+    return button;
+}
+
+/**
+ * From here on, what comes later in this agenda arrives the theme's way (js/motion.js: the register's own arrival, one
+ * after the other): the items that end a loading state, a new item of a live update, the days of the next range. A
+ * pill that is still there keeps its node, so a refresh with the same items moves nothing. Asked by an agenda that can
+ * load (its first loading state) or move (its week buttons); one that only ever shows what it was given stays still.
+ * @param {WeekModel} c
+ */
+function watchArrivals(c) {
+    if (c.motion.asked) return;
+    c.motion.asked = true;
+    void import('./motion.js').then((m) => {
+        if (!c.motion.gone) c.motion.stop = m.easeSize(c.el);
+    });
+}
+
 /** Build the chrome once; the days are filled by paint(). @param {WeekModel} c */
 function build(c) {
     const doc = c.el.ownerDocument;
@@ -198,22 +236,28 @@ function build(c) {
     const level = c.el.dataset.kpHeadingLevel ?? '2';
     const parts = [];
     if (c.el.hasAttribute('data-kp-week-nav')) {
+        // The range's title on the start side and, on the end side, the steps as one control: the package's segmented
+        // track (every register dresses it), holding a chevron back, Today and a chevron on. Not three loose buttons
+        // (Kenny, 2026-10-16: "de knoppen met Prev, Next, Today zijn basic en lelijk en niet volgens het thema").
         const nav = make(doc, 'div', 'kp-week__nav');
-        nav.setAttribute('role', 'group');
-        nav.setAttribute('aria-label', s.weekGroup);
-        const prev = make(doc, 'button', 'kp-button kp-button--sm', s.weekPrev);
-        prev.type = 'button';
-        prev.dataset.kpWeekPrev = '';
         const title = make(doc, /** @type {'h2'} */ (`h${level}`), 'kp-week__title');
         title.setAttribute('aria-live', 'polite');
-        const next = make(doc, 'button', 'kp-button kp-button--sm', s.weekNext);
-        next.type = 'button';
-        next.dataset.kpWeekNext = '';
-        const today = make(doc, 'button', 'kp-button kp-button--sm', s.weekToday);
+        const steps = make(doc, 'div', 'kp-segmented kp-week__steps');
+        steps.setAttribute('role', 'group');
+        steps.setAttribute('aria-label', s.weekGroup);
+        // The dictionary's own Previous and Next name the chevrons (a new word would ask every approved block again: the
+        // dictionary is in every block's hash, catalogue/code-version.json).
+        const prev = stepButton(doc, s.previous, 'M15 18l-6-6 6-6');
+        prev.dataset.kpWeekPrev = '';
+        const today = make(doc, 'button', 'kp-segmented__item kp-week__step', s.weekToday);
         today.type = 'button';
         today.dataset.kpWeekToday = '';
-        nav.append(prev, title, next, today);
+        const next = stepButton(doc, s.next, 'M9 6l6 6-6 6');
+        next.dataset.kpWeekNext = '';
+        steps.append(prev, today, next);
+        nav.append(title, steps);
         c.title = title;
+        c.today = today;
         c.decorate?.(prev, { kind: 'prev', host: c.el, key: keyOf(c.el) });
         c.decorate?.(next, { kind: 'next', host: c.el, key: keyOf(c.el) });
         c.decorate?.(today, { kind: 'today', host: c.el, key: keyOf(c.el) });
@@ -288,6 +332,10 @@ function buildDays(c) {
         const last = c.cols[c.cols.length - 1]?.iso ?? c.start;
         c.title.textContent = `${dm(c.start, true)} – ${dm(last, true)}`;
     }
+    if (c.today) {
+        // Today has nothing to do while the range already starts today: greyed, and still in the tab order.
+        c.today.setAttribute('aria-disabled', String(c.start === today));
+    }
 }
 
 /** A pill for an item, kept by id. @param {WeekModel} c @param {WeekEvent} e */
@@ -349,7 +397,14 @@ function paint(c) {
     c.el.dataset.kpState = c.state;
     c.grid.toggleAttribute('aria-busy', c.state === 'loading');
     const words = c.state === 'loading' ? s.weekLoading : c.state === 'empty' ? s.weekEmpty : c.stateLine.dataset.kpWords || '';
-    c.stateLine.textContent = c.state === 'ready' ? '' : words;
+    // The words stand on a plate of the agenda's own ground, so no day's rule runs through them.
+    const said = c.state === 'ready' ? '' : words;
+    if ((c.stateLine.textContent ?? '') !== said) {
+        if (said) {
+            const plate = make(doc, 'span', 'kp-week__state-words', said);
+            c.stateLine.replaceChildren(plate);
+        } else c.stateLine.replaceChildren();
+    }
     c.stateLine.dataset.kpState = c.state;
     for (const col of c.cols) {
         const nodes = c.state === 'loading' ? [] : col.items.map((item) => item.button);
@@ -549,6 +604,8 @@ export function attachWeeks(root = document, options = {}) {
             cols: [],
             stateLine: el,
             title: null,
+            today: null,
+            motion: { gone: false, stop: null, asked: false },
             legend: el,
             pills: new Map(),
             timer: 0,
@@ -561,6 +618,7 @@ export function attachWeeks(root = document, options = {}) {
         paint(c);
         // The one hover card of the page carries each item's detail.
         void import('./hovercard.js').then((m) => m.attachHoverCards(el.ownerDocument));
+        if (c.title) watchArrivals(c);
 
         /** @param {Event} event */
         const pillOf = (event) =>
@@ -613,7 +671,7 @@ export function attachWeeks(root = document, options = {}) {
         /** @param {Event} event */
         const onNav = (event) => {
             const target = event.target instanceof Element ? event.target.closest('button') : null;
-            if (!target) return;
+            if (!target || target.getAttribute('aria-disabled') === 'true') return;
             let next = c.start;
             if (target.hasAttribute('data-kp-week-prev')) next = shiftDay(c.start, -c.days);
             else if (target.hasAttribute('data-kp-week-next')) next = shiftDay(c.start, c.days);
@@ -645,6 +703,8 @@ export function attachWeeks(root = document, options = {}) {
             el.removeEventListener('click', onNav);
             window.clearInterval(c.timer);
             c.observer?.disconnect();
+            c.motion.gone = true;
+            c.motion.stop?.();
             weeks.delete(el);
         });
     }
@@ -678,6 +738,7 @@ export function setWeekEvents(el, events) {
 export function setWeekState(el, state, words = '') {
     const c = weeks.get(el);
     if (!c) return;
+    if (state === 'loading') watchArrivals(c);
     c.state = state;
     c.stateLine.dataset.kpWords = words;
     paint(c);
