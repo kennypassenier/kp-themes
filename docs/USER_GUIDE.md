@@ -1808,7 +1808,9 @@ outline (`aria-invalid="true"` on the fieldset, the message in a
 The status rows (`.kp-statuslist`, `js/statusrow.js`) carry a system's
 checks too: two opt-in parts, a `warn` state for a check that passes with
 a reservation and `.kp-statusrow__fix`, the fix written out, shown on a
-failed or warn row only.
+failed or warn row only. A row that carries a fix keeps its room in every
+state, so a check that passes on the next read moves nothing; leave the
+part out of a check that cannot fail.
 
 ```html
 <ul class="kp-statuslist kp-statuslist--rows" aria-label="What JobTracker needs" data-kp-status-retry="false">
@@ -1865,9 +1867,10 @@ under it, dimmed and inert, so a refresh never blanks the card, and a
 first load has `--kp-card-stage-min` (7.5rem) of room. Empty fills the
 stage with the package's empty state (title, sentence, optional action);
 error is the destructive alert with Try again, which fires `kp-card-retry`
-on the card. In both the data keeps its room, so a failed refresh of a full
-card does not collapse it; clear the data yourself when it no longer
-holds. When the focused Try again goes with its state, the focus moves to
+on the card. In both the data keeps its room, hidden, with the note
+centred in it, so a failed refresh of a full card does not collapse it;
+clear the data when it no longer holds and the stage falls back to its
+least height. When the focused Try again goes with its state, the focus moves to
 the stage. A framework that writes `data-kp-state` itself is followed by
 `attachCardStates(root)` (loaded by `js/auto.js`), and may render its own
 note in a `.kp-card__state` inside the stage. Exports: `setCardState`,
@@ -1875,6 +1878,59 @@ note in a `.kp-card__state` inside the stage. Exports: `setCardState`,
 (`kp-card-state`, `{ card, state, previous }`), `CARD_RETRY_EVENT`.
 Strings: `cardLoading`, `cardEmpty`, `cardFailed`, `cardRetry`. Knobs:
 `--kp-card-stage-min`, `--kp-card-stage-gap`.
+
+### Rows with a lead: an inbox, a backlog, files, appointments
+
+`.kp-action-list--lead` adds a lead column before the words of the list's
+rows (the buttons in shared columns stay as they are): a state badge or
+dot, a file's format, an appointment's day and hour. The column is as wide
+as the widest lead of the list, so every title starts at one edge, on a
+phone too.
+
+```html
+<ul class="kp-action-list kp-action-list--lead" aria-label="Inbox" data-kp-row-keys>
+    <li data-kp-state="new">
+        <span class="kp-action-list__lead"><span class="kp-badge kp-badge--destructive">dead</span></span>
+        <div class="kp-action-list__main">
+            <strong class="kp-action-list__title">Backups of vault failed twice</strong>
+            <span class="kp-action-list__text">The backup target refused the connection.</span>
+            <span class="kp-action-list__meta"><span>Backups</span><span>12 min ago</span></span>
+            <details class="kp-accordion__item kp-accordion__item--bare kp-action-list__more">
+                <summary>Payload</summary>
+                <pre class="kp-action-list__payload">{ "job": "backup" }</pre>
+            </details>
+        </div>
+        <div class="kp-row-actions">
+            <button type="button" class="kp-button kp-button--sm">Mark seen</button>
+            <button type="button" class="kp-button kp-button--sm kp-button--primary">Open</button>
+        </div>
+    </li>
+</ul>
+```
+
+Parts: `__lead` (every row carries one, empty if need be), `__main` with
+`__title`, `__text`, `__meta` (its plain parts set apart by a dot that
+stays with the part before it; badges stand on their own plate) and the
+folded payload `__more` > `__payload` (at most
+`--kp-action-list-payload-max`, 16rem, then scrolling); `time.__when` for
+a moment (the day over the hour); `li.__group` for a heading row across
+the list (Upcoming, Past). `data-kp-state` on a row is `new`, `active`,
+`warn`, `failed`, `next` (the bar, a primary wash and the lead in the
+primary) or `done` / `past` (quieter ink); each draws a bar along the
+start edge that every row reserves, so a state moves nothing.
+
+`js/actions.js` runs the row's work: `setRowBusy(row, busy, button)`
+dims the row (`aria-busy`), makes its buttons refuse a press
+(`aria-disabled`, the focus stays) and lays the theme's spinner over the
+pressed button's words at its own width; `removeRow(row)` lets the row
+leave the theme's way (`leave()`), the focus first going to the same
+button of the next row; `attachRowKeys(root)` (loaded by `js/auto.js` for
+`data-kp-row-keys`) walks the rows with j / k or the arrows, Home and End,
+one row in the tab order, and fires `kp-row-open` (`{ row }`) on Enter on
+a row. Exports: `setRowBusy`, `removeRow`, `attachRowKeys`, `ROW_KEYS`,
+`ROW_OPEN_EVENT`. Knobs: `--kp-action-list-lead-gap`,
+`--kp-action-list-bar`, `--kp-action-list-pad`,
+`--kp-action-list-next-wash`, `--kp-action-list-payload-max`.
 
 ## Tables that fit [TH95, TH96]
 

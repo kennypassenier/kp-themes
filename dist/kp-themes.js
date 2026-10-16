@@ -635,15 +635,1674 @@ var init_action_tiles = __esm({
   }
 });
 
+// js/as-of.js
+function asOf(root, present, attach) {
+  const own = {
+    querySelectorAll: Object.getOwnPropertyDescriptor(root, "querySelectorAll"),
+    querySelector: Object.getOwnPropertyDescriptor(root, "querySelector")
+  };
+  const all = root.querySelectorAll;
+  const filtered = (selector) => [...all.call(root, selector)].filter((element) => present.has(element));
+  Object.defineProperty(root, "querySelectorAll", { configurable: true, value: filtered });
+  Object.defineProperty(root, "querySelector", { configurable: true, value: (selector) => filtered(selector)[0] ?? null });
+  try {
+    return attach();
+  } finally {
+    for (
+      const name of
+      /** @type {const} */
+      ["querySelectorAll", "querySelector"]
+    ) {
+      const before = own[name];
+      if (before) Object.defineProperty(root, name, before);
+      else delete /** @type {any} */
+      root[name];
+    }
+  }
+}
+function afterPaint(fn) {
+  if (typeof requestAnimationFrame !== "function") {
+    setTimeout(fn, 0);
+    return;
+  }
+  requestAnimationFrame(() => requestAnimationFrame(fn));
+}
+function settleAfter(root, done) {
+  holds.set(root, (holds.get(root) ?? 0) + 1);
+  root.setAttribute(SETTLING_ATTRIBUTE, "");
+  let held2 = true;
+  const release = () => {
+    if (!held2) return;
+    held2 = false;
+    const left = (holds.get(root) ?? 1) - 1;
+    holds.set(root, left);
+    if (left <= 0) root.removeAttribute(SETTLING_ATTRIBUTE);
+  };
+  done.then(
+    () => afterPaint(release),
+    () => afterPaint(release)
+  );
+  return release;
+}
+var presentUnder, SETTLING_ATTRIBUTE, holds, settling;
+var init_as_of = __esm({
+  "js/as-of.js"() {
+    "use strict";
+    presentUnder = (root) => new WeakSet([...root instanceof Element ? [root] : [], ...root.querySelectorAll("*")]);
+    SETTLING_ATTRIBUTE = "data-kp-settling";
+    holds = /* @__PURE__ */ new WeakMap();
+    settling = (el5) => el5.closest(`[${SETTLING_ATTRIBUTE}]`) !== null;
+  }
+});
+
+// js/motion.js
+var motion_exports = {};
+__export(motion_exports, {
+  ARRIVE_KEYS: () => ARRIVE_KEYS,
+  CLOSING_ATTRIBUTE: () => CLOSING_ATTRIBUTE,
+  FOLDING_OUT: () => FOLDING_OUT,
+  FOLD_SELECTOR: () => FOLD_SELECTOR,
+  GROUP_FOLDING_ATTRIBUTE: () => GROUP_FOLDING_ATTRIBUTE,
+  PANEL_SELECTOR: () => PANEL_SELECTOR,
+  REVERSING_ATTRIBUTE: () => REVERSING_ATTRIBUTE,
+  SIZE_ATTRIBUTE: () => SIZE_ATTRIBUTE,
+  SIZE_SELECTOR: () => SIZE_SELECTOR,
+  arriveShown: () => arriveShown,
+  attachMotion: () => attachMotion,
+  closeDialog: () => closeDialog,
+  easeSize: () => easeSize,
+  glideGroup: () => glideGroup,
+  leave: () => leave,
+  leavesState: () => leavesState,
+  motionWatchCount: () => motionWatchCount,
+  playArrivalBackwards: () => playArrivalBackwards,
+  playClose: () => playClose,
+  playEntranceBackwards: () => playEntranceBackwards,
+  registerTime: () => registerTime,
+  repaintedIn: () => repaintedIn,
+  reversedEase: () => reversedEase,
+  sizeMotion: () => sizeMotion,
+  stopClose: () => stopClose,
+  stopReversing: () => stopReversing,
+  themeMotion: () => themeMotion,
+  turnEntrances: () => turnEntrances,
+  turnLines: () => turnLines,
+  withCustomProperties: () => withCustomProperties,
+  withoutOvershoot: () => withoutOvershoot
+});
+function motionWatchCount() {
+  return watching;
+}
+function registerTime(el5, name) {
+  const raw = getComputedStyle(el5).getPropertyValue(name).trim();
+  const n = parseFloat(raw);
+  if (Number.isNaN(n) || n < 0) return null;
+  const root = el5.ownerDocument?.documentElement ?? document.documentElement;
+  const scale = parseFloat(getComputedStyle(root).getPropertyValue("--kp-motion-scale")) || 1;
+  const ms = raw.endsWith("ms") ? n : raw.endsWith("s") ? n * 1e3 : n;
+  return ms * scale;
+}
+function themeMotion(scope = document.documentElement) {
+  if (reduced()) return { open: 0, ease: "linear", close: 0, size: 0 };
+  const host = scope.ownerDocument?.body ?? document.body;
+  const probe = document.createElement("div");
+  probe.className = "kp-dialog";
+  probe.setAttribute("aria-hidden", "true");
+  probe.style.cssText = "position:fixed;inset:auto;left:-9999px;top:0;visibility:hidden;pointer-events:none;";
+  const themed = scope.closest("[data-theme]");
+  (themed && themed !== document.documentElement && themed instanceof HTMLElement ? themed : host).append(probe);
+  let open2 = 0;
+  let ease = "ease";
+  try {
+    const style = getComputedStyle(probe);
+    if (style.animationName && style.animationName !== "none") {
+      open2 = firstMs(style.animationDuration);
+      ease = style.animationTimingFunction.split(/,(?![^(]*\))/)[0].trim() || "ease";
+    }
+  } finally {
+    probe.remove();
+  }
+  const root = scope.ownerDocument?.documentElement ?? document.documentElement;
+  const scale = parseFloat(getComputedStyle(root).getPropertyValue("--kp-motion-scale")) || 1;
+  return {
+    open: open2,
+    ease,
+    close: Math.min(open2 * CLOSE_SHARE, msOf(root, "--kp-close-max", 600)) * scale,
+    size: Math.min(open2 * SIZE_SHARE, msOf(root, "--kp-size-max", 480)) * scale
+  };
+}
+function withCustomProperties(read, own) {
+  const customs = own.filter((frame2) => Object.keys(frame2).some((key) => key.startsWith("--")));
+  if (customs.length === 0) return read;
+  const frames = read.map((frame2) => ({ ...frame2 }));
+  const at = (frame2) => Number(frame2.computedOffset ?? frame2.offset);
+  for (
+    const custom of
+    /** @type {any[]} */
+    customs
+  ) {
+    let frame2 = (
+      /** @type {any} */
+      frames.find((one) => Math.abs(at(one) - at(custom)) < 1e-6)
+    );
+    if (!frame2) {
+      frame2 = { offset: at(custom), computedOffset: at(custom), easing: custom.easing, composite: custom.composite };
+      const next = frames.findIndex((one) => at(one) > at(custom));
+      frames.splice(next === -1 ? frames.length : next, 0, frame2);
+    }
+    for (const key of Object.keys(custom)) if (key.startsWith("--") && !(key in frame2) && !KEYFRAME_FIELDS.has(key)) frame2[key] = custom[key];
+  }
+  return frames;
+}
+function keyframesOf(effect) {
+  const read = effect.getKeyframes();
+  try {
+    return withCustomProperties(read, new KeyframeEffect(effect).getKeyframes());
+  } catch {
+    return read;
+  }
+}
+function lineOf(effect) {
+  const timing = effect.getTiming();
+  const delay = Number(timing.delay) || 0;
+  return {
+    delay,
+    duration: Number(timing.duration) || 0,
+    end: delay + (Number(effect.getComputedTiming().activeDuration) || 0)
+  };
+}
+function turnLines(lines, total) {
+  const span3 = Math.max(0, ...lines.map((line) => line.end));
+  const scale = span3 > 0 ? total / span3 : 1;
+  return lines.map((line) => ({
+    duration: line.duration * scale,
+    openDelay: line.delay * scale,
+    closeDelay: (span3 - line.end) * scale
+  }));
+}
+function turnEntrances(kept, total) {
+  const lines = turnLines(
+    kept.filter((one) => one.pseudoElement !== "::backdrop").map((one) => one.line),
+    total
+  );
+  let at = 0;
+  return kept.map((one) => one.pseudoElement !== "::backdrop" ? lines[at++] : { duration: total, openDelay: 0, closeDelay: 0 });
+}
+function rememberEntrance(dialog) {
+  getComputedStyle(dialog).animationName;
+  const kept = entranceOf(dialog).map((a) => {
+    const effect = (
+      /** @type {KeyframeEffect} */
+      a.effect
+    );
+    return {
+      target: (
+        /** @type {Element} */
+        effect.target
+      ),
+      keyframes: keyframesOf(effect),
+      easing: String(effect.getTiming().easing ?? "linear"),
+      pseudoElement: effect.pseudoElement,
+      line: lineOf(effect)
+    };
+  });
+  entrances.set(dialog, kept);
+}
+function entranceOf(dialog) {
+  return (
+    /** @type {CSSAnimation[]} */
+    dialog.getAnimations({ subtree: true }).filter(
+      (a) => a instanceof CSSAnimation && a.effect instanceof KeyframeEffect && a.effect.target !== null && Number.isFinite(Number(a.effect.getComputedTiming().activeDuration))
+    )
+  );
+}
+async function closeDialog(dialog, returnValue) {
+  const close = () => nativeClose?.call(dialog, returnValue);
+  if (!dialog.open || closing.has(dialog)) return;
+  const { close: duration2 } = themeMotion(dialog);
+  const kept = entrances.get(dialog) ?? [];
+  if (duration2 <= 0) return void close();
+  closing.add(dialog);
+  const out = [];
+  const lines = kept.length > 0 && keepsLines(dialog) ? turnEntrances(kept, duration2) : null;
+  kept.forEach(({ target, keyframes, easing, pseudoElement }, at) => {
+    try {
+      out.push(
+        target.animate(keyframes, {
+          duration: lines ? lines[at].duration : duration2,
+          ...lines ? { delay: lines[at].closeDelay } : {},
+          easing,
+          direction: "reverse",
+          fill: "forwards",
+          ...pseudoElement ? { pseudoElement } : {}
+        })
+      );
+    } catch {
+    }
+  });
+  if (!kept.some((one) => one.target === dialog && one.pseudoElement === "::backdrop")) {
+    try {
+      out.push(
+        dialog.animate([{ opacity: 1 }, { opacity: 0 }], { duration: duration2, easing: "ease-in", fill: "forwards", pseudoElement: "::backdrop" })
+      );
+    } catch {
+    }
+  }
+  if (kept.length === 0) out.push(dialog.animate([{ opacity: 1 }, { opacity: 0 }], { duration: duration2, easing: "ease-in", fill: "forwards" }));
+  await Promise.all(out.map((a) => a.finished.catch(() => void 0)));
+  closing.delete(dialog);
+  close();
+  for (const a of out) a.cancel();
+}
+function openAsReversedClose(dialog) {
+  if (!dialog.open || !opensAsReversedClose(dialog)) return;
+  const { close: duration2 } = themeMotion(dialog);
+  const kept = entrances.get(dialog) ?? [];
+  if (duration2 <= 0) return;
+  for (const a of entranceOf(dialog)) a.cancel();
+  const lines = kept.length > 0 && keepsLines(dialog) ? turnEntrances(kept, duration2) : null;
+  kept.forEach(({ target, keyframes, easing, pseudoElement }, at) => {
+    try {
+      target.animate(keyframes, {
+        duration: lines ? lines[at].duration : duration2,
+        ...lines ? { delay: lines[at].openDelay } : {},
+        easing,
+        fill: "backwards",
+        ...pseudoElement ? { pseudoElement } : {}
+      });
+    } catch {
+    }
+  });
+  const fade = (
+    /** @type {Keyframe[]} */
+    [{ opacity: 1 }, { opacity: 0 }]
+  );
+  if (!kept.some((one) => one.target === dialog && one.pseudoElement === "::backdrop")) {
+    try {
+      dialog.animate(fade, { duration: duration2, easing: "ease-in", direction: "reverse", fill: "backwards", pseudoElement: "::backdrop" });
+    } catch {
+    }
+  }
+  if (kept.length === 0) dialog.animate(fade, { duration: duration2, easing: "ease-in", direction: "reverse", fill: "backwards" });
+}
+function attachClose(dialog) {
+  const own = (
+    /** @type {any} */
+    dialog
+  );
+  if (own.__kpMotion) return () => {
+  };
+  own.__kpMotion = true;
+  watching += 1;
+  const showModal = dialog.showModal;
+  const show = dialog.show;
+  own.showModal = function() {
+    showModal.call(dialog);
+    rememberEntrance(dialog);
+    openAsReversedClose(dialog);
+  };
+  own.show = function() {
+    show.call(dialog);
+    rememberEntrance(dialog);
+    openAsReversedClose(dialog);
+  };
+  own.close = (value) => void closeDialog(dialog, value);
+  if (dialog.open) {
+    rememberEntrance(dialog);
+    openAsReversedClose(dialog);
+  }
+  const onCancel = (event) => {
+    if (event.defaultPrevented) return;
+    event.preventDefault();
+    void closeDialog(dialog);
+  };
+  dialog.addEventListener("cancel", onCancel);
+  return () => {
+    if (!own.__kpMotion) return;
+    watching -= 1;
+    dialog.removeEventListener("cancel", onCancel);
+    delete own.showModal;
+    delete own.show;
+    delete own.close;
+    delete own.__kpMotion;
+  };
+}
+function playEntranceBackwards(el5) {
+  stopReversing(el5);
+  if (reduced() || !el5.isConnected) return Promise.resolve(false);
+  const named = (pseudo) => {
+    const name = getComputedStyle(el5, pseudo).animationName;
+    return Boolean(name) && name !== "none";
+  };
+  if (![null, "::before", "::after"].some(named)) return Promise.resolve(false);
+  el5.setAttribute(REVERSING_ATTRIBUTE, "reset");
+  for (const pseudo of [null, "::before", "::after"]) getComputedStyle(el5, pseudo).animationName;
+  el5.setAttribute(REVERSING_ATTRIBUTE, "play");
+  for (const pseudo of [null, "::before", "::after"]) getComputedStyle(el5, pseudo).animationName;
+  const plays = el5.getAnimations({ subtree: true }).filter(
+    (a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
+    a.effect?.target === el5 && a.effect?.getComputedTiming().iterations !== Infinity
+  );
+  if (plays.length === 0) {
+    el5.removeAttribute(REVERSING_ATTRIBUTE);
+    return Promise.resolve(false);
+  }
+  return new Promise((resolve) => {
+    const own = (
+      /** @type {any} */
+      el5
+    );
+    own.__kpReversing = () => {
+      for (const a of plays) {
+        if (a.playState !== "running" || a.currentTime === null) continue;
+        const end = Number(a.effect?.getComputedTiming().endTime) || 0;
+        a.currentTime = Math.max(0, end - Number(a.currentTime));
+      }
+      resolve(false);
+    };
+    const ended = (a) => new Promise((done) => {
+      a.addEventListener("cancel", done, { once: true });
+      a.addEventListener("remove", done, { once: true });
+      a.finished.then(done, done);
+    });
+    const running2 = () => el5.getAnimations().filter(
+      (a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
+      a.effect?.target === el5 && a.effect?.getComputedTiming().iterations !== Infinity && a.playState !== "finished"
+    );
+    const settle = (waited) => {
+      if (own.__kpReversing === void 0) return;
+      void Promise.all(waited.map(ended)).then(() => {
+        if (own.__kpReversing === void 0) return;
+        const next = running2();
+        if (next.length > 0) return settle(next);
+        delete own.__kpReversing;
+        resolve(true);
+      });
+    };
+    settle(plays);
+  });
+}
+function stopReversing(el5) {
+  const own = (
+    /** @type {any} */
+    el5
+  );
+  const stop = own.__kpReversing;
+  delete own.__kpReversing;
+  stop?.();
+  el5.removeAttribute(REVERSING_ATTRIBUTE);
+}
+async function playClose(el5) {
+  stopClose(el5);
+  if (reduced() || !el5.isConnected) return true;
+  const before = getComputedStyle(el5).animationName;
+  el5.setAttribute(CLOSING_ATTRIBUTE, "");
+  const now = getComputedStyle(el5).animationName;
+  const own = Boolean(now) && now !== "none" && now !== before;
+  let stopped = false;
+  const me = (
+    /** @type {any} */
+    el5
+  );
+  const waits = [];
+  if (own) {
+    waits.push(playedOut(el5, 0));
+  } else {
+    waits.push(playEntranceBackwards(el5));
+  }
+  for (const a of el5.getAnimations({ subtree: true })) {
+    if (typeof CSSTransition !== "undefined" && a instanceof CSSTransition) waits.push(a.finished.catch(() => void 0));
+  }
+  me.__kpClosing = () => {
+    stopped = true;
+    stopReversing(el5);
+    el5.removeAttribute(CLOSING_ATTRIBUTE);
+  };
+  await Promise.all(waits);
+  if (me.__kpClosing === void 0) return false;
+  delete me.__kpClosing;
+  return !stopped;
+}
+function stopClose(el5) {
+  const me = (
+    /** @type {any} */
+    el5
+  );
+  const stop = me.__kpClosing;
+  delete me.__kpClosing;
+  stop?.();
+  stopReversing(el5);
+  el5.removeAttribute(CLOSING_ATTRIBUTE);
+}
+function closePopoverWithGhost(event) {
+  const toggle = (
+    /** @type {ToggleEvent} */
+    event
+  );
+  const el5 = (
+    /** @type {HTMLElement} */
+    toggle.target
+  );
+  if (toggle.newState !== "closed" || !(el5 instanceof HTMLElement) || !el5.matches(PANEL_SELECTOR)) return;
+  if (reduced() || ghosted.has(el5) || !el5.matches(":popover-open")) return;
+  const animated = [null, "::before", "::after"].some((pseudo) => {
+    const name = getComputedStyle(el5, pseudo).animationName;
+    return Boolean(name) && name !== "none";
+  });
+  const before = getComputedStyle(el5).animationName;
+  el5.setAttribute(CLOSING_ATTRIBUTE, "");
+  const leaveOwn = getComputedStyle(el5).animationName;
+  el5.removeAttribute(CLOSING_ATTRIBUTE);
+  if (!animated && (!leaveOwn || leaveOwn === "none" || leaveOwn === before)) return;
+  const box = el5.getBoundingClientRect();
+  if (box.width === 0 && box.height === 0) return;
+  const sized = getComputedStyle(el5);
+  const matrix = sized.transform === "none" ? null : new DOMMatrixReadOnly(sized.transform);
+  const isTurned = matrix !== null && (Math.abs(matrix.b) > 1e-3 || Math.abs(matrix.c) > 1e-3) || sized.rotate !== "none" && sized.rotate !== "0deg";
+  const turned = isTurned && el5 instanceof HTMLElement ? { x: (box.width - el5.offsetWidth) / 2, y: (box.height - el5.offsetHeight) / 2 } : { x: 0, y: 0 };
+  const ghost = (
+    /** @type {HTMLElement} */
+    el5.cloneNode(true)
+  );
+  for (const one of [ghost, ...ghost.querySelectorAll("[id]")]) one.removeAttribute("id");
+  ghost.setAttribute("aria-hidden", "true");
+  ghost.setAttribute("popover", "manual");
+  ghost.setAttribute("data-kp-ghost", "");
+  ghost.inert = true;
+  Object.assign(ghost.style, {
+    position: "fixed",
+    inset: "auto",
+    top: `${box.top + turned.y}px`,
+    left: `${box.left + turned.x}px`,
+    width: sized.width,
+    height: sized.height,
+    margin: "0",
+    boxSizing: sized.boxSizing,
+    pointerEvents: "none",
+    positionAnchor: "none",
+    positionArea: "none"
+  });
+  el5.after(ghost);
+  ghosted.add(el5);
+  const done = () => {
+    ghost.remove();
+    ghosted.delete(el5);
+  };
+  const back = (e) => {
+    if (
+      /** @type {ToggleEvent} */
+      e.newState !== "open"
+    ) return;
+    el5.removeEventListener("beforetoggle", back);
+    stopClose(ghost);
+    done();
+  };
+  const play = () => {
+    el5.addEventListener("beforetoggle", back);
+    void playClose(ghost).then(() => {
+      el5.removeEventListener("beforetoggle", back);
+      done();
+    });
+  };
+  try {
+    ghost.showPopover();
+    play();
+  } catch {
+    setTimeout(() => {
+      if (!ghost.isConnected || el5.matches(":popover-open")) return done();
+      try {
+        ghost.showPopover();
+      } catch {
+        return done();
+      }
+      play();
+    }, 0);
+  }
+}
+function withoutOvershoot(ease) {
+  const list = /^linear\((.*)\)$/.exec(ease.trim());
+  if (list) {
+    const stops = list[1].split(",").map((stop) => stop.trim().split(/\s+/));
+    if (stops.every(([y]) => Number(y) >= 0 && Number(y) <= 1)) return ease;
+    return `linear(${stops.map(([y, ...at]) => [String(Math.min(1, Math.max(0, Number(y)))), ...at].join(" ")).join(", ")})`;
+  }
+  const m = /^cubic-bezier\(\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)$/.exec(ease.trim());
+  if (!m) return ease;
+  const [x1, y1, x2, y2] = m.slice(1).map(Number);
+  const hold = (y) => Math.min(1, Math.max(0, y));
+  return `cubic-bezier(${x1}, ${hold(y1)}, ${x2}, ${hold(y2)})`;
+}
+function sizeEase(box, ease, change, plain = false) {
+  if (plain && getComputedStyle(box).getPropertyValue("--kp-accordion-size").trim() === "own") plain = false;
+  const way = (curve) => withoutOvershoot(change < 0 ? reversedEase(curve) : curve);
+  if (plain) return way(ease);
+  const style = getComputedStyle(box);
+  const own = style.getPropertyValue("--kp-size-ease").trim();
+  if (own) ease = own;
+  if (style.getPropertyValue("--kp-size-steps").trim() === "line") {
+    const line = parseFloat(style.lineHeight) || parseFloat(style.fontSize) * 1.3 || 20;
+    return way(`steps(${Math.max(1, Math.round(Math.abs(change) / line))}, jump-end)`);
+  }
+  return way(ease);
+}
+function steppedDuration(box, easing, duration2) {
+  const steps = /^steps\(\s*(\d+)/.exec(easing.trim());
+  if (!steps || duration2 <= 0) return duration2;
+  const step = msOf(box, "--kp-size-step", 0);
+  if (step <= 0) return duration2;
+  const root = box.ownerDocument?.documentElement ?? document.documentElement;
+  const scale = parseFloat(getComputedStyle(root).getPropertyValue("--kp-motion-scale")) || 1;
+  return Number(steps[1]) * step * scale;
+}
+function onStepClock(box, easing, ms) {
+  if (!/^steps\(/.test(easing.trim())) return ms;
+  const step = msOf(box, "--kp-size-step", 0);
+  return step > 0 ? Math.round(ms / step) * step : ms;
+}
+function reversedEase(ease) {
+  const curve = NAMED_EASES[ease.trim()] ?? ease.trim();
+  const bezier = /^cubic-bezier\(\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)$/.exec(curve);
+  if (bezier) {
+    const [x1, y1, x2, y2] = bezier.slice(1).map(Number);
+    const r = (n) => Math.round(n * 1e4) / 1e4;
+    return `cubic-bezier(${r(1 - x2)}, ${r(1 - y2)}, ${r(1 - x1)}, ${r(1 - y1)})`;
+  }
+  const steps = /^steps\(\s*(\d+)\s*(?:,\s*([a-z-]+)\s*)?\)$/.exec(curve);
+  if (steps) {
+    const flip = (
+      /** @type {Record<string, string>} */
+      {
+        start: "jump-end",
+        "jump-start": "jump-end",
+        end: "jump-start",
+        "jump-end": "jump-start"
+      }
+    );
+    const position = steps[2] ?? "jump-end";
+    return `steps(${steps[1]}, ${flip[position] ?? position})`;
+  }
+  const list = /^linear\((.*)\)$/.exec(curve);
+  if (list) {
+    const stops = list[1].split(",").map((stop) => stop.trim().split(/\s+/));
+    if (stops.every((s2) => s2.length === 1))
+      return `linear(${stops.reverse().map(([y]) => String(Math.round((1 - Number(y)) * 1e4) / 1e4)).join(", ")})`;
+    if (stops.every((s2) => s2.length === 2 && s2[1].endsWith("%")))
+      return `linear(${stops.reverse().map(([y, x]) => `${Math.round((1 - Number(y)) * 1e4) / 1e4} ${Math.round((100 - parseFloat(x)) * 100) / 100}%`).join(", ")})`;
+  }
+  return curve;
+}
+function layoutHeight(el5) {
+  const whole = el5.offsetHeight;
+  const drawn2 = el5.getBoundingClientRect().height;
+  return Math.abs(drawn2 - whole) < 1 ? drawn2 : whole;
+}
+function sizeMotion(box, change) {
+  const { size, ease } = themeMotion(box);
+  if (size <= 0 || switching) return { duration: 0, easing: "linear" };
+  const easing = sizeEase(box, ease, change);
+  return { duration: steppedDuration(box, easing, size), easing };
+}
+function glide(box, from, to, duration2, easing, plain = false, delay = 0) {
+  box.style.setProperty("overflow", "clip");
+  box.style.setProperty("box-sizing", "border-box");
+  box.style.setProperty("--kp-resize-dur", `${Math.round(duration2)}ms`);
+  if (!plain) box.setAttribute("data-kp-resizing", to > from ? "grow" : "shrink");
+  const flow = getComputedStyle(box);
+  if (/flex/.test(flow.display) && flow.flexDirection.startsWith("column")) box.setAttribute("data-kp-gliding", "column");
+  const mine = box.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration: duration2, easing, delay, fill: "backwards" });
+  const own = (
+    /** @type {any} */
+    box
+  );
+  own.__kpGlide = mine;
+  const done = () => {
+    if (own.__kpGlide !== mine) return;
+    own.__kpGlide = null;
+    box.style.removeProperty("overflow");
+    box.style.removeProperty("box-sizing");
+    box.style.removeProperty("--kp-resize-dur");
+    box.removeAttribute("data-kp-resizing");
+    box.removeAttribute("data-kp-gliding");
+  };
+  mine.addEventListener("cancel", done);
+  return { animation: mine, done };
+}
+function arrival(scope) {
+  if (reduced()) return null;
+  const probe = document.createElement("div");
+  probe.className = "kp-toast";
+  probe.setAttribute("aria-hidden", "true");
+  probe.style.cssText = "position:fixed;left:-9999px;top:0;visibility:hidden;pointer-events:none;";
+  const themed = scope.closest("[data-theme]");
+  (themed && themed !== document.documentElement && themed instanceof HTMLElement ? themed : document.body).append(probe);
+  try {
+    const style = getComputedStyle(probe);
+    if (!style.animationName || style.animationName === "none") return null;
+    const name = style.animationName.split(",")[0].trim();
+    const cap = msOf(scope.ownerDocument?.documentElement ?? document.documentElement, "--kp-size-max", 480);
+    const duration2 = Math.min(firstMs(style.animationDuration), cap);
+    if (duration2 <= 0) return null;
+    const ease = style.animationTimingFunction.split(/,(?![^(]*\))/)[0].trim();
+    return `${name} ${duration2}ms ${ease} backwards`;
+  } finally {
+    probe.remove();
+  }
+}
+function arrive(el5, motion) {
+  if (!motion || el5.style.animation || el5.hasAttribute("data-kp-arriving") || el5.hasAttribute("data-kp-leaving") || el5.hasAttribute("data-kp-ghost"))
+    return;
+  if (getComputedStyle(el5).getPropertyValue("--kp-arrive-unseen").trim() === "skip" && el5.getClientRects().length === 0) return;
+  if (opensAsReversedClose(el5) && arriveAsReversedLeave(el5)) return;
+  el5.setAttribute("data-kp-arriving", "");
+  const own = getComputedStyle(el5).animationName;
+  if (!own || own === "none") el5.style.animation = motion;
+  const end = () => {
+    el5.style.removeProperty("animation");
+    el5.removeAttribute("data-kp-arriving");
+  };
+  void playedOut(el5, 1500).then(end);
+}
+function arriveShown(el5) {
+  arrive(el5, arrival(el5));
+}
+function glideGroup(group, opening, apply) {
+  const { size, ease } = themeMotion(group);
+  if (size <= 0 || switching || !group.isConnected || group.parentElement?.closest(`[${GROUP_FOLDING_ATTRIBUTE}]`)) return apply();
+  const own = groupGlides.get(group);
+  const standing = own ? group.getBoundingClientRect().height : null;
+  own?.cancel();
+  const from = standing ?? (opening ? 0 : layoutHeight(group));
+  group.setAttribute(GROUP_FOLDING_ATTRIBUTE, "");
+  group.style.setProperty("overflow", "clip");
+  group.style.setProperty("box-sizing", "border-box");
+  heightFolds.add(group);
+  apply();
+  const to = opening ? layoutHeight(group) : 0;
+  const easing = sizeEase(group, ease, to - from, true);
+  const mine = group.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration: size, easing, fill: "forwards" });
+  groupGlides.set(group, mine);
+  const done = () => {
+    if (groupGlides.get(group) !== mine) return;
+    groupGlides.delete(group);
+    heightFolds.delete(group);
+    group.removeAttribute(GROUP_FOLDING_ATTRIBUTE);
+    group.style.removeProperty("overflow");
+    group.style.removeProperty("box-sizing");
+    mine.cancel();
+  };
+  void mine.finished.then(done, () => void 0);
+}
+async function playArrivalBackwards(el5) {
+  if (reduced() || !el5.isConnected || el5.hasAttribute("data-kp-leaving")) return;
+  const arriving2 = el5.hasAttribute("data-kp-arriving");
+  el5.setAttribute("data-kp-arriving", "");
+  const own = getComputedStyle(el5).animationName;
+  let lent = false;
+  if (!own || own === "none") {
+    const motion = arrival(el5);
+    if (motion) {
+      el5.style.animation = motion;
+      lent = true;
+    }
+  }
+  if (arriving2) {
+    for (const a of el5.getAnimations()) if (a instanceof CSSAnimation) a.finish();
+  }
+  await playEntranceBackwards(el5);
+  stopReversing(el5);
+  if (lent) el5.style.removeProperty("animation");
+  el5.removeAttribute("data-kp-arriving");
+}
+function partway(el5, share, done, lines = false) {
+  const css = exitsOf(el5, lines);
+  const reached = new Promise((resolve) => {
+    const tick4 = () => {
+      const through = css.every((a) => {
+        const timing = a.effect?.getComputedTiming();
+        return a.playState === "finished" || (timing?.progress ?? 0) >= share || (timing?.currentIteration ?? 0) > 0;
+      });
+      if (through) resolve(void 0);
+      else requestAnimationFrame(tick4);
+    };
+    tick4();
+  });
+  return Promise.race([reached, done]);
+}
+function cappedGap(el5, share, lasts, count, lines = false) {
+  const exits = exitsOf(el5, lines).map((a) => {
+    const effect = (
+      /** @type {KeyframeEffect} */
+      a.effect
+    );
+    const timing = effect.getTiming();
+    return { timing, end: (Number(timing.delay) || 0) + (Number(effect.getComputedTiming().activeDuration) || 0) };
+  });
+  if (exits.length === 0) return null;
+  const gap = share > 0 && share < 1 ? Math.max(0, ...exits.map((exit) => reaches(exit.timing, exit.end, share))) : Math.max(lasts, ...exits.map((exit) => exit.end));
+  if (!Number.isFinite(gap)) return null;
+  const next = inTurnGap(gap, count);
+  return next < gap ? next : null;
+}
+function atTime(el5, ms, done, lines = false) {
+  const css = exitsOf(el5, lines);
+  const reached = new Promise((resolve) => {
+    const tick4 = () => {
+      if (css.every((a) => a.playState === "finished" || (Number(a.currentTime) || 0) >= ms)) resolve(void 0);
+      else requestAnimationFrame(tick4);
+    };
+    tick4();
+  });
+  return Promise.race([reached, done]);
+}
+function playedOut(el5, fallback2, lines = false) {
+  const css = exitsOf(el5, lines);
+  if (css.length === 0) return new Promise((resolve) => setTimeout(resolve, fallback2));
+  return Promise.all(css.map((a) => a.finished.catch(() => void 0)));
+}
+function arrivalOf(el5) {
+  if (reduced()) return null;
+  const had = el5.hasAttribute("data-kp-arriving");
+  el5.setAttribute("data-kp-arriving", "");
+  const style = getComputedStyle(el5);
+  const own = style.animationName && style.animationName !== "none";
+  const read = own ? {
+    name: style.animationName.split(",")[0].trim(),
+    duration: firstMs(style.animationDuration),
+    ease: style.animationTimingFunction.split(/,(?![^(]*\))/)[0].trim()
+  } : null;
+  if (!had) el5.removeAttribute("data-kp-arriving");
+  if (read && read.duration > 0) return read;
+  const toast2 = arrival(el5);
+  if (!toast2) return null;
+  const [name, duration2, ...ease] = toast2.split(" ");
+  return { name, duration: parseFloat(duration2), ease: ease.slice(0, -1).join(" ") };
+}
+function foldTiming(style) {
+  const grow = parseFloat(style.getPropertyValue("--kp-leave-fold-grow"));
+  const start = parseFloat(style.getPropertyValue("--kp-leave-fold-start"));
+  return {
+    grow: Number.isNaN(grow) ? 1.25 : grow,
+    start: (lasts) => Number.isNaN(start) ? lasts / 3 : lasts * start
+  };
+}
+function foldCurve(style, ease) {
+  return style.getPropertyValue("--kp-leave-fold-ease").trim() || ease;
+}
+function foldFrames(el5, style) {
+  const parent = el5.parentElement ? getComputedStyle(el5.parentElement) : null;
+  const sideways = style.display.startsWith("inline") || parent !== null && /flex/.test(parent.display) && !parent.flexDirection.startsWith("column");
+  const from = sideways ? {
+    width: `${el5.offsetWidth}px`,
+    marginLeft: style.marginLeft,
+    marginRight: style.marginRight,
+    paddingLeft: style.paddingLeft,
+    paddingRight: style.paddingRight
+  } : {
+    height: `${el5.offsetHeight}px`,
+    marginTop: style.marginTop,
+    marginBottom: style.marginBottom,
+    paddingTop: style.paddingTop,
+    paddingBottom: style.paddingBottom
+  };
+  const floor = sideways ? "minWidth" : "minHeight";
+  if (parseFloat(style[floor]) > 0) from[floor] = style[floor];
+  const to = Object.fromEntries(Object.keys(from).map((k) => [k, "0px"]));
+  const gapOf = parent && /flex/.test(parent.display) ? parseFloat(sideways ? parent.columnGap : parent.rowGap) || 0 : 0;
+  if (gapOf > 0) {
+    const inFlow = (n) => {
+      if (!n) return false;
+      const s2 = getComputedStyle(n);
+      return s2.display !== "none" && s2.position !== "absolute" && s2.position !== "fixed";
+    };
+    const near = (way) => {
+      let n = el5[way];
+      while (n && !inFlow(n)) n = n[way];
+      return n;
+    };
+    const rtl = sideways && style.direction === "rtl";
+    const start = sideways ? rtl ? "marginRight" : "marginLeft" : "marginTop";
+    const end = sideways ? rtl ? "marginLeft" : "marginRight" : "marginBottom";
+    if (near("previousElementSibling")) to[start] = `${-gapOf}px`;
+    else if (near("nextElementSibling")) to[end] = `${-gapOf}px`;
+  }
+  return [from, to];
+}
+function foldReflows(el5, from, to) {
+  if (!("width" in from)) return false;
+  const chain = [];
+  for (let up = el5.parentElement; up && up !== document.body && chain.length < 6; up = up.parentElement) chain.push(up);
+  const before = chain.map((n) => n.getBoundingClientRect().height);
+  const dashed = (k) => k.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
+  const keys = Object.keys(to).map(dashed);
+  const kept = keys.map((k) => el5.style.getPropertyValue(k));
+  const values = Object.values(to);
+  keys.forEach((k, i) => el5.style.setProperty(k, values[i], "important"));
+  const after = chain.map((n) => n.getBoundingClientRect().height);
+  keys.forEach((k, i) => kept[i] ? el5.style.setProperty(k, kept[i]) : el5.style.removeProperty(k));
+  return after.some((h2, i) => Math.abs(h2 - before[i]) >= 1);
+}
+function exitsOf(actor, lines) {
+  return (
+    /** @type {CSSAnimation[]} */
+    actor.getAnimations({ subtree: true }).filter((a) => {
+      if (typeof CSSAnimation === "undefined" || !(a instanceof CSSAnimation)) return false;
+      const effect = (
+        /** @type {KeyframeEffect | null} */
+        a.effect
+      );
+      const target = effect?.target;
+      if (target === actor) return true;
+      return lines && target != null && actor.contains(target) && Number.isFinite(Number(effect?.getComputedTiming().activeDuration));
+    })
+  );
+}
+function arriveAsReversedLeave(el5) {
+  if (el5 instanceof HTMLTableRowElement || !el5.isConnected) return false;
+  const { size, ease } = themeMotion(el5);
+  const before = getComputedStyle(el5).animationName;
+  const beforeSig = animationSignature(el5);
+  const rest = pseudoNames(el5);
+  el5.setAttribute("data-kp-leaving", "");
+  const style = getComputedStyle(el5);
+  const ownName = style.animationName;
+  if (!ownName || ownName === "none" || ownName === before && animationSignature(el5) === beforeSig) {
+    el5.removeAttribute("data-kp-leaving");
+    return false;
+  }
+  el5.setAttribute("data-kp-arriving", "");
+  const lasts = firstMs(style.animationDuration);
+  const fold = style.getPropertyValue("--kp-leave-fold").trim();
+  let actor = el5;
+  if (fold === "ghost" && lasts > 0) {
+    actor = /** @type {HTMLElement} */
+    el5.cloneNode(true);
+    actor.setAttribute("aria-hidden", "true");
+    actor.inert = true;
+    Object.assign(actor.style, {
+      position: "absolute",
+      top: `${el5.offsetTop}px`,
+      left: `${el5.offsetLeft}px`,
+      width: `${el5.offsetWidth}px`,
+      height: `${el5.offsetHeight}px`,
+      margin: "0",
+      boxSizing: "border-box",
+      pointerEvents: "none",
+      zIndex: "1"
+    });
+    el5.after(actor);
+    const want = el5.getBoundingClientRect();
+    const got = actor.getBoundingClientRect();
+    actor.style.top = `${el5.offsetTop + want.top - got.top}px`;
+    actor.style.left = `${el5.offsetLeft + want.left - got.left}px`;
+    el5.style.setProperty("visibility", "hidden");
+  }
+  getComputedStyle(actor).animationName;
+  const css = exitsOf(actor, keepsLines(el5));
+  const exits = css.map((a) => {
+    const effect = (
+      /** @type {KeyframeEffect} */
+      a.effect
+    );
+    const timing2 = effect.getTiming();
+    const pseudo = effect.pseudoElement;
+    if (effect.target === actor && pseudo && rest[pseudo] === animationSignature(actor, pseudo)) {
+      timing2.direction = flipped(timing2.direction);
+      timing2.delay = 0;
+    }
+    return {
+      target: (
+        /** @type {Element} */
+        effect.target
+      ),
+      keyframes: keyframesOf(effect),
+      pseudoElement: effect.pseudoElement,
+      timing: timing2,
+      // The whole of it, every iteration, from the leave's start.
+      end: (Number(timing2.delay) || 0) + (Number(effect.getComputedTiming().activeDuration) || 0)
+    };
+  });
+  for (const a of css) a.cancel();
+  if (actor !== el5) {
+    for (const a of el5.getAnimations()) if (a instanceof CSSAnimation) a.cancel();
+  }
+  const after = fold === "after";
+  const pause = parseFloat(style.getPropertyValue("--kp-leave-pause")) || 0;
+  const timing = foldTiming(style);
+  const foldEase = foldCurve(style, ease);
+  const frames = size > 0 && !floats(el5, style) ? foldFrames(el5, style) : null;
+  const foldFor = frames && !foldReflows(el5, ...frames) ? steppedDuration(el5, withoutOvershoot(foldEase), Math.max(size, lasts) * timing.grow) : 0;
+  const foldAt = onStepClock(el5, withoutOvershoot(foldEase), after ? lasts + pause : timing.start(lasts));
+  const total = Math.max(lasts, ...exits.map((exit) => exit.end), foldFor ? foldAt + foldFor : 0);
+  const plays = [];
+  for (const exit of exits) {
+    const { iterations = 1, direction = "normal", easing = "linear", duration: duration2 } = exit.timing;
+    const even = Number(iterations) % 2 === 0;
+    const turned = {
+      normal: "reverse",
+      reverse: "normal",
+      alternate: even ? "alternate" : "alternate-reverse",
+      "alternate-reverse": even ? "alternate-reverse" : "alternate"
+    };
+    const back = turned[direction] ?? "reverse";
+    try {
+      plays.push(
+        exit.target.animate(exit.keyframes, {
+          duration: Number(duration2) || 0,
+          iterations: Number(iterations),
+          delay: finiteMs(total - exit.end),
+          easing: String(easing),
+          direction: back,
+          fill: "both",
+          ...exit.pseudoElement ? { pseudoElement: exit.pseudoElement } : {}
+        })
+      );
+    } catch {
+    }
+  }
+  const set = parseFloat(style.getPropertyValue("--kp-leave-stagger"));
+  const stagger = Number.isNaN(set) ? 0.5 : set;
+  const lag = lasts <= 0 ? 0 : stagger > 0 && stagger < 1 ? Math.max(0, ...exits.map((exit) => reaches(exit.timing, exit.end, stagger))) : Math.max(lasts, ...exits.map((exit) => exit.end));
+  if (foldFor > 0 && frames) {
+    el5.style.setProperty("overflow", "clip");
+    el5.style.setProperty("box-sizing", "border-box");
+    if ("height" in frames[0]) heightFolds.add(el5);
+    plays.push(
+      el5.animate(frames, {
+        duration: foldFor,
+        delay: finiteMs(total - foldAt - foldFor),
+        // A panel that arrives while another leaves (a tab swap) folds on
+        // `--kp-swap-fold-ease` where the theme says so: see attachTabs().
+        easing: withoutOvershoot(
+          el5.hasAttribute("data-kp-tabs-swapping") && style.getPropertyValue("--kp-swap-fold-ease").trim() || foldEase
+        ),
+        direction: "reverse",
+        fill: "backwards"
+      })
+    );
+  }
+  let stopped = false;
+  const stop = () => {
+    if (stopped) return;
+    stopped = true;
+    entering.delete(el5);
+    heightFolds.delete(el5);
+    for (const a of plays) a.cancel();
+    if (actor !== el5) actor.remove();
+    el5.removeAttribute("data-kp-leaving");
+    el5.removeAttribute("data-kp-arriving");
+    el5.style.removeProperty("overflow");
+    el5.style.removeProperty("box-sizing");
+    el5.style.removeProperty("visibility");
+    getComputedStyle(el5).animationName;
+    for (const a of el5.getAnimations({ subtree: true })) {
+      if (a instanceof CSSAnimation && /** @type {KeyframeEffect} */
+      a.effect?.target === el5 && Number.isFinite(Number(a.effect?.getComputedTiming().activeDuration)))
+        a.finish();
+    }
+  };
+  entering.set(el5, stop);
+  void Promise.all(plays.map((a) => a.finished.catch(() => void 0))).then(stop);
+  if (!arriving) {
+    arriving = [];
+    queueMicrotask(() => {
+      const items = (
+        /** @type {Arriving[]} */
+        arriving
+      );
+      arriving = null;
+      arriveInTurn(items);
+    });
+  }
+  arriving.push({ el: el5, plays, total, lag });
+  return true;
+}
+function arriveInTurn(items) {
+  if (items.length < 2) return;
+  if (getComputedStyle(items[0].el).getPropertyValue("--kp-arrive-turn").trim() === "siblings") {
+    const rows = /* @__PURE__ */ new Map();
+    for (const item of items) rows.set(item.el.parentElement, [...rows.get(item.el.parentElement) ?? [], item]);
+    if (rows.size > 1) {
+      for (const row of rows.values()) turnsOf(row);
+      return;
+    }
+  }
+  turnsOf(items);
+}
+function turnsOf(items) {
+  if (items.length < 2) return;
+  items = items.filter((item) => Number.isFinite(item.total) && Number.isFinite(item.lag));
+  if (items.length < 2) return;
+  items.sort((a, b) => a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING ? 1 : -1);
+  let start = 0;
+  const ends = items.map((item) => {
+    const end = start + item.total;
+    start += inTurnGap(item.lag, items.length);
+    return end;
+  });
+  const last = Math.max(...ends);
+  items.forEach((item, k) => {
+    const later = last - ends[k];
+    if (later <= 0) return;
+    for (const play of item.plays) {
+      const effect = play.effect;
+      if (!effect) continue;
+      effect.updateTiming({ delay: finiteMs((Number(effect.getTiming().delay) || 0) + later) });
+    }
+  });
+}
+function inTurnGap(gap, count) {
+  if (count < 3 || !(gap > 0)) return gap;
+  const budget = Math.max(IN_TURN_MS, gap);
+  return (count - 1) * gap <= budget ? gap : budget / (count - 1);
+}
+function reaches(timing, end, share) {
+  if (!Number.isFinite(end)) return 0;
+  if (typeof KeyframeEffect === "undefined" || typeof Animation === "undefined") return end * share;
+  const effect = new KeyframeEffect(null, null, timing);
+  const probe = new Animation(effect, null);
+  for (let t = 0; t < end; t += 1) {
+    probe.currentTime = t;
+    const now = effect.getComputedTiming();
+    if ((now.progress ?? 0) >= share || (now.currentIteration ?? 0) > 0) return t;
+  }
+  return end;
+}
+function leavesState(el5) {
+  return getComputedStyle(el5).getPropertyValue("--kp-leave-state").trim() === "leave";
+}
+function leave(el5, { hide = false } = {}) {
+  return new Promise((resolve) => {
+    if (!batch) {
+      batch = [];
+      queueMicrotask(() => {
+        const items = (
+          /** @type {Leaving[]} */
+          batch
+        );
+        batch = null;
+        void leaveInTurn(items);
+      });
+    }
+    batch.push({ el: el5, hide, resolve });
+  });
+}
+async function leaveInTurn(items) {
+  items.sort((a, b) => a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING ? 1 : -1);
+  for (const item of items) {
+    const exited = new Promise((resolve) => {
+      void leaveOne(item.el, item.hide, resolve, items.length).then(item.resolve);
+    });
+    await exited;
+  }
+}
+async function leaveOne(el5, hide, exited, count = 1) {
+  const gone = () => {
+    if (hide) el5.hidden = true;
+    else el5.remove();
+  };
+  entering.get(el5)?.();
+  if (!el5.isConnected || el5.hasAttribute("data-kp-leaving")) return exited();
+  const before = getComputedStyle(el5).animationName;
+  const beforeSig = animationSignature(el5);
+  const rest = pseudoNames(el5);
+  const arrival2 = arrivalOf(el5);
+  const { size, ease } = themeMotion(el5);
+  if (!arrival2 && size <= 0) {
+    exited();
+    return gone();
+  }
+  el5.setAttribute("data-kp-leaving", "");
+  const style = getComputedStyle(el5);
+  const ownName = style.animationName;
+  const turned = ownName && ownName !== "none" && ownName === before && animationSignature(el5) !== beforeSig;
+  if (turned) {
+    el5.setAttribute(REVERSING_ATTRIBUTE, "reset");
+    getComputedStyle(el5).animationName;
+    el5.removeAttribute(REVERSING_ATTRIBUTE);
+    getComputedStyle(el5).animationName;
+  }
+  const own = ownName && ownName !== "none" && (ownName !== before || turned) ? { duration: firstMs(style.animationDuration) } : null;
+  const running2 = [];
+  const lasts = own ? own.duration : arrival2?.duration ?? 0;
+  const fold = style.getPropertyValue("--kp-leave-fold").trim();
+  let actor = el5;
+  if (fold === "ghost" && lasts > 0) {
+    actor = /** @type {HTMLElement} */
+    el5.cloneNode(true);
+    actor.setAttribute("aria-hidden", "true");
+    actor.inert = true;
+    Object.assign(actor.style, {
+      position: "absolute",
+      top: `${el5.offsetTop}px`,
+      left: `${el5.offsetLeft}px`,
+      width: `${el5.offsetWidth}px`,
+      height: `${el5.offsetHeight}px`,
+      margin: "0",
+      boxSizing: "border-box",
+      pointerEvents: "none",
+      zIndex: "1"
+    });
+    el5.after(actor);
+    const want = el5.getBoundingClientRect();
+    const got = actor.getBoundingClientRect();
+    actor.style.top = `${el5.offsetTop + want.top - got.top}px`;
+    actor.style.left = `${el5.offsetLeft + want.left - got.left}px`;
+    el5.style.setProperty("visibility", "hidden");
+    el5.style.setProperty("animation", "none");
+  }
+  if (!own && arrival2) actor.style.animation = `${arrival2.name} ${arrival2.duration}ms ${arrival2.ease} reverse forwards`;
+  if (Object.values(rest).some((sig) => !sig.startsWith("none "))) {
+    const inline = actor.style.animation;
+    actor.setAttribute(REVERSING_ATTRIBUTE, "reset");
+    for (const pseudo of [null, "::before", "::after"]) getComputedStyle(actor, pseudo).animationName;
+    actor.removeAttribute(REVERSING_ATTRIBUTE);
+    actor.style.animation = inline;
+  }
+  getComputedStyle(actor).animationName;
+  for (const a of actor.getAnimations({ subtree: true })) {
+    const effect = (
+      /** @type {KeyframeEffect | null} */
+      a.effect
+    );
+    const pseudo = effect?.pseudoElement;
+    if (!(a instanceof CSSAnimation) || effect?.target !== actor || !pseudo || rest[pseudo] !== animationSignature(actor, pseudo)) continue;
+    const timing = effect.getTiming();
+    if (!Number.isFinite(Number(timing.iterations))) continue;
+    const keyframes = keyframesOf(effect);
+    a.cancel();
+    try {
+      running2.push(
+        actor.animate(keyframes, {
+          duration: Number(timing.duration) || 0,
+          iterations: Number(timing.iterations),
+          easing: String(timing.easing ?? "linear"),
+          direction: flipped(timing.direction),
+          fill: "forwards",
+          pseudoElement: pseudo
+        }).finished.catch(() => void 0)
+      );
+    } catch {
+    }
+  }
+  const lines = style.getPropertyValue("--kp-lines").trim() === "keep";
+  const exit = lasts > 0 ? playedOut(actor, lasts + 100, lines) : Promise.resolve();
+  const set = parseFloat(style.getPropertyValue("--kp-leave-stagger"));
+  const stagger = Number.isNaN(set) ? 0.5 : set;
+  const capped = lasts > 0 && count > 2 ? cappedGap(actor, stagger, lasts, count, lines) : null;
+  if (capped !== null) void atTime(actor, capped, exit, lines).then(exited);
+  else if (lasts > 0 && stagger > 0 && stagger < 1) void partway(actor, stagger, exit, lines).then(exited);
+  else void exit.then(exited);
+  running2.push(exit);
+  const foldTo = size > 0 && !(el5 instanceof HTMLTableRowElement) && !floats(el5, style) ? foldFrames(el5, style) : null;
+  if (foldTo && !foldReflows(el5, ...foldTo)) {
+    el5.style.setProperty("overflow", "clip");
+    el5.style.setProperty("box-sizing", "border-box");
+    const [from, to] = foldTo;
+    if ("height" in from) heightFolds.add(el5);
+    const after = fold === "after";
+    const pause = parseFloat(style.getPropertyValue("--kp-leave-pause")) || 0;
+    const timing = foldTiming(style);
+    const foldEase = foldCurve(style, ease);
+    const folding = el5.animate([from, to], {
+      duration: steppedDuration(el5, withoutOvershoot(foldEase), Math.max(size, lasts) * timing.grow),
+      delay: onStepClock(el5, withoutOvershoot(foldEase), after ? lasts + pause : timing.start(lasts)),
+      easing: withoutOvershoot(foldEase),
+      fill: "forwards"
+    });
+    running2.push(folding.finished.catch(() => void 0));
+  }
+  await Promise.all(running2);
+  heightFolds.delete(el5);
+  if (actor !== el5) actor.remove();
+  gone();
+  el5.removeAttribute("data-kp-leaving");
+  el5.style.removeProperty("animation");
+  el5.style.removeProperty("overflow");
+  el5.style.removeProperty("box-sizing");
+  el5.style.removeProperty("visibility");
+  for (const a of el5.getAnimations()) a.cancel();
+}
+function repaintedIn(records, { keys = ARRIVE_KEYS } = {}) {
+  const list = [...records].filter((r) => r.type === "childList");
+  const gone = /* @__PURE__ */ new Map();
+  const keyOf6 = (e) => {
+    for (const name of keys) {
+      const value = name === "id" ? e.getAttribute("id") || e.id || null : e.getAttribute(name);
+      if (value) return `${name}=${value}`;
+    }
+    return null;
+  };
+  const sigOf = (e) => `${e.tagName}.${e.className}`;
+  const skeletal = (e) => typeof e.matches === "function" && e.matches(SKELETON) || typeof e.querySelector === "function" && e.querySelector(SKELETON) !== null;
+  for (const r of list)
+    for (const n of Array.from(r.removedNodes)) {
+      if (n?.nodeType !== 1) continue;
+      const g = gone.get(r.target) ?? { keys: /* @__PURE__ */ new Set(), sigs: /* @__PURE__ */ new Map(), skeleton: false };
+      gone.set(r.target, g);
+      const k = keyOf6(n);
+      if (k) g.keys.add(k);
+      g.sigs.set(sigOf(n), (g.sigs.get(sigOf(n)) ?? 0) + 1);
+      if (skeletal(n)) g.skeleton = true;
+    }
+  const out = /* @__PURE__ */ new Set();
+  for (const r of list)
+    for (const n of Array.from(r.addedNodes)) {
+      if (n?.nodeType !== 1) continue;
+      const g = gone.get(r.target);
+      if (!g) continue;
+      if (g.skeleton) {
+        out.add(n);
+        continue;
+      }
+      const k = keyOf6(n);
+      const left = g.sigs.get(sigOf(n)) ?? 0;
+      if (k ? g.keys.has(k) : left > 0) {
+        out.add(n);
+        if (!k) g.sigs.set(sigOf(n), left - 1);
+      }
+    }
+  return out;
+}
+function settledHeight(box) {
+  const out = (
+    /** @type {HTMLElement[]} */
+    [...box.querySelectorAll(`[data-kp-folding="${FOLDING_OUT}"]`)]
+  );
+  if (out.length === 0) return box.offsetHeight;
+  const how = out.map((el5) => getComputedStyle(el5).display === "table-row" ? ["visibility", "collapse"] : ["position", "absolute"]);
+  const kept = out.map((el5, k) => [el5.style.getPropertyValue(how[k][0]), el5.style.getPropertyPriority(how[k][0])]);
+  out.forEach((el5, k) => el5.style.setProperty(how[k][0], how[k][1], "important"));
+  const height = box.offsetHeight;
+  out.forEach((el5, k) => {
+    if (kept[k][0]) el5.style.setProperty(how[k][0], kept[k][0], kept[k][1]);
+    else el5.style.removeProperty(how[k][0]);
+  });
+  return height;
+}
+function foldingOutFor(box) {
+  let left = 0;
+  for (const el5 of box.querySelectorAll(`[data-kp-folding="${FOLDING_OUT}"]`))
+    for (const a of el5.getAnimations({ subtree: true })) {
+      const timing = a.effect?.getComputedTiming();
+      if (!timing || a.playState !== "running" || timing.iterations === Infinity) continue;
+      const rate = Math.abs(a.playbackRate) || 1;
+      left = Math.max(left, (Number(timing.endTime) - Number(timing.localTime ?? 0)) / rate);
+    }
+  return Number.isFinite(left) ? left : 0;
+}
+function firstRender(el5) {
+  let painted = false;
+  afterPaint(() => painted = true);
+  return () => !painted || settling(el5);
+}
+function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
+  const own = (
+    /** @type {any} */
+    box
+  );
+  if (own.__kpSize) return () => {
+  };
+  own.__kpSize = true;
+  watching += 1;
+  const keys = [...arriveKeys, ...ARRIVE_KEYS];
+  let last = box.offsetHeight;
+  let running2 = null;
+  let followedAt = -Infinity;
+  const fresh = firstRender(box);
+  const settle = () => {
+    if (!box.isConnected) return;
+    const effect = (
+      /** @type {KeyframeEffect | null} */
+      running2?.effect ?? null
+    );
+    if (running2 && effect) {
+      effect.target = null;
+      const natural = settledHeight(box);
+      effect.target = box;
+      if (Math.abs(natural - last) < 1) return;
+    }
+    const from = running2 ? box.offsetHeight : last;
+    running2?.finish();
+    running2 = null;
+    const to = settledHeight(box);
+    last = to;
+    if (switching || fresh() || Math.abs(to - from) < 1 || from === 0 || to === 0) {
+      if (Math.abs(to - from) < 1 && followsAFold(box)) followedAt = performance.now();
+      return;
+    }
+    if (followsAFold(box)) {
+      followedAt = performance.now();
+      return;
+    }
+    if (performance.now() - followedAt < 300 && getComputedStyle(box).getPropertyValue("--kp-leave-fold-ease").trim() !== "") {
+      followedAt = -Infinity;
+      return;
+    }
+    const { size, ease } = themeMotion(box);
+    if (size <= 0) return;
+    const delay = to < from ? Math.max(0, foldingOutFor(box) - size) : 0;
+    const easing = sizeEase(box, ease, to - from);
+    const { animation: mine, done } = glide(box, from, to, steppedDuration(box, easing, size), easing, false, delay);
+    running2 = mine;
+    mine.finished.then(() => {
+      done();
+      if (running2 === mine) running2 = null;
+    }).catch(() => void 0);
+  };
+  const sizes = new ResizeObserver((entries) => {
+    if (entries.some((entry) => entry.target !== box)) settle();
+    else if (!running2) last = box.offsetHeight;
+  });
+  const watch = () => {
+    sizes.disconnect();
+    sizes.observe(box);
+    for (const child of box.children) sizes.observe(child);
+  };
+  watch();
+  const list = new MutationObserver((records) => {
+    const modeOf2 = (target) => fresh() ? "none" : arriveMode(target instanceof Element ? target : box, fallback2);
+    const any = records.some((record) => modeOf2(record.target) !== "none");
+    const motion = records.length && any ? arrival(box) : null;
+    let repainted = null;
+    const hiddenBefore = /* @__PURE__ */ new Map();
+    const moved = /* @__PURE__ */ new Set();
+    for (const record of records) {
+      if (record.type === "attributes" && !hiddenBefore.has(record.target)) hiddenBefore.set(record.target, record.oldValue !== null);
+      if (record.type === "childList") for (const node of record.removedNodes) moved.add(node);
+    }
+    for (const record of records) {
+      const mode = modeOf2(record.target);
+      if (mode === "none") continue;
+      if (record.type === "attributes" && record.target instanceof HTMLElement && !record.target.hidden && hiddenBefore.get(record.target)) {
+        hiddenBefore.delete(record.target);
+        arrive(record.target, motion);
+      }
+      if (record.type === "childList")
+        for (const node of record.addedNodes) {
+          if (!(node instanceof HTMLElement) || moved.has(node) || node.hasAttribute("data-kp-ghost")) continue;
+          if (mode === "new" && (repainted ??= repaintedIn(records, { keys })).has(node)) continue;
+          arrive(node, motion);
+        }
+    }
+    watch();
+    settle();
+  });
+  list.observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ["hidden"], attributeOldValue: true });
+  return () => {
+    if (!own.__kpSize) return;
+    watching -= 1;
+    sizes.disconnect();
+    list.disconnect();
+    running2?.cancel();
+    box.style.removeProperty("overflow");
+    box.style.removeProperty("box-sizing");
+    delete own.__kpSize;
+  };
+}
+function attachFold(details) {
+  const own = (
+    /** @type {any} */
+    details
+  );
+  if (own.__kpFold) return () => {
+  };
+  const summary = details.querySelector(":scope > summary");
+  if (!summary) return () => {
+  };
+  own.__kpFold = true;
+  watching += 1;
+  let running2 = null;
+  let folding = false;
+  const fresh = firstRender(details);
+  const shutHeight = () => {
+    const style = getComputedStyle(details);
+    return layoutHeight(
+      /** @type {HTMLElement} */
+      summary
+    ) + parseFloat(style.borderBlockStartWidth || "0") + parseFloat(style.borderBlockEndWidth || "0");
+  };
+  const setOpen = (value) => {
+    details.open = value;
+    watcher.takeRecords();
+  };
+  const move = (opening, from, size, ease) => {
+    running2?.finish();
+    folding = !opening;
+    setOpen(true);
+    const to = opening ? layoutHeight(details) : shutHeight();
+    details.toggleAttribute("data-kp-folding", folding);
+    const { animation: mine, done } = glide(details, from, to, size, sizeEase(details, ease, to - from, true), true);
+    running2 = mine;
+    mine.finished.then(() => {
+      done();
+      if (running2 !== mine) return;
+      running2 = null;
+      if (folding) {
+        folding = false;
+        setOpen(false);
+      }
+      details.removeAttribute("data-kp-folding");
+    }).catch(() => void 0);
+  };
+  const onClick = (event) => {
+    const { size, ease } = themeMotion(details);
+    if (size <= 0) return;
+    event.preventDefault();
+    move(!details.open || folding, layoutHeight(details), size, ease);
+  };
+  const watcher = new MutationObserver((records) => {
+    const was = records[0].oldValue !== null;
+    const now = details.open;
+    if (fresh() || was === now || !details.isConnected) return;
+    const { size, ease } = themeMotion(details);
+    if (size <= 0) return;
+    let from;
+    if (running2) from = layoutHeight(details);
+    else if (now) from = shutHeight();
+    else {
+      setOpen(true);
+      from = layoutHeight(details);
+    }
+    move(now, from, size, ease);
+  });
+  watcher.observe(details, { attributes: true, attributeFilter: ["open"], attributeOldValue: true });
+  summary.addEventListener("click", onClick);
+  return () => {
+    if (!own.__kpFold) return;
+    watching -= 1;
+    watcher.disconnect();
+    summary.removeEventListener("click", onClick);
+    running2?.cancel();
+    details.style.removeProperty("overflow");
+    details.removeAttribute("data-kp-folding");
+    delete own.__kpFold;
+  };
+}
+function attachMotion(root = document, { size = "", arrive: arrive2 = "all", arriveKeys = [] } = {}) {
+  const detaches = /* @__PURE__ */ new Map();
+  const sizeSelector = size.trim() ? `${SIZE_SELECTOR}, ${size}` : SIZE_SELECTOR;
+  const keep = (el5, detach) => {
+    const before = detaches.get(el5);
+    detaches.set(el5, before ? () => (before(), detach()) : detach);
+  };
+  const scan = (scope) => {
+    const all = (selector) => [
+      ...scope instanceof Element && scope.matches(selector) ? [scope] : [],
+      ...scope.querySelectorAll(selector)
+    ];
+    for (const el5 of all("dialog.kp-dialog, dialog.kp-palette, dialog.kp-alarm"))
+      if (!el5.hasAttribute("data-kp-ghost")) keep(el5, attachClose(
+        /** @type {HTMLDialogElement} */
+        el5
+      ));
+    for (const el5 of all(sizeSelector))
+      if (!el5.hasAttribute("data-kp-ghost")) keep(el5, easeSize(
+        /** @type {HTMLElement} */
+        el5,
+        { arrive: arrive2, arriveKeys }
+      ));
+    for (const el5 of all(FOLD_SELECTOR)) if (el5 instanceof HTMLDetailsElement && !el5.hasAttribute("data-kp-ghost")) keep(el5, attachFold(el5));
+  };
+  scan(root);
+  let sweeping = false;
+  const sweep = () => {
+    sweeping = false;
+    for (const [el5, detach] of detaches)
+      if (!el5.isConnected) {
+        detach();
+        detaches.delete(el5);
+      }
+  };
+  const later = new MutationObserver((records) => {
+    for (const record of records) {
+      for (const node of record.addedNodes) if (node instanceof Element) scan(node);
+      if (record.removedNodes.length && !sweeping) {
+        sweeping = true;
+        queueMicrotask(sweep);
+      }
+    }
+  });
+  later.observe(root instanceof Document ? root.documentElement : (
+    /** @type {Node} */
+    root
+  ), { childList: true, subtree: true });
+  return () => {
+    later.disconnect();
+    for (const one of detaches.values()) one();
+    detaches.clear();
+  };
+}
+var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, watching, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reducedQuery, reducedNow, reduced, entrances, closing, nativeClose, KEYFRAME_FIELDS, keepsLines, opensAsReversedClose, switching, REVERSING_ATTRIBUTE, CLOSING_ATTRIBUTE, PANEL_SELECTOR, ghosted, NAMED_EASES, GROUP_FOLDING_ATTRIBUTE, groupGlides, entering, animationSignature, pseudoNames, floats, flipped, arriving, finiteMs, IN_TURN_MS, batch, FOLDING_OUT, heightFolds, followsAFold, arriveMode;
+var init_motion = __esm({
+  "js/motion.js"() {
+    "use strict";
+    init_as_of();
+    SIZE_ATTRIBUTE = "data-kp-size-motion";
+    SIZE_SELECTOR = [
+      ".kp-dialog",
+      ".kp-tabs",
+      ".kp-datatable",
+      ".kp-toasts",
+      ".kp-upload__list",
+      ".kp-combobox__list",
+      ".kp-tree",
+      ".kp-wizard",
+      ".kp-field",
+      `[${SIZE_ATTRIBUTE}]`
+    ].join(", ");
+    FOLD_SELECTOR = ".kp-accordion__item";
+    ARRIVE_KEYS = /** @type {readonly string[]} */
+    Object.freeze(["data-kp-key", "data-kp-row-key", "id"]);
+    SKELETON = ".kp-skeleton, [data-kp-skeleton]";
+    watching = 0;
+    CLOSE_SHARE = 2 / 3;
+    SIZE_SHARE = 4 / 5;
+    msOf = (el5, name, fallback2) => {
+      const raw = getComputedStyle(el5).getPropertyValue(name).trim();
+      const n = parseFloat(raw);
+      if (Number.isNaN(n)) return fallback2;
+      return raw.endsWith("ms") ? n : n * 1e3;
+    };
+    firstMs = (raw) => {
+      const first = raw.split(",")[0].trim();
+      const n = parseFloat(first);
+      if (Number.isNaN(n)) return 0;
+      return first.endsWith("ms") ? n : n * 1e3;
+    };
+    reducedQuery = typeof matchMedia === "function" ? matchMedia("(prefers-reduced-motion: reduce)") : null;
+    reducedNow = reducedQuery?.matches ?? false;
+    reducedQuery?.addEventListener("change", (event) => {
+      reducedNow = event.matches;
+    });
+    reduced = () => reducedNow;
+    entrances = /* @__PURE__ */ new WeakMap();
+    closing = /* @__PURE__ */ new WeakSet();
+    nativeClose = typeof HTMLDialogElement === "undefined" ? null : HTMLDialogElement.prototype.close;
+    KEYFRAME_FIELDS = /* @__PURE__ */ new Set(["offset", "computedOffset", "easing", "composite"]);
+    keepsLines = (el5) => getComputedStyle(el5).getPropertyValue("--kp-lines").trim() === "keep";
+    opensAsReversedClose = (el5) => getComputedStyle(el5).getPropertyValue("--kp-open").trim() === "reverse-close";
+    switching = 0;
+    if (typeof document !== "undefined" && typeof MutationObserver === "function") {
+      new MutationObserver(() => {
+        const mine = ++switching;
+        const release = () => {
+          if (switching === mine) switching = 0;
+        };
+        requestAnimationFrame(() => requestAnimationFrame(() => void document.fonts?.ready.then(release, release)));
+      }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    }
+    REVERSING_ATTRIBUTE = "data-kp-reversing";
+    CLOSING_ATTRIBUTE = "data-kp-closing";
+    PANEL_SELECTOR = ".kp-popover:not(.kp-tooltip), .kp-menu, .kp-combobox__list, .kp-datepicker__panel";
+    ghosted = /* @__PURE__ */ new WeakSet();
+    if (typeof document !== "undefined") document.addEventListener("beforetoggle", closePopoverWithGhost, true);
+    NAMED_EASES = /** @type {Record<string, string>} */
+    {
+      ease: "cubic-bezier(0.25, 0.1, 0.25, 1)",
+      "ease-in": "cubic-bezier(0.42, 0, 1, 1)",
+      "ease-out": "cubic-bezier(0, 0, 0.58, 1)",
+      "ease-in-out": "cubic-bezier(0.42, 0, 0.58, 1)",
+      "step-start": "steps(1, jump-start)",
+      "step-end": "steps(1, jump-end)"
+    };
+    GROUP_FOLDING_ATTRIBUTE = "data-kp-group-folding";
+    groupGlides = /* @__PURE__ */ new WeakMap();
+    entering = /* @__PURE__ */ new WeakMap();
+    animationSignature = (el5, pseudo = null) => {
+      const style = getComputedStyle(el5, pseudo);
+      return [style.animationName, style.animationDirection, style.animationDuration, style.animationTimingFunction, style.animationFillMode].join(" ");
+    };
+    pseudoNames = (el5) => ({
+      "::before": animationSignature(el5, "::before"),
+      "::after": animationSignature(el5, "::after")
+    });
+    floats = (el5, style) => {
+      if (style.position === "absolute" || style.position === "fixed") return true;
+      try {
+        return el5.matches(":popover-open, :modal");
+      } catch {
+        return false;
+      }
+    };
+    flipped = (direction) => (
+      /** @type {Record<PlaybackDirection, PlaybackDirection>} */
+      {
+        normal: "reverse",
+        reverse: "normal",
+        alternate: "alternate-reverse",
+        "alternate-reverse": "alternate"
+      }[direction ?? "normal"]
+    );
+    arriving = null;
+    finiteMs = (ms) => Number.isFinite(ms) ? ms : 0;
+    IN_TURN_MS = 600;
+    batch = null;
+    FOLDING_OUT = "out";
+    heightFolds = /* @__PURE__ */ new WeakSet();
+    followsAFold = (box) => [...box.querySelectorAll(`[data-kp-leaving], [${GROUP_FOLDING_ATTRIBUTE}]`)].some(
+      (el5) => heightFolds.has(
+        /** @type {HTMLElement} */
+        el5
+      ) && el5.getClientRects().length > 0
+    );
+    arriveMode = (el5, fallback2) => el5.closest("[data-kp-arrive]")?.getAttribute("data-kp-arrive") || fallback2;
+  }
+});
+
 // js/actions.js
 var actions_exports = {};
 __export(actions_exports, {
   ACTION_LIST: () => ACTION_LIST,
   ROW_ACTIONS: () => ROW_ACTIONS,
+  ROW_KEYS: () => ROW_KEYS,
+  ROW_OPEN_EVENT: () => ROW_OPEN_EVENT,
   attachActionColumns: () => attachActionColumns,
+  attachRowKeys: () => attachRowKeys,
   fitActionColumns: () => fitActionColumns,
   mergeRoles: () => mergeRoles,
-  rowRoles: () => rowRoles
+  removeRow: () => removeRow,
+  rowRoles: () => rowRoles,
+  setRowBusy: () => setRowBusy
 });
 function rowRoles(buttons) {
   const seen = /* @__PURE__ */ new Map();
@@ -750,72 +2409,163 @@ function attachActionColumns(root = document) {
     if (queued) view.cancelAnimationFrame(queued);
   };
 }
-var ROW_ACTIONS, ACTION_LIST;
+function setRowBusy(row, busy = true, button = null) {
+  const doc = row.ownerDocument;
+  const buttons = (
+    /** @type {HTMLElement[]} */
+    [...row.querySelectorAll(`${ROW_ACTIONS} > *`)]
+  );
+  if (busy) {
+    row.setAttribute("aria-busy", "true");
+    for (const b of buttons) {
+      if (b.getAttribute("aria-disabled") === "true" && !b.hasAttribute("data-kp-row-blocked")) continue;
+      b.setAttribute("aria-disabled", "true");
+      b.setAttribute("data-kp-row-blocked", "");
+    }
+    if (button && !button.hasAttribute("data-kp-busy")) {
+      button.style.setProperty("min-inline-size", `${button.getBoundingClientRect().width}px`);
+      for (const node of [...button.childNodes])
+        if (node.nodeType === Node.TEXT_NODE && node.textContent?.trim()) {
+          const words = doc.createElement("span");
+          words.className = "kp-button__text";
+          node.replaceWith(words);
+          words.append(node);
+        }
+      const holder = doc.createElement("span");
+      holder.className = "kp-button__busy";
+      holder.setAttribute("aria-hidden", "true");
+      const wheel = doc.createElement("span");
+      wheel.className = "kp-spinner";
+      holder.append(wheel);
+      button.append(holder);
+      button.setAttribute("data-kp-busy", "");
+    }
+    if (!blockers.has(row)) {
+      const block2 = (event) => {
+        const target = event.target instanceof Element ? event.target.closest("[data-kp-row-blocked]") : null;
+        if (!target) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      };
+      row.addEventListener("click", block2, true);
+      blockers.set(row, block2);
+    }
+    return row;
+  }
+  row.removeAttribute("aria-busy");
+  for (const b of buttons) {
+    if (!b.hasAttribute("data-kp-row-blocked")) continue;
+    b.removeAttribute("aria-disabled");
+    b.removeAttribute("data-kp-row-blocked");
+  }
+  for (const b of row.querySelectorAll("[data-kp-busy]")) {
+    b.removeAttribute("data-kp-busy");
+    b.style.removeProperty("min-inline-size");
+    b.querySelector(":scope > .kp-button__busy")?.remove();
+  }
+  const block = blockers.get(row);
+  if (block) {
+    row.removeEventListener("click", block, true);
+    blockers.delete(row);
+  }
+  return row;
+}
+async function removeRow(row) {
+  const list = row.parentElement;
+  const doc = row.ownerDocument;
+  const active = doc.activeElement;
+  if (list && active instanceof HTMLElement && row.contains(active)) {
+    const rows = (
+      /** @type {HTMLElement[]} */
+      [...list.children].filter((r) => r !== row && !r.hidden && !r.classList.contains("kp-action-list__group"))
+    );
+    const at = [...list.children].indexOf(row);
+    const next = rows.find((r) => [...list.children].indexOf(r) > at) ?? rows.reverse().find((r) => [...list.children].indexOf(r) < at) ?? null;
+    const place2 = [...row.querySelectorAll(`${ROW_ACTIONS} > *`)].indexOf(active);
+    const into = next ? (
+      /** @type {HTMLElement | undefined} */
+      next.querySelectorAll(`${ROW_ACTIONS} > *`)[place2] ?? next
+    ) : list;
+    if (!into.matches("a[href], button, input, select, textarea, [tabindex]")) into.tabIndex = -1;
+    into.focus({ preventScroll: true });
+  }
+  row.setAttribute("aria-hidden", "true");
+  const { leave: leave2 } = await Promise.resolve().then(() => (init_motion(), motion_exports));
+  await leave2(row);
+}
+function attachRowKeys(root = document) {
+  const lists = (
+    /** @type {HTMLElement[]} */
+    [
+      ...root instanceof Element && root.matches(ROW_KEYS) ? [root] : [],
+      ...root.querySelectorAll(ROW_KEYS)
+    ]
+  );
+  const undo = [];
+  for (const list of lists) {
+    const rowsOf2 = () => (
+      /** @type {HTMLElement[]} */
+      [...list.children].filter(
+        (r) => r.tagName === "LI" && !r.hidden && !r.classList.contains("kp-action-list__group") && r.getAttribute("aria-hidden") !== "true"
+      )
+    );
+    const current2 = (row) => {
+      for (const r of rowsOf2()) r.tabIndex = r === row ? 0 : -1;
+    };
+    const settle = () => {
+      const rows = rowsOf2();
+      for (const r of rows) if (!r.hasAttribute("tabindex")) r.tabIndex = -1;
+      if (rows.length && !rows.some((r) => r.tabIndex === 0)) current2(rows[0]);
+    };
+    settle();
+    const added = typeof MutationObserver === "undefined" ? null : new MutationObserver(settle);
+    added?.observe(list, { childList: true });
+    const key = (event) => {
+      if (event.ctrlKey || event.metaKey || event.altKey) return;
+      const target = (
+        /** @type {HTMLElement | null} */
+        event.target instanceof HTMLElement ? event.target : null
+      );
+      if (!target || target.closest("input, textarea, select, [contenteditable]")) return;
+      const rows = rowsOf2();
+      const at = rows.findIndex((r) => r === target || r.contains(target));
+      if (at < 0) return;
+      const onRow = rows[at] === target;
+      const to = event.key === "j" || event.key === "ArrowDown" ? Math.min(rows.length - 1, at + 1) : event.key === "k" || event.key === "ArrowUp" ? Math.max(0, at - 1) : onRow && event.key === "Home" ? 0 : onRow && event.key === "End" ? rows.length - 1 : null;
+      if (to !== null) {
+        event.preventDefault();
+        current2(rows[to]);
+        rows[to].focus();
+        return;
+      }
+      if (event.key === "Enter" && onRow) {
+        event.preventDefault();
+        rows[at].dispatchEvent(new CustomEvent(ROW_OPEN_EVENT, { bubbles: true, detail: { row: rows[at] } }));
+      }
+    };
+    const focus = (event) => {
+      const row = rowsOf2().find((r) => event.target instanceof Node && r.contains(event.target));
+      if (row) current2(row);
+    };
+    list.addEventListener("keydown", key);
+    list.addEventListener("focusin", focus);
+    undo.push(() => {
+      added?.disconnect();
+      list.removeEventListener("keydown", key);
+      list.removeEventListener("focusin", focus);
+    });
+  }
+  return () => undo.forEach((u) => u());
+}
+var ROW_ACTIONS, ACTION_LIST, ROW_KEYS, ROW_OPEN_EVENT, blockers;
 var init_actions = __esm({
   "js/actions.js"() {
     "use strict";
     ROW_ACTIONS = ".kp-row-actions";
     ACTION_LIST = ".kp-action-list, table";
-  }
-});
-
-// js/as-of.js
-function asOf(root, present, attach) {
-  const own = {
-    querySelectorAll: Object.getOwnPropertyDescriptor(root, "querySelectorAll"),
-    querySelector: Object.getOwnPropertyDescriptor(root, "querySelector")
-  };
-  const all = root.querySelectorAll;
-  const filtered = (selector) => [...all.call(root, selector)].filter((element) => present.has(element));
-  Object.defineProperty(root, "querySelectorAll", { configurable: true, value: filtered });
-  Object.defineProperty(root, "querySelector", { configurable: true, value: (selector) => filtered(selector)[0] ?? null });
-  try {
-    return attach();
-  } finally {
-    for (
-      const name of
-      /** @type {const} */
-      ["querySelectorAll", "querySelector"]
-    ) {
-      const before = own[name];
-      if (before) Object.defineProperty(root, name, before);
-      else delete /** @type {any} */
-      root[name];
-    }
-  }
-}
-function afterPaint(fn) {
-  if (typeof requestAnimationFrame !== "function") {
-    setTimeout(fn, 0);
-    return;
-  }
-  requestAnimationFrame(() => requestAnimationFrame(fn));
-}
-function settleAfter(root, done) {
-  holds.set(root, (holds.get(root) ?? 0) + 1);
-  root.setAttribute(SETTLING_ATTRIBUTE, "");
-  let held2 = true;
-  const release = () => {
-    if (!held2) return;
-    held2 = false;
-    const left = (holds.get(root) ?? 1) - 1;
-    holds.set(root, left);
-    if (left <= 0) root.removeAttribute(SETTLING_ATTRIBUTE);
-  };
-  done.then(
-    () => afterPaint(release),
-    () => afterPaint(release)
-  );
-  return release;
-}
-var presentUnder, SETTLING_ATTRIBUTE, holds, settling;
-var init_as_of = __esm({
-  "js/as-of.js"() {
-    "use strict";
-    presentUnder = (root) => new WeakSet([...root instanceof Element ? [root] : [], ...root.querySelectorAll("*")]);
-    SETTLING_ATTRIBUTE = "data-kp-settling";
-    holds = /* @__PURE__ */ new WeakMap();
-    settling = (el5) => el5.closest(`[${SETTLING_ATTRIBUTE}]`) !== null;
+    ROW_KEYS = "[data-kp-row-keys]";
+    ROW_OPEN_EVENT = "kp-row-open";
+    blockers = /* @__PURE__ */ new WeakMap();
   }
 });
 
@@ -3303,1600 +5053,6 @@ var init_alarm = __esm({
     TICK_MS = 100;
     serial = 0;
     noiseGlyph = () => GLYPHS[Math.floor(Math.random() * GLYPHS.length)];
-  }
-});
-
-// js/motion.js
-var motion_exports = {};
-__export(motion_exports, {
-  ARRIVE_KEYS: () => ARRIVE_KEYS,
-  CLOSING_ATTRIBUTE: () => CLOSING_ATTRIBUTE,
-  FOLDING_OUT: () => FOLDING_OUT,
-  FOLD_SELECTOR: () => FOLD_SELECTOR,
-  GROUP_FOLDING_ATTRIBUTE: () => GROUP_FOLDING_ATTRIBUTE,
-  PANEL_SELECTOR: () => PANEL_SELECTOR,
-  REVERSING_ATTRIBUTE: () => REVERSING_ATTRIBUTE,
-  SIZE_ATTRIBUTE: () => SIZE_ATTRIBUTE,
-  SIZE_SELECTOR: () => SIZE_SELECTOR,
-  arriveShown: () => arriveShown,
-  attachMotion: () => attachMotion,
-  closeDialog: () => closeDialog,
-  easeSize: () => easeSize,
-  glideGroup: () => glideGroup,
-  leave: () => leave,
-  leavesState: () => leavesState,
-  motionWatchCount: () => motionWatchCount,
-  playArrivalBackwards: () => playArrivalBackwards,
-  playClose: () => playClose,
-  playEntranceBackwards: () => playEntranceBackwards,
-  registerTime: () => registerTime,
-  repaintedIn: () => repaintedIn,
-  reversedEase: () => reversedEase,
-  sizeMotion: () => sizeMotion,
-  stopClose: () => stopClose,
-  stopReversing: () => stopReversing,
-  themeMotion: () => themeMotion,
-  turnEntrances: () => turnEntrances,
-  turnLines: () => turnLines,
-  withCustomProperties: () => withCustomProperties,
-  withoutOvershoot: () => withoutOvershoot
-});
-function motionWatchCount() {
-  return watching;
-}
-function registerTime(el5, name) {
-  const raw = getComputedStyle(el5).getPropertyValue(name).trim();
-  const n = parseFloat(raw);
-  if (Number.isNaN(n) || n < 0) return null;
-  const root = el5.ownerDocument?.documentElement ?? document.documentElement;
-  const scale = parseFloat(getComputedStyle(root).getPropertyValue("--kp-motion-scale")) || 1;
-  const ms = raw.endsWith("ms") ? n : raw.endsWith("s") ? n * 1e3 : n;
-  return ms * scale;
-}
-function themeMotion(scope = document.documentElement) {
-  if (reduced()) return { open: 0, ease: "linear", close: 0, size: 0 };
-  const host = scope.ownerDocument?.body ?? document.body;
-  const probe = document.createElement("div");
-  probe.className = "kp-dialog";
-  probe.setAttribute("aria-hidden", "true");
-  probe.style.cssText = "position:fixed;inset:auto;left:-9999px;top:0;visibility:hidden;pointer-events:none;";
-  const themed = scope.closest("[data-theme]");
-  (themed && themed !== document.documentElement && themed instanceof HTMLElement ? themed : host).append(probe);
-  let open2 = 0;
-  let ease = "ease";
-  try {
-    const style = getComputedStyle(probe);
-    if (style.animationName && style.animationName !== "none") {
-      open2 = firstMs(style.animationDuration);
-      ease = style.animationTimingFunction.split(/,(?![^(]*\))/)[0].trim() || "ease";
-    }
-  } finally {
-    probe.remove();
-  }
-  const root = scope.ownerDocument?.documentElement ?? document.documentElement;
-  const scale = parseFloat(getComputedStyle(root).getPropertyValue("--kp-motion-scale")) || 1;
-  return {
-    open: open2,
-    ease,
-    close: Math.min(open2 * CLOSE_SHARE, msOf(root, "--kp-close-max", 600)) * scale,
-    size: Math.min(open2 * SIZE_SHARE, msOf(root, "--kp-size-max", 480)) * scale
-  };
-}
-function withCustomProperties(read, own) {
-  const customs = own.filter((frame2) => Object.keys(frame2).some((key) => key.startsWith("--")));
-  if (customs.length === 0) return read;
-  const frames = read.map((frame2) => ({ ...frame2 }));
-  const at = (frame2) => Number(frame2.computedOffset ?? frame2.offset);
-  for (
-    const custom of
-    /** @type {any[]} */
-    customs
-  ) {
-    let frame2 = (
-      /** @type {any} */
-      frames.find((one) => Math.abs(at(one) - at(custom)) < 1e-6)
-    );
-    if (!frame2) {
-      frame2 = { offset: at(custom), computedOffset: at(custom), easing: custom.easing, composite: custom.composite };
-      const next = frames.findIndex((one) => at(one) > at(custom));
-      frames.splice(next === -1 ? frames.length : next, 0, frame2);
-    }
-    for (const key of Object.keys(custom)) if (key.startsWith("--") && !(key in frame2) && !KEYFRAME_FIELDS.has(key)) frame2[key] = custom[key];
-  }
-  return frames;
-}
-function keyframesOf(effect) {
-  const read = effect.getKeyframes();
-  try {
-    return withCustomProperties(read, new KeyframeEffect(effect).getKeyframes());
-  } catch {
-    return read;
-  }
-}
-function lineOf(effect) {
-  const timing = effect.getTiming();
-  const delay = Number(timing.delay) || 0;
-  return {
-    delay,
-    duration: Number(timing.duration) || 0,
-    end: delay + (Number(effect.getComputedTiming().activeDuration) || 0)
-  };
-}
-function turnLines(lines, total) {
-  const span3 = Math.max(0, ...lines.map((line) => line.end));
-  const scale = span3 > 0 ? total / span3 : 1;
-  return lines.map((line) => ({
-    duration: line.duration * scale,
-    openDelay: line.delay * scale,
-    closeDelay: (span3 - line.end) * scale
-  }));
-}
-function turnEntrances(kept, total) {
-  const lines = turnLines(
-    kept.filter((one) => one.pseudoElement !== "::backdrop").map((one) => one.line),
-    total
-  );
-  let at = 0;
-  return kept.map((one) => one.pseudoElement !== "::backdrop" ? lines[at++] : { duration: total, openDelay: 0, closeDelay: 0 });
-}
-function rememberEntrance(dialog) {
-  getComputedStyle(dialog).animationName;
-  const kept = entranceOf(dialog).map((a) => {
-    const effect = (
-      /** @type {KeyframeEffect} */
-      a.effect
-    );
-    return {
-      target: (
-        /** @type {Element} */
-        effect.target
-      ),
-      keyframes: keyframesOf(effect),
-      easing: String(effect.getTiming().easing ?? "linear"),
-      pseudoElement: effect.pseudoElement,
-      line: lineOf(effect)
-    };
-  });
-  entrances.set(dialog, kept);
-}
-function entranceOf(dialog) {
-  return (
-    /** @type {CSSAnimation[]} */
-    dialog.getAnimations({ subtree: true }).filter(
-      (a) => a instanceof CSSAnimation && a.effect instanceof KeyframeEffect && a.effect.target !== null && Number.isFinite(Number(a.effect.getComputedTiming().activeDuration))
-    )
-  );
-}
-async function closeDialog(dialog, returnValue) {
-  const close = () => nativeClose?.call(dialog, returnValue);
-  if (!dialog.open || closing.has(dialog)) return;
-  const { close: duration2 } = themeMotion(dialog);
-  const kept = entrances.get(dialog) ?? [];
-  if (duration2 <= 0) return void close();
-  closing.add(dialog);
-  const out = [];
-  const lines = kept.length > 0 && keepsLines(dialog) ? turnEntrances(kept, duration2) : null;
-  kept.forEach(({ target, keyframes, easing, pseudoElement }, at) => {
-    try {
-      out.push(
-        target.animate(keyframes, {
-          duration: lines ? lines[at].duration : duration2,
-          ...lines ? { delay: lines[at].closeDelay } : {},
-          easing,
-          direction: "reverse",
-          fill: "forwards",
-          ...pseudoElement ? { pseudoElement } : {}
-        })
-      );
-    } catch {
-    }
-  });
-  if (!kept.some((one) => one.target === dialog && one.pseudoElement === "::backdrop")) {
-    try {
-      out.push(
-        dialog.animate([{ opacity: 1 }, { opacity: 0 }], { duration: duration2, easing: "ease-in", fill: "forwards", pseudoElement: "::backdrop" })
-      );
-    } catch {
-    }
-  }
-  if (kept.length === 0) out.push(dialog.animate([{ opacity: 1 }, { opacity: 0 }], { duration: duration2, easing: "ease-in", fill: "forwards" }));
-  await Promise.all(out.map((a) => a.finished.catch(() => void 0)));
-  closing.delete(dialog);
-  close();
-  for (const a of out) a.cancel();
-}
-function openAsReversedClose(dialog) {
-  if (!dialog.open || !opensAsReversedClose(dialog)) return;
-  const { close: duration2 } = themeMotion(dialog);
-  const kept = entrances.get(dialog) ?? [];
-  if (duration2 <= 0) return;
-  for (const a of entranceOf(dialog)) a.cancel();
-  const lines = kept.length > 0 && keepsLines(dialog) ? turnEntrances(kept, duration2) : null;
-  kept.forEach(({ target, keyframes, easing, pseudoElement }, at) => {
-    try {
-      target.animate(keyframes, {
-        duration: lines ? lines[at].duration : duration2,
-        ...lines ? { delay: lines[at].openDelay } : {},
-        easing,
-        fill: "backwards",
-        ...pseudoElement ? { pseudoElement } : {}
-      });
-    } catch {
-    }
-  });
-  const fade = (
-    /** @type {Keyframe[]} */
-    [{ opacity: 1 }, { opacity: 0 }]
-  );
-  if (!kept.some((one) => one.target === dialog && one.pseudoElement === "::backdrop")) {
-    try {
-      dialog.animate(fade, { duration: duration2, easing: "ease-in", direction: "reverse", fill: "backwards", pseudoElement: "::backdrop" });
-    } catch {
-    }
-  }
-  if (kept.length === 0) dialog.animate(fade, { duration: duration2, easing: "ease-in", direction: "reverse", fill: "backwards" });
-}
-function attachClose(dialog) {
-  const own = (
-    /** @type {any} */
-    dialog
-  );
-  if (own.__kpMotion) return () => {
-  };
-  own.__kpMotion = true;
-  watching += 1;
-  const showModal = dialog.showModal;
-  const show = dialog.show;
-  own.showModal = function() {
-    showModal.call(dialog);
-    rememberEntrance(dialog);
-    openAsReversedClose(dialog);
-  };
-  own.show = function() {
-    show.call(dialog);
-    rememberEntrance(dialog);
-    openAsReversedClose(dialog);
-  };
-  own.close = (value) => void closeDialog(dialog, value);
-  if (dialog.open) {
-    rememberEntrance(dialog);
-    openAsReversedClose(dialog);
-  }
-  const onCancel = (event) => {
-    if (event.defaultPrevented) return;
-    event.preventDefault();
-    void closeDialog(dialog);
-  };
-  dialog.addEventListener("cancel", onCancel);
-  return () => {
-    if (!own.__kpMotion) return;
-    watching -= 1;
-    dialog.removeEventListener("cancel", onCancel);
-    delete own.showModal;
-    delete own.show;
-    delete own.close;
-    delete own.__kpMotion;
-  };
-}
-function playEntranceBackwards(el5) {
-  stopReversing(el5);
-  if (reduced() || !el5.isConnected) return Promise.resolve(false);
-  const named = (pseudo) => {
-    const name = getComputedStyle(el5, pseudo).animationName;
-    return Boolean(name) && name !== "none";
-  };
-  if (![null, "::before", "::after"].some(named)) return Promise.resolve(false);
-  el5.setAttribute(REVERSING_ATTRIBUTE, "reset");
-  for (const pseudo of [null, "::before", "::after"]) getComputedStyle(el5, pseudo).animationName;
-  el5.setAttribute(REVERSING_ATTRIBUTE, "play");
-  for (const pseudo of [null, "::before", "::after"]) getComputedStyle(el5, pseudo).animationName;
-  const plays = el5.getAnimations({ subtree: true }).filter(
-    (a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
-    a.effect?.target === el5 && a.effect?.getComputedTiming().iterations !== Infinity
-  );
-  if (plays.length === 0) {
-    el5.removeAttribute(REVERSING_ATTRIBUTE);
-    return Promise.resolve(false);
-  }
-  return new Promise((resolve) => {
-    const own = (
-      /** @type {any} */
-      el5
-    );
-    own.__kpReversing = () => {
-      for (const a of plays) {
-        if (a.playState !== "running" || a.currentTime === null) continue;
-        const end = Number(a.effect?.getComputedTiming().endTime) || 0;
-        a.currentTime = Math.max(0, end - Number(a.currentTime));
-      }
-      resolve(false);
-    };
-    const ended = (a) => new Promise((done) => {
-      a.addEventListener("cancel", done, { once: true });
-      a.addEventListener("remove", done, { once: true });
-      a.finished.then(done, done);
-    });
-    const running2 = () => el5.getAnimations().filter(
-      (a) => typeof CSSAnimation !== "undefined" && a instanceof CSSAnimation && /** @type {KeyframeEffect} */
-      a.effect?.target === el5 && a.effect?.getComputedTiming().iterations !== Infinity && a.playState !== "finished"
-    );
-    const settle = (waited) => {
-      if (own.__kpReversing === void 0) return;
-      void Promise.all(waited.map(ended)).then(() => {
-        if (own.__kpReversing === void 0) return;
-        const next = running2();
-        if (next.length > 0) return settle(next);
-        delete own.__kpReversing;
-        resolve(true);
-      });
-    };
-    settle(plays);
-  });
-}
-function stopReversing(el5) {
-  const own = (
-    /** @type {any} */
-    el5
-  );
-  const stop = own.__kpReversing;
-  delete own.__kpReversing;
-  stop?.();
-  el5.removeAttribute(REVERSING_ATTRIBUTE);
-}
-async function playClose(el5) {
-  stopClose(el5);
-  if (reduced() || !el5.isConnected) return true;
-  const before = getComputedStyle(el5).animationName;
-  el5.setAttribute(CLOSING_ATTRIBUTE, "");
-  const now = getComputedStyle(el5).animationName;
-  const own = Boolean(now) && now !== "none" && now !== before;
-  let stopped = false;
-  const me = (
-    /** @type {any} */
-    el5
-  );
-  const waits = [];
-  if (own) {
-    waits.push(playedOut(el5, 0));
-  } else {
-    waits.push(playEntranceBackwards(el5));
-  }
-  for (const a of el5.getAnimations({ subtree: true })) {
-    if (typeof CSSTransition !== "undefined" && a instanceof CSSTransition) waits.push(a.finished.catch(() => void 0));
-  }
-  me.__kpClosing = () => {
-    stopped = true;
-    stopReversing(el5);
-    el5.removeAttribute(CLOSING_ATTRIBUTE);
-  };
-  await Promise.all(waits);
-  if (me.__kpClosing === void 0) return false;
-  delete me.__kpClosing;
-  return !stopped;
-}
-function stopClose(el5) {
-  const me = (
-    /** @type {any} */
-    el5
-  );
-  const stop = me.__kpClosing;
-  delete me.__kpClosing;
-  stop?.();
-  stopReversing(el5);
-  el5.removeAttribute(CLOSING_ATTRIBUTE);
-}
-function closePopoverWithGhost(event) {
-  const toggle = (
-    /** @type {ToggleEvent} */
-    event
-  );
-  const el5 = (
-    /** @type {HTMLElement} */
-    toggle.target
-  );
-  if (toggle.newState !== "closed" || !(el5 instanceof HTMLElement) || !el5.matches(PANEL_SELECTOR)) return;
-  if (reduced() || ghosted.has(el5) || !el5.matches(":popover-open")) return;
-  const animated = [null, "::before", "::after"].some((pseudo) => {
-    const name = getComputedStyle(el5, pseudo).animationName;
-    return Boolean(name) && name !== "none";
-  });
-  const before = getComputedStyle(el5).animationName;
-  el5.setAttribute(CLOSING_ATTRIBUTE, "");
-  const leaveOwn = getComputedStyle(el5).animationName;
-  el5.removeAttribute(CLOSING_ATTRIBUTE);
-  if (!animated && (!leaveOwn || leaveOwn === "none" || leaveOwn === before)) return;
-  const box = el5.getBoundingClientRect();
-  if (box.width === 0 && box.height === 0) return;
-  const sized = getComputedStyle(el5);
-  const matrix = sized.transform === "none" ? null : new DOMMatrixReadOnly(sized.transform);
-  const isTurned = matrix !== null && (Math.abs(matrix.b) > 1e-3 || Math.abs(matrix.c) > 1e-3) || sized.rotate !== "none" && sized.rotate !== "0deg";
-  const turned = isTurned && el5 instanceof HTMLElement ? { x: (box.width - el5.offsetWidth) / 2, y: (box.height - el5.offsetHeight) / 2 } : { x: 0, y: 0 };
-  const ghost = (
-    /** @type {HTMLElement} */
-    el5.cloneNode(true)
-  );
-  for (const one of [ghost, ...ghost.querySelectorAll("[id]")]) one.removeAttribute("id");
-  ghost.setAttribute("aria-hidden", "true");
-  ghost.setAttribute("popover", "manual");
-  ghost.setAttribute("data-kp-ghost", "");
-  ghost.inert = true;
-  Object.assign(ghost.style, {
-    position: "fixed",
-    inset: "auto",
-    top: `${box.top + turned.y}px`,
-    left: `${box.left + turned.x}px`,
-    width: sized.width,
-    height: sized.height,
-    margin: "0",
-    boxSizing: sized.boxSizing,
-    pointerEvents: "none",
-    positionAnchor: "none",
-    positionArea: "none"
-  });
-  el5.after(ghost);
-  ghosted.add(el5);
-  const done = () => {
-    ghost.remove();
-    ghosted.delete(el5);
-  };
-  const back = (e) => {
-    if (
-      /** @type {ToggleEvent} */
-      e.newState !== "open"
-    ) return;
-    el5.removeEventListener("beforetoggle", back);
-    stopClose(ghost);
-    done();
-  };
-  const play = () => {
-    el5.addEventListener("beforetoggle", back);
-    void playClose(ghost).then(() => {
-      el5.removeEventListener("beforetoggle", back);
-      done();
-    });
-  };
-  try {
-    ghost.showPopover();
-    play();
-  } catch {
-    setTimeout(() => {
-      if (!ghost.isConnected || el5.matches(":popover-open")) return done();
-      try {
-        ghost.showPopover();
-      } catch {
-        return done();
-      }
-      play();
-    }, 0);
-  }
-}
-function withoutOvershoot(ease) {
-  const list = /^linear\((.*)\)$/.exec(ease.trim());
-  if (list) {
-    const stops = list[1].split(",").map((stop) => stop.trim().split(/\s+/));
-    if (stops.every(([y]) => Number(y) >= 0 && Number(y) <= 1)) return ease;
-    return `linear(${stops.map(([y, ...at]) => [String(Math.min(1, Math.max(0, Number(y)))), ...at].join(" ")).join(", ")})`;
-  }
-  const m = /^cubic-bezier\(\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)$/.exec(ease.trim());
-  if (!m) return ease;
-  const [x1, y1, x2, y2] = m.slice(1).map(Number);
-  const hold = (y) => Math.min(1, Math.max(0, y));
-  return `cubic-bezier(${x1}, ${hold(y1)}, ${x2}, ${hold(y2)})`;
-}
-function sizeEase(box, ease, change, plain = false) {
-  if (plain && getComputedStyle(box).getPropertyValue("--kp-accordion-size").trim() === "own") plain = false;
-  const way = (curve) => withoutOvershoot(change < 0 ? reversedEase(curve) : curve);
-  if (plain) return way(ease);
-  const style = getComputedStyle(box);
-  const own = style.getPropertyValue("--kp-size-ease").trim();
-  if (own) ease = own;
-  if (style.getPropertyValue("--kp-size-steps").trim() === "line") {
-    const line = parseFloat(style.lineHeight) || parseFloat(style.fontSize) * 1.3 || 20;
-    return way(`steps(${Math.max(1, Math.round(Math.abs(change) / line))}, jump-end)`);
-  }
-  return way(ease);
-}
-function steppedDuration(box, easing, duration2) {
-  const steps = /^steps\(\s*(\d+)/.exec(easing.trim());
-  if (!steps || duration2 <= 0) return duration2;
-  const step = msOf(box, "--kp-size-step", 0);
-  if (step <= 0) return duration2;
-  const root = box.ownerDocument?.documentElement ?? document.documentElement;
-  const scale = parseFloat(getComputedStyle(root).getPropertyValue("--kp-motion-scale")) || 1;
-  return Number(steps[1]) * step * scale;
-}
-function onStepClock(box, easing, ms) {
-  if (!/^steps\(/.test(easing.trim())) return ms;
-  const step = msOf(box, "--kp-size-step", 0);
-  return step > 0 ? Math.round(ms / step) * step : ms;
-}
-function reversedEase(ease) {
-  const curve = NAMED_EASES[ease.trim()] ?? ease.trim();
-  const bezier = /^cubic-bezier\(\s*([^,]+),\s*([^,]+),\s*([^,]+),\s*([^)]+)\)$/.exec(curve);
-  if (bezier) {
-    const [x1, y1, x2, y2] = bezier.slice(1).map(Number);
-    const r = (n) => Math.round(n * 1e4) / 1e4;
-    return `cubic-bezier(${r(1 - x2)}, ${r(1 - y2)}, ${r(1 - x1)}, ${r(1 - y1)})`;
-  }
-  const steps = /^steps\(\s*(\d+)\s*(?:,\s*([a-z-]+)\s*)?\)$/.exec(curve);
-  if (steps) {
-    const flip = (
-      /** @type {Record<string, string>} */
-      {
-        start: "jump-end",
-        "jump-start": "jump-end",
-        end: "jump-start",
-        "jump-end": "jump-start"
-      }
-    );
-    const position = steps[2] ?? "jump-end";
-    return `steps(${steps[1]}, ${flip[position] ?? position})`;
-  }
-  const list = /^linear\((.*)\)$/.exec(curve);
-  if (list) {
-    const stops = list[1].split(",").map((stop) => stop.trim().split(/\s+/));
-    if (stops.every((s2) => s2.length === 1))
-      return `linear(${stops.reverse().map(([y]) => String(Math.round((1 - Number(y)) * 1e4) / 1e4)).join(", ")})`;
-    if (stops.every((s2) => s2.length === 2 && s2[1].endsWith("%")))
-      return `linear(${stops.reverse().map(([y, x]) => `${Math.round((1 - Number(y)) * 1e4) / 1e4} ${Math.round((100 - parseFloat(x)) * 100) / 100}%`).join(", ")})`;
-  }
-  return curve;
-}
-function layoutHeight(el5) {
-  const whole = el5.offsetHeight;
-  const drawn2 = el5.getBoundingClientRect().height;
-  return Math.abs(drawn2 - whole) < 1 ? drawn2 : whole;
-}
-function sizeMotion(box, change) {
-  const { size, ease } = themeMotion(box);
-  if (size <= 0 || switching) return { duration: 0, easing: "linear" };
-  const easing = sizeEase(box, ease, change);
-  return { duration: steppedDuration(box, easing, size), easing };
-}
-function glide(box, from, to, duration2, easing, plain = false, delay = 0) {
-  box.style.setProperty("overflow", "clip");
-  box.style.setProperty("box-sizing", "border-box");
-  box.style.setProperty("--kp-resize-dur", `${Math.round(duration2)}ms`);
-  if (!plain) box.setAttribute("data-kp-resizing", to > from ? "grow" : "shrink");
-  const flow = getComputedStyle(box);
-  if (/flex/.test(flow.display) && flow.flexDirection.startsWith("column")) box.setAttribute("data-kp-gliding", "column");
-  const mine = box.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration: duration2, easing, delay, fill: "backwards" });
-  const own = (
-    /** @type {any} */
-    box
-  );
-  own.__kpGlide = mine;
-  const done = () => {
-    if (own.__kpGlide !== mine) return;
-    own.__kpGlide = null;
-    box.style.removeProperty("overflow");
-    box.style.removeProperty("box-sizing");
-    box.style.removeProperty("--kp-resize-dur");
-    box.removeAttribute("data-kp-resizing");
-    box.removeAttribute("data-kp-gliding");
-  };
-  mine.addEventListener("cancel", done);
-  return { animation: mine, done };
-}
-function arrival(scope) {
-  if (reduced()) return null;
-  const probe = document.createElement("div");
-  probe.className = "kp-toast";
-  probe.setAttribute("aria-hidden", "true");
-  probe.style.cssText = "position:fixed;left:-9999px;top:0;visibility:hidden;pointer-events:none;";
-  const themed = scope.closest("[data-theme]");
-  (themed && themed !== document.documentElement && themed instanceof HTMLElement ? themed : document.body).append(probe);
-  try {
-    const style = getComputedStyle(probe);
-    if (!style.animationName || style.animationName === "none") return null;
-    const name = style.animationName.split(",")[0].trim();
-    const cap = msOf(scope.ownerDocument?.documentElement ?? document.documentElement, "--kp-size-max", 480);
-    const duration2 = Math.min(firstMs(style.animationDuration), cap);
-    if (duration2 <= 0) return null;
-    const ease = style.animationTimingFunction.split(/,(?![^(]*\))/)[0].trim();
-    return `${name} ${duration2}ms ${ease} backwards`;
-  } finally {
-    probe.remove();
-  }
-}
-function arrive(el5, motion) {
-  if (!motion || el5.style.animation || el5.hasAttribute("data-kp-arriving") || el5.hasAttribute("data-kp-leaving") || el5.hasAttribute("data-kp-ghost"))
-    return;
-  if (getComputedStyle(el5).getPropertyValue("--kp-arrive-unseen").trim() === "skip" && el5.getClientRects().length === 0) return;
-  if (opensAsReversedClose(el5) && arriveAsReversedLeave(el5)) return;
-  el5.setAttribute("data-kp-arriving", "");
-  const own = getComputedStyle(el5).animationName;
-  if (!own || own === "none") el5.style.animation = motion;
-  const end = () => {
-    el5.style.removeProperty("animation");
-    el5.removeAttribute("data-kp-arriving");
-  };
-  void playedOut(el5, 1500).then(end);
-}
-function arriveShown(el5) {
-  arrive(el5, arrival(el5));
-}
-function glideGroup(group, opening, apply) {
-  const { size, ease } = themeMotion(group);
-  if (size <= 0 || switching || !group.isConnected || group.parentElement?.closest(`[${GROUP_FOLDING_ATTRIBUTE}]`)) return apply();
-  const own = groupGlides.get(group);
-  const standing = own ? group.getBoundingClientRect().height : null;
-  own?.cancel();
-  const from = standing ?? (opening ? 0 : layoutHeight(group));
-  group.setAttribute(GROUP_FOLDING_ATTRIBUTE, "");
-  group.style.setProperty("overflow", "clip");
-  group.style.setProperty("box-sizing", "border-box");
-  heightFolds.add(group);
-  apply();
-  const to = opening ? layoutHeight(group) : 0;
-  const easing = sizeEase(group, ease, to - from, true);
-  const mine = group.animate([{ height: `${from}px` }, { height: `${to}px` }], { duration: size, easing, fill: "forwards" });
-  groupGlides.set(group, mine);
-  const done = () => {
-    if (groupGlides.get(group) !== mine) return;
-    groupGlides.delete(group);
-    heightFolds.delete(group);
-    group.removeAttribute(GROUP_FOLDING_ATTRIBUTE);
-    group.style.removeProperty("overflow");
-    group.style.removeProperty("box-sizing");
-    mine.cancel();
-  };
-  void mine.finished.then(done, () => void 0);
-}
-async function playArrivalBackwards(el5) {
-  if (reduced() || !el5.isConnected || el5.hasAttribute("data-kp-leaving")) return;
-  const arriving2 = el5.hasAttribute("data-kp-arriving");
-  el5.setAttribute("data-kp-arriving", "");
-  const own = getComputedStyle(el5).animationName;
-  let lent = false;
-  if (!own || own === "none") {
-    const motion = arrival(el5);
-    if (motion) {
-      el5.style.animation = motion;
-      lent = true;
-    }
-  }
-  if (arriving2) {
-    for (const a of el5.getAnimations()) if (a instanceof CSSAnimation) a.finish();
-  }
-  await playEntranceBackwards(el5);
-  stopReversing(el5);
-  if (lent) el5.style.removeProperty("animation");
-  el5.removeAttribute("data-kp-arriving");
-}
-function partway(el5, share, done, lines = false) {
-  const css = exitsOf(el5, lines);
-  const reached = new Promise((resolve) => {
-    const tick4 = () => {
-      const through = css.every((a) => {
-        const timing = a.effect?.getComputedTiming();
-        return a.playState === "finished" || (timing?.progress ?? 0) >= share || (timing?.currentIteration ?? 0) > 0;
-      });
-      if (through) resolve(void 0);
-      else requestAnimationFrame(tick4);
-    };
-    tick4();
-  });
-  return Promise.race([reached, done]);
-}
-function cappedGap(el5, share, lasts, count, lines = false) {
-  const exits = exitsOf(el5, lines).map((a) => {
-    const effect = (
-      /** @type {KeyframeEffect} */
-      a.effect
-    );
-    const timing = effect.getTiming();
-    return { timing, end: (Number(timing.delay) || 0) + (Number(effect.getComputedTiming().activeDuration) || 0) };
-  });
-  if (exits.length === 0) return null;
-  const gap = share > 0 && share < 1 ? Math.max(0, ...exits.map((exit) => reaches(exit.timing, exit.end, share))) : Math.max(lasts, ...exits.map((exit) => exit.end));
-  if (!Number.isFinite(gap)) return null;
-  const next = inTurnGap(gap, count);
-  return next < gap ? next : null;
-}
-function atTime(el5, ms, done, lines = false) {
-  const css = exitsOf(el5, lines);
-  const reached = new Promise((resolve) => {
-    const tick4 = () => {
-      if (css.every((a) => a.playState === "finished" || (Number(a.currentTime) || 0) >= ms)) resolve(void 0);
-      else requestAnimationFrame(tick4);
-    };
-    tick4();
-  });
-  return Promise.race([reached, done]);
-}
-function playedOut(el5, fallback2, lines = false) {
-  const css = exitsOf(el5, lines);
-  if (css.length === 0) return new Promise((resolve) => setTimeout(resolve, fallback2));
-  return Promise.all(css.map((a) => a.finished.catch(() => void 0)));
-}
-function arrivalOf(el5) {
-  if (reduced()) return null;
-  const had = el5.hasAttribute("data-kp-arriving");
-  el5.setAttribute("data-kp-arriving", "");
-  const style = getComputedStyle(el5);
-  const own = style.animationName && style.animationName !== "none";
-  const read = own ? {
-    name: style.animationName.split(",")[0].trim(),
-    duration: firstMs(style.animationDuration),
-    ease: style.animationTimingFunction.split(/,(?![^(]*\))/)[0].trim()
-  } : null;
-  if (!had) el5.removeAttribute("data-kp-arriving");
-  if (read && read.duration > 0) return read;
-  const toast2 = arrival(el5);
-  if (!toast2) return null;
-  const [name, duration2, ...ease] = toast2.split(" ");
-  return { name, duration: parseFloat(duration2), ease: ease.slice(0, -1).join(" ") };
-}
-function foldTiming(style) {
-  const grow = parseFloat(style.getPropertyValue("--kp-leave-fold-grow"));
-  const start = parseFloat(style.getPropertyValue("--kp-leave-fold-start"));
-  return {
-    grow: Number.isNaN(grow) ? 1.25 : grow,
-    start: (lasts) => Number.isNaN(start) ? lasts / 3 : lasts * start
-  };
-}
-function foldCurve(style, ease) {
-  return style.getPropertyValue("--kp-leave-fold-ease").trim() || ease;
-}
-function foldFrames(el5, style) {
-  const parent = el5.parentElement ? getComputedStyle(el5.parentElement) : null;
-  const sideways = style.display.startsWith("inline") || parent !== null && /flex/.test(parent.display) && !parent.flexDirection.startsWith("column");
-  const from = sideways ? {
-    width: `${el5.offsetWidth}px`,
-    marginLeft: style.marginLeft,
-    marginRight: style.marginRight,
-    paddingLeft: style.paddingLeft,
-    paddingRight: style.paddingRight
-  } : {
-    height: `${el5.offsetHeight}px`,
-    marginTop: style.marginTop,
-    marginBottom: style.marginBottom,
-    paddingTop: style.paddingTop,
-    paddingBottom: style.paddingBottom
-  };
-  const floor = sideways ? "minWidth" : "minHeight";
-  if (parseFloat(style[floor]) > 0) from[floor] = style[floor];
-  const to = Object.fromEntries(Object.keys(from).map((k) => [k, "0px"]));
-  const gapOf = parent && /flex/.test(parent.display) ? parseFloat(sideways ? parent.columnGap : parent.rowGap) || 0 : 0;
-  if (gapOf > 0) {
-    const inFlow = (n) => {
-      if (!n) return false;
-      const s2 = getComputedStyle(n);
-      return s2.display !== "none" && s2.position !== "absolute" && s2.position !== "fixed";
-    };
-    const near = (way) => {
-      let n = el5[way];
-      while (n && !inFlow(n)) n = n[way];
-      return n;
-    };
-    const rtl = sideways && style.direction === "rtl";
-    const start = sideways ? rtl ? "marginRight" : "marginLeft" : "marginTop";
-    const end = sideways ? rtl ? "marginLeft" : "marginRight" : "marginBottom";
-    if (near("previousElementSibling")) to[start] = `${-gapOf}px`;
-    else if (near("nextElementSibling")) to[end] = `${-gapOf}px`;
-  }
-  return [from, to];
-}
-function foldReflows(el5, from, to) {
-  if (!("width" in from)) return false;
-  const chain = [];
-  for (let up = el5.parentElement; up && up !== document.body && chain.length < 6; up = up.parentElement) chain.push(up);
-  const before = chain.map((n) => n.getBoundingClientRect().height);
-  const dashed = (k) => k.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`);
-  const keys = Object.keys(to).map(dashed);
-  const kept = keys.map((k) => el5.style.getPropertyValue(k));
-  const values = Object.values(to);
-  keys.forEach((k, i) => el5.style.setProperty(k, values[i], "important"));
-  const after = chain.map((n) => n.getBoundingClientRect().height);
-  keys.forEach((k, i) => kept[i] ? el5.style.setProperty(k, kept[i]) : el5.style.removeProperty(k));
-  return after.some((h2, i) => Math.abs(h2 - before[i]) >= 1);
-}
-function exitsOf(actor, lines) {
-  return (
-    /** @type {CSSAnimation[]} */
-    actor.getAnimations({ subtree: true }).filter((a) => {
-      if (typeof CSSAnimation === "undefined" || !(a instanceof CSSAnimation)) return false;
-      const effect = (
-        /** @type {KeyframeEffect | null} */
-        a.effect
-      );
-      const target = effect?.target;
-      if (target === actor) return true;
-      return lines && target != null && actor.contains(target) && Number.isFinite(Number(effect?.getComputedTiming().activeDuration));
-    })
-  );
-}
-function arriveAsReversedLeave(el5) {
-  if (el5 instanceof HTMLTableRowElement || !el5.isConnected) return false;
-  const { size, ease } = themeMotion(el5);
-  const before = getComputedStyle(el5).animationName;
-  const beforeSig = animationSignature(el5);
-  const rest = pseudoNames(el5);
-  el5.setAttribute("data-kp-leaving", "");
-  const style = getComputedStyle(el5);
-  const ownName = style.animationName;
-  if (!ownName || ownName === "none" || ownName === before && animationSignature(el5) === beforeSig) {
-    el5.removeAttribute("data-kp-leaving");
-    return false;
-  }
-  el5.setAttribute("data-kp-arriving", "");
-  const lasts = firstMs(style.animationDuration);
-  const fold = style.getPropertyValue("--kp-leave-fold").trim();
-  let actor = el5;
-  if (fold === "ghost" && lasts > 0) {
-    actor = /** @type {HTMLElement} */
-    el5.cloneNode(true);
-    actor.setAttribute("aria-hidden", "true");
-    actor.inert = true;
-    Object.assign(actor.style, {
-      position: "absolute",
-      top: `${el5.offsetTop}px`,
-      left: `${el5.offsetLeft}px`,
-      width: `${el5.offsetWidth}px`,
-      height: `${el5.offsetHeight}px`,
-      margin: "0",
-      boxSizing: "border-box",
-      pointerEvents: "none",
-      zIndex: "1"
-    });
-    el5.after(actor);
-    const want = el5.getBoundingClientRect();
-    const got = actor.getBoundingClientRect();
-    actor.style.top = `${el5.offsetTop + want.top - got.top}px`;
-    actor.style.left = `${el5.offsetLeft + want.left - got.left}px`;
-    el5.style.setProperty("visibility", "hidden");
-  }
-  getComputedStyle(actor).animationName;
-  const css = exitsOf(actor, keepsLines(el5));
-  const exits = css.map((a) => {
-    const effect = (
-      /** @type {KeyframeEffect} */
-      a.effect
-    );
-    const timing2 = effect.getTiming();
-    const pseudo = effect.pseudoElement;
-    if (effect.target === actor && pseudo && rest[pseudo] === animationSignature(actor, pseudo)) {
-      timing2.direction = flipped(timing2.direction);
-      timing2.delay = 0;
-    }
-    return {
-      target: (
-        /** @type {Element} */
-        effect.target
-      ),
-      keyframes: keyframesOf(effect),
-      pseudoElement: effect.pseudoElement,
-      timing: timing2,
-      // The whole of it, every iteration, from the leave's start.
-      end: (Number(timing2.delay) || 0) + (Number(effect.getComputedTiming().activeDuration) || 0)
-    };
-  });
-  for (const a of css) a.cancel();
-  if (actor !== el5) {
-    for (const a of el5.getAnimations()) if (a instanceof CSSAnimation) a.cancel();
-  }
-  const after = fold === "after";
-  const pause = parseFloat(style.getPropertyValue("--kp-leave-pause")) || 0;
-  const timing = foldTiming(style);
-  const foldEase = foldCurve(style, ease);
-  const frames = size > 0 && !floats(el5, style) ? foldFrames(el5, style) : null;
-  const foldFor = frames && !foldReflows(el5, ...frames) ? steppedDuration(el5, withoutOvershoot(foldEase), Math.max(size, lasts) * timing.grow) : 0;
-  const foldAt = onStepClock(el5, withoutOvershoot(foldEase), after ? lasts + pause : timing.start(lasts));
-  const total = Math.max(lasts, ...exits.map((exit) => exit.end), foldFor ? foldAt + foldFor : 0);
-  const plays = [];
-  for (const exit of exits) {
-    const { iterations = 1, direction = "normal", easing = "linear", duration: duration2 } = exit.timing;
-    const even = Number(iterations) % 2 === 0;
-    const turned = {
-      normal: "reverse",
-      reverse: "normal",
-      alternate: even ? "alternate" : "alternate-reverse",
-      "alternate-reverse": even ? "alternate-reverse" : "alternate"
-    };
-    const back = turned[direction] ?? "reverse";
-    try {
-      plays.push(
-        exit.target.animate(exit.keyframes, {
-          duration: Number(duration2) || 0,
-          iterations: Number(iterations),
-          delay: finiteMs(total - exit.end),
-          easing: String(easing),
-          direction: back,
-          fill: "both",
-          ...exit.pseudoElement ? { pseudoElement: exit.pseudoElement } : {}
-        })
-      );
-    } catch {
-    }
-  }
-  const set = parseFloat(style.getPropertyValue("--kp-leave-stagger"));
-  const stagger = Number.isNaN(set) ? 0.5 : set;
-  const lag = lasts <= 0 ? 0 : stagger > 0 && stagger < 1 ? Math.max(0, ...exits.map((exit) => reaches(exit.timing, exit.end, stagger))) : Math.max(lasts, ...exits.map((exit) => exit.end));
-  if (foldFor > 0 && frames) {
-    el5.style.setProperty("overflow", "clip");
-    el5.style.setProperty("box-sizing", "border-box");
-    if ("height" in frames[0]) heightFolds.add(el5);
-    plays.push(
-      el5.animate(frames, {
-        duration: foldFor,
-        delay: finiteMs(total - foldAt - foldFor),
-        // A panel that arrives while another leaves (a tab swap) folds on
-        // `--kp-swap-fold-ease` where the theme says so: see attachTabs().
-        easing: withoutOvershoot(
-          el5.hasAttribute("data-kp-tabs-swapping") && style.getPropertyValue("--kp-swap-fold-ease").trim() || foldEase
-        ),
-        direction: "reverse",
-        fill: "backwards"
-      })
-    );
-  }
-  let stopped = false;
-  const stop = () => {
-    if (stopped) return;
-    stopped = true;
-    entering.delete(el5);
-    heightFolds.delete(el5);
-    for (const a of plays) a.cancel();
-    if (actor !== el5) actor.remove();
-    el5.removeAttribute("data-kp-leaving");
-    el5.removeAttribute("data-kp-arriving");
-    el5.style.removeProperty("overflow");
-    el5.style.removeProperty("box-sizing");
-    el5.style.removeProperty("visibility");
-    getComputedStyle(el5).animationName;
-    for (const a of el5.getAnimations({ subtree: true })) {
-      if (a instanceof CSSAnimation && /** @type {KeyframeEffect} */
-      a.effect?.target === el5 && Number.isFinite(Number(a.effect?.getComputedTiming().activeDuration)))
-        a.finish();
-    }
-  };
-  entering.set(el5, stop);
-  void Promise.all(plays.map((a) => a.finished.catch(() => void 0))).then(stop);
-  if (!arriving) {
-    arriving = [];
-    queueMicrotask(() => {
-      const items = (
-        /** @type {Arriving[]} */
-        arriving
-      );
-      arriving = null;
-      arriveInTurn(items);
-    });
-  }
-  arriving.push({ el: el5, plays, total, lag });
-  return true;
-}
-function arriveInTurn(items) {
-  if (items.length < 2) return;
-  if (getComputedStyle(items[0].el).getPropertyValue("--kp-arrive-turn").trim() === "siblings") {
-    const rows = /* @__PURE__ */ new Map();
-    for (const item of items) rows.set(item.el.parentElement, [...rows.get(item.el.parentElement) ?? [], item]);
-    if (rows.size > 1) {
-      for (const row of rows.values()) turnsOf(row);
-      return;
-    }
-  }
-  turnsOf(items);
-}
-function turnsOf(items) {
-  if (items.length < 2) return;
-  items = items.filter((item) => Number.isFinite(item.total) && Number.isFinite(item.lag));
-  if (items.length < 2) return;
-  items.sort((a, b) => a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING ? 1 : -1);
-  let start = 0;
-  const ends = items.map((item) => {
-    const end = start + item.total;
-    start += inTurnGap(item.lag, items.length);
-    return end;
-  });
-  const last = Math.max(...ends);
-  items.forEach((item, k) => {
-    const later = last - ends[k];
-    if (later <= 0) return;
-    for (const play of item.plays) {
-      const effect = play.effect;
-      if (!effect) continue;
-      effect.updateTiming({ delay: finiteMs((Number(effect.getTiming().delay) || 0) + later) });
-    }
-  });
-}
-function inTurnGap(gap, count) {
-  if (count < 3 || !(gap > 0)) return gap;
-  const budget = Math.max(IN_TURN_MS, gap);
-  return (count - 1) * gap <= budget ? gap : budget / (count - 1);
-}
-function reaches(timing, end, share) {
-  if (!Number.isFinite(end)) return 0;
-  if (typeof KeyframeEffect === "undefined" || typeof Animation === "undefined") return end * share;
-  const effect = new KeyframeEffect(null, null, timing);
-  const probe = new Animation(effect, null);
-  for (let t = 0; t < end; t += 1) {
-    probe.currentTime = t;
-    const now = effect.getComputedTiming();
-    if ((now.progress ?? 0) >= share || (now.currentIteration ?? 0) > 0) return t;
-  }
-  return end;
-}
-function leavesState(el5) {
-  return getComputedStyle(el5).getPropertyValue("--kp-leave-state").trim() === "leave";
-}
-function leave(el5, { hide = false } = {}) {
-  return new Promise((resolve) => {
-    if (!batch) {
-      batch = [];
-      queueMicrotask(() => {
-        const items = (
-          /** @type {Leaving[]} */
-          batch
-        );
-        batch = null;
-        void leaveInTurn(items);
-      });
-    }
-    batch.push({ el: el5, hide, resolve });
-  });
-}
-async function leaveInTurn(items) {
-  items.sort((a, b) => a.el.compareDocumentPosition(b.el) & Node.DOCUMENT_POSITION_FOLLOWING ? 1 : -1);
-  for (const item of items) {
-    const exited = new Promise((resolve) => {
-      void leaveOne(item.el, item.hide, resolve, items.length).then(item.resolve);
-    });
-    await exited;
-  }
-}
-async function leaveOne(el5, hide, exited, count = 1) {
-  const gone = () => {
-    if (hide) el5.hidden = true;
-    else el5.remove();
-  };
-  entering.get(el5)?.();
-  if (!el5.isConnected || el5.hasAttribute("data-kp-leaving")) return exited();
-  const before = getComputedStyle(el5).animationName;
-  const beforeSig = animationSignature(el5);
-  const rest = pseudoNames(el5);
-  const arrival2 = arrivalOf(el5);
-  const { size, ease } = themeMotion(el5);
-  if (!arrival2 && size <= 0) {
-    exited();
-    return gone();
-  }
-  el5.setAttribute("data-kp-leaving", "");
-  const style = getComputedStyle(el5);
-  const ownName = style.animationName;
-  const turned = ownName && ownName !== "none" && ownName === before && animationSignature(el5) !== beforeSig;
-  if (turned) {
-    el5.setAttribute(REVERSING_ATTRIBUTE, "reset");
-    getComputedStyle(el5).animationName;
-    el5.removeAttribute(REVERSING_ATTRIBUTE);
-    getComputedStyle(el5).animationName;
-  }
-  const own = ownName && ownName !== "none" && (ownName !== before || turned) ? { duration: firstMs(style.animationDuration) } : null;
-  const running2 = [];
-  const lasts = own ? own.duration : arrival2?.duration ?? 0;
-  const fold = style.getPropertyValue("--kp-leave-fold").trim();
-  let actor = el5;
-  if (fold === "ghost" && lasts > 0) {
-    actor = /** @type {HTMLElement} */
-    el5.cloneNode(true);
-    actor.setAttribute("aria-hidden", "true");
-    actor.inert = true;
-    Object.assign(actor.style, {
-      position: "absolute",
-      top: `${el5.offsetTop}px`,
-      left: `${el5.offsetLeft}px`,
-      width: `${el5.offsetWidth}px`,
-      height: `${el5.offsetHeight}px`,
-      margin: "0",
-      boxSizing: "border-box",
-      pointerEvents: "none",
-      zIndex: "1"
-    });
-    el5.after(actor);
-    const want = el5.getBoundingClientRect();
-    const got = actor.getBoundingClientRect();
-    actor.style.top = `${el5.offsetTop + want.top - got.top}px`;
-    actor.style.left = `${el5.offsetLeft + want.left - got.left}px`;
-    el5.style.setProperty("visibility", "hidden");
-    el5.style.setProperty("animation", "none");
-  }
-  if (!own && arrival2) actor.style.animation = `${arrival2.name} ${arrival2.duration}ms ${arrival2.ease} reverse forwards`;
-  if (Object.values(rest).some((sig) => !sig.startsWith("none "))) {
-    const inline = actor.style.animation;
-    actor.setAttribute(REVERSING_ATTRIBUTE, "reset");
-    for (const pseudo of [null, "::before", "::after"]) getComputedStyle(actor, pseudo).animationName;
-    actor.removeAttribute(REVERSING_ATTRIBUTE);
-    actor.style.animation = inline;
-  }
-  getComputedStyle(actor).animationName;
-  for (const a of actor.getAnimations({ subtree: true })) {
-    const effect = (
-      /** @type {KeyframeEffect | null} */
-      a.effect
-    );
-    const pseudo = effect?.pseudoElement;
-    if (!(a instanceof CSSAnimation) || effect?.target !== actor || !pseudo || rest[pseudo] !== animationSignature(actor, pseudo)) continue;
-    const timing = effect.getTiming();
-    if (!Number.isFinite(Number(timing.iterations))) continue;
-    const keyframes = keyframesOf(effect);
-    a.cancel();
-    try {
-      running2.push(
-        actor.animate(keyframes, {
-          duration: Number(timing.duration) || 0,
-          iterations: Number(timing.iterations),
-          easing: String(timing.easing ?? "linear"),
-          direction: flipped(timing.direction),
-          fill: "forwards",
-          pseudoElement: pseudo
-        }).finished.catch(() => void 0)
-      );
-    } catch {
-    }
-  }
-  const lines = style.getPropertyValue("--kp-lines").trim() === "keep";
-  const exit = lasts > 0 ? playedOut(actor, lasts + 100, lines) : Promise.resolve();
-  const set = parseFloat(style.getPropertyValue("--kp-leave-stagger"));
-  const stagger = Number.isNaN(set) ? 0.5 : set;
-  const capped = lasts > 0 && count > 2 ? cappedGap(actor, stagger, lasts, count, lines) : null;
-  if (capped !== null) void atTime(actor, capped, exit, lines).then(exited);
-  else if (lasts > 0 && stagger > 0 && stagger < 1) void partway(actor, stagger, exit, lines).then(exited);
-  else void exit.then(exited);
-  running2.push(exit);
-  const foldTo = size > 0 && !(el5 instanceof HTMLTableRowElement) && !floats(el5, style) ? foldFrames(el5, style) : null;
-  if (foldTo && !foldReflows(el5, ...foldTo)) {
-    el5.style.setProperty("overflow", "clip");
-    el5.style.setProperty("box-sizing", "border-box");
-    const [from, to] = foldTo;
-    if ("height" in from) heightFolds.add(el5);
-    const after = fold === "after";
-    const pause = parseFloat(style.getPropertyValue("--kp-leave-pause")) || 0;
-    const timing = foldTiming(style);
-    const foldEase = foldCurve(style, ease);
-    const folding = el5.animate([from, to], {
-      duration: steppedDuration(el5, withoutOvershoot(foldEase), Math.max(size, lasts) * timing.grow),
-      delay: onStepClock(el5, withoutOvershoot(foldEase), after ? lasts + pause : timing.start(lasts)),
-      easing: withoutOvershoot(foldEase),
-      fill: "forwards"
-    });
-    running2.push(folding.finished.catch(() => void 0));
-  }
-  await Promise.all(running2);
-  heightFolds.delete(el5);
-  if (actor !== el5) actor.remove();
-  gone();
-  el5.removeAttribute("data-kp-leaving");
-  el5.style.removeProperty("animation");
-  el5.style.removeProperty("overflow");
-  el5.style.removeProperty("box-sizing");
-  el5.style.removeProperty("visibility");
-  for (const a of el5.getAnimations()) a.cancel();
-}
-function repaintedIn(records, { keys = ARRIVE_KEYS } = {}) {
-  const list = [...records].filter((r) => r.type === "childList");
-  const gone = /* @__PURE__ */ new Map();
-  const keyOf6 = (e) => {
-    for (const name of keys) {
-      const value = name === "id" ? e.getAttribute("id") || e.id || null : e.getAttribute(name);
-      if (value) return `${name}=${value}`;
-    }
-    return null;
-  };
-  const sigOf = (e) => `${e.tagName}.${e.className}`;
-  const skeletal = (e) => typeof e.matches === "function" && e.matches(SKELETON) || typeof e.querySelector === "function" && e.querySelector(SKELETON) !== null;
-  for (const r of list)
-    for (const n of Array.from(r.removedNodes)) {
-      if (n?.nodeType !== 1) continue;
-      const g = gone.get(r.target) ?? { keys: /* @__PURE__ */ new Set(), sigs: /* @__PURE__ */ new Map(), skeleton: false };
-      gone.set(r.target, g);
-      const k = keyOf6(n);
-      if (k) g.keys.add(k);
-      g.sigs.set(sigOf(n), (g.sigs.get(sigOf(n)) ?? 0) + 1);
-      if (skeletal(n)) g.skeleton = true;
-    }
-  const out = /* @__PURE__ */ new Set();
-  for (const r of list)
-    for (const n of Array.from(r.addedNodes)) {
-      if (n?.nodeType !== 1) continue;
-      const g = gone.get(r.target);
-      if (!g) continue;
-      if (g.skeleton) {
-        out.add(n);
-        continue;
-      }
-      const k = keyOf6(n);
-      const left = g.sigs.get(sigOf(n)) ?? 0;
-      if (k ? g.keys.has(k) : left > 0) {
-        out.add(n);
-        if (!k) g.sigs.set(sigOf(n), left - 1);
-      }
-    }
-  return out;
-}
-function settledHeight(box) {
-  const out = (
-    /** @type {HTMLElement[]} */
-    [...box.querySelectorAll(`[data-kp-folding="${FOLDING_OUT}"]`)]
-  );
-  if (out.length === 0) return box.offsetHeight;
-  const how = out.map((el5) => getComputedStyle(el5).display === "table-row" ? ["visibility", "collapse"] : ["position", "absolute"]);
-  const kept = out.map((el5, k) => [el5.style.getPropertyValue(how[k][0]), el5.style.getPropertyPriority(how[k][0])]);
-  out.forEach((el5, k) => el5.style.setProperty(how[k][0], how[k][1], "important"));
-  const height = box.offsetHeight;
-  out.forEach((el5, k) => {
-    if (kept[k][0]) el5.style.setProperty(how[k][0], kept[k][0], kept[k][1]);
-    else el5.style.removeProperty(how[k][0]);
-  });
-  return height;
-}
-function foldingOutFor(box) {
-  let left = 0;
-  for (const el5 of box.querySelectorAll(`[data-kp-folding="${FOLDING_OUT}"]`))
-    for (const a of el5.getAnimations({ subtree: true })) {
-      const timing = a.effect?.getComputedTiming();
-      if (!timing || a.playState !== "running" || timing.iterations === Infinity) continue;
-      const rate = Math.abs(a.playbackRate) || 1;
-      left = Math.max(left, (Number(timing.endTime) - Number(timing.localTime ?? 0)) / rate);
-    }
-  return Number.isFinite(left) ? left : 0;
-}
-function firstRender(el5) {
-  let painted = false;
-  afterPaint(() => painted = true);
-  return () => !painted || settling(el5);
-}
-function easeSize(box, { arrive: fallback2 = "all", arriveKeys = [] } = {}) {
-  const own = (
-    /** @type {any} */
-    box
-  );
-  if (own.__kpSize) return () => {
-  };
-  own.__kpSize = true;
-  watching += 1;
-  const keys = [...arriveKeys, ...ARRIVE_KEYS];
-  let last = box.offsetHeight;
-  let running2 = null;
-  let followedAt = -Infinity;
-  const fresh = firstRender(box);
-  const settle = () => {
-    if (!box.isConnected) return;
-    const effect = (
-      /** @type {KeyframeEffect | null} */
-      running2?.effect ?? null
-    );
-    if (running2 && effect) {
-      effect.target = null;
-      const natural = settledHeight(box);
-      effect.target = box;
-      if (Math.abs(natural - last) < 1) return;
-    }
-    const from = running2 ? box.offsetHeight : last;
-    running2?.finish();
-    running2 = null;
-    const to = settledHeight(box);
-    last = to;
-    if (switching || fresh() || Math.abs(to - from) < 1 || from === 0 || to === 0) {
-      if (Math.abs(to - from) < 1 && followsAFold(box)) followedAt = performance.now();
-      return;
-    }
-    if (followsAFold(box)) {
-      followedAt = performance.now();
-      return;
-    }
-    if (performance.now() - followedAt < 300 && getComputedStyle(box).getPropertyValue("--kp-leave-fold-ease").trim() !== "") {
-      followedAt = -Infinity;
-      return;
-    }
-    const { size, ease } = themeMotion(box);
-    if (size <= 0) return;
-    const delay = to < from ? Math.max(0, foldingOutFor(box) - size) : 0;
-    const easing = sizeEase(box, ease, to - from);
-    const { animation: mine, done } = glide(box, from, to, steppedDuration(box, easing, size), easing, false, delay);
-    running2 = mine;
-    mine.finished.then(() => {
-      done();
-      if (running2 === mine) running2 = null;
-    }).catch(() => void 0);
-  };
-  const sizes = new ResizeObserver((entries) => {
-    if (entries.some((entry) => entry.target !== box)) settle();
-    else if (!running2) last = box.offsetHeight;
-  });
-  const watch = () => {
-    sizes.disconnect();
-    sizes.observe(box);
-    for (const child of box.children) sizes.observe(child);
-  };
-  watch();
-  const list = new MutationObserver((records) => {
-    const modeOf2 = (target) => fresh() ? "none" : arriveMode(target instanceof Element ? target : box, fallback2);
-    const any = records.some((record) => modeOf2(record.target) !== "none");
-    const motion = records.length && any ? arrival(box) : null;
-    let repainted = null;
-    const hiddenBefore = /* @__PURE__ */ new Map();
-    const moved = /* @__PURE__ */ new Set();
-    for (const record of records) {
-      if (record.type === "attributes" && !hiddenBefore.has(record.target)) hiddenBefore.set(record.target, record.oldValue !== null);
-      if (record.type === "childList") for (const node of record.removedNodes) moved.add(node);
-    }
-    for (const record of records) {
-      const mode = modeOf2(record.target);
-      if (mode === "none") continue;
-      if (record.type === "attributes" && record.target instanceof HTMLElement && !record.target.hidden && hiddenBefore.get(record.target)) {
-        hiddenBefore.delete(record.target);
-        arrive(record.target, motion);
-      }
-      if (record.type === "childList")
-        for (const node of record.addedNodes) {
-          if (!(node instanceof HTMLElement) || moved.has(node) || node.hasAttribute("data-kp-ghost")) continue;
-          if (mode === "new" && (repainted ??= repaintedIn(records, { keys })).has(node)) continue;
-          arrive(node, motion);
-        }
-    }
-    watch();
-    settle();
-  });
-  list.observe(box, { childList: true, subtree: true, attributes: true, attributeFilter: ["hidden"], attributeOldValue: true });
-  return () => {
-    if (!own.__kpSize) return;
-    watching -= 1;
-    sizes.disconnect();
-    list.disconnect();
-    running2?.cancel();
-    box.style.removeProperty("overflow");
-    box.style.removeProperty("box-sizing");
-    delete own.__kpSize;
-  };
-}
-function attachFold(details) {
-  const own = (
-    /** @type {any} */
-    details
-  );
-  if (own.__kpFold) return () => {
-  };
-  const summary = details.querySelector(":scope > summary");
-  if (!summary) return () => {
-  };
-  own.__kpFold = true;
-  watching += 1;
-  let running2 = null;
-  let folding = false;
-  const fresh = firstRender(details);
-  const shutHeight = () => {
-    const style = getComputedStyle(details);
-    return layoutHeight(
-      /** @type {HTMLElement} */
-      summary
-    ) + parseFloat(style.borderBlockStartWidth || "0") + parseFloat(style.borderBlockEndWidth || "0");
-  };
-  const setOpen = (value) => {
-    details.open = value;
-    watcher.takeRecords();
-  };
-  const move = (opening, from, size, ease) => {
-    running2?.finish();
-    folding = !opening;
-    setOpen(true);
-    const to = opening ? layoutHeight(details) : shutHeight();
-    details.toggleAttribute("data-kp-folding", folding);
-    const { animation: mine, done } = glide(details, from, to, size, sizeEase(details, ease, to - from, true), true);
-    running2 = mine;
-    mine.finished.then(() => {
-      done();
-      if (running2 !== mine) return;
-      running2 = null;
-      if (folding) {
-        folding = false;
-        setOpen(false);
-      }
-      details.removeAttribute("data-kp-folding");
-    }).catch(() => void 0);
-  };
-  const onClick = (event) => {
-    const { size, ease } = themeMotion(details);
-    if (size <= 0) return;
-    event.preventDefault();
-    move(!details.open || folding, layoutHeight(details), size, ease);
-  };
-  const watcher = new MutationObserver((records) => {
-    const was = records[0].oldValue !== null;
-    const now = details.open;
-    if (fresh() || was === now || !details.isConnected) return;
-    const { size, ease } = themeMotion(details);
-    if (size <= 0) return;
-    let from;
-    if (running2) from = layoutHeight(details);
-    else if (now) from = shutHeight();
-    else {
-      setOpen(true);
-      from = layoutHeight(details);
-    }
-    move(now, from, size, ease);
-  });
-  watcher.observe(details, { attributes: true, attributeFilter: ["open"], attributeOldValue: true });
-  summary.addEventListener("click", onClick);
-  return () => {
-    if (!own.__kpFold) return;
-    watching -= 1;
-    watcher.disconnect();
-    summary.removeEventListener("click", onClick);
-    running2?.cancel();
-    details.style.removeProperty("overflow");
-    details.removeAttribute("data-kp-folding");
-    delete own.__kpFold;
-  };
-}
-function attachMotion(root = document, { size = "", arrive: arrive2 = "all", arriveKeys = [] } = {}) {
-  const detaches = /* @__PURE__ */ new Map();
-  const sizeSelector = size.trim() ? `${SIZE_SELECTOR}, ${size}` : SIZE_SELECTOR;
-  const keep = (el5, detach) => {
-    const before = detaches.get(el5);
-    detaches.set(el5, before ? () => (before(), detach()) : detach);
-  };
-  const scan = (scope) => {
-    const all = (selector) => [
-      ...scope instanceof Element && scope.matches(selector) ? [scope] : [],
-      ...scope.querySelectorAll(selector)
-    ];
-    for (const el5 of all("dialog.kp-dialog, dialog.kp-palette, dialog.kp-alarm"))
-      if (!el5.hasAttribute("data-kp-ghost")) keep(el5, attachClose(
-        /** @type {HTMLDialogElement} */
-        el5
-      ));
-    for (const el5 of all(sizeSelector))
-      if (!el5.hasAttribute("data-kp-ghost")) keep(el5, easeSize(
-        /** @type {HTMLElement} */
-        el5,
-        { arrive: arrive2, arriveKeys }
-      ));
-    for (const el5 of all(FOLD_SELECTOR)) if (el5 instanceof HTMLDetailsElement && !el5.hasAttribute("data-kp-ghost")) keep(el5, attachFold(el5));
-  };
-  scan(root);
-  let sweeping = false;
-  const sweep = () => {
-    sweeping = false;
-    for (const [el5, detach] of detaches)
-      if (!el5.isConnected) {
-        detach();
-        detaches.delete(el5);
-      }
-  };
-  const later = new MutationObserver((records) => {
-    for (const record of records) {
-      for (const node of record.addedNodes) if (node instanceof Element) scan(node);
-      if (record.removedNodes.length && !sweeping) {
-        sweeping = true;
-        queueMicrotask(sweep);
-      }
-    }
-  });
-  later.observe(root instanceof Document ? root.documentElement : (
-    /** @type {Node} */
-    root
-  ), { childList: true, subtree: true });
-  return () => {
-    later.disconnect();
-    for (const one of detaches.values()) one();
-    detaches.clear();
-  };
-}
-var SIZE_ATTRIBUTE, SIZE_SELECTOR, FOLD_SELECTOR, ARRIVE_KEYS, SKELETON, watching, CLOSE_SHARE, SIZE_SHARE, msOf, firstMs, reducedQuery, reducedNow, reduced, entrances, closing, nativeClose, KEYFRAME_FIELDS, keepsLines, opensAsReversedClose, switching, REVERSING_ATTRIBUTE, CLOSING_ATTRIBUTE, PANEL_SELECTOR, ghosted, NAMED_EASES, GROUP_FOLDING_ATTRIBUTE, groupGlides, entering, animationSignature, pseudoNames, floats, flipped, arriving, finiteMs, IN_TURN_MS, batch, FOLDING_OUT, heightFolds, followsAFold, arriveMode;
-var init_motion = __esm({
-  "js/motion.js"() {
-    "use strict";
-    init_as_of();
-    SIZE_ATTRIBUTE = "data-kp-size-motion";
-    SIZE_SELECTOR = [
-      ".kp-dialog",
-      ".kp-tabs",
-      ".kp-datatable",
-      ".kp-toasts",
-      ".kp-upload__list",
-      ".kp-combobox__list",
-      ".kp-tree",
-      ".kp-wizard",
-      ".kp-field",
-      `[${SIZE_ATTRIBUTE}]`
-    ].join(", ");
-    FOLD_SELECTOR = ".kp-accordion__item";
-    ARRIVE_KEYS = /** @type {readonly string[]} */
-    Object.freeze(["data-kp-key", "data-kp-row-key", "id"]);
-    SKELETON = ".kp-skeleton, [data-kp-skeleton]";
-    watching = 0;
-    CLOSE_SHARE = 2 / 3;
-    SIZE_SHARE = 4 / 5;
-    msOf = (el5, name, fallback2) => {
-      const raw = getComputedStyle(el5).getPropertyValue(name).trim();
-      const n = parseFloat(raw);
-      if (Number.isNaN(n)) return fallback2;
-      return raw.endsWith("ms") ? n : n * 1e3;
-    };
-    firstMs = (raw) => {
-      const first = raw.split(",")[0].trim();
-      const n = parseFloat(first);
-      if (Number.isNaN(n)) return 0;
-      return first.endsWith("ms") ? n : n * 1e3;
-    };
-    reducedQuery = typeof matchMedia === "function" ? matchMedia("(prefers-reduced-motion: reduce)") : null;
-    reducedNow = reducedQuery?.matches ?? false;
-    reducedQuery?.addEventListener("change", (event) => {
-      reducedNow = event.matches;
-    });
-    reduced = () => reducedNow;
-    entrances = /* @__PURE__ */ new WeakMap();
-    closing = /* @__PURE__ */ new WeakSet();
-    nativeClose = typeof HTMLDialogElement === "undefined" ? null : HTMLDialogElement.prototype.close;
-    KEYFRAME_FIELDS = /* @__PURE__ */ new Set(["offset", "computedOffset", "easing", "composite"]);
-    keepsLines = (el5) => getComputedStyle(el5).getPropertyValue("--kp-lines").trim() === "keep";
-    opensAsReversedClose = (el5) => getComputedStyle(el5).getPropertyValue("--kp-open").trim() === "reverse-close";
-    switching = 0;
-    if (typeof document !== "undefined" && typeof MutationObserver === "function") {
-      new MutationObserver(() => {
-        const mine = ++switching;
-        const release = () => {
-          if (switching === mine) switching = 0;
-        };
-        requestAnimationFrame(() => requestAnimationFrame(() => void document.fonts?.ready.then(release, release)));
-      }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-    }
-    REVERSING_ATTRIBUTE = "data-kp-reversing";
-    CLOSING_ATTRIBUTE = "data-kp-closing";
-    PANEL_SELECTOR = ".kp-popover:not(.kp-tooltip), .kp-menu, .kp-combobox__list, .kp-datepicker__panel";
-    ghosted = /* @__PURE__ */ new WeakSet();
-    if (typeof document !== "undefined") document.addEventListener("beforetoggle", closePopoverWithGhost, true);
-    NAMED_EASES = /** @type {Record<string, string>} */
-    {
-      ease: "cubic-bezier(0.25, 0.1, 0.25, 1)",
-      "ease-in": "cubic-bezier(0.42, 0, 1, 1)",
-      "ease-out": "cubic-bezier(0, 0, 0.58, 1)",
-      "ease-in-out": "cubic-bezier(0.42, 0, 0.58, 1)",
-      "step-start": "steps(1, jump-start)",
-      "step-end": "steps(1, jump-end)"
-    };
-    GROUP_FOLDING_ATTRIBUTE = "data-kp-group-folding";
-    groupGlides = /* @__PURE__ */ new WeakMap();
-    entering = /* @__PURE__ */ new WeakMap();
-    animationSignature = (el5, pseudo = null) => {
-      const style = getComputedStyle(el5, pseudo);
-      return [style.animationName, style.animationDirection, style.animationDuration, style.animationTimingFunction, style.animationFillMode].join(" ");
-    };
-    pseudoNames = (el5) => ({
-      "::before": animationSignature(el5, "::before"),
-      "::after": animationSignature(el5, "::after")
-    });
-    floats = (el5, style) => {
-      if (style.position === "absolute" || style.position === "fixed") return true;
-      try {
-        return el5.matches(":popover-open, :modal");
-      } catch {
-        return false;
-      }
-    };
-    flipped = (direction) => (
-      /** @type {Record<PlaybackDirection, PlaybackDirection>} */
-      {
-        normal: "reverse",
-        reverse: "normal",
-        alternate: "alternate-reverse",
-        "alternate-reverse": "alternate"
-      }[direction ?? "normal"]
-    );
-    arriving = null;
-    finiteMs = (ms) => Number.isFinite(ms) ? ms : 0;
-    IN_TURN_MS = 600;
-    batch = null;
-    FOLDING_OUT = "out";
-    heightFolds = /* @__PURE__ */ new WeakSet();
-    followsAFold = (box) => [...box.querySelectorAll(`[data-kp-leaving], [${GROUP_FOLDING_ATTRIBUTE}]`)].some(
-      (el5) => heightFolds.has(
-        /** @type {HTMLElement} */
-        el5
-      ) && el5.getClientRects().length > 0
-    );
-    arriveMode = (el5, fallback2) => el5.closest("[data-kp-arrive]")?.getAttribute("data-kp-arrive") || fallback2;
   }
 });
 
@@ -24905,6 +25061,8 @@ var NEEDS = [
   // the KPI tile's sparkline and filter toggle, the attention band and
   // the time chart.
   { name: "actions", when: ".kp-row-actions", load: () => Promise.resolve().then(() => (init_actions(), actions_exports)), attach: (m, root) => [m.attachActionColumns(root)] },
+  // Rows the keyboard walks, j / k [kpadopt4-rows].
+  { name: "row-keys", when: "[data-kp-row-keys]", load: () => Promise.resolve().then(() => (init_actions(), actions_exports)), attach: (m, root) => [m.attachRowKeys(root)] },
   {
     name: "kpi",
     when: "svg[data-kp-spark], button.kp-kpi--toggle, .kp-kpis[data-kp-kpis-columns]",
@@ -26042,6 +26200,8 @@ export {
   ROOT_ATTRIBUTE,
   ROUTINES,
   ROW_ACTIONS,
+  ROW_KEYS,
+  ROW_OPEN_EVENT,
   RUN_EVENT,
   SCROLL_BOXES,
   SCROLL_OVERFLOW,
@@ -26178,6 +26338,7 @@ export {
   attachPatterns,
   attachProgressbars,
   attachRemembered,
+  attachRowKeys,
   attachScrollbars,
   attachSegmented,
   attachSelect,
@@ -26381,6 +26542,7 @@ export {
   registersPresent,
   remember_exports as rememberExports,
   rememberedName,
+  removeRow,
   renderDiagnostics,
   repaintedIn,
   resetSegmented,
@@ -26425,6 +26587,7 @@ export {
   setMatrixPick,
   setMenu,
   setMeter,
+  setRowBusy,
   setSegmentedCounts,
   setSegmentedItems,
   setSegmentedValues,

@@ -44,6 +44,7 @@ export const OWN = {
 export const NOT_DATA = {
     'js/action-tiles.js': "a tile is a button: its spinner stands in the tile's own mark",
     'js/statusrow.js': 'each row carries its own spinner while that one item is read; the list stays usable',
+    'js/actions.js': "a row's own action at work (setRowBusy: the pressed button's spinner); the list stays usable",
     'js/facets.js': 'only the counts wait (quiet bars); the rows stay usable to filter with',
     'js/barcell.js': 'a cell of a data table, which lays the card over its rows (`dataTable().busy({ overlay: true })`)',
     'js/forms.js': "a submit button's busy state",

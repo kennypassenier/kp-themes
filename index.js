@@ -121,7 +121,19 @@ export { BUSY_CARD, openBusyCard } from './js/busy-card.js';
 /** @typedef {import('./js/busy-card.js').BusyCard} BusyCard */
 /** @typedef {import('./js/busy-card.js').BusyCardOptions} BusyCardOptions */
 // The dashboard components [scope-143].
-export { ACTION_LIST, ROW_ACTIONS, attachActionColumns, fitActionColumns, mergeRoles, rowRoles } from './js/actions.js';
+export {
+    ACTION_LIST,
+    ROW_ACTIONS,
+    ROW_KEYS,
+    ROW_OPEN_EVENT,
+    attachActionColumns,
+    attachRowKeys,
+    fitActionColumns,
+    mergeRoles,
+    removeRow,
+    rowRoles,
+    setRowBusy,
+} from './js/actions.js';
 export {
     KPI_STRIP,
     KPI_TOGGLE,

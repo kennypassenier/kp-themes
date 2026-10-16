@@ -31,7 +31,8 @@
 //   ready    the data.
 //
 // In empty and error the data keeps its room (hidden, not removed), so a
-// failed refresh of a full card does not collapse it. The page decides what
+// failed refresh of a full card does not collapse it; clear the data when it
+// no longer holds and the stage falls back to its least height. The page decides what
 // a retry is (usually: set loading, read again, set ready). When the focused
 // Try again goes with its state, the focus moves to the stage, so the
 // keyboard keeps its place.

@@ -125,6 +125,8 @@ export const NEEDS = [
     // the KPI tile's sparkline and filter toggle, the attention band and
     // the time chart.
     { name: 'actions', when: '.kp-row-actions', load: () => import('./actions.js'), attach: (m, root) => [m.attachActionColumns(root)] },
+    // Rows the keyboard walks, j / k [kpadopt4-rows].
+    { name: 'row-keys', when: '[data-kp-row-keys]', load: () => import('./actions.js'), attach: (m, root) => [m.attachRowKeys(root)] },
     {
         name: 'kpi',
         when: 'svg[data-kp-spark], button.kp-kpi--toggle, .kp-kpis[data-kp-kpis-columns]',
