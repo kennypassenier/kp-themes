@@ -488,7 +488,9 @@ function holdRows(c) {
     const win = c.el.ownerDocument.defaultView ?? window;
     const letGo = () => {
         if (c.held !== held || c.state === 'loading') return;
-        const busy = c.leaving || c.grid.querySelector('[data-kp-arriving], [data-kp-leaving], [data-kp-reversing]');
+        // The upcoming list stands beside the grid, not in it: its arriving rows are looked for there [kpadopt3].
+        const scope = c.upcoming.on && c.upcoming.list ? c.upcoming.list : c.grid;
+        const busy = c.leaving || scope.querySelector('[data-kp-arriving], [data-kp-leaving], [data-kp-reversing]');
         if (busy && performance.now() < until) {
             win.requestAnimationFrame(letGo);
             return;

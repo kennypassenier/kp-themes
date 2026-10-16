@@ -21739,7 +21739,8 @@ function holdRows(c) {
   const win = c.el.ownerDocument.defaultView ?? window;
   const letGo = () => {
     if (c.held !== held2 || c.state === "loading") return;
-    const busy = c.leaving || c.grid.querySelector("[data-kp-arriving], [data-kp-leaving], [data-kp-reversing]");
+    const scope = c.upcoming.on && c.upcoming.list ? c.upcoming.list : c.grid;
+    const busy = c.leaving || scope.querySelector("[data-kp-arriving], [data-kp-leaving], [data-kp-reversing]");
     if (busy && performance.now() < until) {
       win.requestAnimationFrame(letGo);
       return;

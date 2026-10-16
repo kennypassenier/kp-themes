@@ -51,7 +51,7 @@
         "js/tiles.js": { "digest": "a93919ec458ab18b", "when": "[data-kp-tiles-set]" },
         "js/toolbar.js": { "digest": "ca22723058dcfe13", "when": "[data-kp-toolbar]" },
         "js/upload.js": { "digest": "fe77364297c65175", "when": "[data-kp-upload]" },
-        "js/week.js": { "digest": "30756136b73ea9ab", "when": "[data-kp-week]" },
+        "js/week.js": { "digest": "c18ba6e7fe6dd794", "when": "[data-kp-week]" },
         "js/wizard.js": { "digest": "511924d0f81de6b2", "when": "[data-kp-wizard]" }
     },
     "themes": {
