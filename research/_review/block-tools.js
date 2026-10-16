@@ -88,11 +88,12 @@ function animationsIn(/** @type {Element} */ root) {
     );
 }
 
-const frames = (n) => new Promise((resolve) => {
-    let left = n;
-    const tick = () => (--left <= 0 ? resolve(undefined) : requestAnimationFrame(tick));
-    requestAnimationFrame(tick);
-});
+const frames = (n) =>
+    new Promise((resolve) => {
+        let left = n;
+        const tick = () => (--left <= 0 ? resolve(undefined) : requestAnimationFrame(tick));
+        requestAnimationFrame(tick);
+    });
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /** Wait until what the section plays has finished (looping animations aside), at most `limit` ms. */
@@ -146,7 +147,8 @@ export function mountBlockTools({ section, item, theme, themeLabel, title }) {
     let frame = null;
 
     /** The section on show: the current one, or the previous version's. */
-    const shown = () => (earlier && frame?.contentDocument ? frame.contentDocument.querySelector(`[data-review-item="${CSS.escape(item)}"]`) : null) ?? section;
+    const shown = () =>
+        (earlier && frame?.contentDocument ? frame.contentDocument.querySelector(`[data-review-item="${CSS.escape(item)}"]`) : null) ?? section;
 
     /* -------------------------------------------------- speed */
     let rateTimer = 0;
@@ -162,7 +164,8 @@ export function mountBlockTools({ section, item, theme, themeLabel, title }) {
     };
     function setRate(/** @type {number} */ next) {
         rate = next;
-        for (const b of bar.querySelectorAll('[data-rv-rate]')) b.setAttribute('aria-pressed', String(Number(b.getAttribute('data-rv-rate')) === rate));
+        for (const b of bar.querySelectorAll('[data-rv-rate]'))
+            b.setAttribute('aria-pressed', String(Number(b.getAttribute('data-rv-rate')) === rate));
         cancelAnimationFrame(rateTimer);
         applyRate();
         if (rate !== 1) keepRate();
@@ -173,7 +176,8 @@ export function mountBlockTools({ section, item, theme, themeLabel, title }) {
     // navigation's initial focus, a combobox, a frame's own page), and the letters then went to the demo
     // (Kenny, 2026-10-13: typing in brutalism's note on "Over the page" stopped). The field held is the one
     // last focused outside the section; a press of the pointer anywhere else lets it go.
-    const TYPING = 'textarea, input:not([type="checkbox"], [type="radio"], [type="button"], [type="submit"], [type="reset"]), [contenteditable]:not([contenteditable="false"])';
+    const TYPING =
+        'textarea, input:not([type="checkbox"], [type="radio"], [type="button"], [type="submit"], [type="reset"]), [contenteditable]:not([contenteditable="false"])';
     /** @type {HTMLElement | null} */
     let held = null;
     const takenBySection = (/** @type {Element | null} */ el) => el !== null && (section.contains(el) || (earlier?.contains(el) ?? false));
@@ -241,7 +245,8 @@ export function mountBlockTools({ section, item, theme, themeLabel, title }) {
             const dialog = /** @type {HTMLDialogElement | undefined} */ (opened.find((el) => el.matches('dialog')));
             const popover = /** @type {HTMLElement | undefined} */ (opened.find((el) => el.matches('[popover]')));
             if (combobox) loopButton.focus();
-            else if (opener.getAttribute('aria-expanded') !== expanded || opener.matches('[data-kp-sidenav-toggle]') || !opened.length) opener.click();
+            else if (opener.getAttribute('aria-expanded') !== expanded || opener.matches('[data-kp-sidenav-toggle]') || !opened.length)
+                opener.click();
             else if (dialog) {
                 if (typeof dialog.requestClose === 'function') dialog.requestClose();
                 else if (dialog.dispatchEvent(new Event('cancel', { cancelable: true }))) dialog.close();
@@ -375,12 +380,31 @@ export async function isolate(frame, item, theme) {
     const section = doc.querySelector(`[data-review-item="${CSS.escape(item)}"]`);
     if (!section) return;
     const style = doc.createElement('style');
-    style.textContent = '[data-rv-off], [data-review-look] { display: none !important; } body { margin: 0; } main { padding-block: 0 !important; }';
+    // The frame takes the document's height, so nothing in it may take its least height from the frame's: the
+    // catalogue's `body.cat-shell { min-block-size: 100vh }` plus the root padding terminal's bezel adds
+    // (terminal-register.css, `:root[data-theme='terminal'] { padding: var(--kp-bezel) }`) made the document 100vh plus
+    // two bezels high, the frame grew to it, 100vh with it, and terminal's frame grew without end (Kenny, 2026-10-16:
+    // "terminal lijkt eindeloos lang te zijn en ik geraak niet aan items onder terminal").
+    style.textContent =
+        '[data-rv-off], [data-review-look] { display: none !important; } body { margin: 0; } main { padding-block: 0 !important; }' +
+        ' html, body { min-block-size: 0 !important; block-size: auto !important; } :root { --kp-shell-min: 0px; }';
     doc.head.append(style);
     for (let el = /** @type {Element} */ (section); el.parentElement && el !== doc.body; el = el.parentElement)
-        for (const sibling of el.parentElement.children) if (sibling !== el && !sibling.matches('script, style, link')) sibling.setAttribute('data-rv-off', '');
+        for (const sibling of el.parentElement.children)
+            if (sibling !== el && !sibling.matches('script, style, link')) sibling.setAttribute('data-rv-off', '');
+    // A guard against any other height that follows the frame's: a document that grows by the same step on every fit
+    // five times in a row is the frame feeding itself, and the frame stops following it.
+    let last = 0;
+    let step = 0;
+    let echoes = 0;
     const fit = () => {
-        frame.style.blockSize = `${Math.ceil(doc.documentElement.scrollHeight)}px`;
+        const next = Math.ceil(doc.documentElement.scrollHeight);
+        const grew = next - last;
+        echoes = grew > 0 && grew === step ? echoes + 1 : 0;
+        step = grew;
+        if (echoes >= 4) return;
+        last = next;
+        frame.style.blockSize = `${next}px`;
     };
     new ResizeObserver(fit).observe(doc.body);
     fit();
