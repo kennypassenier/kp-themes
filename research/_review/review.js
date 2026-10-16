@@ -554,7 +554,7 @@ try {
 
 /**
  * @typedef {{ key: string, label: string, title: string, look: string, theme: string, extra?: object, item?: object }} Pair
- * @typedef {{ title: string, theme: string | null, topic?: string, aspect?: string, pairs: Pair[] }} Step
+ * @typedef {{ title: string, theme: string | null, topic?: string, topicTitle?: string, laneTheme?: string, topicAt?: number, topicThemes?: number, aspect?: string, pairs: Pair[] }} Step
  */
 
 const lookFor = (section, theme) => section.querySelector(`[data-review-look] [data-for="${theme}"]`)?.innerHTML || '';
@@ -591,11 +591,12 @@ const pairOf = (item, theme) => ({ key: `${theme}|${item.id}`, label: `${item.id
 /*
  * Topic steps (Kenny, 2026-10-16 16:43: "per topic/thema werken. bv een groepering van gelijksoortige componenten zoals
  * de matrix eerst voor alle thema's, dan de volgende groep etc, zo behoud ik het meeste context en kan ik het best
- * vergelijken"). A round that asks more than one theme walks topic by topic: a step is one topic, a group of similar
- * sections (`data-review-topic="<id>"`, its title in `data-review-topic-title` on any of them; a section without one is
- * a topic of its own), and shows every asked theme of every section in it, each section in each theme in a frame of
- * its own (lane mode above), the same section in every theme one after the other. A round that asks one theme, and
- * a demo of aspect pages, walk theme by theme as before.
+ * vergelijken"). A round that asks more than one theme walks topic by topic, a topic being a group of similar sections
+ * (`data-review-topic="<id>"`, its title in `data-review-topic-title` on any of them; a section without one is a topic
+ * of its own). Within a topic a step is one theme (Kenny, 2026-10-16 17:44: "1 item per thema per approval, want
+ * terminal lijkt eindeloos lang te zijn en ik geraak niet aan items onder terminal"): the topic's sections in that
+ * theme, each in a frame of its own (lane mode above) at the stage's full width, then the next theme of the same
+ * topic, then the next topic. A round that asks one theme, and a demo of aspect pages, walk theme by theme as before.
  */
 const TOPIC_MODE = !ASPECT_MODE && new Set(items.flatMap(askedThemes)).size > 1;
 
@@ -610,11 +611,24 @@ function topicSteps() {
         topics.set(id, [...(topics.get(id) || []), item]);
     }
     return [...topics].flatMap(([id, members]) => {
-        const stepPairs = members.flatMap((item) => askedThemes(item).map((theme) => pairOf(item, theme)));
-        if (!stepPairs.length) return [];
         const named = members.map((item) => item.section.dataset.reviewTopicTitle).find(Boolean);
-        const title = named || (members.length === 1 ? members[0].title : id);
-        return [{ title, theme: null, topic: id, pairs: stepPairs }];
+        const topicTitle = named || (members.length === 1 ? members[0].title : id);
+        // One step per theme of the topic (Kenny, 2026-10-16 17:44: "per group, maar dan 1 item per thema per
+        // approval"), in the demo's theme order; a theme none of the topic's sections is asked in is no step.
+        const themed = ORDER.map((theme) => ({
+            theme,
+            pairs: members.filter((item) => askedThemes(item).includes(theme)).map((item) => pairOf(item, theme)),
+        })).filter((entry) => entry.pairs.length);
+        return themed.map(({ theme, pairs: stepPairs }, at) => ({
+            title: `${topicTitle} · ${LABEL[theme] || theme}`,
+            theme: null,
+            topic: id,
+            topicTitle,
+            laneTheme: theme,
+            topicAt: at + 1,
+            topicThemes: themed.length,
+            pairs: stepPairs,
+        }));
     });
 }
 
@@ -1668,12 +1682,12 @@ function mirrorControls(sections) {
 }
 
 /* ---------------------------------------------------------- topic steps ---
- * A topic step shows each of its sections in every asked theme, one frame per pair (the demo itself in lane mode, at
- * `?theme=<theme>&rv-lane=<item>`, isolated to that one section the way the previous version is), grouped by section:
- * the matrix in every theme, then the heat grid in every theme. The frames load as they come near the view. The
- * demo's controls are mirrored once on top, as on a theme step, and a press acts on the page's own control and on the
- * same control in every frame, so a state is compared in every theme at once; a frame that loads later replays the
- * presses made before it. V and L act on the frame most in view, or the one the key was pressed in.
+ * A topic step shows each of its sections in the step's one theme, one frame per pair (the demo itself in lane mode,
+ * at `?theme=<theme>&rv-lane=<item>`, isolated to that one section the way the previous version is): the heat grid in
+ * cyberpunk, then the matrix in cyberpunk. The frames load as they come near the view. The demo's controls are
+ * mirrored once on top, as on a theme step, and a press acts on the page's own control and on the same control in
+ * every frame; a frame that loads later replays the presses made before it. V and L act on the frame most in view, or
+ * the one the key was pressed in.
  */
 /** @type {{ pair: Pair, frame: HTMLIFrameElement, section: HTMLElement, tool: ReturnType<typeof mountBlockTools> }[]} */
 let lanes = [];
@@ -1796,7 +1810,7 @@ function laneFor(pair) {
     return card;
 }
 
-/** The stage of a topic step: per section a heading and its frames, one per asked theme. @param {Pair[]} shown */
+/** The stage of a topic step: per section a heading and its frame, in the step's one theme. @param {Pair[]} shown */
 function paintTopic(shown) {
     if (keptTheme === undefined) keptTheme = storedTheme();
     const view = /** @type {HTMLElement} */ (stage.closest('.rv-dialog__view'));
@@ -1814,10 +1828,8 @@ function paintTopic(shown) {
         const own = shown.filter((pair) => pair.item === item);
         const group = document.createElement('section');
         group.className = 'rv-topic';
-        group.innerHTML = `<h3 class="rv-topic__title"></h3><p class="rv-meta rv-topic__about"></p><div class="rv-topic__lanes"></div>`;
+        group.innerHTML = `<h3 class="rv-topic__title"></h3><div class="rv-topic__lanes"></div>`;
         /** @type {HTMLElement} */ (group.querySelector('.rv-topic__title')).textContent = item.title;
-        /** @type {HTMLElement} */ (group.querySelector('.rv-topic__about')).textContent =
-            `In ${own.length} theme${own.length === 1 ? '' : 's'}: ${own.map((pair) => LABEL[pair.theme] || pair.theme).join(', ')}`;
         const box = /** @type {HTMLElement} */ (group.querySelector('.rv-topic__lanes'));
         for (const pair of own) {
             const card = laneFor(pair);
@@ -1964,14 +1976,12 @@ function rowFor(pair, only = null, name = '') {
     return li;
 }
 
-/** The rows of a topic step, under one heading per section, one row per theme, in the order of the frames. */
+/** The rows of a topic step: under the step's theme, one row per section, in the order of the frames. */
 function topicRows(/** @type {Pair[]} */ shown) {
-    return [...new Set(shown.map((pair) => pair.item))].flatMap((item) => {
-        const head = document.createElement('li');
-        head.className = 'rv-list__group';
-        head.textContent = item.title;
-        return [head, ...shown.filter((pair) => pair.item === item).map((pair) => rowFor(pair, null, LABEL[pair.theme] || pair.theme))];
-    });
+    const head = document.createElement('li');
+    head.className = 'rv-list__group';
+    head.textContent = LABEL[shown[0]?.theme] || shown[0]?.theme || '';
+    return [head, ...shown.map((pair) => rowFor(pair, null, pair.title))];
 }
 
 function updateApprove() {
@@ -1984,7 +1994,7 @@ function updateApprove() {
     approveButton.textContent = rejecting
         ? `↑ Approve the rest, ${rejecting} not approved`
         : step.topic
-          ? `↑ Approve this topic in every theme`
+          ? `↑ Approve ${LABEL[step.laneTheme] || step.laneTheme} for this topic`
           : step.theme
             ? '↑ Approve this theme'
             : '↑ Approve these blocks';
@@ -2057,24 +2067,23 @@ async function show(at) {
         // beoordelen ook in de dialog ... fix het"), never folded away.
         controlsBox.open = true;
         $('[data-rv-intro]').textContent = step.topic
-            ? 'One topic in every theme asked: each section in each theme, one after the other, so the themes compare directly. Everything on the left is approved together. Tick only what is wrong, and say why.'
+            ? "One topic, one theme per step: the topic's sections in this theme, then the same topic in the next theme. Everything on the left is approved together. Tick only what is wrong, and say why."
             : step.aspect
               ? 'One option at a time, large, its motion already playing. ←/→ flips, ↑ picks it and goes on, ↓ is None of these. Left hand (AZERTY): Q/S step the state, D the tone, F the next set, Z a live update, R replays, E speed, A tours the states by itself, Space pauses.'
               : 'Everything on the left is approved together. Tick only what is wrong, and say why.';
         $('#rv-keys').textContent = step.topic
-            ? 'Up approves the topic and goes on to the next open one, Left/Right move between topics, V the previous version and L open and close of the theme most in view, Escape closes. A state pressed on top plays in every theme at once.'
+            ? 'Up approves this theme for the topic and goes on to the next open theme, Left/Right move between steps, V the previous version and L open and close of the section most in view, Escape closes. A state pressed on top plays in the frames below.'
             : step.aspect
               ? 'Right hand: ←/→ flip · ↑ pick · ↓ none of these. Left hand (AZERTY home row): Q/S state back/on · D tone · F next set · Z live update · R replay · E speed · A tour · Space pause. PageUp/PageDown move between pages · Escape closes.'
               : 'Up approves the step and goes on to the next open one, Left/Right move between steps, V the previous version, L plays open and close, Escape closes. The theme switches by itself.';
         if (!step.topic) for (const pair of shownPairs) if (pair.item) focusAspect(pair.item.section, step.aspect ?? null);
         if (step.aspect) setupFlip(step, shownPairs[0]);
         const judgedHere = step.pairs.filter((p) => verdictOf(p) === 'approved' && !shownPairs.includes(p)).length;
-        const shownThemes = new Set(shownPairs.map((p) => p.theme)).size;
         const shownSections = new Set(shownPairs.map((p) => p.item)).size;
         $('[data-rv-position]').textContent =
             `Step ${index + 1}/${steps.length} · ` +
             (step.topic
-                ? `topic · ${shownSections} section(s) in ${shownThemes} theme(s), ${shownPairs.length} pair(s)`
+                ? `${step.topicAt} of ${step.topicThemes} themes · ${shownSections} section(s)`
                 : `${shownPairs.length} ${step.theme ? 'section(s)' : 'block(s)'}`) +
             (judgedHere ? ` · ${judgedHere} already approved, not shown` : '');
         writeFlipPosition();

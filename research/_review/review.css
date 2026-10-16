@@ -688,21 +688,16 @@
     border: 1px dashed var(--border);
 }
 
-/* A topic step (review.js, "Topic steps"): per section a heading, then the section in every asked theme, one frame per
-   theme. One column on a laptop, so a wide matrix keeps its width; two side by side where the stage is wide enough
-   for two at 40rem. Each frame's head names its theme in the dialog's own type and sticks under the mirrored controls
-   while its section scrolls past, so the theme on screen is never in doubt. */
+/* A topic step (review.js, "Topic steps"): one theme of one topic, per section a heading and the section in that theme
+   in a frame at the full width of the stage. Each frame's head names its theme in the dialog's own type and sticks
+   under the mirrored controls while its section scrolls past, so the theme on screen is never in doubt. */
 .rv-topic + .rv-topic {
     margin-block-start: 2.5rem;
 }
 
 .rv-topic__title {
-    margin: 0;
+    margin: 0 0 0.75rem;
     font-size: 1.125rem;
-}
-
-.rv-topic__about {
-    margin: 0.125rem 0 0.75rem;
 }
 
 .rv-topic__lanes {
@@ -787,13 +782,9 @@
     margin-block-start: 0;
 }
 
-/* On a phone the frame gets the height: the theme list under the topic's title goes, and the tools stay on one line
-   beside the theme's name, scrolling sideways when they do not fit. */
+/* On a phone the frame gets the height: the tools stay on one line beside the theme's name, scrolling sideways when
+   they do not fit. */
 @media (max-width: 48rem) {
-    .rv-topic__about {
-        display: none;
-    }
-
     .rv-topic__title {
         margin-block-end: 0.5rem;
     }

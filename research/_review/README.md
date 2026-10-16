@@ -60,8 +60,8 @@ catalogue page itself):
 
 - A bar at the top of the page: how many steps and pairs are judged,
   "Review in a dialog" and "Copy answer".
-- A round that asks more than one theme: one step per topic, each section of it in every asked theme (see "Topic
-  steps" below). A round that asks one theme, and a demo of aspect pages:
+- A round that asks more than one theme: grouped by topic, one step per theme within a topic, the topic's sections
+  in that one theme (see "Topic steps" below). A round that asks one theme, and a demo of aspect pages:
 - One step per theme: every section of the demo at once, stacked as on
   "Every component, one page", and at the side one row per section with its
   look-at line and a "Not approved" box. The reviewer ticks only what is
@@ -94,25 +94,34 @@ Kenny, 2026-10-16 16:43: "Kunnen we de demo ook indelen zodat we per topic/thema
 gelijksoortige componenten zoals de matrix eerst voor alle thema's, dan de volgende groep etc, zo behoud ik het meeste
 context en kan ik het best vergelijken, doe dit vanaf nu altijd waar mogelijk".
 
-When the sections of a demo are asked in more than one theme together, the dialog walks **topic-major**: one step per
-topic, in the page's order. The stage shows the topic section by section; under each section's title, the section in
-every theme it is asked in, in the demo's theme order, each in a frame of its own (the demo itself at
-`?theme=<theme>&rv-lane=<item>`, isolated to that section the way the previous version is), under a head that names the
-theme and sticks while the section scrolls past. Each theme takes the full width of the stage, one under the other (Kenny, 2026-10-16). The frames load as they come near the view.
+When the sections of a demo are asked in more than one theme together, the dialog walks **topic-major, one theme per
+step** (Kenny, 2026-10-16 17:44: "misschien best per group, maar dan 1 item per thema per approval, want terminal lijkt
+eindeloos lang te zijn en ik geraak niet aan items onder terminal"): all the themes of the first topic, in the demo's
+theme order, then all the themes of the next topic, in the page's order. A step shows the topic's sections in that one
+theme, section by section under its title, each in a frame of its own at the full width of the stage (the demo itself
+at `?theme=<theme>&rv-lane=<item>`, isolated to that section the way the previous version is), under a head that names
+the theme and sticks while the section scrolls past. The step's title names topic and theme ("Matrix and heat grid ·
+Cyberpunk"), its position line where the theme stands in the topic ("3 of 15 themes"). The frames load as they come
+near the view.
 
-- At the side, one heading per section and under it one row per theme, with that theme's look-at line and its
-  "Not approved" box: the verdict stays one per section × theme pair, and a pair ticked "Not approved" marks its frame
-  too. Up approves the whole topic in every theme shown.
-- The demo's controls are mirrored once on top; a press acts on every frame of the step at once (a frame that loads
-  later replays the presses made before it), so a state is compared in every theme, one under the other.
+- At the side, under the theme's name, one row per section with its look-at line and its "Not approved" box: the
+  verdict stays one per section × theme pair, and a pair ticked "Not approved" marks its frame too. Up approves this
+  theme for the topic and goes on to the next open step, the next theme of the same topic.
+- The demo's controls are mirrored once on top; a press acts on every frame of the step (a frame that loads later
+  replays the presses made before it).
 - V and L (previous version, play open and close) act on the frame most in view, or on the frame the key was pressed
   in; each frame's head carries its own buttons.
-- Only open pairs are shown, the counters count steps and pairs as before, the answer keeps its lines per section and
-  theme (`- matrix · deco: …`), "Still open" names the open topics, and after the last open pair the page goes straight
-  back to the Agenda (or `?next=`).
+- Only open pairs are shown and a step whose pairs are all approved is skipped; the counters count steps and pairs as
+  before, the answer keeps its lines per section and theme (`- matrix · deco: …`), "Still open" names the open steps
+  (topic · theme), and after the last open pair the page goes straight back to the Agenda (or `?next=`).
 - A frame's theme stays its own: the theme a frame's head stores is put back, and neither the page nor another frame
   takes it over. The topic attributes are left out of the demo's fingerprint, so adding them to a round under way
   reopens nothing.
+- A frame takes its document's height (block-tools.js, `isolate`). Nothing in the isolated document may size itself
+  by the frame: the catalogue's `body.cat-shell { min-block-size: 100vh }` plus terminal's bezel padding on the root
+  made terminal's document two bezels taller than its frame, so the frame grew without end and nothing under it could
+  be reached. `isolate` resets the least height of `html` and `body`, and a frame whose document grows by the same
+  step five times in a row stops following it.
 
 ## A second round
 
