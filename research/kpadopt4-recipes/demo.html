@@ -44,6 +44,169 @@
 
             <section
                 class="k4-sec"
+                id="quantity"
+                data-review-item="quantity"
+                data-review-topic="inputs"
+                data-review-topic-title="Quantity with minus and plus"
+                data-review-components="quantity"
+                data-review-title="4 · Quantity with minus and plus"
+                aria-labelledby="h-quantity"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-quantity">4 · Quantity with minus and plus</h2>
+                    <p>
+                        <code>.kp-quantity</code> with <code>js/quantity.js</code>: a number between the theme’s own minus and plus buttons, its unit
+                        after it, for portions and shopping amounts. The number can also be typed.
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Each control is three parts on one line: a square minus button, one field box holding the number and its unit, a square
+                            plus button. Buttons are formal’s secondary buttons (inner rule on hover, double rule on press), at least 44 px square; on
+                            a phone 48 px.
+                        </li>
+                        <li>
+                            <b>Portions</b> starts at 2. Press plus: 3 portions … 12 portions; at 12 the plus dims and does nothing, at 1 the minus
+                            dims and the unit says “portion”. Nothing moves while the number changes, not even from 9 to 10, and the unit keeps its
+                            place between “portion” and “portions”.
+                        </li>
+                        <li>
+                            Hold a button down: one step at once, then after a short pause it repeats, slowly first and then faster; let go and it
+                            stops. Keyboard: Tab into the number, ArrowUp and ArrowDown step, PageUp and PageDown step ten, Home and End go to the
+                            bounds; Enter on a focused button steps once.
+                        </li>
+                        <li>
+                            Type in a field: the Dutch one reads <b>1,5</b> and writes a comma, the English one a point; both accept either mark.
+                            Leaving the field keeps the value inside the bounds and on its step (type 7 in grams: it becomes 0 or 50 … the nearest
+                            step). “Type a word” puts “a lot” in the field: its edge turns red while it stands; leaving it brings the last value back.
+                        </li>
+                        <li>
+                            The large one is for cook mode at arm’s length. The disabled one is dimmed and out of reach. The long unit stays on one
+                            line beside its number, with room on both sides. No loading state: a quantity has nothing to wait for.
+                        </li>
+                        <li>The log shows each <code>kp-quantity-change</code> with its value, the previous value and what changed it.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Hold plus on Portions until it stops at 12, then type 1,5 in the Dutch field and Tab away.</p>
+                </div>
+                <div class="k4-grid">
+                    <div>
+                        <p class="k4-label">Portions, 1 to 12</p>
+                        <div
+                            class="kp-quantity"
+                            id="k4-q-portions"
+                            data-kp-quantity
+                            data-kp-quantity-min="1"
+                            data-kp-quantity-max="12"
+                            data-kp-quantity-unit="portions"
+                            data-kp-quantity-unit-one="portion"
+                            data-kp-quantity-label="Portions"
+                        >
+                            <input class="kp-quantity__input" value="2" />
+                        </div>
+                    </div>
+                    <div>
+                        <p class="k4-label">Grams in steps of 50</p>
+                        <div
+                            class="kp-quantity"
+                            id="k4-q-grams"
+                            data-kp-quantity
+                            data-kp-quantity-min="0"
+                            data-kp-quantity-max="2000"
+                            data-kp-quantity-step="50"
+                            data-kp-quantity-unit="g"
+                            data-kp-quantity-label="Flour"
+                        >
+                            <input class="kp-quantity__input" value="500" />
+                        </div>
+                    </div>
+                    <div>
+                        <p class="k4-label">Litres in halves, Dutch (lang="nl")</p>
+                        <div
+                            class="kp-quantity"
+                            lang="nl"
+                            data-kp-quantity
+                            data-kp-quantity-min="0"
+                            data-kp-quantity-max="10"
+                            data-kp-quantity-step="0.5"
+                            data-kp-quantity-unit="liter"
+                            data-kp-quantity-label="Bouillon"
+                        >
+                            <input class="kp-quantity__input" id="k4-q-nl" value="1.5" />
+                        </div>
+                    </div>
+                    <div>
+                        <p class="k4-label">Litres in halves, English (lang="en")</p>
+                        <div
+                            class="kp-quantity"
+                            lang="en"
+                            id="k4-q-en"
+                            data-kp-quantity
+                            data-kp-quantity-min="0"
+                            data-kp-quantity-max="10"
+                            data-kp-quantity-step="0.5"
+                            data-kp-quantity-unit="litres"
+                            data-kp-quantity-label="Stock"
+                        >
+                            <input class="kp-quantity__input" value="1.5" />
+                        </div>
+                        <div class="k4-actions">
+                            <button type="button" class="kp-button kp-button--sm" id="k4-q-word">Type a word in it</button>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="k4-label">Large (cook mode), at its minimum</p>
+                        <div
+                            class="kp-quantity kp-quantity--lg"
+                            data-kp-quantity
+                            data-kp-quantity-min="1"
+                            data-kp-quantity-max="20"
+                            data-kp-quantity-unit="pieces"
+                            data-kp-quantity-unit-one="piece"
+                            data-kp-quantity-label="Eggs"
+                        >
+                            <input class="kp-quantity__input" value="1" />
+                        </div>
+                    </div>
+                    <div>
+                        <p class="k4-label">Disabled</p>
+                        <div
+                            class="kp-quantity"
+                            data-kp-quantity
+                            data-kp-quantity-disabled
+                            data-kp-quantity-min="1"
+                            data-kp-quantity-max="12"
+                            data-kp-quantity-unit="portions"
+                            data-kp-quantity-label="Portions, locked"
+                        >
+                            <input class="kp-quantity__input" value="4" />
+                        </div>
+                    </div>
+                    <div>
+                        <p class="k4-label">A long unit, in a 360 px frame</p>
+                        <div class="k4-frame k4-frame--phone">
+                            <div
+                                class="kp-quantity"
+                                data-kp-quantity
+                                data-kp-quantity-min="0"
+                                data-kp-quantity-max="99"
+                                data-kp-quantity-unit="tablespoons of olive oil"
+                                data-kp-quantity-unit-one="tablespoon of olive oil"
+                                data-kp-quantity-label="Olive oil"
+                            >
+                                <input class="kp-quantity__input" value="3" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <pre class="k4-log" id="k4-q-log" aria-label="Events"></pre>
+            </section>
+
+            <section
+                class="k4-sec"
                 id="tri"
                 data-review-item="tri"
                 data-review-topic="filters"

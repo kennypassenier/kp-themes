@@ -1051,6 +1051,18 @@ export type Strings = {
      * What a three-way group says after Clear all [kpadopt4]
      */
     triCleared: string;
+    /**
+     * The minus button's name, "Portions, less" (js/quantity.js) [kpadopt4]
+     */
+    quantityLess: (label: string) => string;
+    /**
+     * The plus button's name, "Portions, more" [kpadopt4]
+     */
+    quantityMore: (label: string) => string;
+    /**
+     * The value with its unit, as a screen reader hears it, "6 portions" [kpadopt4]
+     */
+    quantityValue: (value: string, unit: string) => string;
 };
 /**
  * @typedef {object} Strings
@@ -1410,6 +1422,9 @@ export type Strings = {
  * @property {string} triHint  The line under a three-way group while nothing is chosen [kpadopt4]
  * @property {(include: string[], exclude: string[]) => string} triSummary  The same line once something is chosen [kpadopt4]
  * @property {string} triCleared  What a three-way group says after Clear all [kpadopt4]
+ * @property {(label: string) => string} quantityLess  The minus button's name, "Portions, less" (js/quantity.js) [kpadopt4]
+ * @property {(label: string) => string} quantityMore  The plus button's name, "Portions, more" [kpadopt4]
+ * @property {(value: string, unit: string) => string} quantityValue  The value with its unit, as a screen reader hears it, "6 portions" [kpadopt4]
  */
 /**
  * The defaults. English, by Kenny's decision of 2026-09-04 — the package

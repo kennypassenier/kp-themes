@@ -13202,6 +13202,151 @@
         border: 1px solid var(--border);
         white-space: nowrap;
     }
+
+    /* --- A quantity with minus and plus [kpadopt4] ------------------------
+ *
+ * A number between a minus and a plus, its unit after it, for servings and
+ * amounts. The buttons are the theme's own `.kp-button`, square and at least
+ * a fingertip (`--kp-quantity-target`, 2.75rem; 3rem on a touch screen); the
+ * number and the unit share one field box, so "6 portions" reads as one
+ * thing. The field is as wide as the widest value it can hold
+ * (`--kp-quantity-chars`, written by js/quantity.js) and the unit as wide as
+ * its longest form, so nothing moves as the number changes. A button at a
+ * bound says so and keeps its place (`aria-disabled`). */
+    .kp-quantity {
+        --kp-quantity-chars: 2;
+        display: inline-grid;
+        grid-template-columns: auto minmax(0, auto) auto;
+        align-items: stretch;
+        justify-self: start;
+        gap: var(--kp-quantity-gap, var(--kp-space-xs, 0.25rem));
+        inline-size: fit-content;
+        max-inline-size: 100%;
+        vertical-align: middle;
+    }
+
+    .kp-quantity__step.kp-button {
+        display: inline-grid;
+        place-items: center;
+        box-sizing: border-box;
+        inline-size: var(--kp-quantity-target, 2.75rem);
+        min-block-size: var(--kp-quantity-target, 2.75rem);
+        padding: 0;
+        font-size: var(--kp-quantity-glyph-size, 1.25rem);
+        line-height: 1;
+        touch-action: manipulation;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+
+    .kp-quantity__glyph::before {
+        content: var(--kp-glyph-minus, '−');
+    }
+
+    .kp-quantity__step[data-kp-quantity-by='1'] .kp-quantity__glyph::before {
+        content: var(--kp-glyph-plus, '+');
+    }
+
+    .kp-quantity__step[aria-disabled='true'] {
+        opacity: 0.45;
+        cursor: not-allowed;
+    }
+
+    .kp-quantity__field {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        box-sizing: border-box;
+        min-block-size: var(--kp-quantity-target, 2.75rem);
+        padding-inline: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--input);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--background);
+        color: var(--foreground);
+        box-shadow: var(--fx-shadow-offset, 0px) var(--fx-shadow-offset, 0px) 0 0 var(--border-strong);
+        cursor: text;
+    }
+
+    .kp-quantity__field:has(.kp-quantity__input:focus-visible) {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        outline-offset: var(--kp-focus-ring-inner-width, 2px);
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+    }
+
+    .kp-quantity__field:has(.kp-quantity__input[aria-invalid='true']) {
+        border-color: var(--destructive);
+    }
+
+    .kp-quantity__input {
+        box-sizing: content-box;
+        inline-size: calc(var(--kp-quantity-chars) * 1ch + 0.25ch);
+        min-inline-size: 1ch;
+        margin: 0;
+        padding: 0 var(--kp-space-xs, 0.25rem);
+        border: 0;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        font-size: var(--kp-quantity-size, var(--kp-text-md, 1rem));
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+    }
+
+    .kp-quantity__input:focus-visible {
+        outline: none;
+        box-shadow: none;
+    }
+
+    /* The unit, as wide as its longest form (`data-kp-words`): an invisible
+ * line of no height holds the width. A unit longer than
+ * `--kp-quantity-unit-max` wraps onto a second line rather than being cut. */
+    .kp-quantity__unit {
+        display: inline-flex;
+        flex-direction: column;
+        min-inline-size: 0;
+        max-inline-size: var(--kp-quantity-unit-max, 12em);
+        overflow: hidden;
+        padding-block: var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        line-height: 1.2;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-quantity__unit::after {
+        content: attr(data-kp-words);
+        block-size: 0;
+        overflow: hidden;
+        visibility: hidden;
+        white-space: pre;
+    }
+
+    .kp-quantity[data-kp-quantity-disabled],
+    .kp-quantity:has(.kp-quantity__input:disabled) {
+        opacity: 0.55;
+    }
+
+    .kp-quantity:has(.kp-quantity__input:disabled) .kp-quantity__field {
+        cursor: not-allowed;
+    }
+
+    /* Larger, for a counter on an arm's length screen (cook mode). */
+    .kp-quantity--lg {
+        --kp-quantity-target: 3.5rem;
+        --kp-quantity-size: 1.5rem;
+        --kp-quantity-glyph-size: 1.75rem;
+    }
+
+    @media (pointer: coarse) {
+        .kp-quantity {
+            --kp-quantity-target: 3rem;
+        }
+
+        .kp-quantity--lg {
+            --kp-quantity-target: 3.5rem;
+        }
+    }
 }
 
 /* The tour's dim is the target's box-shadow, and a register that gives the part a shadow of its own (a card's rim) wins over

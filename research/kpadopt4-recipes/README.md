@@ -8,6 +8,7 @@ AuDHD-recipes thread listed six components kp-themes lacked, each with its optio
 - Package: every `kp-` class and every script under `js/`. Mock: the sample data, the frames, the event logs and the
   buttons that drive a section (`demo.js`, `kit.js`, `sec-*.js`, `demo.css`).
 
-| Need                 | What the package offers now                                        | Built how                         |
-| -------------------- | ------------------------------------------------------------------ | --------------------------------- |
-| 6 · three-way filter | `data-kp-segmented="tri"` on the segmented chips (js/segmented.js) | an opt-in mode of an approved one |
+| Need                 | What the package offers now                                        | Built how                            |
+| -------------------- | ------------------------------------------------------------------ | ------------------------------------ |
+| 6 · three-way filter | `data-kp-segmented="tri"` on the segmented chips (js/segmented.js) | an opt-in mode of an approved one    |
+| 4 · quantity         | `.kp-quantity`, js/quantity.js                                     | new, from `.kp-button` and the field |

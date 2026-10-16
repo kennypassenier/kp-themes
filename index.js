@@ -145,10 +145,12 @@ export {
     SEGMENTED,
     SEGMENTED_EVENT,
     attachSegmented,
+    getSegmentedTri,
     getSegmentedValues,
     resetSegmented,
     setSegmentedCounts,
     setSegmentedItems,
+    setSegmentedTri,
     setSegmentedValues,
 } from './js/segmented.js';
 /** @typedef {import('./js/segmented.js').SegmentedItem} SegmentedItem */
@@ -193,6 +195,17 @@ export {
 /** @typedef {import('./js/statusrow.js').StatusRow} StatusRow */
 export { FACETS, FACET_EVENT, attachFacets, getFacetValues, setFacetCounts, setFacetItems, setFacetValues } from './js/facets.js';
 /** @typedef {import('./js/facets.js').FacetItem} FacetItem */
+// A quantity with minus and plus [kpadopt4].
+export {
+    QUANTITY,
+    QUANTITY_EVENT,
+    attachQuantities,
+    formatQuantity,
+    getQuantity,
+    parseQuantity,
+    setQuantity,
+    settleQuantity,
+} from './js/quantity.js';
 export { HOVERCARD_ATTRIBUTE, HOVERCARD_CARD, HOVERCARD_EVENT, attachHoverCards } from './js/hovercard.js';
 // Information that updates in place, the theme's way [research/update-motion, 2026-10-05].
 export {

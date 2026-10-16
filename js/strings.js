@@ -394,6 +394,9 @@
  * @property {string} triHint  The line under a three-way group while nothing is chosen [kpadopt4]
  * @property {(include: string[], exclude: string[]) => string} triSummary  The same line once something is chosen [kpadopt4]
  * @property {string} triCleared  What a three-way group says after Clear all [kpadopt4]
+ * @property {(label: string) => string} quantityLess  The minus button's name, "Portions, less" (js/quantity.js) [kpadopt4]
+ * @property {(label: string) => string} quantityMore  The plus button's name, "Portions, more" [kpadopt4]
+ * @property {(value: string, unit: string) => string} quantityValue  The value with its unit, as a screen reader hears it, "6 portions" [kpadopt4]
  */
 
 /**
@@ -891,6 +894,10 @@ export const DEFAULT_STRINGS = Object.freeze({
         return line.charAt(0).toUpperCase() + line.slice(1);
     },
     triCleared: 'Every filter is let go.',
+    // A quantity with minus and plus (js/quantity.js) [kpadopt4].
+    quantityLess: (label) => (label ? `${label}, less` : 'Less'),
+    quantityMore: (label) => (label ? `${label}, more` : 'More'),
+    quantityValue: (value, unit) => `${value} ${unit}`,
 });
 
 // STRINGS_NL was removed in 4.0.0 [D3]. Kenny decided that on

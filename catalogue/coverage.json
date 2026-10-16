@@ -11,6 +11,7 @@
         "kp-kbd",
         "kp-keys",
         "kp-matrix",
+        "kp-quantity",
         "kp-segmented",
         "kp-statuslist",
         "kp-statusrow",

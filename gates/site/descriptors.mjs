@@ -2995,6 +2995,36 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
         ],
     },
     {
+        id: 'quantity',
+        title: 'Quantity',
+        group: 'Forms',
+        classes: ['kp-quantity'],
+        exports: [],
+        intro: 'A number between a minus and a plus button with its unit after it, for servings and amounts. `data-kp-quantity` on the root with `-min`, `-max`, `-step`, `-unit`, `-unit-one`, `-label` and `-locale`; js/quantity.js (`attachQuantities`, `setQuantity`, `getQuantity`) writes the buttons, the field box and the unit, and fires `kp-quantity-change` with `{ value, previous, source }`. The number is a spin button that can be typed in the page’s language, with a comma or a point.',
+        whenToUse: 'For a small whole or stepped amount a person nudges up and down: portions, pieces, grams in steps. For a free number use a field; for a share of a range use a slider.',
+        examples: [
+            {
+                title: 'Portions, from 1 to 12',
+                why: 'The buttons are the theme’s own; the number and the unit share one field box; the minus is dimmed at the bound and keeps its place.',
+                markup: `
+<div class="kp-quantity" data-kp-quantity data-kp-quantity-min="1" data-kp-quantity-max="12" data-kp-quantity-unit="portions" data-kp-quantity-unit-one="portion" data-kp-quantity-label="Portions">
+<input class="kp-quantity__input" value="2" />
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-quantity-step', what: 'The step a press moves by; its decimals are the number’s decimals (0.5 shows one).' },
+            { name: 'data-kp-quantity-disabled', what: 'The whole control dimmed and out of reach.' },
+            { name: '.kp-quantity--lg', what: 'Larger buttons and number, for a screen at arm’s length.' },
+        ],
+        accessibility: [
+            'Built in — the number is a spin button with its value and unit in words; ArrowUp, ArrowDown, PageUp, PageDown, Home and End move it; the buttons are named after the label.',
+            'Built in — a button at a bound is marked `aria-disabled` and keeps the focus.',
+            'Yours — give it a label (`data-kp-quantity-label` or a `<label>` for the input).',
+        ],
+    },
+    {
         id: 'steplist',
         title: 'Step list',
         group: 'Feedback',
