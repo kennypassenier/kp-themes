@@ -31,8 +31,9 @@
 // waiting lines, `aria-busy`), `'empty'` (nothing read yet) and `'error'` (a
 // sentence; `message` replaces the default, with a normal-size Retry that
 // fires `kp-stackbar-retry`, `retry: false` leaves it out). Empty and error
-// are the package's empty state (`.kp-empty`, each theme's own) over the
-// bar's and the legend's whole footprint, the height they had, the words and
+// are one calm note over the bar's and the legend's whole footprint (the
+// empty state's frame and each theme's empty-state title, the sentence and
+// Retry side by side so the note fits the small footprint), the height they had, the words and
 // the button centred in it (Kenny, 2026-10-16: failed, empty and loading fill
 // the component's full normal size); a bar without a legend keeps its track
 // and says it in its accessible name and hover card. Nothing under it moves.
@@ -208,7 +209,7 @@ export function setStackbar(el, spec) {
             bar.setAttribute('tabindex', '0');
         } else {
             refocus = el.querySelector(':scope > .kp-stackbar__note')?.contains(doc.activeElement) ?? false;
-            const note = make(doc, 'kp-empty kp-stackbar__note', 'div');
+            const note = make(doc, 'kp-stackbar__note', 'div');
             if (memory.height > 0) note.style.minBlockSize = `${memory.height}px`;
             note.setAttribute('role', failed ? 'alert' : 'status');
             const said = make(doc, 'kp-empty__title kp-stackbar__note-title', 'p');

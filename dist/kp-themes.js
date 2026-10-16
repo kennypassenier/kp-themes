@@ -21862,7 +21862,7 @@ function setStackbar(el9, spec) {
       bar.setAttribute("tabindex", "0");
     } else {
       refocus = el9.querySelector(":scope > .kp-stackbar__note")?.contains(doc.activeElement) ?? false;
-      const note = make2(doc, "kp-empty kp-stackbar__note", "div");
+      const note = make2(doc, "kp-stackbar__note", "div");
       if (memory.height > 0) note.style.minBlockSize = `${memory.height}px`;
       note.setAttribute("role", failed ? "alert" : "status");
       const said = make2(doc, "kp-empty__title kp-stackbar__note-title", "p");

@@ -20615,29 +20615,35 @@
         --kp-skeleton-height: 0.75em;
     }
 
-    /* Not read, or failed: the package's empty state (each theme's own) over
-     * the bar's and the legend's whole footprint, the height they had (the
-     * script writes it; a bar never drawn takes --kp-stackbar-state-min), the
-     * sentence and a normal-size Retry centred in it (Kenny, 2026-10-16). A
-     * bar without a legend keeps its track, its words in its hover card. */
+    /* Not read, or failed: one calm note over the bar's and the legend's whole
+     * footprint, the height they had (the script writes it; a bar never drawn
+     * takes --kp-stackbar-state-min), in the empty state's dashed frame with
+     * the theme's empty-state title; the sentence and a normal-size Retry side
+     * by side, centred, so the note fits a footprint only a few lines high
+     * (Kenny, 2026-10-16). A bar without a legend keeps its track, its words
+     * in its hover card. */
     .kp-stackbar__note {
         box-sizing: border-box;
-        display: grid;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
         align-content: center;
-        justify-items: center;
-        gap: var(--kp-space-xs, 0.25rem);
-        min-block-size: var(--kp-stackbar-state-min, 6rem);
+        justify-content: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        min-block-size: var(--kp-stackbar-state-min, 4rem);
         margin: 0;
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        color: var(--muted-foreground);
         text-align: center;
     }
 
     .kp-stackbar__note > .kp-stackbar__note-title {
+        min-inline-size: 0;
         max-inline-size: 100%;
+        margin: 0;
         overflow-wrap: anywhere;
-    }
-
-    .kp-stackbar__note > .kp-stackbar__retry {
-        margin-block-start: var(--kp-space-sm, 0.5rem);
     }
 
     @media (forced-colors: active) {
