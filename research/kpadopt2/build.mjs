@@ -30,12 +30,37 @@ const THEMES = 'light,dark,cyberpunk,synthwave,pastel,terminal,forest,blueprint,
 // the sections that show them ask formal again in this same round, beside the fifteen other themes. The page names formal
 // too (the review dialog walks the page's themes); every other section names only the fifteen.
 const FORMAL_AGAIN = ['heat', 'matrix', 'gantt-states'];
+// The review dialog walks a round of more than one theme topic by topic (research/_review/README.md, "Topic steps";
+// Kenny, 2026-10-16 16:43): similar sections are one step, each in every asked theme. The first section of a topic
+// carries its title.
+/** @type {Record<string, [string, string?]>} */
+const TOPICS = {
+    actions: ['tiles', 'Tiles and rows'],
+    status: ['tiles'],
+    facets: ['tiles'],
+    heat: ['matrix', 'Matrix and heat grid'],
+    matrix: ['matrix'],
+    barcell: ['barcell', 'Bar in a table cell'],
+    week: ['week', 'Week agenda'],
+    'week-crowd': ['week'],
+    'week-states': ['week'],
+    gantt: ['gantt', 'Run timeline'],
+    'gantt-states': ['gantt'],
+};
+/** The topic attributes of a section. @param {string} item */
+const topicOf = (item) => {
+    const [topic, title] = TOPICS[item] ?? [];
+    return topic ? ` data-review-topic="${topic}"${title ? ` data-review-topic-title="${title}"` : ''}` : '';
+};
 /** Keep only the open sections of a run of sections, each naming the themes it asks. @param {string} html */
 const openOnly = (html) =>
     html.replace(/[ \t]*<section\b[\s\S]*?<\/section>\n?/g, (block) => {
         const item = /\bdata-review-item="([^"]+)"/.exec(block)?.[1] ?? '';
         if (!OPEN.includes(item)) return '';
-        return block.replace(/<section\b/, `<section data-review-themes="${FORMAL_AGAIN.includes(item) ? `formal,${THEMES}` : THEMES}"`);
+        return block.replace(
+            /<section\b/,
+            `<section data-review-themes="${FORMAL_AGAIN.includes(item) ? `formal,${THEMES}` : THEMES}"${topicOf(item)}`,
+        );
     });
 
 const html = `<!doctype html>
