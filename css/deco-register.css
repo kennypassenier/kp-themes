@@ -3799,7 +3799,8 @@
        is not drawn on it: the ring's picture and opacity 0, written later at
        the same weight, took the left door away (Kenny, 2026-10-13: "only has
        the right curtain"). */
-    [data-theme='deco'] :is(a.kp-kpi, .kp-action, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day:not([data-kp-tone='loading']))::before {
+    [data-theme='deco']
+        :is(a.kp-kpi, .kp-action, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day:not([data-kp-tone='loading']))::before {
         content: '';
         position: absolute;
         inset: 0;
@@ -3842,7 +3843,16 @@
        inverse; pressed in 160 ms, let go the same. */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='deco']
-            :is(.kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-action, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day) {
+            :is(
+                .kp-button,
+                .kp-icon-button,
+                .kp-menu__item,
+                a.kp-kpi,
+                .kp-action,
+                .kp-kpi--toggle,
+                .kp-kpi--trend:has(.kp-kpi__link),
+                .kp-calendar__day
+            ) {
             transition:
                 --kp-sig-deco-hv var(--kp-sig-deco-hover-t) var(--kp-sig-deco-settle-out),
                 --kp-sig-deco-pr var(--kp-sig-deco-press-t) var(--kp-sig-deco-settle-out),
@@ -3903,20 +3913,30 @@
     }
 
     [data-theme='deco']
-        :is(.kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-action, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day):hover:not(
-            :disabled,
-            [aria-disabled='true'],
-            [aria-busy='true']
-        ) {
+        :is(
+            .kp-button,
+            .kp-icon-button,
+            .kp-menu__item,
+            a.kp-kpi,
+            .kp-action,
+            .kp-kpi--toggle,
+            .kp-kpi--trend:has(.kp-kpi__link),
+            .kp-calendar__day
+        ):hover:not(:disabled, [aria-disabled='true'], [aria-busy='true']) {
         --kp-sig-deco-hv: 1;
     }
 
     [data-theme='deco']
-        :is(.kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-action, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day):active:not(
-            :disabled,
-            [aria-disabled='true'],
-            [aria-busy='true']
-        ) {
+        :is(
+            .kp-button,
+            .kp-icon-button,
+            .kp-menu__item,
+            a.kp-kpi,
+            .kp-action,
+            .kp-kpi--toggle,
+            .kp-kpi--trend:has(.kp-kpi__link),
+            .kp-calendar__day
+        ):active:not(:disabled, [aria-disabled='true'], [aria-busy='true']) {
         --kp-sig-deco-pr: 1;
     }
 
@@ -4275,7 +4295,9 @@
     [data-theme='deco'] .kp-action__title {
         color: hsl(from var(--foreground) h s l);
     }
-    [data-theme='deco'] .kp-action:not(.kp-action--destructive):hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) > .kp-action__title {
+    [data-theme='deco']
+        .kp-action:not(.kp-action--destructive):hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true']))
+        > .kp-action__title {
         color: var(--kp-sig-deco-gold-hi);
     }
     [data-theme='deco'] .kp-action__meta {
@@ -4336,7 +4358,12 @@
         --kp-facet-radius: 0;
     }
     [data-theme='deco'] .kp-facet {
-        --kp-facet-hover: linear-gradient(135deg, hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.13), hsl(from var(--primary) h s l / 0.07) 38%, hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.12));
+        --kp-facet-hover: linear-gradient(
+            135deg,
+            hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.13),
+            hsl(from var(--primary) h s l / 0.07) 38%,
+            hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.12)
+        );
     }
     [data-theme='deco'] .kp-facet:hover {
         box-shadow: inset 0 -1px 0 var(--primary);
@@ -4352,13 +4379,14 @@
             linear-gradient(hsl(from var(--primary) h s l / 0.7), hsl(from var(--primary) h s l / 0.7)) 0 30% / 100% 1px no-repeat,
             linear-gradient(hsl(from var(--primary) h s l / 0.7), hsl(from var(--primary) h s l / 0.7)) 0 70% / 100% 1px no-repeat,
             linear-gradient(
-                90deg,
-                transparent calc(var(--kp-sig-deco-g, 0) * 140% - 48%),
-                hsl(from var(--primary) h s l / 0.3) calc(var(--kp-sig-deco-g, 0) * 140% - 30%),
-                hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.85) calc(var(--kp-sig-deco-g, 0) * 140% - 8%),
-                hsl(from var(--foreground) h s 97%) calc(var(--kp-sig-deco-g, 0) * 140% - 3%),
-                transparent calc(var(--kp-sig-deco-g, 0) * 140% - 1%)
-            ) 0 50% / 100% 2px no-repeat;
+                    90deg,
+                    transparent calc(var(--kp-sig-deco-g, 0) * 140% - 48%),
+                    hsl(from var(--primary) h s l / 0.3) calc(var(--kp-sig-deco-g, 0) * 140% - 30%),
+                    hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.85) calc(var(--kp-sig-deco-g, 0) * 140% - 8%),
+                    hsl(from var(--foreground) h s 97%) calc(var(--kp-sig-deco-g, 0) * 140% - 3%),
+                    transparent calc(var(--kp-sig-deco-g, 0) * 140% - 1%)
+                )
+                0 50% / 100% 2px no-repeat;
     }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='deco'] .kp-facets[aria-busy='true'] .kp-facet__count {
@@ -4482,13 +4510,14 @@
             linear-gradient(var(--primary), var(--primary)) 0 3px / 100% 1px no-repeat,
             linear-gradient(var(--primary), var(--primary)) 0 calc(100% - 3px) / 100% 1px no-repeat,
             linear-gradient(
-                90deg,
-                transparent calc(var(--kp-sig-deco-g, 1) * 140% - 48%),
-                hsl(from var(--primary) h s l / 0.35) calc(var(--kp-sig-deco-g, 1) * 140% - 30%),
-                hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.85) calc(var(--kp-sig-deco-g, 1) * 140% - 8%),
-                hsl(from var(--foreground) h s 97%) calc(var(--kp-sig-deco-g, 1) * 140% - 3%),
-                transparent calc(var(--kp-sig-deco-g, 1) * 140% - 1%)
-            ) 0 50% / 100% 40% no-repeat,
+                    90deg,
+                    transparent calc(var(--kp-sig-deco-g, 1) * 140% - 48%),
+                    hsl(from var(--primary) h s l / 0.35) calc(var(--kp-sig-deco-g, 1) * 140% - 30%),
+                    hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.85) calc(var(--kp-sig-deco-g, 1) * 140% - 8%),
+                    hsl(from var(--foreground) h s 97%) calc(var(--kp-sig-deco-g, 1) * 140% - 3%),
+                    transparent calc(var(--kp-sig-deco-g, 1) * 140% - 1%)
+                )
+                0 50% / 100% 40% no-repeat,
             var(--kp-sig-deco-lac, var(--card));
         box-shadow: none;
     }
@@ -4538,5 +4567,76 @@
        drops under the first and out of the timeline onto the legend. */
     [data-theme='deco'] .kp-gantt__ghost .kp-gantt__run.kp-skeleton {
         position: absolute;
+    }
+}
+
+/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──
+   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and
+   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).
+   Deco's own (themes/deco/CHARACTER.md): the separator is a gold hairline with the lozenge at its middle, the
+   inlay's own mark; lying down across the phone's list the lozenge sits on the gold line. A day on the axis is ruled
+   in gold under the pointer; pressed it stands on the lacquer over the inlay's double gold rule, the date in the high
+   gold. A series' finished run is a double rule in its ink, as a week pill is; the upcoming list's day rule is a gold
+   hairline; the facet pattern is set in a gilt frame. */
+@layer kp.signature {
+    [data-theme='deco'] .kp-nav__sep {
+        position: relative;
+        border-inline-start-color: hsl(from var(--primary) h s l / 0.6);
+    }
+    [data-theme='deco'] .kp-nav__sep::after {
+        content: '';
+        position: absolute;
+        inset-block-start: calc(50% - 2.5px);
+        inset-inline-start: -3px;
+        inline-size: 5px;
+        block-size: 5px;
+        background: var(--primary);
+        rotate: 45deg;
+    }
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='deco'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            border-block-start-color: hsl(from var(--primary) h s l / 0.6);
+        }
+        [data-theme='deco'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep::after {
+            inset-block-start: -3px;
+            inset-inline-start: calc(50% - 2.5px);
+        }
+    }
+
+    [data-theme='deco'] .kp-gantt__tick:is(button) {
+        border-radius: 0;
+        text-decoration: none;
+    }
+    [data-theme='deco'] .kp-gantt__tick:is(button):hover {
+        color: var(--kp-sig-deco-gold-hi, var(--primary));
+        box-shadow: inset 0 -1px 0 var(--primary);
+    }
+    [data-theme='deco'] .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: var(--kp-sig-deco-lac, var(--card));
+        color: var(--kp-sig-deco-gold-hi, var(--primary));
+        box-shadow:
+            inset 0 -1px 0 var(--primary),
+            inset 0 -3px 0 var(--kp-sig-deco-lac, var(--card)),
+            inset 0 -4px 0 var(--primary);
+    }
+    [data-theme='deco'] .kp-gantt__run[data-kp-state='ok'][data-kp-series] {
+        box-shadow:
+            inset 0 0 0 1px var(--kp-gantt-series),
+            inset 0 0 0 2px var(--kp-sig-deco-lac, var(--card));
+    }
+    [data-theme='deco'] .kp-week__next:not(:has(+ .kp-week__next:not([data-kp-day-start]))) {
+        border-block-end-color: hsl(from var(--primary) h s l / 0.4);
+    }
+    [data-theme='deco'] .kp-facet__swatch[data-kp-facet-pattern] {
+        border-radius: 0;
+        outline: 1px solid hsl(from var(--primary) h s l / 0.75);
+        outline-offset: 1px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-gantt__tick:is(button) {
+            transition:
+                box-shadow var(--kp-sig-deco-contact, 160ms) var(--fx-ease),
+                color var(--kp-sig-deco-contact, 160ms) var(--fx-ease);
+        }
     }
 }

@@ -4273,7 +4273,8 @@
     [data-theme='brutalism'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'], :active)) {
         color: var(--secondary);
     }
-    [data-theme='brutalism'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'], :active))
+    [data-theme='brutalism']
+        .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'], :active))
         :is(.kp-action__title, .kp-action__text, .kp-action__meta, .kp-action__mark) {
         color: var(--secondary);
     }
@@ -4586,5 +4587,68 @@
        drops under the first and out of the timeline onto the legend. */
     [data-theme='brutalism'] .kp-gantt__ghost .kp-gantt__run.kp-skeleton {
         position: absolute;
+    }
+}
+
+/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──
+   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and
+   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).
+   Brutalism's own (themes/brutalism/CHARACTER.md): the separator is a slab of ink as tall as a link;
+   lying down across the phone's list it is the divider's hazard band, the yellow hatch on the ink between two ink
+   rules. A day on the axis is kicked: pointing lifts it up-left off its hard shadow inside an ink frame, pressed it is
+   driven in, the yellow block in the ink frame (as the current page). The upcoming list's day rule is a 2 px ink line;
+   the facet pattern is boxed in ink on a hard shadow. */
+@layer kp.signature {
+    [data-theme='brutalism'] .kp-nav__sep {
+        inline-size: 4px;
+        border-inline-start: 0;
+        background: var(--foreground);
+    }
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='brutalism'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            box-sizing: border-box;
+            inline-size: auto;
+            block-size: 12px;
+            border-block: 2px solid var(--foreground);
+            background: var(--kp-hatch), var(--foreground);
+        }
+    }
+
+    [data-theme='brutalism'] .kp-gantt__tick:is(button) {
+        border-radius: 0;
+        text-decoration: none;
+    }
+    [data-theme='brutalism'] .kp-gantt__tick:is(button):hover {
+        background: var(--card);
+        color: var(--foreground);
+        box-shadow:
+            inset 0 0 0 2px var(--foreground),
+            2px 2px 0 var(--foreground);
+        translate: -2px -2px;
+    }
+    [data-theme='brutalism'] .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow: inset 0 0 0 2px var(--foreground);
+        translate: 0 0;
+    }
+    [data-theme='brutalism'] .kp-week__next {
+        border-block-end-width: 2px;
+    }
+    [data-theme='brutalism'] .kp-week__next:not(:has(+ .kp-week__next:not([data-kp-day-start]))) {
+        border-block-end-color: var(--foreground);
+    }
+    [data-theme='brutalism'] .kp-facet__swatch[data-kp-facet-pattern] {
+        border-radius: 0;
+        box-shadow:
+            inset 0 0 0 2px var(--foreground),
+            2px 2px 0 var(--foreground);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='brutalism'] .kp-gantt__tick:is(button) {
+            transition:
+                translate var(--fx-duration) var(--kp-sig-br-fall, var(--fx-ease)),
+                box-shadow var(--fx-duration) var(--kp-sig-br-fall, var(--fx-ease));
+        }
     }
 }

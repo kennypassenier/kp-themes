@@ -4605,3 +4605,56 @@
         position: absolute;
     }
 }
+
+/* ── The six opt-in options of the dashboard adoption, round 3, in this theme [kpadopt3] ──
+   The nav bar's separator, the timeline's day buttons and series runs, the week agenda's upcoming list on a phone and
+   the facet swatch's identity pattern (the choice-filter value and the heat grid's End are behaviour only).
+   Phantom's own (themes/phantom/CHARACTER.md): the separator is the red slash, leaning with the theme's
+   skew; lying down across the phone's list it is a short red strip cut on the slant. A day on the axis gets the red
+   slash under it when pointed at; pressed the red plate is thrown in under it, cut on the slant, the date in the black
+   ink. A series' finished run carries a hard leading edge in its ink; the facet pattern is cut as a calling card. */
+@layer kp.signature {
+    [data-theme='phantom'] .kp-nav__sep {
+        inline-size: 3px;
+        border-inline-start: 0;
+        background: var(--primary);
+        transform: skewX(-14deg);
+    }
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='phantom'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) > .kp-nav__links > .kp-nav__sep {
+            inline-size: 6rem;
+            block-size: 3px;
+            margin-inline-end: auto;
+            border-block-start: 0;
+            clip-path: polygon(0 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+            transform: none;
+        }
+    }
+
+    [data-theme='phantom'] .kp-gantt__tick:is(button) {
+        border-radius: 0;
+        text-decoration: none;
+    }
+    [data-theme='phantom'] .kp-gantt__tick:is(button):hover {
+        color: var(--foreground);
+        box-shadow: inset 0 -3px 0 var(--primary);
+    }
+    [data-theme='phantom'] .kp-gantt__tick:is(button)[aria-pressed='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        box-shadow: none;
+    }
+    [data-theme='phantom'] .kp-gantt__tick:is(button)[aria-pressed='true']:not(:focus-visible) {
+        clip-path: polygon(4px 0, 100% 0, calc(100% - 4px) 100%, 0 100%);
+    }
+    [data-theme='phantom'] .kp-gantt__run[data-kp-state='ok'][data-kp-series] {
+        box-shadow: inset 3px 0 0 var(--kp-gantt-series);
+    }
+    [data-theme='phantom'] .kp-week__next:not(:has(+ .kp-week__next:not([data-kp-day-start]))) {
+        border-block-end-color: hsl(from var(--primary) h s l / 0.5);
+    }
+    [data-theme='phantom'] .kp-facet__swatch[data-kp-facet-pattern] {
+        border-radius: 0;
+        clip-path: polygon(14% 0, 100% 0, 86% 100%, 0 100%);
+    }
+}
