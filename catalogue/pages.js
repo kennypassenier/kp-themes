@@ -107,6 +107,12 @@ export const PAGES = [
             // Kenny, 2026-10-12: "Cyberpunk lijkt af, zie dat dezelfde fouten nu niet terugkomen in andere thema's": every other theme mended so a close is its open backwards with the theme's own effect; only what changed, each block in the themes where it did (research/all-themes).
             // Kenny, 2026-10-16 (kp-adopt-rest, round 2): eight things the admin dashboard still draws itself (action tiles, status rows, the facet list, the coverage heat grid, the reachability matrix, bars in table cells with data-kp-sort-value, the week agenda, the run timeline), built in the package first as ONE demo, formal only until Kenny approves it.
             // Kenny, 2026-10-16 (kp-adopt-rest, round 3): six things the dashboard still drew itself, each an opt-in option of an approved component (nav separator, choice-filter value, timeline day buttons and series legend, the week's next-N phone list, facet identity patterns, the heat grid's jump to the latest), formal only.
+            // Kenny's apps survey, 2026-10-16 (G14-G25): what JobTracker, the homelab dashboard and kyu still draw around their lists, each an opt-in option of a component the package had, formal only.
+            {
+                href: 'research/kpadopt4-rows/demo.html',
+                label: 'Rows, cards and choices: inbox rows, a card in four states, check lists, choice tiles',
+                about: 'Rows with a lead for an inbox, a message backlog, a file list and appointments (.kp-action-list--lead, setRowBusy, removeRow, j/k), a card in four data states (.kp-card[data-kp-state], js/card-state.js), status rows with warn and the fix written out, and choices as tiles (data-kp-layout="tiles"). Formal only.',
+            },
         ],
     },
     {
