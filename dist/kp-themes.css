@@ -20711,19 +20711,31 @@
         grid-column: lead;
     }
 
+    /* Nothing due, or failed: the package's empty state (each theme's own)
+     * over the list's whole footprint, the height it had with its rows (the
+     * script writes it; a list that never had rows takes
+     * --kp-bullets-state-min), the words and a normal-size Retry centred in
+     * it (Kenny, 2026-10-16: failed and empty fill the component's full
+     * normal size). The rows' grid never stretches the button. */
     .kp-bullets__note {
         box-sizing: border-box;
         display: grid;
-        justify-items: start;
-        gap: var(--kp-space-sm, 0.5rem);
+        align-content: center;
+        justify-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-block-size: var(--kp-bullets-state-min, 7.5rem);
         margin: 0;
-        padding-block: var(--kp-space-md, 0.75rem);
-        color: var(--muted-foreground);
-        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
     }
 
-    .kp-bullets__note > :is(strong) {
-        color: var(--foreground);
+    .kp-bullets__note > :is(.kp-bullets__note-title, .kp-bullets__note-text) {
+        max-inline-size: 100%;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-bullets__note > .kp-bullets__retry {
+        align-self: center;
+        margin-block-start: var(--kp-space-sm, 0.5rem);
     }
 
     @container kp-bullets (max-width: 34rem) {

@@ -22074,7 +22074,7 @@ function bulletTone(value, threshold, bad) {
   return value >= threshold ? "warning" : "";
 }
 function setBullets(el9, spec) {
-  const memory = MEMORY2.get(el9) ?? { rows: 3, leads: false, card: null, drawn: false, pending: null, wired: false };
+  const memory = MEMORY2.get(el9) ?? { rows: 3, leads: false, card: null, drawn: false, pending: null, wired: false, height: 0 };
   MEMORY2.set(el9, memory);
   el9.classList.add("kp-bullets");
   el9.setAttribute("data-kp-bullets", "");
@@ -22160,27 +22160,35 @@ function draw(el9, spec, memory) {
     el9.querySelector(".kp-bullets__link:focus")?.dataset.kpBulletsKey
   );
   if (state === "error" || state === "empty" || rows.length === 0) {
-    el9.setAttribute("data-kp-state", state === "error" ? "error" : "empty");
-    const note = make3(doc, "kp-bullets__note", "div");
+    const failed = state === "error";
+    el9.setAttribute("data-kp-state", failed ? "error" : "empty");
     const was = el9.querySelector(":scope > :is(.kp-bullets__list, .kp-bullets__note)")?.getBoundingClientRect().height ?? 0;
-    if (was > 0) note.style.minBlockSize = `${was}px`;
-    note.setAttribute("role", "status");
-    const title = make3(doc, "", "strong");
-    title.textContent = state === "error" ? spec.message ?? strings.bulletsError : spec.emptyTitle ?? strings.bulletsEmpty;
+    memory.height = Math.max(was, memory.height);
+    const refocus = el9.querySelector(":scope > .kp-bullets__note")?.contains(doc.activeElement) ?? false;
+    const note = make3(doc, "kp-empty kp-bullets__note", "div");
+    if (memory.height > 0) note.style.minBlockSize = `${memory.height}px`;
+    if (failed) note.setAttribute("data-kp-tone", "error");
+    note.setAttribute("role", failed ? "alert" : "status");
+    const title = make3(doc, "kp-empty__title kp-bullets__note-title", "p");
+    title.textContent = failed ? spec.message ?? strings.bulletsError : spec.emptyTitle ?? strings.bulletsEmpty;
     note.append(title);
-    if (state !== "error" && spec.emptyText) {
-      const text = make3(doc, "", "span");
+    if (!failed && spec.emptyText) {
+      const text = make3(doc, "kp-empty__body kp-bullets__note-text", "p");
       text.textContent = spec.emptyText;
       note.append(text);
     }
-    if (state === "error") {
-      const retry = make3(doc, "kp-button kp-button--sm", "button");
+    if (failed && spec.retry !== false) {
+      const retry = make3(doc, "kp-button kp-bullets__retry", "button");
       retry.setAttribute("type", "button");
       retry.setAttribute("data-kp-bullets-retry", "");
       retry.textContent = strings.bulletsRetry;
       note.append(retry);
     }
     el9.replaceChildren(note);
+    if (refocus) {
+      el9.tabIndex = -1;
+      el9.focus({ preventScroll: true });
+    }
     return;
   }
   el9.setAttribute("data-kp-state", "ready");
@@ -22252,6 +22260,7 @@ function draw(el9, spec, memory) {
     list.append(li);
   }
   el9.replaceChildren(list);
+  memory.height = list.getBoundingClientRect().height;
   if (focusedKey !== void 0)
     [...el9.querySelectorAll(".kp-bullets__link")].find((link) => (
       /** @type {HTMLElement} */

@@ -50,6 +50,10 @@ export type BulletsSpec = {
      * the sentence of a failed list
      */
     message?: string;
+    /**
+     * false leaves Retry out of a failed list (a read the page cannot repeat)
+     */
+    retry?: boolean;
     emptyTitle?: string;
     emptyText?: string;
     /**
