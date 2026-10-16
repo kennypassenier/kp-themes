@@ -56324,6 +56324,8 @@
             .kp-alert,
             .kp-empty,
             .kp-grid__tile,
+            .kp-action,
+            .kp-statusrow,
             .kp-dialog,
             .kp-popover:not(.kp-tooltip),
             .kp-menu-button > .kp-menu,
@@ -56387,7 +56389,7 @@
 
     /* The static plates are the box their ::after and a stretched link lie
        over. The overlays are positioned already (and must stay so). */
-    [data-theme='deco'] :where(.kp-card, .kp-kpi, .kp-alert, .kp-empty, .kp-grid__tile, .kp-toast) {
+    [data-theme='deco'] :where(.kp-card, .kp-kpi, .kp-alert, .kp-empty, .kp-grid__tile, .kp-toast, .kp-action, .kp-statusrow) {
         position: relative;
     }
 
@@ -56439,6 +56441,8 @@
             .kp-alert,
             .kp-empty,
             .kp-grid__tile,
+            .kp-action,
+            .kp-statusrow,
             .kp-dialog,
             .kp-popover:not(.kp-tooltip),
             .kp-menu-button > .kp-menu,
@@ -56570,6 +56574,8 @@
             .kp-alert,
             .kp-empty,
             .kp-grid__tile,
+            .kp-action,
+            .kp-statusrow,
             .kp-dialog,
             .kp-popover:not(.kp-tooltip),
             .kp-menu-button > .kp-menu,
@@ -57857,7 +57863,7 @@
     /* A key figure that is a link or a filter, and a day of the month: a
        plate that answers the pointer the same way, the leaf as one more
        layer on its lacquer, the ring on its ::before. */
-    [data-theme='deco'] :is(a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link)) {
+    [data-theme='deco'] :is(a.kp-kpi, .kp-action, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link)) {
         --kp-sig-deco-hv: 0;
         --kp-sig-deco-pr: 0;
         cursor: pointer;
@@ -57891,7 +57897,7 @@
        is not drawn on it: the ring's picture and opacity 0, written later at
        the same weight, took the left door away (Kenny, 2026-10-13: "only has
        the right curtain"). */
-    [data-theme='deco'] :is(a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day:not([data-kp-tone='loading']))::before {
+    [data-theme='deco'] :is(a.kp-kpi, .kp-action, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day:not([data-kp-tone='loading']))::before {
         content: '';
         position: absolute;
         inset: 0;
@@ -57934,7 +57940,7 @@
        inverse; pressed in 160 ms, let go the same. */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='deco']
-            :is(.kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day) {
+            :is(.kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-action, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day) {
             transition:
                 --kp-sig-deco-hv var(--kp-sig-deco-hover-t) var(--kp-sig-deco-settle-out),
                 --kp-sig-deco-pr var(--kp-sig-deco-press-t) var(--kp-sig-deco-settle-out),
@@ -57947,6 +57953,7 @@
                 .kp-icon-button,
                 .kp-menu__item,
                 a.kp-kpi,
+                .kp-action,
                 .kp-kpi--toggle,
                 .kp-kpi--trend:has(.kp-kpi__link),
                 .kp-calendar__day
@@ -57963,6 +57970,7 @@
                 .kp-icon-button,
                 .kp-menu__item,
                 a.kp-kpi,
+                .kp-action,
                 .kp-kpi--toggle,
                 .kp-kpi--trend:has(.kp-kpi__link),
                 .kp-calendar__day
@@ -57984,7 +57992,7 @@
                 [aria-busy='true']
             )::after,
         [data-theme='deco']
-            :is(a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day:not([data-kp-tone='loading'])):is(
+            :is(a.kp-kpi, .kp-action, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day:not([data-kp-tone='loading'])):is(
                 :active,
                 [data-kp-pressed]
             )::before {
@@ -57993,7 +58001,7 @@
     }
 
     [data-theme='deco']
-        :is(.kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day):hover:not(
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-action, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day):hover:not(
             :disabled,
             [aria-disabled='true'],
             [aria-busy='true']
@@ -58002,7 +58010,7 @@
     }
 
     [data-theme='deco']
-        :is(.kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day):active:not(
+        :is(.kp-button, .kp-icon-button, .kp-menu__item, a.kp-kpi, .kp-action, .kp-kpi--toggle, .kp-kpi--trend:has(.kp-kpi__link), .kp-calendar__day):active:not(
             :disabled,
             [aria-disabled='true'],
             [aria-busy='true']
@@ -58032,6 +58040,7 @@
             .kp-icon-button,
             .kp-menu__item,
             a.kp-kpi,
+            .kp-action,
             .kp-kpi--toggle,
             .kp-calendar__day,
             .kp-tab,
@@ -58337,73 +58346,136 @@
     }
 }
 
-/* ── Action tiles, status rows, facet list [kpadopt2-tiles] ── */
+/* ── The dashboard parts: action tiles, status rows, the facet list, the heat grid, the matrix, the bar in a cell, the
+   week agenda and the run timeline [kpadopt2] ──
+   Deco's own (themes/deco/CHARACTER.md): a tile and a status row are plates of the lobby, blue lacquer with the chevron
+   wallpaper, the four corners coved and the double gold inlay following the coves (G5, G6, G7; they join the plate
+   rules above); a tile answers the pointer as a key figure that is a link does: gold leaf warms it and the hairline
+   goes to full gold (G15), a press is the seal in wax, the ring rippling out (G17), focus the 3 px double gold ring
+   (G16); a warning is the words in ruby over a gold rule (G8); waiting is the lift doors (G10) and, where there is no
+   room for doors, the glint running between gold lines (G11); Poiret One capitals name (G18). */
 @layer kp.signature {
-    /* Deco: lacquer with its gold inlay. A hairline plate with a fine gold rule inside it; pointing brightens the inlay to the gold; a press is the wax seal, the plate sunk 1 px under an inner shadow; the title is spaced capitals. */
+    [data-theme='deco'] .kp-actions {
+        --kp-actions-gap: 0.75rem;
+    }
     [data-theme='deco'] .kp-action {
         --kp-action-radius: 0;
-        --kp-action-edge: var(--border-strong);
-        --kp-action-edge-hover: var(--primary);
-        --kp-action-shadow: inset 0 0 0 3px var(--card), inset 0 0 0 4px hsl(from var(--primary) h s l / 0.35);
-        --kp-action-shadow-hover: inset 0 0 0 3px var(--card), inset 0 0 0 4px hsl(from var(--primary) h s l / 0.9);
-        --kp-action-shadow-active: inset 0 2px 4px hsl(from var(--foreground) h s l / 0.25), inset 0 0 0 4px hsl(from var(--primary) h s l / 0.9);
-        --kp-action-ground-active: var(--muted);
-        --kp-action-press: 0 1px;
+        --kp-action-pad: 0.875rem 1.125rem;
+        --kp-action-title-font: var(--theme-font-display);
         --kp-action-title-case: uppercase;
         --kp-action-title-tracking: 0.08em;
-        --kp-action-title-size: 0.875rem;
-        --kp-action-pad: 0.75rem 0.875rem;
+        --kp-action-title-size: 0.9375rem;
+        --kp-action-press: 0 0;
+        --kp-action-shadow: none;
+        --kp-action-shadow-hover: none;
+        --kp-action-shadow-active: inset 1px 2px 4px hsl(from var(--kp-sig-deco-shadow, var(--background)) h s l / 0.8);
     }
+    [data-theme='deco'] .kp-action__title {
+        color: hsl(from var(--foreground) h s l);
+    }
+    [data-theme='deco'] .kp-action:not(.kp-action--destructive):hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) > .kp-action__title {
+        color: var(--kp-sig-deco-gold-hi);
+    }
+    [data-theme='deco'] .kp-action__meta {
+        font-family: var(--theme-font-mono);
+    }
+    /* The destructive bar gives way to the plate's own inlay; the warning is the title in ruby over a gold rule. */
+    [data-theme='deco'] .kp-action--destructive {
+        --kp-action-tone-edge: hsl(from var(--primary) h s l / 0.3);
+        --kp-action-tone-edge-hover: var(--primary);
+    }
+    [data-theme='deco'] .kp-action::after,
+    [data-theme='deco'] .kp-action--destructive::after {
+        inset: -1px;
+        inline-size: auto;
+        border-radius: 0;
+        background-color: transparent;
+    }
+    [data-theme='deco'] .kp-action--destructive:not(:is(:disabled, [aria-disabled='true'])) > .kp-action__title {
+        justify-self: start;
+        color: var(--destructive);
+        text-decoration: underline 1px var(--primary);
+        text-decoration-skip-ink: none;
+        text-underline-offset: 0.35em;
+    }
+    [data-theme='deco'] .kp-action:is(:disabled, [aria-disabled='true']) {
+        color: var(--muted-foreground);
+    }
+    [data-theme='deco'] .kp-action:is(:disabled, [aria-disabled='true']) > .kp-action__title {
+        color: var(--muted-foreground);
+    }
+
+    /* Status rows: plates of the lobby with the inlay; square marks; a failed row's name in ruby over a gold rule. */
     [data-theme='deco'] .kp-statuslist {
         --kp-statusrow-mark-radius: 0;
+        --kp-statuslist-gap: 0.625rem;
     }
     [data-theme='deco'] .kp-statusrow {
-        --kp-statusrow-edge: var(--border-strong);
         --kp-statusrow-radius: 0;
-        outline: 1px solid var(--border);
-        outline-offset: -4px;
+        --kp-statusrow-pad: 0.625rem 0.875rem;
+        column-gap: 0.875rem;
     }
+    [data-theme='deco'] .kp-statusrow__label {
+        letter-spacing: 0.04em;
+    }
+    [data-theme='deco'] .kp-statusrow[data-state='failed'] .kp-statusrow__label {
+        justify-self: start;
+        color: var(--destructive);
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.35em;
+    }
+    [data-theme='deco'] .kp-statusrow[data-state='empty'] .kp-statusrow__label {
+        color: var(--muted-foreground);
+    }
+
+    /* Facets: square rows warmed by gold leaf when pointed at; the title in very widely spaced capitals. The counts on
+       their way are two gold hairlines with the glint running between them. */
     [data-theme='deco'] .kp-facets {
         --kp-facet-radius: 0;
     }
-    [data-theme='deco'] .kp-facets__title {
-        letter-spacing: 0.18em;
-    }
-}
-
-/* The grid's gap leaves room for the tile's own shadow, glow or outline; the facet row's wash. */
-@layer kp.signature {
-    [data-theme='deco'] .kp-actions {
-        --kp-actions-gap: 0.5rem;
-    }
     [data-theme='deco'] .kp-facet {
-        --kp-facet-hover: hsl(from var(--primary) h s l / 0.08);
+        --kp-facet-hover: linear-gradient(135deg, hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.13), hsl(from var(--primary) h s l / 0.07) 38%, hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.12));
     }
-}
-/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
-@layer kp.signature {
-    /* Inlaid tiles: a thin gold inlay inside each tile's frame, pressed 1 px down into it on a press; gold fine rules for the axis; the pick is a double gold ring. */
+    [data-theme='deco'] .kp-facet:hover {
+        box-shadow: inset 0 -1px 0 var(--primary);
+    }
+    [data-theme='deco'] .kp-facets__title {
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-facets[aria-busy='true'] .kp-facet__count {
+        border-radius: 0;
+        background:
+            linear-gradient(hsl(from var(--primary) h s l / 0.7), hsl(from var(--primary) h s l / 0.7)) 0 30% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.7), hsl(from var(--primary) h s l / 0.7)) 0 70% / 100% 1px no-repeat,
+            linear-gradient(
+                90deg,
+                transparent calc(var(--kp-sig-deco-g, 0) * 140% - 48%),
+                hsl(from var(--primary) h s l / 0.3) calc(var(--kp-sig-deco-g, 0) * 140% - 30%),
+                hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.85) calc(var(--kp-sig-deco-g, 0) * 140% - 8%),
+                hsl(from var(--foreground) h s 97%) calc(var(--kp-sig-deco-g, 0) * 140% - 3%),
+                transparent calc(var(--kp-sig-deco-g, 0) * 140% - 1%)
+            ) 0 50% / 100% 2px no-repeat;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-facets[aria-busy='true'] .kp-facet__count {
+            animation: kp-sig-deco-glint var(--kp-sig-deco-loop) linear infinite;
+        }
+        [data-theme='deco'] .kp-facets[aria-busy='true'] li:nth-child(2n) .kp-facet__count {
+            animation-delay: calc(var(--kp-sig-deco-loop) / -12);
+        }
+    }
+
+    /* Heat grid and matrix: inlaid tiles, a thin gold inlay inside each frame; pointing warms a tile with gold leaf
+       and its inlay goes to full gold; a press sinks it under an inner shadow; the pick is the double gold ring;
+       names and the axis in spaced capitals. */
     [data-theme='deco'] :is(.kp-heat, .kp-matrix) {
-        --kp-heat-cell-radius: 1px;
+        --kp-heat-cell-radius: 0;
         --kp-heat-cell-ink: hsl(from var(--primary) h s l / 0.55);
         --kp-heat-cell-lift: inset 0 0 0 1px hsl(from var(--background) h s l / 0.5);
-        --kp-heat-cell-hover: translateY(1px);
-        --kp-matrix-cell-hover: translateY(1px);
-    }
-    [data-theme='deco'] .kp-heat__cell[data-kp-picked],
-    [data-theme='deco'] .kp-matrix__cell[aria-pressed='true'] {
-        outline: 3px double var(--primary);
-        outline-offset: 2px;
-    }
-    [data-theme='deco'] .kp-heat__label,
-    [data-theme='deco'] .kp-matrix__row,
-    [data-theme='deco'] .kp-matrix__col {
-        text-transform: uppercase;
-        letter-spacing: 0.1em;
-        font-size: var(--kp-text-xs, 0.75rem);
-    }
-    [data-theme='deco'] .kp-heat__sep {
-        border-block-start: 1px solid var(--primary);
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
     }
     [data-theme='deco'] .kp-heat {
         --kp-heat-gap-y: 6px;
@@ -58411,32 +58483,146 @@
     [data-theme='deco'] .kp-matrix {
         --kp-matrix-gap: 4px;
     }
+    [data-theme='deco'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='deco'] .kp-matrix__cell:hover:not([data-kp-inert], [aria-disabled='true'], .kp-skeleton) {
+        border-color: var(--kp-sig-deco-gold-hi);
+        box-shadow:
+            inset 0 0 0 1px hsl(from var(--background) h s l / 0.5),
+            0 0 0 1px var(--primary);
+    }
+    [data-theme='deco'] .kp-heat__cell:active:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='deco'] .kp-matrix__cell:active:not([data-kp-inert], [aria-disabled='true'], .kp-skeleton) {
+        box-shadow: inset 1px 2px 4px hsl(from var(--background) h s l / 0.9);
+    }
+    [data-theme='deco'] .kp-heat__cell[data-kp-picked],
+    [data-theme='deco'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 3px double var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='deco'] :is(.kp-heat__label, .kp-matrix__name, .kp-heat__col, .kp-matrix__corner) {
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='deco'] :is(.kp-heat__label-button, .kp-matrix__name) {
+        border-radius: 0;
+    }
+    [data-theme='deco'] .kp-heat__label-button[aria-pressed='true'] {
+        background: hsl(from var(--primary) h s l / 0.14);
+        color: var(--kp-sig-deco-gold-hi);
+        box-shadow: inset 0 -1px 0 var(--primary);
+    }
+    [data-theme='deco'] .kp-heat__sep {
+        border-block-start: 3px double var(--primary);
+    }
+    /* A phone's timeline keeps its toolbar on one row: the range steps close in, in these spaced capitals. */
+    @container kp-gantt (max-width: 22rem) {
+        [data-theme='deco'] .kp-gantt__ranges {
+            --kp-seg-item-pad-inline: 0.5rem;
+        }
+    }
     [data-theme='deco'] .kp-bar-cell {
         --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
         font-variant-numeric: tabular-nums;
     }
-}
-/* ── end heat grid, matrix, bar cell ── */
-@layer kp.register {
-    /* Week agenda and run timeline [kpadopt-time]: an inlay. Pills are a double rule in the series ink, bars a double rule at their ends, the axis in spaced capitals. */
+
+    /* Week agenda and run timeline: an inlay. A pill is a double rule in the series' ink; the next run the double gold
+       ring; the days and the axis in spaced capitals; the line for now is gold with a lozenge at its head. A running
+       run is drawn between two gold hairlines with the glint and its afterglow running between them. */
     [data-theme='deco'] .kp-week {
         --kp-week-pill-radius: 0;
+        --kp-week-now: var(--primary);
     }
     [data-theme='deco'] .kp-gantt {
         --kp-gantt-bar-radius: 0;
+        --kp-gantt-now: var(--primary);
+        --kp-gantt-state-ground: var(--kp-sig-deco-lac, var(--card));
     }
     [data-theme='deco'] .kp-week__pill:not([data-kp-state='reference']) {
         border-style: double;
         border-width: 3px;
-        padding-inline: 0.25rem;
+        padding-inline: 0.3rem;
+    }
+    [data-theme='deco'] .kp-week__pill:is(button):hover,
+    [data-theme='deco'] .kp-gantt__run:is(button):hover {
+        border-color: var(--kp-sig-deco-gold-hi);
+        box-shadow: 0 0 0 1px var(--primary);
+    }
+    [data-theme='deco'] .kp-week__pill[data-kp-state='next'] {
+        outline: 3px double var(--primary);
+        outline-offset: 2px;
+        box-shadow: none;
+    }
+    [data-theme='deco'] .kp-week__now::before {
+        border-radius: 0;
+        rotate: 45deg;
+        inline-size: 7px;
+        block-size: 7px;
+        inset-block-start: -4.5px;
+        inset-inline-start: -3.5px;
     }
     [data-theme='deco'] .kp-gantt__run:not([data-kp-state='queued']) {
         border-inline-style: double;
         border-inline-width: 3px;
     }
-    [data-theme='deco'] :is(.kp-week__dow, .kp-gantt__tick, .kp-gantt__lane) {
+    [data-theme='deco'] :is(.kp-week__head, .kp-gantt__tick, .kp-gantt__lane) {
         letter-spacing: 0.12em;
         text-transform: uppercase;
+    }
+    [data-theme='deco'] :is(.kp-gantt__run, .kp-gantt__swatch)[data-kp-state='running'] {
+        border-color: var(--primary);
+        color: var(--foreground);
+        background:
+            linear-gradient(var(--primary), var(--primary)) 0 3px / 100% 1px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 0 calc(100% - 3px) / 100% 1px no-repeat,
+            linear-gradient(
+                90deg,
+                transparent calc(var(--kp-sig-deco-g, 1) * 140% - 48%),
+                hsl(from var(--primary) h s l / 0.35) calc(var(--kp-sig-deco-g, 1) * 140% - 30%),
+                hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.85) calc(var(--kp-sig-deco-g, 1) * 140% - 8%),
+                hsl(from var(--foreground) h s 97%) calc(var(--kp-sig-deco-g, 1) * 140% - 3%),
+                transparent calc(var(--kp-sig-deco-g, 1) * 140% - 1%)
+            ) 0 50% / 100% 40% no-repeat,
+            var(--kp-sig-deco-lac, var(--card));
+        box-shadow: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-gantt__run[data-kp-state='running'] {
+            animation: kp-sig-deco-glint var(--kp-sig-deco-loop) linear infinite;
+        }
+        [data-theme='deco'] :is(.kp-heat__cell, .kp-matrix__cell, .kp-week__pill, .kp-gantt__run) {
+            transition:
+                border-color var(--kp-sig-deco-contact, 160ms) var(--fx-ease),
+                box-shadow var(--kp-sig-deco-contact, 160ms) var(--fx-ease);
+        }
+    }
+}
+
+/* ── The dashboard parts: what the package leaves to a register [kpadopt2-repairs] ──
+   Formal keeps these parts exactly as Kenny approved them; this theme takes the three repairs the review asks for: a
+   loading heat grid or matrix row as tall as its ready row (no skeleton gap between cells), an empty or failed run
+   timeline with a lane-sized space for its sentence (never over the legend), the sentence as wide as its words on the
+   theme's ground (never through a rule or a ghost bar), and an axis label near the end edge standing before its rule. */
+@layer kp.signature {
+    [data-theme='deco'] :is(.kp-heat__cell, .kp-matrix__cell).kp-skeleton {
+        margin-block: 0;
+    }
+    [data-theme='deco'] .kp-gantt {
+        --kp-gantt-tick-flip: 1;
+    }
+    [data-theme='deco'] .kp-gantt:is([data-kp-state='empty'], [data-kp-state='error']) .kp-gantt__body:not(:has(.kp-gantt__lane)) {
+        min-block-size: 5.25rem;
+    }
+    [data-theme='deco'] .kp-gantt__state {
+        box-sizing: border-box;
+        display: block;
+        inline-size: fit-content;
+        max-inline-size: calc(100% - 2 * var(--kp-space-md, 0.75rem));
+        block-size: fit-content;
+        margin: auto;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--kp-gantt-state-ground, transparent);
     }
 }
 
