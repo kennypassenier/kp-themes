@@ -926,6 +926,7 @@ export const TIMINGS = Object.freeze({
     'kp-sig-dark-figure': { durationMs: 660, cycles: 1, property: '--kp-sig-dk-at', luminanceSteps: [] },
     'kp-sig-dark-lay': { durationMs: 660, cycles: 1, property: 'clip-path', luminanceSteps: [] },
     'kp-sig-dark-comet': { durationMs: 2400, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
+    'kp-sig-dark-run': { durationMs: 2400, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
     'kp-sig-dark-bars': { durationMs: 2400, cycles: Infinity, property: '--kp-sig-dk-ph', luminanceSteps: [] },
     'kp-sig-dark-tap': { durationMs: 220, cycles: 1, property: 'background-position', luminanceSteps: [] },
     'kp-sig-dark-meter-lay': { durationMs: 660, cycles: 1, property: 'mask-size', luminanceSteps: [] },

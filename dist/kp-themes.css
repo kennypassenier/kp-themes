@@ -75659,16 +75659,52 @@
     }
 }
 
-/* ── Action tiles, status rows, facet list [kpadopt2-tiles] ── */
+/* ── The dashboard parts: action tiles, status rows, the facet list, the heat grid, the matrix, the bar in a cell, the
+   week agenda and the run timeline [kpadopt2] ──
+   Dark's own (themes/dark/CHARACTER.md): a near-black plate with the film along the edge that matters, cut on two
+   opposite corners, never rounded (G6, G7); pointing rests the line at the start edge (G15); a press turns the film a
+   quarter while the line crosses the face (G17); a warning or failure is the film gone coral along its whole edge (G8);
+   what waits is swept by the comet, the line with its film tail (G10); what runs is the line running its track (G11);
+   readings in the ticker mono (G18). */
 @layer kp.signature {
-    /* Dark: a machined panel. Pointing lights a 2 px line down the start edge in the four chart colours, as it does on a key figure; focus is the inset double ring; a press is a colour step. */
-    [data-theme='dark'] .kp-action {
-        --kp-action-radius: 2px;
-        --kp-action-edge: var(--border-strong);
-        --kp-action-edge-hover: var(--border-strong);
-        --kp-action-ground-active: var(--accent);
-        --kp-action-press: 0 0;
+    [data-theme='dark'] .kp-actions {
+        --kp-actions-gap: 0.625rem;
     }
+    /* The tile: the near-black card inside the film, the control's chamfer. Its ring is DI2's two channels inside the
+       cut, so the cut never takes a piece of it. */
+    [data-theme='dark'] .kp-action {
+        --kp-action-radius: 0;
+        --kp-action-edge: transparent;
+        --kp-action-edge-hover: transparent;
+        --kp-action-press: 0 0;
+        --kp-iris: conic-gradient(
+            from calc(var(--kp-px, 0) * 1turn + var(--kp-sig-dk-turn)),
+            var(--chart-1),
+            var(--chart-2),
+            var(--chart-3),
+            var(--chart-4),
+            var(--chart-1)
+        );
+        --kp-sig-dk-plate: var(--card);
+        --kp-action-title-weight: 600;
+        background:
+            linear-gradient(var(--kp-sig-dk-plate), var(--kp-sig-dk-plate)) padding-box,
+            var(--kp-iris) border-box;
+        clip-path: var(--kp-sig-dark-cut);
+    }
+    [data-theme='dark'] .kp-action:active:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) {
+        --kp-sig-dk-turn: 90deg;
+        --kp-sig-dk-plate: var(--accent);
+        background:
+            linear-gradient(var(--kp-sig-dk-plate), var(--kp-sig-dk-plate)) padding-box,
+            var(--kp-iris) border-box;
+    }
+    [data-theme='dark'] .kp-action:is(:disabled, [aria-disabled='true']) {
+        background:
+            linear-gradient(var(--muted), var(--muted)) padding-box,
+            linear-gradient(var(--border), var(--border)) border-box;
+    }
+    /* The line rests at the start: a 2 px slice of the film with its one glow. */
     [data-theme='dark'] .kp-action::before {
         content: '';
         position: absolute;
@@ -75680,7 +75716,7 @@
         opacity: 0;
         pointer-events: none;
     }
-    [data-theme='dark'] .kp-action:hover:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true']))::before {
+    [data-theme='dark'] .kp-action:is(:hover, :active):not(:is(:disabled, [aria-disabled='true'], [aria-busy='true']))::before {
         opacity: 1;
     }
     [data-theme='dark'] .kp-action:focus-visible {
@@ -75689,55 +75725,121 @@
             inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring),
             inset 0 0 0 calc(var(--kp-focus-ring-inner-width, 2px) + 2px) var(--focus-ring-contrast);
     }
+    /* Destructive: the film gone coral along the whole edge and the title in coral; no side bar. */
+    [data-theme='dark'] .kp-action--destructive:not(:is(:disabled, [aria-disabled='true'])) {
+        --kp-iris: linear-gradient(var(--destructive), var(--destructive));
+    }
+    [data-theme='dark'] .kp-action--destructive::after {
+        display: none;
+    }
+    [data-theme='dark'] .kp-action--destructive > .kp-action__title {
+        color: var(--destructive);
+    }
+    [data-theme='dark'] .kp-action--destructive:is(:disabled, [aria-disabled='true']) > .kp-action__title {
+        color: inherit;
+    }
+    [data-theme='dark'] .kp-action__meta {
+        font-family: var(--theme-font-mono);
+    }
     @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-action {
+            transition: --kp-sig-dk-turn var(--fx-duration) cubic-bezier(0.64, 0, 0.78, 0);
+        }
         [data-theme='dark'] .kp-action::before {
-            transition: opacity var(--fx-duration) var(--fx-ease);
+            transition: opacity var(--fx-duration) linear;
+        }
+        [data-theme='dark'] .kp-action:active:not(:is(:disabled, [aria-disabled='true'], [aria-busy='true'])) {
+            transition: --kp-sig-dk-turn var(--fx-duration) var(--kp-sig-dark-ease);
         }
     }
+
+    /* Status rows: machined rows on the control's cut, square marks, the reading in the ticker mono. A failed row is
+       the film gone coral; a loading row is a waiting surface, so the comet crosses it. */
     [data-theme='dark'] .kp-statuslist {
-        --kp-statusrow-mark-radius: 3px;
+        --kp-statusrow-mark-radius: 0;
     }
     [data-theme='dark'] .kp-statusrow {
         --kp-statusrow-edge: var(--border-strong);
-        --kp-statusrow-radius: 2px;
+        --kp-statusrow-radius: 0;
+        position: relative;
+        clip-path: var(--kp-sig-dark-cut);
+    }
+    [data-theme='dark'] .kp-statusrow[data-state='failed'] {
+        --kp-statusrow-state-edge: var(--destructive);
     }
     [data-theme='dark'] .kp-statusrow__detail {
         font-family: var(--theme-font-mono);
     }
-    [data-theme='dark'] .kp-facets {
-        --kp-facet-radius: 2px;
+    [data-theme='dark'] .kp-statusrow[data-state='loading']::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image: var(--kp-sig-dk-line), var(--kp-sig-dk-tail);
+        background-repeat: no-repeat;
+        background-size:
+            2px 100%,
+            calc(var(--kp-sig-dk-cw) * 100%) 100%;
+        background-position:
+            calc(50% * (1 + var(--kp-sig-dk-cw)) - 1px) 0,
+            50% 0;
+        opacity: 0.55;
     }
-    [data-theme='dark'] .kp-facet__count {
-        font-family: var(--theme-font-mono);
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-statusrow[data-state='loading']::before {
+            animation: kp-sig-dark-comet var(--kp-sig-dk-loop) linear infinite;
+        }
     }
-}
 
-/* The grid's gap leaves room for the tile's own shadow, glow or outline; the facet row's wash. */
-@layer kp.signature {
-    [data-theme='dark'] .kp-actions {
-        --kp-actions-gap: 0.5rem;
+    /* Facets: square rows; pointing rests the line at the row's start, as on a menu entry; counts are readings. The
+       counts on their way are slots the comet crosses. */
+    [data-theme='dark'] .kp-facets {
+        --kp-facet-radius: 0;
     }
     [data-theme='dark'] .kp-facet {
         --kp-facet-hover: var(--accent);
+        background-image: var(--kp-sig-dk-line);
+        background-repeat: no-repeat;
+        background-position: 0 0;
+        background-size: 0 100%;
     }
-}
-/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
-@layer kp.signature {
-    /* Instrument cells: a lit top edge in the oxide film's light, nothing else moves; the pick is a film-coloured ring. */
+    [data-theme='dark'] .kp-facet:hover {
+        background-size: 2px 100%;
+    }
+    [data-theme='dark'] :is(.kp-facet__count, .kp-facets__title) {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='dark'] .kp-facets[aria-busy='true'] .kp-facet__count {
+        border-radius: 0;
+        background-color: var(--accent);
+        background-image: var(--kp-sig-dk-line), var(--kp-sig-dk-tail);
+        background-repeat: no-repeat;
+        background-size:
+            2px 100%,
+            calc(var(--kp-sig-dk-cw) * 100%) 100%;
+        background-position:
+            calc(50% * (1 + var(--kp-sig-dk-cw)) - 1px) 0,
+            50% 0;
+        clip-path: var(--kp-sig-dark-cut);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-facet {
+            transition:
+                background-color var(--fx-duration) linear,
+                background-size var(--fx-duration) linear;
+        }
+        [data-theme='dark'] .kp-facets[aria-busy='true'] .kp-facet__count {
+            animation: kp-sig-dark-comet var(--kp-sig-dk-loop) linear infinite;
+        }
+    }
+
+    /* Heat grid and matrix: square instrument cells with a lighter top edge where the tool left the surface;
+       pointing rests the line on the cell's start edge (nothing grows); the pin is the film's cyan with its glow. */
     [data-theme='dark'] :is(.kp-heat, .kp-matrix) {
-        --kp-heat-cell-radius: 3px;
+        --kp-heat-cell-radius: 0;
         --kp-heat-cell-lift: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.16);
         --kp-heat-cell-hover: none;
         --kp-matrix-cell-hover: none;
-    }
-    [data-theme='dark'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
-    [data-theme='dark'] .kp-matrix__cell:hover:not([data-kp-inert]) {
-        filter: brightness(1.18);
-    }
-    [data-theme='dark'] .kp-heat__cell[data-kp-picked] {
-        outline: 1px solid var(--primary);
-        outline-offset: 2px;
-        box-shadow: 0 0 10px hsl(from var(--primary) h s l / 0.35);
     }
     [data-theme='dark'] .kp-heat {
         --kp-heat-gap-y: 6px;
@@ -75745,26 +75847,134 @@
     [data-theme='dark'] .kp-matrix {
         --kp-matrix-gap: 4px;
     }
+    [data-theme='dark'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='dark'] .kp-matrix__cell:hover:not([data-kp-inert], [aria-disabled='true'], .kp-skeleton) {
+        box-shadow:
+            inset 2px 0 0 var(--chart-1),
+            inset 7px 0 9px -6px hsl(from var(--chart-1) h s l / 0.5);
+    }
+    [data-theme='dark'] .kp-heat__cell[data-kp-picked],
+    [data-theme='dark'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 2px solid var(--chart-1);
+        outline-offset: 1px;
+        box-shadow: 0 0 10px hsl(from var(--chart-1) h s l / 0.4);
+    }
+    [data-theme='dark'] :is(.kp-heat__label-button, .kp-matrix__name) {
+        border-radius: 0;
+    }
+    [data-theme='dark'] .kp-heat__label-button[aria-pressed='true'] {
+        background: var(--accent);
+        color: var(--foreground);
+        box-shadow: inset 2px 0 0 var(--chart-1);
+    }
+    [data-theme='dark'] :is(.kp-heat__col, .kp-matrix__col) {
+        font-family: var(--theme-font-mono);
+    }
     [data-theme='dark'] .kp-bar-cell {
         --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-family: var(--theme-font-mono);
         font-variant-numeric: tabular-nums;
     }
-}
-/* ── end heat grid, matrix, bar cell ── */
-@layer kp.register {
-    /* Week agenda and run timeline [kpadopt-time]: machined slots. Square ends, a bright top edge where the tool left the surface, small capitals on the axis. */
+
+    /* Week agenda and run timeline: square slots with a lighter top edge where the tool left the surface and the
+       series' ink on the start edge; the line for now is the film's 2 px cyan with its one glow; day names and the
+       axis are microlabels in the ticker mono. A running run is the line running its track: a near-black slot in the
+       film, crossed by the comet, again and again; no marching stripes. */
     [data-theme='dark'] .kp-week {
-        --kp-week-pill-radius: 2px;
+        --kp-week-pill-radius: 0;
+        --kp-week-now: var(--chart-1);
     }
     [data-theme='dark'] .kp-gantt {
-        --kp-gantt-bar-radius: 2px;
+        --kp-gantt-bar-radius: 0;
+        --kp-gantt-now: var(--chart-1);
     }
     [data-theme='dark'] :is(.kp-week__pill, .kp-gantt__run) {
         border-block-start-color: color-mix(in oklab, var(--kp-week-ink, var(--kp-gantt-fill, var(--foreground))) 55%, var(--foreground));
     }
-    [data-theme='dark'] :is(.kp-week__dow, .kp-gantt__tick) {
+    [data-theme='dark'] .kp-week__pill {
+        border-inline-start: 2px solid var(--kp-week-ink);
+    }
+    [data-theme='dark'] .kp-week__pill:is(button):hover {
+        box-shadow: inset 7px 0 9px -6px hsl(from var(--chart-1) h s l / 0.5);
+        border-inline-start-color: var(--chart-1);
+    }
+    [data-theme='dark'] .kp-week__pill[data-kp-state='next'] {
+        box-shadow: 0 0 0 1px var(--chart-1), 0 0 10px hsl(from var(--chart-1) h s l / 0.4);
+    }
+    [data-theme='dark'] :is(.kp-week__now, .kp-gantt__now) {
+        filter: drop-shadow(0 0 5px hsl(from var(--chart-1) h s l / 0.6));
+    }
+    [data-theme='dark'] .kp-week__now::before {
+        border-radius: 0;
+        inline-size: 2px;
+        block-size: 10px;
+        inset-block-start: -6px;
+        inset-inline-start: 0;
+    }
+    [data-theme='dark'] :is(.kp-week__head, .kp-week__axis, .kp-gantt__tick, .kp-week__time) {
+        font-family: var(--theme-font-mono);
+    }
+    [data-theme='dark'] .kp-week__head {
         letter-spacing: 0.1em;
-        text-transform: uppercase;
+    }
+    [data-theme='dark'] .kp-gantt__run:is(button):hover {
+        box-shadow:
+            inset 2px 0 0 var(--chart-1),
+            0 0 0 1px var(--foreground);
+    }
+    [data-theme='dark'] .kp-gantt__run[data-kp-state='running'] {
+        --kp-sig-dk-cw: 0.5;
+        border-color: transparent;
+        background:
+            var(--kp-sig-dk-line) no-repeat,
+            var(--kp-sig-dk-tail) no-repeat,
+            linear-gradient(var(--accent), var(--accent)) padding-box,
+            linear-gradient(90deg, var(--chart-1), var(--chart-2), var(--chart-3), var(--chart-4)) border-box;
+        background-size:
+            2px 100%,
+            calc(var(--kp-sig-dk-cw) * 100%) 100%,
+            auto,
+            auto;
+        background-position:
+            calc(50% * (1 + var(--kp-sig-dk-cw)) - 1px) 0,
+            50% 0,
+            0 0,
+            0 0;
+        color: var(--foreground);
+        box-shadow: inset -2px 0 0 var(--chart-1);
+    }
+    [data-theme='dark'] .kp-gantt__swatch[data-kp-state='running'] {
+        background: var(--accent);
+        border-color: var(--chart-1);
+        box-shadow: inset 2px 0 0 var(--chart-1);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-gantt__run[data-kp-state='running'] {
+            animation: kp-sig-dark-run var(--kp-sig-dk-loop) linear infinite;
+        }
+        [data-theme='dark'] .kp-facet:hover,
+        [data-theme='dark'] .kp-week__pill {
+            transition: box-shadow var(--fx-duration) linear;
+        }
+    }
+    /* The comet over a bar whose own two grounds stay put: the head and the tail move, the plate and the film do not. */
+    @keyframes kp-sig-dark-run {
+        0% {
+            background-position:
+                calc(0% - 2px) 0,
+                calc(-100% * var(--kp-sig-dk-cw) / (1 - var(--kp-sig-dk-cw))) 0,
+                0 0,
+                0 0;
+        }
+
+        75%,
+        100% {
+            background-position:
+                calc(100% * (1 + var(--kp-sig-dk-cw)) - 2px) 0,
+                calc(100% / (1 - var(--kp-sig-dk-cw))) 0,
+                0 0,
+                0 0;
+        }
     }
 }
 
