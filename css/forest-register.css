@@ -4749,3 +4749,866 @@
         }
     }
 }
+
+/* ── The fourth adoption round in this theme [kpadopt4]: data pieces ──
+   Forest's own (themes/forest/CHARACTER.md): the ground is a map on kraft paper, what stands on it is the wood the map
+   describes. A mark or a tag is light wood with its grain, routed in (G7); a plate is kraft with the leaf corner (G6);
+   pointing is blazing, a dashed green ring laid 2 px round the part, a press closes it in solid, nothing moves (G12);
+   what the trail marks is clay, never green (G5, G14); the field-note voice is italic beside upright titles and figures
+   (G13); a live change lays a growth ring round it (G8); a trig point is a mark on a scale (G14). Every motion on the
+   growth curve and under no-preference (G1, G15). */
+@layer kp.signature {
+    /* Identity mark: a wooden tag with the leaf corner, its grain and its routed edge in the name's own colour; a round
+       one is a tree ring (a ring inside a ring); the current one in a list is ringed in solid green (the pick); the
+       glyph is a clay trig mark. */
+    [data-theme='forest'] .kp-idmark:not(.kp-idmark--round) {
+        --kp-idmark-radius: 0 min(var(--kp-sig-fo-leaf), calc(var(--kp-idmark-s) * 0.36));
+    }
+    [data-theme='forest'] .kp-idmark:not(.kp-skeleton, [data-kp-idmark-empty], .kp-idmark--pattern) {
+        background-image: var(--kp-sig-fo-wood);
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-idmark--round:not(.kp-skeleton, [data-kp-idmark-empty]) {
+        box-shadow:
+            inset 0 0 0 2px var(--card),
+            inset 0 0 0 3px hsl(from var(--kp-idmark-c) h s l / 0.7);
+    }
+    [data-theme='forest'] .kp-idmark--glyph::after {
+        border-radius: 0;
+        background: var(--accent-foreground);
+    }
+    [data-theme='forest'] .kp-idmark[aria-current]:not([aria-current='false']),
+    [data-theme='forest'] .kp-idmark[data-kp-idmark-selected] {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+        box-shadow: none;
+    }
+    [data-theme='forest'] .kp-idmark-group > :is(.kp-idmark, .kp-idmark-group__more) {
+        box-shadow: 0 0 0 2px var(--card);
+    }
+    [data-theme='forest'] .kp-idmark-group__more {
+        border-radius: 0 min(var(--kp-sig-fo-leaf), calc(var(--kp-idmark-s) * 0.36));
+        font-style: italic;
+    }
+
+    /* Share bar: a wooden gauge, routed into the page; each part is the same wood stained in its own colour; the
+       threshold is a trig point on the scale; a part pointed at is blazed with the dashed green ring and its legend row
+       blazed inside; the labels are notes. */
+    [data-theme='forest'] .kp-stackbar {
+        --kp-stackbar-radius: 3px;
+    }
+    [data-theme='forest'] .kp-stackbar:not([aria-busy='true']) .kp-stackbar__bar {
+        background: var(--kp-sig-fo-wood), var(--muted);
+        box-shadow: var(--kp-sig-fo-routed);
+    }
+    [data-theme='forest'] .kp-stackbar__seg {
+        background-image: var(--kp-sig-fo-wood);
+        background-color: var(--kp-stackbar-colour, var(--chart-1));
+    }
+    [data-theme='forest'] .kp-stackbar__seg[data-kp-stackbar-hatch] {
+        background-image: repeating-linear-gradient(-45deg, transparent 0 3px, var(--card) 3px 4.5px);
+    }
+    [data-theme='forest'] .kp-stackbar__seg[data-kp-stackbar-lit] {
+        outline: 2px dashed var(--primary);
+        outline-offset: 2px;
+        box-shadow: inset calc(var(--kp-stackbar-gap, 2px) * -1) 0 0 var(--card);
+    }
+    [data-theme='forest'] .kp-stackbar__mark {
+        inline-size: 2px;
+        background: var(--accent-foreground);
+        box-shadow: none;
+    }
+    [data-theme='forest'] .kp-stackbar__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -0.4rem;
+        inset-inline-start: 50%;
+        inline-size: 0.7rem;
+        block-size: 0.5rem;
+        translate: -50% 0;
+        background: var(--accent-foreground);
+        clip-path: polygon(50% 100%, 0 0, 100% 0);
+    }
+    [data-theme='forest'] .kp-stackbar__item[data-kp-stackbar-lit] {
+        background: transparent;
+        outline: 2px dashed var(--primary);
+        outline-offset: -2px;
+    }
+    [data-theme='forest'] .kp-stackbar__swatch {
+        border-radius: 0 3px;
+        background-image: var(--kp-sig-fo-wood);
+        background-color: var(--kp-stackbar-colour, var(--chart-1));
+    }
+    [data-theme='forest'] .kp-stackbar__swatch[data-kp-stackbar-hatch] {
+        background-image: repeating-linear-gradient(-45deg, transparent 0 3px, var(--card) 3px 4.5px);
+    }
+    [data-theme='forest'] .kp-stackbar__item[data-kp-stackbar-rest] .kp-stackbar__swatch {
+        background-image: none;
+    }
+    [data-theme='forest'] .kp-stackbar__label {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-stackbar__note {
+        border-radius: var(--kp-sig-fo-plate);
+    }
+
+    /* Bullet rows: the row that leads somewhere is blazed inside when pointed at (no wash, no underline); the detail is
+       a note; a figure that says a tone is a field note, a square tag on the status pair. */
+    [data-theme='forest'] .kp-bullets__row {
+        border-radius: var(--kp-sig-fo-part);
+        outline: 2px dashed transparent;
+        outline-offset: -2px;
+    }
+    [data-theme='forest'] .kp-bullets__row:has(.kp-bullets__link:hover) {
+        background: transparent;
+        outline-color: var(--primary);
+    }
+    [data-theme='forest'] .kp-bullets__row:has(.kp-bullets__link:hover) .kp-bullets__label {
+        text-decoration: none;
+    }
+    [data-theme='forest'] .kp-bullets__row:has(.kp-bullets__link:active) {
+        outline-style: solid;
+    }
+    [data-theme='forest'] .kp-bullets__detail {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-bullets__row:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-bullets__figure {
+        border-radius: 0;
+        font-style: italic;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-bullets__row {
+            transition: outline-color var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* Key-value grid and form rows: the labels are notes beside upright values; a ruled line is a trail of dashes in
+       clay; a row changed and not saved or one that could not be read carries a short painted blaze on its start edge
+       (clay for the first, the red for the second), never a full bar. */
+    [data-theme='forest'] :is(.kp-kv__row > dt, .kp-formrow__label, .kp-formrow__aside) {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-formrow__label {
+        font-weight: 600;
+    }
+    [data-theme='forest'] :is(.kp-kv--lines > .kp-kv__row, .kp-formrows--lines > .kp-formrow) {
+        border-block-end: 1px dashed hsl(from var(--accent-foreground) h s l / 0.5);
+    }
+    [data-theme='forest'] :is(.kp-kv--lines > .kp-kv__row:last-child, .kp-formrows--lines > .kp-formrow:last-child) {
+        border-block-end: 0;
+    }
+    [data-theme='forest'] .kp-kv__row[data-kp-state='error']::before,
+    [data-theme='forest'] .kp-formrow[data-kp-changed]::before,
+    [data-theme='forest'] .kp-formrow[data-kp-state='error']::before {
+        inset-block: 0.3em auto;
+        inset-inline-start: calc(var(--kp-space-sm, 0.5rem) * -1 - 1px);
+        inline-size: 4px;
+        block-size: 1.15em;
+        border-radius: 0 2px 2px 0;
+        background: var(--accent-foreground);
+    }
+    [data-theme='forest'] .kp-kv__row[data-kp-state='error']::before,
+    [data-theme='forest'] .kp-formrow[data-kp-state='error']::before {
+        background: var(--destructive);
+    }
+    [data-theme='forest'] .kp-kv__row[data-kp-changed] > dt::after {
+        color: var(--accent-foreground);
+    }
+    [data-theme='forest'] .kp-formrow__lock {
+        font-style: italic;
+    }
+
+    /* Code block: a kraft plate with the leaf corner; the head is cut from the body by a trail of dashes; the line
+       numbers and the foot are notes; the text itself stays plain (no texture under running text). */
+    [data-theme='forest'] .kp-code {
+        border-radius: var(--kp-sig-fo-plate);
+    }
+    [data-theme='forest'] .kp-code__head {
+        border-block-end: 1px dashed hsl(from var(--accent-foreground) h s l / 0.55);
+        border-start-end-radius: inherit;
+    }
+    [data-theme='forest'] .kp-code__foot {
+        border-block-start: 1px dashed hsl(from var(--accent-foreground) h s l / 0.55);
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-code__meta {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-code__body,
+    [data-theme='forest'] .kp-code__note {
+        border-end-start-radius: inherit;
+    }
+    [data-theme='forest'] .kp-code[data-kp-code-lines] .kp-code__line::before {
+        font-style: italic;
+    }
+
+    /* A live number lays a growth ring round it as it counts: drawn once, clockwise from the top, on the growth curve,
+       then it fades (G8); the number itself never moves. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] [data-kp-tick][data-kp-tick-state='running'] {
+            position: relative;
+            display: inline-block;
+        }
+        [data-theme='forest'] [data-kp-tick][data-kp-tick-state='running']::after {
+            content: '';
+            position: absolute;
+            inset: -4px -8px;
+            border: 1.5px solid var(--primary);
+            border-radius: 999px;
+            mask: conic-gradient(var(--foreground) var(--kp-fo-arc), transparent 0);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-forest-update-ring var(--kp-sig-fo-time) linear both;
+        }
+    }
+}
+
+/* ── Rows, cards and choices [kpadopt4]: tiles, status rows, the action list, secrets, dialogs ── */
+@layer kp.signature {
+    /* Choice tiles: kraft cards with the leaf corner; pointing blazes a tile with the dashed green ring, a press closes
+       the blaze in, the chosen one has the solid green ring over its moss wash; the hint is a note. */
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'] {
+        --kp-field-tile-radius: var(--kp-sig-fo-plate);
+        --kp-field-tiles-gap: 0.875rem;
+    }
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+        outline: 2px dashed transparent;
+        outline-offset: 5px;
+    }
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:hover:not(:has(> .kp-field__check:disabled)) {
+        border-color: var(--border);
+        outline-color: var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:active:not(:has(> .kp-field__check:disabled)) {
+        outline-style: solid;
+        outline-offset: 1px;
+    }
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:checked) {
+        --kp-field-tile-ground-checked: color-mix(in oklab, var(--primary) 9%, var(--card));
+    }
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:focus-visible) {
+        outline-style: solid;
+        outline-color: var(--focus-ring-contrast);
+        outline-offset: var(--kp-focus-ring-inner-width, 2px);
+    }
+    [data-theme='forest'] .kp-field__option-hint {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'][aria-invalid='true'],
+    [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'][data-kp-invalid] {
+        outline: 2px dashed var(--destructive);
+        outline-offset: 4px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease),
+                background-color var(--fx-duration) var(--fx-ease),
+                border-color var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* A check with a reservation is a field note on the warning pair, a square italic tag; the fix written out is a
+       note under a clay blaze. */
+    [data-theme='forest'] .kp-statusrow[data-state='warn'] {
+        --kp-statusrow-state-edge: var(--border-strong);
+    }
+    [data-theme='forest'] .kp-statusrow[data-state='warn'] .kp-statusrow__detail {
+        justify-self: start;
+        margin-block-start: 0.2rem;
+        padding: 0 0.4em;
+        border-radius: 0;
+        background: var(--warning);
+        color: var(--warning-foreground);
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-statusrow__fix {
+        padding-inline-start: 0.6rem;
+        border-inline-start: 3px solid var(--accent-foreground);
+        font-style: italic;
+    }
+
+    /* The action list with a lead: a row is a line on the kraft ground; its state is a short painted blaze on the start
+       edge, not a bar (clay marks the trail, so a plain new row takes the green that acts); the next one has the moss
+       wash and its date in the note voice; a group's heading is a note; the payload a kraft note with the leaf corner. */
+    [data-theme='forest'] .kp-action-list--lead > li:is([data-kp-state='new'], [data-kp-state='next']) {
+        --kp-fo-blaze: var(--primary);
+    }
+    [data-theme='forest'] .kp-action-list--lead > li[data-kp-state='active'] {
+        --kp-fo-blaze: var(--info-foreground);
+    }
+    [data-theme='forest'] .kp-action-list--lead > li[data-kp-state='warn'] {
+        --kp-fo-blaze: var(--warning-foreground);
+    }
+    [data-theme='forest'] .kp-action-list--lead > li[data-kp-state='failed'] {
+        --kp-fo-blaze: var(--destructive);
+    }
+    [data-theme='forest'] .kp-action-list--lead > li:is([data-kp-state='new'], [data-kp-state='next'], [data-kp-state='active'], [data-kp-state='warn'], [data-kp-state='failed']) {
+        border-image: linear-gradient(to bottom, transparent 0.4rem, var(--kp-fo-blaze) 0.4rem 1.7rem, transparent 1.7rem) 1;
+    }
+    [data-theme='forest'] .kp-action-list__meta,
+    [data-theme='forest'] .kp-action-list__text {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-action-list > li.kp-action-list__group {
+        font-style: italic;
+        letter-spacing: 0;
+        text-transform: none;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+    [data-theme='forest'] .kp-action-list__payload {
+        border-radius: 0 var(--kp-sig-fo-leaf);
+    }
+
+    /* A secret: the value lies in a routed slot of wood; the time left is a grove planted along the line that withers
+       back from its end as the time runs out (whole trees go one by one); a failure is a field note. */
+    [data-theme='forest'] .kp-secret {
+        --kp-secret-drain-size: 0.625rem;
+    }
+    [data-theme='forest'] .kp-secret__value {
+        border-color: transparent;
+        border-radius: 3px;
+        background: var(--kp-sig-fo-wood), var(--muted);
+        box-shadow: var(--kp-sig-fo-routed);
+    }
+    [data-theme='forest'] .kp-secret__value:not(.kp-masked) {
+        background: var(--muted);
+    }
+    [data-theme='forest'] .kp-secret[data-kp-secret-state='disabled'] .kp-secret__value {
+        background: var(--muted);
+        box-shadow: none;
+        border-color: var(--border-strong);
+    }
+    [data-theme='forest'] .kp-secret__drain {
+        background: var(--primary);
+        mask: var(--kp-fo-trees) 0 0 / 2.1875rem 100% repeat-x;
+    }
+    [data-theme='forest'] .kp-secret__drain:dir(rtl) {
+        mask-position: 100% 0;
+    }
+    [data-theme='forest'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        padding: 0 0.5rem;
+        border-inline-start: 0;
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-style: italic;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-secret:not([data-kp-secret-ttl='0'], [data-kp-secret-reveal-on='hold'])[data-kp-secret-state='shown'] .kp-secret__drain {
+            animation-name: kp-sig-forest-secret-drain;
+            animation-timing-function: linear;
+        }
+    }
+    @keyframes kp-sig-forest-secret-drain {
+        from {
+            inline-size: 100%;
+        }
+        to {
+            inline-size: 0;
+        }
+    }
+
+    /* A dialog in sections: a section's rule is a trail of dashes; a danger section carries the red's painted blaze on
+       its start edge; what still depends on the thing and what would be lost are kraft notes with the leaf corner; the
+       name to type is painted with a clay line under it. */
+    [data-theme='forest'] .kp-dialog__section {
+        border-block-start: 1px dashed hsl(from var(--accent-foreground) h s l / 0.5);
+    }
+    [data-theme='forest'] .kp-dialog__section:first-child {
+        border-block-start: 0;
+    }
+    [data-theme='forest'] .kp-dialog__section--danger {
+        border-inline-start-width: 4px;
+        border-image: linear-gradient(to bottom, transparent 0.25rem, var(--destructive) 0.25rem 1.75rem, transparent 1.75rem) 1;
+    }
+    [data-theme='forest'] .kp-dialog__note {
+        font-style: italic;
+    }
+    [data-theme='forest'] :is(.kp-confirm__dependents, .kp-type-confirm__loses) {
+        border-radius: 0 var(--kp-sig-fo-leaf);
+    }
+    [data-theme='forest'] .kp-type-confirm__loses {
+        border-inline-start-width: 1px;
+        border-inline-start-color: var(--border);
+    }
+    [data-theme='forest'] .kp-type-confirm__loses-title {
+        justify-self: start;
+        padding: 0 0.4em;
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-type-confirm__name {
+        border-radius: 0;
+        background: var(--muted);
+        box-shadow: inset 0 -2px 0 var(--accent-foreground);
+    }
+}
+
+/* ── Time and flows [kpadopt4]: moments, the journey, the pipeline, the drawings ── */
+@layer kp.signature {
+    /* Moments on the run timeline: a moment is a node on the trail, a planned one dashed; pointing blazes it with the
+       dashed green ring; a count on a cluster is a field note; a stretch is a dashed trail line in the tone's own
+       colour; the dated line is the trail itself, its dates notes. */
+    [data-theme='forest'] :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-shape='square']::before {
+        border-radius: 0 3px;
+    }
+    [data-theme='forest'] .kp-gantt__point[data-kp-planned]::before {
+        border-style: dashed;
+    }
+    [data-theme='forest'] .kp-gantt__point:hover::before {
+        box-shadow: none;
+        outline: 2px dashed var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='forest'] .kp-gantt__count {
+        border-radius: 0;
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-gantt__zone[data-kp-lane-zone] {
+        border-radius: 0;
+        background: repeating-linear-gradient(90deg, hsl(from var(--kp-gantt-mark) h s l / 0.8) 0 8px, transparent 8px 12px);
+    }
+    [data-theme='forest'] .kp-gantt__sub {
+        font-style: italic;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-gantt__point::before {
+            transition: outline-offset var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* A journey: the steps stand along one trail; a reached step is a solid green node joined by a solid rule, the
+       ones to come are joined by a trail of dashes; the step it stands at is a node with a dashed ring laid round it
+       (a blaze); a closed path ends in the red's cross and its dashes; the names are notes, the dates upright. */
+    [data-theme='forest'] .kp-steplist--journey > .kp-steplist__item {
+        border-inline-start: 0;
+    }
+    [data-theme='forest'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item::before {
+        background: repeating-linear-gradient(90deg, var(--border-strong) 0 5px, transparent 5px 9px);
+    }
+    [data-theme='forest'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background: var(--kp-step-tone, var(--primary));
+    }
+    [data-theme='forest'] .kp-steplist--journey .kp-steplist__item[data-state='done']:not([data-kp-tone]) .kp-steplist__mark {
+        border-color: var(--primary);
+        background-color: var(--primary);
+        color: var(--primary-foreground);
+    }
+    [data-theme='forest'] .kp-steplist--journey .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        outline: 2px dashed var(--kp-step-tone, var(--primary));
+        outline-offset: 3px;
+    }
+    [data-theme='forest'] .kp-steplist--journey .kp-steplist__title {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-steplist--journey .kp-steplist__item[data-state='current'] .kp-steplist__title {
+        font-style: normal;
+    }
+    @container kp-journey (max-width: 30rem) {
+        [data-theme='forest'] .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
+            background: repeating-linear-gradient(180deg, var(--border-strong) 0 5px, transparent 5px 9px);
+        }
+        [data-theme='forest']
+            .kp-steplist--journey
+            > .kp-steplist__item:has(+ .kp-steplist__item:is([data-state='done'], [data-state='current']))::after {
+            background: var(--kp-step-tone, var(--primary));
+        }
+    }
+
+    /* The pipeline: a lane is a kraft plate with the leaf corner, its head a wooden tag in the stage's own stain; a card
+       is a kraft card with the small leaf corner, blazed when pointed at, closed in solid when pressed; the open one has
+       the solid green ring; a dimmed one is dashed; the share is a note. */
+    [data-theme='forest'] .kp-pipeline__lane {
+        border-radius: var(--kp-sig-fo-plate);
+        background: color-mix(in oklab, var(--muted) 70%, var(--card));
+    }
+    [data-theme='forest'] .kp-pipeline__head {
+        border-radius: 3px;
+        background: var(--kp-sig-fo-wood), color-mix(in oklab, var(--kp-pipeline-tone) 24%, var(--card));
+        box-shadow: var(--kp-sig-fo-routed);
+        border-color: transparent;
+    }
+    [data-theme='forest'] .kp-pipeline__share,
+    [data-theme='forest'] .kp-pipeline__sub,
+    [data-theme='forest'] .kp-pipeline__none {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-pipeline__card {
+        border-radius: var(--kp-sig-fo-part);
+        outline: 2px dashed transparent;
+        outline-offset: 4px;
+    }
+    [data-theme='forest'] .kp-pipeline__card:is(button, a):hover:not(:focus-visible) {
+        border-color: var(--border);
+        outline-color: var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='forest'] .kp-pipeline__card:is(button, a):active:not(:focus-visible) {
+        outline-style: solid;
+        outline-offset: 1px;
+    }
+    [data-theme='forest'] .kp-pipeline__card[aria-current='true'] {
+        border-color: var(--border);
+        box-shadow: none;
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='forest'] .kp-pipeline__mark {
+        border-radius: 3px;
+        background-image: var(--kp-sig-fo-wood);
+        font-style: italic;
+        text-transform: none;
+    }
+    [data-theme='forest'] .kp-pipeline__state {
+        border-radius: var(--kp-sig-fo-plate);
+    }
+    [data-theme='forest'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
+        padding: 0 0.5rem;
+        border-inline-start: 0;
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-style: italic;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-pipeline__card {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* Drawings for an empty state: the field kit (js/art.js). Each stroke grows up out of its own line on the growth
+       curve, 1000 ms, 80 ms apart from the ground up, turning from autumn to green as it grows (G10). The drawing takes
+       the place of the empty state's contour clearing and its sprout. Reduced, the drawing stands grown. */
+    [data-theme='forest'] .kp-art {
+        display: block;
+    }
+    [data-theme='forest'] .kp-art > g[data-kp-art-set='fieldkit'] {
+        display: inline;
+    }
+    [data-theme='forest'] .kp-art path {
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+    [data-theme='forest'] .kp-art__ink {
+        stroke: var(--foreground);
+    }
+    [data-theme='forest'] .kp-empty[data-kp-art] {
+        background: var(--card);
+    }
+    [data-theme='forest'] .kp-empty[data-kp-art]::before,
+    [data-theme='forest'] .kp-empty[data-kp-art]::after {
+        content: none;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-art > g[data-kp-art-set='fieldkit'] > path {
+            transform-box: fill-box;
+            transform-origin: 50% 100%;
+            animation: kp-sig-forest-art-grow var(--kp-sig-fo-time) var(--kp-sig-fo-grow) both;
+            animation-delay: calc(var(--kp-art-i, 0) * var(--kp-sig-fo-stagger));
+        }
+    }
+    @keyframes kp-sig-forest-art-grow {
+        from {
+            scale: 1 0;
+            opacity: 0;
+            filter: sepia(1) saturate(0.6);
+        }
+        to {
+            scale: 1 1;
+            opacity: 1;
+            filter: none;
+        }
+    }
+}
+
+/* ── The calm components and the seven new ones [kpadopt4] ── */
+@layer kp.signature {
+    /* Three-way chips: the chip that is in is green on the leaf; the one that is out is a dashed outline with the word
+       struck through and a red node; pointing blazes any chip with the dashed green ring (no inner line). */
+    [data-theme='forest'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item {
+        outline: 2px dashed transparent;
+        outline-offset: 4px;
+    }
+    [data-theme='forest'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item[data-kp-segmented-tri='exclude'] {
+        border-style: dashed;
+    }
+    @media (hover: hover) {
+        [data-theme='forest'] .kp-segmented--chips[data-kp-segmented='tri']:not([aria-disabled='true']) > .kp-segmented__item:hover:not(:focus-visible) {
+            box-shadow: none;
+            outline-color: var(--primary);
+            outline-offset: 2px;
+        }
+    }
+    [data-theme='forest'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item:active:not(:focus-visible) {
+        outline-style: solid;
+        outline-offset: 1px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* Quantity: the number lies in a routed slot of wood; the steps are forest's own buttons. */
+    [data-theme='forest'] .kp-quantity__field {
+        border-color: transparent;
+        border-radius: 3px;
+        background: var(--kp-sig-fo-wood), var(--muted);
+        box-shadow: var(--kp-sig-fo-routed);
+    }
+    [data-theme='forest'] .kp-quantity__field:has(.kp-quantity__input:focus-visible) {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        outline-offset: var(--kp-focus-ring-inner-width, 2px);
+        box-shadow: var(--kp-sig-fo-routed);
+    }
+    [data-theme='forest'] .kp-quantity__unit {
+        font-style: italic;
+    }
+
+    /* Checklist: a row is blazed inside when pointed at; a ticked item is struck through in clay and goes quiet; the
+       rules are trails of dashes; counts are notes. */
+    [data-theme='forest'] .kp-checklist__bar {
+        border-block-end: 1px dashed hsl(from var(--accent-foreground) h s l / 0.55);
+    }
+    [data-theme='forest'] :is(.kp-checklist__list, .kp-checklist__item) {
+        border-color: hsl(from var(--accent-foreground) h s l / 0.35);
+        border-style: dashed;
+    }
+    [data-theme='forest'] .kp-checklist__row {
+        outline: 2px dashed transparent;
+        outline-offset: -2px;
+        border-radius: var(--kp-sig-fo-part);
+    }
+    @media (hover: hover) {
+        [data-theme='forest'] .kp-checklist__row:hover {
+            background: transparent;
+            outline-color: var(--primary);
+        }
+    }
+    [data-theme='forest'] .kp-checklist__row:active {
+        outline-style: solid;
+    }
+    [data-theme='forest'] .kp-checklist__item[data-kp-checklist-checked] .kp-checklist__label {
+        text-decoration-color: var(--accent-foreground);
+    }
+    [data-theme='forest'] :is(.kp-checklist__count, .kp-checklist__detail, .kp-checklist__status) {
+        font-style: italic;
+    }
+    [data-theme='forest'] :is(.kp-checklist__empty, .kp-timers__empty) {
+        border-radius: var(--kp-sig-fo-plate);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-checklist__row {
+            transition: outline-color var(--fx-duration) var(--fx-ease);
+        }
+    }
+
+    /* Kitchen timers: a card is kraft with the leaf corner, the time upright and its state a note; a finished timer, and
+       a finished disc or countdown, has a growth ring laid round it, drawn three times on the growth curve. */
+    [data-theme='forest'] .kp-timer {
+        position: relative;
+        border-radius: var(--kp-sig-fo-plate);
+    }
+    [data-theme='forest'] .kp-timer__state {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-timer[data-kp-timer-state='done'] {
+        border-color: var(--border);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-timer[data-kp-timer-ringing]::after,
+        [data-theme='forest'] .kp-countdown[data-kp-countdown-state='ended']::after,
+        [data-theme='forest'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face::after {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            border: 1.5px solid var(--primary);
+            border-radius: 0 calc(var(--kp-sig-fo-leaf) + 5px);
+            mask: conic-gradient(var(--foreground) var(--kp-fo-arc), transparent 0);
+            opacity: 0;
+            pointer-events: none;
+            animation: kp-sig-forest-update-ring var(--kp-sig-fo-time) linear 3 both;
+        }
+        [data-theme='forest'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face::after {
+            border-radius: 50%;
+        }
+    }
+
+    /* Cook mode: what the step needs is a kraft note with the leaf corner; its title and the screen line are notes;
+       the screen lamp is a green node. */
+    [data-theme='forest'] .kp-focus-steps__needs {
+        padding: var(--kp-space-md, 0.75rem) 1rem;
+        border: 1px solid var(--border);
+        border-radius: var(--kp-sig-fo-plate);
+        background: var(--card);
+    }
+    [data-theme='forest'] :is(.kp-focus-steps__needs-title, .kp-focus-steps__wake, .kp-focus-steps__name) {
+        font-style: italic;
+    }
+
+    /* Wheel: a cross-section of a trunk. The hub is the heartwood with its tree rings, the pointer a clay trig
+       mark; the wheel spins up out of nothing and settles on the growth curve; the winner is named in the note voice. */
+    [data-theme='forest'] .kp-wheel {
+        --kp-wheel-ease: var(--kp-sig-fo-grow);
+        --kp-wheel-pointer: var(--accent-foreground);
+    }
+    [data-theme='forest'] .kp-wheel__spin.kp-button {
+        background: repeating-radial-gradient(
+            circle closest-side,
+            var(--primary) 0 4px,
+            hsl(from var(--primary) h s calc(l * 1.4)) 4px 5px
+        );
+    }
+    [data-theme='forest'] .kp-wheel__rim {
+        stroke-width: 2.5;
+    }
+    [data-theme='forest'] .kp-wheel__segment {
+        stroke-width: 1.6;
+    }
+    [data-theme='forest'] .kp-wheel__label {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-wheel__caption {
+        font-style: italic;
+    }
+
+    /* Uptime: every period is a plank of the strip, the leaf corner on its small scale, up in the wood's grain; the
+       one pointed at is blazed; a failure to read is a field note. */
+    [data-theme='forest'] .kp-uptime {
+        --kp-uptime-cell-radius: 0 3px;
+        --kp-uptime-gap: 3px;
+    }
+    [data-theme='forest'] .kp-uptime__cell[data-kp-tone='up'] {
+        --kp-uptime-pattern: var(--kp-sig-fo-wood);
+    }
+    [data-theme='forest'] .kp-uptime__cell:is(:focus-visible, [aria-expanded='true']) {
+        outline-style: dashed;
+        outline-color: var(--primary);
+    }
+    [data-theme='forest'] .kp-uptime__summary[data-kp-tone='error'] {
+        border-radius: 0;
+        font-style: italic;
+    }
+    [data-theme='forest'] :is(.kp-uptime__axis, .kp-uptime__info-figures) {
+        font-style: italic;
+    }
+
+    /* Command: a kraft plate with the leaf corner; the shell is a wooden tag, the prompt clay, the place a note. */
+    [data-theme='forest'] .kp-command {
+        --kp-command-prompt-ink: var(--accent-foreground);
+        border-radius: var(--kp-sig-fo-plate);
+    }
+    [data-theme='forest'] .kp-command__head {
+        border-block-end: 1px dashed hsl(from var(--accent-foreground) h s l / 0.55);
+    }
+    [data-theme='forest'] .kp-command__shell {
+        padding: 0.1rem 0.5rem;
+        border-radius: 3px;
+        background: var(--kp-sig-fo-wood), var(--muted);
+        box-shadow: var(--kp-sig-fo-routed);
+    }
+    [data-theme='forest'] .kp-command__where {
+        border-block-start: 1px dashed hsl(from var(--accent-foreground) h s l / 0.55);
+        font-style: italic;
+    }
+
+    /* Visual timer and countdown: the timer is a cross-section of a trunk, its annual rings on the face and a knot for
+       the hub; the time left is the green wedge. The countdown is a kraft plate with the leaf corner. */
+    [data-theme='forest'] .kp-timer-disc__face {
+        border-width: 2px;
+        background: repeating-radial-gradient(circle closest-side, var(--card) 0 5px, hsl(from var(--border-strong) h s l / 0.35) 5px 6px);
+    }
+    [data-theme='forest'] .kp-timer-disc {
+        --kp-timer-disc-marks: var(--accent-foreground);
+        --kp-timer-disc-ring: transparent;
+    }
+    [data-theme='forest'] .kp-timer-disc__sector {
+        background: conic-gradient(
+            hsl(from var(--kp-timer-disc-fill, var(--primary)) h s l / 0.88) calc(var(--kp-timer-disc-left, 1) * 360deg),
+            transparent 0
+        );
+    }
+    [data-theme='forest'] .kp-timer-disc__hub {
+        background: var(--accent-foreground);
+    }
+    [data-theme='forest'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face,
+    [data-theme='forest'] .kp-countdown[data-kp-countdown-state='ended'] {
+        box-shadow: none;
+        animation: none;
+    }
+    [data-theme='forest'] .kp-countdown {
+        --kp-countdown-ring: transparent;
+        position: relative;
+        border-radius: var(--kp-sig-fo-plate);
+    }
+    [data-theme='forest'] :is(.kp-timer-disc__status, .kp-countdown__status, .kp-timer-disc__caption, .kp-countdown__name) {
+        font-style: italic;
+    }
+    [data-theme='forest'] .kp-timer-disc__face {
+        position: relative;
+    }
+
+    /* Range picker: the custom window in force wears the solid green ring of a pick; an invalid time the red's dashed one. */
+    [data-theme='forest'] .kp-range__custom[aria-pressed='true'] {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px var(--primary);
+    }
+    [data-theme='forest'] .kp-range__panel .kp-field__input[aria-invalid='true'] {
+        border-style: dashed;
+        box-shadow: none;
+    }
+    [data-theme='forest'] .kp-range__label {
+        font-style: italic;
+    }
+
+    /* Compare slider: a kraft frame with the leaf corner; the divider is a trail of green dashes with a node for its
+       handle, which is blazed when pointed at; the two labels are field notes; the divider glides on the growth curve. */
+    [data-theme='forest'] .kp-compare {
+        --kp-compare-line: 2px;
+        --kp-compare-ink: var(--primary);
+        border-radius: var(--kp-sig-fo-plate);
+    }
+    [data-theme='forest'] .kp-compare__divider {
+        border-inline-start: 0;
+        background: repeating-linear-gradient(to bottom, var(--primary) 0 8px, transparent 8px 13px);
+        inline-size: 2px;
+    }
+    [data-theme='forest'] .kp-compare__handle {
+        inset-inline-start: -1px;
+        outline: 2px dashed transparent;
+        outline-offset: 4px;
+    }
+    [data-theme='forest'] .kp-compare__handle:hover {
+        outline-color: var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='forest'] .kp-compare__handle:active {
+        outline-style: solid;
+        outline-offset: 1px;
+    }
+    [data-theme='forest'] .kp-compare__handle:focus-visible {
+        outline-style: solid;
+        outline-color: var(--ring);
+        outline-offset: 2px;
+    }
+    [data-theme='forest'] .kp-compare__label {
+        border-radius: 0;
+        font-style: italic;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='forest'] .kp-compare__handle {
+            transition:
+                outline-color var(--fx-duration) var(--fx-ease),
+                outline-offset var(--fx-duration) var(--fx-ease);
+        }
+        [data-theme='forest'] .kp-compare[data-kp-compare-glide] :is(.kp-compare__pane, .kp-compare__divider) {
+            transition-timing-function: var(--kp-sig-fo-grow);
+        }
+    }
+}
