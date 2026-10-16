@@ -1,16 +1,3 @@
-/* research/kpadopt2-tiles: the page. The package's CSS is untouched here; the only rules are this page's layout,
-   the mock list, and the "hover" and "focus" stand-ins (which read the package's own knobs). Every rule hangs on a
-   class of its own, because the review dialog moves the sections into its stage. */
-
-.ta-page {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--kp-space-xl, 2rem);
-    max-inline-size: 90rem;
-    margin-inline: auto;
-    padding: var(--kp-space-lg, 1.5rem) var(--kp-space-md, 1rem) var(--kp-space-2xl, 3rem);
-}
-
 .ta-intro,
 .ta-sec__head,
 .ta-block {
@@ -45,7 +32,6 @@
     font-size: 0.875rem;
 }
 
-.ta-themes,
 .ta-actions {
     display: flex;
     flex-wrap: wrap;
@@ -53,14 +39,8 @@
     gap: var(--kp-space-xs, 0.25rem);
 }
 
-.ta-themes > b,
 .ta-actions > b {
     margin-inline-end: var(--kp-space-sm, 0.5rem);
-}
-
-.ta-themes .kp-button[aria-pressed='true'] {
-    outline: 2px solid var(--primary);
-    outline-offset: 1px;
 }
 
 .ta-sec {
@@ -168,46 +148,6 @@
     margin: 0;
     padding-block-start: var(--kp-space-sm, 0.5rem);
     border-block-start: 1px dashed var(--border);
-}
-
-.ta-list[data-view='cards'] /* ---- the sixteen side by side */
-
-.ta-lineup {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--kp-space-md, 0.75rem);
-}
-
-.ta-lineup :is(h2, p) {
-    margin: 0;
-    max-inline-size: 80ch;
-}
-
-.ta-lineup__grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 24rem), 1fr));
-    gap: var(--kp-space-md, 0.75rem);
-}
-
-.ta-stage {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    align-content: start;
-    justify-items: start;
-    gap: var(--kp-space-md, 0.75rem);
-    min-inline-size: 0;
-    padding: var(--kp-space-md, 1rem);
-    border: 1px solid var(--border);
-    background: var(--background);
-    color: var(--foreground);
-}
-
-.ta-stage__name {
-    margin: 0;
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted-foreground);
 }
 
 /* The page shows the look-at line of the theme it is in, not all sixteen stacked; the review dialog reads the
@@ -405,16 +345,6 @@ html[data-theme='titanium'] [data-review-look] > [data-for='titanium'] {
     --kp-facet-swatch-colour: var(--chart-5);
 }
 
-.ta-stage__actions {
-    --kp-actions-min: 9rem;
-    width: 100%;
-}
-
-.ta-stage > * {
-    min-inline-size: 0;
-    inline-size: 100%;
-}
-
 @media (max-width: 48rem) {
     .ta-states--one .ta-states__row {
         grid-template-columns: minmax(0, 1fr);
@@ -423,4 +353,212 @@ html[data-theme='titanium'] [data-review-look] > [data-for='titanium'] {
     .ta-log__lines li {
         min-inline-size: 30rem;
     }
+}
+/* Mock layout for this research page only. Every class is `gd-` and none
+   restyles a `kp-` class: the grids, the matrix, the bar cells, the buttons,
+   the tags and the data tables are the package's own. */
+.gd-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 24rem), 1fr));
+    gap: var(--kp-space-md, 1rem);
+    align-items: start;
+    margin-block-start: var(--kp-space-md, 1rem);
+}
+.gd-panel {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+    align-content: start;
+}
+.gd-panel > h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+.gd-tag {
+    display: inline-block;
+    margin-inline-start: 0.5rem;
+    padding: 0.05rem 0.5rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    font: 600 0.7rem/1.4 var(--theme-font-mono, monospace);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    vertical-align: middle;
+}
+.gd-tag--package {
+    color: var(--success);
+}
+.gd-tag--mock {
+    color: var(--warning);
+}
+.gd-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+}
+.gd-grow {
+    flex: 1 1 0;
+}
+.gd-note {
+    margin: 0;
+    font-size: 0.8125rem;
+    opacity: 0.85;
+}
+/* The narrow box: 22 rem, so the matrix inside has to scroll. */
+.gd-narrow {
+    max-inline-size: 22rem;
+    padding: var(--kp-space-sm, 0.5rem);
+    border: 1px dashed var(--border-strong);
+}
+
+/* The plain statement of what to see and what each control does, one per section [Kenny, 2026-10-16]. */
+.gd-expect {
+    margin: 0 0 var(--kp-space-md, 1rem);
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    border: 1px solid var(--border-strong);
+    border-inline-start-width: 4px;
+    border-radius: var(--radius, 0);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+.gd-expect p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+.gd-expect ul {
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+.gd-expect li + li {
+    margin-block-start: var(--kp-space-xs, 0.25rem);
+}
+
+/* One column, so the tables are tables at a desktop width and cards only on a phone. The capacity table gives
+   its number column the room "not read" needs: the package's --kp-bar-cell-value knob. */
+.gd-stack {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+}
+.gd-stack .kp-table {
+    --kp-bar-cell-value: 8ch;
+}
+
+.kt-intro,
+.kt-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.kt-intro h1,
+.kt-intro p,
+.kt-sec__head h2,
+.kt-sec__head p {
+    margin: 0;
+}
+
+.kt-intro p,
+.kt-sec__head p {
+    color: var(--muted-foreground);
+}
+
+.kt-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+/* The "Expected:" block: what to see and what each control does. */
+.kt-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.kt-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.kt-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.kt-label {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 600;
+}
+
+.kt-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* The full width and a phone width (360 px) one under the other: the full
+   width is the whole section, so its columns have room. */
+.kt-cols {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+    min-inline-size: 0;
+}
+
+.kt-cols > * {
+    min-inline-size: 0;
+}
+
+.kt-phone {
+    inline-size: min(360px, 100%);
+    padding: var(--kp-space-sm, 0.5rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+    box-sizing: border-box;
+}
+
+.kt-stack {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+}
+
+.kt-log {
+    min-block-size: 3.5rem;
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    overflow: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+    color: var(--muted-foreground);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--kp-text-xs, 0.75rem);
+    white-space: pre-wrap;
+}
+
+/* The one page: sections stack in a grid, so every gap is the same wherever a section comes from. */
+.r2-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+.r2-page > .cat-block {
+    margin-block: 0;
+}
+.r2-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+.r2-intro :is(h1, p) {
+    margin: 0;
 }

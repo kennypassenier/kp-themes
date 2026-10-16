@@ -41,8 +41,9 @@
 //            asks for (range, Live, Zoom) lays the lanes out again.
 //            `data-kp-gantt-ghosts="2 3 2 1 1"` sets the rows of the
 //            loading lanes, so loading and loaded are as tall
-//   chip     the selected range floats over the foot of the plot and is
-//            absent (no height, no gap) until a range is selected
+//   chip     the selected range takes the toolbar row over (the range
+//            buttons and Live are inert under it): it lies on no lane and
+//            adds no height when it comes, at any width
 //   keys     one tab stop: ← → move along a lane, ↑ ↓ to the nearest bar
 //            of the neighbouring lane, Home and End to the lane's first and
 //            last, Enter or Space opens; the range, Live, Zoom and Clear
@@ -285,7 +286,9 @@ function build(c) {
     clear.title = s.ganttClearTitle;
     clear.dataset.kpGanttClear = '';
     c.selection.append(c.selectionText, zoom, clear);
-    bar.append(c.ranges, c.liveButton);
+    // The chip sits in the toolbar row, over the range buttons and Live while a range is selected: it lies on no data and
+    // adds no height when it comes.
+    bar.append(c.ranges, c.liveButton, c.selection);
     c.decorate?.(c.liveButton, { kind: 'live', host: c.el, key: keyOf(c.el) });
     c.decorate?.(zoom, { kind: 'zoom', host: c.el, key: keyOf(c.el) });
     c.decorate?.(clear, { kind: 'clear', host: c.el, key: keyOf(c.el) });
@@ -315,9 +318,8 @@ function build(c) {
     c.announcer = make(doc, 'p', 'kp-gantt__announce');
     c.announcer.setAttribute('role', 'status');
     const frame = make(doc, 'div', 'kp-gantt__frame');
-    // The chip floats over the plot's foot: it takes no height when absent and moves nothing when it comes.
     c.selection.hidden = true;
-    frame.append(c.scroll, c.stateLine, c.selection);
+    frame.append(c.scroll, c.stateLine);
     const hint = make(doc, 'p', 'kp-gantt__hint', s.ganttHint);
     const legend = make(doc, 'ul', 'kp-gantt__legend');
     for (const state of /** @type {const} */ (['ok', 'failed', 'running', 'queued'])) {
@@ -606,6 +608,9 @@ function paintSelection(c) {
     const sel = c.selected;
     c.selection.toggleAttribute('data-kp-active', sel !== null);
     c.selection.hidden = sel === null;
+    // What the chip covers cannot be reached by keyboard either.
+    c.ranges.toggleAttribute('inert', sel !== null);
+    c.liveButton.toggleAttribute('inert', sel !== null);
     c.selectBox.hidden = sel === null;
     if (!sel) {
         c.selectionText.textContent = '';

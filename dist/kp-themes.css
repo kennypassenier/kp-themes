@@ -11126,6 +11126,903 @@
         content: var(--kp-glyph-skipped, '–');
     }
 
+    /* --- Week agenda: seven days, the items of the week placed in time -----
+ * `section.kp-week[data-kp-week]` (js/week.js). A grid of an hour axis and
+ * one column per day; every item is a pill at its time of day. The column's
+ * height is fixed (--kp-week-height), so nothing moves when items arrive,
+ * when a day is crowded or when the week is loading: what does not fit is
+ * folded into a `+N` menu button at the end of the stack. Below the agenda's
+ * own width of 40rem (a container query, so it follows the pane and not the
+ * window) the columns become rows: the day on the left, its items in time
+ * order on the right, every item shown.
+ *
+ * Every state is a shape or a word as well as a colour [DI4]: the day that
+ * is today wears the word and a filled number; the next run a ring; an item
+ * that is off or skipped is struck through and quieter by ink, not by
+ * opacity; the host's own round is dashed and is not a button.
+ * Knobs [KT6]: `--kp-week-height` (15rem, the day column), `--kp-week-pill`
+ * (1.5rem, one pill's height), `--kp-week-axis` (3.25rem, the hour labels'
+ * column), `--kp-week-day-label` (5.5rem, the day's column in the list),
+ * `--kp-week-pill-radius`, `--kp-week-now` (the line for now, --destructive),
+ * `--kp-week-today` (the today plate, --primary), `--kp-week-gap`. */
+    .kp-week {
+        container: kp-week / inline-size;
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-week__nav {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-week__title {
+        flex: 1 1 auto;
+        margin: 0;
+        font-size: var(--kp-text-base, 1rem);
+        font-variant-numeric: tabular-nums;
+        text-align: center;
+    }
+
+    .kp-week__frame {
+        position: relative;
+    }
+
+    .kp-week__grid {
+        --kp-week-mode: grid;
+        display: grid;
+        grid-template-columns: var(--kp-week-axis, 3.25rem) repeat(var(--kp-week-days, 7), minmax(0, 1fr));
+        grid-template-rows: auto var(--kp-week-height, 15rem);
+        padding-block-end: 0.5rem;
+        min-inline-size: 0;
+    }
+
+    .kp-week__day {
+        display: contents;
+    }
+
+    .kp-week__head {
+        grid-row: 1;
+        grid-column: calc(var(--kp-week-i, 0) + 2);
+        display: grid;
+        grid-template-columns: auto auto;
+        justify-content: start;
+        align-content: end;
+        align-items: baseline;
+        column-gap: 0.375rem;
+        padding: 0 var(--kp-space-sm, 0.5rem) 0.75rem;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    .kp-week__num {
+        font-variant-numeric: tabular-nums;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+    }
+
+    .kp-week__date {
+        display: none;
+    }
+
+    /* The mark's room is always there, so today moving from one day to the
+ * next changes no height. */
+    .kp-week__today {
+        grid-column: 1 / -1;
+        visibility: hidden;
+        font-size: 0.625rem;
+        line-height: 1;
+    }
+
+    .kp-week__day[data-kp-today] .kp-week__head {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-week__day[data-kp-today] .kp-week__today {
+        visibility: visible;
+        color: var(--kp-week-today, var(--primary));
+    }
+
+    .kp-week__day[data-kp-today] .kp-week__num {
+        color: var(--kp-week-today, var(--primary));
+    }
+
+    .kp-week__axis {
+        grid-row: 2;
+        grid-column: 1;
+        position: relative;
+    }
+
+    .kp-week__axis > span {
+        position: absolute;
+        inset-inline-end: var(--kp-space-sm, 0.5rem);
+        inset-block-start: calc(var(--kp-week-at, 0) * 100%);
+        translate: 0 -50%;
+        color: var(--muted-foreground);
+        font-size: 0.6875rem;
+        font-variant-numeric: tabular-nums;
+        line-height: 1;
+    }
+
+    .kp-week__col {
+        grid-row: 2;
+        grid-column: calc(var(--kp-week-i, 0) + 2);
+        position: relative;
+        min-inline-size: 0;
+        border-inline-start: 1px solid var(--border);
+        border-block-end: 1px solid var(--border);
+        background-image: linear-gradient(to bottom, var(--border) 1px, transparent 1px);
+        background-size: 100% 25%;
+        background-repeat: no-repeat repeat;
+    }
+
+    .kp-week__day[data-kp-today] .kp-week__col {
+        background-color: color-mix(in oklab, var(--kp-week-today, var(--primary)) 6%, transparent);
+    }
+
+    .kp-week__pill {
+        --kp-week-ink: var(--chart-1);
+        box-sizing: border-box;
+        position: absolute;
+        inset-inline: 0.25rem;
+        inset-block-start: var(--kp-week-top, 0);
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        block-size: var(--kp-week-pill, 1.5rem);
+        margin: 0;
+        padding: 0 0.375rem;
+        overflow: hidden;
+        border: 1px solid color-mix(in oklab, var(--kp-week-ink) 45%, var(--border));
+        border-radius: var(--kp-week-pill-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: color-mix(in oklab, var(--kp-week-ink) 14%, var(--card));
+        color: var(--foreground);
+        font: inherit;
+        font-size: var(--kp-text-xs, 0.75rem);
+        line-height: 1;
+        text-align: start;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+
+    .kp-week__pill[data-kp-series='2'],
+    .kp-week__swatch[data-kp-series='2'] {
+        --kp-week-ink: var(--chart-2);
+    }
+
+    .kp-week__pill[data-kp-series='3'],
+    .kp-week__swatch[data-kp-series='3'] {
+        --kp-week-ink: var(--chart-3);
+    }
+
+    .kp-week__pill[data-kp-series='4'],
+    .kp-week__swatch[data-kp-series='4'] {
+        --kp-week-ink: var(--chart-4);
+    }
+
+    .kp-week__pill[data-kp-series='5'],
+    .kp-week__swatch[data-kp-series='5'] {
+        --kp-week-ink: var(--chart-5);
+    }
+
+    .kp-week__time {
+        flex: none;
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+    }
+
+    .kp-week__label {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .kp-week__pill:is(button):hover {
+        box-shadow: 0 0 0 1px var(--foreground);
+    }
+
+    .kp-week__pill[data-kp-state='next'] {
+        box-shadow: 0 0 0 2px var(--ring);
+    }
+
+    .kp-week__pill[data-kp-state='next']:hover {
+        box-shadow:
+            0 0 0 2px var(--ring),
+            0 0 0 3px var(--foreground);
+    }
+
+    /* Off and skipped: quieter by ink and a strike, so the words keep their contrast. */
+    .kp-week__pill:is([data-kp-state='off'], [data-kp-state='skipped']) {
+        background: transparent;
+        color: var(--muted-foreground);
+        text-decoration: line-through;
+    }
+
+    .kp-week__pill[data-kp-state='reference'] {
+        background: transparent;
+        border-style: dashed;
+        border-color: var(--border-strong);
+        color: var(--muted-foreground);
+        cursor: default;
+    }
+
+    .kp-week__pill[data-kp-past]:not([data-kp-state='next']) .kp-week__label {
+        color: var(--muted-foreground);
+    }
+
+    .kp-week .kp-week__pill--more {
+        position: static;
+        inset: auto;
+        justify-content: center;
+        inline-size: 100%;
+        border-style: solid;
+        border-color: var(--border-strong);
+        background: var(--card);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-week .kp-week__more {
+        position: absolute;
+        display: block;
+        inset-inline: 0.25rem;
+        inset-block-start: var(--kp-week-top, 0);
+        block-size: var(--kp-week-pill, 1.5rem);
+    }
+
+    .kp-week__more[hidden] {
+        display: none;
+    }
+
+    .kp-week__now {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: calc(var(--kp-week-at, 0) * 100%);
+        z-index: 2;
+        border-block-start: 2px solid var(--kp-week-now, var(--destructive));
+        pointer-events: none;
+    }
+
+    .kp-week__now[hidden] {
+        display: none;
+    }
+
+    .kp-week__now::before {
+        content: '';
+        position: absolute;
+        inset-inline-start: -4px;
+        inset-block-start: -5px;
+        inline-size: 8px;
+        block-size: 8px;
+        border-radius: 50%;
+        background: var(--kp-week-now, var(--destructive));
+    }
+
+    /* Loading keeps the pills' size: ghosts, pulsing only without reduced motion. */
+    .kp-week__ghost {
+        box-sizing: border-box;
+        position: absolute;
+        inset-inline: 0.25rem;
+        inset-block-start: calc(var(--kp-week-at, 0) * (100% - var(--kp-week-pill, 1.5rem)));
+        block-size: var(--kp-week-pill, 1.5rem);
+        border-radius: var(--kp-week-pill-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        display: none;
+    }
+
+    .kp-week[data-kp-state='loading'] .kp-week__ghost {
+        display: block;
+    }
+
+    .kp-week[data-kp-state='loading'] .kp-week__now {
+        display: none;
+    }
+
+    /* The sentence of an empty, loading or failed week sits over the grid:
+ * it takes no room, so nothing moves when it comes and goes. */
+    .kp-week__state {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        margin: 0;
+        padding: var(--kp-space-md, 0.75rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
+        pointer-events: none;
+    }
+
+    .kp-week__state:empty {
+        display: none;
+    }
+
+    .kp-week__state[data-kp-state='error'] {
+        color: var(--destructive);
+    }
+
+    .kp-week__legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-week__legend[hidden] {
+        display: none;
+    }
+
+    .kp-week__legend li {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+
+    .kp-week__swatch {
+        --kp-week-ink: var(--chart-1);
+        inline-size: 0.875rem;
+        block-size: 0.625rem;
+        border: 1px solid color-mix(in oklab, var(--kp-week-ink) 45%, var(--border));
+        border-radius: var(--kp-week-pill-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: color-mix(in oklab, var(--kp-week-ink) 14%, var(--card));
+    }
+
+    /* The items that did not fit are listed in the `+N` menu; the narrow
+ * layout shows every item and needs none of it. */
+    @container kp-week (min-width: 40rem) {
+        .kp-week__pill[data-kp-overflow] {
+            display: none;
+        }
+    }
+
+    @container kp-week (max-width: 39.99rem) {
+        .kp-week__grid {
+            --kp-week-mode: list;
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-rows: none;
+            padding-block-end: 0;
+        }
+
+        .kp-week__nav {
+            display: grid;
+            grid-template-columns: auto auto auto;
+            justify-content: start;
+        }
+
+        .kp-week__title {
+            grid-column: 1 / -1;
+            grid-row: 1;
+        }
+
+        .kp-week__axis,
+        .kp-week__now,
+        .kp-week__more {
+            display: none;
+        }
+
+        .kp-week__day {
+            display: grid;
+            grid-template-columns: var(--kp-week-day-label, 5.5rem) minmax(0, 1fr);
+            column-gap: var(--kp-space-sm, 0.5rem);
+            align-items: start;
+            padding-block: var(--kp-space-sm, 0.5rem);
+            border-block-end: 1px solid var(--border);
+        }
+
+        .kp-week__head {
+            grid-row: auto;
+            grid-column: 1;
+            grid-template-columns: auto auto;
+            align-content: start;
+            padding: 0.125rem 0 0;
+        }
+
+        .kp-week__date {
+            display: inline;
+            grid-column: 1 / -1;
+            letter-spacing: 0;
+            text-transform: none;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .kp-week__today {
+            grid-column: 1 / -1;
+        }
+
+        .kp-week__col {
+            grid-row: auto;
+            grid-column: 2;
+            display: flex;
+            flex-direction: column;
+            gap: var(--kp-week-gap, 0.25rem);
+            min-block-size: var(--kp-week-pill, 1.5rem);
+            border: 0;
+            background: none;
+        }
+
+        .kp-week__day[data-kp-today] .kp-week__col {
+            background: none;
+        }
+
+        .kp-week__pill {
+            position: static;
+            inset: auto;
+            flex: none;
+        }
+
+        .kp-week__ghost {
+            position: static;
+            inset: auto;
+        }
+    }
+
+    /* --- Run timeline: one bar per run on a time axis ----------------------
+ * `section.kp-gantt[data-kp-gantt]` (js/gantt.js). A bar of range buttons, a
+ * Live button and the selected range; under it a frame with the axis on top
+ * (it stays while the lanes scroll), one lane per job with its label on the
+ * left, and the runs as bars. Every bar is placed by the stylesheet from
+ * three numbers the script keeps current (`--kp-g-from`, `--kp-g-span`,
+ * `--kp-g-now`, seconds from a base moment) and its own two (`--kp-g-s`,
+ * `--kp-g-e`), so a growing bar and a moving window repaint nothing else.
+ * A lane's height is its rows times --kp-gantt-row and never shrinks while
+ * the window stays: a run that finishes moves nothing. The viewport keeps
+ * the height it first had with data (js/gantt.js), so a start that needs a
+ * new row scrolls inside the frame and the page does not jump.
+ *
+ * The state is a shape as well as a colour [DI4]: ok is solid; failed is
+ * solid, taller, with a cap at its end and a cross where the bar is wide
+ * enough; running is striped with a bright leading edge; queued is hollow
+ * and dashed. Knobs [KT6]: `--kp-gantt-label` (9rem, the lanes' labels),
+ * `--kp-gantt-row` (1.75rem), `--kp-gantt-bar` (1.125rem),
+ * `--kp-gantt-bar-failed` (1.5rem), `--kp-gantt-bar-min` (0.5rem),
+ * `--kp-gantt-height` (22rem, past which the lanes scroll),
+ * `--kp-gantt-bar-radius`, `--kp-gantt-now` (the line for now),
+ * `--kp-gantt-axis` (1.75rem, the axis row). */
+    .kp-gantt {
+        container: kp-gantt / inline-size;
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-gantt__bar {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    }
+
+    /* The selected-range chip takes the toolbar row over (inset 0): while a range is selected it stands where the range
+ * buttons and Live are, so it lies on no lane and adds no height at any width; Clear gives the buttons back. */
+    .kp-gantt__selection {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        box-sizing: border-box;
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        padding-inline: var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--border-strong, var(--border));
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    .kp-gantt__selection > .kp-button {
+        flex: none;
+    }
+
+    .kp-gantt__selection > .kp-gantt__selected {
+        flex: 1 1 0;
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-gantt__selection[hidden] {
+        display: none;
+    }
+
+    .kp-gantt__selected {
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-gantt__live[aria-pressed='true']::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        margin-inline-end: 0.375rem;
+        border-radius: 50%;
+        background: var(--success);
+    }
+
+    .kp-gantt__frame {
+        position: relative;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    .kp-gantt__scroll {
+        max-block-size: var(--kp-gantt-height, 22rem);
+        overflow-x: hidden;
+        overflow-y: auto;
+        touch-action: pan-y;
+        user-select: none;
+    }
+
+    .kp-gantt__body {
+        --kp-gantt-pad: 0.25rem;
+        position: relative;
+        display: grid;
+        grid-template-columns: var(--kp-gantt-label, 9rem) minmax(0, 1fr);
+        isolation: isolate;
+    }
+
+    .kp-gantt__corner,
+    .kp-gantt__axis {
+        grid-row: 1;
+        position: sticky;
+        inset-block-start: 0;
+        z-index: 3;
+        box-sizing: border-box;
+        block-size: var(--kp-gantt-axis, 1.75rem);
+        border-block-end: 1px solid var(--border-strong);
+        background: var(--card);
+    }
+
+    .kp-gantt__corner {
+        grid-column: 1;
+    }
+
+    .kp-gantt__axis {
+        grid-column: 2;
+        overflow: hidden;
+    }
+
+    .kp-gantt__tick {
+        position: absolute;
+        inset-inline-start: calc((var(--kp-g-t, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inset-block-start: 0;
+        padding-inline-start: 0.3125rem;
+        color: var(--muted-foreground);
+        font-size: 0.6875rem;
+        font-variant-numeric: tabular-nums;
+        line-height: var(--kp-gantt-axis, 1.75rem);
+        white-space: nowrap;
+    }
+
+    .kp-gantt__tick[data-kp-day] {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-gantt__lines {
+        grid-column: 2;
+        grid-row: 2 / span var(--kp-g-lanes, 1);
+        position: relative;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .kp-gantt__rule {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc((var(--kp-g-t, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inline-size: 0;
+        border-inline-start: 1px solid var(--border);
+    }
+
+    .kp-gantt__lane {
+        grid-column: 1;
+        display: flex;
+        align-items: center;
+        min-inline-size: 0;
+        box-sizing: border-box;
+        padding: 0 var(--kp-space-sm, 0.5rem);
+        border-block-end: 1px solid var(--border);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-gantt__lane > span {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-gantt__track {
+        grid-column: 2;
+        position: relative;
+        overflow: hidden;
+        box-sizing: border-box;
+        block-size: calc(var(--kp-g-rows, 1) * var(--kp-gantt-row, 1.75rem) + 2 * var(--kp-gantt-pad));
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-gantt__plot {
+        grid-column: 2;
+        grid-row: 2 / span var(--kp-g-lanes, 1);
+        position: relative;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    .kp-gantt__now {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc((var(--kp-g-now, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inline-size: 0;
+        border-inline-start: 2px solid var(--kp-gantt-now, var(--destructive));
+    }
+
+    .kp-gantt__now[data-kp-out] {
+        display: none;
+    }
+
+    .kp-gantt__select,
+    .kp-gantt__brush {
+        position: absolute;
+        inset-block: 0;
+        background: color-mix(in oklab, var(--primary) 14%, transparent);
+        border-inline: 1px solid var(--primary);
+    }
+
+    .kp-gantt__select {
+        inset-inline-start: calc((var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inline-size: calc((var(--kp-g-e, 0) - var(--kp-g-s, 0)) / var(--kp-g-span, 21600) * 100%);
+    }
+
+    .kp-gantt__brush {
+        inset-inline-start: var(--kp-g-x, 0);
+        inline-size: var(--kp-g-w, 0);
+        border-style: dashed;
+    }
+
+    .kp-gantt__select[hidden],
+    .kp-gantt__brush[hidden] {
+        display: none;
+    }
+
+    .kp-gantt__run {
+        --kp-gantt-fill: var(--success);
+        --kp-gantt-ink: var(--success-foreground);
+        container: kp-gantt-run / inline-size;
+        box-sizing: border-box;
+        position: absolute;
+        inset-block-start: calc(
+            var(--kp-gantt-pad) + var(--kp-g-row, 0) * var(--kp-gantt-row, 1.75rem) + (var(--kp-gantt-row, 1.75rem) - var(--kp-gantt-bar, 1.125rem)) /
+                2
+        );
+        inset-inline-start: calc((var(--kp-g-s, 0) - var(--kp-g-from, 0)) / var(--kp-g-span, 21600) * 100%);
+        inline-size: max(var(--kp-gantt-bar-min, 0.5rem), calc((var(--kp-g-e, 0) - var(--kp-g-s, 0)) / var(--kp-g-span, 21600) * 100%));
+        block-size: var(--kp-gantt-bar, 1.125rem);
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        border: 1px solid var(--kp-gantt-fill);
+        border-radius: var(--kp-gantt-bar-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: var(--kp-gantt-fill);
+        color: var(--kp-gantt-ink);
+        font: inherit;
+        font-size: 0.6875rem;
+        text-align: start;
+        cursor: pointer;
+    }
+
+    .kp-gantt__run[hidden] {
+        display: none;
+    }
+
+    .kp-gantt__run:is(button):hover {
+        z-index: 1;
+        box-shadow: 0 0 0 2px var(--foreground);
+    }
+
+    .kp-gantt__label {
+        display: block;
+        padding-inline: 0.375rem;
+        overflow: hidden;
+        line-height: calc(var(--kp-gantt-bar, 1.125rem) - 2px);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    .kp-gantt__run[data-kp-state='failed'] {
+        --kp-gantt-fill: var(--destructive);
+        --kp-gantt-ink: var(--destructive-foreground);
+        inset-block-start: calc(
+            var(--kp-gantt-pad) + var(--kp-g-row, 0) * var(--kp-gantt-row, 1.75rem) +
+                (var(--kp-gantt-row, 1.75rem) - var(--kp-gantt-bar-failed, 1.5rem)) / 2
+        );
+        block-size: var(--kp-gantt-bar-failed, 1.5rem);
+        box-shadow: inset -3px 0 0 var(--kp-gantt-ink);
+    }
+
+    .kp-gantt__run[data-kp-state='failed'] .kp-gantt__label {
+        line-height: calc(var(--kp-gantt-bar-failed, 1.5rem) - 2px);
+    }
+
+    .kp-gantt__run[data-kp-state='failed']:hover {
+        box-shadow:
+            inset -3px 0 0 var(--kp-gantt-ink),
+            0 0 0 2px var(--foreground);
+    }
+
+    .kp-gantt__run[data-kp-state='running'],
+    .kp-gantt__swatch[data-kp-state='running'] {
+        --kp-gantt-fill: var(--warning);
+        --kp-gantt-ink: var(--warning-foreground);
+        background-image: repeating-linear-gradient(
+            135deg,
+            transparent 0 0.375rem,
+            hsl(from var(--warning-foreground) h s l / 0.22) 0.375rem 0.75rem
+        );
+        background-size: 1.0607rem 1.0607rem;
+        box-shadow: inset -3px 0 0 var(--kp-gantt-ink);
+    }
+
+    .kp-gantt__run[data-kp-state='running']:hover {
+        box-shadow:
+            inset -3px 0 0 var(--kp-gantt-ink),
+            0 0 0 2px var(--foreground);
+    }
+
+    .kp-gantt__run[data-kp-state='queued'],
+    .kp-gantt__swatch[data-kp-state='queued'] {
+        --kp-gantt-fill: var(--muted-foreground);
+        --kp-gantt-ink: var(--foreground);
+        background: transparent;
+        border-style: dashed;
+    }
+
+    .kp-gantt__run[data-kp-state='failed'] .kp-gantt__label::before {
+        content: var(--kp-glyph-failed, '✕');
+        margin-inline-end: 0.25rem;
+        font-weight: 700;
+    }
+
+    @container kp-gantt-run (max-width: 2rem) {
+        .kp-gantt__label {
+            display: none;
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-gantt__run[data-kp-state='running'] {
+            animation: kp-gantt-march 1600ms linear infinite;
+        }
+    }
+
+    @keyframes kp-gantt-march {
+        to {
+            background-position: 1.0607rem 0;
+        }
+    }
+
+    .kp-gantt__ghost.kp-gantt__lane {
+        border-block-end-color: var(--border);
+    }
+
+    .kp-gantt__ghost.kp-gantt__lane > .kp-skeleton {
+        inline-size: 70%;
+        block-size: 0.75rem;
+    }
+
+    .kp-gantt__ghost .kp-gantt__run {
+        inset-inline-start: calc(var(--kp-g-at, 0) * 100%);
+        inline-size: calc(var(--kp-g-width, 0.1) * 100%);
+        border: 0;
+        cursor: default;
+        background: var(--muted);
+    }
+
+    .kp-gantt__state {
+        position: absolute;
+        inset: var(--kp-gantt-axis, 1.75rem) 0 0;
+        z-index: 4;
+        display: grid;
+        place-items: center;
+        margin: 0;
+        padding: var(--kp-space-md, 0.75rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
+        pointer-events: none;
+    }
+
+    .kp-gantt__state:empty {
+        display: none;
+    }
+
+    .kp-gantt__state[data-kp-state='error'] {
+        color: var(--destructive);
+    }
+
+    .kp-gantt[data-kp-state='ready'] .kp-gantt__body:not(:has(.kp-gantt__lane)) {
+        min-block-size: 5.25rem;
+    }
+
+    .kp-gantt__legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-gantt__legend li {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+
+    .kp-gantt__swatch {
+        --kp-gantt-fill: var(--success);
+        box-sizing: border-box;
+        inline-size: 1.25rem;
+        block-size: 0.625rem;
+        border: 1px solid var(--kp-gantt-fill);
+        border-radius: var(--kp-gantt-bar-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: var(--kp-gantt-fill);
+    }
+
+    .kp-gantt__swatch[data-kp-state='failed'] {
+        --kp-gantt-fill: var(--destructive);
+        block-size: 0.8125rem;
+        box-shadow: inset -3px 0 0 var(--destructive-foreground);
+    }
+
+    .kp-gantt__hint {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-gantt__announce {
+        position: absolute;
+        inline-size: 1px;
+        block-size: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        white-space: nowrap;
+        border: 0;
+        clip-path: inset(50%);
+    }
+
+    @container kp-gantt (max-width: 32rem) {
+        .kp-gantt__body {
+            --kp-gantt-label: 5.5rem;
+        }
+
+        .kp-gantt__lane {
+            font-size: var(--kp-text-xs, 0.75rem);
+        }
+    }
+
     /* Diff view [TH54] */
     .kp-diff {
         margin: 0;
@@ -12746,6 +13643,682 @@
         block-size: 1rem;
         border: 2px solid transparent;
         border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+    }
+
+    /* --- Heat grid [kpadopt2-grids] ----------------------------------------- */
+
+    /* Rows x many columns of small cells, each toned by a state (ok, warn,
+ * bad, muted, future, before, none: the month heatmap's words) or by a
+ * value (`data-kp-tone="level"` with `--kp-heat-level` 0 to 1). A label
+ * column on the start side (the label is a button that toggles when the
+ * grid is `data-kp-heat-toggle`), the column axis above (or below,
+ * `axis: 'end'`), an optional summary row whose cells fill from the bottom
+ * by `--kp-heat-share`, a legend (`.kp-heat__legend`), a picked column
+ * (`data-kp-picked`) and hover detail through the hover card. js/heat.js
+ * writes and wires it; the markup is complete without the script.
+ *
+ * Every row is a subgrid of the label column and the cell columns, so the
+ * labels and the cells line up in every state, a loading grid keeps the
+ * same footprint (the cells are the theme's own `.kp-skeleton--block`), and
+ * a state is never told by colour alone: a bad cell is striped, a warn
+ * cell ruled, a future cell dashed, a cell before the record hatched.
+ * Knobs: --kp-heat-cols (set by the script), --kp-heat-label (8rem, at most
+ * a quarter of the grid on a narrow page), --kp-heat-gap-x (0.75rem),
+ * --kp-heat-gap-y (6px), --kp-heat-cell-gap (3px), --kp-heat-cell-edge (1px, a cell's frame),
+ * --kp-heat-cell-ink (the frame's colour), --kp-heat-cell-lift (a shadow),
+ * --kp-heat-cell-hover (the hover transform), --kp-heat-cell-height
+ * (22px), --kp-heat-summary-height (30px), --kp-heat-cell-radius,
+ * --kp-heat-state-height (6rem, the empty and failed states), and the
+ * fills --kp-heat-ok, --kp-heat-warn, --kp-heat-bad, --kp-heat-level-ink. */
+    :is(.kp-heat, .kp-heat__legend, .kp-heat__swatch) {
+        --kp-heat-ok: color-mix(in oklab, var(--success-foreground) 70%, var(--card));
+        --kp-heat-warn: color-mix(in oklab, var(--warning-foreground) 78%, var(--card));
+        --kp-heat-bad: var(--destructive);
+        --kp-heat-level-ink: var(--primary);
+    }
+
+    .kp-heat {
+        display: grid;
+        grid-template-columns: clamp(4.5rem, 26%, var(--kp-heat-label, 8rem)) minmax(0, 1fr);
+        column-gap: var(--kp-heat-gap-x, 0.75rem);
+        row-gap: var(--kp-heat-gap-y, 6px);
+        align-content: start;
+        align-items: center;
+        min-inline-size: 0;
+    }
+
+    .kp-heat__row {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        align-items: center;
+        min-block-size: var(--kp-heat-cell-height, 22px);
+    }
+
+    .kp-heat__cells {
+        display: grid;
+        grid-template-columns: repeat(var(--kp-heat-cols, 30), minmax(0, 1fr));
+        gap: var(--kp-heat-cell-gap, 3px);
+        min-inline-size: 0;
+    }
+
+    .kp-heat__label {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 500;
+    }
+
+    .kp-heat__label-button {
+        appearance: none;
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        inline-size: calc(100% + 12px);
+        min-inline-size: 0;
+        margin-inline: -6px;
+        padding: 2px 6px;
+        border: 0;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: none;
+        color: inherit;
+        font: inherit;
+        text-align: start;
+        cursor: pointer;
+    }
+
+    .kp-heat__label-button:hover {
+        background: color-mix(in oklab, var(--muted) 70%, transparent);
+    }
+
+    .kp-heat__label-button[aria-pressed='true'] {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    .kp-heat__label-button:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 1px;
+    }
+
+    .kp-heat__label-text {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-heat__label-text--muted {
+        color: var(--muted-foreground);
+    }
+
+    .kp-heat__mark {
+        flex: none;
+        inline-size: 0.625rem;
+        block-size: 0.625rem;
+        border-radius: 2px;
+        background: var(--kp-heat-mark, var(--primary));
+    }
+
+    .kp-heat__label-skeleton {
+        inline-size: 70%;
+        block-size: 0.75rem;
+    }
+
+    .kp-heat__sep {
+        grid-column: 1 / -1;
+        margin-block: 4px;
+        border-block-start: 1px solid var(--border);
+    }
+
+    /* The column axis: one name per few columns; the others stay in their
+ * column, in no colour, so every name keeps its own column and a screen
+ * reader still has every header. */
+    .kp-heat__col {
+        display: flex;
+        justify-content: center;
+        min-inline-size: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    .kp-heat__col:last-child:not([data-kp-minor]) {
+        justify-content: flex-end;
+    }
+
+    .kp-heat__col[data-kp-minor] {
+        overflow: hidden;
+        color: transparent;
+        user-select: none;
+    }
+
+    /* On a phone every second name goes: thirty columns are 8 px each there. */
+    @media (max-width: 40rem) {
+        .kp-heat__col:not([data-kp-minor], :last-child):nth-child(6n + 4) {
+            color: transparent;
+            user-select: none;
+        }
+    }
+
+    .kp-heat__col[data-kp-picked] {
+        color: var(--foreground);
+        font-weight: 700;
+    }
+
+    .kp-heat__cell,
+    .kp-heat__swatch {
+        --kp-heat-fill: var(--muted);
+        --kp-heat-pattern: none;
+        box-sizing: border-box;
+        border: var(--kp-heat-cell-edge, 1px) solid var(--kp-heat-cell-ink, transparent);
+        border-radius: var(--kp-heat-cell-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        box-shadow: var(--kp-heat-cell-lift, none);
+        background-color: var(--kp-heat-fill);
+        background-image: var(--kp-heat-pattern);
+    }
+
+    .kp-heat__cell {
+        position: relative;
+        display: block;
+        min-inline-size: 0;
+        block-size: var(--kp-heat-cell-height, 22px);
+        padding: 0;
+        cursor: pointer;
+    }
+
+    .kp-heat__swatch {
+        display: inline-block;
+        inline-size: 0.75rem;
+        block-size: 0.75rem;
+        vertical-align: -0.125rem;
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='ok'] {
+        --kp-heat-fill: var(--kp-heat-ok);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='warn'] {
+        --kp-heat-fill: var(--kp-heat-warn);
+        --kp-heat-pattern: repeating-linear-gradient(0deg, color-mix(in oklab, var(--card) 55%, transparent) 0 1px, transparent 1px 4px);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='bad'] {
+        --kp-heat-fill: var(--kp-heat-bad);
+        --kp-heat-pattern: repeating-linear-gradient(135deg, color-mix(in oklab, var(--card) 38%, transparent) 0 2px, transparent 2px 5px);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='future'] {
+        --kp-heat-fill: transparent;
+        border-style: dashed;
+        border-color: var(--muted-foreground);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='before'] {
+        --kp-heat-fill: transparent;
+        --kp-heat-pattern: repeating-linear-gradient(135deg, var(--muted) 0 3px, transparent 3px 6px);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='none'] {
+        --kp-heat-fill: transparent;
+        border-color: var(--border);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='level'] {
+        --kp-heat-fill: color-mix(in oklab, var(--kp-heat-level-ink) calc(var(--kp-heat-level, 0) * 100%), var(--muted));
+    }
+
+    /* The summary row: the cell is a track and the tone fills it from the
+ * bottom by the share (a night in which four of five stacks were backed up). */
+    .kp-heat__row--summary {
+        min-block-size: var(--kp-heat-summary-height, 30px);
+    }
+
+    .kp-heat__row--summary .kp-heat__cell {
+        block-size: var(--kp-heat-summary-height, 30px);
+    }
+
+    .kp-heat__cell[data-kp-share] {
+        overflow: hidden;
+        background-color: var(--muted);
+        background-image: none;
+    }
+
+    .kp-heat__cell[data-kp-share]::before {
+        content: '';
+        position: absolute;
+        inset: auto 0 0 0;
+        block-size: calc(var(--kp-heat-share, 0) * 100%);
+        background-color: var(--kp-heat-fill);
+        background-image: var(--kp-heat-pattern);
+    }
+
+    .kp-heat__cell[data-kp-share]:is([data-kp-tone='future'], [data-kp-tone='before'], [data-kp-tone='none'], [data-kp-tone='muted']) {
+        background-color: transparent;
+        background-image: var(--kp-heat-pattern);
+    }
+
+    .kp-heat__cell[data-kp-share]:is([data-kp-tone='future'], [data-kp-tone='before'], [data-kp-tone='none'], [data-kp-tone='muted'])::before {
+        display: none;
+    }
+
+    /* Hover, focus, the picked column. The cell grows a little on the block
+ * axis only, so no neighbour moves. */
+    .kp-heat__cell[aria-disabled='true'] {
+        cursor: default;
+    }
+
+    .kp-heat__cell:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+        z-index: 1;
+    }
+
+    .kp-heat__cell[data-kp-picked] {
+        outline: 2px solid var(--primary);
+        outline-offset: 1px;
+    }
+
+    .kp-heat__cell[data-kp-picked]:focus-visible {
+        outline-color: var(--ring);
+        outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-heat__cell {
+            transition: transform var(--fx-duration, 110ms) var(--fx-ease, ease);
+        }
+
+        .kp-heat__cell:hover:not([aria-disabled='true'], .kp-skeleton) {
+            transform: var(--kp-heat-cell-hover, scaleY(1.15));
+        }
+    }
+
+    /* Loading keeps the footprint: the cells are the theme's skeleton block
+ * at the cell's own size. */
+    .kp-heat__cell.kp-skeleton {
+        block-size: var(--kp-heat-cell-height, 22px);
+        cursor: progress;
+    }
+
+    .kp-heat__row--summary .kp-heat__cell.kp-skeleton {
+        block-size: var(--kp-heat-summary-height, 30px);
+    }
+
+    .kp-heat__state {
+        grid-column: 1 / -1;
+        display: grid;
+        place-items: center;
+        min-block-size: var(--kp-heat-state-height, 6rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
+    }
+
+    .kp-heat__state[data-kp-state='error'] {
+        color: var(--destructive);
+    }
+
+    /* The legend, under the grid: a swatch and its words, wrapping by whole
+ * entries. `.kp-heat__ramp` is a value scale, less to more. */
+    .kp-heat__legend {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
+        margin: var(--kp-space-sm, 0.5rem) 0 0;
+        padding: 0;
+        list-style: none;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-heat__legend > li {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-heat__legend > li[data-kp-end] {
+        display: flex;
+        flex: 1 1 auto;
+        justify-content: flex-end;
+        min-inline-size: 0;
+    }
+
+    .kp-heat__legend > li[data-kp-end] > .kp-keys {
+        flex: 0 1 auto;
+        min-inline-size: 0;
+        justify-content: flex-end;
+    }
+
+    .kp-heat__ramp {
+        display: inline-flex;
+        gap: 2px;
+    }
+
+    /* --- Matrix [kpadopt2-grids] -------------------------------------------- */
+
+    /* Source x destination: a cell per pair, each in words and a glyph as
+ * well as a tone (allowed, mismatch, blocked, unknown; `self` is the pair
+ * with itself, dashed and inert). The grid scrolls inside its own box when
+ * the cells cannot be narrower than --kp-matrix-cell-min; the column
+ * headers stay on the top and the row headers on the start side, and the
+ * corner holds the key ("from down to across"). A header is a button that
+ * lights its row and its column (`data-kp-lit` on the matrix dims the cells
+ * it does not touch); one cell can be pinned (`aria-pressed`); a rule
+ * being read marks the cells it touches (`data-kp-mark`).
+ * Knobs: --kp-matrix-cols (set by the script), --kp-matrix-head (6.5rem, 4.6rem
+ * in a box under 36rem), --kp-matrix-cell-min (3.5rem), --kp-matrix-cell-height
+ * (44px), --kp-matrix-gap (4px), --kp-matrix-ground (the card colour: what the
+ * sticky headers are painted with), --kp-matrix-dim (0.4). */
+    .kp-matrix {
+        --kp-matrix-ground: var(--card);
+        container: kp-matrix / inline-size;
+        position: relative;
+        max-inline-size: 100%;
+        overflow: auto;
+        overscroll-behavior-x: contain;
+        scroll-padding-inline-start: var(--kp-matrix-head, 6.5rem);
+        scroll-padding-block-start: 2.5rem;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-matrix__grid {
+        display: grid;
+        grid-template-columns: var(--kp-matrix-head, 6.5rem) repeat(var(--kp-matrix-cols, 5), minmax(var(--kp-matrix-cell-min, 3.5rem), 1fr));
+        gap: var(--kp-matrix-gap, 4px);
+        inline-size: max-content;
+        min-inline-size: 100%;
+        align-content: start;
+    }
+
+    .kp-matrix__line {
+        display: contents;
+    }
+
+    @container kp-matrix (max-width: 36rem) {
+        .kp-matrix__grid {
+            --kp-matrix-head: 4.6rem;
+            --kp-matrix-gap: 3px;
+        }
+    }
+
+    .kp-matrix__corner {
+        position: sticky;
+        inset: 0 auto auto 0;
+        z-index: 3;
+        display: flex;
+        align-items: flex-end;
+        padding: 4px 2px;
+        background: var(--kp-matrix-ground);
+        color: var(--muted-foreground);
+        box-shadow: 0 var(--kp-matrix-gap, 4px) 0 var(--kp-matrix-ground);
+    }
+
+    .kp-matrix__col,
+    .kp-matrix__row {
+        appearance: none;
+        box-sizing: border-box;
+        min-inline-size: 0;
+        margin: 0;
+        border: 0;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--kp-matrix-ground);
+        color: var(--muted-foreground);
+        font: inherit;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .kp-matrix__col {
+        position: sticky;
+        inset-block-start: 0;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 4px 2px;
+        box-shadow: 0 var(--kp-matrix-gap, 4px) 0 var(--kp-matrix-ground);
+    }
+
+    .kp-matrix__row {
+        position: sticky;
+        inset-inline-start: 0;
+        z-index: 1;
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.375rem);
+        padding: 0 6px;
+        color: var(--foreground);
+        text-align: start;
+        box-shadow: var(--kp-matrix-gap, 4px) 0 0 var(--kp-matrix-ground);
+    }
+
+    .kp-matrix__name {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-matrix__mark {
+        flex: none;
+        inline-size: 0.75rem;
+        block-size: 0.75rem;
+        border-radius: 2px;
+        background: var(--kp-heat-mark, var(--primary));
+    }
+
+    @container kp-matrix (max-width: 36rem) {
+        .kp-matrix__row .kp-matrix__mark {
+            display: none;
+        }
+    }
+
+    :is(.kp-matrix__col, .kp-matrix__row):hover {
+        background: color-mix(in oklab, var(--muted) 70%, var(--kp-matrix-ground));
+    }
+
+    :is(.kp-matrix__col, .kp-matrix__row)[aria-pressed='true'] {
+        background: var(--accent);
+        color: var(--accent-foreground);
+    }
+
+    :is(.kp-matrix__col, .kp-matrix__row):focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: -2px;
+    }
+
+    .kp-matrix__cell {
+        appearance: none;
+        box-sizing: border-box;
+        display: grid;
+        place-items: center;
+        min-inline-size: 0;
+        min-block-size: var(--kp-matrix-cell-height, 44px);
+        margin: 0;
+        padding: 2px;
+        border: 2px solid transparent;
+        border-radius: var(--kp-heat-cell-radius, var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2)));
+        background: var(--muted);
+        color: var(--muted-foreground);
+        font: inherit;
+        font-variant-numeric: tabular-nums;
+        line-height: 1.2;
+        text-align: center;
+        overflow-wrap: anywhere;
+        cursor: pointer;
+    }
+
+    .kp-matrix__cell[data-kp-glyph]::before {
+        content: attr(data-kp-glyph);
+        font-size: 1.25em;
+        font-weight: 700;
+    }
+
+    .kp-matrix__cell[data-kp-tone='ok'] {
+        background: var(--success);
+        color: var(--success-foreground);
+        font-weight: 600;
+    }
+
+    .kp-matrix__cell[data-kp-tone='warn'] {
+        background: var(--warning);
+        color: var(--warning-foreground);
+        font-weight: 600;
+    }
+
+    .kp-matrix__cell[data-kp-tone='bad'] {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-weight: 600;
+    }
+
+    .kp-matrix__cell[data-kp-tone='muted'] {
+        background: var(--muted);
+        color: var(--muted-foreground);
+    }
+
+    .kp-matrix__cell:is([data-kp-tone='self'], [data-kp-tone='none']) {
+        border-style: dashed;
+        border-color: var(--border);
+        background: transparent;
+        cursor: default;
+    }
+
+    .kp-matrix__cell[data-kp-tone='none'] {
+        border-color: var(--border-strong);
+    }
+
+    .kp-matrix__cell[data-kp-ringed] {
+        box-shadow:
+            inset 0 0 0 2px var(--destructive),
+            inset 0 0 0 4px var(--kp-matrix-ground);
+    }
+
+    .kp-matrix__cell[aria-pressed='true'] {
+        outline: 2px solid var(--primary);
+        outline-offset: 1px;
+    }
+
+    .kp-matrix__cell:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+
+    .kp-matrix__cell[data-kp-mark] {
+        outline: 2px dashed var(--primary);
+        outline-offset: 1px;
+    }
+
+    .kp-matrix[data-kp-lit] .kp-matrix__cell:not([data-kp-hot], [data-kp-mark], [data-kp-inert]) {
+        opacity: var(--kp-matrix-dim, 0.4);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-matrix__cell {
+            transition:
+                transform var(--fx-duration, 110ms) var(--fx-ease, ease),
+                opacity var(--fx-duration, 110ms) var(--fx-ease, ease);
+        }
+
+        .kp-matrix__cell:hover:not([data-kp-inert], [aria-disabled='true']) {
+            transform: var(--kp-matrix-cell-hover, scale(1.05));
+        }
+    }
+
+    .kp-matrix__cell.kp-skeleton {
+        min-block-size: var(--kp-matrix-cell-height, 44px);
+        block-size: auto;
+        cursor: progress;
+    }
+
+    .kp-matrix__col--skeleton,
+    .kp-matrix__row--skeleton {
+        block-size: 1rem;
+        align-self: center;
+    }
+
+    .kp-matrix__state {
+        display: grid;
+        place-items: center;
+        min-block-size: var(--kp-heat-state-height, 6rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    /* The legend under a matrix is the heat grid's. A matrix swatch shows the
+ * cell's plate. */
+    .kp-heat__swatch--plate {
+        inline-size: 1rem;
+        block-size: 1rem;
+        border-width: 2px;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+    }
+
+    .kp-heat__swatch--plate[data-kp-tone='ok'] {
+        background: var(--success);
+    }
+
+    .kp-heat__swatch--plate[data-kp-tone='warn'] {
+        background: var(--warning);
+    }
+
+    .kp-heat__swatch--plate[data-kp-tone='bad'] {
+        background: var(--destructive);
+    }
+
+    .kp-heat__swatch--plate[data-kp-tone='muted'] {
+        background: var(--muted);
+    }
+
+    .kp-heat__swatch--plate:is([data-kp-tone='self'], [data-kp-tone='none']) {
+        border-style: dashed;
+        border-color: var(--border-strong);
+        background: transparent;
+    }
+
+    .kp-heat__swatch--plate[data-kp-ringed] {
+        box-shadow:
+            inset 0 0 0 2px var(--destructive),
+            inset 0 0 0 4px var(--card);
+    }
+
+    /* --- A value with a bar, in a table cell [kpadopt2-grids] ---------------- */
+
+    /* The meter and its number in one cell: the bar takes the room that is
+ * left, the number a column of its own on the end edge, so a column of
+ * these lines up its bars and its figures whatever the figures say. A data
+ * table sorts it by the cell's `data-kp-sort-value`. js/barcell.js writes
+ * it; `data-kp-bar="0.62"` on the span is enough. Knobs:
+ * --kp-bar-cell-bar (3rem, the least the bar takes), --kp-bar-cell-value
+ * (4ch, the number's column), --kp-bar-cell-gap (0.5rem). */
+    .kp-bar-cell {
+        display: grid;
+        grid-template-columns: minmax(var(--kp-bar-cell-bar, 3rem), 1fr) var(--kp-bar-cell-value, 4ch);
+        align-items: center;
+        gap: var(--kp-bar-cell-gap, var(--kp-space-sm, 0.5rem));
+        min-inline-size: 0;
+    }
+
+    .kp-bar-cell--start {
+        grid-template-columns: var(--kp-bar-cell-value, 4ch) minmax(var(--kp-bar-cell-bar, 3rem), 1fr);
+    }
+
+    .kp-bar-cell--start > .kp-bar-cell__value {
+        order: -1;
+    }
+
+    .kp-bar-cell__value {
+        min-inline-size: 0;
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+        white-space: nowrap;
     }
 
     /* --- Bottom tab bar [kpadopt-nav] -------------------------------------- */
@@ -17376,17 +18949,17 @@
        with the tone's hue, a neon edge, bright ink. The ink and the edge come from the theme's own
        tokens (the status ink, red alarms in its hot tint); the tint is derived, never a colour of
        its own. Every state is measured against its ground, AA 4.5:1. */
-    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-alert) {
+    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate, .kp-alert) {
         --kp-cp-neon-ground: hsl(from var(--kp-cp-neon-edge, transparent) h calc(s * 0.6) 8%);
     }
 
-    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='ok'],
+    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='ok'],
     [data-theme='cyberpunk'] .kp-alert--success {
         --kp-cp-neon: var(--success-foreground);
         --kp-cp-neon-edge: var(--success-foreground);
     }
 
-    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='warn'],
+    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='warn'],
     [data-theme='cyberpunk'] .kp-alert--warning {
         --kp-cp-neon: var(--warning-foreground);
         --kp-cp-neon-edge: var(--warning-foreground);
@@ -17397,7 +18970,7 @@
         --kp-cp-neon-edge: var(--info-foreground);
     }
 
-    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='bad'],
+    [data-theme='cyberpunk'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='bad'],
     [data-theme='cyberpunk'] .kp-alert--destructive {
         --kp-cp-neon: var(--fx-hot-alarm, var(--destructive));
         --kp-cp-neon-edge: var(--destructive);
@@ -17409,8 +18982,14 @@
             .kp-calendar__day[data-kp-tone='warn'],
             .kp-calendar__day[data-kp-tone='bad'],
             .kp-calendar__swatch[data-kp-tone='ok'],
+            .kp-matrix__cell[data-kp-tone='ok'],
+            .kp-heat__swatch--plate[data-kp-tone='ok'],
             .kp-calendar__swatch[data-kp-tone='warn'],
+            .kp-matrix__cell[data-kp-tone='warn'],
+            .kp-heat__swatch--plate[data-kp-tone='warn'],
             .kp-calendar__swatch[data-kp-tone='bad'],
+            .kp-matrix__cell[data-kp-tone='bad'],
+            .kp-heat__swatch--plate[data-kp-tone='bad'],
             .kp-alert--success,
             .kp-alert--warning,
             .kp-alert--info,
@@ -20788,6 +22367,84 @@
     }
     [data-theme='cyberpunk'] .kp-facet {
         --kp-facet-hover: hsl(from var(--primary) h s l / 0.1);
+    }
+}
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Neon tubes in a void: a cell is a dark tinted ground in its tone's neon edge, a glow of the same hue; the pick is a cyan tube. */
+    [data-theme='cyberpunk'] .kp-heat {
+        --kp-heat-cell-radius: 1px;
+        --kp-heat-cell-gap: 2px;
+    }
+    [data-theme='cyberpunk']
+        .kp-heat__cell:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']):not([data-kp-share]),
+    [data-theme='cyberpunk'] .kp-heat__swatch:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']) {
+        background-color: hsl(from var(--kp-heat-fill) h calc(s * 0.6) 11%);
+        background-image: linear-gradient(to top, var(--kp-heat-fill) 0 3px, transparent 3px), var(--kp-heat-pattern);
+        border-color: var(--kp-heat-fill);
+        box-shadow: 0 0 6px hsl(from var(--kp-heat-fill) h s l / 0.55);
+    }
+    [data-theme='cyberpunk'] .kp-heat__cell[data-kp-share] {
+        background-color: hsl(from var(--muted) h s 8%);
+        border-color: hsl(from var(--kp-heat-fill) h s l / 0.7);
+    }
+    [data-theme='cyberpunk'] .kp-heat__cell[data-kp-picked] {
+        outline: 2px solid var(--accent);
+        outline-offset: 1px;
+        box-shadow: 0 0 10px var(--accent);
+    }
+    [data-theme='cyberpunk'] .kp-heat__label {
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='cyberpunk'] .kp-matrix__cell[data-kp-hovercard]:hover:not([data-kp-inert]) {
+        box-shadow: 0 0 10px var(--kp-cp-neon, var(--accent));
+    }
+    [data-theme='cyberpunk'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='cyberpunk'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='cyberpunk'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: a HUD readout. One notched corner (cut outwards past the box so the focus ring stays whole), a hard 3px bar on the leading edge, a running bar that burns. */
+    [data-theme='cyberpunk'] .kp-week {
+        --kp-week-pill-radius: 0;
+        --kp-week-now: var(--primary);
+    }
+    [data-theme='cyberpunk'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+        --kp-gantt-now: var(--primary);
+    }
+    [data-theme='cyberpunk'] :is(.kp-week__pill, .kp-gantt__run) {
+        clip-path: polygon(
+            -8px -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--fx-notch-sm) - 8px),
+            calc(100% - var(--fx-notch-sm) - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px)
+        );
+    }
+    [data-theme='cyberpunk'] .kp-week__pill {
+        border-color: var(--kp-hairline);
+        border-inline-start: 3px solid var(--kp-week-ink);
+    }
+    [data-theme='cyberpunk'] .kp-week__time {
+        font-family: var(--kp-mono);
+    }
+    [data-theme='cyberpunk'] .kp-gantt__run[data-kp-state='running'] {
+        filter: drop-shadow(0 0 3px var(--kp-gantt-fill));
+    }
+    [data-theme='cyberpunk'] .kp-gantt__tick,
+    [data-theme='cyberpunk'] .kp-week__axis > span {
+        font-family: var(--kp-mono);
     }
 }
 
@@ -24314,7 +25971,9 @@
             :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
             .kp-calendar__day[data-kp-tone='loading']
             > .kp-calendar__day-busy:not([data-kp-leaving])::after,
-        [data-theme='synthwave'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy:not([data-kp-leaving])::after {
+        [data-theme='synthwave']
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true'])
+            > .kp-calendar__busy:not([data-kp-leaving])::after {
             content: '';
             position: absolute;
             inset: 0;
@@ -25243,6 +26902,74 @@
     }
     [data-theme='synthwave'] .kp-facet {
         --kp-facet-hover: hsl(from var(--primary) h s l / 0.1);
+    }
+}
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* A glowing core in a pale tube: each tile is a rounded tube lit from inside, its glow the tone's own light; the pick is a cyan rail pair. */
+    [data-theme='synthwave'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 999px;
+        --kp-heat-cell-gap: 3px;
+    }
+    [data-theme='synthwave'] .kp-matrix {
+        --kp-heat-cell-radius: 8px;
+    }
+    [data-theme='synthwave']
+        .kp-heat__cell:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']):not([data-kp-share]),
+    [data-theme='synthwave'] .kp-heat__swatch:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']) {
+        background-image: linear-gradient(to bottom, hsl(from var(--background) h s 100% / 0.45), transparent 55%), var(--kp-heat-pattern);
+        box-shadow: 0 0 8px hsl(from var(--kp-heat-fill) h s l / 0.7);
+    }
+    [data-theme='synthwave'] .kp-heat__cell[data-kp-share] {
+        box-shadow: 0 0 6px hsl(from var(--kp-heat-fill) h s l / 0.5);
+    }
+    [data-theme='synthwave'] .kp-heat__cell[data-kp-picked] {
+        outline: none;
+        box-shadow:
+            0 -3px 0 -1px var(--accent),
+            0 3px 0 -1px var(--accent);
+    }
+    [data-theme='synthwave'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: none;
+        box-shadow:
+            0 0 0 2px var(--accent),
+            0 0 12px var(--accent);
+    }
+    [data-theme='synthwave'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='synthwave'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='synthwave'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: the arcade floor. A running bar is the pink-to-cyan beam with its stripes over it and a neon halo; the grid lines are the floor's. */
+    [data-theme='synthwave'] .kp-week {
+        --kp-week-pill-radius: 3px;
+        --kp-week-now: var(--primary);
+    }
+    [data-theme='synthwave'] .kp-gantt {
+        --kp-gantt-bar-radius: 3px;
+        --kp-gantt-now: var(--primary);
+    }
+    [data-theme='synthwave'] .kp-gantt__run[data-kp-state='running'] {
+        background-image:
+            repeating-linear-gradient(135deg, transparent 0 0.375rem, hsl(from var(--warning-foreground) h s l / 0.22) 0.375rem 0.75rem),
+            linear-gradient(90deg, var(--primary), var(--secondary, var(--accent, var(--primary))));
+        filter: drop-shadow(0 0 4px hsl(from var(--primary) h s l / 0.7));
+    }
+    [data-theme='synthwave'] .kp-week__pill[data-kp-state='next'] {
+        filter: drop-shadow(0 0 4px hsl(from var(--ring) h s l / 0.7));
+    }
+    [data-theme='synthwave'] .kp-gantt__tick,
+    [data-theme='synthwave'] .kp-week__dow {
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
     }
 }
 
@@ -27928,7 +29655,6 @@
         pointer-events: none;
     }
 
-
     [data-theme='phantom'] .kp-dialog__title {
         /* The title at the package's metrics [scope-87]: Kenny chose the fixed size
            over the theme's own on 2026-10-03 (research/dialog-title). */
@@ -29256,13 +30982,15 @@
         }
 
         /* A rail (slim) keeps its width glide beside the throw. */
-        [data-theme='phantom'] .kp-sidenav[data-kp-sidenav-slim]:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+        [data-theme='phantom']
+            .kp-sidenav[data-kp-sidenav-slim]:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
             transition:
                 translate 400ms cubic-bezier(0.81, 0, 0, 1),
                 inline-size 400ms cubic-bezier(0.81, 0, 0, 1);
         }
 
-        [data-theme='phantom'] .kp-sidenav[data-kp-sidenav-slim]:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+        [data-theme='phantom']
+            .kp-sidenav[data-kp-sidenav-slim]:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
             transition:
                 translate 400ms cubic-bezier(1, 0, 0.19, 1) 300ms,
                 inline-size 400ms cubic-bezier(1, 0, 0.19, 1);
@@ -29538,6 +31266,69 @@
     }
     [data-theme='phantom'] .kp-facet {
         --kp-facet-hover: var(--muted);
+    }
+}
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Cut-out plates: each tile is thrown in off the square (a slight slant) with a hard black shadow; a press drops it 3 px; the pick is a white bar under the column. */
+    [data-theme='phantom'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 0;
+        --kp-heat-cell-lift: 2px 2px 0 hsl(from var(--foreground) h s l / 0.55);
+        --kp-heat-cell-hover: translate(-1px, -1px);
+        --kp-matrix-cell-hover: translate(-2px, -2px);
+    }
+    [data-theme='phantom'] .kp-heat__cell {
+        rotate: -2deg;
+    }
+    [data-theme='phantom'] .kp-heat__cell:is([data-kp-tone='future'], [data-kp-tone='none'], [data-kp-tone='before'], [data-kp-share]) {
+        box-shadow: none;
+    }
+    [data-theme='phantom'] .kp-heat__cell:active:not(.kp-skeleton),
+    [data-theme='phantom'] .kp-matrix__cell:active:not([data-kp-inert]) {
+        transform: translate(3px, 3px);
+        box-shadow: none;
+    }
+    [data-theme='phantom'] .kp-heat__cell[data-kp-picked],
+    [data-theme='phantom'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 3px solid var(--foreground);
+        outline-offset: 1px;
+    }
+    [data-theme='phantom'] .kp-heat__label,
+    [data-theme='phantom'] .kp-matrix__row,
+    [data-theme='phantom'] .kp-matrix__col {
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-weight: 800;
+    }
+    [data-theme='phantom'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='phantom'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='phantom'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: slanted plates. Pills and bars lean with the theme's skew, in the display face, as its badges do; the text keeps the lean. */
+    [data-theme='phantom'] .kp-week {
+        --kp-week-pill-radius: 0;
+    }
+    [data-theme='phantom'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+    }
+    [data-theme='phantom'] :is(.kp-week__pill, .kp-gantt__run) {
+        transform: skewX(var(--kp-skew));
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='phantom'] .kp-week__pill:is(button)[data-kp-state='next'] {
+        transform: skewX(var(--kp-skew));
     }
 }
 
@@ -31975,7 +33766,8 @@
 
     /* The cursor at the line a menu or popover is printing; at rest it is not
        drawn (nothing sits on a part that is not waiting, G16). */
-    [data-theme='terminal'] :is(.kp-popover[popover], .kp-menu-button > .kp-menu, .kp-combobox__list, .kp-datepicker__panel, .kp-tour):not(.kp-tooltip)::before,
+    [data-theme='terminal']
+        :is(.kp-popover[popover], .kp-menu-button > .kp-menu, .kp-combobox__list, .kp-datepicker__panel, .kp-tour):not(.kp-tooltip)::before,
     [data-theme='terminal'] .kp-nav__links > li > .kp-nav__menu::after {
         content: '';
         position: absolute;
@@ -33066,7 +34858,9 @@
             :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
             .kp-calendar__day[data-kp-tone='loading']
             > .kp-calendar__day-busy:not([data-kp-leaving])::after,
-        [data-theme='terminal'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy:not([data-kp-leaving])::after {
+        [data-theme='terminal']
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true'])
+            > .kp-calendar__busy:not([data-kp-leaving])::after {
             content: '';
             position: absolute;
             inset-block: 0;
@@ -33606,6 +35400,83 @@
     }
     [data-theme='terminal'] .kp-facet {
         --kp-facet-hover: var(--muted);
+    }
+}
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Character cells: square, no rounding, no shadow; a cell under the pointer takes the cursor ring; the pick is reverse video: a > before the column's name and a bar of phosphor under it. */
+    [data-theme='terminal'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 0;
+        --kp-heat-cell-gap: 2px;
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+    }
+    [data-theme='terminal'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='terminal'] .kp-matrix__cell:hover:not([data-kp-inert]) {
+        box-shadow: var(--kp-sig-tm-ring, 0 0 0 1px var(--foreground));
+        z-index: 1;
+    }
+    [data-theme='terminal'] .kp-heat__col[data-kp-picked]::before {
+        content: '>';
+    }
+    [data-theme='terminal'] .kp-heat__cell[data-kp-picked] {
+        outline: 1px solid var(--foreground);
+        outline-offset: 1px;
+    }
+    [data-theme='terminal'] .kp-heat__label-button[aria-pressed='true'],
+    [data-theme='terminal'] :is(.kp-matrix__col, .kp-matrix__row)[aria-pressed='true'] {
+        background: var(--foreground);
+        color: var(--background);
+    }
+    [data-theme='terminal'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 1px solid var(--foreground);
+        outline-offset: 2px;
+    }
+    [data-theme='terminal'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='terminal'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='terminal'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: program output. No plates: the time is in brackets, bars are blocks of the phosphor, the running bar steps instead of gliding, rules are dashed. */
+    [data-theme='terminal'] .kp-week {
+        --kp-week-pill-radius: 0;
+        font-family: var(--theme-font-mono, var(--font-mono, monospace));
+    }
+    [data-theme='terminal'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+        font-family: var(--theme-font-mono, var(--font-mono, monospace));
+    }
+    [data-theme='terminal'] .kp-week__pill {
+        background: transparent;
+    }
+    [data-theme='terminal'] .kp-week__time::before {
+        content: '[';
+    }
+    [data-theme='terminal'] .kp-week__time::after {
+        content: ']';
+    }
+    [data-theme='terminal'] .kp-week__col,
+    [data-theme='terminal'] .kp-gantt__rule {
+        border-inline-style: dashed;
+    }
+    [data-theme='terminal'] .kp-gantt__run[data-kp-state='running'] {
+        animation-timing-function: steps(6, end);
+    }
+    [data-theme='terminal'] .kp-week__now,
+    [data-theme='terminal'] .kp-gantt__now {
+        border-color: var(--primary);
+        box-shadow: var(--kp-bloom);
+    }
+    [data-theme='terminal'] .kp-week {
+        --kp-week-now: var(--primary);
     }
 }
 
@@ -37481,10 +39352,7 @@
            (js/motion.js), and the date picker's playClose(), whose name stays the same on the
            union of its opening mark and the closing marks (lesson 10). */
         [data-theme='brutalism']
-            :is(
-                .kp-combobox__list:popover-open,
-                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open
-            ) {
+            :is(.kp-combobox__list:popover-open, .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open) {
             --kp-sig-br-h: var(--kp-sig-br-h-plate);
             --kp-sig-br-sh: var(--kp-sig-br-drop);
             animation: kp-sig-brutalism-drop var(--kp-sig-br-time) var(--kp-sig-br-fall) backwards;
@@ -37551,7 +39419,11 @@
                 animation: kp-sig-brutalism-leave var(--kp-sig-br-time) var(--kp-sig-br-up) forwards;
             }
 
-            [data-theme='brutalism'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu {
+            [data-theme='brutalism']
+                .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing])
+                .kp-nav__links
+                > li
+                > .kp-nav__menu {
                 animation: none;
                 transition: none;
             }
@@ -37651,7 +39523,9 @@
 
         /* Each slab's shadow stays on the ground while the panel is up (the current one sits in
            its footprint, so its shadow shows only while it is lifted). */
-        [data-theme='brutalism'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) :is(.kp-sidenav__link, .kp-sidenav__category-toggle):not([aria-current='page'], :hover, :focus-visible) {
+        [data-theme='brutalism']
+            .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])
+            :is(.kp-sidenav__link, .kp-sidenav__category-toggle):not([aria-current='page'], :hover, :focus-visible) {
             box-shadow: calc(3px + var(--kp-sig-br-lift)) calc(3px + var(--kp-sig-br-lift)) 0 var(--foreground);
         }
 
@@ -37904,6 +39778,106 @@
     }
     [data-theme='brutalism'] .kp-facet {
         --kp-facet-hover: var(--secondary);
+    }
+}
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Slabs: square, framed in ink, a hard shadow under each; a tile under the pointer is pressed into its shadow; the pick is the fat 5 px frame. */
+    [data-theme='brutalism'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 0;
+        --kp-heat-cell-edge: 2px;
+        --kp-heat-cell-ink: var(--foreground);
+        --kp-heat-cell-gap: 4px;
+        --kp-heat-cell-lift: 2px 2px 0 var(--foreground);
+        --kp-heat-cell-hover: translate(2px, 2px);
+        --kp-matrix-cell-hover: translate(3px, 3px);
+    }
+    [data-theme='brutalism'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']) {
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-heat__cell:is([data-kp-tone='future'], [data-kp-tone='none'], [data-kp-tone='before']) {
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-heat__cell[data-kp-picked] {
+        outline: 4px solid var(--foreground);
+        outline-offset: 0;
+        z-index: 1;
+    }
+    [data-theme='brutalism'] .kp-heat__label,
+    [data-theme='brutalism'] .kp-matrix__row,
+    [data-theme='brutalism'] .kp-matrix__col {
+        text-transform: uppercase;
+        font-weight: 800;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='brutalism'] .kp-matrix__cell {
+        border: 2px solid var(--foreground);
+        box-shadow: 3px 3px 0 var(--foreground);
+        color: var(--foreground);
+    }
+    [data-theme='brutalism'] .kp-matrix__cell:is([data-kp-tone='self'], [data-kp-tone='none'], [data-kp-inert]) {
+        box-shadow: none;
+    }
+    [data-theme='brutalism'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 4px solid var(--foreground);
+        outline-offset: 0;
+    }
+    [data-theme='brutalism'] .kp-heat__label-button[aria-pressed='true'] {
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+        box-shadow: 3px 3px 0 var(--foreground);
+    }
+    @media (max-width: 40rem) {
+        [data-theme='brutalism'] .kp-heat {
+            --kp-heat-cell-edge: 1px;
+            --kp-heat-cell-gap: 2px;
+            --kp-heat-cell-lift: 1px 1px 0 var(--foreground);
+        }
+    }
+    [data-theme='brutalism'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='brutalism'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='brutalism'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: black boxes. A 2px black frame and a hard offset shadow on every pill and bar, no radius, no glide on the stripes. */
+    [data-theme='brutalism'] .kp-week {
+        --kp-week-pill-radius: 0;
+    }
+    [data-theme='brutalism'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+        --kp-gantt-row: 2rem;
+        --kp-gantt-bar: 1.25rem;
+        --kp-gantt-bar-failed: 1.625rem;
+    }
+    [data-theme='brutalism'] :is(.kp-week__pill, .kp-gantt__run) {
+        border: 2px solid var(--foreground);
+        filter: drop-shadow(2px 2px 0 var(--foreground));
+    }
+    [data-theme='brutalism'] .kp-week__pill:is([data-kp-state='reference'], [data-kp-state='off'], [data-kp-state='skipped']) {
+        filter: none;
+    }
+    [data-theme='brutalism'] .kp-gantt__run[data-kp-state='running'] {
+        animation: none;
+    }
+    [data-theme='brutalism'] .kp-gantt__run[data-kp-state='queued'] {
+        border-style: dashed;
+        filter: none;
+    }
+    [data-theme='brutalism'] :is(.kp-week__col, .kp-gantt__rule) {
+        border-inline-color: var(--foreground);
+    }
+    [data-theme='brutalism'] :is(.kp-week__dow, .kp-gantt__tick, .kp-gantt__lane) {
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
     }
 }
 
@@ -40559,7 +42533,9 @@
             :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
             .kp-calendar__day[data-kp-tone='loading']
             > .kp-calendar__day-busy:not([data-kp-leaving])::after,
-        [data-theme='titanium'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy:not([data-kp-leaving])::after {
+        [data-theme='titanium']
+            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true'])
+            > .kp-calendar__busy:not([data-kp-leaving])::after {
             content: '';
             position: absolute;
             inset: 0;
@@ -41404,6 +43380,70 @@
     }
     [data-theme='titanium'] .kp-facet {
         --kp-facet-hover: var(--muted);
+    }
+}
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Machined tiles: square, a bright chamfer on the top and start edges and a dark one on the others, nothing eased; the pick is an engraved bracket round the column. */
+    [data-theme='titanium'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 0;
+        --kp-heat-cell-lift: inset 1px 1px 0 hsl(from var(--foreground) h s l / 0.28), inset -1px -1px 0 hsl(from var(--background) h s 0% / 0.4);
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+        --kp-heat-cell-gap: 2px;
+    }
+    [data-theme='titanium'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='titanium'] .kp-matrix__cell:hover:not([data-kp-inert]) {
+        filter: brightness(1.2);
+    }
+    [data-theme='titanium'] .kp-heat__cell[data-kp-picked] {
+        outline: 1px solid var(--foreground);
+        outline-offset: 1px;
+    }
+    [data-theme='titanium'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 1px solid var(--foreground);
+        outline-offset: 2px;
+    }
+    [data-theme='titanium'] .kp-heat__label,
+    [data-theme='titanium'] .kp-matrix__row,
+    [data-theme='titanium'] .kp-matrix__col {
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='titanium'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='titanium'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='titanium'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: machined plates. The chamfer cuts the top-left and the bottom-right corner (cut outwards past the box so the focus ring stays whole); the running bar's feed is constant and linear, as everything here moves. */
+    [data-theme='titanium'] .kp-week {
+        --kp-week-pill-radius: 0;
+    }
+    [data-theme='titanium'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+    }
+    [data-theme='titanium'] :is(.kp-week__pill, .kp-gantt__run) {
+        clip-path: polygon(
+            calc(var(--kp-chamfer, 0.5rem) * 0.6 + 8px) -8px,
+            calc(100% + 8px) -8px,
+            calc(100% + 8px) calc(100% - var(--kp-chamfer, 0.5rem) * 0.6 - 8px),
+            calc(100% - var(--kp-chamfer, 0.5rem) * 0.6 - 8px) calc(100% + 8px),
+            -8px calc(100% + 8px),
+            -8px calc(var(--kp-chamfer, 0.5rem) * 0.6 + 8px)
+        );
+        border-color: var(--border-strong);
+    }
+    [data-theme='titanium'] :is(.kp-week__time, .kp-gantt__tick, .kp-week__axis > span) {
+        font-family: var(--theme-font-mono);
     }
 }
 
@@ -45632,11 +47672,7 @@
         inset-block-start: calc(-1 * var(--kp-tabbar-pad, 0.25rem) - 0.4rem);
         block-size: 0.7rem;
         border-radius: 2px;
-        background: repeating-linear-gradient(
-            -45deg,
-            hsl(from var(--primary) h s l / 0.85) 0 5px,
-            hsl(from var(--primary) h s l / 0.55) 5px 10px
-        );
+        background: repeating-linear-gradient(-45deg, hsl(from var(--primary) h s l / 0.85) 0 5px, hsl(from var(--primary) h s l / 0.55) 5px 10px);
         rotate: -1.5deg;
         scale: 0 1;
     }
@@ -45704,6 +47740,68 @@
     }
     [data-theme='pastel'] .kp-facet {
         --kp-facet-hover: var(--secondary);
+    }
+}
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Gummy sweets: round, glossy, a flat shadow under each; a pressed sweet drops into its shadow; the pick is a plum ring. */
+    [data-theme='pastel'] .kp-heat {
+        --kp-heat-cell-radius: 999px;
+        --kp-heat-cell-gap: 4px;
+        --kp-heat-cell-lift: 0 2px 0 hsl(from var(--foreground) h s l / 0.18);
+        --kp-heat-cell-hover: translateY(-2px);
+    }
+    [data-theme='pastel'] .kp-matrix {
+        --kp-heat-cell-radius: 14px;
+        --kp-heat-cell-lift: 0 3px 0 hsl(from var(--foreground) h s l / 0.16);
+        --kp-matrix-cell-hover: translateY(-2px);
+    }
+    [data-theme='pastel']
+        .kp-heat__cell:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']):not([data-kp-share]) {
+        background-image: linear-gradient(to bottom, hsl(from var(--background) h s 100% / 0.55) 0 30%, transparent 30%), var(--kp-heat-pattern);
+    }
+    [data-theme='pastel'] .kp-heat__cell:active:not(.kp-skeleton),
+    [data-theme='pastel'] .kp-matrix__cell:active:not([data-kp-inert]) {
+        transform: translateY(2px);
+        box-shadow: none;
+    }
+    [data-theme='pastel'] .kp-heat__cell[data-kp-picked],
+    [data-theme='pastel'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 3px solid var(--primary);
+        outline-offset: 1px;
+    }
+    [data-theme='pastel'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='pastel'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='pastel'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: stickers. Round, with a 2px edge and a solid peel under them; the running bar is a candy stripe. */
+    [data-theme='pastel'] .kp-week {
+        --kp-week-pill-radius: 999px;
+    }
+    [data-theme='pastel'] .kp-gantt {
+        --kp-gantt-bar-radius: 999px;
+    }
+    [data-theme='pastel'] :is(.kp-week__pill, .kp-gantt__run) {
+        border-width: 2px;
+        filter: drop-shadow(0 2px 0 hsl(from var(--foreground) h s l / 0.22));
+    }
+    [data-theme='pastel'] .kp-week__pill {
+        padding-inline: 0.625rem;
+    }
+    [data-theme='pastel'] .kp-gantt__label {
+        padding-inline: 0.625rem;
+    }
+    [data-theme='pastel'] .kp-gantt__run[data-kp-state='queued'] {
+        border-style: dashed;
     }
 }
 
@@ -49142,24 +51240,29 @@
        night with nothing done a double blaze; a night not known is a dashed
        patch with a question mark, a day to come a dotted one, a day before
        the record hatched; today is ringed in green with a map pin. */
-    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch):is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad']) {
+    [data-theme='forest']
+        :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate):is(
+            [data-kp-tone='ok'],
+            [data-kp-tone='warn'],
+            [data-kp-tone='bad']
+        ) {
         background-image: linear-gradient(var(--kp-fo-blaze) 0 0);
         background-position: left 3px center;
         background-size: 4px calc(100% - 10px);
         background-repeat: no-repeat;
     }
 
-    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='ok'] {
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='ok'] {
         --kp-fo-blaze: var(--success-foreground);
         border-color: hsl(from var(--success-foreground) h s l / 0.3);
     }
 
-    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='warn'] {
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='warn'] {
         --kp-fo-blaze: var(--warning-foreground);
         border-color: hsl(from var(--warning-foreground) h s l / 0.3);
     }
 
-    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='bad'] {
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='bad'] {
         --kp-fo-blaze: var(--destructive-foreground);
         background-image: linear-gradient(var(--kp-fo-blaze) 0 0), linear-gradient(var(--kp-fo-blaze) 0 0);
         background-position:
@@ -49172,11 +51275,11 @@
         padding-inline-start: 0.8rem;
     }
 
-    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='muted'] {
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='muted'] {
         border-color: var(--border);
     }
 
-    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='none'] {
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='none'] {
         border-style: dashed;
         border-color: var(--border-strong);
         background: var(--card);
@@ -49195,13 +51298,13 @@
         pointer-events: none;
     }
 
-    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='future'] {
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='future'] {
         border-style: dotted;
         border-color: var(--border-strong);
         background: transparent;
     }
 
-    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='before'] {
+    [data-theme='forest'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='before'] {
         border-color: transparent;
         background: repeating-linear-gradient(-45deg, hsl(from var(--border-strong) h s l / 0.3) 0 1px, transparent 1px 5px);
     }
@@ -49453,13 +51556,17 @@
             flex-wrap: nowrap;
             max-block-size: 0;
             opacity: 0;
-            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither), opacity var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
+            transition:
+                max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
+                opacity var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
         }
 
         [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
             max-block-size: var(--kp-nav-links-height, 25rem);
             opacity: 1;
-            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-grow), opacity var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
+            transition:
+                max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-grow),
+                opacity var(--kp-sig-fo-time) var(--kp-sig-fo-grow);
         }
 
         @starting-style {
@@ -49472,7 +51579,9 @@
         [data-theme='forest'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
             max-block-size: 0;
             opacity: 0;
-            transition: max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither), opacity var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
+            transition:
+                max-block-size var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
+                opacity var(--kp-sig-fo-time) var(--kp-sig-fo-wither);
         }
 
         @media (prefers-reduced-motion: no-preference) {
@@ -49538,7 +51647,10 @@
         [data-theme='forest']
             .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']):is(
                 [data-kp-sidenav-open='false'],
-                [data-kp-sidenav-slim-collapsed]:not([data-kp-sidenav-peek='open'], [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover)
+                [data-kp-sidenav-slim-collapsed]:not(
+                    [data-kp-sidenav-peek='open'],
+                    [data-kp-sidenav-expand-on-hover]:not([data-kp-sidenav-attached]):hover
+                )
             ) {
             transition:
                 translate var(--kp-sig-fo-time) var(--kp-sig-fo-wither),
@@ -50123,6 +52235,61 @@
     }
     [data-theme='forest'] .kp-facet {
         --kp-facet-hover: hsl(from var(--primary) h s l / 0.08);
+    }
+}
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Leaves on a trail: each tile is a leaf (two opposite corners rounded hard); a summary tile is a sapling that grows from the ground up; the pick is a green ring with a map pin. */
+    [data-theme='forest'] .kp-heat {
+        --kp-heat-cell-radius: 999px 3px;
+        --kp-heat-cell-gap: 3px;
+    }
+    [data-theme='forest'] .kp-matrix {
+        --kp-heat-cell-radius: 14px 4px;
+    }
+    [data-theme='forest'] .kp-heat__cell[data-kp-picked],
+    [data-theme='forest'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='forest'] .kp-heat__col[data-kp-picked]::before {
+        content: '▾';
+        margin-inline-end: 1px;
+        color: var(--primary);
+    }
+    [data-theme='forest'] .kp-heat__label-button[aria-pressed='true'] {
+        background: color-mix(in oklab, var(--primary) 16%, var(--card));
+        color: var(--foreground);
+        box-shadow: inset 3px 0 0 var(--primary);
+    }
+    [data-theme='forest'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='forest'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='forest'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: leaves. Two rounded corners and two nearly square on every pill and bar, the way the forest cuts a chip. */
+    [data-theme='forest'] .kp-week {
+        --kp-week-pill-radius: 0.7rem 0.15rem 0.7rem 0.15rem;
+    }
+    [data-theme='forest'] .kp-gantt {
+        --kp-gantt-bar-radius: 0.6rem 0.12rem 0.6rem 0.12rem;
+    }
+    [data-theme='forest'] .kp-week__pill {
+        padding-inline: 0.625rem;
+    }
+    [data-theme='forest'] .kp-gantt__label {
+        padding-inline: 0.625rem;
+    }
+    [data-theme='forest'] .kp-gantt__lane {
+        font-style: italic;
     }
 }
 
@@ -54355,7 +56522,9 @@
         --kp-kbd-edge: var(--primary);
         --kp-kbd-ground: var(--card);
         --kp-kbd-foot: 1px;
-        box-shadow: inset 0 0 0 2px var(--card), inset 0 0 0 3px hsl(from var(--primary) h s l / 0.5);
+        box-shadow:
+            inset 0 0 0 2px var(--card),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.5);
         padding-inline: 0.4rem;
     }
     [data-theme='deco'] .kp-segmented--chips > .kp-segmented__item[aria-pressed='true'] {
@@ -54406,6 +56575,65 @@
     }
     [data-theme='deco'] .kp-facet {
         --kp-facet-hover: hsl(from var(--primary) h s l / 0.08);
+    }
+}
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Inlaid tiles: a thin gold inlay inside each tile's frame, pressed 1 px down into it on a press; gold fine rules for the axis; the pick is a double gold ring. */
+    [data-theme='deco'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 1px;
+        --kp-heat-cell-ink: hsl(from var(--primary) h s l / 0.55);
+        --kp-heat-cell-lift: inset 0 0 0 1px hsl(from var(--background) h s l / 0.5);
+        --kp-heat-cell-hover: translateY(1px);
+        --kp-matrix-cell-hover: translateY(1px);
+    }
+    [data-theme='deco'] .kp-heat__cell[data-kp-picked],
+    [data-theme='deco'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 3px double var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='deco'] .kp-heat__label,
+    [data-theme='deco'] .kp-matrix__row,
+    [data-theme='deco'] .kp-matrix__col {
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='deco'] .kp-heat__sep {
+        border-block-start: 1px solid var(--primary);
+    }
+    [data-theme='deco'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='deco'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='deco'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: an inlay. Pills are a double rule in the series ink, bars a double rule at their ends, the axis in spaced capitals. */
+    [data-theme='deco'] .kp-week {
+        --kp-week-pill-radius: 0;
+    }
+    [data-theme='deco'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+    }
+    [data-theme='deco'] .kp-week__pill:not([data-kp-state='reference']) {
+        border-style: double;
+        border-width: 3px;
+        padding-inline: 0.25rem;
+    }
+    [data-theme='deco'] .kp-gantt__run:not([data-kp-state='queued']) {
+        border-inline-style: double;
+        border-inline-width: 3px;
+    }
+    [data-theme='deco'] :is(.kp-week__dow, .kp-gantt__tick, .kp-gantt__lane) {
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
     }
 }
 
@@ -57149,6 +59377,63 @@
         --kp-facet-hover: var(--muted);
     }
 }
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Paper tiles with a hairline shadow that settles 2 px on a press; the pick is a slim indigo bar under the column's tiles. */
+    [data-theme='light'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 5px;
+        --kp-heat-cell-lift: 0 1px 2px hsl(from var(--foreground) h s l / 0.14);
+        --kp-heat-cell-hover: translateY(-1px);
+        --kp-matrix-cell-hover: translateY(-1px);
+    }
+    [data-theme='light'] .kp-heat__cell:active:not(.kp-skeleton),
+    [data-theme='light'] .kp-matrix__cell:active:not([data-kp-inert]) {
+        transform: translateY(2px);
+        box-shadow: none;
+    }
+    [data-theme='light'] .kp-heat__cell[data-kp-picked] {
+        outline: none;
+        box-shadow: 0 3px 0 -1px var(--primary);
+    }
+    [data-theme='light'] .kp-heat__label-button[aria-pressed='true'] {
+        background: color-mix(in oklab, var(--primary) 12%, var(--card));
+        color: var(--primary);
+    }
+    [data-theme='light'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='light'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='light'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: daylight. Pills and bars are soft capsules; the column dividers are the faintest line there is. */
+    [data-theme='light'] .kp-week {
+        --kp-week-pill-radius: 999px;
+    }
+    [data-theme='light'] .kp-gantt {
+        --kp-gantt-bar-radius: 999px;
+    }
+    [data-theme='light'] .kp-week__pill {
+        padding-inline: 0.625rem;
+        border-color: transparent;
+    }
+    [data-theme='light'] .kp-gantt__label {
+        padding-inline: 0.625rem;
+    }
+    [data-theme='light'] .kp-week__col,
+    [data-theme='light'] .kp-gantt__rule {
+        border-inline-color: hsl(from var(--border) h s l / 0.6);
+    }
+    [data-theme='light'] .kp-gantt__run[data-kp-state='queued'] {
+        border-color: var(--border-strong);
+    }
+}
 
 /* The red plate's polar position round the black ink: --kp-sig-gr-a is its
    angle (it only ever grows: screen y points down, so a growing angle is
@@ -57431,7 +59716,6 @@
         background: var(--background);
         border-block-end: 0;
     }
-
 
     [data-theme='grotesk'] .kp-nav__brand {
         grid-column: 1 / 4;
@@ -58152,7 +60436,6 @@
         color: var(--foreground);
         font-weight: 700;
     }
-
 
     [data-theme='grotesk'] .kp-timeline {
         border-inline-start: 3px solid var(--foreground);
@@ -60016,8 +62299,7 @@
 
     /* The windows that slip most: the palette, the shortcuts sheet, the tour's card, the picker's
        panel, the combobox's list, the bar's panels. */
-    [data-theme='grotesk']
-        :is(.kp-palette, .kp-shortcuts, .kp-tour, .kp-datepicker__panel, .kp-combobox__list, .kp-nav__menu, .kp-alarm__panel) {
+    [data-theme='grotesk'] :is(.kp-palette, .kp-shortcuts, .kp-tour, .kp-datepicker__panel, .kp-combobox__list, .kp-nav__menu, .kp-alarm__panel) {
         --kp-sig-gr-r: 8px;
     }
 
@@ -60477,6 +62759,73 @@
     }
     [data-theme='grotesk'] .kp-facet {
         --kp-facet-hover: var(--muted);
+    }
+}
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Flat squares on the twelve-column grid: no rounding, no shadow, an even 2 px gutter; labels in capitals; the pick is a red rule under the column, never a ring. */
+    [data-theme='grotesk'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 0;
+        --kp-heat-cell-gap: 2px;
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+    }
+    [data-theme='grotesk'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='grotesk'] .kp-matrix__cell:hover:not([data-kp-inert]) {
+        outline: 2px solid var(--foreground);
+        outline-offset: 0;
+    }
+    [data-theme='grotesk'] .kp-heat__cell[data-kp-picked] {
+        outline: none;
+        box-shadow: 0 4px 0 -1px var(--destructive);
+    }
+    [data-theme='grotesk'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 3px solid var(--foreground);
+        outline-offset: 0;
+    }
+    [data-theme='grotesk'] .kp-heat__label,
+    [data-theme='grotesk'] .kp-matrix__row,
+    [data-theme='grotesk'] .kp-matrix__col {
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        font-weight: 700;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='grotesk'] .kp-heat__col {
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='grotesk'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='grotesk'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='grotesk'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: flat and heavy. Hard-edged blocks in the bold grotesque, a thick leading rule, never wrapping: the type is wide, so the pill and the bar clip it instead. */
+    [data-theme='grotesk'] .kp-week {
+        --kp-week-pill-radius: 0;
+    }
+    [data-theme='grotesk'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+    }
+    [data-theme='grotesk'] :is(.kp-week__pill, .kp-gantt__run) {
+        font-weight: 700;
+        letter-spacing: -0.01em;
+    }
+    [data-theme='grotesk'] .kp-week__pill {
+        border-inline-start-width: 5px;
+    }
+    [data-theme='grotesk'] .kp-gantt__bar {
+        flex-wrap: wrap;
+    }
+    [data-theme='grotesk'] :is(.kp-week__col, .kp-gantt__rule) {
+        border-inline-width: 2px;
     }
 }
 
@@ -63515,12 +65864,20 @@
                 animation: kp-sig-blueprint-trace-out var(--kp-sig-bp-panel) linear reverse forwards;
             }
 
-            [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu {
+            [data-theme='blueprint']
+                .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing])
+                .kp-nav__links
+                > li
+                > .kp-nav__menu {
                 animation: none;
                 transition: none;
             }
 
-            [data-theme='blueprint'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links > li > .kp-nav__menu::after {
+            [data-theme='blueprint']
+                .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing])
+                .kp-nav__links
+                > li
+                > .kp-nav__menu::after {
                 content: none;
             }
         }
@@ -64657,7 +67014,11 @@
         /* The pen and the construction line, the dialog's (its ::after). On the side navigation the
            line runs on the panel's own edge; on the alarm it runs on the alarm's frame, so the frame
            is what the pen constructs before the screen is inked. */
-        [data-theme='blueprint'] :is(.kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']), .kp-alarm[open]:not([data-kp-alarm-motion='still']))::after {
+        [data-theme='blueprint']
+            :is(
+                .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
+                .kp-alarm[open]:not([data-kp-alarm-motion='still'])
+            )::after {
             content: '';
             position: absolute;
             z-index: 4;
@@ -64812,7 +67173,8 @@
         --kp-seg-tracking: 0.08em;
         --kp-seg-case: uppercase;
         --kp-seg-track: transparent;
-        --kp-seg-thumb: repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.34) 0 1px, transparent 1px 5px), hsl(from var(--primary) h s l / 0.1);
+        --kp-seg-thumb:
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.34) 0 1px, transparent 1px 5px), hsl(from var(--primary) h s l / 0.1);
         --kp-seg-thumb-ink: var(--foreground);
         --kp-seg-thumb-edge: 0 0 0 1px var(--primary);
         --kp-seg-thumb-lift: 0 0 0 0 transparent;
@@ -64913,6 +67275,68 @@
     }
     [data-theme='blueprint'] .kp-facet {
         --kp-facet-hover: hsl(from var(--primary) h s l / 0.08);
+    }
+}
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Drafted cells: ruled squares in line weight, hatching for what is not there; the pick is a dashed amber datum line round the column. */
+    [data-theme='blueprint'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 0;
+        --kp-heat-cell-edge: 1px;
+        --kp-heat-cell-ink: hsl(from var(--foreground) h s l / 0.7);
+        --kp-heat-cell-gap: 3px;
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+    }
+    [data-theme='blueprint'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='blueprint'] .kp-matrix__cell:hover:not([data-kp-inert]) {
+        outline: 1px solid var(--foreground);
+        outline-offset: 2px;
+    }
+    [data-theme='blueprint'] .kp-heat__cell[data-kp-picked] {
+        outline: 1px dashed var(--accent, var(--primary));
+        outline-offset: 2px;
+    }
+    [data-theme='blueprint'] .kp-heat__label,
+    [data-theme='blueprint'] .kp-matrix__row,
+    [data-theme='blueprint'] .kp-matrix__col {
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='blueprint'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 1px dashed var(--accent, var(--primary));
+        outline-offset: 2px;
+    }
+    [data-theme='blueprint'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='blueprint'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='blueprint'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: a drawing. Open frames with a hatch for a fill, square corners, dashed witness lines. */
+    [data-theme='blueprint'] .kp-week {
+        --kp-week-pill-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-gantt {
+        --kp-gantt-bar-radius: 0;
+    }
+    [data-theme='blueprint'] .kp-week__pill:not([data-kp-state='off'], [data-kp-state='skipped'], [data-kp-state='reference']) {
+        background-image: repeating-linear-gradient(45deg, hsl(from var(--kp-week-ink) h s l / 0.28) 0 1px, transparent 1px 5px);
+    }
+    [data-theme='blueprint'] .kp-week__col,
+    [data-theme='blueprint'] .kp-gantt__rule {
+        border-inline-style: dashed;
+    }
+    [data-theme='blueprint'] :is(.kp-week__time, .kp-gantt__tick, .kp-week__axis > span) {
+        font-family: var(--theme-font-mono, var(--font-mono, monospace));
     }
 }
 
@@ -68700,6 +71124,64 @@
     }
     [data-theme='nostromo'] .kp-facet {
         --kp-facet-hover: var(--muted);
+    }
+}
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Vents lit from behind: a dark slot per tile with the tone as the light inside it (a bright core, a soft bloom); nothing scales; the pick is an orange tab under the column. */
+    [data-theme='nostromo'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 2px;
+        --kp-heat-cell-gap: 3px;
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+    }
+    [data-theme='nostromo']
+        .kp-heat__cell:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']):not([data-kp-share]),
+    [data-theme='nostromo'] .kp-heat__swatch:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']) {
+        background-image: radial-gradient(ellipse at 50% 50%, hsl(from var(--background) h s 100% / 0.28), transparent 70%), var(--kp-heat-pattern);
+        box-shadow:
+            inset 0 0 0 1px hsl(from var(--background) h s 0% / 0.6),
+            0 0 6px hsl(from var(--kp-heat-fill) h s l / 0.45);
+    }
+    [data-theme='nostromo'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='nostromo'] .kp-matrix__cell:hover:not([data-kp-inert]) {
+        filter: brightness(1.25);
+    }
+    [data-theme='nostromo'] .kp-heat__cell[data-kp-picked] {
+        outline: none;
+        box-shadow: 0 4px 0 -1px var(--primary);
+    }
+    [data-theme='nostromo'] .kp-heat__label,
+    [data-theme='nostromo'] .kp-matrix__row,
+    [data-theme='nostromo'] .kp-matrix__col {
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='nostromo'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='nostromo'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='nostromo'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: label tape. Mono capitals on a 2px-cut strip, a hairline frame, the axis in the same tape face. */
+    [data-theme='nostromo'] .kp-week {
+        --kp-week-pill-radius: var(--kp-sig-no-tape, 2px);
+    }
+    [data-theme='nostromo'] .kp-gantt {
+        --kp-gantt-bar-radius: var(--kp-sig-no-tape, 2px);
+    }
+    [data-theme='nostromo'] :is(.kp-week__pill, .kp-gantt__run, .kp-week__dow, .kp-gantt__tick, .kp-gantt__lane) {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
     }
 }
 
@@ -72755,6 +75237,52 @@
         --kp-facet-hover: var(--accent);
     }
 }
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Instrument cells: a lit top edge in the oxide film's light, nothing else moves; the pick is a film-coloured ring. */
+    [data-theme='dark'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 3px;
+        --kp-heat-cell-lift: inset 0 1px 0 hsl(from var(--foreground) h s l / 0.16);
+        --kp-heat-cell-hover: none;
+        --kp-matrix-cell-hover: none;
+    }
+    [data-theme='dark'] .kp-heat__cell:hover:not(.kp-skeleton, [aria-disabled='true']),
+    [data-theme='dark'] .kp-matrix__cell:hover:not([data-kp-inert]) {
+        filter: brightness(1.18);
+    }
+    [data-theme='dark'] .kp-heat__cell[data-kp-picked] {
+        outline: 1px solid var(--primary);
+        outline-offset: 2px;
+        box-shadow: 0 0 10px hsl(from var(--primary) h s l / 0.35);
+    }
+    [data-theme='dark'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='dark'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='dark'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: machined slots. Square ends, a bright top edge where the tool left the surface, small capitals on the axis. */
+    [data-theme='dark'] .kp-week {
+        --kp-week-pill-radius: 2px;
+    }
+    [data-theme='dark'] .kp-gantt {
+        --kp-gantt-bar-radius: 2px;
+    }
+    [data-theme='dark'] :is(.kp-week__pill, .kp-gantt__run) {
+        border-block-start-color: color-mix(in oklab, var(--kp-week-ink, var(--kp-gantt-fill, var(--foreground))) 55%, var(--foreground));
+    }
+    [data-theme='dark'] :is(.kp-week__dow, .kp-gantt__tick) {
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+}
 
 /* The numbers formal's motion is made of, registered at the top level
    because Firefox does not register an @property inside a cascade layer;
@@ -76003,7 +78531,12 @@
     /* A day of the month: paper with a rule, not a tinted plate. A kept night
        is ruled along its start edge in navy, a night to look at in red ink, a
        failed one in two red rules; today stands in the double rule. */
-    [data-theme='formal'] :is(.kp-calendar__day, .kp-calendar__swatch):is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad']) {
+    [data-theme='formal']
+        :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate):is(
+            [data-kp-tone='ok'],
+            [data-kp-tone='warn'],
+            [data-kp-tone='bad']
+        ) {
         --kp-fm-edge: inset 3px 0 0 var(--primary);
         border-color: var(--border);
         background: var(--card);
@@ -76011,12 +78544,12 @@
         color: var(--foreground);
     }
 
-    [data-theme='formal'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='warn'] {
+    [data-theme='formal'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='warn'] {
         --kp-fm-edge: inset 3px 0 0 var(--destructive);
         color: var(--destructive);
     }
 
-    [data-theme='formal'] :is(.kp-calendar__day, .kp-calendar__swatch)[data-kp-tone='bad'] {
+    [data-theme='formal'] :is(.kp-calendar__day, .kp-calendar__swatch, .kp-matrix__cell, .kp-heat__swatch--plate)[data-kp-tone='bad'] {
         --kp-fm-edge: inset 3px 0 0 var(--destructive), inset 6px 0 0 var(--card), inset 8px 0 0 var(--destructive);
         color: var(--destructive);
     }
@@ -76307,11 +78840,7 @@
         [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
         [data-theme='formal'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) > * {
             --kp-fm-f: clamp(0, (var(--kp-fm-t) * 740 - var(--kp-fm-k, 0) * var(--kp-sig-fm-st)) / var(--kp-sig-fm-len), 1);
-            --kp-fm-lf: clamp(
-                0,
-                (var(--kp-fm-t) * 740 - var(--kp-fm-k, 0) * var(--kp-sig-fm-st) - var(--kp-sig-fm-len)) / var(--kp-sig-fm-lift),
-                1
-            );
+            --kp-fm-lf: clamp(0, (var(--kp-fm-t) * 740 - var(--kp-fm-k, 0) * var(--kp-sig-fm-st) - var(--kp-sig-fm-len)) / var(--kp-sig-fm-lift), 1);
             --kp-fm-open: calc(100% - var(--kp-fm-f) * (100% + var(--kp-sig-fm-reach)));
             clip-path: inset(
                 calc(-1 * var(--kp-sig-fm-reach)) calc(var(--kp-fm-open) * var(--kp-fm-ltr) - var(--kp-sig-fm-reach) * (1 - var(--kp-fm-ltr)))
@@ -76804,6 +79333,48 @@
         --kp-kbd-foot: 1px;
         font-family: var(--theme-font-body);
     }
+
+    /* Loading in the ledger keeps the shape of what is loading: each ghost is a plate of the pill's or the bar's own size (a pale ground,
+       a ruled edge, 2 px corners) and the navy rule of the skeleton is ruled along its foot, as on every other waiting surface. Without
+       this the skeleton's single ruled line would replace the pills and bars. */
+    [data-theme='formal'] .kp-gantt__ghost .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block),
+    [data-theme='formal'] .kp-week__ghost.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        border: 1px solid var(--border);
+        border-radius: 2px;
+        background: var(--muted);
+    }
+    [data-theme='formal'] .kp-gantt__ghost .kp-gantt__run.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        position: absolute;
+        block-size: var(--kp-gantt-bar, 1.125rem);
+    }
+    [data-theme='formal'] .kp-week__ghost.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        position: absolute;
+        block-size: var(--kp-week-pill, 1.5rem);
+    }
+    [data-theme='formal'] .kp-gantt__ghost.kp-gantt__lane > .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        block-size: 0.75rem;
+    }
+}
+
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: a ledger. Entries are ruled lines with a heavy rule on their left edge, bars are inked strips with a 2px cut, and the axis rules are dotted leaders. */
+    [data-theme='formal'] .kp-week {
+        --kp-week-pill-radius: 2px;
+    }
+    [data-theme='formal'] .kp-gantt {
+        --kp-gantt-bar-radius: 2px;
+    }
+    [data-theme='formal'] .kp-week__pill {
+        border-inline-start-width: 4px;
+    }
+    [data-theme='formal'] .kp-week__col {
+        border-inline-start-style: dotted;
+    }
+    [data-theme='formal'] .kp-week__dow,
+    [data-theme='formal'] .kp-gantt__tick {
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.08em;
+    }
 }
 
 /* ── Action tiles, status rows, facet list [kpadopt2-tiles] ── */
@@ -76866,6 +79437,46 @@
         --kp-facet-hover: var(--muted);
     }
 }
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Ledger entries: a cell is a ruled square of the ledger, the pick is the double rule, labels are small capitals. */
+    [data-theme='formal'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 1px;
+        --kp-heat-cell-ink: hsl(from var(--foreground) h s l / 0.3);
+        --kp-heat-cell-gap: 3px;
+    }
+    [data-theme='formal'] .kp-heat__cell[data-kp-picked],
+    [data-theme='formal'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 3px double var(--primary);
+        outline-offset: 1px;
+    }
+    [data-theme='formal'] .kp-heat__label,
+    [data-theme='formal'] .kp-matrix__row,
+    [data-theme='formal'] .kp-matrix__col {
+        font-variant-caps: all-small-caps;
+        letter-spacing: 0.08em;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+    [data-theme='formal'] .kp-heat__label-button[aria-pressed='true'] {
+        background: none;
+        color: var(--primary);
+        box-shadow: inset 0 -2px 0 var(--primary);
+    }
+    [data-theme='formal'] .kp-heat__sep {
+        border-block-start: 3px double var(--border-strong);
+    }
+    [data-theme='formal'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='formal'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='formal'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
 
 /* Pointing and pressing run on one number each [Kenny, 2026-10-07]: 0 at
    rest, 1 at the end of the unit. Registered so the browser can transition
@@ -79333,10 +81944,7 @@
         }
 
         [data-theme='solstice']
-            :is(
-                .kp-combobox__list:popover-open,
-                .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open
-            ) {
+            :is(.kp-combobox__list:popover-open, .kp-datepicker__panel:is([data-kp-date-open], [data-kp-closing], [data-kp-reversing]):popover-open) {
             animation: kp-sig-solstice-kindled var(--kp-sig-solstice-open) var(--kp-sig-solstice-come) backwards;
         }
 
@@ -79581,6 +82189,52 @@
     }
     [data-theme='solstice'] .kp-statusrow {
         --kp-statusrow-radius: 0.6rem;
+    }
+}
+/* ── Heat grid, matrix, bar cell [kpadopt2-grids] ── */
+@layer kp.signature {
+    /* Low sun: each tile is a hillside lit from its foot (a warm band along the bottom edge), and a tile under the pointer lets the sun rise 2 px; the pick is a gold ring. */
+    [data-theme='solstice'] :is(.kp-heat, .kp-matrix) {
+        --kp-heat-cell-radius: 6px;
+        --kp-heat-cell-hover: translateY(-2px);
+        --kp-matrix-cell-hover: translateY(-2px);
+    }
+    [data-theme='solstice']
+        .kp-heat__cell:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']):not([data-kp-share]),
+    [data-theme='solstice'] .kp-heat__swatch:is([data-kp-tone='ok'], [data-kp-tone='warn'], [data-kp-tone='bad'], [data-kp-tone='level']) {
+        background-image: linear-gradient(to top, hsl(from var(--primary) h s 85% / 0.7) 0 22%, transparent 22%), var(--kp-heat-pattern);
+    }
+    [data-theme='solstice'] .kp-heat__cell[data-kp-picked],
+    [data-theme='solstice'] .kp-matrix__cell[aria-pressed='true'] {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='solstice'] .kp-heat {
+        --kp-heat-gap-y: 6px;
+    }
+    [data-theme='solstice'] .kp-matrix {
+        --kp-matrix-gap: 4px;
+    }
+    [data-theme='solstice'] .kp-bar-cell {
+        --kp-bar-cell-gap: var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+}
+/* ── end heat grid, matrix, bar cell ── */
+@layer kp.register {
+    /* Week agenda and run timeline [kpadopt-time]: embers. Warm gradient plates with a halo on what runs next or runs now; the halo is a drop shadow, so it never fights the focus ring. */
+    [data-theme='solstice'] .kp-week {
+        --kp-week-pill-radius: 0.5rem;
+    }
+    [data-theme='solstice'] .kp-gantt {
+        --kp-gantt-bar-radius: 0.5rem;
+    }
+    [data-theme='solstice'] .kp-week__pill:not([data-kp-state='off'], [data-kp-state='skipped'], [data-kp-state='reference']) {
+        background-image: linear-gradient(90deg, hsl(from var(--kp-week-ink) h s l / 0.22), transparent 85%);
+    }
+    [data-theme='solstice'] .kp-week__pill[data-kp-state='next'],
+    [data-theme='solstice'] .kp-gantt__run[data-kp-state='running'] {
+        filter: drop-shadow(0 0 5px hsl(from var(--ring) h s l / 0.55));
     }
 }
 

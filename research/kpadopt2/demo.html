@@ -1,0 +1,1862 @@
+<!doctype html>
+<!-- Written by research/kpadopt2/build.mjs; edit build.mjs, parts/, demo-*.css and demo-*.js, not this file. -->
+<html lang="en" data-theme="formal" data-review="kpadopt2" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Round 2 of the dashboard adoption · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main r2-page">
+            <header class="r2-intro">
+                <h1>Round 2 of the dashboard adoption: eight components</h1>
+                <p class="cat-intro">
+                    Eight things the admin dashboard still draws itself, now built in the package (Kenny’s rule: a consumer draws nothing). One page,
+                    eleven sections, judged one after the other in the review dialog (“Review in a dialog” at the top), formal only until it is
+                    approved: <b>action tiles</b>, <b>status rows</b> and the <b>facet list</b> (<code>nx-action</code>, <code>perstack-chip</code>,
+                    <code>hl-opt</code>); the <b>heat grid</b>, the <b>matrix</b> and the <b>bar in a table cell</b> with the table’s
+                    <code>data-kp-sort-value</code> (<code>bk-heat</code>, <code>fw-mx</code>, <code>mp-caps</code>, <code>mp-growth</code>); the
+                    <b>week agenda</b> and the <b>run timeline</b> (<code>sch-week</code>, <code>ac-tl</code>). Everything with a
+                    <code>kp-</code> class and every script under <code>js/</code> is the package; the sample data, the buttons that drive a demo and
+                    the rows that stand in for hover, focus and press are this page’s. Every section says what you should see under <b>Expected</b>.
+                </p>
+                <p class="ta-note" data-ta-mirror-note hidden>
+                    <b>Hover, focus and press rows are drawn by copying the package’s own rules</b> (the page reads the stylesheets and re-writes
+                    <code>:hover</code> as a class), so they show the theme’s real look. That needs the page to be served over http (as the catalogue
+                    does); opened as a file, those rows show only the plain tile.
+                </p>
+                <p class="ta-note" data-ta-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so hover and press change the look but nothing moves or fades.
+                </p>
+            </header>
+
+            <section
+                class="ta-sec"
+                data-review-item="actions"
+                data-review-components="actions action"
+                data-review-title="1 · Action tiles"
+                aria-label="Action tiles"
+            >
+                <div class="ta-sec__head">
+                    <h2>1 · Action tiles</h2>
+                    <p>
+                        A button or a link drawn as a tile: a title and the one sentence that says what it does, in a grid whose tiles on one row are
+                        all as tall as the tallest. Use it where a short list of things to do (or places to go) needs a sentence each, on a landing
+                        page or in a drawer. A <b>button</b> tile does something; a <b>link</b> tile goes somewhere (and shows a chevron).
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        An engraved plate with a 3 px corner. Point at a tile: nothing moves, the title takes a 2 px navy underline (the quill). Press
+                        and hold: a double navy rule is laid inside the plate (the seal). The destructive tile has a red bar at its start edge and a
+                        red title; the disabled one is a quieter plate.
+                    </p>
+                    <p data-for="light">
+                        A white card with a hair of shadow and a round corner. Pointing settles it 1 px toward the paper, a press lands it flat 2 px
+                        down with the shadow gone. Check the destructive bar is inside the corner, not over it.
+                    </p>
+                    <p data-for="dark">
+                        A machined panel with a square-ish 2 px corner. Pointing lights a thin line of the four chart colours down the start edge,
+                        with a faint glow; keyboard focus is an inset double ring, not an outer one. A press is a plain colour step.
+                    </p>
+                    <p data-for="cyberpunk">
+                        A holo plate: a hairline rim, spaced capitals for the title. Pointing lights a 14 px circuit grid over the tile and the rim
+                        goes yellow with a glow; the grid must not make the sentence hard to read. A press washes the tile yellow.
+                    </p>
+                    <p data-for="synthwave">
+                        An arcade marquee: a pink frame with a glow, the title in spaced display capitals. Pointing widens the glow; a press dims the
+                        tube and drops the tile 1 px. Check the glow stays inside the grid gap and does not touch the next tile.
+                    </p>
+                    <p data-for="pastel">
+                        A sticker on a dashed washi outline with its own shadow. Pointing lifts it 2 px on a longer shadow, a press sticks it down.
+                        The outline stays dashed in every state.
+                    </p>
+                    <p data-for="terminal">
+                        A cell of the screen, all mono, with a gutter at the start. Pointing writes a green > prompt in the gutter and boxes the tile
+                        in a 2 px green outline 3 px out; a press is reverse video (green ground, black type). Nothing eases.
+                    </p>
+                    <p data-for="forest">
+                        A herbarium sheet with the leaf corner (top-start and bottom-end square) and an italic title. Pointing lays a dashed trail
+                        ring round the tile (the blaze); a press washes it moss. Check the ring follows the leaf corner.
+                    </p>
+                    <p data-for="blueprint">
+                        A drawn box: a dashed frame, mono capitals. Pointing closes the frame to a line and lights an 8 px drafting grid in cyan
+                        across the tile; a press is a cyan wash. Keyboard focus keeps a dashed outline.
+                    </p>
+                    <p data-for="solstice">
+                        The horizon: an amber line along the foot of the tile with a warm glow rising from it. Pointing thickens the line to 3 px; a
+                        press thins it to 1 px and lowers the tile 1 px.
+                    </p>
+                    <p data-for="brutalism">
+                        A slab: a 3 px black line on a 6 px hard shadow, a lavender tint, heavy capitals. Pointing grows the shadow to 8 px (the tile
+                        does not rise); a press drives the slab into its footprint, shadow gone. Focus is a 4 px ink outline.
+                    </p>
+                    <p data-for="deco">
+                        Lacquer with a fine gold inlay rule inside the plate, spaced capitals. Pointing brightens the inlay to full gold and the rim
+                        to gold; a press sinks the plate 1 px under an inner shadow (the wax seal).
+                    </p>
+                    <p data-for="phantom">
+                        Cut paper: a square slab on a 3 px deep-red shadow, condensed capitals. Pointing throws a red bar in behind the title in two
+                        cuts and flips its ink to black; the tile itself does not move. A press drops the slab 3 px onto its shadow.
+                    </p>
+                    <p data-for="grotesk">
+                        A transit board: no frame, a red bar hanging from the top edge. Pointing grows the bar from 6 to 10 px, a press to 14 px (it
+                        is an inset shadow, so the tile never changes size). The bold titles must stay on one line where they fit, in every column
+                        width.
+                    </p>
+                    <p data-for="nostromo">
+                        An indicator panel: a muted plate with a dark well along its top and mono capital titles. Pointing wakes the console: heavy
+                        scanlines over the plate; a press darkens the plate and seats it 1 px. Check the scanlines do not cut through the sentence.
+                    </p>
+                    <p data-for="titanium">
+                        An anodised plate with a 4 px edge along the top. Pointing turns that edge to the primary; every change is instant and linear
+                        (metal does not ease). A press keeps the primary edge and lights a hairline on top.
+                    </p>
+                </div>
+                <div class="ta-expect">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>The grid:</b> the first row has a tile with one short line and tiles with three lines, and all of them are the same
+                            height. The grid fills the width with columns of at least 15rem and goes to one column when narrow; resize the window.
+                        </li>
+                        <li>
+                            <b>Press the button tiles in the live grid</b> (Back up now, Restart the dashboard, Delete all snapshots): the tile
+                            becomes busy at once, the theme’s own spinner appears in the right-hand corner and the readout under the grid says what
+                            happened. The tile keeps its size (the title does not rewrap), the keyboard focus stays on it, and pressing it again does
+                            nothing until it is done (about 2.5 s). Link tiles only move the readout; they do not leave the page.
+                        </li>
+                        <li>
+                            <b>The disabled tile</b> (Check for updates) does nothing and shows no hover.
+                            <b>The tile with a spinner already in it</b> (Rebuild the search index) is busy from the start and does not answer a
+                            press.
+                        </li>
+                        <li>
+                            <b>Keyboard:</b> Tab goes tile by tile (one stop each); Enter or Space presses a button tile, Enter a link tile; the focus
+                            ring is the theme’s own and whole in every theme.
+                        </li>
+                        <li>
+                            <b>The table below</b> shows every state side by side, button beside link. Hover, focus and pressed are drawn by classes
+                            there; point at the live tiles above to see the real thing.
+                        </li>
+                    </ul>
+                </div>
+                <div class="ta-block">
+                    <h3>The live grid</h3>
+                    <p class="ta-caption">
+                        Mock: the readout and the 2.5 s of “work”. Everything else is the package. The grid is <code>.kp-actions</code>; each tile a
+                        <code>.kp-action</code> with a <code>__title</code>, a <code>__mark</code> and a <code>__text</code>.
+                    </p>
+                    <div class="ta-card">
+                        <div class="kp-actions" role="group" aria-label="System actions">
+                            <button type="button" class="kp-action" data-ta-live="backup">
+                                <strong class="kp-action__title">Back up now</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                ><span class="kp-action__text">Copies every volume to the backup disk and checks the copy.</span></button
+                            ><button type="button" class="kp-action" data-ta-live="restart">
+                                <strong class="kp-action__title">Restart the dashboard</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                ><span class="kp-action__text">About ten seconds.</span></button
+                            ><a class="kp-action" href="#host"
+                                ><strong class="kp-action__title">Host</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                ><span class="kp-action__text"
+                                    >CPU, memory, disks and temperatures of the machine underneath, and the updates that wait for it.</span
+                                ><span class="kp-action__meta">load 0.42 · 61 °C</span></a
+                            ><a class="kp-action" href="#backups"
+                                ><strong class="kp-action__title">Backups</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                ><span class="kp-action__text">What was copied, when, and how to get a file back.</span></a
+                            ><a class="kp-action" href="#audit"
+                                ><strong class="kp-action__title">Download the audit log</strong
+                                ><span class="kp-action__mark" aria-hidden="true"></span
+                                ><span class="kp-action__text">Every change of the last 90 days as one file.</span></a
+                            ><button type="button" class="kp-action kp-action--destructive" data-ta-live="delete">
+                                <strong class="kp-action__title">Delete all snapshots</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                ><span class="kp-action__text">Frees 48 GB. This cannot be undone.</span></button
+                            ><button type="button" class="kp-action" disabled>
+                                <strong class="kp-action__title">Check for updates</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                ><span class="kp-action__text">Not while a backup is running.</span></button
+                            ><button type="button" class="kp-action" aria-busy="true">
+                                <strong class="kp-action__title">Rebuild the search index</strong
+                                ><span class="kp-action__mark" aria-hidden="true"></span
+                                ><span class="kp-action__text">Reads every note again; the search is slow until it is done.</span>
+                            </button>
+                        </div>
+                        <p class="ta-readout" data-ta-readout="actions" aria-live="polite">Nothing pressed yet.</p>
+                    </div>
+                </div>
+                <div class="ta-block">
+                    <h3>Every state</h3>
+                    <p class="ta-caption">
+                        Mock: “hover”, “focus” and “pressed” are drawn by classes that copy the theme’s own rules; disabled and busy are the real
+                        attributes.
+                    </p>
+                    <div class="ta-states">
+                        <div class="ta-states__row ta-states__row--head">
+                            <p></p>
+                            <p>Button tile</p>
+                            <p>Link tile</p>
+                        </div>
+                        <div class="ta-states__row">
+                            <p class="ta-states__name">Default</p>
+                            <div class="ta-states__cell">
+                                <button type="button" class="kp-action">
+                                    <strong class="kp-action__title">Back up now</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Copies every volume to the backup disk and checks the copy.</span>
+                                </button>
+                            </div>
+                            <div class="ta-states__cell">
+                                <a class="kp-action" href="#target"
+                                    ><strong class="kp-action__title">Open the host page</strong
+                                    ><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Copies every volume to the backup disk and checks the copy.</span></a
+                                >
+                            </div>
+                        </div>
+                        <div class="ta-states__row">
+                            <p class="ta-states__name">Hover (drawn by a class)</p>
+                            <div class="ta-states__cell">
+                                <button type="button" class="kp-action ta-is-hover">
+                                    <strong class="kp-action__title">Back up now</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Copies every volume to the backup disk and checks the copy.</span>
+                                </button>
+                            </div>
+                            <div class="ta-states__cell">
+                                <a class="kp-action ta-is-hover" href="#target"
+                                    ><strong class="kp-action__title">Open the host page</strong
+                                    ><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Copies every volume to the backup disk and checks the copy.</span></a
+                                >
+                            </div>
+                        </div>
+                        <div class="ta-states__row">
+                            <p class="ta-states__name">Keyboard focus (drawn by a class)</p>
+                            <div class="ta-states__cell">
+                                <button type="button" class="kp-action ta-is-focus">
+                                    <strong class="kp-action__title">Back up now</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Copies every volume to the backup disk and checks the copy.</span>
+                                </button>
+                            </div>
+                            <div class="ta-states__cell">
+                                <a class="kp-action ta-is-focus" href="#target"
+                                    ><strong class="kp-action__title">Open the host page</strong
+                                    ><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Copies every volume to the backup disk and checks the copy.</span></a
+                                >
+                            </div>
+                        </div>
+                        <div class="ta-states__row">
+                            <p class="ta-states__name">Pressed (drawn by a class)</p>
+                            <div class="ta-states__cell">
+                                <button type="button" class="kp-action ta-is-active">
+                                    <strong class="kp-action__title">Back up now</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Copies every volume to the backup disk and checks the copy.</span>
+                                </button>
+                            </div>
+                            <div class="ta-states__cell">
+                                <a class="kp-action ta-is-active" href="#target"
+                                    ><strong class="kp-action__title">Open the host page</strong
+                                    ><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Copies every volume to the backup disk and checks the copy.</span></a
+                                >
+                            </div>
+                        </div>
+                        <div class="ta-states__row">
+                            <p class="ta-states__name">Disabled</p>
+                            <div class="ta-states__cell">
+                                <button type="button" class="kp-action" disabled>
+                                    <strong class="kp-action__title">Back up now</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Copies every volume to the backup disk and checks the copy.</span>
+                                </button>
+                            </div>
+                            <div class="ta-states__cell">
+                                <a class="kp-action" href="#target" aria-disabled="true"
+                                    ><strong class="kp-action__title">Open the host page</strong
+                                    ><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Copies every volume to the backup disk and checks the copy.</span></a
+                                >
+                            </div>
+                        </div>
+                        <div class="ta-states__row">
+                            <p class="ta-states__name">Busy (<code>aria-busy</code>)</p>
+                            <div class="ta-states__cell">
+                                <button type="button" class="kp-action" aria-busy="true">
+                                    <strong class="kp-action__title">Back up now</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Copies every volume to the backup disk and checks the copy.</span>
+                                </button>
+                            </div>
+                            <div class="ta-states__cell">
+                                <a class="kp-action" href="#target" aria-busy="true"
+                                    ><strong class="kp-action__title">Open the host page</strong
+                                    ><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Copies every volume to the backup disk and checks the copy.</span></a
+                                >
+                            </div>
+                        </div>
+                        <div class="ta-states__row">
+                            <p class="ta-states__name">Destructive</p>
+                            <div class="ta-states__cell">
+                                <button type="button" class="kp-action kp-action--destructive">
+                                    <strong class="kp-action__title">Delete all snapshots</strong
+                                    ><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Frees 48 GB. This cannot be undone.</span>
+                                </button>
+                            </div>
+                            <div class="ta-states__cell">
+                                <a class="kp-action kp-action--destructive" href="#target"
+                                    ><strong class="kp-action__title">Open the danger zone</strong
+                                    ><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Frees 48 GB. This cannot be undone.</span></a
+                                >
+                            </div>
+                        </div>
+                        <div class="ta-states__row">
+                            <p class="ta-states__name">Destructive, hover</p>
+                            <div class="ta-states__cell">
+                                <button type="button" class="kp-action kp-action--destructive ta-is-hover">
+                                    <strong class="kp-action__title">Delete all snapshots</strong
+                                    ><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Frees 48 GB. This cannot be undone.</span>
+                                </button>
+                            </div>
+                            <div class="ta-states__cell">
+                                <a class="kp-action kp-action--destructive ta-is-hover" href="#target"
+                                    ><strong class="kp-action__title">Open the danger zone</strong
+                                    ><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Frees 48 GB. This cannot be undone.</span></a
+                                >
+                            </div>
+                        </div>
+                        <div class="ta-states__row">
+                            <p class="ta-states__name">Destructive, disabled</p>
+                            <div class="ta-states__cell">
+                                <button type="button" class="kp-action kp-action--destructive" disabled>
+                                    <strong class="kp-action__title">Delete all snapshots</strong
+                                    ><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Frees 48 GB. This cannot be undone.</span>
+                                </button>
+                            </div>
+                            <div class="ta-states__cell">
+                                <a class="kp-action kp-action--destructive" href="#target" aria-disabled="true"
+                                    ><strong class="kp-action__title">Open the danger zone</strong
+                                    ><span class="kp-action__mark" aria-hidden="true"></span
+                                    ><span class="kp-action__text">Frees 48 GB. This cannot be undone.</span></a
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ta-block">
+                    <h3>In a narrow column</h3>
+                    <p class="ta-caption">
+                        A 20rem drawer: one column, the same tiles. The titles may wrap; the tiles do not change height when a spinner arrives.
+                    </p>
+                    <div class="ta-card ta-card--narrow">
+                        <div class="kp-actions ta-narrow-grid" role="group" aria-label="System actions">
+                            <button type="button" class="kp-action" data-ta-live="backup">
+                                <strong class="kp-action__title">Back up now</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                ><span class="kp-action__text">Copies every volume to the backup disk and checks the copy.</span></button
+                            ><button type="button" class="kp-action" data-ta-live="restart">
+                                <strong class="kp-action__title">Restart the dashboard</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                ><span class="kp-action__text">About ten seconds.</span></button
+                            ><a class="kp-action" href="#host"
+                                ><strong class="kp-action__title">Host</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                ><span class="kp-action__text"
+                                    >CPU, memory, disks and temperatures of the machine underneath, and the updates that wait for it.</span
+                                ><span class="kp-action__meta">load 0.42 · 61 °C</span></a
+                            ><a class="kp-action" href="#backups"
+                                ><strong class="kp-action__title">Backups</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                ><span class="kp-action__text">What was copied, when, and how to get a file back.</span></a
+                            ><a class="kp-action" href="#audit"
+                                ><strong class="kp-action__title">Download the audit log</strong
+                                ><span class="kp-action__mark" aria-hidden="true"></span
+                                ><span class="kp-action__text">Every change of the last 90 days as one file.</span></a
+                            ><button type="button" class="kp-action kp-action--destructive" data-ta-live="delete">
+                                <strong class="kp-action__title">Delete all snapshots</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                ><span class="kp-action__text">Frees 48 GB. This cannot be undone.</span></button
+                            ><button type="button" class="kp-action" disabled>
+                                <strong class="kp-action__title">Check for updates</strong><span class="kp-action__mark" aria-hidden="true"></span
+                                ><span class="kp-action__text">Not while a backup is running.</span></button
+                            ><button type="button" class="kp-action" aria-busy="true">
+                                <strong class="kp-action__title">Rebuild the search index</strong
+                                ><span class="kp-action__mark" aria-hidden="true"></span
+                                ><span class="kp-action__text">Reads every note again; the search is slow until it is done.</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="ta-sec"
+                data-review-item="status"
+                data-review-components="statuslist statusrow"
+                data-review-title="2 · Status rows"
+                aria-label="Status rows"
+            >
+                <div class="ta-sec__head">
+                    <h2>2 · Status rows</h2>
+                    <p>
+                        One row per item that is read or checked one by one: a mark, the item’s name, a short detail and, when it failed, a Retry that
+                        tries
+                        <b>that one</b> item again. The four states are each a shape and a word as well as a colour: a disc with a tick (ok), the
+                        theme’s spinner (loading), a disc with a cross (failed, with its reason and a Retry), a dashed ring (empty, with the reason
+                        there is nothing).
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Ledger rows ruled underneath, no box: a tick disc, the name in bold, the reason under it. A failed row keeps the red rule
+                        under it and a Retry button; an empty row is dashed and quiet.
+                    </p>
+                    <p data-for="light">
+                        Soft cards with a hair of shadow and a round corner; round marks. A failed row has a red edge and a Retry in the light button.
+                    </p>
+                    <p data-for="dark">
+                        Machined rows with square-ish marks (3 px) and a mono detail line. Loading shows the theme spinner in the mark.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Square plates with a hairline rim; a loading or failed row gets a 3 px bar on its start edge. The detail line is mono. Marks
+                        are square.
+                    </p>
+                    <p data-for="synthwave">Marquee rows with a pink hairline; a loading row glows. The detail is in the tech mono.</p>
+                    <p data-for="pastel">
+                        Round 2 px sticker rows; the ok mark is tilted -8 degrees like a stamp. The failed row keeps its red edge.
+                    </p>
+                    <p data-for="terminal">
+                        Plain text rows with a dashed rule at the start, all mono: + ok, x failed, - empty, and the theme spinner for loading. A
+                        loading row has a solid rule.
+                    </p>
+                    <p data-for="forest">
+                        Rows with a 4 px start edge: dark for the quiet states, green for loading, red for failed. Marks are round.
+                    </p>
+                    <p data-for="blueprint">Dashed drafting boxes, square marks, mono detail; a loading row is drawn in a solid line.</p>
+                    <p data-for="solstice">Plain warm rows; the ok mark carries a faint green halo. Nothing else changes size.</p>
+                    <p data-for="brutalism">
+                        Slabs on a hard shadow with a 3 px line; marks are square with a heavy ring. A loading row takes the muted ground.
+                    </p>
+                    <p data-for="deco">Plates with an inner hairline inlay, square marks. The failed row's red edge must not hide the inlay.</p>
+                    <p data-for="phantom">
+                        Slabs with a 4 px start edge (dark, red while loading, red-edge for failed), square marks, condensed type.
+                    </p>
+                    <p data-for="grotesk">
+                        Rows ruled underneath by a 2 px black line, no box, bold names. A failed row keeps its red rule. Check no row wraps into two
+                        lines where one fits.
+                    </p>
+                    <p data-for="nostromo">Panel rows with a dark frame and 2 px marks; a loading row has an amber inner line. Detail in mono.</p>
+                    <p data-for="titanium">Plates with a strong edge, mono detail. Loading uses the theme spinner; nothing eases.</p>
+                </div>
+                <div class="ta-expect">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Press “Read all twelve”</b>: every row goes to loading (the spinner, “reading (n s)” with the seconds counting), then
+                            the rows settle one by one: most become ok, two fail with a reason and a Retry button, one is empty with its reason. A
+                            screen reader hears one summary (for example “12 updated, 2 failed”), not twelve sentences.
+                        </li>
+                        <li>
+                            <b>The list does not move while this happens.</b> The “height of the list” readout under it shows the same number before,
+                            during and after (in the second list, whose rows reserve room for a two-line reason). In the first, compact list a row
+                            grows by one line only when its reason is longer than one line.
+                        </li>
+                        <li>
+                            <b>Press Retry on a failed row</b>: that row alone goes back to loading and, after about 1.5 s, becomes ok (the second
+                            Retry of “traefik” fails again, on purpose, to show a failing retry). The keyboard focus is not lost: after pressing Retry
+                            with the keyboard the focus moves to the row’s name.
+                        </li>
+                        <li>
+                            <b>The four fixed rows below</b> are the states side by side, and the lists under them show a single column and a very
+                            long reason (it wraps; nothing is cut).
+                        </li>
+                    </ul>
+                </div>
+                <div class="ta-block">
+                    <h3>Live: reading twelve stacks, with Retry</h3>
+                    <p class="ta-caption">
+                        Mock: the reads and their results. The rows, marks, announcements and Retry are the package (<code>buildStatusList</code>,
+                        <code>setStatus</code>, the <code>kp-status-retry</code> event).
+                    </p>
+                    <div class="ta-actions">
+                        <button type="button" class="kp-button kp-button--primary kp-button--sm" data-ta-read>Read all twelve</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ta-read-reset>Back to the start</button>
+                    </div>
+                    <div class="ta-card" data-ta-status-live></div>
+                    <p class="ta-readout" data-ta-readout="status-height">Height of the list: not measured yet.</p>
+                </div>
+                <div class="ta-block">
+                    <h3>The same, with room reserved for a two-line reason</h3>
+                    <p class="ta-caption">
+                        <code>--kp-statusrow-detail-lines: 2</code> keeps two lines under every name, so a long reason arriving moves nothing. Use it
+                        where failures are expected.
+                    </p>
+                    <div class="ta-actions">
+                        <button type="button" class="kp-button kp-button--primary kp-button--sm" data-ta-read-reserved>Read all twelve</button>
+                    </div>
+                    <div class="ta-card ta-reserve" data-ta-status-reserved></div>
+                    <p class="ta-readout" data-ta-readout="status-height-reserved">Height of the list: not measured yet.</p>
+                </div>
+                <div class="ta-block">
+                    <h3>The four states</h3>
+                    <div class="ta-card">
+                        <ul class="kp-statuslist" aria-label="The four states">
+                            <li class="kp-statusrow" data-state="ok" data-kp-status-id="a">
+                                <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                ><span class="kp-statusrow__body"
+                                    ><span class="kp-statusrow__label">jellyfin</span><span class="kp-statusrow__detail">read</span></span
+                                >
+                            </li>
+                            <li class="kp-statusrow" data-state="loading" data-kp-status-id="b">
+                                <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                ><span class="kp-statusrow__body"
+                                    ><span class="kp-statusrow__label">vaultwarden</span
+                                    ><span class="kp-statusrow__detail">reading (12 s)</span></span
+                                >
+                            </li>
+                            <li class="kp-statusrow" data-state="failed" data-kp-status-id="c">
+                                <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                ><span class="kp-statusrow__body"
+                                    ><span class="kp-statusrow__label">traefik</span
+                                    ><span class="kp-statusrow__detail">timed out after 20 s</span></span
+                                >
+                            </li>
+                            <li class="kp-statusrow" data-state="empty" data-kp-status-id="d">
+                                <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                ><span class="kp-statusrow__body"
+                                    ><span class="kp-statusrow__label">grafana</span
+                                    ><span class="kp-statusrow__detail">no backups by design</span></span
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="ta-block">
+                    <h3>One column, and a very long reason</h3>
+                    <div class="ta-stack ta-stack--two">
+                        <div class="ta-card">
+                            <ul class="kp-statuslist kp-statuslist--rows" aria-label="One column">
+                                <li class="kp-statusrow" data-state="ok" data-kp-status-id="a">
+                                    <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                    ><span class="kp-statusrow__body"
+                                        ><span class="kp-statusrow__label">jellyfin</span><span class="kp-statusrow__detail">read</span></span
+                                    >
+                                </li>
+                                <li class="kp-statusrow" data-state="loading" data-kp-status-id="b">
+                                    <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                    ><span class="kp-statusrow__body"
+                                        ><span class="kp-statusrow__label">vaultwarden</span
+                                        ><span class="kp-statusrow__detail">reading (12 s)</span></span
+                                    >
+                                </li>
+                                <li class="kp-statusrow" data-state="failed" data-kp-status-id="c">
+                                    <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                    ><span class="kp-statusrow__body"
+                                        ><span class="kp-statusrow__label">traefik</span
+                                        ><span class="kp-statusrow__detail">timed out after 20 s</span></span
+                                    >
+                                </li>
+                                <li class="kp-statusrow" data-state="empty" data-kp-status-id="d">
+                                    <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                    ><span class="kp-statusrow__body"
+                                        ><span class="kp-statusrow__label">grafana</span
+                                        ><span class="kp-statusrow__detail">no backups by design</span></span
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="ta-card ta-card--narrow">
+                            <ul class="kp-statuslist kp-statuslist--rows" aria-label="A very long reason">
+                                <li class="kp-statusrow" data-state="failed" data-kp-status-id="l1">
+                                    <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                    ><span class="kp-statusrow__body"
+                                        ><span class="kp-statusrow__label">prometheus-remote-write-eu-west-2</span
+                                        ><span class="kp-statusrow__detail"
+                                            >The host answered 503 after 20 s: the volume is mounted read-only since the last power cut</span
+                                        ></span
+                                    >
+                                </li>
+                                <li class="kp-statusrow" data-state="empty" data-kp-status-id="l2">
+                                    <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                    ><span class="kp-statusrow__body"
+                                        ><span class="kp-statusrow__label">loki</span
+                                        ><span class="kp-statusrow__detail">This stack keeps no backups by design</span></span
+                                    >
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="ta-sec"
+                data-review-item="facets"
+                data-review-components="facets facet"
+                data-review-title="3 · Facet list"
+                aria-label="Facet list"
+            >
+                <div class="ta-sec__head">
+                    <h2>3 · Facet list</h2>
+                    <p>
+                        Checkbox rows that narrow a list by one property, each with how many items it would show, and an <b>only</b> button that
+                        selects just that row. “Everything” turns every row on. The checkboxes are the theme’s own; <b>only</b> is the theme’s ghost
+                        button, a sibling of the label (never inside it), shown when the pointer is on the row or focus is in it, and always on a
+                        touch screen.
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Square-cornered rows. The name is truncated with an ellipsis, the count is right-aligned in tabular figures. Point at a row: a
+                        quiet wash and the only button appears; none of it moves the counts.
+                    </p>
+                    <p data-for="light">
+                        Pill rows with a soft wash; the only button appears on hover or when focus is in the row. The counts keep one column.
+                    </p>
+                    <p data-for="dark">Square rows, mono counts, a faint wash. The checkbox is the theme's own.</p>
+                    <p data-for="cyberpunk">
+                        Square rows with mono counts; the section title is a spaced mono label. The only button is the theme's ghost button.
+                    </p>
+                    <p data-for="synthwave">Slightly rounded rows with mono counts; the only button shows on hover.</p>
+                    <p data-for="pastel">Round rows with a soft wash; checkboxes are the sticker kind.</p>
+                    <p data-for="terminal">All mono; rows are plain text with a wash on hover. The checkbox is the terminal's.</p>
+                    <p data-for="forest">Rows with the leaf corner, so the wash shows it; counts right-aligned.</p>
+                    <p data-for="blueprint">Mono counts, square rows; the checkbox is drawn in line.</p>
+                    <p data-for="solstice">Softly rounded rows with a warm wash.</p>
+                    <p data-for="brutalism">
+                        Heavy: on hover a row turns into a solid block of the secondary colour (yellow) with black type. The title above is bold.
+                    </p>
+                    <p data-for="deco">Square rows; the section title is in very widely spaced capitals.</p>
+                    <p data-for="phantom">Square rows with a grey wash; the title is condensed capitals. The only button is phantom's key cap.</p>
+                    <p data-for="grotesk">Bold counts in black, square rows; the names must stay on one line and cut with an ellipsis, never wrap.</p>
+                    <p data-for="nostromo">Slightly rounded rows with mono counts; the wash is the panel's.</p>
+                    <p data-for="titanium">Square rows, mono counts. Contact is instant, there is no fade on the wash.</p>
+                </div>
+                <div class="ta-expect">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Click a checkbox or its name</b> in the live log below: that source’s lines appear or disappear, the “Showing x of y
+                            lines” readout follows, and the Everything checkbox becomes mixed (a dash) while only some rows are on.
+                        </li>
+                        <li>
+                            <b>Point at a row</b> (or Tab into it): the <b>only</b> button appears at the row’s end without moving the count. Press
+                            it: that row stays on, every other turns off, and the readout says “Showing only …”. Press Everything: all rows are on
+                            again.
+                        </li>
+                        <li>
+                            <b>Keyboard:</b> Tab reaches each checkbox (Space turns it); when a row has focus its <b>only</b> button is the next stop
+                            (Enter presses it). After pressing it the focus stays where it was.
+                        </li>
+                        <li>
+                            <b>“A new source appears”</b> adds a row in its place without touching the others: if you hold the keyboard focus on a
+                            checkbox while it is added, the focus stays. <b>“Counts are loading”</b> replaces the counts with quiet bars that keep
+                            their place, and “Counts arrive” writes them back. <b>Reset the filters</b> turns everything on.
+                        </li>
+                        <li><b>The row of facets</b> (last block) is the phone form: one line of bordered rows that scrolls sideways.</li>
+                    </ul>
+                </div>
+                <div class="ta-block">
+                    <h3>Live: the host log, two facet groups</h3>
+                    <p class="ta-caption">
+                        Mock: the log lines and their filtering (the page reads the facets and writes the counts back). The rows, the Everything
+                        state, “only”, in-place insertion and announcements are the package (<code>setFacetItems</code>, <code>setFacetCounts</code>,
+                        <code>kp-facet-change</code>).
+                    </p>
+                    <div class="ta-actions" data-review-controls role="group" aria-label="The log demo">
+                        <button type="button" class="kp-button kp-button--sm" data-ta-add-source>A new source appears</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ta-counts-wait>Counts are loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ta-counts-arrive>Counts arrive</button>
+                        <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-ta-facet-reset>Reset the filters</button>
+                    </div>
+                    <div class="ta-log">
+                        <div class="ta-log__side">
+                            <h4 class="kp-facets__title" id="ta-h-source">Source</h4>
+                            <div
+                                class="kp-facets"
+                                data-kp-facets
+                                data-kp-facets-all="Everything"
+                                role="group"
+                                aria-labelledby="ta-h-source"
+                                data-ta-facets="source"
+                            >
+                                <ul class="kp-facets__list"></ul>
+                                <p class="kp-facets__empty" hidden>No sources yet.</p>
+                            </div>
+                            <h4 class="kp-facets__title" id="ta-h-level">Level</h4>
+                            <div class="kp-facets" data-kp-facets role="group" aria-labelledby="ta-h-level" data-ta-facets="level">
+                                <ul class="kp-facets__list"></ul>
+                            </div>
+                        </div>
+                        <div class="ta-log__main">
+                            <p class="ta-readout" data-ta-readout="log" aria-live="polite">Showing all lines.</p>
+                            <ol class="ta-log__lines" data-ta-lines></ol>
+                        </div>
+                    </div>
+                </div>
+                <div class="ta-block">
+                    <h3>Every state</h3>
+                    <p class="ta-caption">Mock: “hover” and “focus in the row” are drawn by classes that copy the package’s rules.</p>
+                    <div class="ta-states ta-states--one">
+                        <div class="ta-states__row">
+                            <p class="ta-states__name">Default</p>
+                            <div class="ta-states__cell">
+                                <div class="kp-facets" role="group" aria-label="Source">
+                                    <ul class="kp-facets__list">
+                                        <li class="kp-facet" data-kp-facet-all>
+                                            <label class="kp-facet__option"
+                                                ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span class="kp-facet__name"
+                                                    >Everything</span
+                                                ><span class="kp-facet__count">351</span></label
+                                            >
+                                        </li>
+                                        <li class="kp-facet" data-value="HOST">
+                                            <label class="kp-facet__option"
+                                                ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span
+                                                    class="kp-facet__swatch ta-sw-a"
+                                                    aria-hidden="true"
+                                                ></span
+                                                ><span class="kp-facet__name">Host</span><span class="kp-facet__count">214</span></label
+                                            ><button
+                                                type="button"
+                                                class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                                aria-label="Show only Host"
+                                            >
+                                                only
+                                            </button>
+                                        </li>
+                                        <li class="kp-facet" data-value="jellyfin">
+                                            <label class="kp-facet__option"
+                                                ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span
+                                                    class="kp-facet__swatch ta-sw-b"
+                                                    aria-hidden="true"
+                                                ></span
+                                                ><span class="kp-facet__name">jellyfin</span><span class="kp-facet__count">96</span></label
+                                            ><button
+                                                type="button"
+                                                class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                                aria-label="Show only jellyfin"
+                                            >
+                                                only
+                                            </button>
+                                        </li>
+                                        <li class="kp-facet" data-value="vaultwarden">
+                                            <label class="kp-facet__option"
+                                                ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span
+                                                    class="kp-facet__swatch ta-sw-c"
+                                                    aria-hidden="true"
+                                                ></span
+                                                ><span class="kp-facet__name">vaultwarden</span><span class="kp-facet__count">41</span></label
+                                            ><button
+                                                type="button"
+                                                class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                                aria-label="Show only vaultwarden"
+                                            >
+                                                only
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ta-states__row">
+                            <p class="ta-states__name">Hover (drawn by a class)</p>
+                            <div class="ta-states__cell">
+                                <div class="kp-facets" role="group" aria-label="Source">
+                                    <ul class="kp-facets__list">
+                                        <li class="kp-facet" data-value="HOST">
+                                            <label class="kp-facet__option"
+                                                ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span
+                                                    class="kp-facet__swatch ta-sw-a"
+                                                    aria-hidden="true"
+                                                ></span
+                                                ><span class="kp-facet__name">Host</span><span class="kp-facet__count">214</span></label
+                                            ><button
+                                                type="button"
+                                                class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                                aria-label="Show only Host"
+                                            >
+                                                only
+                                            </button>
+                                        </li>
+                                        <li class="kp-facet ta-is-hover" data-value="jellyfin">
+                                            <label class="kp-facet__option"
+                                                ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span
+                                                    class="kp-facet__swatch ta-sw-b"
+                                                    aria-hidden="true"
+                                                ></span
+                                                ><span class="kp-facet__name">jellyfin</span><span class="kp-facet__count">96</span></label
+                                            ><button
+                                                type="button"
+                                                class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                                aria-label="Show only jellyfin"
+                                            >
+                                                only
+                                            </button>
+                                        </li>
+                                        <li class="kp-facet" data-value="vaultwarden">
+                                            <label class="kp-facet__option"
+                                                ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span
+                                                    class="kp-facet__swatch ta-sw-c"
+                                                    aria-hidden="true"
+                                                ></span
+                                                ><span class="kp-facet__name">vaultwarden</span><span class="kp-facet__count">41</span></label
+                                            ><button
+                                                type="button"
+                                                class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                                aria-label="Show only vaultwarden"
+                                            >
+                                                only
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ta-states__row">
+                            <p class="ta-states__name">Focus in the row (drawn by a class)</p>
+                            <div class="ta-states__cell">
+                                <div class="kp-facets" role="group" aria-label="Source">
+                                    <ul class="kp-facets__list">
+                                        <li class="kp-facet" data-value="HOST">
+                                            <label class="kp-facet__option"
+                                                ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span
+                                                    class="kp-facet__swatch ta-sw-a"
+                                                    aria-hidden="true"
+                                                ></span
+                                                ><span class="kp-facet__name">Host</span><span class="kp-facet__count">214</span></label
+                                            ><button
+                                                type="button"
+                                                class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                                aria-label="Show only Host"
+                                            >
+                                                only
+                                            </button>
+                                        </li>
+                                        <li class="kp-facet ta-is-within" data-value="jellyfin">
+                                            <label class="kp-facet__option"
+                                                ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span
+                                                    class="kp-facet__swatch ta-sw-b"
+                                                    aria-hidden="true"
+                                                ></span
+                                                ><span class="kp-facet__name">jellyfin</span><span class="kp-facet__count">96</span></label
+                                            ><button
+                                                type="button"
+                                                class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                                aria-label="Show only jellyfin"
+                                            >
+                                                only
+                                            </button>
+                                        </li>
+                                        <li class="kp-facet" data-value="vaultwarden">
+                                            <label class="kp-facet__option"
+                                                ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span
+                                                    class="kp-facet__swatch ta-sw-c"
+                                                    aria-hidden="true"
+                                                ></span
+                                                ><span class="kp-facet__name">vaultwarden</span><span class="kp-facet__count">41</span></label
+                                            ><button
+                                                type="button"
+                                                class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                                aria-label="Show only vaultwarden"
+                                            >
+                                                only
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ta-states__row">
+                            <p class="ta-states__name">Some off; Everything is mixed</p>
+                            <div class="ta-states__cell">
+                                <div class="kp-facets" role="group" aria-label="Source">
+                                    <ul class="kp-facets__list">
+                                        <li class="kp-facet" data-kp-facet-all>
+                                            <label class="kp-facet__option"
+                                                ><input type="checkbox" class="kp-field__check kp-facet__check" data-ta-mixed /><span
+                                                    class="kp-facet__name"
+                                                    >Everything</span
+                                                ><span class="kp-facet__count">351</span></label
+                                            >
+                                        </li>
+                                        <li class="kp-facet" data-value="HOST">
+                                            <label class="kp-facet__option"
+                                                ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span
+                                                    class="kp-facet__swatch ta-sw-a"
+                                                    aria-hidden="true"
+                                                ></span
+                                                ><span class="kp-facet__name">Host</span><span class="kp-facet__count">214</span></label
+                                            ><button
+                                                type="button"
+                                                class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                                aria-label="Show only Host"
+                                            >
+                                                only
+                                            </button>
+                                        </li>
+                                        <li class="kp-facet" data-value="jellyfin">
+                                            <label class="kp-facet__option"
+                                                ><input type="checkbox" class="kp-field__check kp-facet__check" /><span
+                                                    class="kp-facet__swatch ta-sw-b"
+                                                    aria-hidden="true"
+                                                ></span
+                                                ><span class="kp-facet__name">jellyfin</span><span class="kp-facet__count">96</span></label
+                                            ><button
+                                                type="button"
+                                                class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                                aria-label="Show only jellyfin"
+                                            >
+                                                only
+                                            </button>
+                                        </li>
+                                        <li class="kp-facet" data-value="vaultwarden">
+                                            <label class="kp-facet__option"
+                                                ><input type="checkbox" class="kp-field__check kp-facet__check" /><span
+                                                    class="kp-facet__swatch ta-sw-c"
+                                                    aria-hidden="true"
+                                                ></span
+                                                ><span class="kp-facet__name">vaultwarden</span><span class="kp-facet__count">41</span></label
+                                            ><button
+                                                type="button"
+                                                class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                                aria-label="Show only vaultwarden"
+                                            >
+                                                only
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ta-states__row">
+                            <p class="ta-states__name">One row disabled</p>
+                            <div class="ta-states__cell">
+                                <div class="kp-facets" role="group" aria-label="Source">
+                                    <ul class="kp-facets__list">
+                                        <li class="kp-facet" data-value="HOST">
+                                            <label class="kp-facet__option"
+                                                ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span
+                                                    class="kp-facet__swatch ta-sw-a"
+                                                    aria-hidden="true"
+                                                ></span
+                                                ><span class="kp-facet__name">Host</span><span class="kp-facet__count">214</span></label
+                                            ><button
+                                                type="button"
+                                                class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                                aria-label="Show only Host"
+                                            >
+                                                only
+                                            </button>
+                                        </li>
+                                        <li class="kp-facet" data-value="jellyfin">
+                                            <label class="kp-facet__option"
+                                                ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span
+                                                    class="kp-facet__swatch ta-sw-b"
+                                                    aria-hidden="true"
+                                                ></span
+                                                ><span class="kp-facet__name">jellyfin</span><span class="kp-facet__count">96</span></label
+                                            ><button
+                                                type="button"
+                                                class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                                aria-label="Show only jellyfin"
+                                            >
+                                                only
+                                            </button>
+                                        </li>
+                                        <li class="kp-facet" data-value="vaultwarden">
+                                            <label class="kp-facet__option"
+                                                ><input type="checkbox" class="kp-field__check kp-facet__check" checked disabled /><span
+                                                    class="kp-facet__swatch ta-sw-c"
+                                                    aria-hidden="true"
+                                                ></span
+                                                ><span class="kp-facet__name">vaultwarden</span><span class="kp-facet__count">41</span></label
+                                            ><button
+                                                type="button"
+                                                class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                                aria-label="Show only vaultwarden"
+                                            >
+                                                only
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ta-states__row">
+                            <p class="ta-states__name">A long name, and a count of five figures</p>
+                            <div class="ta-states__cell">
+                                <div class="kp-facets ta-narrow" role="group" aria-label="Source">
+                                    <ul class="kp-facets__list">
+                                        <li class="kp-facet" data-value="x">
+                                            <label class="kp-facet__option"
+                                                ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span
+                                                    class="kp-facet__swatch ta-sw-a"
+                                                    aria-hidden="true"
+                                                ></span
+                                                ><span class="kp-facet__name">vaultwarden-backup-nightly-eu-west-2-replica</span
+                                                ><span class="kp-facet__count">12840</span></label
+                                            ><button
+                                                type="button"
+                                                class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                                aria-label="Show only vaultwarden-backup-nightly-eu-west-2-replica"
+                                            >
+                                                only
+                                            </button>
+                                        </li>
+                                        <li class="kp-facet" data-value="jellyfin">
+                                            <label class="kp-facet__option"
+                                                ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span
+                                                    class="kp-facet__swatch ta-sw-b"
+                                                    aria-hidden="true"
+                                                ></span
+                                                ><span class="kp-facet__name">jellyfin</span><span class="kp-facet__count">96</span></label
+                                            ><button
+                                                type="button"
+                                                class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                                aria-label="Show only jellyfin"
+                                            >
+                                                only
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ta-states__row">
+                            <p class="ta-states__name">The counts are on their way</p>
+                            <div class="ta-states__cell">
+                                <div class="kp-facets" role="group" aria-label="Source" aria-busy="true">
+                                    <ul class="kp-facets__list">
+                                        <li class="kp-facet" data-value="HOST">
+                                            <label class="kp-facet__option"
+                                                ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span
+                                                    class="kp-facet__swatch ta-sw-a"
+                                                    aria-hidden="true"
+                                                ></span
+                                                ><span class="kp-facet__name">Host</span><span class="kp-facet__count">00</span></label
+                                            ><button
+                                                type="button"
+                                                class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                                aria-label="Show only Host"
+                                            >
+                                                only
+                                            </button>
+                                        </li>
+                                        <li class="kp-facet" data-value="jellyfin">
+                                            <label class="kp-facet__option"
+                                                ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span
+                                                    class="kp-facet__swatch ta-sw-b"
+                                                    aria-hidden="true"
+                                                ></span
+                                                ><span class="kp-facet__name">jellyfin</span><span class="kp-facet__count">00</span></label
+                                            ><button
+                                                type="button"
+                                                class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                                aria-label="Show only jellyfin"
+                                            >
+                                                only
+                                            </button>
+                                        </li>
+                                        <li class="kp-facet" data-value="vaultwarden">
+                                            <label class="kp-facet__option"
+                                                ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span
+                                                    class="kp-facet__swatch ta-sw-c"
+                                                    aria-hidden="true"
+                                                ></span
+                                                ><span class="kp-facet__name">vaultwarden</span><span class="kp-facet__count">00</span></label
+                                            ><button
+                                                type="button"
+                                                class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                                aria-label="Show only vaultwarden"
+                                            >
+                                                only
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ta-states__row">
+                            <p class="ta-states__name">No rows yet</p>
+                            <div class="ta-states__cell">
+                                <div class="kp-facets" role="group" aria-label="Source">
+                                    <ul class="kp-facets__list"></ul>
+                                    <p class="kp-facets__empty">No sources yet. They appear here as lines arrive.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ta-block">
+                    <h3>The row of facets (phone)</h3>
+                    <p class="ta-caption"><code>kp-facets--row</code>: the rows side by side, scrolling sideways. Here in a 20rem column.</p>
+                    <div class="ta-card ta-card--narrow">
+                        <div class="kp-facets kp-facets--row" role="group" aria-label="Level">
+                            <ul class="kp-facets__list">
+                                <li class="kp-facet" data-kp-facet-all>
+                                    <label class="kp-facet__option"
+                                        ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span class="kp-facet__name"
+                                            >Everything</span
+                                        ><span class="kp-facet__count">3242</span></label
+                                    >
+                                </li>
+                                <li class="kp-facet" data-value="e">
+                                    <label class="kp-facet__option"
+                                        ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span
+                                            class="kp-facet__swatch ta-sw-a"
+                                            aria-hidden="true"
+                                        ></span
+                                        ><span class="kp-facet__name">Errors</span><span class="kp-facet__count">12</span></label
+                                    ><button
+                                        type="button"
+                                        class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                        aria-label="Show only Errors"
+                                    >
+                                        only
+                                    </button>
+                                </li>
+                                <li class="kp-facet" data-value="w">
+                                    <label class="kp-facet__option"
+                                        ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span
+                                            class="kp-facet__swatch ta-sw-b"
+                                            aria-hidden="true"
+                                        ></span
+                                        ><span class="kp-facet__name">Warnings</span><span class="kp-facet__count">40</span></label
+                                    ><button
+                                        type="button"
+                                        class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                        aria-label="Show only Warnings"
+                                    >
+                                        only
+                                    </button>
+                                </li>
+                                <li class="kp-facet" data-value="i">
+                                    <label class="kp-facet__option"
+                                        ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span
+                                            class="kp-facet__swatch ta-sw-c"
+                                            aria-hidden="true"
+                                        ></span
+                                        ><span class="kp-facet__name">Info</span><span class="kp-facet__count">880</span></label
+                                    ><button
+                                        type="button"
+                                        class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                        aria-label="Show only Info"
+                                    >
+                                        only
+                                    </button>
+                                </li>
+                                <li class="kp-facet" data-value="d">
+                                    <label class="kp-facet__option"
+                                        ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span
+                                            class="kp-facet__swatch ta-sw-d"
+                                            aria-hidden="true"
+                                        ></span
+                                        ><span class="kp-facet__name">Debug</span><span class="kp-facet__count">2310</span></label
+                                    ><button
+                                        type="button"
+                                        class="kp-button kp-button--ghost kp-button--sm kp-facet__only"
+                                        aria-label="Show only Debug"
+                                    >
+                                        only
+                                    </button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="heat" data-review-item="heat" data-review-title="Heat grid" data-review-components="heat">
+                <h2>
+                    Heat grid: stacks by nights<span class="gd-tag gd-tag--package">package</span><span class="gd-tag gd-tag--mock">mock data</span>
+                </h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the tiles are the theme’s own small plates; the grid never changes height when the state changes; nothing wraps
+                    (the long scratch-volume name is cut with an ellipsis); the whole-fleet row fills from its foot; the pinned night is ringed in
+                    every row; at 390 px the label column narrows and the tiles stay in thirty columns.
+                </div>
+                <div class="gd-expect">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>The grid</b> shows seven stacks (rows) by thirty nights (columns). Each cell is a small tile in the theme’s own shape.
+                            Green-ish <b>filled</b> is backed up, <b>striped red</b> is missed, <b>ruled amber</b> (only in the whole-fleet row) is
+                            some stacks missed. A <b>dashed outline</b> is the night that has not run yet (the last column), a <b>hatched</b> tile is
+                            before the stack had any history (docs), an <b>empty outline</b> is a stack that keeps no data by design (the long-named
+                            scratch volume, whose name is cut with an ellipsis).
+                        </li>
+                        <li>
+                            <b>Whole fleet</b> row: each tile fills from the bottom by how many stacks were backed up that night. Under it a rule,
+                            then one row per stack, and the day numbers above (every third one is written).
+                        </li>
+                        <li>
+                            <b>Hover or Tab</b> to a tile: after a short pause a card says what that tile is (stack, date, snapshot time).
+                            <b>Press a tile</b> (or Enter): its whole night gets a ring in every row and the line under the grid names who missed it;
+                            press it again, or Esc, to unpin. <b>Arrow keys</b> move between tiles, Home and End go to the ends of the row, Page Up
+                            and Page Down earlier and later.
+                        </li>
+                        <li>
+                            <b>Press a stack name</b>: it stays pressed (accent plate) and the line under the grid lists the pressed names; the page
+                            would filter, the grid only reports. <b>Earlier, Later, Today</b> move the thirty nights; Later is disabled on today.
+                        </li>
+                        <li>
+                            <b>Ready, Loading, Empty, Failed</b> swap the same grid: loading keeps every tile in place and animates them in the
+                            theme’s own busy picture; empty and failed show one centred sentence, with the grid’s own minimum height so the page does
+                            not jump.
+                        </li>
+                        <li>
+                            <b>Requests per hour</b> (below) is the same grid toned by a value: the darker the tile, the more requests; the legend is
+                            a five-step ramp. Three small boxes at the end show loading, empty and failed.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The tiles are ruled ledger squares (a hairline frame, nearly square corners); a pinned night takes the double rule round every
+                        tile of its column; the row names are small capitals, a pressed name takes a navy underline instead of a plate; the rule under
+                        the whole-fleet row is a double rule. Nothing moves when the state changes.
+                    </p>
+                </div>
+                <div class="gd-panel">
+                    <h3>Snapshots per stack per night</h3>
+                    <div class="gd-bar">
+                        <button type="button" class="kp-button kp-button--sm kp-button--ghost" data-gd-earlier>‹ Earlier</button>
+                        <button type="button" class="kp-button kp-button--sm kp-button--ghost" data-gd-later>Later ›</button>
+                        <button type="button" class="kp-button kp-button--sm kp-button--secondary" data-gd-today>Today</button>
+                        <span class="gd-note" data-gd-range></span>
+                        <span class="gd-grow"></span>
+                        <span class="gd-note">State</span>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-gd-state="ready">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-gd-state="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-gd-state="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-gd-state="error">Failed</button>
+                    </div>
+                    <div class="kp-heat" data-kp-heat data-kp-heat-toggle data-gd-heat="main"></div>
+                    <ul class="kp-heat__legend" aria-label="Legend">
+                        <li><span class="kp-heat__swatch" data-kp-tone="ok"></span> backed up</li>
+                        <li><span class="kp-heat__swatch" data-kp-tone="warn"></span> some stacks missed</li>
+                        <li><span class="kp-heat__swatch" data-kp-tone="bad"></span> missed</li>
+                        <li><span class="kp-heat__swatch" data-kp-tone="before"></span> before any history</li>
+                        <li><span class="kp-heat__swatch" data-kp-tone="future"></span> not run yet</li>
+                        <li><span class="kp-heat__swatch" data-kp-tone="none"></span> keeps no data</li>
+                        <li data-kp-end><span class="kp-keys" data-gd-keys="heat"></span></li>
+                    </ul>
+                    <p class="gd-note" role="status" data-gd-heat-detail>No night pinned. Press a cell to pin its night.</p>
+                    <p class="gd-note" role="status" data-gd-heat-filter>All stacks shown. Press stack names to show only them.</p>
+                </div>
+                <div class="gd-grid">
+                    <div class="gd-panel">
+                        <h3>The same grid toned by a value</h3>
+                        <div class="kp-heat" data-kp-heat data-gd-heat="level"></div>
+                        <ul class="kp-heat__legend" aria-label="Legend">
+                            <li>
+                                fewer
+                                <span class="kp-heat__ramp">
+                                    <span class="kp-heat__swatch" data-kp-tone="level" data-gd-level="0.1"></span>
+                                    <span class="kp-heat__swatch" data-kp-tone="level" data-gd-level="0.3"></span>
+                                    <span class="kp-heat__swatch" data-kp-tone="level" data-gd-level="0.5"></span>
+                                    <span class="kp-heat__swatch" data-kp-tone="level" data-gd-level="0.7"></span>
+                                    <span class="kp-heat__swatch" data-kp-tone="level" data-gd-level="0.9"></span>
+                                </span>
+                                more requests
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="gd-panel">
+                        <h3>Loading, empty, failed</h3>
+                        <div class="kp-heat" data-kp-heat data-gd-heat="loading"></div>
+                        <div class="kp-heat" data-kp-heat data-gd-heat="empty"></div>
+                        <div class="kp-heat" data-kp-heat data-gd-heat="error"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cat-block" id="matrix" data-review-item="matrix" data-review-title="Matrix" data-review-components="matrix">
+                <h2>
+                    Matrix: which stack can reach which<span class="gd-tag gd-tag--package">package</span
+                    ><span class="gd-tag gd-tag--mock">mock data</span>
+                </h2>
+                <div class="cat-look">
+                    <b>Look at:</b> state is told by the plate <i>and</i> a word or glyph (cover the colours in your mind: it still reads); the pinned
+                    cell, the lit row and column and the dashed rule marker are three different looks; the headers stay put while the narrow box
+                    scrolls; the grid does not change height between ready, loading, empty and failed.
+                </div>
+                <div class="gd-expect">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>The matrix</b> has the sources down the side and the destinations across the top; the corner says “from ↓ to →”. Each
+                            pressable cell shows its state in a plate colour <b>and</b> a word or glyph: a number is the ports open (allowed, as
+                            declared), <b>open</b> is a mismatch (more open than declared), <b>×</b> is blocked, <b>0</b> is nothing declared. A
+                            <b>dashed empty</b> cell is a stack with itself, a <b>dashed</b> cell with a dash is “unknown”. A <b>red inner ring</b> on
+                            a cell means the traffic was dropped on the way out of the source.
+                        </li>
+                        <li>
+                            <b>Press a name</b> (side or top): its row and column stay bright and everything else dims; press more names to add them;
+                            <b>Esc</b> or the name again turns it off. <b>Press a cell</b>: it gets a ring and the line under the matrix names the
+                            pair. In the first matrix the <b>arrow keys</b> also pin the cell they land on (the dashboard’s behaviour); the cells that
+                            cannot be pressed are skipped and the arrows wrap round.
+                        </li>
+                        <li><b>backup → database</b> carries a dashed outline: that is a rule being read touching that pair.</li>
+                        <li><b>Hover or Tab</b> to a cell: a card says the pair and its state in words.</li>
+                        <li>
+                            <b>The second matrix</b> sits in a box 22 rem wide: the box scrolls sideways, and the
+                            <b>names on the top and the side stay in place</b> (sticky) with the corner; scroll it and look at the headers. At the
+                            narrow width the side names get shorter and lose their colour mark.
+                        </li>
+                        <li>
+                            <b>Ready, Loading, Empty, Failed</b> swap both matrices: loading keeps the shape (names and cells are skeletons); empty
+                            and failed show one sentence.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Cells are paper plates with a navy start rule (allowed), red ink (mismatch) and two red rules (blocked), the way the formal
+                        month calendar draws its days; the pinned cell has the double rule; names are small capitals; the headers stay while the
+                        narrow box scrolls.
+                    </p>
+                </div>
+                <div class="gd-panel">
+                    <h3>Reachability matrix</h3>
+                    <div class="gd-bar">
+                        <span class="gd-grow"></span>
+                        <span class="gd-note">State</span>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-gd-mstate="ready">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-gd-mstate="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-gd-mstate="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-gd-mstate="error">Failed</button>
+                    </div>
+                    <div class="kp-matrix" data-kp-matrix data-kp-matrix-select="follow" data-gd-matrix="main"></div>
+                    <ul class="kp-heat__legend" aria-label="Legend">
+                        <li><span class="kp-heat__swatch kp-heat__swatch--plate" data-kp-tone="ok"></span> allowed, as declared (ports open)</li>
+                        <li><span class="kp-heat__swatch kp-heat__swatch--plate" data-kp-tone="warn"></span> mismatch</li>
+                        <li><span class="kp-heat__swatch kp-heat__swatch--plate" data-kp-tone="bad"></span> blocked</li>
+                        <li><span class="kp-heat__swatch kp-heat__swatch--plate" data-kp-tone="muted"></span> nothing open</li>
+                        <li><span class="kp-heat__swatch kp-heat__swatch--plate" data-kp-tone="none"></span> unknown</li>
+                        <li><span class="kp-heat__swatch kp-heat__swatch--plate" data-kp-tone="self"></span> itself</li>
+                        <li><span class="kp-heat__swatch kp-heat__swatch--plate" data-kp-tone="ok" data-kp-ringed></span> dropped on the way out</li>
+                        <li data-kp-end><span class="kp-keys" data-gd-keys="matrix"></span></li>
+                    </ul>
+                    <p class="gd-note" role="status" data-gd-matrix-detail>No cell pinned. Press a cell, or use the arrow keys.</p>
+                    <p class="gd-note" role="status" data-gd-matrix-light>Nothing lit. Press a name to light its row and column.</p>
+                </div>
+                <div class="gd-panel">
+                    <h3>The same matrix in a box 22 rem wide: it scrolls, the names stay</h3>
+                    <div class="gd-narrow">
+                        <div class="kp-matrix" data-kp-matrix data-gd-matrix="narrow"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="cat-block"
+                id="barcell"
+                data-review-item="barcell"
+                data-review-title="Bar in a table cell"
+                data-review-components="bar-cell"
+            >
+                <h2>
+                    A value with a bar in a data table cell<span class="gd-tag gd-tag--package">package</span
+                    ><span class="gd-tag gd-tag--mock">mock data</span>
+                </h2>
+                <div class="cat-look">
+                    <b>Look at:</b> the bar and the figure in one cell, the figures aligned on their end edge, bars starting in one place; the sort by
+                    the value (not by the text); a row with no reading keeps the row height; the warning and destructive fills are the theme’s; at 390
+                    px the rows are cards and the bars keep their width.
+                </div>
+                <div class="gd-expect">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Capacity per stack</b>: each of CPU, Memory and Disk is a bar with its number on the end edge. The numbers line up on
+                            their right edge and the bars start in the same place in every row. From 75 % the bar turns warning, from 90 % destructive
+                            (platform’s disk is 94 %, backups’ disk 87 %, media’s memory 91 %); docs’ memory is 112 %: the bar is full and says so
+                            with its mark at the end. <b>network</b> has no reading: an empty track and the words “not read”, the same height as every
+                            other row.
+                        </li>
+                        <li>
+                            <b>Press a column heading</b> (CPU, Memory, Disk, On disk): the rows sort by the <b>value</b> under the bar, not by the
+                            text. Press again to reverse. “On disk” shows “440 MB” and “12.1 GB” but sorts by bytes (it carries
+                            <code>data-kp-sort-value</code>). Shift + click adds a second sort key. The row for network (no reading) sorts first
+                            ascending.
+                        </li>
+                        <li>
+                            <b>Show loading</b> turns every bar into the theme’s busy track at the same size, the numbers empty; pressing it again
+                            brings the readings back.
+                        </li>
+                        <li>
+                            <b>Disk growth</b> (second table) is written in markup only: <code>data-kp-bar="0.82"</code> on a span, and a sort value
+                            on the cell for “Full in”. Sort it by “Full in”: 6 days comes before 41 days and “never” comes last, because the sort
+                            value is 9999, not the text.
+                        </li>
+                        <li>
+                            On a narrow window the table becomes one card per row with the column names in front of each bar; the bars still line up.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The bar is the formal meter (ruled column, navy entry) with its figure on the end edge in tabular figures; warning and
+                        destructive are the ledger’s ochre and red. Sorting follows the value under the bar.
+                    </p>
+                </div>
+                <div class="gd-stack">
+                    <div class="gd-panel">
+                        <h3>Capacity per stack (cells written by script)</h3>
+                        <div class="gd-bar">
+                            <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-gd-bar-load>Show loading</button>
+                        </div>
+                        <div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-page-sizes="none" data-kp-sort-multi>
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <caption class="kp-sr-only">
+                                        Capacity per stack. CPU, memory and disk are bars; sorting uses the share, not the text.
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" data-kp-sort="text">Stack</th>
+                                            <th scope="col" data-kp-sort="number">CPU</th>
+                                            <th scope="col" data-kp-sort="number">Memory</th>
+                                            <th scope="col" data-kp-sort="number">Disk</th>
+                                            <th scope="col" data-kp-sort="number" class="kp-text-end">On disk</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-gd-cap></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="gd-panel">
+                        <h3>Disk growth (cells written in markup)</h3>
+                        <div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-page-sizes="none">
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <caption class="kp-sr-only">
+                                        Disk growth per filesystem. The first bar is how full the disk is now; the last column is days until full.
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" data-kp-sort="text">Where</th>
+                                            <th scope="col" data-kp-sort="number">Now</th>
+                                            <th scope="col" data-kp-sort="number" class="kp-text-end">Trend</th>
+                                            <th scope="col" data-kp-sort="number" class="kp-text-end">Full in</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td data-label="Where">Host <b class="kp-mono">/</b></td>
+                                            <td data-label="Now"><span class="kp-bar-cell" data-kp-bar="0.82" data-kp-bar-label="full"></span></td>
+                                            <td data-label="Trend" class="kp-text-end kp-numeric" data-kp-sort-value="0.42">+0.42 %/day</td>
+                                            <td data-label="Full in" class="kp-text-end" data-kp-sort-value="6">6 days</td>
+                                        </tr>
+                                        <tr>
+                                            <td data-label="Where">Stack <b class="kp-mono">media</b></td>
+                                            <td data-label="Now"><span class="kp-bar-cell" data-kp-bar="0.57" data-kp-bar-label="full"></span></td>
+                                            <td data-label="Trend" class="kp-text-end kp-numeric" data-kp-sort-value="0.1">+0.10 %/day</td>
+                                            <td data-label="Full in" class="kp-text-end" data-kp-sort-value="41">41 days</td>
+                                        </tr>
+                                        <tr>
+                                            <td data-label="Where">Stack <b class="kp-mono">backups</b></td>
+                                            <td data-label="Now"><span class="kp-bar-cell" data-kp-bar="0.93" data-kp-bar-label="full"></span></td>
+                                            <td data-label="Trend" class="kp-text-end kp-numeric" data-kp-sort-value="-0.05">−0.05 %/day</td>
+                                            <td data-label="Full in" class="kp-text-end" data-kp-sort-value="9999">never</td>
+                                        </tr>
+                                        <tr>
+                                            <td data-label="Where">Stack <b class="kp-mono">home</b></td>
+                                            <td data-label="Now"><span class="kp-bar-cell" data-kp-bar="0.31" data-kp-bar-label="full"></span></td>
+                                            <td data-label="Trend" class="kp-text-end kp-numeric" data-kp-sort-value="0.02">+0.02 %/day</td>
+                                            <td data-label="Full in" class="kp-text-end" data-kp-sort-value="9999">never</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="kt-sec"
+                id="week"
+                data-review-item="week"
+                data-review-components="week"
+                data-review-title="Week agenda: seven days, every item at its time"
+                aria-labelledby="h-week"
+            >
+                <div class="kt-sec__head">
+                    <h2 id="h-week">Week agenda: seven days, every item at its time</h2>
+                    <p>
+                        A column per day, an hour axis, every item a pill at its time of day, a line across today at the current time. Below 40rem of
+                        its own width the days become rows. Items open with a click or Enter.
+                    </p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Seven day columns starting today. Today carries the word <b>Today</b> under its number, a coloured number and a tinted
+                            column; a line crosses it at the current time and the pills above the line are quieter.
+                        </li>
+                        <li>
+                            Every pill shows its time and its name, ending in an ellipsis when the name is long. The pill with a ring is the
+                            <b>next run</b>; the struck-through ones are <b>off</b> or <b>skipped</b>; the dashed one is the host’s own round,
+                            <b>for reference</b>, and does nothing when pressed.
+                        </li>
+                        <li>
+                            Hover a pill (not the dashed one): a card with its detail. Click it or press Enter: the readout under the agenda logs the
+                            item.
+                        </li>
+                        <li>
+                            Tab enters the agenda once, on a pill. The arrows move: up and down inside a day, left and right to the nearest item of
+                            the next day. Tab leaves.
+                        </li>
+                        <li>
+                            <b>Prev</b>, <b>Next</b> and <b>Today</b> move the range by seven days and the title follows; the demo then hands the
+                            agenda the same weekly pattern for the new days (a real page would load them).
+                        </li>
+                        <li>The 360 px column holds the same days as rows, with every item shown and nothing cut off.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Check the full-width agenda and the 360 px one. Ledger entries: a heavy 4px rule on the left of each pill, 2px corners, the
+                        weekday in small capitals, dotted dividers between the days like leaders.
+                    </p>
+                </div>
+                <div class="kt-cols">
+                    <div>
+                        <p class="kt-label">Full width, with the week buttons</p>
+                        <div class="kp-week" data-kp-week data-kp-week-nav id="kt-week-wide" aria-label="Runs in the next 7 days"></div>
+                    </div>
+                    <div>
+                        <p class="kt-label">Phone, 360 px</p>
+                        <div class="kt-phone"><div class="kp-week" data-kp-week id="kt-week-phone" aria-label="Runs in the next 7 days"></div></div>
+                    </div>
+                </div>
+                <pre class="kt-log" id="kt-week-log" aria-label="What the agenda reported" aria-live="off"></pre>
+            </section>
+
+            <section
+                class="kt-sec"
+                id="week-crowd"
+                data-review-item="week-crowd"
+                data-review-components="week"
+                data-review-title="A crowded day folds into a +N menu"
+                aria-labelledby="h-week-crowd"
+            >
+                <div class="kt-sec__head">
+                    <h2 id="h-week-crowd">A crowded day folds into a +N menu</h2>
+                    <p>
+                        A column holds as many pills as its height fits. The rest is folded into a +N button at the end of the stack; its menu (the
+                        package’s menu button) lists them. The column never grows.
+                    </p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Thursday has fourteen items between 01:00 and 04:30. Its column shows a stack of pills and, at the foot of the stack, a
+                            <b>+N</b> button instead of one more pill. No pill sits on another and the column keeps its height.
+                        </li>
+                        <li>
+                            The menu under +N opens by itself, joined to its button, as soon as that button is in view (it is not open while the
+                            button is below the fold); it closes again when the button leaves the view. It lists the folded items with their time and
+                            name. Pick one: it is reported like a pill.
+                        </li>
+                        <li><b>Open the +N menu</b> opens it again; Esc closes it and returns the focus to +N; a click elsewhere closes it too.</li>
+                        <li>
+                            <b>Add an item</b> puts a fifteenth item on Thursday, <b>Remove one</b> takes one away: the number on +N follows and
+                            nothing else moves. Fewer items than the column holds: no +N at all.
+                        </li>
+                        <li>The 360 px column shows all fourteen items as rows and no +N.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Open the +N menu in this theme and compare it with the other menus of the page. Ledger entries: a heavy 4px rule on the left
+                        of each pill, 2px corners, the weekday in small capitals, dotted dividers between the days like leaders.
+                    </p>
+                </div>
+                <div class="kt-actions">
+                    <button type="button" class="kp-button" id="kt-more-open">Open the +N menu</button>
+                    <button type="button" class="kp-button" id="kt-crowd-add">Add an item to Thursday</button>
+                    <button type="button" class="kp-button" id="kt-crowd-remove">Remove one</button>
+                </div>
+                <div class="kt-cols">
+                    <div>
+                        <p class="kt-label">Full width</p>
+                        <div class="kp-week" data-kp-week id="kt-crowd-wide" aria-label="A crowded week"></div>
+                    </div>
+                    <div>
+                        <p class="kt-label">Phone, 360 px</p>
+                        <div class="kt-phone"><div class="kp-week" data-kp-week id="kt-crowd-phone" aria-label="A crowded week"></div></div>
+                    </div>
+                </div>
+                <pre class="kt-log" id="kt-crowd-log" aria-label="What the agenda reported" aria-live="off"></pre>
+            </section>
+
+            <section
+                class="kt-sec"
+                id="week-states"
+                data-review-item="week-states"
+                data-review-components="week"
+                data-review-title="Week agenda: loading, empty, error, focus"
+                aria-labelledby="h-week-states"
+            >
+                <div class="kt-sec__head">
+                    <h2 id="h-week-states">Week agenda: loading, empty, error, focus</h2>
+                    <p>The three states of the whole agenda, each at the agenda’s final size, and a pill that has the keyboard focus.</p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Loading</b>: ghost pills of the final size pulse in the columns (still without reduced motion); the day heads and the
+                            axis are already there. Nothing moves when the real items arrive.
+                        </li>
+                        <li><b>Empty</b>: the same grid, the sentence “Nothing is planned in this week.” over it.</li>
+                        <li><b>Error</b>: the grid, with the page’s own words in the destructive colour over it.</li>
+                        <li>
+                            <b>Focus</b>: the third agenda has its first pill focused as a keyboard user would see it; the ring must be whole, not cut
+                            by the pill’s corners, and clearly visible against the neighbours.
+                        </li>
+                        <li>
+                            <b>Make it load, then arrive</b> runs the loading state for two seconds and then gives the first agenda its items: no
+                            column changes height and no head moves.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Check that the three agendas have the same height and that the sentence sits over the grid, not in it. Ledger entries: a heavy
+                        4px rule on the left of each pill, 2px corners, the weekday in small capitals, dotted dividers between the days like leaders.
+                    </p>
+                </div>
+                <div class="kt-actions">
+                    <button type="button" class="kp-button" id="kt-states-cycle">Make it load, then arrive</button>
+                </div>
+                <div class="kt-stack">
+                    <div>
+                        <p class="kt-label">Loading</p>
+                        <div class="kp-week" data-kp-week id="kt-state-loading" aria-label="Loading week"></div>
+                    </div>
+                    <div>
+                        <p class="kt-label">Empty</p>
+                        <div class="kp-week" data-kp-week id="kt-state-empty" aria-label="Empty week"></div>
+                    </div>
+                    <div>
+                        <p class="kt-label">Error</p>
+                        <div class="kp-week" data-kp-week id="kt-state-error" aria-label="Failed week"></div>
+                    </div>
+                    <div>
+                        <p class="kt-label">A pill with the focus</p>
+                        <div class="kp-week" data-kp-week id="kt-state-focus" aria-label="Week with focus"></div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="kt-sec"
+                id="gantt"
+                data-review-item="gantt"
+                data-review-components="gantt"
+                data-review-title="Run timeline: bars per job, growing live"
+                aria-labelledby="h-gantt"
+            >
+                <div class="kt-sec__head">
+                    <h2 id="h-gantt">Run timeline: bars per job, growing live</h2>
+                    <p>
+                        A lane per job, a bar per run on a time axis that follows the clock. Running bars grow, queued ones wait hollow, finished ones
+                        are solid, failed ones stand taller. Drag across the plot to select a range.
+                    </p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            An axis on top with times, one lane per job with its name on the left, and a line for now. The six runs that are running
+                            or queued now are at the right edge: <b>running</b> is striped with a bright leading edge and grows; <b>queued</b> is
+                            hollow and dashed and grows too.
+                        </li>
+                        <li>
+                            <b>Succeeded</b> bars are solid; <b>failed</b> bars are solid, taller, with a cap at the end and a cross when wide enough.
+                            The Updates lane has two overlapping runs on two rows; the Reports lane has small bars close together.
+                        </li>
+                        <li>
+                            Hover a bar: a card with name, times, length and state (a running one counts up). Click it or press Enter: the readout
+                            under the timeline logs it. Tab enters once; the arrows move along a lane (left, right) and between lanes (up, down).
+                        </li>
+                        <li>
+                            The range buttons <b>1h 6h 24h 7d</b> change how much time shows. <b>Live</b> (pressed) makes the right edge follow now;
+                            press it to freeze the window, press again to follow.
+                        </li>
+                        <li>
+                            Drag across the plot: a dashed band, then the toolbar row above the timeline turns into a chip with the range,
+                            <b>Zoom</b> (the window becomes the range and stops following) and <b>Clear</b>. A click on a bar without a drag still
+                            opens it.
+                        </li>
+                        <li>
+                            The buttons under the timeline drive it: <b>Start a run</b> adds a running bar, <b>Finish</b> turns the oldest running one
+                            solid, <b>Fail</b> turns it failed, <b>Queue a run</b> adds a hollow one, <b>Start the queued run</b> turns it striped.
+                            <b>Fast time</b> runs the clock sixty times faster so growth is visible. The frame does not change height when a run
+                            starts or ends: the lanes with a run still open already hold a spare row, and a start that needs more scrolls inside the
+                            frame. Pressing a range button, <b>Live</b> or <b>Zoom</b> lays the lanes out again.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Press Start a run, then Fast time, and watch a bar grow; then drag across the plot. Inked strips with 2px corners, the axis in
+                        small capitals with dotted rules. A failed run is taller with a cap at its end and a cross.
+                    </p>
+                </div>
+                <div class="kt-actions">
+                    <button type="button" class="kp-button" id="kt-run-start">Start a run</button>
+                    <button type="button" class="kp-button" id="kt-run-finish">Finish the oldest running run</button>
+                    <button type="button" class="kp-button" id="kt-run-fail">Fail it instead</button>
+                    <button type="button" class="kp-button" id="kt-run-queue">Queue a run</button>
+                    <button type="button" class="kp-button" id="kt-run-promote">Start the queued run</button>
+                    <button type="button" class="kp-button" id="kt-run-fast" aria-pressed="false">Fast time (x60)</button>
+                </div>
+                <div class="kt-cols kt-cols--gantt">
+                    <div>
+                        <p class="kt-label">Full width</p>
+                        <div
+                            class="kp-gantt"
+                            data-kp-gantt
+                            data-kp-gantt-range="6h"
+                            data-kp-gantt-ghosts="2 3 2 1 1"
+                            id="kt-gantt-wide"
+                            aria-label="Operations of the dashboard"
+                        ></div>
+                    </div>
+                    <div>
+                        <p class="kt-label">Phone, 360 px</p>
+                        <div class="kt-phone">
+                            <div
+                                class="kp-gantt"
+                                data-kp-gantt
+                                data-kp-gantt-range="6h"
+                                data-kp-gantt-ghosts="2 3 2 1 1"
+                                id="kt-gantt-phone"
+                                aria-label="Operations of the dashboard"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+                <pre class="kt-log" id="kt-gantt-log" aria-label="What the timeline reported" aria-live="off"></pre>
+            </section>
+
+            <section
+                class="kt-sec"
+                id="gantt-states"
+                data-review-item="gantt-states"
+                data-review-components="gantt"
+                data-review-title="Run timeline: loading, empty, error, a held window, the hover card"
+                aria-labelledby="h-gantt-states"
+            >
+                <div class="kt-sec__head">
+                    <h2 id="h-gantt-states">Run timeline: loading, empty, error, a held window, the hover card</h2>
+                    <p>
+                        The states of the whole timeline at their final size, a window held in the past with a selected range, and the hover card
+                        opened on a failed run.
+                    </p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Loading</b>: five ghost lanes as tall as the real ones, each ghost bar a plate of a bar’s size with the navy rule ruled
+                            along its foot (formal’s own loading); the axis is already there.
+                        </li>
+                        <li>
+                            <b>Empty</b>: the axis and the sentence “No run in this window.” over a lane-sized space. <b>Error</b>: the page’s words
+                            in the destructive colour.
+                        </li>
+                        <li>
+                            <b>A held window</b>: the Live button is not pressed, the window ends two hours ago and does not move; a range is already
+                            selected (a band across the plot and the toolbar row turned into a chip with its times, Zoom and Clear, standing where the
+                            range buttons and Live stand; the toolbar keeps its height and the chip lies on no lane, at 1280 and at 390 px).
+                            <b>Zoom</b> makes the band the window; <b>Clear</b> lifts it.
+                        </li>
+                        <li>
+                            <b>Show the hover card on the failed run</b> opens the card on the failed bar of the held window: name, times, length and
+                            state, joined to its bar, with its edge whole in this theme.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Check the ghost lanes against the real lanes above, and the card against its bar. Inked strips with 2px corners, the axis in
+                        small capitals with dotted rules. A failed run is taller with a cap at its end and a cross.
+                    </p>
+                </div>
+                <div class="kt-actions">
+                    <button type="button" class="kp-button" id="kt-hover-open">Show the hover card on the failed run</button>
+                </div>
+                <div class="kt-stack">
+                    <div>
+                        <p class="kt-label">Loading</p>
+                        <div
+                            class="kp-gantt"
+                            data-kp-gantt
+                            data-kp-gantt-ghosts="2 3 2 1 1"
+                            id="kt-gstate-loading"
+                            aria-label="Loading history"
+                        ></div>
+                    </div>
+                    <div>
+                        <p class="kt-label">Empty</p>
+                        <div class="kp-gantt" data-kp-gantt id="kt-gstate-empty" aria-label="Empty history"></div>
+                    </div>
+                    <div>
+                        <p class="kt-label">Error</p>
+                        <div class="kp-gantt" data-kp-gantt id="kt-gstate-error" aria-label="Failed history"></div>
+                    </div>
+                    <div>
+                        <p class="kt-label">A held window with a selected range</p>
+                        <div
+                            class="kp-gantt"
+                            data-kp-gantt
+                            data-kp-gantt-live="false"
+                            data-kp-gantt-range="6h"
+                            id="kt-gstate-held"
+                            aria-label="History held in the past"
+                        ></div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script type="module" src="demo-grids.js"></script>
+        <script type="module" src="demo-time.js"></script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="demo-tiles.js"></script>
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-16-r1", "reopen": [] }
+        </script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

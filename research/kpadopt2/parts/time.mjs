@@ -1,8 +1,4 @@
-// research/kpadopt2-time: writes demo.html from one description.
-// Edit this file and demo.css / demo.js, not demo.html.
-//
-//   node research/kpadopt2-time/build.mjs
-import { writeFileSync } from 'node:fs';
+// research/kpadopt2: the week agenda and run timeline sections (imported by ../build.mjs).
 
 const THEMES = [
     'formal',
@@ -166,7 +162,7 @@ SECTIONS.push({
         '<b>Succeeded</b> bars are solid; <b>failed</b> bars are solid, taller, with a cap at the end and a cross when wide enough. The Updates lane has two overlapping runs on two rows; the Reports lane has small bars close together.',
         'Hover a bar: a card with name, times, length and state (a running one counts up). Click it or press Enter: the readout under the timeline logs it. Tab enters once; the arrows move along a lane (left, right) and between lanes (up, down).',
         'The range buttons <b>1h 6h 24h 7d</b> change how much time shows. <b>Live</b> (pressed) makes the right edge follow now; press it to freeze the window, press again to follow.',
-        'Drag across the plot: a dashed band, then a chip with the range, <b>Zoom</b> (the window becomes the range and stops following) and <b>Clear</b>. A click on a bar without a drag still opens it.',
+        'Drag across the plot: a dashed band, then the toolbar row above the timeline turns into a chip with the range, <b>Zoom</b> (the window becomes the range and stops following) and <b>Clear</b>. A click on a bar without a drag still opens it.',
         'The buttons under the timeline drive it: <b>Start a run</b> adds a running bar, <b>Finish</b> turns the oldest running one solid, <b>Fail</b> turns it failed, <b>Queue a run</b> adds a hollow one, <b>Start the queued run</b> turns it striped. <b>Fast time</b> runs the clock sixty times faster so growth is visible. The frame does not change height when a run starts or ends: the lanes with a run still open already hold a spare row, and a start that needs more scrolls inside the frame. Pressing a range button, <b>Live</b> or <b>Zoom</b> lays the lanes out again.',
     ],
     look: 'Press Start a run, then Fast time, and watch a bar grow; then drag across the plot.',
@@ -200,7 +196,7 @@ SECTIONS.push({
     expected: [
         '<b>Loading</b>: five ghost lanes as tall as the real ones, each ghost bar a plate of a bar’s size with the navy rule ruled along its foot (formal’s own loading); the axis is already there.',
         '<b>Empty</b>: the axis and the sentence “No run in this window.” over a lane-sized space. <b>Error</b>: the page’s words in the destructive colour.',
-        '<b>A held window</b>: the Live button is not pressed, the window ends two hours ago and does not move; a range is already selected (a band across the plot and a chip floating over the foot of the plot with its times, Zoom and Clear; the chip takes no room of its own, so the other timelines have no gap where it would be). <b>Zoom</b> makes the band the window; <b>Clear</b> lifts it.',
+        '<b>A held window</b>: the Live button is not pressed, the window ends two hours ago and does not move; a range is already selected (a band across the plot and the toolbar row turned into a chip with its times, Zoom and Clear, standing where the range buttons and Live stand; the toolbar keeps its height and the chip lies on no lane, at 1280 and at 390 px). <b>Zoom</b> makes the band the window; <b>Clear</b> lifts it.',
         '<b>Show the hover card on the failed run</b> opens the card on the failed bar of the held window: name, times, length and state, joined to its bar, with its edge whole in this theme.',
     ],
     look: 'Check the ghost lanes against the real lanes above, and the card against its bar.',
@@ -241,61 +237,6 @@ ${looks(s.look, s.perTheme)}
                 </div>${s.body}
             </section>`;
 
-const html = `<!doctype html>
-<html lang="en" data-theme="formal" data-review="kpadopt2-time" data-review-themes="formal">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>kp-themes: week agenda and run timeline</title>
-        <link rel="stylesheet" href="../../css/fonts.css" />
-        <link rel="stylesheet" href="../../css/themes.css" />
-        <link rel="stylesheet" href="../../css/components.css" />
-        <link rel="stylesheet" href="../../css/layout.css" />
-        <link rel="stylesheet" href="../../css/utilities.css" />
-        <script>
-            (function () {
-                var d = document.documentElement;
-                var t = new URLSearchParams(location.search).get('theme');
-                try {
-                    // A theme in the link is kept, so the catalogue's own
-                    // boot, which reads the stored theme, does not undo it.
-                    if (t) localStorage.setItem('theme', t);
-                    t = t || localStorage.getItem('theme');
-                } catch (e) {}
-                if (t) d.setAttribute('data-theme', t);
-                var theme = d.getAttribute('data-theme') || 'formal';
-                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
-            })();
-        </script>
-        <link rel="stylesheet" href="demo.css" />
-    </head>
-    <body>
-        <main class="kt-page">
-            <header class="kt-intro">
-                <h1>Week agenda and run timeline for the admin dashboard</h1>
-                <p>
-                    Two things the dashboard still draws itself: the week of the schedules page (<code>sch-week</code>, <code>sch-pill</code>) and the
-                    timeline of the Activity page (<code>ac-tl</code>). Both are the package’s now: <code>.kp-week</code> with
-                    <code>js/week.js</code> and <code>.kp-gantt</code> with <code>js/gantt.js</code> (both new, wired into <code>js/auto.js</code>).
-                </p>
-                <p>
-                    Mock on this page: everything prefixed <code>kt-</code>, the sample data (a household server’s jobs) and the buttons that
-                    drive the timeline. Package: every <code>kp-</code> class and the scripts. Every section says what you should see under
-                    <b>Expected</b>, and each section also shows the component in a 360 px column.
-                </p>
-            </header>
+export const sections = `
 ${SECTIONS.map(section).join('\n')}
-        </main>
-        <script type="module" src="demo.js"></script>
-        <script type="module" src="../../js/auto.js"></script>
-        <script type="application/json" data-review-round>
-            { "round": "2026-10-16-r1", "reopen": [] }
-        </script>
-        <script type="module" src="../_review/review.js"></script>
-        <script src="../../catalogue/boot-check.js"></script>
-        <script type="module" src="../../catalogue/catalogue.js"></script>
-    </body>
-</html>
 `;
-writeFileSync(new URL('demo.html', import.meta.url), html);
-console.log(`demo.html: ${html.length} bytes, ${SECTIONS.length} sections`);

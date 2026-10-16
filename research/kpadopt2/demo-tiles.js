@@ -1,4 +1,4 @@
-// research/kpadopt2-tiles: what this page does that the package does not.
+// research/kpadopt2: what this page does that the package does not.
 //   1. the theme buttons (register loaded first, then the theme set) and the lineup's registers;
 //   2. the stand-ins for hover, focus and press: the package's own rules, copied with the pseudo-class turned into a class;
 //   3. the live grids: a press makes a tile busy for 2.5 s and says so in a readout;

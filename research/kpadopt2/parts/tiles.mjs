@@ -1,8 +1,4 @@
-// research/kpadopt2-tiles: writes demo.html from one description.
-// Edit this file, looks.mjs, demo.css and demo.js, not demo.html.
-//
-//   node research/kpadopt2-tiles/build.mjs
-import { writeFileSync } from 'node:fs';
+// research/kpadopt2: the sections of action tiles, status rows and the facet list (imported by ../build.mjs).
 import { ACT, FAC, STA } from './looks.mjs';
 
 const THEMES = [
@@ -211,63 +207,7 @@ const facetStates = [
     row('No rows yet', flist('Source', [], { empty: true })),
 ].join('\n');
 
-const themeButtons = THEMES.map(
-    ([t, n]) => `<button type="button" class="kp-button kp-button--sm" data-ta-theme="${t}" aria-pressed="false">${n}</button>`,
-).join('\n                    ');
-
-const lineup = THEMES.map(
-    ([t, name]) => `
-<article class="ta-stage" data-theme="${t}">
-    <h4 class="ta-stage__name">${name}</h4>
-    <div class="kp-actions ta-stage__actions">${[
-        tile({ title: 'Back up now', text: 'Copies every volume to the backup disk.' }),
-        tile({ tag: 'a', title: 'Host', text: 'CPU, memory and disks.' }),
-        tile({ title: 'Delete snapshots', text: 'This cannot be undone.', cls: 'kp-action--destructive' }),
-    ].join('')}</div>
-    ${slist(staticRows, { cls: 'kp-statuslist--rows', label: `Backups per stack (${name})`, attrs: 'data-ta-lineup' })}
-    ${flist('Source', SOURCES.slice(0, 3), { all: allRow('Everything', 351) })}
-</article>`,
-).join('\n');
-
-const html = `<!doctype html>
-<!-- Written by research/kpadopt2-tiles/build.mjs; edit build.mjs, looks.mjs, demo.css and demo.js, not this file. -->
-<html lang="en" data-theme="light" data-cat-theme="light" data-cat-theme-fixed data-review="kpadopt2-tiles" data-review-themes="formal">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>kp-themes: action tiles, status rows and the facet list</title>
-        <link rel="stylesheet" href="../../css/fonts.css" />
-        <link rel="stylesheet" href="../../css/themes.css" />
-        <link rel="stylesheet" href="../../css/components.css" />
-        <link rel="stylesheet" href="../../css/layout.css" />
-        <link rel="stylesheet" href="../../css/utilities.css" />
-        <link rel="stylesheet" href="../../css/formal-register.css" data-kp-register="formal" />
-        <link rel="stylesheet" href="../../css/light-register.css" data-kp-register="light" />
-        <link rel="stylesheet" href="demo.css" />
-    </head>
-    <body>
-        <main class="ta-page">
-            <header class="ta-intro">
-                <h1>Action tiles, status rows and the facet list</h1>
-                <p>
-                    Three parts Kenny’s admin dashboard still draws itself because kp-themes 10.1.1 has no component for them (its <code>nx-action</code>,
-                    <code>perstack-chip</code> and <code>hl-opt</code>). Each is built here on the package: the rules are in css/components.css and all
-                    sixteen registers, the behaviour in js/action-tiles.js, js/statusrow.js and js/facets.js. Everything on this page is the package; only the
-                    sample data (a homelab’s stacks and log lines), the scripted runs, and the rows that stand in for hover, focus and press are this page’s.
-                    Judge in the review dialog (“Review in a dialog” at the top): formal first, three sections.
-                </p>
-                <p class="ta-note" data-ta-mirror-note hidden>
-                    <b>Hover, focus and press rows are drawn by copying the package’s own rules</b> (the page reads the stylesheets and re-writes
-                    <code>:hover</code> as a class), so they show the theme’s real look. That needs the page to be served over http (as the catalogue
-                    does); opened as a file, those rows show only the plain tile.
-                </p>
-                <p class="ta-note" data-ta-motion hidden><b>Your system asks for reduced motion</b>, so hover and press change the look but nothing moves or fades.</p>
-                <div class="ta-themes" role="group" aria-label="Theme (outside the review dialog)">
-                    <b>Theme:</b>
-                    ${themeButtons}
-                </div>
-            </header>
-
+export const sections = `
             <section class="ta-sec" data-review-item="actions" data-review-components="actions action" data-review-title="1 · Action tiles" aria-label="Action tiles">
                 <div class="ta-sec__head">
                     <h2>1 · Action tiles</h2>
@@ -426,26 +366,4 @@ ${facetStates}
                     )}</div>
                 </div>
             </section>
-
-            <section class="ta-lineup" aria-label="All sixteen themes side by side">
-                <h2>All sixteen side by side</h2>
-                <p>
-                    For comparing the themes with each other, not judged in the dialog: three action tiles, the four status rows and a facet list in each
-                    theme at once. Each stage has its own theme and loads its register.
-                </p>
-                <div class="ta-lineup__grid" data-ta-lineup>
-${lineup}
-                </div>
-            </section>
-        </main>
-        <script type="module" src="../../js/auto.js"></script>
-        <script type="module" src="demo.js"></script>
-        <script type="module" src="../_review/review.js"></script>
-        <script src="../../catalogue/boot-check.js"></script>
-        <script type="module" src="../../catalogue/catalogue.js"></script>
-    </body>
-</html>
 `;
-
-writeFileSync(new URL('demo.html', import.meta.url), html);
-console.log('demo.html', html.length, 'bytes');

@@ -8229,34 +8229,42 @@
     }
 
     .kp-gantt__bar {
+        position: relative;
         display: flex;
         flex-wrap: wrap;
         align-items: center;
         gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
     }
 
-    /* The chip floats over the foot of the plot, inside the frame: absent it
- * takes no height (no empty row at any width), present it moves nothing. */
+    /* The selected-range chip takes the toolbar row over (inset 0): while a range is selected it stands where the range
+ * buttons and Live are, so it lies on no lane and adds no height at any width; Clear gives the buttons back. */
     .kp-gantt__selection {
         position: absolute;
-        inset-block-end: var(--kp-space-sm, 0.5rem);
-        inset-inline: var(--kp-space-sm, 0.5rem);
+        inset: 0;
         z-index: 5;
         box-sizing: border-box;
-        inline-size: fit-content;
-        max-inline-size: calc(100% - 2 * var(--kp-space-sm, 0.5rem));
-        margin-inline-start: auto;
         display: flex;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         align-items: center;
-        justify-content: flex-end;
-        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
-        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        padding-inline: var(--kp-space-sm, 0.5rem);
         border: 1px solid var(--border-strong, var(--border));
         border-radius: var(--radius, 0.5rem);
         background: var(--card);
         color: var(--card-foreground, var(--foreground));
-        box-shadow: 0 2px 8px color-mix(in oklab, var(--foreground) 18%, transparent);
+    }
+
+    .kp-gantt__selection > .kp-button {
+        flex: none;
+    }
+
+    .kp-gantt__selection > .kp-gantt__selected {
+        flex: 1 1 0;
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .kp-gantt__selection[hidden] {

@@ -1,4 +1,4 @@
-// The per-theme "Look at" sentences of research/kpadopt2-tiles, one map per judged section.
+// The per-theme "Look at" sentences of research/kpadopt2, one map per judged section.
 export const ACT = {
     formal: 'An engraved plate with a 3 px corner. Point at a tile: nothing moves, the title takes a 2 px navy underline (the quill). Press and hold: a double navy rule is laid inside the plate (the seal). The destructive tile has a red bar at its start edge and a red title; the disabled one is a quieter plate.',
     light: 'A white card with a hair of shadow and a round corner. Pointing settles it 1 px toward the paper, a press lands it flat 2 px down with the shadow gone. Check the destructive bar is inside the corner, not over it.',
