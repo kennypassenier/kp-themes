@@ -707,7 +707,8 @@
 
 .rv-topic__lanes {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 40rem), 1fr));
+    /* One theme per row at the full width of the stage (Kenny, 2026-10-16 17:06). */
+    grid-template-columns: minmax(0, 1fr);
     gap: 1.25rem;
     align-items: start;
 }

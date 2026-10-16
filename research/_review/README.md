@@ -98,14 +98,13 @@ When the sections of a demo are asked in more than one theme together, the dialo
 topic, in the page's order. The stage shows the topic section by section; under each section's title, the section in
 every theme it is asked in, in the demo's theme order, each in a frame of its own (the demo itself at
 `?theme=<theme>&rv-lane=<item>`, isolated to that section the way the previous version is), under a head that names the
-theme and sticks while the section scrolls past. One column on a laptop, two side by side where the stage is wider than
-two times 40rem. The frames load as they come near the view.
+theme and sticks while the section scrolls past. Each theme takes the full width of the stage, one under the other (Kenny, 2026-10-16). The frames load as they come near the view.
 
 - At the side, one heading per section and under it one row per theme, with that theme's look-at line and its
   "Not approved" box: the verdict stays one per section × theme pair, and a pair ticked "Not approved" marks its frame
   too. Up approves the whole topic in every theme shown.
 - The demo's controls are mirrored once on top; a press acts on every frame of the step at once (a frame that loads
-  later replays the presses made before it), so a state is compared in every theme side by side.
+  later replays the presses made before it), so a state is compared in every theme, one under the other.
 - V and L (previous version, play open and close) act on the frame most in view, or on the frame the key was pressed
   in; each frame's head carries its own buttons.
 - Only open pairs are shown, the counters count steps and pairs as before, the answer keeps its lines per section and
