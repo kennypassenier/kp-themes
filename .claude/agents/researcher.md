@@ -47,6 +47,12 @@ dialog or the review dialog's stage too [Kenny, 2026-10-16: "het geopende menu h
 refuses a register rule that strips it; open the section in the review dialog and run `research/_review/measure-plate.mjs` before you
 hand a demo over.
 
+A data area that loads (a grid, a matrix, a timeline, a list read as a whole) shows the data table's own loading card in its
+middle, never only waiting cells [Kenny, 2026-10-16: "ik zie geen loading icoon? moet hier ook zoals bij een table zijn"]: lay it
+with `openBusyCard()` from `js/busy-card.js`, keep the frame steady under it and draw the data once it has gone.
+`gates/check-busy-card.mjs` refuses a module in `js/` that takes a loading state and is not classified there; check the
+loading state in Firefox in the review dialog before you hand a demo over.
+
 Measure before you claim: a byte count comes from `wc -c`, a class name
 from grep. Finish with the absolute paths and a five-line summary.
 
