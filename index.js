@@ -195,6 +195,20 @@ export {
 /** @typedef {import('./js/statusrow.js').StatusRow} StatusRow */
 export { FACETS, FACET_EVENT, attachFacets, getFacetValues, setFacetCounts, setFacetItems, setFacetValues } from './js/facets.js';
 /** @typedef {import('./js/facets.js').FacetItem} FacetItem */
+// A checklist whose ticked items sink [kpadopt4].
+export {
+    CHECKLIST,
+    CHECKLIST_CLEAR_EVENT,
+    CHECKLIST_EVENT,
+    CHECKLIST_UNDO_EVENT,
+    CHECKLIST_UNDO_MS,
+    attachChecklists,
+    getChecklistItems,
+    setChecklistChecked,
+    setChecklistItems,
+    setChecklistState,
+} from './js/checklist.js';
+/** @typedef {import('./js/checklist.js').ChecklistItem} ChecklistItem */
 // A quantity with minus and plus [kpadopt4].
 export {
     QUANTITY,

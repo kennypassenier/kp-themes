@@ -207,6 +207,83 @@
 
             <section
                 class="k4-sec"
+                id="checklist"
+                data-review-item="checklist"
+                data-review-topic="lists"
+                data-review-topic-title="Checklist"
+                data-review-components="checklist"
+                data-review-title="5 · Checklist whose ticked items sink"
+                aria-labelledby="h-checklist"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-checklist">5 · Checklist whose ticked items sink</h2>
+                    <p>
+                        <code>.kp-checklist</code> with <code>js/checklist.js</code>: a shopping list by shop. What you still need stays on top, what
+                        is in the basket sinks, struck through. The component stores nothing; every change is an event with the whole list.
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Three shops, each a heading with its count at the end (“Colruyt … 1 of 6”). Rows are a fingertip high and separated by
+                            hairlines; the amount stands in its own column at the end, so amounts line up. Bread and butter are already ticked and
+                            stand last in their group, struck through in grey.
+                        </li>
+                        <li>
+                            Click anywhere on a row (not only the box): it is ticked, struck through, and glides to the end of its group in formal’s
+                            time, so you see where it went; the count goes up. Click it again: it glides back to its own place among the open ones. A
+                            shop whose every row is ticked shows formal’s check before its count.
+                        </li>
+                        <li>
+                            Keyboard: Tab to the first row and press Space: the row sinks and the focus is already on the next open row, so Space,
+                            Space, Space ticks down the list without moving your eyes.
+                        </li>
+                        <li>
+                            <b>Clear checked</b> takes the ticked rows away; the bar’s line becomes “3 cleared” with an <b>Undo</b> button in the same
+                            place (6 s), which puts them back where they were. <b>Check all</b> ticks everything and dims while all is done.
+                        </li>
+                        <li>
+                            The buttons below the list: <b>Load again</b> shows formal’s busy card in the middle of the list (2.5 s, the spinner
+                            turning) and then the list; <b>Fail</b> shows a red-edged sentence where the rows were; <b>Empty</b> the dashed empty
+                            line. The second list keeps ticked rows in place (<code>data-kp-checklist-sink="false"</code>). The 360 px frame wraps the
+                            long name onto a second line, with room around it.
+                        </li>
+                        <li>Reduced motion: rows move at once, without the glide. The log shows every event.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Tick three rows with Space, then Clear checked and Undo; then Load again.</p>
+                </div>
+                <div class="k4-grid">
+                    <div>
+                        <p class="k4-label">The shopping list</p>
+                        <div class="kp-checklist" id="k4-list" data-kp-checklist aria-label="Shopping list"></div>
+                        <div class="k4-actions">
+                            <button type="button" class="kp-button kp-button--sm" id="k4-list-load">Load again</button>
+                            <button type="button" class="kp-button kp-button--sm" id="k4-list-fail">Fail</button>
+                            <button type="button" class="kp-button kp-button--sm" id="k4-list-empty">Empty</button>
+                            <button type="button" class="kp-button kp-button--sm" id="k4-list-reset">Back to the sample</button>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="k4-label">Ticked rows stay in place; a 360 px frame</p>
+                        <div class="k4-frame k4-frame--phone">
+                            <div
+                                class="kp-checklist"
+                                id="k4-list-stay"
+                                data-kp-checklist
+                                data-kp-checklist-sink="false"
+                                aria-label="Packing list"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+                <pre class="k4-log" id="k4-list-log" aria-label="Events"></pre>
+            </section>
+
+            <section
+                class="k4-sec"
                 id="tri"
                 data-review-item="tri"
                 data-review-topic="filters"

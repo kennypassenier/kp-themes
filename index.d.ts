@@ -70,6 +70,9 @@ export type StatusRow = import('./js/statusrow.js').StatusRow;
 export { FACETS, FACET_EVENT, attachFacets, getFacetValues, setFacetCounts, setFacetItems, setFacetValues } from './js/facets.js';
 export type FacetItem = import('./js/facets.js').FacetItem;
 /** @typedef {import('./js/facets.js').FacetItem} FacetItem */
+export { CHECKLIST, CHECKLIST_CLEAR_EVENT, CHECKLIST_EVENT, CHECKLIST_UNDO_EVENT, CHECKLIST_UNDO_MS, attachChecklists, getChecklistItems, setChecklistChecked, setChecklistItems, setChecklistState, } from './js/checklist.js';
+export type ChecklistItem = import('./js/checklist.js').ChecklistItem;
+/** @typedef {import('./js/checklist.js').ChecklistItem} ChecklistItem */
 export { QUANTITY, QUANTITY_EVENT, attachQuantities, formatQuantity, getQuantity, parseQuantity, setQuantity, settleQuantity, } from './js/quantity.js';
 export { HOVERCARD_ATTRIBUTE, HOVERCARD_CARD, HOVERCARD_EVENT, attachHoverCards } from './js/hovercard.js';
 export { UPDATE_PROPERTY, UPDATE_STYLE, UPDATING_ATTRIBUTE, markUpdating, unmarkUpdating, update, updateIdea, updatePlays, updateTiming, updateTimingOf, } from './js/update.js';

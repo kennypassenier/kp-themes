@@ -1063,6 +1063,58 @@ export type Strings = {
      * The value with its unit, as a screen reader hears it, "6 portions" [kpadopt4]
      */
     quantityValue: (value: string, unit: string) => string;
+    /**
+     * A checklist group's count beside its heading, "4 of 9" (js/checklist.js) [kpadopt4]
+     */
+    checklistCount: (done: number, total: number) => string;
+    /**
+     * The whole list's count in its bar, "4 of 9 done" [kpadopt4]
+     */
+    checklistSummary: (done: number, total: number) => string;
+    /**
+     * The bar's button that ticks every item [kpadopt4]
+     */
+    checklistCheckAll: string;
+    /**
+     * The bar's button that takes the ticked items away [kpadopt4]
+     */
+    checklistClear: string;
+    /**
+     * The button that brings them back [kpadopt4]
+     */
+    checklistUndo: string;
+    /**
+     * The bar's line after a clear, "3 cleared" [kpadopt4]
+     */
+    checklistCleared: (n: number) => string;
+    /**
+     * Said after Undo [kpadopt4]
+     */
+    checklistRestored: (n: number) => string;
+    /**
+     * An empty checklist [kpadopt4]
+     */
+    checklistEmpty: string;
+    /**
+     * The words under a loading checklist's spinner [kpadopt4]
+     */
+    checklistLoading: string;
+    /**
+     * A checklist that could not be read, when the page gives no message [kpadopt4]
+     */
+    checklistFailed: string;
+    /**
+     * Said when an item is ticked [kpadopt4]
+     */
+    checklistDone: (label: string) => string;
+    /**
+     * Said when an item is ticked with the keyboard and sank [kpadopt4]
+     */
+    checklistDoneMoved: (label: string) => string;
+    /**
+     * Said when an item is unticked [kpadopt4]
+     */
+    checklistOpen: (label: string) => string;
 };
 /**
  * @typedef {object} Strings
@@ -1425,6 +1477,19 @@ export type Strings = {
  * @property {(label: string) => string} quantityLess  The minus button's name, "Portions, less" (js/quantity.js) [kpadopt4]
  * @property {(label: string) => string} quantityMore  The plus button's name, "Portions, more" [kpadopt4]
  * @property {(value: string, unit: string) => string} quantityValue  The value with its unit, as a screen reader hears it, "6 portions" [kpadopt4]
+ * @property {(done: number, total: number) => string} checklistCount  A checklist group's count beside its heading, "4 of 9" (js/checklist.js) [kpadopt4]
+ * @property {(done: number, total: number) => string} checklistSummary  The whole list's count in its bar, "4 of 9 done" [kpadopt4]
+ * @property {string} checklistCheckAll  The bar's button that ticks every item [kpadopt4]
+ * @property {string} checklistClear  The bar's button that takes the ticked items away [kpadopt4]
+ * @property {string} checklistUndo  The button that brings them back [kpadopt4]
+ * @property {(n: number) => string} checklistCleared  The bar's line after a clear, "3 cleared" [kpadopt4]
+ * @property {(n: number) => string} checklistRestored  Said after Undo [kpadopt4]
+ * @property {string} checklistEmpty  An empty checklist [kpadopt4]
+ * @property {string} checklistLoading  The words under a loading checklist's spinner [kpadopt4]
+ * @property {string} checklistFailed  A checklist that could not be read, when the page gives no message [kpadopt4]
+ * @property {(label: string) => string} checklistDone  Said when an item is ticked [kpadopt4]
+ * @property {(label: string) => string} checklistDoneMoved  Said when an item is ticked with the keyboard and sank [kpadopt4]
+ * @property {(label: string) => string} checklistOpen  Said when an item is unticked [kpadopt4]
  */
 /**
  * The defaults. English, by Kenny's decision of 2026-09-04 — the package

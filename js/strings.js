@@ -397,6 +397,19 @@
  * @property {(label: string) => string} quantityLess  The minus button's name, "Portions, less" (js/quantity.js) [kpadopt4]
  * @property {(label: string) => string} quantityMore  The plus button's name, "Portions, more" [kpadopt4]
  * @property {(value: string, unit: string) => string} quantityValue  The value with its unit, as a screen reader hears it, "6 portions" [kpadopt4]
+ * @property {(done: number, total: number) => string} checklistCount  A checklist group's count beside its heading, "4 of 9" (js/checklist.js) [kpadopt4]
+ * @property {(done: number, total: number) => string} checklistSummary  The whole list's count in its bar, "4 of 9 done" [kpadopt4]
+ * @property {string} checklistCheckAll  The bar's button that ticks every item [kpadopt4]
+ * @property {string} checklistClear  The bar's button that takes the ticked items away [kpadopt4]
+ * @property {string} checklistUndo  The button that brings them back [kpadopt4]
+ * @property {(n: number) => string} checklistCleared  The bar's line after a clear, "3 cleared" [kpadopt4]
+ * @property {(n: number) => string} checklistRestored  Said after Undo [kpadopt4]
+ * @property {string} checklistEmpty  An empty checklist [kpadopt4]
+ * @property {string} checklistLoading  The words under a loading checklist's spinner [kpadopt4]
+ * @property {string} checklistFailed  A checklist that could not be read, when the page gives no message [kpadopt4]
+ * @property {(label: string) => string} checklistDone  Said when an item is ticked [kpadopt4]
+ * @property {(label: string) => string} checklistDoneMoved  Said when an item is ticked with the keyboard and sank [kpadopt4]
+ * @property {(label: string) => string} checklistOpen  Said when an item is unticked [kpadopt4]
  */
 
 /**
@@ -898,6 +911,20 @@ export const DEFAULT_STRINGS = Object.freeze({
     quantityLess: (label) => (label ? `${label}, less` : 'Less'),
     quantityMore: (label) => (label ? `${label}, more` : 'More'),
     quantityValue: (value, unit) => `${value} ${unit}`,
+    // A checklist (js/checklist.js) [kpadopt4].
+    checklistCount: (done, total) => `${done} of ${total}`,
+    checklistSummary: (done, total) => `${done} of ${total} done`,
+    checklistCheckAll: 'Check all',
+    checklistClear: 'Clear checked',
+    checklistUndo: 'Undo',
+    checklistCleared: (n) => `${n} cleared`,
+    checklistRestored: (n) => `${n} back on the list`,
+    checklistEmpty: 'Nothing on the list.',
+    checklistLoading: 'Loading the list…',
+    checklistFailed: 'The list could not be read.',
+    checklistDone: (label) => `${label} done`,
+    checklistDoneMoved: (label) => `${label} done, moved to the end. Next item.`,
+    checklistOpen: (label) => `${label} back on the list`,
 });
 
 // STRINGS_NL was removed in 4.0.0 [D3]. Kenny decided that on

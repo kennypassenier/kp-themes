@@ -127,4 +127,5 @@
 .k4-sec__head code,
 .k4-expected code {
     padding-inline: 0.2em;
+    box-decoration-break: clone;
 }

@@ -3025,6 +3025,35 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
         ],
     },
     {
+        id: 'checklist',
+        title: 'Checklist',
+        group: 'Data',
+        classes: ['kp-checklist'],
+        exports: [],
+        intro: 'A list a person works down, such as a shopping list by shop: every row is a checkbox’s label, a ticked row is struck through and sinks to the end of its group, gliding in the theme’s own time. `data-kp-checklist` on the root; js/checklist.js (`setChecklistItems`, `getChecklistItems`, `setChecklistChecked`, `setChecklistState`, `attachChecklists`) draws the groups, the counts and the bar with Check all, Clear checked and its Undo, and fires `kp-checklist-change`, `kp-checklist-clear` and `kp-checklist-undo` with the whole list, so the page stores it.',
+        whenToUse: 'For items a person ticks off and no longer needs to see on top. For a filter use the facet list; for the steps of a running process use the step list.',
+        examples: [
+            {
+                title: 'A shopping list',
+                why: 'The module draws the rows from the items it is given; the markup is only the root.',
+                markup: `
+<div class="kp-checklist" data-kp-checklist aria-label="Shopping list"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-checklist-sink="false"', what: 'A ticked row stays where it is, struck through.' },
+            { name: 'data-kp-checklist-undo-ms', what: 'How long Undo is offered after Clear checked (6000).' },
+            { name: 'data-kp-checklist-empty', what: 'The sentence of an empty list.' },
+            { name: 'data-kp-checklist-heading', what: 'The level of the group headings (3).' },
+        ],
+        accessibility: [
+            'Built in — real checkboxes in labels, named by the item and described by its amount; group headings with their counts.',
+            'Built in — ticked with the keyboard, the focus goes to the item that took its place; a status region says what moved.',
+            'Yours — give the list a name and store what the events say.',
+        ],
+    },
+    {
         id: 'steplist',
         title: 'Step list',
         group: 'Feedback',
