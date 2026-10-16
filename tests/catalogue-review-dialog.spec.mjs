@@ -308,7 +308,7 @@ test(
         for (const [theme, label] of [
             ['nostromo', 'Nostromo'],
             ['cyberpunk', 'Cyberpunk'],
-            ['light', 'Light'],
+            ['pastel', 'Pastel'],
         ]) {
             await page.evaluate((name) => import('/js/theme-core.js').then((m) => m.applyTheme(name)), theme);
             await waitForJudging(page);
@@ -519,7 +519,7 @@ test(
         expect(short.color, 'a colour of its own').not.toBe(short.lookColor);
 
         // The ink on its ground reads in light and dark themes alike.
-        for (const theme of ['formal', 'dark', 'nostromo', 'light']) {
+        for (const theme of ['formal', 'dark', 'nostromo', 'pastel']) {
             await page.keyboard.press('Escape');
             await page.evaluate((name) => import('/js/theme-core.js').then((m) => m.applyTheme(name)), theme);
             await waitForJudging(page);

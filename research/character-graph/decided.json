@@ -9,13 +9,6 @@
             "focus": "3",
             "live": "2"
         },
-        "light": {
-            "shape": "1",
-            "loading": "r3-lt-load-3",
-            "arrival": "3",
-            "focus": "3",
-            "live": "2"
-        },
         "dark": {
             "shape": "1",
             "loading": "r3-dk-load-3",

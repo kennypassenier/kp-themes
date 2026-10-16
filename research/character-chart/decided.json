@@ -10,14 +10,6 @@
             "events": "shape",
             "tip": "b"
         },
-        "light": {
-            "shape": "b",
-            "loading": "rise",
-            "arrival": "rise",
-            "update": "none",
-            "events": "halo",
-            "tip": "b"
-        },
         "dark": {
             "shape": "a",
             "loading": "cutter",

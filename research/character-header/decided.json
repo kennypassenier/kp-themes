@@ -7,11 +7,6 @@
             "menu": "2",
             "interactive": "1"
         },
-        "light": {
-            "shape": "1",
-            "menu": "1",
-            "interactive": "2"
-        },
         "dark": {
             "shape": "1",
             "menu": "2",

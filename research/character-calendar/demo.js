@@ -145,78 +145,6 @@ const IDEAS = {
             },
         ],
     },
-    light: {
-        shape: [
-            {
-                name: 'The seam',
-                text: "Light's divider as a calendar: soft plates without a frame, each night's state also told by a seam along its foot in the state's ink, the dashed seam for a day to come.",
-            },
-            {
-                name: 'White cards',
-                text: 'The month as white cards on the white page, each on its soft shadow and a hairline seam, with the numbers in the regular face; no wash behind them.',
-            },
-            {
-                name: 'The pill row',
-                text: 'Every day a soft pill, fully rounded, the figure and count side by side in the body face; the weekdays as quiet lowercase labels.',
-            },
-        ],
-        loading: [
-            {
-                name: 'The seam: its loading',
-                text: 'Loading is a dashed seam on a blank plate. Now it moves: the dashed seam walks along the foot.',
-            },
-            {
-                name: 'Out of focus',
-                text: 'A loading day keeps its cell; its number and its count breathe out of focus (blur and brightness up and back), a day later in the week a beat later.',
-            },
-            {
-                name: 'The sunbeam',
-                text: 'A thin beam of light sweeps across each pill from left to right.',
-            },
-        ],
-        arrival: [
-            {
-                name: 'Out of the glare',
-                text: 'Every day comes into focus where it stands, out of a blurred, too bright glare, one after the other in reading order, 30 ms apart.',
-            },
-            {
-                name: 'Slide up',
-                text: 'Each pill slides up a few pixels into its row, week by week.',
-            },
-            {
-                name: 'The wave',
-                text: 'A gentle scale wave crosses the month diagonally.',
-            },
-        ],
-        tone: [
-            {
-                name: 'The seam: its tones and today',
-                text: "Light's divider as a calendar: soft plates without a frame, each night's state also told by a seam along its foot in the state's ink, the dashed seam for a day to come. Today's number sits in the divider's open circle; the picked day carries a rounded indigo ring.",
-            },
-            {
-                name: 'White plates, a bead for today',
-                text: 'Each tone paints its plain plate; today wears a white-ringed cyan bead in the corner of its cell; no glow and no ring of sunlight.',
-            },
-            {
-                name: 'The coloured dot',
-                text: 'White pills with a coloured dot in the top corner for the night; today ringed in the primary colour.',
-            },
-        ],
-        select: [
-            {
-                name: 'The seam: its pick',
-                text: "Today's number sits in the divider's open circle; the picked day carries a rounded indigo ring. New: the day lifts on hover, the picked count in heavy type.",
-            },
-            {
-                name: 'Settles under the pointer',
-                text: 'Pointing settles the day 2 px toward the paper and tightens its shadow; the picked day keeps its indigo ring and its count on an ink plate.',
-            },
-            {
-                name: 'The focus halo',
-                text: 'A soft halo in the ring colour round the picked pill; a dashed ring on hover; the count boxed.',
-            },
-        ],
-    },
     dark: {
         shape: [
             {
@@ -1238,7 +1166,6 @@ const IDEAS = {
  */
 const PICKED = {
     formal: ['1', '1', '2', '1', '1'],
-    light: ['2', '2', '1', '2', '2'],
     dark: ['3', '1', '3', '1', '2'],
     cyberpunk: ['3', '2', '1', '2', '2'],
     synthwave: ['3', '3', '1', '1', '1'],

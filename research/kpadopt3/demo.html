@@ -1,9 +1,9 @@
 <!doctype html>
 <html
     lang="en"
-    data-theme="light"
+    data-theme="formal"
     data-review="kpadopt3"
-    data-review-themes="light,dark,cyberpunk,synthwave,pastel,forest,blueprint,solstice,brutalism,deco,grotesk,nostromo,titanium"
+    data-review-themes="dark,cyberpunk,synthwave,pastel,forest,blueprint,solstice,brutalism,deco,grotesk,nostromo,titanium"
 >
     <head>
         <meta charset="utf-8" />
@@ -25,7 +25,7 @@
                     t = t || localStorage.getItem('theme');
                 } catch (e) {}
                 if (t) d.setAttribute('data-theme', t);
-                var theme = d.getAttribute('data-theme') || 'light';
+                var theme = d.getAttribute('data-theme') || 'formal';
                 document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
             })();
         </script>

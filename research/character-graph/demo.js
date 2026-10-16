@@ -117,42 +117,6 @@ const IDEAS = {
             ['Amended in the margin', 'The changed site blinks three times like a correction mark; its link is ruled again.'],
         ],
     },
-    light: {
-        shape: [
-            [
-                'The soft canvas',
-                'White discs on a soft shadow with their hue as a thin rim, soft round links, labels on a white halo; the kinds are soft pills.',
-            ],
-            ['Daylight', 'Every node a white disc with a wide pastel rim, round-capped links, a sunny amber hub over a warm wash; plain chips.'],
-            [
-                'The paper cut-out',
-                'Cut paper on the page: each site a white disc with a grey cut edge and a full hue core, solid round links, semi-bold labels; the kinds as paper tabs with a printed edge below.',
-            ],
-        ],
-        loading: [
-            ['A soft dashed ring', 'Character 1’s soft dashed ring, now gliding slowly round.'],
-            ['A band of daylight', 'As character 2 had it: one amber band of light runs round the ring.'],
-            ['Pearls on a string', 'A string of round pearls in the primary slides round the ring.'],
-        ],
-        arrival: [
-            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
-            ['Lifted onto the canvas', 'Each site rises a little into place, one after another, while the links draw out softly.'],
-            ['Unfolding', 'The sites grow from a point with a soft overshoot, the links follow them out.'],
-        ],
-        focus: [
-            ['Misted', 'As character 1 had it: the rest fades back into a soft mist at 22 %, the links nearly vanish.'],
-            [
-                'The package’s dimming',
-                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
-            ],
-            ['The highlighter', 'The pick gets a wide amber highlighter ring; the rest stays at half strength; a hidden kind is struck through.'],
-        ],
-        live: [
-            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
-            ['A soft ripple', 'The changed site’s ring swells in the primary and settles; its link glows thicker for a moment.'],
-            ['Sunlit', 'The changed site pops up in the sun and its link takes an amber light for a moment.'],
-        ],
-    },
     dark: {
         shape: [
             ['The status board', 'Black discs with a lit rim in their hue, thin lit links, ticker-mono labels; the kinds are square lit chips.'],
@@ -653,7 +617,6 @@ const IDEAS = {
  */
 const PICKED = {
     formal: ['3', '3', '3', '3', '2'],
-    light: ['1', '3', '3', '3', '2'],
     dark: ['1', '3', '2', '3', '3'],
     cyberpunk: ['3', '4', '2', '3', '3'],
     synthwave: ['1', '4', '2', '2', '3'],

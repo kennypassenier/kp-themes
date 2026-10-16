@@ -5,7 +5,7 @@
         "licence": "OFL-1.1",
         "reservedFontName": false,
         "subset": true,
-        "themes": ["formal", "light", "dark", "pastel", "forest", "blueprint", "solstice"],
+        "themes": ["formal", "dark", "pastel", "forest", "blueprint", "solstice"],
         "scripts": ["latin"],
         "upstream": "ofl/instrumentsans",
         "faces": [

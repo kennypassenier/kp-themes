@@ -7,11 +7,6 @@
             "tone": "2",
             "change": "1"
         },
-        "light": {
-            "shape": "1",
-            "tone": "1",
-            "change": "1"
-        },
         "dark": {
             "shape": "1",
             "tone": "3",

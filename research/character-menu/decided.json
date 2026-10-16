@@ -9,13 +9,6 @@
             "tone": "1",
             "interact": "1"
         },
-        "light": {
-            "shape": "1",
-            "loading": "2",
-            "open": "3",
-            "tone": "1",
-            "interact": "1"
-        },
         "dark": {
             "shape": "2",
             "loading": "r2-dk-load-3",

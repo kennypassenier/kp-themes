@@ -6,7 +6,6 @@ import { writeFileSync } from 'node:fs';
 
 const THEMES = [
     ['formal', 'Formal'],
-    ['light', 'Light'],
     ['dark', 'Dark'],
     ['cyberpunk', 'Cyberpunk'],
     ['synthwave', 'Synthwave'],
@@ -366,11 +365,11 @@ const themeButtons = THEMES.map(
     ([t, n]) => `<button type="button" class="kp-button kp-button--sm" data-cd-theme="${t}" aria-pressed="false">${n}</button>`,
 ).join('\n                    ');
 
-const registers = ['formal', 'light'].map((t) => `        <link rel="stylesheet" href="../../css/${t}-register.css" data-kp-register="${t}" />`);
+const registers = ['formal'].map((t) => `        <link rel="stylesheet" href="../../css/${t}-register.css" data-kp-register="${t}" />`);
 
 const html = `<!doctype html>
 <!-- Written by research/kpadopt-controls/build.mjs; edit build.mjs, demo.css and demo.js, not this file. -->
-<html lang="en" data-theme="light" data-cat-theme="light" data-cat-theme-fixed data-review="kpadopt-controls">
+<html lang="en" data-theme="formal" data-cat-theme="formal" data-cat-theme-fixed data-review="kpadopt-controls">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

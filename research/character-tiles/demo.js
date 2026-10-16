@@ -90,47 +90,6 @@ const IDEAS = {
             },
         ],
     },
-    light: {
-        shape: [
-            { name: 'The white card', text: 'A white card of 0.5 rem on its small shadow and a hairline seam, a soft mark.' },
-            { name: 'Daylight', text: 'A pale wash from the top, the mark a small sun, the footer a soft rule.' },
-            { name: 'The paper sheet', text: 'A lifted corner at the top right, faint writing rules, the mark a paperclip dot.' },
-        ],
-        loading: [
-            {
-                name: 'Out of focus',
-                text: 'A busy tile keeps its plate and its words breathe out of focus (blur and brightness up and back); no baseline is drawn.',
-            },
-            { name: 'Daylight', text: 'A slow band of light crosses the plate.' },
-            { name: 'A cloud passes', text: 'The soft shadow of a cloud drifts across the plate, slowly.' },
-        ],
-        arrival: [
-            { name: 'At once', text: 'The title and the body are there the moment loading ends.' },
-            { name: 'Unfolds', text: 'The card opens from its middle, slowing as it lands.' },
-            {
-                name: 'Out of the glare',
-                text: 'Tile after tile comes into focus where it stands, out of a blurred, too bright glare, in reading order, 120 ms apart.',
-            },
-        ],
-        tone: [
-            { name: 'The soft pill', text: 'A warning or destructive tile shows the note on a soft pill under the title.' },
-            { name: 'The coloured tab', text: 'A warning or destructive tile gets a soft band of its colour along the top.' },
-            { name: 'The outline', text: 'A warning or destructive tile is ringed in a soft outline of its own colour.' },
-        ],
-        hover: [
-            {
-                name: 'Settles toward the paper',
-                text: 'The tile’s shadow does not grow; its Open link settles 2 px toward the paper like any of light’s buttons.',
-            },
-            { name: 'The warmth rises', text: 'The card warms a shade; Open underlines; a focus ring glows around the tile.' },
-            { name: 'The corner lifts', text: 'The paper corner lifts further; Open gains a dot; focus traces a dashed outline.' },
-        ],
-        live: [
-            { name: 'Redrawn', text: 'The body text changes in place at once.' },
-            { name: 'Re-exposed', text: 'The changed tile goes into the glare for a beat and comes back into focus; it never swells.' },
-            { name: 'The page turns', text: 'The tile flips like a page corner, then shows the new reading.' },
-        ],
-    },
     dark: {
         shape: [
             { name: 'The status board', text: 'A black panel, the title in ticker mono, the mark a lit square chip.' },
@@ -666,7 +625,6 @@ const IDEAS = {
  */
 const PICKED = {
     formal: ['1', '1', '2', '1', '1', '3'],
-    light: ['1', '1', '3', '1', '1', '2'],
     dark: ['2', '1', '2', '1', '1', '2'],
     cyberpunk: ['3', '6', '3', '2', '1', '3'],
     synthwave: ['3', '1', '1', '3', '3', '2'],

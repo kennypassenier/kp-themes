@@ -127,78 +127,6 @@ const IDEAS = {
             },
         ],
     },
-    light: {
-        shape: [
-            {
-                name: 'The white card',
-                text: 'A white card of 0.5 rem on its small shadow and a hairline seam, the line in a confident stroke.',
-            },
-            {
-                name: 'Daylight',
-                text: 'A pale sky over the line, from the primary wash at the top to the card at the foot, the sun as a warm glow in the corner, the change as a pill.',
-            },
-            {
-                name: 'The paper sheet',
-                text: 'A sheet of paper on the page: a small radius, a lifted corner folded over at the top right, faint writing rules in the plot, the line in indigo ink.',
-            },
-        ],
-        loading: [
-            {
-                name: 'Out of focus',
-                text: 'The plot stands out of focus in the seam’s grey, breathing between a dim and a dazzling exposure; no baseline is drawn.',
-            },
-            {
-                name: 'Daylight',
-                text: 'A slow band of daylight crosses the sky.',
-            },
-            {
-                name: 'A cloud passes',
-                text: 'The soft shadow of a cloud drifts across the plot, slowly.',
-            },
-        ],
-        arrival: [
-            {
-                name: 'At once',
-                text: 'The number and the line are there the moment loading ends, as both characters had them.',
-            },
-            {
-                name: 'Unfolds',
-                text: 'The line opens from its middle, slowing as it lands; the number rises into its line.',
-            },
-            {
-                name: 'Out of the glare',
-                text: 'The line and the figure come into focus where they stand, out of a blurred, too bright glare, 700 ms on a long settle.',
-            },
-        ],
-        tone: [
-            {
-                name: 'The soft card',
-                text: 'The change as a soft pill; a warning or destructive figure shows the note in the label on the tone’s plate.',
-            },
-            {
-                name: 'The soft outline',
-                text: 'The change as a pill drawn in a soft outline of its own ink over its plate.',
-            },
-            {
-                name: 'The band and the pill',
-                text: 'A warning or failed trend carries a 3 px band of the tone’s colour along its top; its change sits on a soft pill with no shadow.',
-            },
-        ],
-        live: [
-            {
-                name: 'Redrawn',
-                text: 'A new reading redraws the line in place at once, as both characters had it.',
-            },
-            {
-                name: 'Re-exposed',
-                text: 'The line goes into the glare for a beat and comes back into focus; it never swells.',
-            },
-            {
-                name: 'The page turns',
-                text: 'The line steps one reading to the left, as chart paper advances, slowing as it lands.',
-            },
-        ],
-    },
     dark: {
         shape: [
             {
@@ -1220,7 +1148,6 @@ const IDEAS = {
  */
 const PICKED = {
     formal: ['1', '2', '2', '3', '1'],
-    light: ['1', '1', '3', '3', '2'],
     dark: ['1', '2', '2', '3', '3'],
     cyberpunk: ['1', '1', '3', '3', '3'],
     synthwave: ['1', '1', '2', '3', '3'],

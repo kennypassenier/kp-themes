@@ -49,7 +49,6 @@ const SHEETS = [
     'pastel-register.css',
     'forest-register.css',
     'deco-register.css',
-    'light-register.css',
     'grotesk-register.css',
     'blueprint-register.css',
     'nostromo-register.css',

@@ -54,24 +54,6 @@
                 "selector": "[data-theme='formal'] [data-kp-surface] h1"
             }
         },
-        "light": {
-            "surface": {
-                "css": "css/themes.css",
-                "selector": "[data-theme='light'] [data-kp-surface='hero']"
-            },
-            "emphasis": {
-                "css": "css/light-register.css",
-                "selector": "[data-theme='light'] mark:not([data-kp-reveal='emphasis'] mark)"
-            },
-            "reveal": {
-                "css": "css/light-register.css",
-                "selector": "[data-theme='light'] [data-kp-reveal='headline']"
-            },
-            "divider": {
-                "css": "css/light-register.css",
-                "selector": "[data-theme='light'] [data-kp-divider]"
-            }
-        },
         "dark": {
             "surface": {
                 "css": "css/themes.css",

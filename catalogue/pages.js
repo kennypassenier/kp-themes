@@ -209,12 +209,8 @@ export const PAGES = [
             { href: 'research/deco-character/demo.html', label: 'What makes deco deco' },
             // Decided 2026-10-09: Kenny approved all ten uniformity questions of forest (research/forest-uniformity/decided.json).
             { href: 'research/forest-uniformity/demo.html', label: 'Forest, straightened' },
-            // Decided 2026-10-08: Kenny approved light's grammar, every recommendation except the durations = unhurried and the busy bar = the bead orbits the line (research/light-character/decided.json).
-            { href: 'research/light-character/demo.html', label: 'What makes light light' },
             // Decided 2026-10-08: Kenny picked the fan (and the progress bar is to be redone) as deco's anchor element (research/deco-anchor/decided.json).
             { href: 'research/deco-anchor/demo.html', label: "What is deco's anchor element" },
-            // Decided 2026-10-08: Kenny picked the glare (overexposed) as light's anchor element (research/light-anchor/decided.json).
-            { href: 'research/light-anchor/demo.html', label: "What is light's anchor element" },
             // Decided 2026-10-08: Kenny picked the double rule (the account is closed) as formal's anchor element (research/formal-anchor/decided.json).
             { href: 'research/formal-anchor/demo.html', label: "What is formal's anchor element" },
             // Decided 2026-10-08 01:00: Kenny picked the floor as the page, behind the plates (research/synthwave-floor/decided.json).

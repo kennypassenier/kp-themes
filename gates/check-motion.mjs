@@ -239,22 +239,6 @@ const OUT_OF_SCOPE = {
     // Light's grammar [themes/light/CHARACTER.md §4, Kenny, 2026-10-08]: every
     // one is a blur and brightness filter or a clip-path, none a change of
     // opacity or a colour, so none can flash.
-    'kp-sig-light-reexpose':
-        'a changed figure going into the glare for a beat (a blur of 2px and brightness 1.4) and back to none, once per update; a filter on a figure, under 341x256 px',
-    'kp-sig-light-meter-expose-d':
-        'a meter a few px tall re-exposed once as it turns to the destructive tone (a blur of 2px and brightness 1.4); under 341x256 px',
-    'kp-sig-light-meter-expose-o': 'a meter a few px tall re-exposed once as its tone clears (a blur of 2px and brightness 1.4); under 341x256 px',
-    'kp-sig-light-meter-expose-w':
-        'a meter a few px tall re-exposed once as it turns to the warning tone (a blur of 2px and brightness 1.4); under 341x256 px',
-    'kp-sig-light-breathe':
-        'a waiting surface (a placeholder, a meter, the words on a busy card) breathing between blur 3px with brightness 1.3 and blur 5px with brightness 1.6 over 3.6 s, on ease-in-out: a slow filter swell of well under one change a second, never a flash',
-    'kp-sig-light-breathe-ink':
-        'the label of a busy button breathing between a 3px and a 5px blur of its own text shadow over 3.6 s on ease-in-out, its ink moving toward the paper by under a third; a slow swell of well under one change a second, never a flash',
-    'kp-sig-light-burn':
-        'the spinner bead (a few px) burning out and back into focus once a turn of 1.2 s, a filter on a dot far under 341x256 px, two changes a turn',
-    'kp-sig-light-flash': 'a pressed pill flashing once, brightness 1.25 for 200 ms and back; a filter on a control, one change, under 341x256 px',
-    'kp-sig-light-feed':
-        "a meter's share exposed from its start to its end once, out of the glare (a clip-path and a blur with brightness); one monotone change, under 341x256 px",
     'kp-sig-synthwave-meter-grow-o': "a meter's share scaling in from its start once; a transform, under 341x256 px",
     'kp-sig-synthwave-meter-pos':
         'a background-position slide of the loading picture inside a meter a few px tall; the picture keeps its colours, only its position moves',

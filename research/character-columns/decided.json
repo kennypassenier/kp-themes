@@ -9,13 +9,6 @@
             "tone": "3",
             "live": "3"
         },
-        "light": {
-            "shape": "3",
-            "loading": "1",
-            "arrival": "3",
-            "tone": "3",
-            "live": "2"
-        },
         "dark": {
             "shape": "3",
             "loading": "1",

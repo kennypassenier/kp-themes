@@ -638,9 +638,6 @@ export const TIMINGS = Object.freeze({
     'kp-sig-formal-ruled-pen': { durationMs: 560, cycles: 1, property: 'clip-path', luminanceSteps: [] },
     'kp-sig-formal-ruled-pen-rtl': { durationMs: 560, cycles: 1, property: 'clip-path', luminanceSteps: [] },
     'kp-sig-formal-pen': { durationMs: 180, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-light-meter-expose-d': { durationMs: 700, cycles: 1, property: 'filter', luminanceSteps: [] },
-    'kp-sig-light-meter-expose-o': { durationMs: 700, cycles: 1, property: 'filter', luminanceSteps: [] },
-    'kp-sig-light-meter-expose-w': { durationMs: 700, cycles: 1, property: 'filter', luminanceSteps: [] },
     'kp-sig-synthwave-meter-grow-o': { durationMs: 600, cycles: 1, property: 'scale', luminanceSteps: [] },
     'kp-sig-synthwave-meter-pos': { durationMs: 1800, cycles: Infinity, property: 'background-position', luminanceSteps: [] },
     'kp-sig-pastel-meter-drift': { durationMs: 1600, cycles: Infinity, property: 'translate', luminanceSteps: [] },
@@ -779,22 +776,10 @@ export const TIMINGS = Object.freeze({
     'kp-sig-deco-deco-turn': { durationMs: 3600, cycles: Infinity, property: 'transform', luminanceSteps: [] },
     'kp-sig-deco-deco-unfold': { durationMs: 340, cycles: 1, property: 'clip-path', luminanceSteps: [] },
     'kp-sig-deco-deco-grow': { durationMs: 340, cycles: 1, property: 'transform', luminanceSteps: [] },
-    // light-register
-    'kp-sig-light-light-orbit': { durationMs: 1200, cycles: Infinity, property: 'transform', luminanceSteps: [] },
-    'kp-sig-light-light-tick': { durationMs: 200, cycles: 1, property: 'clip-path', luminanceSteps: [] },
     // Light's grammar, 2026-10-08 (themes/light/CHARACTER.md §4): the exposure
     // and its leave (opacity, 0 to 1 and 1 to 0), the filter keyframes (a
     // re-exposure, out of focus, the burnt bead, the shutter), the bead on the
     // hairline and the line exposed start to end.
-    'kp-sig-light-expose': { durationMs: 700, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
-    'kp-sig-light-leave': { durationMs: 700, cycles: 1, property: 'opacity', luminanceSteps: [1, 0] },
-    'kp-sig-light-reexpose': { durationMs: 700, cycles: 1, property: 'filter', luminanceSteps: [] },
-    'kp-sig-light-breathe': { durationMs: 3600, cycles: Infinity, property: 'filter', luminanceSteps: [] },
-    'kp-sig-light-breathe-ink': { durationMs: 3600, cycles: Infinity, property: 'text-shadow', luminanceSteps: [] },
-    'kp-sig-light-burn': { durationMs: 1200, cycles: Infinity, property: 'filter', luminanceSteps: [] },
-    'kp-sig-light-flash': { durationMs: 200, cycles: 1, property: 'filter', luminanceSteps: [] },
-    'kp-sig-light-line': { durationMs: 3600, cycles: Infinity, property: 'transform', luminanceSteps: [] },
-    'kp-sig-light-feed': { durationMs: 700, cycles: 1, property: 'clip-path, filter', luminanceSteps: [] },
     // grotesk-register
     'kp-sig-grotesk-fall': { durationMs: 34, cycles: 1, property: 'filter', luminanceSteps: [] },
     'kp-sig-grotesk-fall-again': { durationMs: 960, cycles: 1, property: 'filter', luminanceSteps: [] },

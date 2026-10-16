@@ -128,72 +128,6 @@ const IDEAS = {
             },
         ],
     },
-    light: {
-        shape: [
-            {
-                name: 'The soft card',
-                text: 'A white card lifted on a soft shadow, a wide radius, the number in a rounded sans, the change as its own status plate.',
-            },
-            {
-                name: 'The soft outline',
-                text: 'A pale sky wash behind the number, the sun a warm glow in the corner, the change as its own status plate.',
-            },
-            {
-                name: 'The white card',
-                text: 'A white card of 0.5 rem on its small shadow and a hairline seam; no folded corner.',
-            },
-        ],
-        loading: [
-            {
-                name: 'The dashed baseline',
-                text: 'While the figure loads, a dashed line under the label drifts steadily to the right, looping at the edge; it keeps moving until the reading is drawn.',
-            },
-            {
-                name: 'Out of focus',
-                text: 'The tile’s words breathe out of focus on its plate (blur and brightness up and back); nothing crosses it.',
-            },
-            {
-                name: 'A cloud passes',
-                text: 'While the figure loads, a soft blurred cloud shadow drifts the full width of the card, left to right, and returns; it keeps moving until the reading is drawn.',
-            },
-        ],
-        tone: [
-            {
-                name: 'The soft card',
-                text: 'The change as a soft pill; a warning or destructive figure shows the note in the label on the tone’s plate.',
-            },
-            { name: 'The soft outline', text: 'The change as a pill drawn in a soft outline of its own ink over its plate.' },
-            {
-                name: 'The band and the pill',
-                text: 'A warning or failed figure carries a 3 px band of the tone’s colour along its top, the card staying white and the figure in the ink; its change sits on a soft pill.',
-            },
-        ],
-        interactive: [
-            {
-                name: 'The lift',
-                text: 'As a link or a filter: the card lifts on a wider soft shadow and its border warms a shade on hover, a 2px indigo ring appears outside the edge on focus, the lift settles flat again when pressed.',
-            },
-            {
-                name: 'Settles toward the paper',
-                text: 'A tile that is a link or a toggle settles 2 px under the pointer with a tighter shadow, wears the two-channel ring when focused, and lands flat and flashes when pressed.',
-            },
-            {
-                name: 'The paper curls',
-                text: 'As a link or a filter: the folded corner lifts further and casts a small shadow on hover, an indigo rule frames the tile on focus, the corner flattens back down when pressed.',
-            },
-        ],
-        live: [
-            { name: 'Redrawn', text: 'A new reading: the number is replaced at once, as both characters had it.' },
-            {
-                name: 'Re-exposed',
-                text: 'The changed figure goes into the glare for a beat and comes back into focus; it never swells.',
-            },
-            {
-                name: 'The page turns',
-                text: "A new reading: the new figure slides in from the right while sliding the old one's place, slowing to a stop as it lands, as a page turning to the next entry.",
-            },
-        ],
-    },
     dark: {
         shape: [
             {
@@ -1146,7 +1080,6 @@ const IDEAS = {
  */
 const PICKED = {
     formal: ['2', '3', '3', '2', '3'],
-    light: ['3', '2', '3', '2', '2'],
     dark: ['3', '1', '3', '1', '3'],
     cyberpunk: ['3', '3', '2', '1', '3'],
     synthwave: ['3', '1', '1', '2', '3'],

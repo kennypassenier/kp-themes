@@ -62,13 +62,6 @@
                     "shot": "2240403178a342694fdb6891aa0d95c2e0f3a1bff8b1b228e8e19cc63a1a0666"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "63febf2d2a28a9cca9ad98be072d9880b6900d70b1c118005bfef03a510b095d"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -160,13 +153,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "0eca0b28bb7b875d724fd1b1bb61d8efb8e0438b37bd4f5e45cbf9d9e245a735"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "773ed3236adb232834996fd2647da2319fe6d3f6af9ab55bd6cb889a01783478"
                 }
             },
             "nostromo": {
@@ -262,13 +248,6 @@
                     "shot": "aeae90540eda4c2aa35d7f49ee0ce90915f7bdb0f5f77d4c62a05e6750280a55"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "4fa2129af00b3096a19a73ab5815b95634bac0df49b630c99c8b7bdab1256c53"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -360,13 +339,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "4e38f88ce2f6367eed587b500df540e5722fccec50ba0d2c18dd133808f524dd"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "70fa20327dbcb3b88091b52dbe227f58790ece31a1156a50108929af9fd1b12e"
                 }
             },
             "nostromo": {
@@ -462,13 +434,6 @@
                     "shot": "e49b7199112cd31757a2dc9ba888967dd98d962898aeca2c818ce26abcc91466"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "7c84940a96ad40a9d57d1f854dbf8a275f9b729e7713b02e5c660ecb26d0f65a"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -560,13 +525,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "c6ec28121d74b7e0abb0a364e3987d4e0090fa01a9840bb94e22563741f37de3"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "f40be7248371bea210c7da83ebf1b1b0858bbf26012b7a947d667037cb72329a"
                 }
             },
             "nostromo": {
@@ -662,13 +620,6 @@
                     "shot": "e83c72fc947662a083b38299271fc0cd0d1a9bffcab1a4968f171149ca4fd27b"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "45ce743f88765dee4390fb1038389fc461811a29d1e5c85a0c2a2e16e7b062c8"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -760,13 +711,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "5e7e770dc5ff2469e20199b90b711acc91fb3b6dfa44ec32564be9546ab26327"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "d7307ac7a27a89c9e26031b628dfd0bb25efb98f72773732ddf56d98019887b7"
                 }
             },
             "nostromo": {
@@ -862,13 +806,6 @@
                     "shot": "10d66965b7a330f6fc88ec2fd3635d3936e4e2d65fa296287bdbdba0d7918b05"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "5b01692e24ca4eaed9659548c634f53f9301895b89f30097869bb71cfff45633"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -960,13 +897,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "e3ef4590e31648f3a8d8cda27f70b6e3776d00b7911ca7b98b78c9003f40b449"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "274a797611779a39b6001407b812d7979afdde650d6d7910e7ffb0c8f5e7bbef"
                 }
             },
             "nostromo": {
@@ -1062,13 +992,6 @@
                     "shot": "108ade498b60c254f90cb4d4a38acc8b11517f85c3162651374857c3fcd150e7"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "e0c8e77e87371c43ff63e83b65866fa6fe2530ea3fdceace3f65aa26f126ac8f"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -1160,13 +1083,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "882b3f4eab39bde7aa328f7564ed9fe8875b44c23a5bd016a3b9a689da95908b"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "5616aee896cde921e273e9bd699fd7f7d37c8fbdbb3e26028c46f8d79b7e4bb9"
                 }
             },
             "nostromo": {
@@ -1262,13 +1178,6 @@
                     "shot": "8e35490004ceefd9bd06687083d6a0e9f34c5d5bd820b2823f85fe779277c82a"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "aaf255610f63dd31e02d6248f840f448458e7eebe08453864300ffb79f0fa704"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -1360,13 +1269,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "d540782213d4f0450b5ae30915d7ad8106b104bc7662b30e8dcba2b152933d96"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "8728a08d9368b8c40bf3d98b30e5dca5e5d5840d91999ce7737af9813e8899f2"
                 }
             },
             "nostromo": {
@@ -1462,13 +1364,6 @@
                     "shot": "38fb712ac64103a1964f96526e2234fc41caff5911293ebb6fc904e6e970032a"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "28a7dc9ed2cdafa734aa8a3b67d9cfebedbbe5774cf92aa09d707271103f02b9"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -1560,13 +1455,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "d3cc308519229b7ecfaa424faeb476c729023677d2b2acc7bea5383fea905bd4"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "5d78dfb44a91370fad57676fb384489172a1f254eaf5bae776d3648c1aaadef0"
                 }
             },
             "nostromo": {
@@ -1662,13 +1550,6 @@
                     "shot": "702a6518e876832570ec882118a4d10e3c09efb70920eb9ee1433a6511122442"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "c9b33ce3931158b6c1754a670e2c70e2892ffd3d7e45c639fe782478be410621"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -1760,13 +1641,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "719932e392f113112e1d1a08efdd9490e3bf061143fa46601488b2e50cf378d4"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "4c800a50cba8d0e840d6aec1c97acdd4b3b3013b9ff55f717798009d27b56578"
                 }
             },
             "nostromo": {
@@ -1862,13 +1736,6 @@
                     "shot": "b78df2c1959e817cdd1e1de1b89d54a175a62f7e899f7e549e76373d0642be23"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "663e82c91fb7f1d8922ef39cf16e95d0bb6666925e3f9cff4691a50c1d1a5040"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -1962,13 +1829,6 @@
                     "shot": "acc7db83421b7bb1491ddb389a843a29a31b8b8ba4ca085a5f0f5d0822d8244e"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "fa9f8aa41ec1fa8769de6f95871e5126d708f8643a50b78a0c3f5a6a1ec74b5f"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -2060,13 +1920,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "496ff94ceb2f3fb6ab4ffd62065a3837243c6862036af948ecc0bafff098672b"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "98c9c0079498d4b0c6f70c95ec7fa4e3eb55d035e948fdfcd5001a8a88177d29"
                 }
             },
             "nostromo": {
@@ -2190,13 +2043,6 @@
                     "shot": "36229293363b21b2df5c6ce9094062ed31c8905349b2bff9727e05be5b83928a"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "bb8ca687b26c6b07d05e24a8d28aba4bb30ba9a13cd9e5b1b7e62e373a2ada72"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -2260,13 +2106,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "0658307bf128eb791b81f114b10668cc5a0fd16ea1a50cd843406f0c3c585c65"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "e8ae68917f5781c3fa61eef41aeb7735f175cc115286ac3f7b090b381c084aa5"
                 }
             },
             "nostromo": {
@@ -2362,13 +2201,6 @@
                     "shot": "e3a8d40435e15216a907529b895bc4813876e71b64b45749c43540e733f02a96"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "a1ddeea8a295e7a88dbc42d72e10df77e3494709f7138f7679c024dec8217b32"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -2460,13 +2292,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "80917a04b5ba384ad0f9e2382ab711c9c536ab99750e4aa883eadf27766d6efd"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "02aa1586e2d93cc1bc8632e6b8dcf72420837a816949df01615937acf927012e"
                 }
             },
             "nostromo": {
@@ -2562,13 +2387,6 @@
                     "shot": "b33962ea30116a5ab74f24e10155b2ad2462cd6a66ca1bf06797f61e141a44ee"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "c2c1ec5a3aa3832bf3ae3fb037607a9731c7e056b5668fce6d7e02b893116181"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -2660,13 +2478,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "1a5682bf172e6c976cccc373c98f70df199bf0afd48dd042aa235a8ced9e8fb5"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "c4ddfe445474f52e18a5ae050b4e422124c138d1d12b3f319fdd1e5cca14db1a"
                 }
             },
             "nostromo": {
@@ -2762,13 +2573,6 @@
                     "shot": "9fa550234b9c2a14d8ae66c5b68feaf3cbd3b61d73fae671058c1a8791d05494"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "1a10ed99508e14da51450851d5828eb087d457448005f0f5a937ce0d89c62149"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -2860,13 +2664,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "9a6d4b748f083ad97b0fb5954c70757d3e47f3ad4c367d17ec685c4dcfbbacb6"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "29a4b738fa85ad57176fc9613dcea4d1b9a12b7824cfdd0dcf468a80e7995447"
                 }
             },
             "nostromo": {
@@ -2962,13 +2759,6 @@
                     "shot": "3d0a5d5a82d9268b003171c37c549da9fecc02f0f302ba5a1867ef23a214e45e"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "b4c0ef0b5c0ef6a75d66ae49196b8427c2baffe5036bd8d11f2fad5cd8487736"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -3060,13 +2850,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "0c9d747f5beb1ad4f4ffb876511289c74b2a69ac69b669bee5c35495221f8d5e"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "9fb6a5e98497b1a99d90dbf7b58d3854175e8b911926f29c89a4a269b5ff2869"
                 }
             },
             "nostromo": {
@@ -3162,13 +2945,6 @@
                     "shot": "338594c641986a1db45f93e6f45f818a0fb14de62b4c8a4a45ed6fc8b1da5c9e"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "7f2ae99f84abed8ded6e868765f27563383ecf850e5a497b81908ac1bd2d9d3b"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -3260,13 +3036,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "6828863a869b3d071bc4ae81c3d0e06fad5cb6d1373066b0d96b256b8c8ad840"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "903183559471ade52ead5f5b982687ba849498a01b67c08b2cf05a48be4639da"
                 }
             },
             "nostromo": {
@@ -3362,13 +3131,6 @@
                     "shot": "bce73e8aa3f29978adb51a157a0c34285f8197ddfd70c11ce5187582a1ba1751"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "a4bc86a4554c15c0b2173e4a45b34318ac6a73673c798a28b6ead845abe8ab3a"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -3460,13 +3222,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "cf3dd0e0c0813fa8756bfa4cc57a1c145f1e5e613d207a269cee94de55cfa80c"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "5c5fd723031e8c312ec678ac03fc0edced761552dbe275c2b7327499b367c94e"
                 }
             },
             "nostromo": {
@@ -3562,13 +3317,6 @@
                     "shot": "a6fd9a3904cbaa51b7f8387fed80cc222899b8153f2847545a93ec7cceec5ab6"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "2999bbd57ff60326f190aa6e30899f736ee3dab73aaa278d5b7d244d1c7d8c14"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -3660,13 +3408,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "ea3390a2af81c0c8a3089ac9114057cf721da894e70ea15eec2fc78eeb15cd28"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "c0798a2fae56bc4613fdbed228416527ceef68c6be80d9ca23051f5771242463"
                 }
             },
             "nostromo": {
@@ -3762,13 +3503,6 @@
                     "shot": "9bf5c712291320de8566f5dccee54bce44b51a0ecbd03a0db0e2faa23bc8015d"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "ec2a5ededf072362a6df06ff3484cea3cec977b7e4c957272520c8d611876ddb"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -3860,13 +3594,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "34483b844006dd93cfa3921633c1e7380da609f4fcf4167714270b851a1027b1"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "b82819f4fba67fc86d8038b5abab2f90f990fe51e4b183b79a28d3a6eb62251b"
                 }
             },
             "nostromo": {
@@ -3990,13 +3717,6 @@
                     "shot": "c042211944e585d97e2e2b06ac017273a2951906c096dba81069d9bd15bf0d84"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "271e44a80fb95ca0d4fd25a7954b1294bc64232603d25f4af59990bfbad1ed35"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -4060,13 +3780,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "8a9e180d4818cb738c2ea95611eb50e437692410e071afb08f5635f0210679dc"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "a35a31380fbbd2ef33fe20c9474d216e868e8942325670c9c0fc1c5f67991485"
                 }
             },
             "nostromo": {
@@ -4162,13 +3875,6 @@
                     "shot": "86bd4c7455697f633e59523ed5fb111f8c1b2ab7ad8b79adf99d80be1ccf6d72"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "c73d7b5a1a8473d8783c012831d163a22b1027daa63dba44ebe56e60652165ef"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -4260,13 +3966,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "a7c24c0ad2bb310c74a24539a73487eee2f21702ce6d3c7ea2f798a89cbd4592"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "e06e34a93c03f1005e64e096b5570d4151c39b9d00ddc9c0ec703a24c256963b"
                 }
             },
             "nostromo": {
@@ -4362,13 +4061,6 @@
                     "shot": "80685868ad9f8503ee32d948ab0907f88c79f746fa47ae6d9124af0bc2bc4d1c"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "097c3fa25b9b6aa696853f344e0b6441c0e862e0a0ae8608cde493f773050222"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -4462,13 +4154,6 @@
                     "shot": "4c8874515e80ca98f57189eb2e461f84796adac4c9fc388c5539c9483d80c0d8"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "5620af557fd7efb6874f7f39f3884a898fe92b9dab0f21ffc148294633c0c8e9"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -4560,13 +4245,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "6003c39a7d42d2b61a3eeb047eef841be6ed9e4a58e34b2316e89693de9ab81c"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "50f1043321d12f59a6a343103e3353073f0bd75ae137d92c81194bed66f43daf"
                 }
             },
             "nostromo": {
@@ -4716,13 +4394,6 @@
                     "shot": "da6990403095ad00df042cf48d92827a84da3beb656b2131de54673cd3fb252a"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "1414046fdfb18130cbaf3fad09be5b528a629ce8c3a22b1ce02cbf3e3717adb3"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -4814,13 +4485,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "d98eb294e8b0d79240d92cbdbcc8cef4e0f5d0d5ee3eb2f22edac23628b5bf6b"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "9391029d3e85b64696d9fa2fd3140b515d9dcc0c3c1fc0e6884ba869227911ad"
                 }
             },
             "nostromo": {
@@ -4916,13 +4580,6 @@
                     "shot": "37224e354ead76e0bdf0982d807a84df4e1884384c9f8a99634560b9903e0894"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "83f6ee7228ff9e9d68a96742745462c5cf67e62568876e36665f830e7322dc2c"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -5014,13 +4671,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "47c312dd580061d2957520356d40ccd343b7c0e17aaa1ecfc9e6051430861c76"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "22a14c22bdcd2feaba85d8d8d7ddddedc683a7db2a175e57b7809c382cc87223"
                 }
             },
             "nostromo": {
@@ -5116,13 +4766,6 @@
                     "shot": "65e480ae0715a4a0821b43ca56ef3267db81c735d099ba42889762c2f7f8daab"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "dafa7b78f3ffb1621fb463696b5fb25d8e38c8c551ddaea1ce0dad0872765e95"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -5214,13 +4857,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "7c3e779a8ffe03efbf9dbb2d6165a1e7bd3ecb2879c6d1ae77df4d87bca6d822"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "fa475e4beb16d584ffd50dd098ecb06595d9cc36a6a2b63ff99ad6346a6aa83c"
                 }
             },
             "nostromo": {
@@ -5316,13 +4952,6 @@
                     "shot": "e3e87242b448fcd7a660bced9499943e8c2661596f20a4a3f1c055e461fded9d"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "215acda396f35870a6bf961eacc60e9a1c77c6416e9a2150654f169b0b96c668"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -5414,13 +5043,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "fd19af375b67f4de6c430edc68148f4aba8570fd87115a0ee84012c7b824a7c1"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "f44179eaa862c16310d6f7bc354731174748320964aa7c66af7f1532cc4d8e47"
                 }
             },
             "nostromo": {
@@ -5516,13 +5138,6 @@
                     "shot": "e0613c2887ba0ded134133cd22e6ac6dfdedb2bff558d8ea3d984dd7af31ab78"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "67d509d1b83cc43d496aeb919bd3c86eeea00bc9f6f75b1264b059a1d21aa115"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -5614,13 +5229,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "1a552b9f411373fc7f1b342135e79d88b8f7fe309cf77943f4baf6acc7f07ffb"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "7c77f68aaad887f9667f73c0bb3ab24e486e1b21b89237f27619d6637eb0a512"
                 }
             },
             "nostromo": {
@@ -5716,13 +5324,6 @@
                     "shot": "e535d0102bf8430457ae3a5bb03510ac1388bb52573ea64d518e0c0f7948bfb4"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "e6a678f8b9e4607ba810c26a221db4868b623baa69aa9637c77e13111a6f7df2"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -5814,13 +5415,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "fe323a06bd2baf3f6751fd012422936b8e5092ae2647cccae69120e3d539eca6"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "de3867971dfdb30a58e07dabd040bb0aeb109351ee70032b2afb1e85dc4c5f79"
                 }
             },
             "nostromo": {
@@ -5916,13 +5510,6 @@
                     "shot": "ed8917a8dffbc3a7de3b7bda369a0e4297a33461e89bc42a5f0fa08e41135f07"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "965a246d5efbdff8f12e7b6b2b1e01a72990e523e4ebcb66d09d619b03b48f91"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -6014,13 +5601,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "218ea3ce8440ad550e16e9f54f12acebaefb84bb06fbd125afa5c17588450195"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "f993060bc63606d0fb6e7109943649bd8911259ea3c95e8958d75d468d6c8d58"
                 }
             },
             "nostromo": {
@@ -6116,13 +5696,6 @@
                     "shot": "eda43bf6cd07e8633a30f233857e7e57c2e5ccbbd0313b586b11c551892a8766"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "94d158abcbe6a8d4a3134c459b7d51233e9170a4b1f38d649bcd08cb8514ddac"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -6214,13 +5787,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "5776a6b68d2a466f3ef2b8d3f233733f85fe38baaa29a73eac38d9199096ee93"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "86c300d0cee6e30870e79d5f2348d7c1c07fff15f4f3196563b72db0caff9eb1"
                 }
             },
             "nostromo": {
@@ -6316,13 +5882,6 @@
                     "shot": "774ed9adcb0ca7444952d005e5a89c2c57eecf2326ded17d6005971aadaa313a"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "eca6818d7b7cb7cfa6c2740a92f85a2974f44b3f20f3d6de9ffc04a09750f03e"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -6414,13 +5973,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "e8f8491a0733385d2000efc7affad7c63d02de08c1be15126f691c7be7f0870f"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "5dfa3cde88a778f49fb543c981b276b7fd67f45c5d36605ee7062f79341cb02d"
                 }
             },
             "nostromo": {
@@ -6516,13 +6068,6 @@
                     "shot": "cc2233e260092a99debdb142c7cc4de09abcf3f928702e28f9318f55005e0321"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "b27f8ce57c77e66996a26b4b81428ac2611dd3da088097ba60cf4e6afe7c6a7d"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -6614,13 +6159,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "d35ebe9c86f4d752fb6c076c9698a558ad4831381169f03be167d9dacc92bd9d"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "3d070e81ee52258421b6066e1b56538aea04d22658970fd8536565403a05bf47"
                 }
             },
             "nostromo": {
@@ -6716,13 +6254,6 @@
                     "shot": "7d29fc64514c3977b6bbe3972c323e14aa770d41131fb3c4e0276ecadb7d4ba0"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "0c6c7db7fcec27c431ffd94487e2201e0b56e312136782683c697be2dcdbaf7f"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -6814,13 +6345,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "58bb7cd271a62a1f8f24c182c6e3ca09c4930dc4eebf6a17ce92e9b68dcab02b"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "6b423cdf62a49184b467abf417abee3a380cfb3a3253c1ec43783feedf035510"
                 }
             },
             "nostromo": {
@@ -6916,13 +6440,6 @@
                     "shot": "41d22eb1f7118d3198044d3e11a62faf585735d8906aa6bb12361fed5174e167"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "f78d225176f8cd2dbbca66f2275c5d8fced60b8a1b61a15290a1698dc5c109dc"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -7014,13 +6531,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "7370d4e540f65a78eac5536cc6caa8dd3da6cafd8d2619736ee8b5bbf45eddad"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "70bd9c3286fc3c47b2f8ac8e1d2639bbb7dc5ba7aeb6884fb1cd5f92d79dce3a"
                 }
             },
             "nostromo": {
@@ -7116,13 +6626,6 @@
                     "shot": "4cb471ba8f81477579d34f21f16fbc20a43ffb72429631fcbaf50cb4c5e20999"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "ef5d7fabbe434a260c02a4dd4b9c6ddb58da8600f2b69b0252269a77d1ce80da"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -7214,13 +6717,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "6e3d79fc9d7a900cc07d833bee6867c2c05e58511f120fdd733cdb03825f8a52"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "604829c96a49944edce93fcd522a51e427ab19705e0c9117720b77a135091d56"
                 }
             },
             "nostromo": {
@@ -7316,13 +6812,6 @@
                     "shot": "fc09fa13fb6262935a178f91bcd2983a322b87e2835a5c02e0e0cabae5496f61"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "198c924e18353fb66f740dca9b3cd7b495a76a507a49f7cd91475d69184290e6"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -7414,13 +6903,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "ed86a38579461b5e72e4e35563015693001bd79b59a5cce506e56af1a12ccd92"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "760538cd1791daf62c0f330a2e45fe34e2c06607cdf4b12e0dd55013bb915418"
                 }
             },
             "nostromo": {
@@ -7516,13 +6998,6 @@
                     "shot": "4f35ced16430ca42db090617486148a82dc626e2155602393da496eb4803d713"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "8f93bbc10a7b3b1ca5b192b9504b7360b05f39c6e3fd37678de23aaf5fca01f6"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -7614,13 +7089,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "0f6b54a91e7daaf0662e9a9fa5b8f15621b250b359a683ca62318e80550a39f2"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "4357be67683f9b8747ab3dc1b7d765278db8df52c5e9497c32d5e8f719a143f6"
                 }
             },
             "nostromo": {
@@ -7716,13 +7184,6 @@
                     "shot": "a1bb3ce9efe5630698b8e01855195d5647d8b4a598bb192b3d9f15a0554cc0ee"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "73f57fdbb6777271daa676c182dba850c9a235911e8fd649158b2d2035e6187e"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -7814,13 +7275,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "5749e5060e9b540e898f1bae466375fda652b9da19442006100d20fb2cd2af09"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "a2c3e059900c4d013f60e9bfacb3e5fd78fbf4c2a660c38f98059a8cbaeed61e"
                 }
             },
             "nostromo": {
@@ -7916,13 +7370,6 @@
                     "shot": "90cf029590d8537ddf02506b3b383ed9644e194221b69015d771ad45905774f9"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "98861675bcbbbaf22864ea64b7e326361fddedd0b7b7feccb101d2818ac0d7d4"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -8014,13 +7461,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "a20d46e9553b0af654fcbfd0199c1ffdd4e0855e8ce14134538cf7c95c20928f"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "ea034090f836e77d5dc1d6b00e20f7ab0ba2b201c101de2073ea5180f8a47d05"
                 }
             },
             "nostromo": {
@@ -8116,13 +7556,6 @@
                     "shot": "05553be195f82190ba275a72afa7ed73765bc7f32ae6a8f3bf9df75cbc66b543"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "86602931857123b533bb5e0e1c723cc9787c7b654ba34935ed64f88008cd6caf"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -8214,13 +7647,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "c2969f4ae78c43a8e00401fe3ad853d3213e50253e69f6aa23a2fc6a4c7b747f"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "6b3d9c61f7478b9a8849114ab236747594d97bf91c2fe305d9eafe5b005af938"
                 }
             },
             "nostromo": {
@@ -8325,13 +7751,6 @@
                     "shot": "19fa16a77b37128a4d0cd3f9373777f241efa0c0409a7bced966208d450d0e4f"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "cdd685ab740da469f70c92b3e66a44ac08606bb67fde9777b3b27c26867d5779"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -8423,13 +7842,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "259278cca386127ec2a0e758d1ebe9588326b32fc4c884d70da6e86e6e5d48f8"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "8e3042583d38b67c75ee2930d9306e6bedda7837f9a4f383a6fb09839e2819b7"
                 }
             },
             "nostromo": {
@@ -8525,13 +7937,6 @@
                     "shot": "1261c2b2f2d9e5c9cc1d2db2ee84f0d1fd16c53c97e07b02aa7ffa815ba89e1a"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "9ca21fabc77e3a75e38b3f6295c5d790b1289b27a6c079895858b5c997f89a11"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -8623,13 +8028,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "588438a03c57de4d28cef112592ba86ff901d8ae191295c9a05368371432555d"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "a2fb78217eea0b5f479f24649808582d6be1ecba0482f2a771a75384ffa92153"
                 }
             },
             "nostromo": {
@@ -8725,13 +8123,6 @@
                     "shot": "9f178a28624272f138302512655769985da5831ad661bb89c685cef55d7caef9"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "22a677cedeb5546deb7bb315a7f99126ff29ad0aace97d6e081d90afd207c97c"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -8823,13 +8214,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "f6766b934ef7273397b5b7cc4dca6eb88d8c3bdcbf84e42375d9c606af7dd68a"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "5814abc76b79cd29690c418ea7f37df38dc412f9424f1fd30d754ade513f6003"
                 }
             },
             "nostromo": {
@@ -8925,13 +8309,6 @@
                     "shot": "95f9ca542f86163b2772bb077081e06b41fd3461a443c9e602861211c13b69e9"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "79497eb4b5cd647c17946d1b317e847e28b0b3a9de72635e09bec2dc44004cb6"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -9023,13 +8400,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "907f75475119cead781790f4af0e975718242999c18d07f3e6e3c8a53da4ee69"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "19b4e026ca3a4f3b15eab51937a5eb019fe04972a86bde318b8a1c5c85c043b4"
                 }
             },
             "nostromo": {
@@ -9125,13 +8495,6 @@
                     "shot": "8d835929f895c5f47b802bc76c933a6a6caa3074b3bc1c3f83e2d978ce976c24"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "d9f39b8732db60efdc19a6d974274c6494ddcc56088ed422ecfda5f942b16553"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -9223,13 +8586,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "dcad17116c57545e8bc7f63c14a84667cf239a3925188b4b18e8715608aba41d"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "dc4ca568a5ac5b24c76a963f96bda64a0eab6674d762353e7006bafaa98dc77f"
                 }
             },
             "nostromo": {
@@ -9325,13 +8681,6 @@
                     "shot": "7ab48b4b9050354cb6144da309b260f0690b574a7ee796086482261d7754b430"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "bd8cc345c6b8e5c9dad029db3511cd801d08e8cbe2a2025c60fd571a296fe855"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -9423,13 +8772,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "fd8543972ea990f7964c844a94bbbb05e041a8815e5443612484855ea0805bc3"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "cf3248557bc16c09a1ec3515782ba90d4fc9300703f1a710528593be0d136370"
                 }
             },
             "nostromo": {
@@ -9525,13 +8867,6 @@
                     "shot": "5f9714c4c132b5a4b28b463ceb7b925705c378aaad266a98874ec7f226f16327"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "0cb1f645e155fa063a199e279ba9e788d8089ee80caa7526d54c95c2d23374f4"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -9625,13 +8960,6 @@
                     "shot": "20ae704c02ac9ae613aac1f33de48abf966a7782fa4d1f64c034f338c25ce3e7"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "710a2acae07a18a33d8f9ed0c9e988e449e3ab7bf30bc7fbf137bf72bf21ed83"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -9723,13 +9051,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "422db164adb9882a8bc91f826fe706016d62bdd2debcd46aff780114f4e1da3c"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "5a7dac79f19da9e10b58e2c3db0f68807b4fb426343c4f737782466ea9245176"
                 }
             },
             "nostromo": {
@@ -9987,13 +9308,6 @@
                     "shot": "c83c68eed3254882d3929fd0faf905a0817361064cef2cd85689ae46c6e78e51"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "85d594a2d4478b4210976f412c3d72c8a7209019eb8903a5b4b9c4b68ad965ea"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -10085,13 +9399,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "a652f4dac54789bfb9e2b0e2e7aa1eb42984e0cfbbb60b1a601866535165c897"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "76903f6cf7cb5228a2a643b4ad9532776d22c586758aa5badcc19ae98ca14007"
                 }
             },
             "nostromo": {
@@ -10187,13 +9494,6 @@
                     "shot": "fdcd9c9df4b5ce2bdc0f9d5ce0d2a517708344d29fd9e179eacdd4d7bed3d17f"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "eec0aa01cc95cc5f7c4534135ea13d960ff3ed5a7de3b0de368732e4f22e3327"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -10285,13 +9585,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "e5e5e494780aa86a2542dc6b2a7f84789136ec235035d592fae4658729fc0486"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "0fd9ef840604afe76b584402c27ca05f318bbc544230c62c68e5edb8202d8c57"
                 }
             },
             "nostromo": {
@@ -10387,13 +9680,6 @@
                     "shot": "87eba5e9283d52cbafa07f5c1f9a9f02ce84e2fc4771f3f9b694e397635f45d7"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "a39802734ab1b48998fc97bcb850d6b9897bc89f1150dce7f5fa6d3f47bc288e"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -10485,13 +9771,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "2e1eb313ce89146fdebd4c42dd2bbf62a78286d00a6fd94dafec1fafcaf63105"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "cfb1fe72b0f4860a4b36dad77226a5f4d6292666a8128d7b4b46542c4b7f2d88"
                 }
             },
             "nostromo": {
@@ -10594,13 +9873,6 @@
                     "shot": "e3d72b1495b8a5bbf2ec3674e98558a095347c184909b345fec7b0d70011293e"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "ae148e45137f95f6c22d07536c18033bc4f6a6e241f4a7c74550739d4bd82809"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -10685,13 +9957,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "0518af93728c79794ab7c37fc09f79e76e53144300554eaa02ed99244139c5ea"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "2c0ac20f2c02e250e0b69a49594d3f36fd9b1613e26ca74d256aeb6aaed43d89"
                 }
             },
             "nostromo": {
@@ -10787,13 +10052,6 @@
                     "shot": "6323885d5aa5f3e162e3caea53ee674ca25dc1cf0a1341581c8645e05a805050"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "759e34fcfe2b5e4ef5888c9011e5c04a5118ad2c01b08f5200e9cc404c0e777b"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -10885,13 +10143,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "77a5c62c7b771f5778db4a731e10b95a25ba2a597eb7514f6692dda604004f50"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "72cd923c8148c4d15162a849ed69e45e184120029559820ee75eedd6db6c4070"
                 }
             },
             "nostromo": {
@@ -10987,13 +10238,6 @@
                     "shot": "8123f83744898240351c8629053d1c70103f1b20c8397ed8dfb74244a4223d07"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "2c6febe807a3ecd1f67cbfd0f38ed1db514a0e0b43ead6705de984281ea3beb2"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -11085,13 +10329,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "1ed7dd4030ba58b08a445a9424b5c4cf80fe29ddbc47eefc09e7b19a68d275c6"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "aacf0d8fb278a9cf512ebcf7bee30012d621bcdf10d88280698c9d007bafd140"
                 }
             },
             "nostromo": {
@@ -11187,13 +10424,6 @@
                     "shot": "12039e8b380d06f2e32befd99351a5fb4c8d8d5bc58eb19ab77d74c9b5b83798"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "a37e512e4f9675550e39a39422d4b2d8db3229bc76dbcf3f65c8d824ba5c8204"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -11285,13 +10515,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "efa82b42f5e840373a56c3e5f3760084a6b176919b1d3a49fdab180173c8ea68"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "ccc7d87279250b363ec311f4248dc4a40ed78051a799bbb940c29430fe43db44"
                 }
             },
             "nostromo": {
@@ -11387,13 +10610,6 @@
                     "shot": "56b6bc5adbb94b1110021c6205436577fb00193b6811d0e6c630dbd7682f36d3"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "89ce400321c1c797c884f98ccbc167847fedae360fb92d540316f56575b45985"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -11485,13 +10701,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "1045dac9cff65d20394c08c5f93b99fa92a93c3e10700888ad9ba912746a5e33"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "598ffb028c6a854707bad659fef43b6df164fbb3171064e9523e6bd2d035ef00"
                 }
             },
             "nostromo": {
@@ -11587,13 +10796,6 @@
                     "shot": "338bebeeb41636d2df77c73f9a3539e38453542d128bfdb4aeb3d605789eb207"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "d470650c051dfe852c80de0834a308959f935c241358250d2ee18434de8482aa"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -11685,13 +10887,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "43231b9d0312435d98a4600b099058cb11dfdb00932cdb6b44951c85986c3394"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "59579314fcb2f0631eb2986a207b721de5c8e6d65bd892c95e3aee11d4646261"
                 }
             },
             "nostromo": {
@@ -11787,13 +10982,6 @@
                     "shot": "0cd71f2fc36d2323ce6d8ec4ab4b46df6c44d562f3dabe68ccdad47c50ae246b"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "1f8764843d3ce177e3a3e8e285a603e00d4e283932ef8e9dbe43cf7b44c3bb46"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -11887,13 +11075,6 @@
                     "shot": "6c5e6582c192508b230b6023b2320ef9d3440440953686bad8fe38c83b8ce43c"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "380c686a87c46bf820125a360b14393c25664b29aacdc08e2e2e91c28f8b65b9"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -11985,13 +11166,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "aacb788e7fbaba910668bf2384a8c17fdf3861cdf392f9f87a174138274c1347"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "e5d1f9ca7898d9be9d0dafcb7c34b980c451f395fc8cf969d9329d154ea05816"
                 }
             },
             "nostromo": {
@@ -12115,13 +11289,6 @@
                     "shot": "1dfdd712c1a4cc376df5a2ab28c96d8c2391a6b7d1a45b7110d32ce52b756b9b"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "6f6a61343048659c203248da2f32e4b3f519fb0d8c0ecddb43fd324f1c0ed9d9"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -12215,13 +11382,6 @@
                     "shot": "222b9a6c53e5827497cdab1e4e35479b3962268b66f4047dffd9d2277ce62ea5"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "c7a3c1031cd080c7e728b1a5d79cb8eee8b65f9f7fec9a05203c8e9bbaf12233"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -12285,13 +11445,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "13c394aa479ae9c9c7b595dc3c565b08db4afb41a4f33c8e03d92cc605f3b0d6"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "20f9c2d5ec5d21ebb39881285f04d8379b86ca60efc7d1b7f9e95a1c6c08eea5"
                 }
             },
             "nostromo": {
@@ -12387,13 +11540,6 @@
                     "shot": "e37acc344e9106ea000246b3c875f5e9934d6b9df8f4f43e5866bb748ebd5d70"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "b9fb1cd680e6d720b300afb25e34986731a698b56fde89e2b4a1ee0537143801"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -12485,13 +11631,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "2b99639f444ac2165969a404127f3c48c0d1b28bf33c72dedb03688e111caf66"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "5dbb4c978499aa9228a4bf3fa3f7c27d316ced22cddbd03151d8a595cafd41d2"
                 }
             },
             "nostromo": {
@@ -12587,13 +11726,6 @@
                     "shot": "6f0cba9f092cbf4b2e85c60d5420d79ec9c88c40a3388ba18424c278ea2058e0"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "837e5f7f4c9c66db5c6dcb4887a2028d097af8c0061809e15a3079b0e9f429e1"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -12685,13 +11817,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "b479da59534f57d1ca81f301b275f871fb56170ef1d03480ba52aa20f4e07acb"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "82f48a3d44531e6911597d458bfc2b86700d1e3fb48cfb05ffef051bbd02729e"
                 }
             },
             "nostromo": {
@@ -12794,13 +11919,6 @@
                     "shot": "19c44567011365ffbf6152cfc55c827b47770d12ad3f9dc3189dbba68927b562"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "1a9fe51661fd6437f1c936c101e1a351f9a41e4870af563577588d46544a430c"
-                }
-            },
             "pastel": {
                 "firefox": {
                     "state": "carried",
@@ -12885,13 +12003,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "c6bd1c9a677012f776306911e0c8e5224df42d67613df15c22cf1aaa31059a9c"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "095d989461df261d8426caa03682cd4d204af79a2766129cbed796e16478c702"
                 }
             },
             "nostromo": {
@@ -12987,13 +12098,6 @@
                     "shot": "8ef8bcdd661743e6ce6543215449093d1587646f8976a53eee6be0cb5c86cb04"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "b81b98224d461f810d6ae937d21b3c64618424654c283a2fb58de510ebd5d1ea"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -13085,13 +12189,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "8aa39968bb7e835a3833e8494ba4757f7c4c11391755faedb4f2f16b3a77f452"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "e90911fd3da19f18a6dacae49ed0c211468e83326cb493912381c6d7ede01b89"
                 }
             },
             "nostromo": {
@@ -13187,13 +12284,6 @@
                     "shot": "13878e8f65179386782db61a0c6104244d14ae65e786cdc91718f573dc32c264"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "e68f9e2beade83d781db3e92dcee8f6549438f167ed6a1cf91f6548b94983c75"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -13285,13 +12375,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "df15331942b18db6a02a387c6fc3de423fab518b451c675a81af282192de6ca7"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "7ac262bdd227feda2366f581f7412a3368623700a5303f84d84545b249179c7f"
                 }
             },
             "nostromo": {
@@ -13387,13 +12470,6 @@
                     "shot": "8708c1f28992622ec13d59c099d09c4745a1cde4d744a46ad6faf709b0f937cd"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "1ecfdbbaec382f837a36d06ee14c5c808df8b486ac4ee2595aea5304cfcd6034"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -13485,13 +12561,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "523c823086e817413ca605fcda4190f8e16a82a326631c1d8a217e83702e191e"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "bd3c357aa212397869cfc62a8d6a2f811df558ea989d0d77ca7470ab12074305"
                 }
             },
             "nostromo": {
@@ -13587,13 +12656,6 @@
                     "shot": "644eeb4a440aade26dfbd4749ad7ac35c275ce59a0399428b58db703954d42be"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "f41dfa6fb618b945441a9ff2d6c3269aaea0b210e3f66c91527b7c0bb24a471e"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -13685,13 +12747,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "d7e1442fea00dfb680b554c737ccaac7a3ee6719e92b1c60fb518068e85a7925"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "55ed25a15b90177e6808043ba5c12ecb3914bd797bf4d2552cfb13d8219fea2a"
                 }
             },
             "nostromo": {
@@ -13787,13 +12842,6 @@
                     "shot": "c57d79d14e1992a911567655fc15d184a5894c2255cb82431ca85d6d98d6af16"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "f32af963f04fb30a42a8c42c995e42cae8fa7b7de9ee4c45b05e47e0d45e18a8"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -13885,13 +12933,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "3f4a76764a7491aec49511d8b49dd8c4d2e849e446bbe13ae7d2004bd146f5c3"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "30632232de74f8d7568a5d1b81b28586e76391de72b004a85135b9247c939133"
                 }
             },
             "nostromo": {
@@ -13987,13 +13028,6 @@
                     "shot": "b0848e39c645f87ea0ca05f2852c5d84946b5c81f0824d7ec632c56f3115c439"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "638bdefddef310cbd45f2550d75a02a28dba9858c509161610c46c3e2013ef71"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -14078,13 +13112,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "491bcd702e240bf1f1a5fb1144072dd588e3aeaec46299fa74cc711ed2408e2d"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "99b404a50311f2f5f855e21a135843da772fcaac90f82c6525262a20962daef0"
                 }
             },
             "nostromo": {
@@ -14187,13 +13214,6 @@
                     "shot": "4db3ce9885194baad3712d8b7f08ef71ede3592e0f5b4b47e956e76a11fed6ab"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "37b214238417275e8192a43e6a8f7ec513bbd65b51e4fc9265774888c714e6c6"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -14285,13 +13305,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "c9e82e99730c2c95a13191dd65084bfb4a42b9bcc003fd5727528c7bd44bfa04"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "b6946bbe56af0c169bb934156da8025da27c51de76d0805184b411e9b1fb8e33"
                 }
             },
             "nostromo": {
@@ -14387,13 +13400,6 @@
                     "shot": "4a99839d4236c376a97e2027daec533bffe1a21f7e7cea81243267dff7bdf354"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "d7c50f93931e4310c79aefa78e4d44c46d336ee1b8ab4bcdc2d1b39d826eb42c"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -14485,13 +13491,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "330208a957cabf982c855c3ccb308bd14237c8428aaa746cc14a41d4b29cce52"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "55be90f4db36a3ce6a49835cb89ea8ddb3870134cf95847e5a6839b6378b6ff8"
                 }
             },
             "nostromo": {
@@ -14587,13 +13586,6 @@
                     "shot": "c9eeaff850d4cccf5929d3079dd5a37a771acdd3b8f6e59bc2bc06c2689dec18"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "099dec2ee129ae116ce2a00fd4ba0a389002ae72aa061b9c93433a572529635c"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -14685,13 +13677,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "210071093b1f6f7755134f8d411bd5c891ee3792e4e160dab687dcef0092e25d"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "5aa7ea8262aa505dcd7a04a9180c3ea9550d5d9bc44cc473e3daf08091f8d4d7"
                 }
             },
             "nostromo": {
@@ -14787,13 +13772,6 @@
                     "shot": "ed1e69366d8535ce34edcc6f4713bc793a043efc2d96d66f0c804b569f04ab0b"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "8caa56a4a482f081c6c61b49bdb932f08b1efc194c8f93fd5bd27867fdfb7d0e"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -14885,13 +13863,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "41a6e57ab7979bea2e78f9f56ba6782261495d9910d44b461fdb3a0b1e85080d"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "ebb734f3b2a10b76ba3fcb35ede86d1c661b5182520d136e61452e2671853caf"
                 }
             },
             "nostromo": {
@@ -14987,13 +13958,6 @@
                     "shot": "63b2e4605b375f54fa8cf975af452590dbbb746fc22f61cf5e86a73b964e64b6"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "517a0fdbc0a5d05c0ec6fd9137e25b1479fa4918de363e9348ba558734a2747e"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -15085,13 +14049,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "64dea8bc256bc3c444f592ed818dbaa7431916547f53e935569224999f04f758"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "5236188a5307efe6863f43341d4dea07ccfff192e4487f0bd1e21c2b0cbe463b"
                 }
             },
             "nostromo": {
@@ -15187,13 +14144,6 @@
                     "shot": "836febc83683894d726dd577f1a77ef0907b4f4af3c1142b3576ed763a2d5f6f"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "374c053297eaedf18d6034bf4b02ea305a0590006b6e360c0ad5bc3307fe9b8a"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -15285,13 +14235,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "1c6131b7b414edbedd549e0deb7f7c6b0c31c69b5afcf52c9737d77deaf8b986"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "5b6896be57e8b0227368103e34169afeea3ce205729d69468a775c45544649ab"
                 }
             },
             "nostromo": {
@@ -15387,13 +14330,6 @@
                     "shot": "aedb3e28f0168459fea88234a6a77f9c8ecc5fc96374f3ac7776e8f2f79f18e6"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "3c1f2793841818d9a2de3c07de962e3088794ab724552b43ab708833aaf23a06"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -15485,13 +14421,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "02b388e241bda67e2509a772944bafae94ef10ef7d6c506bf8103b60f61c4e25"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "2dbeb3a11528188d2a0b6fc7037049768a5f9cb211efef61c7fa2a431803dcf1"
                 }
             },
             "nostromo": {
@@ -15587,13 +14516,6 @@
                     "shot": "5a4437665be8fa037f2f49a2d725c6c90128374e05c55d48b4ed4c90b82f9420"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "4fe7485433b6bb4ade589b2b82f229f38ef7f44163781654c4ed6e545e1f1bad"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -15685,13 +14607,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "2c250105dbcf84fd41e516c8f86a31d37c658b2ca9d939d2a0092f4e41106930"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "62343b7e443b5db12521707229317525b8b8117decb3a9e51ce8421af18e3335"
                 }
             },
             "nostromo": {
@@ -15787,13 +14702,6 @@
                     "shot": "1e065369a9f4d0405147d1921317a36a9ac00228a7a37818c58a09a55310bd95"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "7af27297705aaabd56270dcb3ce266743bba7cc97743dd7e2f2a3dd2edbbf1f7"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -15885,13 +14793,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "e9c05d6d930fbbed31a9da6cf1878330878bd22f9715dd5aa9bb961e8a557e17"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "f563b244ccaf3e5675df89550e759bf69f4e0f9f3a5e89a72e6281e130b0e615"
                 }
             },
             "nostromo": {
@@ -15987,13 +14888,6 @@
                     "shot": "b98d297a7c22d8e68e7ac7b1b2e03f20f2ce0707395e19b83456b4afd371a568"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "6ecc0a445d594397b72299ca2823bdab522d0293af8c76bb9dee2e41ed33f32f"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -16085,13 +14979,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "d6cd06e63ac882f11d4ad43aec8ceee08837cdb510c165a44d34a12fe3262fdd"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "464f03c29994874621cc07fbc1eb9456c134c52abdfec0353aa24c94370f2f18"
                 }
             },
             "nostromo": {
@@ -16187,13 +15074,6 @@
                     "shot": "fd1338cddc644daf713ae6d2da44c45894e81546f2648362851cf18b8be687d8"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "d6f8f19d78f3c28e97deefb54222c38cffe96b345ed62d211ea60e6b3353d38a"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -16285,13 +15165,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "3055ecebb78c5cbbd59734186fa5963b9b0d1edf97c6425b770a8f362a10e78e"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "1779c7dcffdec972acc1d20aefc25244717f0f934f2784f1f2e7a599efb5fd70"
                 }
             },
             "nostromo": {
@@ -16387,13 +15260,6 @@
                     "shot": "86889cc17f4eed8b6149bc9b5fe698122c9ef3fb3b5320d9a6c8b88bb6c54060"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "bdb2eb5f8c03add3f2f6cfbdbde1fdc245506f80a083fc35bb8d515cc7563817"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -16485,13 +15351,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "109b9f05a65b77d0de17029200173cbfc9f1c09e94002433281d73b65aa7815f"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "8fcdb3e052ed06c7971055c0643490851bf651414beb308fec40fce4513b43f1"
                 }
             },
             "nostromo": {
@@ -16587,13 +15446,6 @@
                     "shot": "25a5e9f9d8194f38eed52bc1ad410be1aaad1bb2bd45b14a6c709cb1f834cf8f"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "7dbf1ebdc58432c047f5ff3bb9fe82ae816e3adeb3c294b0af9bcc76666c1e25"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -16685,13 +15537,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "982de05530dbe9b07912d76a016c7bc8f05308ffad5da41c7532f44538a40738"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "4b676cd1974d8952ca417d0e0dffecf192e4d2d73a0093ee61243262643ed38b"
                 }
             },
             "nostromo": {
@@ -16787,13 +15632,6 @@
                     "shot": "80c6bed57fccadbb68502d3420e0f12241861147fa1cb041b0798aea2c27e3f1"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "3b0ff8aec1035426fb6c824e3d6a3f4eb9bd635a9fc7417ba46b41ef0ec69516"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -16885,13 +15723,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "4255f142b927d13b77cdce262461b6b472f0c7cf12e0352888f86741f7c5973c"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "000b23a1a89299a68d328533e97e283edea189872867f618a56e9ecba6268c8f"
                 }
             },
             "nostromo": {
@@ -16987,13 +15818,6 @@
                     "shot": "92168582c5b7adb5953dc733839731c4e9d4cc8ae7ec9870d4e1f6a612d3729f"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "55fc235ccf39b70f9f7976b74aa5da51a9ea120d33d56fa0a7a2fc6ced2a4277"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -17085,13 +15909,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "d008eedb9ea40de7406552bb4fcbc723bed99ea9f6b0cd3c6c8145d7b3e94141"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "1309f026aa59e7eb780d088f91b1b60e1b7bc2cfc92036191461ef7d259156af"
                 }
             },
             "nostromo": {
@@ -17187,13 +16004,6 @@
                     "shot": "271b1bd26a0e8925b5128bb959062dc240e45efe32a6d5f7c813a3ab6591f19b"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "6abd4d986fd85674d2636a18154096c609d069e3a3c855444e71d244985fc4a8"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -17285,13 +16095,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "8294148bbfe8435cf93270ecfd1fe416d4ab29444cc862dba1c01df6679cc9b6"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "c4e78f75ae984caa62ba78c418154b1697930ed21fa733fc22e8d14efc76d2a6"
                 }
             },
             "nostromo": {
@@ -17387,13 +16190,6 @@
                     "shot": "9397c7e000bb8a120066dd184f219c8769f3229501a893cc984fba18a12945bc"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "0c8798accb30c2c3cc052b1841a5ad2b54695de4404376c0db1e99caca1dbd84"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -17487,13 +16283,6 @@
                     "shot": "f18c08b66ba78724e530b143ce5d75aa9f63adef35b7dad77999132adfe24ac4"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "e6f090c338ef60d8618500018e2bd60a0240bdb89596a9550ef4415ad44aa4a9"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -17585,13 +16374,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "7383ca111ad069190162e5b9aa7b8347477e83bdeaea94c61f02200ce48c0c01"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "f0df0219e8178210dbe2734908f13f8be73ca87aa132f9bd40e9d06b7188389c"
                 }
             },
             "nostromo": {
@@ -17723,13 +16505,6 @@
                     "shot": "f9f204bd617dd2ee4f7f35365b50f763e8accc8baebeb0203f9e32688f7be722"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "c9375da66d25cea43ba99774d2eb03ffa4891d1cca4302cc9842956d54f8eb1d"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -17821,13 +16596,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "8e25bdeee6da6a83c9f91e109d9cfa3cf1f24a55521f563fc9fc88e89fac8893"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "9d5e0103fb3d12f49c51b7c3ab4093b6f50ea82b4842eb24add9d7bd29750e7c"
                 }
             },
             "nostromo": {
@@ -17923,13 +16691,6 @@
                     "shot": "b9f4b30868b76773370a7a0094fb899977a8504cdcdcd27674f04f6387460d34"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "9dd247cca9f24a09cf26df2b958af603bbb537f6c02866384917c792e9733613"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -18021,13 +16782,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "535f24f1b146c6d6f33a4ad46dd234f722a5d8e092d516caa3cb5950dc670640"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "d2db5052cb35f79599419e6d003685ff73742c91b2605fccbc8152d69ecc1355"
                 }
             },
             "nostromo": {
@@ -18123,13 +16877,6 @@
                     "shot": "ea17041d2946b20b2724e079467f197b6db617fbfa17f36a3328ad88a13fe6ef"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "f272de28b5eda970c48ba7b130b70ecd62a50ba39f30b6d4c5d0eb32a6273d7a"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -18221,13 +16968,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "4827a98eebf735fdd18325c3b40649f93cb0a325d802353a654d55d6adc76cc9"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "d0c338805de0ffd1be85c49ec178255a79306c530ff82a630e387c37fa66b91e"
                 }
             },
             "nostromo": {
@@ -18323,13 +17063,6 @@
                     "shot": "79929aad95464eeecd554c3f71134b6d089c87a9a61ad9ecbf8798e6fda1ede1"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "562881012d5c40e905aefc6a741368817c8242cc5d8a270032c2ec6e0a11691a"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -18421,13 +17154,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "c3809218c7014c9bd6125dc7f0e52b166e9378ef94de0818ad9ae136b9a0a230"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "c2115aa4a6828937aabe91e8c1b6b018a9a29de74b86fc3b85f88f072bad2988"
                 }
             },
             "nostromo": {
@@ -18523,13 +17249,6 @@
                     "shot": "f157e030f42f5820344c6fa662f9f2885d6edeba7fcee569b79ab5b8c89f45dc"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "1a5a9d53528c1984d9db798ebad225ebfa72aa928d3f74253a4af4b7222dedd8"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -18621,13 +17340,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "bb91a439bc6bf88516f7d5edcc8d002b9320b37ad05a3b8eb2abf3bc057b8c1f"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "1eef309cf9b848d663972f3075897f478a64e344442734bf4bf32d00524b982e"
                 }
             },
             "nostromo": {
@@ -18723,13 +17435,6 @@
                     "shot": "237d8bf8bb2b93b7a4e424e9f654fd2562af0c3172536224ed1df54b3451d92c"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "573f9cce23810f5dfe755252c4c43249ba8f742308de6cacc39abde8210f4145"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -18821,13 +17526,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "754a31e90dac1ac82ae636b0735fed3d77e3f7fdb5fab45b6ba6eb7b9f633940"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "b8ee3e96fc783632482f802eeca199fb015f0c1603f80653cebbe07917ed69a9"
                 }
             },
             "nostromo": {
@@ -18923,13 +17621,6 @@
                     "shot": "a57f6bfce69e657cf85738cdd10b49edaeeed0c2b52e6eeed3acdc81dd9c0447"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "20a4d2aa2c8567c991f7c0a7653d1b659d88cfaad0a8f17e5330292077afa2db"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -19021,13 +17712,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "3f014d2555edadf3515376a5c002274c07309f6d6bb1c58aeeb15d21ca605e5b"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "4b1e3e41b25e87f281e6232cda5a004ba66ad27a84b72a786056ea0c090a155e"
                 }
             },
             "nostromo": {
@@ -19123,13 +17807,6 @@
                     "shot": "f51134a1d76009c8d88953ef559e729e5c41da304a5970642995c276ed91b7d4"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "e869d9e304598a6cc85b0daed99f3aa12fa8a12e0334bfaf0ac4d64477c661b0"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -19221,13 +17898,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "c68139f49941e6f1f019f449c766450b08d6faaec94e5b59ab73e91fcc81d269"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "7e45c42ba48ddf89c75ebb1023cbde5e871147faad04ec1259838df0e524a78e"
                 }
             },
             "nostromo": {
@@ -19323,13 +17993,6 @@
                     "shot": "638b159627566af7f04d7402ea1b6a41a0793db31c8eb2fee5bc34088df89ef9"
                 }
             },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "b67f629de8e46cdb5561933cb507cf589a41f9de504396d886a368f52e1cf96a"
-                }
-            },
             "nostromo": {
                 "firefox": {
                     "state": "carried",
@@ -19421,13 +18084,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "831bfd3c07e85d648e8ed56f2598d4923a0c7e10ca51d74b05422c93f9c64c35"
-                }
-            },
-            "light": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "02759adf0560a2dcb6364624e72e09a3a1c0791385eb09ecb3c671f6fece6325"
                 }
             },
             "nostromo": {

@@ -1,5 +1,6 @@
 // Kenny's review notes of 2026-09-15 on light, pastel and high-contrast
-// (high-contrast's part went with the theme, removed 2026-10-08),
+// (high-contrast's part went with the theme, removed 2026-10-08, and
+// light's with light, removed 2026-10-16),
 // read where he read them.
 //
 // He judged the catalogue in FireDragon and left three notes: light's nav
@@ -63,7 +64,7 @@ const open = async (page, url, theme) => {
 /** @param {number[]} c */
 const rgb = (c) => /** @type {[number, number, number]} */ (c.slice(0, 3));
 
-for (const theme of ['light', 'pastel']) {
+for (const theme of ['pastel']) {
     test.describe(`${theme}: the diff's added line [data#diff]`, { tag: [`@theme:${theme}`, '@component:data'] }, () => {
         test('the added line stands off its ground as far as the removed line does, and its line numbers stay readable', async ({ page }) => {
             // Before: the added wash 0.75 ΔE from the diff's ground in light and
@@ -92,55 +93,3 @@ for (const theme of ['light', 'pastel']) {
         });
     });
 }
-
-test.describe('light: no indigo in the nav bars [navigation#bar-collapsed]', { tag: ['@theme:light', '@component:navigation'] }, () => {
-    test('every bar link, dropdown link and search trigger reads in the ink, not the primary, and pointing at it still shows', async ({ page }) => {
-        // Eight bars, every link hovered: 30 s alone, so more under a parallel run.
-        test.setTimeout(120_000);
-        // Before: every bar link rgb(53, 46, 184) — --primary — at rest, on
-        // hover, on focus and as the current page, in all eight bars.
-        await open(page, '/catalogue/navigation.html', 'light');
-        const primary = await page.evaluate(() =>
-            /** @type {any} */ (window).kpRgba(getComputedStyle(document.documentElement).getPropertyValue('--primary')),
-        );
-        const blocks = ['bar', 'dropdown', 'mega-menu', 'bar-collapsed', 'bar-long', 'bar-search', 'bar-sticky', 'app-shell'];
-        const selector = blocks.map((b) => `#${b} :is(.kp-nav__link, .kp-nav__search-trigger, .kp-nav__menu a)`).join(', ');
-        const items = page.locator(selector);
-        const faults = [];
-        await page.mouse.move(0, 0);
-        for (let i = 0; i < (await items.count()); i++) {
-            const item = items.nth(i);
-            if (!(await item.isVisible())) continue;
-            const read = () =>
-                item.evaluate((el) => {
-                    const w = /** @type {any} */ (window);
-                    return {
-                        label: `${el.closest('section')?.id} ${el.textContent?.trim()}`,
-                        ink: w.kpRgba(getComputedStyle(el).color),
-                        ground: w.kpGround(el),
-                    };
-                });
-            const rest = await read();
-            await item.hover({ force: true });
-            const hover = await read();
-            await page.mouse.move(0, 0);
-            for (const [state, s] of [
-                ['rest', rest],
-                ['hover', hover],
-            ]) {
-                const ink = rgb(s.ink);
-                if (distance(ink, rgb(primary)) < 10) faults.push(`${rest.label} ${state}: in the primary`);
-                // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
-                if (contrast(ink, s.ground) < 4.5) reportContrast(test.info(), `${rest.label} ${state}: ${contrast(ink, s.ground).toFixed(2)}:1`);
-            }
-        }
-        expect(faults).toEqual([]);
-
-        // The bar link at rest and under the pointer are two inks, not one.
-        const link = page.locator('#bar .kp-nav__link:not([aria-current])').first();
-        const ink = () => link.evaluate((el) => /** @type {any} */ (window).kpRgba(getComputedStyle(el).color));
-        const before = await ink();
-        await link.hover();
-        await expect.poll(async () => distance(rgb(await ink()), rgb(before)), 'the hovered link differs from the resting one').toBeGreaterThan(20);
-    });
-});

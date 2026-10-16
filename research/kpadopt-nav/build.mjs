@@ -19,7 +19,6 @@ const esc = (text) => text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').repl
 
 const THEMES = [
     'formal',
-    'light',
     'dark',
     'cyberpunk',
     'synthwave',

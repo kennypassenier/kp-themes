@@ -49,16 +49,6 @@ const IDEAS = {
             text: "A graph ruled into a ledger: column rules every tenth across the paper, the baseline closed with the bookkeeper's double rule, the tick labels in ledger figures (monospaced). The pen draws with sharp corners and the area is hatched by hand. The tooltip is a ledger slip with its ruled lines and a red-ink margin in navy; the legend is index tabs, the pressed one inked. Loading shows the empty ruled page, still; nothing moves in formal.",
         },
     },
-    light: {
-        a: {
-            name: 'The seam',
-            text: "Light's divider as a chart: no frame, the grid in seams, the tick labels in the sans at medium weight. The line is a confident indigo pen whose area fades to nothing as it falls to the baseline. The tooltip is a white card with the divider's open circle as its pin; the legend is pills, the pressed one tinted indigo. Loading is a dashed seam across the plot, still.",
-        },
-        b: {
-            name: 'Daylight',
-            text: 'The plot in the light: white paper, its lines crisp, the tooltip a white card on the medium shadow, the legend pills with a soft shadow. Loading stands the plot out of focus, breathing, until the readings come into focus.',
-        },
-    },
     dark: {
         a: {
             name: 'The spectrometer',
@@ -225,7 +215,6 @@ const ASPECTS = [
 /** Round 1's picks (Kenny, 2026-10-05 20:03); high-contrast, solstice and brutalism are open. */
 const PICK = {
     formal: 'b',
-    light: 'b',
     dark: 'b',
     cyberpunk: 'a',
     synthwave: 'a',
@@ -323,25 +312,6 @@ const R2 = {
         events: [
             ['ring', 'Open circles'],
             ['pin', 'Pins in the margin'],
-        ],
-    },
-    light: {
-        loading: [
-            ['glint', 'Sunlight along the seam', '--primary', '--chart-2'],
-            ['rise', 'Out of focus', '--primary', '--primary'],
-            ['hop', 'Three beads', '--primary', '--primary'],
-        ],
-        arrival: [
-            ['rise', 'Exposed along its length'],
-            ['wipe', 'Drawn in, softly'],
-        ],
-        update: [
-            ['shift', 'Slides along'],
-            ['tail', 'A new piece drawn'],
-        ],
-        events: [
-            ['ring', "The divider's open circle"],
-            ['halo', 'A dot in its own light'],
         ],
     },
     dark: {
@@ -728,7 +698,6 @@ const NEW = {
  */
 const PICKED = {
     formal: ['1', '3', '3', '1', '1', '1'],
-    light: ['1', '2', '2', '1', '3', '1'],
     dark: ['2', '2', '2', '1', '3', '2'],
     synthwave: ['1', '1', '2', '1', '3', '1'],
     'high-contrast': ['1', '3', '3', '3', '3', '1'],

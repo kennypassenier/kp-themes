@@ -63,23 +63,6 @@ const IDEAS = {
             { name: 'Turned over', text: 'The word flips over like a card index, in two hard steps.' },
         ],
     },
-    light: {
-        shape: [
-            { name: 'The plain dot', text: 'A small dot in the state’s ink beside the word, with no glow around it.' },
-            { name: 'The daylight pill', text: 'The whole chip is a pale rounded pill lifted on a soft shadow, the dot at its left.' },
-            { name: 'The sticky note', text: 'The word sits on a small square note with a folded corner, the dot a pin through it.' },
-        ],
-        tone: [
-            { name: 'The soft wash', text: 'Only the dot takes the state’s colour; the word stays the page’s ink.' },
-            { name: 'The tinted pill', text: 'The pill’s background washes softly into the state’s colour, the word kept dark enough to read.' },
-            { name: 'The warm note', text: 'A warning or failed state warms the note’s paper and darkens the pin.' },
-        ],
-        change: [
-            { name: 'Re-exposed', text: 'The dot and the word go into the glare for a beat and come back into focus; nothing moves or swells.' },
-            { name: 'The pill breathes', text: 'The pill widens a touch and back as the word changes, easing in and out.' },
-            { name: 'The note flutters', text: 'The note tips a few degrees and rights itself, overshooting once.' },
-        ],
-    },
     dark: {
         shape: [
             { name: 'The status lamp', text: 'A small lit lamp sits before the word, the word in ticker mono on no plate.' },
@@ -362,7 +345,6 @@ const IDEAS = {
  */
 const PICKED = {
     formal: ['1', '2', '1'],
-    light: ['1', '1', '1'],
     dark: ['1', '3', '1'],
     cyberpunk: ['3', '2', '1'],
     synthwave: ['3', '3', '1'],

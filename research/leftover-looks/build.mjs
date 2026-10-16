@@ -94,7 +94,11 @@ function menuButton(kind, pos) {
 
 const decoBars = [
     { id: 'now', head: 'Now', sub: 'The inlay is drawn from the middle of the menu’s top edge, whichever button opened it.' },
-    { id: 'anchor', head: 'Under the button (recommended)', sub: 'The same menus, the inlay drawn from the top edge right under the button that opened them.' },
+    {
+        id: 'anchor',
+        head: 'Under the button (recommended)',
+        sub: 'The same menus, the inlay drawn from the top edge right under the button that opened them.',
+    },
 ]
     .map(
         (bar) => `                        <figure class="lo-bar-fig" data-lo-bar="${bar.id}">
@@ -155,7 +159,7 @@ const decoChoices = [
 
 const html = `<!doctype html>
 <!-- Written by research/leftover-looks/build.mjs; edit build.mjs and demo.css, not this file. -->
-<html lang="en" data-theme="light" data-cat-theme="light" data-cat-theme-fixed data-review="leftover-looks" data-review-themes="phantom,deco">
+<html lang="en" data-theme="formal" data-cat-theme="formal" data-cat-theme-fixed data-review="leftover-looks" data-review-themes="phantom,deco">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />

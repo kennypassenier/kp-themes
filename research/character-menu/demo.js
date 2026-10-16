@@ -113,57 +113,6 @@ const IDEAS = {
             },
         ],
     },
-    light: {
-        shape: [
-            {
-                name: 'The soft card',
-                text: 'A white menu of 0.5 rem on the medium shadow, plain headings in the regular face, a solid rule between groups.',
-            },
-            { name: 'Daylight', text: 'A pale wash lightens toward the top of the plate, headings sit on it plainly, entries keep generous air.' },
-            {
-                name: 'The paper sheet',
-                text: 'A lifted corner folds over the plate’s top right, faint writing rules run behind the groups, hints in a soft grey.',
-            },
-        ],
-        loading: [
-            { name: 'The dashed baseline', text: 'A dashed baseline under the loading row drifts to the right, then starts again.' },
-            {
-                name: 'Out of focus',
-                text: 'The loading row’s words breathe out of focus (blur and brightness up and back); nothing crosses the row.',
-            },
-            { name: 'A cloud passes', text: 'The soft shadow of a cloud drifts across the loading row, slowly, and returns.' },
-        ],
-        open: [
-            { name: 'Unfolds', text: 'The menu opens from its middle like a folded card, and folds back to its middle to close.' },
-            { name: 'Sunrise', text: 'The menu rises softly from the button’s edge, slowing as it lands, and sinks back the same way to close.' },
-            {
-                name: 'Out of the glare',
-                text: 'The menu comes into focus under its button, out of a blurred, too bright glare, 700 ms on a long settle, and goes back into the glare to close.',
-            },
-        ],
-        tone: [
-            {
-                name: 'The band',
-                text: 'The destructive entry carries a 3 px band of the destructive colour along its top and its words in the same ink, with a soft pill under the pointer.',
-            },
-            {
-                name: 'The soft outline',
-                text: 'The destructive entry is ringed in a soft outline of its own ink; the disabled reason sits in a lighter, smaller line.',
-            },
-            {
-                name: 'The warm edge',
-                text: 'A warm band glows along the destructive entry’s top edge; a disabled entry’s reason carries a soft dot before it.',
-            },
-        ],
-        interact: [
-            {
-                name: 'Settles toward the paper',
-                text: 'A hovered entry takes the muted wash, a focused one the two-channel ring inside the entry, a pressed one lands 2 px and flashes.',
-            },
-            { name: 'The glow', text: 'A hovered or focused entry’s plate glows a touch warmer; a press dims it back for a moment.' },
-            { name: 'The round pill', text: 'A hovered or focused entry gets a soft rounded fill behind it; a press shrinks the fill by a hair.' },
-        ],
-    },
     dark: {
         shape: [
             {
@@ -843,7 +792,6 @@ const LABEL = Object.fromEntries(THEMES.map((t) => [t.name, t.label]));
  */
 const PICKED = {
     formal: ['1', '1', '1', '1', '1'],
-    light: ['1', '2', '3', '1', '1'],
     dark: ['2', '3', '3', '3', '1'],
     synthwave: ['2', '1', '3', '1', '1'],
     pastel: ['1', '2', '3', '2', '2'],

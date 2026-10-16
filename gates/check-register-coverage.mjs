@@ -43,7 +43,6 @@ export const REGISTERS = [
     'css/pastel-register.css',
     'css/forest-register.css',
     'css/deco-register.css',
-    'css/light-register.css',
     'css/grotesk-register.css',
     'css/blueprint-register.css',
     'css/nostromo-register.css',

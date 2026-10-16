@@ -9,13 +9,6 @@
             "failure": "3",
             "phone": "1"
         },
-        "light": {
-            "shape": "2",
-            "loading": "1",
-            "arrival": "2",
-            "failure": "1",
-            "phone": "1"
-        },
         "dark": {
             "shape": "1",
             "loading": "1",

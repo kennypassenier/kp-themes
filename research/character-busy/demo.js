@@ -152,78 +152,6 @@ const IDEAS = {
             },
         ],
     },
-    light: {
-        shape: [
-            {
-                name: 'The soft card',
-                text: 'A white panel lifted on a soft shadow with a wide radius, the words in the regular face.',
-            },
-            {
-                name: 'The white card',
-                text: 'A white panel on the veil, told apart by the medium shadow and a hairline seam: no wash from above and no frame all round.',
-            },
-            {
-                name: 'The paper sheet',
-                text: 'A small radius and a lifted corner fold at the top right, faint writing rules behind the words.',
-            },
-        ],
-        loading: [
-            {
-                name: 'Out of focus',
-                text: 'The panel’s words breathe out of focus (blur and brightness up and back, 3.6 s) while the spinner’s bead burns out and comes back into focus; nothing is drawn under them.',
-            },
-            {
-                name: 'Daylight crosses',
-                text: 'A soft band of the primary wash crosses the panel from one side to the other and begins again.',
-            },
-            {
-                name: 'A cloud passes',
-                text: 'A soft round shadow drifts across the panel’s face, slow, like a cloud over a lawn.',
-            },
-        ],
-        arrival: [
-            {
-                name: 'At once',
-                text: 'The panel is there the moment the table turns busy, full size, no entrance of its own.',
-            },
-            {
-                name: 'Out of the glare',
-                text: 'The panel comes into focus where it stands, out of a blurred, too bright glare, 700 ms on a long settle; it never rises or unfolds.',
-            },
-            {
-                name: 'Sunrise',
-                text: 'The panel rises from the row below it, slowing as it lands, as a sun clears the sill.',
-            },
-        ],
-        failure: [
-            {
-                name: 'The band and the pill',
-                text: 'The failed alert is a white card with a 3 px band of the destructive colour along its top and the medium shadow; it comes into focus where it stands.',
-            },
-            {
-                name: 'The outlined notice',
-                text: 'The alert is drawn in a soft outline of the destructive ink over its own plate, no fill change.',
-            },
-            {
-                name: 'The coloured tab',
-                text: 'A band of the destructive colour runs along the top edge of the alert, the rest the soft card.',
-            },
-        ],
-        phone: [
-            {
-                name: 'The flat card',
-                text: 'The panel lies flat with its soft shadow kept only along the top edge.',
-            },
-            {
-                name: 'The sheet strip',
-                text: 'The panel narrows to a strip with its folded corner kept small at the inline-start.',
-            },
-            {
-                name: 'The daylight strip',
-                text: 'The wash narrows to a thin band along the top of the flattened panel.',
-            },
-        ],
-    },
     dark: {
         shape: [
             {
@@ -1250,7 +1178,6 @@ const section = /** @type {HTMLElement} */ (document.querySelector('[data-review
 // rest, busy's new shapes and the phone where he gave none, stays open.
 const KEPT = {
     formal: { shape: '1', loading: '3', failure: '3', arrival: '3', phone: '1' },
-    light: { shape: '2', loading: '1', arrival: '2', failure: '1', phone: '1' },
     dark: { shape: '1', loading: '1', arrival: '1', failure: '2', phone: '1' },
     cyberpunk: { loading: '1', arrival: '1', failure: '1', phone: '1', shape: '2' },
     synthwave: { loading: '3', arrival: '1', failure: '1', shape: '1', phone: '1' },

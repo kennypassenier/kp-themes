@@ -120,78 +120,6 @@ const IDEAS = {
             },
         ],
     },
-    light: {
-        shape: [
-            {
-                name: 'The hairline track',
-                text: 'A flat indigo share on a hairline track, the mark a plain stroke with a white edge; nothing brightens, shadows or glints.',
-            },
-            {
-                name: 'The seam and its circle',
-                text: "Light's divider as a meter: a 1px seam, the share an indigo pill laid over it, and the mark the divider's own open circle resting on the seam. Past the end the seam runs on to a small cyan circle.",
-            },
-            {
-                name: 'The folded note',
-                text: 'A paper note lifted off the page by a soft shadow; the share is indigo laid inside its edge; the mark is a paper pin with a cyan head; past the end the note’s corner folds over.',
-            },
-        ],
-        loading: [
-            {
-                name: 'Out of focus',
-                text: 'The track breathes out of focus (blur and brightness up and back) while it measures.',
-            },
-            {
-                name: 'The shadow swings',
-                text: 'The thin shadow of a gnomon sweeps across the track.',
-            },
-            {
-                name: 'Through the window',
-                text: 'Window panes of light drift along the track.',
-            },
-        ],
-        arrival: [
-            {
-                name: 'Morning light',
-                text: 'The share is drawn in from the left slowing as it lands.',
-            },
-            {
-                name: 'Exposed along its length',
-                text: 'The share is exposed from its start to its end, out of a blurred, too bright glare, 700 ms on a long settle.',
-            },
-            {
-                name: 'Through the window',
-                text: 'The share is drawn in from the left in 4 hard steps.',
-            },
-        ],
-        tone: [
-            {
-                name: 'Morning light',
-                text: 'A new tone draws the share again in the new colour, the way the picked arrival brings it.',
-            },
-            {
-                name: 'Re-exposed',
-                text: 'A new tone puts the meter into the glare for a beat and brings it back into focus, in place.',
-            },
-            {
-                name: 'Through the window',
-                text: 'A new tone knocks the meter up and back once, slowing as it lands.',
-            },
-        ],
-        mark: [
-            {
-                name: 'Morning light',
-                text: "The mark moves easing in and out; a mark past the end stops at the meter's end, › after it.",
-            },
-            {
-                name: 'The upright mark',
-                text: 'The mark moves on the settle; a mark past the end stops at the meter’s end, upright, with no sign after it.',
-            },
-            {
-                name: 'Through the window',
-                text: 'The mark moves in 4 hard steps; a mark past the end stands just outside the end, › after it.',
-            },
-        ],
-    },
     dark: {
         shape: [
             {
@@ -1213,7 +1141,6 @@ const IDEAS = {
  */
 const PICKED = {
     formal: ['1', '2', '1', '1', '2'],
-    light: ['1', '1', '2', '2', '2'],
     dark: ['1', '', '2', '3', '3'],
     synthwave: ['1', '2', '2', '2', '1'],
     pastel: ['1', '1', '3', '1', '2'],

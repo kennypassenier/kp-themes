@@ -3,7 +3,6 @@ import { ACT, FAC, STA } from './looks.mjs';
 
 // Round 5 asks the fifteen non-formal themes, so formal's approved lines stay in looks.mjs but leave the page.
 const THEMES = [
-    ['light', 'Light'],
     ['dark', 'Dark'],
     ['cyberpunk', 'Cyberpunk'],
     ['synthwave', 'Synthwave'],

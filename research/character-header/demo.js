@@ -94,44 +94,6 @@ const IDEAS = {
             },
         ],
     },
-    light: {
-        shape: [
-            {
-                name: 'The soft card',
-                text: 'A white header of 0.5 rem on the small shadow, the title at 600, the actions as pills with a soft shadow.',
-            },
-            {
-                name: 'Daylight',
-                text: 'A pale sky wash behind the title, the actions as bright pill buttons with a gentle lift, the overflow a soft outline pill.',
-            },
-            {
-                name: 'The paper sheet',
-                text: 'A sheet of paper with a lifted corner at the top right, the title in indigo, the actions as flat paper tabs along the fold.',
-            },
-        ],
-        menu: [
-            {
-                name: 'Out of the glare',
-                text: 'The panel comes into focus where it hangs under its button, out of a blurred, too bright glare, 700 ms on a long settle; it goes back into the glare to close.',
-            },
-            { name: 'Floats down', text: 'The menu drifts down and settles with a soft bounce; it drifts back up the same way to close.' },
-            {
-                name: 'A cloud passes',
-                text: 'The menu’s shadow grows as it drops into place; the shadow shrinks away the same way as it closes.',
-            },
-        ],
-        interactive: [
-            {
-                name: 'The soft lift',
-                text: 'A button lifts a little higher on hover, gets a soft outer ring on focus, and sinks back down on press.',
-            },
-            {
-                name: 'Settles toward the paper',
-                text: 'A button in the header is light’s own: it settles 2 px and its shadow tightens when pointed at, wears the two-channel ring when focused, and lands flat and flashes when pressed.',
-            },
-            { name: 'The gentle press', text: 'Hover brightens a button’s fill, focus draws a dashed halo, press dents the pill softly inward.' },
-        ],
-    },
     dark: {
         shape: [
             {

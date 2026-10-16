@@ -130,78 +130,6 @@ const IDEAS = {
             },
         ],
     },
-    light: {
-        shape: [
-            {
-                name: 'The soft card',
-                text: 'A white panel lifted on a soft shadow with a wide radius, the head and foot each a hair lighter than the body, the scroll edge a soft inner shadow.',
-            },
-            {
-                name: 'The daylight pane',
-                text: 'A pale sky wash tops the panel and fades toward the card colour by the body, the foot sits on a thin warm-grey rule.',
-            },
-            {
-                name: 'The paper sheet',
-                text: 'A sheet with a small radius and a lifted corner fold at the top of the head, faint writing rules run the body, the foot is a soft fold shadow.',
-            },
-        ],
-        openclose: [
-            {
-                name: 'It slides on daylight',
-                text: 'The panel slides in from the end edge while a soft highlight sweeps across its face in the same direction; closing slides it out while the sweep reverses.',
-            },
-            {
-                name: 'It drifts in like a curtain',
-                text: 'The panel eases in with a gentle overshoot and settle, as a light curtain drawn shut; closing eases it out with the same settle, reversed.',
-            },
-            {
-                name: 'It lifts off the sheet',
-                text: 'The panel rises in scale from 97% to 100% as it slides in, like a sheet lifted off a stack; closing shrinks it back to 97% as it slides out.',
-            },
-        ],
-        highlight: [
-            {
-                name: 'The soft halo',
-                text: 'A soft, wide halo of card-coloured light surrounds the target; the rest of the stage takes a gentle grey wash.',
-            },
-            {
-                name: 'The daylight beam',
-                text: 'A warm beam-shaped glow falls across the target from the upper corner; the rest of the stage dims to overcast grey.',
-            },
-            {
-                name: 'The pencil circle',
-                text: 'A thin, rounded pencil-like ring circles the target loosely, slightly off-centre; the stage behind takes a pale wash.',
-            },
-        ],
-        card: [
-            {
-                name: 'The plain card',
-                text: 'The tour card is a white card of 0.5 rem on all four corners, on the medium shadow, its title at 600.',
-            },
-            {
-                name: 'The sunlit card',
-                text: 'A white card with a warm top edge fading toward plain white by the foot, the title bold, the foot in a muted rule-free row.',
-            },
-            {
-                name: 'The paper tab',
-                text: 'A card with one corner turned up as a tab, the title set over a thin warm-grey underline, the foot airy with generous gaps.',
-            },
-        ],
-        next: [
-            {
-                name: 'Re-exposed',
-                text: 'On the next step the card goes into the glare for a beat and comes back into focus, in place.',
-            },
-            {
-                name: 'The beam swings',
-                text: 'The daylight beam swings like a spotlight from the old target to the new, slowing as it arrives; the card’s text changes once it stops.',
-            },
-            {
-                name: 'The tab is peeled',
-                text: 'The card lifts slightly, as a tab peeled up, moves to sit by the new target, and settles back down; the text changes at the settle.',
-            },
-        ],
-    },
     dark: {
         shape: [
             {
@@ -1201,7 +1129,6 @@ const IDEAS = {
  */
 const PICKED = {
     formal: ['1', '3', '1', '1', '2'],
-    light: ['1', '3', '1', '1', '1'],
     dark: ['1', '1', '1', '2', '2'],
     cyberpunk: ['2', '2', '1', '1', '3'],
     synthwave: ['2', '2', '1', '1', '2'],

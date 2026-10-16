@@ -154,10 +154,10 @@ test('the picker remembers each half across a reload [TH88]', { tag: ['@componen
     await page.evaluate(() => window.scrollTo(0, 400));
     await page.click('#pane-left .kp-icon-button');
     await opened(page, '#sc-menu-left');
-    await page.click('#sc-menu-left [data-kp-theme="light"]');
+    await page.click('#sc-menu-left [data-kp-theme="pastel"]');
     await page.reload();
     await page.waitForSelector('.kp-icon-button');
-    await expect(page.locator('#pane-left')).toHaveAttribute('data-theme', 'light');
+    await expect(page.locator('#pane-left')).toHaveAttribute('data-theme', 'pastel');
 });
 
 test(

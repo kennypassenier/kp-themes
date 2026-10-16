@@ -9,13 +9,6 @@
             "interactive": "2",
             "live": "3"
         },
-        "light": {
-            "shape": "3",
-            "loading": "2",
-            "tone": "3",
-            "interactive": "2",
-            "live": "2"
-        },
         "dark": {
             "shape": "3",
             "loading": "1",

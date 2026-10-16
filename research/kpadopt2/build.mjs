@@ -25,7 +25,7 @@ const grids = readFileSync(new URL('./parts/grids.html', import.meta.url), 'utf8
 // Round 5 (2026-10-16) asks the fifteen other themes for every section, all approved in formal in rounds 1 to 4
 // (research/kpadopt2/VERDICTS.json; gates/check-rereview.mjs refuses a page that offers an approved pair). Formal leaves the page.
 const OPEN = ['actions', 'status', 'facets', 'heat', 'matrix', 'barcell', 'week', 'week-crowd', 'week-states', 'gantt', 'gantt-states'];
-const THEMES = 'light,dark,cyberpunk,synthwave,pastel,forest,blueprint,solstice,brutalism,deco,grotesk,nostromo,titanium';
+const THEMES = 'dark,cyberpunk,synthwave,pastel,forest,blueprint,solstice,brutalism,deco,grotesk,nostromo,titanium';
 // Kenny reopened four faults in formal on 2026-10-16 15:46 ("formal-faults: Herstellen"; research/approved-formal-notes.md):
 // the sections that show them ask formal again in this same round, beside the fifteen other themes. The page names formal
 // too (the review dialog walks the page's themes); every other section names only the fifteen.
@@ -65,7 +65,7 @@ const openOnly = (html) =>
 
 const html = `<!doctype html>
 <!-- Written by research/kpadopt2/build.mjs; edit build.mjs, parts/, demo-*.css and demo-*.js, not this file. -->
-<html lang="en" data-theme="light" data-review="kpadopt2" data-review-themes="formal,${THEMES}">
+<html lang="en" data-theme="formal" data-review="kpadopt2" data-review-themes="formal,${THEMES}">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -86,7 +86,7 @@ const html = `<!doctype html>
                     t = t || localStorage.getItem('theme');
                 } catch (e) {}
                 if (t) d.setAttribute('data-theme', t);
-                var theme = d.getAttribute('data-theme') || 'light';
+                var theme = d.getAttribute('data-theme') || 'formal';
                 document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
             })();
         </script>
