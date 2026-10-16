@@ -107,6 +107,12 @@ export const PAGES = [
             // Kenny, 2026-10-12: "Cyberpunk lijkt af, zie dat dezelfde fouten nu niet terugkomen in andere thema's": every other theme mended so a close is its open backwards with the theme's own effect; only what changed, each block in the themes where it did (research/all-themes).
             // Kenny, 2026-10-16 (kp-adopt-rest, round 2): eight things the admin dashboard still draws itself (action tiles, status rows, the facet list, the coverage heat grid, the reachability matrix, bars in table cells with data-kp-sort-value, the week agenda, the run timeline), built in the package first as ONE demo, formal only until Kenny approves it.
             // Kenny, 2026-10-16 (kp-adopt-rest, round 3): six things the dashboard still drew itself, each an opt-in option of an approved component (nav separator, choice-filter value, timeline day buttons and series legend, the week's next-N phone list, facet identity patterns, the heat grid's jump to the latest), formal only.
+            // 2026-10-16 (component survey G1, G4, G12, G17, G18, G20, G24): data pieces every app drew itself, built in the package first, formal only.
+            {
+                href: 'research/kpadopt4-data/demo.html',
+                label: 'Identity marks, share bars, bullet rows, key-value grids, form rows, code blocks and live numbers',
+                about: 'Seven things the homelab dashboard, JobTracker, kyu and chassis still draw themselves: .kp-idmark (a plate made from a name), .kp-stackbar (parts of a whole with a legend), .kp-bullets (a value against a threshold per row), .kp-kv and .kp-formrows, .kp-code (payload block with Pretty/Raw, Wrap, Copy, fold), the page header line with a mark and the freshness line, and data-kp-tick (a live number that counts to its new value).',
+            },
         ],
     },
     {
