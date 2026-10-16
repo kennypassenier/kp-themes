@@ -1,0 +1,177 @@
+/* research/kpadopt4-flows: the page's own frame. Everything with a kp- class is the package; these fd- rules only lay the
+   sections out, frame the widths and hold the open dialogs still on the page. */
+
+.fd-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.fd-intro,
+.fd-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.fd-intro :is(h1, p),
+.fd-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.fd-intro p,
+.fd-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.fd-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+/* The "Expected:" block: what to see and what each control does. */
+.fd-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.fd-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.fd-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.fd-label {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-xs, 0.75rem);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+/* A grid of equal cells: every example of a state in a cell of the same width. */
+.fd-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 22rem), 1fr));
+    gap: var(--kp-space-lg, 1.5rem) var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.fd-grid--3 {
+    align-items: stretch;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+}
+
+.fd-cell {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 0;
+}
+
+.fd-note {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-xs, 0.75rem);
+}
+
+/* A phone: 390 px wide, the component inside it as on the device. */
+.fd-phone {
+    box-sizing: border-box;
+    inline-size: min(100%, 390px);
+    padding: var(--kp-space-md, 0.75rem);
+    border: 1px solid var(--border-strong);
+    border-radius: calc(var(--radius, 0.5rem) * 2);
+    background: var(--background);
+}
+
+.fd-frame {
+    min-inline-size: 0;
+    padding: var(--kp-space-md, 0.75rem);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+}
+
+.fd-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* An open dialog held still in the page, so it is seen without opening it: the package's own dialog and its parts,
+   only taken out of the top layer. */
+.fd-stage {
+    display: grid;
+    justify-items: center;
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem) var(--kp-space-md, 0.75rem);
+    border: 1px dashed var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: hsl(from var(--foreground) h s l / 0.06);
+}
+
+.fd-stage > dialog[open] {
+    position: static;
+    inset: auto;
+    margin: 0;
+    max-inline-size: 100%;
+    max-block-size: none;
+}
+
+.fd-sample {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* The journey with its dated line and facts, as a dossier card lays them out. */
+.fd-journey {
+    display: grid;
+    gap: var(--kp-space-md, 0.75rem);
+    min-inline-size: 0;
+}
+
+.fd-facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+    gap: var(--kp-space-sm, 0.5rem);
+    margin: 0;
+}
+
+.fd-facts > div {
+    display: grid;
+    gap: 0.125rem;
+    min-inline-size: 0;
+    padding: var(--kp-space-sm, 0.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--kp-radius-sm, 0.25rem);
+}
+
+.fd-facts dt {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-xs, 0.75rem);
+}
+
+.fd-facts dd {
+    margin: 0;
+    font-variant-numeric: tabular-nums;
+}
