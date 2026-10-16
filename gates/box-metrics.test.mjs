@@ -200,8 +200,6 @@ export const MAY_KEEP = {
     // Option B [scope-87]: block padding that is a painted bar's or a frame's inset, not the heading's size.
     "deco-register.css [data-theme='deco'] [data-kp-surface] h1[data-kp-reveal='headline'] padding":
         'the headline is set in a cartouche, a stepped frame drawn around it: the padding is the room between the frame and the words.',
-    "terminal-register.css [data-theme='terminal'] [data-kp-surface] h1 min-block-size":
-        'the headline is typed out character by character; the floor holds two lines of room so the page below does not jump while it types.',
     "cyberpunk-register.css [data-theme='cyberpunk'] [data-kp-surface] h2 padding-top":
         'the room above the words where the four corner brackets are painted (background gradients): without it the brackets cross the letters.',
 };

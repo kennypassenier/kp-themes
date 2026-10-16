@@ -157,23 +157,6 @@ const IDEAS = {
             { name: 'Popped', text: 'The sticker pops up once, overshooting, then lands.' },
         ],
     },
-    terminal: {
-        shape: [
-            { name: 'The top(1) row', text: 'The word sits in the mono with an asterisk for a dot, in reverse video on no plate.' },
-            { name: 'The box-drawn tag', text: 'A tag drawn in box-drawing characters holds the word, the dot a filled character cell.' },
-            { name: 'The status line', text: 'The dot is a blinking block cursor before the word, both in the phosphor.' },
-        ],
-        tone: [
-            { name: 'The reverse colour', text: 'Only the reverse-video background takes the state’s colour; the glyphs stay the phosphor.' },
-            { name: 'The bracket colour', text: 'The box-drawn tag’s rule takes the state’s colour, the word kept in the phosphor.' },
-            { name: 'The alert blink', text: 'A warning or failed state also colours the blinking cursor.' },
-        ],
-        change: [
-            { name: 'A blip', text: 'The dot flares with light once, slowing as it lands.' },
-            { name: 'Redrawn', text: 'The tag’s box-drawing rule redraws left to right under the new word.' },
-            { name: 'The cursor blinks faster', text: 'The cursor blinks twice quickly once, then returns to its steady rate.' },
-        ],
-    },
     forest: {
         shape: [
             { name: 'The trail marker', text: 'A small round trail-blaze marker sits before the word, the word in serif italic on no plate.' },

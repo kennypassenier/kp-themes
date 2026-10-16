@@ -52,46 +52,14 @@ test(
     { tag: ['@sweep', '@component:site'] },
     () => {
         const furniture = rootFurniture();
-        expect(furniture.length, 'no register draws fixed furniture at all, which cannot be right after the terminal repair').toBeGreaterThan(0);
-
+        // Terminal, the theme whose bezel and sweep this guards against, was
+        // removed on 2026-10-16; the guard stays for the next register that
+        // hangs fixed furniture on the theme attribute.
         const loose = furniture.filter((line) => !line.includes(':root['));
         expect(
             loose,
             `these rules paint fixed furniture on ANY element carrying the theme, so a card previewing that theme covers the whole viewport:\n${loose.join('\n')}`,
         ).toEqual([]);
-    },
-);
-
-// Drill: the `padding: var(--kp-bezel)` rule removed from
-// css/terminal-register.css and the bundle regenerated -> red, naming the
-// skip link and the first navigation link. Restored: green.
-test(
-    'nothing readable sits under the bezel on a page wearing terminal [Kenny 2026-09-12]',
-    { tag: ['@theme:terminal', '@component:site'] },
-    async ({ page }) => {
-        await page.setViewportSize({ width: 1600, height: 900 });
-        await page.goto('/site/index.html');
-        await page.evaluate(() => document.documentElement.setAttribute('data-theme', 'terminal'));
-
-        const hidden = await page.evaluate(() => {
-            const bezel = Number.parseFloat(getComputedStyle(document.documentElement, '::before').borderLeftWidth);
-            if (!Number.isFinite(bezel) || bezel <= 0) return { bezel, under: ['the bezel is not drawn at all'] };
-            const under = [];
-            for (const el of document.querySelectorAll('a, button, input, h1, h2, p, li, code')) {
-                const r = el.getBoundingClientRect();
-                if (r.width === 0 || r.height === 0) continue;
-                // Off-screen by design — a skip link parks at -9999 until focused.
-                if (r.left < -100 || r.top < -100) continue;
-                if (r.left < bezel - 0.5 || r.top < bezel - 0.5)
-                    under.push(
-                        `${el.tagName.toLowerCase()} "${(el.textContent || '').trim().slice(0, 24)}" at ${Math.round(r.left)},${Math.round(r.top)}`,
-                    );
-            }
-            return { bezel, under };
-        });
-
-        expect(hidden.bezel, 'the bezel should be drawn — this test is about what it covers').toBeGreaterThan(0);
-        expect(hidden.under, `the bezel is ${hidden.bezel}px and these sit under it:\n${hidden.under.join('\n')}`).toEqual([]);
     },
 );
 
@@ -120,6 +88,8 @@ test(
         });
 
         expect(leaked, `a card previewing a theme paints fixed furniture over the whole page:\n${leaked.join('\n')}`).toEqual([]);
-        expect(THEMES.length, 'the page should carry a card per theme').toBeGreaterThan(15);
+        expect(THEMES.length, 'the page should carry a card per theme').toBe(
+            JSON.parse(readFileSync(new URL('../themes/order.json', import.meta.url), 'utf8')).length,
+        );
     },
 );

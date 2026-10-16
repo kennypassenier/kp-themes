@@ -350,11 +350,6 @@
                                             </button>
                                         </li>
                                         <li>
-                                            <button type="button" data-kp-theme="terminal">
-                                                <span class="kp-swatch" data-theme="terminal"></span>Terminal
-                                            </button>
-                                        </li>
-                                        <li>
                                             <button type="button" data-kp-theme="blueprint">
                                                 <span class="kp-swatch" data-theme="blueprint"></span>Blueprint
                                             </button>
@@ -390,11 +385,11 @@
             <section class="cat-block" id="theme-menu-react">
                 <h2>Theme menu, React shape</h2>
                 <div class="cat-look">
-                    <b>Look at:</b> the same menu as <code>components/theme-switcher.jsx</code> renders it, frozen open with Terminal chosen: the list
-                    is a <code>.kp-theme-menu__list</code> under the button at its end edge, each option has its label in
+                    <b>Look at:</b> the same menu as <code>components/theme-switcher.jsx</code> renders it, frozen open with Cyberpunk chosen: the
+                    list is a <code>.kp-theme-menu__list</code> under the button at its end edge, each option has its label in
                     <code>.kp-theme-option__label</code> and the chosen one a drawn check (<code>.kp-theme-option__check</code>) instead of the text
                     glyph. Put it beside the block above: the two channels must be indistinguishable apart from that check. This copy is not attached
-                    — its check stays on Terminal whatever the page wears, because only React moves it.
+                    — its check stays on Cyberpunk whatever the page wears, because only React moves it.
                 </div>
                 <div class="cat-stage cat-stage--block" style="contain: layout; min-block-size: 46rem">
                     <div style="display: flex; justify-content: flex-end; max-inline-size: 24rem">
@@ -439,17 +434,9 @@
                                             <li role="option" data-kp-theme="dark" data-selected="false" aria-selected="false" tabindex="-1">
                                                 <span class="kp-swatch" data-theme="dark"></span><span class="kp-theme-option__label">Dark</span>
                                             </li>
-                                            <li role="option" data-kp-theme="cyberpunk" data-selected="false" aria-selected="false" tabindex="-1">
+                                            <li role="option" data-kp-theme="cyberpunk" data-selected="true" aria-selected="true" tabindex="0">
                                                 <span class="kp-swatch" data-theme="cyberpunk"></span
-                                                ><span class="kp-theme-option__label">Cyberpunk</span>
-                                            </li>
-                                            <li role="option" data-kp-theme="synthwave" data-selected="false" aria-selected="false" tabindex="-1">
-                                                <span class="kp-swatch" data-theme="synthwave"></span
-                                                ><span class="kp-theme-option__label">Synthwave</span>
-                                            </li>
-                                            <li role="option" data-kp-theme="terminal" data-selected="true" aria-selected="true" tabindex="0">
-                                                <span class="kp-swatch" data-theme="terminal"></span
-                                                ><span class="kp-theme-option__label">Terminal</span
+                                                ><span class="kp-theme-option__label">Cyberpunk</span
                                                 ><svg
                                                     class="kp-theme-option__check"
                                                     viewBox="0 0 24 24"
@@ -462,6 +449,10 @@
                                                 >
                                                     <path d="M20 6 9 17l-5-5"></path>
                                                 </svg>
+                                            </li>
+                                            <li role="option" data-kp-theme="synthwave" data-selected="false" aria-selected="false" tabindex="-1">
+                                                <span class="kp-swatch" data-theme="synthwave"></span
+                                                ><span class="kp-theme-option__label">Synthwave</span>
                                             </li>
                                             <li role="option" data-kp-theme="blueprint" data-selected="false" aria-selected="false" tabindex="-1">
                                                 <span class="kp-swatch" data-theme="blueprint"></span
@@ -546,11 +537,6 @@
                                 <li>
                                     <button type="button" data-kp-theme="synthwave">
                                         <span class="kp-swatch" data-theme="synthwave"></span>Synthwave
-                                    </button>
-                                </li>
-                                <li>
-                                    <button type="button" data-kp-theme="terminal">
-                                        <span class="kp-swatch" data-theme="terminal"></span>Terminal
                                     </button>
                                 </li>
                                 <li>

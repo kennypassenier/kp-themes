@@ -50,14 +50,6 @@
             "hover": "1",
             "live": "3"
         },
-        "terminal": {
-            "shape": "2",
-            "loading": "2",
-            "arrival": "2",
-            "tone": "1",
-            "hover": "3",
-            "live": "2"
-        },
         "forest": {
             "shape": "3",
             "loading": "2",

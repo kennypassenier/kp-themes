@@ -83,7 +83,6 @@ export const DESCRIPTORS = [
 <div data-kp-theme-picker>
 <button type="button" data-kp-theme="formal"><span class="kp-swatch" data-theme="formal"></span> Formal</button>
 <button type="button" data-kp-theme="dark"><span class="kp-swatch" data-theme="dark"></span> Dark</button>
-<button type="button" data-kp-theme="terminal"><span class="kp-swatch" data-theme="terminal"></span> Terminal</button>
 </div>
 <p data-kp-theme-status hidden></p>
 `,

@@ -544,7 +544,7 @@ test('the DI5 report rates every flicker cyberpunk keeps under 2.5 per second [s
  * what a Harding analyser does, not a certified one. WCAG allows 3; this
  * holds 2, a margin of one.
  */
-const FLASH_THEMES = ['cyberpunk', 'synthwave', 'nostromo', 'terminal', 'formal', 'pastel'];
+const FLASH_THEMES = ['cyberpunk', 'synthwave', 'nostromo', 'formal', 'pastel'];
 for (const theme of FLASH_THEMES) {
     test(
         `flash rate in ${theme}: at most 2 per second, measured from rendered frames [WCAG 2.3.1]`,

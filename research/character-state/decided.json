@@ -32,11 +32,6 @@
             "tone": "3",
             "change": "2"
         },
-        "terminal": {
-            "shape": "2",
-            "tone": "3",
-            "change": "3"
-        },
         "forest": {
             "shape": "1",
             "tone": "1",

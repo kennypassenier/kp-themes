@@ -112,7 +112,7 @@
         "licence": "OFL-1.1",
         "reservedFontName": true,
         "subset": true,
-        "themes": ["terminal"],
+        "themes": ["cyberpunk", "synthwave"],
         "scripts": ["latin"],
         "upstream": "ofl/sharetechmono",
         "faces": [

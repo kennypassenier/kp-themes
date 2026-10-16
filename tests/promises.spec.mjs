@@ -47,10 +47,10 @@ test('a refused save is shown, not swallowed [AR6]', { tag: ['@component:picker'
             throw new DOMException('blocked', 'QuotaExceededError');
         };
     });
-    await page.click('#plain [data-kp-theme="terminal"]');
+    await page.click('#plain [data-kp-theme="cyberpunk"]');
 
     // The theme still applies — only the remembering failed.
-    await expect(page.locator('html')).toHaveAttribute('data-theme', 'terminal');
+    await expect(page.locator('html')).toHaveAttribute('data-theme', 'cyberpunk');
     const status = page.locator('[data-kp-theme-status]');
     await expect(status).toBeVisible();
     await expect(status).toContainText(S.themeSaveFailed);

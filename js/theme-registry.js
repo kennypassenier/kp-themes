@@ -12,7 +12,7 @@
  * measured on 2026-09-04 carrying a hand-kept copy of which themes
  * exist, and both had it wrong.
  *
- * @typedef {'formal' | 'light' | 'dark' | 'cyberpunk' | 'synthwave' | 'pastel' | 'terminal' | 'forest' | 'blueprint' | 'solstice' | 'brutalism' | 'deco' | 'phantom' | 'grotesk' | 'nostromo' | 'titanium'} ThemeName
+ * @typedef {'formal' | 'light' | 'dark' | 'cyberpunk' | 'synthwave' | 'pastel' | 'forest' | 'blueprint' | 'solstice' | 'brutalism' | 'deco' | 'phantom' | 'grotesk' | 'nostromo' | 'titanium'} ThemeName
  */
 
 /** @typedef {{name: ThemeName, label: string, dark: boolean}} ThemeRecord */
@@ -25,7 +25,6 @@ export const THEMES = Object.freeze([
     { name: 'cyberpunk', label: 'Cyberpunk', dark: true },
     { name: 'synthwave', label: 'Synthwave', dark: true },
     { name: 'pastel', label: 'Pastel', dark: false },
-    { name: 'terminal', label: 'Terminal', dark: true },
     { name: 'forest', label: 'Forest', dark: false },
     { name: 'blueprint', label: 'Blueprint', dark: true },
     { name: 'solstice', label: 'Solstice', dark: true },

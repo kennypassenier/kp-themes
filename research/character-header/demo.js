@@ -284,41 +284,6 @@ const IDEAS = {
             },
         ],
     },
-    terminal: {
-        shape: [
-            {
-                name: 'The top(1) row',
-                text: 'A double box-drawing frame: the title in capitals, the description in dim mono, the actions in reverse-video blocks.',
-            },
-            {
-                name: 'The dumb-terminal plot',
-                text: 'gnuplot’s dumb terminal: the actions bracketed in rules, the title in bold mono, no colour beyond the phosphor.',
-            },
-            {
-                name: 'The curses window',
-                text: 'A single-line curses box: the title ruled off, the actions boxed in a fainter rule, square and plain.',
-            },
-        ],
-        menu: [
-            {
-                name: 'Printed',
-                text: 'The menu prints in from the top line by line, the caret blinking after each; it erases the same way, bottom up, to close.',
-            },
-            {
-                name: 'Paged in',
-                text: 'The menu drops into place from above in hard steps, like a page scrolling; it scrolls back up the same way to close.',
-            },
-            { name: 'The hash bar fills', text: 'A row of # blocks fills in to reveal the menu; the blocks clear the same way to close it.' },
-        ],
-        interactive: [
-            {
-                name: 'Reverse video',
-                text: 'Hover shows a button in reverse video, focus dashes a box round it, press holds the reverse for the moment held.',
-            },
-            { name: 'The block caret', text: 'Hover blinks a caret beside a button, focus underlines it, press flashes it in reverse once.' },
-            { name: 'The bell', text: 'Hover underlines a button, focus boxes it dashed, press flashes it in reverse, as a terminal bell line.' },
-        ],
-    },
     forest: {
         shape: [
             {

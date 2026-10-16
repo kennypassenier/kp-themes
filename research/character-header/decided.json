@@ -32,11 +32,6 @@
             "menu": "1",
             "interactive": "2"
         },
-        "terminal": {
-            "shape": "3",
-            "menu": "1",
-            "interactive": "1"
-        },
         "forest": {
             "shape": "1",
             "menu": "3",

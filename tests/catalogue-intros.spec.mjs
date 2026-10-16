@@ -44,19 +44,12 @@ async function playFrame(page, query) {
     return page.evaluate(() => ({ elapsed: window.kpIntro.end - window.kpIntro.start, lines: window.kpIntro.lines }));
 }
 
-test.describe('the arrival speed knob, --kp-arrival-rate [scope-84]', { tag: ['@component:page-effects', '@theme:terminal'] }, () => {
-    test('unset, terminal boots in its own time: four steps of 190 ms, 320 ms, and the tube going off', async ({ page }) => {
-        const { elapsed } = await playFrame(page, { theme: 'terminal' });
-        // 4 × 190 + 320 + 420 (kp-tube-off) = 1500 ms, with room for a busy machine.
-        expect(elapsed).toBeGreaterThan(1300);
-        expect(elapsed).toBeLessThan(2200);
-    });
-
+test.describe('the arrival speed knob, --kp-arrival-rate [scope-84]', { tag: ['@component:page-effects', '@theme:synthwave'] }, () => {
     test('at 0.5 the same arrival takes twice as long', async ({ browser }) => {
         const one = await browser.newPage();
         const half = await browser.newPage();
-        const atOne = await playFrame(one, { theme: 'terminal', rate: '1' });
-        const atHalf = await playFrame(half, { theme: 'terminal', rate: '0.5' });
+        const atOne = await playFrame(one, { theme: 'synthwave', rate: '1' });
+        const atHalf = await playFrame(half, { theme: 'synthwave', rate: '0.5' });
         const ratio = atHalf.elapsed / atOne.elapsed;
         expect(ratio, `1×: ${Math.round(atOne.elapsed)} ms, 0.5×: ${Math.round(atHalf.elapsed)} ms`).toBeGreaterThan(1.7);
         expect(ratio).toBeLessThan(2.3);
@@ -98,22 +91,22 @@ test.describe('the intro inspector page [scope-84]', { tag: ['@component:catalog
         await useEmptyRegister(context);
     });
 
-    test('Play plays the arrival, and plays it again although it is once per session', { tag: ['@theme:terminal'] }, async ({ page }) => {
+    test('Play plays the arrival, and plays it again although it is once per session', { tag: ['@theme:synthwave'] }, async ({ page }) => {
         await page.emulateMedia({ reducedMotion: 'no-preference' });
         await page.goto('/catalogue/intros.html');
         await waitForJudging(page);
-        const block = page.locator('#intro-terminal');
-        const frame = page.frameLocator('#intro-terminal iframe');
+        const block = page.locator('#intro-synthwave');
+        const frame = page.frameLocator('#intro-synthwave iframe');
         await block.locator('[data-cat-intro-rate]').fill('2');
         await expect(block.locator('[data-cat-intro-rate-value]')).toHaveText('2.0×');
-        await expect(block.locator('[data-cat-intro-words]')).toContainText('PHOSPHOR PROFILE');
+        await expect(block.locator('[data-cat-intro-words]')).toContainText('Tracking');
 
         for (const round of [1, 2]) {
             await block.locator('[data-cat-intro-play]').click();
             await expect(frame.locator('.kp-boot'), `play ${round} shows the overlay`).toHaveCount(1);
             await expect(block, `play ${round} ends`).toHaveAttribute('data-cat-intro-state', 'ended', { timeout: 10_000 });
             await expect(block.locator('[data-cat-intro-status]')).toContainText(/Played in \d+ ms/);
-            await expect(block.locator('[data-cat-intro-live]')).toContainText('READY.');
+            await expect(block.locator('[data-cat-intro-live]')).toContainText('Press start');
         }
     });
 
@@ -141,7 +134,7 @@ test.describe('the intro inspector page [scope-84]', { tag: ['@component:catalog
         const line = page.locator('[data-cat-intro-none]');
         await expect(line).toHaveText(/^No intro: formal, /);
         await expect(line).not.toContainText('Declares an intro but has no block');
-        for (const theme of ['synthwave', 'terminal', 'phantom']) await expect(line).not.toContainText(theme);
+        for (const theme of ['synthwave', 'phantom']) await expect(line).not.toContainText(theme);
     });
 });
 
@@ -155,18 +148,18 @@ test.describe('the intro inspector page [scope-84]', { tag: ['@component:catalog
 test.describe('the intro blocks work where they are judged [fix-43]', { tag: ['@component:catalogue'] }, () => {
     test.describe.configure({ timeout: 180_000 });
 
-    test('Play plays the arrival on the review page too', { tag: ['@theme:terminal'] }, async ({ page, context }) => {
+    test('Play plays the arrival on the review page too', { tag: ['@theme:synthwave'] }, async ({ page, context }) => {
         await useEmptyRegister(context);
         await page.emulateMedia({ reducedMotion: 'no-preference' });
         await page.goto('/catalogue/index.html');
         await waitForJudging(page, { timeout: 120_000 });
 
-        const block = page.locator('#intros--intro-terminal');
-        await expect(block.locator('[data-cat-intro-words]')).toContainText('PHOSPHOR PROFILE');
+        const block = page.locator('#intros--intro-synthwave');
+        await expect(block.locator('[data-cat-intro-words]')).toContainText('Tracking');
         await block.locator('[data-cat-intro-play]').click();
         await expect(block).toHaveAttribute('data-cat-intro-state', 'ended', { timeout: 30_000 });
         await expect(block.locator('[data-cat-intro-status]')).toContainText(/Played in \d+ ms/);
-        await expect(block.locator('[data-cat-intro-live]')).toContainText('READY.');
+        await expect(block.locator('[data-cat-intro-live]')).toContainText('Press start');
     });
 });
 
@@ -212,7 +205,7 @@ test.describe('the verdict of an intro block is kept under its own theme [scope-
             // are judged under the review page's key, not under their own page.
             expect(await storedThemes(page, 'intros--intro-synthwave')).toEqual(['synthwave']);
             // The other blocks keep their own themes and are still open.
-            await expect(page.locator('#intro-terminal .cat-judge [data-cat-approval-state]')).toHaveText(`Not yet judged · Terminal · ${engine}`);
+            await expect(page.locator('#intro-phantom .cat-judge [data-cat-approval-state]')).toHaveText(`Not yet judged · Phantom · ${engine}`);
 
             const prompt = await page.evaluate(() => import('/catalogue/review-state.js').then((m) => m.buildPrompt().text));
             expect(prompt).toContain('Theme Synthwave:');

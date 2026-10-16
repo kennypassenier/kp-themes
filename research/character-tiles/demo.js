@@ -268,38 +268,6 @@ const IDEAS = {
             { name: 'Squished', text: 'The tile swells once and settles, slowing as it lands.' },
         ],
     },
-    terminal: {
-        shape: [
-            { name: 'The top(1) row', text: 'A double box-drawing frame, the title in capitals, the mark a blinking block.' },
-            { name: 'The dumb-terminal card', text: 'A grid of character cells, the mark an asterisk, the footer underlined.' },
-            { name: 'The curses window', text: 'A single-line box, the title ruled off under it, the mark a bracketed dot.' },
-        ],
-        loading: [
-            { name: 'The top(1) row', text: 'A block caret blinks in the body, once a second.' },
-            { name: 'The dumb-terminal plot', text: 'A row of dots marches across the body.' },
-            { name: 'The hash bar', text: 'A row of # blocks fills the body block by block, then starts over.' },
-        ],
-        arrival: [
-            { name: 'At once', text: 'The title and the body are there the moment loading ends.' },
-            { name: 'Printed', text: 'The body is typed in from the left, character by character.' },
-            { name: 'Paged in', text: 'Tile after tile drops into place from above, in hard steps.' },
-        ],
-        tone: [
-            { name: 'Reverse video', text: 'A warning or destructive tile shows the note in reverse video.' },
-            { name: 'Underlined', text: 'A warning or destructive tile’s note is underlined in its colour.' },
-            { name: 'The bell', text: 'A warning or destructive tile prints its note in reverse on a dashed box, as a terminal bell line.' },
-        ],
-        hover: [
-            { name: 'The cursor lands', text: 'A block caret appears beside the title; Open inverts; focus draws a dashed box.' },
-            { name: 'The row highlights', text: 'The whole row inverts briefly; Open underlines; focus thickens the frame to 2px.' },
-            { name: 'The prompt blinks', text: 'A > prompt blinks before the title; Open gains brackets; focus traces the box twice.' },
-        ],
-        live: [
-            { name: 'Redrawn', text: 'The body text changes in place at once.' },
-            { name: 'Scrolled', text: 'The tile steps up one line, as a terminal scrolls, in hard steps.' },
-            { name: 'Reverse flash', text: 'The tile flashes in reverse once, in hard jumps.' },
-        ],
-    },
     forest: {
         shape: [
             { name: 'The ranger’s logbook', text: 'Kraft paper, the title in serif italic, the mark a wooden tag dot.' },

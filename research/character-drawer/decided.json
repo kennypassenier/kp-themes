@@ -44,13 +44,6 @@
             "card": "3",
             "next": "2"
         },
-        "terminal": {
-            "shape": "r2-term-shape-2",
-            "openclose": "3",
-            "highlight": "3",
-            "card": "3",
-            "next": "1"
-        },
         "forest": {
             "shape": "2",
             "openclose": "1",

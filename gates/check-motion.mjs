@@ -122,16 +122,11 @@ const CSS = stylesheets('motion').map((file) => `../${file}`);
 const OUT_OF_SCOPE = {
     // The phantom register [PH1]: the loader's bar and its shove out, both
     // transforms; the removed Retro register [RT1]: the selection bar and the
-    // redaction brush, both clip-paths; the terminal register [TM1]: the
-    // sweep band; the brutalism register [BR1]: the slam and the marquee.
+    // redaction brush, both clip-paths; the brutalism register [BR1]: the slam and the marquee.
     'kp-bar-run': 'a horizontal scale on a 3px bar, once; no luminance change and nothing over 341x256 px',
     'kp-load-out': 'the arrival overlay skewing and translating off the viewport once; the overlay keeps its colours, only its position moves',
     'kp-drag-select': 'a clip-path widening over a phrase once (the selection bar); under 341x256 px',
     'kp-redact-lift': 'a clip-path narrowing over a phrase once (the redaction brush); under 341x256 px',
-    'kp-sweep': 'a band translating down the viewport once per ten seconds, resting eight of them; a transform, and the band is a 9% tint',
-    'kp-caret': 'a background layer of one character cell appearing and disappearing once a second; rated in TIMINGS at 1/s and under 341x256 px',
-    'kp-caret-reverse':
-        'the colour of the one character under kp-caret switching in step with it, once a second; rated in TIMINGS at 1/s and under 341x256 px',
     'kp-slam': 'a word translating onto its text-shadow once; a transform on a word, under 341x256 px',
     'kp-marquee': 'a strip translating -50% over 42 seconds; the strip keeps its colours, only its position moves',
     // The solstice register [scope-12]: the raking band.
@@ -268,14 +263,6 @@ const OUT_OF_SCOPE = {
     'kp-sig-pastel-meter-drop-d': "a meter's share dropping into its track once, replayed in the destructive tone; a transform, under 341x256 px",
     'kp-sig-pastel-meter-drop-o': "a meter's share dropping into its track once; a transform, under 341x256 px",
     'kp-sig-pastel-meter-drop-w': "a meter's share dropping into its track once, replayed in the warning tone; a transform, under 341x256 px",
-    'kp-sig-terminal-tm-fill':
-        'a custom number running 0 to 1 and back that lights an htop row one cell a step; no opacity or colour stop, under 341x256 px',
-    'kp-sig-terminal-tm-k':
-        'a custom number running 0 to 1 that types a part cell by cell with a block cursor on its head; a clip, once, under 341x256 px',
-    'kp-sig-terminal-tm-feed': 'a block cursor stepping down the lines of a printed dialog once; a position, one cell wide',
-    'kp-sig-terminal-update-blink':
-        'a changed value taking the bright then the dim phosphor three times in 900 ms, once; text colour, never hidden, under 341x256 px',
-    'kp-sig-terminal-update-blink-line': 'a changed sparkline taking the bright then the dim phosphor three times in 900 ms, once; under 341x256 px',
     'kp-sig-forest-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
     'kp-sig-solstice-meter-bump-d': 'a meter swelling once as it turns to the destructive tone; a transform, under 341x256 px',
     'kp-sig-solstice-meter-bump-o': 'a meter swelling once as its tone clears; a transform, under 341x256 px',
@@ -419,8 +406,6 @@ const OUT_OF_SCOPE = {
     'kp-sig-nostromo-size-scan':
         'an arriving part revealed in four scan frames (clip-path) while a brightness filter settles from 1.8 to none once; one monotone change, 80 ms a frame',
     'kp-sig-synthwave-sun': 'the sun sinking below the horizon once (a translate) and hidden at the end; one change from shown to hidden',
-    'kp-sig-terminal-tm-menu-feed':
-        "a panel's paper fed line by line once (the top of a pseudo-element, four 136 ms steps), visible from the first step; one monotone change",
     'kp-sig-titanium-ti-cut':
         "a custom property setting where a dialog's chamfer cut sits as it opens, once; the dialog keeps its colours, only its outline changes",
 };

@@ -233,8 +233,6 @@ export const PAGES = [
             { href: 'research/brutalism-character/demo.html', label: 'What makes brutalism brutalism' },
             // Decided 2026-10-07 23:43: Kenny approved all nineteen grotesk character questions after three updates (research/grotesk-character/decided.json).
             { href: 'research/grotesk-character/demo.html', label: 'What makes grotesk grotesk' },
-            // Decided 2026-10-07 23:43: Kenny approved the sixteen terminal character picks, Loading = an htop row with the cursor its head (research/terminal-character/decided.json).
-            { href: 'research/terminal-character/demo.html', label: 'What makes terminal terminal' },
             // Decided 2026-10-07 23:41: Kenny approved the sixteen blueprint character picks (research/blueprint-character/decided.json).
             { href: 'research/blueprint-character/demo.html', label: 'What makes blueprint blueprint' },
             // Decided 2026-10-07 23:18: Kenny approved solstice's grammar, every recommendation except the focus ring = a halo and the leave = the morning mist (research/solstice-character/decided.json); applied in css/solstice-register.css.

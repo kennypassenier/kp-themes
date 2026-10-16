@@ -190,7 +190,6 @@ const UNSTAMPED_BEFORE = {
     'cyberpunk-character': '2026-10-07T19:24:52Z',
     'solstice-character': '2026-10-07T15:17:44Z',
     'brutalism-character': '2026-10-07T14:24:39Z',
-    'terminal-character': '2026-10-07T19:08:45Z',
     'synthwave-character': '2026-10-07T19:22:41Z',
     'grotesk-character': '2026-10-07T14:24:39Z',
     'nostromo-character': '2026-10-07T15:17:26Z',

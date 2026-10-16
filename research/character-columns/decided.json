@@ -44,13 +44,6 @@
             "tone": "2",
             "live": "1"
         },
-        "terminal": {
-            "shape": "3",
-            "loading": "3",
-            "arrival": "2",
-            "tone": "3",
-            "live": "3"
-        },
         "forest": {
             "shape": "3",
             "loading": "1",

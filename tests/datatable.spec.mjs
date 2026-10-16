@@ -798,7 +798,7 @@ test.describe('datatable — a group folds as its open played backwards', { tag:
         await page.waitForTimeout(400);
     };
 
-    for (const theme of ['formal', 'cyberpunk', 'terminal']) {
+    for (const theme of ['formal', 'cyberpunk']) {
         test(`${theme}: the box eases shut while the rows go, frame t of the fold is frame T - t of the open`, async ({ page }) => {
             const errors = /** @type {string[]} */ ([]);
             page.on('console', (message) => message.type() === 'error' && errors.push(message.text()));

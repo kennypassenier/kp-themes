@@ -512,78 +512,6 @@ const IDEAS = {
             },
         ],
     },
-    terminal: {
-        shape: [
-            {
-                name: 'The top(1) row',
-                text: 'Everything in the mono, the words in capitals, a square frame in the phosphor colour.',
-            },
-            {
-                name: 'The dumb-terminal plot',
-                text: 'A grid of character cells behind the words, the frame drawn in rule characters.',
-            },
-            {
-                name: 'The curses window',
-                text: 'A double-line box frame around the panel, the words in the mono, a status bar rule at the foot.',
-            },
-        ],
-        loading: [
-            {
-                name: 'The cursor blinks',
-                text: 'A block cursor at the end of the words appears and disappears on a hard beat, no fade.',
-            },
-            {
-                name: 'The marquee scrolls',
-                text: 'The words’ row scrolls a trailing dot pattern from right to left and loops.',
-            },
-            {
-                name: 'The spinner cycles',
-                text: 'A single ASCII-style glyph in the frame’s corner steps through a short cycle, hard, looping.',
-            },
-        ],
-        arrival: [
-            {
-                name: 'At once',
-                text: 'The panel is there the moment the table turns busy, full size, no entrance of its own.',
-            },
-            {
-                name: 'Printed',
-                text: 'The panel’s frame draws itself top to bottom in rule characters, then the panel fills in.',
-            },
-            {
-                name: 'Paged in',
-                text: 'The panel scrolls up from the row below it in hard character-row steps.',
-            },
-        ],
-        failure: [
-            {
-                name: 'The bell',
-                text: 'The failed alert’s frame flashes to the destructive colour once, hard, then holds.',
-            },
-            {
-                name: 'Reverse flash',
-                text: 'The alert’s frame and words swap to reverse video in the destructive pair.',
-            },
-            {
-                name: 'The core dump',
-                text: 'A block of character-cell marks fills the alert’s corner in the destructive colour.',
-            },
-        ],
-        phone: [
-            {
-                name: 'The flat row',
-                text: 'The panel flattens to one mono row, the square frame kept thin along the top.',
-            },
-            {
-                name: 'The flat plot',
-                text: 'The character-cell grid narrows to a single row behind the words.',
-            },
-            {
-                name: 'The flat window',
-                text: 'The double-line frame narrows to a single rule along the top of the panel.',
-            },
-        ],
-    },
     forest: {
         shape: [
             {
@@ -1399,7 +1327,6 @@ const KEPT = {
     cyberpunk: { loading: '1', arrival: '1', failure: '1', phone: '1', shape: '2' },
     synthwave: { loading: '3', arrival: '1', failure: '1', shape: '1', phone: '1' },
     pastel: { loading: '2', arrival: '2', failure: '3', shape: '1', phone: '1' },
-    terminal: { loading: '1', arrival: '1', failure: '1', shape: '1', phone: '1' },
     forest: { loading: '1', arrival: '2', shape: '2', phone: '3', failure: '1' },
     'high-contrast': { loading: '1', arrival: '1', failure: '1', shape: '2', phone: '1' },
     sepia: { loading: '3', arrival: '2', failure: '1', shape: '3', phone: '1' },

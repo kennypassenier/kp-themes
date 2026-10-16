@@ -444,14 +444,6 @@ export const TIMINGS = Object.freeze({
     'kp-dither-out': { durationMs: 520, cycles: 1, property: 'opacity', luminanceSteps: [1, 1, 1, 1, 0] },
     'kp-drag-select': { durationMs: 360, cycles: 1, property: 'clip-path', luminanceSteps: [] },
     'kp-redact-lift': { durationMs: 400, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    // The terminal register [TM1]: the sweep band that rests eight of ten
-    // seconds and the tube collapsing the boot screen.
-    'kp-sweep': { durationMs: 10000, cycles: Infinity, property: 'transform', luminanceSteps: [] },
-    'kp-tube-off': { durationMs: 420, cycles: 1, property: 'opacity', luminanceSteps: [1, 1, 0] },
-    // The cursor in the box [TM2, R6-Q7]: one character cell on and off, once a second.
-    'kp-caret': { durationMs: 1000, cycles: Infinity, property: 'background-size', luminanceSteps: [1, 1, 0, 0] },
-    // The character the cursor stands on (the ghost button's `]`), reversed in step with kp-caret.
-    'kp-caret-reverse': { durationMs: 1000, cycles: Infinity, property: 'color', luminanceSteps: [1, 1, 0, 0] },
     // The alarm [scope-94]: the plate fading in, the frame's glow breathing
     // (one half-cycle per 1.4 s), the panel flickering in once (cyberpunk's
     // own keyframe since scope-100, below), each letter cell's two noise glyphs and its letter (once per
@@ -655,14 +647,6 @@ export const TIMINGS = Object.freeze({
     'kp-sig-pastel-meter-drop-d': { durationMs: 600, cycles: 1, property: 'translate', luminanceSteps: [] },
     'kp-sig-pastel-meter-drop-o': { durationMs: 600, cycles: 1, property: 'translate', luminanceSteps: [] },
     'kp-sig-pastel-meter-drop-w': { durationMs: 600, cycles: 1, property: 'translate', luminanceSteps: [] },
-    'kp-sig-terminal-meter-tone-w': { durationMs: 900, cycles: 1, property: 'filter', luminanceSteps: [] },
-    'kp-sig-terminal-meter-tone-d': { durationMs: 900, cycles: 1, property: 'filter', luminanceSteps: [] },
-    'kp-sig-terminal-tm-fill': { durationMs: 1000, cycles: Infinity, property: '--kp-sig-tm-k', luminanceSteps: [] },
-    'kp-sig-terminal-tm-head': { durationMs: 1000, cycles: Infinity, property: '--kp-sig-tm-head', luminanceSteps: [] },
-    'kp-sig-terminal-tm-k': { durationMs: 1088, cycles: 1, property: '--kp-sig-tm-k', luminanceSteps: [] },
-    'kp-sig-terminal-tm-feed': { durationMs: 816, cycles: 1, property: 'inset-block-start', luminanceSteps: [] },
-    'kp-sig-terminal-update-blink': { durationMs: 900, cycles: 1, property: 'color', luminanceSteps: [] },
-    'kp-sig-terminal-update-blink-line': { durationMs: 900, cycles: 1, property: 'color', luminanceSteps: [] },
     'kp-sig-forest-meter-wipe-o': { durationMs: 1000, cycles: 1, property: 'clip-path', luminanceSteps: [] },
     'kp-sig-forest-meter-wipe-o-rtl': { durationMs: 1000, cycles: 1, property: 'clip-path', luminanceSteps: [] },
     'kp-sig-solstice-meter-bump-d': { durationMs: 500, cycles: 1, property: 'scale', luminanceSteps: [] },
@@ -752,21 +736,6 @@ export const TIMINGS = Object.freeze({
     'kp-sig-phantom-face': { durationMs: 120, cycles: 1, property: 'mask-image', luminanceSteps: [] },
     'kp-sig-phantom-ink': { durationMs: 120, cycles: 1, property: 'color', luminanceSteps: [] },
     'kp-sig-phantom-update': { durationMs: 400, cycles: 1, property: 'mask-image', luminanceSteps: [] },
-    // terminal-register
-    'kp-sig-terminal-tm-dot': { durationMs: 800, cycles: Infinity, property: 'transform', luminanceSteps: [] },
-    'kp-sig-terminal-tm-trail': { durationMs: 800, cycles: Infinity, property: 'transform', luminanceSteps: [] },
-    'kp-sig-terminal-tm-decay': { durationMs: 800, cycles: Infinity, property: 'opacity', luminanceSteps: [0.6, 0.15] },
-    'kp-sig-terminal-tm-type': { durationMs: 800, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-terminal-tm-rows': { durationMs: 800, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-terminal-tm-menu': { durationMs: 136, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-terminal-tm-menu-feed': { durationMs: 136, cycles: 1, property: 'inset-block-start, visibility', luminanceSteps: [] },
-    'kp-sig-terminal-tm-wash': { durationMs: 800, cycles: 1, property: 'opacity', luminanceSteps: [0, 1] },
-    'kp-sig-terminal-tm-blink': { durationMs: 1000, cycles: 5, property: 'opacity', luminanceSteps: [0] },
-    'kp-tp-caret': { durationMs: 1000, cycles: Infinity, property: 'opacity', luminanceSteps: [0] },
-    'kp-tp-walk': { durationMs: 2400, cycles: Infinity, property: 'transform', luminanceSteps: [] },
-    'kp-sig-terminal-leave': { durationMs: 480, cycles: 1, property: 'clip-path', luminanceSteps: [] },
-    'kp-sig-terminal-leave-rtl': { durationMs: 480, cycles: 1, property: 'clip-path', luminanceSteps: [] }, // swapped in by animation-name on the rule that runs its sibling
-    'kp-sig-terminal-leave-2': { durationMs: 480, cycles: 1, property: 'inset-inline-end', luminanceSteps: [] },
     // brutalism-register
     'kp-progressbar-brutalism-hop': { durationMs: 2400, cycles: Infinity, property: 'translate', luminanceSteps: [] },
     'kp-sig-brutalism-hoist': { durationMs: 1200, cycles: Infinity, property: 'background-position-y', luminanceSteps: [] },

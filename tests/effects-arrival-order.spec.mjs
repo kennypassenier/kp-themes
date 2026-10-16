@@ -18,7 +18,7 @@ const CHANNELS = [
     ['React', '/tests/fixtures/examples.html?example=concept'],
 ];
 
-const INTRO_THEMES = ['synthwave', 'terminal', 'phantom'];
+const INTRO_THEMES = ['synthwave', 'phantom'];
 
 /**
  * Record, from the first script on, when the arrival overlay was added and

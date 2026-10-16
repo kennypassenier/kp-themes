@@ -84,13 +84,13 @@ for (const [name, channel] of Object.entries(CHANNELS)) {
         });
 
         test('stores the choice and reads it back', async ({ page }) => {
-            await channel.choose(page, 'terminal');
-            expect(await page.evaluate(() => localStorage.getItem('theme'))).toBe('terminal');
+            await channel.choose(page, 'cyberpunk');
+            expect(await page.evaluate(() => localStorage.getItem('theme'))).toBe('cyberpunk');
 
             await page.reload();
             await ready(page);
-            await expect(page.locator('html')).toHaveAttribute('data-theme', 'terminal');
-            expect(await channel.selection(page)).toBe('terminal');
+            await expect(page.locator('html')).toHaveAttribute('data-theme', 'cyberpunk');
+            expect(await channel.selection(page)).toBe('cyberpunk');
         });
 
         test('sets the theme attribute on the root element', async ({ page }) => {

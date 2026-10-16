@@ -99,16 +99,6 @@ const IDEAS = {
             text: 'The plot is a riso print taped into a notebook: two strips of washi tape hold its top corners, the paper carries riso grain, the lines print with a second pass off register, the areas in halftone dots. The tooltip is a note held by its own tape; the legend small tape labels. Loading drifts the stripes of a pale tape across the plot.',
         },
     },
-    terminal: {
-        a: {
-            name: 'The braille plot',
-            text: 'A plot drawn in a terminal with braille cells: the lines and the areas are made of dots on a character grid, the grid lines box-drawing dashes ┄, the tick labels in the mono. The tooltip is framed in the double box line ═; the legend is a checklist [x]. Loading walks a lit cell along a line, the caret blinking once a second (the loop the theme allows).',
-        },
-        b: {
-            name: 'The oscilloscope',
-            text: "The plot is a scope screen: a graticule with ten divisions and the minor ticks on its centre lines, the lines a phosphor trace with its glow, the area its afterglow. The crosshair is the yellow cursor. The tooltip is the scope's measurement box; the legend the channel keys, the pressed one lit. Loading sweeps the beam across the screen.",
-        },
-    },
     forest: {
         a: {
             name: "The ranger's logbook",
@@ -440,25 +430,6 @@ const R2 = {
         events: [
             ['halo', 'Candy drops'],
             ['ring', 'Sticker rings'],
-        ],
-    },
-    terminal: {
-        loading: [
-            ['type', 'The prompt', '--primary', , "'$ tail -f gauges'"],
-            ['segments', 'The progress bar', '--primary', '--primary'],
-            ['sweep', 'The phosphor sweep', '--primary'],
-        ],
-        arrival: [
-            ['steps', 'Printed column by column'],
-            ['scan', 'Refreshed top down'],
-        ],
-        update: [
-            ['tick', 'One line scrolls'],
-            ['tail', 'The new sample drawn'],
-        ],
-        events: [
-            ['ring', 'Open cells'],
-            ['target', 'Lit cells'],
         ],
     },
     forest: {

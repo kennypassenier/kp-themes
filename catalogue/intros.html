@@ -41,7 +41,6 @@
             </div>
             <ul class="cat-toc">
                 <li><a href="#intro-synthwave">Synthwave</a></li>
-                <li><a href="#intro-terminal">Terminal</a></li>
                 <li><a href="#intro-phantom">Phantom</a></li>
             </ul>
             <p class="cat-note" data-cat-intro-none>No intro: every other theme.</p>
@@ -80,37 +79,6 @@ OK</pre>
                 </div>
             </section>
 
-            <section class="cat-block" id="intro-terminal" data-cat-intro="terminal" data-cat-theme="terminal">
-                <h2>Terminal</h2>
-                <div class="cat-look">
-                    <b>Look at:</b> the words did not change; judge them for fit. <b>Words were and are:</b> "KP-THEMES BIOS v5.0.0", "MEMORY TEST
-                    ......... 640K OK", "PHOSPHOR PROFILE .... terminal", "CRT WARM-UP ......... OK", "READY." — the five POST lines of the approved
-                    "Green Phosphor" demo, which Kenny answered "Demo exact". Then the look: phosphor green on the near-black glass with a bloom, the
-                    lines arriving one under another every 190 ms at 1×, a bracketed <b>Skip</b>, and the tube collapsing to a line and to nothing,
-                    transform and opacity only, with no brightness spike.
-                </div>
-                <div class="cat-live__bar cat-intro-controls">
-                    <button type="button" class="kp-button kp-button--sm" data-cat-intro-play>Play the intro</button>
-                    <label class="kp-field__label" for="rate-terminal">Speed</label>
-                    <input id="rate-terminal" type="range" min="0.1" max="2" step="0.1" value="1" data-cat-intro-rate />
-                    <output for="rate-terminal" data-cat-intro-rate-value>1.0×</output>
-                </div>
-                <div class="cat-pair">
-                    <div class="cat-stage cat-stage--block">
-                        <iframe class="cat-viewport cat-intro-frame" title="Terminal's intro" data-cat-intro-frame></iframe>
-                    </div>
-                    <div class="cat-intro-words">
-                        <h3>All the words the package ships for this intro</h3>
-                        <pre data-cat-intro-words></pre>
-                        <h3>Words before</h3>
-                        <pre>Unchanged.</pre>
-                        <h3>The line on screen at this moment of the playback</h3>
-                        <pre data-cat-intro-live aria-live="polite">—</pre>
-                        <p class="cat-note" data-cat-intro-status>Not played yet.</p>
-                    </div>
-                </div>
-            </section>
-
             <section class="cat-block" id="intro-phantom" data-cat-intro="phantom" data-cat-theme="phantom">
                 <h2>Phantom</h2>
                 <div class="cat-look">
@@ -142,7 +110,7 @@ OK</pre>
         </main>
 
         <!-- No js/auto.js on this page, on purpose: it would attach the effects
-             to this document too, and in synthwave, terminal or phantom
+             to this document too, and in synthwave or phantom
              the review page itself would be covered by the intro it inspects. -->
         <script src="./boot-check.js"></script>
         <script type="module" src="./catalogue.js"></script>

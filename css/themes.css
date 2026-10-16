@@ -37,7 +37,7 @@
    version meets a registry from another. js/diagnostics.js reads them. */
 :root {
     --kp-themes-version: '10.1.1';
-    --kp-themes-names: 'formal light dark cyberpunk synthwave pastel terminal forest blueprint solstice brutalism deco phantom grotesk nostromo titanium';
+    --kp-themes-names: 'formal light dark cyberpunk synthwave pastel forest blueprint solstice brutalism deco phantom grotesk nostromo titanium';
 }
 
 :root,
@@ -811,135 +811,6 @@
     --destructive-hover: hsl(349, 93%, 33%);
     --destructive-active: hsl(353, 100%, 28%);
     --destructive-disabled: hsl(358, 66%, 57%);
-}
-
-[data-theme='terminal'] {
-    /* Phosphor-green monochrome on CRT black; everything is mono. */
-    --background: hsl(120, 10%, 5%);
-    --foreground: hsl(120, 85%, 68%);
-    --card: hsl(120, 14%, 7%);
-    --card-foreground: hsl(120, 85%, 68%);
-    --popover: hsl(120, 14%, 7%);
-    --popover-foreground: hsl(120, 85%, 68%);
-    --primary: hsl(120, 90%, 50%);
-    --primary-foreground: hsl(120, 100%, 4%);
-    --secondary: hsl(120, 16%, 9%);
-    --secondary-foreground: hsl(120, 50%, 75%);
-    --muted: hsl(120, 8%, 10%);
-    --muted-foreground: hsl(120, 25%, 62%);
-    --accent: hsl(65, 90%, 50%);
-    --accent-foreground: hsl(65, 100%, 6%);
-    --destructive: hsl(0, 90%, 62%);
-    --destructive-foreground: hsl(0, 100%, 6%);
-    --success: hsl(120, 85%, 19%);
-    --success-foreground: hsl(120, 100%, 44%);
-    --warning: hsl(65, 90%, 19%);
-    --warning-foreground: hsl(65, 100%, 43%);
-    --info: hsl(150, 60%, 19%);
-    --info-foreground: hsl(150, 75%, 46%);
-    --border: hsl(120, 20%, 18%);
-    --border-strong: hsl(120, 30%, 34%);
-    --input: hsl(120, 30%, 34%);
-    --ring: hsl(120, 90%, 50%);
-    --selected: hsl(120, 90%, 25%);
-    --chart-1: hsl(120, 90%, 50%);
-    --chart-2: hsl(160, 70%, 55%);
-    --chart-3: hsl(65, 85%, 55%);
-    --chart-4: hsl(180, 60%, 55%);
-    --chart-5: hsl(120, 20%, 70%);
-    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
-    --code-keyword: hsl(120, 90%, 50%);
-    --code-string: hsl(160, 70%, 55%);
-    --sidebar-background: hsl(120, 18%, 3%);
-    --sidebar-foreground: hsl(120, 60%, 70%);
-    --sidebar-primary: hsl(120, 90%, 50%);
-    --sidebar-primary-foreground: hsl(120, 100%, 4%);
-    --sidebar-accent: hsl(120, 10%, 9%);
-    --sidebar-accent-foreground: hsl(120, 60%, 72%);
-    --sidebar-border: hsl(120, 20%, 14%);
-    --sidebar-ring: hsl(120, 90%, 50%);
-
-    /* Status badges (application pipeline): phosphor tints; offer is the one solid green plate. */
-    --status-draft: hsl(120, 8%, 14%);
-    --status-draft-foreground: hsl(120, 25%, 68%);
-    --status-sent: hsl(160, 60%, 16%);
-    --status-sent-foreground: hsl(160, 80%, 70%);
-    --status-screening: hsl(65, 60%, 16%);
-    --status-screening-foreground: hsl(65, 90%, 62%);
-    --status-interview: hsl(180, 50%, 16%);
-    --status-interview-foreground: hsl(180, 70%, 65%);
-    --status-offer: hsl(120, 90%, 50%);
-    --status-offer-foreground: hsl(120, 100%, 4%);
-    --status-rejected: hsl(0, 60%, 20%);
-    --status-rejected-foreground: hsl(0, 90%, 67%);
-    --status-withdrawn: hsl(120, 5%, 12%);
-    --status-withdrawn-foreground: hsl(120, 10%, 55%);
-    --color-scheme: dark;
-    --theme-font-body: 'KP Tech Mono', 'Share Tech Mono', ui-monospace, monospace;
-    --radius: 0rem;
-    --fx-signal: hsl(65, 90%, 22%);
-    --fx-signal-foreground: hsl(65, 100%, 100%);
-    --fx-notch: 2px;
-    --fx-duration: 34ms;
-    --fx-ease: steps(1, jump-end);
-    --theme-font-display: 'KP Tech Mono', 'Share Tech Mono', ui-monospace, monospace;
-    --theme-font-mono: 'KP Tech Mono', 'Share Tech Mono', ui-monospace, Menlo, monospace;
-    --fx-overprint: hsl(65, 90%, 50%);
-    --fx-scanline: hsl(65, 90%, 50%);
-    --fx-lift: 0px;
-    --fx-hot: hsl(120, 100%, 80%);
-    --fx-hot-alarm: hsl(0, 100%, 75%);
-    --fx-shadow-offset: 0px;
-    --chart-pattern-1: none;
-    --chart-pattern-2: none;
-    --chart-pattern-3: none;
-    --chart-pattern-4: none;
-    --chart-pattern-5: none;
-
-    /* The spacing scale [TH94, AR18]. xs, sm and md carry the values they already had as fallbacks in css/components.css, so declaring them shifts nothing (S20); lg, xl and 2xl are the new steps above them. A theme may retune the whole rhythm here. */
-    --kp-space-xs: 0.25rem;
-    --kp-space-sm: 0.5rem;
-    --kp-space-md: 0.75rem;
-    --kp-space-lg: 1rem;
-    --kp-space-xl: 1.5rem;
-    --kp-space-2xl: 2rem;
-    --kp-text-xs: 0.75rem;
-    --kp-text-sm: 0.8125rem;
-    --kp-text-md: 1rem;
-
-    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
-    --surface-hero-bg: hsl(120, 10%, 5%);
-    --surface-hero-fg: hsl(120, 85%, 68%);
-    --surface-hero-fg-2: hsl(120, 90%, 50%);
-    --surface-hero-muted: hsl(120, 25%, 62%);
-    --surface-hero-border: hsl(120, 30%, 34%);
-    --surface-hero-primary: hsl(120, 90%, 50%);
-    --surface-hero-primary-foreground: hsl(120, 100%, 4%);
-    --surface-hero-danger: hsl(0, 90%, 62%);
-    --surface-hero-danger-foreground: hsl(0, 100%, 6%);
-    --surface-hero-card: hsl(120, 9%, 7%);
-    --surface-hero-card-foreground: hsl(120, 85%, 68%);
-
-    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
-    --kp-text-display: clamp(2rem, 4vw, 3rem);
-
-    /* Derived interaction states — see gates/generate-themes.mjs. */
-    --link: hsl(120, 90%, 50%);
-    --link-visited: hsl(176, 100%, 49%);
-    --focus-ring: hsl(120, 85%, 68%);
-    --focus-ring-contrast: hsl(120, 10%, 5%);
-    --primary-hover: hsl(119, 100%, 59%);
-    --primary-active: hsl(116, 85%, 73%);
-    --primary-disabled: hsl(120, 100%, 43%);
-    --secondary-hover: hsl(120, 12%, 13%);
-    --secondary-active: hsl(120, 8%, 19%);
-    --secondary-disabled: hsl(121, 32%, 4%);
-    --accent-hover: hsl(65, 100%, 60%);
-    --accent-active: hsl(64, 93%, 81%);
-    --accent-disabled: hsl(65, 100%, 44%);
-    --destructive-hover: hsl(1, 100%, 66%);
-    --destructive-active: hsl(4, 62%, 68%);
-    --destructive-disabled: hsl(358, 74%, 53%);
 }
 
 [data-theme='forest'] {
@@ -2285,29 +2156,6 @@
         --destructive-active: hsl(353, 100%, 28%);
         --destructive-disabled: hsl(358, 66%, 57%);
     }
-    [data-theme='terminal'] [data-kp-surface='hero'] {
-        --background: var(--surface-hero-bg);
-        --foreground: var(--surface-hero-fg);
-        --muted-foreground: var(--surface-hero-muted);
-        --border-strong: var(--surface-hero-border);
-        --input: var(--surface-hero-border);
-        --selected: var(--surface-hero-primary);
-        --primary: var(--surface-hero-primary);
-        --primary-foreground: var(--surface-hero-primary-foreground);
-        --destructive: var(--surface-hero-danger);
-        --destructive-foreground: var(--surface-hero-danger-foreground);
-        --card: var(--surface-hero-card);
-        --card-foreground: var(--surface-hero-card-foreground);
-        --link: var(--surface-hero-fg-2);
-        --focus-ring: var(--surface-hero-fg);
-        --focus-ring-contrast: var(--surface-hero-bg);
-        --primary-hover: hsl(119, 100%, 59%);
-        --primary-active: hsl(116, 85%, 73%);
-        --primary-disabled: hsl(120, 100%, 43%);
-        --destructive-hover: hsl(1, 100%, 66%);
-        --destructive-active: hsl(4, 62%, 68%);
-        --destructive-disabled: hsl(358, 74%, 53%);
-    }
     [data-theme='forest'] [data-kp-surface='hero'] {
         --background: var(--surface-hero-bg);
         --foreground: var(--surface-hero-fg);
@@ -2569,22 +2417,6 @@
     [data-theme='pastel'] h2 {
         /* Overprint: the same title in a second ink, printed a hair off. */
         text-shadow: 2px 2px 0 hsl(from var(--fx-overprint) h s l / 0.4);
-    }
-
-    /* T9 · Terminal: scanlines on the CRT glass, phosphor bloom on titles. */
-    [data-theme='terminal'] {
-        --fx-texture: repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.06) 0 1px, transparent 1px 3px);
-        --fx-texture-opacity: 1;
-    }
-
-    [data-theme='terminal'] h1,
-    [data-theme='terminal'] h2 {
-        text-shadow: 0 0 8px hsl(from var(--primary) h s l / 0.45);
-    }
-
-    [data-theme='terminal'] ::selection {
-        background: var(--primary);
-        color: var(--primary-foreground);
     }
 
     /* Brutalism: a faint dot grid, the graph paper the black boxes sit on [TH64]. */
@@ -3163,10 +2995,6 @@
         [data-theme='pastel'] .kp-badge {
             animation: kp-settle var(--fx-duration) var(--fx-ease) both;
         }
-
-        /* terminal — the cursor after a field's label is gone (5.0.0, R6-Q7):
-       the terminal register puts a block cursor inside the focused field,
-       at the caret, where a terminal's cursor actually is. */
 
         /* forest — the contour field does not move: it is a static page background
        (see the forest texture rule above). */

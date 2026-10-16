@@ -104,13 +104,6 @@
                     "shot": "ca17f1f1ec8a588d19949ca3490253bb0f9ad80cc1111609b72d4e7525b992d7"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "5d37761367e8d6645f54daa2a4cca8de0a90037ac4c3e1109cd1b067badd091d"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -216,13 +209,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "55cb110bc1a5a3e05ff3172fee8d8228d4952aafc08075331a1905eaf9980c75"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "4aea69ca0447a4528778c1c436f4bf1c9590413385504ea930e9222b6428c9a5"
                 }
             },
             "titanium": {
@@ -332,13 +318,6 @@
                     "shot": "44bae15001a93f95e5e2341cdab6226a50ca6174d24b843348e07e0296cf3ed0"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "16ae50c560e50e253fed13d57ef47aca8df7ea8b4aff5feb50ac93bb35ab058a"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -444,13 +423,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "a1ca6531f0cb5db4d140fc033927becb7dcc7aaedd7739c46085bc9894243eb8"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "e29f6c01e6398a75267b9566ff542185e2e4a2a951a78dc88481b550ea55cfcb"
                 }
             },
             "titanium": {
@@ -560,13 +532,6 @@
                     "shot": "6426cc314ce844e4e9c89773c2c89227ee93b7bf5c91249a12f7471e44eb1a92"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "743b5738d0ad4f83364eb1ba562af863b310b278567b7112bc78dbc150eff1d3"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -672,13 +637,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "fd353fc1393f862af985af0e28b851f708cd9d5cd86b87ee7a5705bb255e509f"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "0273f51959cdbdd320e65e330ef988336a9fcedf4d84bb39b792fbe06f5a278b"
                 }
             },
             "titanium": {
@@ -788,13 +746,6 @@
                     "shot": "b0d1e53e973ad235d98948147cafa61c1efb6f4c85903b0cbcf0585191910b55"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "7b018f7f0a34c219b15384dc2a06446e65639b337536a3cee33f03af95b66f88"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -900,13 +851,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "b04a0b8c31415cbe272de18d0faa487bfe1f62ed342214606d94f83a85b0d912"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "1040b77eedf3521514f7e64ecf934ca3c98dc4abad0cd4e8fcbe82df47014527"
                 }
             },
             "titanium": {
@@ -1016,13 +960,6 @@
                     "shot": "2330f70d936ada09e216d375d9c39814d833b368d8202898f4b7fba58e2ed6b8"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "6ea99c483e1432de2714a1bd498d90b6dc88f8e1e8b736d1c56f552ac75f4885"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -1128,13 +1065,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "ebbd8eb087d5264927f527e65665a23bf598e57d8608ebd2994e2a86278c4c36"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "2d37a50fe8886b2d7186834bc8c23ec7ddeecf3d194caf8d3c6f478ad2c79600"
                 }
             },
             "titanium": {
@@ -1244,13 +1174,6 @@
                     "shot": "5f042dd8d996c160273a9ede3c611abe02481941bfe7de9ca03458092e77d66f"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "908c586706184d3ef1b5461a5f2bd6f4ae6f20083e932bea5382aed47b58694a"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -1356,13 +1279,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "28d4ec77ece15725b793850fddf294b5c0bd99f9a051b926cf9df81a9f29b19e"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "28a6b4a21db7f5fb06edea4c53fdc2d4eb0c4824356207c2ee43c13d9c524ee3"
                 }
             },
             "titanium": {
@@ -1472,13 +1388,6 @@
                     "shot": "3aa3ba678b1a21f5377a5860958282358da32f5f830e2e885c85ba9ccbd0f694"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "aa51553d43afc1b4910f58f5021d7ba83f7e1f28e8ef241a88c3e2212a335ed5"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -1584,13 +1493,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "68322490938719242f1caad25db95531f6957b1e7e01e6ec2dec0dfa0d0707d3"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "a70dbba1bc9fa9433f8be2efcbe1f1ac51f2377074245fc40fb1d71147171f87"
                 }
             },
             "titanium": {
@@ -1700,13 +1602,6 @@
                     "shot": "3027e0c9a09f4cb26d631d1da01363a2fd03d64c5c8ea380164f88f85bcb0160"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "9c874b106fc377f87a47775aa5e1ea6e6e9b2eacf4d11079ab7f14992346d5f5"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -1812,13 +1707,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "92af1b204f4e347d0959cd778e4e006d6b4a946e743ac795b021061caf2dd9da"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "6527f5cd1847a8c1c3d9f9a5566d3eb479c1fb34bbe162cab5b170eff5581ae0"
                 }
             },
             "titanium": {
@@ -1928,13 +1816,6 @@
                     "shot": "795a031b536e83e256962c0a09a8a58f8e961d165094bbdca5dabb91cca558b3"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "2554006ad4dc8e1c233f4f433741e5b424e7113a2a3757be4dc4443b9e62a29e"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -2040,13 +1921,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "54e4cf0766c45b9f519a1570e14390b9c2e38c42df4567ec453069449163a683"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "36264687dd6f75b49ead828f62b8c987e1d629d0f924255340e8f348100157b0"
                 }
             },
             "titanium": {
@@ -2156,13 +2030,6 @@
                     "shot": "30b67d00dec87805fcdfbaab983a6dcd89e3cb39439b6f71b77d1d4cf5cdfbaf"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "0c52d3660c64164142ce9f50e0cdbc4420a56abae574b259f31d00b8e216bf7e"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -2268,13 +2135,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "e251ba5683b10a87f994acac5301beca4fbe03b25302659b97c43c8914120636"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "6a98a8e99e2d49fe35bc51db2881d9ebf323e9968a43e535023c311695eca62a"
                 }
             },
             "titanium": {
@@ -2384,13 +2244,6 @@
                     "shot": "3eb5f78d6ef729152fdef79253e481ec3f8b69c6676f180f9a0e2e0033bd66f8"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "2cd2f018fbc3281edea021725bc7270c68e8921d68d6100e6da43780a44abb30"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -2482,13 +2335,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "6e9df8f64241f79b655023133420703a20edbaa91623ca9a69f6b134cd8adbfb"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "a17db3454d66c0db8b2dfcc1d59db0f92b54ca4dc26b9ce025dcb5dbdbdd50a4"
                 }
             },
             "titanium": {
@@ -2605,13 +2451,6 @@
                     "shot": "584b7730f086e6632486dbb7d96cb276d97dd110d1528bc8dffbdf35c2aa6947"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "686f1141566f38439b99ea659a2d565a6fff645c5d101d2b9d86100ef631252d"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -2726,13 +2565,6 @@
                     "shot": "2c9470c39f8ddd743edf2776667abb7a8c4b94c9f27dcf7d50b8a0c29f7a8276"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "8c3bd5f1de150622f915016b24f1bb113556385409ba726b0bdf68b8cd6cb6ab"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -2838,13 +2670,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "16559955c3ed0f7aca124ef5ea2823fb4171896de34881321e5f865357b65e71"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "b40bd298a6171f12297d28b13bf774aa7862c58389b21d32b146964f032e990e"
                 }
             },
             "titanium": {
@@ -2954,13 +2779,6 @@
                     "shot": "6b2202a57048ed6702f4b7929cbc7fc4cf5efb508805fb1d56193bc19a3a1237"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "2d78e7d97a484267afb2095b53548ecfba4c8f17ad6f49fc4afd118103be83f9"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -3066,13 +2884,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "3b25adf77dc943a36e8cf2afeacc02a28bf78854fa095dd8347da58b71063270"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "02e2a433e208700450b477176cc6799333f1de8aa6b3d8362c11e67f4c8dc600"
                 }
             },
             "titanium": {
@@ -3182,13 +2993,6 @@
                     "shot": "f38ce00f3f5ac4226b8dcce257a81f90cf0e30349707f16e96402643a7fc0999"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "51ab883ac8b2a253a3e73358e63ddfbe3c431002c9ac0b73f1a644239a69837a"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -3294,13 +3098,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "26b4d98201f08e480a4de35ded3b8a6a63c56a30d1fa407181be117f04a125e8"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "2370b6c13c8b76b7ac6a8364d9fa3f752deb419ad94438e2092a328514c3bad2"
                 }
             },
             "titanium": {
@@ -3410,13 +3207,6 @@
                     "shot": "133cd058e35d525f49c544ac7617cbd1380ea82dbb6f291e7bea848ad846c3af"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "d0518c66a25023b2b10a9c33d41c6e7a050edca3f6b7d4dfb3d96627eca06811"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -3522,13 +3312,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "a834fc1e24e144b2d1d226cd1e140ef809223e8a7aecaa419969e359af8450ea"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "b68c0207ec7535d58e1a52284ebbd12c743e9b45e9f6bf598683f9253efaeaca"
                 }
             },
             "titanium": {
@@ -3638,13 +3421,6 @@
                     "shot": "a79d38df8c820a2a1db751a921365631ded1ee755f6bdfbad617483c0307e32b"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "992cee154a80f8921a1258432cf3c46cf463dbb423d80ef6ede3193b27cc1d2c"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -3750,13 +3526,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "f4db409ae76586eb3a54232a910bfc91aec38b5f9848f7920e69f6ded3b90c2b"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "0e8533dc0aa15421a83a20f51f006758d8ed85bc81d4441b5a932f484fa0ccdb"
                 }
             },
             "titanium": {
@@ -3866,13 +3635,6 @@
                     "shot": "6eefacdbba4fce6992d59d49ba45ecd8fdc3eb8b6edadcdb4ffa5babbece8689"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "366946dc3f25d1b1435c3233644fc7862af94f0983e7852c8b1ffe589bc2cb89"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -3978,13 +3740,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "7db1651b76c4a88b54260049f7634d686143e90cb935737c05a5d52e164340ad"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "48051d7d9325ab9e87d7a70932055c1ce9386ca1a7cea1f539d8ddd8fc963b7a"
                 }
             },
             "titanium": {
@@ -4094,13 +3849,6 @@
                     "shot": "10f1b3b074384511339eca62f1fe42686cec11fafc3705c90986fda8e7bc8b50"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "2460ded01373058eb9a646bb8e1994a05e9c26f3e0303c0a62eadf322bc76ca0"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -4206,13 +3954,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "36c1e296d4f3fcb6de066c1364a4d6e5a29c7afec48a4b6abcc10cc95f55bba3"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "b9b9fa5f5280a72f2562990cd32d187ccc7845876d491122e8113ac64f2879dd"
                 }
             },
             "titanium": {
@@ -4322,13 +4063,6 @@
                     "shot": "d404aec39d6c7bfeaf74586ebbbe7fe1d923bf3309ac6df2f0347dc2ea70dafb"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "5f86157c8c4442a9f01e6fb855521cb93adfc563b1ff02aa5ce9ca561792d20a"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -4436,13 +4170,6 @@
                     "shot": "35859177455e92ed1bf698c66ef521856497280fb2f686b174b9a9183a93a023"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "a357524e1531e8b9aad6cc174ae97eb407dcfca187e871bc98501a17a83a0257"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -4520,13 +4247,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "6af5bfb1cb4ea1effaccaa15bf5fc681da70d94138069c6f4acd73d57bbfee34"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "ff43386523c92712fad2438c85f80bc8753b73d37963b8ed78156d0e72bedf53"
                 }
             },
             "titanium": {
@@ -4664,13 +4384,6 @@
                     "shot": "2ab93ac91accac23d91361d86b6d180d2bcd63fa0117c3b73e40e8415d1b7c38"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "636c4b73999611d184ccf829fb424aceca8b61ebcd4a90a247b450c94a93c571"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -4776,13 +4489,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "2223a34f0a71502bf67832689e7d65473e4f6724c5e324aab393510dada3ca47"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "2a7ee211f9714adde23789aed008274bc141234f198a296d0aac264c1da3bf21"
                 }
             },
             "titanium": {
@@ -4892,13 +4598,6 @@
                     "shot": "b99ded6a58cf6c317f4971457a0eb33f97d9a101c3cec7768be3782bacd01b4f"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "3dd289ba0c3960c15e699c27c50879fee9d17306b2943510dc70e516b1675003"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -5004,13 +4703,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "eb2f5fa20b51a313167c1383ec3ef8bea0a4e84f7899e7c525a95c3a852789d3"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "9c5423d034e97cd8c0ce845a2f5fbb829466fef4262bbb6aaa3142e5b03d3699"
                 }
             },
             "titanium": {
@@ -5120,13 +4812,6 @@
                     "shot": "356c91b33f48e640499ab529ce2e6663d4e23096b97b74fa26568aa9510cc6af"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "7fdd74d0e500ca9916026a968cf8acab872afcee30d0fb88d12c81f289e68718"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -5232,13 +4917,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "ed2c279dc4a82006b3458e548c6e39c58646f394a7bc8cef948aeccd9f76146c"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "a1724e63c0b14d8f09e71f43d95e1b116ee4a5696abc5d5aafab4a63382e865b"
                 }
             },
             "titanium": {
@@ -5402,13 +5080,6 @@
                     "shot": "3cb4157e0a37f115988dae6f29c0f6e4c04109faefcf42907170a47d58dbcbce"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "220fbe57282fcface31334784190f8f4f2d3918f896304a1d1eec149805e75c0"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -5514,13 +5185,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "0f75975d3988ba3eaf875255d368da2fc674bd19548c62405205be334d16850f"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "6c119dc515a7639149c87d99e8026d695db69d516b8ae617f4afc2a2da2d3f73"
                 }
             },
             "titanium": {
@@ -5630,13 +5294,6 @@
                     "shot": "9038ed9cf0b7c640ac6bcf9caf90cf006d08c3e9f4f4834357a36340ea178115"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "7e555291348915fd1e089e76f30e3d9eb1cabbd2b1aa4b708f7748fa8ea6280e"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -5742,13 +5399,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "95269d6922cb48e12b5b5b95e774575356eb4657ee2d7c7ec0baf348cbcc5988"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "0dd33d06b34c01b8d13d4701e3e29f14d5c03d72f957a2b7322dd5c80e08cb5d"
                 }
             },
             "titanium": {
@@ -5858,13 +5508,6 @@
                     "shot": "50db36c320412eefc1b93f11f7837b3eba532987eb720455aac14933bd179c10"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "c8d03b973472267040e11ff3570859771dd602e64202f7e5aeabf6abe9231910"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -5970,13 +5613,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "2466fbb99911c718f9b6fc533034360cd9123b2e3f7e503cf87832e63318faeb"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "1d385c4f11a170fa53fe3a9896b8ecf35cdc2277511f1cc7226a095a0dee41ee"
                 }
             },
             "titanium": {
@@ -6086,13 +5722,6 @@
                     "shot": "20d8cdab389b9e52d2a8b759f15edb6a5b993441d83e27a2b98596cfceb0108a"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "578cb2e9961ceff3358f7d84ffbefa5504046ee866c41891b97ff001f82e10bb"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -6198,13 +5827,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "cd0c8c277dd6b1c9aace021b282ba636ad40528cddb1c1c77bbada88af868b9e"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "d9e4823053d74abfb6f7e25927df2b9d10958ce6754c0f4bfccd9fb499e9f61a"
                 }
             },
             "titanium": {
@@ -6314,13 +5936,6 @@
                     "shot": "166b86af559a1761a9097852e66707d13c173c69c2e1b8e1457b16e35c800f6b"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "392b4a8162fa91c693ac4bfac7cfffa5f0861c0385690ebc92c11a88a714c79c"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -6426,13 +6041,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "f27d8374438429d3d0223e2160e093674481b1020925a80007538788a637a9cc"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "c2abc24100da1dd1510b0940ddfe53eb1cdaf1ef9b72fc5db53c893e18291b43"
                 }
             },
             "titanium": {
@@ -6542,13 +6150,6 @@
                     "shot": "81adf9c710bc990781b45afbb8caa8462c3ec19ee60f1222203ece27b8ef30ec"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "78af11de916682dea9a709455529d2003b40a76709aafef4568165ba32b42e83"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -6654,13 +6255,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "dc739f67f663e724878010832b37539c7828328c5648f2328abfadaddeeaac44"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "c1c52038f5ead6439613458bf8faaa64a7bea6d80f38469db47eb8e1f86ea9d0"
                 }
             },
             "titanium": {
@@ -6770,13 +6364,6 @@
                     "shot": "3706b6c0fba6fdcedfdc051b29cc28e1947d5626950c6b394eeae81290bc3e35"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "9ccb73403700096c8f6683bd7c6529b812c1a34791e8dc84a0ba3f97b9cff5db"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -6882,13 +6469,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "03e3f034743bdca3820978ddde2d7d226d00b3a65c9bdc5fd0f6bb0f18834687"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "5ea44fc6fc274846e28fab958fff0b64869686b58f8abf3318b2d200e130f9e4"
                 }
             },
             "titanium": {
@@ -6998,13 +6578,6 @@
                     "shot": "d8bfa5b07dde1d0ca4828ab10e3ee3b21b30dfa4d92ecb18babf0e0b24095da6"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "0c558856c3699b0ba969dc24d38beddf952bdd635145b85de1663592a5809d96"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -7110,13 +6683,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "f863379c0af0de42c99eab9340ca0f3fab946d1f8aa0b90ec42ca028aba8dd0c"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "8e8c819f503cf051c0fc87261743fbce733064022d9f32df340f84738c14cc83"
                 }
             },
             "titanium": {
@@ -7226,13 +6792,6 @@
                     "shot": "151157bb73b426a01664e147482ff9db7c1915aba8393bf2c2a79297b93b6949"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "e1ecc3008e523ea8f0a6eaa682cdf8e43f562a585f7ef41bef4932f618ee7c6f"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -7338,13 +6897,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "ffa398962453ade3a99b19b2c40378111f2cc55f4152f92642e6d184381ee6bd"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "afe2d5cbb63ad3ab2d37f77a92406ccd1c0660d1a848dad3956e6d450e3ea3ea"
                 }
             },
             "titanium": {
@@ -7454,13 +7006,6 @@
                     "shot": "4bd1f2eb88a608a9748a7c533329fc2e81180fdde9f53d9c6cf8a895d9da9f75"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "c37e669e2a939c3b7a6a0707203f6371d57588abd54505633d072abfe53b078f"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -7566,13 +7111,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "01f7d77b7cdf36f8b0a825f354b266c5acfb6d3ea1304a5522f16a92b394cd79"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "719cbe7afcc7c650b9a59ec24a4b38c7407b8ad06cb0c9b42763b1ee0a0a5b06"
                 }
             },
             "titanium": {
@@ -7682,13 +7220,6 @@
                     "shot": "434e9445acc6ab21ebf6e601c7e45169c7a81983f89a58ceaedf83710c5a866d"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "b77a9414196f257551db912d3406cc952efcdc469f19f29f846f60b731ca2f82"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -7794,13 +7325,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "6f63ec9d44fb02eca4e4ef1b9717cd13d04f073840b07d48f95fc2313a755aac"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "ea07786e317b81830b8682cd62129d32abc8a64fd1276d656d3657de54ca4239"
                 }
             },
             "titanium": {
@@ -7910,13 +7434,6 @@
                     "shot": "2c967d00b73b5d12ca8e0b2345549e54e3d66b7b607d5dc8033629b8965d5f23"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "809335abf6b27c47877c003b0a0587e42f78ea3af0f5c570932db6f11025c9a7"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -8022,13 +7539,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "65747378f3989535d34f60d9904efd582e7a1336ace247aec32b52207660b836"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "864a8e5a50bdb67177ef87268fd9ee8c8a8b9a3dc655d880fe15cacb9f5cdadb"
                 }
             },
             "titanium": {
@@ -8138,13 +7648,6 @@
                     "shot": "0ba5fdc3622fda59a20cb423ecfe4c3f4803f028eb5cc131256e74a02b11db9c"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "bc06ce5355e411671e41e2fd02d462d415a653629288426464e055a8d4dacbec"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -8250,13 +7753,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "74a84f617744a39403310cb47653d25018ae53ca0fc8f0f39e1ef3456c7086a7"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "71849c2aa11e3776c412ed8b66a3ec80e0127f332bec1f51dda640a7f09d2efe"
                 }
             },
             "titanium": {
@@ -8366,13 +7862,6 @@
                     "shot": "a6a07a944b6b590e4ae4de0582e2de4d14f3a924abcb9613a613c0e71c4a0771"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "b1626af08bafc333288b6514915b78e0e8f612cd256d1ae4998d33c7f2d6f77f"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -8478,13 +7967,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "f60c2c4f450b1eecb909a69be9e658cea0568bbb00b9167ef0d5f0f1856b0ef3"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "3e675e00213f7202cf7aab4723c75cada66ad0d3c06bd41b42aadfc16f952efa"
                 }
             },
             "titanium": {
@@ -8594,13 +8076,6 @@
                     "shot": "7ca805199f81e2cad7d5a8f801c7e990f421ffb0c3409b2f12a2595cd872d2da"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "515bc3ef0fd6d679304289c95b3151ded37e5edb46413a252f2ba4c14c871008"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -8706,13 +8181,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "a372f8723bef73af84ee107df5150fa1e780a748fdc7d4735b6a6d78ed5735a3"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "a63748893f639b77b41b9db6288b03a95341287197fde5e721ac6facf7994a14"
                 }
             },
             "titanium": {
@@ -8822,13 +8290,6 @@
                     "shot": "8e4a76a40a0b6c3d6dba25ec398a064a0ca3cb435bb365f03f956b97c0bb98b7"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "4fee9eab1016e92a0bec5e6ce549a7a774e7d1671c5c69a6f66ca289886a0acb"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -8934,13 +8395,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "0357ae33c7a04397c858c62bcdc4b7fe3c7879283ec9682fb1d7a4c4d5d71f44"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "28df1852670560dcf0f7a44731f28db8bfafbce3c9cc17e1bf29d2200bf7aaec"
                 }
             },
             "titanium": {
@@ -9050,13 +8504,6 @@
                     "shot": "33124643397c0e004246343c42cd1f2df8198049e133bb6acf442fca2d820d19"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "6143596e138e7b49c1c3602cb52910112f13762c9ebceefaa003899167c81ef1"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -9162,13 +8609,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "906d3fb75527ce4f614e32df6b5d63895cf9d3518eef156f53dfb417af7e7ccf"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "5c6ebb3b57c62590286e32f3c7be465ff4e7223e677ea1f22c63c6d7cea0b40a"
                 }
             },
             "titanium": {
@@ -9278,13 +8718,6 @@
                     "shot": "8d5374511099d34fdf803dd241dcd57adef5d1386a5cfb69f61342fddf983a2e"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "2b52932c600d061c54046de2f9ad0a40ea58f596bb688952290b50e1613d2cbb"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -9392,13 +8825,6 @@
                     "shot": "a076f81aa1baf8d42244af808f53da33c1257e8aafea6e4a8a0f13c408bcb0b3"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "ae90b16ee05b475a3e17f22a34933151f529123a7fb649794ac1dd0ab59b41e4"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -9422,15 +8848,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "4f118efa864fab28e43e4f3f79ff341978de56eab6b4882f6370b80d9ac31145"
-                }
-            }
-        },
-        "intros--intro-terminal": {
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "ffa7045d7d907e1fe31cb43e47e286c69a7446ff203cd44073feaa18bd0c75e0"
                 }
             }
         },
@@ -9531,13 +8948,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "5205a7c0be94937533d130ebd0ad8c0148429238896cec98d1ecfcb819527a18"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "dd7aa8e449812a55b097737f376c1d24b78933c92a276435c6517ff9351b3f3a"
                 }
             },
             "titanium": {
@@ -9647,13 +9057,6 @@
                     "shot": "d04953ca9923a85bcfd8e1f047d3d5ca531040062f8a45b89f7d2550e28c500a"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "e2ae5fa49baffe8a555899fd59161b3c58222fcea4d275241bd888f890f40c32"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -9759,13 +9162,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "98fb8c5aa0f3c60801f727f4037b32ad48f693a510936008acdbc35691a1023c"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "3991b2ccd09efe8e1d9266bbf4b854720d6b428fcb414520748b31fef4d35180"
                 }
             },
             "titanium": {
@@ -9875,13 +9271,6 @@
                     "shot": "a85b496afb780661bd31d622ee7ffbe8328ec660ad278a40e808e6e0d2176b71"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "343110167e1b98b1e8d0dece31e79e7f60b303c5d8920a69f67bb0d68a4c26d8"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -9987,13 +9376,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "887301629c87fecb699e268c4538f56884f415406d159c1cb4dbbf58ee95ed5c"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "6fb6d26715169fc4657987ca12126361d0bb7db288bc6cf02cbb673270e95e90"
                 }
             },
             "titanium": {
@@ -10103,13 +9485,6 @@
                     "shot": "f80bed36cb8495d2c271afa1be0b72186d6be29a26ab15361125bd859e8dbe0c"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "21e72f5e438a6c761af3ef312a54cd7951e32bbd2ad4d92b84e714575ae33d38"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -10215,13 +9590,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "e2cb36ce01a47c3ecdad90f5e4470b2757cc1996776fea7cd1ea13c23f57f746"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "88e4422ba75a6b2357a820277695d60e8dd46294b84cdaae35cdf8bad13e08db"
                 }
             },
             "titanium": {
@@ -10331,13 +9699,6 @@
                     "shot": "f2448ebdd320131c7959acca1c00ef2ff9661f0e6cdcebb9a73c0d680c230015"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "1316f109f0089c4bc568a77553e83687ef89f7eaa43c225f96372f9641787bb2"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -10443,13 +9804,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "bf84816a7099f173ba63fca4c428945eff94b2101e240834a55e7c602bf1380e"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "09fbf91fcd8c89a01449c3df0eab02deb59a839bc6f433aa4867b67aab280114"
                 }
             },
             "titanium": {
@@ -10559,13 +9913,6 @@
                     "shot": "f3876ac9176ac8924bdd4b441ea231dcc509531ebb9aeced529d9a50eedc0c89"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "a15ce96bc8d14e84a437977c050beeb8b1dde04231b9db0b3743449ec9f20220"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -10671,13 +10018,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "64ff091aa6d3a162e0ee83e39f2113b74914d2a395f9041f917da108cc4c29e1"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "6d7061ef80ebf0c73416d3c666cb4c51c29486fd667767f66a2bd7fdad24c466"
                 }
             },
             "titanium": {
@@ -10787,13 +10127,6 @@
                     "shot": "ff16c70c451bdea6ff81b8e8efc525128aa6184ab0a390de1bb5772e17c2f4da"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "cb0106b461fda8a0f13332f180b2fec6f76c7660b538f7b801637d68c738b619"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -10899,13 +10232,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "0908e04e9964cb7acc640e0cb6fdd530ac44bc3893c6888d4dc26eb2e76fd65c"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "34e5feecb8592700ccd7ce751ef78a9b7cbe1b062eb56e5fbca15c9ca66b6964"
                 }
             },
             "titanium": {
@@ -11015,13 +10341,6 @@
                     "shot": "734000be9c34b892da36de62bead7ff134ce421cf462e2fec1e9257607da3cde"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "5ad5a889ef53636fcbdda036c63d3b4a2d67f150a0f850d1dcc8fa1895eb0c9d"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -11127,13 +10446,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "f358996f42f0ac2176f1f248d40526cefb9a44345fb7e5bb7ecf7ff4d5424766"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "9775f6b39e1d081cccd76b1d0ad2194c43049f2f34a841d3538100748a822992"
                 }
             },
             "titanium": {
@@ -11405,13 +10717,6 @@
                     "shot": "4fd799ad623f4eae8545578635d5ec6e97db01a786f498c18bcd0b7d66f40d69"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "6d6a411d64bd44e76b8bf24cfb64e3bafc3338dc475f5ef908219bffad1e6c54"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -11517,13 +10822,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "26181ede29e94ae77ef66532f2e9de5638fb4800d5a10b73fcacafe2430d4794"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "4595cf82e947546eb17aac5638af3c7f5c1bd9d34ef2f737d2c14de380900d7f"
                 }
             },
             "titanium": {
@@ -11633,13 +10931,6 @@
                     "shot": "91cbb0614e707e372f48759345e86642ab09ec2f910c595af03dc9531fa819d0"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "76e2bb0b43de2f73d3f039de37cf53d08597c390eb666a2643ba83e92bde136e"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -11745,13 +11036,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "1aef53006af08a1c3dcf2b9e763dc483b0e8c04987f70e0120a72a695d7f5ee3"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "d2700ce5b2aea75648b079cd4da506a0e2f8474bc50cc6a333e117d12ef56858"
                 }
             },
             "titanium": {
@@ -11861,13 +11145,6 @@
                     "shot": "fce42b497422fbcbcec52e3f3d854f82d4ad3e35103ce3fa266fa17f8f167b89"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "39a73b6b6c5fd5f6133ce804ff8926963ee17a7a9f570a8887bcdfd82daff550"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -11973,13 +11250,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "55c5760a1404e2724e0b7298d8b0665864883e6053c2814794d4943733719441"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "f0bbc3f98724b78948dd5ec508e9e6f15a744f57995ecd6a34690b765ae6af48"
                 }
             },
             "titanium": {
@@ -12089,13 +11359,6 @@
                     "shot": "fbeb46cbd9f08d2ac7cb8546fe7d664e9984e19ef457395bd1d387be1b35be71"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "b11ad0199c13d99871b52053d718eda07f42017b83bad898349242863d691d87"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -12201,13 +11464,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "086f8c1e8105ede6fb2892616a16174dbb78af49f4fc88e5b59d1b9f5e66dbda"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "aea4a49b199071c371a51023677eae060fc556cb67444d43c55b1ab78133e0fc"
                 }
             },
             "titanium": {
@@ -12317,13 +11573,6 @@
                     "shot": "72fdd17e3d2a8176efec9f809550af7263d1478ca0ea3401d63e4b863f8d30a6"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "797a538ac6882f5641e4e0da24778398cd62e4efac2ce8137dbd7b0526227ca6"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -12429,13 +11678,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "e05d22e8e6c674519f9b0dc0c947b23d4cc1d0dadf7e6867690d0795a5b8a667"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "9fdac82fe21b8a717480bea751d32de26a99237d81cd81e2bffa80fe05afbe95"
                 }
             },
             "titanium": {
@@ -12545,13 +11787,6 @@
                     "shot": "c63eeee9a98491dbd603ef7f1abb4c2b36df7828d7897701bed16983970570b6"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "d277e4652be7ec0376ff705a765023661967a2ac4b5abdd079cab07f3ae39fcb"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -12657,13 +11892,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "7cca1f64240ad19bd470aa322acb8cf4f96259a9fa8a6016331516943e0a4b1a"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "786b8e5821aa4683bce9360e72ba6c6b4391982bc355e805e34234d00f0e1ca9"
                 }
             },
             "titanium": {
@@ -12773,13 +12001,6 @@
                     "shot": "6c3e0bfab9ac93c0dbb725edc12e53870f4b43af54ef165e105d08255aab30b1"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "136abaf206f06b043fd61c3c1395166982f81d3b66fbc7f3e249bf63be634021"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -12885,13 +12106,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "e5711acd5edcace39c4039fdd5fcf66470466ee449a44c4acfcbd99239b420b5"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "66f54e64e8b6897dbfe060b868330710c61db93f4993f97ab8b3d0d59aeb30c9"
                 }
             },
             "titanium": {
@@ -13001,13 +12215,6 @@
                     "shot": "6dfcd67b12b02ee21278dc7539126b4b11d019452646c37e869aab3a06815d66"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "5bd13fa6f12de434ef10fa1de41f602dd90f59d1d49e56c9066e530d7ed7fbce"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -13113,13 +12320,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "58177d6532305acebada8a69a2fb91b610e689d871e5761c78516f6d27b5c86b"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "d29c33a1b1dbe564204364cad7d5405783166db45393a174f2f81a775fcf7894"
                 }
             },
             "titanium": {
@@ -13229,13 +12429,6 @@
                     "shot": "eb178bb5783a6b0e10f72da82df7cbaaec75518d9de73b538614de173b8df49a"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "5a74629aedeea3d7507471b779cd8c04697187153e7976a739093ee73319252e"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -13341,13 +12534,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "dcf23ba5a5d65b8228ab413c372cc716c7c644aada4dea7b1a7cfc39b52576d1"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "d5f7e46acec7d4805335e542da72383af7b9af5ed452702b4b8690b8628ffe8a"
                 }
             },
             "titanium": {
@@ -13457,13 +12643,6 @@
                     "shot": "56021d93c672a304ac2c74703c868b2b32e2a68c6626f41cafebbe5631ddaa9f"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "48e951cc4865b9b53bceb2e7e8992f285e8180b92c5fa46a283e3eeb184a1a29"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -13569,13 +12748,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "7e63cc41b51f0045d39526fc2f630d71a467a197bc46c1455a3977360178320a"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "a6837bcb9025a52510fe9ac0a12fe40ba588e4d0dfea080b6677ae746190c17c"
                 }
             },
             "titanium": {
@@ -13685,13 +12857,6 @@
                     "shot": "530da31bc41a89f8b7bb8199cd30e36f5524c3c6dca7083175ae2819fca58eec"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "9fc9e033ebe81bc21d383c8acacc3ade14bce69f2ec08576cfe1193a5ddec726"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -13762,13 +12927,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "70b7f75cc7e5e95feac943f53cb64ead5d4db0456d447d0f5af448ff7341ba3c"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "9022add876b5f72c8bf0cc736a5299a410f9ec24c8eee9e1c70d495ddf928d12"
                 }
             },
             "titanium": {
@@ -13876,13 +13034,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "ab958899d272c9c3ab339797d65227648ab44628383f57718da2767bde21891b"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "c19edaf4693ed61b15ceedeefe12e3be46694f1557a1eb4086c4026fc5fc2bb6"
                 }
             },
             "titanium": {
@@ -14027,13 +13178,6 @@
                     "shot": "1c67439b1cc85a16ff87e5c1309129057488d9e7e84066842d5cba8b347bc47a"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "aa68565030a0220ac10801d5c18054b042d11e7baf90653349669c809c77c8bc"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -14139,13 +13283,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "d58b0aed6192363b9efd42dcdcfe7d72fec4fa576b2f7bae28ab0a2d31154d14"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "75eded70f68ff95063f6ecff08ab204dfb4554f0f628f226095220225eab75f9"
                 }
             },
             "titanium": {
@@ -14255,13 +13392,6 @@
                     "shot": "c2a15fc9905d98410f9376cac7410c8b6bc9dc9ff913a9cd736956aab07d83d8"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "ddebd99fcb5387795a3133530eb6257d9a25c835f3bba875b3ea9b69bc61e64d"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -14367,13 +13497,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "b1de6fc7f7f6e8045ac7bb584a3854e231f7e52a1324307755260aee3d8ee4b3"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "3098f5c780a6b35644dbbbd13d5b50d855fb7f35bf3c5d9e9ee5a869bf1f2f5a"
                 }
             },
             "titanium": {
@@ -14483,13 +13606,6 @@
                     "shot": "3ef0e258dee6ef0ea868a2179aa40e60d5389bc0834bc6868082b4e01e4beecd"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "9c94195f3e3de2253c9399ad4e3c4ba3f75931b3ab7036692b1b0c8ba693fa77"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -14595,13 +13711,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "37ef1a935273c13a2b6cc3b3fcfa61586cb15dde5a638fd00f946ad9790792b4"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "8adb011fc6b92adcaa36c0c07b0bedc3f08843e059fb50784135b428ece6c558"
                 }
             },
             "titanium": {
@@ -14711,13 +13820,6 @@
                     "shot": "409e282a46185f893dbc585a1bc15112d8616976f47380ad3785333bea344224"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "95341a311beecbcea03455647f28c0d80551d2ce1c6cbd33a7b74cb169bdf0dc"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -14823,13 +13925,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "cfd4f6744bb872393f788a8c27f6bd4e59d586fae58c3145546f7c14c8eca3ec"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "873e67be987ff4e512f9d5d697f6a4cf4b5b41a96385f170ff345ba73b030561"
                 }
             },
             "titanium": {
@@ -14939,13 +14034,6 @@
                     "shot": "d0f214f3389f150d0d423e76affe0b847f3544cd19ca748e56fa5aaa4cc61e5e"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "92c86568857a116e81ab2147282a2bf528e9e937d218fc07fcb0e5e8be6e04d9"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -15051,13 +14139,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "ed309c111b56d74e35d7c50d075f3b5e7f80ac53c46851067522c4555ca6b65a"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "df80c2eac6231e800d13215d4ee1e446a03154a27c818b825e2ea0e558caeff1"
                 }
             },
             "titanium": {
@@ -15167,13 +14248,6 @@
                     "shot": "e35697fe7ec1f05ecdbd4822a03591bb5a359c3d1a03ca440b40551fe6106450"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "01b398e6d3625b6bb3c4bb746c4a0dc2cf6b597065472fe8f2b5a9c2de833e2f"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -15279,13 +14353,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "6a53395b04a4da17e70af3d4e33812fd617e251187c8ab04219214e2b387a78f"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "b3e97a57c783ce56ad7c68c796f0825cf19597bd22344ed5f347ac81a8cc7398"
                 }
             },
             "titanium": {
@@ -15395,13 +14462,6 @@
                     "shot": "a371574ce0deaae3630783dd9b961f2bce6bdf1ca56c097faa3f00481d36f4d1"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "3c29dd668b98b03f5b029170c95f0437894a6b7c3e470e8700f4523777fba955"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -15507,13 +14567,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "65bda03fd1a2876e5f7c2e04b8fa56eac01999f807aad7db677ba6c230442be7"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "f1c23adc1d219991ce15c4b1def3a91e488d7500cd1d945519f2c344f7cea969"
                 }
             },
             "titanium": {
@@ -15623,13 +14676,6 @@
                     "shot": "000bacf721080ea11b959e38aaddb75215b8db56e4fcb3155f01fd30a36f7878"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "b82b8f19372f8e8caa3846e42d9f7634158bfecd40aa24c20149aca7af2c304d"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -15735,13 +14781,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "abf053aaf4546df7ab6616eae0bc1236a4f98aec8dea330e84f44d8fbdb19f7b"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "9fe4da41232499528518d1c70be4e767a6828ed588374876cd0c0c31147658c1"
                 }
             },
             "titanium": {
@@ -15851,13 +14890,6 @@
                     "shot": "3be0c77a9b0fc6e28697fdff3e36e8e09ec5fe4cc645cd600f3805b57b54afb3"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "01b808d3e36fdce3fa57d3f70d608b1b1789ec20999e7ef3163aad2dd8afbcda"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -15965,13 +14997,6 @@
                     "shot": "ac582c722aaa2f0001c4b7f8c793a27c192d17e7e5c3967348dd792469356b0b"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "2a60e73fc8c5056bb2dc50428b88ca8214268aea6e79289f307d53de76c0eb01"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -16070,13 +15095,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "2a5dc6b732cf938271d1f4e334b939bc936e2dbd7e9ffffbe2e6ccfe7fe2f6f8"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "e6f435024105dfb9f9a5cdf4e15b2350f55ef87e2b99560c09ca7b71786e8729"
                 }
             },
             "titanium": {
@@ -16193,13 +15211,6 @@
                     "shot": "f1af841083fea7cc6808b794d38b46e95f6a4fcc49f266691af189cc8fbc0adc"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "d384b4a5ad1b4f37e68d9e0a72bf968bf09d9ff0fa121f932f70fcd6d9833ca4"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -16305,13 +15316,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "95e697f4576e0aeae9b49bd1a5c282a470d4b9e82a782321d105d475ce82b8c5"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "0f294bfca22bb410ac1e8086c69ef587fe376ec41fb1446252ab3a6bea355448"
                 }
             },
             "titanium": {
@@ -16421,13 +15425,6 @@
                     "shot": "e9c51dfb8d9bd5de6d747cdd0053ca5f7c402f424cbfe739ec6d473c2ce70363"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "b997a7ccd7c871fc63d694a9668adac5be5dddd781ebc6432acc9ae0166434d5"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -16533,13 +15530,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "9b6925de5f9fb6161caf2122baef54097c49063c0fb8b7bba31a8fb3c90185e0"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "7f29909c04df552727ce1f18c01e974da2822368946d9be6435493ee6ac71131"
                 }
             },
             "titanium": {
@@ -16649,13 +15639,6 @@
                     "shot": "640ca75311c53e31a1955ab5f24a39de285aa250d4f83a533e9c0da0b3960657"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "369fcfa3f49b8a29598a563847ec0c9163390291948e72f8b4624795196f3a0d"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -16761,13 +15744,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "1332d489f33dac4704cc19c753d91ce4d0765708f74f9b563f0b509484621e38"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "ad97f43e686c4c1c2dd8fb1a22fc8e24f1f91d67fe61d40e8304bd9731f7efe3"
                 }
             },
             "titanium": {
@@ -16877,13 +15853,6 @@
                     "shot": "69e31133ae0bc0fa5a1a915307da6b046faa6b38b9691060bb502589089235e3"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "61e2bac8f36c75f7ded8ee2dd781a7d7b340f8e4dae8137a7687f3b6270c9d75"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -16989,13 +15958,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "683a52070eafc2b75b2bbc615de63f1219a1de76448647fc77ac9cd8c8e600c4"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "b4f407f9a20d0d921d274eb5ae7e9038322de3e8895d184f54d19f6ae19f80c1"
                 }
             },
             "titanium": {
@@ -17105,13 +16067,6 @@
                     "shot": "2ecb68d6f5d4ff1e116e7ec0dfd5d3f53e3664b5bdeb0ef545fdc63d7971b198"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "a234acceb8b108cb44340a3b69c25400e7389b7d841707f80243c24764dba257"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -17217,13 +16172,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "0a3491e342b94c767f8debfc41ebd01c8493519cdf4c3598d92f49c0f177df1e"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "fe64377ff2221ff1d3cd6457db5bee759191d151f5d30bccfa9ed973d29aaeec"
                 }
             },
             "titanium": {
@@ -17333,13 +16281,6 @@
                     "shot": "5b54e99b47189831503fa612690c2ffa01bdade8c02125a5b6bbf36fefcdaf78"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "6f09288cc527b65954ee6f2ffbce27e460624f4ebf2c90ce38b4f32d2df3f30f"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -17445,13 +16386,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "4096007052a2915c2409ef3b675d288adb326877fb9880295fa3689f7ff3a7d5"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "721ea009751315546aca746dcf1aba4b61775aff82b5c989b920644d81022a38"
                 }
             },
             "titanium": {
@@ -17561,13 +16495,6 @@
                     "shot": "80241e945fc0abed380ac191b4f7af6df7d6a4d18ac51e73edea0de5fbe621eb"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "8e0cec00c117a0cd5b625558205a070262823fadee5ecb35202aec8078b9089a"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -17673,13 +16600,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "3d4ff65b42c28a99ad6883dc058aeb9f17fb95a7f215abd5462a2ff1895a0cd2"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "ef364145d84344cac687678de16caefc5b0ccac4464cdd3cd215ad7550137093"
                 }
             },
             "titanium": {
@@ -17789,13 +16709,6 @@
                     "shot": "d3fc8f16290329833e12e1764b08b82cddd12b933e5fd9c617edebd3fc1c4aa0"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "139d804d98ad7fe67576d975e3957b8629f1044f5186a4f9d2abe5f282b36d77"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -17901,13 +16814,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "c100b8ff9e901dfa01b3e89e8b69f8c5ee6886db20168bbd211ae58e72f0826c"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "df150a59250a9ecbaa43321cae95169d90e3333b85f6dc2f37beff0c590cf352"
                 }
             },
             "titanium": {
@@ -18017,13 +16923,6 @@
                     "shot": "c22b524df8defdad849fc1e623ff01d74487974dc4df76604994f00f9ec2d4a2"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "cd90bec5b528bbec7b850b26d41ae4e08e11d5f53dfff5054e707d8ed641e0e6"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -18129,13 +17028,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "f15aa77faf273f4c287184076ff884a9e4002ade8f5f0b3a8b7d24ad31026110"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "3c17eb62e9c1fd30509bba5f333e8da1e25a59a5cf96921de24ed4e0547c2f34"
                 }
             },
             "titanium": {
@@ -18245,13 +17137,6 @@
                     "shot": "d186d81cbad269517a6d8cd16de70b9f2725451e82261c1120f58aa46beacf6e"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "eb48fb9cf42ab6ee5e27a07e985e22d8c425cb920679d3b1ca46d421bbf59d9d"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -18357,13 +17242,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "9c6e752ce163a57f2ff2ee3ab2703e68e11099db067390723cf72813c74c69f7"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "3cfda2a87d974789ecc77c85e210d0cc6c97a45c5076ff305e3e4bc025c17760"
                 }
             },
             "titanium": {
@@ -18473,13 +17351,6 @@
                     "shot": "007f96c2288f937edb172680813464d9a10231c471df15b59dfde63bccbd9ebe"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "d45e0ee5dc98d68a7e5a12332f853209ac3b45c66c5c6fb07acb776e887ffdec"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -18585,13 +17456,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "45595a0af64664d2971a0bd9c022b125089f3484805d5178932ee2a2dbaae909"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "d99bd62fad2e47f460776eb7f14696b0b9d9abba82c18f3966806033eb874ef4"
                 }
             },
             "titanium": {
@@ -18701,13 +17565,6 @@
                     "shot": "b7302513013f0eb94d9bc07c17ba3eb1aadbf13f65cfee1497bbc78068369f8b"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "5588bbe30caa8e83941cf24bc00e1c27784b5e4d4c81c00d149da0f8802e99bf"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -18813,13 +17670,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "fef766e85a519d280c2106e387c59ad433a49cbf60650656d140ff4074e8a007"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "a01cd0828967b7ceb3589f986f49fa3d78b407b22e2c9e5cc062091cec5e6d69"
                 }
             },
             "titanium": {
@@ -18929,13 +17779,6 @@
                     "shot": "24d8faa5dc29dc2b1f26936ee228f1195a5e6d0967de659e752c3fce50f1f6a2"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "1088957f1b419af620ae2821219853ba4759019a33e9302df0b092d7f8115a7e"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -19041,13 +17884,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "f092dfae689af9750e98ebb90d2ea6059aa7706ec58a2147653a9a9c577d85ca"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "51692553413801ba5ceced425f0e12abbd73fc07afc17978f0ac683ba64fd39f"
                 }
             },
             "titanium": {
@@ -19157,13 +17993,6 @@
                     "shot": "247572ec6575c1b2df7383c61998d8e328f3274ea3748514a9d2630d9cfbac80"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "722934014585bce5806ba3e760f7d43343e68a84ac8c9da440a87e26ebedda55"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -19269,13 +18098,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "ae57096e87c1b0e4a9abb752fa8295dd2f2dceb154e8e738e6c3ff5a3dd7b2c2"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "945c7a7b8c0812aa3fd3b49b70d653a1fa479fe9a2dd1a3b1cbc5900ea9f4f5f"
                 }
             },
             "titanium": {
@@ -19385,13 +18207,6 @@
                     "shot": "ec862f1b199f5c7553d20da8990b4f3ed9f5200326a66e9e2e7fea58ca418d89"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "3aaa29a8573dff845c090f394d2663c8a0ae0f185d28029ac907f2f143656bc5"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -19497,13 +18312,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "b764deb9cc86f9c28e5f0b7b7e3ae069c3e1bb8182c058c15195de6f1fc7dd12"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "fd439bac9fb631b8ebd979aab564f192450892658d19c5bf613d309d5977e966"
                 }
             },
             "titanium": {
@@ -19613,13 +18421,6 @@
                     "shot": "05b4b5f2018412ad06eda43d0ff6f136f6d836d33abc8e55d331c98ad1d690fd"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "55dec7dcc2225ae96d1a475f14cb07116888f8c6b7c0f94c1e8163a2ac76f5bc"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -19725,13 +18526,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "a35fbed05bafeb491bc4001e326f9b0b76b49adc273271f0757842c15584d0ce"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "ed98e297300dc441236327b85fd488ff348c4fb60cec71d67a1a3c17b8654947"
                 }
             },
             "titanium": {
@@ -19841,13 +18635,6 @@
                     "shot": "439dfc57c2c028fcdc884f897dfd34eedbd863b7f1e567af7526043b8773b72a"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "dd6f095fa08601303ba2cf0e6a0688a594619685f95f9eb0be8639535b82f756"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -19955,13 +18742,6 @@
                     "shot": "e236ba31b80841994c7ec40bece4ccfca5054e7f49d5276dccb9fd17015dcc91"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "3e35ff6685ed8eba039e05d88fdf42867d1919e49f6288e4f340ebd91c637f6b"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -20067,13 +18847,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "7ed495b1e16e6e8d33bd95a6a7b1bd82fcc79d8d40ba935aaee08cdf2c08dc79"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "1dbf527a99cce09de695f1bcf305b9c24df9cee2629436ce833bfbed72119c5e"
                 }
             },
             "titanium": {
@@ -20219,13 +18992,6 @@
                     "shot": "d8db96d83c80d54f27051495e57f6772292b231655d90c6dcb47b0c1ea1715c9"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "55f0a5bd04fc746eec91250efa32083956c41d2a211a3a725a0e50181fb5ee01"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -20331,13 +19097,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "c88a1482585de7aa7c6940c46fe467755dd9cda7a2b6ba1ae87af3a3c97fcd98"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "ac913ff2c51e62245b91d938f6adc9ec2048213ed74d82a23b811c9be99bd0d0"
                 }
             },
             "titanium": {
@@ -20447,13 +19206,6 @@
                     "shot": "db181a208c19ba021d1745146d9036996cb6d4ebb8101f2d243ffccf747028d1"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "d039dbbb4fb17a88b84d5cc5ea620304dba2a9d0d3508369206568049d8eb3cb"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -20559,13 +19311,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "8fac8c134c1c62c82cb060177a94e2b91d54e80899c15d7fbe40e111fd9f4f4e"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "f8b21691940b6da6c61d391d27ca54179f445fa4f36fd869788a49ef07d811b6"
                 }
             },
             "titanium": {
@@ -20675,13 +19420,6 @@
                     "shot": "3df9651019b16676fbf350363057a6f6abfba064220cc9c3b37b531bbecdc7e9"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "f6099c7facd5d122376e094bfe7743011081fb8d41b10ce7c8ba5c0ced1fd944"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -20787,13 +19525,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "1b03c3bdadbea20915b0f87f6d80cdba57371bb64edcfe3f3c67475398901708"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "aec869e7b9df0f3b7ba76eadc9ddbc810acad3dbd3e2a79f38bfef03582a2dfe"
                 }
             },
             "titanium": {
@@ -20903,13 +19634,6 @@
                     "shot": "6f52eced5d3725f419c3998f0322069c6f4676eac99f9291095d7469059c7fc5"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "89ca8f2e66d04819f3bdc39e50ba290917a1b8da539094f8f62cb0df3faa9558"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -21015,13 +19739,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "40702478cf2bb0241e64341fe6822f40273fadd0025da8bc2bec170585b68665"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "7e89a6cc4fd8759b840cf6bfeb1036ffc536c63c3a0af6d17fad3b5b4753250e"
                 }
             },
             "titanium": {
@@ -21131,13 +19848,6 @@
                     "shot": "95f90ed731d2930623b31f202f193e97b66841cd488b96d750a3cdb651cd50fc"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "d7510cd850a6bf8f8f9b7a3f78181577d862ca3b96699a653104887c90faaa05"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -21243,13 +19953,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "f9d15777bfbff07bf334f42da1d7028700f7674170cd2604de52be5ff2d6d774"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "763a23985e4fbe8d6e32cd513d33d8b86d00f5370f63134db667d44bd48b6c06"
                 }
             },
             "titanium": {
@@ -21359,13 +20062,6 @@
                     "shot": "d0ea2c5a65b64388a8518dcdf43625b9e657e0bd9b5ee521a202cb215822a940"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "46250c6493b2c9a904b4fb2934b5fa9a6a2e3f61b39cb02d5540ad997d7c079c"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -21471,13 +20167,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "38c2dcc30cbdc1dd3668bc5cafecb356ce106715901969309beb8b94bbe38aed"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "711be0e682b4091522db9ee8fe2290e45d0b3ef00fa0c8e93c7b687dd3ef9b1d"
                 }
             },
             "titanium": {
@@ -21587,13 +20276,6 @@
                     "shot": "4374a4e5da776d6e03baa6449963c03c3e9b85b8b7cb44d7ed8ace4326f67136"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "7028a5bb3a26bbb22fd38724636031126a669e7c9b020cf34c3e3b52fc5e2ca5"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -21699,13 +20381,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "b7fd44d2e598f5d31c376a6717302693024023f76bd6d0dabfa39e78070b5d07"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "f038eec1b5a1e070f0a1c05659714ec8b9ae880ec8f6c53f77f1bee80d3cee67"
                 }
             },
             "titanium": {
@@ -21815,13 +20490,6 @@
                     "shot": "968a345d39f4338a936a52f5425466ba61bf4e1495d8030bffc4c033d83d6c3f"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "eac74c71da00c6cd2ee84403f79eeb2bc4e0de8f3124227367905a5d1958ac40"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -21927,13 +20595,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "ed94625e5de97021b940922408dbc724e732668271e6e28d9db55a509fc11ac8"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "af12a09fad325c46b62d510fe283dbefb6791c0f3df6bd3cfd06da164f0e42d8"
                 }
             },
             "titanium": {
@@ -22043,13 +20704,6 @@
                     "shot": "19e7734193e9cfcb4944b5fe9d4d765acb2a9acd2041bc3881514a4f3ccfbe59"
                 }
             },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "2db07f2ee984b6a9584be5a668d5ce04a1dd1cc090aa17d25946ef2675107207"
-                }
-            },
             "titanium": {
                 "firefox": {
                     "state": "carried",
@@ -22155,13 +20809,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "ad41163bcd930a5704f5b607ee5dcfcb04683d35ff67a8dbf0abe486cbac2c84"
-                }
-            },
-            "terminal": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "6b3d96e4244ee4e95ff36b2afd9b59d4331abcc56bd1eae3ea30ab2370cedc60"
                 }
             },
             "titanium": {

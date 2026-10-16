@@ -21,7 +21,7 @@
  * ring (tests/helpers/focus-paint.mjs) is, and it is asserted for every theme.
  * A theme that joins this list owes a ring that shows in paint on all four sides.
  */
-export const OWN_FOCUS_GRAMMAR = new Set(['cyberpunk', 'synthwave', 'pastel', 'terminal', 'solstice', 'deco', 'phantom']);
+export const OWN_FOCUS_GRAMMAR = new Set(['cyberpunk', 'synthwave', 'pastel', 'solstice', 'deco', 'phantom']);
 
 /**
  * Reach an element with the keyboard, by CSS selector.

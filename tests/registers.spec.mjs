@@ -118,12 +118,9 @@ for (const theme of THEMES) {
                 const hovered = await paint();
                 await page.mouse.down();
                 try {
-                    await measured(
-                        button,
-                        readPaint,
-                        undefined,
-                        `${theme}: held down, the button paints exactly as it did hovered`,
-                    ).not.toBe(hovered);
+                    await measured(button, readPaint, undefined, `${theme}: held down, the button paints exactly as it did hovered`).not.toBe(
+                        hovered,
+                    );
                 } finally {
                     await page.mouse.up();
                 }
@@ -168,15 +165,16 @@ for (const theme of SWEEP) {
             const unit = (/** @type {number[]} */ c) => /** @type {[number, number, number]} */ (c.map((v) => v / 255));
             const ratio = contrast(unit(parse(ink)), unit(ground));
             // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
-            if (ratio < 4.5) reportContrast(test.info(), `${theme} destructive alert, ${ink} on painted rgb(${ground.join(', ')}): ${ratio.toFixed(2)}:1`);
+            if (ratio < 4.5)
+                reportContrast(test.info(), `${theme} destructive alert, ${ink} on painted rgb(${ground.join(', ')}): ${ratio.toFixed(2)}:1`);
         },
     );
 }
 
 // CP1 — the arrival answers a click anywhere, not only on Skip.
 //
-// Three themes build one: phantom (`card`), terminal and synthwave
-// (`boot`). The overlay is `position: fixed; inset: 0`, so until 6.0.0 it
+// Two themes build one: phantom (`card`) and synthwave (`boot`; terminal
+// built one too until it was removed on 2026-10-16). The overlay is `position: fixed; inset: 0`, so until 6.0.0 it
 // ate every click for up to 1100ms and only the Skip button ended it — a
 // click elsewhere did nothing and gave no sign it had been lost.
 // JobTracker reported that as "the theme picker does not work on phantom";
@@ -186,7 +184,7 @@ for (const theme of SWEEP) {
 // Drilled 2026-09-12 in firefox: the overlay's own listener removed from
 // js/effects.js → red on all four, because the click lands and the
 // overlay stays. Restored green.
-for (const theme of ['phantom', 'terminal', 'synthwave']) {
+for (const theme of ['phantom', 'synthwave']) {
     test(
         `the arrival lets go of a click anywhere under ${theme} [CP1]`,
         { tag: ['@sweep', `@theme:${theme}`, '@component:page-effects', '@component:showcase'] },
@@ -254,22 +252,12 @@ test(
             expect(box, `${theme}: the picker is on the page`).not.toBeNull();
             seen.push([theme, Math.round(box.y), Math.round(box.x)]);
         }
-        // One theme is inset on purpose, and it is not drift.
-        //
-        // terminal draws a CRT bezel — a frame up to 18px wide, fixed against
-        // the viewport — and since 2026-09-13 the theme reserves that space so
-        // nothing sits behind it. Kenny's words at the release gate: "links
-        // moeten compleet en klikbaar zijn". Before that, the site's first
-        // navigation link started at 8px and lost 9.8 of them behind the frame,
-        // and the approved demo hid its own skip link the same way.
-        //
-        // So terminal's picker really does rest further in than the others, by
-        // exactly the frame it draws. That is a theme having a frame, not a
-        // control wandering. It is named here with its measurement rather than
-        // widened away, so the day terminal stops framing the page this line
-        // fails and someone reads it.
-        const FRAMED = { terminal: 18 };
-        const INSET_REASON = 'terminal reserves the width of its own CRT bezel, measured 18px at 1600px and 18px at this width';
+        // No theme is inset on purpose any more: terminal, which reserved the
+        // width of its CRT bezel (18px), was removed on 2026-10-16. A theme
+        // that frames the page again names its inset here with its measurement.
+        /** @type {Record<string, number>} */
+        const FRAMED = {};
+        const INSET_REASON = 'it reserves the width of its own frame';
 
         const straight = seen.filter(([name]) => !(name in FRAMED));
         const ys = straight.map(([, y]) => y);

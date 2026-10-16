@@ -146,28 +146,6 @@
                 "chromium": "content 239 wide in a box of 230",
                 "firefox": null
             }
-        ],
-        "terminal": [
-            {
-                "where": "dl",
-                "chromium": "content 238 wide in a box of 224",
-                "firefox": "content 238 wide in a box of 224"
-            },
-            {
-                "where": "i.kp-spec__swatch inside dd",
-                "chromium": "wider than its container by 9px",
-                "firefox": "wider than its container by 9px"
-            },
-            {
-                "where": "input.kp-field__check",
-                "chromium": "content 27 wide in a box of 22",
-                "firefox": "content 26 wide in a box of 23"
-            },
-            {
-                "where": "span.kp-spec__font inside dd",
-                "chromium": "wider than its container by 7px",
-                "firefox": "wider than its container by 7px"
-            }
         ]
     }
 }

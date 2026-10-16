@@ -291,39 +291,6 @@ const IDEAS = {
             ['The wobble', 'The changed site wobbles like jelly; its string is drawn again.'],
         ],
     },
-    terminal: {
-        shape: [
-            ['The box-drawing map', 'A framed text screen, square-capped phosphor links, dashed square-ish rings; [x] / [ ] kinds.'],
-            ['traceroute', 'Hop-dot links, inverse-video node blocks, the hub in reverse video; underlined kinds.'],
-            [
-                'The ASCII plot',
-                'Plain characters on the screen: every site an open circle in the phosphor with a + core, links in fine dotted ink, bold labels; the kinds as > prompts.',
-            ],
-        ],
-        loading: [
-            ['The text spinner', 'As character 1 had it: the dashed ring ticks round like a spinner.'],
-            ['Hops marching', 'As character 2 had it: the hop dots march round.'],
-            ['The blinking cursor', 'A block cursor blinks on the ring while it ticks a step at a time.'],
-        ],
-        arrival: [
-            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
-            ['Printed line by line', 'The sites are printed one by one, as a command writes its output; the links come after.'],
-            ['Scrolled up', 'The whole network scrolls up into place in four steps, as a screen filling.'],
-        ],
-        focus: [
-            ['Half bright', 'As character 1 had it: the rest drops to half brightness.'],
-            [
-                'The package’s dimming',
-                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
-            ],
-            ['Reverse video', 'The pick is drawn in reverse video; the rest dims to a quarter; a hidden kind is struck through.'],
-        ],
-        live: [
-            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
-            ['The cursor blink', 'The changed site blinks three times like a cursor; its link runs a dotted packet.'],
-            ['Bold for a beat', 'The changed site’s ring and its link turn bold phosphor for a beat.'],
-        ],
-    },
     forest: {
         shape: [
             ['The trail map', 'Contour rings on kraft, trail-dash links, cairn rings, a ranger station hub, serif italic labels; wooden markers.'],

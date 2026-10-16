@@ -44,13 +44,6 @@
             "failure": "3",
             "phone": "1"
         },
-        "terminal": {
-            "shape": "r2-tm-shape-1",
-            "loading": "1",
-            "arrival": "1",
-            "failure": "1",
-            "phone": "1"
-        },
         "forest": {
             "shape": "r2-fo-shape-2",
             "loading": "1",

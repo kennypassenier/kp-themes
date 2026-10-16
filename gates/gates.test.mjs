@@ -233,11 +233,12 @@ test('KT2: every theme has a pressed state you can see', () => {
     assert.deepEqual(failures, []);
 });
 
-test('KT2: the two themes that could not reach it on lightness now do', () => {
+test('KT2: the theme that could not reach it on lightness now does', () => {
     // The whole point of letting the pressed state give up chroma. Before
-    // the fix these two produced nine violations between them.
-    const opted = themes().filter(/** @param {Theme} t */ (t) => ['cyberpunk', 'terminal'].includes(t.name));
-    assert.equal(opted.length, 2);
+    // the fix this one and terminal (removed 2026-10-16) produced nine
+    // violations between them.
+    const opted = themes().filter(/** @param {Theme} t */ (t) => ['cyberpunk'].includes(t.name));
+    assert.equal(opted.length, 1);
     for (const theme of opted) assert.deepEqual(checkStateVisibility(theme), []);
 });
 

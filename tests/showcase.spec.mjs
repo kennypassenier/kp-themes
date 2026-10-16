@@ -78,18 +78,18 @@ for (const side of ['left', 'right']) {
         await page.click(`#pane-${side} .kp-icon-button`);
         await expect(page.locator(`#sc-menu-${side}`)).toBeVisible();
         await opened(page, `#sc-menu-${side}`);
-        await page.click(`#sc-menu-${side} [data-kp-theme="terminal"]`);
+        await page.click(`#sc-menu-${side} [data-kp-theme="cyberpunk"]`);
 
-        await expect(page.locator(`#pane-${side}`)).toHaveAttribute('data-theme', 'terminal');
+        await expect(page.locator(`#pane-${side}`)).toHaveAttribute('data-theme', 'cyberpunk');
         await expect(page.locator(`#pane-${other}`)).toHaveAttribute('data-theme', before);
         // The menu closes itself, the name above the half says what it
         // wears, and the option is marked as selected.
         await expect(page.locator(`#sc-menu-${side}`)).toBeHidden();
-        await expect(page.locator(`[data-sc-name="${side}"]`)).toHaveText('Terminal');
-        await expect(page.locator(`#sc-menu-${side} [data-kp-theme="terminal"]`)).toHaveAttribute('data-selected', 'true');
+        await expect(page.locator(`[data-sc-name="${side}"]`)).toHaveText('Cyberpunk');
+        await expect(page.locator(`#sc-menu-${side} [data-kp-theme="cyberpunk"]`)).toHaveAttribute('data-selected', 'true');
         // The document did not change theme: the page chrome is nobody's half.
         expect(await page.getAttribute('html', 'data-theme')).toBe(documentTheme);
-        // And the half really wears it: its ground is terminal's, not the other half's.
+        // And the half really wears it: its ground is cyberpunk's, not the other half's.
         const grounds = await page.evaluate(
             ([a, b]) => [
                 getComputedStyle(document.querySelector(`#pane-${a} .sc-cell`)).backgroundColor,
@@ -106,13 +106,13 @@ test('the two halves scroll as one and stay aligned specimen by specimen [TH88]'
     await page.goto('/showcase/index.html');
     await page.waitForSelector('.kp-icon-button');
     // Two faces with different metrics, so the halves WOULD drift if each
-    // were its own column: formal's sans on the left, terminal's mono on
+    // were its own column: formal's sans on the left, cyberpunk's condensed face on
     // the right.
     await page.evaluate(() => window.scrollTo(0, 400));
     await page.click('#pane-right .kp-icon-button');
     await opened(page, '#sc-menu-right');
-    await page.click('#sc-menu-right [data-kp-theme="terminal"]');
-    // Terminal brings its own face (Share Tech Mono). Measuring before it
+    await page.click('#sc-menu-right [data-kp-theme="cyberpunk"]');
+    // Cyberpunk brings its own face (Rajdhani). Measuring before it
     // lands reads the fallback's metrics on the right half only, and the
     // two columns appear 3px apart against a 1px tolerance -- this test
     // failed roughly one run in two under full-suite load until this

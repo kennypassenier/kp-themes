@@ -950,9 +950,7 @@ export const DEFAULT_STRINGS = Object.freeze({
     arrivalWordsByTheme: {
         synthwave: { line: '▶ Play', progress: 'Tracking', ready: 'Press start' },
     },
-    arrivalLinesByTheme: {
-        terminal: ['KP-THEMES BIOS v5.0.0', 'MEMORY TEST ......... 640K OK', 'PHOSPHOR PROFILE .... terminal', 'CRT WARM-UP ......... OK', 'READY.'],
-    },
+    arrivalLinesByTheme: {},
     arrivalProgress: 'Progress',
     arrivalReady: 'Ready',
     arrivalSkip: 'Skip',

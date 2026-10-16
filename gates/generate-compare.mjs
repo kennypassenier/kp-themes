@@ -188,7 +188,7 @@ export function diffs() {
             // the new side is compared as the same union.
             const oldRules = scopedRules(oldCss, was(theme.name));
             const nowRules = scopedRules(
-                newThemes + '\n' + newRegisters[/** @type {'cyberpunk' | 'synthwave' | 'phantom' | 'terminal' | 'brutalism'} */ (theme.name)],
+                newThemes + '\n' + newRegisters[/** @type {'cyberpunk' | 'synthwave' | 'phantom' | 'brutalism'} */ (theme.name)],
                 theme.name,
             );
             register = !oldBlocks.has(was(theme.name))
@@ -300,7 +300,6 @@ const CURRENT = [
     'cyberpunk-register.css',
     'synthwave-register.css',
     'phantom-register.css',
-    'terminal-register.css',
     'brutalism-register.css',
     'titanium-register.css',
     'pastel-register.css',

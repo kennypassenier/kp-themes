@@ -50,14 +50,6 @@
             "events": "r4-pa-ev-scallop",
             "tip": "a"
         },
-        "terminal": {
-            "shape": "a",
-            "loading": "r4-tm-load-dialup",
-            "arrival": "r3-tm-ar-print",
-            "update": "none",
-            "events": "ring",
-            "tip": "b"
-        },
         "forest": {
             "shape": "a",
             "loading": "r4-fo-map",

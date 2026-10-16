@@ -53,22 +53,6 @@
         text-shadow: 2px 2px 0 hsl(from var(--fx-overprint) h s l / 0.4);
     }
 
-    /* T9 · Terminal: scanlines on the CRT glass, phosphor bloom on titles. */
-    [data-theme='terminal'] {
-        --fx-texture: repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 0.06) 0 1px, transparent 1px 3px);
-        --fx-texture-opacity: 1;
-    }
-
-    [data-theme='terminal'] h1,
-    [data-theme='terminal'] h2 {
-        text-shadow: 0 0 8px hsl(from var(--primary) h s l / 0.45);
-    }
-
-    [data-theme='terminal'] ::selection {
-        background: var(--primary);
-        color: var(--primary-foreground);
-    }
-
     /* Brutalism: a faint dot grid, the graph paper the black boxes sit on [TH64]. */
     [data-theme='brutalism'] {
         /* The demo's own geometry [S49, A8]: 1.6px dots on a 20px grid. */
@@ -645,10 +629,6 @@
         [data-theme='pastel'] .kp-badge {
             animation: kp-settle var(--fx-duration) var(--fx-ease) both;
         }
-
-        /* terminal — the cursor after a field's label is gone (5.0.0, R6-Q7):
-       the terminal register puts a block cursor inside the focused field,
-       at the caret, where a terminal's cursor actually is. */
 
         /* forest — the contour field does not move: it is a static page background
        (see the forest texture rule above). */

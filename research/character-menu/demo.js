@@ -344,45 +344,6 @@ const IDEAS = {
             },
         ],
     },
-    terminal: {
-        shape: [
-            {
-                name: 'The top(1) row',
-                text: 'A double box-drawing frame around the plate, headings in mono capitals, entries square-joined in the phosphor.',
-            },
-            { name: 'The dumb-terminal plot', text: 'Groups separated by a row of character-cell rules, hints in brackets, everything in the mono.' },
-            {
-                name: 'The curses window',
-                text: 'A single-line box frame, headings ruled off under them in a fainter line, entries square in the phosphor.',
-            },
-        ],
-        loading: [
-            { name: 'The block caret', text: 'A block caret blinks on the loading row, once a second.' },
-            { name: 'The dots march', text: 'A row of dots marches across the loading row, then starts again.' },
-            { name: 'The hash bar', text: 'A row of # blocks fills the loading row block by block, then starts over.' },
-        ],
-        open: [
-            { name: 'Printed', text: 'The menu prints in line by line in hard steps, and erases back line by line to close.' },
-            { name: 'Paged in', text: 'The menu drops into place from above in three hard steps, and drops back up the same steps to close.' },
-            { name: 'Booted', text: 'The menu’s frame draws on in a single hard step, and drops off in a single step to close.' },
-        ],
-        tone: [
-            { name: 'The bell', text: 'The destructive entry flashes in reverse video once on open; the disabled reason prints under a dashed box.' },
-            { name: 'Reverse video', text: 'The destructive entry sits permanently in reverse video; the disabled entry’s reason is underlined.' },
-            { name: 'The warning glyph', text: 'A ! glyph sits before the destructive entry’s label; the disabled reason reads in brackets.' },
-        ],
-        interact: [
-            {
-                name: 'Reverse on hover',
-                text: 'A hovered or focused entry flips to reverse video; a press holds the reverse a beat longer before release.',
-            },
-            { name: 'The caret moves', text: 'A hovered or focused entry gets a block caret before its label; a press fills the caret solid.' },
-            {
-                name: 'The underline cursor',
-                text: 'A hovered or focused entry’s label gets an underline cursor that blinks once; a press stops the blink solid.',
-            },
-        ],
-    },
     forest: {
         shape: [
             { name: 'The ranger’s logbook', text: 'A kraft-paper plate, headings in serif italic, contour rings running faintly behind the groups.' },
