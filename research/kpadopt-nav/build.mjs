@@ -263,6 +263,13 @@ const tab = (t) => {
     return `<a class="kp-tabbar__tab" href="#${t.id}" data-kp-tab="${t.id}"${attrs ? ` ${attrs}` : ''}><span class="kp-tabbar__icon">${spin}</span><span class="kp-tabbar__label">${t.label}</span>${badge}</a>`;
 };
 
+/**
+ * The plain statement of what Kenny should see and what each control should do (Kenny, 2026-10-16: "Zet in de volgende
+ * demo nog eens duidelijk wat je verwacht"). One per section, beside the per-theme look-at text.
+ * @param {string} html
+ */
+const expected = (html) => `<div class="nf-expect"><p><b>Expected:</b></p>${html}</div>`;
+
 /** @param {string} drawer the id of the dialog the tab opens */
 const more = (drawer = 'tb-more') =>
     `<button type="button" class="kp-tabbar__tab kp-tabbar__tab--more" data-kp-dialog="${drawer}"><span class="kp-tabbar__icon kp-tabbar__icon--more" aria-hidden="true"></span><span class="kp-tabbar__label">More</span></button>`;
@@ -299,7 +306,7 @@ const MORE_ITEMS = `<a class="kp-menu__item" href="#backups"><span class="kp-men
 /** The More sheet drawn open inside a phone (the real one is the dialog below). */
 const SHEET = `<div class="kp-drawer kp-dialog tb-sheet" role="group" aria-label="More, shown open">
                                 <header class="kp-drawer__head"><h3 class="kp-dialog__title">More</h3><p class="kp-drawer__desc">The two areas you need less often, plus search and help.</p></header>
-                                <div class="kp-drawer__body"><div class="kp-menu" role="group" aria-label="More">
+                                <div class="kp-drawer__body"><div class="kp-menu kp-menu--rich" role="group" aria-label="More">
                                     ${MORE_ITEMS}
                                 </div></div>
                             </div>`;
@@ -309,10 +316,10 @@ const DRAWER = `
         <dialog class="kp-drawer kp-dialog" id="tb-more" aria-labelledby="tb-more-title">
             <header class="kp-drawer__head">
                 <h2 class="kp-dialog__title" id="tb-more-title">More</h2>
-                <button type="button" class="kp-icon-button kp-dialog__close" data-kp-dialog-close aria-label="Close"></button>
+                <button type="button" class="kp-icon-button kp-dialog__close" data-kp-dialog-close aria-label="Close">×</button>
                 <p class="kp-drawer__desc">The two areas you need less often, plus search and help.</p>
             </header>
-            <div class="kp-drawer__body"><div class="kp-menu" role="group" aria-label="More">
+            <div class="kp-drawer__body"><div class="kp-menu kp-menu--rich" role="group" aria-label="More">
                 ${MORE_ITEMS}
             </div></div>
         </dialog>`;
@@ -326,6 +333,12 @@ const SECTIONS = `
                     <h2 id="h-nav-fold">What does not fit goes behind More, and the bar never changes height.</h2>
                     <p class="nf-how"><code>data-kp-nav-fold</code> on the nav. Nothing else is written by hand: the More button and its menu are added by the script, and the menu is the package’s menu button.</p>
                 </div>
+                ${expected(`<ul>
+                    <li>Drag the slider above the first bar: the links that do not fit leave the bar from the end and are listed behind a <b>More</b> button; the bar stays one row tall at every width, and nothing jumps when a link folds.</li>
+                    <li>Press <b>More</b> (or the button under the “More opened” bar): a menu hangs from it with the folded links; picking an entry follows its link, <b>Escape</b> closes the menu and the focus is back on More.</li>
+                    <li>The three-link bar at 26rem has no More at all. The bar that keeps Settings (<code>data-kp-nav-keep</code>) keeps it however narrow it gets.</li>
+                    <li>Tab through a bar: the links that stay, then More, then Search. Folded links are skipped.</li>
+                </ul>`)}
                 <div class="nf-look" data-review-look>
 ${looks(
     (theme) =>
@@ -375,6 +388,13 @@ ${bar({ id: 'nf-live', width: 'nf-w-live', links: LINKS.plain })}
                     <h2 id="h-tabbar">Four areas within thumb reach, then More.</h2>
                     <p class="nf-how"><code>nav.kp-tabbar</code> of <code>.kp-tabbar__tab</code>s (icon over label, a count at the icon’s corner). The More tab is a <code>data-kp-dialog</code> button that opens the package’s drawer. Shown here inside phone frames with <code>kp-tabbar--always kp-tabbar--static</code>; the section below shows the real, fixed bar in a window of its own.</p>
                 </div>
+                ${expected(`<ul>
+                    <li>Five tabs sit at the foot of each phone: Home, Needs you, Overview, Activity and <b>More</b>, each with an icon over its label. The current tab is marked the way the theme marks it (see the look-at line).</li>
+                    <li>Press Home, Needs you, Overview or Activity in the first phone: the mark moves to the tab you pressed. (A busy or disabled tab does not take the mark.)</li>
+                    <li>The buttons under the phones act on the first phone: <b>Add a count</b> raises the number on Needs you by one; <b>Clear the count</b> removes it; <b>Toggle busy</b> swaps the icon of Overview for the theme’s spinner and back, the tab keeps its size; <b>Show keyboard focus</b> draws the focus ring on Activity.</li>
+                    <li>Press <b>More</b> in any phone: a panel opens at the right edge of the window, full height, and on a phone-sized window it leaves a dimmed strip of the page at the left. It lists four entries: Backups, System, Search or do anything, Help and the words. A <b>×</b> sits at its top right.</li>
+                    <li>The panel closes four ways: the <b>×</b>, <b>Escape</b>, a press on the dimmed strip, or a press on one of its entries (Backups and System also follow their link). Open it again and the same four entries are there. After it closes the focus is back on the More tab.</li>
+                </ul>`)}
                 <div class="nf-look" data-review-look>
 ${looks(
     (theme) =>
@@ -474,6 +494,7 @@ ${looks(
                     <span class="tb-play__note">These act on the first phone. The More tab of any phone opens the real drawer.</span>
                 </div>
                 <p class="nf-note">Pointing a tab and pressing it are the theme’s, and live: hover and press them. Contrast: a resting tab’s label is the muted ink, as a bar link is; where a theme’s muted ink is under 4.5:1 on the bar it is the theme’s own muted ink and is not changed here.</p>
+${DRAWER}
             </section>
 
             <section class="nf-sec" id="live-button" data-review-item="live-button" data-review-title="3 · The running-job button" data-review-components="button" aria-labelledby="h-live">
@@ -482,6 +503,11 @@ ${looks(
                     <h2 id="h-live">The dashboard’s pill is a button with the theme’s spinner in front.</h2>
                     <p class="nf-how"><code>kp-button kp-button--live</code> with a <code>kp-spinner kp-button__spin</code>, a <code>kp-button__short</code> and a <code>kp-button__long</code> label. No new look: it is the theme’s button, so it wears the theme’s button in every variant. It cuts a long label with an ellipsis, gives way to the short label in a container under 40rem, and <code>hidden</code> removes it without a gap.</p>
                 </div>
+                ${expected(`<ul>
+                    <li>Every button in the first row shows the theme’s spinner turning in front of the word “Running”, in its own variant (default, primary, secondary, ghost, destructive, small, large, mirrored).</li>
+                    <li>The disabled button does not answer the pointer. The very long label is cut with an ellipsis, never wrapped.</li>
+                    <li>In the wide bar the button reads “Updating gateway · step 3 of 35”; in the 22rem bar it reads only “Running”. In the last frame no job is running: the button is hidden and the bar closes over the gap.</li>
+                </ul>`)}
                 <div class="nf-look" data-review-look>
 ${looks(
     (theme) =>
@@ -529,6 +555,11 @@ ${looks(
                     <h2 id="h-together">The dashboard’s shell in three real windows.</h2>
                     <p class="nf-how">Three pages in frames, each a window of its own width: the media queries answer to the frame, so this is what a phone, a tablet and a desktop get. The mock page behind is the demo’s; the top bar, the tab bar, the running-job button, the menu button and the drawer are the package’s.</p>
                 </div>
+                ${expected(`<ul>
+                    <li>Three real pages in three windows. <b>Phone</b> (22.5rem): brand, search, the job button (“Running”) at the top, the four areas and More in a tab bar at the foot, the last line of the page clear of the bar. <b>Tablet</b> (48rem): the same tab bar. <b>Desktop</b> (70rem): all links in the top bar, no tab bar.</li>
+                    <li>Press More in the phone or tablet window: its panel opens inside that window (not over this page) and closes with its ×, Escape, a press on the strip beside it or a press on an entry.</li>
+                    <li>Nothing in the three windows should overlap, cut or shift when you press the controls.</li>
+                </ul>`)}
                 <div class="nf-look" data-review-look>
 ${looks(
     (theme) =>
@@ -573,9 +604,13 @@ const demo = `<!doctype html>
                 </p>
             </header>
 ${SECTIONS}
-        </main>${DRAWER}
+        </main>
         <script type="module" src="../../js/auto.js"></script>
         <script type="module" src="demo.js"></script>
+        <!-- Round two (2026-10-16): Kenny's rejections of round one reopen by themselves; every pair he has not judged is still open. -->
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-16-r2", "reopen": [] }
+        </script>
         <script type="module" src="../_review/review.js"></script>
         <script src="../../catalogue/boot-check.js"></script>
         <script type="module" src="../../catalogue/catalogue.js"></script>
@@ -626,10 +661,10 @@ const app = `<!doctype html>
         <dialog class="kp-drawer kp-dialog" id="tb-more" aria-labelledby="tb-more-title">
             <header class="kp-drawer__head">
                 <h2 class="kp-dialog__title" id="tb-more-title">More</h2>
-                <button type="button" class="kp-icon-button kp-dialog__close" data-kp-dialog-close aria-label="Close"></button>
+                <button type="button" class="kp-icon-button kp-dialog__close" data-kp-dialog-close aria-label="Close">×</button>
                 <p class="kp-drawer__desc">The two areas you need less often, plus search and help.</p>
             </header>
-            <div class="kp-drawer__body"><div class="kp-menu" role="group" aria-label="More">
+            <div class="kp-drawer__body"><div class="kp-menu kp-menu--rich" role="group" aria-label="More">
                 ${MORE_ITEMS}
             </div></div>
         </dialog>

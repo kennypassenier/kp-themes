@@ -1,0 +1,315 @@
+/* research/kpadopt-controls: the page. The package's CSS is untouched here; the only rules are this page's layout,
+   the mock list, and the "hover" and "focus" stand-ins (which read the package's own knobs). Every rule hangs on a
+   class of its own, because the review dialog moves the sections into its stage. */
+
+.cd-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1.5rem) var(--kp-space-md, 1rem) var(--kp-space-2xl, 3rem);
+}
+
+.cd-intro,
+.cd-sec__head,
+.cd-block {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.cd-intro :is(h1, p),
+.cd-sec__head :is(h2, p),
+.cd-block :is(h3, p) {
+    margin: 0;
+}
+
+.cd-intro p,
+.cd-sec__head p,
+.cd-caption {
+    max-inline-size: 80ch;
+}
+
+.cd-motion,
+.cd-caption,
+.cd-readout,
+.cd-mark {
+    color: var(--muted-foreground);
+}
+
+.cd-caption,
+.cd-readout,
+.cd-mark {
+    font-size: 0.875rem;
+}
+
+.cd-themes,
+.cd-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.cd-themes > b,
+.cd-actions > b {
+    margin-inline-end: var(--kp-space-sm, 0.5rem);
+}
+
+.cd-themes .kp-button[aria-pressed='true'] {
+    outline: 2px solid var(--primary);
+    outline-offset: 1px;
+}
+
+.cd-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.cd-block + .cd-block {
+    padding-block-start: var(--kp-space-lg, 1.5rem);
+    border-block-start: 1px solid var(--border);
+}
+
+.cd-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.cd-sentence {
+    margin: 0;
+}
+
+/* ---- the states grid: one label column, then segmented and chips on shared tracks */
+
+.cd-states {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.cd-states__row {
+    display: grid;
+    grid-template-columns: minmax(9rem, 14rem) minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    padding-block: var(--kp-space-xs, 0.25rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.cd-states__row--head p {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+}
+
+.cd-states__row p {
+    margin: 0;
+}
+
+.cd-states__name {
+    font-size: 0.875rem;
+}
+
+.cd-states__cell {
+    min-inline-size: 0;
+}
+
+.cd-narrow {
+    max-inline-size: 17rem;
+}
+
+@media (max-width: 48rem) {
+    .cd-states__row {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .cd-states__row--head {
+        display: none;
+    }
+}
+
+/* Stand-ins for the states a page cannot hold still. They read the package's own knobs, so a register's
+   values reach them as they reach the real states. */
+.cd-hover {
+    background: var(--kp-seg-hover, hsl(from var(--foreground) h s l / 0.08));
+    color: var(--kp-seg-ink-hover, var(--foreground));
+}
+
+.kp-segmented--chips > .cd-hover {
+    border-color: var(--ring);
+    background: var(--kp-chip-hover, var(--card));
+    color: var(--kp-chip-ink, var(--foreground));
+}
+
+.cd-focus {
+    z-index: 2;
+    outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+    outline-offset: var(--kp-focus-ring-inner-width, 2px);
+    box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring);
+}
+
+/* ---- cards, stacks, the mock list */
+
+.cd-card {
+    display: grid;
+    gap: var(--kp-space-md, 0.75rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-md, 0.75rem);
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.cd-card--narrow {
+    max-inline-size: 24rem;
+}
+
+.cd-stack {
+    display: grid;
+    gap: var(--kp-space-md, 0.75rem);
+    min-inline-size: 0;
+}
+
+.cd-stack--two {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    align-items: start;
+}
+
+.cd-mark {
+    margin: 0;
+    padding-block-start: var(--kp-space-sm, 0.5rem);
+    border-block-start: 1px dashed var(--border);
+}
+
+.cd-list {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    min-block-size: calc(12 * 2.5rem);
+    align-content: start;
+}
+
+.cd-list[data-view='cards'] {
+    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.cd-list__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 5rem auto;
+    align-items: center;
+    gap: var(--kp-space-md, 0.75rem);
+    min-block-size: 2.5rem;
+    padding-inline: var(--kp-space-sm, 0.5rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.cd-list[data-view='cards'] .cd-list__row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    border: 1px solid var(--border);
+}
+
+.cd-list[data-view='cards'] .cd-list__kind {
+    display: none;
+}
+
+.cd-list__row[hidden],
+.cd-list__none[hidden] {
+    display: none;
+}
+
+.cd-list__name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cd-list__kind {
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+}
+
+.cd-list__none {
+    padding: var(--kp-space-md, 0.75rem);
+    color: var(--muted-foreground);
+}
+
+/* ---- the sixteen side by side */
+
+.cd-lineup {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 0.75rem);
+}
+
+.cd-lineup :is(h2, p) {
+    margin: 0;
+    max-inline-size: 80ch;
+}
+
+.cd-lineup__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 24rem), 1fr));
+    gap: var(--kp-space-md, 0.75rem);
+}
+
+.cd-stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    justify-items: start;
+    gap: var(--kp-space-md, 0.75rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.cd-stage__name {
+    margin: 0;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+}
+
+/* The page shows the look-at line of the theme it is in, not all sixteen stacked; the review dialog reads the
+   paragraphs from the markup, so it still gets every theme's. */
+[data-review-look] > [data-for] {
+    display: none;
+}
+
+html[data-theme="formal"] [data-review-look] > [data-for="formal"],
+html[data-theme="light"] [data-review-look] > [data-for="light"],
+html[data-theme="dark"] [data-review-look] > [data-for="dark"],
+html[data-theme="cyberpunk"] [data-review-look] > [data-for="cyberpunk"],
+html[data-theme="synthwave"] [data-review-look] > [data-for="synthwave"],
+html[data-theme="pastel"] [data-review-look] > [data-for="pastel"],
+html[data-theme="terminal"] [data-review-look] > [data-for="terminal"],
+html[data-theme="forest"] [data-review-look] > [data-for="forest"],
+html[data-theme="blueprint"] [data-review-look] > [data-for="blueprint"],
+html[data-theme="solstice"] [data-review-look] > [data-for="solstice"],
+html[data-theme="brutalism"] [data-review-look] > [data-for="brutalism"],
+html[data-theme="deco"] [data-review-look] > [data-for="deco"],
+html[data-theme="phantom"] [data-review-look] > [data-for="phantom"],
+html[data-theme="grotesk"] [data-review-look] > [data-for="grotesk"],
+html[data-theme="nostromo"] [data-review-look] > [data-for="nostromo"],
+html[data-theme="titanium"] [data-review-look] > [data-for="titanium"] {
+    display: block;
+}

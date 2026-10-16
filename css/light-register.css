@@ -1606,6 +1606,14 @@
         font-weight: 500;
     }
 
+    /* The page's one hover card (js/hovercard.js) holds several lines and rows. A pill radius is for one line
+       of words: on a card it reads as an oval (Kenny, kpadopt-tooltip-sort, 2026-10-16), so the card takes the
+       popover's own corner. */
+    [data-theme='light'] .kp-tooltip[data-kp-hovercard-card] {
+        padding: 0.5rem 0.8rem;
+        border-radius: var(--radius, 0.5rem);
+    }
+
     [data-theme='light'] .kp-tooltip::before {
         content: '';
         position: absolute;

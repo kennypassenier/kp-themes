@@ -18889,12 +18889,28 @@ function wire(bar) {
       }
     };
     sync();
+    dialog.setAttribute("data-kp-tabbar-drawer", "");
+    const onPress = (event) => {
+      if (!dialog.open) return;
+      const target = event.target;
+      if (target === dialog) {
+        const box = dialog.getBoundingClientRect();
+        const outside = event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom;
+        if (outside) dialog.close();
+        return;
+      }
+      if (target instanceof Element && target.closest("a[href], .kp-menu__item") !== null && target.closest("[data-kp-dialog-close]") === null)
+        view.setTimeout(() => dialog.close(), 0);
+    };
+    dialog.addEventListener("click", onPress);
     const watch = new MutationObserver(sync);
     watch.observe(dialog, { attributes: true, attributeFilter: ["open", "aria-current"], subtree: true });
     dialog.addEventListener("close", sync);
     undo.push(() => {
       watch.disconnect();
       dialog.removeEventListener("close", sync);
+      dialog.removeEventListener("click", onPress);
+      dialog.removeAttribute("data-kp-tabbar-drawer");
       tab.removeAttribute("aria-haspopup");
       tab.removeAttribute("aria-controls");
       tab.removeAttribute("aria-expanded");
@@ -19895,7 +19911,7 @@ function hubOf(data) {
   }
   return best;
 }
-function graphLayout(data, W, H, { plain = false } = {}) {
+function graphLayout(data, W, H) {
   const at = /* @__PURE__ */ new Map();
   const hub = hubOf(data);
   const cx = W / 2;
@@ -19903,7 +19919,7 @@ function graphLayout(data, W, H, { plain = false } = {}) {
   const R = Math.min(W, H) * 0.36;
   let rx = R * (W > 600 ? 1.35 : 1);
   let ry = R;
-  if (W < 600 && !plain) {
+  if (W < 600) {
     rx = Math.min(rx, W * 0.24);
     ry = Math.max(ry, H * 0.36);
   }
@@ -19915,16 +19931,15 @@ function graphLayout(data, W, H, { plain = false } = {}) {
   });
   return at;
 }
-function graphBends(edges, bent) {
+function graphBends(edges) {
   const seen = /* @__PURE__ */ new Map();
   return edges.map((e) => {
     const key = [e.from, e.to].sort().join("\0");
     const k = seen.get(key) ?? 0;
     seen.set(key, k + 1);
-    const step = bent?.has(e.kind) ? k + 1 : k;
-    if (step === 0) return 0;
-    const size = Math.ceil(step / 2) * 26;
-    return size * (step % 2 ? 1 : -1) * (e.from < e.to ? 1 : -1);
+    if (k === 0) return 0;
+    const size = Math.ceil(k / 2) * 26;
+    return size * (k % 2 ? 1 : -1) * (e.from < e.to ? 1 : -1);
   });
 }
 function fitGraphLabels(labels, W, H, measure) {
@@ -19957,12 +19972,6 @@ function fitGraphLabels(labels, W, H, measure) {
     }
     if (!found) break;
   }
-}
-function edgeD(a, b, bend) {
-  const len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
-  const mx = (a.x + b.x) / 2 - (b.y - a.y) / len * bend;
-  const my = (a.y + b.y) / 2 + (b.x - a.x) / len * bend;
-  return `M${a.x.toFixed(1)},${a.y.toFixed(1)} Q${mx.toFixed(1)},${my.toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)}`;
 }
 function graphChanged(g) {
   g.el.dispatchEvent(
@@ -20005,45 +20014,36 @@ function fitDrawnLabels(labels, W, H) {
     return l.text.getBBox();
   });
 }
-function hueOf(data, n) {
-  if (n.hue != null) return n.hue;
-  const sorted = data.nodes.filter((x) => !x.external).sort((x, y) => x.label.localeCompare(y.label) || x.id.localeCompare(y.id));
-  return Math.round(sorted.indexOf(n) / Math.max(1, sorted.length) * 360);
-}
-function writeHint(hint, words) {
-  const lines = words.split("\n");
-  if (lines.length < 2) {
-    hint.textContent = words;
-    return;
-  }
-  hint.replaceChildren(...lines.map((line) => make3(hint.ownerDocument, "span", "", line)));
-}
-function ghostOf(doc, last, W, H, plain) {
+function ghostOf(doc, last, W, H) {
   const data = last?.nodes.length ? last : {
     nodes: ["hub", "a", "b", "c", "d", "e", "f"].map((id) => ({ id, label: id, description: "" })),
     edges: ["a", "b", "c", "d", "e", "f"].map((to) => ({ from: "hub", to, kind: "link" })),
     kinds: [],
     hub: "hub"
   };
-  const at = graphLayout(data, W, H, { plain });
+  const at = graphLayout(data, W, H);
   const hub = hubOf(data);
   const order = [...hub ? [hub] : [], ...ringOf(data, hub).map((n) => n.id)];
-  const bends = graphBends(data.edges, bentKinds(data));
+  const bends = graphBends(data.edges);
   const kinds = new Map(data.kinds.map((k) => [k.kind, k]));
+  const sorted = data.nodes.filter((n) => !n.external).sort((a, b) => a.label.localeCompare(b.label));
   const root = svgEl(doc, "g", { class: "kp-graph__ghost", "aria-hidden": "true", style: `--n: ${order.length}` });
   const edges = svgEl(doc, "g", { class: "kp-graph__edges" });
   data.edges.forEach((e, i) => {
     const a = at.get(e.from);
     const b = at.get(e.to);
     if (!a || !b) return;
+    const len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+    const mx = (a.x + b.x) / 2 - (b.y - a.y) / len * bends[i];
+    const my = (a.y + b.y) / 2 + (b.x - a.x) / len * bends[i];
     const kind = kinds.get(e.kind);
     edges.append(
       svgEl(doc, "path", {
         class: "kp-graph__edge",
-        d: edgeD(a, b, bends[i]),
+        d: `M${a.x.toFixed(1)},${a.y.toFixed(1)} Q${mx.toFixed(1)},${my.toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)}`,
         "data-kp-kind": e.kind,
         "data-kp-style": kind?.style ?? "solid",
-        style: [`--i: ${Math.max(0, order.indexOf(e.from === hub ? e.to : e.from))}`, kindStyle(kind)].filter(Boolean).join("; ")
+        style: `--i: ${Math.max(0, order.indexOf(e.from === hub ? e.to : e.from))}${kind?.colour ? `; --kp-graph-edge-colour: ${kind.colour}` : ""}`
       })
     );
   });
@@ -20053,9 +20053,10 @@ function ghostOf(doc, last, W, H, plain) {
     const p = at.get(id);
     if (!n || !p) return;
     const r = radiusOf(n);
+    const hue = n.hue ?? Math.round(sorted.indexOf(n) / Math.max(1, sorted.length) * 360);
     const node = svgEl(doc, "g", {
       class: `kp-graph__node${n.external ? " kp-graph__node--external" : ""}${id === hub ? " kp-graph__node--hub" : ""}`,
-      style: `--i: ${i}${n.external ? "" : `; --kp-graph-hue: ${hueOf(data, n)}`}`
+      style: `--i: ${i}${n.external ? "" : `; --kp-graph-hue: ${hue}`}`
     });
     node.append(svgEl(doc, "circle", { class: "kp-graph__ring", cx: p.x, cy: p.y, r }));
     if (!n.external) node.append(svgEl(doc, "circle", { class: "kp-graph__core", cx: p.x, cy: p.y, r: Math.max(4, r - 6) }));
@@ -20068,14 +20069,13 @@ function ghostOf(doc, last, W, H, plain) {
 }
 function drawGraph(g) {
   const doc = g.el.ownerDocument;
-  const under = g.el.getAttribute("data-kp-graph-labels") === "under";
   const width = g.box.clientWidth;
   g.drawnWidth = width;
   const W = Math.max(280, width || 800);
   const H = W < 600 ? 480 : Math.max(420, Math.min(560, Math.round(W * 0.6)));
   g.box.style.setProperty("--kp-graph-h", `${H}px`);
-  g.svg.setAttribute("height", String(H));
   g.svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  g.svg.setAttribute("height", String(H));
   const hadFocus = g.svg.contains(doc.activeElement) ? g.focus : null;
   g.svg.replaceChildren();
   const data = g.data;
@@ -20083,7 +20083,7 @@ function drawGraph(g) {
   g.note.textContent = g.state === "ready" ? "" : g.state === "loading" ? g.words || g.strings.graphLoading : g.words;
   g.note.hidden = g.state === "ready";
   if (g.state === "loading") {
-    g.svg.append(ghostOf(doc, g.data, W, H, under));
+    g.svg.append(ghostOf(doc, g.data, W, H));
   }
   if (g.state !== "ready" || !data) {
     g.legend.replaceChildren();
@@ -20091,9 +20091,9 @@ function drawGraph(g) {
     g.showAll.setAttribute("data-kp-idle", "");
     return;
   }
-  const at = graphLayout(data, W, H, { plain: under });
+  const at = graphLayout(data, W, H);
   const hub = hubOf(data);
-  const bends = graphBends(data.edges, bentKinds(data));
+  const bends = graphBends(data.edges);
   const kinds = new Map(data.kinds.map((k) => [k.kind, k]));
   const name = (id) => data.nodes.find((n) => n.id === id)?.label ?? id;
   const edges = svgEl(doc, "g", { class: "kp-graph__edges" });
@@ -20101,23 +20101,26 @@ function drawGraph(g) {
     const a = at.get(e.from);
     const b = at.get(e.to);
     if (!a || !b) return;
+    const len = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+    const mx = (a.x + b.x) / 2 - (b.y - a.y) / len * bends[i];
+    const my = (a.y + b.y) / 2 + (b.x - a.x) / len * bends[i];
     const kind = kinds.get(e.kind);
     const path = svgEl(doc, "path", {
-      d: edgeD(a, b, bends[i]),
+      d: `M${a.x.toFixed(1)},${a.y.toFixed(1)} Q${mx.toFixed(1)},${my.toFixed(1)} ${b.x.toFixed(1)},${b.y.toFixed(1)}`,
       class: "kp-graph__edge",
       "data-kp-from": e.from,
       "data-kp-to": e.to,
       "data-kp-kind": e.kind,
       "data-kp-style": kind?.style ?? "solid"
     });
-    const style = kindStyle(kind);
-    if (style) path.setAttribute("style", style);
+    if (kind?.colour) path.setAttribute("style", `--kp-graph-edge-colour: ${kind.colour}`);
     const title = svgEl(doc, "title");
     title.textContent = `${name(e.from)} \u2192 ${name(e.to)}: ${e.detail || kind?.label || e.kind}`;
     path.append(title);
     edges.append(path);
   });
   g.svg.append(edges);
+  const sorted = data.nodes.filter((n) => !n.external).sort((a, b) => a.label.localeCompare(b.label));
   const labels = [];
   const ring = ringOf(data, hub);
   const order = [...hub ? [hub] : [], ...ring.map((n) => n.id)];
@@ -20138,28 +20141,18 @@ function drawGraph(g) {
       "aria-pressed": String(g.selected.has(id)),
       "aria-label": `${n.label}, ${n.description}`
     });
-    if (!n.external) node.setAttribute("style", `--kp-graph-hue: ${hueOf(data, n)}`);
+    if (!n.external) node.setAttribute("style", `--kp-graph-hue: ${n.hue ?? Math.round(sorted.indexOf(n) / Math.max(1, sorted.length) * 360)}`);
     const title = svgEl(doc, "title");
     title.textContent = `${n.label}: ${n.description}`;
-    node.append(title);
-    let lx;
-    let ly;
-    let anchor;
-    node.append(svgEl(doc, "circle", { class: "kp-graph__ring", cx: p.x, cy: p.y, r }));
+    node.append(title, svgEl(doc, "circle", { class: "kp-graph__ring", cx: p.x, cy: p.y, r }));
     if (!n.external) node.append(svgEl(doc, "circle", { class: "kp-graph__core", cx: p.x, cy: p.y, r: Math.max(4, r - 6) }));
     if (n.flag === "mismatch") node.append(svgEl(doc, "circle", { class: "kp-graph__flag", cx: p.x, cy: p.y, r: r + 5 }));
-    if (under) {
-      lx = p.x;
-      ly = p.y + r + 16;
-      anchor = "middle";
-    } else {
-      const dx = id === hub ? 0 : Math.cos(p.angle);
-      const dy = id === hub ? 1 : Math.sin(p.angle);
-      const off = r + (n.flag === "mismatch" ? 10 : 6);
-      anchor = dx > 0.35 ? "start" : dx < -0.35 ? "end" : "middle";
-      lx = p.x + dx * off;
-      ly = p.y + dy * off + (dy > 0.35 ? 9 : dy < -0.35 ? -3 : 4);
-    }
+    const dx = id === hub ? 0 : Math.cos(p.angle);
+    const dy = id === hub ? 1 : Math.sin(p.angle);
+    const off = r + (n.flag === "mismatch" ? 10 : 6);
+    const anchor = dx > 0.35 ? "start" : dx < -0.35 ? "end" : "middle";
+    const lx = p.x + dx * off;
+    const ly = p.y + dy * off + (dy > 0.35 ? 9 : dy < -0.35 ? -3 : 4);
     const text = (
       /** @type {SVGTextElement} */
       svgEl(doc, "text", { class: "kp-graph__label", x: lx.toFixed(1), y: ly.toFixed(1), "text-anchor": anchor })
@@ -20167,7 +20160,7 @@ function drawGraph(g) {
     text.textContent = n.label;
     text.setAttribute("aria-hidden", "true");
     node.append(text);
-    if (!under) labels.push({ text, full: n.label, length: n.label.length });
+    labels.push({ text, full: n.label, length: n.label.length });
     g.svg.append(node);
     g.decorate?.(node, { kind: "node", host: g.el, key: keyOf3(g.el), index, value: id, label: n.label });
   });
@@ -20185,8 +20178,7 @@ function drawGraph(g) {
       button.setAttribute("aria-pressed", String(!g.hidden.has(k.kind)));
       const sample = svgEl(doc, "svg", { class: "kp-graph__sample", viewBox: "0 0 24 8", "aria-hidden": "true" });
       const line = svgEl(doc, "line", { x1: 1, y1: 4, x2: 23, y2: 4, "data-kp-style": k.style });
-      const sampleStyle = kindStyle(k);
-      if (sampleStyle) line.setAttribute("style", sampleStyle);
+      line.setAttribute("style", `--kp-graph-edge-colour: ${k.colour}`);
       sample.append(line);
       button.append(sample, make3(doc, "span", "", k.label));
       li.append(button);
@@ -20269,12 +20261,11 @@ function attachGraphs(root = document, { decorate, strings } = {}) {
       /** @type {unknown} */
       svgEl(doc, "svg", { class: "kp-graph__svg", role: "group" })
     );
-    svg.setAttribute("aria-label", `${el2.getAttribute("aria-label") ?? s2.graphUnnamed}. ${s2.graphHint.split("\n").join(". ")}`);
+    svg.setAttribute("aria-label", `${el2.getAttribute("aria-label") ?? s2.graphUnnamed}. ${s2.graphHint}`);
     const note = make3(doc, "p", "kp-graph__note");
     note.setAttribute("role", "status");
     box.append(svg, note);
-    const hint = make3(doc, "p", "kp-graph__hint");
-    writeHint(hint, s2.graphHint);
+    const hint = make3(doc, "p", "kp-graph__hint", s2.graphHint);
     el2.replaceChildren(bar, box, hint, ...script ? [script] : []);
     const g = {
       el: el2,
@@ -20453,7 +20444,7 @@ function attachGraphs(root = document, { decorate, strings } = {}) {
   }
   return () => undo.splice(0).forEach((off) => off());
 }
-var GRAPH, GRAPH_CHANGE_EVENT, keyOf3, ringOf, graphLabelText, kindStyle, bentKinds, radiusOf, isShown, make3, SVG_NS, svgEl, graphs;
+var GRAPH, GRAPH_CHANGE_EVENT, keyOf3, ringOf, graphLabelText, radiusOf, isShown, make3, SVG_NS, svgEl, graphs;
 var init_graph = __esm({
   "js/graph.js"() {
     "use strict";
@@ -20463,12 +20454,6 @@ var init_graph = __esm({
     keyOf3 = (host) => host.getAttribute("data-kp-key") ?? void 0;
     ringOf = (data, hub) => data.nodes.filter((n) => n.id !== hub).sort((a, b) => Number(!!a.external) - Number(!!b.external) || a.label.localeCompare(b.label) || a.id.localeCompare(b.id));
     graphLabelText = (full, length) => length >= full.length ? full : `${full.slice(0, length).trimEnd()}\u2026`;
-    kindStyle = (kind) => [
-      kind?.colour ? `--kp-graph-edge-colour: ${kind.colour}` : "",
-      kind?.dash ? `--kp-graph-dash: ${kind.dash}` : "",
-      kind?.opacity != null ? `--kp-graph-edge-opacity: ${kind.opacity}` : ""
-    ].filter(Boolean).join("; ");
-    bentKinds = (data) => new Set(data.kinds.filter((k) => k.bent).map((k) => k.kind));
     radiusOf = (n) => n.external ? 9 : n.weight != null ? 10 + 14 * Math.sqrt(Math.max(0, Math.min(1, n.weight))) : 14;
     isShown = (el2) => !!el2 && el2.isConnected && el2.getClientRects().length > 0;
     make3 = (doc, tag, className, text) => {

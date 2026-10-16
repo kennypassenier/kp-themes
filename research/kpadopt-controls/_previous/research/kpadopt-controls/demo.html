@@ -1,0 +1,1780 @@
+<!doctype html>
+<!-- Written by research/kpadopt-controls/build.mjs; edit build.mjs, demo.css and demo.js, not this file. -->
+<html lang="en" data-theme="light" data-cat-theme="light" data-cat-theme-fixed data-review="kpadopt-controls">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes: segmented control, list toolbar and key line</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" data-kp-register="formal" />
+        <link rel="stylesheet" href="../../css/light-register.css" data-kp-register="light" />
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <main class="cd-page">
+            <header class="cd-intro">
+                <h1>Segmented control, list toolbar and key line</h1>
+                <p>
+                    Three parts Kenny’s admin dashboard still draws itself because kp-themes 10.1.1 has no component for them (its toggleGroup,
+                    segSwitch, toolbar, filterChip and keyRow). Each is built here on the package: the stylesheet rules are in css/components.css and
+                    every register, the behaviour in js/segmented.js, js/toolbar.js and js/keys.js. Everything on this page is the package; only the
+                    list of containers, the filtering of it and the “hover” and “focus” rows are this page’s (stand-ins, named where they appear).
+                    Judge in the review dialog (“Review in a dialog” at the top): sixteen themes, three sections each.
+                </p>
+                <p class="cd-motion" data-cd-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so the plate under a chosen segment appears in place instead of gliding. Turn it off
+                    to judge the movement.
+                </p>
+                <div class="cd-themes" role="group" aria-label="Theme (outside the review dialog)">
+                    <b>Theme:</b>
+                    <button type="button" class="kp-button kp-button--sm" data-cd-theme="formal" aria-pressed="false">Formal</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cd-theme="light" aria-pressed="false">Light</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cd-theme="dark" aria-pressed="false">Dark</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cd-theme="cyberpunk" aria-pressed="false">Cyberpunk</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cd-theme="synthwave" aria-pressed="false">Synthwave</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cd-theme="pastel" aria-pressed="false">Pastel</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cd-theme="terminal" aria-pressed="false">Terminal</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cd-theme="forest" aria-pressed="false">Forest</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cd-theme="blueprint" aria-pressed="false">Blueprint</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cd-theme="solstice" aria-pressed="false">Solstice</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cd-theme="brutalism" aria-pressed="false">Brutalism</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cd-theme="deco" aria-pressed="false">Art Deco</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cd-theme="phantom" aria-pressed="false">Phantom</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cd-theme="grotesk" aria-pressed="false">Grotesk</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cd-theme="nostromo" aria-pressed="false">Nostromo</button>
+                    <button type="button" class="kp-button kp-button--sm" data-cd-theme="titanium" aria-pressed="false">Titanium</button>
+                </div>
+            </header>
+
+            <section
+                class="cd-sec"
+                data-review-item="segmented"
+                data-review-components="segmented"
+                data-review-title="1 · Segmented control and filter chips"
+                aria-label="Segmented control and filter chips"
+            >
+                <div class="cd-sec__head">
+                    <h2>1 · Segmented control and filter chips</h2>
+                    <p>
+                        One component, two looks. The segmented look is a track with a plate under the chosen value; the chip look is the same buttons
+                        as separate pills. A group chooses <b>one</b> value (a radio group: one tab stop, the arrow keys move and choose) or
+                        <b>several</b>
+                        (toggle buttons: arrows move, Space or Enter turns the value; none on means All, turning every value on is the same as none).
+                        Try it with the keyboard: Tab into a control, then the arrow keys, Home and End.
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The chosen segment is a card on a ledger track with a navy rule under its word (the quill underline); chips are
+                        square-cornered and fill navy. The label keeps one weight, so nothing shifts when you press.
+                    </p>
+                    <p data-for="light">
+                        A white pill floats on a pale track with a soft lift and glides to the next value on the theme’s easing. Chips are round pills
+                        that fill indigo.
+                    </p>
+                    <p data-for="dark">
+                        A machined slot: the chosen segment is a lit slot with a bright top edge, small capitals, square ends. The glide is quick and
+                        square.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Neon trace: the chosen word is lit inside a thin yellow frame with a glow; after a press the word splits into cyan and red for
+                        three steps. It must not play on load.
+                    </p>
+                    <p data-for="synthwave">
+                        A VCR display: spaced capitals, the plate a pink-to-cyan gradient with a glow. Check the dark word reads on both ends of the
+                        gradient.
+                    </p>
+                    <p data-for="pastel">
+                        A sticker on washi tape (dashed track): the chosen plate is a raspberry sticker with a darker peel edge beneath, and it
+                        springs a little past the next value before it settles. Chips peel the same way.
+                    </p>
+                    <p data-for="terminal">
+                        Reverse video: the chosen segment is a solid green block with black type and it jumps in one step, no glide. Monospace
+                        throughout.
+                    </p>
+                    <p data-for="forest">
+                        The chosen segment is a leaf: two rounded corners, two nearly square, with a darker edge under it. Chips take the same leaf
+                        when they are on.
+                    </p>
+                    <p data-for="blueprint">
+                        Drafting hatch: a cyan-hatched box with a thin cyan frame on an open track, mono capitals; the plate moves in drafting steps.
+                    </p>
+                    <p data-for="solstice">
+                        Embers: the plate is an orange-to-red gradient with a warm halo; chips glow when on. The glow must not bleed over the
+                        neighbouring segment.
+                    </p>
+                    <p data-for="brutalism">
+                        A slab: thick black frame with a hard drop, bold capitals; the chosen segment is a yellow block with a thick black inset
+                        frame, and it slams across in a blink.
+                    </p>
+                    <p data-for="deco">
+                        A gilt frame: a gold hairline plate with a double inlay rule inside it, spaced capitals. The inlay must stay inside the plate
+                        while it moves.
+                    </p>
+                    <p data-for="phantom">
+                        Cut paper: a red plate with the top-start and bottom-end corners snipped, condensed capitals. Chips are flat red with a deep
+                        second plate behind. Tab to a chosen chip: the focus ring must stay whole.
+                    </p>
+                    <p data-for="grotesk">
+                        A transit board: no box; the segments hang from one black rule and the chosen one carries a thick red bar under its word,
+                        which runs to the next value. Chips are plain frames that invert when on.
+                    </p>
+                    <p data-for="nostromo">
+                        A CRT panel: a tan track, the chosen segment a dark block with faint scanlines in monospace capitals; the movement is stepped
+                        like a refresh.
+                    </p>
+                    <p data-for="titanium">
+                        An anodised badge: the chosen plate is a chamfered, knurled block in the primary colour and moves in one linear glide (metal
+                        does not ease). Check the chamfer clips cleanly at both ends.
+                    </p>
+                </div>
+                <div class="cd-block">
+                    <h3>One value, with counts</h3>
+                    <p class="cd-caption">
+                        Single choice. The plate glides in the theme’s own motion and the counts keep their column when they change.
+                    </p>
+                    <div class="cd-row">
+                        <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show">
+                            <button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count">3</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="View">
+                            <button type="button" class="kp-segmented__item" data-value="table" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">Table</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="cards" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Cards</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="cd-block">
+                    <h3>Several values, with an All segment</h3>
+                    <p class="cd-caption">Plain-click toggles. “All” is pressed while nothing else is on; pressing it turns the rest off.</p>
+                    <div class="cd-row">
+                        <div class="kp-segmented" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="true">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="running" aria-pressed="false">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                    </div>
+                    <p class="cd-readout" data-cd-readout="status">Values on: none (All).</p>
+                </div>
+                <div class="cd-block">
+                    <h3>The chip look</h3>
+                    <p class="cd-caption">Chips wrap rather than scroll; a chip fills when it is on.</p>
+                    <div class="cd-row">
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="single" role="radiogroup" aria-label="Kind">
+                            <button type="button" class="kp-segmented__item" data-value="web" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Web</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="db" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">Database</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="job" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Job</span><span class="kp-segmented__count">3</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="cd-block">
+                    <h3>Full width</h3>
+                    <p class="cd-caption"><code>kp-segmented--block</code>: every segment the same width.</p>
+                    <div class="kp-segmented kp-segmented--block" data-kp-segmented="single" role="radiogroup" aria-label="Range">
+                        <button type="button" class="kp-segmented__item" data-value="1h" role="radio" aria-checked="false">
+                            <span class="kp-segmented__label">1 hour</span></button
+                        ><button type="button" class="kp-segmented__item" data-value="24h" role="radio" aria-checked="true">
+                            <span class="kp-segmented__label">24 hours</span></button
+                        ><button type="button" class="kp-segmented__item" data-value="7d" role="radio" aria-checked="false">
+                            <span class="kp-segmented__label">7 days</span></button
+                        ><button type="button" class="kp-segmented__item" data-value="30d" role="radio" aria-checked="false">
+                            <span class="kp-segmented__label">30 days</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="cd-block">
+                    <h3>Every state, segmented beside chips</h3>
+                    <div class="cd-actions" data-review-controls role="group" aria-label="The loading rows">
+                        <b>Loading rows:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-cd-arrive>Numbers arrive</button>
+                        <button type="button" class="kp-button kp-button--sm" data-cd-wait>Back to loading</button>
+                    </div>
+                    <p class="cd-caption">
+                        Mock: a page cannot hold the pointer or the keyboard still, so “hover” and “focus” are drawn with this page’s classes from the
+                        package’s own knobs (<code>--kp-seg-hover</code>, the global focus ring). Disabled, loading and the rest are the package’s.
+                    </p>
+                    <div class="cd-states">
+                        <div class="cd-states__row cd-states__row--head">
+                            <p></p>
+                            <p>Segmented</p>
+                            <p>Chips</p>
+                        </div>
+                        <div class="cd-states__row">
+                            <p class="cd-states__name">Chosen</p>
+                            <div class="cd-states__cell">
+                                <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show">
+                                    <button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true">
+                                        <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false">
+                                        <span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false">
+                                        <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count">3</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="cd-states__cell">
+                                <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                                    <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                        <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                        <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                        <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cd-states__row">
+                            <p class="cd-states__name">Hover (shown by a class)</p>
+                            <div class="cd-states__cell">
+                                <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show">
+                                    <button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true">
+                                        <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button
+                                    ><button type="button" class="kp-segmented__item cd-hover" data-value="all" role="radio" aria-checked="false">
+                                        <span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false">
+                                        <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count">3</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="cd-states__cell">
+                                <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                                    <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                        <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                                    ><button type="button" class="kp-segmented__item cd-hover" data-value="stopped" aria-pressed="false">
+                                        <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                        <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cd-states__row">
+                            <p class="cd-states__name">Keyboard focus (shown by a class)</p>
+                            <div class="cd-states__cell">
+                                <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show">
+                                    <button type="button" class="kp-segmented__item cd-focus" data-value="changed" role="radio" aria-checked="true">
+                                        <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false">
+                                        <span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false">
+                                        <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count">3</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="cd-states__cell">
+                                <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                                    <button type="button" class="kp-segmented__item cd-focus" data-value="running" aria-pressed="true">
+                                        <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                        <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                        <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cd-states__row">
+                            <p class="cd-states__name">One value disabled</p>
+                            <div class="cd-states__cell">
+                                <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show">
+                                    <button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true">
+                                        <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false">
+                                        <span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false" disabled>
+                                        <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count">3</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="cd-states__cell">
+                                <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                                    <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="false">
+                                        <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                        <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false" disabled>
+                                        <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cd-states__row">
+                            <p class="cd-states__name">Whole control disabled</p>
+                            <div class="cd-states__cell">
+                                <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show" aria-disabled="true">
+                                    <button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true">
+                                        <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false">
+                                        <span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false">
+                                        <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count">3</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="cd-states__cell">
+                                <div
+                                    class="kp-segmented kp-segmented--chips"
+                                    data-kp-segmented="multi"
+                                    role="group"
+                                    aria-label="Status"
+                                    aria-disabled="true"
+                                >
+                                    <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                        <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                        <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                        <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cd-states__row">
+                            <p class="cd-states__name">Loading: the numbers are on their way</p>
+                            <div class="cd-states__cell">
+                                <div
+                                    class="kp-segmented"
+                                    data-kp-segmented="single"
+                                    role="radiogroup"
+                                    aria-label="Show"
+                                    aria-busy="true"
+                                    data-cd-loading
+                                >
+                                    <button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true">
+                                        <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count"></span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false">
+                                        <span class="kp-segmented__label">All</span><span class="kp-segmented__count"></span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false">
+                                        <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count"></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="cd-states__cell">
+                                <div
+                                    class="kp-segmented kp-segmented--chips"
+                                    data-kp-segmented="multi"
+                                    role="group"
+                                    aria-label="Status"
+                                    aria-busy="true"
+                                    data-cd-loading
+                                >
+                                    <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="false">
+                                        <span class="kp-segmented__label">Running</span><span class="kp-segmented__count"></span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                        <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count"></span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                        <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count"></span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cd-states__row">
+                            <p class="cd-states__name">A long label, cut with an ellipsis</p>
+                            <div class="cd-states__cell">
+                                <div class="kp-segmented cd-narrow" data-kp-segmented="single" role="radiogroup" aria-label="Scope">
+                                    <button
+                                        type="button"
+                                        class="kp-segmented__item"
+                                        data-value="a"
+                                        role="radio"
+                                        aria-checked="true"
+                                        title="Everything that changed since the last nightly backup finished"
+                                    >
+                                        <span class="kp-segmented__label"
+                                            >Everything that changed since the last nightly backup finished</span
+                                        ></button
+                                    ><button type="button" class="kp-segmented__item" data-value="b" role="radio" aria-checked="false">
+                                        <span class="kp-segmented__label">Mine</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="cd-states__cell">
+                                <div class="kp-segmented kp-segmented--chips cd-narrow" data-kp-segmented="multi" role="group" aria-label="Scope">
+                                    <button type="button" class="kp-segmented__item" data-value="a" aria-pressed="true">
+                                        <span class="kp-segmented__label"
+                                            >Everything that changed since the last nightly backup finished</span
+                                        ></button
+                                    ><button type="button" class="kp-segmented__item" data-value="b" aria-pressed="false">
+                                        <span class="kp-segmented__label">Mine</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cd-states__row">
+                            <p class="cd-states__name">More values than room (scrolls / wraps)</p>
+                            <div class="cd-states__cell">
+                                <div class="kp-segmented cd-narrow" data-kp-segmented="single" role="radiogroup" aria-label="Month">
+                                    <button type="button" class="kp-segmented__item" data-value="Jan" role="radio" aria-checked="false">
+                                        <span class="kp-segmented__label">Jan</span><span class="kp-segmented__count">1</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="Feb" role="radio" aria-checked="false">
+                                        <span class="kp-segmented__label">Feb</span><span class="kp-segmented__count">4</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="Mar" role="radio" aria-checked="true">
+                                        <span class="kp-segmented__label">Mar</span><span class="kp-segmented__count">7</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="Apr" role="radio" aria-checked="false">
+                                        <span class="kp-segmented__label">Apr</span><span class="kp-segmented__count">10</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="May" role="radio" aria-checked="false">
+                                        <span class="kp-segmented__label">May</span><span class="kp-segmented__count">13</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="Jun" role="radio" aria-checked="false">
+                                        <span class="kp-segmented__label">Jun</span><span class="kp-segmented__count">16</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="Jul" role="radio" aria-checked="false">
+                                        <span class="kp-segmented__label">Jul</span><span class="kp-segmented__count">19</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="Aug" role="radio" aria-checked="false">
+                                        <span class="kp-segmented__label">Aug</span><span class="kp-segmented__count">22</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="Sep" role="radio" aria-checked="false">
+                                        <span class="kp-segmented__label">Sep</span><span class="kp-segmented__count">25</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="cd-states__cell">
+                                <div class="kp-segmented kp-segmented--chips cd-narrow" data-kp-segmented="multi" role="group" aria-label="Month">
+                                    <button type="button" class="kp-segmented__item" data-value="Jan" aria-pressed="false">
+                                        <span class="kp-segmented__label">Jan</span><span class="kp-segmented__count">1</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="Feb" aria-pressed="false">
+                                        <span class="kp-segmented__label">Feb</span><span class="kp-segmented__count">4</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="Mar" aria-pressed="true">
+                                        <span class="kp-segmented__label">Mar</span><span class="kp-segmented__count">7</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="Apr" aria-pressed="false">
+                                        <span class="kp-segmented__label">Apr</span><span class="kp-segmented__count">10</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="May" aria-pressed="false">
+                                        <span class="kp-segmented__label">May</span><span class="kp-segmented__count">13</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="Jun" aria-pressed="false">
+                                        <span class="kp-segmented__label">Jun</span><span class="kp-segmented__count">16</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="Jul" aria-pressed="false">
+                                        <span class="kp-segmented__label">Jul</span><span class="kp-segmented__count">19</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="Aug" aria-pressed="false">
+                                        <span class="kp-segmented__label">Aug</span><span class="kp-segmented__count">22</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="Sep" aria-pressed="false">
+                                        <span class="kp-segmented__label">Sep</span><span class="kp-segmented__count">25</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="cd-states__row">
+                            <p class="cd-states__name">Right to left (arrows and plate)</p>
+                            <div class="cd-states__cell">
+                                <div dir="rtl" class="cd-rtl">
+                                    <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show">
+                                        <button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true">
+                                            <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false">
+                                            <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count">3</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cd-states__cell">
+                                <div dir="rtl" class="cd-rtl">
+                                    <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                                        <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                            <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                            <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                            <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="cd-sec"
+                data-review-item="toolbar"
+                data-review-components="toolbar"
+                data-review-title="2 · List toolbar"
+                aria-label="List toolbar"
+            >
+                <div class="cd-sec__head">
+                    <h2>2 · List toolbar</h2>
+                    <p>
+                        The bar above a list, a log or a board that is not a data table: search at its own width, labelled filter groups, view and
+                        state against the right edge, and under them the filters that are on, as the data table’s own removable tags. Press
+                        <kbd class="kp-kbd">/</kbd>
+                        anywhere outside a field to jump to the search; Escape in the search clears it.
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Search box (the theme’s own field), then the filter group labels (small capitals with air between the letters), the chips, and
+                        the count at the right edge. Type a word, turn a status on: the “Showing only” row appears with removable tags, the same tags
+                        as the data table’s. The three zones must keep their places while you type and toggle, and the list must not jump when the row
+                        appears (the second toolbar reserves it).
+                    </p>
+                    <p data-for="light">
+                        Search box (the theme’s own field), then the filter group labels (lightly spaced), the chips, and the count at the right edge.
+                        Type a word, turn a status on: the “Showing only” row appears with removable tags, the same tags as the data table’s. The
+                        three zones must keep their places while you type and toggle, and the list must not jump when the row appears (the second
+                        toolbar reserves it).
+                    </p>
+                    <p data-for="dark">
+                        Search box (the theme’s own field), then the filter group labels (spaced capitals), the chips, and the count at the right
+                        edge. Type a word, turn a status on: the “Showing only” row appears with removable tags, the same tags as the data table’s.
+                        The three zones must keep their places while you type and toggle, and the list must not jump when the row appears (the second
+                        toolbar reserves it).
+                    </p>
+                    <p data-for="cyberpunk">
+                        Search box (the theme’s own field), then the filter group labels (very widely spaced), the chips, and the count at the right
+                        edge. Type a word, turn a status on: the “Showing only” row appears with removable tags, the same tags as the data table’s.
+                        The three zones must keep their places while you type and toggle, and the list must not jump when the row appears (the second
+                        toolbar reserves it).
+                    </p>
+                    <p data-for="synthwave">
+                        Search box (the theme’s own field), then the filter group labels (extremely widely spaced), the chips, and the count at the
+                        right edge. Type a word, turn a status on: the “Showing only” row appears with removable tags, the same tags as the data
+                        table’s. The three zones must keep their places while you type and toggle, and the list must not jump when the row appears
+                        (the second toolbar reserves it).
+                    </p>
+                    <p data-for="pastel">
+                        Search box (the theme’s own field), then the filter group labels (lightly spaced), the chips, and the count at the right edge.
+                        Type a word, turn a status on: the “Showing only” row appears with removable tags, the same tags as the data table’s. The
+                        three zones must keep their places while you type and toggle, and the list must not jump when the row appears (the second
+                        toolbar reserves it).
+                    </p>
+                    <p data-for="terminal">
+                        Search box (the theme’s own field), then the filter group labels (lower-case monospace), the chips, and the count at the right
+                        edge. Type a word, turn a status on: the “Showing only” row appears with removable tags, the same tags as the data table’s.
+                        The three zones must keep their places while you type and toggle, and the list must not jump when the row appears (the second
+                        toolbar reserves it).
+                    </p>
+                    <p data-for="forest">
+                        Search box (the theme’s own field), then the filter group labels (lightly spaced), the chips, and the count at the right edge.
+                        Type a word, turn a status on: the “Showing only” row appears with removable tags, the same tags as the data table’s. The
+                        three zones must keep their places while you type and toggle, and the list must not jump when the row appears (the second
+                        toolbar reserves it).
+                    </p>
+                    <p data-for="blueprint">
+                        Search box (the theme’s own field), then the filter group labels (monospace, widely spaced), the chips, and the count at the
+                        right edge. Type a word, turn a status on: the “Showing only” row appears with removable tags, the same tags as the data
+                        table’s. The three zones must keep their places while you type and toggle, and the list must not jump when the row appears
+                        (the second toolbar reserves it).
+                    </p>
+                    <p data-for="solstice">
+                        Search box (the theme’s own field), then the filter group labels (lightly spaced), the chips, and the count at the right edge.
+                        Type a word, turn a status on: the “Showing only” row appears with removable tags, the same tags as the data table’s. The
+                        three zones must keep their places while you type and toggle, and the list must not jump when the row appears (the second
+                        toolbar reserves it).
+                    </p>
+                    <p data-for="brutalism">
+                        Search box (the theme’s own field), then the filter group labels (in the heavy display face), the chips, and the count at the
+                        right edge. Type a word, turn a status on: the “Showing only” row appears with removable tags, the same tags as the data
+                        table’s. The three zones must keep their places while you type and toggle, and the list must not jump when the row appears
+                        (the second toolbar reserves it).
+                    </p>
+                    <p data-for="deco">
+                        Search box (the theme’s own field), then the filter group labels (in gilt-style spaced capitals), the chips, and the count at
+                        the right edge. Type a word, turn a status on: the “Showing only” row appears with removable tags, the same tags as the data
+                        table’s. The three zones must keep their places while you type and toggle, and the list must not jump when the row appears
+                        (the second toolbar reserves it).
+                    </p>
+                    <p data-for="phantom">
+                        Search box (the theme’s own field), then the filter group labels (in condensed display capitals), the chips, and the count at
+                        the right edge. Type a word, turn a status on: the “Showing only” row appears with removable tags, the same tags as the data
+                        table’s. The three zones must keep their places while you type and toggle, and the list must not jump when the row appears
+                        (the second toolbar reserves it).
+                    </p>
+                    <p data-for="grotesk">
+                        Search box (the theme’s own field), then the filter group labels (bold, tight), the chips, and the count at the right edge.
+                        Type a word, turn a status on: the “Showing only” row appears with removable tags, the same tags as the data table’s. The
+                        three zones must keep their places while you type and toggle, and the list must not jump when the row appears (the second
+                        toolbar reserves it).
+                    </p>
+                    <p data-for="nostromo">
+                        Search box (the theme’s own field), then the filter group labels (monospace, widely spaced), the chips, and the count at the
+                        right edge. Type a word, turn a status on: the “Showing only” row appears with removable tags, the same tags as the data
+                        table’s. The three zones must keep their places while you type and toggle, and the list must not jump when the row appears
+                        (the second toolbar reserves it).
+                    </p>
+                    <p data-for="titanium">
+                        Search box (the theme’s own field), then the filter group labels (monospace, spaced), the chips, and the count at the right
+                        edge. Type a word, turn a status on: the “Showing only” row appears with removable tags, the same tags as the data table’s.
+                        The three zones must keep their places while you type and toggle, and the list must not jump when the row appears (the second
+                        toolbar reserves it).
+                    </p>
+                </div>
+                <div class="cd-block">
+                    <h3>Above a plain list (live)</h3>
+                    <p class="cd-caption">Mock: the list and its filtering are this page’s. Everything in the bar is the package.</p>
+                    <div class="cd-card" data-cd-live-root>
+                        <div class="kp-toolbar" data-kp-toolbar data-kp-toolbar-key="/" role="group" aria-label="Containers" data-cd-live="a">
+                            <div class="kp-toolbar__search">
+                                <input
+                                    type="search"
+                                    class="kp-field__input kp-toolbar__input"
+                                    placeholder="Search containers"
+                                    aria-label="Search containers"
+                                    aria-keyshortcuts="/"
+                                    autocomplete="off"
+                                />
+                                <kbd class="kp-kbd kp-toolbar__key" aria-hidden="true">/</kbd>
+                            </div>
+                            <div class="kp-toolbar__filters">
+                                <div class="kp-toolbar__group" role="group" aria-label="Status">
+                                    <b class="kp-toolbar__label">Status</b>
+                                    <div
+                                        class="kp-segmented kp-segmented--chips"
+                                        data-kp-segmented="multi"
+                                        role="group"
+                                        aria-label="Status"
+                                        data-cd-group="status"
+                                    >
+                                        <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="false">
+                                            <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                            <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                            <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="kp-toolbar__group" role="group" aria-label="Kind">
+                                    <b class="kp-toolbar__label">Kind</b>
+                                    <div
+                                        class="kp-segmented kp-segmented--chips"
+                                        data-kp-segmented="multi"
+                                        role="group"
+                                        aria-label="Kind"
+                                        data-cd-group="kind"
+                                    >
+                                        <button type="button" class="kp-segmented__item" data-value="web" aria-pressed="false">
+                                            <span class="kp-segmented__label">Web</span><span class="kp-segmented__count">3</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="db" aria-pressed="false">
+                                            <span class="kp-segmented__label">Database</span><span class="kp-segmented__count">3</span></button
+                                        ><button type="button" class="kp-segmented__item" data-value="job" aria-pressed="false">
+                                            <span class="kp-segmented__label">Job</span><span class="kp-segmented__count">3</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="kp-toolbar__state">
+                                <span data-cd-count>12 of 12</span>
+                                <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="View" data-cd-group="view">
+                                    <button type="button" class="kp-segmented__item" data-value="table" role="radio" aria-checked="true">
+                                        <span class="kp-segmented__label">Table</span></button
+                                    ><button type="button" class="kp-segmented__item" data-value="cards" role="radio" aria-checked="false">
+                                        <span class="kp-segmented__label">Cards</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="kp-toolbar__active" hidden></div>
+                        </div>
+
+                        <ul class="cd-list" data-cd-list="a" aria-label="Containers">
+                            <li class="cd-list__row" data-name="nginx-proxy" data-kind="web" data-status="running">
+                                <span class="cd-list__name">nginx-proxy</span><span class="cd-list__kind">web</span
+                                ><span class="kp-badge kp-badge--success">running</span>
+                            </li>
+                            <li class="cd-list__row" data-name="api-gateway" data-kind="web" data-status="running">
+                                <span class="cd-list__name">api-gateway</span><span class="cd-list__kind">web</span
+                                ><span class="kp-badge kp-badge--success">running</span>
+                            </li>
+                            <li class="cd-list__row" data-name="grafana" data-kind="web" data-status="running">
+                                <span class="cd-list__name">grafana</span><span class="cd-list__kind">web</span
+                                ><span class="kp-badge kp-badge--success">running</span>
+                            </li>
+                            <li class="cd-list__row" data-name="postgres-main" data-kind="db" data-status="running">
+                                <span class="cd-list__name">postgres-main</span><span class="cd-list__kind">db</span
+                                ><span class="kp-badge kp-badge--success">running</span>
+                            </li>
+                            <li class="cd-list__row" data-name="redis-cache" data-kind="db" data-status="running">
+                                <span class="cd-list__name">redis-cache</span><span class="cd-list__kind">db</span
+                                ><span class="kp-badge kp-badge--success">running</span>
+                            </li>
+                            <li class="cd-list__row" data-name="loki" data-kind="db" data-status="stopped">
+                                <span class="cd-list__name">loki</span><span class="cd-list__kind">db</span
+                                ><span class="kp-badge kp-badge--destructive">stopped</span>
+                            </li>
+                            <li class="cd-list__row" data-name="worker-mail" data-kind="job" data-status="restarting">
+                                <span class="cd-list__name">worker-mail</span><span class="cd-list__kind">job</span
+                                ><span class="kp-badge kp-badge--warning">restarting</span>
+                            </li>
+                            <li class="cd-list__row" data-name="worker-thumbs" data-kind="job" data-status="running">
+                                <span class="cd-list__name">worker-thumbs</span><span class="cd-list__kind">job</span
+                                ><span class="kp-badge kp-badge--success">running</span>
+                            </li>
+                            <li class="cd-list__row" data-name="backup-nightly" data-kind="job" data-status="stopped">
+                                <span class="cd-list__name">backup-nightly</span><span class="cd-list__kind">job</span
+                                ><span class="kp-badge kp-badge--destructive">stopped</span>
+                            </li>
+                            <li class="cd-list__row" data-name="uptime-kuma" data-kind="web" data-status="running">
+                                <span class="cd-list__name">uptime-kuma</span><span class="cd-list__kind">web</span
+                                ><span class="kp-badge kp-badge--success">running</span>
+                            </li>
+                            <li class="cd-list__row" data-name="postgres-replica" data-kind="db" data-status="running">
+                                <span class="cd-list__name">postgres-replica</span><span class="cd-list__kind">db</span
+                                ><span class="kp-badge kp-badge--success">running</span>
+                            </li>
+                            <li class="cd-list__row" data-name="report-export" data-kind="job" data-status="stopped">
+                                <span class="cd-list__name">report-export</span><span class="cd-list__kind">job</span
+                                ><span class="kp-badge kp-badge--destructive">stopped</span>
+                            </li>
+                            <li class="cd-list__none" hidden>No container matches. Turn a filter off or clear the search.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="cd-block">
+                    <h3>The row of filters that are on, kept in place</h3>
+                    <p class="cd-caption">
+                        <code>data-kp-toolbar-reserve</code> keeps the row’s height while it is empty, so the list under the toolbar does not move
+                        when a filter is turned on. Below: absent when empty (the default), reserved when empty, and with filters on.
+                    </p>
+                    <div class="cd-stack">
+                        <div class="cd-card">
+                            <div class="kp-toolbar" data-kp-toolbar role="group" aria-label="Absent when empty (default)">
+                                <div class="kp-toolbar__search">
+                                    <input
+                                        type="search"
+                                        class="kp-field__input kp-toolbar__input"
+                                        placeholder="Search containers"
+                                        aria-label="Search containers"
+                                    /><kbd class="kp-kbd kp-toolbar__key" aria-hidden="true">/</kbd>
+                                </div>
+                                <div class="kp-toolbar__filters">
+                                    <div class="kp-toolbar__group" role="group" aria-label="Status">
+                                        <b class="kp-toolbar__label">Status</b>
+                                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                                            <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="false">
+                                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="kp-toolbar__state"><span>12 of 12</span></div>
+                                <div class="kp-toolbar__active" hidden></div>
+                            </div>
+                            <p class="cd-mark">The list starts here.</p>
+                        </div>
+                        <div class="cd-card">
+                            <div class="kp-toolbar" data-kp-toolbar data-kp-toolbar-reserve role="group" aria-label="Reserved when empty">
+                                <div class="kp-toolbar__search">
+                                    <input
+                                        type="search"
+                                        class="kp-field__input kp-toolbar__input"
+                                        placeholder="Search containers"
+                                        aria-label="Search containers"
+                                    /><kbd class="kp-kbd kp-toolbar__key" aria-hidden="true">/</kbd>
+                                </div>
+                                <div class="kp-toolbar__filters">
+                                    <div class="kp-toolbar__group" role="group" aria-label="Status">
+                                        <b class="kp-toolbar__label">Status</b>
+                                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                                            <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="false">
+                                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="kp-toolbar__state"><span>12 of 12</span></div>
+                                <div class="kp-toolbar__active" hidden></div>
+                            </div>
+                            <p class="cd-mark">The list starts here too.</p>
+                        </div>
+                        <div class="cd-card">
+                            <div class="kp-toolbar" data-kp-toolbar role="group" aria-label="Two filters on">
+                                <div class="kp-toolbar__search">
+                                    <input
+                                        type="search"
+                                        class="kp-field__input kp-toolbar__input"
+                                        placeholder="Search containers"
+                                        aria-label="Search containers"
+                                    /><kbd class="kp-kbd kp-toolbar__key" aria-hidden="true">/</kbd>
+                                </div>
+                                <div class="kp-toolbar__filters">
+                                    <div class="kp-toolbar__group" role="group" aria-label="Status">
+                                        <b class="kp-toolbar__label">Status</b>
+                                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                                            <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="kp-toolbar__state"><span>12 of 12</span></div>
+                                <div class="kp-toolbar__active">
+                                    <span class="kp-toolbar__active-label">Showing only</span>
+                                    <ul class="kp-tag-list kp-toolbar__active-list" aria-label="Active filters">
+                                        <li class="kp-tag">
+                                            Status: Running<button type="button" class="kp-tag__remove" aria-label="Remove filter Status: Running">
+                                                ×
+                                            </button>
+                                        </li>
+                                        <li class="kp-tag">
+                                            Search: “postgres-main-replica-eu-west-2-nightly”<button
+                                                type="button"
+                                                class="kp-tag__remove"
+                                                aria-label="Remove filter Search: “postgres-main-replica-eu-west-2-nightly”"
+                                            >
+                                                ×
+                                            </button>
+                                        </li>
+                                    </ul>
+                                    <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-kp-toolbar-clear>Clear all</button>
+                                </div>
+                            </div>
+                            <p class="cd-mark">The list starts here, and a long tag wraps.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="cd-block">
+                    <h3>No search, and stacked in a narrow column</h3>
+                    <p class="cd-caption">
+                        <code>kp-toolbar--stacked</code> is the phone layout on demand (below 48rem the toolbar stacks by itself).
+                    </p>
+                    <div class="cd-stack cd-stack--two">
+                        <div class="cd-card">
+                            <div class="kp-toolbar" data-kp-toolbar role="group" aria-label="Without search">
+                                <div class="kp-toolbar__filters">
+                                    <div class="kp-toolbar__group" role="group" aria-label="Status">
+                                        <b class="kp-toolbar__label">Status</b>
+                                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                                            <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="false">
+                                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="kp-toolbar__state"><span>12 of 12</span></div>
+                                <div class="kp-toolbar__active" hidden></div>
+                            </div>
+                        </div>
+                        <div class="cd-card cd-card--narrow">
+                            <div class="kp-toolbar kp-toolbar--stacked" data-kp-toolbar role="group" aria-label="Stacked">
+                                <div class="kp-toolbar__search">
+                                    <input
+                                        type="search"
+                                        class="kp-field__input kp-toolbar__input"
+                                        placeholder="Search containers"
+                                        aria-label="Search containers"
+                                    /><kbd class="kp-kbd kp-toolbar__key" aria-hidden="true">/</kbd>
+                                </div>
+                                <div class="kp-toolbar__filters">
+                                    <div class="kp-toolbar__group" role="group" aria-label="Status">
+                                        <b class="kp-toolbar__label">Status</b>
+                                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                                            <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="kp-toolbar__state"><span>12 of 12</span></div>
+                                <div class="kp-toolbar__active">
+                                    <span class="kp-toolbar__active-label">Showing only</span>
+                                    <ul class="kp-tag-list kp-toolbar__active-list" aria-label="Active filters">
+                                        <li class="kp-tag">
+                                            Status: Running<button type="button" class="kp-tag__remove" aria-label="Remove filter Status: Running">
+                                                ×
+                                            </button>
+                                        </li>
+                                    </ul>
+                                    <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-kp-toolbar-clear>Clear all</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cd-block">
+                    <h3>Beside the data table’s own bar</h3>
+                    <p class="cd-caption">
+                        A real <code>kp-datatable</code> (search, a header filter with a pill). Its pills and the toolbar’s tags are the same
+                        <code>.kp-tag</code>, so the two read as one family.
+                    </p>
+                    <div class="cd-card">
+                        <div class="kp-datatable" data-kp-datatable data-kp-filter-mode="panel">
+                            <div class="kp-datatable__bar">
+                                <input
+                                    class="kp-datatable__search"
+                                    type="search"
+                                    data-kp-datatable-search
+                                    aria-label="Search containers"
+                                    placeholder="Search containers"
+                                />
+                            </div>
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <caption class="kp-sr-only">
+                                        Containers
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" data-kp-sort="text">Name</th>
+                                            <th scope="col" data-kp-filter="choice" data-kp-filter-value="running">Status</th>
+                                            <th scope="col" data-kp-sort="text">Kind</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>nginx-proxy</td>
+                                            <td>running</td>
+                                            <td>web</td>
+                                        </tr>
+                                        <tr>
+                                            <td>api-gateway</td>
+                                            <td>running</td>
+                                            <td>web</td>
+                                        </tr>
+                                        <tr>
+                                            <td>grafana</td>
+                                            <td>running</td>
+                                            <td>web</td>
+                                        </tr>
+                                        <tr>
+                                            <td>postgres-main</td>
+                                            <td>running</td>
+                                            <td>db</td>
+                                        </tr>
+                                        <tr>
+                                            <td>redis-cache</td>
+                                            <td>running</td>
+                                            <td>db</td>
+                                        </tr>
+                                        <tr>
+                                            <td>loki</td>
+                                            <td>stopped</td>
+                                            <td>db</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="cd-sec"
+                data-review-item="keys"
+                data-review-components="keys kbd"
+                data-review-title="3 · Inline key line"
+                aria-label="Inline key line"
+            >
+                <div class="cd-sec__head">
+                    <h2>3 · Inline key line</h2>
+                    <p>
+                        A row of key caps with what each does, under a list or beside a control. It is not the Help sheet: no box, no dialog, one line
+                        that wraps by whole shortcuts. The cap (<code>kbd.kp-kbd</code>) also stands alone: in a button, a hint, a sentence.
+                    </p>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Engraved plate caps in the body face, a thin foot. The whole line stays one row of one height; the words follow their caps;
+                        two caps for one action (↑ ↓) sit closer than two actions. The last line wraps by whole shortcuts, never mid-shortcut. Ctrl K
+                        shows ⌘ on a Mac.
+                    </p>
+                    <p data-for="light">
+                        Soft rounded caps on a pale ground. The whole line stays one row of one height; the words follow their caps; two caps for one
+                        action (↑ ↓) sit closer than two actions. The last line wraps by whole shortcuts, never mid-shortcut. Ctrl K shows ⌘ on a Mac.
+                    </p>
+                    <p data-for="dark">
+                        Machined caps with a thick foot. The whole line stays one row of one height; the words follow their caps; two caps for one
+                        action (↑ ↓) sit closer than two actions. The last line wraps by whole shortcuts, never mid-shortcut. Ctrl K shows ⌘ on a Mac.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Cyan outlined capitals, flat. The whole line stays one row of one height; the words follow their caps; two caps for one action
+                        (↑ ↓) sit closer than two actions. The last line wraps by whole shortcuts, never mid-shortcut. Ctrl K shows ⌘ on a Mac.
+                    </p>
+                    <p data-for="synthwave">
+                        Cyan outlined caps with a faint glow. The whole line stays one row of one height; the words follow their caps; two caps for
+                        one action (↑ ↓) sit closer than two actions. The last line wraps by whole shortcuts, never mid-shortcut. Ctrl K shows ⌘ on a
+                        Mac.
+                    </p>
+                    <p data-for="pastel">
+                        Rounded sticker caps with a 3 px foot. The whole line stays one row of one height; the words follow their caps; two caps for
+                        one action (↑ ↓) sit closer than two actions. The last line wraps by whole shortcuts, never mid-shortcut. Ctrl K shows ⌘ on a
+                        Mac.
+                    </p>
+                    <p data-for="terminal">
+                        No box at all: each key is written [ / ], as a man page writes it. The whole line stays one row of one height; the words
+                        follow their caps; two caps for one action (↑ ↓) sit closer than two actions. The last line wraps by whole shortcuts, never
+                        mid-shortcut. Ctrl K shows ⌘ on a Mac.
+                    </p>
+                    <p data-for="forest">
+                        Bark-plank caps with a 3 px foot. The whole line stays one row of one height; the words follow their caps; two caps for one
+                        action (↑ ↓) sit closer than two actions. The last line wraps by whole shortcuts, never mid-shortcut. Ctrl K shows ⌘ on a Mac.
+                    </p>
+                    <p data-for="blueprint">
+                        Dashed outline caps in monospace. The whole line stays one row of one height; the words follow their caps; two caps for one
+                        action (↑ ↓) sit closer than two actions. The last line wraps by whole shortcuts, never mid-shortcut. Ctrl K shows ⌘ on a Mac.
+                    </p>
+                    <p data-for="solstice">
+                        Ember-grey caps with a 2 px foot. The whole line stays one row of one height; the words follow their caps; two caps for one
+                        action (↑ ↓) sit closer than two actions. The last line wraps by whole shortcuts, never mid-shortcut. Ctrl K shows ⌘ on a Mac.
+                    </p>
+                    <p data-for="brutalism">
+                        Heavy black caps with a hard 2 px shadow. The whole line stays one row of one height; the words follow their caps; two caps
+                        for one action (↑ ↓) sit closer than two actions. The last line wraps by whole shortcuts, never mid-shortcut. Ctrl K shows ⌘
+                        on a Mac.
+                    </p>
+                    <p data-for="deco">
+                        Gold double-rule caps. The whole line stays one row of one height; the words follow their caps; two caps for one action (↑ ↓)
+                        sit closer than two actions. The last line wraps by whole shortcuts, never mid-shortcut. Ctrl K shows ⌘ on a Mac.
+                    </p>
+                    <p data-for="phantom">
+                        Condensed capitals on a grey cut. The whole line stays one row of one height; the words follow their caps; two caps for one
+                        action (↑ ↓) sit closer than two actions. The last line wraps by whole shortcuts, never mid-shortcut. Ctrl K shows ⌘ on a Mac.
+                    </p>
+                    <p data-for="grotesk">
+                        Plain black outline caps in bold. The whole line stays one row of one height; the words follow their caps; two caps for one
+                        action (↑ ↓) sit closer than two actions. The last line wraps by whole shortcuts, never mid-shortcut. Ctrl K shows ⌘ on a Mac.
+                    </p>
+                    <p data-for="nostromo">
+                        Tan keys with monospace capitals and a 3 px foot. The whole line stays one row of one height; the words follow their caps; two
+                        caps for one action (↑ ↓) sit closer than two actions. The last line wraps by whole shortcuts, never mid-shortcut. Ctrl K
+                        shows ⌘ on a Mac.
+                    </p>
+                    <p data-for="titanium">
+                        Monospace caps with a lit top edge. The whole line stays one row of one height; the words follow their caps; two caps for one
+                        action (↑ ↓) sit closer than two actions. The last line wraps by whole shortcuts, never mid-shortcut. Ctrl K shows ⌘ on a Mac.
+                    </p>
+                </div>
+                <div class="cd-block">
+                    <h3>The line</h3>
+
+                    <div class="kp-keys" role="group" aria-label="Keyboard shortcuts">
+                        <span class="kp-keys__item"><kbd class="kp-kbd">/</kbd> search containers</span>
+                        <span class="kp-keys__item"
+                            ><span class="kp-keys__caps"><kbd class="kp-kbd">↑</kbd><kbd class="kp-kbd">↓</kbd></span> move</span
+                        >
+                        <span class="kp-keys__item"><kbd class="kp-kbd">Enter</kbd> open</span>
+                        <span class="kp-keys__item"><kbd class="kp-kbd">Esc</kbd> clear</span>
+                    </div>
+                </div>
+                <div class="cd-block">
+                    <h3>Written from pairs, with the platform’s modifier</h3>
+                    <p class="cd-caption">
+                        <code>setKeys(el, [[['Mod','K'], 'palette'], …])</code>: <code>Mod</code> is ⌘ on a Mac and Ctrl elsewhere.
+                    </p>
+                    <div data-cd-keys></div>
+                </div>
+                <div class="cd-block">
+                    <h3>Against the far edge, and wrapping</h3>
+                    <div class="cd-stack cd-stack--two">
+                        <div class="cd-card">
+                            <div class="kp-keys kp-keys--end" role="group" aria-label="Keyboard shortcuts">
+                                <span class="kp-keys__item"><kbd class="kp-kbd">/</kbd> search containers</span>
+                                <span class="kp-keys__item"
+                                    ><span class="kp-keys__caps"><kbd class="kp-kbd">↑</kbd><kbd class="kp-kbd">↓</kbd></span> move</span
+                                >
+                                <span class="kp-keys__item"><kbd class="kp-kbd">Enter</kbd> open</span>
+                                <span class="kp-keys__item"><kbd class="kp-kbd">Esc</kbd> clear</span>
+                            </div>
+                        </div>
+                        <div class="cd-card cd-card--narrow">
+                            <div class="kp-keys" role="group" aria-label="Keyboard shortcuts">
+                                <span class="kp-keys__item"><kbd class="kp-kbd">/</kbd> search containers</span>
+                                <span class="kp-keys__item"
+                                    ><span class="kp-keys__caps"><kbd class="kp-kbd">↑</kbd><kbd class="kp-kbd">↓</kbd></span> move</span
+                                >
+                                <span class="kp-keys__item"><kbd class="kp-kbd">Enter</kbd> open</span>
+                                <span class="kp-keys__item"><kbd class="kp-kbd">Esc</kbd> clear</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cd-block">
+                    <h3>A cap on its own</h3>
+                    <div class="cd-row">
+                        <button type="button" class="kp-button kp-button--primary">Search <kbd class="kp-kbd">/</kbd></button>
+                        <button type="button" class="kp-button">Close <kbd class="kp-kbd">Esc</kbd></button>
+                        <button type="button" class="kp-button" disabled>Delete <kbd class="kp-kbd">Del</kbd></button>
+                        <p class="cd-sentence">
+                            Press <kbd class="kp-kbd">Ctrl</kbd> <kbd class="kp-kbd">S</kbd> to save, <kbd class="kp-kbd">Shift</kbd>
+                            <kbd class="kp-kbd">Tab</kbd> to go back.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cd-lineup" aria-label="All sixteen themes side by side">
+                <h2>All sixteen side by side</h2>
+                <p>
+                    For comparing the themes with each other, not judged in the dialog: a segmented control (single), chips, a multi segmented control
+                    and a key line, in each theme at once. Each stage has its own theme and loads its register.
+                </p>
+                <div class="cd-lineup__grid" data-cd-lineup>
+                    <article class="cd-stage" data-theme="formal">
+                        <h4 class="cd-stage__name">Formal</h4>
+                        <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show">
+                            <button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count">3</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="true">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-keys" role="group" aria-label="Keyboard shortcuts">
+                            <span class="kp-keys__item"><kbd class="kp-kbd">/</kbd> search</span
+                            ><span class="kp-keys__item"
+                                ><span class="kp-keys__caps"><kbd class="kp-kbd">↑</kbd><kbd class="kp-kbd">↓</kbd></span> move</span
+                            ><span class="kp-keys__item"><kbd class="kp-kbd">Esc</kbd> clear</span>
+                        </div>
+                    </article>
+
+                    <article class="cd-stage" data-theme="light">
+                        <h4 class="cd-stage__name">Light</h4>
+                        <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show">
+                            <button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count">3</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="true">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-keys" role="group" aria-label="Keyboard shortcuts">
+                            <span class="kp-keys__item"><kbd class="kp-kbd">/</kbd> search</span
+                            ><span class="kp-keys__item"
+                                ><span class="kp-keys__caps"><kbd class="kp-kbd">↑</kbd><kbd class="kp-kbd">↓</kbd></span> move</span
+                            ><span class="kp-keys__item"><kbd class="kp-kbd">Esc</kbd> clear</span>
+                        </div>
+                    </article>
+
+                    <article class="cd-stage" data-theme="dark">
+                        <h4 class="cd-stage__name">Dark</h4>
+                        <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show">
+                            <button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count">3</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="true">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-keys" role="group" aria-label="Keyboard shortcuts">
+                            <span class="kp-keys__item"><kbd class="kp-kbd">/</kbd> search</span
+                            ><span class="kp-keys__item"
+                                ><span class="kp-keys__caps"><kbd class="kp-kbd">↑</kbd><kbd class="kp-kbd">↓</kbd></span> move</span
+                            ><span class="kp-keys__item"><kbd class="kp-kbd">Esc</kbd> clear</span>
+                        </div>
+                    </article>
+
+                    <article class="cd-stage" data-theme="cyberpunk">
+                        <h4 class="cd-stage__name">Cyberpunk</h4>
+                        <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show">
+                            <button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count">3</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="true">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-keys" role="group" aria-label="Keyboard shortcuts">
+                            <span class="kp-keys__item"><kbd class="kp-kbd">/</kbd> search</span
+                            ><span class="kp-keys__item"
+                                ><span class="kp-keys__caps"><kbd class="kp-kbd">↑</kbd><kbd class="kp-kbd">↓</kbd></span> move</span
+                            ><span class="kp-keys__item"><kbd class="kp-kbd">Esc</kbd> clear</span>
+                        </div>
+                    </article>
+
+                    <article class="cd-stage" data-theme="synthwave">
+                        <h4 class="cd-stage__name">Synthwave</h4>
+                        <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show">
+                            <button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count">3</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="true">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-keys" role="group" aria-label="Keyboard shortcuts">
+                            <span class="kp-keys__item"><kbd class="kp-kbd">/</kbd> search</span
+                            ><span class="kp-keys__item"
+                                ><span class="kp-keys__caps"><kbd class="kp-kbd">↑</kbd><kbd class="kp-kbd">↓</kbd></span> move</span
+                            ><span class="kp-keys__item"><kbd class="kp-kbd">Esc</kbd> clear</span>
+                        </div>
+                    </article>
+
+                    <article class="cd-stage" data-theme="pastel">
+                        <h4 class="cd-stage__name">Pastel</h4>
+                        <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show">
+                            <button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count">3</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="true">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-keys" role="group" aria-label="Keyboard shortcuts">
+                            <span class="kp-keys__item"><kbd class="kp-kbd">/</kbd> search</span
+                            ><span class="kp-keys__item"
+                                ><span class="kp-keys__caps"><kbd class="kp-kbd">↑</kbd><kbd class="kp-kbd">↓</kbd></span> move</span
+                            ><span class="kp-keys__item"><kbd class="kp-kbd">Esc</kbd> clear</span>
+                        </div>
+                    </article>
+
+                    <article class="cd-stage" data-theme="terminal">
+                        <h4 class="cd-stage__name">Terminal</h4>
+                        <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show">
+                            <button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count">3</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="true">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-keys" role="group" aria-label="Keyboard shortcuts">
+                            <span class="kp-keys__item"><kbd class="kp-kbd">/</kbd> search</span
+                            ><span class="kp-keys__item"
+                                ><span class="kp-keys__caps"><kbd class="kp-kbd">↑</kbd><kbd class="kp-kbd">↓</kbd></span> move</span
+                            ><span class="kp-keys__item"><kbd class="kp-kbd">Esc</kbd> clear</span>
+                        </div>
+                    </article>
+
+                    <article class="cd-stage" data-theme="forest">
+                        <h4 class="cd-stage__name">Forest</h4>
+                        <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show">
+                            <button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count">3</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="true">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-keys" role="group" aria-label="Keyboard shortcuts">
+                            <span class="kp-keys__item"><kbd class="kp-kbd">/</kbd> search</span
+                            ><span class="kp-keys__item"
+                                ><span class="kp-keys__caps"><kbd class="kp-kbd">↑</kbd><kbd class="kp-kbd">↓</kbd></span> move</span
+                            ><span class="kp-keys__item"><kbd class="kp-kbd">Esc</kbd> clear</span>
+                        </div>
+                    </article>
+
+                    <article class="cd-stage" data-theme="blueprint">
+                        <h4 class="cd-stage__name">Blueprint</h4>
+                        <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show">
+                            <button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count">3</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="true">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-keys" role="group" aria-label="Keyboard shortcuts">
+                            <span class="kp-keys__item"><kbd class="kp-kbd">/</kbd> search</span
+                            ><span class="kp-keys__item"
+                                ><span class="kp-keys__caps"><kbd class="kp-kbd">↑</kbd><kbd class="kp-kbd">↓</kbd></span> move</span
+                            ><span class="kp-keys__item"><kbd class="kp-kbd">Esc</kbd> clear</span>
+                        </div>
+                    </article>
+
+                    <article class="cd-stage" data-theme="solstice">
+                        <h4 class="cd-stage__name">Solstice</h4>
+                        <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show">
+                            <button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count">3</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="true">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-keys" role="group" aria-label="Keyboard shortcuts">
+                            <span class="kp-keys__item"><kbd class="kp-kbd">/</kbd> search</span
+                            ><span class="kp-keys__item"
+                                ><span class="kp-keys__caps"><kbd class="kp-kbd">↑</kbd><kbd class="kp-kbd">↓</kbd></span> move</span
+                            ><span class="kp-keys__item"><kbd class="kp-kbd">Esc</kbd> clear</span>
+                        </div>
+                    </article>
+
+                    <article class="cd-stage" data-theme="brutalism">
+                        <h4 class="cd-stage__name">Brutalism</h4>
+                        <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show">
+                            <button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count">3</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="true">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-keys" role="group" aria-label="Keyboard shortcuts">
+                            <span class="kp-keys__item"><kbd class="kp-kbd">/</kbd> search</span
+                            ><span class="kp-keys__item"
+                                ><span class="kp-keys__caps"><kbd class="kp-kbd">↑</kbd><kbd class="kp-kbd">↓</kbd></span> move</span
+                            ><span class="kp-keys__item"><kbd class="kp-kbd">Esc</kbd> clear</span>
+                        </div>
+                    </article>
+
+                    <article class="cd-stage" data-theme="deco">
+                        <h4 class="cd-stage__name">Art Deco</h4>
+                        <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show">
+                            <button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count">3</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="true">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-keys" role="group" aria-label="Keyboard shortcuts">
+                            <span class="kp-keys__item"><kbd class="kp-kbd">/</kbd> search</span
+                            ><span class="kp-keys__item"
+                                ><span class="kp-keys__caps"><kbd class="kp-kbd">↑</kbd><kbd class="kp-kbd">↓</kbd></span> move</span
+                            ><span class="kp-keys__item"><kbd class="kp-kbd">Esc</kbd> clear</span>
+                        </div>
+                    </article>
+
+                    <article class="cd-stage" data-theme="phantom">
+                        <h4 class="cd-stage__name">Phantom</h4>
+                        <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show">
+                            <button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count">3</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="true">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-keys" role="group" aria-label="Keyboard shortcuts">
+                            <span class="kp-keys__item"><kbd class="kp-kbd">/</kbd> search</span
+                            ><span class="kp-keys__item"
+                                ><span class="kp-keys__caps"><kbd class="kp-kbd">↑</kbd><kbd class="kp-kbd">↓</kbd></span> move</span
+                            ><span class="kp-keys__item"><kbd class="kp-kbd">Esc</kbd> clear</span>
+                        </div>
+                    </article>
+
+                    <article class="cd-stage" data-theme="grotesk">
+                        <h4 class="cd-stage__name">Grotesk</h4>
+                        <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show">
+                            <button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count">3</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="true">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-keys" role="group" aria-label="Keyboard shortcuts">
+                            <span class="kp-keys__item"><kbd class="kp-kbd">/</kbd> search</span
+                            ><span class="kp-keys__item"
+                                ><span class="kp-keys__caps"><kbd class="kp-kbd">↑</kbd><kbd class="kp-kbd">↓</kbd></span> move</span
+                            ><span class="kp-keys__item"><kbd class="kp-kbd">Esc</kbd> clear</span>
+                        </div>
+                    </article>
+
+                    <article class="cd-stage" data-theme="nostromo">
+                        <h4 class="cd-stage__name">Nostromo</h4>
+                        <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show">
+                            <button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count">3</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="true">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-keys" role="group" aria-label="Keyboard shortcuts">
+                            <span class="kp-keys__item"><kbd class="kp-kbd">/</kbd> search</span
+                            ><span class="kp-keys__item"
+                                ><span class="kp-keys__caps"><kbd class="kp-kbd">↑</kbd><kbd class="kp-kbd">↓</kbd></span> move</span
+                            ><span class="kp-keys__item"><kbd class="kp-kbd">Esc</kbd> clear</span>
+                        </div>
+                    </article>
+
+                    <article class="cd-stage" data-theme="titanium">
+                        <h4 class="cd-stage__name">Titanium</h4>
+                        <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Show">
+                            <button type="button" class="kp-segmented__item" data-value="changed" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">Changed</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="all" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">48</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="errors" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Errors</span><span class="kp-segmented__count">3</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="false">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-segmented" data-kp-segmented="multi" role="group" aria-label="Status">
+                            <button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="false">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">12</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="running" aria-pressed="true">
+                                <span class="kp-segmented__label">Running</span><span class="kp-segmented__count">8</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="stopped" aria-pressed="true">
+                                <span class="kp-segmented__label">Stopped</span><span class="kp-segmented__count">3</span></button
+                            ><button type="button" class="kp-segmented__item" data-value="restarting" aria-pressed="false">
+                                <span class="kp-segmented__label">Restarting</span><span class="kp-segmented__count">1</span>
+                            </button>
+                        </div>
+                        <div class="kp-keys" role="group" aria-label="Keyboard shortcuts">
+                            <span class="kp-keys__item"><kbd class="kp-kbd">/</kbd> search</span
+                            ><span class="kp-keys__item"
+                                ><span class="kp-keys__caps"><kbd class="kp-kbd">↑</kbd><kbd class="kp-kbd">↓</kbd></span> move</span
+                            ><span class="kp-keys__item"><kbd class="kp-kbd">Esc</kbd> clear</span>
+                        </div>
+                    </article>
+                </div>
+            </section>
+        </main>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="demo.js"></script>
+        </body>
+</html>

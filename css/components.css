@@ -6396,6 +6396,11 @@
         background: var(--muted);
         color: var(--muted-foreground);
         font-size: var(--kp-text-sm, 0.8125rem);
+        /* A tag is one line. A theme that folds the width of what arrives (formal rules a part open from
+           the start edge, js/motion.js animates its width from 0) would otherwise wrap its words to one
+           letter per line while it grows: a pill 279 px tall that pushed the page down until the arrival
+           ended (Kenny, kpadopt-controls toolbar · formal, 2026-10-16). */
+        white-space: nowrap;
     }
 
     .kp-tag__remove {
@@ -9887,6 +9892,16 @@
         border-block: 0;
         border-inline-end: 0;
         border-radius: 0;
+    }
+
+    /* The drawer a tab bar's More tab opens (js/tabbar.js marks it). On a phone the plain drawer is the whole
+       window, which reads as another page with no way back (Kenny, kpadopt-nav, 2026-10-16); this one leaves a
+       strip of the page, dimmed, at the start edge: a press on it closes the drawer, and it says "this is on top
+       of the page". A side drawer, not a bottom sheet: see research/kpadopt-nav/README.md. */
+    dialog.kp-drawer[data-kp-tabbar-drawer],
+    dialog.kp-drawer[data-kp-tabbar-drawer]:modal {
+        inline-size: var(--kp-drawer-width, min(28rem, calc(100vw - 3.5rem)));
+        max-inline-size: calc(100vw - 3.5rem);
     }
 
     @media (prefers-reduced-motion: no-preference) {

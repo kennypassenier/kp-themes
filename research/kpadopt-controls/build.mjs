@@ -99,6 +99,13 @@ const KEYS_LOOK = Object.fromEntries(
     ]),
 );
 
+/**
+ * The plain statement of what to see and what each control does (Kenny, 2026-10-16: "Zet in de volgende demo nog eens
+ * duidelijk wat je verwacht"). One per section, beside the per-theme look-at text.
+ * @param {string} items list items
+ */
+const expected = (items) => `<div class="cd-expect"><p><b>Expected:</b></p><ul>${items}</ul></div>`;
+
 const look = (map) =>
     `<div data-review-look>\n${THEMES.map(([t]) => `                        <p data-for="${t}">${map[t]}</p>`).join('\n')}\n                    </div>`;
 
@@ -410,6 +417,12 @@ ${registers.join('\n')}
                     </p>
                 </div>
                 ${look(SEG)}
+                ${expected(`
+                    <li><b>One value:</b> press Changed, All or Errors, or Table or Cards: the pressed one becomes the chosen one (the plate moves under it), the other loses it, exactly one is chosen at any time. The counts do not move the labels.</li>
+                    <li><b>Several values:</b> press Running, Stopped or Restarting: each press turns that value on or off, and “Values on” under the group lists what is on. With nothing on, All is the pressed one; pressing All turns every other value off; turning on every value one by one ends as All.</li>
+                    <li><b>Keyboard:</b> Tab reaches a group once (one tab stop); the arrow keys, Home and End move inside it; in a one-value group they also choose; in a several-values group Space or Enter turns the value.</li>
+                    <li><b>Loading rows:</b> “Numbers arrive” fills the counts without moving any label; “Back to loading” puts the grey places back. Hover and focus rows are drawn standing still; Disabled does not answer a press.</li>
+                `)}
                 <div class="cd-block">
                     <h3>One value, with counts</h3>
                     <p class="cd-caption">Single choice. The plate glides in the theme’s own motion and the counts keep their column when they change.</p>
@@ -474,6 +487,12 @@ ${stateRows}
                     </p>
                 </div>
                 ${look(TB)}
+                ${expected(`
+                    <li><b>Live toolbar:</b> type in the search box: the list under it narrows to the names that match, the count at the right (“5 of 12”) follows, and a tag “Search: …” appears. Press <kbd class="kp-kbd">/</kbd> outside a field to jump to the search; Escape in the search clears it.</li>
+                    <li><b>Press a filter</b> (for instance Status: Running): the list narrows, the counts on the other chips update, and a removable tag “Status: Running” appears in a row under the bar. The tag must appear at its final size at once: it must not start tall or stretched, and the page may move down by that one row, once, and then stay still.</li>
+                    <li><b>The tag’s × and Clear all</b> turn that filter off, or every filter off, and the row goes away again. Table / Cards changes the list’s layout (the rows become cards).</li>
+                    <li><b>Three bars below:</b> without the row (the list starts higher), reserved (the list starts at the same place with or without filters), two filters on (the long one is cut, not wrapped). The narrow one is stacked in one column. The data table’s own pills look the same as the toolbar’s tags.</li>
+                `)}
                 <div class="cd-block">
                     <h3>Above a plain list (live)</h3>
                     <p class="cd-caption">Mock: the list and its filtering are this page’s. Everything in the bar is the package.</p>
@@ -536,6 +555,11 @@ ${CONTAINERS.slice(0, 6)
                     </p>
                 </div>
                 ${look(KEYS_LOOK)}
+                ${expected(`
+                    <li><b>The line:</b> one row of key caps, each followed by what it does, no box around it. When the row is too wide it wraps by whole shortcuts, never in the middle of one; two caps for one action (like ↑ ↓) sit closer together than two actions.</li>
+                    <li><b>Written from pairs:</b> the Mod key reads ⌘ on a Mac and Ctrl everywhere else, on this machine it reads as the platform’s own key.</li>
+                    <li><b>A cap on its own</b> in a button, a sentence, or in a disabled button (dimmed with its button). The caps are not controls: pressing one does nothing.</li>
+                `)}
                 <div class="cd-block">
                     <h3>The line</h3>
                     ${keysStatic()}
@@ -576,6 +600,10 @@ ${lineup}
         </main>
         <script type="module" src="../../js/auto.js"></script>
         <script type="module" src="demo.js"></script>
+        <!-- Round two (2026-10-16): Kenny's rejections of round one reopen by themselves; every pair he has not judged is still open. -->
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-16-r2", "reopen": [] }
+        </script>
         <script type="module" src="../_review/review.js"></script>
         <script src="../../catalogue/boot-check.js"></script>
         <script type="module" src="../../catalogue/catalogue.js"></script>

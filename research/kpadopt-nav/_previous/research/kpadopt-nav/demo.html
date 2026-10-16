@@ -1,0 +1,1604 @@
+<!doctype html>
+<!-- Written by research/kpadopt-nav/build.mjs; edit build.mjs, demo.css and demo.js, not this file. -->
+<html lang="en" data-theme="formal" data-cat-theme="formal" data-review="kpadopt-nav">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kp-themes: a folding top bar, a bottom tab bar and the running-job button</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <link rel="stylesheet" href="../../css/formal-register.css" data-kp-register="formal" />
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <main class="nf-page">
+            <header class="nf-intro">
+                <h1>A folding top bar, a bottom tab bar and the running-job button</h1>
+                <p>
+                    Three things the homelab dashboard still draws by hand, built into the package so it can draw nothing itself. Everything inside
+                    the frames is the package’s own classes and scripts (<code>kp-nav</code> with <code>data-kp-nav-fold</code>,
+                    <code>kp-tabbar</code>, <code>kp-button--live</code>, the menu button and the drawer); the frames, the slider, the mock page
+                    behind the phones and the buttons that play a state are this demo’s. Judge them in the review dialog (“Review in a dialog” at the
+                    top), one theme at a time.
+                </p>
+                <p class="nf-motion" data-nf-motion hidden>
+                    <b>Your system asks for reduced motion</b>, so the marks and menus appear without moving. Turn it off to judge the movement.
+                </p>
+            </header>
+
+            <section
+                class="nf-sec"
+                id="nav-fold"
+                data-review-item="nav-fold"
+                data-review-title="1 · A bar that folds behind More"
+                data-review-components="nav-fold"
+                aria-labelledby="h-nav-fold"
+            >
+                <div class="nf-sec__head">
+                    <p class="nf-num">1 · Top bar</p>
+                    <h2 id="h-nav-fold">What does not fit goes behind More, and the bar never changes height.</h2>
+                    <p class="nf-how">
+                        <code>data-kp-nav-fold</code> on the nav. Nothing else is written by hand: the More button and its menu are added by the
+                        script, and the menu is the package’s menu button.
+                    </p>
+                </div>
+                <div class="nf-look" data-review-look>
+                    <p data-for="formal">
+                        In formal, drag the slider and watch the first bar: the links that do not fit fold from the end behind More, one after the
+                        other, and the bar stays one row tall at every width (nothing jumps when a link folds). More has no caret in this theme; it
+                        marks a menu link by its word alone, as the theme’s own dropdown links do. Open it (the second row shows it open): It is ruled
+                        open line by line, downward out of the button’s edge. The entry for the current page is marked as the theme marks a current
+                        link; a group heading stands over the Stacks links; Backups stays in the list, greyed, with its reason under it. Compare the
+                        five widths: the same links fold in the same order.
+                    </p>
+                    <p data-for="light">
+                        In light, drag the slider and watch the first bar: the links that do not fit fold from the end behind More, one after the
+                        other, and the bar stays one row tall at every width (nothing jumps when a link folds). More has no caret in this theme; it
+                        marks a menu link by its word alone, as the theme’s own dropdown links do. Open it (the second row shows it open): It comes
+                        into focus under the button. The entry for the current page is marked as the theme marks a current link; a group heading
+                        stands over the Stacks links; Backups stays in the list, greyed, with its reason under it. Compare the five widths: the same
+                        links fold in the same order.
+                    </p>
+                    <p data-for="dark">
+                        In dark, drag the slider and watch the first bar: the links that do not fit fold from the end behind More, one after the
+                        other, and the bar stays one row tall at every width (nothing jumps when a link folds). More wears the theme’s caret for a
+                        link that opens something. Open it (the second row shows it open): It is swept in from the button’s edge. The entry for the
+                        current page is marked as the theme marks a current link; a group heading stands over the Stacks links; Backups stays in the
+                        list, greyed, with its reason under it. Compare the five widths: the same links fold in the same order.
+                    </p>
+                    <p data-for="cyberpunk">
+                        In cyberpunk, drag the slider and watch the first bar: the links that do not fit fold from the end behind More, one after the
+                        other, and the bar stays one row tall at every width (nothing jumps when a link folds). More wears the theme’s caret for a
+                        link that opens something. Open it (the second row shows it open): It glitches in. The entry for the current page is marked as
+                        the theme marks a current link; a group heading stands over the Stacks links; Backups stays in the list, greyed, with its
+                        reason under it. Compare the five widths: the same links fold in the same order.
+                    </p>
+                    <p data-for="synthwave">
+                        In synthwave, drag the slider and watch the first bar: the links that do not fit fold from the end behind More, one after the
+                        other, and the bar stays one row tall at every width (nothing jumps when a link folds). More wears the theme’s caret for a
+                        link that opens something. Open it (the second row shows it open): It rises over its horizon. The entry for the current page
+                        is marked as the theme marks a current link; a group heading stands over the Stacks links; Backups stays in the list, greyed,
+                        with its reason under it. Compare the five widths: the same links fold in the same order.
+                    </p>
+                    <p data-for="pastel">
+                        In pastel, drag the slider and watch the first bar: the links that do not fit fold from the end behind More, one after the
+                        other, and the bar stays one row tall at every width (nothing jumps when a link folds). More wears the theme’s caret for a
+                        link that opens something. Open it (the second row shows it open): It is stuck on beside the button. The entry for the current
+                        page is marked as the theme marks a current link; a group heading stands over the Stacks links; Backups stays in the list,
+                        greyed, with its reason under it. Compare the five widths: the same links fold in the same order.
+                    </p>
+                    <p data-for="terminal">
+                        In terminal, drag the slider and watch the first bar: the links that do not fit fold from the end behind More, one after the
+                        other, and the bar stays one row tall at every width (nothing jumps when a link folds). More wears the theme’s caret for a
+                        link that opens something. Open it (the second row shows it open): It is printed a line at a time. The entry for the current
+                        page is marked as the theme marks a current link; a group heading stands over the Stacks links; Backups stays in the list,
+                        greyed, with its reason under it. Compare the five widths: the same links fold in the same order.
+                    </p>
+                    <p data-for="forest">
+                        In forest, drag the slider and watch the first bar: the links that do not fit fold from the end behind More, one after the
+                        other, and the bar stays one row tall at every width (nothing jumps when a link folds). More has no caret in this theme; it
+                        marks a menu link by its word alone, as the theme’s own dropdown links do. Open it (the second row shows it open): It grows
+                        out of the button. The entry for the current page is marked as the theme marks a current link; a group heading stands over the
+                        Stacks links; Backups stays in the list, greyed, with its reason under it. Compare the five widths: the same links fold in the
+                        same order.
+                    </p>
+                    <p data-for="blueprint">
+                        In blueprint, drag the slider and watch the first bar: the links that do not fit fold from the end behind More, one after the
+                        other, and the bar stays one row tall at every width (nothing jumps when a link folds). More wears the theme’s caret for a
+                        link that opens something. Open it (the second row shows it open): It is drawn, the way the sheet is: constructed, then inked.
+                        The entry for the current page is marked as the theme marks a current link; a group heading stands over the Stacks links;
+                        Backups stays in the list, greyed, with its reason under it. Compare the five widths: the same links fold in the same order.
+                    </p>
+                    <p data-for="solstice">
+                        In solstice, drag the slider and watch the first bar: the links that do not fit fold from the end behind More, one after the
+                        other, and the bar stays one row tall at every width (nothing jumps when a link folds). More wears the theme’s caret for a
+                        link that opens something. Open it (the second row shows it open): It is kindled under the button. The entry for the current
+                        page is marked as the theme marks a current link; a group heading stands over the Stacks links; Backups stays in the list,
+                        greyed, with its reason under it. Compare the five widths: the same links fold in the same order.
+                    </p>
+                    <p data-for="brutalism">
+                        In brutalism, drag the slider and watch the first bar: the links that do not fit fold from the end behind More, one after the
+                        other, and the bar stays one row tall at every width (nothing jumps when a link folds). More wears the theme’s caret for a
+                        link that opens something. Open it (the second row shows it open): It is dropped onto its footprint. The entry for the current
+                        page is marked as the theme marks a current link; a group heading stands over the Stacks links; Backups stays in the list,
+                        greyed, with its reason under it. Compare the five widths: the same links fold in the same order.
+                    </p>
+                    <p data-for="deco">
+                        In deco, drag the slider and watch the first bar: the links that do not fit fold from the end behind More, one after the
+                        other, and the bar stays one row tall at every width (nothing jumps when a link folds). More wears the theme’s caret for a
+                        link that opens something. Open it (the second row shows it open): Its inlay draws itself under the button and the lacquer
+                        comes up. The entry for the current page is marked as the theme marks a current link; a group heading stands over the Stacks
+                        links; Backups stays in the list, greyed, with its reason under it. Compare the five widths: the same links fold in the same
+                        order.
+                    </p>
+                    <p data-for="phantom">
+                        In phantom, drag the slider and watch the first bar: the links that do not fit fold from the end behind More, one after the
+                        other, and the bar stays one row tall at every width (nothing jumps when a link folds). More wears the theme’s caret for a
+                        link that opens something. Open it (the second row shows it open): It is thrown from the button and resolves. The entry for
+                        the current page is marked as the theme marks a current link; a group heading stands over the Stacks links; Backups stays in
+                        the list, greyed, with its reason under it. Compare the five widths: the same links fold in the same order.
+                    </p>
+                    <p data-for="grotesk">
+                        In grotesk, drag the slider and watch the first bar: the links that do not fit fold from the end behind More, one after the
+                        other, and the bar stays one row tall at every width (nothing jumps when a link folds). More has no caret in this theme; it
+                        marks a menu link by its word alone, as the theme’s own dropdown links do. Open it (the second row shows it open): It is
+                        printed by the colour bands. The entry for the current page is marked as the theme marks a current link; a group heading
+                        stands over the Stacks links; Backups stays in the list, greyed, with its reason under it. Compare the five widths: the same
+                        links fold in the same order.
+                    </p>
+                    <p data-for="nostromo">
+                        In nostromo, drag the slider and watch the first bar: the links that do not fit fold from the end behind More, one after the
+                        other, and the bar stays one row tall at every width (nothing jumps when a link folds). More has no caret in this theme; it
+                        marks a menu link by its word alone, as the theme’s own dropdown links do. Open it (the second row shows it open): It strikes
+                        on like a tube. The entry for the current page is marked as the theme marks a current link; a group heading stands over the
+                        Stacks links; Backups stays in the list, greyed, with its reason under it. Compare the five widths: the same links fold in the
+                        same order.
+                    </p>
+                    <p data-for="titanium">
+                        In titanium, drag the slider and watch the first bar: the links that do not fit fold from the end behind More, one after the
+                        other, and the bar stays one row tall at every width (nothing jumps when a link folds). More wears the theme’s caret for a
+                        link that opens something. Open it (the second row shows it open): It is cut open from the top. The entry for the current page
+                        is marked as the theme marks a current link; a group heading stands over the Stacks links; Backups stays in the list, greyed,
+                        with its reason under it. Compare the five widths: the same links fold in the same order.
+                    </p>
+                </div>
+                <div class="nf-liveset">
+                    <label class="nf-slider"
+                        ><span>Width of the first bar</span
+                        ><input type="range" min="18" max="64" step="1" value="46" data-nf-slider="nf-live" /><output data-nf-out="nf-live"
+                            >46rem</output
+                        ></label
+                    >
+
+                    <div class="nf-frame nf-w-live" data-nf="nf-live">
+                        <div class="kp-nav-wrap">
+                            <nav class="kp-nav" data-kp-nav-fold aria-label="Main">
+                                <span class="kp-nav__brand">Homelab</span>
+                                <ul class="kp-nav__links">
+                                    <li><a class="kp-nav__link" aria-current="page" href="#">Home</a></li>
+                                    <li><a class="kp-nav__link" href="#">Needs you</a></li>
+                                    <li><a class="kp-nav__link" href="#">Overview</a></li>
+                                    <li><a class="kp-nav__link" href="#">Activity</a></li>
+                                    <li><a class="kp-nav__link" href="#">Stacks</a></li>
+                                    <li><a class="kp-nav__link" href="#">Logs</a></li>
+                                    <li><a class="kp-nav__link" href="#">Backups</a></li>
+                                    <li><a class="kp-nav__link" href="#">System</a></li>
+                                    <li><a class="kp-nav__link" href="#">Settings</a></li>
+                                </ul>
+                                <div class="kp-nav__search">
+                                    <button type="button" class="kp-button kp-button--ghost kp-button--sm">Search</button>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <div class="nf-grid">
+                    <figure class="nf-fig">
+                        <div class="nf-frame nf-w-xl" data-nf="w-xl">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" data-kp-nav-fold aria-label="Main">
+                                    <span class="kp-nav__brand">Homelab</span>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" aria-current="page" href="#">Home</a></li>
+                                        <li><a class="kp-nav__link" href="#">Needs you</a></li>
+                                        <li><a class="kp-nav__link" href="#">Overview</a></li>
+                                        <li><a class="kp-nav__link" href="#">Activity</a></li>
+                                        <li><a class="kp-nav__link" href="#">Stacks</a></li>
+                                        <li><a class="kp-nav__link" href="#">Logs</a></li>
+                                        <li><a class="kp-nav__link" href="#">Backups</a></li>
+                                        <li><a class="kp-nav__link" href="#">System</a></li>
+                                        <li><a class="kp-nav__link" href="#">Settings</a></li>
+                                    </ul>
+                                    <div class="kp-nav__search">
+                                        <button type="button" class="kp-button kp-button--ghost kp-button--sm">Search</button>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                        <figcaption>64rem: with the theme’s own letters, some fit, some already fold.</figcaption>
+                    </figure>
+                    <figure class="nf-fig">
+                        <div class="nf-frame nf-w-l" data-nf="w-l">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" data-kp-nav-fold aria-label="Main">
+                                    <span class="kp-nav__brand">Homelab</span>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" aria-current="page" href="#">Home</a></li>
+                                        <li><a class="kp-nav__link" href="#">Needs you</a></li>
+                                        <li><a class="kp-nav__link" href="#">Overview</a></li>
+                                        <li><a class="kp-nav__link" href="#">Activity</a></li>
+                                        <li><a class="kp-nav__link" href="#">Stacks</a></li>
+                                        <li><a class="kp-nav__link" href="#">Logs</a></li>
+                                        <li><a class="kp-nav__link" href="#">Backups</a></li>
+                                        <li><a class="kp-nav__link" href="#">System</a></li>
+                                        <li><a class="kp-nav__link" href="#">Settings</a></li>
+                                    </ul>
+                                    <div class="kp-nav__search">
+                                        <button type="button" class="kp-button kp-button--ghost kp-button--sm">Search</button>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                        <figcaption>46rem</figcaption>
+                    </figure>
+                    <figure class="nf-fig">
+                        <div class="nf-frame nf-w-m" data-nf="w-m">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" data-kp-nav-fold aria-label="Main">
+                                    <span class="kp-nav__brand">Homelab</span>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" aria-current="page" href="#">Home</a></li>
+                                        <li><a class="kp-nav__link" href="#">Needs you</a></li>
+                                        <li><a class="kp-nav__link" href="#">Overview</a></li>
+                                        <li><a class="kp-nav__link" href="#">Activity</a></li>
+                                        <li><a class="kp-nav__link" href="#">Stacks</a></li>
+                                        <li><a class="kp-nav__link" href="#">Logs</a></li>
+                                        <li><a class="kp-nav__link" href="#">Backups</a></li>
+                                        <li><a class="kp-nav__link" href="#">System</a></li>
+                                        <li><a class="kp-nav__link" href="#">Settings</a></li>
+                                    </ul>
+                                    <div class="kp-nav__search">
+                                        <button type="button" class="kp-button kp-button--ghost kp-button--sm">Search</button>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                        <figcaption>34rem</figcaption>
+                    </figure>
+                    <figure class="nf-fig">
+                        <div class="nf-frame nf-w-s" data-nf="w-s">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" data-kp-nav-fold aria-label="Main">
+                                    <span class="kp-nav__brand">Homelab</span>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" aria-current="page" href="#">Home</a></li>
+                                        <li><a class="kp-nav__link" href="#">Needs you</a></li>
+                                        <li><a class="kp-nav__link" href="#">Overview</a></li>
+                                        <li><a class="kp-nav__link" href="#">Activity</a></li>
+                                        <li><a class="kp-nav__link" href="#">Stacks</a></li>
+                                        <li><a class="kp-nav__link" href="#">Logs</a></li>
+                                        <li><a class="kp-nav__link" href="#">Backups</a></li>
+                                        <li><a class="kp-nav__link" href="#">System</a></li>
+                                        <li><a class="kp-nav__link" href="#">Settings</a></li>
+                                    </ul>
+                                    <div class="kp-nav__search">
+                                        <button type="button" class="kp-button kp-button--ghost kp-button--sm">Search</button>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                        <figcaption>26rem: only the first links stay.</figcaption>
+                    </figure>
+                    <figure class="nf-fig">
+                        <div class="nf-frame nf-w-s" data-nf="few">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" data-kp-nav-fold aria-label="Main">
+                                    <span class="kp-nav__brand">Homelab</span>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" aria-current="page" href="#">Home</a></li>
+                                        <li><a class="kp-nav__link" href="#">Needs you</a></li>
+                                        <li><a class="kp-nav__link" href="#">Overview</a></li>
+                                    </ul>
+                                    <div class="kp-nav__search">
+                                        <button type="button" class="kp-button kp-button--ghost kp-button--sm">Search</button>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                        <figcaption>Three links at 26rem: everything fits, More is not drawn and takes no room.</figcaption>
+                    </figure>
+                    <figure class="nf-fig">
+                        <div class="nf-frame nf-w-m" data-nf="behind">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" data-kp-nav-fold aria-label="Main">
+                                    <span class="kp-nav__brand">Homelab</span>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" href="#">Home</a></li>
+                                        <li><a class="kp-nav__link" href="#">Needs you</a></li>
+                                        <li><a class="kp-nav__link" href="#">Overview</a></li>
+                                        <li><a class="kp-nav__link" href="#">Activity</a></li>
+                                        <li><a class="kp-nav__link" href="#">Stacks</a></li>
+                                        <li><a class="kp-nav__link" href="#">Logs</a></li>
+                                        <li><a class="kp-nav__link" href="#">Backups</a></li>
+                                        <li><a class="kp-nav__link" aria-current="page" href="#">System</a></li>
+                                        <li><a class="kp-nav__link" href="#">Settings</a></li>
+                                    </ul>
+                                    <div class="kp-nav__search">
+                                        <button type="button" class="kp-button kp-button--ghost kp-button--sm">Search</button>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                        <figcaption>
+                            The current page (System) is behind More: the button reads as the current item of the bar
+                            (<code>aria-current="true"</code>).
+                        </figcaption>
+                    </figure>
+                    <figure class="nf-fig">
+                        <div class="nf-frame nf-w-m" data-nf="counter">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" data-kp-nav-fold aria-label="Main with a counter">
+                                    <span class="kp-nav__brand">Homelab</span>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" href="#">Home</a></li>
+                                        <li>
+                                            <a class="kp-nav__link" href="#">Needs you <span class="kp-badge kp-badge--destructive">3</span></a>
+                                        </li>
+                                        <li><a class="kp-nav__link" href="#">Overview</a></li>
+                                        <li><a class="kp-nav__link" href="#">Activity</a></li>
+                                        <li><a class="kp-nav__link" href="#">Stacks</a></li>
+                                        <li><a class="kp-nav__link" href="#">Logs</a></li>
+                                        <li><a class="kp-nav__link" href="#">Backups</a></li>
+                                        <li><a class="kp-nav__link" href="#">System</a></li>
+                                        <li><a class="kp-nav__link" href="#">Settings</a></li>
+                                    </ul>
+                                    <div class="kp-nav__search">
+                                        <button type="button" class="kp-button kp-button--ghost kp-button--sm">Search</button>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                        <figcaption>Needs you carries a count (3), as a bar link does.</figcaption>
+                    </figure>
+                    <figure class="nf-fig">
+                        <div class="nf-frame nf-w-s" data-nf="counter-s">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" data-kp-nav-fold aria-label="Main with a counter, narrow">
+                                    <span class="kp-nav__brand">Homelab</span>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" href="#">Home</a></li>
+                                        <li>
+                                            <a class="kp-nav__link" href="#">Needs you <span class="kp-badge kp-badge--destructive">3</span></a>
+                                        </li>
+                                        <li><a class="kp-nav__link" href="#">Overview</a></li>
+                                        <li><a class="kp-nav__link" href="#">Activity</a></li>
+                                        <li><a class="kp-nav__link" href="#">Stacks</a></li>
+                                        <li><a class="kp-nav__link" href="#">Logs</a></li>
+                                        <li><a class="kp-nav__link" href="#">Backups</a></li>
+                                        <li><a class="kp-nav__link" href="#">System</a></li>
+                                        <li><a class="kp-nav__link" href="#">Settings</a></li>
+                                    </ul>
+                                    <div class="kp-nav__search">
+                                        <button type="button" class="kp-button kp-button--ghost kp-button--sm">Search</button>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                        <figcaption>
+                            The counter is behind More: a dot on the button, announced to a screen reader; the entry reads “Needs you · 3”.
+                        </figcaption>
+                    </figure>
+                    <figure class="nf-fig">
+                        <div class="nf-frame nf-w-s" data-nf="keep">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" data-kp-nav-fold aria-label="Main with a kept link">
+                                    <span class="kp-nav__brand">Homelab</span>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" href="#">Home</a></li>
+                                        <li><a class="kp-nav__link" href="#">Needs you</a></li>
+                                        <li><a class="kp-nav__link" href="#">Overview</a></li>
+                                        <li><a class="kp-nav__link" href="#">Activity</a></li>
+                                        <li><a class="kp-nav__link" href="#">Stacks</a></li>
+                                        <li><a class="kp-nav__link" href="#">Logs</a></li>
+                                        <li><a class="kp-nav__link" href="#">Backups</a></li>
+                                        <li><a class="kp-nav__link" href="#">System</a></li>
+                                        <li data-kp-nav-keep><a class="kp-nav__link" aria-current="page" href="#">Settings</a></li>
+                                    </ul>
+                                    <div class="kp-nav__search">
+                                        <button type="button" class="kp-button kp-button--ghost kp-button--sm">Search</button>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                        <figcaption>
+                            <code>data-kp-nav-keep</code> on Settings: it stays in the bar however narrow it gets; the others fold around it.
+                        </figcaption>
+                    </figure>
+                </div>
+                <div class="nf-grid nf-grid--tall">
+                    <figure class="nf-fig">
+                        <div class="nf-frame nf-w-m nf-frame--tall" data-nf="open">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" data-kp-nav-fold aria-label="Main, More open">
+                                    <span class="kp-nav__brand">Homelab</span>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" href="#">Home</a></li>
+                                        <li>
+                                            <a class="kp-nav__link" href="#">Needs you <span class="kp-badge kp-badge--destructive">3</span></a>
+                                        </li>
+                                        <li><a class="kp-nav__link" href="#">Overview</a></li>
+                                        <li><a class="kp-nav__link" href="#">Activity</a></li>
+                                        <li>
+                                            <a class="kp-nav__link" href="#" aria-haspopup="true">Stacks</a>
+                                            <ul class="kp-nav__menu">
+                                                <li><a class="kp-nav__link" href="#stacks">All stacks</a></li>
+                                                <li><a class="kp-nav__link" href="#gateway">Gateway</a></li>
+                                                <li><a class="kp-nav__link" href="#media">Media</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a class="kp-nav__link" href="#">Logs</a></li>
+                                        <li><a class="kp-nav__link" aria-disabled="true" href="#">Backups</a></li>
+                                        <li><a class="kp-nav__link" aria-current="page" href="#">System</a></li>
+                                        <li><a class="kp-nav__link" href="#">Settings</a></li>
+                                    </ul>
+                                    <div class="kp-nav__search">
+                                        <button type="button" class="kp-button kp-button--ghost kp-button--sm">Search</button>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                        <figcaption>
+                            More opened: a link with a dropdown becomes a named group, a counter reads “Needs you · 3”, Backups is greyed with its
+                            reason, the current page is marked.
+                            <button type="button" class="kp-button kp-button--sm" data-nf-open="open">Open it again</button>
+                        </figcaption>
+                    </figure>
+                    <figure class="nf-fig">
+                        <div class="nf-frame nf-w-m" data-nf="focus">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" data-kp-nav-fold aria-label="Main, focus on More">
+                                    <span class="kp-nav__brand">Homelab</span>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" aria-current="page" href="#">Home</a></li>
+                                        <li><a class="kp-nav__link" href="#">Needs you</a></li>
+                                        <li><a class="kp-nav__link" href="#">Overview</a></li>
+                                        <li><a class="kp-nav__link" href="#">Activity</a></li>
+                                        <li><a class="kp-nav__link" href="#">Stacks</a></li>
+                                        <li><a class="kp-nav__link" href="#">Logs</a></li>
+                                        <li><a class="kp-nav__link" href="#">Backups</a></li>
+                                        <li><a class="kp-nav__link" href="#">System</a></li>
+                                        <li><a class="kp-nav__link" href="#">Settings</a></li>
+                                    </ul>
+                                    <div class="kp-nav__search">
+                                        <button type="button" class="kp-button kp-button--ghost kp-button--sm">Search</button>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                        <figcaption>
+                            Keyboard focus on More: the theme’s ring. Tab into the bar to see the order: the links that stay, then More, then Search;
+                            the folded links are out of the order.
+                            <button type="button" class="kp-button kp-button--sm" data-nf-focus="focus">Show focus</button>
+                        </figcaption>
+                    </figure>
+                    <figure class="nf-fig">
+                        <div class="nf-frame nf-w-m" dir="rtl" data-nf="rtl">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" data-kp-nav-fold aria-label="Main, right to left">
+                                    <span class="kp-nav__brand">Homelab</span>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" aria-current="page" href="#">Home</a></li>
+                                        <li><a class="kp-nav__link" href="#">Needs you</a></li>
+                                        <li><a class="kp-nav__link" href="#">Overview</a></li>
+                                        <li><a class="kp-nav__link" href="#">Activity</a></li>
+                                        <li><a class="kp-nav__link" href="#">Stacks</a></li>
+                                        <li><a class="kp-nav__link" href="#">Logs</a></li>
+                                        <li><a class="kp-nav__link" href="#">Backups</a></li>
+                                        <li><a class="kp-nav__link" href="#">System</a></li>
+                                        <li><a class="kp-nav__link" href="#">Settings</a></li>
+                                    </ul>
+                                    <div class="kp-nav__search">
+                                        <button type="button" class="kp-button kp-button--ghost kp-button--sm">Search</button>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                        <figcaption>
+                            Right to left: the links fold from the left, More sits at the end (the left), and the menu hangs from it.
+                        </figcaption>
+                    </figure>
+                    <figure class="nf-fig">
+                        <div class="nf-frame nf-w-s" data-nf="toggle">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" data-kp-nav-fold aria-label="Main with the phone toggle">
+                                    <span class="kp-nav__brand">Homelab</span>
+                                    <button type="button" data-kp-nav-toggle class="kp-nav__toggle"></button>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" aria-current="page" href="#">Home</a></li>
+                                        <li><a class="kp-nav__link" href="#">Needs you</a></li>
+                                        <li><a class="kp-nav__link" href="#">Overview</a></li>
+                                        <li><a class="kp-nav__link" href="#">Activity</a></li>
+                                        <li><a class="kp-nav__link" href="#">Stacks</a></li>
+                                        <li><a class="kp-nav__link" href="#">Logs</a></li>
+                                        <li><a class="kp-nav__link" href="#">Backups</a></li>
+                                        <li><a class="kp-nav__link" href="#">System</a></li>
+                                        <li><a class="kp-nav__link" href="#">Settings</a></li>
+                                    </ul>
+                                    <div class="kp-nav__search">
+                                        <button type="button" class="kp-button kp-button--ghost kp-button--sm">Search</button>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                        <figcaption>
+                            A bar that also has the phone toggle: below 40rem the toggle’s own collapse wins, as before, and the fold stands down
+                            (More is not drawn).
+                        </figcaption>
+                    </figure>
+                </div>
+                <p class="nf-note">
+                    Not shown: loading. The fold has no loading state of its own; the More menu shows the menu button’s loading entry when a page
+                    fills it that way. Hovering a link is the theme’s, and not repeated here.
+                </p>
+            </section>
+
+            <section
+                class="nf-sec"
+                id="tabbar"
+                data-review-item="tabbar"
+                data-review-title="2 · The bottom tab bar"
+                data-review-components="tabbar badge"
+                aria-labelledby="h-tabbar"
+            >
+                <div class="nf-sec__head">
+                    <p class="nf-num">2 · Bottom tab bar</p>
+                    <h2 id="h-tabbar">Four areas within thumb reach, then More.</h2>
+                    <p class="nf-how">
+                        <code>nav.kp-tabbar</code> of <code>.kp-tabbar__tab</code>s (icon over label, a count at the icon’s corner). The More tab is a
+                        <code>data-kp-dialog</code> button that opens the package’s drawer. Shown here inside phone frames with
+                        <code>kp-tabbar--always kp-tabbar--static</code>; the section below shows the real, fixed bar in a window of its own.
+                    </p>
+                </div>
+                <div class="nf-look" data-review-look>
+                    <p data-for="formal">
+                        In formal, look at the current tab in the first phone. A navy rule is ruled along the bar’s top edge over the current tab, at
+                        an even pace from the start; the labels are small capitals and the bar stands under a double rule. A press doubles the rule.
+                        Then press the tabs: the mark moves to the one you press. Check the count on Needs you (placed at the icon’s corner, the tab
+                        does not move when the count appears or goes), the busy tab (the theme’s spinner takes the icon’s place at the same size), the
+                        disabled tab, the long label (cut with an ellipsis, never wrapped), the loading bar (grey places, no links), and More opened
+                        (the sheet in the frame is the same drawer the More tab opens).
+                    </p>
+                    <p data-for="light">
+                        In light, look at the current tab in the first phone. The current tab settles into a soft pill behind its icon, as if exposed;
+                        the bar floats on a soft shadow. Then press the tabs: the mark moves to the one you press. Check the count on Needs you
+                        (placed at the icon’s corner, the tab does not move when the count appears or goes), the busy tab (the theme’s spinner takes
+                        the icon’s place at the same size), the disabled tab, the long label (cut with an ellipsis, never wrapped), the loading bar
+                        (grey places, no links), and More opened (the sheet in the frame is the same drawer the More tab opens).
+                    </p>
+                    <p data-for="dark">
+                        In dark, look at the current tab in the first phone. A film line is laid along the top edge over the current tab, fading at
+                        both ends, with a chamfered wash under it; the count is chamfered. Then press the tabs: the mark moves to the one you press.
+                        Check the count on Needs you (placed at the icon’s corner, the tab does not move when the count appears or goes), the busy tab
+                        (the theme’s spinner takes the icon’s place at the same size), the disabled tab, the long label (cut with an ellipsis, never
+                        wrapped), the loading bar (grey places, no links), and More opened (the sheet in the frame is the same drawer the More tab
+                        opens).
+                    </p>
+                    <p data-for="cyberpunk">
+                        In cyberpunk, look at the current tab in the first phone. The current tab becomes a yellow notched plate with dark ink,
+                        acquired in three ticks, never eased; labels are mono capitals. Then press the tabs: the mark moves to the one you press.
+                        Check the count on Needs you (placed at the icon’s corner, the tab does not move when the count appears or goes), the busy tab
+                        (the theme’s spinner takes the icon’s place at the same size), the disabled tab, the long label (cut with an ellipsis, never
+                        wrapped), the loading bar (grey places, no links), and More opened (the sheet in the frame is the same drawer the More tab
+                        opens).
+                    </p>
+                    <p data-for="synthwave">
+                        In synthwave, look at the current tab in the first phone. A neon tube lights along the top edge over the current tab and its
+                        label glows; a press dips the tube; the count is a neon ring. Then press the tabs: the mark moves to the one you press. Check
+                        the count on Needs you (placed at the icon’s corner, the tab does not move when the count appears or goes), the busy tab (the
+                        theme’s spinner takes the icon’s place at the same size), the disabled tab, the long label (cut with an ellipsis, never
+                        wrapped), the loading bar (grey places, no links), and More opened (the sheet in the frame is the same drawer the More tab
+                        opens).
+                    </p>
+                    <p data-for="pastel">
+                        In pastel, look at the current tab in the first phone. A strip of washi tape is stuck on the bar’s edge over the current tab,
+                        a hair off true, with one soft overshoot; hovering lifts a tab, a press sticks it down; the count is a sticker. Then press the
+                        tabs: the mark moves to the one you press. Check the count on Needs you (placed at the icon’s corner, the tab does not move
+                        when the count appears or goes), the busy tab (the theme’s spinner takes the icon’s place at the same size), the disabled tab,
+                        the long label (cut with an ellipsis, never wrapped), the loading bar (grey places, no links), and More opened (the sheet in
+                        the frame is the same drawer the More tab opens).
+                    </p>
+                    <p data-for="terminal">
+                        In terminal, look at the current tab in the first phone. The current tab is printed in reverse video in one step; hovering
+                        underlines the label like a cursor line; a press enters it in reverse. Then press the tabs: the mark moves to the one you
+                        press. Check the count on Needs you (placed at the icon’s corner, the tab does not move when the count appears or goes), the
+                        busy tab (the theme’s spinner takes the icon’s place at the same size), the disabled tab, the long label (cut with an
+                        ellipsis, never wrapped), the loading bar (grey places, no links), and More opened (the sheet in the frame is the same drawer
+                        the More tab opens).
+                    </p>
+                    <p data-for="forest">
+                        In forest, look at the current tab in the first phone. A short clay trail blaze grows down from the bar’s edge over the
+                        current tab; the paper bar is dashed from the page by a hairline. Then press the tabs: the mark moves to the one you press.
+                        Check the count on Needs you (placed at the icon’s corner, the tab does not move when the count appears or goes), the busy tab
+                        (the theme’s spinner takes the icon’s place at the same size), the disabled tab, the long label (cut with an ellipsis, never
+                        wrapped), the loading bar (grey places, no links), and More opened (the sheet in the frame is the same drawer the More tab
+                        opens).
+                    </p>
+                    <p data-for="blueprint">
+                        In blueprint, look at the current tab in the first phone. The current tab is dimensioned: a witness line with end ticks is
+                        drawn under its label at the plotter’s feed; labels are mono capitals. Then press the tabs: the mark moves to the one you
+                        press. Check the count on Needs you (placed at the icon’s corner, the tab does not move when the count appears or goes), the
+                        busy tab (the theme’s spinner takes the icon’s place at the same size), the disabled tab, the long label (cut with an
+                        ellipsis, never wrapped), the loading bar (grey places, no links), and More opened (the sheet in the frame is the same drawer
+                        the More tab opens).
+                    </p>
+                    <p data-for="solstice">
+                        In solstice, look at the current tab in the first phone. The sun is raised under the current tab: warm light comes up from the
+                        tab’s foot; labels are in the serif. Then press the tabs: the mark moves to the one you press. Check the count on Needs you
+                        (placed at the icon’s corner, the tab does not move when the count appears or goes), the busy tab (the theme’s spinner takes
+                        the icon’s place at the same size), the disabled tab, the long label (cut with an ellipsis, never wrapped), the loading bar
+                        (grey places, no links), and More opened (the sheet in the frame is the same drawer the More tab opens).
+                    </p>
+                    <p data-for="brutalism">
+                        In brutalism, look at the current tab in the first phone. The current tab is a yellow slab with an ink border and a hard
+                        offset shadow; pointing lifts a tab off its footprint, a press drives it in. Then press the tabs: the mark moves to the one
+                        you press. Check the count on Needs you (placed at the icon’s corner, the tab does not move when the count appears or goes),
+                        the busy tab (the theme’s spinner takes the icon’s place at the same size), the disabled tab, the long label (cut with an
+                        ellipsis, never wrapped), the loading bar (grey places, no links), and More opened (the sheet in the frame is the same drawer
+                        the More tab opens).
+                    </p>
+                    <p data-for="deco">
+                        In deco, look at the current tab in the first phone. A gold line is drawn along the top edge from the centre to both sides and
+                        a jewel is set on it; the bar stands under a double rule; the count is a gold lozenge. Then press the tabs: the mark moves to
+                        the one you press. Check the count on Needs you (placed at the icon’s corner, the tab does not move when the count appears or
+                        goes), the busy tab (the theme’s spinner takes the icon’s place at the same size), the disabled tab, the long label (cut with
+                        an ellipsis, never wrapped), the loading bar (grey places, no links), and More opened (the sheet in the frame is the same
+                        drawer the More tab opens).
+                    </p>
+                    <p data-for="phantom">
+                        In phantom, look at the current tab in the first phone. The current tab is a skewed red plate with black ink, thrown in from
+                        off the start edge in one shove; labels are condensed capitals. Then press the tabs: the mark moves to the one you press.
+                        Check the count on Needs you (placed at the icon’s corner, the tab does not move when the count appears or goes), the busy tab
+                        (the theme’s spinner takes the icon’s place at the same size), the disabled tab, the long label (cut with an ellipsis, never
+                        wrapped), the loading bar (grey places, no links), and More opened (the sheet in the frame is the same drawer the More tab
+                        opens).
+                    </p>
+                    <p data-for="grotesk">
+                        In grotesk, look at the current tab in the first phone. A black baseline is drawn under the current tab’s label from the
+                        start; a press thickens it; the bar stands under a black rule; the count is the one red. Then press the tabs: the mark moves
+                        to the one you press. Check the count on Needs you (placed at the icon’s corner, the tab does not move when the count appears
+                        or goes), the busy tab (the theme’s spinner takes the icon’s place at the same size), the disabled tab, the long label (cut
+                        with an ellipsis, never wrapped), the loading bar (grey places, no links), and More opened (the sheet in the frame is the same
+                        drawer the More tab opens).
+                    </p>
+                    <p data-for="nostromo">
+                        In nostromo, look at the current tab in the first phone. Every tab is a key with its lamp: dark when idle, lit when current; a
+                        press pushes the key in; labels are tape capitals. Then press the tabs: the mark moves to the one you press. Check the count
+                        on Needs you (placed at the icon’s corner, the tab does not move when the count appears or goes), the busy tab (the theme’s
+                        spinner takes the icon’s place at the same size), the disabled tab, the long label (cut with an ellipsis, never wrapped), the
+                        loading bar (grey places, no links), and More opened (the sheet in the frame is the same drawer the More tab opens).
+                    </p>
+                    <p data-for="titanium">
+                        In titanium, look at the current tab in the first phone. The current tab is a chamfered accent plate (top-start and bottom-end
+                        cut) with a bright tool edge along its top, fed in from the start and slowing as it lands; counts are in the mono. Then press
+                        the tabs: the mark moves to the one you press. Check the count on Needs you (placed at the icon’s corner, the tab does not
+                        move when the count appears or goes), the busy tab (the theme’s spinner takes the icon’s place at the same size), the disabled
+                        tab, the long label (cut with an ellipsis, never wrapped), the loading bar (grey places, no links), and More opened (the sheet
+                        in the frame is the same drawer the More tab opens).
+                    </p>
+                </div>
+                <div class="tb-grid">
+                    <figure class="tb-fig">
+                        <div class="tb-phone" data-tb="home">
+                            <div class="tb-page" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+                            <nav class="kp-tabbar kp-tabbar--always kp-tabbar--static" aria-label="Areas">
+                                <a class="kp-tabbar__tab" href="#home" data-kp-tab="home" aria-current="page"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M3 3h7v7H3z" />
+                                            <path d="M14 3h7v7h-7z" />
+                                            <path d="M3 14h7v7H3z" />
+                                            <path d="M14 14h7v7h-7z" /></svg></span
+                                    ><span class="kp-tabbar__label">Home</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#inbox" data-kp-tab="inbox"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M4 13h4l2 3h4l2-3h4" />
+                                            <path d="M5 5h14l1 8v6H4v-6z" /></svg></span
+                                    ><span class="kp-tabbar__label">Needs you</span><span class="kp-badge kp-tabbar__badge">3</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#overview" data-kp-tab="overview"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="m12 3 9 5-9 5-9-5z" />
+                                            <path d="m3 13 9 5 9-5" /></svg></span
+                                    ><span class="kp-tabbar__label">Overview</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#activity" data-kp-tab="activity"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l3-7 4 14 3-7h4" /></svg></span
+                                    ><span class="kp-tabbar__label">Activity</span></a
+                                >
+                                <button type="button" class="kp-tabbar__tab kp-tabbar__tab--more" data-kp-dialog="tb-more">
+                                    <span class="kp-tabbar__icon kp-tabbar__icon--more" aria-hidden="true"></span
+                                    ><span class="kp-tabbar__label">More</span>
+                                </button>
+                            </nav>
+                        </div>
+                        <figcaption>Home is current; Needs you has a count.<span>Press the tabs: the mark moves.</span></figcaption>
+                    </figure>
+                    <figure class="tb-fig">
+                        <div class="tb-phone" data-tb="inbox">
+                            <div class="tb-page" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+                            <nav class="kp-tabbar kp-tabbar--always kp-tabbar--static" aria-label="Areas">
+                                <a class="kp-tabbar__tab" href="#home" data-kp-tab="home"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M3 3h7v7H3z" />
+                                            <path d="M14 3h7v7h-7z" />
+                                            <path d="M3 14h7v7H3z" />
+                                            <path d="M14 14h7v7h-7z" /></svg></span
+                                    ><span class="kp-tabbar__label">Home</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#inbox" data-kp-tab="inbox" aria-current="page"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M4 13h4l2 3h4l2-3h4" />
+                                            <path d="M5 5h14l1 8v6H4v-6z" /></svg></span
+                                    ><span class="kp-tabbar__label">Needs you</span><span class="kp-badge kp-tabbar__badge">99+</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#overview" data-kp-tab="overview"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="m12 3 9 5-9 5-9-5z" />
+                                            <path d="m3 13 9 5 9-5" /></svg></span
+                                    ><span class="kp-tabbar__label">Overview</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#activity" data-kp-tab="activity"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l3-7 4 14 3-7h4" /></svg></span
+                                    ><span class="kp-tabbar__label">Activity</span></a
+                                >
+                                <button type="button" class="kp-tabbar__tab kp-tabbar__tab--more" data-kp-dialog="tb-more">
+                                    <span class="kp-tabbar__icon kp-tabbar__icon--more" aria-hidden="true"></span
+                                    ><span class="kp-tabbar__label">More</span>
+                                </button>
+                            </nav>
+                        </div>
+                        <figcaption>Needs you is current; the count is 99+.</figcaption>
+                    </figure>
+                    <figure class="tb-fig">
+                        <div class="tb-phone" data-tb="held">
+                            <div class="tb-page" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+                            <nav class="kp-tabbar kp-tabbar--always kp-tabbar--static" aria-label="Areas">
+                                <a class="kp-tabbar__tab" href="#home" data-kp-tab="home"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M3 3h7v7H3z" />
+                                            <path d="M14 3h7v7h-7z" />
+                                            <path d="M3 14h7v7H3z" />
+                                            <path d="M14 14h7v7h-7z" /></svg></span
+                                    ><span class="kp-tabbar__label">Home</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#inbox" data-kp-tab="inbox"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M4 13h4l2 3h4l2-3h4" />
+                                            <path d="M5 5h14l1 8v6H4v-6z" /></svg></span
+                                    ><span class="kp-tabbar__label">Needs you</span><span class="kp-badge kp-tabbar__badge"></span
+                                ></a>
+                                <a class="kp-tabbar__tab" href="#overview" data-kp-tab="overview"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="m12 3 9 5-9 5-9-5z" />
+                                            <path d="m3 13 9 5 9-5" /></svg></span
+                                    ><span class="kp-tabbar__label">Overview</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#activity" data-kp-tab="activity"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l3-7 4 14 3-7h4" /></svg></span
+                                    ><span class="kp-tabbar__label">Activity</span></a
+                                >
+                                <button type="button" aria-current="true" class="kp-tabbar__tab kp-tabbar__tab--more" data-kp-dialog="tb-more">
+                                    <span class="kp-tabbar__icon kp-tabbar__icon--more" aria-hidden="true"></span
+                                    ><span class="kp-tabbar__label">More</span>
+                                </button>
+                            </nav>
+                        </div>
+                        <figcaption>
+                            The current page is behind More: the More tab reads as current.<span>The dot on Needs you is an empty badge.</span>
+                        </figcaption>
+                    </figure>
+                    <figure class="tb-fig">
+                        <div class="tb-phone" data-tb="sheet">
+                            <div class="tb-page" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+                            <div class="kp-drawer kp-dialog tb-sheet" role="group" aria-label="More, shown open">
+                                <header class="kp-drawer__head">
+                                    <h3 class="kp-dialog__title">More</h3>
+                                    <p class="kp-drawer__desc">The two areas you need less often, plus search and help.</p>
+                                </header>
+                                <div class="kp-drawer__body">
+                                    <div class="kp-menu" role="group" aria-label="More">
+                                        <a class="kp-menu__item" href="#backups"
+                                            ><span class="kp-menu__label">Backups</span
+                                            ><span class="kp-menu__hint">Snapshots, restores and the nightly run</span></a
+                                        >
+                                        <a class="kp-menu__item" href="#system"
+                                            ><span class="kp-menu__label">System</span
+                                            ><span class="kp-menu__hint">The host, its disks and updates</span></a
+                                        >
+                                        <button type="button" class="kp-menu__item">
+                                            <span class="kp-menu__label">Search or do anything</span
+                                            ><span class="kp-menu__hint">Pages, stacks and actions in one box</span>
+                                        </button>
+                                        <button type="button" class="kp-menu__item">
+                                            <span class="kp-menu__label">Help and the words</span
+                                            ><span class="kp-menu__hint">What a stack, a deploy or a snapshot is</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <nav class="kp-tabbar kp-tabbar--always kp-tabbar--static" aria-label="Areas">
+                                <a class="kp-tabbar__tab" href="#home" data-kp-tab="home"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M3 3h7v7H3z" />
+                                            <path d="M14 3h7v7h-7z" />
+                                            <path d="M3 14h7v7H3z" />
+                                            <path d="M14 14h7v7h-7z" /></svg></span
+                                    ><span class="kp-tabbar__label">Home</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#inbox" data-kp-tab="inbox"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M4 13h4l2 3h4l2-3h4" />
+                                            <path d="M5 5h14l1 8v6H4v-6z" /></svg></span
+                                    ><span class="kp-tabbar__label">Needs you</span><span class="kp-badge kp-tabbar__badge">3</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#overview" data-kp-tab="overview"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="m12 3 9 5-9 5-9-5z" />
+                                            <path d="m3 13 9 5 9-5" /></svg></span
+                                    ><span class="kp-tabbar__label">Overview</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#activity" data-kp-tab="activity"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l3-7 4 14 3-7h4" /></svg></span
+                                    ><span class="kp-tabbar__label">Activity</span></a
+                                >
+                                <button
+                                    type="button"
+                                    aria-expanded="true"
+                                    aria-current="true"
+                                    class="kp-tabbar__tab kp-tabbar__tab--more"
+                                    data-kp-dialog="tb-more"
+                                >
+                                    <span class="kp-tabbar__icon kp-tabbar__icon--more" aria-hidden="true"></span
+                                    ><span class="kp-tabbar__label">More</span>
+                                </button>
+                            </nav>
+                        </div>
+                        <figcaption>More opened: the sheet is the drawer’s own content.</figcaption>
+                    </figure>
+                    <figure class="tb-fig">
+                        <div class="tb-phone" data-tb="states">
+                            <div class="tb-page" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+                            <nav class="kp-tabbar kp-tabbar--always kp-tabbar--static" aria-label="Areas">
+                                <a class="kp-tabbar__tab" href="#home" data-kp-tab="home" aria-current="page"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M3 3h7v7H3z" />
+                                            <path d="M14 3h7v7h-7z" />
+                                            <path d="M3 14h7v7H3z" />
+                                            <path d="M14 14h7v7h-7z" /></svg></span
+                                    ><span class="kp-tabbar__label">Home</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#inbox" data-kp-tab="inbox" aria-busy="true"
+                                    ><span class="kp-tabbar__icon"><span class="kp-spinner" aria-hidden="true"></span></span
+                                    ><span class="kp-tabbar__label">Needs you</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#overview" data-kp-tab="overview" aria-disabled="true"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="m12 3 9 5-9 5-9-5z" />
+                                            <path d="m3 13 9 5 9-5" /></svg></span
+                                    ><span class="kp-tabbar__label">Overview</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#logs" data-kp-tab="logs"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M4 5h16" />
+                                            <path d="M4 10h16" />
+                                            <path d="M4 15h10" />
+                                            <path d="M4 20h7" /></svg></span
+                                    ><span class="kp-tabbar__label">Notifications and logs</span></a
+                                >
+                                <button type="button" class="kp-tabbar__tab kp-tabbar__tab--more" data-kp-dialog="tb-more">
+                                    <span class="kp-tabbar__icon kp-tabbar__icon--more" aria-hidden="true"></span
+                                    ><span class="kp-tabbar__label">More</span>
+                                </button>
+                            </nav>
+                        </div>
+                        <figcaption>
+                            A tab waiting (busy), a disabled tab, a long label.<span
+                                >Busy and disabled tabs: the busy one is not a link to follow yet.</span
+                            >
+                        </figcaption>
+                    </figure>
+                    <figure class="tb-fig">
+                        <div class="tb-phone" data-tb="loading">
+                            <div class="tb-page" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+                            <nav class="kp-tabbar kp-tabbar--always kp-tabbar--static" aria-label="Areas" aria-busy="true">
+                                <a class="kp-tabbar__tab" href="#home" data-kp-tab="home" aria-current="page"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M3 3h7v7H3z" />
+                                            <path d="M14 3h7v7h-7z" />
+                                            <path d="M3 14h7v7H3z" />
+                                            <path d="M14 14h7v7h-7z" /></svg></span
+                                    ><span class="kp-tabbar__label">Home</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#inbox" data-kp-tab="inbox"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M4 13h4l2 3h4l2-3h4" />
+                                            <path d="M5 5h14l1 8v6H4v-6z" /></svg></span
+                                    ><span class="kp-tabbar__label">Needs you</span><span class="kp-badge kp-tabbar__badge">3</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#overview" data-kp-tab="overview"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="m12 3 9 5-9 5-9-5z" />
+                                            <path d="m3 13 9 5 9-5" /></svg></span
+                                    ><span class="kp-tabbar__label">Overview</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#activity" data-kp-tab="activity"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l3-7 4 14 3-7h4" /></svg></span
+                                    ><span class="kp-tabbar__label">Activity</span></a
+                                >
+                                <button type="button" class="kp-tabbar__tab kp-tabbar__tab--more" data-kp-dialog="tb-more">
+                                    <span class="kp-tabbar__icon kp-tabbar__icon--more" aria-hidden="true"></span
+                                    ><span class="kp-tabbar__label">More</span>
+                                </button>
+                            </nav>
+                        </div>
+                        <figcaption>The bar loading: places, not links.</figcaption>
+                    </figure>
+                    <figure class="tb-fig">
+                        <div class="tb-phone" data-tb="three">
+                            <div class="tb-page" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+                            <nav class="kp-tabbar kp-tabbar--always kp-tabbar--static" aria-label="Areas">
+                                <a class="kp-tabbar__tab" href="#home" data-kp-tab="home" aria-current="page"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M3 3h7v7H3z" />
+                                            <path d="M14 3h7v7h-7z" />
+                                            <path d="M3 14h7v7H3z" />
+                                            <path d="M14 14h7v7h-7z" /></svg></span
+                                    ><span class="kp-tabbar__label">Home</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#inbox" data-kp-tab="inbox"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M4 13h4l2 3h4l2-3h4" />
+                                            <path d="M5 5h14l1 8v6H4v-6z" /></svg></span
+                                    ><span class="kp-tabbar__label">Needs you</span><span class="kp-badge kp-tabbar__badge">3</span></a
+                                >
+                                <button type="button" class="kp-tabbar__tab kp-tabbar__tab--more" data-kp-dialog="tb-more">
+                                    <span class="kp-tabbar__icon kp-tabbar__icon--more" aria-hidden="true"></span
+                                    ><span class="kp-tabbar__label">More</span>
+                                </button>
+                            </nav>
+                        </div>
+                        <figcaption>Three tabs share the width equally.</figcaption>
+                    </figure>
+                    <figure class="tb-fig">
+                        <div class="tb-phone" data-tb="six">
+                            <div class="tb-page" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+                            <nav class="kp-tabbar kp-tabbar--always kp-tabbar--static" aria-label="Areas">
+                                <a class="kp-tabbar__tab" href="#home" data-kp-tab="home" aria-current="page"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M3 3h7v7H3z" />
+                                            <path d="M14 3h7v7h-7z" />
+                                            <path d="M3 14h7v7H3z" />
+                                            <path d="M14 14h7v7h-7z" /></svg></span
+                                    ><span class="kp-tabbar__label">Home</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#inbox" data-kp-tab="inbox"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M4 13h4l2 3h4l2-3h4" />
+                                            <path d="M5 5h14l1 8v6H4v-6z" /></svg></span
+                                    ><span class="kp-tabbar__label">Needs you</span><span class="kp-badge kp-tabbar__badge">3</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#overview" data-kp-tab="overview"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="m12 3 9 5-9 5-9-5z" />
+                                            <path d="m3 13 9 5 9-5" /></svg></span
+                                    ><span class="kp-tabbar__label">Overview</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#activity" data-kp-tab="activity"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l3-7 4 14 3-7h4" /></svg></span
+                                    ><span class="kp-tabbar__label">Activity</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#logs" data-kp-tab="logs"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M4 5h16" />
+                                            <path d="M4 10h16" />
+                                            <path d="M4 15h10" />
+                                            <path d="M4 20h7" /></svg></span
+                                    ><span class="kp-tabbar__label">Logs</span></a
+                                >
+                                <button type="button" class="kp-tabbar__tab kp-tabbar__tab--more" data-kp-dialog="tb-more">
+                                    <span class="kp-tabbar__icon kp-tabbar__icon--more" aria-hidden="true"></span
+                                    ><span class="kp-tabbar__label">More</span>
+                                </button>
+                            </nav>
+                        </div>
+                        <figcaption>Six tabs, at 22rem: labels shrink to an ellipsis before anything wraps.</figcaption>
+                    </figure>
+                    <figure class="tb-fig">
+                        <div class="tb-phone tb-phone--safe" data-tb="safe">
+                            <div class="tb-page" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+                            <nav class="kp-tabbar kp-tabbar--always kp-tabbar--static" aria-label="Areas">
+                                <a class="kp-tabbar__tab" href="#home" data-kp-tab="home" aria-current="page"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M3 3h7v7H3z" />
+                                            <path d="M14 3h7v7h-7z" />
+                                            <path d="M3 14h7v7H3z" />
+                                            <path d="M14 14h7v7h-7z" /></svg></span
+                                    ><span class="kp-tabbar__label">Home</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#inbox" data-kp-tab="inbox"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M4 13h4l2 3h4l2-3h4" />
+                                            <path d="M5 5h14l1 8v6H4v-6z" /></svg></span
+                                    ><span class="kp-tabbar__label">Needs you</span><span class="kp-badge kp-tabbar__badge">3</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#overview" data-kp-tab="overview"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="m12 3 9 5-9 5-9-5z" />
+                                            <path d="m3 13 9 5 9-5" /></svg></span
+                                    ><span class="kp-tabbar__label">Overview</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#activity" data-kp-tab="activity"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l3-7 4 14 3-7h4" /></svg></span
+                                    ><span class="kp-tabbar__label">Activity</span></a
+                                >
+                                <button type="button" class="kp-tabbar__tab kp-tabbar__tab--more" data-kp-dialog="tb-more">
+                                    <span class="kp-tabbar__icon kp-tabbar__icon--more" aria-hidden="true"></span
+                                    ><span class="kp-tabbar__label">More</span>
+                                </button>
+                            </nav>
+                        </div>
+                        <figcaption>
+                            Safe area: 1.25rem kept under the bar, as a home indicator needs.<span
+                                >Set by <code>--kp-tabbar-safe-bottom</code> here; a phone gives <code>env(safe-area-inset-bottom)</code>.</span
+                            >
+                        </figcaption>
+                    </figure>
+                    <figure class="tb-fig">
+                        <div class="tb-phone" dir="rtl" data-tb="rtl">
+                            <div class="tb-page" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+                            <nav class="kp-tabbar kp-tabbar--always kp-tabbar--static" aria-label="Areas">
+                                <a class="kp-tabbar__tab" href="#home" data-kp-tab="home" aria-current="page"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M3 3h7v7H3z" />
+                                            <path d="M14 3h7v7h-7z" />
+                                            <path d="M3 14h7v7H3z" />
+                                            <path d="M14 14h7v7h-7z" /></svg></span
+                                    ><span class="kp-tabbar__label">Home</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#inbox" data-kp-tab="inbox"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M4 13h4l2 3h4l2-3h4" />
+                                            <path d="M5 5h14l1 8v6H4v-6z" /></svg></span
+                                    ><span class="kp-tabbar__label">Needs you</span><span class="kp-badge kp-tabbar__badge">3</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#overview" data-kp-tab="overview"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="m12 3 9 5-9 5-9-5z" />
+                                            <path d="m3 13 9 5 9-5" /></svg></span
+                                    ><span class="kp-tabbar__label">Overview</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#activity" data-kp-tab="activity"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l3-7 4 14 3-7h4" /></svg></span
+                                    ><span class="kp-tabbar__label">Activity</span></a
+                                >
+                                <button type="button" class="kp-tabbar__tab kp-tabbar__tab--more" data-kp-dialog="tb-more">
+                                    <span class="kp-tabbar__icon kp-tabbar__icon--more" aria-hidden="true"></span
+                                    ><span class="kp-tabbar__label">More</span>
+                                </button>
+                            </nav>
+                        </div>
+                        <figcaption>Right to left: the order and the marks mirror.</figcaption>
+                    </figure>
+                    <figure class="tb-fig">
+                        <div class="tb-phone" data-tb="tones">
+                            <div class="tb-page" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
+                            <nav class="kp-tabbar kp-tabbar--always kp-tabbar--static" aria-label="Areas">
+                                <a class="kp-tabbar__tab" href="#home" data-kp-tab="home" aria-current="page"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M3 3h7v7H3z" />
+                                            <path d="M14 3h7v7h-7z" />
+                                            <path d="M3 14h7v7H3z" />
+                                            <path d="M14 14h7v7h-7z" /></svg></span
+                                    ><span class="kp-tabbar__label">Home</span><span class="kp-badge kp-tabbar__badge kp-badge--success">2</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#inbox" data-kp-tab="inbox"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="M4 13h4l2 3h4l2-3h4" />
+                                            <path d="M5 5h14l1 8v6H4v-6z" /></svg></span
+                                    ><span class="kp-tabbar__label">Needs you</span><span class="kp-badge kp-tabbar__badge kp-badge--info">4</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#overview" data-kp-tab="overview"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true">
+                                            <path d="m12 3 9 5-9 5-9-5z" />
+                                            <path d="m3 13 9 5 9-5" /></svg></span
+                                    ><span class="kp-tabbar__label">Overview</span
+                                    ><span class="kp-badge kp-tabbar__badge kp-badge--warning">5</span></a
+                                >
+                                <a class="kp-tabbar__tab" href="#activity" data-kp-tab="activity"
+                                    ><span class="kp-tabbar__icon"
+                                        ><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l3-7 4 14 3-7h4" /></svg></span
+                                    ><span class="kp-tabbar__label">Activity</span
+                                    ><span class="kp-badge kp-tabbar__badge kp-badge--destructive">6</span></a
+                                >
+                                <button type="button" class="kp-tabbar__tab kp-tabbar__tab--more" data-kp-dialog="tb-more">
+                                    <span class="kp-tabbar__icon kp-tabbar__icon--more" aria-hidden="true"></span
+                                    ><span class="kp-tabbar__label">More</span>
+                                </button>
+                            </nav>
+                        </div>
+                        <figcaption>Every badge tone on a tab: success, info, warning, destructive.</figcaption>
+                    </figure>
+                </div>
+                <div class="tb-play">
+                    <button type="button" class="kp-button kp-button--sm" data-tb-count>Add a count to Needs you</button>
+                    <button type="button" class="kp-button kp-button--sm" data-tb-clear>Clear the count</button>
+                    <button type="button" class="kp-button kp-button--sm" data-tb-busy>Toggle busy on Overview</button>
+                    <button type="button" class="kp-button kp-button--sm" data-tb-focus>Show keyboard focus on Activity</button>
+                    <span class="tb-play__note">These act on the first phone. The More tab of any phone opens the real drawer.</span>
+                </div>
+                <p class="nf-note">
+                    Pointing a tab and pressing it are the theme’s, and live: hover and press them. Contrast: a resting tab’s label is the muted ink,
+                    as a bar link is; where a theme’s muted ink is under 4.5:1 on the bar it is the theme’s own muted ink and is not changed here.
+                </p>
+            </section>
+
+            <section
+                class="nf-sec"
+                id="live-button"
+                data-review-item="live-button"
+                data-review-title="3 · The running-job button"
+                data-review-components="button"
+                aria-labelledby="h-live"
+            >
+                <div class="nf-sec__head">
+                    <p class="nf-num">3 · Running job</p>
+                    <h2 id="h-live">The dashboard’s pill is a button with the theme’s spinner in front.</h2>
+                    <p class="nf-how">
+                        <code>kp-button kp-button--live</code> with a <code>kp-spinner kp-button__spin</code>, a <code>kp-button__short</code> and a
+                        <code>kp-button__long</code> label. No new look: it is the theme’s button, so it wears the theme’s button in every variant. It
+                        cuts a long label with an ellipsis, gives way to the short label in a container under 40rem, and <code>hidden</code> removes
+                        it without a gap.
+                    </p>
+                </div>
+                <div class="nf-look" data-review-look>
+                    <p data-for="formal">
+                        In formal, the spinner is an arc ruled round a double ring and the button around it is the theme’s own button in each of its
+                        seven variants (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that
+                        the spinner sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem
+                        bar shows the short word instead of the long, and that the hidden button leaves no gap in the bar.
+                    </p>
+                    <p data-for="light">
+                        In light, the spinner is a bead that burns out and comes back and the button around it is the theme’s own button in each of
+                        its seven variants (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check
+                        that the spinner sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the
+                        22rem bar shows the short word instead of the long, and that the hidden button leaves no gap in the bar.
+                    </p>
+                    <p data-for="dark">
+                        In dark, the spinner is the line running the ring and the button around it is the theme’s own button in each of its seven
+                        variants (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the
+                        spinner sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar
+                        shows the short word instead of the long, and that the hidden button leaves no gap in the bar.
+                    </p>
+                    <p data-for="cyberpunk">
+                        In cyberpunk, the spinner is the reticle locking on its core and the button around it is the theme’s own button in each of its
+                        seven variants (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that
+                        the spinner sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem
+                        bar shows the short word instead of the long, and that the hidden button leaves no gap in the bar.
+                    </p>
+                    <p data-for="synthwave">
+                        In synthwave, the spinner is the sun setting and the button around it is the theme’s own button in each of its seven variants
+                        (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the spinner
+                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar shows
+                        the short word instead of the long, and that the hidden button leaves no gap in the bar.
+                    </p>
+                    <p data-for="pastel">
+                        In pastel, the spinner is the caterpillar and the button around it is the theme’s own button in each of its seven variants
+                        (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the spinner
+                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar shows
+                        the short word instead of the long, and that the hidden button leaves no gap in the bar.
+                    </p>
+                    <p data-for="terminal">
+                        In terminal, the spinner is the braille cell and the button around it is the theme’s own button in each of its seven variants
+                        (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the spinner
+                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar shows
+                        the short word instead of the long, and that the hidden button leaves no gap in the bar.
+                    </p>
+                    <p data-for="forest">
+                        In forest, the spinner is forest’s own spinner and the button around it is the theme’s own button in each of its seven
+                        variants (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the
+                        spinner sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar
+                        shows the short word instead of the long, and that the hidden button leaves no gap in the bar.
+                    </p>
+                    <p data-for="blueprint">
+                        In blueprint, the spinner is the compass and the button around it is the theme’s own button in each of its seven variants
+                        (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the spinner
+                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar shows
+                        the short word instead of the long, and that the hidden button leaves no gap in the bar.
+                    </p>
+                    <p data-for="solstice">
+                        In solstice, the spinner is the sun’s arc and the button around it is the theme’s own button in each of its seven variants
+                        (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the spinner
+                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar shows
+                        the short word instead of the long, and that the hidden button leaves no gap in the bar.
+                    </p>
+                    <p data-for="brutalism">
+                        In brutalism, the spinner is the block tipped over and the button around it is the theme’s own button in each of its seven
+                        variants (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the
+                        spinner sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar
+                        shows the short word instead of the long, and that the hidden button leaves no gap in the bar.
+                    </p>
+                    <p data-for="deco">
+                        In deco, the spinner is the sunburst turning and the button around it is the theme’s own button in each of its seven variants
+                        (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the spinner
+                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar shows
+                        the short word instead of the long, and that the hidden button leaves no gap in the bar.
+                    </p>
+                    <p data-for="phantom">
+                        In phantom, the spinner is the star that snaps and resolves and the button around it is the theme’s own button in each of its
+                        seven variants (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that
+                        the spinner sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem
+                        bar shows the short word instead of the long, and that the hidden button leaves no gap in the bar.
+                    </p>
+                    <p data-for="grotesk">
+                        In grotesk, the spinner is the plate and the button around it is the theme’s own button in each of its seven variants
+                        (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the spinner
+                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar shows
+                        the short word instead of the long, and that the hidden button leaves no gap in the bar.
+                    </p>
+                    <p data-for="nostromo">
+                        In nostromo, the spinner is the tape reel and the button around it is the theme’s own button in each of its seven variants
+                        (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the spinner
+                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar shows
+                        the short word instead of the long, and that the hidden button leaves no gap in the bar.
+                    </p>
+                    <p data-for="titanium">
+                        In titanium, the spinner is the facing cut and the button around it is the theme’s own button in each of its seven variants
+                        (default, primary, secondary, ghost, destructive, small, large; the mirror one reads the other way). Check that the spinner
+                        sits centred on the text line, that the long label is cut with an ellipsis in the narrow-limit row, that the 22rem bar shows
+                        the short word instead of the long, and that the hidden button leaves no gap in the bar.
+                    </p>
+                </div>
+                <div class="lv-row">
+                    <button type="button" class="kp-button kp-button--live">
+                        <span class="kp-spinner kp-button__spin" aria-hidden="true"></span><span class="kp-button__short">Running</span
+                        ><span class="kp-button__long">Updating gateway · step 3 of 35</span>
+                    </button>
+                    <button type="button" class="kp-button kp-button--primary kp-button--live">
+                        <span class="kp-spinner kp-button__spin" aria-hidden="true"></span><span class="kp-button__short">Running</span
+                        ><span class="kp-button__long">Updating gateway · step 3 of 35</span>
+                    </button>
+                    <button type="button" class="kp-button kp-button--secondary kp-button--live">
+                        <span class="kp-spinner kp-button__spin" aria-hidden="true"></span><span class="kp-button__short">Running</span
+                        ><span class="kp-button__long">Updating gateway · step 3 of 35</span>
+                    </button>
+                    <button type="button" class="kp-button kp-button--ghost kp-button--live">
+                        <span class="kp-spinner kp-button__spin" aria-hidden="true"></span><span class="kp-button__short">Running</span
+                        ><span class="kp-button__long">Updating gateway · step 3 of 35</span>
+                    </button>
+                    <button type="button" class="kp-button kp-button--destructive kp-button--live">
+                        <span class="kp-spinner kp-button__spin" aria-hidden="true"></span><span class="kp-button__short">Running</span
+                        ><span class="kp-button__long">Updating gateway · step 3 of 35</span>
+                    </button>
+                    <button type="button" class="kp-button kp-button--secondary kp-button--sm kp-button--live">
+                        <span class="kp-spinner kp-button__spin" aria-hidden="true"></span><span class="kp-button__short">Running</span
+                        ><span class="kp-button__long">Updating gateway · step 3 of 35</span>
+                    </button>
+                    <button type="button" class="kp-button kp-button--secondary kp-button--lg kp-button--live">
+                        <span class="kp-spinner kp-button__spin" aria-hidden="true"></span><span class="kp-button__short">Running</span
+                        ><span class="kp-button__long">Updating gateway · step 3 of 35</span>
+                    </button>
+                    <button type="button" class="kp-button kp-button--secondary kp-button--mirror kp-button--live">
+                        <span class="kp-spinner kp-button__spin" aria-hidden="true"></span><span class="kp-button__short">Running</span
+                        ><span class="kp-button__long">Updating gateway · step 3 of 35</span>
+                    </button>
+                </div>
+                <div class="lv-row">
+                    <button type="button" class="kp-button kp-button--secondary kp-button--live" disabled>
+                        <span class="kp-spinner kp-button__spin" aria-hidden="true"></span><span class="kp-button__short">Running</span
+                        ><span class="kp-button__long">Updating gateway · step 3 of 35</span>
+                    </button>
+                    <span class="lv-cap">disabled</span>
+                    <button type="button" class="kp-button kp-button--secondary kp-button--live">
+                        <span class="kp-spinner kp-button__spin" aria-hidden="true"></span><span class="kp-button__short">Running +2</span
+                        ><span class="kp-button__long"
+                            >Restoring the media library from last night’s snapshot on the second backup disk · step 12 of 35 · 2 more waiting</span
+                        >
+                    </button>
+                    <span class="lv-cap">a very long label, cut at 30rem with an ellipsis</span>
+                </div>
+                <div class="nf-grid">
+                    <figure class="nf-fig">
+                        <div class="nf-frame nf-w-xl" data-nf="live-wide">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" data-kp-nav-fold aria-label="Main with a running job">
+                                    <span class="kp-nav__brand">Homelab</span>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" aria-current="page" href="#">Home</a></li>
+                                        <li><a class="kp-nav__link" href="#">Needs you</a></li>
+                                        <li><a class="kp-nav__link" href="#">Overview</a></li>
+                                    </ul>
+                                    <button type="button" class="kp-button kp-button--secondary kp-button--sm kp-button--live">
+                                        <span class="kp-spinner kp-button__spin" aria-hidden="true"></span
+                                        ><span class="kp-button__short">Running</span
+                                        ><span class="kp-button__long">Updating gateway · step 3 of 35</span>
+                                    </button>
+                                    <div class="kp-nav__search">
+                                        <button type="button" class="kp-button kp-button--ghost kp-button--sm">Search</button>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                        <figcaption>In a wide bar: the long label.</figcaption>
+                    </figure>
+                    <figure class="nf-fig">
+                        <div class="nf-frame nf-w-xs" data-nf="live-narrow">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" data-kp-nav-fold aria-label="Main with a running job, narrow">
+                                    <span class="kp-nav__brand">Homelab</span>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" aria-current="page" href="#">Home</a></li>
+                                        <li><a class="kp-nav__link" href="#">Needs you</a></li>
+                                        <li><a class="kp-nav__link" href="#">Overview</a></li>
+                                    </ul>
+                                    <button type="button" class="kp-button kp-button--secondary kp-button--sm kp-button--live">
+                                        <span class="kp-spinner kp-button__spin" aria-hidden="true"></span
+                                        ><span class="kp-button__short">Running</span
+                                        ><span class="kp-button__long">Updating gateway · step 3 of 35</span>
+                                    </button>
+                                    <div class="kp-nav__search">
+                                        <button type="button" class="kp-button kp-button--ghost kp-button--sm">Search</button>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                        <figcaption>In a bar under 40rem (22rem): the short word.</figcaption>
+                    </figure>
+                    <figure class="nf-fig">
+                        <div class="nf-frame nf-w-m" data-nf="live-hidden">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" aria-label="Main, no job">
+                                    <span class="kp-nav__brand">Homelab</span>
+                                    <button type="button" class="kp-button kp-button--secondary kp-button--sm kp-button--live" hidden>
+                                        <span class="kp-spinner kp-button__spin" aria-hidden="true"></span
+                                        ><span class="kp-button__short">Running</span
+                                        ><span class="kp-button__long">Updating gateway · step 3 of 35</span>
+                                    </button>
+                                    <div class="kp-nav__search">
+                                        <button type="button" class="kp-button kp-button--ghost kp-button--sm">Search</button>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                        <figcaption>No job running: the button is <code>hidden</code> and the bar closes over it.</figcaption>
+                    </figure>
+                </div>
+            </section>
+
+            <section
+                class="nf-sec"
+                id="together"
+                data-review-item="together"
+                data-review-title="4 · Together, in a real window"
+                data-review-components="tabbar nav-fold"
+                aria-labelledby="h-together"
+            >
+                <div class="nf-sec__head">
+                    <p class="nf-num">4 · Together</p>
+                    <h2 id="h-together">The dashboard’s shell in three real windows.</h2>
+                    <p class="nf-how">
+                        Three pages in frames, each a window of its own width: the media queries answer to the frame, so this is what a phone, a
+                        tablet and a desktop get. The mock page behind is the demo’s; the top bar, the tab bar, the running-job button, the menu
+                        button and the drawer are the package’s.
+                    </p>
+                </div>
+                <div class="nf-look" data-review-look>
+                    <p data-for="formal">
+                        In formal, compare the three windows. Phone (22.5rem): the top bar keeps only the brand, the search box, the running-job
+                        button (its short word) and the theme; the areas are in the tab bar at the foot, fixed, with room kept under the last line of
+                        the page; pressing More opens the drawer. Tablet (48rem): the tab bar is the wide one (shown below 60rem) and the top bar has
+                        no links. Desktop (70rem): no tab bar, the top bar folds what does not fit behind More. A navy rule is ruled along the bar’s
+                        top edge over the current tab, at an even pace from the start; the labels are small capitals and the bar stands under a double
+                        rule. A press doubles the rule.
+                    </p>
+                    <p data-for="light">
+                        In light, compare the three windows. Phone (22.5rem): the top bar keeps only the brand, the search box, the running-job button
+                        (its short word) and the theme; the areas are in the tab bar at the foot, fixed, with room kept under the last line of the
+                        page; pressing More opens the drawer. Tablet (48rem): the tab bar is the wide one (shown below 60rem) and the top bar has no
+                        links. Desktop (70rem): no tab bar, the top bar folds what does not fit behind More. The current tab settles into a soft pill
+                        behind its icon, as if exposed; the bar floats on a soft shadow.
+                    </p>
+                    <p data-for="dark">
+                        In dark, compare the three windows. Phone (22.5rem): the top bar keeps only the brand, the search box, the running-job button
+                        (its short word) and the theme; the areas are in the tab bar at the foot, fixed, with room kept under the last line of the
+                        page; pressing More opens the drawer. Tablet (48rem): the tab bar is the wide one (shown below 60rem) and the top bar has no
+                        links. Desktop (70rem): no tab bar, the top bar folds what does not fit behind More. A film line is laid along the top edge
+                        over the current tab, fading at both ends, with a chamfered wash under it; the count is chamfered.
+                    </p>
+                    <p data-for="cyberpunk">
+                        In cyberpunk, compare the three windows. Phone (22.5rem): the top bar keeps only the brand, the search box, the running-job
+                        button (its short word) and the theme; the areas are in the tab bar at the foot, fixed, with room kept under the last line of
+                        the page; pressing More opens the drawer. Tablet (48rem): the tab bar is the wide one (shown below 60rem) and the top bar has
+                        no links. Desktop (70rem): no tab bar, the top bar folds what does not fit behind More. The current tab becomes a yellow
+                        notched plate with dark ink, acquired in three ticks, never eased; labels are mono capitals.
+                    </p>
+                    <p data-for="synthwave">
+                        In synthwave, compare the three windows. Phone (22.5rem): the top bar keeps only the brand, the search box, the running-job
+                        button (its short word) and the theme; the areas are in the tab bar at the foot, fixed, with room kept under the last line of
+                        the page; pressing More opens the drawer. Tablet (48rem): the tab bar is the wide one (shown below 60rem) and the top bar has
+                        no links. Desktop (70rem): no tab bar, the top bar folds what does not fit behind More. A neon tube lights along the top edge
+                        over the current tab and its label glows; a press dips the tube; the count is a neon ring.
+                    </p>
+                    <p data-for="pastel">
+                        In pastel, compare the three windows. Phone (22.5rem): the top bar keeps only the brand, the search box, the running-job
+                        button (its short word) and the theme; the areas are in the tab bar at the foot, fixed, with room kept under the last line of
+                        the page; pressing More opens the drawer. Tablet (48rem): the tab bar is the wide one (shown below 60rem) and the top bar has
+                        no links. Desktop (70rem): no tab bar, the top bar folds what does not fit behind More. A strip of washi tape is stuck on the
+                        bar’s edge over the current tab, a hair off true, with one soft overshoot; hovering lifts a tab, a press sticks it down; the
+                        count is a sticker.
+                    </p>
+                    <p data-for="terminal">
+                        In terminal, compare the three windows. Phone (22.5rem): the top bar keeps only the brand, the search box, the running-job
+                        button (its short word) and the theme; the areas are in the tab bar at the foot, fixed, with room kept under the last line of
+                        the page; pressing More opens the drawer. Tablet (48rem): the tab bar is the wide one (shown below 60rem) and the top bar has
+                        no links. Desktop (70rem): no tab bar, the top bar folds what does not fit behind More. The current tab is printed in reverse
+                        video in one step; hovering underlines the label like a cursor line; a press enters it in reverse.
+                    </p>
+                    <p data-for="forest">
+                        In forest, compare the three windows. Phone (22.5rem): the top bar keeps only the brand, the search box, the running-job
+                        button (its short word) and the theme; the areas are in the tab bar at the foot, fixed, with room kept under the last line of
+                        the page; pressing More opens the drawer. Tablet (48rem): the tab bar is the wide one (shown below 60rem) and the top bar has
+                        no links. Desktop (70rem): no tab bar, the top bar folds what does not fit behind More. A short clay trail blaze grows down
+                        from the bar’s edge over the current tab; the paper bar is dashed from the page by a hairline.
+                    </p>
+                    <p data-for="blueprint">
+                        In blueprint, compare the three windows. Phone (22.5rem): the top bar keeps only the brand, the search box, the running-job
+                        button (its short word) and the theme; the areas are in the tab bar at the foot, fixed, with room kept under the last line of
+                        the page; pressing More opens the drawer. Tablet (48rem): the tab bar is the wide one (shown below 60rem) and the top bar has
+                        no links. Desktop (70rem): no tab bar, the top bar folds what does not fit behind More. The current tab is dimensioned: a
+                        witness line with end ticks is drawn under its label at the plotter’s feed; labels are mono capitals.
+                    </p>
+                    <p data-for="solstice">
+                        In solstice, compare the three windows. Phone (22.5rem): the top bar keeps only the brand, the search box, the running-job
+                        button (its short word) and the theme; the areas are in the tab bar at the foot, fixed, with room kept under the last line of
+                        the page; pressing More opens the drawer. Tablet (48rem): the tab bar is the wide one (shown below 60rem) and the top bar has
+                        no links. Desktop (70rem): no tab bar, the top bar folds what does not fit behind More. The sun is raised under the current
+                        tab: warm light comes up from the tab’s foot; labels are in the serif.
+                    </p>
+                    <p data-for="brutalism">
+                        In brutalism, compare the three windows. Phone (22.5rem): the top bar keeps only the brand, the search box, the running-job
+                        button (its short word) and the theme; the areas are in the tab bar at the foot, fixed, with room kept under the last line of
+                        the page; pressing More opens the drawer. Tablet (48rem): the tab bar is the wide one (shown below 60rem) and the top bar has
+                        no links. Desktop (70rem): no tab bar, the top bar folds what does not fit behind More. The current tab is a yellow slab with
+                        an ink border and a hard offset shadow; pointing lifts a tab off its footprint, a press drives it in.
+                    </p>
+                    <p data-for="deco">
+                        In deco, compare the three windows. Phone (22.5rem): the top bar keeps only the brand, the search box, the running-job button
+                        (its short word) and the theme; the areas are in the tab bar at the foot, fixed, with room kept under the last line of the
+                        page; pressing More opens the drawer. Tablet (48rem): the tab bar is the wide one (shown below 60rem) and the top bar has no
+                        links. Desktop (70rem): no tab bar, the top bar folds what does not fit behind More. A gold line is drawn along the top edge
+                        from the centre to both sides and a jewel is set on it; the bar stands under a double rule; the count is a gold lozenge.
+                    </p>
+                    <p data-for="phantom">
+                        In phantom, compare the three windows. Phone (22.5rem): the top bar keeps only the brand, the search box, the running-job
+                        button (its short word) and the theme; the areas are in the tab bar at the foot, fixed, with room kept under the last line of
+                        the page; pressing More opens the drawer. Tablet (48rem): the tab bar is the wide one (shown below 60rem) and the top bar has
+                        no links. Desktop (70rem): no tab bar, the top bar folds what does not fit behind More. The current tab is a skewed red plate
+                        with black ink, thrown in from off the start edge in one shove; labels are condensed capitals.
+                    </p>
+                    <p data-for="grotesk">
+                        In grotesk, compare the three windows. Phone (22.5rem): the top bar keeps only the brand, the search box, the running-job
+                        button (its short word) and the theme; the areas are in the tab bar at the foot, fixed, with room kept under the last line of
+                        the page; pressing More opens the drawer. Tablet (48rem): the tab bar is the wide one (shown below 60rem) and the top bar has
+                        no links. Desktop (70rem): no tab bar, the top bar folds what does not fit behind More. A black baseline is drawn under the
+                        current tab’s label from the start; a press thickens it; the bar stands under a black rule; the count is the one red.
+                    </p>
+                    <p data-for="nostromo">
+                        In nostromo, compare the three windows. Phone (22.5rem): the top bar keeps only the brand, the search box, the running-job
+                        button (its short word) and the theme; the areas are in the tab bar at the foot, fixed, with room kept under the last line of
+                        the page; pressing More opens the drawer. Tablet (48rem): the tab bar is the wide one (shown below 60rem) and the top bar has
+                        no links. Desktop (70rem): no tab bar, the top bar folds what does not fit behind More. Every tab is a key with its lamp: dark
+                        when idle, lit when current; a press pushes the key in; labels are tape capitals.
+                    </p>
+                    <p data-for="titanium">
+                        In titanium, compare the three windows. Phone (22.5rem): the top bar keeps only the brand, the search box, the running-job
+                        button (its short word) and the theme; the areas are in the tab bar at the foot, fixed, with room kept under the last line of
+                        the page; pressing More opens the drawer. Tablet (48rem): the tab bar is the wide one (shown below 60rem) and the top bar has
+                        no links. Desktop (70rem): no tab bar, the top bar folds what does not fit behind More. The current tab is a chamfered accent
+                        plate (top-start and bottom-end cut) with a bright tool edge along its top, fed in from the start and slowing as it lands;
+                        counts are in the mono.
+                    </p>
+                </div>
+                <div class="tg-windows">
+                    <figure class="tg-fig">
+                        <iframe class="tg-window tg-window--phone" src="app.html" title="The shell in a phone-sized window" loading="lazy"></iframe>
+                        <figcaption>Phone, 22.5rem</figcaption>
+                    </figure>
+                    <figure class="tg-fig">
+                        <iframe class="tg-window tg-window--tablet" src="app.html" title="The shell in a tablet-sized window" loading="lazy"></iframe>
+                        <figcaption>Tablet, 48rem</figcaption>
+                    </figure>
+                    <figure class="tg-fig">
+                        <iframe
+                            class="tg-window tg-window--desktop"
+                            src="app.html"
+                            title="The shell in a desktop-sized window"
+                            loading="lazy"
+                        ></iframe>
+                        <figcaption>Desktop, 70rem</figcaption>
+                    </figure>
+                </div>
+            </section>
+        </main>
+        <dialog class="kp-drawer kp-dialog" id="tb-more" aria-labelledby="tb-more-title">
+            <header class="kp-drawer__head">
+                <h2 class="kp-dialog__title" id="tb-more-title">More</h2>
+                <button type="button" class="kp-icon-button kp-dialog__close" data-kp-dialog-close aria-label="Close"></button>
+                <p class="kp-drawer__desc">The two areas you need less often, plus search and help.</p>
+            </header>
+            <div class="kp-drawer__body">
+                <div class="kp-menu" role="group" aria-label="More">
+                    <a class="kp-menu__item" href="#backups"
+                        ><span class="kp-menu__label">Backups</span><span class="kp-menu__hint">Snapshots, restores and the nightly run</span></a
+                    >
+                    <a class="kp-menu__item" href="#system"
+                        ><span class="kp-menu__label">System</span><span class="kp-menu__hint">The host, its disks and updates</span></a
+                    >
+                    <button type="button" class="kp-menu__item">
+                        <span class="kp-menu__label">Search or do anything</span
+                        ><span class="kp-menu__hint">Pages, stacks and actions in one box</span>
+                    </button>
+                    <button type="button" class="kp-menu__item">
+                        <span class="kp-menu__label">Help and the words</span
+                        ><span class="kp-menu__hint">What a stack, a deploy or a snapshot is</span>
+                    </button>
+                </div>
+            </div>
+        </dialog>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="demo.js"></script>
+        </body>
+</html>

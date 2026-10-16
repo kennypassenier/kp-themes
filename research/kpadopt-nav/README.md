@@ -40,14 +40,21 @@ missing pieces were the row, the ellipsis and the short/long swap, which are CSS
 - The dashboard folds ALL links behind its own toggle as soon as one wraps; this folds only the ones that do not fit.
   That is the request, and it is a behaviour change the dashboard should accept.
 - The dashboard's More tab opens a bespoke `dialog.nx-sheet`; this opens the package's `dialog.kp-drawer` (a panel at the end
-  edge, not a bottom sheet). Whether a bottom sheet is wanted is an open question below.
+  edge, not a bottom sheet; decided, question 1 below).
 - The tab bar's breakpoint is 40rem (the package's one step) or 60rem with `kp-tabbar--wide`; the dashboard's 60rem is the
   second, as asked for by a class, not a number.
 - The dashboard's `nx-count` badge in the tab is the package's `.kp-badge` made small and placed at the icon's corner.
 
 ## Open design questions for the demo
 
-1. Is a side drawer right for the phone's More, or should it be a sheet rising from the bar?
+1. Decided in round 2 (Kenny, 2026-10-16, after the drawer opened over the whole window with no way back): the phone's More stays
+   the package's **side drawer**, and a bottom sheet is not built. Why: every theme's drawer already has its approved character at the
+   end edge (research/character-drawer: how it enters and leaves, its edge, its time), so a drawer is the theme's own element; a bottom
+   sheet would be a second drawer to draw, move and approve in sixteen themes. What fixed the confusion was the way back, not the
+   edge: on a phone the drawer now leaves a dimmed strip of the page (`min(28rem, 100vw - 3.5rem)`, `dialog[data-kp-tabbar-drawer]`),
+   shows a visible **×** (the demo's close button had no glyph), closes on Escape, on a press on the strip and on a press on an entry
+   (`js/tabbar.js`), and the demo's drawer now sits inside its review section, so the review dialog's Escape no longer closed the
+   dialog and left the drawer open. Say so if a sheet from the bar is still wanted.
 2. Should the folded entry for a link with a counter read “Needs you · 3”, or show the count as a badge on the entry?
 3. Should More be kept visible at all widths (greyed when empty) rather than appearing and disappearing? It is out of the
    flow when idle, so nothing moves either way.

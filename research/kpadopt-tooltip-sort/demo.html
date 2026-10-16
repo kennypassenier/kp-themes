@@ -41,6 +41,30 @@
                     can move onto it. <b>Almanac</b>'s tag has nothing to say: no card opens. The faded badge below is <code>aria-disabled</code>; its
                     card says why.
                 </div>
+                <div class="hc-expect">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Hover or Tab</b> to a status badge, a cut-off service name or a tag in the table: after a short pause one card opens
+                            under it, with its start edge on the anchor’s start edge. The card is a
+                            <b>rectangle with the theme’s own popup corner</b> (square where the theme is square), never a pill or an oval, however
+                            many lines it holds.
+                        </li>
+                        <li>
+                            <b>Moving to the next anchor</b> carries the same card over without a new entrance; leaving closes it as its entrance
+                            played backwards. <b>Escape</b> closes it; the pointer may move onto it and it stays.
+                        </li>
+                        <li>
+                            <b>Rebuild now</b> (and “every 8 s”) replaces every row: an open card closes with its anchor, and the new cells open cards
+                            at once, with no re-attach. The counter says how many times it was rebuilt.
+                        </li>
+                        <li>
+                            <b>Show an attribute card open / a rich card open</b> opens one card and holds it; <b>Close</b> or Escape hides it. The
+                            faded “Restart” badge still opens a card saying why; the “Almanac” tag opens nothing. The long note wraps inside the card;
+                            the Edge anchor’s card stays 8 px inside the window; the docked anchors open their card above.
+                        </li>
+                    </ul>
+                </div>
                 <div data-review-look>
                     <p data-for="blueprint">
                         In this theme the card is a drafting callout: a leader line is drawn from its node on the anchor, then the pen traces the
@@ -185,6 +209,25 @@
                     back to one key; <b>Clear the sort</b> puts the opening sort back (here: none). The second table opens on three keys and its
                     button restores them. The third is the default, unchanged: Shift adds, a plain click sorts alone. The fourth adds
                     <code>data-kp-sort-cycle="three"</code>. The summary line must keep one line high whatever it says.
+                </div>
+                <div class="hc-expect">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>First table:</b> a plain click on a header adds it as the next sort key (ascending, then descending again on the next
+                            click); small numbers in the headers give the order and the line above the table says it in words. <b>Shift</b> + click
+                            sorts on that column alone. <b>Clear the sort</b> puts the opening sort back (none).
+                        </li>
+                        <li>
+                            <b>Second table</b> opens on three keys; its button restores them after you changed the sort. <b>Third table</b> is the
+                            default: Shift + click adds a key, a plain click sorts alone. <b>Fourth table</b> has the three-step cycle: a third click
+                            on the same header takes that key out again.
+                        </li>
+                        <li>
+                            Enter or Space on a focused header does what a click does. The summary line stays one line high whatever it says: the
+                            table below it does not jump when the sort changes.
+                        </li>
+                    </ul>
                 </div>
                 <div data-review-look>
                     <p data-for="blueprint">
@@ -575,6 +618,25 @@
                     without the attribute hides every heading that has no data row. Check the heading reads as a heading in the three states, the
                     Retry button aligns with the text and the count badge reads 0.
                 </div>
+                <div class="hc-expect">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Left table</b> (<code>data-kp-group-always</code>): the headings “home” (loading), “platform” (failed, with its Retry
+                            button) and “lab” (empty) all stay visible with no data rows under them; the count badge reads 0. “media” has its two
+                            rows. The right table is the default and hides every heading that has no data row.
+                        </li>
+                        <li>
+                            <b>Search “jellyfin”:</b> the three kept headings stay, the media rows narrow to one. <b>Retry</b> acts on its own: a
+                            click on it does not fold the group.
+                        </li>
+                        <li>
+                            <b>Press the arrow of “Stack media”:</b> its two rows go out and come back, played in the theme’s own motion, the way the
+                            group opened. Going out is the opening played backwards: a row never grows first and then vanishes, no text rises or falls
+                            through the page, and the table below does not jump. Press again: they come back.
+                        </li>
+                    </ul>
+                </div>
                 <div data-review-look>
                     <p data-for="blueprint">
                         In this theme the heading is the theme&#x27;s own group row; judge the kept heading in loading, failed and empty form against
@@ -770,6 +832,11 @@
 
         <script type="module" src="demo.js"></script>
         <script type="module" src="../../js/auto.js"></script>
+        <!-- Round two (2026-10-16): Kenny's four rejections of round one reopen by themselves (hovercard in light, pastel and
+             solstice; groupalways in forest); forest's toast arrival was rewritten, so forest's other two pairs come back as well. -->
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-16-r2", "reopen": ["forest|hovercard", "forest|sortclick"] }
+        </script>
         <script type="module" src="../_review/review.js"></script>
         <script src="../../catalogue/boot-check.js"></script>
         <script type="module" src="../../catalogue/catalogue.js"></script>

@@ -51,6 +51,31 @@
     color: var(--muted-foreground);
 }
 
+/* The plain statement of what to see and what each control does, one per section [Kenny, 2026-10-16]. */
+.nf-expect {
+    margin: 0 0 var(--kp-space-md, 1rem);
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    border: 1px solid var(--border-strong);
+    border-inline-start-width: 4px;
+    border-radius: var(--radius, 0);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.nf-expect p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.nf-expect ul {
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.nf-expect li + li {
+    margin-block-start: var(--kp-space-xs, 0.25rem);
+}
+
 .nf-how {
     color: var(--muted-foreground);
     font-size: var(--kp-text-sm, 0.8125rem);

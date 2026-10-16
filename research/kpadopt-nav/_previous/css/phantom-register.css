@@ -1,0 +1,4232 @@
+/* --kp-sig-ph-hold: a number the bar's mega menu transitions while it
+   closes, so js/components.js (which waits for a transition on a closing mega
+   menu) holds it for the throw back's 700 ms. Registered at the top level:
+   Firefox does not register an @property inside a cascade layer. */
+@property --kp-sig-ph-hold {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
+@layer kp.register {
+    /* @kp-soft/themes — css/phantom-register.css
+   The phantom register, 5.0.0 [S48, LIFT_PLAN row 2]: the cut-paper
+   register. Scoped to [data-theme='phantom'] and inert elsewhere; opt-in,
+   imported after themes.css. The approved concept demo ("Calling Card",
+   2026-09-08) is the reference for every value here, and
+   docs/archive/RESEARCH_2026-09.md §15 is where each mechanism was measured.
+
+   Cyberpunk emits light; phantom is print. What this file does, in
+   order: the knobs and the texture; the type; the hooks of S45 — the
+   headline whose words shout in, the plate a <mark> is shoved under, the
+   rail sweeping under a heading, the torn paper as divider; the hero's
+   silhouette; the navbar with the skewed bar; the buttons as key caps;
+   the fields; and one answer per component root (TH124). The reveals
+   have their rest state here and their motion in js/effects.js; without
+   the script every one of them stands at rest.
+
+   Colour discipline (DI9): nothing here names a colour. The red is a
+   plate with black ink and never a word (the anatomy's rule: the reference
+   red on black measures 4.12); white on red is not used anywhere.
+
+   Nothing here flickers: the halftone and the scan are static, every
+   gesture is a transform or a clip-path, and the three-step film cut is
+   one monotonic change. The references' CRT flicker (133/s and 10 Hz)
+   was measured and refused (DI5). */
+
+    [data-theme='phantom'] {
+        /* The month heatmap's nav goes on two rows below this width: the
+           widest month and the three buttons in this type [fix-98]. */
+        --kp-calendar-nav-fit: 23.75rem;
+        /* The configuration surface [AR43], the demo's values as defaults. */
+        --kp-reveal-threshold: 0.6;
+        /* The clock [themes/phantom/CHARACTER.md G4; Kenny, 2026-10-09 on
+           research/phantom-character: one throw]: contact 120 ms (--fx-duration),
+           a throw 400 ms, its resolve 300 ms, parts of a group 80 ms apart, a
+           loop 1500 ms. */
+        --kp-reveal-stagger: 80ms;
+        --kp-redact-stagger: 80ms;
+        --kp-classified-delay: 520ms;
+        --kp-word-stagger: 28ms;
+        --kp-card-hold: 300ms;
+        --kp-wipe: 400ms;
+        --kp-plate: 400ms;
+        --kp-rail: 400ms;
+        --kp-rail-weight: 10px;
+        --kp-tear-height: 58px;
+        /* G1: the throw is the shove, `cubic-bezier(0.81, 0, 0, 1)`: a hard
+           start and a dead stop. Every travel in this register is on it (the
+           old eased curves --kp-cut and --kp-out are the shove now), every
+           change of state is a hard cut (steps), and a close runs the shove
+           on its inverse, `cubic-bezier(1, 0, 0.19, 1)`. Timing functions
+           inside @keyframes are written out: a var() there falls back to
+           `ease`. */
+        --kp-cut: cubic-bezier(0.81, 0, 0, 1);
+        --kp-out: cubic-bezier(0.81, 0, 0, 1);
+        --kp-shove: cubic-bezier(0.81, 0, 0, 1);
+        --kp-shove-out: cubic-bezier(1, 0, 0.19, 1);
+        --kp-skew: -8deg;
+        /* G6: the corner is cut, never rounded; the cut is a fixed 14 px at
+           45 degrees on every part, long or wide, so the angle and the size of
+           the corner never change and content is inset from it by the same
+           amount (Kenny, 2026-10-09: "I don't want the angle of the corners
+           to change"). Top-start and bottom-end. */
+        --kp-cut-size: 14px;
+        --kp-paperclip: polygon(
+            0 var(--kp-cut-size),
+            var(--kp-cut-size) 0,
+            100% 0,
+            100% calc(100% - var(--kp-cut-size)),
+            calc(100% - var(--kp-cut-size)) 100%,
+            0 100%
+        );
+        /* A landed part stands a degree and a half askew. */
+        --kp-land: -1.5deg;
+        /* The reveals this theme performs [S45]: js/effects.js reads these
+           and leaves a theme that declares none at rest. */
+        --kp-reveal-headline: shout;
+        --kp-reveal-emphasis: slab;
+        --kp-reveal-rule: rail;
+        --kp-arrival: card;
+        --kp-mono: var(--theme-font-mono);
+        /* The second plate: the print misregistration under the red one. */
+        --kp-red-deep: var(--sidebar-background);
+        --kp-hard: 4px 4px 0 var(--kp-red-deep);
+        /* The screen a part in the air is seen through [G13]: the register's
+           7 px dot grid, the dot at 25, 50 and 75 % of the cell (radius
+           sqrt(share x 49 / pi), its edge a third of a pixel soft). A part
+           drawn through it is its own silhouette of dots, title and all, and
+           the end of every animation that uses it has no mask at all. The
+           fine pair is the same on a 4 px cell (the busy slab, the skeleton),
+           the last three are the six cuts of a live update. */
+        --kp-sig-ph-m25: radial-gradient(circle at center, var(--foreground) 1.9747px, transparent 2.3247px);
+        --kp-sig-ph-m50: radial-gradient(circle at center, var(--foreground) 2.7926px, transparent 3.1426px);
+        --kp-sig-ph-m75: radial-gradient(circle at center, var(--foreground) 3.4202px, transparent 3.7702px);
+        --kp-sig-ph-m10: radial-gradient(circle at center, var(--foreground) 1.2489px, transparent 1.5989px);
+        --kp-sig-ph-m40: radial-gradient(circle at center, var(--foreground) 2.4979px, transparent 2.8479px);
+        --kp-sig-ph-m70: radial-gradient(circle at center, var(--foreground) 3.3044px, transparent 3.6544px);
+        --kp-sig-ph-dots: radial-gradient(circle at center, var(--foreground) 1.5958px, transparent 1.9458px);
+        --kp-line: hsl(from var(--foreground) h s l / 0.14);
+
+        /* The texture [DI9, AR46, S49]: the three static layers the
+           approved demo measured — the halftone screen with its 1px/3px
+           scan, the desaturated grain over it, and the denser screen the
+           hero carries. The demo is the specification (S49, A8, Kenny
+           2026-09-08), so the page layer paints at the demo's 0.14 and
+           phantom carries its own ceiling in gates/config.json; the
+           overrun against DI9's 0.06 is reported, not corrected (S42). */
+        --fx-texture:
+            radial-gradient(circle at center, hsl(from var(--foreground) h s l / 0.16) 0.9px, transparent 1px),
+            repeating-linear-gradient(hsl(from var(--foreground) h s l / 1) 0 1px, transparent 1px 3px);
+        --fx-texture-size: 7px 7px, 100% 3px;
+        --fx-texture-opacity: 0.14;
+    }
+
+    /* ── The ring: dashed and red [themes/phantom/CHARACTER.md G16; Kenny,
+       2026-10-09 on research/phantom-character: "a dashed red ring"] ──────
+       Two channels, as DI2 asks of every theme: the contrast ring hugs the
+       part (2 px, the surface colour, so the dashes never run into the red of
+       a plate), and the dashed red ring stands off it (3 px, 2 px out),
+       red on the board at 4.12:1. The broad rule sits here, before the
+       register's own component rules, so a control that composes its own
+       shadow stack still wins. Focus shows the ring alone: the bar a hover
+       throws in is not thrown in by the keyboard, and a hover on a focused
+       part leaves the ring. */
+    [data-theme='phantom'] :focus-visible {
+        outline: var(--focus-ring-width, 3px) dashed var(--primary);
+        outline-offset: 2px;
+        box-shadow: 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--focus-ring-contrast);
+    }
+
+    /* The grain: fractal noise with its colour taken out, laid over the
+       screen in soft light. Its own layer, its own measured opacity, and
+       its own line in the texture gate — a second layer is not a place to
+       hide a first one. */
+    [data-theme='phantom'] body::before {
+        content: '';
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: var(--kp-z-texture, 80);
+        --fx-texture: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+        --fx-texture-opacity: 0.1;
+        background-image: var(--fx-texture);
+        opacity: var(--fx-texture-opacity);
+        mix-blend-mode: soft-light;
+    }
+
+    /* ── Type ──────────────────────────────────────────────────────────── */
+
+    [data-theme='phantom'] h1,
+    [data-theme='phantom'] h2,
+    [data-theme='phantom'] h3 {
+        font-family: var(--theme-font-display);
+        font-style: italic;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+    }
+
+    /* Microlabels: mono, uppercase, a red tick. */
+    [data-theme='phantom'] .microlabel {
+        font-family: var(--kp-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+        line-height: 1.4;
+    }
+
+    [data-theme='phantom'] .microlabel::before {
+        content: '▮ ';
+        color: var(--primary);
+    }
+
+    /* ── The hooks [S45]: the heading accent, the mark, the rule, the divider ── */
+
+    /* The heading accent: the display step (S47), a hard black shadow and
+       one red offset — the theme's whole character. */
+    [data-theme='phantom'] [data-kp-surface] h1 {
+        font-weight: 900;
+        margin-block: 0 0.35em;
+        text-wrap: balance;
+        color: var(--foreground);
+        text-shadow:
+            4px 4px 0 var(--background),
+            9px 9px 0 var(--primary);
+    }
+
+    [data-theme='phantom'] [data-kp-surface] h2 {
+        text-shadow:
+            3px 3px 0 var(--background),
+            6px 6px 0 var(--primary);
+    }
+
+    /* The headline reveal: the words shout in one after another, 28 ms
+       apart, each from below with a skew that straightens. The module
+       wraps the words; the register moves them. */
+    [data-theme='phantom'] [data-kp-reveal='headline'] [data-word] {
+        display: inline-block;
+    }
+
+    /* The rail: a skewed slab under a section heading; the red half sweeps
+       across the grey one when the heading enters the viewport. It is a
+       slab at every moment, so nothing is ever invisible; without the
+       script it stands red. */
+    [data-theme='phantom'] [data-kp-reveal='rule']::after {
+        content: '';
+        display: block;
+        width: min(18rem, 62%);
+        height: var(--kp-rail-weight);
+        margin-top: 0.6rem;
+        transform: skewX(-24deg);
+        background: linear-gradient(90deg, var(--primary) 0 45%, var(--border) 45% 100%);
+        background-size: 220% 100%;
+        background-position: 0 0;
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='phantom'][data-kp-effects] [data-kp-reveal='rule']:not(.is-in)::after {
+        background-position: 100% 0;
+    }
+
+    /* The mark: emphasis is a plate of cut paper shoved under the word,
+       black ink on red. At rest the plate is there; with the script armed
+       the word is white until the plate arrives. The plate is painted
+       twice on purpose: the skewed pseudo-element is what the eye sees,
+       and a narrower rectangle of the same red is the element's own
+       background, so that what measures a text against its ground — the
+       surfaces test, an accessibility tool, forced colours — finds the
+       red and not the void. CI found black on black without it. */
+    [data-theme='phantom'] mark {
+        background: linear-gradient(var(--primary), var(--primary)) center / calc(100% - 8px) 100% no-repeat;
+        color: var(--primary-foreground);
+        font-weight: 700;
+        white-space: nowrap;
+        position: relative;
+        z-index: 0;
+        isolation: isolate;
+        padding-inline: 0.22em;
+    }
+
+    [data-theme='phantom'] mark::before {
+        content: '';
+        position: absolute;
+        inset: -0.1em -0.05em;
+        background: var(--primary);
+        transform: skewX(var(--kp-skew));
+        transform-origin: left center;
+        z-index: -1;
+    }
+
+    [data-theme='phantom'][data-kp-effects] mark:not(.is-cleared) {
+        color: var(--foreground);
+        background-size: 0 100%;
+    }
+
+    [data-theme='phantom'][data-kp-effects] mark:not(.is-cleared)::before {
+        transform: skewX(var(--kp-skew)) scaleX(0);
+    }
+
+    /* The divider: torn paper [TH121]. Three plates — the void, the paper,
+       the red — each cut by the measured slash polygon; the second tear is
+       the first one mirrored. */
+    [data-theme='phantom'] [data-kp-divider] {
+        display: block;
+        position: relative;
+        block-size: var(--kp-tear-height);
+        background: var(--background);
+        overflow: hidden;
+    }
+
+    [data-theme='phantom'] [data-kp-divider]::before,
+    [data-theme='phantom'] [data-kp-divider]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+    }
+
+    [data-theme='phantom'] [data-kp-divider]::before {
+        background: var(--foreground);
+        clip-path: polygon(0 0, 100% 0, 100% 30%, 71% 44%, 85% 56%, 43% 70%, 57% 82%, 17% 95%, 0 86%);
+    }
+
+    [data-theme='phantom'] [data-kp-divider]::after {
+        background: var(--primary);
+        clip-path: polygon(0 0, 100% 0, 100% 18%, 69% 32%, 83% 44%, 41% 58%, 55% 70%, 15% 83%, 0 74%);
+    }
+
+    [data-theme='phantom'] [data-kp-divider='alt'] {
+        transform: scaleX(-1);
+    }
+
+    /* ── The hero: the silhouette and the denser screen ───────────────── */
+
+    /* The section's ground is the void; the halftone is denser here than
+       on the page, and the measured #slash silhouette stands in red on
+       the right, arriving once with the loader's shove when the script
+       runs. Both are pseudo-elements, so the ground a text is measured
+       against stays the token. */
+    [data-theme='phantom'] [data-kp-surface='hero'] {
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+        padding-block: 3rem 4.5rem;
+    }
+
+    /* The screen is denser over the hero than over the page: the demo's
+       0.22 dot at 0.55 [S49, A8], declared through the texture tokens so
+       gates/check-texture.mjs measures this layer too. */
+    [data-theme='phantom'] [data-kp-surface='hero']::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        --fx-texture: radial-gradient(circle at center, hsl(from var(--foreground) h s l / 0.22) 0.9px, transparent 1px);
+        --fx-texture-opacity: 0.55;
+        background-image: var(--fx-texture);
+        background-size: 7px 7px;
+        opacity: var(--fx-texture-opacity);
+        z-index: -2;
+    }
+
+    [data-theme='phantom'] [data-kp-surface='hero']::after {
+        content: '';
+        position: absolute;
+        right: -6%;
+        top: -14%;
+        width: 66%;
+        height: 130%;
+        background: linear-gradient(160deg, var(--primary) 0 62%, var(--kp-red-deep) 62% 100%);
+        clip-path: polygon(58% 0, 100% 0, 100% 100%, 40% 100%, 52% 62%, 45% 60%, 60% 24%, 51% 22%);
+        opacity: 0.9;
+        z-index: -3;
+        pointer-events: none;
+    }
+
+    [data-theme='phantom'][data-kp-effects]:not([data-kp-effects-done]) [data-kp-surface='hero']::after {
+        transform: translateX(14%) skewX(-6deg);
+    }
+
+    [data-theme='phantom'] [data-kp-surface='hero'] [data-kp-hero-grid] {
+        grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+        gap: 2.5rem;
+        align-items: end;
+    }
+
+    @container (max-width: 54rem) {
+        [data-theme='phantom'] [data-kp-surface='hero'] [data-kp-hero-grid] {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* ── The navbar: a black bar, the skewed red bar behind a hover ────── */
+
+    [data-theme='phantom'] .kp-nav-wrap {
+        background: var(--background);
+    }
+
+    [data-theme='phantom'] .kp-nav {
+        background: var(--background);
+        border-bottom: 2px solid var(--border);
+        padding-block: calc(var(--kp-nav-pad-block, 1.1rem) * var(--kp-nav-pad-scale, 1));
+        position: relative;
+        /* Its own stacking context for the bar's decorations; the layer is the
+         * wrapper's, from the base [scope-48]. */
+        isolation: isolate;
+    }
+
+    /* The brand: italic capitals with the red offset. */
+    [data-theme='phantom'] .kp-nav__brand {
+        font-family: var(--theme-font-display);
+        font-style: italic;
+        font-weight: 900;
+        font-size: 1.9rem;
+        letter-spacing: 0.01em;
+        text-transform: uppercase;
+        line-height: 1;
+        color: var(--foreground);
+        text-decoration: none;
+        text-shadow: 3px 3px 0 var(--primary);
+    }
+
+    [data-theme='phantom'] .kp-nav__links {
+        gap: 0.15rem;
+    }
+
+    [data-theme='phantom'] .kp-nav__link {
+        display: block;
+        position: relative;
+        z-index: 0;
+        padding-inline: 0.95rem;
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--foreground);
+        text-decoration: none;
+        border-radius: 0;
+        background: none;
+    }
+
+    /* The measured rule: left -4%, top 18%, height 70%, width 0 → 108%,
+       skewX(-16deg). */
+    [data-theme='phantom'] .kp-nav__link::before {
+        content: '';
+        position: absolute;
+        left: -4%;
+        top: 14%;
+        height: 72%;
+        width: 0;
+        background: var(--primary);
+        transform: skewX(-16deg);
+        z-index: -1;
+    }
+
+    [data-theme='phantom'] .kp-nav__link:hover,
+    [data-theme='phantom'] .kp-nav__link[aria-current],
+    [data-theme='phantom'] .kp-nav__links > li:focus-within > .kp-nav__link {
+        color: var(--primary-foreground);
+        background: none;
+        box-shadow: none;
+    }
+
+    [data-theme='phantom'] .kp-nav__link:hover::before,
+    [data-theme='phantom'] .kp-nav__link[aria-current]::before,
+    [data-theme='phantom'] .kp-nav__links > li:focus-within > .kp-nav__link::before {
+        width: 108%;
+    }
+
+    [data-theme='phantom'] .kp-nav__link[aria-haspopup]::after {
+        content: ' ▾';
+        font-size: 0.8em;
+    }
+
+    [data-theme='phantom'] .kp-nav__link--lang {
+        border-left: 2px solid var(--border);
+        margin-left: 0.5rem;
+        padding-left: 0.95rem;
+    }
+
+    /* The call to action is a key cap: skewed, red, the deep red as its
+       hard shadow; a press drops it onto the shadow. */
+    [data-theme='phantom'] .kp-nav__link--cta {
+        margin-left: 0.5rem;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        transform: skewX(var(--kp-skew));
+        box-shadow: 5px 5px 0 var(--kp-red-deep);
+        align-self: center;
+    }
+
+    [data-theme='phantom'] .kp-nav__link--cta::before {
+        display: none;
+    }
+
+    [data-theme='phantom'] .kp-nav__link--cta:hover {
+        background: var(--primary);
+        box-shadow: 2px 2px 0 var(--kp-red-deep);
+        translate: 3px 3px;
+    }
+
+    /* The dropdown: a cut-paper popover with the red edge, arriving on a
+       three-step film cut (steps(3), one monotonic change). */
+    [data-theme='phantom'] .kp-nav__menu {
+        background: var(--popover);
+        border: 0;
+        border-left: 4px solid var(--primary);
+        border-radius: 0;
+        clip-path: var(--kp-paperclip);
+        padding: calc(var(--kp-cut-size) - 4px) 0;
+        min-width: 12.5rem;
+        box-shadow: none;
+        rotate: var(--kp-land);
+    }
+
+    /* Collapsed, the dropdown is a list in the flow, not a panel [gap-12]:
+       the rule above dresses the floating panel in kp.register, which
+       beats the reset in kp.components, so the reset is restated here. */
+    @container kp-nav (max-width: 40rem) {
+        [data-theme='phantom'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open] .kp-nav__menu {
+            min-width: 0;
+            padding-inline-start: var(--kp-nav-menu-indent, 1rem);
+            border: 0;
+            background: transparent;
+            box-shadow: none;
+            clip-path: none;
+            rotate: none;
+        }
+    }
+
+    [data-theme='phantom'] .kp-nav__menu a {
+        display: block;
+        position: relative;
+        z-index: 0;
+        padding-inline: 1rem;
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--popover-foreground);
+        text-decoration: none;
+    }
+
+    [data-theme='phantom'] .kp-nav__menu a::before {
+        content: '';
+        position: absolute;
+        left: -2%;
+        top: 10%;
+        height: 80%;
+        width: 0;
+        background: var(--primary);
+        transform: skewX(-16deg);
+        z-index: -1;
+    }
+
+    [data-theme='phantom'] .kp-nav__menu a:hover {
+        color: var(--primary-foreground);
+        background: none;
+    }
+
+    [data-theme='phantom'] .kp-nav__menu a:hover::before {
+        width: 104%;
+    }
+
+    /* ── Buttons: key caps — a skewed plate behind a straight label ─────── */
+
+    /* The plate is a pseudo-element so the label stays upright: the frame
+       and the fill live on ::before, the red bar that fills an outline
+       button on hover on ::after. */
+    [data-theme='phantom'] .kp-button {
+        --kp-plate-fill: transparent;
+        --kp-plate-ink: var(--foreground);
+        --kp-plate-frame: var(--foreground);
+        position: relative;
+        isolation: isolate;
+        padding-inline: 1.6rem;
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        font-size: 1.05rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--kp-plate-ink);
+        background: transparent;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+    }
+
+    /* The demo skews the button itself — border, plate and the box a
+       click lands in — and sets the label upright again [S49, A7, Kenny
+       2026-09-08, on the comparison page that measured both hit areas].
+       The plate no longer skews on its own: it inherits the element's. */
+    [data-theme='phantom'] .kp-button {
+        transform: skewX(var(--kp-skew));
+    }
+
+    [data-theme='phantom'] .kp-button__label {
+        transform: skewX(calc(-1 * var(--kp-skew)));
+    }
+
+    /* The busy words of a submit button sit in a label of their own since
+       [scope-143]; before that they were the button's own text and leaned
+       with it. They keep leaning, so nothing about the busy button moves. */
+    [data-theme='phantom'] .kp-button[aria-busy='true'] > .kp-button__label:only-child {
+        transform: none;
+    }
+
+    [data-theme='phantom'] .kp-button::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--kp-plate-fill);
+        border: 2px solid var(--kp-plate-frame);
+        z-index: -2;
+    }
+
+    [data-theme='phantom'] .kp-button::after {
+        content: '';
+        position: absolute;
+        left: 2px;
+        top: 2px;
+        bottom: 2px;
+        width: 0;
+        background: var(--primary);
+        transform: skewX(var(--kp-skew));
+        transform-origin: left center;
+        z-index: -1;
+    }
+
+    /* Pointing throws the red bar in behind the label and the ink flips to
+       black [G15; Kenny, 2026-10-09: "the red bar thrown in and resolved"]. The
+       bar is the plate's ::after, the label's ink flips at the second cut
+       (the motion, below). */
+    [data-theme='phantom'] .kp-button:hover {
+        color: var(--primary-foreground);
+        background: transparent;
+        box-shadow: none;
+    }
+
+    [data-theme='phantom'] .kp-button:hover::after {
+        width: calc(100% - 4px);
+    }
+
+    /* A press drops the key cap onto its shadow, 3 px, and nothing eases. */
+    [data-theme='phantom'] .kp-button:active {
+        translate: 3px 3px;
+    }
+
+    /* The demo's call-to-action row: wide buttons, as in the reference. A
+       pager's or a menu's button keeps its own width (DI11 at 320 px). */
+    [data-theme='phantom'] [data-kp-surface='hero'] .kp-row > .kp-button {
+        min-width: 12rem;
+    }
+
+    /* Two channels, outside the plate: the contrast ring hugging it and the
+       dashed red ring standing off it (DI2, AR30; Kenny, 2026-10-09). It
+       skews with the plate. */
+    [data-theme='phantom'] .kp-button:focus-visible {
+        outline: 3px dashed var(--primary);
+        outline-offset: 4px;
+        box-shadow: 0 0 0 2px var(--focus-ring-contrast);
+    }
+
+    /* The primary plate is painted twice, like the mark's: the skewed
+       pseudo-element for the eye, a narrower rectangle of the same red as
+       the button's own background for whatever measures the ink against
+       its ground. */
+    [data-theme='phantom'] .kp-button--primary,
+    [data-theme='phantom'] .kp-button--primary:hover {
+        --kp-plate-fill: var(--primary);
+        --kp-plate-ink: var(--primary-foreground);
+        --kp-plate-frame: var(--primary);
+        background: linear-gradient(var(--primary), var(--primary)) center / calc(100% - 14px) 100% no-repeat;
+    }
+
+    [data-theme='phantom'] .kp-button--primary {
+        filter: drop-shadow(5px 5px 0 var(--kp-red-deep));
+    }
+
+    [data-theme='phantom'] .kp-button--primary::after {
+        background: var(--foreground);
+    }
+
+    [data-theme='phantom'] .kp-button--primary:hover {
+        filter: drop-shadow(2px 2px 0 var(--kp-red-deep));
+        translate: 3px 3px;
+    }
+
+    /* The destructive button is red on its frame, white in its ink: red is a
+       plate, never a word [G5]. */
+    [data-theme='phantom'] .kp-button--destructive {
+        --kp-plate-fill: transparent;
+        --kp-plate-ink: var(--foreground);
+        --kp-plate-frame: var(--primary);
+    }
+
+    [data-theme='phantom'] .kp-button--ghost {
+        --kp-plate-frame: transparent;
+    }
+
+    [data-theme='phantom'] .kp-button--ghost:hover {
+        --kp-plate-frame: var(--foreground);
+    }
+
+    [data-theme='phantom'] .kp-button:disabled {
+        opacity: 0.45;
+        translate: none;
+        filter: none;
+    }
+
+    [data-theme='phantom'] .kp-button--sm {
+        min-width: 0;
+        padding-inline: 1rem;
+        font-size: 0.9rem;
+    }
+
+    [data-theme='phantom'] .kp-icon-button {
+        border: 2px solid var(--border);
+        border-radius: 0;
+        transform: skewX(var(--kp-skew));
+    }
+
+    /* On an alert the close button sits on the alert's own plate, in the
+       alert's ink, the way it does on a toast [fix-95]. */
+    [data-theme='phantom'] .kp-alert .kp-icon-button {
+        background: transparent;
+        border-color: transparent;
+        color: inherit;
+    }
+
+    /* An icon button takes the same manners as the key cap [G14]: pointed at,
+       the red plate with black ink; pressed, it drops 3 px. */
+    [data-theme='phantom'] .kp-icon-button:hover {
+        border-color: var(--foreground);
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='phantom'] .kp-icon-button:active {
+        translate: 3px 3px;
+    }
+
+    /* ── Fields ───────────────────────────────────────────────────────── */
+
+    [data-theme='phantom'] .kp-field__label {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--foreground);
+    }
+
+    [data-theme='phantom'] .kp-field__label::before {
+        content: '▮ ';
+        color: var(--primary);
+        font-size: 0.7em;
+        vertical-align: 0.15em;
+    }
+
+    [data-theme='phantom'] .kp-field__input {
+        background: var(--card);
+        border: 2px solid var(--input);
+        border-radius: 0;
+        padding-inline: 0.85rem;
+        caret-color: var(--primary);
+    }
+
+    /* Both channels on the field too [S49, A5]: the register switched the
+       outline off here, which left DI2 with one ring on one control. */
+    [data-theme='phantom'] .kp-field__input:focus-visible {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 2px var(--focus-ring-contrast);
+    }
+
+    [data-theme='phantom'] select.kp-field__input::picker-icon {
+        color: var(--primary);
+    }
+
+    [data-theme='phantom'] .kp-field__help {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.06em;
+    }
+
+    [data-theme='phantom'] .kp-field--invalid .kp-field__input {
+        border-color: var(--fx-signal);
+    }
+
+    [data-theme='phantom'] .kp-field__error {
+        font-family: var(--kp-mono);
+        color: var(--fx-signal);
+    }
+
+    [data-theme='phantom'] .kp-field__error::before {
+        content: '!! ';
+    }
+
+    [data-theme='phantom'] .kp-fieldset {
+        border: 2px solid var(--border);
+        border-radius: 0;
+    }
+
+    /* The switch [gap-11], in the checkbox's voice: the skewed square with
+       the input's two-pixel edge, and the primary fill once on. */
+    [data-theme='phantom'] .kp-switch {
+        --kp-switch-border: 2px;
+    }
+
+    [data-theme='phantom'] .kp-switch__input {
+        transform: skewX(var(--kp-skew));
+    }
+
+    [data-theme='phantom'] .kp-form__summary {
+        border-left: 4px solid var(--primary);
+        background: var(--card);
+        clip-path: var(--kp-paperclip);
+    }
+
+    /* ── Cards, surfaces and containers: cut paper with the red edge ───── */
+
+    [data-theme='phantom'] .kp-card {
+        background: var(--card);
+        border: 0;
+        border-left: 5px solid var(--primary);
+        border-radius: 0;
+        clip-path: var(--kp-paperclip);
+        box-shadow: none;
+    }
+
+    [data-theme='phantom'] .kp-card__title {
+        font-family: var(--theme-font-display);
+        font-style: italic;
+        font-weight: 900;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+        text-shadow: 3px 3px 0 var(--background);
+    }
+
+    /* The dossier: the label is a skewed red plate with black ink (no stamp:
+       the print's motifs are the screen, the skew, the red plate, the second
+       plate, the slash and the star [G19]); the redactions are censor plates
+       that shear off, right edge first, when the file is opened. */
+    [data-theme='phantom'] .kp-card[data-kp-reveal='emphasis'] {
+        position: relative;
+    }
+
+    [data-theme='phantom'] .kp-card[data-kp-label]::before {
+        content: attr(data-kp-label);
+        position: absolute;
+        top: 0.9rem;
+        right: 0.9rem;
+        transform: skewX(var(--kp-skew));
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border: 0;
+        box-shadow: var(--kp-hard);
+        font-family: var(--theme-font-display);
+        font-weight: 800;
+        font-style: italic;
+        font-size: 0.85rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        padding: 0.15rem 0.6rem;
+    }
+
+    [data-theme='phantom'] .kp-card[data-kp-reveal='emphasis'] mark {
+        color: var(--card-foreground);
+        background: none;
+        padding-inline: 0;
+    }
+
+    [data-theme='phantom'] .kp-card[data-kp-reveal='emphasis'] mark::before {
+        display: none;
+    }
+
+    [data-theme='phantom'] .kp-card[data-kp-reveal='emphasis'] mark::after {
+        content: '';
+        position: absolute;
+        inset: -0.08em -0.2em;
+        background: var(--primary);
+        border-right: 4px solid var(--background);
+        transform: skewX(var(--kp-skew)) scaleX(0);
+        transform-origin: right center;
+    }
+
+    [data-theme='phantom'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared) {
+        color: transparent;
+    }
+
+    [data-theme='phantom'][data-kp-effects] .kp-card[data-kp-reveal='emphasis'] mark:not(.is-cleared)::after {
+        transform: skewX(var(--kp-skew)) scaleX(1);
+    }
+
+    [data-theme='phantom'] .kp-dialog,
+    [data-theme='phantom'] .kp-popover,
+    [data-theme='phantom'] .kp-menu,
+    [data-theme='phantom'] .kp-toast,
+    [data-theme='phantom'] .kp-tooltip,
+    [data-theme='phantom'] .kp-confirm,
+    [data-theme='phantom'] .kp-datepicker__panel,
+    [data-theme='phantom'] .kp-combobox__list,
+    [data-theme='phantom'] .kp-palette,
+    [data-theme='phantom'] .kp-theme-menu__list {
+        background: var(--popover);
+        border: 0;
+        border-left: 4px solid var(--primary);
+        border-radius: 0;
+        clip-path: var(--kp-paperclip);
+        box-shadow: none;
+    }
+
+    /* A list inside one of those surfaces is part of it, not a second one:
+       the theme menu's popover holds a .kp-menu, and both took the 4 px
+       edge, so the bar on the left stood twice (Kenny, 2026-10-08: "die
+       balk links staat er twee keer?"). The outer surface keeps the edge
+       and the paperclip; the list inside is bare.
+       A combobox's list is not one of them: it never lies inside the surface
+       that holds its field, it floats over it in the top layer as a dropdown
+       of its own (js/top-layer.js), so it keeps its own plate there too.
+       Named here it lost its ground, its edge and its paperclip inside any
+       dialog, the review dialog's stage included, and the page showed
+       through its options (Kenny, 2026-10-13 22:12: "er is precies geen vlak
+       achter de opties"). */
+    [data-theme='phantom']
+        :is(.kp-dialog, .kp-popover, .kp-toast, .kp-confirm, .kp-datepicker__panel, .kp-palette)
+        :is(.kp-menu, .kp-theme-menu__list) {
+        background: transparent;
+        border-left: 0;
+        clip-path: none;
+        box-shadow: none;
+    }
+
+    [data-theme='phantom']
+        :is(.kp-dialog, .kp-popover, .kp-toast, .kp-confirm, .kp-datepicker__panel, .kp-palette)
+        :is(.kp-menu, .kp-theme-menu__list)::after {
+        content: none;
+    }
+
+    /* The theme menu's wrapper is not a surface [scope-107]. Kenny,
+       2026-09-16, on the React theme menu: "niet veel te zien? Ook het
+       vorige item heb ik te snel approved" — both theme-menu blocks in the
+       catalogue showed the trigger and nothing else.
+
+       `.kp-theme-menu` is `display: inline-block; position: relative` in
+       css/components.css: the box the trigger stands in and the panel
+       hangs off, 40x36 px in the catalogue. It stood in the list above, so
+       it took the paperclip — and a `clip-path` clips every descendant,
+       including one positioned outside the box. Measured in firefox at
+       devicePixelRatio 2.222: the panel is 188x632 px and starts 151.6 px
+       back along the inline axis and 36 px below, so all of it fell
+       outside a 40x36 clip and nothing of the menu was painted, in both
+       channels. The wrapper also wore the popover's ground and the 4 px
+       primary edge, which is the lone red bar that stood beside the
+       trigger with nothing behind it.
+
+       So the wrapper is given its own nature back and the panels keep the
+       paperclip themselves: `.kp-popover` above already dresses the
+       markup channel's popover and the React channel's
+       `.kp-popover.kp-theme-menu__list`, which is named in the list too so
+       a consumer using the class on its own still gets the torn edge.
+       Spelled out rather than simply dropped from the list, because this
+       is the rule that says the element is not a surface. */
+    [data-theme='phantom'] .kp-theme-menu {
+        background: transparent;
+        border: 0;
+        clip-path: none;
+    }
+
+    /* A dropdown and a menu are cut paper that has landed: the corner is cut
+       by the fixed 14 px, so the rows are inset by the cut less the edge
+       (the demo's menu), and the plate stands a degree and a half askew. */
+    [data-theme='phantom'] :is(.kp-popover:not(.kp-tooltip), .kp-menu-button > .kp-menu) {
+        padding: calc(var(--kp-cut-size) - 4px) 0.6rem calc(var(--kp-cut-size) - 4px) 0.8rem;
+        rotate: var(--kp-land);
+    }
+
+    [data-theme='phantom'] .kp-toast--destructive,
+    [data-theme='phantom'] .kp-toast--error {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        border-color: var(--destructive);
+    }
+
+    [data-theme='phantom']
+        :is(.kp-toast--success, .kp-toast--info, .kp-toast--warning, .kp-toast--destructive, .kp-toast--error)
+        :is(.kp-button--ghost, .kp-icon-button) {
+        color: inherit;
+    }
+
+    /* A button hovered on a toast takes a shade of the toast's own plate
+       (--kp-toast-button-hover, set in kp.components), not this theme's page hover (Kenny's second nostromo pass,
+       2026-09-13). Restated here because this layer repaints the hover. */
+    [data-theme='phantom'] .kp-toast :is(.kp-button--ghost, .kp-icon-button):hover:not(:disabled) {
+        background: var(--kp-toast-button-hover);
+        color: inherit;
+    }
+
+    [data-theme='phantom'] .kp-toasts {
+        gap: 0.6rem;
+    }
+
+    /* The keyboard highlight is the skewed red bar with black ink (KT8:
+       the list text keeps its colour where the bar is a wash — here the
+       plate carries its own ink). */
+    [data-theme='phantom'] .kp-combobox__option[aria-selected='true'],
+    [data-theme='phantom'] .kp-palette__option[aria-selected='true'] {
+        background: hsl(from var(--foreground) h s l / 0.14);
+    }
+
+    /* A menu entry, pointed at, is the red bar thrown in behind its label with
+       the ink flipped to black [G15, G14]; the bar waits off its start edge and
+       the entry clips it. The same bar is behind a calendar day and behind the
+       label of a key figure that is a link. */
+    [data-theme='phantom'] :is(.kp-menu__item, .kp-calendar__day) {
+        position: relative;
+        isolation: isolate;
+        overflow: clip;
+    }
+
+    [data-theme='phantom'] .kp-menu__item::before,
+    [data-theme='phantom'] .kp-calendar__day:not([data-kp-tone='loading'])::before,
+    [data-theme='phantom'] :is(a.kp-kpi, .kp-kpi--toggle) .kp-kpi__label::before {
+        content: '';
+        position: absolute;
+        inset: 0 0.2rem 0 -0.35rem;
+        z-index: -1;
+        background: var(--primary);
+        transform: skewX(var(--kp-skew));
+        translate: -115% 0;
+    }
+
+    [data-theme='phantom'] :is(a.kp-kpi, .kp-kpi--toggle) .kp-kpi__label {
+        position: relative;
+        isolation: isolate;
+        inline-size: fit-content;
+        padding-inline: 0.3rem;
+        margin-inline: -0.3rem;
+    }
+
+    [data-theme='phantom'] .kp-menu__item:hover,
+    [data-theme='phantom'] .kp-calendar__day:not([data-kp-tone='loading']):hover,
+    [data-theme='phantom'] :is(a.kp-kpi, .kp-kpi--toggle):hover .kp-kpi__label {
+        background: none;
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='phantom'] .kp-menu__item:hover::before,
+    [data-theme='phantom'] .kp-calendar__day:not([data-kp-tone='loading']):hover::before,
+    [data-theme='phantom'] :is(a.kp-kpi, .kp-kpi--toggle):hover .kp-kpi__label::before {
+        translate: 0 0;
+    }
+
+    [data-theme='phantom'] :is(.kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle):active {
+        translate: 3px 3px;
+    }
+
+    /* On a part that is cut or clipped the ring stands inside it. */
+    [data-theme='phantom'] :is(.kp-menu__item, .kp-calendar__day, a.kp-kpi, .kp-kpi--toggle):focus-visible {
+        outline-offset: -6px;
+    }
+
+    /* A destructive entry is a red plate with black ink, never a red word [G5, G8]. */
+    [data-theme='phantom'] .kp-menu__item--destructive,
+    [data-theme='phantom'] .kp-menu__item--destructive:hover,
+    [data-theme='phantom'] .kp-menu__item--destructive .kp-menu__label {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-weight: 700;
+    }
+
+    /* Its focus ring stands inside the plate (-6 px), and the dashed red ring
+       of every other part would be red on red here, with the contrast ring
+       clipped away by the entry's own `overflow: clip` (black on the board
+       besides). On this plate the dashes take the plate's ink and the hugging
+       ring is drawn inside the edge in the surface colour, so both channels
+       show on the red and on the board [G16; the dashboard's destructive menu
+       item, suite triage 10.0.0]. */
+    [data-theme='phantom'] .kp-menu__item--destructive:focus-visible {
+        outline-color: var(--primary-foreground);
+        box-shadow: inset 0 0 0 var(--kp-focus-ring-inner-width, 2px) var(--foreground);
+    }
+
+    /* The plain alert only [gap-1, Kenny 2026-09-10]. This rule used to
+       repaint the ground of EVERY alert, and `kp.register` is a later layer
+       than `kp.components`, so it beat `.kp-alert--destructive`'s own plate
+       while that variant's ink — `--destructive-foreground`, which is drawn
+       to sit ON the plate — stayed. Measured in firefox on 2026-09-12:
+       seventeen of the twenty-two themes carried a destructive alert whose
+       text was unreadable, grotesk at 1.00 exactly, white on white.
+
+       Kenny saw it in chassis-rs and said to write it down and touch
+       nothing; this is the round he asked for it in. Same shape as fix-12,
+       one property over: a register overriding half of a pair the base
+       layer defines together. */
+    [data-theme='phantom'] .kp-alert:not([class*='kp-alert--']) {
+        background: var(--card);
+        border: 2px solid var(--border);
+        border-left: 5px solid var(--accent);
+        border-radius: 0;
+    }
+
+    [data-theme='phantom'] .kp-alert--destructive {
+        border-left-color: var(--primary);
+    }
+
+    /* A warning is the yellow overprint [G8; Kenny, 2026-10-09: "the yellow
+       overprint"]: the alert is the yellow plate with black ink and a black
+       edge; yellow is the overprint for a warning and for nothing else. */
+    [data-theme='phantom'] .kp-alert--warning {
+        border: 2px solid var(--background);
+        border-inline-start: 5px solid var(--background);
+        background: var(--fx-signal);
+        color: var(--fx-signal-foreground);
+    }
+
+    [data-theme='phantom'] .kp-alert--success {
+        border-left-color: var(--success-foreground);
+    }
+
+    [data-theme='phantom'] .kp-alert__label {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='phantom'] .kp-grid__tile,
+    [data-theme='phantom'] .kp-split__pane {
+        background: var(--card);
+        border: 2px solid var(--border);
+        border-radius: 0;
+    }
+
+    [data-theme='phantom'] .kp-grid {
+        gap: 1rem;
+    }
+
+    [data-theme='phantom'] .kp-split__separator {
+        background: var(--primary);
+        width: 4px;
+        transform: skewX(var(--kp-skew));
+    }
+
+    /* Top and bottom [gap-12]: the thickness above is an inline size, so
+       a horizontal split takes the same value as a block size. */
+    [data-theme='phantom'] .kp-split[data-kp-orientation='horizontal'] > .kp-split__separator {
+        inline-size: auto;
+        block-size: 4px;
+    }
+
+    [data-theme='phantom'] .kp-footer {
+        background: var(--background);
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='phantom'] .kp-footer h4 {
+        font-family: var(--theme-font-display);
+        font-style: italic;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--foreground);
+        text-shadow: 2px 2px 0 var(--primary);
+    }
+
+    [data-theme='phantom'] .kp-footer a {
+        position: relative;
+        z-index: 0;
+        display: inline-block;
+        padding: 0.1rem 0.4rem;
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        font-size: 0.95rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--foreground);
+        text-decoration: none;
+    }
+
+    [data-theme='phantom'] .kp-footer a::before {
+        content: '';
+        position: absolute;
+        left: -4%;
+        top: 10%;
+        height: 80%;
+        width: 0;
+        background: var(--primary);
+        transform: skewX(-16deg);
+        z-index: -1;
+    }
+
+    [data-theme='phantom'] .kp-footer a:hover {
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='phantom'] .kp-footer a:hover::before {
+        width: 108%;
+    }
+
+    /* ── Badges, tags, status: small plates with their own ink ───────── */
+
+    [data-theme='phantom'] .kp-badge,
+    [data-theme='phantom'] .kp-tag {
+        border-radius: 0;
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        transform: skewX(var(--kp-skew));
+    }
+
+    /* The badge's type size is the package's [scope-87]; the tag keeps this register's. */
+    [data-theme='phantom'] .kp-tag {
+        font-size: 0.8rem;
+    }
+
+    [data-theme='phantom'] .kp-health__dot {
+        border-radius: 0;
+        transform: skewX(var(--kp-skew));
+    }
+
+    [data-theme='phantom'] .kp-health {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+    }
+
+    [data-theme='phantom'] .kp-skeleton {
+        background: repeating-linear-gradient(-16deg, var(--card) 0 8px, var(--popover) 8px 16px);
+        border-radius: 0;
+    }
+
+    [data-theme='phantom'] .kp-spinner {
+        border-color: var(--border);
+        border-top-color: var(--primary);
+    }
+
+    [data-theme='phantom'] .kp-empty__title {
+        letter-spacing: 0.06em;
+    }
+
+    [data-theme='phantom'] .kp-error {
+        font-family: var(--kp-mono);
+        color: var(--fx-signal);
+    }
+
+    /* ── Text shapes: identifiers in the mono face ────────────────────── */
+
+    [data-theme='phantom'] .kp-id,
+    [data-theme='phantom'] .kp-url,
+    [data-theme='phantom'] .kp-numeric,
+    [data-theme='phantom'] .kp-timestamp,
+    [data-theme='phantom'] .kp-masked,
+    [data-theme='phantom'] .kp-copyable,
+    [data-theme='phantom'] .kp-truncate,
+    [data-theme='phantom'] .kp-cell-break,
+    [data-theme='phantom'] .kp-cell-truncate {
+        font-family: var(--kp-mono);
+        letter-spacing: 0.04em;
+    }
+
+    [data-theme='phantom'] .kp-timestamp,
+    [data-theme='phantom'] .kp-id {
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='phantom'] .kp-copyable__button {
+        border: 2px solid var(--border);
+        border-radius: 0;
+        transform: skewX(var(--kp-skew));
+    }
+
+    /* The copy button's two states win over this register's own button
+       rules [gap-12]: those paint in kp.register, which beats the states
+       in kp.components, so copied lost its success plate and a refused
+       copy looked idle. Restated token for token. */
+    [data-theme='phantom'] .kp-copyable .kp-copyable__button[data-kp-copied] {
+        border-color: var(--success);
+        color: var(--success-foreground);
+        background: var(--success);
+    }
+
+    [data-theme='phantom'] .kp-copyable .kp-copyable__button[data-kp-copy-failed] {
+        border-color: var(--destructive);
+        border-style: dashed;
+        color: var(--foreground);
+    }
+
+    /* ── Data ─────────────────────────────────────────────────────────── */
+
+    [data-theme='phantom'] .kp-table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    [data-theme='phantom'] .kp-table th {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        font-size: 0.95rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        border-bottom: 3px solid var(--foreground);
+    }
+
+    [data-theme='phantom'] .kp-table td {
+        border-bottom: 1px solid var(--kp-line);
+    }
+
+    [data-theme='phantom'] .kp-table tbody tr:hover {
+        background: var(--card);
+    }
+
+    [data-theme='phantom'] .kp-datatable__bar {
+        border-bottom: 2px solid var(--border);
+    }
+
+    [data-theme='phantom'] .kp-datatable__sort[aria-sort] {
+        text-decoration: underline 3px var(--primary);
+        text-underline-offset: 0.25em;
+    }
+
+    [data-theme='phantom'] .kp-datatable__status,
+    [data-theme='phantom'] .kp-datatable__page {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='phantom'] .kp-diff__line,
+    [data-theme='phantom'] .kp-diff__hunk {
+        font-family: var(--kp-mono);
+    }
+
+    [data-theme='phantom'] .kp-diff__sign {
+        font-weight: 700;
+    }
+
+    [data-theme='phantom'] .kp-timeline__marker {
+        background: var(--primary);
+        border-radius: 0;
+        transform: skewX(var(--kp-skew));
+    }
+
+    [data-theme='phantom'] .kp-timeline__when {
+        font-family: var(--kp-mono);
+        color: var(--muted-foreground);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+    }
+
+    /* The step list is a stack of cut-out cards with a red cut at the left;
+       the running card's cut is the primary. */
+    [data-theme='phantom'] .kp-steplist {
+        --kp-steplist-mark-radius: 0;
+    }
+
+    [data-theme='phantom'] .kp-steplist__item {
+        border-radius: 0;
+        border-inline-start: 4px solid var(--border-strong);
+    }
+
+    [data-theme='phantom'] .kp-steplist__item[data-state='running'] {
+        border-inline-start-color: var(--primary);
+    }
+
+    [data-theme='phantom'] .kp-timeline {
+        border-left: 3px solid var(--foreground);
+    }
+
+    [data-theme='phantom'] .kp-tree {
+        font-family: var(--kp-mono);
+    }
+
+    /* The accordion [gap-12]: the display capitals its tabs shout in. */
+    [data-theme='phantom'] .kp-accordion__summary {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='phantom'] .kp-accordion__summary::marker {
+        color: var(--primary);
+    }
+
+    [data-theme='phantom'] .kp-accordion__item[open] > .kp-accordion__summary {
+        text-decoration: underline 3px var(--primary);
+        text-underline-offset: 0.25em;
+    }
+
+    [data-theme='phantom'] .kp-reorder {
+        border: 2px solid var(--border);
+        border-radius: 0;
+    }
+
+    /* ── Navigation and steps ─────────────────────────────────────────── */
+
+    [data-theme='phantom'] .kp-tab {
+        border-radius: 0;
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        position: relative;
+        z-index: 0;
+    }
+
+    [data-theme='phantom'] .kp-tab::before {
+        content: '';
+        position: absolute;
+        left: -2%;
+        top: 12%;
+        height: 76%;
+        width: 0;
+        background: var(--primary);
+        transform: skewX(-16deg);
+        z-index: -1;
+    }
+
+    [data-theme='phantom'] .kp-tab[aria-selected='true'] {
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='phantom'] .kp-tab[aria-selected='true']::before {
+        width: 104%;
+    }
+
+    [data-theme='phantom'] .kp-tabs__list {
+        border-bottom: 3px solid var(--foreground);
+    }
+
+    [data-theme='phantom'] .kp-breadcrumb,
+    [data-theme='phantom'] .kp-pagination {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='phantom'] .kp-pagination a[aria-current],
+    [data-theme='phantom'] .kp-pagination [aria-current] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        transform: skewX(var(--kp-skew));
+    }
+
+    [data-theme='phantom'] .kp-wizard__steps {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='phantom'] .kp-wizard {
+        border: 0;
+        border-left: 5px solid var(--primary);
+        background: var(--card);
+        clip-path: var(--kp-paperclip);
+    }
+
+    /* ── Pickers and palettes ─────────────────────────────────────────── */
+
+    [data-theme='phantom'] .kp-combobox__input,
+    [data-theme='phantom'] .kp-palette__input,
+    [data-theme='phantom'] .kp-datatable__search {
+        background: var(--card);
+        border: 2px solid var(--input);
+        border-radius: 0;
+        caret-color: var(--primary);
+    }
+
+    [data-theme='phantom'] .kp-datepicker__day[aria-selected='true'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-radius: 0;
+        transform: skewX(var(--kp-skew));
+    }
+
+    [data-theme='phantom'] .kp-datepicker__weekday,
+    [data-theme='phantom'] .kp-datepicker__title {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='phantom'] .kp-colorpicker__swatch {
+        border: 2px solid var(--border);
+        border-radius: 0;
+        transform: skewX(var(--kp-skew));
+    }
+
+    [data-theme='phantom'] .kp-colorpicker__value {
+        font-family: var(--kp-mono);
+    }
+
+    [data-theme='phantom'] .kp-shortcuts__row kbd {
+        font-family: var(--kp-mono);
+        border: 2px solid var(--border);
+        border-radius: 0;
+        transform: skewX(var(--kp-skew));
+        display: inline-block;
+    }
+
+    [data-theme='phantom'] .kp-shortcuts__group-label,
+    [data-theme='phantom'] .kp-palette__group-label {
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='phantom'] .kp-theme-menu__status,
+    [data-theme='phantom'] .kp-palette__status,
+    [data-theme='phantom'] .kp-combobox__status {
+        font-family: var(--kp-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.06em;
+    }
+
+    /* ── The roots the rules above reach only by their parts ──────────── */
+
+    [data-theme='phantom'] .kp-field,
+    [data-theme='phantom'] .kp-form {
+        gap: calc(var(--kp-space-xs) * 1.2);
+    }
+
+    [data-theme='phantom'] .kp-form {
+        gap: var(--kp-space-lg);
+    }
+
+    [data-theme='phantom'] .kp-combobox,
+    [data-theme='phantom'] .kp-datepicker,
+    [data-theme='phantom'] .kp-colorpicker,
+    [data-theme='phantom'] .kp-shortcuts {
+        border-radius: 0;
+    }
+
+    [data-theme='phantom'] .kp-datatable {
+        border: 2px solid var(--border);
+        border-radius: 0;
+    }
+
+    [data-theme='phantom'] .kp-diff {
+        background: var(--card);
+        border: 2px solid var(--border);
+        border-radius: 0;
+    }
+
+    [data-theme='phantom'] .kp-split {
+        gap: 0;
+    }
+
+    /* ── The scrollbar joins the theme ────────────────────────────────── */
+
+    [data-theme='phantom'] {
+        scrollbar-color: var(--primary) var(--background);
+    }
+
+    /* ── The demo's own pieces [S46] ──────────────────────────────────── */
+
+    /* The vertical margin note, a white-on-black label. */
+    [data-theme='phantom'] .kp-side-note {
+        position: absolute;
+        right: 0.5rem;
+        top: 2.5rem;
+        writing-mode: vertical-rl;
+        font-family: var(--kp-mono);
+        font-size: 0.68rem;
+        letter-spacing: 0.34em;
+        text-transform: uppercase;
+        color: var(--foreground);
+        background: var(--background);
+        padding: 0.6rem 0.15rem;
+        z-index: 2;
+    }
+
+    /* Laurels: the hud tags — rotated cards with a hard shadow. */
+    [data-theme='phantom'] .kp-laurels {
+        gap: 0.9rem 1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        font-size: 0.68rem;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='phantom'] .kp-laurels li {
+        background: var(--card);
+        border: 2px solid var(--border);
+        box-shadow: var(--kp-hard);
+        padding: 0.45rem 0.85rem;
+        rotate: var(--kp-land);
+    }
+
+    [data-theme='phantom'] .kp-laurels li:nth-child(2) {
+        border-color: var(--primary);
+    }
+
+    [data-theme='phantom'] .kp-laurels b {
+        display: block;
+        font-family: var(--theme-font-display);
+        font-weight: 800;
+        font-style: italic;
+        font-size: 1.05rem;
+        letter-spacing: 0.04em;
+        color: var(--foreground);
+    }
+
+    [data-theme='phantom'] .kp-lede {
+        max-width: 36rem;
+        font-size: 1.1rem;
+    }
+
+    /* The platforms line: mono, a red tick before every name. */
+    [data-theme='phantom'] .kp-platforms {
+        margin-top: 2.2rem;
+        gap: 0.4rem 1.4rem;
+        font-family: var(--kp-mono);
+        font-size: 0.7rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: var(--muted-foreground);
+    }
+
+    [data-theme='phantom'] .kp-platforms span::before {
+        content: '▮ ';
+        color: var(--primary);
+    }
+
+    /* The spec sheet: a cut-paper card with the red edge. */
+    [data-theme='phantom'] .kp-spec {
+        background: var(--card);
+        color: var(--card-foreground);
+        padding: 1.3rem 1.4rem 1.5rem;
+        border-left: 5px solid var(--primary);
+        clip-path: var(--kp-paperclip);
+        font-family: var(--kp-mono);
+        font-size: 0.74rem;
+        line-height: 1.75;
+    }
+
+    [data-theme='phantom'] .kp-spec dt {
+        color: var(--muted-foreground);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    /* The log wears what this register already decided for its other data
+ * surface, `.kp-spec` — the same ground, the same edge, the same face
+ * [gap-14]. A new component that invents a look of its own is a
+ * twenty-third decision nobody made. */
+    [data-theme='phantom'] .kp-log {
+        background: var(--card);
+        color: var(--card-foreground);
+        clip-path: var(--kp-paperclip);
+        font-family: var(--kp-mono);
+    }
+
+    [data-theme='phantom'] .kp-log__level {
+        --kp-log-level-ink: var(--muted-foreground);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='phantom'] .kp-spec__swatch {
+        border: 1px solid var(--input);
+    }
+
+    [data-theme='phantom'] .kp-spec__font {
+        font-family: var(--theme-font-display);
+        font-style: italic;
+        font-weight: 800;
+    }
+
+    /* ── The arrival [S45, PH2]: the calling card ─────────────────────── */
+
+    /* The overlay js/effects.js builds when the theme answers the arrival
+       hook with `card`: the theme's name in the display face, a red bar
+       that runs across under it, a Skip button, and the whole card shoved
+       off to the left with the Phantom.Land easings. Once per session;
+       never under reduced motion (the module does not build it). */
+    [data-theme='phantom'] .kp-boot {
+        position: fixed;
+        inset: 0;
+        z-index: var(--kp-z-boot, 100);
+        background: var(--background);
+        display: grid;
+        place-items: center;
+        overflow: hidden;
+        transform-origin: center;
+    }
+
+    [data-theme='phantom'] .kp-boot::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 50%;
+        height: 3px;
+        background: var(--primary);
+        transform: translateY(-50%) scaleX(1);
+        transform-origin: left center;
+    }
+
+    [data-theme='phantom'] .kp-boot__line {
+        margin: 0;
+        font-family: var(--theme-font-display);
+        font-style: italic;
+        font-weight: 900;
+        font-size: clamp(3rem, 15vw, 9rem);
+        line-height: 1;
+        letter-spacing: 0.01em;
+        text-transform: uppercase;
+        color: var(--foreground);
+        text-shadow: 5px 5px 0 var(--primary);
+        transform: skewX(-10deg);
+        white-space: pre-wrap;
+    }
+
+    [data-theme='phantom'] .kp-boot__skip {
+        position: absolute;
+        right: 1.2rem;
+        bottom: 1.2rem;
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        font-size: 0.95rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--foreground);
+        background: none;
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+        padding: 0.4rem 1rem;
+        cursor: pointer;
+        transform: skewX(var(--kp-skew));
+    }
+
+    [data-theme='phantom'] .kp-boot.is-off {
+        pointer-events: none;
+    }
+
+    /* ── Motion, guarded [DI7] ────────────────────────────────────────── */
+
+    /* Every animation and transition of this register lives here, inside
+       the no-preference guard, so a reader who asked for reduced motion
+       never receives one: the rest states above are what they get (the part
+       resolved, landed askew). The durations are literal because
+       check-motion.mjs computes DI5's rate from them; the matching --kp-*
+       knobs are what js/effects.js reads. The grammar: the throw is the shove
+       and every change of state is hard cuts (G1), so a hover throws the red
+       bar in on the shove and resolves it in two cuts, a press drops the cap
+       and resolves its face in two cuts, and nothing eases. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* The words of a headline are thrown in from the start edge one after
+           the other and resolve (the signature layer's pair, on the words'
+           own offsets); without the script every word stands at rest. */
+        [data-theme='phantom'] [data-kp-reveal='headline'].is-words [data-word] {
+            --kp-sig-ph-x0: -0.6em;
+            --kp-sig-ph-y0: 0px;
+            --kp-sig-ph-r0: 0deg;
+            --kp-sig-ph-s0: 1;
+            --kp-sig-ph-land: 0deg;
+            mask-size: 7px 7px;
+            animation:
+                kp-sig-phantom-fly 700ms linear backwards,
+                kp-sig-phantom-resolve 700ms linear backwards;
+            animation-delay: calc(var(--kp-i, 0) * var(--kp-word-stagger));
+        }
+
+        [data-theme='phantom'] [data-kp-reveal='rule']::after {
+            transition: background-position var(--kp-rail) var(--kp-shove);
+        }
+
+        [data-theme='phantom'] mark::before {
+            transition: transform var(--kp-plate) var(--kp-cut);
+        }
+
+        /* The rectangle under the plate switches on after the slide, in no
+           time at all: a size, not a colour, so KT8's mid-transition colour
+           can never be read. */
+        [data-theme='phantom'] mark {
+            transition: background-size 0s linear var(--kp-plate);
+        }
+
+        [data-theme='phantom'] .kp-card[data-kp-reveal='emphasis'] mark::after {
+            transition: transform var(--kp-wipe) var(--kp-cut);
+        }
+
+        [data-theme='phantom'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(2)::after {
+            transition-delay: var(--kp-redact-stagger);
+        }
+
+        [data-theme='phantom'] .kp-card[data-kp-reveal='emphasis'] mark:nth-of-type(3)::after {
+            transition-delay: calc(2 * var(--kp-redact-stagger));
+        }
+
+        [data-theme='phantom'] [data-kp-surface='hero']::after {
+            transition: transform 400ms var(--kp-shove);
+        }
+
+        /* The red bar behind a label [G15]: width only, no colour transition
+           (a theme applied after first paint transitions every colour, and
+           CI's chromium read a nav link halfway; KT8, rule 8a). Leaving, the
+           bar is snatched back: 60 ms on the shove's inverse, 30 ms after the
+           pointer left. Pointing, it is thrown in on the shove in 60 ms and
+           resolved from dots to solid in two cuts across the 120 ms of
+           contact (kp-sig-phantom-bar); the ink flips to black at the
+           second (kp-sig-phantom-ink). The solid face is the rule's own
+           `mask-image: none`, not the animation's held last frame, so the
+           animation ends and a focused link settles with none running
+           (tests/focus-visible.spec.mjs counts every finite animation that
+           still holds a fill). */
+        [data-theme='phantom'] :is(.kp-nav__link, .kp-nav__menu a, .kp-footer a, .kp-tab, .kp-nav__search-trigger)::before,
+        [data-theme='phantom'] .kp-button::after {
+            mask-size: 7px 7px;
+            transition: width 60ms var(--kp-shove-out) 30ms;
+        }
+
+        [data-theme='phantom'] :is(.kp-nav__link, .kp-nav__menu a, .kp-footer a, .kp-nav__search-trigger):hover::before,
+        [data-theme='phantom'] .kp-nav__links > li:focus-within > .kp-nav__link::before,
+        [data-theme='phantom'] .kp-tab[aria-selected='true']::before,
+        [data-theme='phantom'] .kp-button:hover::after {
+            transition: width 60ms var(--kp-shove);
+            animation: kp-sig-phantom-bar 120ms linear backwards;
+            mask-image: none;
+        }
+
+        [data-theme='phantom'] .kp-button:hover {
+            animation: kp-sig-phantom-ink 120ms linear both;
+        }
+
+        /* A press drops the cap (translate, instantly: nothing eases) and its
+           face resolves from dots to solid in two cuts; let go, the cap is
+           up and the face solid. */
+        [data-theme='phantom'] .kp-button:active:not(.kp-button--primary)::after,
+        [data-theme='phantom'] .kp-button--primary:active::before {
+            animation: kp-sig-phantom-face 120ms linear both;
+        }
+
+        [data-theme='phantom'] .kp-button--primary:active::before {
+            mask-size: 7px 7px;
+        }
+
+        [data-theme='phantom'] .kp-nav__link--cta,
+        [data-theme='phantom'] .kp-button,
+        [data-theme='phantom'] .kp-icon-button {
+            transition: none;
+        }
+
+        /* A menu entry, a calendar day and a key figure that is a link: the
+           bar is the part's ::before (a key figure's label's), thrown in from
+           the start edge, which the part clips; the same hand as the button's. */
+        [data-theme='phantom'] :is(.kp-menu__item, .kp-calendar__day, :is(a.kp-kpi, .kp-kpi--toggle) .kp-kpi__label)::before {
+            mask-size: 7px 7px;
+            transition: translate 60ms var(--kp-shove-out) 30ms;
+        }
+
+        [data-theme='phantom'] :is(.kp-menu__item, .kp-calendar__day:not([data-kp-tone='loading'])):hover::before,
+        [data-theme='phantom'] :is(a.kp-kpi, .kp-kpi--toggle):hover .kp-kpi__label::before {
+            transition: translate 60ms var(--kp-shove);
+            animation: kp-sig-phantom-bar 120ms linear backwards;
+            mask-image: none;
+        }
+
+        /* A press drops these 3 px as it drops a key cap, and nothing eases. */
+        [data-theme='phantom'] :is(.kp-menu__item, .kp-calendar__day):active::before,
+        [data-theme='phantom'] :is(a.kp-kpi, .kp-kpi--toggle):active .kp-kpi__label::before {
+            animation: kp-sig-phantom-face 120ms linear both;
+        }
+
+        [data-theme='phantom'] .kp-boot::before {
+            animation: kp-bar-run 900ms var(--kp-out) both;
+        }
+
+        [data-theme='phantom'] .kp-boot.is-off {
+            animation: kp-load-out 640ms var(--kp-shove) 1 forwards;
+        }
+    }
+
+    /* Every keyframe here has its row in TIMINGS (js/effects.js). */
+    @keyframes kp-bar-run {
+        from {
+            transform: translateY(-50%) scaleX(0);
+        }
+
+        to {
+            transform: translateY(-50%) scaleX(1);
+        }
+    }
+
+    @keyframes kp-load-out {
+        0% {
+            transform: none;
+        }
+
+        50% {
+            transform: skew(-20deg);
+        }
+
+        100% {
+            transform: skew(-20deg) translateX(-115vw);
+        }
+    }
+
+    /* The card's file code, in the red the plates wear [S49, A3]. */
+    [data-theme='phantom'] .kp-nav__brand-tag {
+        padding-inline: 0.45em;
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-style: normal;
+        letter-spacing: 0.2em;
+    }
+    /* The band [M1, M4]: Kenny picked this theme's own version over the
+       shared one on 2026-09-08 — the whole band a degree off square, inverted, in caps. */
+    [data-theme='phantom'] .kp-marquee {
+        background: var(--foreground);
+        color: var(--background);
+        transform: skewY(-1deg);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        --kp-marquee: 22000ms;
+    }
+
+    /* The menu's caption [M3]: the same choice, for the line a consumer
+       may put above a dropdown's items. */
+    /* A mega menu's group headings speak in the caption's voice [scope-48]. */
+    [data-theme='phantom'] .kp-nav__menu[data-kp-menu-label]::before,
+    [data-theme='phantom'] .kp-nav__menu--wide .kp-nav__menu-heading {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        transform: skewX(-8deg);
+        border-block-end: 0;
+    }
+
+    /* ── The side navigation [feat-nav-3] ────────────────────────────
+       The bar grows a plate out from behind the current item. Down the
+       side it does the same thing sideways: the plate slides out of the
+       edge the panel is attached to. */
+    [data-theme='phantom'] .kp-sidenav {
+        --kp-sidenav-surface: var(--card);
+    }
+
+    [data-theme='phantom'] .kp-sidenav__link,
+    [data-theme='phantom'] .kp-sidenav__category-toggle {
+        position: relative;
+        z-index: 0;
+        padding-inline: 0.95rem;
+    }
+
+    [data-theme='phantom'] .kp-sidenav__link::before {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: 0;
+        inline-size: 0;
+        z-index: -1;
+        background: var(--primary);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] .kp-sidenav__link::before {
+            transition: inline-size var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+    }
+
+    [data-theme='phantom'] .kp-sidenav__link:hover::before {
+        inline-size: 0.35rem;
+    }
+
+    [data-theme='phantom'] .kp-sidenav__link[aria-current='page'] {
+        color: var(--primary-foreground);
+        background: none;
+    }
+
+    [data-theme='phantom'] .kp-sidenav__link[aria-current='page']::before {
+        inline-size: 100%;
+    }
+
+    /* ── Back to top, and a picture [feat-page-1, feat-media-1] ──────
+       The plate that slides out from behind things, held still: the frame
+       is offset from its own shadow rather than bordered. */
+    [data-theme='phantom'] .kp-to-top {
+        box-shadow: 0.25rem 0.25rem 0 var(--kp-red-deep);
+    }
+
+    [data-theme='phantom'] .kp-media {
+        border: 1px solid var(--border-strong);
+        box-shadow: 0.4rem 0.4rem 0 var(--kp-red-deep);
+    }
+
+    [data-theme='phantom'] .kp-media-figure > figcaption {
+        letter-spacing: 0.08em;
+    }
+
+    /* The figure carries the caption's voice, so the decision sits with
+       the picture rather than with the words under it. */
+    [data-theme='phantom'] .kp-media-figure {
+        color: var(--muted-foreground);
+    }
+
+    /* ── The pressed state the register had been cancelling [fix-12] ───
+       A layer beats a state: this register's hover background sits in
+       kp.register, later than the kp.components rule that says what the
+       button looks like while it is held down, so pressing it changed
+       nothing. The base layer's own values, put back token for token. */
+
+    [data-theme='phantom'] .kp-button--primary:active:not(:disabled) {
+        background: var(--primary-active);
+        border-color: var(--primary-active);
+    }
+
+    /* The primary's press [scope-80]. Every other variant is shoved 3px
+       down and right when pressed; the primary already takes that shove on
+       hover, so pressing it moved nothing (measured: `matrix(1, 0, 0, 1, 3,
+       3)` hovered and pressed alike) — Kenny's "the primary needs an
+       animation like the others when I click it". Pressed, it travels the
+       rest of the way onto its own shadow: 5px, the shadow's full offset,
+       with the shadow gone under it. */
+    [data-theme='phantom'] .kp-button--primary:active:not(:disabled) {
+        translate: 5px 5px;
+        filter: drop-shadow(0 0 0 var(--kp-red-deep));
+    }
+
+    /* ── Read-only fields [gap-11] ────────────────────────────────────── */
+
+    /* A read-only field is a value on a record, not a box to type in. This
+       register sets the field's border and ground in kp.register, which
+       beats the read-only look in kp.components, so read-only painted like
+       an editable field. The state is answered here, on top of the rest
+       look, which stays as it was. */
+    [data-theme='phantom'] .kp-field__input[readonly] {
+        border-style: dashed;
+        background-color: var(--muted);
+    }
+
+    /* ── The palette's trigger in the bar [scope-48, scope-80] ─────────── */
+
+    /* In the voice of this register's own nav links (Kenny, 2026-09-14,
+       search-voice "Per thema"): tall condensed display capitals in the full
+       ink, and under the pointer the skewed red slash that sweeps in behind
+       them. The link's typeface, case, spacing, shape and pointer answer are
+       restated here, because the trigger is a button beside the list rather
+       than a link in it. The underline a plain link carries is not: it says
+       "this is a link", and the trigger is not one. */
+    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger {
+        position: relative;
+        z-index: 0;
+        padding-inline: 0.95rem;
+        font-family: var(--theme-font-display);
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger:hover {
+        color: var(--primary-foreground);
+        background: none;
+        box-shadow: none;
+    }
+
+    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger::before {
+        content: '';
+        position: absolute;
+        left: -4%;
+        top: 14%;
+        height: 72%;
+        width: 0;
+        background: var(--primary);
+        transform: skewX(-16deg);
+        z-index: -1;
+    }
+
+    [data-theme='phantom'] .kp-nav__search .kp-nav__search-trigger:hover::before {
+        width: 108%;
+    }
+
+    /* ── The alarm [scope-94] ──────────────────────────────────────────────
+       A calling card: red, black and white only, the headline tilted, white bars and a white frame. Every colour is one of this theme's tokens. The
+       button keeps this register's shape and takes the alarm's paint, on
+       selectors long enough to outrank this register's own button states;
+       the dialog takes no focus ring, because in the auto mode the whole
+       screen is what has focus. */
+    [data-theme='phantom'] .kp-alarm {
+        --kp-alarm-ground: hsl(from var(--background) h s 3% / 0.96);
+        --kp-alarm-ink: var(--destructive);
+        --kp-alarm-soft: var(--foreground);
+        --kp-alarm-split: var(--foreground);
+        --kp-alarm-on-ink: var(--background);
+        --kp-alarm-glow: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-halo: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-scan: hsl(from var(--destructive) h s l / 0);
+        --kp-alarm-vignette: hsl(from var(--background) h s 1% / 0.8);
+        --kp-alarm-stripe: var(--foreground);
+        --kp-alarm-frame: 3px solid var(--foreground);
+        --kp-alarm-title-tracking: 0;
+    }
+
+    [data-theme='phantom'] .kp-alarm:focus-visible {
+        outline: none;
+    }
+
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack,
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:hover:not(:disabled),
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:active:not(:disabled) {
+        border-color: var(--kp-alarm-ink);
+        background: var(--kp-alarm-ink);
+        color: var(--kp-alarm-on-ink);
+        text-shadow: none;
+    }
+
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__ack.kp-alarm__ack:is(:hover, :focus-visible):not(:disabled):not(:active) {
+        background: var(--kp-alarm-on-ink);
+        color: var(--kp-alarm-ink);
+    }
+
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep,
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__keep.kp-alarm__keep:is(:hover, :focus-visible):not(:disabled) {
+        border-color: currentColor;
+        background: transparent;
+        color: inherit;
+        text-shadow: none;
+    }
+
+    [data-theme='phantom'] .kp-alarm__title {
+        rotate: -3deg;
+    }
+
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__ack::before {
+        border-color: var(--kp-alarm-soft);
+        background: var(--kp-alarm-ink);
+    }
+
+    [data-theme='phantom'] .kp-alarm .kp-button.kp-alarm__ack::after {
+        background: var(--kp-alarm-soft);
+    }
+
+    /* A submenu item's mark [Kenny, 2026-09-20]: the block it marks its own alarms with. */
+    [data-theme='phantom'] .kp-sidenav__submenu .kp-sidenav__link {
+        --kp-sidenav-submenu-mark: '▮';
+    }
+}
+
+/* ── Signature [scope-140] ─────────────────────────────────────────────── */
+/* phantom's approved signature (Kenny, 2026-10-03, three review rounds): the
+   progress bar and the ten elements (spinner, skeleton, switch, check and
+   radio, toast, dialog, tooltip, wizard steps, empty state, link hover),
+   ported once from research/progress-signature/themes/phantom.css and research/signature-elements/themes/phantom.css
+   and maintained here from now on. In kp.signature, which css/themes.css
+   orders after kp.register, so it draws over the register exactly as the
+   approved demos did, whatever the weight of a register selector. */
+@layer kp.signature {
+    /* The link signature is for links in running text; a link in a navigation,
+       a menu, a breadcrumb (a nav) or the footer keeps its own component's look
+       (scope-93: no link colour in a navigation). */
+    /* A shadow or outline the signature draws on a focusable control yields to
+       the theme's focus ring while the control has focus (DI2). */
+    [data-theme='phantom'] .kp-progressbar {
+        --kp-progressbar-height: calc(1rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-slant: calc(0.375rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-shard: calc(0.3125rem * var(--kp-progressbar-scale, 1));
+        --kp-ps-gap: calc(3px * var(--kp-progressbar-scale, 1));
+        --kp-ps-dot: calc(5px * var(--kp-progressbar-scale, 1));
+        --kp-ps-stripe: calc(6px * var(--kp-progressbar-scale, 1));
+        --kp-ps-pitch: calc(13px * var(--kp-progressbar-scale, 1));
+        --kp-ps-edge: calc(var(--kp-value) * (100% - var(--kp-ps-slant)));
+        /* The cut's slant, full from the first two percent, none at zero, so an
+           empty card shows no red at all. */
+        --kp-ps-cut: calc(var(--kp-ps-slant) * min(1, var(--kp-value) * 50));
+    }
+
+    [data-theme='phantom'] .kp-progressbar__track {
+        border-radius: 0;
+        background: var(--border-strong);
+        clip-path: polygon(var(--kp-ps-slant) 0, 100% 0, calc(100% - var(--kp-ps-slant)) 100%, 0 100%);
+    }
+
+    [data-theme='phantom'] .kp-progressbar__track::before {
+        content: '';
+        position: absolute;
+        inset: 2px 2px 2px 2px;
+        background:
+            radial-gradient(
+                    circle at center,
+                    color-mix(in srgb, var(--foreground) 28%, transparent) calc(0.9px * var(--kp-progressbar-scale, 1)),
+                    transparent calc(1px * var(--kp-progressbar-scale, 1))
+                )
+                0 0 / var(--kp-ps-dot) var(--kp-ps-dot),
+            var(--background);
+        clip-path: polygon(calc(var(--kp-ps-slant) - 1px) 0, 100% 0, calc(100% - var(--kp-ps-slant) + 1px) 100%, 0 100%);
+    }
+
+    [data-theme='phantom'] .kp-progressbar__track::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: var(--kp-red-deep, var(--sidebar-background));
+        clip-path: polygon(
+            0 0,
+            calc(var(--kp-ps-edge) + var(--kp-ps-cut) + var(--kp-ps-gap) * min(1, var(--kp-value) * 50)) 0,
+            calc(var(--kp-ps-edge) + var(--kp-ps-gap) * min(1, var(--kp-value) * 50)) 100%,
+            0 100%
+        );
+        transition: clip-path var(--fx-duration) var(--fx-ease);
+    }
+
+    [data-theme='phantom'] .kp-progressbar__fill {
+        z-index: 2;
+        clip-path: polygon(0 0, calc(var(--kp-ps-edge) + var(--kp-ps-cut)) 0, var(--kp-ps-edge) 100%, 0 100%);
+        transition: clip-path var(--fx-duration) var(--fx-ease);
+    }
+
+    [data-theme='phantom'] .kp-progressbar__head {
+        z-index: 3;
+        inline-size: calc(var(--kp-ps-slant) + var(--kp-ps-shard));
+        background: var(--foreground);
+        clip-path: polygon(var(--kp-ps-slant) 0, 100% 0, var(--kp-ps-shard) 100%, 0 100%);
+        transform: translateX(calc(var(--kp-value) * (100cqi - var(--kp-ps-slant)) + var(--kp-ps-gap) * 2 + 1px));
+        transition: transform var(--fx-duration) var(--fx-ease);
+    }
+
+    [data-theme='phantom'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::after {
+        display: none;
+    }
+
+    [data-theme='phantom'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inline-size: 34%;
+        clip-path: polygon(var(--kp-ps-slant) 0, 100% 0, calc(100% - var(--kp-ps-slant)) 100%, 0 100%);
+        box-shadow: none;
+        /* The slab shoved across as a screen [G11; Kenny, 2026-10-09 on
+           research/phantom-character: "the slab shoved across as a screen"]:
+           busy, with no share known, the red slab is a silhouette of dots on a
+           4 px cell that never resolves, 1500 ms, and again. */
+        mask-image: var(--kp-sig-ph-dots);
+        mask-size: 4px 4px;
+        animation: kp-progressbar-phantom-shove 1500ms cubic-bezier(0.81, 0, 0, 1) infinite;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='phantom'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            inset-inline: 0;
+            inline-size: auto;
+            animation: none;
+            transform: none;
+            mask-image: none;
+            clip-path: none;
+            background: repeating-linear-gradient(-69deg, var(--primary) 0 var(--kp-ps-stripe), transparent var(--kp-ps-stripe) var(--kp-ps-pitch));
+        }
+    }
+
+    [data-theme='phantom'] {
+        --kp-sig-ph-plate: var(--sidebar-background, var(--primary));
+        --kp-sig-ph-cut: polygon(0 6%, 100% 0, 96% 100%, 3% 92%);
+    }
+
+    [data-theme='phantom'] .kp-spinner {
+        --kp-sig-dur: 1200ms;
+        position: relative;
+        border: 0;
+        border-radius: 0;
+        background: none;
+        animation: none;
+    }
+
+    [data-theme='phantom'] .kp-spinner::before,
+    [data-theme='phantom'] .kp-spinner::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    }
+
+    [data-theme='phantom'] .kp-spinner::before {
+        background: var(--primary);
+        translate: 2px 2px;
+    }
+
+    [data-theme='phantom'] .kp-spinner::after {
+        background: var(--foreground);
+    }
+
+    /* ── Loading is the red slash across a halftone block [themes/phantom/
+       CHARACTER.md G10; Kenny, 2026-10-09 on research/phantom-character:
+       "the red slash (as today)"]. A part that waits is a block of the screen
+       with a red slash sweeping over it, 1400 ms a loop, the register's own
+       skeleton, drawn on every waiting surface the package has: the skeleton's
+       lines, blocks and circles, the loading meter, the table's busy panel,
+       the loading entry of a menu, a busy button and card, the tiles' cards,
+       the calendar's days and busy panel, the chart's plot. The block fills
+       the whole element and is shaped like the result (the line's leaning
+       sheet, the plate's cut corner, the circle); the part's words stand
+       above it. Nothing is translucent: the layout layer's busy dim is off. ── */
+    [data-theme='phantom'] {
+        --kp-sig-ph-block: radial-gradient(circle, hsl(from var(--foreground) h s l / 0.32) 1px, transparent 1.4px) 0 0 / 5px 5px, var(--muted);
+        --kp-sig-ph-slash: polygon(0.8rem 0, 2.6rem 0, 1.8rem 100%, 0 100%);
+    }
+
+    [data-theme='phantom'] .kp-skeleton {
+        --kp-sig-dur: 1400ms;
+        position: relative;
+        overflow: hidden;
+        border-radius: 0;
+        background: var(--kp-sig-ph-block);
+        animation: none;
+    }
+
+    [data-theme='phantom'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        block-size: 0.95rem;
+        clip-path: var(--kp-sig-ph-cut);
+    }
+
+    [data-theme='phantom'] .kp-skeleton--block {
+        clip-path: var(--kp-paperclip);
+    }
+
+    [data-theme='phantom'] .kp-skeleton--circle {
+        border-radius: 50%;
+    }
+
+    [data-theme='phantom'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) + .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block-start: 0.55rem;
+    }
+
+    [data-theme='phantom'] .kp-skeleton::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--primary);
+        clip-path: var(--kp-sig-ph-slash);
+        translate: -2.8rem 0;
+    }
+
+    /* The other surfaces that wait. */
+    [data-theme='phantom']
+        :is(
+            .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-chart__state[data-kp-state='loading'],
+            .kp-calendar__day[data-kp-tone='loading'],
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading]
+        ) {
+        --kp-busy-opacity: 1;
+        position: relative;
+        isolation: isolate;
+        overflow: clip;
+        animation: none;
+    }
+
+    /* The block and the slash are drawn against the panel itself: both
+       panels are static in the package (a flex item in the table's layer, a
+       grid item of the month), so without a position of their own the two
+       layers below were laid against the nearest positioned ancestor, the
+       whole window in the review stage (Kenny, review round 2: "staat de
+       laadanimatie over het hele scherm ipv enkel in de tabel"; lesson 5:
+       the panel is static, so `relative` moves nothing). */
+    [data-theme='phantom'] :is(.kp-datatable__busy-panel, .kp-calendar--busy-whole > .kp-calendar__busy) {
+        --kp-busy-opacity: 1;
+        position: relative;
+        isolation: isolate;
+        overflow: clip;
+    }
+
+    [data-theme='phantom']
+        :is(
+            .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-chart__state[data-kp-state='loading'],
+            .kp-calendar__day[data-kp-tone='loading'],
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-datatable__busy-panel,
+            .kp-calendar--busy-whole > .kp-calendar__busy
+        )::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -2;
+        background: var(--kp-sig-ph-block);
+        transform: none;
+        translate: none;
+        mask-image: none;
+        pointer-events: none;
+    }
+
+    [data-theme='phantom']
+        :is(
+            .kp-card[aria-busy='true'],
+            .kp-tiles[aria-busy='true'] > .kp-card,
+            .kp-chart__state[data-kp-state='loading'],
+            .kp-calendar__day[data-kp-tone='loading'],
+            .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+            .kp-datatable__busy-panel,
+            .kp-calendar--busy-whole > .kp-calendar__busy
+        )::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background: var(--primary);
+        clip-path: var(--kp-sig-ph-slash);
+        translate: -2.8rem 0;
+        pointer-events: none;
+    }
+
+    /* A busy button is the key cap with its plate a block of the screen and the
+       slash across it; its label and spinner stand above. */
+    [data-theme='phantom'] .kp-button[aria-busy='true'] {
+        --kp-plate-fill: var(--kp-sig-ph-block);
+        --kp-plate-ink: var(--foreground);
+        --kp-busy-opacity: 1;
+        overflow: clip;
+    }
+
+    [data-theme='phantom'] .kp-button[aria-busy='true']::after {
+        width: calc(100% - 4px);
+        background: var(--primary);
+        clip-path: var(--kp-sig-ph-slash);
+        translate: -2.8rem 0;
+        transition: none;
+        mask-image: none;
+    }
+
+    /* The loading meter: its groove is the block and the slash crosses it. */
+    [data-theme='phantom'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::before {
+        display: block;
+        content: '';
+        position: absolute;
+        inset: 0;
+        inline-size: auto;
+        z-index: 1;
+        border-radius: 0;
+        background: var(--primary);
+        clip-path: var(--kp-sig-ph-slash);
+        translate: -2.8rem 0;
+        transition: none;
+        pointer-events: none;
+    }
+
+    [data-theme='phantom'] .kp-switch {
+        --kp-switch-radius: 0;
+        --kp-switch-thumb-radius: 0;
+    }
+
+    [data-theme='phantom'] .kp-switch__input {
+        border: 2px solid var(--foreground);
+        background: var(--background);
+    }
+
+    [data-theme='phantom'] .kp-switch__input::before {
+        inset-block: 1px;
+        inline-size: calc(var(--kp-switch-height, 1.5rem) - 2px);
+        background: var(--muted-foreground);
+        clip-path: polygon(22% 0, 100% 0, 78% 100%, 0 100%);
+    }
+
+    [data-theme='phantom'] .kp-switch__input:checked {
+        border-color: var(--foreground);
+        background: var(--primary);
+    }
+
+    [data-theme='phantom'] .kp-switch__input:checked::before {
+        inset-inline-start: var(--kp-switch-inset, 0.125rem);
+        background: var(--foreground);
+        transform: translateX(calc(var(--kp-switch-width, 2.5rem) - var(--kp-switch-height, 1.5rem) - 2px));
+    }
+
+    [data-theme='phantom'] .kp-field__check {
+        --kp-sig-dur: 300ms;
+        appearance: none;
+        position: relative;
+        display: inline-grid;
+        place-content: center;
+        inline-size: 1.15rem;
+        block-size: 1.15rem;
+        /* Room for the slant: skewed, the box reaches about 1.3px past each side. */
+        margin: 0 2px;
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+        background: var(--background);
+        transform: skewX(var(--kp-skew, -8deg));
+    }
+
+    [data-theme='phantom'] .kp-field__check:not(:focus-visible) {
+        box-shadow: 3px 3px 0 var(--kp-sig-ph-plate);
+    }
+
+    [data-theme='phantom'] .kp-field__check:checked {
+        border-color: var(--foreground);
+        background: var(--foreground);
+    }
+
+    [data-theme='phantom'] .kp-field__check:checked:not(:focus-visible) {
+        box-shadow: 3px 3px 0 var(--kp-sig-ph-plate);
+    }
+
+    [data-theme='phantom'] .kp-field__check[type='checkbox']:checked::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -0.42rem;
+        inset-inline-start: 0.02rem;
+        inline-size: 1.25rem;
+        block-size: 1.05rem;
+        background: var(--primary);
+        clip-path: polygon(0 52%, 22% 38%, 40% 66%, 82% 0, 100% 14%, 42% 100%);
+        filter: drop-shadow(1px 1px 0 var(--primary-foreground));
+        transform: skewX(calc(var(--kp-skew, -8deg) * -1));
+    }
+
+    [data-theme='phantom'] .kp-field__check[type='radio'] {
+        border-radius: 50%;
+        transform: none;
+    }
+
+    [data-theme='phantom'] .kp-field__check[type='radio']:checked::before {
+        content: '';
+        inline-size: 0.85rem;
+        block-size: 0.85rem;
+        background: var(--primary);
+        clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    }
+
+    [data-theme='phantom'] .kp-toast {
+        --kp-sig-dur: 700ms;
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+        background: var(--background);
+        color: var(--foreground);
+        --kp-sig-ph-corner: var(--kp-sig-ph-plate);
+        box-shadow: 6px 6px 0 var(--kp-sig-ph-corner);
+        rotate: var(--kp-land);
+    }
+
+    [data-theme='phantom'] .kp-toast--success {
+        border-color: var(--success-foreground);
+        background: var(--success);
+        color: var(--success-foreground);
+        --kp-sig-ph-corner: hsl(from var(--success) h s calc(l + 16));
+        box-shadow: 6px 6px 0 var(--kp-sig-ph-corner);
+    }
+
+    [data-theme='phantom'] .kp-toast--info {
+        border-color: var(--info-foreground);
+        background: var(--info);
+        color: var(--info-foreground);
+        --kp-sig-ph-corner: hsl(from var(--info) h s calc(l + 16));
+        box-shadow: 6px 6px 0 var(--kp-sig-ph-corner);
+    }
+
+    [data-theme='phantom'] .kp-toast--warning {
+        border-color: var(--warning-foreground);
+        background: var(--warning);
+        color: var(--warning-foreground);
+        --kp-sig-ph-corner: hsl(from var(--warning) h s calc(l + 16));
+        box-shadow: 6px 6px 0 var(--kp-sig-ph-corner);
+    }
+
+    [data-theme='phantom'] :is(.kp-toast--destructive, .kp-toast--error) {
+        border-color: var(--foreground);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        box-shadow: 6px 6px 0 var(--kp-sig-ph-corner);
+    }
+
+    [data-theme='phantom'] .kp-toast__body {
+        font-family: var(--theme-font-display);
+        font-size: 1.05rem;
+        font-style: italic;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='phantom'] .kp-dialog::backdrop {
+        background:
+            radial-gradient(circle, hsl(from var(--primary) h s l / 0.45) 1.4px, transparent 1.9px) 0 0 / 8px 8px,
+            var(--background);
+    }
+
+    /* The unopened dialog is the one js/motion.js measures for the theme's
+       time (a probe it adds and takes off), and it reads close = two thirds
+       of that: so it runs one and a half throws, and the dialog that is open
+       runs one, which is also its close and its opening [see the motion block
+       below]. */
+    [data-theme='phantom'] .kp-dialog[open] {
+        --kp-sig-dur: 700ms;
+    }
+
+    [data-theme='phantom'] .kp-dialog {
+        --kp-sig-dur: 1050ms;
+        --kp-sig-ph-edge: 2.2rem;
+        border: 3px solid var(--foreground);
+        border-radius: 0;
+        background: var(--background);
+        box-shadow: 10px 10px 0 var(--kp-sig-ph-plate);
+        rotate: var(--kp-land);
+        /* Its turn, for a part inside it placed by measuring (kp-sig-phantom-fly-placed). */
+        --kp-sig-ph-host-turn: var(--kp-land);
+        /* The red edge stands outside the content: the title, the words and
+           the buttons are inset from it by its own width and 12 px, so no word
+           sits on the red [Kenny, 2026-10-09: "in a dialog with a title, the
+           red on the side makes some of the content hard to read"]. */
+        padding-inline-end: calc(var(--kp-sig-ph-edge) + 12px);
+    }
+
+    /* On a phone the edge is thinner, so the actions keep their words. */
+    @media (max-width: 30rem) {
+        [data-theme='phantom'] .kp-dialog {
+            --kp-sig-ph-edge: 1.25rem;
+            padding-inline-end: calc(var(--kp-sig-ph-edge) + 8px);
+        }
+    }
+
+    [data-theme='phantom'] .kp-dialog.kp-drawer {
+        padding-inline-end: 0;
+        rotate: none;
+        --kp-sig-ph-host-turn: 0deg;
+    }
+
+    /* The slash the hero carries, here as the dialog's end edge: a red plate
+       cut at 40 %, behind nothing. */
+    [data-theme='phantom'] .kp-dialog:not(.kp-drawer)::after {
+        content: '';
+        position: absolute;
+        inset-block: 0;
+        inset-inline-end: 0;
+        inline-size: var(--kp-sig-ph-edge);
+        background: var(--primary);
+        clip-path: polygon(40% 0, 100% 0, 100% 100%, 0 100%);
+        opacity: 0.9;
+        pointer-events: none;
+    }
+
+    [data-theme='phantom'] .kp-dialog:not(.kp-drawer):dir(rtl)::after {
+        clip-path: polygon(0 0, 60% 0, 100% 100%, 0 100%);
+    }
+
+    /* ── The second plate, drawn [G7; Kenny, 2026-10-15 02:12, research/leftover-looks,
+       option 1 "one hard plate"] ────────────────────────────────────────
+       The paperclip is a clip-path, and a clip-path clips the part's own box-shadow,
+       so the deep red plate the register declared for a card, a menu, a toast and a
+       dialog was never seen. The clip is widened to take in the room of the plate
+       (--kp-sig-ph-d, the plate's offset: 4 px for a card and a menu, 6 px for a
+       toast, 10 px for a dialog) and the part's own box-shadow shows through it.
+       The bottom-end cut is the part's own corner: a box-shadow cannot reach it, so
+       one pseudo-element fills it, red where the plate shows through (the dialog's
+       ::after is its slash, so a dialog takes ::before). --kp-sig-ph-bw is the
+       border the pseudo-element is placed past. A part clipped by a theme's other
+       rules (a menu or a theme menu inside a surface) has no plate. */
+    [data-theme='phantom'] :is(.kp-card, .kp-menu, .kp-toast, .kp-dialog:not(.kp-drawer)) {
+        clip-path: polygon(
+            0 var(--kp-cut-size),
+            var(--kp-cut-size) 0,
+            100% 0,
+            100% var(--kp-sig-ph-d),
+            calc(100% + var(--kp-sig-ph-d)) var(--kp-sig-ph-d),
+            calc(100% + var(--kp-sig-ph-d)) calc(100% - var(--kp-cut-size) + var(--kp-sig-ph-d)),
+            calc(100% - var(--kp-cut-size) + var(--kp-sig-ph-d)) calc(100% + var(--kp-sig-ph-d)),
+            var(--kp-sig-ph-d) calc(100% + var(--kp-sig-ph-d)),
+            var(--kp-sig-ph-d) 100%,
+            0 100%
+        );
+    }
+
+    /* The mask of an arrival and a leave is the part's own dots; its default clip is the border box, which
+       would cut the plate while the part is in the air. */
+    [data-theme='phantom'] :is(.kp-card, .kp-menu, .kp-toast, .kp-dialog),
+    [data-theme='phantom'] [data-kp-leaving] {
+        mask-clip: no-clip;
+    }
+
+    [data-theme='phantom'] :is(.kp-card, .kp-menu) {
+        --kp-sig-ph-d: 4px;
+        --kp-sig-ph-bw: 0px;
+        --kp-sig-ph-corner: var(--kp-red-deep);
+        box-shadow: var(--kp-hard);
+    }
+
+    [data-theme='phantom'] .kp-toast {
+        --kp-sig-ph-d: 6px;
+        --kp-sig-ph-bw: 2px;
+    }
+
+    [data-theme='phantom'] .kp-dialog:not(.kp-drawer) {
+        --kp-sig-ph-d: 10px;
+        --kp-sig-ph-bw: 3px;
+        --kp-sig-ph-corner: var(--kp-red-deep);
+    }
+
+    /* A static part holds its pseudo-element (the weakest rule: a menu button's menu stays absolute). */
+    :where([data-theme='phantom']) :is(.kp-card, .kp-menu, .kp-toast) {
+        position: relative;
+    }
+
+    [data-theme='phantom'] :is(.kp-card, .kp-menu, .kp-toast)::after,
+    [data-theme='phantom'] .kp-dialog:not(.kp-drawer)::before {
+        content: '';
+        position: absolute;
+        inset: auto calc(-1 * var(--kp-sig-ph-bw)) calc(-1 * var(--kp-sig-ph-bw)) auto;
+        inline-size: var(--kp-cut-size);
+        block-size: var(--kp-cut-size);
+        z-index: 2;
+        background: linear-gradient(135deg, transparent 50%, var(--kp-sig-ph-corner) 50%);
+        pointer-events: none;
+    }
+
+
+    [data-theme='phantom'] .kp-dialog__title {
+        /* The title at the package's metrics [scope-87]: Kenny chose the fixed size
+           over the theme's own on 2026-10-03 (research/dialog-title). */
+        font-family: var(--theme-font-display);
+        font-style: italic;
+        font-weight: 900;
+        letter-spacing: 0.01em;
+        text-transform: uppercase;
+        text-shadow: 2px 2px 0 var(--primary);
+    }
+
+    [data-theme='phantom'] .kp-tooltip {
+        --kp-sig-dur: 300ms;
+        clip-path: none;
+        margin-block-start: 0.6rem;
+        /* Within 12px under its trigger and never over it (Kenny's phantom note,
+           2026-09-15, tests/dark-themes-notes.spec.mjs). */
+        margin-inline-start: 0.6rem;
+        padding: 0.2rem 0.75rem;
+        border: 0;
+        border-radius: 0;
+        background: var(--foreground);
+        color: var(--background);
+        box-shadow: 4px 4px 0 var(--primary);
+        font-family: var(--theme-font-display);
+        font-size: 0.95rem;
+        font-style: italic;
+        font-weight: 800;
+        text-transform: uppercase;
+        rotate: -3deg;
+    }
+
+    [data-theme='phantom'] .kp-wizard__steps {
+        gap: 0.6rem 0;
+    }
+
+    [data-theme='phantom'] .kp-wizard__steps li {
+        gap: 0.45rem;
+        font-family: var(--theme-font-display);
+        font-size: 1rem;
+        font-style: italic;
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='phantom'] .kp-wizard__steps li:not(:last-child)::after {
+        content: '';
+        inline-size: 0.45rem;
+        block-size: 1.2rem;
+        margin-inline: 0.55rem;
+        background: var(--primary);
+        transform: skewX(-24deg);
+    }
+
+    [data-theme='phantom'] .kp-wizard__steps li::before {
+        inline-size: 1.6rem;
+        block-size: 1.6rem;
+        border: 2px solid var(--foreground);
+        border-radius: 0;
+        background: var(--background);
+        color: var(--foreground);
+        font-family: var(--theme-font-display);
+        font-size: 1rem;
+        font-weight: 900;
+        rotate: var(--kp-land);
+    }
+
+    [data-theme='phantom'] .kp-wizard__steps li[data-state='done']::before {
+        background: var(--foreground);
+        color: var(--background);
+    }
+
+    [data-theme='phantom'] .kp-wizard__steps li[data-state='current'] {
+        color: var(--foreground);
+        font-weight: 900;
+    }
+
+    [data-theme='phantom'] .kp-wizard__steps li[data-state='current']::before {
+        inline-size: 2rem;
+        block-size: 2rem;
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+        font-size: 1.25rem;
+        box-shadow: 3px 3px 0 var(--foreground);
+        rotate: var(--kp-land);
+    }
+
+    [data-theme='phantom'] .kp-empty {
+        padding: 1.6rem 1rem 1.5rem;
+        border: 0;
+        border-radius: 0;
+        background:
+            radial-gradient(circle, hsl(from var(--foreground) h s l / 0.25) 1.3px, transparent 1.8px) 0 0 / 7px 7px,
+            var(--card);
+        clip-path: var(--kp-paperclip);
+    }
+
+    [data-theme='phantom'] .kp-empty__title {
+        margin: 0 0 0.35rem;
+        color: var(--foreground);
+        font-family: var(--theme-font-display);
+        font-size: 1.7rem;
+        font-style: italic;
+        font-weight: 900;
+        line-height: 1;
+        text-transform: uppercase;
+        text-shadow: 3px 3px 0 var(--primary);
+    }
+
+    [data-theme='phantom'] .kp-empty__body {
+        display: inline-block;
+        margin: 0;
+        padding: 0.1rem 0.5rem;
+        background: var(--background);
+        color: var(--foreground);
+    }
+
+    /* A link in running text is white with a red underline [G5]; pointed at,
+       a thin red bar is thrown in over its foot from the start edge [G15] (a
+       card does not move, and the link keeps its white ink). */
+    [data-theme='phantom'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a) {
+        color: var(--foreground);
+        font-weight: 600;
+        text-decoration-color: var(--primary);
+        text-decoration-thickness: 2px;
+        text-underline-offset: 0.2em;
+        background: linear-gradient(var(--primary), var(--primary)) 0 100% / 0% 0.2em no-repeat;
+        -webkit-box-decoration-break: clone;
+        box-decoration-break: clone;
+    }
+
+    [data-theme='phantom'] a:not([class], :is(nav, [role='navigation'], [role='menu'], [role='menubar'], .kp-nav, .kp-sidenav, .kp-footer) a):hover {
+        background-size: 100% 0.2em;
+    }
+
+    /* ── Contact, the throw and the leave, on the shove [themes/phantom/
+       CHARACTER.md G1 to G4, G13; Kenny, 2026-10-09 on research/phantom-
+       character]. One throw is 700 ms: the part comes from beyond its start
+       edge along the skew, turning, and lands a degree and a half askew on the
+       shove's dead stop (400 ms), then its screen resolves in three hard cuts
+       (300 ms): kp-sig-phantom-fly and kp-sig-phantom-resolve, played
+       together. A close is the same backwards (js/motion.js plays an opening
+       backwards, frame for frame; a leave is the pair on the inverse curve,
+       below). A part that has not arrived or has left is not drawn at all:
+       the first frame of the throw and the last of the leave are
+       `visibility: hidden`, so a closed part never shows a sliver. Each part
+       names where it comes from (--kp-sig-ph-x0, -y0, -r0, -s0) and the pose
+       it lands in (--kp-sig-ph-land); the defaults are the dialog's: off the
+       start edge, 80 cqi along, 6 cqi down, turned -22 degrees, 1.15 larger.
+       The mask lives on the part only while the animation runs. ── */
+    [data-theme='phantom'] {
+        --kp-sig-ph-x0: -80cqi;
+        --kp-sig-ph-y0: 6cqi;
+        --kp-sig-ph-r0: -22deg;
+        --kp-sig-ph-s0: 1.15;
+        --kp-sig-ph-land: -1.5deg;
+    }
+
+    [data-theme='phantom']:dir(rtl) {
+        --kp-sig-ph-x0: 80cqi;
+        --kp-sig-ph-r0: 22deg;
+    }
+
+    /* A menu, a popover and a tour card are thrown from the edge of what opens
+       them, not from the edge of the board. */
+    [data-theme='phantom'] :is(.kp-popover:not(.kp-tooltip), .kp-menu-button > .kp-menu, .kp-nav__menu, .kp-tour) {
+        --kp-sig-dur: 700ms;
+        --kp-sig-ph-x0: -1.6rem;
+        --kp-sig-ph-y0: -2.4rem;
+        --kp-sig-ph-r0: -9deg;
+        --kp-sig-ph-s0: 1;
+    }
+
+    [data-theme='phantom']:dir(rtl) :is(.kp-popover:not(.kp-tooltip), .kp-menu-button > .kp-menu, .kp-nav__menu, .kp-tour) {
+        --kp-sig-ph-x0: 1.6rem;
+        --kp-sig-ph-r0: 9deg;
+    }
+
+    /* The tooltip is too small to fly: it resolves in place. */
+    [data-theme='phantom'] .kp-tooltip {
+        --kp-sig-ph-land: -3deg;
+    }
+
+    /* A full-height drawer lands level (a turned edge would show the board
+       beside it) and is thrown from its own edge. */
+    [data-theme='phantom'] dialog.kp-drawer {
+        --kp-sig-dur: 700ms;
+        --kp-sig-ph-x0: 100%;
+        --kp-sig-ph-y0: 0px;
+        --kp-sig-ph-r0: 0deg;
+        --kp-sig-ph-s0: 1;
+        --kp-sig-ph-land: 0deg;
+    }
+
+    [data-theme='phantom']:dir(rtl) dialog.kp-drawer {
+        --kp-sig-ph-x0: -100%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] .kp-spinner::before,
+        [data-theme='phantom'] .kp-spinner::after {
+            animation: kp-sig-phantom-phantom-snap var(--kp-sig-dur) infinite;
+        }
+
+        [data-theme='phantom'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2)::after {
+            animation-delay: 90ms;
+        }
+
+        [data-theme='phantom'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3)::after {
+            animation-delay: 180ms;
+        }
+
+        [data-theme='phantom'] .kp-switch__input::before {
+            transition: transform var(--fx-duration) var(--fx-ease);
+        }
+
+        /* A tick and a radio's star are thrown nowhere: they resolve in place,
+           from dots to solid in three cuts. */
+        [data-theme='phantom'] .kp-field__check:checked::before {
+            mask-size: 7px 7px;
+            animation: kp-sig-phantom-resolve-tip var(--kp-sig-dur) linear backwards;
+        }
+
+        [data-theme='phantom'] .kp-toast {
+            mask-size: 7px 7px;
+            animation:
+                kp-sig-phantom-fly var(--kp-sig-dur) linear backwards,
+                kp-sig-phantom-resolve var(--kp-sig-dur) linear backwards;
+        }
+
+        [data-theme='phantom'] .kp-dialog,
+        [data-theme='phantom'] dialog.kp-drawer[open] {
+            mask-size: 7px 7px;
+            animation:
+                kp-sig-phantom-fly var(--kp-sig-dur) linear backwards,
+                kp-sig-phantom-resolve var(--kp-sig-dur) linear backwards;
+        }
+
+        [data-theme='phantom'] .kp-tooltip {
+            mask-size: 7px 7px;
+            animation: kp-sig-phantom-resolve-tip var(--kp-sig-dur) linear backwards;
+        }
+
+        [data-theme='phantom'] :is(.kp-popover:not(.kp-tooltip)[popover], .kp-menu-button > .kp-menu, .kp-tour) {
+            mask-size: 7px 7px;
+            animation:
+                kp-sig-phantom-fly var(--kp-sig-dur) linear backwards,
+                kp-sig-phantom-resolve var(--kp-sig-dur) linear backwards;
+        }
+
+        /* The dropdown of the bar opens as it is shown (display, from none):
+           the pair runs when it comes, and the retired fade and slide are
+           out. */
+        [data-theme='phantom'] .kp-nav__menu {
+            mask-size: 7px 7px;
+            transition: none;
+        }
+
+        [data-theme='phantom'] .kp-nav__links > li:hover > .kp-nav__menu,
+        [data-theme='phantom'] .kp-nav__links > li:focus-within > .kp-nav__menu,
+        [data-theme='phantom'] .kp-nav__links > li[data-kp-nav-menu-open] > .kp-nav__menu {
+            animation:
+                kp-sig-phantom-fly var(--kp-sig-dur) linear backwards,
+                kp-sig-phantom-resolve var(--kp-sig-dur) linear backwards;
+        }
+    }
+
+    @keyframes kp-sig-phantom-phantom-snap {
+        0%,
+        12% {
+            transform: rotate(0);
+        }
+
+        20%,
+        32% {
+            transform: rotate(72deg);
+        }
+
+        40%,
+        52% {
+            transform: rotate(144deg);
+        }
+
+        60%,
+        72% {
+            transform: rotate(216deg);
+        }
+
+        80%,
+        92% {
+            transform: rotate(288deg);
+        }
+
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes kp-sig-phantom-phantom-slash {
+        from {
+            translate: -2.8rem 0;
+        }
+
+        to {
+            translate: 100% 0;
+        }
+    }
+
+    /* The throw [G1, G2, G13]: 700 ms, the shove for the first 400 (57.142857 %),
+       then the part holds. It starts hidden: a part that has not arrived is not
+       drawn, and visibility is visible for the whole of the throw after its
+       first instant. */
+    @keyframes kp-sig-phantom-fly {
+        0% {
+            translate: var(--kp-sig-ph-x0, -80cqi) var(--kp-sig-ph-y0, 6cqi);
+            rotate: var(--kp-sig-ph-r0, -22deg);
+            scale: var(--kp-sig-ph-s0, 1.15);
+            visibility: hidden;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        57.142857% {
+            translate: 0 0;
+            rotate: var(--kp-sig-ph-land, -1.5deg);
+            scale: 1;
+            visibility: visible;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            translate: 0 0;
+            rotate: var(--kp-sig-ph-land, -1.5deg);
+            scale: 1;
+            visibility: visible;
+        }
+    }
+
+    /* The throw for a part placed by measuring it as it opens (the combobox's list): its first
+       frame, unseen, stands unturned where the part lands; the throw's own pose comes from the next
+       frame. Unturned on the screen, not only against its parent: inside a surface that stands
+       askew (a dialog lands a degree and a half turned, the review dialog's stage included) the
+       part is turned back by that surface's own turn (--kp-sig-ph-host-turn), so the box measured
+       is the part itself and not the larger box round it turned. Measured inside the turned review
+       dialog without this, the raised list stood 2.4 px before its field, 1.2 px under it instead
+       of the 4 px margin, and 224 px wide against the field's 219 (review round 3). */
+    @keyframes kp-sig-phantom-fly-placed {
+        0% {
+            translate: 0 0;
+            rotate: calc(-1 * var(--kp-sig-ph-host-turn, 0deg));
+            scale: 1;
+            visibility: hidden;
+            animation-timing-function: linear;
+        }
+
+        0.01% {
+            translate: var(--kp-sig-ph-x0, -80cqi) var(--kp-sig-ph-y0, 6cqi);
+            rotate: var(--kp-sig-ph-r0, -22deg);
+            scale: var(--kp-sig-ph-s0, 1.15);
+            visibility: hidden;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        57.142857% {
+            translate: 0 0;
+            rotate: var(--kp-sig-ph-land, -1.5deg);
+            scale: 1;
+            visibility: visible;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            translate: 0 0;
+            rotate: var(--kp-sig-ph-land, -1.5deg);
+            scale: 1;
+            visibility: visible;
+        }
+    }
+
+    /* The resolve [G3]: the part is its own silhouette of dots while it
+       flies and cuts to 50 %, 75 % and solid, a hundred milliseconds a cut,
+       from the slap on; each cut is placed a hundredth of a millisecond early
+       so the instant it falls on shows the new picture in both directions
+       (a close plays this backwards). */
+    @keyframes kp-sig-phantom-resolve {
+        0% {
+            mask-image: var(--kp-sig-ph-m25);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        57.141429% {
+            mask-image: var(--kp-sig-ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        71.427143% {
+            mask-image: var(--kp-sig-ph-m75);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        85.712857% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: none;
+        }
+    }
+
+    /* A tooltip, a tick: too small to fly, so it resolves in place in three
+       cuts, 300 ms. */
+    @keyframes kp-sig-phantom-resolve-tip {
+        0% {
+            mask-image: var(--kp-sig-ph-m25);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        33.332% {
+            mask-image: var(--kp-sig-ph-m50);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        66.665% {
+            mask-image: var(--kp-sig-ph-m75);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        99.998% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: none;
+        }
+    }
+
+    /* The leave: the throw backwards on the inverse curve, `cubic-bezier(1, 0,
+       0.19, 1)` (a curve's inverse is its point reflection), so an arrival,
+       which js/motion.js plays as the leave backwards, is thrown on the shove.
+       The last instant is hidden. */
+    @keyframes kp-sig-phantom-fly-out {
+        0% {
+            translate: 0 0;
+            rotate: var(--kp-sig-ph-land, -1.5deg);
+            scale: 1;
+            visibility: visible;
+            animation-timing-function: linear;
+        }
+
+        42.857143% {
+            translate: 0 0;
+            rotate: var(--kp-sig-ph-land, -1.5deg);
+            scale: 1;
+            visibility: visible;
+            animation-timing-function: cubic-bezier(1, 0, 0.19, 1);
+        }
+
+        100% {
+            translate: var(--kp-sig-ph-x0, -80cqi) var(--kp-sig-ph-y0, 6cqi);
+            rotate: var(--kp-sig-ph-r0, -22deg);
+            scale: var(--kp-sig-ph-s0, 1.15);
+            visibility: hidden;
+        }
+    }
+
+    @keyframes kp-sig-phantom-resolve-out {
+        0% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        14.287143% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        28.572857% {
+            mask-image: var(--kp-sig-ph-m75);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        42.858571% {
+            mask-image: var(--kp-sig-ph-m50);
+            animation-timing-function: steps(1, jump-start);
+        }
+
+        100% {
+            mask-image: var(--kp-sig-ph-m25);
+        }
+    }
+
+    /* Contact [G15]: the red bar is thrown in and resolved in two cuts across
+       the 120 ms (dots at 25 %, 75 %, then solid at three quarters). */
+    @keyframes kp-sig-phantom-bar {
+        0% {
+            mask-image: var(--kp-sig-ph-m25);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        49.991667% {
+            mask-image: var(--kp-sig-ph-m75);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        74.991667% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: none;
+        }
+    }
+
+    /* A press: the face of the cap resolves from dots to solid in two cuts
+       [G17], once the cap has dropped. Its own name, so the press starts it
+       again from the dots. */
+    @keyframes kp-sig-phantom-face {
+        0% {
+            mask-image: var(--kp-sig-ph-m25);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        49.991667% {
+            mask-image: var(--kp-sig-ph-m75);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        74.991667% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: none;
+        }
+    }
+
+    /* The ink flips from the plate's own to black when the bar lands (the
+       second cut, 90 ms of 120). */
+    @keyframes kp-sig-phantom-ink {
+        0% {
+            color: var(--kp-plate-ink, var(--foreground));
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        74.991667% {
+            color: var(--primary-foreground);
+            animation-timing-function: linear;
+        }
+
+        100% {
+            color: var(--primary-foreground);
+        }
+    }
+
+    /* A live update [G9]: the changed part dissolves into its dots and
+       resolves to the new value, in place, in six even cuts in 400 ms
+       (10 %, 40 %, 70 %, then the same back); it never moves. */
+    @keyframes kp-sig-phantom-update {
+        0% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        0.0025% {
+            mask-image: var(--kp-sig-ph-m70);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        16.665% {
+            mask-image: var(--kp-sig-ph-m40);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        33.3325% {
+            mask-image: var(--kp-sig-ph-m10);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        49.9975% {
+            mask-image: var(--kp-sig-ph-m40);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        66.665% {
+            mask-image: var(--kp-sig-ph-m70);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        83.3325% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: none;
+        }
+    }
+
+    @keyframes kp-progressbar-phantom-shove {
+        0% {
+            transform: translateX(-105%);
+        }
+        40%,
+        55% {
+            transform: translateX(97%);
+        }
+        100% {
+            transform: translateX(300%);
+        }
+    }
+
+    /* Leaving, this theme's way [scope-142; Kenny, 2026-10-09 on research/
+       phantom-character, leaving and arriving 1: "thrown and resolved,
+       dissolved and snatched"]. js/motion.js marks what leaves
+       `[data-kp-leaving]`, closes its space during the exit, and in a row of
+       leaves starts the next one halfway through this one. A part dissolves
+       into its dots in three cuts and is snatched back off its start edge on
+       the shove's inverse, 700 ms, and is not drawn once it has gone. */
+    @media (prefers-reduced-motion: no-preference) {
+        /* Opening is closing turned around (Kenny's pick on research/open-reverse,
+           2026-10-05): js/motion.js opens the dialog as its close played backwards,
+           in the close's time, and lets what arrives play this leave backwards:
+           thrown on the shove, resolved in three cuts. */
+        [data-theme='phantom'] {
+            --kp-open: reverse-close;
+            /* A close or a glide of one throw is not cut short (its defaults,
+               600 and 480 ms, are other themes'). */
+            --kp-close-max: 700ms;
+            --kp-size-max: 700ms;
+            /* The close mechanism (lessons 19, 23, 24, 37; applied 2026-10-13):
+               a part a script removes or hides (the busy table's layer, a file
+               row, a re-shown alert, an empty state) leaves by the dissolve and
+               snatch below and arrives as that backwards; what takes no box
+               arrives as nothing; the space a leave folds shut takes the
+               throw's own 700 ms and starts with it. */
+            --kp-leave-state: leave;
+            --kp-arrive-unseen: skip;
+            --kp-leave-fold-grow: 1;
+            --kp-leave-fold-start: 0;
+        }
+
+        [data-theme='phantom'] [data-kp-leaving] {
+            mask-size: 7px 7px;
+            animation:
+                kp-sig-phantom-fly-out 700ms linear forwards,
+                kp-sig-phantom-resolve-out 700ms linear forwards;
+        }
+
+        /* A live update, 400 ms [G9]: js/update.js writes the new value at
+           once and marks the element; the element dissolves into its dots and
+           resolves again. A spark is the svg's parent's, a state word's mask
+           is its own. */
+        [data-theme='phantom'] {
+            --kp-update: resolve;
+        }
+
+        [data-theme='phantom'] [data-kp-updating='resolve'] {
+            mask-size: 7px 7px;
+            animation: kp-sig-phantom-update 400ms linear both;
+        }
+    }
+
+    /* ── The parts of a key figure, on the grammar [themes/phantom/CHARACTER.md
+       G8, G18; Kenny, 2026-10-09 on research/phantom-character]. A tone is not
+       a tinted card and not a frame: the figure stays plain, the card stays its
+       plate, and the change is stamped on the overprint (a warning's on the
+       yellow plate with black ink, a failure's on the red plate with black
+       ink), two pixels off register on the figure. The label shouts in the
+       condensed face, the figure speaks in the plain one, a state is a word
+       that shouts. ── */
+    [data-theme='phantom'] .kp-kpi__label {
+        font-family: var(--theme-font-display);
+        font-style: italic;
+        font-weight: 800;
+    }
+
+    [data-theme='phantom'] .kp-kpi__value {
+        font-family: var(--theme-font-body);
+        font-weight: 700;
+    }
+
+    [data-theme='phantom'] .kp-state-word {
+        font-family: var(--theme-font-display);
+        font-style: italic;
+        font-weight: 900;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='phantom'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) {
+        box-shadow: none;
+    }
+
+    [data-theme='phantom'] .kp-kpi:is([data-kp-tone='warning'], [data-kp-tone='destructive']) .kp-kpi__value {
+        padding-inline: 0;
+        background: none;
+        color: inherit;
+    }
+
+    [data-theme='phantom'] .kp-kpi__delta[data-kp-tone] {
+        display: inline-block;
+    }
+
+    [data-theme='phantom'] .kp-kpi[data-kp-tone='warning'] .kp-kpi__delta {
+        background: var(--fx-signal);
+        color: var(--fx-signal-foreground);
+        translate: 2px 2px;
+    }
+
+    [data-theme='phantom'] .kp-kpi[data-kp-tone='destructive'] .kp-kpi__delta,
+    [data-theme='phantom'] .kp-kpi__delta[data-kp-tone='bad'] {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        translate: 2px 2px;
+    }
+
+    /* A tour card is cut paper that has landed, as the menu is, with its hard
+       shadow and no blur [G7]. */
+    [data-theme='phantom'] .kp-tour {
+        border: 0;
+        border-inline-start: 4px solid var(--primary);
+        border-radius: 0;
+        clip-path: var(--kp-paperclip);
+        box-shadow: none;
+        rotate: var(--kp-land);
+    }
+
+    /* ── The meter with a mark, this theme's way [picked by Kenny on
+       research/character-meter, round 3, 2026-10-05: shape 1, while
+       loading 1, how the share arrives 1, when the tone changes 1,
+       the mark past the end 2]. The package's own markup and states
+       (setMeter(), js/kpi.js): the track on the meter, the share on ::before,
+       the sign past the end or the loading picture on ::after, the mark
+       `.kp-meter__mark`. Every animation and transition under
+       prefers-reduced-motion: no-preference; still frames otherwise. ── */
+
+    /* The shared part: room past the end, loading without the pulse, the mark
+       centred on its width, the package's signs cleared for the shape's own.
+       Under :where() so each picked rule below wins as it did in the demo. */
+    :where([data-theme='phantom']) :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-room: 0.625rem;
+        box-sizing: border-box;
+    }
+
+    :where([data-theme='phantom']) .kp-meter--inline {
+        margin-inline-end: calc(var(--kp-space-xs, 0.25rem) + var(--kp-sig-meter-room));
+    }
+
+    /* Each character draws its own loading picture instead of the pulse. */
+    :where([data-theme='phantom']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading] {
+        overflow: clip;
+        animation: none;
+    }
+
+    :where([data-theme='phantom']) :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+    }
+
+    /* The mark is centred on its share, whatever its width. */
+    :where([data-theme='phantom']) .kp-meter__mark {
+        --kp-sig-meter-mw: 2px;
+        box-sizing: border-box;
+        inline-size: var(--kp-sig-meter-mw);
+        inset-inline-start: calc(clamp(0, var(--kp-mark, 0), 1) * 100% - var(--kp-sig-meter-mw) / 2);
+    }
+
+    :where([data-theme='phantom']) .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - 0.75rem);
+    }
+
+    /* The sign past the end, cleared of the package's ▸ for each character
+       to draw its own. */
+    :where([data-theme='phantom']) :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '';
+        position: absolute;
+        inset: auto;
+        translate: none;
+        color: inherit;
+        font-size: 0.75rem;
+        line-height: 1;
+        text-shadow: none;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    /* A mark past the end keeps the package's sign inside the bar's end, in
+       each character's own glyph and ink. */
+    :where([data-theme='phantom']) .kp-meter__mark[data-kp-over]::after {
+        content: var(--kp-sig-meter-mo-sign, '▸');
+        color: var(--kp-sig-meter-mo-ink, var(--foreground));
+        font-family: var(--kp-sig-meter-mo-font, inherit);
+        text-shadow:
+            0 0 1px var(--kp-sig-meter-mo-halo, var(--card)),
+            0 0 2px var(--kp-sig-meter-mo-halo, var(--card));
+    }
+
+    /* ── shape: option 1 ── */
+
+    /* ── phantom · the calling card ───────────────────────────────── */
+    [data-theme='phantom'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-meter-height: 0.5rem;
+        --kp-sig-meter-room: 1.375rem;
+        --kp-sig-meter-mo-halo: var(--background);
+        border-radius: 0;
+        transform: skewX(-8deg);
+        /* The screen a tone's redraw is seen through (a live update). */
+        mask-size: 7px 7px;
+        background:
+            radial-gradient(circle, hsl(from var(--foreground) h s l / 0.24) 0 0.7px, transparent 1.1px) 0 0 / 3px 3px,
+            var(--background);
+        box-shadow: 0 0 0 1px hsl(from var(--foreground) h s l / 0.55);
+    }
+
+    /* The red plate, its deep red second plate off register. */
+    [data-theme='phantom'] :is(.kp-meter, .kp-kpi__meter)::before {
+        border-radius: 0;
+        background:
+            linear-gradient(var(--kp-meter-fill-colour), var(--kp-meter-fill-colour)) 0 0 / calc(100% - 2px) calc(100% - 2px) no-repeat,
+            color-mix(in oklab, var(--kp-meter-fill-colour) 55%, var(--background));
+    }
+
+    /* A white shard of paper. */
+    [data-theme='phantom'] .kp-meter__mark {
+        --kp-sig-meter-mw: 3px;
+        inset-block: -4px;
+        border-radius: 0;
+        background: var(--foreground);
+        box-shadow: 0 0 0 1px var(--background);
+    }
+
+    [data-theme='phantom'] .kp-meter__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-end: calc(100% - 1px);
+        inset-inline-start: 0;
+        inline-size: 7px;
+        block-size: 5px;
+        background: var(--foreground);
+        clip-path: polygon(0 100%, 100% 0, 45% 100%);
+    }
+
+    /* A white burst with a black "!". */
+    [data-theme='phantom'] :is(.kp-meter, .kp-kpi__meter)[data-kp-over]::after {
+        content: '!';
+        display: grid;
+        place-items: center;
+        inset-inline-start: calc(100% + 2px);
+        inset-block-start: 50%;
+        inline-size: 1.125rem;
+        block-size: 1.125rem;
+        translate: 0 -50%;
+        background: var(--foreground);
+        color: var(--background);
+        font: italic 900 0.75rem/1 var(--theme-font-display, sans-serif);
+        clip-path: polygon(50% 0, 61% 30%, 95% 18%, 74% 47%, 100% 74%, 63% 70%, 55% 100%, 40% 72%, 6% 90%, 26% 58%, 0 28%, 36% 32%);
+    }
+
+    /* ── while loading: the block and the slash (the loading rules above and
+       the motion below); the screen no longer slides [G10] ── */
+
+    [data-theme='phantom'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::after {
+        background: var(--kp-sig-ph-block);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        /* ── how the share arrives: shoved in on the shove, 400 ms [G1, G4] ── */
+        [data-theme='phantom'] :is(.kp-meter, .kp-kpi__meter)::before {
+            animation: kp-sig-phantom-meter-slant-o 400ms cubic-bezier(0.81, 0, 0, 1) backwards;
+            transition: inline-size 400ms var(--kp-shove);
+        }
+
+        /* ── when the tone changes: the meter dissolves into its dots and
+           resolves again, in place, in six cuts (G9: it never jolts) ── */
+        [data-theme='phantom'] :is(.kp-meter, .kp-kpi__meter):not([data-kp-loading], [data-kp-tone]) {
+            animation: kp-sig-phantom-meter-redraw-o 400ms linear;
+        }
+
+        [data-theme='phantom'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='warning']:not([data-kp-loading]) {
+            animation: kp-sig-phantom-meter-redraw-w 400ms linear;
+        }
+
+        [data-theme='phantom'] :is(.kp-meter, .kp-kpi__meter)[data-kp-tone='destructive']:not([data-kp-loading]) {
+            animation: kp-sig-phantom-meter-redraw-d 400ms linear;
+        }
+
+        /* The slash crosses every block that waits, 1400 ms a loop. */
+        [data-theme='phantom']
+            :is(
+                .kp-skeleton,
+                .kp-card[aria-busy='true'],
+                .kp-tiles[aria-busy='true'] > .kp-card,
+                .kp-chart__state[data-kp-state='loading'],
+                .kp-calendar__day[data-kp-tone='loading'],
+                .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading],
+                .kp-datatable__busy-panel,
+                .kp-calendar--busy-whole > .kp-calendar__busy,
+                .kp-button[aria-busy='true']
+            )::after,
+        [data-theme='phantom'] :is(.kp-meter, .kp-kpi__meter)[data-kp-loading]::before {
+            animation: kp-sig-phantom-phantom-slash 1400ms cubic-bezier(0.6, 0, 0.4, 1) infinite;
+        }
+    }
+
+    /* ── the mark past the end: option 2 ── */
+
+    [data-theme='phantom'] :is(.kp-meter, .kp-kpi__meter) {
+        --kp-sig-meter-mo-sign: '!';
+    }
+
+    [data-theme='phantom'] .kp-meter__mark[data-kp-over] {
+        inset-inline-start: calc(100% - var(--kp-sig-meter-mw) - 1px);
+        rotate: 24deg;
+        transform-origin: 50% 100%;
+    }
+
+    [data-theme='phantom'] .kp-meter__mark[data-kp-over]::after {
+        inset-inline-start: calc(100% + 3px);
+        rotate: -24deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] .kp-meter__mark {
+            transition:
+                inset-inline-start 200ms steps(2),
+                rotate 200ms steps(2);
+        }
+    }
+
+    /* A tone that changes is a live update: the meter dissolves into its dots
+       and resolves again in place, six even cuts in 400 ms [G9]. Three names,
+       so a change from one tone to another starts it again. */
+    @keyframes kp-sig-phantom-meter-redraw-d {
+        0% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        0.0025% {
+            mask-image: var(--kp-sig-ph-m70);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        16.665% {
+            mask-image: var(--kp-sig-ph-m40);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        33.3325% {
+            mask-image: var(--kp-sig-ph-m10);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        49.9975% {
+            mask-image: var(--kp-sig-ph-m40);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        66.665% {
+            mask-image: var(--kp-sig-ph-m70);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        83.3325% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: none;
+        }
+    }
+
+    @keyframes kp-sig-phantom-meter-redraw-o {
+        0% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        0.0025% {
+            mask-image: var(--kp-sig-ph-m70);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        16.665% {
+            mask-image: var(--kp-sig-ph-m40);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        33.3325% {
+            mask-image: var(--kp-sig-ph-m10);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        49.9975% {
+            mask-image: var(--kp-sig-ph-m40);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        66.665% {
+            mask-image: var(--kp-sig-ph-m70);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        83.3325% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: none;
+        }
+    }
+
+    @keyframes kp-sig-phantom-meter-redraw-w {
+        0% {
+            mask-image: none;
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        0.0025% {
+            mask-image: var(--kp-sig-ph-m70);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        16.665% {
+            mask-image: var(--kp-sig-ph-m40);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        33.3325% {
+            mask-image: var(--kp-sig-ph-m10);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        49.9975% {
+            mask-image: var(--kp-sig-ph-m40);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        66.665% {
+            mask-image: var(--kp-sig-ph-m70);
+            animation-timing-function: steps(1, jump-end);
+        }
+
+        83.3325% {
+            mask-image: none;
+            animation-timing-function: linear;
+        }
+
+        100% {
+            mask-image: none;
+        }
+    }
+
+    @keyframes kp-sig-phantom-meter-slant-o {
+        0% {
+            clip-path: polygon(0 0, 8px 0, 0 100%, 0 100%);
+        }
+
+        100% {
+            clip-path: polygon(0 0, calc(100% + 8px) 0, 100% 100%, 0 100%);
+        }
+    }
+
+    /* ── Close = open reversed, and the throw on every part that opens
+       (research/all-themes/BRIEF.md, 2026-10-13; lessons 11, 19-26, 31, 36-38).
+       Phantom's own motion only: the throw (kp-sig-phantom-fly, the shove,
+       400 ms) and the resolve (kp-sig-phantom-resolve, three cuts, 300 ms),
+       played together, 700 ms; the close is the same backwards (js/motion.js)
+       or the leave pair (kp-sig-phantom-fly-out, -resolve-out), which is that
+       pair turned round frame for frame. ── */
+
+    /* A tree branch's children glide shut as they glided open (js/motion.js
+       glideGroup(), lesson 26): the group is kept drawn while it shuts. */
+    [data-theme='phantom'] .kp-tree [role='treeitem'][aria-expanded='false'] > [role='group'][data-kp-group-folding],
+    [data-theme='phantom'] .kp-tree [role='treeitem'][aria-expanded='false'] + [role='group'][data-kp-group-folding] {
+        display: block;
+    }
+
+    /* One loading picture: while the busy table's layer stands over the rows,
+       the status line's small spinner stays out, so it holds back no arrival
+       of the layer (lesson 23; cyberpunk's rule). */
+    [data-theme='phantom'] .kp-datatable:has(> .kp-datatable__busy-overlay) .kp-datatable__status > .kp-spinner {
+        display: none;
+    }
+
+    /* The tour (lessons 11, 21, 22): the page's dim and the target's ring come
+       with the card's throw (400 ms on the shove) and go with its throw back:
+       after the card's 300 ms dissolve, 400 ms on the shove's inverse,
+       shrinking back into the target. */
+    [data-theme='phantom'] {
+        --kp-tour-dim-close: 0 0 0 0 transparent;
+        --kp-tour-dim-time: 400ms;
+        --kp-tour-dim-close-ease: cubic-bezier(1, 0, 0.19, 1);
+        --kp-tour-dim-close-delay: 300ms;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] [data-kp-tour-target] {
+            animation: kp-sig-phantom-tour-ring 400ms cubic-bezier(0.81, 0, 0, 1) backwards;
+            transition:
+                box-shadow 400ms cubic-bezier(0.81, 0, 0, 1),
+                outline-color 400ms cubic-bezier(0.81, 0, 0, 1);
+        }
+    }
+
+    @keyframes kp-sig-phantom-tour-ring {
+        from {
+            outline-color: transparent;
+        }
+    }
+
+    /* The command palette is thrown onto the board as the dialog is (it is
+       a dialog of its own class, so it had only the package's fade);
+       js/motion.js keeps a dialog's entrance and plays it backwards to close. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] .kp-palette {
+            mask-size: 7px 7px;
+            animation:
+                kp-sig-phantom-fly 700ms linear backwards,
+                kp-sig-phantom-resolve 700ms linear backwards;
+        }
+    }
+
+    /* The date picker's panel and the combobox's list are thrown from the
+       edge of what opens them and resolve, as a menu is. The date picker's
+       panel lands level, as it stood. */
+    [data-theme='phantom'] :is(.kp-datepicker__panel, .kp-combobox__list) {
+        --kp-sig-dur: 700ms;
+        --kp-sig-ph-x0: -1.6rem;
+        --kp-sig-ph-y0: -2.4rem;
+        --kp-sig-ph-r0: -9deg;
+        --kp-sig-ph-s0: 1;
+    }
+
+    [data-theme='phantom'] .kp-datepicker__panel {
+        --kp-sig-ph-land: 0deg;
+    }
+
+    /* The combobox's list is phantom's menu [G3, G6, G14] (Kenny, review
+       round 2: "Niet de open/close animatie van dit thema"; it landed level):
+       thrown from the field's edge, it slaps down and stands a degree and a
+       half askew, as the theme menu and the row actions do. Inside a dialog
+       too: there it floats over the dialog in the top layer as a plate of its
+       own (review round 3: inside a dialog, the review stage's included, it had
+       been made bare, level and still). */
+    [data-theme='phantom'] .kp-combobox__list {
+        --kp-sig-ph-land: var(--kp-land);
+        rotate: var(--kp-land);
+    }
+
+    [data-theme='phantom']:dir(rtl) :is(.kp-datepicker__panel, .kp-combobox__list) {
+        --kp-sig-ph-x0: 1.6rem;
+        --kp-sig-ph-r0: 9deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] :is(.kp-datepicker__panel, .kp-combobox__list) {
+            mask-size: 7px 7px;
+            animation:
+                kp-sig-phantom-fly var(--kp-sig-dur) linear backwards,
+                kp-sig-phantom-resolve var(--kp-sig-dur) linear backwards;
+        }
+
+        /* The date picker moves the focus onto a day the moment it opens; a
+           panel that is `visibility: hidden` for the throw's first instant
+           cannot take it, and the keyboard was left outside (Escape no longer
+           reached it). The panel stays drawn (as its 25 % screen, off its
+           anchor) from that first instant; an important declaration outranks
+           the keyframes. */
+        [data-theme='phantom'] .kp-datepicker__panel {
+            visibility: visible !important;
+        }
+
+        /* The combobox's list is placed by measuring where it is drawn the moment it opens
+           (js/top-layer.js raiseInPlace(), layoutRect(), which sets a move aside but not a turn or
+           a scale). Measured at the throw's first pose it stayed 13 px left, 16 px up over its field
+           and 27 px wide for as long as it was open (review round 2 follow-up, 2026-10-13). Its
+           throw holds the pose back on its first, unseen frame (visibility hidden): unturned, at
+           its place, so the measurement reads the list where it lands; every frame that can be
+           seen is the throw's. */
+        [data-theme='phantom'] .kp-combobox__list {
+            animation-name: kp-sig-phantom-fly-placed, kp-sig-phantom-resolve;
+        }
+    }
+
+    /* The busy table dims as its layer resolves over it and comes up as the
+       layer dissolves: the dim is part of the pair, in the resolve's three
+       hard cuts (400 ms in, after the throw; at once on the way back, the
+       cuts the other way round), never a fade. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] :is(.kp-datatable, .kp-datatable .kp-table tbody) {
+            transition: opacity 300ms steps(3, jump-start);
+        }
+
+        [data-theme='phantom'] :is(.kp-datatable[aria-busy='true'], .kp-datatable[aria-busy='true'] .kp-table tbody) {
+            transition: opacity 300ms steps(3, jump-end) 400ms;
+        }
+    }
+
+    /* The calendar's busy layers (the month's plate and a day's star) are
+       thrown in and resolve, and leave by the dissolve and snatch on
+       `[data-kp-leaving]` (the leave above): js/calendar.js marks a layer
+       while its state goes (`--kp-calendar-busy-leave: hold`, cyberpunk's
+       mechanism) and the rules below keep it drawn through the 700 ms. They
+       land level, as they stand. */
+    [data-theme='phantom'] :is(.kp-calendar__day-busy, .kp-calendar__busy) {
+        --kp-sig-ph-land: 0deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] :is(.kp-calendar__day-busy, .kp-calendar__busy) {
+            --kp-calendar-busy-leave: hold;
+            mask-size: 7px 7px;
+            transition: none;
+        }
+
+        [data-theme='phantom']
+            :is(.kp-calendar--busy-days, .kp-calendar--busy-whole:not(:has(> .kp-calendar__grid[aria-busy='true'])))
+            .kp-calendar__day[data-kp-tone='loading']
+            > .kp-calendar__day-busy,
+        [data-theme='phantom'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+            animation:
+                kp-sig-phantom-fly 700ms linear backwards,
+                kp-sig-phantom-resolve 700ms linear backwards;
+        }
+
+        [data-theme='phantom'] .kp-calendar__day:has(> .kp-calendar__day-busy[data-kp-leaving]) {
+            position: relative;
+        }
+
+        [data-theme='phantom'] .kp-calendar__day-busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-spinner, 0.75rem);
+            position: absolute;
+            inset-inline: 0;
+            inset-block-end: 0.125rem;
+            display: flex;
+            justify-content: center;
+            line-height: 0;
+        }
+
+        [data-theme='phantom'] .kp-calendar--busy-whole > .kp-calendar__busy[data-kp-leaving] {
+            --kp-spinner-size: var(--kp-calendar-busy-spinner, 2.5rem);
+            z-index: 1;
+            display: grid;
+            place-self: center;
+            place-items: center;
+            padding: var(--kp-space-md, 1rem);
+            border-radius: var(--radius, 0.5rem);
+            background: var(--card);
+            box-shadow: 0 0 0 1px var(--border);
+            line-height: 0;
+        }
+    }
+
+    /* ── The alarm is thrown onto the board as phantom's dialog is [G3, G13;
+       Kenny, review round 2: "Niet de open/close animatie van dit thema"]:
+       the package's rise, scale and fades of the plate, the panel, the
+       headline and the reason are retired. The alarm fills the screen, so it
+       is thrown as the full-size drawer is: from the start edge, level, on
+       the shove as a screen of dots, slapping down and resolving in three
+       cuts (700 ms); js/motion.js keeps that entrance and plays it backwards
+       to close (the dissolve, then the snatch back off the edge). It is drawn
+       from the first instant (off the board then), so the Acknowledge button
+       takes the focus the alarm gives it. ── */
+    [data-theme='phantom'] .kp-alarm {
+        --kp-sig-ph-x0: -100%;
+        --kp-sig-ph-y0: 0px;
+        --kp-sig-ph-r0: 0deg;
+        --kp-sig-ph-s0: 1;
+        --kp-sig-ph-land: 0deg;
+    }
+
+    [data-theme='phantom'] .kp-alarm:dir(rtl) {
+        --kp-sig-ph-x0: 100%;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] .kp-alarm[open]:not([data-kp-alarm-motion='still']) {
+            mask-size: 7px 7px;
+            animation:
+                kp-sig-phantom-fly 700ms linear backwards,
+                kp-sig-phantom-resolve 700ms linear backwards;
+        }
+
+        [data-theme='phantom'] .kp-alarm[open] {
+            visibility: visible !important;
+        }
+
+        [data-theme='phantom'] .kp-alarm:not([data-kp-alarm-motion='still']) :is(.kp-alarm__panel, .kp-alarm__title, .kp-alarm__detail) {
+            animation: none;
+        }
+    }
+
+    /* ── The side navigation is thrown as phantom's drawer is [G3, G13;
+       Kenny, review round 2: "Niet de open/close animatie van dit thema"]:
+       a panel that slides over (or pushes) the page is thrown from its own
+       edge, level, on the shove (400 ms) as a screen of dots, and slaps down
+       and resolves in three cuts (300 ms); closing, it dissolves in three
+       cuts and is snatched back off its edge on the inverse curve. The
+       travel stays the panel's translate (js/sidenav.js times a pushed
+       page's move from it, so the content goes with the throw); the screen
+       is kp-sig-phantom-resolve, the dialog's. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']) {
+            mask-size: 7px 7px;
+        }
+
+        [data-theme='phantom'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transition: translate 400ms cubic-bezier(0.81, 0, 0, 1);
+            animation: kp-sig-phantom-resolve 700ms linear backwards;
+        }
+
+        [data-theme='phantom'] .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+            transition: translate 400ms cubic-bezier(1, 0, 0.19, 1) 300ms;
+            animation: kp-sig-phantom-resolve-out 700ms linear forwards;
+        }
+
+        /* A rail (slim) keeps its width glide beside the throw. */
+        [data-theme='phantom'] .kp-sidenav[data-kp-sidenav-slim]:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='true'] {
+            transition:
+                translate 400ms cubic-bezier(0.81, 0, 0, 1),
+                inline-size 400ms cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        [data-theme='phantom'] .kp-sidenav[data-kp-sidenav-slim]:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push'])[data-kp-sidenav-open='false'] {
+            transition:
+                translate 400ms cubic-bezier(1, 0, 0.19, 1) 300ms,
+                inline-size 400ms cubic-bezier(1, 0, 0.19, 1);
+        }
+
+        /* Where the package lays a backdrop, it comes with the throw and goes
+           with the snatch: 700 ms, the dim in the shove's 400, held through
+           the resolve; js/sidenav.js plays it backwards to close. */
+        [data-theme='phantom'] .kp-sidenav__backdrop {
+            animation: kp-sig-phantom-sidenav-dim 700ms linear both;
+        }
+    }
+
+    @keyframes kp-sig-phantom-sidenav-dim {
+        0% {
+            opacity: 0;
+            animation-timing-function: cubic-bezier(0.81, 0, 0, 1);
+        }
+
+        57.142857%,
+        100% {
+            opacity: 1;
+        }
+    }
+
+    /* ── The bar (coordinator, 2026-10-12; lessons 36, 38): the hover dropdown
+       was thrown in but closed at once (Firefox does not hold `display`), the
+       mega menu went at once, the phone bar's panel had no motion. Each is
+       now thrown in and resolves (700 ms) and leaves by the dissolve and
+       snatch, the throw backwards. The dropdown is held for that by
+       js/components.js (`--kp-nav-close-time`), the mega menu while a
+       transition runs on it (--kp-sig-ph-hold), the phone bar's panel for
+       `--kp-nav-close-time`. ── */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='phantom'] {
+            --kp-nav-close-time: 700ms;
+        }
+
+        [data-theme='phantom'] .kp-nav__menu {
+            --kp-sig-ph-hold: 0;
+            transition: --kp-sig-ph-hold 700ms linear;
+        }
+
+        [data-theme='phantom']
+            :is(
+                .kp-nav__links > li:is(:hover, :focus-within, [data-kp-nav-menu-open]) > .kp-nav__menu:not(.kp-nav__menu--wide),
+                .kp-nav__links > li:is([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true'])) > .kp-nav__menu--wide
+            ) {
+            --kp-sig-ph-hold: 1;
+            animation:
+                kp-sig-phantom-fly 700ms linear backwards,
+                kp-sig-phantom-resolve 700ms linear backwards;
+        }
+
+        [data-theme='phantom']
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not(:hover, :focus-within, [data-kp-nav-menu-open])
+            > .kp-nav__menu:not(.kp-nav__menu--wide) {
+            display: block;
+            opacity: 1;
+            animation:
+                kp-sig-phantom-fly-out 700ms linear forwards,
+                kp-sig-phantom-resolve-out 700ms linear forwards;
+        }
+
+        [data-theme='phantom']
+            .kp-nav__links
+            > li[data-kp-nav-closing]:not([data-kp-nav-menu-open], :has(> [data-kp-nav-disclosure][aria-expanded='true']))
+            > .kp-nav__menu--wide {
+            animation:
+                kp-sig-phantom-fly-out 700ms linear forwards,
+                kp-sig-phantom-resolve-out 700ms linear forwards;
+        }
+    }
+
+    @container kp-nav (max-width: 40rem) {
+        /* Collapsed, the lists nested in the open panel are its own rows: they
+           come with it and play nothing of their own. */
+        [data-theme='phantom'] .kp-nav:has(> .kp-nav__toggle):is([data-kp-nav-open], [data-kp-nav-closing]) .kp-nav__links .kp-nav__menu {
+            animation: none;
+            transition: none;
+        }
+
+        /* The panel is thrown from the toggle's side as a menu is and lands
+           level, as it stands. */
+        [data-theme='phantom'] .kp-nav:has(> .kp-nav__toggle) > .kp-nav__links {
+            --kp-sig-ph-x0: -1.6rem;
+            --kp-sig-ph-y0: -2.4rem;
+            --kp-sig-ph-r0: -9deg;
+            --kp-sig-ph-s0: 1;
+            --kp-sig-ph-land: 0deg;
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            [data-theme='phantom'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-open]:not([data-kp-nav-closing]) > .kp-nav__links {
+                mask-size: 7px 7px;
+                animation:
+                    kp-sig-phantom-fly 700ms linear backwards,
+                    kp-sig-phantom-resolve 700ms linear backwards;
+            }
+
+            [data-theme='phantom'] .kp-nav:has(> .kp-nav__toggle)[data-kp-nav-closing] > .kp-nav__links {
+                mask-size: 7px 7px;
+                animation:
+                    kp-sig-phantom-fly-out 700ms linear forwards,
+                    kp-sig-phantom-resolve-out 700ms linear forwards;
+            }
+        }
+    }
+
+    /* A reader who asked for no motion gets no close to wait for. */
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='phantom'] {
+            --kp-nav-close-time: 0ms;
+        }
+    }
+}
+
+@layer kp.register {
+    /* Bottom tab bar [kpadopt-nav] — phantom: a screen print. The current tab is a skewed red plate with black ink, thrown in from off the start edge in one shove; pointing throws a thin red bar; capitals in the condensed face (G1, G5, G6, G15). */
+    [data-theme='phantom'] .kp-tabbar {
+        background: var(--background);
+        border-block-start: 2px solid var(--primary);
+    }
+
+    [data-theme='phantom'] .kp-tabbar__tab {
+        border-radius: 0;
+        isolation: isolate;
+        font-family: var(--theme-font-display);
+        font-size: calc(var(--kp-tabbar-size, var(--kp-text-xs, 0.75rem)) * 1.1);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    [data-theme='phantom'] .kp-tabbar__tab::before {
+        inset: 0.125rem 0.125rem;
+        block-size: auto;
+        z-index: -1;
+        background: var(--primary);
+        transform: skewX(-10deg);
+        transform-origin: 0 50%;
+        scale: 0 1;
+    }
+
+    [data-theme='phantom'] .kp-tabbar__tab:dir(rtl)::before {
+        transform: skewX(10deg);
+        transform-origin: 100% 50%;
+    }
+
+    [data-theme='phantom'] .kp-tabbar__tab[aria-current]:not([aria-current='false']) {
+        color: var(--primary-foreground);
+    }
+
+    [data-theme='phantom'] .kp-tabbar__tab[aria-current]:not([aria-current='false']) .kp-tabbar__icon {
+        color: inherit;
+    }
+
+    [data-theme='phantom'] .kp-tabbar__tab:is(:hover, :focus-visible):not([aria-current]:not([aria-current='false']))::before {
+        scale: 0.06 1;
+    }
+
+    [data-theme='phantom'] .kp-tabbar__badge {
+        border-radius: 0;
+        transform: skewX(-10deg);
+        background: var(--fx-signal);
+        color: var(--fx-signal-foreground);
+    }
+}
+/* ── End of the signature ── */
+
+/* ── Segmented control, list toolbar, key line [kpadopt-controls] ── */
+@layer kp.signature {
+    [data-theme='phantom'] .kp-segmented {
+        --kp-seg-radius: 0;
+        --kp-seg-font: var(--theme-font-display);
+        --kp-seg-size: 0.8125rem;
+        --kp-seg-tracking: 0.12em;
+        --kp-seg-case: uppercase;
+        --kp-seg-track: var(--card);
+        --kp-seg-thumb: var(--primary);
+        --kp-seg-thumb-ink: var(--primary-foreground);
+        --kp-seg-thumb-edge: 0 0 0 0 transparent;
+        --kp-seg-thumb-lift: 0 0 0 0 transparent;
+        --kp-chip-radius: 0;
+        --kp-chip-on: var(--primary);
+        --kp-chip-on-ink: var(--primary-foreground);
+        --kp-chip-on-edge: var(--primary);
+    }
+    [data-theme='phantom'] .kp-toolbar {
+        --kp-toolbar-group-gap: 1.125rem;
+    }
+    [data-theme='phantom'] .kp-toolbar__label {
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.2em;
+    }
+    [data-theme='phantom'] .kp-keys {
+        --kp-keys-gap: 1rem;
+    }
+    [data-theme='phantom'] .kp-kbd {
+        --kp-kbd-radius: 0;
+        --kp-kbd-edge: var(--border-strong);
+        --kp-kbd-ground: var(--secondary);
+        --kp-kbd-foot: 2px;
+        font-family: var(--theme-font-display);
+        text-transform: uppercase;
+    }
+    /* The plate is cut paper: the corners at the start of the top and the end of
+       the bottom are snipped. Only the plate is clipped; an item keeps its focus
+       ring, and a chosen chip gets the deep second plate instead. */
+    [data-theme='phantom'] .kp-segmented[data-kp-segmented-thumb]::before {
+        clip-path: polygon(0.5rem 0, 100% 0, 100% calc(100% - 0.5rem), calc(100% - 0.5rem) 100%, 0 100%, 0 0.5rem);
+    }
+    [data-theme='phantom'] .kp-segmented--chips > .kp-segmented__item[aria-pressed='true'] {
+        box-shadow: 3px 3px 0 var(--kp-red-deep, var(--border-strong));
+    }
+}

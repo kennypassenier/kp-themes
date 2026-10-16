@@ -18,30 +18,30 @@ the selectors and their order are identical, which is what
 | `css/_rules.css` | 39.4 kB | 20.2 kB | 49% |
 | `css/blueprint-register.css` | 173.3 kB | 88.0 kB | 49% |
 | `css/brutalism-register.css` | 163.7 kB | 85.6 kB | 48% |
-| `css/components.css` | 393.6 kB | 162.9 kB | 59% |
+| `css/components.css` | 391.7 kB | 161.6 kB | 59% |
 | `css/cyberpunk-register.css` | 242.6 kB | 136.7 kB | 44% |
 | `css/dark-register.css` | 161.6 kB | 74.9 kB | 54% |
 | `css/deco-register.css` | 166.6 kB | 90.9 kB | 45% |
 | `css/fonts.css` | 21.3 kB | 15.8 kB | 26% |
-| `css/forest-register.css` | 174.3 kB | 88.2 kB | 49% |
+| `css/forest-register.css` | 174.9 kB | 88.2 kB | 50% |
 | `css/formal-register.css` | 157.2 kB | 80.6 kB | 49% |
 | `css/grotesk-register.css` | 124.9 kB | 59.6 kB | 52% |
 | `css/layout.css` | 13.0 kB | 2.5 kB | 81% |
-| `css/light-register.css` | 108.0 kB | 50.6 kB | 53% |
+| `css/light-register.css` | 108.4 kB | 50.7 kB | 53% |
 | `css/nostromo-register.css` | 146.1 kB | 73.8 kB | 50% |
-| `css/pastel-register.css` | 162.5 kB | 82.3 kB | 49% |
+| `css/pastel-register.css` | 162.8 kB | 82.4 kB | 49% |
 | `css/phantom-register.css` | 154.6 kB | 77.4 kB | 50% |
-| `css/solstice-register.css` | 103.9 kB | 54.3 kB | 48% |
+| `css/solstice-register.css` | 104.2 kB | 54.4 kB | 48% |
 | `css/synthwave-register.css` | 168.8 kB | 86.7 kB | 49% |
 | `css/terminal-register.css` | 146.4 kB | 75.7 kB | 48% |
 | `css/themes.css` | 153.4 kB | 99.3 kB | 35% |
 | `css/titanium-register.css` | 132.9 kB | 66.0 kB | 50% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 3056.3 kB | 1539.6 kB | 50% |
-| `dist/kp-themes.js` | 877.3 kB | 477.4 kB | 46% |
+| `dist/kp-themes.css` | 3056.0 kB | 1538.7 kB | 50% |
+| `dist/kp-themes.js` | 877.3 kB | 477.5 kB | 46% |
 
-The loose stylesheets together weigh **3116.4 kB** authored and
-**1576.6 kB** minified, 49% less. A page loading one theme's
+The loose stylesheets together weigh **3116.0 kB** authored and
+**1575.7 kB** minified, 49% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
 The wire is smaller again: gzip takes the minified bundle to roughly a
