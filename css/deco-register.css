@@ -2228,6 +2228,16 @@
             .kp-grid__tile,
             .kp-action,
             .kp-statusrow,
+            .kp-timer,
+            .kp-countdown,
+            .kp-code,
+            .kp-command,
+            .kp-compare,
+            .kp-pipeline__lane,
+            .kp-pipeline__state,
+            .kp-type-confirm__loses,
+            .kp-stackbar__note,
+            .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option,
             .kp-dialog,
             .kp-popover:not(.kp-tooltip),
             .kp-menu-button > .kp-menu,
@@ -2291,7 +2301,27 @@
 
     /* The static plates are the box their ::after and a stretched link lie
        over. The overlays are positioned already (and must stay so). */
-    [data-theme='deco'] :where(.kp-card, .kp-kpi, .kp-alert, .kp-empty, .kp-grid__tile, .kp-toast, .kp-action, .kp-statusrow) {
+    [data-theme='deco']
+        :where(
+            .kp-card,
+            .kp-kpi,
+            .kp-alert,
+            .kp-empty,
+            .kp-grid__tile,
+            .kp-toast,
+            .kp-action,
+            .kp-statusrow,
+            .kp-timer,
+            .kp-countdown,
+            .kp-code,
+            .kp-command,
+            .kp-compare,
+            .kp-pipeline__lane,
+            .kp-pipeline__state,
+            .kp-type-confirm__loses,
+            .kp-stackbar__note,
+            .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option
+        ) {
         position: relative;
     }
 
@@ -2345,6 +2375,16 @@
             .kp-grid__tile,
             .kp-action,
             .kp-statusrow,
+            .kp-timer,
+            .kp-countdown,
+            .kp-code,
+            .kp-command,
+            .kp-compare,
+            .kp-pipeline__lane,
+            .kp-pipeline__state,
+            .kp-type-confirm__loses,
+            .kp-stackbar__note,
+            .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option,
             .kp-dialog,
             .kp-popover:not(.kp-tooltip),
             .kp-menu-button > .kp-menu,
@@ -2478,6 +2518,16 @@
             .kp-grid__tile,
             .kp-action,
             .kp-statusrow,
+            .kp-timer,
+            .kp-countdown,
+            .kp-code,
+            .kp-command,
+            .kp-compare,
+            .kp-pipeline__lane,
+            .kp-pipeline__state,
+            .kp-type-confirm__loses,
+            .kp-stackbar__note,
+            .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option,
             .kp-dialog,
             .kp-popover:not(.kp-tooltip),
             .kp-menu-button > .kp-menu,
@@ -4638,5 +4688,1485 @@
                 box-shadow var(--kp-sig-deco-contact, 160ms) var(--fx-ease),
                 color var(--kp-sig-deco-contact, 160ms) var(--fx-ease);
         }
+    }
+}
+
+/* ── The kpadopt4 data pieces, in this theme [kpadopt4] ──
+   Deco's own (themes/deco/CHARACTER.md): the lobby after the lights go down. A small part is a plate in little, blue
+   lacquer inside a double gold hairline; gold is a line and a jewel, never a fill (G5); emerald marks what is on or
+   done and ruby only warns, as the figure over a gold rule (G8); pointing warms with gold leaf, the hairline goes to
+   full gold and the label to champagne (G15); a mark is a lozenge, the jewel (G19); Poiret One capitals name, Josefin
+   speaks and counts (G18). Everything settles on the lobby's curve (G1). */
+@layer kp.signature {
+    /* The identity mark: lacquer with a wash of its own colour, inside a double gold inlay; round it is a jewel, the
+       double ring. The pick is the double gold ring. */
+    [data-theme='deco'] .kp-idmark {
+        --kp-idmark-radius: 0;
+        --kp-idmark-tint: 30%;
+        border: 1px solid hsl(from var(--primary) h s l / 0.75);
+        background: color-mix(in oklab, var(--kp-idmark-c) var(--kp-idmark-tint), var(--kp-sig-deco-lac));
+        box-shadow:
+            inset 0 0 0 2px var(--kp-sig-deco-lac),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.45);
+        color: var(--kp-sig-deco-champagne);
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        clip-path: polygon(3px 0, calc(100% - 3px) 0, 100% 3px, 100% calc(100% - 3px), calc(100% - 3px) 100%, 3px 100%, 0 calc(100% - 3px), 0 3px);
+    }
+    [data-theme='deco'] .kp-idmark--xs {
+        box-shadow: inset 0 0 0 1px var(--kp-sig-deco-lac);
+    }
+    [data-theme='deco'] .kp-idmark--round {
+        border-radius: 50%;
+        clip-path: none;
+    }
+    [data-theme='deco'] .kp-idmark--pattern {
+        background: color-mix(in oklab, var(--kp-idmark-c) 78%, var(--kp-sig-deco-lac));
+        --kp-idmark-ink: var(--kp-sig-deco-lac);
+    }
+    [data-theme='deco'] .kp-idmark--glyph {
+        clip-path: none;
+    }
+    [data-theme='deco'] .kp-idmark--glyph::after {
+        z-index: 1;
+        background: var(--kp-sig-deco-gold-lt);
+        box-shadow: 0 0 0 1.5px var(--kp-sig-deco-lac);
+        rotate: 45deg;
+        scale: 0.8;
+    }
+    [data-theme='deco'] .kp-idmark--glyph[data-kp-idmark-glyph='circle']::after {
+        rotate: none;
+        scale: 0.8;
+    }
+    [data-theme='deco'] .kp-idmark--glyph[data-kp-idmark-glyph='triangle']::after {
+        rotate: none;
+        scale: 1;
+        box-shadow: none;
+    }
+    [data-theme='deco'] .kp-idmark[data-kp-idmark-empty] {
+        border-style: dashed;
+        background: var(--kp-sig-deco-lac);
+        box-shadow: none;
+        color: var(--muted-foreground);
+    }
+    [data-theme='deco'] .kp-idmark[aria-current]:not([aria-current='false']),
+    [data-theme='deco'] .kp-idmark[data-kp-idmark-selected] {
+        clip-path: none;
+        outline: 3px double var(--primary);
+        outline-offset: 2px;
+        box-shadow:
+            inset 0 0 0 2px var(--kp-sig-deco-lac),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.45);
+    }
+    [data-theme='deco'] .kp-idmark-group > .kp-idmark,
+    [data-theme='deco'] .kp-idmark-group > .kp-idmark-group__more {
+        clip-path: none;
+        box-shadow:
+            inset 0 0 0 2px var(--kp-sig-deco-lac),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.45),
+            0 0 0 2px var(--kp-sig-deco-lac);
+    }
+    [data-theme='deco'] .kp-idmark-group__more {
+        --kp-idmark-radius: 0;
+        border: 1px solid hsl(from var(--primary) h s l / 0.75);
+        border-radius: 0;
+        background: var(--kp-sig-deco-lac);
+        color: var(--kp-sig-deco-champagne);
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+    }
+
+    /* The share bar: the inlay doubled, two gold hairlines 3 px apart round the track, the parts flat between them set
+       apart by the lacquer, the threshold a gold lozenge on its hairline, the swatches lozenges (the jewel). */
+    [data-theme='deco'] .kp-stackbar {
+        --kp-stackbar-radius: 0;
+        --kp-stackbar-gap: 2px;
+    }
+    [data-theme='deco'] .kp-stackbar__title {
+        font-family: var(--theme-font-display);
+        font-size: 0.9375rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-stackbar__total {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+    }
+    [data-theme='deco'] .kp-stackbar__bar {
+        margin-block: 4px;
+        background: var(--kp-sig-deco-shadow);
+        box-shadow:
+            0 0 0 1px hsl(from var(--primary) h s l / 0.8),
+            0 0 0 3px var(--kp-sig-deco-lac),
+            0 0 0 4px hsl(from var(--primary) h s l / 0.8);
+    }
+    [data-theme='deco'] .kp-stackbar__seg {
+        box-shadow: inset calc(var(--kp-stackbar-gap, 2px) * -1) 0 0 var(--kp-sig-deco-shadow);
+    }
+    [data-theme='deco'] .kp-stackbar__seg:dir(rtl) {
+        box-shadow: inset var(--kp-stackbar-gap, 2px) 0 0 var(--kp-sig-deco-shadow);
+    }
+    [data-theme='deco'] .kp-stackbar__seg[data-kp-stackbar-hatch],
+    [data-theme='deco'] .kp-stackbar__swatch[data-kp-stackbar-hatch] {
+        background-image: repeating-linear-gradient(-45deg, transparent 0 3px, var(--kp-sig-deco-lac) 3px 4.5px);
+    }
+    [data-theme='deco'] .kp-stackbar__seg[data-kp-stackbar-lit] {
+        box-shadow:
+            inset calc(var(--kp-stackbar-gap, 2px) * -1) 0 0 var(--kp-sig-deco-shadow),
+            0 -1px 0 var(--kp-sig-deco-gold-hi),
+            0 1px 0 var(--kp-sig-deco-gold-hi);
+        filter: brightness(1.15);
+    }
+    [data-theme='deco'] .kp-stackbar__mark {
+        inset-block: -0.5rem;
+        inline-size: 1px;
+        background: var(--primary);
+        box-shadow: none;
+    }
+    [data-theme='deco'] .kp-stackbar__mark::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -0.2rem;
+        inset-inline-start: -0.2rem;
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        rotate: 45deg;
+        background: var(--kp-sig-deco-gold-lt);
+        box-shadow: 0 0 0 1px var(--kp-sig-deco-lac);
+    }
+    [data-theme='deco'] .kp-stackbar__bar[data-kp-over]::after {
+        content: '\25C6';
+        color: var(--destructive);
+        font-size: 0.6875rem;
+    }
+    [data-theme='deco'] .kp-stackbar__item {
+        border-radius: 0;
+    }
+    [data-theme='deco'] .kp-stackbar__item[data-kp-stackbar-lit] {
+        background: linear-gradient(
+            135deg,
+            hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.13),
+            hsl(from var(--primary) h s l / 0.07) 38%,
+            hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.12)
+        );
+        box-shadow: inset 0 -1px 0 var(--primary);
+        color: var(--kp-sig-deco-champagne);
+    }
+    [data-theme='deco'] .kp-stackbar__swatch {
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        margin-inline: 0.125rem;
+        rotate: 45deg;
+        border-radius: 0;
+        box-shadow:
+            0 0 0 1px var(--kp-sig-deco-lac),
+            0 0 0 2px hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='deco'] .kp-stackbar__item[data-kp-stackbar-rest] .kp-stackbar__swatch {
+        background: var(--kp-sig-deco-lac);
+        box-shadow: 0 0 0 1px hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='deco'] .kp-stackbar__label {
+        letter-spacing: 0.04em;
+    }
+    [data-theme='deco'] .kp-stackbar__value {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+    }
+    [data-theme='deco'] .kp-stackbar__item[data-kp-stackbar-over] .kp-stackbar__value {
+        color: var(--destructive);
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.3em;
+    }
+    [data-theme='deco'] .kp-stackbar__note {
+        border-style: solid;
+        text-align: center;
+        font-family: var(--theme-font-body);
+    }
+
+    /* Bullet rows: gold leaf when pointed at; a figure of a tone is the figure in ruby over a gold rule (G8). */
+    [data-theme='deco'] .kp-bullets__row {
+        border-radius: 0;
+    }
+    [data-theme='deco'] .kp-bullets__row:has(.kp-bullets__link:hover) {
+        background: linear-gradient(
+            135deg,
+            hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.13),
+            hsl(from var(--primary) h s l / 0.07) 38%,
+            hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.12)
+        );
+        box-shadow: inset 0 -1px 0 var(--primary);
+    }
+    [data-theme='deco'] .kp-bullets__row:has(.kp-bullets__link:hover) .kp-bullets__label {
+        color: var(--kp-sig-deco-champagne);
+        text-decoration: none;
+    }
+    [data-theme='deco'] .kp-bullets__label {
+        letter-spacing: 0.04em;
+    }
+    [data-theme='deco'] .kp-bullets__figure {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+    }
+    [data-theme='deco'] .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure,
+    [data-theme='deco'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        background: none;
+        border-radius: 0;
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.3em;
+    }
+    [data-theme='deco'] .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure {
+        text-decoration-style: double;
+    }
+    [data-theme='deco'] .kp-bullets__note {
+        text-align: center;
+    }
+
+    /* The key-value grid: the keys in spaced Josefin capitals, hairlines of gold, a changed row marked by a lozenge. */
+    [data-theme='deco'] .kp-kv__row > dt {
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-kv__row > dd {
+        font-weight: 500;
+    }
+    [data-theme='deco'] .kp-kv--lines > .kp-kv__row {
+        border-block-end-color: hsl(from var(--primary) h s l / 0.3);
+    }
+    [data-theme='deco'] .kp-kv {
+        --kp-glyph-changed: '\00a0\25C6';
+    }
+    [data-theme='deco'] .kp-kv__row[data-kp-changed] > dt::after {
+        color: var(--kp-sig-deco-gold-lt);
+        font-size: 0.6em;
+        vertical-align: 0.15em;
+    }
+    [data-theme='deco'] .kp-kv__row[data-kp-state='error'] > dd {
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.35em;
+    }
+    [data-theme='deco'] .kp-kv__row[data-kp-state='error']::before {
+        content: none;
+    }
+
+    /* Form rows: the label in spaced capitals; changed and not saved, a gold lozenge stands in the gap before the row;
+       an error is the same lozenge in ruby. */
+    [data-theme='deco'] .kp-formrow__label {
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-formrow__label > small {
+        letter-spacing: 0.02em;
+        text-transform: none;
+    }
+    [data-theme='deco'] .kp-formrow[data-kp-changed]::before,
+    [data-theme='deco'] .kp-formrow[data-kp-state='error']::before {
+        inset-block: auto;
+        inset-block-start: calc((var(--kp-control-height, 2.25rem) - 0.5rem) / 2);
+        inset-inline-start: calc(var(--kp-space-sm, 0.5rem) * -1 - 0.1rem);
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        rotate: 45deg;
+        background: var(--kp-sig-deco-gold-lt);
+        box-shadow: 0 0 0 1px var(--kp-sig-deco-lac);
+    }
+    [data-theme='deco'] .kp-formrow--top[data-kp-changed]::before,
+    [data-theme='deco'] .kp-formrow--top[data-kp-state='error']::before {
+        inset-block-start: 0.5em;
+    }
+    [data-theme='deco'] .kp-formrow[data-kp-state='error']::before {
+        background: var(--destructive);
+    }
+    [data-theme='deco'] .kp-formrows--lines > .kp-formrow {
+        border-block-end-color: hsl(from var(--primary) h s l / 0.3);
+    }
+    [data-theme='deco'] .kp-formrow__lock::before {
+        border-radius: 0;
+    }
+
+    /* The code block: lacquer with the coved double inlay, a double rule under its head, the keys in champagne. */
+    [data-theme='deco'] .kp-code {
+        --kp-code-key: var(--kp-sig-deco-champagne);
+        --kp-code-bg: transparent;
+    }
+    [data-theme='deco'] .kp-code__head {
+        border-block-end: 3px double hsl(from var(--primary) h s l / 0.7);
+        padding-block: var(--kp-space-sm, 0.5rem);
+    }
+    [data-theme='deco'] .kp-code__title {
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-code__meta {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        letter-spacing: 0.06em;
+    }
+    [data-theme='deco'] .kp-code__body,
+    [data-theme='deco'] .kp-code__note {
+        background: var(--kp-sig-deco-shadow);
+        border-radius: 0;
+    }
+    [data-theme='deco'] .kp-code__foot {
+        border-block-start-color: hsl(from var(--primary) h s l / 0.35);
+        font-family: var(--theme-font-body);
+    }
+    [data-theme='deco'] .kp-code[data-kp-state='error'] .kp-code__note {
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.35em;
+    }
+
+    /* The header line. */
+    [data-theme='deco'] .kp-page-header__line > .kp-page-header__title {
+        font-family: var(--theme-font-display);
+        letter-spacing: var(--kp-sig-deco-title-track);
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-page-header__meta {
+        font-family: var(--theme-font-body);
+        letter-spacing: 0.04em;
+    }
+
+    /* A number that ticks: gilded while it runs, one flare of gold that settles into its ink when it lands (G9). */
+    [data-theme='deco'] [data-kp-tick] {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        transition:
+            color var(--kp-sig-deco-hover-t) var(--kp-sig-deco-settle),
+            text-shadow var(--kp-sig-deco-hover-t) var(--kp-sig-deco-settle);
+    }
+    [data-theme='deco'] [data-kp-tick][data-kp-tick-state='running'] {
+        color: var(--kp-sig-deco-gold-hi);
+        text-shadow: 0 0 0.45em hsl(from var(--primary) h s l / 0.8);
+    }
+    @media (prefers-reduced-motion: reduce) {
+        [data-theme='deco'] [data-kp-tick] {
+            transition: none;
+        }
+    }
+}
+
+/* ── The uptime strip, in this theme [kpadopt4-ideas] ──
+   A strip is a row of lacquer slats between gold hairlines: up is emerald (what is on), a degraded period is gold with
+   its fine rules, a down one ruby with its stripes, none an empty frame in gold (G5); pointing warms the slat with gold
+   leaf and its edge to full gold (G15); waiting is the glint running between two gold hairlines, the narrow place's own
+   loading (G10, G11). */
+@layer kp.signature {
+    [data-theme='deco'] .kp-uptime {
+        --kp-uptime-cell-radius: 0;
+        --kp-uptime-up: var(--kp-sig-deco-emerald);
+        --kp-uptime-degraded: var(--kp-sig-deco-gold-lo);
+        --kp-uptime-down: var(--destructive);
+    }
+    [data-theme='deco'] .kp-uptime__title {
+        font-family: var(--theme-font-display);
+        font-size: 0.9375rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-uptime__percent {
+        color: var(--kp-sig-deco-gold-hi);
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+    }
+    [data-theme='deco'] .kp-uptime__summary[data-kp-tone='error'] {
+        background: none;
+        border-radius: 0;
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.3em;
+    }
+    [data-theme='deco'] .kp-uptime__cell:not(.kp-skeleton) {
+        border: 0;
+        border-radius: 0;
+        box-shadow: inset 0 0 0 1px hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.35);
+    }
+    [data-theme='deco'] .kp-uptime__cell[data-kp-tone='none']:not(.kp-skeleton) {
+        background: transparent;
+        box-shadow: inset 0 0 0 1px hsl(from var(--primary) h s l / 0.5);
+    }
+    [data-theme='deco'] .kp-uptime__cell:is(:hover, :focus-visible, [aria-expanded='true']):not(.kp-skeleton) {
+        box-shadow:
+            inset 0 0 0 1px var(--kp-sig-deco-gold-hi),
+            0 0 0 1px var(--primary);
+        filter: brightness(1.2);
+    }
+    [data-theme='deco'] .kp-uptime__axis {
+        font-family: var(--theme-font-body);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-uptime__info-title {
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-uptime__swatch {
+        border: 0;
+        border-radius: 0;
+        box-shadow: inset 0 0 0 1px hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.5);
+    }
+    [data-theme='deco'] .kp-uptime__cell.kp-skeleton {
+        visibility: hidden;
+    }
+    [data-theme='deco'] .kp-uptime__track:has(> .kp-skeleton) {
+        background:
+            linear-gradient(hsl(from var(--primary) h s l / 0.7), hsl(from var(--primary) h s l / 0.7)) 0 30% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--primary) h s l / 0.7), hsl(from var(--primary) h s l / 0.7)) 0 70% / 100% 1px no-repeat,
+            linear-gradient(
+                    90deg,
+                    transparent calc(var(--kp-sig-deco-g, 0) * 140% - 48%),
+                    hsl(from var(--primary) h s l / 0.3) calc(var(--kp-sig-deco-g, 0) * 140% - 30%),
+                    hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.85) calc(var(--kp-sig-deco-g, 0) * 140% - 8%),
+                    hsl(from var(--foreground) h s 97%) calc(var(--kp-sig-deco-g, 0) * 140% - 3%),
+                    transparent calc(var(--kp-sig-deco-g, 0) * 140% - 1%)
+                )
+                0 50% / 100% 2px no-repeat;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-uptime__track:has(> .kp-skeleton) {
+            animation: kp-sig-deco-glint var(--kp-sig-deco-loop) linear infinite;
+        }
+        [data-theme='deco'] .kp-uptime__cell {
+            transition:
+                block-size var(--kp-sig-deco-contact) var(--kp-sig-deco-settle),
+                box-shadow var(--kp-sig-deco-contact) var(--kp-sig-deco-settle),
+                filter var(--kp-sig-deco-contact) var(--kp-sig-deco-settle);
+        }
+    }
+}
+
+/* ── Rows, checks, choices, a card's four states and the drawings, in this theme [kpadopt4-rows] ──
+   A row is ruled by gold hairlines and says its state in a double edge of gold, emerald or ruby; a warning is the words
+   in ruby over a gold rule (G8); the next one up is warmed by gold leaf (G15). A tile of choices is a plate of the
+   lobby, its pick a hairline gone to full gold with a glow inside the inlay (G5, G7). A card's data comes up with the
+   lacquer (G3). The drawings are the fan, drawn as the inlay is, from the centre out in pairs (G2, G13). */
+@layer kp.signature {
+    [data-theme='deco'] .kp-action-list--lead {
+        --kp-action-list-bar: 3px;
+        --kp-action-list-next-wash: 0%;
+    }
+    [data-theme='deco'] .kp-action-list--lead > li {
+        border-block-end: 1px solid hsl(from var(--primary) h s l / 0.3);
+        border-inline-start-style: double;
+    }
+    [data-theme='deco'] .kp-action-list--lead > li[data-kp-state='new'] {
+        border-inline-start-color: var(--primary);
+    }
+    [data-theme='deco'] .kp-action-list--lead > li[data-kp-state='active'] {
+        border-inline-start-color: var(--kp-sig-deco-emerald);
+    }
+    [data-theme='deco'] .kp-action-list--lead > li[data-kp-state='warn'],
+    [data-theme='deco'] .kp-action-list--lead > li[data-kp-state='failed'] {
+        border-inline-start-color: var(--destructive);
+    }
+    [data-theme='deco'] .kp-action-list--lead > li:is([data-kp-state='warn'], [data-kp-state='failed']) .kp-action-list__title {
+        justify-self: start;
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.35em;
+    }
+    [data-theme='deco'] .kp-action-list--lead > li[data-kp-state='next'] {
+        border-inline-start-color: var(--kp-sig-deco-gold-hi);
+        background: linear-gradient(
+            135deg,
+            hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.13),
+            hsl(from var(--primary) h s l / 0.07) 38%,
+            hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.12)
+        );
+        box-shadow: inset 0 -1px 0 var(--primary);
+    }
+    [data-theme='deco'] .kp-action-list--lead > li[data-kp-state='next'] > .kp-action-list__lead {
+        color: var(--kp-sig-deco-gold-hi);
+    }
+    [data-theme='deco'] .kp-action-list__title {
+        letter-spacing: 0.02em;
+    }
+    [data-theme='deco'] .kp-action-list__when > :first-child {
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-action-list > li.kp-action-list__group {
+        padding-inline-start: var(--kp-space-sm, 0.5rem);
+        border-block-end: 3px double hsl(from var(--primary) h s l / 0.6);
+        color: var(--kp-sig-deco-champagne);
+        font-family: var(--theme-font-display);
+        font-size: 0.875rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-action-list__payload {
+        border: 1px solid hsl(from var(--primary) h s l / 0.5);
+        border-radius: 0;
+        background: var(--kp-sig-deco-shadow);
+        box-shadow:
+            inset 0 0 0 2px var(--kp-sig-deco-lac),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.25);
+    }
+    [data-theme='deco'] .kp-action-list__more > summary {
+        letter-spacing: 0.06em;
+    }
+    [data-theme='deco'] .kp-action-list__more > summary:hover {
+        color: var(--kp-sig-deco-champagne);
+    }
+
+    /* A check with a reservation: the label in ruby over a gold rule; the mark square with its gold hairline. */
+    [data-theme='deco'] .kp-statusrow[data-state='warn'] .kp-statusrow__label {
+        justify-self: start;
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.35em;
+    }
+    [data-theme='deco'] .kp-statusrow[data-state='warn'] .kp-statusrow__mark {
+        border-color: var(--primary);
+        background: var(--kp-sig-deco-lac);
+        color: hsl(from var(--destructive) h s calc(l + 4));
+    }
+    [data-theme='deco'] .kp-statusrow__fix {
+        letter-spacing: 0.02em;
+    }
+
+    /* Choices as tiles: the plate of the lobby, the title in spaced capitals, the pick a gold hairline gone full. */
+    [data-theme='deco'] .kp-fieldset[data-kp-layout='tiles'] {
+        --kp-field-tiles-gap: 0.75rem;
+    }
+    [data-theme='deco'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+        position: relative;
+        padding: 0.875rem 1.125rem;
+        border-color: hsl(from var(--primary) h s l / 0.3);
+        color: var(--foreground);
+    }
+    [data-theme='deco'] .kp-field__option-title {
+        font-size: 0.8125rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:hover:not(:has(> .kp-field__check:disabled)) {
+        border-color: var(--kp-sig-deco-gold-hi);
+        box-shadow: inset 0 0 1.25rem hsl(from var(--primary) h s l / 0.14);
+    }
+    [data-theme='deco']
+        .kp-fieldset[data-kp-layout='tiles']
+        > .kp-field__option:hover:not(:has(> .kp-field__check:disabled))
+        .kp-field__option-title {
+        color: var(--kp-sig-deco-champagne);
+    }
+    [data-theme='deco'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:checked) {
+        border-color: var(--kp-sig-deco-gold-hi);
+        background-color: color-mix(in oklab, var(--primary) 9%, var(--kp-sig-deco-lac));
+        box-shadow: inset 0 0 1.5rem hsl(from var(--primary) h s l / 0.2);
+    }
+    [data-theme='deco'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:checked) .kp-field__option-title {
+        color: var(--kp-sig-deco-champagne);
+    }
+    [data-theme='deco'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:disabled) {
+        border-style: dashed;
+        background-color: var(--muted);
+        box-shadow: none;
+    }
+    [data-theme='deco'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:has(> .kp-field__check:focus-visible) {
+        outline: 3px double var(--primary);
+        outline-offset: 3px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option {
+            transition:
+                border-color var(--kp-sig-deco-hover-t) var(--kp-sig-deco-settle),
+                box-shadow var(--kp-sig-deco-hover-t) var(--kp-sig-deco-settle),
+                background-color var(--kp-sig-deco-hover-t) var(--kp-sig-deco-settle);
+        }
+    }
+
+    /* A card in four data states: the title of its note in spaced capitals; the data comes up with the lacquer. */
+    [data-theme='deco'] .kp-card__state-title {
+        font-family: var(--theme-font-display);
+        letter-spacing: var(--kp-sig-deco-title-track);
+        text-transform: uppercase;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-card[data-kp-state='ready'] > .kp-card__stage > .kp-card__data {
+            animation: kp-sig-deco-k4-up var(--kp-sig-deco-up-t) var(--kp-sig-deco-settle) both;
+        }
+    }
+    @keyframes kp-sig-deco-k4-up {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* The drawings: the lobby's fan in gold hairlines, drawn from the centre out two strokes at a time on the settle
+       (G1, G2); the reduced pose is the drawing as it is. */
+    [data-theme='deco'] .kp-art {
+        display: block;
+        --kp-art-stroke: 1.25px;
+        --kp-art-rule: var(--kp-sig-deco-gold-hi);
+        --kp-art-line: hsl(from var(--primary) h s l / 0.45);
+        --kp-art-ink: var(--primary);
+        --kp-art-red: hsl(from var(--destructive) h s calc(l + 4));
+    }
+    [data-theme='deco'] .kp-art > g[data-kp-art-set='fan'] {
+        display: inline;
+    }
+    [data-theme='deco'] .kp-art path {
+        stroke-linecap: butt;
+        stroke-linejoin: miter;
+    }
+    [data-theme='deco'] .kp-art path.kp-art__ink {
+        stroke-width: 1.25px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-art path {
+            stroke-dasharray: 1;
+            animation: kp-sig-deco-art-draw var(--kp-sig-deco-draw-t) var(--kp-sig-deco-settle) both;
+            animation-delay: calc(var(--kp-art-i, 0) * 40ms);
+        }
+    }
+    @keyframes kp-sig-deco-art-draw {
+        from {
+            stroke-dashoffset: 1;
+        }
+        to {
+            stroke-dashoffset: 0;
+        }
+    }
+}
+
+/* ── Flows and records, in this theme [kpadopt4-flows] ──
+   A secret is a figure kept under lacquer: shown, it opens from its middle to both sides as the inlay does (G2), and
+   its time runs out as a gold hairline with a lozenge at its head (G11, G19). A dialog's sections are divided by a
+   gold hairline with a lozenge at its centre, the danger section is the words in ruby over a gold rule (G8, G19). A
+   moment on the timeline is a jewel set in gold, a stretch a pair of hairlines. A journey is a path of gold double
+   rules through emerald jewels, the step it stands at the double ring (G5, G16). The pipeline's lanes are plates of the
+   lobby, a card an inlaid panel warmed by gold leaf (G7, G15). */
+@layer kp.signature {
+    [data-theme='deco'] .kp-secret {
+        --kp-secret-drain: var(--kp-sig-deco-gold-lt);
+        --kp-secret-drain-size: 1px;
+    }
+    [data-theme='deco'] .kp-secret__value {
+        border: 1px solid hsl(from var(--primary) h s l / 0.7);
+        border-radius: 0;
+        background: var(--kp-sig-deco-shadow);
+        box-shadow:
+            inset 0 0 0 2px var(--kp-sig-deco-lac),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.3);
+        font-weight: 500;
+    }
+    [data-theme='deco'] .kp-secret__value.kp-masked {
+        letter-spacing: 0.08em;
+    }
+    [data-theme='deco'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__value {
+        border-color: var(--kp-sig-deco-gold-hi);
+        color: var(--kp-sig-deco-champagne);
+    }
+    [data-theme='deco'] .kp-secret[data-kp-secret-state='disabled'] .kp-secret__value {
+        border-style: dashed;
+        box-shadow: none;
+    }
+    [data-theme='deco'] .kp-secret__line {
+        font-size: 0.8125rem;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='deco'] .kp-secret__drain {
+        position: relative;
+        background: linear-gradient(to right, hsl(from var(--primary) h s l / 0.5), var(--kp-sig-deco-gold-hi));
+        overflow: visible;
+    }
+    [data-theme='deco'] .kp-secret__drain::after {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-end: 0;
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        translate: 50% -50%;
+        rotate: 45deg;
+        background: var(--kp-sig-deco-gold-lt);
+        box-shadow: 0 0 0 1px var(--kp-sig-deco-lac);
+    }
+    [data-theme='deco'] .kp-secret[data-kp-secret-state='error'] .kp-secret__words {
+        border-inline-start: 0;
+        padding-inline-start: 0;
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.35em;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-secret[data-kp-secret-state='shown'] .kp-secret__text {
+            display: inline-block;
+            animation: kp-sig-deco-secret-open var(--kp-sig-deco-draw-t) var(--kp-sig-deco-settle) both;
+        }
+    }
+    @keyframes kp-sig-deco-secret-open {
+        from {
+            clip-path: inset(0 50% 0 50%);
+        }
+        to {
+            clip-path: inset(0);
+        }
+    }
+
+    /* The dialog in sections. */
+    [data-theme='deco'] .kp-dialog__section {
+        position: relative;
+        border-block-start-color: hsl(from var(--primary) h s l / 0.45);
+        text-align: start;
+    }
+    [data-theme='deco'] .kp-dialog__section:not(:first-child)::before {
+        content: '';
+        position: absolute;
+        inset-block-start: -0.2rem;
+        inset-inline-start: calc(50% - 0.2rem);
+        inline-size: 0.4rem;
+        block-size: 0.4rem;
+        rotate: 45deg;
+        background: var(--kp-sig-deco-gold-lt);
+        box-shadow: 0 0 0 2px var(--kp-sig-deco-lac);
+    }
+    [data-theme='deco'] .kp-dialog__heading {
+        font-size: 0.8125rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-dialog__section--danger {
+        padding-inline-start: 0;
+        border-inline-start: 0;
+    }
+    [data-theme='deco'] .kp-dialog__section--danger .kp-dialog__heading {
+        justify-self: start;
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.35em;
+    }
+    [data-theme='deco'] .kp-confirm__dependents {
+        border: 1px solid hsl(from var(--primary) h s l / 0.5);
+        border-radius: 0;
+        background: var(--kp-sig-deco-shadow);
+        box-shadow:
+            inset 0 0 0 2px var(--kp-sig-deco-lac),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.25);
+        text-align: start;
+    }
+
+    /* Moments and stretches on the timeline. */
+    [data-theme='deco'] :is(.kp-gantt__point, .kp-gantt__mark)::before {
+        box-shadow:
+            0 0 0 1px var(--kp-sig-deco-lac),
+            0 0 0 2px hsl(from var(--primary) h s l / 0.85);
+    }
+    [data-theme='deco'] :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-shape='square']::before {
+        rotate: 45deg;
+        scale: 0.8;
+        border-radius: 0;
+    }
+    [data-theme='deco'] .kp-gantt__point[data-kp-planned]::before {
+        background: var(--kp-sig-deco-lac);
+    }
+    [data-theme='deco'] .kp-gantt__point:hover::before {
+        box-shadow:
+            0 0 0 1px var(--kp-sig-deco-lac),
+            0 0 0 2px var(--kp-sig-deco-gold-hi),
+            0 0 0 4px var(--kp-sig-deco-lac),
+            0 0 0 5px hsl(from var(--primary) h s l / 0.6);
+    }
+    [data-theme='deco'] .kp-gantt__zone,
+    [data-theme='deco'] .kp-gantt__band {
+        border-inline: 3px double hsl(from var(--kp-gantt-mark) h s l / 0.6);
+        background: hsl(from var(--kp-gantt-mark) h s l / 0.1);
+    }
+    [data-theme='deco'] .kp-gantt__zone[data-kp-lane-zone] {
+        border: 0;
+        border-block: 1px solid var(--kp-gantt-mark);
+        border-radius: 0;
+        background: hsl(from var(--kp-gantt-mark) h s l / 0.35);
+    }
+    [data-theme='deco'] :is(.kp-gantt__zone, .kp-gantt__band)[data-kp-tone='warning'] {
+        --kp-gantt-mark: hsl(from var(--destructive) h s calc(l + 4));
+    }
+    [data-theme='deco'] .kp-gantt__count {
+        border-color: hsl(from var(--primary) h s l / 0.7);
+        border-radius: 0;
+        background: var(--kp-sig-deco-lac);
+        font-family: var(--theme-font-body);
+    }
+    [data-theme='deco'] .kp-gantt__sub {
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-gantt__lane-link {
+        text-decoration-color: hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='deco'] .kp-gantt__lane-link:hover {
+        color: var(--kp-sig-deco-champagne);
+        text-decoration-color: var(--kp-sig-deco-gold-hi);
+    }
+
+    /* The journey. */
+    [data-theme='deco'] .kp-steplist--journey {
+        --kp-journey-rule: 3px;
+        --kp-steplist-mark: 1.5rem;
+    }
+    [data-theme='deco'] .kp-steplist--journey > .kp-steplist__item {
+        border: 0;
+        outline: 0;
+        background: transparent;
+    }
+    [data-theme='deco'] .kp-steplist--journey .kp-steplist__title {
+        font-size: 0.8125rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-steplist--journey > .kp-steplist__item:not([data-state='current']) .kp-steplist__title {
+        font-weight: 500;
+    }
+    [data-theme='deco'] .kp-steplist--journey > .kp-steplist__item[data-state='current'] .kp-steplist__title {
+        color: var(--kp-sig-deco-champagne);
+        font-weight: 600;
+    }
+    [data-theme='deco'] .kp-steplist--journey .kp-steplist__time {
+        font-family: var(--theme-font-body);
+        font-weight: 500;
+    }
+    [data-theme='deco'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item::before,
+    [data-theme='deco'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        background:
+            linear-gradient(
+                    var(--kp-journey-line, hsl(from var(--primary) h s l / 0.35)),
+                    var(--kp-journey-line, hsl(from var(--primary) h s l / 0.35))
+                )
+                0 0 / 100% 1px no-repeat,
+            linear-gradient(
+                    var(--kp-journey-line, hsl(from var(--primary) h s l / 0.35)),
+                    var(--kp-journey-line, hsl(from var(--primary) h s l / 0.35))
+                )
+                0 100% / 100% 1px no-repeat;
+    }
+    [data-theme='deco'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {
+        --kp-journey-line: var(--kp-step-tone, var(--primary));
+    }
+    [data-theme='deco'] .kp-steplist--journey > .kp-steplist__item[data-state='failed']::before {
+        background: repeating-linear-gradient(90deg, var(--destructive) 0 0.375rem, transparent 0.375rem 0.625rem);
+    }
+    [data-theme='deco'] .kp-steplist--journey .kp-steplist__mark {
+        border: 1px solid hsl(from var(--primary) h s l / 0.5);
+        background-color: var(--kp-sig-deco-lac);
+        box-shadow:
+            inset 0 0 0 2px var(--kp-sig-deco-lac),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.3);
+    }
+    [data-theme='deco'] .kp-steplist--journey .kp-steplist__item[data-state='done']:not([data-kp-tone]) .kp-steplist__mark {
+        border-color: var(--primary);
+        background: var(--kp-sig-deco-emerald);
+        color: var(--kp-sig-deco-champagne);
+        box-shadow: inset 0 0 0 2px var(--kp-sig-deco-lac);
+    }
+    [data-theme='deco'] .kp-steplist--journey .kp-steplist__item[data-state='done'][data-kp-tone] .kp-steplist__mark {
+        border-color: var(--primary);
+        box-shadow: inset 0 0 0 2px var(--kp-sig-deco-lac);
+        background: color-mix(in oklab, var(--kp-step-tone) 78%, var(--kp-sig-deco-lac));
+        color: var(--kp-sig-deco-champagne);
+    }
+    [data-theme='deco'] .kp-steplist--journey .kp-steplist__item[data-state='current'] .kp-steplist__mark {
+        border-color: var(--kp-sig-deco-gold-hi);
+        background: var(--kp-sig-deco-lac);
+        box-shadow:
+            0 0 0 2px var(--kp-sig-deco-lac),
+            0 0 0 3px var(--kp-step-tone, var(--primary)),
+            inset 0 0 0 4px var(--kp-sig-deco-lac),
+            inset 0 0 0 20px var(--kp-step-tone, var(--kp-sig-deco-gold-lt));
+    }
+    [data-theme='deco'] .kp-steplist--journey .kp-steplist__item[data-state='failed'] .kp-steplist__mark {
+        border-color: var(--primary);
+        box-shadow: inset 0 0 0 2px var(--kp-sig-deco-lac);
+    }
+    @container kp-journey (max-width: 30rem) {
+        [data-theme='deco'] .kp-steplist--journey > .kp-steplist__item:not(:last-child)::after {
+            background: hsl(from var(--primary) h s l / 0.35);
+        }
+        [data-theme='deco']
+            .kp-steplist--journey
+            > .kp-steplist__item:has(+ .kp-steplist__item:is([data-state='done'], [data-state='current']))::after {
+            background: var(--kp-step-tone, var(--primary));
+        }
+        [data-theme='deco'] .kp-steplist--journey > .kp-steplist__item:has(+ .kp-steplist__item[data-state='failed'])::after {
+            background: repeating-linear-gradient(180deg, var(--destructive) 0 0.25rem, transparent 0.25rem 0.4375rem);
+        }
+    }
+
+    /* The pipeline. */
+    [data-theme='deco'] .kp-pipeline {
+        --kp-pipeline-gap: 0.875rem;
+    }
+    [data-theme='deco'] .kp-pipeline__lane {
+        padding: 0.75rem;
+    }
+    [data-theme='deco'] .kp-pipeline__head {
+        border-color: hsl(from var(--primary) h s l / 0.6);
+        border-radius: 0;
+        background: color-mix(in oklab, var(--kp-pipeline-tone) 28%, var(--kp-sig-deco-lac));
+        box-shadow:
+            inset 0 0 0 2px var(--kp-sig-deco-lac),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.25);
+    }
+    [data-theme='deco'] .kp-pipeline__name {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-pipeline__count {
+        color: var(--kp-sig-deco-gold-hi);
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+    }
+    [data-theme='deco'] .kp-pipeline__share {
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-pipeline__card {
+        color: var(--foreground);
+        border-color: hsl(from var(--primary) h s l / 0.35);
+        border-radius: 0;
+        background: var(--kp-sig-deco-shadow);
+        box-shadow:
+            inset 0 0 0 2px var(--kp-sig-deco-shadow),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.18);
+    }
+    [data-theme='deco'] .kp-pipeline__card:hover {
+        border-color: var(--kp-sig-deco-gold-hi);
+        background:
+            linear-gradient(
+                135deg,
+                hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.13),
+                hsl(from var(--primary) h s l / 0.07) 38%,
+                hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.12)
+            ),
+            var(--kp-sig-deco-shadow);
+    }
+    [data-theme='deco'] .kp-pipeline__card:hover .kp-pipeline__title {
+        color: var(--kp-sig-deco-champagne);
+    }
+    [data-theme='deco'] .kp-pipeline__card:active {
+        box-shadow: inset 1px 2px 4px hsl(from var(--background) h s l / 0.9);
+    }
+    [data-theme='deco'] .kp-pipeline__card[aria-current='true'] {
+        border-color: var(--kp-sig-deco-gold-hi);
+        outline: 3px double var(--primary);
+        outline-offset: 2px;
+    }
+    [data-theme='deco'] .kp-pipeline__card[data-kp-dimmed] {
+        border-style: dashed;
+        background: transparent;
+        box-shadow: none;
+    }
+    [data-theme='deco'] .kp-pipeline__title {
+        letter-spacing: 0.03em;
+    }
+    [data-theme='deco'] .kp-pipeline__mark {
+        border: 1px solid hsl(from var(--primary) h s l / 0.7);
+        border-radius: 0;
+        background: color-mix(in oklab, var(--kp-pipeline-tone, var(--muted-foreground)) 38%, var(--kp-sig-deco-lac));
+        color: var(--kp-sig-deco-champagne);
+        font-family: var(--theme-font-body);
+        letter-spacing: 0.04em;
+        clip-path: polygon(3px 0, calc(100% - 3px) 0, 100% 3px, 100% calc(100% - 3px), calc(100% - 3px) 100%, 3px 100%, 0 calc(100% - 3px), 0 3px);
+    }
+    [data-theme='deco'] .kp-pipeline__state {
+        text-align: center;
+    }
+    [data-theme='deco'] .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
+        border-inline-start: 0;
+        padding-inline-start: 0;
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.35em;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-pipeline__card {
+            transition:
+                border-color var(--kp-sig-deco-hover-t) var(--kp-sig-deco-settle),
+                background-color var(--kp-sig-deco-hover-t) var(--kp-sig-deco-settle);
+        }
+    }
+}
+
+/* ── The ideas and the recipe components, in this theme [kpadopt4-ideas, kpadopt4-recipes] ──
+   Plates of the lobby (a timer, a countdown, a code block, a terminal, the compare frame) take the lacquer, the coves and
+   the double inlay; a time out is one gilded flare, never a loop that shouts (G9); a handle is the lozenge jewel (G19);
+   emerald marks what is included, ruby what is left out (G5); a wheel settles as a hand opens a fan (G1) inside a double
+   gold rim; a step comes up with the lacquer (G3). Poiret One capitals name, Josefin counts (G18). */
+@layer kp.signature {
+    /* Typed confirmation. */
+    [data-theme='deco'] .kp-type-confirm__loses {
+        padding: 0.75rem 1rem;
+        text-align: start;
+    }
+    [data-theme='deco'] .kp-type-confirm__loses-title {
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        font-size: 0.8125rem;
+        letter-spacing: 0.12em;
+        text-decoration: underline 1px var(--primary);
+        text-transform: uppercase;
+        text-underline-offset: 0.35em;
+        justify-self: start;
+    }
+    [data-theme='deco'] .kp-type-confirm__name {
+        border: 1px solid hsl(from var(--primary) h s l / 0.7);
+        border-radius: 0;
+        background: var(--kp-sig-deco-shadow);
+        color: var(--kp-sig-deco-champagne);
+    }
+    [data-theme='deco'] .kp-type-confirm__status {
+        font-size: 0.8125rem;
+        letter-spacing: 0.04em;
+    }
+
+    /* Command block. */
+    [data-theme='deco'] .kp-command {
+        --kp-command-prompt-ink: var(--kp-sig-deco-gold-lt);
+    }
+    [data-theme='deco'] .kp-command__head {
+        border-block-end: 3px double hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='deco'] .kp-command__shell {
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-command__code {
+        background: var(--kp-sig-deco-shadow);
+        color: var(--kp-sig-deco-champagne);
+    }
+    [data-theme='deco'] .kp-command__where {
+        border-block-start-color: hsl(from var(--primary) h s l / 0.35);
+        font-family: var(--theme-font-body);
+        font-size: 0.8125rem;
+        letter-spacing: 0.02em;
+    }
+    [data-theme='deco'] .kp-command:not([data-kp-command-ready])::before {
+        border-block-end: 3px double hsl(from var(--primary) h s l / 0.7);
+    }
+
+    /* Visual timer and countdown. */
+    [data-theme='deco'] .kp-timer-disc {
+        --kp-timer-disc-fill: var(--kp-sig-deco-gold-lt);
+        --kp-timer-disc-marks: hsl(from var(--primary) h s l / 0.8);
+    }
+    [data-theme='deco'] .kp-timer-disc__face {
+        border: 1px solid hsl(from var(--primary) h s l / 0.8);
+        background-color: var(--kp-sig-deco-lac);
+        box-shadow:
+            inset 0 0 0 3px var(--kp-sig-deco-lac),
+            inset 0 0 0 4px hsl(from var(--primary) h s l / 0.5),
+            0 0 0 3px var(--kp-sig-deco-lac),
+            0 0 0 4px hsl(from var(--primary) h s l / 0.5);
+    }
+    [data-theme='deco'] .kp-timer-disc__sector {
+        background: conic-gradient(var(--kp-sig-deco-gold-lt) calc(var(--kp-timer-disc-left, 1) * 360deg), transparent 0);
+        box-shadow: 0 0 0 1px hsl(from var(--primary) h s l / 0.8);
+    }
+    [data-theme='deco'] .kp-timer-disc__hub {
+        inset: 45%;
+        border: 2px solid var(--kp-sig-deco-lac);
+        border-radius: 0;
+        rotate: 45deg;
+        background: var(--kp-sig-deco-gold-hi);
+        box-shadow: 0 0 0 1px var(--primary);
+    }
+    [data-theme='deco'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face {
+        box-shadow:
+            inset 0 0 0 3px var(--kp-sig-deco-lac),
+            inset 0 0 0 4px var(--kp-sig-deco-gold-hi),
+            0 0 0 3px var(--kp-sig-deco-lac),
+            0 0 0 4px var(--kp-sig-deco-gold-hi);
+    }
+    [data-theme='deco'] :is(.kp-timer-disc__caption, .kp-countdown__name) {
+        font-family: var(--theme-font-display);
+        font-size: 1rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] :is(.kp-timer-disc__status, .kp-countdown__status) {
+        letter-spacing: 0.04em;
+    }
+    [data-theme='deco'] .kp-countdown {
+        --kp-countdown-ink: var(--kp-sig-deco-champagne);
+    }
+    [data-theme='deco'] .kp-countdown__time {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+        letter-spacing: 0.04em;
+    }
+    [data-theme='deco'] .kp-countdown__colon {
+        color: var(--primary);
+    }
+    [data-theme='deco'] .kp-countdown[data-kp-countdown-state='ended'] {
+        outline: 3px double var(--kp-sig-deco-gold-hi);
+        outline-offset: 3px;
+    }
+    [data-theme='deco'] .kp-countdown[data-kp-countdown-state='ended'] .kp-countdown__time {
+        color: var(--kp-sig-deco-gold-hi);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-timer-disc[data-kp-timer-disc-state='ended'] .kp-timer-disc__face,
+        [data-theme='deco'] .kp-countdown[data-kp-countdown-state='ended'] {
+            animation: kp-sig-deco-k4-flare calc(var(--kp-sig-deco-loop) * 5 / 12) linear 1;
+        }
+    }
+    @keyframes kp-sig-deco-k4-flare {
+        0% {
+            filter: drop-shadow(0 0 0 transparent);
+            animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+        }
+        30% {
+            filter: drop-shadow(0 0 0.5em var(--primary));
+            animation-timing-function: cubic-bezier(0.4, 0, 0.6, 1);
+        }
+        100% {
+            filter: drop-shadow(0 0 0 transparent);
+        }
+    }
+
+    /* Range picker. */
+    [data-theme='deco'] .kp-range__custom[aria-pressed='true'] {
+        border-color: var(--kp-sig-deco-gold-hi);
+        outline: 3px double var(--primary);
+        outline-offset: 2px;
+        box-shadow: none;
+    }
+    [data-theme='deco'] .kp-range__label {
+        letter-spacing: 0.04em;
+    }
+    [data-theme='deco'] .kp-range__title {
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-range__panel .kp-field__input[aria-invalid='true'] {
+        border-color: var(--destructive);
+        box-shadow: inset 0 -1px 0 var(--primary);
+    }
+
+    /* Compare slider: the divider a gold double line, the handle the lozenge jewel. */
+    [data-theme='deco'] .kp-compare {
+        --kp-compare-line: 3px;
+        --kp-compare-ink: var(--primary);
+    }
+    [data-theme='deco'] .kp-compare__divider {
+        border-inline-start-style: double;
+        border-inline-start-color: var(--kp-sig-deco-gold-hi);
+    }
+    [data-theme='deco'] .kp-compare__handle {
+        border: 1px solid var(--kp-sig-deco-gold-hi);
+        border-radius: 0;
+        background: var(--kp-sig-deco-lac);
+        box-shadow:
+            inset 0 0 0 2px var(--kp-sig-deco-lac),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.6),
+            0 0 0 2px var(--kp-sig-deco-lac);
+        color: var(--kp-sig-deco-gold-hi);
+        rotate: 45deg;
+    }
+    [data-theme='deco'] .kp-compare__grip {
+        rotate: -45deg;
+    }
+    [data-theme='deco'] .kp-compare__handle:focus-visible {
+        outline: 3px double var(--primary);
+        outline-offset: 3px;
+    }
+    [data-theme='deco'] .kp-compare__label {
+        border-color: hsl(from var(--primary) h s l / 0.7);
+        border-radius: 0;
+        background: var(--kp-sig-deco-lac);
+        color: var(--kp-sig-deco-champagne);
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-compare__failed {
+        background: var(--kp-sig-deco-lac);
+        color: hsl(from var(--destructive) h s calc(l + 4));
+    }
+    [data-theme='deco'] .kp-compare__failed-words {
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.35em;
+    }
+
+    /* Three-way chips: included is emerald in a gold ring, left out is ruby. */
+    [data-theme='deco'] .kp-segmented[data-kp-segmented='tri'] {
+        --kp-tri-mark-radius: 50%;
+        --kp-tri-out-edge: var(--destructive);
+        --kp-tri-out-ground: var(--kp-sig-deco-lac);
+        --kp-tri-out-ink: var(--foreground);
+        --kp-glyph-check: '\2713';
+    }
+    [data-theme='deco'] .kp-segmented__mark {
+        border-color: hsl(from var(--primary) h s l / 0.7);
+        font-family: var(--theme-font-body);
+    }
+    [data-theme='deco'] .kp-segmented__item[data-kp-segmented-tri='include'] > .kp-segmented__mark {
+        border-color: var(--primary);
+        background: var(--kp-sig-deco-emerald);
+    }
+    [data-theme='deco'] .kp-segmented__item[data-kp-segmented-tri='include'] > .kp-segmented__mark::before {
+        color: var(--kp-sig-deco-champagne);
+    }
+    [data-theme='deco'] .kp-segmented--chips > .kp-segmented__item[data-kp-segmented-tri='include'] {
+        color: var(--kp-sig-deco-champagne);
+    }
+    [data-theme='deco'] .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__label {
+        text-decoration-color: var(--destructive);
+        text-decoration-thickness: 1px;
+    }
+    [data-theme='deco'] .kp-segmented__item[data-kp-segmented-tri='exclude'] > .kp-segmented__mark {
+        border-color: var(--primary);
+        background: var(--destructive);
+    }
+    [data-theme='deco'] .kp-segmented__summary {
+        letter-spacing: 0.04em;
+    }
+
+    /* Quantity. */
+    [data-theme='deco'] .kp-quantity__field {
+        border: 1px solid hsl(from var(--primary) h s l / 0.7);
+        border-radius: 0;
+        background: var(--kp-sig-deco-shadow);
+        box-shadow:
+            inset 0 0 0 2px var(--kp-sig-deco-lac),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.3);
+    }
+    [data-theme='deco'] .kp-quantity__field:has(.kp-quantity__input:focus-visible) {
+        outline: 3px double var(--primary);
+        outline-offset: 2px;
+        box-shadow:
+            inset 0 0 0 2px var(--kp-sig-deco-lac),
+            inset 0 0 0 3px hsl(from var(--primary) h s l / 0.3);
+    }
+    [data-theme='deco'] .kp-quantity__field:has(.kp-quantity__input[aria-invalid='true']) {
+        border-color: var(--destructive);
+    }
+    [data-theme='deco'] .kp-quantity__input {
+        color: var(--kp-sig-deco-champagne);
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+    }
+    [data-theme='deco'] .kp-quantity__unit {
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    /* Checklist. */
+    [data-theme='deco'] .kp-checklist__bar {
+        border-block-end: 3px double hsl(from var(--primary) h s l / 0.5);
+    }
+    [data-theme='deco'] .kp-checklist__status {
+        font-family: var(--theme-font-body);
+        letter-spacing: 0.04em;
+    }
+    [data-theme='deco'] .kp-checklist__head {
+        font-family: var(--theme-font-display);
+        font-size: 0.9375rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-checklist__count {
+        font-family: var(--theme-font-body);
+        font-weight: 600;
+    }
+    [data-theme='deco'] .kp-checklist__group[data-kp-checklist-done] .kp-checklist__count::before {
+        content: '\25C6\00a0';
+        color: var(--kp-sig-deco-emerald);
+        font-size: 0.7em;
+        vertical-align: 0.1em;
+    }
+    [data-theme='deco'] .kp-checklist__list {
+        border-block-start-color: hsl(from var(--primary) h s l / 0.35);
+    }
+    [data-theme='deco'] .kp-checklist__item {
+        border-block-end-color: hsl(from var(--primary) h s l / 0.35);
+    }
+    [data-theme='deco'] .kp-checklist__row:hover {
+        background: linear-gradient(
+            135deg,
+            hsl(from var(--kp-sig-deco-gold-hi) h s l / 0.13),
+            hsl(from var(--primary) h s l / 0.07) 38%,
+            hsl(from var(--kp-sig-deco-gold-lt) h s l / 0.12)
+        );
+        box-shadow: inset 0 -1px 0 var(--primary);
+    }
+    [data-theme='deco'] .kp-checklist__item[data-kp-checklist-checked] .kp-checklist__label {
+        text-decoration-color: var(--primary);
+        text-decoration-thickness: 1px;
+    }
+    [data-theme='deco'] .kp-checklist__empty {
+        border: 1px dashed hsl(from var(--primary) h s l / 0.6);
+        border-radius: 0;
+        background: var(--kp-sig-deco-shadow);
+    }
+    [data-theme='deco'] .kp-checklist__empty[data-kp-checklist-failed] {
+        border-style: solid;
+        border-color: hsl(from var(--primary) h s l / 0.7);
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.35em;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-checklist__row {
+            transition: background-color var(--kp-sig-deco-hover-t) var(--kp-sig-deco-settle);
+        }
+    }
+
+    /* Timers. */
+    [data-theme='deco'] .kp-timer {
+        --kp-timer-font: var(--theme-font-body);
+    }
+    [data-theme='deco'] .kp-timer__name {
+        font-family: var(--theme-font-display);
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-timer__state {
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-timer__time {
+        color: var(--kp-sig-deco-champagne);
+        font-weight: 600;
+    }
+    [data-theme='deco'] .kp-timer[data-kp-timer-state='paused'] .kp-timer__time {
+        color: var(--muted-foreground);
+    }
+    [data-theme='deco'] .kp-timer[data-kp-timer-state='done'] {
+        --kp-timer-done-ground: var(--kp-sig-deco-lac);
+        --kp-timer-done-ink: var(--foreground);
+        --kp-timer-done-edge: var(--primary);
+        outline: 3px double var(--kp-sig-deco-gold-hi);
+        outline-offset: 3px;
+    }
+    [data-theme='deco'] .kp-timer[data-kp-timer-state='done'] .kp-timer__state,
+    [data-theme='deco'] .kp-timer[data-kp-timer-state='done'] .kp-timer__time {
+        color: var(--kp-sig-deco-gold-hi);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-timer[data-kp-timer-state='done'] {
+            animation: kp-sig-deco-k4-flare calc(var(--kp-sig-deco-loop) * 5 / 12) linear 1;
+        }
+        [data-theme='deco'] .kp-timer[data-kp-timer-ringing] {
+            animation-iteration-count: infinite;
+            animation-duration: var(--kp-sig-deco-loop);
+        }
+    }
+
+    /* Cook mode: the step comes up with the lacquer; the wake light is a small jewel. */
+    [data-theme='deco'] .kp-focus-steps__count {
+        font-family: var(--theme-font-body);
+        font-size: 0.9375rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-focus-steps__text {
+        font-weight: 400;
+        line-height: 1.5;
+    }
+    [data-theme='deco'] .kp-focus-steps__needs {
+        border-block-start: 3px double hsl(from var(--primary) h s l / 0.5);
+    }
+    [data-theme='deco'] .kp-focus-steps__needs-title {
+        color: var(--kp-sig-deco-champagne);
+        font-size: 0.8125rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-focus-steps__amount {
+        color: var(--kp-sig-deco-champagne);
+        font-weight: 600;
+    }
+    [data-theme='deco'] .kp-focus-steps__wake::before {
+        border-radius: 0;
+        rotate: 45deg;
+    }
+    [data-theme='deco'] .kp-focus-steps[data-kp-focus-steps-screen='on'] .kp-focus-steps__wake::before {
+        border-color: var(--kp-sig-deco-gold-lt);
+        background: var(--kp-sig-deco-gold-lt);
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-focus-steps__step {
+            animation: kp-sig-deco-k4-up var(--kp-sig-deco-up-t) var(--kp-sig-deco-settle) both;
+        }
+    }
+
+    /* The wheel: a double gold rim round the disc, flat lacquer segments between gold hairlines, a gold pointer. */
+    [data-theme='deco'] .kp-wheel {
+        --kp-wheel-ease: cubic-bezier(0.22, 1, 0.36, 1);
+        --kp-wheel-tint: 26%;
+        --kp-wheel-tint-chosen: 58%;
+        --kp-wheel-pointer: var(--kp-sig-deco-gold-lt);
+    }
+    [data-theme='deco'] .kp-wheel__disc {
+        box-shadow:
+            0 0 0 3px var(--kp-sig-deco-lac),
+            0 0 0 4px hsl(from var(--primary) h s l / 0.8);
+    }
+    [data-theme='deco'] .kp-wheel__segment {
+        fill: color-mix(in oklab, var(--kp-wheel-tone) var(--kp-wheel-tint), var(--kp-sig-deco-lac));
+        stroke: hsl(from var(--primary) h s l / 0.8);
+        stroke-width: 0.8;
+    }
+    [data-theme='deco'] .kp-wheel__segment[data-kp-wheel-chosen] {
+        fill: color-mix(in oklab, var(--kp-wheel-tone) var(--kp-wheel-tint-chosen), var(--kp-sig-deco-lac));
+        stroke: var(--kp-sig-deco-gold-hi);
+        stroke-width: 1.6;
+    }
+    [data-theme='deco'] .kp-wheel__label {
+        fill: var(--kp-sig-deco-champagne);
+        font-family: var(--theme-font-body);
+        font-weight: 500;
+        letter-spacing: 0.02em;
+    }
+    [data-theme='deco'] .kp-wheel__rim {
+        stroke: var(--primary);
+        stroke-width: 1;
+    }
+    [data-theme='deco'] .kp-wheel .kp-wheel__spin.kp-button {
+        translate: -50% calc(-50% + 1px * var(--kp-sig-deco-pr, 0));
+    }
+    [data-theme='deco'] .kp-wheel__pointer {
+        stroke: var(--kp-sig-deco-lac);
+    }
+    [data-theme='deco'] .kp-wheel__stage::before {
+        background: var(--kp-sig-deco-lac);
+        box-shadow:
+            0 0 0 var(--kp-wheel-hub-ring, 4px) var(--kp-sig-deco-lac),
+            0 0 0 calc(var(--kp-wheel-hub-ring, 4px) + 1px) hsl(from var(--primary) h s l / 0.8);
+    }
+    [data-theme='deco'] .kp-wheel__outcome:not([data-kp-wheel-note]) {
+        padding-block-end: 0.2em;
+        border-block-end: 3px double hsl(from var(--primary) h s l / 0.7);
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+    }
+    [data-theme='deco'] .kp-wheel__outcome:empty {
+        border-block-end: 0;
+    }
+    [data-theme='deco'] .kp-wheel__result[data-kp-wheel-failed] .kp-wheel__outcome {
+        background: none;
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.35em;
+    }
+    [data-theme='deco'] .kp-wheel__caption {
+        letter-spacing: 0.04em;
     }
 }
