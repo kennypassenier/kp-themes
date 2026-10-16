@@ -6878,10 +6878,14 @@
         background: var(--muted);
         color: var(--muted-foreground);
         font-size: var(--kp-text-sm, 0.8125rem);
-        /* A tag is one line. A theme that folds the width of what arrives (formal rules a part open from
-           the start edge, js/motion.js animates its width from 0) would otherwise wrap its words to one
-           letter per line while it grows: a pill 279 px tall that pushed the page down until the arrival
-           ended (Kenny, kpadopt-controls toolbar · formal, 2026-10-16). */
+    }
+
+    /* A list toolbar's active filter is one line. A theme that folds the width of what arrives (formal rules a
+       part open from the start edge, js/motion.js animates its width from 0) would otherwise wrap its words to one
+       letter per line while it grows: a pill 279 px tall that pushed the page down until the arrival ended (Kenny,
+       kpadopt-controls toolbar · formal, 2026-10-16). Only there: a plain tag holding a sentence wraps inside its
+       pill, as approved (catalogue/feedback.html#tags). */
+    .kp-toolbar__active-list > .kp-tag {
         white-space: nowrap;
     }
 
@@ -17354,7 +17358,6 @@
             grid-row: 2;
             margin-block: 0.25rem 0.125rem;
         }
-
     }
 
     /* --- Key-value grid ------------------------------------------------- */
