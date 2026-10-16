@@ -4582,4 +4582,9 @@
     [data-theme='brutalism'] .kp-matrix__corner {
         text-wrap: balance;
     }
+    /* A ghost bar stands where its run would, as in formal: absolute in its track, so a second ghost of one track never
+       drops under the first and out of the timeline onto the legend. */
+    [data-theme='brutalism'] .kp-gantt__ghost .kp-gantt__run.kp-skeleton {
+        position: absolute;
+    }
 }
