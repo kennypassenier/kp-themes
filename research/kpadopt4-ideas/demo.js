@@ -167,3 +167,21 @@ const waitTyped = () => {
     if (!typeIn()) requestAnimationFrame(waitTyped);
 };
 waitTyped();
+
+/* ------------------------------------------------------------ 3 · the command block */
+
+const cmdLog = byId('k4-cmd-log');
+document.addEventListener('kp-copy', (event) => {
+    const text = /** @type {CustomEvent} */ (event).detail.text;
+    say(cmdLog, `kp-copy · ${text.split('\n').length} line(s) · ${JSON.stringify(text.slice(0, 70))}${text.length > 70 ? '…' : ''}`);
+});
+document.addEventListener('kp-copy-failed', () => say(cmdLog, 'kp-copy-failed · the clipboard refused'));
+// Demo only: a clipboard that refuses, to show the failure state.
+const refuse = byId('k4-cmd-refuse');
+const realWrite = navigator.clipboard?.writeText?.bind(navigator.clipboard);
+refuse.addEventListener('click', () => {
+    const on = refuse.getAttribute('aria-pressed') !== 'true';
+    refuse.setAttribute('aria-pressed', String(on));
+    if (navigator.clipboard)
+        navigator.clipboard.writeText = on ? () => Promise.reject(new DOMException('Refused for the demo', 'NotAllowedError')) : realWrite;
+});

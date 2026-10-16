@@ -152,6 +152,10 @@
             "types": "./js/uptime.d.ts",
             "default": "./js/uptime.js"
         },
+        "./js/command": {
+            "types": "./js/command.d.ts",
+            "default": "./js/command.js"
+        },
         "./js/loading-pieces": {
             "types": "./js/loading-pieces.d.ts",
             "default": "./js/loading-pieces.js"

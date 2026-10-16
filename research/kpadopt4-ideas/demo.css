@@ -136,3 +136,8 @@
     inline-size: 100%;
     margin: 0;
 }
+
+/* Siblings in one row share one height (the command blocks). */
+.k4-pair--even {
+    align-items: stretch;
+}

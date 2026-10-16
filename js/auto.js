@@ -169,6 +169,8 @@ export const NEEDS = [
     { name: 'gantt', when: '[data-kp-gantt]', load: () => import('./gantt.js'), attach: (m, root) => [m.attachGantts(root)] },
     // The uptime strip [kpadopt4-ideas]: one cell per period, toned up, degraded, down or without data, in exact figures.
     { name: 'uptime', when: '[data-kp-uptime]', load: () => import('./uptime.js'), attach: (m, root) => [m.attachUptimes(root)] },
+    // The command block [kpadopt4-ideas]: one command with its terminal, its admin or sudo badge and a copy that confirms.
+    { name: 'command', when: '[data-kp-command]', load: () => import('./command.js'), attach: (m, root) => [m.attachCommands(root)] },
     { name: 'graph', when: '[data-kp-graph]', load: () => import('./graph.js'), attach: (m, root) => [m.attachGraphs(root)] },
     {
         // A theme's loading picture made of pieces (`--kp-loading-pieces`,

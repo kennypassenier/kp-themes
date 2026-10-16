@@ -2900,6 +2900,43 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
         ],
     },
     {
+        id: 'command',
+        title: 'Command block',
+        group: 'Content',
+        classes: ['kp-command'],
+        aliases: ['continued'],
+        exports: [],
+        intro: 'One command to run, with the terminal it runs in, whether it needs admin or sudo, a copy button that confirms and where it runs. `attachCommands(root)` in js/command.js writes the head (the terminal’s name from `data-kp-command`: `wsl`, `powershell`, `cmd`, `garuda`, `bash`; the amber `admin` or `sudo` badge with `data-kp-command-elevated`; the package’s copy button) and the note `data-kp-command-where` under the code, and puts every line behind the terminal’s prompt, which the stylesheet draws so it is never copied. A line ending in a continuation mark or a pipe carries on, indented, on the next. A long line wraps under its first character; `data-kp-command-wrap="scroll"` keeps it whole and the code scrolls.',
+        whenToUse:
+            'Whenever a page asks a person to run something: a fix in a runbook, the next step of a release, a command a dialog shows for a workstation. Not for a code listing to read (use a plain `pre`) and not for a value to copy (use the copyable value).',
+        examples: [
+            {
+                title: 'A WSL command that needs sudo',
+                why: 'The markup is the code and three attributes; the head, the prompt and the copy button are the script’s, and the copy is the command as written.',
+                markup: `
+<div class="kp-command" data-kp-command="wsl" data-kp-command-elevated data-kp-command-where="CT 109 (kyu)"><pre class="kp-command__code"><code>sudo systemctl restart kyu</code></pre></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-command', what: 'The terminal: `wsl`, `powershell`, `cmd`, `garuda` or `bash`; it decides the name, the prompt and the continuation marks.' },
+            { name: 'data-kp-command-label', what: 'The terminal’s name when it is not one the dictionary knows.' },
+            { name: 'data-kp-command-elevated', what: 'The command needs a terminal opened as administrator (Windows) or runs with sudo (Linux): the amber badge.' },
+            { name: 'data-kp-command-where', what: 'Where it runs; shown under the code as “Runs on …”.' },
+            { name: 'data-kp-command-wrap', what: '`scroll`: long lines stay whole and the code scrolls sideways, its edge fading on the side with more.' },
+            { name: 'data-kp-command-shell', what: 'Set by the script: the terminal the prompt is drawn for, or `other`.' },
+            { name: 'data-kp-command-ready', what: 'Set by the script once the block is drawn; before it the head’s room is kept.' },
+            { name: 'data-kp-command-before', what: 'Set by the script on scrolling code with more before the view.' },
+            { name: 'data-kp-command-after', what: 'Set by the script on scrolling code with more after the view.' },
+            { name: 'data-kp-continued', what: 'Set by the script on a line that carries on from the line before: indented, without a prompt.' },
+        ],
+        accessibility: [
+            'Built in — the block is a group named by its terminal; the copy button is described by it, says “Copied” on itself and announces it; a refused copy says so in a toast and on the button.',
+            'Built in — the prompts are drawn, not written, so neither a screen reader nor a copy reads them; scrolling code is a focusable region a keyboard can scroll.',
+            'Yours — say what the command does in the sentence before it, and name where it runs when that is not the obvious machine.',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

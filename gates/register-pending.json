@@ -21,5 +21,6 @@
     "help": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports-2); each register answers it once it is judged in that theme",
     "tour": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports-2); each register answers it once it is judged in that theme",
     "uptime": "a new component approved by Kenny on 2026-10-16 (research/kpadopt4-ideas), demoed in formal only; each register answers it once it is judged in that theme",
-    "type-confirm": "a new component approved by Kenny on 2026-10-16 (research/kpadopt4-ideas), demoed in formal only; each register answers it once it is judged in that theme"
+    "type-confirm": "a new component approved by Kenny on 2026-10-16 (research/kpadopt4-ideas), demoed in formal only; each register answers it once it is judged in that theme",
+    "command": "a new component approved by Kenny on 2026-10-16 (research/kpadopt4-ideas), demoed in formal only; each register answers it once it is judged in that theme"
 }

@@ -443,6 +443,185 @@
                 </div>
             </section>
 
+            <!-- 3 · command block -->
+            <section
+                class="k4-sec"
+                id="command"
+                data-review-item="command"
+                data-review-components="command"
+                data-review-topic="command"
+                data-review-topic-title="3 · Command block"
+                data-review-title="3 · Command block: four terminals"
+                aria-labelledby="h-command"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-command">3 · Command block: four terminals</h2>
+                    <p>
+                        <code>&lt;div class="kp-command" data-kp-command="wsl" data-kp-command-elevated data-kp-command-where="…"&gt;</code> around a
+                        <code>&lt;pre&gt;&lt;code&gt;</code> (js/command.js). The copy button is the package’s own (js/patterns.js).
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Each block: a head with the terminal’s name (<b>WSL</b>, <b>PowerShell</b>, <b>cmd</b>, <b>Garuda</b>), an amber
+                            <b>sudo</b> or <b>admin</b> badge where the command needs it (point at it for what it means), and <b>Copy</b> at the end;
+                            the command on the grey code ground; “Runs on …” under it where given.
+                        </li>
+                        <li>
+                            Every line starts with its terminal’s prompt in muted ink: <code>$</code> for WSL and Garuda, <code>PS&gt;</code> for
+                            PowerShell, <code>&gt;</code> for cmd. A line that carries on (ending in <code>\</code> or a backtick) is followed by an
+                            indented line without a prompt.
+                        </li>
+                        <li>
+                            Press <b>Copy</b>: it turns green and says <b>Copied</b> for a moment, without changing width; the grey box shows what
+                            reached the clipboard (without the prompts). Paste it somewhere: the command exactly as written.
+                        </li>
+                        <li>
+                            <b>Refuse the clipboard</b> (demo) makes the next copy fail: the button gets a dashed red frame, keeps the word
+                            <b>Copy</b>, and the package’s toast says copying is blocked. Press it again to allow.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal’s card with a hairline under the head, its mono face for the terminal and the code, its warning badge and its small
+                        button; the copied state is formal’s success plate.
+                    </p>
+                </div>
+                <div class="k4-pair k4-pair--even">
+                    <div class="kp-command" data-kp-command="wsl" data-kp-command-elevated data-kp-command-where="CT 109 (kyu), as root">
+                        <pre class="kp-command__code"><code>sudo systemctl restart kyu</code></pre>
+                    </div>
+                    <div class="kp-command" data-kp-command="powershell" data-kp-command-elevated data-kp-command-where="the Windows PC">
+                        <pre class="kp-command__code"><code>Get-Service -Name "Claude*" |
+    Restart-Service -Force `
+    -PassThru</code></pre>
+                    </div>
+                    <div class="kp-command" data-kp-command="cmd">
+                        <pre class="kp-command__code"><code>ipconfig /flushdns</code></pre>
+                    </div>
+                    <div class="kp-command" data-kp-command="garuda" data-kp-command-elevated data-kp-command-where="your Garuda desktop">
+                        <pre class="kp-command__code"><code>sudo pacman -Syu \
+  --noconfirm
+sudo systemctl reboot</code></pre>
+                    </div>
+                </div>
+                <div class="k4-actions">
+                    <button type="button" class="kp-button" aria-pressed="false" id="k4-cmd-refuse">Refuse the clipboard (demo)</button>
+                </div>
+                <pre class="k4-log" id="k4-cmd-log" aria-live="polite"></pre>
+            </section>
+
+            <section
+                class="k4-sec"
+                id="command-long"
+                data-review-item="command-long"
+                data-review-components="command"
+                data-review-topic="command"
+                data-review-title="3 · Command block: long commands, wrap or scroll"
+                aria-labelledby="h-command-long"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-command-long">3 · Command block: long commands, wrap or scroll</h2>
+                    <p>
+                        The same long line wrapped (the default) and kept whole with <code>data-kp-command-wrap="scroll"</code>, then a long script.
+                    </p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Wrap</b>: the line breaks where it must and the next part starts under the first letter after the prompt, never under
+                            the prompt; no character is cut or hidden.
+                        </li>
+                        <li>
+                            <b>Scroll</b>: the line stays one line and the code scrolls sideways inside its block; Tab reaches it (a focus ring
+                            appears) and the arrow keys scroll it. The page itself never scrolls sideways.
+                        </li>
+                        <li><b>A long script</b>: twelve lines, each with its prompt; nothing is cut and the copy takes all twelve lines.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal’s code ground and its mono face; the focus ring is formal’s.</p>
+                </div>
+                <div class="k4-stack">
+                    <div>
+                        <p class="k4-label">Wrap (default)</p>
+                        <div class="kp-command" data-kp-command="wsl" data-kp-command-where="CT 106 (media)">
+                            <pre
+                                class="kp-command__code"
+                            ><code>docker compose -f /srv/stacks/media/compose.yaml --project-directory /srv/stacks/media --env-file /srv/stacks/media/.env up --detach --remove-orphans --wait --wait-timeout 120 jellyfin jellyseerr</code></pre>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="k4-label">Scroll</p>
+                        <div class="kp-command" data-kp-command="wsl" data-kp-command-wrap="scroll" data-kp-command-where="CT 106 (media)">
+                            <pre
+                                class="kp-command__code"
+                            ><code>docker compose -f /srv/stacks/media/compose.yaml --project-directory /srv/stacks/media --env-file /srv/stacks/media/.env up --detach --remove-orphans --wait --wait-timeout 120 jellyfin jellyseerr</code></pre>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="k4-label">A long script</p>
+                        <div class="kp-command" data-kp-command="bash" data-kp-command-elevated data-kp-command-where="the Proxmox host">
+                            <pre class="kp-command__code"><code>pct stop 109
+pct snapshot 109 before-kyu-4-1 --description "before kyu 4.1.0"
+pct set 109 --memory 2048 --swap 512
+pct start 109
+pct exec 109 -- systemctl status kyu --no-pager
+pct exec 109 -- journalctl -u kyu -n 50 --no-pager
+pct exec 109 -- ss -ltnp
+pct exec 109 -- curl -fsS http://127.0.0.1:8080/health
+pct exec 109 -- df -h /
+pct exec 109 -- free -m
+pct listsnapshot 109
+pct config 109</code></pre>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="k4-sec"
+                id="command-phone"
+                data-review-item="command-phone"
+                data-review-components="command"
+                data-review-topic="command"
+                data-review-title="3 · Command block at phone width"
+                aria-labelledby="h-command-phone"
+            >
+                <div class="k4-sec__head">
+                    <h2 id="h-command-phone">3 · Command block at phone width</h2>
+                    <p>PowerShell as administrator with a long note, in a 360 px frame.</p>
+                </div>
+                <div class="k4-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The head stays one line: <b>PowerShell</b>, <b>admin</b>, <b>Copy</b>. The long command wraps under its first letter; the
+                            note wraps under the code. No text touches the frame or the button.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal at a phone’s width.</p>
+                </div>
+                <div class="k4-frame k4-frame--phone">
+                    <div
+                        class="kp-command"
+                        data-kp-command="powershell"
+                        data-kp-command-elevated
+                        data-kp-command-where="the Windows PC, in a PowerShell window you opened with Run as administrator"
+                    >
+                        <pre
+                            class="kp-command__code"
+                        ><code>wsl --shutdown; Start-Sleep -Seconds 5; wsl --distribution Garuda --user root --exec /usr/local/bin/sign-releases --all</code></pre>
+                    </div>
+                </div>
+            </section>
+
             <!-- next sections -->
         </main>
         <script type="module" src="demo.js"></script>

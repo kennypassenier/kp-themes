@@ -1867,6 +1867,35 @@ page that draws its own. The words are `typeConfirmLabel`, `typeConfirmRuleExact
 `typeConfirmMatched`, `typeConfirmMismatch` and `typeConfirmLoses`. Knobs: `--kp-type-confirm-gap`,
 `--kp-type-confirm-list-max` (12rem; a longer list scrolls), `--kp-confirm-typed-max-width` (30rem).
 
+### A command to run
+
+One command with the terminal it runs in, an admin or sudo badge, a copy button that confirms and where it runs:
+
+```html
+<div class="kp-command" data-kp-command="powershell" data-kp-command-elevated data-kp-command-where="the Windows PC">
+    <pre class="kp-command__code"><code>Get-Service -Name "Claude*" |
+    Restart-Service -Force</code></pre>
+</div>
+```
+
+`attachCommands(root)` (`js/command.js`, attached by `js/auto.js`) writes the head: the terminal's name
+(`data-kp-command` is `wsl`, `powershell`, `cmd`, `garuda` or `bash`; `data-kp-command-label` names another), the
+warning badge `admin` (Windows) or `sudo` (Linux) for `data-kp-command-elevated`, and the package's copy button
+(`[data-kp-copy]`, js/patterns.js: "Copied" on the button and announced, `kp-copy`; a refused clipboard marks the
+button and says so in a toast, `kp-copy-failed`). The button keeps one width for both words. `data-kp-command-where`
+becomes "Runs on …" under the code.
+
+Every line stands behind its terminal's prompt (`$`, `PS>`, `>`), drawn by the stylesheet (`--kp-command-prompt`), so
+it is never selected or copied: the copy is the command as written, newlines and all. A line that ends in the
+terminal's continuation mark (`\` in a Linux shell, a backtick in PowerShell, `^` in cmd) or in a pipe (and `&&` or
+`||` in a Linux shell) carries on, indented, on the next. A long line wraps under its first character after the
+prompt; with `data-kp-command-wrap="scroll"` it stays whole and the code scrolls sideways, a focusable region whose
+edge fades on the side with more. Before the script runs the block keeps its head's room, so the code does not move.
+`commandLines(text, continues)` is the line rule and `COMMAND_SHELLS` the table of terminals. The words are
+`commandShell`, `commandAdmin`, `commandAdminTitle`, `commandSudo`, `commandSudoTitle` and `commandRunsOn`, beside the
+copy button's own `copy` and `copied`. Knobs: `--kp-command-prompt`, `--kp-command-prompt-width`,
+`--kp-command-prompt-ink`, `--kp-command-head-height` (2.75rem), `--kp-command-code-max`.
+
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

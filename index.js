@@ -136,6 +136,7 @@ export {
     uptimeFit,
     uptimePercent,
 } from './js/uptime.js';
+export { COMMAND, COMMAND_SHELLS, attachCommands, commandLines } from './js/command.js';
 // The dashboard components [scope-143].
 export { ACTION_LIST, ROW_ACTIONS, attachActionColumns, fitActionColumns, mergeRoles, rowRoles } from './js/actions.js';
 export {

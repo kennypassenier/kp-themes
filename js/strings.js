@@ -370,6 +370,12 @@
  * @property {string} typeConfirmMatched  The badge once the typed name matches [kpadopt4-ideas]
  * @property {string} typeConfirmMismatch  The line while what is typed does not match yet [kpadopt4-ideas]
  * @property {string} typeConfirmLoses  The heading over what the action will delete [kpadopt4-ideas]
+ * @property {(shell: string) => string} commandShell  A command block's terminal by its key: WSL, PowerShell, cmd, Garuda, bash; another key as written (js/command.js) [kpadopt4-ideas]
+ * @property {string} commandAdmin  The badge of a Windows command that needs a terminal opened as administrator [kpadopt4-ideas]
+ * @property {string} commandAdminTitle  Its tooltip [kpadopt4-ideas]
+ * @property {string} commandSudo  The badge of a Linux command that runs with root rights [kpadopt4-ideas]
+ * @property {string} commandSudoTitle  Its tooltip [kpadopt4-ideas]
+ * @property {(where: string) => string} commandRunsOn  The note under a command that says where it runs [kpadopt4-ideas]
  * @property {string} graphShowAll  The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
  * @property {string} graphShowAllTitle  Its title [scope-143]
  * @property {string} graphHint  The hint under the graph, and the second half of its picture's accessible name: what a pointer, a click and the keys do [scope-143]
@@ -859,6 +865,13 @@ export const DEFAULT_STRINGS = Object.freeze({
     typeConfirmMatched: 'Matches',
     typeConfirmMismatch: 'Does not match yet',
     typeConfirmLoses: 'This deletes, for good:',
+    // The command block [kpadopt4-ideas].
+    commandShell: (shell) => ({ wsl: 'WSL', powershell: 'PowerShell', cmd: 'cmd', garuda: 'Garuda', bash: 'bash' })[shell] ?? shell,
+    commandAdmin: 'admin',
+    commandAdminTitle: 'Run it in a terminal opened as administrator',
+    commandSudo: 'sudo',
+    commandSudoTitle: 'Runs with root rights; the terminal asks for your password',
+    commandRunsOn: (where) => `Runs on ${where}`,
     // The network graph [scope-143]: its own words; the nodes, kinds and
     // the sentences of its states are the page's.
     graphShowAll: 'Show all',

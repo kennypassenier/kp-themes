@@ -138,6 +138,7 @@ export const FILES = [
     'js/week.js',
     'js/gantt.js',
     'js/uptime.js',
+    'js/command.js',
     'js/loading-pieces.js',
     'js/busy-card.js',
     'js/motion.js',

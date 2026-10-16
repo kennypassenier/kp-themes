@@ -16755,6 +16755,170 @@
         color: var(--muted-foreground);
         font-size: var(--kp-text-sm, 0.8125rem);
     }
+
+    /* --- Command block: one command, its terminal, a copy that confirms [kpadopt4-ideas] ---
+ * `.kp-command[data-kp-command="wsl|powershell|cmd|garuda|bash"]` (js/command.js). A head with the terminal's name,
+ * the admin or sudo badge (the warning badge) and the package's copy button, then the code on the muted ground of a
+ * `pre`, every line behind the terminal's prompt (drawn here, so it is never selected or copied), then an optional
+ * note on where it runs. A long line wraps under its own first character after the prompt; with
+ * `data-kp-command-wrap="scroll"` it stays whole and the code scrolls inside its block. The head keeps its height
+ * before the script has drawn it, and the copy button keeps one width for "Copy" and "Copied".
+ * Knobs [KT6]: --kp-command-prompt (the prompt, per terminal), --kp-command-prompt-width (its width in ch),
+ * --kp-command-prompt-ink (--muted-foreground), --kp-command-head-height (2.75rem), --kp-command-code-max (none: a
+ * very long command scrolls inside the block past this height). */
+    .kp-command {
+        --kp-command-prompt: '$ ';
+        --kp-command-prompt-width: 2ch;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        /* Blocks side by side in a grid are as tall as the tallest: the code's ground takes the room. */
+        grid-template-rows: auto 1fr;
+        min-inline-size: 0;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        overflow: hidden;
+    }
+
+    .kp-command:has(> .kp-command__where) {
+        grid-template-rows: auto 1fr auto;
+    }
+
+    .kp-command[data-kp-command-shell='powershell'] {
+        --kp-command-prompt: 'PS> ';
+        --kp-command-prompt-width: 4ch;
+    }
+
+    .kp-command[data-kp-command-shell='cmd'] {
+        --kp-command-prompt: '> ';
+        --kp-command-prompt-width: 2ch;
+    }
+
+    /* The head's room is there before the script draws it, so the code does not move down when it arrives. */
+    .kp-command:not([data-kp-command-ready])::before {
+        content: '';
+        display: block;
+        box-sizing: border-box;
+        block-size: var(--kp-command-head-height, 2.75rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-command__head {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        min-block-size: var(--kp-command-head-height, 2.75rem);
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-xs, 0.25rem) var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.875rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-command__shell {
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .kp-command__elevated {
+        flex: none;
+    }
+
+    /* The copy button and its two invisible copies share one cell, as wide as the wider word. */
+    .kp-command__copy-slot {
+        display: inline-grid;
+        margin-inline-start: auto;
+    }
+
+    .kp-command__copy-slot > * {
+        grid-area: 1 / 1;
+    }
+
+    .kp-command__ghost {
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .kp-command__copy-slot > .kp-command__copy:not(.kp-command__ghost) {
+        inline-size: 100%;
+    }
+
+    .kp-command__code {
+        margin: 0;
+        max-block-size: var(--kp-command-code-max, none);
+        padding: var(--kp-space-sm, 0.625rem) var(--kp-space-md, 0.875rem);
+        border-radius: 0;
+        overflow: auto;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        line-height: 1.6;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-command__code > code {
+        display: block;
+        padding: 0;
+        background: none;
+        font-size: inherit;
+    }
+
+    /* A line hangs under its first character after the prompt when it wraps. */
+    .kp-command__line {
+        display: block;
+        padding-inline-start: var(--kp-command-prompt-width, 2ch);
+        text-indent: calc(-1 * var(--kp-command-prompt-width, 2ch));
+    }
+
+    .kp-command__line::before {
+        content: var(--kp-command-prompt, '$ ');
+        color: var(--kp-command-prompt-ink, var(--muted-foreground));
+        user-select: none;
+    }
+
+    .kp-command__line[data-kp-continued]::before {
+        content: '';
+        display: inline-block;
+        inline-size: var(--kp-command-prompt-width, 2ch);
+    }
+
+    .kp-command[data-kp-command-wrap='scroll'] .kp-command__code {
+        white-space: pre;
+        overflow-wrap: normal;
+        scrollbar-width: thin;
+    }
+
+    .kp-command[data-kp-command-wrap='scroll'] .kp-command__line {
+        display: block;
+        inline-size: max-content;
+        min-inline-size: 100%;
+    }
+
+    .kp-command__code[data-kp-command-before] {
+        mask-image: linear-gradient(to right, transparent, var(--foreground) 2rem);
+    }
+
+    .kp-command__code[data-kp-command-after] {
+        mask-image: linear-gradient(to left, transparent, var(--foreground) 2rem);
+    }
+
+    .kp-command__code[data-kp-command-before][data-kp-command-after] {
+        mask-image: linear-gradient(to right, transparent, var(--foreground) 2rem calc(100% - 2rem), transparent);
+    }
+
+    .kp-command__code:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: -2px;
+    }
+
+    .kp-command__where {
+        margin: 0;
+        padding: var(--kp-space-xs, 0.375rem) var(--kp-space-md, 0.875rem);
+        border-block-start: 1px solid var(--border);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        overflow-wrap: anywhere;
+    }
 }
 
 /* The tour's dim is the target's box-shadow, and a register that gives the part a shadow of its own (a card's rim) wins over
