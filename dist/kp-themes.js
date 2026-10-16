@@ -22546,7 +22546,7 @@ function edgeTicks(c, w) {
   if (!room) return;
   for (const [t, parts] of c.ticks) {
     const at = (t - w.from) / c.span * room;
-    parts.label.toggleAttribute("data-kp-edge", room - at < parts.label.offsetWidth + 2);
+    parts.label.toggleAttribute("data-kp-gantt-edge", room - at < parts.label.offsetWidth + 2);
   }
 }
 function paint4(c) {

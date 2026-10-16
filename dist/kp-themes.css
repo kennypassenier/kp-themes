@@ -11871,12 +11871,12 @@
     }
 
     /* Near the end edge the label stands before its rule and ends at it (js/gantt.js marks it), never cut. */
-    .kp-gantt__tick[data-kp-edge] {
+    .kp-gantt__tick[data-kp-gantt-edge] {
         translate: -100% 0;
         padding-inline: 0 0.3125rem;
     }
 
-    .kp-gantt__tick[data-kp-edge]:dir(rtl) {
+    .kp-gantt__tick[data-kp-gantt-edge]:dir(rtl) {
         translate: 100% 0;
     }
 
