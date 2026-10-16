@@ -4795,7 +4795,6 @@
         font-weight: 600;
     }
     [data-theme='deco'] .kp-stackbar__bar {
-        margin-block: 4px;
         background: var(--kp-sig-deco-shadow);
         box-shadow:
             0 0 0 1px hsl(from var(--primary) h s l / 0.8),

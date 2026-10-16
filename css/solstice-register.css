@@ -3318,6 +3318,10 @@
         font-size: 1rem;
         font-weight: 400;
     }
+    [data-theme='solstice'] .kp-bullets__wait--what > .kp-bullets__wait:first-child,
+    [data-theme='solstice'] .kp-bullets__wait--figure {
+        font-size: 1rem;
+    }
     [data-theme='solstice'] .kp-bullets__figure {
         font-family: var(--theme-font-display, inherit);
         font-size: 1rem;
@@ -3338,9 +3342,14 @@
     }
 
     /* The key-value grid: the keys in the serif, a row lit at its foot only where it fails or changed. */
+    [data-theme='solstice'] .kp-kv {
+        font-size: 0.9375rem;
+    }
+    [data-theme='solstice'] .kp-kv__row {
+        align-items: start;
+    }
     [data-theme='solstice'] .kp-kv__row > dt {
         font-family: var(--theme-font-display, inherit);
-        font-size: 0.9375rem;
     }
     [data-theme='solstice'] .kp-kv--lines > .kp-kv__row {
         border-block-end-color: var(--border);
