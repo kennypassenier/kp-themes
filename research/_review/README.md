@@ -23,6 +23,16 @@ copy one structured answer back into the conversation [scope-141].
 `data-review-themes` is optional; without it the dialog walks all 22 themes
 in the registry's order.
 
+A demo that asks more than one theme groups its sections into topics (Kenny, 2026-10-16), one attribute per section;
+the first section of a topic carries its title:
+
+```html
+<section data-review-item="heat" data-review-topic="matrix" data-review-topic-title="Matrix and heat grid">…</section>
+<section data-review-item="matrix" data-review-topic="matrix">…</section>
+```
+
+A section without `data-review-topic` is a topic of its own. See "Topic steps" below.
+
 A section can name its own themes, `data-review-themes="formal,light"`: the dialog then asks it only in those
 themes (a demo of what changed per theme, research/all-themes-applied). Without it a section is asked in every
 theme the demo walks.
@@ -50,6 +60,8 @@ catalogue page itself):
 
 - A bar at the top of the page: how many steps and pairs are judged,
   "Review in a dialog" and "Copy answer".
+- A round that asks more than one theme: one step per topic, each section of it in every asked theme (see "Topic
+  steps" below). A round that asks one theme, and a demo of aspect pages:
 - One step per theme: every section of the demo at once, stacked as on
   "Every component, one page", and at the side one row per section with its
   look-at line and a "Not approved" box. The reviewer ticks only what is
@@ -75,6 +87,33 @@ Not approved:
 
 Verdicts and notes live in the browser's localStorage under
 `kp-demo-review:<demo id>`, until "Clear all verdicts".
+
+## Topic steps
+
+Kenny, 2026-10-16 16:43: "Kunnen we de demo ook indelen zodat we per topic/thema werken. bv een groepering van
+gelijksoortige componenten zoals de matrix eerst voor alle thema's, dan de volgende groep etc, zo behoud ik het meeste
+context en kan ik het best vergelijken, doe dit vanaf nu altijd waar mogelijk".
+
+When the sections of a demo are asked in more than one theme together, the dialog walks **topic-major**: one step per
+topic, in the page's order. The stage shows the topic section by section; under each section's title, the section in
+every theme it is asked in, in the demo's theme order, each in a frame of its own (the demo itself at
+`?theme=<theme>&rv-lane=<item>`, isolated to that section the way the previous version is), under a head that names the
+theme and sticks while the section scrolls past. One column on a laptop, two side by side where the stage is wider than
+two times 40rem. The frames load as they come near the view.
+
+- At the side, one heading per section and under it one row per theme, with that theme's look-at line and its
+  "Not approved" box: the verdict stays one per section × theme pair, and a pair ticked "Not approved" marks its frame
+  too. Up approves the whole topic in every theme shown.
+- The demo's controls are mirrored once on top; a press acts on every frame of the step at once (a frame that loads
+  later replays the presses made before it), so a state is compared in every theme side by side.
+- V and L (previous version, play open and close) act on the frame most in view, or on the frame the key was pressed
+  in; each frame's head carries its own buttons.
+- Only open pairs are shown, the counters count steps and pairs as before, the answer keeps its lines per section and
+  theme (`- matrix · deco: …`), "Still open" names the open topics, and after the last open pair the page goes straight
+  back to the Agenda (or `?next=`).
+- A frame's theme stays its own: the theme a frame's head stores is put back, and neither the page nor another frame
+  takes it over. The topic attributes are left out of the demo's fingerprint, so adding them to a round under way
+  reopens nothing.
 
 ## A second round
 

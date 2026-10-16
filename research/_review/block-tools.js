@@ -353,7 +353,7 @@ export function mountBlockTools({ section, item, theme, themeLabel, title }) {
  * theme's register is loaded, and the frame takes the section's height.
  * @param {HTMLIFrameElement} frame @param {string} item @param {string} theme
  */
-async function isolate(frame, item, theme) {
+export async function isolate(frame, item, theme) {
     const doc = frame.contentDocument;
     if (!doc) return;
     const root = doc.documentElement;

@@ -47,6 +47,12 @@
 // step, Left/Right move between steps outside a note, Escape closes. After the
 // last open step the dialog closes and the answer waits at the foot.
 //
+// A round that asks more than one theme walks topic by topic instead (Kenny,
+// 2026-10-16): one step per group of similar sections, each section shown in
+// every asked theme side by side or one after the other, so the themes
+// compare directly (see "Topic steps" below). A section joins a topic with
+// `data-review-topic="<id>"` (title: `data-review-topic-title`).
+//
 // Controls (Kenny, 2026-10-05: "Als je knoppen zet die bv loading state
 // weergeven, of andere dingen zoals animation, zet die dan ook in de dialog!").
 // A demo marks every container of its own buttons (states, data variants,
@@ -75,7 +81,7 @@
 // closes on the answer: one button copies it and returns to the hub. Nothing
 // opens the next item by itself (Kenny, 2026-10-14: the Agenda reopened the
 // same demo and its answer lost his two notes).
-import { THEMES } from '../../js/theme-registry.js';
+import { STORAGE_KEY, THEMES } from '../../js/theme-registry.js';
 import { applyTheme, currentTheme } from '../../js/theme-core.js';
 import {
     carriedAnswer,
@@ -88,7 +94,7 @@ import {
     staleKeys,
     storeKey,
 } from './progress.js';
-import { mountBlockTools } from './block-tools.js';
+import { isolate, mountBlockTools } from './block-tools.js';
 
 const root = document.documentElement;
 const DEMO = root.dataset.review;
@@ -142,6 +148,37 @@ const EMBED = params.get('embed');
 if (EMBED) {
     embed(EMBED);
     await new Promise(() => {});
+}
+/*
+ * Lane mode: one section of this demo, in one theme, as a frame of a topic step (see "Topic steps" below). The
+ * dialog around it isolates the section and judges it; here nothing of the kit is built (no bar, no dialog, no
+ * verdicts written), and the dialog's own keys that a frame would swallow are handed up: V and L (previous version,
+ * play open and close, for this frame's section) and Escape when nothing of the demo is open in the frame.
+ */
+if (params.has('rv-lane')) {
+    lane();
+    await new Promise(() => {});
+}
+
+/** Hands the review dialog's own keys from a lane frame to the page around it. */
+function lane() {
+    // Every frame of a topic step keeps its own theme: the theme another frame stores (its head keeps `?theme=`) is
+    // not taken over here, as js/theme-core.js would take a choice made in another tab. Capture listeners run first.
+    addEventListener('storage', (event) => event.key === STORAGE_KEY && event.stopImmediatePropagation(), true);
+    const TYPING = 'textarea, select, input:not([type="checkbox"], [type="radio"], [type="button"])';
+    const OPEN = 'dialog[open], [popover]:popover-open, .kp-datepicker__panel:not([hidden]), [aria-expanded="true"]';
+    addEventListener(
+        'keydown',
+        (event) => {
+            if (parent === window || event.altKey || event.ctrlKey || event.metaKey) return;
+            if (/** @type {Element} */ (event.target).matches?.(TYPING)) return;
+            if (event.key === 'Escape' ? document.querySelector(OPEN) : event.code !== 'KeyV' && event.code !== 'KeyL') return;
+            event.preventDefault();
+            event.stopPropagation();
+            parent.postMessage({ type: 'rv-lane-key', key: event.key, code: event.code }, location.origin);
+        },
+        true,
+    );
 }
 
 /** Runs one demo as a frame of research/families/ (see above). @param {string} aspect */
@@ -517,7 +554,7 @@ try {
 
 /**
  * @typedef {{ key: string, label: string, title: string, look: string, theme: string, extra?: object, item?: object }} Pair
- * @typedef {{ title: string, theme: string | null, pairs: Pair[] }} Step
+ * @typedef {{ title: string, theme: string | null, topic?: string, aspect?: string, pairs: Pair[] }} Step
  */
 
 const lookFor = (section, theme) => section.querySelector(`[data-review-look] [data-for="${theme}"]`)?.innerHTML || '';
@@ -547,28 +584,54 @@ const lockedFor = (theme, id) => Boolean(UPDATE?.picks?.[theme]?.[id]) && !UPDAT
 const ASPECT_MODE = items.length > 0 && items.every((item) => item.section.dataset.reviewMode === 'aspects');
 const plainFixed = (theme, choice) => (typeof choice.fixed === 'object' && choice.fixed ? Boolean(choice.fixed[theme]) : Boolean(choice.fixed));
 
+/** The themes a section is asked in, in the demo's order. */
+const askedThemes = (item) => ORDER.filter((theme) => !item.themes || item.themes.includes(theme));
+const pairOf = (item, theme) => ({ key: `${theme}|${item.id}`, label: `${item.id} · ${theme}`, title: item.title, look: '', theme, item });
+
+/*
+ * Topic steps (Kenny, 2026-10-16 16:43: "per topic/thema werken. bv een groepering van gelijksoortige componenten zoals
+ * de matrix eerst voor alle thema's, dan de volgende groep etc, zo behoud ik het meeste context en kan ik het best
+ * vergelijken"). A round that asks more than one theme walks topic by topic: a step is one topic, a group of similar
+ * sections (`data-review-topic="<id>"`, its title in `data-review-topic-title` on any of them; a section without one is
+ * a topic of its own), and shows every asked theme of every section in it, each section in each theme in a frame of
+ * its own (lane mode above), the same section in every theme one after the other. A round that asks one theme, and
+ * a demo of aspect pages, walk theme by theme as before.
+ */
+const TOPIC_MODE = !ASPECT_MODE && new Set(items.flatMap(askedThemes)).size > 1;
+
 /** @type {Step[]} */
-const steps = ORDER.flatMap((theme) => {
-    const themePairs = items
-        .filter((item) => !item.themes || item.themes.includes(theme))
-        .map((item) => ({
-            key: `${theme}|${item.id}`,
-            label: `${item.id} · ${theme}`,
-            title: item.title,
-            look: '',
-            theme,
-            item,
-        }));
-    // A theme with no section asked in it is no step: a re-review that asks a few pairs counts and walks only those.
-    if (!themePairs.length) return [];
-    if (!ASPECT_MODE) return [{ title: LABEL[theme] || theme, theme, pairs: themePairs }];
-    const aspectSteps = themePairs.flatMap((pair) =>
-        pair.item.choices
-            .filter((choice) => !choice.once && !plainFixed(theme, choice) && !lockedFor(theme, choice.id))
-            .map((choice) => ({ title: `${LABEL[theme] || theme} · ${choice.label}`, theme, aspect: choice.id, pairs: [pair] })),
-    );
-    return aspectSteps.length ? aspectSteps : [{ title: LABEL[theme] || theme, theme, pairs: themePairs }];
-});
+const steps = TOPIC_MODE ? topicSteps() : themeSteps();
+
+function topicSteps() {
+    /** @type {Map<string, typeof items>} */
+    const topics = new Map();
+    for (const item of items) {
+        const id = item.section.dataset.reviewTopic || `item:${item.id}`;
+        topics.set(id, [...(topics.get(id) || []), item]);
+    }
+    return [...topics].flatMap(([id, members]) => {
+        const stepPairs = members.flatMap((item) => askedThemes(item).map((theme) => pairOf(item, theme)));
+        if (!stepPairs.length) return [];
+        const named = members.map((item) => item.section.dataset.reviewTopicTitle).find(Boolean);
+        const title = named || (members.length === 1 ? members[0].title : id);
+        return [{ title, theme: null, topic: id, pairs: stepPairs }];
+    });
+}
+
+function themeSteps() {
+    return ORDER.flatMap((theme) => {
+        const themePairs = items.filter((item) => !item.themes || item.themes.includes(theme)).map((item) => pairOf(item, theme));
+        // A theme with no section asked in it is no step: a re-review that asks a few pairs counts and walks only those.
+        if (!themePairs.length) return [];
+        if (!ASPECT_MODE) return [{ title: LABEL[theme] || theme, theme, pairs: themePairs }];
+        const aspectSteps = themePairs.flatMap((pair) =>
+            pair.item.choices
+                .filter((choice) => !choice.once && !plainFixed(theme, choice) && !lockedFor(theme, choice.id))
+                .map((choice) => ({ title: `${LABEL[theme] || theme} · ${choice.label}`, theme, aspect: choice.id, pairs: [pair] })),
+        );
+        return aspectSteps.length ? aspectSteps : [{ title: LABEL[theme] || theme, theme, pairs: themePairs }];
+    });
+}
 if (extras.length) {
     steps.push({
         title: 'Catalogue blocks',
@@ -740,7 +803,8 @@ const isOpen = (pair) => !verdictOf(pair);
 const aspectDone = (pair, aspect) => Boolean(state[pair.key]?.choices?.[aspect] || state[pair.key]?.redo?.[aspect]);
 const stepOpen = (step) => (step.aspect ? step.pairs.some((p) => isOpen(p) && !aspectDone(p, step.aspect)) : step.pairs.some(isOpen));
 /** Every theme that has a step, once. */
-const themesOf = (list) => [...new Set(list.map((s) => s.theme).filter(Boolean))];
+const themesOf = (list) =>
+    [...new Set(list.flatMap((s) => s.pairs.filter((p) => !p.extra).map((p) => p.theme)))].sort((a, b) => ORDER.indexOf(a) - ORDER.indexOf(b));
 
 /* --------------------------------------------------------------- theme */
 
@@ -1497,6 +1561,10 @@ function putBack() {
     unmirror();
     for (const [placeholder, section] of moved) placeholder.replaceWith(section);
     moved = [];
+    laneWatch?.disconnect();
+    laneWatch = null;
+    lanes = [];
+    pressedLog = [];
     stage.replaceChildren();
 }
 
@@ -1504,6 +1572,10 @@ function putBack() {
 
 const controlsBox = $('[data-rv-controls]');
 const controlsBody = $('[data-rv-controls-body]');
+// The frames' heads on a topic step stick under the mirrored controls, whatever their height.
+new ResizeObserver(() => {
+    stage.closest('.rv-dialog__view')?.style.setProperty('--rv-controls-block', `${controlsBox.hidden ? 0 : controlsBox.offsetHeight}px`);
+}).observe(controlsBox);
 /** @type {MutationObserver[]} */
 let mirrors = [];
 /** The demo's own controls, in document order, that the mirror can act on. */
@@ -1551,14 +1623,17 @@ function mirror(source, heading) {
                     event.preventDefault();
                     own.click();
                     keepPress(own);
+                    pressInLanes(source, i, { type: 'click' });
                 });
             } else {
                 const forward = (event) => {
                     const from = /** @type {HTMLInputElement} */ (mine);
                     const to = /** @type {HTMLInputElement} */ (own);
-                    if ('checked' in from && (from.type === 'checkbox' || from.type === 'radio')) to.checked = from.checked;
+                    const checks = 'checked' in from && (from.type === 'checkbox' || from.type === 'radio');
+                    if (checks) to.checked = from.checked;
                     else to.value = from.value;
                     to.dispatchEvent(new Event(event.type, { bubbles: true }));
+                    pressInLanes(source, i, { type: event.type, checked: checks ? from.checked : undefined, value: from.value });
                 };
                 mine.addEventListener('input', forward);
                 mine.addEventListener('change', forward);
@@ -1592,6 +1667,167 @@ function mirrorControls(sections) {
     controlsBox.hidden = !controlsBody.childElementCount;
 }
 
+/* ---------------------------------------------------------- topic steps ---
+ * A topic step shows each of its sections in every asked theme, one frame per pair (the demo itself in lane mode, at
+ * `?theme=<theme>&rv-lane=<item>`, isolated to that one section the way the previous version is), grouped by section:
+ * the matrix in every theme, then the heat grid in every theme. The frames load as they come near the view. The
+ * demo's controls are mirrored once on top, as on a theme step, and a press acts on the page's own control and on the
+ * same control in every frame, so a state is compared in every theme at once; a frame that loads later replays the
+ * presses made before it. V and L act on the frame most in view, or the one the key was pressed in.
+ */
+/** @type {{ pair: Pair, frame: HTMLIFrameElement, section: HTMLElement, tool: ReturnType<typeof mountBlockTools> }[]} */
+let lanes = [];
+/** The presses on the mirrored controls since the step was shown, replayed in a frame that loads later. */
+let pressedLog = [];
+/** @type {IntersectionObserver | null} */
+let laneWatch = null;
+
+/** The control `at` of the container that is the `which`-th `[data-review-controls]` of `doc`. */
+const controlIn = (doc, which, at) => actorsOf(doc.querySelectorAll('[data-review-controls]')[which] ?? doc.createElement('i'))[at];
+
+function applyPress(/** @type {Document} */ doc, press) {
+    const el = /** @type {HTMLInputElement | undefined} */ (controlIn(doc, press.which, press.at));
+    if (!el) return;
+    if (press.type === 'click') return el.click();
+    if (press.checked !== undefined) el.checked = press.checked;
+    else el.value = press.value;
+    el.dispatchEvent(new (doc.defaultView?.Event ?? Event)(press.type, { bubbles: true }));
+}
+
+/** A press on a mirrored control, played in every frame of the step. */
+function pressInLanes(/** @type {HTMLElement} */ source, /** @type {number} */ at, action) {
+    if (!steps[index]?.topic) return;
+    const which = [...document.querySelectorAll('[data-review-controls]')].indexOf(source);
+    if (which < 0) return;
+    const press = { which, at, ...action };
+    pressedLog.push(press);
+    for (const lane of lanes) if (lane.frame.contentDocument) applyPress(lane.frame.contentDocument, press);
+}
+
+/** The theme this browser keeps, read before the first frame stored its own (undefined: not read yet). */
+let keptTheme = /** @type {string | null | undefined} */ (undefined);
+const storedTheme = () => {
+    try {
+        return localStorage.getItem(STORAGE_KEY);
+    } catch {
+        return null;
+    }
+};
+/** Puts the kept theme back after a frame's head stored its own. */
+function restoreTheme() {
+    try {
+        if (keptTheme === undefined || storedTheme() === keptTheme) return;
+        if (keptTheme === null) localStorage.removeItem(STORAGE_KEY);
+        else localStorage.setItem(STORAGE_KEY, keptTheme);
+    } catch {
+        /* a private window */
+    }
+}
+// While a topic step is on screen, the themes its frames store are no choice of the reviewer's: the page keeps its own.
+addEventListener('storage', (event) => event.key === STORAGE_KEY && laneWatch !== null && event.stopImmediatePropagation(), true);
+
+/** The lane frame a message came from, by its window. */
+const laneOf = (/** @type {MessageEventSource | null} */ source) => lanes.find((lane) => lane.frame.contentWindow === source);
+addEventListener('message', (event) => {
+    const data = event.data || {};
+    if (event.origin !== location.origin || data.type !== 'rv-lane-key' || !dialog.open) return;
+    if (data.key === 'Escape') return dialog.close();
+    laneOf(event.source)?.tool.key(data.code);
+});
+
+/** One section in one theme, in a frame of its own, under a head naming the theme. @param {Pair} pair */
+function laneFor(pair) {
+    const label = LABEL[pair.theme] || pair.theme;
+    const card = document.createElement('article');
+    card.className = 'rv-lane';
+    card.dataset.rvPair = pair.key;
+    card.classList.toggle('rv-lane--rejected', verdictOf(pair) === 'rejected');
+    card.setAttribute('aria-label', `${pair.title}, in ${label}`);
+    card.innerHTML = `
+        <header class="rv-lane__head">
+            <p class="rv-lane__name"><b class="rv-lane__theme"></b><span class="rv-lane__section"></span></p>
+        </header>
+        <iframe class="rv-lane__frame"></iframe>`;
+    /** @type {HTMLElement} */ (card.querySelector('.rv-lane__theme')).textContent = label;
+    /** @type {HTMLElement} */ (card.querySelector('.rv-lane__section')).textContent = pair.title;
+    const frame = /** @type {HTMLIFrameElement} */ (card.querySelector('iframe'));
+    frame.title = `${pair.title}, in ${label}`;
+    const src = new URL(location.pathname, location.href);
+    src.search = new URLSearchParams({ theme: pair.theme, 'rv-lane': pair.item.id }).toString();
+    /** @type {any} */ (card).rvLoad = () => {
+        frame.addEventListener(
+            'load',
+            async () => {
+                // The demo's head keeps a theme from its address as the stored theme; the one kept before is put back.
+                restoreTheme();
+                const doc = frame.contentDocument;
+                if (!doc || !card.isConnected) return;
+                await isolate(frame, pair.item.id, pair.theme);
+                const sheet = doc.createElement('link');
+                sheet.rel = 'stylesheet';
+                sheet.href = new URL('review.css', import.meta.url).href;
+                doc.head.append(sheet);
+                const own = doc.createElement('style');
+                // The section's own controls are mirrored on top of the dialog, as on a theme step.
+                own.textContent =
+                    '[data-review-item] [data-review-controls], .cat-judge { display: none !important; } body { background: var(--background); }';
+                doc.head.append(own);
+                const section = /** @type {HTMLElement | null} */ (doc.querySelector(`[data-review-item="${CSS.escape(pair.item.id)}"]`));
+                if (!section || !card.isConnected) return;
+                const tool = mountBlockTools({ section, item: pair.item.id, theme: pair.theme, themeLabel: label, title: pair.title });
+                card.querySelector('.rv-lane__head')?.append(tool.bar);
+                tools.push(tool);
+                lanes.push({ pair, frame, section, tool });
+                for (const press of pressedLog) applyPress(doc, press);
+                const View = doc.defaultView?.CustomEvent ?? CustomEvent;
+                section.dispatchEvent(new View('review:show', { bubbles: true }));
+                for (const choice of pair.item.choices) {
+                    const value = choiceOf(pair, choice);
+                    if (value) section.dispatchEvent(new View('review:choice', { bubbles: true, detail: { id: choice.id, value } }));
+                }
+                // The other frames of this section take its height until they load, so the page does not jump.
+                const group = card.closest('.rv-topic');
+                if (group && !group.style.getPropertyValue('--rv-lane-guess')) group.style.setProperty('--rv-lane-guess', frame.style.blockSize);
+            },
+            { once: true },
+        );
+        frame.src = src.href;
+    };
+    return card;
+}
+
+/** The stage of a topic step: per section a heading and its frames, one per asked theme. @param {Pair[]} shown */
+function paintTopic(shown) {
+    if (keptTheme === undefined) keptTheme = storedTheme();
+    const view = /** @type {HTMLElement} */ (stage.closest('.rv-dialog__view'));
+    laneWatch = new IntersectionObserver(
+        (entries) => {
+            for (const entry of entries)
+                if (entry.isIntersecting) {
+                    laneWatch?.unobserve(entry.target);
+                    /** @type {any} */ (entry.target).rvLoad?.();
+                }
+        },
+        { root: view, rootMargin: '150% 0px' },
+    );
+    for (const item of [...new Set(shown.map((pair) => pair.item))]) {
+        const own = shown.filter((pair) => pair.item === item);
+        const group = document.createElement('section');
+        group.className = 'rv-topic';
+        group.innerHTML = `<h3 class="rv-topic__title"></h3><p class="rv-meta rv-topic__about"></p><div class="rv-topic__lanes"></div>`;
+        /** @type {HTMLElement} */ (group.querySelector('.rv-topic__title')).textContent = item.title;
+        /** @type {HTMLElement} */ (group.querySelector('.rv-topic__about')).textContent =
+            `In ${own.length} theme${own.length === 1 ? '' : 's'}: ${own.map((pair) => LABEL[pair.theme] || pair.theme).join(', ')}`;
+        const box = /** @type {HTMLElement} */ (group.querySelector('.rv-topic__lanes'));
+        for (const pair of own) {
+            const card = laneFor(pair);
+            box.append(card);
+            laneWatch.observe(card);
+        }
+        stage.append(group);
+    }
+}
+
 function frameFor(pair) {
     const { page, block, theme } = pair.extra;
     const box = document.createElement('section');
@@ -1618,7 +1854,7 @@ function frameFor(pair) {
     return box;
 }
 
-function rowFor(pair, only = null) {
+function rowFor(pair, only = null, name = '') {
     const li = document.createElement('li');
     li.className = 'rv-row';
     const id = `rv-${pair.key.replace(/[^a-z0-9-]/gi, '-')}`;
@@ -1633,7 +1869,7 @@ function rowFor(pair, only = null) {
         <p class="rv-row__look" data-rv-row-look></p>
         <div class="rv-row__choices" data-rv-choices></div>
         <textarea class="kp-field__input kp-field__input--multiline rv-row__note" rows="2" placeholder="What should change" data-rv-row-note hidden></textarea>`;
-    li.querySelector('[data-rv-jump]').textContent = pair.title;
+    li.querySelector('[data-rv-jump]').textContent = name || pair.title;
     const look = pair.item ? lookFor(pair.item.section, pair.theme) : pair.look;
     const lookBox = li.querySelector('[data-rv-row-look]');
     if (look && !only) lookBox.innerHTML = look;
@@ -1664,6 +1900,10 @@ function rowFor(pair, only = null) {
                 save();
                 render();
                 pair.item.section.dispatchEvent(new CustomEvent('review:choice', { bubbles: true, detail: { id: choice.id, value: option.value } }));
+                const lane = lanes.find((l) => l.pair === pair);
+                const View = lane?.frame.contentWindow?.CustomEvent;
+                if (lane && View)
+                    lane.section.dispatchEvent(new View('review:choice', { bubbles: true, detail: { id: choice.id, value: option.value } }));
             });
             const text = document.createElement('span');
             const name = document.createElement('b');
@@ -1693,6 +1933,7 @@ function rowFor(pair, only = null) {
     box.addEventListener('change', () => {
         note.hidden = !box.checked && !note.value;
         li.classList.toggle('rv-row--rejected', box.checked);
+        stage.querySelector(`.rv-lane[data-rv-pair="${CSS.escape(pair.key)}"]`)?.classList.toggle('rv-lane--rejected', box.checked);
         if (box.checked) note.focus();
         if (!only) {
             state[pair.key] = {
@@ -1723,6 +1964,16 @@ function rowFor(pair, only = null) {
     return li;
 }
 
+/** The rows of a topic step, under one heading per section, one row per theme, in the order of the frames. */
+function topicRows(/** @type {Pair[]} */ shown) {
+    return [...new Set(shown.map((pair) => pair.item))].flatMap((item) => {
+        const head = document.createElement('li');
+        head.className = 'rv-list__group';
+        head.textContent = item.title;
+        return [head, ...shown.filter((pair) => pair.item === item).map((pair) => rowFor(pair, null, LABEL[pair.theme] || pair.theme))];
+    });
+}
+
 function updateApprove() {
     const step = steps[index];
     const rejecting = list.querySelectorAll('[data-rv-reject]:checked').length;
@@ -1732,9 +1983,11 @@ function updateApprove() {
     }
     approveButton.textContent = rejecting
         ? `↑ Approve the rest, ${rejecting} not approved`
-        : step.theme
-          ? '↑ Approve this theme'
-          : '↑ Approve these blocks';
+        : step.topic
+          ? `↑ Approve this topic in every theme`
+          : step.theme
+            ? '↑ Approve this theme'
+            : '↑ Approve these blocks';
 }
 
 /**
@@ -1775,7 +2028,8 @@ async function show(at) {
         // note, until a new round reopens it (kpadopt-nav, 2026-10-16: "option 2 disappeared from the list when I reopened
         // the page" was the pair he had rejected, dropped because it was no longer 'open').
         shownPairs = stepOpen(step) ? step.pairs.filter((p) => isOpen(p) || verdictOf(p) === 'rejected') : step.pairs;
-        for (const pair of shownPairs) {
+        if (step.topic) paintTopic(shownPairs);
+        for (const pair of step.topic ? [] : shownPairs) {
             if (pair.item) {
                 const placeholder = document.createComment('review');
                 pair.item.section.replaceWith(placeholder);
@@ -1795,24 +2049,33 @@ async function show(at) {
             }
         }
         stage.scrollTop = 0;
-        mirrorControls(shownPairs.filter((pair) => pair.item).map((pair) => pair.item.section));
-        list.replaceChildren(...shownPairs.map((pair) => rowFor(pair, step.aspect ?? null)));
+        mirrorControls([...new Set(shownPairs.filter((pair) => pair.item).map((pair) => pair.item.section))]);
+        list.replaceChildren(...(step.topic ? topicRows(shownPairs) : shownPairs.map((pair) => rowFor(pair, step.aspect ?? null))));
         paintUpdate(step);
         // The demo's controls always stand open in the dialog: Kenny judges
         // only there (2026-10-06 14:53: "alle knoppen die helpen om de demo te
         // beoordelen ook in de dialog ... fix het"), never folded away.
         controlsBox.open = true;
-        $('[data-rv-intro]').textContent = step.aspect
-            ? 'One option at a time, large, its motion already playing. ←/→ flips, ↑ picks it and goes on, ↓ is None of these. Left hand (AZERTY): Q/S step the state, D the tone, F the next set, Z a live update, R replays, E speed, A tours the states by itself, Space pauses.'
-            : 'Everything on the left is approved together. Tick only what is wrong, and say why.';
-        $('#rv-keys').textContent = step.aspect
-            ? 'Right hand: ←/→ flip · ↑ pick · ↓ none of these. Left hand (AZERTY home row): Q/S state back/on · D tone · F next set · Z live update · R replay · E speed · A tour · Space pause. PageUp/PageDown move between pages · Escape closes.'
-            : 'Up approves the step and goes on to the next open one, Left/Right move between steps, V the previous version, L plays open and close, Escape closes. The theme switches by itself.';
-        for (const pair of shownPairs) if (pair.item) focusAspect(pair.item.section, step.aspect ?? null);
+        $('[data-rv-intro]').textContent = step.topic
+            ? 'One topic in every theme asked: each section in each theme, one after the other, so the themes compare directly. Everything on the left is approved together. Tick only what is wrong, and say why.'
+            : step.aspect
+              ? 'One option at a time, large, its motion already playing. ←/→ flips, ↑ picks it and goes on, ↓ is None of these. Left hand (AZERTY): Q/S step the state, D the tone, F the next set, Z a live update, R replays, E speed, A tours the states by itself, Space pauses.'
+              : 'Everything on the left is approved together. Tick only what is wrong, and say why.';
+        $('#rv-keys').textContent = step.topic
+            ? 'Up approves the topic and goes on to the next open one, Left/Right move between topics, V the previous version and L open and close of the theme most in view, Escape closes. A state pressed on top plays in every theme at once.'
+            : step.aspect
+              ? 'Right hand: ←/→ flip · ↑ pick · ↓ none of these. Left hand (AZERTY home row): Q/S state back/on · D tone · F next set · Z live update · R replay · E speed · A tour · Space pause. PageUp/PageDown move between pages · Escape closes.'
+              : 'Up approves the step and goes on to the next open one, Left/Right move between steps, V the previous version, L plays open and close, Escape closes. The theme switches by itself.';
+        if (!step.topic) for (const pair of shownPairs) if (pair.item) focusAspect(pair.item.section, step.aspect ?? null);
         if (step.aspect) setupFlip(step, shownPairs[0]);
         const judgedHere = step.pairs.filter((p) => verdictOf(p) === 'approved' && !shownPairs.includes(p)).length;
+        const shownThemes = new Set(shownPairs.map((p) => p.theme)).size;
+        const shownSections = new Set(shownPairs.map((p) => p.item)).size;
         $('[data-rv-position]').textContent =
-            `Step ${index + 1}/${steps.length} · ${shownPairs.length} ${step.theme ? 'section(s)' : 'block(s)'}` +
+            `Step ${index + 1}/${steps.length} · ` +
+            (step.topic
+                ? `topic · ${shownSections} section(s) in ${shownThemes} theme(s), ${shownPairs.length} pair(s)`
+                : `${shownPairs.length} ${step.theme ? 'section(s)' : 'block(s)'}`) +
             (judgedHere ? ` · ${judgedHere} already approved, not shown` : '');
         writeFlipPosition();
         $('[data-rv-title]').textContent = step.title;
@@ -1829,13 +2092,13 @@ async function show(at) {
         for (const box of [stage, stage.closest('.rv-dialog__view'), dialog.querySelector('.rv-dialog__side')]) if (box) box.scrollTop = 0;
         // A demo can act when its section comes on screen (signature-dialog
         // opens its dialog, so the entrance plays without a click).
-        for (const pair of shownPairs) pair.item?.section.dispatchEvent(new CustomEvent('review:show', { bubbles: true }));
+        if (!step.topic) for (const pair of shownPairs) pair.item?.section.dispatchEvent(new CustomEvent('review:show', { bubbles: true }));
         // Every pick already on file goes to the demo before the next aspect is
         // shown: the shape picked one step earlier is the shape every later
         // option is drawn in (Kenny, 2026-10-06 18:50). A pick made by flipping
         // never passed through the radio's change handler, so the demo kept
         // drawing its default.
-        for (const pair of shownPairs)
+        for (const pair of step.topic ? [] : shownPairs)
             for (const choice of pair.item?.choices || []) {
                 const value = choiceOf(pair, choice);
                 if (value) pair.item.section.dispatchEvent(new CustomEvent('review:choice', { bubbles: true, detail: { id: choice.id, value } }));
@@ -1977,7 +2240,8 @@ document.addEventListener(
         // V and L act on the section most in view: its previous version, its open and close on a loop.
         if ((event.code === 'KeyV' || event.code === 'KeyL') && tools.length) {
             const view = stage.closest('.rv-dialog__view')?.getBoundingClientRect();
-            const inView = tools.find((tool) => tool.bar.getBoundingClientRect().bottom > (view?.top ?? 0) + 8) ?? tools[0];
+            const ordered = [...tools].sort((a, b) => (a.bar.compareDocumentPosition(b.bar) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
+            const inView = ordered.find((tool) => tool.bar.getBoundingClientRect().bottom > (view?.top ?? 0) + 8) ?? ordered[0];
             if (inView.key(event.code)) {
                 event.preventDefault();
                 event.stopPropagation();

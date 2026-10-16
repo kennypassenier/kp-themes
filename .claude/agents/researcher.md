@@ -33,6 +33,10 @@ Every deliverable is two files under `research/<topic>/`:
    `[data-review-look]` as `<p data-for="<theme>">`, and
    `<script type="module" src="../_review/review.js"></script>`. See
    `research/_review/README.md`.
+   A demo that asks more than one theme groups its sections into topics: `data-review-topic="<id>"` on
+   every section of a group of similar components (the matrix and the heat grid, a component and its states), and
+   `data-review-topic-title` on the first; the dialog then walks topic by topic, each section in every theme side by
+   side, so Kenny compares the themes directly (Kenny, 2026-10-16). A section without a topic is a topic of its own.
    Show every variant the catalogue renders of the component a section is
    about (`kp-<component>--<variant>`: success, info, warning, destructive,
    circle, block, invalid…); `npm run gates` refuses a demo under review that

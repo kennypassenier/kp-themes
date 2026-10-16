@@ -687,3 +687,136 @@
     min-block-size: 12rem;
     border: 1px dashed var(--border);
 }
+
+/* A topic step (review.js, "Topic steps"): per section a heading, then the section in every asked theme, one frame per
+   theme. One column on a laptop, so a wide matrix keeps its width; two side by side where the stage is wide enough
+   for two at 40rem. Each frame's head names its theme in the dialog's own type and sticks under the mirrored controls
+   while its section scrolls past, so the theme on screen is never in doubt. */
+.rv-topic + .rv-topic {
+    margin-block-start: 2.5rem;
+}
+
+.rv-topic__title {
+    margin: 0;
+    font-size: 1.125rem;
+}
+
+.rv-topic__about {
+    margin: 0.125rem 0 0.75rem;
+}
+
+.rv-topic__lanes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 40rem), 1fr));
+    gap: 1.25rem;
+    align-items: start;
+}
+
+.rv-lane {
+    min-inline-size: 0;
+    border: 1px solid var(--border);
+}
+
+.rv-lane--rejected {
+    border-color: var(--destructive);
+    box-shadow: inset 3px 0 0 var(--destructive);
+}
+
+.rv-lane__head {
+    position: sticky;
+    inset-block-start: var(--rv-controls-block, 0);
+    z-index: 3;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.75rem;
+    padding: 0.375rem 0.625rem;
+    background: var(--muted);
+    border-block-end: 1px solid var(--border);
+}
+
+.rv-lane__name {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0 0.5rem;
+    margin: 0;
+    flex: 1 1 12rem;
+    min-inline-size: 0;
+}
+
+.rv-lane__theme {
+    font-size: 1rem;
+}
+
+.rv-lane__section {
+    font-size: 0.8125rem;
+    color: var(--muted-foreground);
+}
+
+.rv-lane__head > .rv-tools {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.rv-lane__head > .rv-tools .rv-tools__note:empty {
+    display: none;
+}
+
+.rv-lane__frame {
+    display: block;
+    inline-size: 100%;
+    block-size: var(--rv-lane-guess, 12rem);
+    border: 0;
+}
+
+.rv-dialog__list > .rv-list__group {
+    margin-block-start: 0.75rem;
+    padding-block: 0.25rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-transform: none;
+    color: var(--muted-foreground);
+    border-block-end: 1px solid var(--border);
+}
+
+.rv-dialog__list > .rv-list__group:first-child {
+    margin-block-start: 0;
+}
+
+/* On a phone the frame gets the height: the theme list under the topic's title goes, and the tools stay on one line
+   beside the theme's name, scrolling sideways when they do not fit. */
+@media (max-width: 48rem) {
+    .rv-topic__about {
+        display: none;
+    }
+
+    .rv-topic__title {
+        margin-block-end: 0.5rem;
+    }
+
+    .rv-lane__head {
+        flex-wrap: nowrap;
+        padding: 0.25rem 0.5rem;
+    }
+
+    .rv-lane__name {
+        flex: 0 0 auto;
+    }
+
+    .rv-lane__section {
+        display: none;
+    }
+
+    .rv-lane__head > .rv-tools {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        min-inline-size: 0;
+    }
+
+    .rv-lane__head > .rv-tools > * {
+        flex: 0 0 auto;
+    }
+}

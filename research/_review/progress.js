@@ -4,9 +4,8 @@
 // zodat ik vanuit één centrale locatie/pagina verder kan").
 //
 // One store, one key: review.js keeps its verdicts under storeKey(), and this
-// module reads the same entry. What counts as open mirrors review.js: a step
-// is one theme (plus one step for the catalogue blocks a demo carries along),
-// a pair is open while it has no verdict, and a round the demo announces
+// module reads the same entry. What counts as open mirrors review.js: a pair
+// (section × theme, or a catalogue block) is open while it has no verdict, and a round the demo announces
 // (`data-review-round`) reopens its rejected and named pairs. Here that
 // reopening is only read, never written: the demo writes it when it opens.
 import { THEMES } from '../../js/theme-registry.js';
@@ -148,6 +147,9 @@ export async function loadUpdate(url) {
  * (an approval stands, as it does across rounds).
  */
 
+/** A section's topic (`data-review-topic`, `-title`), left out of the fingerprint. */
+const TOPIC_ATTRIBUTES = /\s+data-review-topic(?:-title)?="[^"]*"/g;
+
 /**
  * The fingerprint of the demo at `url`: its page and the scripts and sheets
  * in its own folder, hashed. Null when it cannot be read or hashed.
@@ -167,7 +169,10 @@ export async function fingerprintOf(url, html) {
             .filter((file) => file.href.startsWith(folder))
             .map((file) => file.href)
             .sort();
-        const parts = [text, ...(await Promise.all(own.map(async (file) => (await fetch(file, { cache: 'no-cache' })).text())))];
+        // A section's topic only groups the review dialog's steps: setting it is no new version of the demo, and reopens
+        // nothing (Kenny, 2026-10-16, topic steps added to rounds already under way).
+        const shown = text.replace(TOPIC_ATTRIBUTES, '');
+        const parts = [shown, ...(await Promise.all(own.map(async (file) => (await fetch(file, { cache: 'no-cache' })).text())))];
         const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(parts.join('\u0000')));
         return [...new Uint8Array(digest).slice(0, 8)].map((b) => b.toString(16).padStart(2, '0')).join('');
     } catch {
