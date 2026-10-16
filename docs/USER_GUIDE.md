@@ -79,24 +79,20 @@ node -e "import('@kp-soft/themes/js/registry').then(m => console.log(m.THEMES.le
 
 ---
 
-## The sixteen themes
+## The twelve themes
 
 | `data-theme` | Label | Dark |
 | --- | --- | --- |
 | `formal` | Formal | no |
-| `light` | Light | no |
 | `dark` | Dark | yes |
 | `cyberpunk` | Cyberpunk | yes |
 | `synthwave` | Synthwave | yes |
 | `pastel` | Pastel | no |
-| `terminal` | Terminal | yes |
 | `forest` | Forest | no |
 | `blueprint` | Blueprint | yes |
 | `solstice` | Solstice | yes |
 | `brutalism` | Brutalism | no |
 | `deco` | Art Deco | yes |
-| `phantom` | Phantom | yes |
-| `grotesk` | Grotesk | no |
 | `nostromo` | Nostromo | no |
 | `titanium` | Titanium | yes |
 
@@ -112,8 +108,10 @@ remaining nineteen were lifted the same way over 2026-09-08, each from
 its own approved demo, so every theme carries a register. Three were
 removed again on 2026-10-06 (Lapis, Shade (light) and Shade (dark);
 see MIGRATION.md), two more on 2026-10-08 (High contrast and Sepia), and
-Retro on 2026-10-09 (its idea is kept in docs/FUTURE_THEMES.md), which
-leaves the sixteen above.
+Retro on 2026-10-09 (its idea is kept in docs/FUTURE_THEMES.md), and
+Terminal, Phantom, Light and Grotesk on 2026-10-16, which leaves the
+twelve above. A stored or written name of a removed theme falls back to
+`formal`.
 
 That table is generated from the token sources into
 `js/theme-registry.js`; import it rather than typing the list:
@@ -126,7 +124,7 @@ Each theme's character is written down — what it is, what is load-bearing,
 what it deliberately does not do — in `themes/<name>/anatomy.md`. Read the
 one you are about to change before you change it.
 
-The `Theme` type is the union of exactly those sixteen names since 1.1.0,
+The `Theme` type is the union of exactly those twelve names since 1.1.0,
 not `string`. A name that is not one of them is a compile error rather
 than a silent fallback to `formal`. What a function *accepts* stayed
 lenient — `storeTheme` and `initializeTheme` still take a plain string —
@@ -171,7 +169,7 @@ matches descendants, and an inner theme has the same specificity, so file
 order decides rather than depth.
 
 So: theme a page, and theme a pane inside it. Do not nest a third. The
-fix is `@scope ([data-theme='x']) to ([data-theme])` in all sixteen
+fix is `@scope ([data-theme='x']) to ([data-theme])` in all twelve
 registers, which is a round of its own rather than a patch.
 
 ### As an icon with a dropdown
@@ -523,7 +521,7 @@ await closeDialog(dialog, 'saved');
 A size never overshoots, even in a theme whose entrance does, and what
 arrives in a box (a row, a panel or a message shown) arrives with the theme's
 own toast entrance. A theme may ask for its sizes to move one line at a time
-with `--kp-size-steps: line` (terminal does); `withoutOvershoot(ease)` is the
+with `--kp-size-steps: line` (none of the twelve does since terminal left); `withoutOvershoot(ease)` is the
 curve rule, exported for a page that animates its own boxes.
 
 What leaves goes with its theme's own exit: `leave(el)` marks it
@@ -669,8 +667,7 @@ window. It opens as a modal `<dialog role="alertdialog">`, so the page behind
 it cannot be clicked or tabbed to until it is dealt with, and focus goes back
 to the trigger when it closes. Every theme draws it in its own colours and
 faces: the plate, the ink, the frame and the bars come from each theme's
-tokens, and each register adds its voice (terminal's reversed phosphor, brutalism's slammed stamp, grotesk's red
-poster).
+tokens, and each register adds its voice (brutalism's slammed stamp, nostromo's amber console).
 
 From a script, `showAlarm()` resolves with why it closed — `'ack'`,
 `'timeout'` or `'escape'`:
@@ -2718,7 +2715,7 @@ Use the top layer for the thing that has to escape.
 **The package's own calendars and lists already do.** A `clip-path` clips
 the same way an overflow does, and four registers draw a container's
 silhouette with one — the cut corners of `.kp-card`, `.kp-alert`,
-`.kp-popover`, `.kp-dialog` or `.kp-spec` in dark, cyberpunk, phantom and
+`.kp-popover`, `.kp-dialog` or `.kp-spec` in dark, cyberpunk, phantom (removed 2026-10-16) and
 titanium. Measured on 2026-09-13 inside a `.kp-card` in those four themes:
 every day of an open date picker and every option of a combobox and of a
 drawn select was out of reach, the clipped area handing the click to what
@@ -3347,8 +3344,8 @@ prop.
 
 Since 5.0.0 `DecipherText` is a wrapper around `attachEffects()` from
 `js/effects.js`: it renders the headline reveal the current theme
-declares (cyberpunk deciphers, synthwave tracks, phantom shouts,
-terminal types, formal stays still), and
+declares (cyberpunk deciphers, synthwave tracks, brutalism slams,
+formal stays still), and
 its 4.x props `delay`, `direction`, `preserve` and `glyphs` are gone —
 `charsPerSecond` and `reduceMotion` remain (`MIGRATION.md`).
 
@@ -3356,17 +3353,17 @@ its 4.x props `delay`, `direction`, `preserve` and `glyphs` are gone —
 
 Every theme has a register — the opt-in stylesheet carrying its
 expression — and a page with a picker can end up on any of the
-sixteen. There are two ways to handle that, and the package supports
+twelve. There are two ways to handle that, and the package supports
 both.
 
-The simple one is `dist/kp-themes.css`: twenty stylesheets in one
-file, including all sixteen registers, each scoped to
+The simple one is `dist/kp-themes.css`: sixteen stylesheets in one
+file, including all twelve registers, each scoped to
 `[data-theme='name']`. Load it once and a theme change fetches nothing —
 `applyTheme()` sets the attribute and the right register is already
 there. It costs 693 kB minified.
 
 The frugal one is a `<link>` whose `href` follows `onThemeChange`. A
-register averages 20 kB minified (dark 44 kB, light 12 kB), so a visitor
+register averages 20 kB minified (dark 44 kB, solstice 12 kB), so a visitor
 who stays in one theme downloads far less; the cost is a request per
 switch and a frame between the old register leaving and the new one
 arriving.
@@ -3458,7 +3455,7 @@ way.
 ## The hook vocabulary [S45]
 
 Since 5.0.0 a page marks what a passage *is* and every theme answers in
-its own way — loudly in cyberpunk, synthwave, phantom and terminal, quietly
+its own way — loudly in cyberpunk, synthwave and brutalism, quietly
 in the rest. Six
 hooks: `data-kp-surface="hero|app"` on a section, a `<mark>` for an
 emphasis, `data-kp-reveal="headline|emphasis|rule"` on something that
@@ -3490,8 +3487,8 @@ phrase from wrapping.
 
 The arrival's words are the theme's own [scope-84]: synthwave's counting
 boot reads `arrivalWordsByTheme.synthwave` ("▶ Play", "Tracking",
-"Press start"), terminal's POST lines are
-`arrivalLinesByTheme`, and phantom's card is the theme's name. A theme
+"Press start"); `arrivalLinesByTheme` holds a theme's own lines when it
+prints several (none of the twelve does since terminal left). A theme
 that asks for `boot` with no entry shows the neutral `arrivalLine`,
 `arrivalProgress` and `arrivalReady` ("Loading", "Progress", "Ready").
 To change synthwave's words, set `arrivalWordsByTheme` with `setStrings`;
@@ -3907,15 +3904,15 @@ stain without a transition.
 
 A theme's handwriting is three tokens, and every transition in the package
 reads them rather than carrying its own number — with three exceptions the
-motion gate insists on: the terminal cursor blink, the skeleton pulse and
+motion gate insists on: the skeleton pulse and
 the cyberpunk flicker change luminance, and DI5 pins their durations above
 the flash threshold, so they are literals rather than knobs:
 
 | Token | What it decides |
 | --- | --- |
-| `--fx-duration` | how long anything takes — 90 ms in terminal, 220 ms in pastel, 240 ms in solstice |
-| `--fx-ease` | how it accelerates. Pastel overshoots, terminal uses `steps(2, end)` because a character display jumps rather than sweeps, blueprint is `linear` |
-| `--fx-lift` | how far a control rises under the cursor. Ten of the sixteen answer `0px` — formal among them — which is a character rather than an omission |
+| `--fx-duration` | how long anything takes — 220 ms in pastel, 240 ms in solstice |
+| `--fx-ease` | how it accelerates. Pastel overshoots, blueprint is `linear` |
+| `--fx-lift` | how far a control rises under the cursor. Most of the twelve answer `0px` — formal among them — which is a character rather than an omission |
 | `--fx-shadow-offset` | how far a hard, unblurred shadow sits from a button, card or input — brutalism's `4px`; `0px` everywhere else, which paints nothing (3.1.0) |
 | `--chart-pattern-1` … `-5` | an image drawn over the matching `--chart-*` colour so a series is told apart without hue — mono's five SVG fills; `none` everywhere else (3.1.0) |
 | `--kp-highlight` | the hover and keyboard-highlight wash on rows and options — the foreground at 8% alpha by default, so it is quiet in every theme; a theme or a page sets it for more (3.1.0) |
@@ -3924,15 +3921,11 @@ the flash threshold, so they are literals rather than knobs:
 A native `<select>`'s open list wears the theme only where the browser lets a page take it over (`appearance: base-select`, Chromium 135+); Firefox and older browsers draw that list themselves, in the platform's highlight colour. So the package draws it: every single `<select class="kp-field__input">` gets a listbox in the combobox's look laid over it by `attachSelects` (which `auto.js` runs) and by the React `Field`, `FormField` and `DataTable`, without asking. The native select stays the control — it holds the value, submits with the form, fires `change` and is what a screen reader reads. To keep the browser's own list on one select, write `data-kp-select="native"` (React: `drawn={false}`); a `multiple` select always keeps it. A bare `data-kp-select` still asks for the drawn list on a select without the class.
 
 Each theme also has at most one gesture of its own: a rule that draws
-itself under a heading in formal, a blinking block cursor after the label
-of the field a person is typing into in terminal (3.1.1), a
+itself under a heading in formal, a
 badge that settles in pastel, a drifting contour layer in forest, a ruled
 line in blueprint, an ember around a new card in solstice, the whole
 register in cyberpunk; since 3.1.0 a box that drops onto its shadow in
-brutalism, a double gold rule in deco, a
-badge that slides in in phantom (and since 5.0.0 its cut-paper register:
-the plate under a `<mark>`, the rail under a heading, the torn-paper
-divider, the calling card on arrival),
+brutalism, a double gold rule in deco,
 and since
 5.0.0 the horizon register in
 synthwave — a striped sun and a drifting floor on the hero, a neon tube

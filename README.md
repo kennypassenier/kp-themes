@@ -1,11 +1,11 @@
 # @kp-soft/themes
 
-The house themes as a shared package: sixteen `data-theme` palettes
-— six light (formal, light, pastel, forest, brutalism, grotesk) and ten dark (dark, titanium, cyberpunk,
-synthwave, terminal, blueprint, solstice, deco, phantom, nostromo) — as plain CSS custom properties, the
+The house themes as a shared package: twelve `data-theme` palettes
+— five light (formal, pastel, forest, brutalism, nostromo) and seven dark (dark, titanium,
+cyberpunk, synthwave, blueprint, solstice, deco) — as plain CSS custom properties, the
 element-level rules that make a theme complete (links, code, selection,
 form fields, print), twenty-one components, a theme picker, and a register
-for every one of the sixteen themes — the opt-in stylesheet that
+for every one of the twelve themes — the opt-in stylesheet that
 carries a theme's own expression, from cyberpunk's notches and data stream
 to titanium's oxide film.
 
@@ -98,7 +98,7 @@ and `Theme` is the union of the twenty-five names rather than `string`.
 Plain CSS (any stack):
 
 ```css
-@import '@kp-soft/themes/css'; /* the sixteen themes + textures + body colours */
+@import '@kp-soft/themes/css'; /* the twelve themes + textures + body colours */
 @import '@kp-soft/themes/css/register'; /* optional: cyberpunk HUD chrome and motion */
 @import '@kp-soft/themes/css/titanium-register'; /* optional: and one like it for each of the other 21 */
 ```
@@ -138,12 +138,12 @@ a Modified Version that may not carry that name — not even as part of a
 new one. They ship renamed, and the tokens name the renamed family first
 and the original after it, for a reader who has the original installed:
 
-| Shipped as          | Renamed from    | Named by                |
-| ------------------- | --------------- | ----------------------- |
-| `KP Tech Mono`      | Share Tech Mono | terminal, the registers |
-| `KP Deco Sans`      | Josefin Sans    | deco                    |
-| `KP Ticker Mono`    | IBM Plex Mono   | dark                    |
-| `KP Outrun Display` | Orbitron        | synthwave               |
+| Shipped as          | Renamed from    | Named by             |
+| ------------------- | --------------- | -------------------- |
+| `KP Tech Mono`      | Share Tech Mono | cyberpunk, synthwave |
+| `KP Deco Sans`      | Josefin Sans    | deco                 |
+| `KP Ticker Mono`    | IBM Plex Mono   | dark                 |
+| `KP Outrun Display` | Orbitron        | synthwave            |
 
 `gates/check-fonts.mjs` reads every shipped file's name table and refuses
 one that carries a reserved word. Woodblock ships a real bold face for
@@ -182,9 +182,9 @@ refuses a theme that leaves a hook unanswered.
 ### `data-theme` and the `.dark` class
 
 A theme is active when `<html data-theme="…">` carries its name; without
-the attribute the `:root` fallback is `formal`. The ten dark themes
-(`dark`, `titanium`, `cyberpunk`, `synthwave`, `terminal`, `blueprint`,
-`solstice`, `deco`, `phantom`, `nostromo`)
+the attribute the `:root` fallback is `formal`. The seven dark themes
+(`dark`, `titanium`, `cyberpunk`, `synthwave`, `blueprint`, `solstice`,
+`deco`)
 additionally need the `.dark` class on
 `<html>` so existing `dark:` variants keep working — `applyTheme()` sets
 both. To avoid a flash before React mounts, call `initializeTheme()`
@@ -232,13 +232,13 @@ verdict above it — the showcase publishes one at `showcase/diagnostics.html`.
 
 ## Loading the registers when a visitor can pick any theme
 
-Sixteen themes, sixteen registers, one picker: which of them does
+Twelve themes, twelve registers, one picker: which of them does
 a page load? Two answers, and both are right for someone. Measured
 2026-09-09 on this repository's own build.
 
 **The bundle — load everything once, switch by attribute.**
-`dist/kp-themes.css` is twenty stylesheets concatenated: the palette,
-the components, **all sixteen registers**, layout and utilities. Every
+`dist/kp-themes.css` is sixteen stylesheets concatenated: the palette,
+the components, **all twelve registers**, layout and utilities. Every
 register rule is scoped to `[data-theme='name']`, so with that one file
 loaded a theme change needs nothing fetched — flipping the attribute on
 `<html>` is the whole mechanism, which is what `applyTheme()` already
@@ -325,36 +325,34 @@ reachable on its own. `node gates/check-package.mjs` prints the count and
 proves every one of them is published. What follows is the set you reach
 for.
 
-| Import                                   | What it is                                               |
-| ---------------------------------------- | -------------------------------------------------------- |
-| `@kp-soft/themes`                        | React: components, hooks, the switcher                   |
-| `@kp-soft/themes/fx`                     | React: the cyberpunk effects                             |
-| `@kp-soft/themes/css`                    | the palette — the one file a vendoring consumer needs    |
-| `@kp-soft/themes/css/components`         | the component classes                                    |
-| `@kp-soft/themes/css/register`           | the cyberpunk HUD chrome, opt-in                         |
-| `@kp-soft/themes/css/synthwave-register` | synthwave's sun, floor, horizon and neon, opt-in         |
-| `@kp-soft/themes/css/phantom-register`   | phantom's cut paper, plates, rails and tears, opt-in     |
-| `@kp-soft/themes/css/terminal-register`  | terminal's glass, cursor, inverse video and POST, opt-in |
-| `@kp-soft/themes/css/brutalism-register` | brutalism's plates, slam, bars and marquee, opt-in       |
-| `@kp-soft/themes/css/layout`             | the nineteen layout classes                              |
-| `@kp-soft/themes/css/utilities`          | the 118 utility classes                                  |
-| `@kp-soft/themes/css/tailwind-bridge`    | for Tailwind v4 consumers                                |
-| `@kp-soft/themes/dist/css`               | all of the above in one stylesheet                       |
-| `@kp-soft/themes/dist/js`                | js/auto and everything it imports, in one module         |
-| `@kp-soft/themes/js/core`                | the theme state, framework-free                          |
-| `@kp-soft/themes/js/picker`              | the framework-free picker                                |
-| `@kp-soft/themes/js/components`          | the DI4 and DI10 contracts                               |
-| `@kp-soft/themes/js/overlays`            | dialogs, tabs, toasts                                    |
-| `@kp-soft/themes/js/alarm`               | the full-screen alarm, `showAlarm()` and its triggers    |
-| `@kp-soft/themes/js/registry`            | the generated theme list                                 |
-| `@kp-soft/themes/js/no-flash`            | the first-paint snippet                                  |
-| `@kp-soft/themes/js/lazy-register`       | the active theme's register, fetched at runtime          |
-| `@kp-soft/themes/js/strings`             | the dictionary and its defaults                          |
-| `@kp-soft/themes/js/tables`              | the keyboard-reachable table scroll region               |
-| `@kp-soft/themes/js/diagnostics`         | which half of a vendored pair is behind                  |
-| `@kp-soft/themes/css/<theme>-register`   | one theme's own expression, opt-in, 25 of them           |
-| `@kp-soft/themes/css/fonts`              | the `@font-face` block for the shipped families          |
-| `@kp-soft/themes/dist/css/min`           | the minified bundle (`docs/MINIFIED.md` has the sizes)   |
+| Import                                   | What it is                                             |
+| ---------------------------------------- | ------------------------------------------------------ |
+| `@kp-soft/themes`                        | React: components, hooks, the switcher                 |
+| `@kp-soft/themes/fx`                     | React: the cyberpunk effects                           |
+| `@kp-soft/themes/css`                    | the palette — the one file a vendoring consumer needs  |
+| `@kp-soft/themes/css/components`         | the component classes                                  |
+| `@kp-soft/themes/css/register`           | the cyberpunk HUD chrome, opt-in                       |
+| `@kp-soft/themes/css/synthwave-register` | synthwave's sun, floor, horizon and neon, opt-in       |
+| `@kp-soft/themes/css/brutalism-register` | brutalism's plates, slam, bars and marquee, opt-in     |
+| `@kp-soft/themes/css/layout`             | the nineteen layout classes                            |
+| `@kp-soft/themes/css/utilities`          | the 118 utility classes                                |
+| `@kp-soft/themes/css/tailwind-bridge`    | for Tailwind v4 consumers                              |
+| `@kp-soft/themes/dist/css`               | all of the above in one stylesheet                     |
+| `@kp-soft/themes/dist/js`                | js/auto and everything it imports, in one module       |
+| `@kp-soft/themes/js/core`                | the theme state, framework-free                        |
+| `@kp-soft/themes/js/picker`              | the framework-free picker                              |
+| `@kp-soft/themes/js/components`          | the DI4 and DI10 contracts                             |
+| `@kp-soft/themes/js/overlays`            | dialogs, tabs, toasts                                  |
+| `@kp-soft/themes/js/alarm`               | the full-screen alarm, `showAlarm()` and its triggers  |
+| `@kp-soft/themes/js/registry`            | the generated theme list                               |
+| `@kp-soft/themes/js/no-flash`            | the first-paint snippet                                |
+| `@kp-soft/themes/js/lazy-register`       | the active theme's register, fetched at runtime        |
+| `@kp-soft/themes/js/strings`             | the dictionary and its defaults                        |
+| `@kp-soft/themes/js/tables`              | the keyboard-reachable table scroll region             |
+| `@kp-soft/themes/js/diagnostics`         | which half of a vendored pair is behind                |
+| `@kp-soft/themes/css/<theme>-register`   | one theme's own expression, opt-in, 25 of them         |
+| `@kp-soft/themes/css/fonts`              | the `@font-face` block for the shipped families        |
+| `@kp-soft/themes/dist/css/min`           | the minified bundle (`docs/MINIFIED.md` has the sizes) |
 
 ## Consume the JavaScript
 
@@ -826,7 +824,7 @@ beside it.
 ### Theme names
 
 The labels are English in the token source since 3.0.0 — "Formal",
-"Light", "Dark", "Blueprint", "Solstice", "Forest",
+"Dark", "Blueprint", "Solstice", "Forest",
 and the rest are names; the thirteen themes of 3.1.0 arrived with English
 labels ("Art Deco"). The interface names (`formal`, `forest`) did not
 change. Override any label in

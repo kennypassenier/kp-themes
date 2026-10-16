@@ -178,8 +178,9 @@ no point of its own and puts the stain in the middle deliberately.
 ### The boot screen ignores the `arrivalLine` I set
 
 Since scope-84 (2026-09-15) a theme with words of its own reads them
-first: synthwave's boot takes `arrivalWordsByTheme.synthwave`, terminal's
-takes `arrivalLinesByTheme`. `arrivalLine`, `arrivalProgress`
+first: synthwave's boot takes `arrivalWordsByTheme.synthwave`, and a theme
+that prints several lines takes `arrivalLinesByTheme` (none of the twelve
+does since terminal left on 2026-10-16). `arrivalLine`, `arrivalProgress`
 and `arrivalReady` are the neutral words for a theme without an entry.
 Set the theme's own entry with `setStrings({ arrivalWordsByTheme: { … } })`.
 

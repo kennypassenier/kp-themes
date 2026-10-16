@@ -2,7 +2,7 @@
 
 Ideas for themes the package may take up again, in case we want more. Each
 entry is what was decided before the theme was stopped, why it was stopped,
-and what to do differently. Nothing here ships; the package has sixteen
+and what to do differently. Nothing here ships; the package has twelve
 themes (`themes/order.json`).
 
 ## Retro (a Windows 95 desktop)

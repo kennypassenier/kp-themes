@@ -197,7 +197,7 @@ nothing here.
 While building, run the single spec you are working on:
 
 ```bash
-npx playwright test tests/register-grotesk.spec.mjs --project=firefox
+npx playwright test tests/register-brutalism.spec.mjs --project=firefox
 ```
 
 Measured for the round-six correction record: 3.6 seconds against 3.5
@@ -220,7 +220,7 @@ You can ask the same question without running a browser at all:
 
 ```bash
 npm run test:tags -- --dry-run                                  # since `git merge-base HEAD main`, with the test count
-npm run test:tags -- --files css/grotesk-register.css --dry-run  # what one file reaches
+npm run test:tags -- --files css/brutalism-register.css --dry-run  # what one file reaches
 npm run test:tags -- --commit <sha> --dry-run                   # what one commit selected
 ```
 
@@ -357,7 +357,7 @@ None of these blocks anything. They are readings.
 | `<file>:NN: <declaration> sits outside a prefers-reduced-motion guard (DI7).` | `gates/check-motion.mjs` | wrap it in `@media (prefers-reduced-motion: no-preference)` |
 | `<file>: kp-<name> animates something this gate cannot measure and is not listed as out of scope. Add it to OUT_OF_SCOPE with the reason, or teach the gate to read it.` | `gates/check-motion.mjs` | a new keyframe on a property with no opacity stops |
 | `css/<theme>-register.css:NN <selector>: texture paints at 0.14 (layer 0.14 × alpha 1), over DI9's ceiling of 0.06` | `gates/check-texture.mjs` | the effective opacity is the layer opacity times the strongest alpha |
-| `N invariant violation(s) across 16 themes.` | `gates/check-invariants.mjs` | the closing line, and the reason `npm run advice` exits non-zero |
+| `N invariant violation(s) across 12 themes.` | `gates/check-invariants.mjs` | the closing line, and the reason `npm run advice` exits non-zero |
 
 Under S49 a value an approved demo showed is not changed because a
 reading disagrees with it. The reading becomes a **finding** put to

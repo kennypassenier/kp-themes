@@ -5,12 +5,48 @@ a consumer does about it. A minor release that needs no action has no
 section. The break into v1 itself, the five numbered sections, is at the
 end.
 
-## Coming from 9.x to the next major release: six themes are gone
+## Coming from 10.x to the next release: four more themes are gone (breaking)
+
+`terminal`, `phantom`, `light` and `grotesk` are no longer in the package
+(Kenny, 2026-10-16). This is a breaking change: a consumer that names one
+of them has to act. Twelve themes remain: formal, dark, cyberpunk,
+synthwave, pastel, forest, blueprint, solstice, brutalism, deco, nostromo
+and titanium. What a consumer notices:
+
+- **A stored or written name falls back to `formal`.**
+  `applyTheme('terminal')`, a `data-theme="light"` in markup or one of the
+  four names in localStorage now resolves to `DEFAULT_THEME` (`formal`),
+  says so once in the console and fires the unknown-theme event, as any
+  other unknown name does. The stored preference is left as it is; replace
+  it in your own code if you want a different landing theme for those
+  users. Nothing in the package picked `light` by itself (no
+  prefers-color-scheme mapping, no light/dark pair), so an app that wrote
+  `light` as its own default has to change that default. The nearest of
+  the twelve: `formal` or `pastel` for Light, `brutalism` for Grotesk,
+  `dark` or `cyberpunk` for Phantom, `nostromo` or `cyberpunk` for Terminal.
+- **TypeScript:** `ThemeName` (and `Theme`) no longer includes the four
+  names, so code that names one of them is now a compile error.
+- **Imports that no longer resolve:** `@kp-soft/themes/css/terminal-register`,
+  `.../css/phantom-register`, `.../css/light-register`,
+  `.../css/grotesk-register` and their `/min` variants, and the four token
+  files under themes/. Remove those imports; the bundle
+  (`dist/kp-themes.css`) simply no longer carries them.
+- **Fonts:** the folders for Barlow, Barlow Condensed and Inter are gone
+  from fonts/, and `css/fonts.css` no longer declares them. A page that
+  names one of those families in its own CSS falls back to its next family.
+- **A vendored `css/themes.css`** (Almanac, kyu) keeps the four blocks
+  until it is copied again; nothing breaks, it is only dead weight.
+- **The split theme repositories** (kp-themes-windows, -linux, -vscode,
+  -ha, -jellyfin, -tui) are pinned to an earlier `tokens.tar` by checksum
+  and keep their copies of the four until they move to the new tarball;
+  a generator there that lists the four by name fails on the new tarball.
+
+## Coming from 9.x to 10.x: six themes are gone
 
 `lapis`, `shade-light` and `shade-dark` are no longer in the package
 (Kenny, 2026-10-06), neither are `high-contrast` and `sepia` (Kenny,
 2026-10-08), and neither is `retro` (Kenny, 2026-10-09). Sixteen themes
-remain. What a consumer notices:
+remained. What a consumer notices:
 
 - **A stored or written name falls back.** `applyTheme('lapis')`, a
   `data-theme="shade-dark"` in markup or one of the six names in

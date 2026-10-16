@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+- **Removed: four themes, `terminal`, `phantom`, `light` and `grotesk`** [breaking; Kenny, 2026-10-16
+  23:38 to 23:40: "we gaan het terminal thema bij deze ook verwijderen uit ons pakket", "En phantom ook", "en light ook",
+  "en grotesk ook"]. Twelve themes remain: formal, dark, cyberpunk, synthwave, pastel, forest, blueprint, solstice,
+  brutalism, deco, nostromo and titanium. Gone with them, as with retro: their token sources (`themes/<name>/`), their
+  registers (`css/<name>-register.css` and the `./css/<name>-register` and `/min` exports), their blocks in
+  `css/themes.css` and entries in `js/theme-registry.js` (and so in the `ThemeName` type), their texture and heading
+  rules in `css/_rules.css`, their hooks, their `kp-sig-<theme>-*` TIMINGS rows and terminal's `kp-sweep`, `kp-tube-off`,
+  `kp-caret`, `kp-caret-reverse` and `kp-tp-*` rows, terminal's BIOS lines in `arrivalLinesByTheme`, the font families
+  only they used (Barlow and Barlow Condensed for phantom, Inter for grotesk; Share Tech Mono stays as cyberpunk's and
+  synthwave's `KP Tech Mono`), their showcase, compare and concept pages, terminal's and phantom's intro blocks and every
+  theme-menu entry in the catalogue and the site, their verdict, hash and pixel rows (770 block/theme pairs), their
+  theme-specific tests and their research demos (`<name>-anchor`, `<name>-character`, grotesk-hover, their variant
+  sheets in the character demos). The `shout` headline routine and the card arrival keep the TIMINGS rows they time
+  themselves by (`kp-sig-phantom-fly`, `kp-bar-run`, `kp-load-out`). Synthwave is now the only theme with an arrival
+  intro. A page that stores one of the four names falls back to `formal` like any unknown name. The review demos that
+  opened in light open in formal. See MIGRATION.md.
 - **Changed: the compare slider loads as a table does** [kpadopt4 round 2; Kenny, 2026-10-16: "het laadstreepje is super dun ten opzichte van het laadveld. Doe iets in de aard van een table die laadt met centraal de laadanimatie"]. While an image loads, a quiet plate covers the box at its size and the data table's own loading card stands in its middle (js/busy-card.js, `.kp-compare__busy`, string `compareLoading`); the skeleton block is gone. New `setCompareBusy(el, busy)` holds the box in loading for a page that reads its panes itself. A failed image fills the visible part of its pane with the sentence and a normal-size Retry (string `compareRetry`) that asks for it again and fires `kp-compare-retry` (`COMPARE_RETRY_EVENT`, `{ pane }`). gates/check-busy-card.mjs moves js/compare.js to the components that lay the card.
 - **Added: uptime cells that open something** [kpadopt4 round 2; Kenny, 2026-10-16: "zie dat de items zelf klikbaar zijn zodat ze bv iets kunnen openen, ofwel een pagina, ofwel mss een tooltip ofzo met wat snelle info"]. Opt-in, two ways. A period with `href` is a link to its page (Enter or Space follows it). `open: 'info'` on `setUptime` (or `data-kp-uptime-open="info"`) makes a press, Enter or Space open the period's quick info under its cell: the theme's popover plate (`.kp-uptime__info`, in the top layer, placed against the cell, opened and closed in the theme's motion) with the period, its state as a swatch and a word, its exact figures, the period's `details` lines and, with `href`, a link to its page; the arrows carry it along the strip, a second press, Escape (focus back to the cell) or a press outside closes it, the hover card rests meanwhile. `kp-uptime-open` (`UPTIME_OPEN_EVENT`, cancelable, `{ key, index, period, panel }`) fires before it opens; `kp-uptime-pick` as before. Strings `uptimeInfoFigures`, `uptimeOpen`; knob `--kp-uptime-info-width`. Without `href` and `open` a strip is unchanged.
 - **Changed: the bullet rows' nothing-due and failed states take the list's full size** [kpadopt4 round 2; Kenny, 2026-10-16: the Retry button was "heel kort en veel te hoog"]. Both are the package's empty state (`.kp-empty`, each theme's own) over the list's whole footprint, the height its rows had (`--kp-bullets-state-min`, 7.5rem, for a list that never had rows), the words centred; failed has a normal-size Retry (`.kp-bullets__retry`, no longer stretched by the grid; `retry: false` leaves it out, `BULLETS_RETRY_EVENT`). A focused Retry that goes with its note leaves the focus on the list.
