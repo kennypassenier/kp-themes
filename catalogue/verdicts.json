@@ -6448,9 +6448,9 @@
                 "firefox": {
                     "verdict": "approved",
                     "hash": "27d89d4bdec6440017b6fff417cfca073db2bc467119eb70e296d5e2f78ad1db",
-                    "commit": "ad6d6ad1d375be3713c028fd304ac01f4d735dc9",
-                    "given": "2026-09-20",
-                    "ratio": 2.222
+                    "commit": "56a4c680dbadf6c2846997f649d3b79a5e5f304d",
+                    "given": "2026-10-16",
+                    "ratio": 2
                 }
             },
             "dark": {
