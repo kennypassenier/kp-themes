@@ -7,8 +7,8 @@ export declare const STATUS_EVENT = "kp-status-change";
 /** Fired on the list, bubbling, when a Retry is pressed: `{ item, id }`. */
 export declare const STATUS_RETRY_EVENT = "kp-status-retry";
 /** The states a row can be in. */
-export declare const STATUS_STATES: readonly ['ok', 'loading', 'failed', 'empty'];
-export type StatusState = 'ok' | 'loading' | 'failed' | 'empty';
+export declare const STATUS_STATES: readonly ['ok', 'loading', 'failed', 'empty', 'warn'];
+export type StatusState = 'ok' | 'loading' | 'failed' | 'empty' | 'warn';
 export type StatusRow = {
     /**
      * names the row for setStatus(); defaults to its label
@@ -23,6 +23,10 @@ export type StatusRow = {
      * loading when absent
      */
     state?: StatusState;
+    /**
+     * what to do about it, written out; shown on a failed or warn row only [kpadopt4-rows]
+     */
+    fix?: string;
 };
 /**
  * Build a status list from rows. The result still needs attachStatusLists()
@@ -43,14 +47,24 @@ export declare function buildStatusList(rows: StatusRow[], { label, retry, singl
  *
  * @param {Element} list
  * @param {string | number} key
- * @param {{ state?: StatusState, label?: string, detail?: string }} change
+ * @param {{ state?: StatusState, label?: string, detail?: string, fix?: string }} change
  * @returns {Element | null} the row, or null when there is no such row
  */
 export declare function setStatus(list: Element, key: string | number, change: {
     state?: StatusState;
     label?: string;
     detail?: string;
+    fix?: string;
 }): Element | null;
+/**
+ * How many rows of a list are in each state, for a summary line such as
+ * "3 of 4 checks pass" [kpadopt4-rows]. Counts the rows as they are now.
+ * @param {Element} list
+ * @returns {Record<StatusState, number> & { total: number }}
+ */
+export declare function countStatus(list: Element): Record<StatusState, number> & {
+    total: number;
+};
 /**
  * Sync every `.kp-statuslist` under `root`, follow `data-state` changes later
  * and turn a press on a Retry into `kp-status-retry`. A list rendered after

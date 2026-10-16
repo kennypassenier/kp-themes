@@ -96,6 +96,10 @@ export type Strings = {
      */
     statusEmpty: string;
     /**
+     * A status row that passes with a reservation, `data-state="warn"` [kpadopt4-rows]
+     */
+    statusWarn: string;
+    /**
      * The Retry button of a failed status row
      */
     statusRetry: string;
@@ -1053,6 +1057,7 @@ export type Strings = {
  * @property {string} statusLoading  A status row still being read
  * @property {string} statusFailed  A status row that failed
  * @property {string} statusEmpty  A status row with nothing to show
+ * @property {string} statusWarn  A status row that passes with a reservation, `data-state="warn"` [kpadopt4-rows]
  * @property {string} statusRetry  The Retry button of a failed status row
  * @property {(label: string) => string} statusRetryLabel  That button's accessible name, "Retry vault"
  * @property {(label: string, state: string, detail: string) => string} statusAnnounce  What the list's status region says when a row changes, "vault: failed, The host did not answer"

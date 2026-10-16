@@ -36,6 +36,11 @@
 //     again. A burst of changes in one tick is one announcement, and more than
 //     three become "12 updated, 2 failed".
 //
+// A check list [kpadopt4-rows] uses two more parts, both opt-in: the state
+// `warn` (passes with a reservation: the warning pair on the mark, "!" as its
+// shape) and `.kp-statusrow__fix` inside the body, the fix written out, shown
+// on a failed or warn row only. buildStatusList() and setStatus() take `fix`.
+//
 // Change a row with setStatus(list, 'vault', { state: 'loading', detail: 'reading (3 s)' });
 // a framework that sets `data-state` itself is followed too. Every word it adds
 // is in js/strings.js.
@@ -51,15 +56,16 @@ export const STATUS_EVENT = 'kp-status-change';
 /** Fired on the list, bubbling, when a Retry is pressed: `{ item, id }`. */
 export const STATUS_RETRY_EVENT = 'kp-status-retry';
 /** The states a row can be in. */
-export const STATUS_STATES = /** @type {const} */ (['ok', 'loading', 'failed', 'empty']);
+export const STATUS_STATES = /** @type {const} */ (['ok', 'loading', 'failed', 'empty', 'warn']);
 
 /**
- * @typedef {'ok' | 'loading' | 'failed' | 'empty'} StatusState
+ * @typedef {'ok' | 'loading' | 'failed' | 'empty' | 'warn'} StatusState
  * @typedef {object} StatusRow
  * @property {string} [id] names the row for setStatus(); defaults to its label
  * @property {string} label
  * @property {string} [detail] the short line under the label: how long, the reason; give every row one so a reason arriving later moves nothing
  * @property {StatusState} [state] loading when absent
+ * @property {string} [fix] what to do about it, written out; shown on a failed or warn row only [kpadopt4-rows]
  */
 
 /** The state each row was last synced to. @type {WeakMap<Element, string>} */
@@ -73,7 +79,7 @@ const known = (state) => (STATUS_STATES.includes(/** @type {any} */ (state)) ? /
 /** @param {StatusState} state */
 const stateWord = (state) => {
     const s = getStrings();
-    return { ok: s.statusOk, loading: s.statusLoading, failed: s.statusFailed, empty: s.statusEmpty }[state];
+    return { ok: s.statusOk, loading: s.statusLoading, failed: s.statusFailed, empty: s.statusEmpty, warn: s.statusWarn }[state];
 };
 
 /** @param {string} className @param {string} [tag] */
@@ -103,6 +109,7 @@ export function buildStatusList(rows, { label, retry = true, single = false } = 
         item.dataset.state = known(row.state);
         const body = el('kp-statusrow__body');
         body.append(el('kp-statusrow__label'), el('kp-statusrow__detail'));
+        if (row.fix !== undefined) body.append(el('kp-statusrow__fix'));
         item.append(el('kp-statusrow__mark'), body);
         list.append(item);
         writeText(item, row);
@@ -114,11 +121,23 @@ export function buildStatusList(rows, { label, retry = true, single = false } = 
 /**
  * Set the text parts of a row.
  * @param {Element} item
- * @param {{ label?: string, detail?: string }} change
+ * @param {{ label?: string, detail?: string, fix?: string }} change
  */
-function writeText(item, { label, detail }) {
+function writeText(item, { label, detail, fix }) {
     if (label !== undefined) item.querySelector('.kp-statusrow__label')?.replaceChildren(label);
     if (detail !== undefined) item.querySelector('.kp-statusrow__detail')?.replaceChildren(detail);
+    if (fix !== undefined) {
+        let part = item.querySelector('.kp-statusrow__fix');
+        if (!part) {
+            part = el('kp-statusrow__fix');
+            // Before the spoken state word, which stays the body's last part.
+            const body = item.querySelector('.kp-statusrow__body');
+            const word = body?.querySelector(':scope > .kp-statusrow__state');
+            if (word) word.before(part);
+            else body?.append(part);
+        }
+        part.replaceChildren(fix);
+    }
 }
 
 /** @param {Element} item */
@@ -271,7 +290,7 @@ function say(list, entry) {
  *
  * @param {Element} list
  * @param {string | number} key
- * @param {{ state?: StatusState, label?: string, detail?: string }} change
+ * @param {{ state?: StatusState, label?: string, detail?: string, fix?: string }} change
  * @returns {Element | null} the row, or null when there is no such row
  */
 export function setStatus(list, key, change) {
@@ -282,6 +301,22 @@ export function setStatus(list, key, change) {
     if (change.state !== undefined) item.setAttribute('data-state', known(change.state));
     syncItem(item, { announce: true });
     return item;
+}
+
+/**
+ * How many rows of a list are in each state, for a summary line such as
+ * "3 of 4 checks pass" [kpadopt4-rows]. Counts the rows as they are now.
+ * @param {Element} list
+ * @returns {Record<StatusState, number> & { total: number }}
+ */
+export function countStatus(list) {
+    /** @type {Record<StatusState, number> & { total: number }} */
+    const counts = { ok: 0, loading: 0, failed: 0, empty: 0, warn: 0, total: 0 };
+    for (const item of list.querySelectorAll(':scope > .kp-statusrow')) {
+        counts[known(item.getAttribute('data-state'))] += 1;
+        counts.total += 1;
+    }
+    return counts;
 }
 
 /**

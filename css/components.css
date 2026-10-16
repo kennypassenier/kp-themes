@@ -13007,6 +13007,40 @@
         content: var(--kp-glyph-empty, '–');
     }
 
+    /* A check that passes with a reservation [kpadopt4-rows; JobTracker's
+ * readiness card, homelab's doctor checks]: `data-state="warn"`, the
+ * warning pair on the mark (its plate, its own ink on it, fix-70) with an
+ * exclamation as its shape, and an edge leaning towards the warning ink.
+ * Opt-in: a row is warn only when the page says so. */
+    .kp-statusrow[data-state='warn'] {
+        --kp-statusrow-state-edge: color-mix(in oklab, var(--warning-foreground) 45%, var(--border));
+    }
+
+    .kp-statusrow[data-state='warn'] .kp-statusrow__mark {
+        border-color: var(--warning-foreground);
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+
+    .kp-statusrow[data-state='warn'] .kp-statusrow__mark::after {
+        content: var(--kp-glyph-warn, '!');
+    }
+
+    /* The fix, written out [kpadopt4-rows]: what to do about a failed or
+ * warn row, under its detail in the page's own ink (it is an instruction,
+ * not an aside). Shown on those two states only, so a row that passes
+ * carries no advice it does not need; `--kp-statusrow-fix-gap` is the room
+ * above it. */
+    .kp-statusrow__fix {
+        margin-block-start: var(--kp-statusrow-fix-gap, var(--kp-space-xs, 0.25rem));
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-statusrow:not([data-state='failed'], [data-state='warn']) .kp-statusrow__fix {
+        display: none;
+    }
+
     /* --- Facet list -----------------------------------------------------------
  * Checkbox rows, each with its count and an "only" button that selects
  * just that row. The row is a grid of two cells, the label (the checkbox,

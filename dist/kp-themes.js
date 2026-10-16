@@ -92,6 +92,7 @@ var init_strings = __esm({
       statusLoading: "loading",
       statusFailed: "failed",
       statusEmpty: "nothing to show",
+      statusWarn: "needs attention",
       statusRetry: "Retry",
       statusRetryLabel: (label) => `Retry ${label}`,
       statusAnnounce: (label, state, detail) => detail ? `${label}: ${state}, ${detail}` : `${label}: ${state}`,
@@ -19531,6 +19532,7 @@ __export(statusrow_exports, {
   STATUS_STATES: () => STATUS_STATES,
   attachStatusLists: () => attachStatusLists,
   buildStatusList: () => buildStatusList,
+  countStatus: () => countStatus,
   setStatus: () => setStatus
 });
 function buildStatusList(rows, { label, retry = true, single = false } = {}) {
@@ -19544,6 +19546,7 @@ function buildStatusList(rows, { label, retry = true, single = false } = {}) {
     item.dataset.state = known2(row.state);
     const body = el2("kp-statusrow__body");
     body.append(el2("kp-statusrow__label"), el2("kp-statusrow__detail"));
+    if (row.fix !== void 0) body.append(el2("kp-statusrow__fix"));
     item.append(el2("kp-statusrow__mark"), body);
     list.append(item);
     writeText2(item, row);
@@ -19551,9 +19554,20 @@ function buildStatusList(rows, { label, retry = true, single = false } = {}) {
   });
   return list;
 }
-function writeText2(item, { label, detail }) {
+function writeText2(item, { label, detail, fix }) {
   if (label !== void 0) item.querySelector(".kp-statusrow__label")?.replaceChildren(label);
   if (detail !== void 0) item.querySelector(".kp-statusrow__detail")?.replaceChildren(detail);
+  if (fix !== void 0) {
+    let part = item.querySelector(".kp-statusrow__fix");
+    if (!part) {
+      part = el2("kp-statusrow__fix");
+      const body = item.querySelector(".kp-statusrow__body");
+      const word = body?.querySelector(":scope > .kp-statusrow__state");
+      if (word) word.before(part);
+      else body?.append(part);
+    }
+    part.replaceChildren(fix);
+  }
 }
 function syncItem2(item, { announce: announce2 = false } = {}) {
   const state = known2(item.getAttribute("data-state"));
@@ -19672,6 +19686,14 @@ function setStatus(list, key, change) {
   syncItem2(item, { announce: true });
   return item;
 }
+function countStatus(list) {
+  const counts = { ok: 0, loading: 0, failed: 0, empty: 0, warn: 0, total: 0 };
+  for (const item of list.querySelectorAll(":scope > .kp-statusrow")) {
+    counts[known2(item.getAttribute("data-state"))] += 1;
+    counts.total += 1;
+  }
+  return counts;
+}
 function attachStatusLists(root = document) {
   const lists = (
     /** @type {HTMLElement[]} */
@@ -19719,7 +19741,7 @@ var init_statusrow = __esm({
     STATUS_EVENT = "kp-status-change";
     STATUS_RETRY_EVENT = "kp-status-retry";
     STATUS_STATES = /** @type {const} */
-    ["ok", "loading", "failed", "empty"];
+    ["ok", "loading", "failed", "empty", "warn"];
     synced3 = /* @__PURE__ */ new WeakMap();
     pending2 = /* @__PURE__ */ new WeakMap();
     known2 = (state) => STATUS_STATES.includes(
@@ -19731,7 +19753,7 @@ var init_statusrow = __esm({
     ) : "loading";
     stateWord2 = (state) => {
       const s2 = getStrings();
-      return { ok: s2.statusOk, loading: s2.statusLoading, failed: s2.statusFailed, empty: s2.statusEmpty }[state];
+      return { ok: s2.statusOk, loading: s2.statusLoading, failed: s2.statusFailed, empty: s2.statusEmpty, warn: s2.statusWarn }[state];
     };
     el2 = (className, tag = "span") => {
       const node = document.createElement(tag);
@@ -26008,6 +26030,7 @@ export {
   configureTheme,
   contrast,
   contrast_exports as contrastExports,
+  countStatus,
   createListbox,
   currentTheme,
   dashOf,

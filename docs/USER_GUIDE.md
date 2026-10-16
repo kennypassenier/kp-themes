@@ -1803,6 +1803,35 @@ outline (`aria-invalid="true"` on the fieldset, the message in a
 `--kp-field-tile-ground`, `--kp-field-tile-ground-checked`,
 `--kp-field-tile-edge-checked`. No script.
 
+### A check list with the fix written out
+
+The status rows (`.kp-statuslist`, `js/statusrow.js`) carry a system's
+checks too: two opt-in parts, a `warn` state for a check that passes with
+a reservation and `.kp-statusrow__fix`, the fix written out, shown on a
+failed or warn row only.
+
+```html
+<ul class="kp-statuslist kp-statuslist--rows" aria-label="What JobTracker needs" data-kp-status-retry="false">
+    <li class="kp-statusrow" data-state="warn" data-kp-status-id="almanac">
+        <span class="kp-statusrow__mark" aria-hidden="true"></span>
+        <span class="kp-statusrow__body">
+            <span class="kp-statusrow__label">Calendar (Almanac)</span>
+            <span class="kp-statusrow__detail">partly set up</span>
+            <span class="kp-statusrow__fix">Add the Almanac token to the configuration to send follow-ups and interviews.</span>
+        </span>
+    </li>
+</ul>
+```
+
+The warn mark is the warning pair (its plate, its own ink on it) with "!"
+as its shape (`--kp-glyph-warn`), and a screen reader hears "needs
+attention" (`statusWarn`). `buildStatusList(rows)` and
+`setStatus(list, id, { state, detail, fix })` take `fix`;
+`countStatus(list)` counts the rows per state for the summary line ("3 of
+4 checks pass"). A list of checks usually re-checks as a whole, from its
+card's header: `data-kp-status-retry="false"` leaves out the Retry per
+row. Knob: `--kp-statusrow-fix-gap`.
+
 ## Tables that fit [TH95, TH96]
 
 A table is the widest thing on most pages, and everything below is about

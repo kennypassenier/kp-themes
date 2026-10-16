@@ -188,6 +188,7 @@ export {
     STATUS_STATES,
     attachStatusLists,
     buildStatusList,
+    countStatus,
     setStatus,
 } from './js/statusrow.js';
 /** @typedef {import('./js/statusrow.js').StatusRow} StatusRow */
