@@ -1,12 +1,11 @@
 // research/kpadopt3: the demo's wiring. The components and their new options are the package's own (js/nav-fold.js,
-// js/datatable.js, js/gantt.js, js/week.js, js/facets.js, js/heat.js); the sample data, the frames, the readouts and the
+// js/gantt.js, js/week.js, js/facets.js); the sample data, the frames, the readouts and the
 // buttons that drive a section are this page's (mock). Loaded before js/auto.js, so the options given here are the ones
 // that count.
 import { openMenu, closeMenu } from '../../js/menu-button.js';
 import { attachGantts, setGanttLegend, setGanttRuns, GANTT_OPEN_EVENT, GANTT_SELECT_EVENT } from '../../js/gantt.js';
 import { attachWeeks, setWeekEvents, setWeekState, WEEK_OPEN_EVENT } from '../../js/week.js';
 import { attachFacets, setFacetItems, setFacetCounts } from '../../js/facets.js';
-import { attachHeats, setHeat, setHeatPick, HEAT_PAGE_EVENT } from '../../js/heat.js';
 import { attachHoverCards } from '../../js/hovercard.js';
 import { dayKey, formatDayKey, shiftDay } from '../../js/calendar.js';
 import { zonedTime } from '../../js/chart.js';
@@ -338,54 +337,3 @@ setFacetItems(
 );
 setFacetCounts(plain, {});
 setFacetCounts(facets, {});
-
-/* ------------------------------------------------------------ 6 · the heat grid */
-
-const STACK_ROWS = ['media', 'photos', 'nextcloud', 'gitea', 'vaultwarden', 'pihole'];
-const NIGHTS = 60;
-const PAGE = 14;
-const heat = byId('k3-heat');
-const readout = byId('k3-heat-readout');
-let offset = 0;
-/** A night's outcome, the same on every visit. @param {number} r @param {number} n */
-const outcome = (r, n) => {
-    const v = (r * 7919 + n * 104729) % 97;
-    if (r === 4 && n > 44) return 'before';
-    return v < 4 ? 'bad' : v < 11 ? 'warn' : 'ok';
-};
-const WORDS = { ok: 'backed up', warn: 'backed up late', bad: 'missed', before: 'before any history' };
-const drawHeat = () => {
-    // Column 0 of the page is the oldest shown; night 0 is the newest of all.
-    const nights = Array.from({ length: PAGE }, (_, i) => offset + PAGE - 1 - i);
-    const iso = (/** @type {number} */ n) => shiftDay(today(), -n - 1);
-    setHeat(heat, {
-        columns: nights.map((n) => ({ key: iso(n), label: iso(n).slice(8, 10) })),
-        rows: STACK_ROWS.map((name, r) => ({
-            key: name,
-            label: name,
-            mark: `oklch(0.62 0.15 ${hueOf(name)})`,
-            cells: nights.map((n) => {
-                const tone = /** @type {'ok' | 'warn' | 'bad' | 'before'} */ (outcome(r, n));
-                return { tone, label: WORDS[tone], tip: `${name}, ${formatDayKey(iso(n))}: ${WORDS[tone]}` };
-            }),
-        })),
-        every: 2,
-    });
-    const first = formatDayKey(iso(offset + PAGE - 1));
-    const last = formatDayKey(iso(offset));
-    readout.textContent =
-        offset === 0 ? `Nights ${first} to ${last}: the newest ${PAGE}.` : `Nights ${first} to ${last}: ${offset} nights before the newest.`;
-};
-attachHeats(document);
-drawHeat();
-heat.addEventListener(HEAT_PAGE_EVENT, (event) => {
-    const { direction } = /** @type {CustomEvent} */ (event).detail;
-    if (direction === 'earlier') offset = Math.min(NIGHTS - PAGE, offset + PAGE);
-    else if (direction === 'later') offset = Math.max(0, offset - PAGE);
-    else if (direction === 'latest') {
-        // As the dashboard's Home did: back to the newest nights, and the picked night let go.
-        offset = 0;
-        setHeatPick(heat, null);
-    }
-    drawHeat();
-});

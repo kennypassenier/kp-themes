@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="kpadopt3" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Round 3 of the dashboard adoption: six options the dashboard still draws itself · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k3-page">
+            <header class="k3-intro">
+                <h1>Round 3 of the dashboard adoption: six options</h1>
+                <p class="cat-intro">
+                    The admin dashboard still drew six things itself because the package lacked them. Each is now an <b>opt-in option</b> of a
+                    component you already approved: without the new attribute or field, every one of them looks and behaves exactly as approved.
+                    Everything with a <code>kp-</code> class and every script under <code>js/</code> is the package; the sample data, the frames, the
+                    readouts and the buttons that drive a demo are this page’s. Every section says what you should see under <b>Expected</b>. Formal
+                    only, judged in the review dialog (“Review in a dialog” at the top).
+                </p>
+            </header>
+
+            <section
+                class="k3-sec"
+                id="nav-sep"
+                data-review-item="nav-sep"
+                data-review-components="nav-fold"
+                data-review-title="1 · A separator in the folding bar"
+                aria-labelledby="h-nav-sep"
+            >
+                <div class="k3-sec__head">
+                    <h2 id="h-nav-sep">1 · A separator in the folding bar</h2>
+                    <p>
+                        <code>&lt;li class="kp-nav__sep" aria-hidden="true"&gt;</code> between two groups of links. The fold
+                        (<code>data-kp-nav-fold</code>) knows it: a separator stays only between two links that are shown, and in the More menu it
+                        becomes the menu’s own rule.
+                    </p>
+                </div>
+                <div class="k3-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The wide bar: <b>Backups</b> and <b>System</b> (the rarely needed two) stand after formal’s docket cut: a strong hairline
+                            as tall as a link with a short navy tick at its head, in the same gap as between two links. No word touches it.
+                        </li>
+                        <li>
+                            The 33rem bar has folded from Logs on: More holds <b>Logs</b>, then a hairline across the menu, then <b>Backups</b> and
+                            <b>System</b>. No separator is left standing before More. The menu is open under the bar (it hangs from More, joined to
+                            it, on its opaque plate).
+                        </li>
+                        <li>
+                            Drag the slider: links leave the bar from the end. While a link after the separator is still in the bar, the separator
+                            stays; once every link after it has folded, the separator folds with them and turns into the rule in the menu. The bar
+                            keeps its height at every width and nothing jumps.
+                        </li>
+                        <li>
+                            The 360 px bar collapses into its toggle as before; opened, the separator is a rule across the list (the docket cut lying
+                            down: hairline, navy tick at its start) between Logs and Backups.
+                        </li>
+                        <li>Tab through a bar: the separator is never a stop, and a screen reader does not hear it.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Compare the wide bar’s separator with the one lying down in the opened 360 px list, and the rule in the open menu.
+                    </p>
+                </div>
+                <div class="k3-stack">
+                    <div>
+                        <p class="k3-label">The page’s own width (everything in the bar at 1280)</p>
+                        <div class="k3-frame">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" data-kp-nav-fold aria-label="Main, wide">
+                                    <span class="kp-nav__brand">Homelab</span>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" aria-current="page" href="#nav-sep">Home</a></li>
+                                        <li><a class="kp-nav__link" href="#nav-sep">Needs you</a></li>
+                                        <li><a class="kp-nav__link" href="#nav-sep">Activity</a></li>
+                                        <li><a class="kp-nav__link" href="#nav-sep">Stacks</a></li>
+                                        <li><a class="kp-nav__link" href="#nav-sep">Logs</a></li>
+                                        <li class="kp-nav__sep" aria-hidden="true"></li>
+                                        <li><a class="kp-nav__link" href="#nav-sep">Backups</a></li>
+                                        <li><a class="kp-nav__link" href="#nav-sep">System</a></li>
+                                    </ul>
+                                    <div class="kp-nav__search">
+                                        <button type="button" class="kp-button kp-button--ghost kp-button--sm">Search</button>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="k3-label">33rem, More opened</p>
+                        <div class="k3-scroll-x">
+                            <div class="k3-frame k3-frame--fold k3-frame--menu" data-k3-open-more>
+                                <div class="kp-nav-wrap">
+                                    <nav class="kp-nav" data-kp-nav-fold aria-label="Main, folded">
+                                        <span class="kp-nav__brand">Homelab</span>
+                                        <ul class="kp-nav__links">
+                                            <li><a class="kp-nav__link" aria-current="page" href="#nav-sep">Home</a></li>
+                                            <li><a class="kp-nav__link" href="#nav-sep">Needs you</a></li>
+                                            <li><a class="kp-nav__link" href="#nav-sep">Activity</a></li>
+                                            <li><a class="kp-nav__link" href="#nav-sep">Stacks</a></li>
+                                            <li><a class="kp-nav__link" href="#nav-sep">Logs</a></li>
+                                            <li class="kp-nav__sep" aria-hidden="true"></li>
+                                            <li><a class="kp-nav__link" href="#nav-sep">Backups</a></li>
+                                            <li><a class="kp-nav__link" href="#nav-sep">System</a></li>
+                                        </ul>
+                                        <div class="kp-nav__search">
+                                            <button type="button" class="kp-button kp-button--ghost kp-button--sm">Search</button>
+                                        </div>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="k3-actions">
+                            <button type="button" class="kp-button" data-k3-open-more-button>Open the More menu again</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="k3-slider"
+                            ><span>Width of this bar</span><input type="range" min="20" max="64" step="1" value="44" data-k3-slider /><output
+                                data-k3-out
+                                >44rem</output
+                            ></label
+                        >
+                        <div class="k3-scroll-x">
+                            <div class="k3-frame k3-frame--live" data-k3-live>
+                                <div class="kp-nav-wrap">
+                                    <nav class="kp-nav" data-kp-nav-fold aria-label="Main, any width">
+                                        <span class="kp-nav__brand">Homelab</span>
+                                        <ul class="kp-nav__links">
+                                            <li><a class="kp-nav__link" aria-current="page" href="#nav-sep">Home</a></li>
+                                            <li><a class="kp-nav__link" href="#nav-sep">Needs you</a></li>
+                                            <li><a class="kp-nav__link" href="#nav-sep">Activity</a></li>
+                                            <li><a class="kp-nav__link" href="#nav-sep">Stacks</a></li>
+                                            <li><a class="kp-nav__link" href="#nav-sep">Logs</a></li>
+                                            <li class="kp-nav__sep" aria-hidden="true"></li>
+                                            <li><a class="kp-nav__link" href="#nav-sep">Backups</a></li>
+                                            <li><a class="kp-nav__link" href="#nav-sep">System</a></li>
+                                        </ul>
+                                        <div class="kp-nav__search">
+                                            <button type="button" class="kp-button kp-button--ghost kp-button--sm">Search</button>
+                                        </div>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="k3-label">Phone, 360 px, the toggle opened</p>
+                        <div class="k3-frame k3-frame--phone">
+                            <div class="kp-nav-wrap">
+                                <nav class="kp-nav" data-kp-nav-fold aria-label="Main, phone" data-k3-phone-nav>
+                                    <span class="kp-nav__brand">Homelab</span>
+                                    <button type="button" data-kp-nav-toggle class="kp-nav__toggle"></button>
+                                    <ul class="kp-nav__links">
+                                        <li><a class="kp-nav__link" aria-current="page" href="#nav-sep">Home</a></li>
+                                        <li><a class="kp-nav__link" href="#nav-sep">Needs you</a></li>
+                                        <li><a class="kp-nav__link" href="#nav-sep">Activity</a></li>
+                                        <li><a class="kp-nav__link" href="#nav-sep">Stacks</a></li>
+                                        <li><a class="kp-nav__link" href="#nav-sep">Logs</a></li>
+                                        <li class="kp-nav__sep" aria-hidden="true"></li>
+                                        <li><a class="kp-nav__link" href="#nav-sep">Backups</a></li>
+                                        <li><a class="kp-nav__link" href="#nav-sep">System</a></li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="k3-sec"
+                id="choice-value"
+                data-review-item="choice-value"
+                data-review-components="datatable"
+                data-review-title="2 · A choice filter that reads a word, not the cell"
+                aria-labelledby="h-choice-value"
+            >
+                <div class="k3-sec__head">
+                    <h2 id="h-choice-value">2 · A choice filter that reads a word, not the cell</h2>
+                    <p>
+                        <code>td data-kp-filter-value="running"</code>: the cell shows what it likes (a dot, the state, how long), the data table’s
+                        choice filter lists and matches it by the word, as <code>data-kp-sort-value</code> does for sorting. Search still reads what
+                        the cell shows.
+                    </p>
+                </div>
+                <div class="k3-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The Status column shows a dot, the state and how long (“Running · up 3 days”). Open <b>Filters</b>: Status lists exactly
+                            three choices, <b>failed</b>, <b>running</b>, <b>stopped</b>, not one per cell text.
+                        </li>
+                        <li>
+                            Tick <b>failed</b>: the two failed hosts stay, the status line says “Showing 1–2 of 2 (filtered from 7)” and a pill says
+                            Status: failed. Tick <b>stopped</b> as well: three rows, two pills.
+                        </li>
+                        <li>The search box still reads what is shown: type “up 3” and only the host that has been up 3 days stays.</li>
+                        <li>The Kind column has no value of its own: its choices are its texts, as before.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Open Filters and compare the Status choices with the cells.</p>
+                </div>
+                <div class="kp-datatable" data-kp-datatable data-kp-filter-mode="panel">
+                    <div class="kp-datatable__bar">
+                        <input
+                            class="kp-datatable__search"
+                            type="search"
+                            data-kp-datatable-search
+                            aria-label="Search hosts"
+                            placeholder="Search hosts"
+                        />
+                    </div>
+                    <div class="kp-table-wrap">
+                        <table class="kp-table">
+                            <caption class="kp-sr-only">
+                                Hosts
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col" data-kp-sort="text">Host</th>
+                                    <th scope="col" data-kp-sort="text" data-kp-filter="choice">Status</th>
+                                    <th scope="col" data-kp-sort="text" data-kp-filter="choice">Kind</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>media</td>
+                                    <td data-kp-filter-value="running">
+                                        <span class="kp-health" data-state="ok"><span class="kp-health__dot"></span>Running · up 3 days</span>
+                                    </td>
+                                    <td>container</td>
+                                </tr>
+                                <tr>
+                                    <td>photos</td>
+                                    <td data-kp-filter-value="running">
+                                        <span class="kp-health" data-state="ok"><span class="kp-health__dot"></span>Running · up 26 h</span>
+                                    </td>
+                                    <td>container</td>
+                                </tr>
+                                <tr>
+                                    <td>gitea</td>
+                                    <td data-kp-filter-value="failed">
+                                        <span class="kp-health" data-state="down"
+                                            ><span class="kp-health__dot"></span>Failed · exit 137 at 03:12</span
+                                        >
+                                    </td>
+                                    <td>container</td>
+                                </tr>
+                                <tr>
+                                    <td>paperless</td>
+                                    <td data-kp-filter-value="stopped">
+                                        <span class="kp-health"><span class="kp-health__dot"></span>Stopped · by you at 22:40</span>
+                                    </td>
+                                    <td>container</td>
+                                </tr>
+                                <tr>
+                                    <td>dns</td>
+                                    <td data-kp-filter-value="running">
+                                        <span class="kp-health" data-state="ok"><span class="kp-health__dot"></span>Running · up 41 days</span>
+                                    </td>
+                                    <td>virtual machine</td>
+                                </tr>
+                                <tr>
+                                    <td>backup-target</td>
+                                    <td data-kp-filter-value="failed">
+                                        <span class="kp-health" data-state="down"
+                                            ><span class="kp-health__dot"></span>Failed · disk full at 02:05</span
+                                        >
+                                    </td>
+                                    <td>virtual machine</td>
+                                </tr>
+                                <tr>
+                                    <td>vaultwarden</td>
+                                    <td data-kp-filter-value="running">
+                                        <span class="kp-health" data-state="ok"><span class="kp-health__dot"></span>Running · up 9 h</span>
+                                    </td>
+                                    <td>container</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="kp-datatable__bar">
+                        <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="k3-sec"
+                id="gantt-days"
+                data-review-item="gantt-days"
+                data-review-components="gantt"
+                data-review-title="3 · Run timeline: a day on the axis, and a colour legend"
+                aria-labelledby="h-gantt-days"
+            >
+                <div class="k3-sec__head">
+                    <h2 id="h-gantt-days">3 · Run timeline: a day on the axis, and a colour legend</h2>
+                    <p>
+                        <code>data-kp-gantt-days</code> makes every day named on the axis a button that selects that whole day; the page hears it and
+                        jumps. A run’s <code>series</code> (1 to 5) inks a finished run in a chart colour, and <code>setGanttLegend()</code> names the
+                        series after the states.
+                    </p>
+                </div>
+                <div class="k3-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The last 7 days. Each day on the axis (“10/10”) is a button: pointing rules the navy rule under it. Press one: the whole
+                            day, 00:00 to 00:00, is selected as a drag would select it (the band across the plot, the toolbar row turned into the chip
+                            with its times, Zoom and Clear), the day on the axis is closed with the double rule, and the history under the timeline
+                            scrolls to that day inside its own box (its heading ruled), not the page.
+                        </li>
+                        <li>
+                            Press the same day again: the selection lifts. <b>Clear</b> lifts it too. Tab reaches the days as one stop; ← → Home End
+                            move between them; Enter or Space presses.
+                        </li>
+                        <li>
+                            The nightly round (series 1) and the updates (series 2) are plates of their own chart colour with their edge in the full
+                            colour and formal’s heavy rule on the start edge; a run with no series is the green of “succeeded”; failed, running and
+                            queued look as before. The legend names <b>Nightly round</b> and <b>Updates</b> after the four states.
+                        </li>
+                        <li>
+                            The 360 px timeline names every other day (the axis keeps a label’s room); those days are its buttons. A day whose label
+                            would run past the end of the axis stands against its end; where that would touch the label before it, the last, partial
+                            day is not offered, so no two labels ever touch.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Press a day on the axis, then look at the band, the chip, the pressed day and the history box together.</p>
+                </div>
+                <div class="k3-stack">
+                    <div>
+                        <p class="k3-label">Full width</p>
+                        <div
+                            class="kp-gantt"
+                            data-kp-gantt
+                            data-kp-gantt-days
+                            data-kp-gantt-ranges="24h 7d"
+                            data-kp-gantt-range="7d"
+                            id="k3-gantt"
+                            aria-label="Operations of the last 7 days"
+                        ></div>
+                    </div>
+                    <div>
+                        <p class="k3-label">The page’s history (mock), jumped to by the axis</p>
+                        <ol class="k3-history" id="k3-history" aria-label="History by day"></ol>
+                    </div>
+                    <div>
+                        <p class="k3-label">Phone, 360 px</p>
+                        <div class="k3-frame k3-frame--phone">
+                            <div
+                                class="kp-gantt"
+                                data-kp-gantt
+                                data-kp-gantt-days
+                                data-kp-gantt-ranges="24h 7d"
+                                data-kp-gantt-range="7d"
+                                id="k3-gantt-phone"
+                                aria-label="Operations of the last 7 days"
+                            ></div>
+                        </div>
+                    </div>
+                    <pre class="k3-log" id="k3-gantt-log" aria-label="What the timeline reported" aria-live="off"></pre>
+                </div>
+            </section>
+
+            <section
+                class="k3-sec"
+                id="week-upcoming"
+                data-review-item="week-upcoming"
+                data-review-components="week"
+                data-review-title="4 · Week agenda: the next 8 as a list on a phone"
+                aria-labelledby="h-week-upcoming"
+            >
+                <div class="k3-sec__head">
+                    <h2 id="h-week-upcoming">4 · Week agenda: the next 8 as a list on a phone</h2>
+                    <p>
+                        <code>data-kp-week-upcoming="8"</code>: below 40rem the agenda lists the next 8 items instead of seven day rows. Wider, the
+                        week is the week you approved.
+                    </p>
+                </div>
+                <div class="k3-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>The full-width agenda is the approved week: seven columns, the now-line, the pills at their time.</li>
+                        <li>
+                            The 360 px agenda is a list of exactly 8 rows, the next 8 runs from now in time order: the day (weekday, date, and
+                            <b>Today</b> under today’s) on the left, named once on the first row of each day, the run’s own pill on the right with its
+                            time and name. The rule falls only where the next day starts. Nothing that is off, skipped or the host’s own round is
+                            listed; the pill with a ring is the next run.
+                        </li>
+                        <li>Tab enters the list once; ↑ ↓ Home End move; Enter opens (the readout logs it). Hover a pill: its card.</li>
+                        <li>
+                            <b>Skip the next run</b>: it leaves the list, the rows below move up and the ninth run arrives at the end the theme’s way;
+                            the list stays 8 rows. <b>Make it load, then arrive</b>: the rows go, the list keeps its height, the data table’s loading
+                            card stands in the list, then the 8 rows arrive one after the other. No row is drawn under the card.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Compare the phone list with the full-width week above it: the same pills, now in reading order.</p>
+                </div>
+                <div class="k3-actions">
+                    <button type="button" class="kp-button" id="k3-week-skip">Skip the next run</button>
+                    <button type="button" class="kp-button kp-button--live" id="k3-week-cycle">
+                        <span class="kp-spinner kp-button__spin" aria-hidden="true" hidden></span
+                        ><span class="kp-button__long" data-k3-cycle-words>Make it load, then arrive</span>
+                    </button>
+                </div>
+                <div class="k3-stack">
+                    <div>
+                        <p class="k3-label">Full width</p>
+                        <div class="kp-week" data-kp-week data-kp-week-upcoming="8" id="k3-week-wide" aria-label="Runs in the next 7 days"></div>
+                    </div>
+                    <div>
+                        <p class="k3-label">Phone, 360 px</p>
+                        <div class="k3-frame k3-frame--phone">
+                            <div
+                                class="kp-week"
+                                data-kp-week
+                                data-kp-week-upcoming="8"
+                                data-kp-week-upcoming-label="The next 8 runs"
+                                id="k3-week-phone"
+                                aria-label="Runs in the next 7 days"
+                            ></div>
+                        </div>
+                    </div>
+                    <pre class="k3-log" id="k3-week-log" aria-label="What the agenda reported" aria-live="off"></pre>
+                </div>
+            </section>
+
+            <section
+                class="k3-sec"
+                id="facet-pattern"
+                data-review-item="facet-pattern"
+                data-review-components="facets"
+                data-review-title="5 · Facet list: a swatch with an identity pattern"
+                aria-labelledby="h-facet-pattern"
+            >
+                <div class="k3-sec__head">
+                    <h2 id="h-facet-pattern">5 · Facet list: a swatch with an identity pattern</h2>
+                    <p>
+                        A row’s <code>pattern</code> (or <code>data-kp-facet-pattern</code> on a hand-written swatch) draws the name’s own mirrored 5
+                        by 5 pattern over its hue, the dashboard’s stack mark, so two close hues are still two stacks.
+                    </p>
+                </div>
+                <div class="k3-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Each stack’s swatch is a small square of its hue with a pale pattern on it, symmetric left to right, a cell’s margin from
+                            its edge; the same name always has the same pattern. <b>photos</b> and <b>immich</b> are ten degrees of hue apart,
+                            <b>pihole</b> and <b>wiki</b> one degree: each pair is told apart by its patterns.
+                        </li>
+                        <li>
+                            The name keeps the same room from the swatch as from the checkbox; the counts line up; the “only” buttons appear on hover
+                            as before. The last row (<b>wiki</b>) is written by hand with <code>data-kp-facet-pattern</code>.
+                        </li>
+                        <li>The plain list beside it (no pattern) is the approved facet list, unchanged.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Look at the swatches at their size, and at pihole against wiki.</p>
+                </div>
+                <div class="k3-pair">
+                    <div>
+                        <p class="k3-label">With patterns</p>
+                        <div
+                            class="kp-facets k3-facets"
+                            data-kp-facets
+                            data-kp-facets-all="Every stack"
+                            role="group"
+                            aria-label="Stack"
+                            id="k3-facets"
+                        >
+                            <ul class="kp-facets__list">
+                                <li class="kp-facet" data-value="wiki">
+                                    <label class="kp-facet__option"
+                                        ><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span
+                                            class="kp-facet__swatch k3-wiki"
+                                            data-kp-facet-pattern="wiki"
+                                        ></span
+                                        ><span class="kp-facet__name">wiki</span><span class="kp-facet__count">12</span></label
+                                    ><button type="button" class="kp-button kp-button--ghost kp-button--sm kp-facet__only"></button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="k3-label">Without (as approved)</p>
+                        <div
+                            class="kp-facets k3-facets"
+                            data-kp-facets
+                            data-kp-facets-all="Every stack"
+                            role="group"
+                            aria-label="Stack, plain"
+                            id="k3-facets-plain"
+                        >
+                            <ul class="kp-facets__list"></ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="k3-sec"
+                id="heat-latest"
+                data-review-item="heat-latest"
+                data-review-components="heat"
+                data-review-title="6 · Heat grid: End goes to the latest night"
+                aria-labelledby="h-heat-latest"
+            >
+                <div class="k3-sec__head">
+                    <h2 id="h-heat-latest">6 · Heat grid: End goes to the latest night</h2>
+                    <p>
+                        <code>data-kp-heat-latest="end"</code> says the newest column is at the end. The keys stay the package’s; End (towards the
+                        newest) also asks the page for the newest columns, as Page Up and Page Down ask for older and newer ones.
+                    </p>
+                </div>
+                <div class="k3-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>Fourteen nights of six stacks, the newest on the right; the readout under the grid names the nights shown.</li>
+                        <li>
+                            Tab to the grid (or click a cell, which also picks its night with formal’s double rule), then press <b>Page Up</b> twice:
+                            the grid shows two pages of older nights, the readout says which. The arrows and Home still move between cells as before.
+                        </li>
+                        <li>
+                            Press <b>End</b>: the focus goes to the end of the row and the grid is back on the newest fourteen nights in the same
+                            press; the focus stays on the newest night of that row, and this page lets a picked night go (as the dashboard’s Home
+                            did). <b>Ctrl+End</b> does the same at the bottom corner. <b>Home</b> goes to the start of the row and pages nothing.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Page back with Page Up, then press End once and watch the readout and the focus.</p>
+                </div>
+                <div class="kp-heat" data-kp-heat data-kp-heat-latest="end" id="k3-heat" aria-label="Snapshots per stack per night"></div>
+                <p class="k3-readout" id="k3-heat-readout" role="status"></p>
+            </section>
+        </main>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../../js/auto.js"></script>
+        </body>
+</html>

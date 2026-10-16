@@ -3,7 +3,17 @@
     "rounds": [
         {
             "round": "1",
-            "allJudged": true,
+            "page": "2026-10-16-r1",
+            "allJudged": false,
+            "comment": "The page asked formal only: the approved pairs are listed, so the pairs round 2 asks of the other themes are not read as judged. Kenny approved all six in formal (2026-10-16 15:21).",
+            "approved": [
+                { "item": "nav-sep", "theme": "formal" },
+                { "item": "choice-value", "theme": "formal" },
+                { "item": "gantt-days", "theme": "formal" },
+                { "item": "week-upcoming", "theme": "formal" },
+                { "item": "facet-pattern", "theme": "formal" },
+                { "item": "heat-latest", "theme": "formal" }
+            ],
             "notApproved": [],
             "notes": [
                 {

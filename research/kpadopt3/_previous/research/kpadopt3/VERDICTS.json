@@ -1,0 +1,17 @@
+{
+    "demo": "kpadopt3",
+    "rounds": [
+        {
+            "round": "1",
+            "allJudged": true,
+            "notApproved": [],
+            "notes": [
+                {
+                    "item": "week-upcoming",
+                    "theme": "formal",
+                    "note": "Kenny, 2026-10-16 15:21: \"de phone versie lijkt ok, het laden werkt enkel op phone, dus als dat de bedoeling is, dan is het goedgekeurd\". It is: the option only changes the phone view; the wide week keeps its approved loading. Recorded as approved."
+                }
+            ]
+        }
+    ]
+}

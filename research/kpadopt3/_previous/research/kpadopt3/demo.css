@@ -1,0 +1,230 @@
+/* research/kpadopt3: the page's own frame. Everything with a kp- class is the package; these k3- rules only lay the
+   sections out, frame the widths and draw the readouts. */
+
+.k3-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.k3-intro,
+.k3-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.k3-intro :is(h1, p),
+.k3-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.k3-intro p,
+.k3-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.k3-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+/* The "Expected:" block: what to see and what each control does. */
+.k3-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.k3-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.k3-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.k3-label {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 600;
+}
+
+.k3-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.k3-stack {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    min-inline-size: 0;
+}
+
+.k3-stack > * {
+    min-inline-size: 0;
+}
+
+/* Two columns side by side where there is room, one under the other on a phone. */
+.k3-pair {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.k3-pair > * {
+    min-inline-size: 0;
+}
+
+/* A frame of a fixed width: what the component does at that width, whatever the page's. */
+.k3-frame {
+    box-sizing: border-box;
+    max-inline-size: 100%;
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.k3-frame--live {
+    inline-size: var(--k3-w, 40rem);
+}
+
+.k3-frame--fold {
+    inline-size: 33rem;
+}
+
+.k3-frame--phone {
+    inline-size: min(360px, 100%);
+    padding: var(--kp-space-sm, 0.5rem);
+}
+
+/* The bar's frame leaves room under it for the menu that hangs from More. */
+.k3-frame--menu {
+    margin-block-end: 13rem;
+    margin-inline-end: 10rem;
+}
+
+.k3-slider {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-md, 1rem);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.k3-slider input {
+    flex: 0 1 24rem;
+    min-inline-size: 8rem;
+}
+
+.k3-slider output {
+    min-inline-size: 4ch;
+    font-variant-numeric: tabular-nums;
+}
+
+.k3-scroll-x {
+    overflow-x: auto;
+    padding-block-end: var(--kp-space-xs, 0.25rem);
+}
+
+.k3-log {
+    min-block-size: 3.5rem;
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    overflow: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+    color: var(--muted-foreground);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--kp-text-xs, 0.75rem);
+    white-space: pre-wrap;
+}
+
+/* The page's own history under the timeline (mock): a list grouped by day in a box that scrolls, the day a press on the
+   axis jumped to marked. */
+.k3-history {
+    position: relative;
+    max-block-size: 15rem;
+    margin: 0;
+    padding: 0 var(--kp-space-md, 0.75rem);
+    overflow-y: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+    list-style: none;
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.k3-history h3 {
+    position: sticky;
+    inset-block-start: 0;
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) 0 var(--kp-space-xs, 0.25rem);
+    border-block-end: 1px solid var(--border);
+    background: var(--background);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.k3-history h3[aria-current='true'] {
+    color: var(--primary);
+    box-shadow: inset 0 -2px 0 var(--primary);
+}
+
+.k3-history ul {
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.k3-history li li {
+    display: grid;
+    grid-template-columns: 4ch minmax(0, 1fr) auto;
+    gap: var(--kp-space-sm, 0.5rem);
+    padding-block: 0.25rem;
+    font-variant-numeric: tabular-nums;
+}
+
+.k3-history li li > :last-child {
+    color: var(--muted-foreground);
+}
+
+.k3-facets {
+    inline-size: min(22rem, 100%);
+}
+
+.k3-readout {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-variant-numeric: tabular-nums;
+}
+
+/* The hand-written row's hue (a stack's colour is the page's, as on the dashboard). */
+.k3-wiki {
+    --kp-facet-swatch-colour: oklch(0.62 0.15 265);
+}
+
+/* The 33rem bar and the slider's bar keep their width on a phone and scroll sideways, so they fold as they do at 1280. */
+.k3-scroll-x > .k3-frame {
+    max-inline-size: none;
+}

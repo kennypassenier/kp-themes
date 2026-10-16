@@ -1,9 +1,14 @@
 <!doctype html>
-<html lang="en" data-theme="formal" data-review="kpadopt3" data-review-themes="formal">
+<html
+    lang="en"
+    data-theme="light"
+    data-review="kpadopt3"
+    data-review-themes="light,dark,cyberpunk,synthwave,pastel,terminal,forest,blueprint,solstice,brutalism,deco,phantom,grotesk,nostromo,titanium"
+>
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Round 3 of the dashboard adoption: six options the dashboard still draws itself · kp-themes research demo</title>
+        <title>Round 3 of the dashboard adoption, page round 2: four options in the fifteen other themes · kp-themes research demo</title>
         <link rel="stylesheet" href="../../css/fonts.css" />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
@@ -20,7 +25,7 @@
                     t = t || localStorage.getItem('theme');
                 } catch (e) {}
                 if (t) d.setAttribute('data-theme', t);
-                var theme = d.getAttribute('data-theme') || 'formal';
+                var theme = d.getAttribute('data-theme') || 'light';
                 document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
             })();
         </script>
@@ -32,13 +37,16 @@
 
         <main id="main" class="cat-main k3-page">
             <header class="k3-intro">
-                <h1>Round 3 of the dashboard adoption: six options</h1>
+                <h1>Round 3 of the dashboard adoption, page round 2: four options in every other theme</h1>
                 <p class="cat-intro">
-                    The admin dashboard still drew six things itself because the package lacked them. Each is now an <b>opt-in option</b> of a
-                    component you already approved: without the new attribute or field, every one of them looks and behaves exactly as approved.
-                    Everything with a <code>kp-</code> class and every script under <code>js/</code> is the package; the sample data, the frames, the
-                    readouts and the buttons that drive a demo are this page’s. Every section says what you should see under <b>Expected</b>. Formal
-                    only, judged in the review dialog (“Review in a dialog” at the top).
+                    Review round 2. You approved the six opt-in options in formal (round 1). Four of them are seen, so this round asks the fifteen
+                    other themes for those four, each drawn in that theme’s own language: the <b>separator in the folding bar</b>, the run timeline’s
+                    <b>day buttons and series runs</b>, the week agenda’s <b>next 8 on a phone</b> and the facet swatch’s <b>identity pattern</b>. The
+                    choice filter’s word and the heat grid’s End are behaviour only, the same in every theme, and formal is approved: they are not on
+                    the page. Every section says what you should see under <b>Expected</b>, and the review dialog’s “Look at” line names what is this
+                    theme’s own; <b>Previous version</b> shows the package’s plain drawing from before this round. Everything with a
+                    <code>kp-</code> class and every script under <code>js/</code> is the package; the sample data, the frames and the buttons that
+                    drive a demo are this page’s.
                 </p>
             </header>
 
@@ -62,8 +70,9 @@
                     <p><b>Expected:</b></p>
                     <ul>
                         <li>
-                            The wide bar: <b>Backups</b> and <b>System</b> (the rarely needed two) stand after formal’s docket cut: a strong hairline
-                            as tall as a link with a short navy tick at its head, in the same gap as between two links. No word touches it.
+                            The wide bar: <b>Backups</b> and <b>System</b> (the rarely needed two) stand after the theme’s own separator (the “Look
+                            at” line names it), in the same gap as between two links. No word touches it. In the themes whose wide letters fold the
+                            bar early, drag the slider below to see it standing.
                         </li>
                         <li>
                             The 33rem bar has folded from Logs on: More holds <b>Logs</b>, then a hairline across the menu, then <b>Backups</b> and
@@ -76,15 +85,73 @@
                             keeps its height at every width and nothing jumps.
                         </li>
                         <li>
-                            The 360 px bar collapses into its toggle as before; opened, the separator is a rule across the list (the docket cut lying
-                            down: hairline, navy tick at its start) between Logs and Backups.
+                            The 360 px bar collapses into its toggle as before; opened, the separator lies across the list between Logs and Backups,
+                            the same mark lying down, inside the list’s own ground.
                         </li>
                         <li>Tab through a bar: the separator is never a stop, and a screen reader does not hear it.</li>
                     </ul>
                 </div>
                 <div data-review-look>
-                    <p data-for="formal">
-                        Compare the wide bar’s separator with the one lying down in the opened 360 px list, and the rule in the open menu.
+                    <p data-for="light">
+                        The separator is light’s divider stood upright: a hairline with a small open bead at its middle, in the same gap as between
+                        two links; in the opened 360 px list it lies across the list with the bead at its centre. The More menu keeps light’s own
+                        rule.
+                    </p>
+                    <p data-for="dark">
+                        The separator is dark’s scale stood upright: a hairline that fades at both ends with one short lit cyan tick at its middle;
+                        lying across the opened 360 px list, the tick stands on the middle of a line that fades at both ends.
+                    </p>
+                    <p data-for="cyberpunk">
+                        The separator is a yellow neon slash leaning with the bar’s own cut, its cyan ghost beside it (the RGB split); in the opened
+                        360 px list it is a short data dash on the black plate, yellow then a cyan packet, never past the plate.
+                    </p>
+                    <p data-for="synthwave">
+                        The separator is the horizon stood upright: the pink tube with its white core and its glow, as tall as a link; in the opened
+                        360 px list it is the horizon lying across the list.
+                    </p>
+                    <p data-for="pastel">
+                        The separator is pastel’s divider stood upright: a column of small plum beads; in the opened 360 px list the beads run across
+                        the list as a dotted line inside the card.
+                    </p>
+                    <p data-for="terminal">
+                        The separator is written, not drawn: the box-drawing │ in the dim phosphor, between Logs and Backups; in the opened 360 px
+                        list it is a line of ─ across the list, cut at its end.
+                    </p>
+                    <p data-for="forest">
+                        The separator is a twig: a green hairline with one small leaf at its head; in the opened 360 px list the twig lies across the
+                        list with the leaf sitting on its start.
+                    </p>
+                    <p data-for="blueprint">
+                        The separator is the sheet’s fold line: the dashed rule of blueprint’s divider, stood upright; in the opened 360 px list it is
+                        the dashed rule across the list.
+                    </p>
+                    <p data-for="solstice">
+                        The separator is solstice’s horizon stood upright, a hairline with the small amber peak of the low sun leaning towards the
+                        next group; in the opened 360 px list the peak rises from the middle of the line.
+                    </p>
+                    <p data-for="brutalism">
+                        The separator is a 4 px slab of ink as tall as a link (the wide bar folds early in these wide letters: drag the slider to see
+                        it); in the opened 360 px list it is the divider’s hazard band, the yellow hatch on ink between two ink rules.
+                    </p>
+                    <p data-for="deco">
+                        The separator is a gold hairline with the lozenge at its middle (the wide bar folds early in these wide capitals: drag the
+                        slider to see it); in the opened 360 px list the lozenge sits on the middle of a gold line across the gilt frame.
+                    </p>
+                    <p data-for="phantom">
+                        The separator is the red slash, leaning with phantom’s skew; in the opened 360 px list it is a short red strip cut on the
+                        slant under Logs.
+                    </p>
+                    <p data-for="grotesk">
+                        The separator is grotesk’s razor tear stood upright: two black rules with the red hairline exactly between them; in the opened
+                        360 px list it is the tear across the list.
+                    </p>
+                    <p data-for="nostromo">
+                        The separator is a panel seam: a dark joint with its light lip and one unlit amber lamp at its middle; in the opened 360 px
+                        list the seam runs across the console with the lamp at its centre.
+                    </p>
+                    <p data-for="titanium">
+                        The separator is titanium’s milled groove stood upright, a dark channel with its bright lip; in the opened 360 px list it is
+                        the groove across the list.
                     </p>
                 </div>
                 <div class="k3-stack">
@@ -195,133 +262,14 @@
 
             <section
                 class="k3-sec"
-                id="choice-value"
-                data-review-item="choice-value"
-                data-review-components="datatable"
-                data-review-title="2 · A choice filter that reads a word, not the cell"
-                aria-labelledby="h-choice-value"
-            >
-                <div class="k3-sec__head">
-                    <h2 id="h-choice-value">2 · A choice filter that reads a word, not the cell</h2>
-                    <p>
-                        <code>td data-kp-filter-value="running"</code>: the cell shows what it likes (a dot, the state, how long), the data table’s
-                        choice filter lists and matches it by the word, as <code>data-kp-sort-value</code> does for sorting. Search still reads what
-                        the cell shows.
-                    </p>
-                </div>
-                <div class="k3-expected">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>
-                            The Status column shows a dot, the state and how long (“Running · up 3 days”). Open <b>Filters</b>: Status lists exactly
-                            three choices, <b>failed</b>, <b>running</b>, <b>stopped</b>, not one per cell text.
-                        </li>
-                        <li>
-                            Tick <b>failed</b>: the two failed hosts stay, the status line says “Showing 1–2 of 2 (filtered from 7)” and a pill says
-                            Status: failed. Tick <b>stopped</b> as well: three rows, two pills.
-                        </li>
-                        <li>The search box still reads what is shown: type “up 3” and only the host that has been up 3 days stays.</li>
-                        <li>The Kind column has no value of its own: its choices are its texts, as before.</li>
-                    </ul>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">Open Filters and compare the Status choices with the cells.</p>
-                </div>
-                <div class="kp-datatable" data-kp-datatable data-kp-filter-mode="panel">
-                    <div class="kp-datatable__bar">
-                        <input
-                            class="kp-datatable__search"
-                            type="search"
-                            data-kp-datatable-search
-                            aria-label="Search hosts"
-                            placeholder="Search hosts"
-                        />
-                    </div>
-                    <div class="kp-table-wrap">
-                        <table class="kp-table">
-                            <caption class="kp-sr-only">
-                                Hosts
-                            </caption>
-                            <thead>
-                                <tr>
-                                    <th scope="col" data-kp-sort="text">Host</th>
-                                    <th scope="col" data-kp-sort="text" data-kp-filter="choice">Status</th>
-                                    <th scope="col" data-kp-sort="text" data-kp-filter="choice">Kind</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>media</td>
-                                    <td data-kp-filter-value="running">
-                                        <span class="kp-health" data-state="ok"><span class="kp-health__dot"></span>Running · up 3 days</span>
-                                    </td>
-                                    <td>container</td>
-                                </tr>
-                                <tr>
-                                    <td>photos</td>
-                                    <td data-kp-filter-value="running">
-                                        <span class="kp-health" data-state="ok"><span class="kp-health__dot"></span>Running · up 26 h</span>
-                                    </td>
-                                    <td>container</td>
-                                </tr>
-                                <tr>
-                                    <td>gitea</td>
-                                    <td data-kp-filter-value="failed">
-                                        <span class="kp-health" data-state="down"
-                                            ><span class="kp-health__dot"></span>Failed · exit 137 at 03:12</span
-                                        >
-                                    </td>
-                                    <td>container</td>
-                                </tr>
-                                <tr>
-                                    <td>paperless</td>
-                                    <td data-kp-filter-value="stopped">
-                                        <span class="kp-health"><span class="kp-health__dot"></span>Stopped · by you at 22:40</span>
-                                    </td>
-                                    <td>container</td>
-                                </tr>
-                                <tr>
-                                    <td>dns</td>
-                                    <td data-kp-filter-value="running">
-                                        <span class="kp-health" data-state="ok"><span class="kp-health__dot"></span>Running · up 41 days</span>
-                                    </td>
-                                    <td>virtual machine</td>
-                                </tr>
-                                <tr>
-                                    <td>backup-target</td>
-                                    <td data-kp-filter-value="failed">
-                                        <span class="kp-health" data-state="down"
-                                            ><span class="kp-health__dot"></span>Failed · disk full at 02:05</span
-                                        >
-                                    </td>
-                                    <td>virtual machine</td>
-                                </tr>
-                                <tr>
-                                    <td>vaultwarden</td>
-                                    <td data-kp-filter-value="running">
-                                        <span class="kp-health" data-state="ok"><span class="kp-health__dot"></span>Running · up 9 h</span>
-                                    </td>
-                                    <td>container</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="kp-datatable__bar">
-                        <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
-                    </div>
-                </div>
-            </section>
-
-            <section
-                class="k3-sec"
                 id="gantt-days"
                 data-review-item="gantt-days"
                 data-review-components="gantt"
-                data-review-title="3 · Run timeline: a day on the axis, and a colour legend"
+                data-review-title="2 · Run timeline: a day on the axis, and a colour legend"
                 aria-labelledby="h-gantt-days"
             >
                 <div class="k3-sec__head">
-                    <h2 id="h-gantt-days">3 · Run timeline: a day on the axis, and a colour legend</h2>
+                    <h2 id="h-gantt-days">2 · Run timeline: a day on the axis, and a colour legend</h2>
                     <p>
                         <code>data-kp-gantt-days</code> makes every day named on the axis a button that selects that whole day; the page hears it and
                         jumps. A run’s <code>series</code> (1 to 5) inks a finished run in a chart colour, and <code>setGanttLegend()</code> names the
@@ -332,19 +280,19 @@
                     <p><b>Expected:</b></p>
                     <ul>
                         <li>
-                            The last 7 days. Each day on the axis (“10/10”) is a button: pointing rules the navy rule under it. Press one: the whole
-                            day, 00:00 to 00:00, is selected as a drag would select it (the band across the plot, the toolbar row turned into the chip
-                            with its times, Zoom and Clear), the day on the axis is closed with the double rule, and the history under the timeline
-                            scrolls to that day inside its own box (its heading ruled), not the page.
+                            The last 7 days. Each day on the axis (“10/10”) is a button: pointing marks it the theme’s way. Press one: the whole day,
+                            00:00 to 00:00, is selected as a drag would select it (the band across the plot, the toolbar row turned into the chip with
+                            its times, Zoom and Clear), the pressed day is drawn the theme’s way, and the history under the timeline scrolls to that
+                            day inside its own box, not the page. The date never touches the edge of its own mark.
                         </li>
                         <li>
                             Press the same day again: the selection lifts. <b>Clear</b> lifts it too. Tab reaches the days as one stop; ← → Home End
                             move between them; Enter or Space presses.
                         </li>
                         <li>
-                            The nightly round (series 1) and the updates (series 2) are plates of their own chart colour with their edge in the full
-                            colour and formal’s heavy rule on the start edge; a run with no series is the green of “succeeded”; failed, running and
-                            queued look as before. The legend names <b>Nightly round</b> and <b>Updates</b> after the four states.
+                            The nightly round (series 1) and the updates (series 2) are runs of their own chart colour with their edge in the full
+                            colour, in the theme’s own run shape; a run with no series is the theme’s “succeeded”; failed, running and queued look as
+                            before. The legend names <b>Nightly round</b> and <b>Updates</b> after the four states.
                         </li>
                         <li>
                             The 360 px timeline names every other day (the axis keeps a label’s room); those days are its buttons. A day whose label
@@ -354,7 +302,67 @@
                     </ul>
                 </div>
                 <div data-review-look>
-                    <p data-for="formal">Press a day on the axis, then look at the band, the chip, the pressed day and the history box together.</p>
+                    <p data-for="light">
+                        Point at a day on the axis: a muted pill; press one: the indigo-tint pill with its ring, the band and the chip as before. The
+                        nightly round and the updates are pills in their chart colour with the small card shadow.
+                    </p>
+                    <p data-for="dark">
+                        Point at a day: its foot lights in cyan; press one: it becomes the lit plate, the foot with its glow rising into it. A series
+                        run carries a 2 px leading edge in its ink, as a week pill does.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Point at a day: cyberpunk’s cyan target corners close round it and the date splits into cyan and red ghosts (the RGB split);
+                        press one: the yellow lock-on, a tinted ground with its corner notched and a hard yellow foot. A series run has the hard 3 px
+                        bar on its leading edge.
+                    </p>
+                    <p data-for="synthwave">
+                        Point at a day: the laser draws its pink line under it; press one: it is lit in the pink tube with its glow, the date in the
+                        core’s white. A series run glows in its own neon.
+                    </p>
+                    <p data-for="pastel">
+                        Point at a day: it lifts on its plum peel; press one: it is stuck down, the pink chip in a plum ring. A series run stands on a
+                        peel of its own colour.
+                    </p>
+                    <p data-for="terminal">
+                        Point at a day: the cursor ring; press one: reverse video, the phosphor block with the date in the ground’s ink. Nothing
+                        eases. The series runs are the package’s blocks in their chart colours.
+                    </p>
+                    <p data-for="forest">
+                        Point at a day: the moss wash in the leaf shape; press one: the green leaf with the trail’s foot under it. A series run grows
+                        from its foot in its own colour.
+                    </p>
+                    <p data-for="blueprint">
+                        Point at a day: the pen’s cyan witness lines to either side; press one: an amber hatched section between amber witness lines,
+                        the dimension line under it. A series run is a hatched section in its ink.
+                    </p>
+                    <p data-for="solstice">
+                        Point at a day: a flare rises from its foot; press one: it wears the halo, the primary’s light rising from the horizon under
+                        it. A series run is lit from its foot in its own light.
+                    </p>
+                    <p data-for="brutalism">
+                        Point at a day: it is kicked up-left off its hard shadow inside an ink frame; press one: it is driven in, the yellow block in
+                        its ink frame. The series runs are the package’s plates in their chart colours.
+                    </p>
+                    <p data-for="deco">
+                        Point at a day: a gold rule under it and the date in the high gold; press one: it stands on the lacquer over the inlay’s
+                        double gold rule. A series run is a double rule in its ink, as a week pill is.
+                    </p>
+                    <p data-for="phantom">
+                        Point at a day: the red slash under it; press one: the red plate is thrown in under it, cut on the slant, the date in black
+                        ink. A series run carries a hard leading edge in its ink.
+                    </p>
+                    <p data-for="grotesk">
+                        Point at a day: the red baseline; press one: it is inverted, the black block with the date in white. A series run has a hard
+                        leading rule in its colour.
+                    </p>
+                    <p data-for="nostromo">
+                        Point at a day: its rim lights in the LED orange; press one: a key sunk in its well with its lamp lit under the date. The
+                        series runs are the package’s tapes in their chart colours.
+                    </p>
+                    <p data-for="titanium">
+                        Point at a day: its tool edge turns bright metal at once; press one: a blue-oxide plate with the chamfer pair and the oxide
+                        edge under it. A series run carries its tool edge along the top in its own oxide.
+                    </p>
                 </div>
                 <div class="k3-stack">
                     <div>
@@ -396,11 +404,11 @@
                 id="week-upcoming"
                 data-review-item="week-upcoming"
                 data-review-components="week"
-                data-review-title="4 · Week agenda: the next 8 as a list on a phone"
+                data-review-title="3 · Week agenda: the next 8 as a list on a phone"
                 aria-labelledby="h-week-upcoming"
             >
                 <div class="k3-sec__head">
-                    <h2 id="h-week-upcoming">4 · Week agenda: the next 8 as a list on a phone</h2>
+                    <h2 id="h-week-upcoming">3 · Week agenda: the next 8 as a list on a phone</h2>
                     <p>
                         <code>data-kp-week-upcoming="8"</code>: below 40rem the agenda lists the next 8 items instead of seven day rows. Wider, the
                         week is the week you approved.
@@ -425,7 +433,56 @@
                     </ul>
                 </div>
                 <div data-review-look>
-                    <p data-for="formal">Compare the phone list with the full-width week above it: the same pills, now in reading order.</p>
+                    <p data-for="light">
+                        The 360 px list: the days written as said (“Sat 17/10”), light’s pills with their faint shadow; the day rule is the week’s
+                        faint hairline. Make it load: light’s busy card stands in the list.
+                    </p>
+                    <p data-for="dark">
+                        The 360 px list: the days in the ticker mono capitals, dark’s pills with their lit leading edge; the next run glows in cyan.
+                        Make it load: dark’s busy card in the list.
+                    </p>
+                    <p data-for="cyberpunk">
+                        The 360 px list: mono days, the cut pills with their hard leading bar, the day rule a hairline. Make it load: cyberpunk’s busy
+                        card; the ninth run arrives as the theme’s pills do.
+                    </p>
+                    <p data-for="synthwave">
+                        The 360 px list: OSD capitals for the days, the tape pills with their stripe on top; the day rule is a line of the grid floor
+                        in faint magenta.
+                    </p>
+                    <p data-for="pastel">
+                        The 360 px list: sticker pills on their peel; the rule where a new day starts is a dotted line of plum beads.
+                    </p>
+                    <p data-for="terminal">
+                        The 360 px list: program output, [time] in brackets; the rule where a new day starts is dashed, as the week’s rules are.
+                    </p>
+                    <p data-for="forest">The 360 px list: the leaf-cornered pills; the rule where a new day starts is a faint green line.</p>
+                    <p data-for="blueprint">
+                        The 360 px list: the days lettered in sloped mono capitals, the hatched frames; the rule where a new day starts is dashed.
+                    </p>
+                    <p data-for="solstice">
+                        The 360 px list: the days in the serif, the pills lit from their foot; the rule where a new day starts is the horizon’s
+                        hairline.
+                    </p>
+                    <p data-for="brutalism">
+                        The 360 px list: heavy capitals, the boxed pills on their hard shadow; the rule where a new day starts is a 2 px ink line.
+                    </p>
+                    <p data-for="deco">
+                        The 360 px list: spaced capitals for the days, the inlaid pills; the rule where a new day starts is a gold hairline.
+                    </p>
+                    <p data-for="phantom">
+                        The 360 px list: the days in the italic display face, the slanted plates; the rule where a new day starts is a faint red line.
+                    </p>
+                    <p data-for="grotesk">
+                        The 360 px list: the days in the bold grotesque, the flat blocks with their leading rule; the rule where a new day starts is a
+                        2 px black line.
+                    </p>
+                    <p data-for="nostromo">
+                        The 360 px list: label tape in mono capitals; Today is named in the LED orange; the rule where a new day starts is the strong
+                        hairline.
+                    </p>
+                    <p data-for="titanium">
+                        The 360 px list: the days in mono, the machined pills; the rule where a new day starts is the plain hairline.
+                    </p>
                 </div>
                 <div class="k3-actions">
                     <button type="button" class="kp-button" id="k3-week-skip">Skip the next run</button>
@@ -461,11 +518,11 @@
                 id="facet-pattern"
                 data-review-item="facet-pattern"
                 data-review-components="facets"
-                data-review-title="5 · Facet list: a swatch with an identity pattern"
+                data-review-title="4 · Facet list: a swatch with an identity pattern"
                 aria-labelledby="h-facet-pattern"
             >
                 <div class="k3-sec__head">
-                    <h2 id="h-facet-pattern">5 · Facet list: a swatch with an identity pattern</h2>
+                    <h2 id="h-facet-pattern">4 · Facet list: a swatch with an identity pattern</h2>
                     <p>
                         A row’s <code>pattern</code> (or <code>data-kp-facet-pattern</code> on a hand-written swatch) draws the name’s own mirrored 5
                         by 5 pattern over its hue, the dashboard’s stack mark, so two close hues are still two stacks.
@@ -475,9 +532,9 @@
                     <p><b>Expected:</b></p>
                     <ul>
                         <li>
-                            Each stack’s swatch is a small square of its hue with a pale pattern on it, symmetric left to right, a cell’s margin from
-                            its edge; the same name always has the same pattern. <b>photos</b> and <b>immich</b> are ten degrees of hue apart,
-                            <b>pihole</b> and <b>wiki</b> one degree: each pair is told apart by its patterns.
+                            Each stack’s swatch is a small mark of its hue in the theme’s shape with a pale pattern on it, symmetric left to right, a
+                            cell’s margin from its edge; the same name always has the same pattern. <b>photos</b> and <b>immich</b> are ten degrees of
+                            hue apart, <b>pihole</b> and <b>wiki</b> one degree: each pair is told apart by its patterns.
                         </li>
                         <li>
                             The name keeps the same room from the swatch as from the checkbox; the counts line up; the “only” buttons appear on hover
@@ -487,7 +544,23 @@
                     </ul>
                 </div>
                 <div data-review-look>
-                    <p data-for="formal">Look at the swatches at their size, and at pihole against wiki.</p>
+                    <p data-for="light">
+                        Each pattern sits on a small card of its hue: a 4 px corner and a hair of shadow, as a heat cell. Compare pihole with wiki.
+                    </p>
+                    <p data-for="dark">Each pattern is a square with a machined rim, no corner. Compare pihole with wiki.</p>
+                    <p data-for="cyberpunk">Each pattern has its top-end corner notched, as cyberpunk’s cards are. Compare pihole with wiki.</p>
+                    <p data-for="synthwave">Each pattern glows in its own hue on a 2 px corner. Compare pihole with wiki.</p>
+                    <p data-for="pastel">Each pattern is a rounded sticker on a little peel of its own colour. Compare pihole with wiki.</p>
+                    <p data-for="terminal">Each pattern is a square cell blooming in its hue, as the phosphor does. Compare pihole with wiki.</p>
+                    <p data-for="forest">Each pattern is a leaf (two round corners), as the theme’s pills are. Compare pihole with wiki.</p>
+                    <p data-for="blueprint">Each pattern is square and framed by a drawn line of its hue, a pixel out. Compare pihole with wiki.</p>
+                    <p data-for="solstice">Each pattern is a soft lantern, rounded and lit from below in its hue. Compare pihole with wiki.</p>
+                    <p data-for="brutalism">Each pattern is boxed in a 2 px ink line on a hard shadow. Compare pihole with wiki.</p>
+                    <p data-for="deco">Each pattern is set in a gilt frame, a gold hairline a pixel out. Compare pihole with wiki.</p>
+                    <p data-for="phantom">Each pattern is cut on the slant, as a calling card. Compare pihole with wiki.</p>
+                    <p data-for="grotesk">Each pattern is a plain square, no corner and no frame. Compare pihole with wiki.</p>
+                    <p data-for="nostromo">Each pattern is a key sunk in its well. Compare pihole with wiki.</p>
+                    <p data-for="titanium">Each pattern is chamfered on two corners, as a machined plate. Compare pihole with wiki.</p>
                 </div>
                 <div class="k3-pair">
                     <div>
@@ -528,44 +601,10 @@
                     </div>
                 </div>
             </section>
-
-            <section
-                class="k3-sec"
-                id="heat-latest"
-                data-review-item="heat-latest"
-                data-review-components="heat"
-                data-review-title="6 · Heat grid: End goes to the latest night"
-                aria-labelledby="h-heat-latest"
-            >
-                <div class="k3-sec__head">
-                    <h2 id="h-heat-latest">6 · Heat grid: End goes to the latest night</h2>
-                    <p>
-                        <code>data-kp-heat-latest="end"</code> says the newest column is at the end. The keys stay the package’s; End (towards the
-                        newest) also asks the page for the newest columns, as Page Up and Page Down ask for older and newer ones.
-                    </p>
-                </div>
-                <div class="k3-expected">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>Fourteen nights of six stacks, the newest on the right; the readout under the grid names the nights shown.</li>
-                        <li>
-                            Tab to the grid (or click a cell, which also picks its night with formal’s double rule), then press <b>Page Up</b> twice:
-                            the grid shows two pages of older nights, the readout says which. The arrows and Home still move between cells as before.
-                        </li>
-                        <li>
-                            Press <b>End</b>: the focus goes to the end of the row and the grid is back on the newest fourteen nights in the same
-                            press; the focus stays on the newest night of that row, and this page lets a picked night go (as the dashboard’s Home
-                            did). <b>Ctrl+End</b> does the same at the bottom corner. <b>Home</b> goes to the start of the row and pages nothing.
-                        </li>
-                    </ul>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">Page back with Page Up, then press End once and watch the readout and the focus.</p>
-                </div>
-                <div class="kp-heat" data-kp-heat data-kp-heat-latest="end" id="k3-heat" aria-label="Snapshots per stack per night"></div>
-                <p class="k3-readout" id="k3-heat-readout" role="status"></p>
-            </section>
         </main>
+        <script type="application/json" data-review-round>
+            { "round": "2026-10-16-r2", "received": ["2026-10-16-r1"] }
+        </script>
         <script type="module" src="demo.js"></script>
         <script type="module" src="../../js/auto.js"></script>
         <script type="module" src="../_review/review.js"></script>
