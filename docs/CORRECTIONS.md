@@ -6813,8 +6813,8 @@ the gate parses with that consumer's parser (lightningcss) instead.
 Kenny, 2026-10-16: approved.
 
 **1 · What went wrong.** Rounds 2 and 3 of the kpadopt demos offered sections and themes Kenny had approved, against his
-standing rule of 2026-10-13 (a re-review shows only what is not approved yet). Round 3 of kpadopt-nav offered 48 pairs
-while 4 were open; rounds 2 of kpadopt-controls, kpadopt-nav and kpadopt-tooltip-sort did the same.
+standing rule of 2026-10-13 (a re-review shows only what is not approved yet). Round 3 of kpadopt-nav offered 64 pairs
+(60 of them approved) while 4 were open; rounds 2 of kpadopt-controls, kpadopt-nav and kpadopt-tooltip-sort did the same.
 
 **2 · Which gate let it through.** None: no gate checked a re-review for approved pairs; the rule lived only in Claude's
 memory.
