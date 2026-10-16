@@ -141,32 +141,35 @@ const LEGEND = [
 attachWeeks(document);
 const hover = attachHoverCards(document);
 
-const weekWide = byId('kt-week-wide');
-const weekPhone = byId('kt-week-phone');
-const weekLog = byId('kt-week-log');
 let start = today();
-for (const el of [weekWide, weekPhone]) {
-    setWeekEvents(el, plan(start));
-    setWeekLegend(el, LEGEND);
+// The week section, when it is on the page (round 3 shows only the states section).
+if (document.getElementById('kt-week-wide')) {
+    const weekWide = byId('kt-week-wide');
+    const weekPhone = byId('kt-week-phone');
+    const weekLog = byId('kt-week-log');
+    for (const el of [weekWide, weekPhone]) {
+        setWeekEvents(el, plan(start));
+        setWeekLegend(el, LEGEND);
+    }
+    weekWide.addEventListener(WEEK_OPEN_EVENT, (e) =>
+        say(weekLog, `opened: ${/** @type {CustomEvent} */ (e).detail.event.label} (${/** @type {CustomEvent} */ (e).detail.source})`),
+    );
+    weekPhone.addEventListener(WEEK_OPEN_EVENT, (e) => say(weekLog, `phone opened: ${/** @type {CustomEvent} */ (e).detail.event.label}`));
+    // A real page fetches the new range: both agendas wait in the theme's loading picture, then the items arrive the theme's
+    // way. A second press during the wait asks for the newest range only.
+    let rangeAsk = 0;
+    weekWide.addEventListener(WEEK_RANGE_EVENT, (e) => {
+        start = /** @type {CustomEvent} */ (e).detail.start;
+        say(weekLog, `range moved to ${start}; the page reads its items`);
+        setWeekStart(weekPhone, start);
+        for (const el of [weekWide, weekPhone]) setWeekState(el, 'loading');
+        const ask = ++rangeAsk;
+        window.setTimeout(() => {
+            if (ask !== rangeAsk) return;
+            for (const el of [weekWide, weekPhone]) setWeekEvents(el, plan(start));
+        }, 900);
+    });
 }
-weekWide.addEventListener(WEEK_OPEN_EVENT, (e) =>
-    say(weekLog, `opened: ${/** @type {CustomEvent} */ (e).detail.event.label} (${/** @type {CustomEvent} */ (e).detail.source})`),
-);
-weekPhone.addEventListener(WEEK_OPEN_EVENT, (e) => say(weekLog, `phone opened: ${/** @type {CustomEvent} */ (e).detail.event.label}`));
-// A real page fetches the new range: both agendas wait in the theme's loading picture, then the items arrive the theme's
-// way. A second press during the wait asks for the newest range only.
-let rangeAsk = 0;
-weekWide.addEventListener(WEEK_RANGE_EVENT, (e) => {
-    start = /** @type {CustomEvent} */ (e).detail.start;
-    say(weekLog, `range moved to ${start}; the page reads its items`);
-    setWeekStart(weekPhone, start);
-    for (const el of [weekWide, weekPhone]) setWeekState(el, 'loading');
-    const ask = ++rangeAsk;
-    window.setTimeout(() => {
-        if (ask !== rangeAsk) return;
-        for (const el of [weekWide, weekPhone]) setWeekEvents(el, plan(start));
-    }, 900);
-});
 
 // Each part runs only when its section is on the page: a re-review round shows only the open sections.
 if (document.getElementById('kt-crowd-wide')) {

@@ -11,10 +11,10 @@ import { sections as time } from './parts/time.mjs';
 
 const grids = readFileSync(new URL('./parts/grids.html', import.meta.url), 'utf8');
 
-// Round 2 (2026-10-16) shows only the sections Kenny has not approved (research/kpadopt2/VERDICTS.json; gates/check-rereview.mjs
-// refuses a page that offers an approved pair): the matrix, the bar in a table cell, the week agenda and its states. The other
-// seven sections stay in parts/ for the record and leave the page.
-const OPEN = ['matrix', 'barcell', 'week', 'week-states'];
+// Round 3 (2026-10-16) shows only the section Kenny has not approved (research/kpadopt2/VERDICTS.json; gates/check-rereview.mjs
+// refuses a page that offers an approved pair): the week agenda's states. The other ten sections stay in parts/ for the record
+// and leave the page.
+const OPEN = ['week-states'];
 /** Keep only the open sections of a run of sections. @param {string} html */
 const openOnly = (html) =>
     html.replace(/[ \t]*<section\b[\s\S]*?<\/section>\n?/g, (block) =>
@@ -27,7 +27,7 @@ const html = `<!doctype html>
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Round 2 of the dashboard adoption, the four still open · kp-themes research demo</title>
+        <title>Round 2 of the dashboard adoption, the one still open · kp-themes research demo</title>
         <link rel="stylesheet" href="../../css/fonts.css" />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
@@ -56,26 +56,24 @@ const html = `<!doctype html>
 
         <main id="main" class="cat-main r2-page">
             <header class="r2-intro">
-                <h1>Round 2 of the dashboard adoption: the four still open</h1>
+                <h1>Round 2 of the dashboard adoption: the one still open</h1>
                 <p class="cat-intro">
-                    Round 2. Kenny approved seven of the eleven sections in formal (the action tiles, the status rows, the facet list, the heat grid, the
-                    crowded week and both run timeline sections), so only the four still open are on this page, each rebuilt from the package’s own
-                    parts: the <b>matrix</b> (every name the same room from its mark and its edges; the state picked with the package’s segmented
-                    control), the <b>bar in a table cell</b> (loading in the theme’s own loading picture, the table’s busy panel over the rows), the
-                    <b>week agenda</b> (its steps one control in the theme’s segmented track, a new week waits and its items arrive the theme’s way)
-                    and the <b>week agenda’s states</b> (the loading agenda loads, then its items arrive). Everything with a <code>kp-</code> class and
-                    every script under <code>js/</code> is the package; the sample data and the buttons that drive a demo are this page’s. Every
-                    section says what you should see under <b>Expected</b>. Formal only, judged in the review dialog (“Review in a dialog” at the top).
+                    Review round 3. Kenny approved ten of the eleven sections in formal, so only the <b>week agenda’s states</b> is on this page. While
+                    it loads, the week is now formal’s own loading picture, the ledger being ruled: every day holds unwritten entries of a pill’s
+                    shape and size, and a navy rule is ruled along them one after the other across the week. A week that loads again takes all of
+                    its items out first, so no old item stays under or beside the new ones and no words are drawn twice. Everything with a
+                    <code>kp-</code> class and every script under <code>js/</code> is the package; the sample data and the button that drives the
+                    demo are this page’s. The section says what you should see under <b>Expected</b>. Formal only, judged in the review dialog
+                    (“Review in a dialog” at the top).
                 </p>
             </header>
 ${openOnly(grids)}
 ${openOnly(time)}
         </main>
-        <script type="module" src="demo-grids.js"></script>
-        <script type="module" src="demo-time.js"></script>
+${openOnly(grids).trim() ? '        <script type="module" src="demo-grids.js"></script>\n' : ''}        <script type="module" src="demo-time.js"></script>
         <script type="module" src="../../js/auto.js"></script>
         <script type="application/json" data-review-round>
-            { "round": "2026-10-16-r2", "received": ["2026-10-16-r1"], "reopen": ["formal|matrix", "formal|barcell", "formal|week", "formal|week-states"] }
+            { "round": "2026-10-16-r3", "received": ["2026-10-16-r1", "2026-10-16-r2"], "reopen": ["formal|week-states"] }
         </script>
         <script type="module" src="../_review/review.js"></script>
         <script src="../../catalogue/boot-check.js"></script>

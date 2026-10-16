@@ -104,6 +104,20 @@ const GAP = 2;
 /** The hours the axis names. */
 const AXIS_HOURS = [0, 6, 12, 18, 24];
 
+/** Where a loading day's ghosts stand (0 is the top of the column, 1 its foot), day by day; at least 0.2 apart. */
+const GHOST_TIMES = [
+    [0.08, 0.29],
+    [0.08, 0.3, 0.62],
+    [0.1, 0.42, 0.78],
+    [0.29, 0.55],
+    [0.08, 0.3],
+    [0.12, 0.33, 0.62],
+    [0.29, 0.5, 0.74],
+];
+
+/** How far a ghost's label stub reaches, in % of the room after its time stub. */
+const GHOST_LABELS = [72, 54, 86, 62, 78, 48];
+
 /** Two digits. @param {number} n */
 const two = (n) => String(n).padStart(2, '0');
 
@@ -311,11 +325,17 @@ function buildDays(c) {
         now.setAttribute('role', 'separator');
         now.hidden = true;
         track.append(now);
-        // Ghosts for the loading state, at the final size of a pill.
-        const ghosts = [0.18, 0.32, 0.5, 0.74].slice(0, 2 + (i % 3)).map((at, g) => {
+        // Ghosts for the loading state: a pill's size and shape, a short stub where its time goes and a longer one where its
+        // label goes, at times a household week has (night, morning, evening), never closer than two pills' height in a
+        // column of the default height, so no ghost touches another. `--kp-week-seq` is the ghost's place in the week (day
+        // after day, top down), for a theme that runs its loading picture across the week in that order.
+        const ghosts = GHOST_TIMES[i % GHOST_TIMES.length].map((at, g) => {
             const ghost = make(doc, 'span', 'kp-week__ghost kp-skeleton');
             ghost.setAttribute('aria-hidden', 'true');
-            ghost.style.setProperty('--kp-week-at', String(at + ((i + g) % 3) * 0.04));
+            ghost.style.setProperty('--kp-week-at', String(at));
+            ghost.style.setProperty('--kp-week-seq', String(i + g));
+            ghost.style.setProperty('--kp-week-ghost-label', `${GHOST_LABELS[(i + g) % GHOST_LABELS.length]}%`);
+            ghost.append(make(doc, 'span', 'kp-week__ghost-time'), make(doc, 'span', 'kp-week__ghost-label'));
             return ghost;
         });
         track.append(...ghosts);
@@ -413,6 +433,11 @@ function paint(c) {
         const have = [...col.track.children].filter((n) => n !== col.moreButton?.parentElement);
         const same = wanted.length === have.length && wanted.every((n, i) => n === have[i]);
         if (!same) {
+            // What the track holds and is no longer wanted leaves it: a loading state takes every pill out (it once
+            // only re-appended the wanted nodes, so the old pills stayed, lost their place and stood stacked at the
+            // top of the day under the ghosts, two items' words drawn on top of each other).
+            const keep = new Set(/** @type {Element[]} */ (wanted));
+            for (const n of have) if (!keep.has(n)) n.remove();
             for (const n of nodes) n.remove();
             col.track.append(...nodes);
         }

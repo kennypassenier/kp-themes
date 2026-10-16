@@ -42,6 +42,25 @@ general note: build from the package's own parts and each theme's spirit. What c
   now drives this section's loading agenda, as the package's running-job button (`kp-button--live` with the theme's spinner) while it
   waits.
 
+## Round 3 of the page (2026-10-16-r3): the week agenda's states
+
+Kenny approved the matrix, the bar cell and the week agenda in round 2; only the states section is on the page (`OPEN` in
+`build.mjs`). His note: the loading picture was only the sentence "Reading the week" in the middle, and while loading items and
+words overlapped (his screenshot: every day's old pills stacked at 00:00 under the ghosts, two items' words on top of each other).
+
+- **The overlap, at its root:** `paint()` in `js/week.js` re-ordered a day only by re-appending the wanted nodes; a loading state
+  wants no pills, so nothing was taken out and the previous items stayed in the day, lost their place (`--kp-week-top` is cleared
+  for a loading state) and stood stacked at the top. Every node a day holds and no longer wants now leaves it. Before, the first
+  "Make it load" looked right only because that agenda had never held items.
+- **The loading picture is formal's own** (G10, G2): each ghost is an unwritten entry of a pill's size and shape (paper, the
+  entry's heavy 4px rule on its start edge, a short ledger line for the time, a longer one for the label), at a household week's
+  times and never touching another; the skeleton's navy rule is ruled along each entry's foot, one step (300 ms) later per day and
+  per line down, so the ruling runs through the week (`css/formal-register.css`, "A loading week is the ledger being ruled"). The
+  sentence is still read out (`role="status"`) but no longer drawn over the week.
+- **In rows (below 40rem)** a pill that arrives first opens its room, then is ruled in at full height (`--kp-leave-fold-start: 1`),
+  so no pill shows squeezed words or reaches over its neighbour while the row opens.
+- **Review kit:** the last open pair judged, a small dialog offers **Back to the Agenda** first (research/_review/README.md).
+
 ## Decisions to judge
 
 - Tiles: the "only" button of the facet list is a sibling of the label, always shown on touch; a status row keeps one detail line (`--kp-statusrow-detail-lines: 2` for more); the tile reserves a mark column so a spinner never moves the title.

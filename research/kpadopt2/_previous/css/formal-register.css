@@ -4065,6 +4065,68 @@
         position: absolute;
         block-size: var(--kp-week-pill, 1.5rem);
     }
+    /* A loading week is the ledger being ruled [G10, G2; Kenny, 2026-10-16: "de loading animatie moet die van het thema zijn"].
+       Each ghost is an entry of the week not yet written: a plate of paper the pill's size with the entry's heavy 4px rule on
+       its start edge in the strong hairline, a short ledger line where the time goes and a longer one where the label goes.
+       The navy rule is ruled along each entry's foot at the ruling pace, held, lifted from the start and ruled again
+       (the skeleton's loop, 2400 ms), entry after entry, start to end and top down:
+       one step (300 ms) later per day and per line down from the week's first entry, so the clerk's pen visibly runs
+       through the week. Standing still (reduced motion) every entry is
+       ruled. Nothing pulses, nothing is grey. */
+    [data-theme='formal'] .kp-week__col > .kp-week__ghost.kp-week__ghost {
+        position: absolute;
+        display: none;
+        align-items: center;
+        gap: 0.375rem;
+        block-size: var(--kp-week-pill, 1.5rem);
+        padding-inline: 0.375rem;
+        border: 1px solid var(--border);
+        border-inline-start: 4px solid var(--border-strong);
+        border-radius: 2px;
+        background: var(--card);
+    }
+    [data-theme='formal'] .kp-week[data-kp-state='loading'] .kp-week__col > .kp-week__ghost.kp-week__ghost {
+        display: flex;
+    }
+    /* In rows (below 40rem) the ghosts stand in the day's row like its pills. */
+    @container kp-week (max-width: 39.99rem) {
+        [data-theme='formal'] .kp-week__col > .kp-week__ghost.kp-week__ghost {
+            position: relative;
+            inset: auto;
+            flex: none;
+        }
+    }
+    /* In rows a pill that arrives first opens its room, then is ruled in at its full height [G13: the frame first, then
+       the words]: the reversed leave runs its fold before its words (`--kp-leave-fold-start: 1`), so no pill shows its
+       words squeezed into a half-open row or reaches over its neighbour while the gap is swallowed. */
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] .kp-week[data-kp-week-mode='list'] .kp-week__pill {
+            --kp-leave-fold-start: 1;
+        }
+    }
+    [data-theme='formal'] :is(.kp-week__ghost-time, .kp-week__ghost-label) {
+        block-size: 0;
+        border-block-end: 1px solid var(--border-strong);
+        translate: 0 0.25rem;
+    }
+    [data-theme='formal'] .kp-week__ghost-time {
+        flex: none;
+        inline-size: 2.25em;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+    [data-theme='formal'] .kp-week__ghost-label {
+        flex: 0 1 var(--kp-week-ghost-label, 66%);
+        min-inline-size: 0;
+    }
+    [data-theme='formal'] .kp-week__col > .kp-week__ghost.kp-week__ghost.kp-week__ghost::before {
+        inset-inline: -4px -1px;
+        inset-block-end: -1px;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] .kp-week__col > .kp-week__ghost.kp-week__ghost.kp-week__ghost::before {
+            animation-delay: calc(var(--kp-week-seq, 0) * var(--kp-sig-fm-loop) / 8);
+        }
+    }
     [data-theme='formal'] .kp-gantt__ghost.kp-gantt__lane > .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
         block-size: 0.75rem;
     }

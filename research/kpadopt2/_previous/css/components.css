@@ -8117,6 +8117,18 @@
         display: none;
     }
 
+    /* While the week loads, its ghosts say so; the sentence is still read out (role="status") but drawn nowhere, so no
+     * plate stands over a ghost (Kenny, 2026-10-16: the words alone in the middle were not enough and sat over the week). */
+    .kp-week__state[data-kp-state='loading'] {
+        inset: auto;
+        inline-size: 1px;
+        block-size: 1px;
+        padding: 0;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
     .kp-week__state[data-kp-state='error'] {
         color: var(--destructive);
     }
