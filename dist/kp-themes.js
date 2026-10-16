@@ -22551,6 +22551,7 @@ function edgeTicks(c, w) {
   const room = c.axis.clientWidth;
   if (!room) return;
   for (const [t, parts] of c.ticks) {
+    if (parts.label.tagName === "BUTTON") continue;
     const at = (t - w.from) / c.span * room;
     parts.label.toggleAttribute("data-kp-gantt-edge", room - at < parts.label.offsetWidth + 2);
   }

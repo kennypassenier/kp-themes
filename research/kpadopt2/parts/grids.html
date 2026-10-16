@@ -9,8 +9,8 @@
         <p><b>Expected:</b></p>
         <ul>
             <li>
-                <b>The grid</b> shows seven stacks (rows) by thirty nights (columns). Each cell is a small tile in the theme’s own shape. Green-ish
-                <b>filled</b> is backed up, <b>striped red</b> is missed, <b>ruled amber</b> (only in the whole-fleet row) is some stacks missed. A
+                <b>The grid</b> shows seven stacks (rows) by thirty nights (columns). Each cell is a small tile in the theme’s own shape. A
+                <b>filled</b> tile in the success ink is backed up, a <b>red</b> one is missed, an <b>amber</b> one (only in the whole-fleet row) is some stacks missed. A
                 <b>dashed outline</b> is the night that has not run yet (the last column), a <b>hatched</b> tile is before the stack had any history
                 (docs), an <b>empty outline</b> is a stack that keeps no data by design (the long-named scratch volume, whose name is cut with an
                 ellipsis).
@@ -25,12 +25,12 @@
                 <b>Arrow keys</b> move between tiles, Home and End go to the ends of the row, Page Up and Page Down earlier and later.
             </li>
             <li>
-                <b>Press a stack name</b>: it stays pressed (accent plate) and the line under the grid lists the pressed names; the page would filter,
+                <b>Press a stack name</b>: it stays pressed (the theme’s own pressed look) and the line under the grid lists the pressed names; the page would filter,
                 the grid only reports. <b>Earlier, Later, Today</b> move the thirty nights; Later is disabled on today.
             </li>
             <li>
-                <b>Ready, Loading, Empty, Failed</b> swap the same grid: loading keeps every tile in place and animates them in the theme’s own busy
-                picture; empty and failed show one centred sentence, with the grid’s own minimum height so the page does not jump.
+                <b>Ready, Loading, Empty, Failed</b> swap the same grid: loading keeps every tile in place under the theme’s own busy picture, which
+                always moves; empty and failed show one centred sentence, with the grid’s own minimum height so the page does not jump.
             </li>
             <li>
                 <b>Requests per hour</b> (below) is the same grid toned by a value: the darker the tile, the more requests; the legend is a five-step
@@ -38,13 +38,7 @@
             </li>
         </ul>
     </div>
-    <div data-review-look>
-        <p data-for="formal">
-            The tiles are ruled ledger squares (a hairline frame, nearly square corners); a pinned night takes the double rule round every tile of its
-            column; the row names are small capitals, a pressed name takes a navy underline instead of a plate; the rule under the whole-fleet row is
-            a double rule. Nothing moves when the state changes.
-        </p>
-    </div>
+    <!-- look:heat -->
     <div class="gd-panel">
         <h3>Snapshots per stack per night</h3>
         <div class="gd-bar">
@@ -132,17 +126,11 @@
             </li>
             <li>
                 <b>State</b> is the package’s segmented control (<b>Ready</b>, <b>Loading</b>, <b>Empty</b>, <b>Failed</b>) and swaps both matrices:
-                loading keeps the shape, the names stay and every cell waits in the theme’s loading picture (formal: its lines ruled in, again and
-                again); empty and failed show one sentence. The grid does not change height.
+                loading keeps the shape, the names stay and every cell waits in the theme’s own loading picture, which always moves; empty and failed show one sentence. The grid does not change height.
             </li>
         </ul>
     </div>
-    <div data-review-look>
-        <p data-for="formal">
-            Cells are paper plates with a navy start rule (allowed), red ink (mismatch) and two red rules (blocked), the way the formal month calendar
-            draws its days; the pinned cell has the double rule; names are small capitals; the headers stay while the narrow box scrolls.
-        </p>
-    </div>
+    <!-- look:matrix -->
     <div class="gd-panel">
         <h3>Reachability matrix</h3>
         <div class="gd-bar">
@@ -205,8 +193,7 @@
             <li>
                 <b>Show loading</b> puts the table in its loading state, as a page that reads the readings again: the rows dim and the table’s busy
                 panel stands over them with the theme’s spinner and “Reading CPU, memory and disk”; every bar and every figure waits in the theme’s
-                own loading picture at its final size (formal: a navy rule ruled across the groove, again and again, and a ruled line where the figure
-                stands). Nothing moves sideways. Press it again: the panel goes and the readings are back.
+                own loading picture at its final size. Nothing moves sideways. Press it again: the panel goes and the readings are back.
             </li>
             <li>
                 <b>Disk growth</b> (second table) is written in markup only: <code>data-kp-bar="0.82"</code> on a span, and a sort value on the cell
@@ -215,12 +202,7 @@
             <li>On a narrow window the table becomes one card per row with the column names in front of each bar; the bars still line up.</li>
         </ul>
     </div>
-    <div data-review-look>
-        <p data-for="formal">
-            The bar is the formal meter (ruled column, navy entry) with its figure on the end edge in tabular figures; warning and destructive are the
-            ledger’s ochre and red. Sorting follows the value under the bar.
-        </p>
-    </div>
+    <!-- look:barcell -->
     <div class="gd-stack">
         <div class="gd-panel">
             <h3>Capacity per stack (cells written by script)</h3>

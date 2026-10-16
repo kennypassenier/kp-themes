@@ -78,6 +78,25 @@ loading table does, one loading picture in the middle of the whole. So:
   once the items have arrived, so the same items move nothing.
 - **Review kit:** the small end dialog is gone; after the last pair the kit goes straight to the Agenda (or `?next=`).
 
+## Round 5 of the page (2026-10-16-r5): the fifteen other themes
+
+Every section was approved in formal in rounds 1 to 4. This round asks the fifteen other themes, every section, each built
+from that theme's approved parts (buttons, menus, segmented control, loading pieces, arrival motion, signature animations)
+in one `[kpadopt2]` block of `css/<theme>-register.css`, and a `[kpadopt2-repairs]` block beside it.
+
+- **Per-theme look lines:** `parts/looks.mjs` holds one map per section (`ACT`, `STA`, `FAC`, `HEAT`, `MATRIX`, `BARCELL`,
+  `WEEK`, `WEEK_CROWD`, `WEEK_STATES`, `GANTT`, `GANTT_STATES`); `build.mjs` turns the `<!-- look:KEY -->` markers of
+  `parts/grids.html` into those lines. The Expected blocks no longer describe formal's own loading.
+- **One loading picture per grid where the cell is too small to carry a word:** cyberpunk deciphers one LOADING over the grid,
+  solstice and phantom cross one glow or slash per row, pastel runs one caterpillar per heat row, terminal one htop row.
+- **New keyframes** have their row in `js/effects.js` `TIMINGS`.
+- **Package changes, formal unchanged:** `js/gantt.js` marks an axis label near the end edge `data-kp-gantt-edge`, and a
+  register that sets `--kp-gantt-tick-flip: 1` hangs that label inside the plot (formal keeps 0, so its axis is as approved);
+  pastel's loading pieces (`js/loading-pieces.js`) carry one caterpillar per heat row and none per heat or matrix cell.
+- **Found in formal and left as approved:** the heat and matrix loading rows are 6 px taller than the ready rows (the grid
+  grows about 36 px while it loads); the empty and failed timeline sentence sits over the legend; the bar table grows at
+  390 px while it loads; an axis label at the end edge can be cut. The other themes fix these in their repairs block.
+
 ## Decisions to judge
 
 - Tiles: the "only" button of the facet list is a sibling of the label, always shown on touch; a status row keeps one detail line (`--kp-statusrow-detail-lines: 2` for more); the tile reserves a mark column so a spinner never moves the title.

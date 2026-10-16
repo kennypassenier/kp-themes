@@ -11872,12 +11872,12 @@
 
     /* Near the end edge js/gantt.js marks a label `data-kp-gantt-edge`; a register that sets --kp-gantt-tick-flip to 1
      * stands such a label before its rule, ending at it, so the edge never cuts it (0 by default: the label as it was). */
-    .kp-gantt__tick[data-kp-gantt-edge] {
+    .kp-gantt__tick[data-kp-gantt-edge]:not(button) {
         translate: calc(-100% * var(--kp-gantt-tick-flip, 0)) 0;
         padding-inline: calc(0.3125rem * (1 - var(--kp-gantt-tick-flip, 0))) calc(0.3125rem * var(--kp-gantt-tick-flip, 0));
     }
 
-    .kp-gantt__tick[data-kp-gantt-edge]:dir(rtl) {
+    .kp-gantt__tick[data-kp-gantt-edge]:not(button):dir(rtl) {
         translate: calc(100% * var(--kp-gantt-tick-flip, 0)) 0;
     }
 

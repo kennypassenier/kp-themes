@@ -9,8 +9,18 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { sections as tiles } from './parts/tiles.mjs';
 import { sections as time } from './parts/time.mjs';
+import { BARCELL, HEAT, MATRIX } from './parts/looks.mjs';
 
-const grids = readFileSync(new URL('./parts/grids.html', import.meta.url), 'utf8');
+const escLook = (/** @type {string} */ t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+/** The hand-written grid sections carry a <!-- look:KEY --> marker; each becomes that section's per-theme "Look at" lines. */
+const GRID_LOOKS = { heat: HEAT, matrix: MATRIX, barcell: BARCELL };
+const grids = readFileSync(new URL('./parts/grids.html', import.meta.url), 'utf8').replace(
+    /^ {4}<!-- look:(\w+) -->$/gm,
+    (_, key) =>
+        `    <div data-review-look>\n${Object.entries(GRID_LOOKS[/** @type {keyof typeof GRID_LOOKS} */ (key)])
+            .map(([t, line]) => `        <p data-for="${t}">${escLook(line)}</p>`)
+            .join('\n')}\n    </div>`,
+);
 
 // Round 5 (2026-10-16) asks the fifteen other themes for every section, all approved in formal in rounds 1 to 4
 // (research/kpadopt2/VERDICTS.json; gates/check-rereview.mjs refuses a page that offers an approved pair). Formal leaves the page.

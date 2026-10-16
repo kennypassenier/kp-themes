@@ -1,70 +1,14 @@
 // research/kpadopt2: the week agenda and run timeline sections (imported by ../build.mjs).
 
-const THEMES = [
-    'formal',
-    'light',
-    'dark',
-    'cyberpunk',
-    'synthwave',
-    'pastel',
-    'terminal',
-    'forest',
-    'blueprint',
-    'solstice',
-    'brutalism',
-    'deco',
-    'phantom',
-    'grotesk',
-    'nostromo',
-    'titanium',
-];
+import { GANTT, GANTT_STATES, WEEK, WEEK_CROWD, WEEK_STATES } from './looks.mjs';
 
-// What each theme does with a pill in the week agenda.
-const WEEK = {
-    formal: 'Ledger entries: a heavy 4px rule on the left of each pill, 2px corners, the weekday in small capitals, dotted dividers between the days like leaders.',
-    light: 'Soft capsules with no visible frame and the faintest dividers; the next run has a ring round its capsule; today is an indigo number.',
-    dark: 'Machined slots: square, with a lighter top edge where the tool left the surface; the weekday in spaced capitals; the now-line reads against the dark ground.',
-    cyberpunk:
-        'HUD readouts: one notched bottom-right corner, a 3px leading bar in the series colour, the time in mono; the now-line is neon. Tab to a pill: the focus ring must stay whole round the notch.',
-    synthwave: 'The arcade floor: spaced capitals for the weekday, a pink now-line, and a neon halo round the next run.',
-    pastel: 'Stickers: round capsules with a 2px edge and a solid peel underneath, roomy padding. The off and skipped ones are plain but still round.',
-    terminal: 'Program output: no plate fill, the time in [brackets] in the mono face, dashed dividers, and a now-line that glows phosphor green.',
-    forest: 'Leaves: rounded at the top-left and bottom-right, nearly square at the other two corners, generous padding.',
-    blueprint: 'A drawing: square frames filled with a fine hatch in the series colour, dashed dividers, the time in mono.',
-    solstice: 'Embers: each pill fades from a warm tint to nothing across its width; the next run carries a soft halo.',
-    brutalism: 'Black boxes: a 2px black frame and a hard offset shadow, heavy uppercase weekdays; off, skipped and reference pills drop the shadow.',
-    deco: 'An inlay: a double rule round every pill, spaced capitals on the weekday; the reference pill stays one dashed line.',
-    phantom: 'Slanted plates in the display face, capitals; the whole pill leans with the theme.',
-    grotesk:
-        'Flat heavy blocks with a 5px leading rule, bold type. In these wide letters no pill may wrap to a second line: the name clips with an ellipsis.',
-    nostromo: 'Label tape: mono capitals on a hairline frame with 2px corners.',
-    titanium:
-        'Machined plates: the chamfer cuts the top-left and the bottom-right corner. Tab to a pill: the focus ring must look chamfered but whole.',
-};
+const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
 
-// What each theme does with a bar in the run timeline.
-const GANTT = {
-    formal: 'Inked strips with 2px corners, the axis in small capitals with dotted rules. A failed run is taller with a cap at its end and a cross.',
-    light: 'Capsule bars; a failed run is taller with a cap; the running one carries soft stripes and the Live button a green dot.',
-    dark: 'Square machined bars with a lighter top edge; the stripes of a running bar march at a constant, steady speed.',
-    cyberpunk: 'Notched bars; the running bar burns with a glow; the axis is in mono; the now-line is neon.',
-    synthwave: 'A running bar is a pink-to-cyan beam with a neon halo and stripes over it; the axis is in spaced capitals.',
-    pastel: 'Candy capsules with a solid peel under them; a queued run is a dashed capsule.',
-    terminal: 'Phosphor blocks and dashed rules. The stripes of the running bar step in discrete jumps, they do not glide; the now-line glows.',
-    forest: 'Leaf-cut bars (two round corners, two nearly square); the lane names are in italic.',
-    blueprint: 'Square bars on dashed witness lines, the axis in mono.',
-    solstice: 'Warm bars; the running bar carries a halo.',
-    brutalism: 'Black-framed bars with a hard offset shadow in taller lanes; the stripes of a running bar stand still.',
-    deco: 'Bars with a double rule at both ends; lane names and the axis in spaced capitals.',
-    phantom: 'Slanted bars in the display face, capitals.',
-    grotesk: 'Heavy flat bars. The row of controls above the timeline must wrap cleanly, never overflow, in these wide letters.',
-    nostromo: 'Label-tape bars: mono capitals on hairline frames.',
-    titanium:
-        'Chamfered bars (top-left and bottom-right); the stripes feed linearly at a constant speed. Tab to a bar: the focus ring must stay whole.',
-};
-
-/** @param {string} lead @param {Record<string, string>} per */
-const looks = (lead, per) => ['formal'].map((t) => `                    <p data-for="${t}">${lead} ${per[t]}</p>`).join('\n');
+/** The section's lead sentence, then the theme's own touches, one paragraph per theme. @param {string} lead @param {Record<string, string>} per */
+const looks = (lead, per) =>
+    Object.keys(per)
+        .map((t) => `                    <p data-for="${t}">${lead} ${esc(per[t])}</p>`)
+        .join('\n');
 
 const SECTIONS = [];
 
@@ -126,7 +70,7 @@ SECTIONS.push({
                     </div>
                 </div>
                 <pre class="kt-log" id="kt-crowd-log" aria-label="What the agenda reported" aria-live="off"></pre>`,
-    perTheme: WEEK,
+    perTheme: WEEK_CROWD,
 });
 
 SECTIONS.push({
@@ -134,11 +78,11 @@ SECTIONS.push({
     title: 'Week agenda: loading, empty, error, focus',
     about: 'The three states of the whole agenda, each at the agenda’s final size, and a pill that has the keyboard focus.',
     expected: [
-        '<b>Loading</b>: the week loads as the data table loads. The days, the hours and the lines are all there and stay empty; in the middle of the days stands the same card as a loading table shows: formal’s large ring spinner, the words “Reading the week” and the navy rules ruled under them. Nothing else is drawn in the days, and the card covers neither the day heads nor the hours. It is the card of the data table’s “Loading, with a layer over the rows”.',
+        '<b>Loading</b>: the week loads as the data table loads. The days, the hours and the lines are all there and stay empty; in the middle of the days stands the same card as a loading table shows: the theme’s own large loading mark and the words “Reading the week”, dressed as the theme dresses a loading table. Nothing else is drawn in the days, and the card covers neither the day heads nor the hours. It is the card of the data table’s “Loading, with a layer over the rows”.',
         '<b>Empty</b>: the same grid, the sentence “Nothing is planned in this week.” over it.',
         '<b>Error</b>: the grid, with the page’s own words in the destructive colour over it.',
         '<b>Focus</b>: the third agenda has its first pill focused as a keyboard user would see it; the ring must be whole, not cut by the pill’s corners, and clearly visible against the neighbours.',
-        '<b>Make it load, then arrive</b> (above the first agenda): the button shows the theme’s spinner and says the items arrive in 2 s; the first agenda’s items leave at once and the loading card arrives in the middle as it does over a table. After two seconds the card is ruled off first, then the items arrive the theme’s way, one after the other (formal rules them in); no item is ever drawn under the card. No column changes height and no head moves, here and in the 390 px view (where a day keeps its height while it loads again); the button can play it again, as often as you like.',
+        '<b>Make it load, then arrive</b> (above the first agenda): the button shows the theme’s spinner and says the items arrive in 2 s; the first agenda’s items leave at once and the loading card arrives in the middle as it does over a table. After two seconds the card leaves first, then the items arrive the theme’s way, one after the other; no item is ever drawn under the card. No column changes height and no head moves, here and in the 390 px view (where a day keeps its height while it loads again); the button can play it again, as often as you like.',
     ],
     look: 'Press Make it load, then arrive three times in a row and watch the first agenda: an empty week with the table’s loading card in the middle, then its items, never both.',
     body: `
@@ -151,7 +95,7 @@ SECTIONS.push({
                     <div><p class="kt-label">Error</p><div class="kp-week" data-kp-week id="kt-state-error" aria-label="Failed week"></div></div>
                     <div><p class="kt-label">A pill with the focus</p><div class="kp-week" data-kp-week id="kt-state-focus" aria-label="Week with focus"></div></div>
                 </div>`,
-    perTheme: WEEK,
+    perTheme: WEEK_STATES,
 });
 
 SECTIONS.push({
@@ -159,12 +103,12 @@ SECTIONS.push({
     title: 'Run timeline: bars per job, growing live',
     about: 'A lane per job, a bar per run on a time axis that follows the clock. Running bars grow, queued ones wait hollow, finished ones are solid, failed ones stand taller. Drag across the plot to select a range.',
     expected: [
-        'An axis on top with times, one lane per job with its name on the left, and a line for now. The six runs that are running or queued now are at the right edge: <b>running</b> is striped with a bright leading edge and grows; <b>queued</b> is hollow and dashed and grows too.',
+        'An axis on top with times, one lane per job with its name on the left, and a line for now. The six runs that are running or queued now are at the right edge: <b>running</b> carries the theme’s running mark and grows; <b>queued</b> is hollow and dashed and grows too.',
         '<b>Succeeded</b> bars are solid; <b>failed</b> bars are solid, taller, with a cap at the end and a cross when wide enough. The Updates lane has two overlapping runs on two rows; the Reports lane has small bars close together.',
         'Hover a bar: a card with name, times, length and state (a running one counts up). Click it or press Enter: the readout under the timeline logs it. Tab enters once; the arrows move along a lane (left, right) and between lanes (up, down).',
         'The range buttons <b>1h 6h 24h 7d</b> change how much time shows. <b>Live</b> (pressed) makes the right edge follow now; press it to freeze the window, press again to follow.',
         'Drag across the plot: a dashed band, then the toolbar row above the timeline turns into a chip with the range, <b>Zoom</b> (the window becomes the range and stops following) and <b>Clear</b>. A click on a bar without a drag still opens it.',
-        'The buttons above the timeline drive it: <b>Start a run</b> adds a running bar, <b>Finish the oldest run</b> turns the oldest running one solid, <b>Fail it instead</b> turns it failed, <b>Queue a run</b> adds a hollow one, <b>Start the queued run</b> turns it striped. <b>Fast time</b> runs the clock sixty times faster so growth is visible. The frame does not change height when a run starts or ends: the lanes with a run still open already hold a spare row, and a start that needs more scrolls inside the frame. Pressing a range button, <b>Live</b> or <b>Zoom</b> lays the lanes out again.',
+        'The buttons above the timeline drive it: <b>Start a run</b> adds a running bar, <b>Finish the oldest run</b> turns the oldest running one solid, <b>Fail it instead</b> turns it failed, <b>Queue a run</b> adds a hollow one, <b>Start the queued run</b> sets it running. <b>Fast time</b> runs the clock sixty times faster so growth is visible. The frame does not change height when a run starts or ends: the lanes with a run still open already hold a spare row, and a start that needs more scrolls inside the frame. Pressing a range button, <b>Live</b> or <b>Zoom</b> lays the lanes out again.',
     ],
     look: 'Press Start a run, then Fast time, and watch a bar grow; then drag across the plot.',
     body: `
@@ -195,7 +139,7 @@ SECTIONS.push({
     title: 'Run timeline: loading, empty, error, a held window, the hover card',
     about: 'The states of the whole timeline at their final size, a window held in the past with a selected range, and the hover card opened on a failed run.',
     expected: [
-        '<b>Loading</b>: five ghost lanes as tall as the real ones, each ghost bar a plate of a bar’s size with the navy rule ruled along its foot (formal’s own loading); the axis is already there.',
+        '<b>Loading</b>: five ghost lanes as tall as the real ones, each ghost bar a plate of a bar’s size in the theme’s own loading picture; the axis is already there.',
         '<b>Empty</b>: the axis and the sentence “No run in this window.” over a lane-sized space. <b>Error</b>: the page’s words in the destructive colour.',
         '<b>A held window</b>: the Live button is not pressed, the window ends two hours ago and does not move; a range is already selected (a band across the plot and the toolbar row turned into a chip with its times, Zoom and Clear, standing where the range buttons and Live stand; the toolbar keeps its height and the chip lies on no lane, at 1280 and at 390 px). <b>Zoom</b> makes the band the window; <b>Clear</b> lifts it.',
         '<b>Hover card on the failed run</b> opens the card on the failed bar of the held window: name, times, length and state, joined to its bar, with its edge whole in this theme.',
@@ -211,7 +155,7 @@ SECTIONS.push({
                     <div><p class="kt-label">Error</p><div class="kp-gantt" data-kp-gantt id="kt-gstate-error" aria-label="Failed history"></div></div>
                     <div><p class="kt-label">A held window with a selected range</p><div class="kp-gantt" data-kp-gantt data-kp-gantt-live="false" data-kp-gantt-range="6h" id="kt-gstate-held" aria-label="History held in the past"></div></div>
                 </div>`,
-    perTheme: GANTT,
+    perTheme: GANTT_STATES,
 });
 
 const section = (s) => `

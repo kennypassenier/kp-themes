@@ -1,8 +1,8 @@
 // research/kpadopt2: the sections of action tiles, status rows and the facet list (imported by ../build.mjs).
 import { ACT, FAC, STA } from './looks.mjs';
 
+// Round 5 asks the fifteen non-formal themes, so formal's approved lines stay in looks.mjs but leave the page.
 const THEMES = [
-    ['formal', 'Formal'],
     ['light', 'Light'],
     ['dark', 'Dark'],
     ['cyberpunk', 'Cyberpunk'],

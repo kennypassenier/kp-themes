@@ -109,8 +109,8 @@ export const PAGES = [
             // Kenny, 2026-10-16 (kp-adopt-rest, round 3): six things the dashboard still drew itself, each an opt-in option of an approved component (nav separator, choice-filter value, timeline day buttons and series legend, the week's next-N phone list, facet identity patterns, the heat grid's jump to the latest), formal only.
             {
                 href: 'research/kpadopt2/demo.html',
-                label: 'Round 2: the week agenda’s states, still open',
-                about: 'Eight components the dashboard draws itself, each section judged in one review dialog: .kp-action tiles, .kp-statusrow, .kp-facets, .kp-heat, .kp-matrix, .kp-bar-cell with the table’s data-kp-sort-value, .kp-week, .kp-gantt. Formal first.',
+                label: 'Round 5: the eight components in the fifteen other themes',
+                about: 'Eight components the dashboard draws itself, each section judged in one review dialog: .kp-action tiles, .kp-statusrow, .kp-facets, .kp-heat, .kp-matrix, .kp-bar-cell with the table’s data-kp-sort-value, .kp-week, .kp-gantt. Approved in formal (rounds 1 to 4); this round asks every other theme, each built from its own parts.',
             },
         ],
     },
