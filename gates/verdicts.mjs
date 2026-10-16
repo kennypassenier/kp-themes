@@ -1260,7 +1260,7 @@ async function compare(args) {
     const engine = option('--engine', /chrom|edge|brave/i.test(executable) ? 'chromium' : 'firefox');
     const width = Number(option('--width', '1920'));
     const height = Number(option('--height', '1000'));
-    const themes = option('--themes', 'formal,cyberpunk,nostromo,grotesk,brutalism,phantom').split(',');
+    const themes = option('--themes', 'formal,cyberpunk,nostromo,grotesk,brutalism').split(',');
     const { serve, blockPages, measurePlaywright, BidiGecko, firstDifference } = await import('./verdict-hashes.mjs');
     const playwright = await import('@playwright/test');
     const PROPS = [...readFileSync(join(ROOT, 'catalogue/block-hash.js'), 'utf8').matchAll(/^ {4}'([a-z-]+)',$/gm)].map((m) => m[1]);

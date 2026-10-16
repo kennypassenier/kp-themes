@@ -83,13 +83,6 @@
                     "shot": "be3cc2eeae1065dfae5c55853af4b68fbfed0d5c471c5a5d9455566aa1eb6228"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "b0479f05d0cc07bef8cdd265e9c6b2548667d0add94d29c068fd49bc47be02b8"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -188,13 +181,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "0cbc9766e95e29ea1d13e419bb455658e833e0f7c9704e61a228479260fa914b"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "faaccd6a2c854471a8831cb5e3e6a0591712ea6be801691ab1ed6bb7abf8bf2e"
                 }
             },
             "solstice": {
@@ -297,13 +283,6 @@
                     "shot": "cb4e7268e1e08e45e6d7cf3d5b72f6b3c64f23f6a1dea5bf37b0f7f5532e7301"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "087fcb8547cc383a8711df2ed2fd2f9de89465ee2a6eec42d8b621470b091970"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -402,13 +381,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "fd926acac430d194a43c4c1e638bc96266100776ffb6c29c74049ca5c15d7b8e"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "fc83a3aaa6c7b530ae2da0e0bb35f2c3ce3b0996e53a428ed55bc31a4895cf30"
                 }
             },
             "solstice": {
@@ -511,13 +483,6 @@
                     "shot": "afd5aa8758775186d0e2d2566812b4b9bddd95a2deac3243e791b203b41ec9d6"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "351a55bdbe49987a80ee3b0e18b181ce7478f6d9f544e29f98f7c63dbd9ec2ac"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -616,13 +581,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "c8a533ed3e6a1771c3d650a380f388f345c8e0307a968da6f75cb0874c9b2b24"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "b210e3c18b82c8cab7a1fc105a9d685cd87cf3351049332b8f7bf303139b65cc"
                 }
             },
             "solstice": {
@@ -725,13 +683,6 @@
                     "shot": "fdd86b10bdea252dded00409faa71f2ded19d776670851b9496de41ea161aaaa"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "b9d37f0670cd93801af9c1e610cb3f7c07196b82c295e1c3c809405a1fda9a33"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -830,13 +781,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "b35abafc2d7264458e205df6f7eddf0ed324edc4771b0a7731f41f488283561c"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "f3d4aba1910a2a0dec7068b80d3601c4ea6b974497bcc2387692bf6c19ed3178"
                 }
             },
             "solstice": {
@@ -939,13 +883,6 @@
                     "shot": "07310551ba461c80a9ed6a42f6f6ff1674b0feb439b174372df34b21f3f791d7"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "3f392b721cfcc145388365fe844ad461d0266817322fb81ae5aeabbc5c01d47a"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -1044,13 +981,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "b51a8f153c3bdd82a500246fae917cedfab1bb38851484afd2606b1e7e926766"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "2cf2334a73a2510443877c04137dc6a04a3c1e295a15815091b6bd928f25a454"
                 }
             },
             "solstice": {
@@ -1153,13 +1083,6 @@
                     "shot": "c72b1dfc467b26c12fd51a24dded5f848dc08225ce04c84c66e2e24c4f7647e9"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "2222f2d5e0318df437887fbc41d969475dc1b52722d3836fbd72a5099993e78a"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -1258,13 +1181,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "346af835e9b50cb1c62f594485675c51d5d803442dad7b9590e5b578fbf48aea"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "6c1251d392eb606dfa7859b2b3c836982d1772e693e8748755292a973237abc5"
                 }
             },
             "solstice": {
@@ -1367,13 +1283,6 @@
                     "shot": "7942a93fae6b561122f914a164b51c9bdc41e2d526068d34837843c838fda16f"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "1d70e4a29296806c462d1a4cb9fa79405fe22859dda5c524042fc7a63adc25bb"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -1472,13 +1381,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "5f4c6b9711df589ed4b9fd02a9f3a789347f08acf65437b0cecc71772e2c831d"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "121620d1d5819d33b0b114ebb682028d6febed833f953ea494a77e347a330872"
                 }
             },
             "solstice": {
@@ -1581,13 +1483,6 @@
                     "shot": "bf9117d4b36d91287e6304f827ea6e9ad835b8f27892243cca85e61880d2b828"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "e3f08af2ca2c6686968c8b3898e3e19f7dae7ee1909c69f166c197de54ba3f97"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -1686,13 +1581,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "3726dec15c76163c6e93629295c3003f528c48824b24e0f8f23b674031ab205a"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "e155de8b0a1a06683ea7fcc32998d17c8af56a4355a975bae5efb0d87673599e"
                 }
             },
             "solstice": {
@@ -1795,13 +1683,6 @@
                     "shot": "59c25b02b40ba6e0843746688a3c56de4e27c5ffc4135ce7bc7998863b416f1b"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "757b9a0c99ea26ce152fcf86c3ac7db6c9d1d60e4cbdf87db7f6ddc4f3f2b15d"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -1900,13 +1781,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "656fe0e01bec9ed669e3e8e1c008b04ca53fb05f872b50091ee1be81e733408e"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "0d569df49a265c949af1dac3a664b973d2c982b81a874f0425d8528c747e4519"
                 }
             },
             "solstice": {
@@ -2009,13 +1883,6 @@
                     "shot": "df6144ed01cf50af7e6a892f0af2b4541c41942f623f697c0e6c520fe5f8f4e1"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "ba9f2788cd6ff9c578ca0c13931b5e0aac4d43a4c5494667ac2643bc8ba3f8c9"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -2114,13 +1981,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "376ec4664a85ffa06643597d806d7b5861c3e08752fbb55d3e2c185bf105587b"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "e44727ced30644d196b3a0aa03820a6c57e017e99992a029bb4966ddd5d36876"
                 }
             },
             "solstice": {
@@ -2223,13 +2083,6 @@
                     "shot": "6be1bca50b820c5f57bb1e5114579fc274732b2b9c768ab5c4927ed8a8c944cc"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "fadfdcdc2b1b1afbf2310b3b2240c568287e4542fe238e5eccae404f9be10e6b"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -2321,13 +2174,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "0ce9c2e3501d7dc292fe56f2c319a14500930135ac91322a4302172a5c0a91bc"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "26efb9755f6a57225a7af8f442a30a0be10f39867ffdca456e9db3954e540395"
                 }
             },
             "synthwave": {
@@ -2437,13 +2283,6 @@
                     "shot": "fa16bbcea995120bc4afc9c3371ce7497a0f9021b2e5aae323cffffb156d7108"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "2717ab81e9c07a934ab8dcb0be030ec18346aef3344e92959bce469fdd9e872b"
-                }
-            },
             "synthwave": {
                 "firefox": {
                     "state": "carried",
@@ -2542,13 +2381,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "4006f4cc74f3a9ded6bb44440f8cb9a568a952d704133f6336f13cda80526bd8"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "8d2a38255523370ab9020c5b4d607603ddc4a25e6f5086fe240e46ddf8247978"
                 }
             },
             "solstice": {
@@ -2651,13 +2483,6 @@
                     "shot": "f8043ec21a98f049f65cbbb6e1ccaf6ea66e31950f834caeecff8ff7cf10c271"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "b3f2ee21c4209bd05e36443d556a70ff82f538ce781a79983dfa962c768d8830"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -2756,13 +2581,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "b315e03067634a315b9f6f332598a78d2cf44d5a83ada5cbff1a2178820f5c42"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "25834a2cdc17f52d4a70a0805e448eb4748e2d78ca8bc688faa450063ed75501"
                 }
             },
             "solstice": {
@@ -2865,13 +2683,6 @@
                     "shot": "5826c8347ce1b1bbd727cdbb65a3011452a50d3de170d7c8e5da9655bc16d65c"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "0521d436f9fe866017bc01acc7e927037f3cf0161db001cbce4fcb6b1f944069"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -2970,13 +2781,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "fcbba3736dcb1825f721c29cccf410056db929f5b09fa0f439cc31d888eb573e"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "25acc72db075ae575ebe9831f0fd3894e9823063c6d8a122cb0b0caa9a4f7d07"
                 }
             },
             "solstice": {
@@ -3079,13 +2883,6 @@
                     "shot": "724698cdcbf59479571240132edae0a20dcf68bfcd1a40f0641616b6c37e3de5"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "cdd94d5a9b1009e8eaf4ae9eddc3193ed37d6528c8226a5a4406c47f3dbb3aed"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -3184,13 +2981,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "e4845f10aa07ca7be224ff593407eaf24b5b7579e196e67715f1541725196b55"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "bc4ee2ea5cb2b62075c7bd239a148ed78849105280ae6bee03325dcf0ef7c6e5"
                 }
             },
             "solstice": {
@@ -3293,13 +3083,6 @@
                     "shot": "2cfe5ebad5b9e0fb9b14b4771eeda5e961d297771ffbc9d274a05caedf428ab2"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "16f92a4b0cc61d19192bcdf65218419604a72b4a85aee8c6432fd28a89dea22e"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -3398,13 +3181,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "ac97f724d007e4707cdcb2709cbdc2d820597ba7c6bcf1d6fb3c45a38a19e6f4"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "62e2ac4641a13b8749b195a2afaf70f230dcd02904649a85cf5e1fec834d48ad"
                 }
             },
             "solstice": {
@@ -3507,13 +3283,6 @@
                     "shot": "deb2fa59b730b2bbef3ccd360f6ba3a4bece9716c8157ccfb90e3eb2ce6994d5"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "b2f24eab03148cbce89c02e7b3e7bf0b77077532b7bf53b95be7134cfda108e6"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -3612,13 +3381,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "f631db97f3b8b5960b293f74300d456d4e009812d73b6ef47a2f7f38473e7089"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "1f9e0d3d110d2a2c510885ec830b62dba15434ae658d23e82219783b8c76890a"
                 }
             },
             "solstice": {
@@ -3721,13 +3483,6 @@
                     "shot": "6fb552d29f9f210767e1cc14d8df800c2b43fca98575b59a9d2dafa478a1539a"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "247159b61201123b1e1aa1b46a5f4270620b72a964df14158edd2d5610a9c9dc"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -3826,13 +3581,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "618c2957fe67d581e13922f9200c540da877b02bb4ec59c9c8fdd135803e4198"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "95d04d58b54064c7e05fb9d62c9949c270e43f72e3926c2705aa2b68d7bc1498"
                 }
             },
             "solstice": {
@@ -3935,13 +3683,6 @@
                     "shot": "6db0954179f5719c0808db2fe1f5bc0769edb0f222e6ba28eb48c52b3da60300"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "f52d8cd32d25960d7b520e811a3f79dedb06ac367bece1279ad82e8fce4e7503"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -4042,13 +3783,6 @@
                     "shot": "11d2dac7657769df0c7feee0f18cedecf458449c754e8b89c80e6fcda542c4fd"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "281ec452b50f0cb010049df7d7efa2e6da344f4303a8cf225e51299540589824"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -4147,13 +3881,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "ca95b0e9dde2516352acdf39370dc1966c392a18ba6a92824a13695dc965d1bb"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "bbffbe9ca906db6de18d5d8e7369e00732ef9780ec661b9a7d93f94417b25d56"
                 }
             },
             "solstice": {
@@ -4270,13 +3997,6 @@
                     "shot": "271e44a80fb95ca0d4fd25a7954b1294bc64232603d25f4af59990bfbad1ed35"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "16afbe33b71837791c12e8516774ec3d9f213a3f49654a727a27138392eead39"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -4361,13 +4081,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "6715ab07cd0f8fcb0f5f0d771e81c5c7e1d526829d91e104b126868245538815"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "ba3635404a0012d7b7d3404b9551411a09a0c37a5780f316f2f623c2bf900b8c"
                 }
             },
             "solstice": {
@@ -4470,13 +4183,6 @@
                     "shot": "3fe41895c401db08a7121922ba6e19681320bc7ae3eea50803681e8e5fc31e73"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "913d882306a650c27d3e89c3b08827181639bd5f6873b275f81f85f069fd6a32"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -4575,13 +4281,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "fe035777d6fb77cba9c3c217e544ec518474467fe9e02895a9fb95ffbfc9741c"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "0f8d8db389832a31d37ba6253867660540934a7b3ba8a9b2dc2ba7a52fdaf74e"
                 }
             },
             "solstice": {
@@ -4684,13 +4383,6 @@
                     "shot": "e92c9f33a3dabf3728f76ad64f6a92939727edf24af80ddc40bfa9814f5f5fbb"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "fc0c92dda21fa1189c55f0015b4e3b938c5cffd40da756298654ea772dfbf8b9"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -4791,13 +4483,6 @@
                     "shot": "3c30371e17138e369f0c5549fad8a97816f17d351f7ddc3a4b908ce24f00ff1c"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "0087c52c4d4fb552212afffe1390fa2c80e21e5e3a64a939ad442697cd1099da"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -4896,13 +4581,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "db7ada62823629b9d61b107ef56ec66643a66cf6eaa9ae36b8114dca9173202b"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "2eb5f1d09b58ab3e6df8b3a3fa4870d388699dda12f796f635801765185612a5"
                 }
             },
             "solstice": {
@@ -5059,13 +4737,6 @@
                     "shot": "1a81f7c2c7e4caba73f0cdd7f0943c8fb3ed527bb625eae855adcdc4dab94c12"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "da2c6d4286de702d7c63b5b0ea41b5740c6b4ecb1418b1174a53405d9f8dae4b"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -5164,13 +4835,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "975a8a0ba3af55aa1d851b7bd56628c14c884f9550a1b52a39d9e2dc4c6bc439"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "9f079dc54fe94f3d7b78bd6f1c7c7b5a9210ec3439f37a2d294ca39d2a9a7631"
                 }
             },
             "solstice": {
@@ -5273,13 +4937,6 @@
                     "shot": "37ff52612b6f04da1f5272eb36b97fcb7f59ce71ce61fbbdfa80d1828dff2c79"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "60fcc8fb56ddbd652504adf4bf7cd314ccf25e53aff94cea9393e1b9f6218cd6"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -5378,13 +5035,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "7bb4ef9177f6b8e445acdb20b1ef207b9a2f540e28fbbc1d2ab9306a1e6acc52"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "279cb89ea819c967d2048440709a54f3f3756d42f8f2f4546ddeadd5b223f7fe"
                 }
             },
             "solstice": {
@@ -5487,13 +5137,6 @@
                     "shot": "981a444ca7260a73feb2320abe1539f3fcb9be3e79f4307e4ea148854df4ac16"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "f9f70605908758b555ee579c74e50e818761d2560f650b69190c38d8e0b6de45"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -5592,13 +5235,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "7760ef8c8addb65aab31cb6be809c9122f7cdade1b8560ff90effdab6eb661e0"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "50751bb4746951268eca278c25e23f483819199b45be00ad30525c2bbac66b08"
                 }
             },
             "solstice": {
@@ -5701,13 +5337,6 @@
                     "shot": "ff78baa7ea9d7a6c95ad955991909299dc2fe79b422f477e1ce1cc0b36226c32"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "d00fa22c3c59410187187295601d899df4a7311befe01103473aab966201be82"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -5806,13 +5435,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "8ce6acf3faebe628702b11c2c4317ea28c16e28e9483a960cd42803b32f4f6e9"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "22b9f22252ea4029d809d70f6c13c2f2032b8f9277ba5de9468e50c71bcd95ee"
                 }
             },
             "solstice": {
@@ -5915,13 +5537,6 @@
                     "shot": "416dbf8d675f0d2d1e6925f5d5e12621fdead8f787fcd4f522b738bfee4e35c5"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "9f06870f7137eb70e04806c71ff3ecb935b4ab7620af61c15b9bc9220114a8a5"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -6020,13 +5635,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "1fa3d4eb1d6f46fd3bbb899da52a45fa59060058f1a2189cd9f998f014c32730"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "ff21c5c460bf5e4d4803650f98bf535323e2268abaac6c9b30d9999172edc80b"
                 }
             },
             "solstice": {
@@ -6129,13 +5737,6 @@
                     "shot": "aae22d2d428a84d37a859b2f99f54ad8e917629cc8bc94a63a4d4c4cfee59c6c"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "f842a087de990dfebca3a99bc1c69dc63e0515857f97fdfc8a3665814ccaf5f5"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -6234,13 +5835,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "148a4bfc386d9af13ba50eb052045936a6142db95d014e6bf6bd33cc69c68ef6"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "c26d362f6e6333fbea3be630dbb730a0711740a6dbedc632472a6008dcce7365"
                 }
             },
             "solstice": {
@@ -6343,13 +5937,6 @@
                     "shot": "3f12239f2a7ab9479689ff55b4de5d62bff0aff2403c6b239708c01b881017e9"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "bdc0108390c296dd5ac9a8bb6f43265d3492e82d07e7071557fb6ba8de06fd5f"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -6448,13 +6035,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "6b567f492cfa0da90d18439bf8c43521ee5586f249adf05b53e1d2de4f6c4a5a"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "c350a528d16111aaf7a5f4c6b20b1bf17abe2adb68530d56ebe5a90d862f5516"
                 }
             },
             "solstice": {
@@ -6557,13 +6137,6 @@
                     "shot": "b5216721e818d01d4aa10413b83d1ecba7744f960e384a4dc6642f6bc434c416"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "2fafd884e8df0da4795c911fe28b2994b5a5945834be94e09517a71ea2d447d0"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -6662,13 +6235,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "e1c59ab67854731066ae87e802781a26b39c4effdf4da45634691d7577a9d304"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "fb50fbe701ffc7e743c08369f26e9862ca4e9e906edb6184a1019a59da07fef6"
                 }
             },
             "solstice": {
@@ -6771,13 +6337,6 @@
                     "shot": "faeddac72d2711315a0d7c89cbdba5dd79405c70a56964499522606be1250eb4"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "61cf21944d3802b9cabd337cac921bd8d2b1d63490764328f83e55a7a4cd7a0d"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -6876,13 +6435,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "1a680bd0055432cd8d5043bb80dcfb8122fb11067ec64f7afc46067df1109c6c"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "4babf0b50948fedb211816dd6ac00213eec382b1f3e1878fd31d8039cee3be25"
                 }
             },
             "solstice": {
@@ -6985,13 +6537,6 @@
                     "shot": "bcfe0baf4fb3588d45fbbaf2de9a4860839a01865424d7e9d0e0fd9af8181a79"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "b2b58ea2bdb05dea53221f7b0662c39510e8addfcb4a298bd69ccd02ce188d1c"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -7090,13 +6635,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "152d6393c74ce719cbc3a4c66fb362ac8664352e6c6726a1107bd2549f4aac44"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "10b170f2e41092e0004fc900ffc7e54d1aaeb3f07113ff930dd27fe3922b6b56"
                 }
             },
             "solstice": {
@@ -7199,13 +6737,6 @@
                     "shot": "b9cff04eee5c1492ee52f2475dd67d854d39dc93f6be7caeb75e0012e6206d98"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "21c8d8adca8e817c03658d86db7f39f3e30f187c6bce313bb986d94e62287f02"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -7304,13 +6835,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "1e39a38fb36afc7b17fb0e1a1a465d0646f99c3da222cfc1d5bc3c23ec9a305b"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "ae6bed5bbcbff323e93c5efb44f49db72d4a4bd0616307d245801f6d2839e178"
                 }
             },
             "solstice": {
@@ -7413,13 +6937,6 @@
                     "shot": "cdf2adc6e6902f22cef30c97767fbab846962b6dc1196748b390966363a29db6"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "b4d1c573914866245d9ce91a8fb8be128f93f596c9f42c6becb7c2c9002c6bef"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -7518,13 +7035,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "df0c0c5f845f3dd013c37a8e6f5f810d435e3ffb807649fb86ff8231798f3180"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "651715288632f7b7e72da04fe48eaf172eaddaff3e6a8decca747220948e06d3"
                 }
             },
             "solstice": {
@@ -7627,13 +7137,6 @@
                     "shot": "889870c216a79dbdefb720eb6e760266a10f18959facb59a79dc427b34f99afb"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "48f1b46f1743c1f983165776d9713249766c362c9111a8112caec4677ad2798e"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -7732,13 +7235,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "dc6863ca51af673d23172512cfb841dfa5b81b112bf1a5049b6fee7a1107ff79"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "771bc477b778e2fa630c8cbdfce77b330e97d1bf0691ba4d52b432834f679505"
                 }
             },
             "solstice": {
@@ -7841,13 +7337,6 @@
                     "shot": "f3ce52ed24a824ee52cdfee7a8dd79137c716434b605f4a6a956190d1cf8acbf"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "ec3d4fe9a9f09faf72aed1b0982c827d92cd2ac3c0edefbc21c9f4a9a6f02c5f"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -7946,13 +7435,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "fd792dfee7879644ec1ebe75aee72138a33027e19bda1765de5554b674eecb3d"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "b6fff15a249dab4670bf0a8af30d74f65e18dc28f7498be0f9a741b556a0303d"
                 }
             },
             "solstice": {
@@ -8055,13 +7537,6 @@
                     "shot": "fa962f1c52bf29bd7c0ce3131af779fe9f6bc89570df9515ca8a3a14675ccae2"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "5dd487cb66937dc4227ea64c1bf7cf44bfc8862887eec0bd60996ed24a4a7415"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -8160,13 +7635,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "e6f7f3efa5591f1ba3611118b9bd413aca5d7d243d623b033f05d29589c88b23"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "e8ad71fab60a3c24c5f1a8e5abf03a963fdc916ac59b3312140eb1060f3896b7"
                 }
             },
             "solstice": {
@@ -8269,13 +7737,6 @@
                     "shot": "7b7b691dd0aed4cfe9263c883491054f35253bd24034093afa6f228999759a91"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "72ed6e2e2b361c5dc78d88f45421634f5fcb54f7f86a9a0051e5b75034c549e5"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -8374,13 +7835,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "59cd28777d433677ef0f052481cb707fc64c624b7a9b0668862beb294247bd24"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "eeaacf82045479a8b60a469bd1e3ea4b18c9e1ef0a8023a2e4dd1aef47eba6a5"
                 }
             },
             "solstice": {
@@ -8483,13 +7937,6 @@
                     "shot": "bd36aea187d4ea5c533d31a0be7de8eeb747b9ccd19b599a9a7c5b0767d8c15f"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "63a734cae34c3abc2404e789fddd0678fc65a083d1837fc745a057321cc377c6"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -8588,13 +8035,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "b362a2575a9fe93ae840ee82b2800b0be29ff681a5ca467daaba425d85284782"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "7c5ae86185e6410dfc8842b0ef5f02caee1a897d4a350760152764ad37b6ee5e"
                 }
             },
             "solstice": {
@@ -8697,13 +8137,6 @@
                     "shot": "f2fcc747a665280f51c3df7f92dfb82b413941008f76cfea65583e9da9f449af"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "0c669deea37e7e7ccacd080b644232b73b52adc1461e6be192e56b48397545fd"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -8804,13 +8237,6 @@
                     "shot": "ec4b02dae84db4dbe564f6e52903278761d1580d75e9cd09e6956a48cfe842c6"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "d330034056ab1e4a20efc8c02a28c71f1277b20fb6cd55c8915278d400bd6858"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -8830,15 +8256,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "dfcb0c423d0bcffb1d63a82b4712a99b63138cf89d53b84110df47774ea08c6b"
-                }
-            }
-        },
-        "intros--intro-phantom": {
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "7fc0740404b77423b0eb73a3f9665b8b5c8736df9c2d986299c5a1ff12be7eed"
                 }
             }
         },
@@ -8927,13 +8344,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "0296de2ee69bb8558fdc0886b44025f2289961163aa3ba5ee53df774ff1ae130"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "3a50c188ad24ed5881da313fd0e8566da02105ef85e4845cabf045081b221327"
                 }
             },
             "solstice": {
@@ -9036,13 +8446,6 @@
                     "shot": "ca120409b1f54b59ce986cb510efd296a3e95d800c93cac47e2d79c09e3c84dc"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "0c9c67a6adda1fb7aa67ec98d00c12f6d14045a0b2770c3b240c7d9da845e86f"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -9141,13 +8544,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "9a080eb94be85c0b82f5cc9d5f8c74f5665d82f72e9ff19631d0b003a529418e"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "cfceccdd990fdb082d0ff703cd7416feb6f2e902bdacc73b6e59566bf1ae8ad7"
                 }
             },
             "solstice": {
@@ -9250,13 +8646,6 @@
                     "shot": "81675ba8b80abde30bcd89cd979c9e3fc33233a0ad2f0bdd2394fe24bb4a2161"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "1f531d0571a97360000d246baac1892851268c155a1501911f84f38859e89aa7"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -9355,13 +8744,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "856b78645e7da44b96dfc4e0527ccf47f64943bc9e469f089a00c31cc0e03635"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "1cf9104ff5ce56916ae53acb76fb1662cb62642f1bd4f8c0b37a0d753410842c"
                 }
             },
             "solstice": {
@@ -9464,13 +8846,6 @@
                     "shot": "e1744e65ee8238c07d8dece029306962785db543c174961faa2148c850949897"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "2e68da229b72eb980a4755bf32c86b670fe5d9c60ce1f2864014f3aa3ee54160"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -9569,13 +8944,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "bce62443982c253cb7f01d9ff368d57cf8f53fb73483fe9281ea78d8c766149f"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "3d12c77221405bf9a4cf2c7d38bab80879fdc5b5c5e0098c6aeda779eda83ad7"
                 }
             },
             "solstice": {
@@ -9678,13 +9046,6 @@
                     "shot": "b074ad69b2f971ecf93c98fa9aae58630986e7b8021f55b74e4038830e4eeff9"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "1da3c76cebda7d5b1be10f3d654fdcf6c74958b9bf87a7f2751ff2e07b00b4e0"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -9783,13 +9144,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "c9178adb9fb50511c9a9c9b08a4e3a07fa3652569de73d4e58d4f5e1e43db293"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "2e6e23c2c618fa1c056023ea2925c2debcab5b8bbb1c87172933103b430bbfe9"
                 }
             },
             "solstice": {
@@ -9892,13 +9246,6 @@
                     "shot": "3e12a8a9a5caaf8ddbb95c8eb337f405e0814b5e1e10ac0612bd328380b626ab"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "406a5c77d651f8dcc6edc68ef6bc0e0d94d4e2abb6b6b97f902dd238b0ff22fe"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -9997,13 +9344,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "b1f0d672048757ca80efd99da1e97d431c3ac3bf201e613600706e6f9f3ec818"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "4e6858802ced47d61e81a1b4165d20b2f418e4402ef5eac97988a73bda6fcf99"
                 }
             },
             "solstice": {
@@ -10106,13 +9446,6 @@
                     "shot": "b345ff3b3f02cd7a26155a356ad4cea18cf12978528d618cf161039eaf72859b"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "047cfe45155bab7b0aa1391aaf1cca6442c4d2ae7bf896070ca55e6a67779c29"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -10211,13 +9544,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "0bb5f5984993b112193489d2d21e3908cd9ce97eab15ae83aa3ca872a2fae440"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "1767bf530da8eb26077af8ff619c9cc99c8093e5a0b47b15f45fc8264d8a83e8"
                 }
             },
             "solstice": {
@@ -10320,13 +9646,6 @@
                     "shot": "5895665959c15d4f643dd9a3697f7cb34d8c25cb15f5d19c9ffeda46e69e5829"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "82f670925024e6e4ac5079da5e2522d925d4bd13b09e25149a0ec3222920580b"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -10425,13 +9744,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "068b83a6bd8ea45ba82b691fddeca74fb766c8320562ebf656df2695a755a243"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "e503f52a34a187e30f72289a3c7058892ec4bc8e07066a504112e2deb991c974"
                 }
             },
             "solstice": {
@@ -10696,13 +10008,6 @@
                     "shot": "99be389090550b97e52611ad1b2cba8bd6057f3d9ff85e9205e0e5dd3faeff5b"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "00326a56b2946c8580ce46e89add2a4765244f855aacb797c374ddc01b6fb3b9"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -10801,13 +10106,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "8348984dbd8808ef3f965538fa4ee7f5d9cde02c081b0a6c8d331d91695ec3ed"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "6258b471f90082ea015bc9085fc22e3a446dad24e65b583dc748c696f67b9925"
                 }
             },
             "solstice": {
@@ -10910,13 +10208,6 @@
                     "shot": "a717f5dc428db54e02997eff1db519d1c67f62023241566c33d28a22acb881b5"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "9e4463c47fe7b44de0b22d73c25aa995b3c6659e635619df4a0ef9aadae0877f"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -11015,13 +10306,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "4d6b8697f2d3483e19afbd4628a1f9c18c743c7a001c0a2cd387d8dd8abbae53"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "b322ba98da78bcf2f539b0e38a1c86e0da4044b8b6d477f4b2ce0643eec6264a"
                 }
             },
             "solstice": {
@@ -11124,13 +10408,6 @@
                     "shot": "a11fee387e3f393a67d894fa4f2f3e1c0c9eac9debe23174b09ee5bd08685758"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "1f4573ef07f18434722e909d2416e9c51ecce3cfb4a29b8f854565860c3c13b5"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -11229,13 +10506,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "2704032259328b03b3e9ed3e74da2786374e1f454f2d3c01a2ec3d50772ff8b4"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "97eeed670f9a40a1375676a5cc09d8f2da090fdbbca6d356981dc01117ed1777"
                 }
             },
             "solstice": {
@@ -11345,13 +10615,6 @@
                     "shot": "1125513483d84087cb0a38e22c6db20f34cc72552c65ec583210e1aaf3395938"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "78c9f3db6ea26c4848467c7f790d8262d4d572db3e3c0071b70d536c8489effc"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -11443,13 +10706,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "175951045e95cf016e18c9f44eead0aa1c288606e5381c41aa82100172515652"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "b9f919a801f162cb43d122e871a92ce83b1be25ac9cc2cf30c724cdf2924100b"
                 }
             },
             "solstice": {
@@ -11552,13 +10808,6 @@
                     "shot": "716ff7fcb7cc05856a20b8e8cd5eaa22c6fe667bf1bb2e8294bf04f0ea45a6ce"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "5f8fe13fb3eded876ed62f26d293cd24ff7a4d4bff7a9c9f4b44cdd19d887de3"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -11657,13 +10906,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "9bd31c1169371510e8a4e3700c75f409f289499a2d97d6f15349f7fe5ce80fb9"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "5afc2d8e72c5834a83a5c83b39c1a958a641d4dadf64c9dd74601201a6ac238f"
                 }
             },
             "solstice": {
@@ -11766,13 +11008,6 @@
                     "shot": "d1ad9bc6c80cb42ed70c456e6eae3979f83e9dec7c2654d9a33c77fb00a2c744"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "2ce222a183dcf222ad329e1e143baa92b895c123136a4882a0212540bb65a8c9"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -11871,13 +11106,6 @@
                     "state": "carried",
                     "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
                     "shot": "90f6c9022eeb635bee4e62d43da2e7c5fdff318baa6314d28372e076867f0dc9"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "3037e8120dcbf4a7c0291f057fe70681c573c2b8",
-                    "shot": "e28e6be963a2509bccafb7cdfb260e23efadab352b0e1080f64cc2dc7d0abc73"
                 }
             },
             "solstice": {
@@ -11980,13 +11208,6 @@
                     "shot": "329555045c6a9b3efc81b0d343bca30fcd0f2caf16c7dbfb8724e4f0ab94aefb"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "21b33965d46b935ca8e412e3539bc6652bb32a6ae45682cc0f810d7ca642b540"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -12085,13 +11306,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "08c72b4d0c550a490c5f1424f53e1c7b827c147052aa48b8f9f8d6fd3edca31b"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "bc72741ed9cc7dd3d3f0ed354c84fb06a0fabf734e990b19bdab18b1ddc11c43"
                 }
             },
             "solstice": {
@@ -12194,13 +11408,6 @@
                     "shot": "1463ea8f971ace0d2da213ce130b80035a0f051dfffa01fb024d3f9ebc6b76ba"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "822df9c714db271cdff7f914638232e49aa19cfe5b1dec243d58abb93bb6509b"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -12299,13 +11506,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "d70c740da6d633b21ca736ab12ce7a276e2805afe3493aaaf4019cb3ee29e51f"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "9cb7d8ffab6f9529fcbf4cd5052499fb16614f584c742e0e9125b472320fb86a"
                 }
             },
             "solstice": {
@@ -12408,13 +11608,6 @@
                     "shot": "1a097080c7e0abba59dcd44f145b08020f7a8873866c136a9c907175b1324168"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "a96c5bf783099c3d249cab1cd2f574d360a05343e3b89d1696d0289fb387f895"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -12513,13 +11706,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "eb82d3f676a57bf6826ba4dabaf8612e2ef5191f793a148332c9a3788022a466"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "acffa200c7d65cf9874388538d4a26a99b428cc119a4f670e5fb2a64cb148fbd"
                 }
             },
             "solstice": {
@@ -12622,13 +11808,6 @@
                     "shot": "22a7db5cd6e27b6fd3026d24afdb20def04e20f8d389f7f5dbd2b9e4043e57f3"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "67efdfedeb43ad3a736fad44a787e055670525e5eaa069df7e461f1685dc92f0"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -12729,13 +11908,6 @@
                     "shot": "ffa85d1e709bebe8a3751b259bf6eaa06eab53bb88ecfa61c1f30db393313afd"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "6f7d570518217009f3c33fb09096045917ba0e657dc163e77c0624fcaf79930b"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -12834,13 +12006,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "010c9081ec4b0934e6b5f85978f9d31d4abf00ee4ca7be20b2e287208db9985d"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "1b0f5f9b54387ae740e218a00e3f8b4b1cf7b2ccdd8cb5baf2a2ee5fb440167d"
                 }
             },
             "solstice": {
@@ -12957,13 +12122,6 @@
                     "shot": "6f6a61343048659c203248da2f32e4b3f519fb0d8c0ecddb43fd324f1c0ed9d9"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "69e520348a0690df681cd3e3fd095651b2c5b602bffc57fc21e2f61c12467125"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -13064,13 +12222,6 @@
                     "shot": "c7a3c1031cd080c7e728b1a5d79cb8eee8b65f9f7fec9a05203c8e9bbaf12233"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "33f8783d28fd2f9e510f9d167c7c35a643fa1838711b54a3d63a688c8d6dc77e"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -13155,13 +12306,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "a2a647fae7e5d8b265978d8fad5e89db33bf6581c542fe348be696bca2c02166"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "4b063eabfd14d65a3dee7e3d6e115c9472efa1feafd241a9eb5b6a1cecfb0f87"
                 }
             },
             "solstice": {
@@ -13264,13 +12408,6 @@
                     "shot": "29690c9d12eec378690bd2115f496da3e9a14ec49d8d01209baa5e18693ae635"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "993a01df45ff2a7d31b105c0c95be84a4e984b6f34f7efce5bdfdec5ca9fa195"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -13369,13 +12506,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "c913e0dd2e26afabb082c66d2f6feed0ef87de4980446d089cf401b644d1268c"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "8906570a881af68f2a64b9afc21fb188a2178b65337f73b79248c24db7d2d8e6"
                 }
             },
             "solstice": {
@@ -13478,13 +12608,6 @@
                     "shot": "7a038fa92111f5de4ed63205c3cb357e9ae99a8d330a4a6bf874ceb5dbb2c010"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "2150aa3ae19b41f8fdf627520fbc877aa34b6c01d0da2861a8fe62a1165a5743"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -13585,13 +12708,6 @@
                     "shot": "c63d4a43d41b38cc04d84f5e17afbf4375de7c39fd271e35400aaa2e5a00510d"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "92fc5d5a5c71d7eb379bc0aef78c8d8b8dbdd6d74f9e3ea622aa9c2a3489156e"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -13648,13 +12764,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "6ac65c4f625ea85b8848265629124a4c7a8607513f9602ad071d8ca5a056107e"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "6e41738970a62cc79ab5792b5df1a7012d58b97738d9dbb409a54223dd5880b6"
                 }
             },
             "cyberpunk": {
@@ -13799,13 +12908,6 @@
                     "shot": "f6dbe1098f8ce44f77b842416f715dd77d91df459f5be86da64e153eae7c41e5"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "678c2f5a0ff294842ef3da466109ae7da837c63194eeff6ed56374da82697e8c"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -13904,13 +13006,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "ebafb037b4bcfd9228a5d0dac270eedcef33dae27a559ee10d245472449295b8"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "3b704a5c01d2c1b42cb82fefa5e01760129a40f74ea9d7221c8af7ae786cde3c"
                 }
             },
             "solstice": {
@@ -14013,13 +13108,6 @@
                     "shot": "de3a82d6047ce32d0870d6176d58eb0f3448ff11f0fa9dbc2fc635b45cf7db98"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "95514a4c5c7c0dc36001863d2f2b1f6edf655392fd5677e4f6d79b1fdc33ddfd"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -14118,13 +13206,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "31e7ec5f7c03018214d401f34803932db05de9e1d1a0039dfb477c33dcbfe83e"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "8759db18805927854831eaa4c172aa0e841160f32574ff1e1fd420e149fd21ba"
                 }
             },
             "solstice": {
@@ -14227,13 +13308,6 @@
                     "shot": "4304aede972404208d2975107fc3f80928dc19cb380933b971bb8e090103153c"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "1a7397e9d1b4a3bfb086cda8f439541e27642d574c1222a3a46619b7b227397f"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -14332,13 +13406,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "8aaad629f2c718540a8847fe3dae4a3c29a5050768db35f9792fd5a2f724bc1d"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "63714930796a0ad1bdb746578cc17c21c623222ec2fb0bd162393e2657707f28"
                 }
             },
             "solstice": {
@@ -14441,13 +13508,6 @@
                     "shot": "4965e0c4ae194fee8031e080793e11bc1bfc1f65916ce569d05b308386338d11"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "d82f5cd9f7432e5db3023ab506cfae30562826060efbf6b9bda6f57b20bbf43a"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -14546,13 +13606,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "970a0fd1398440ed43d84d4fb04d9172ce223283c8c288245adeaf69eee6599e"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "a0d37685cd0860fc503ad283e87b21695f08feea2b4bd9b95c5ce2120693d623"
                 }
             },
             "solstice": {
@@ -14655,13 +13708,6 @@
                     "shot": "d19e2c4bc537d1661ee4454192da2db943ab61d9953f68ea8bc4db95ee64784f"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "301c056212eb932627b3857eb8f0f13bdd4af9310b1280a7e2f657623efe7dd0"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -14760,13 +13806,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "7cdf6a018c8ada26e1743197c7ae712c7abbd58ac697b3550a99e3faf41a26f7"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "3ee8ae579f42bd3f3fb44878d8b38267ef31ea75f9ee1a58804c1611163d35f7"
                 }
             },
             "solstice": {
@@ -14869,13 +13908,6 @@
                     "shot": "f3579f811bfb6a9fbb01fb8acb2753df682b050eb930d4a5f79aef12dc3ae10f"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "07668f1a324c3b7104198cd3a6dff4adb7fa3d601acc37b92cb52de1467b2cf6"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -14976,13 +14008,6 @@
                     "shot": "aa1a3074e0bf4b84c3ecb7b3365a1c983e6707aed7fa00a0a039f09cc002b4d0"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "e2182b2c9ae47e4b486678270860e6284872355dfd5946cbe0050930c3bb1c99"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -15074,13 +14099,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "055237c7d59dd21a20e9eafaaa6b2607622ca81db58c300880759081a79b4dbe"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "5c7528e0f9ed84db0054d3f92d52915c1abae6da136a00b81cce25393dca53d9"
                 }
             },
             "solstice": {
@@ -15190,13 +14208,6 @@
                     "shot": "c6a3287010d3e1c9135a0d9ae57c30f02457bfc8ee5f7e5fb6d9d3c3d7d71868"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "7719925e561dcb8f93df2af1bc41d0bbf604aa9581d674d8dd29f554325d3f6e"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -15295,13 +14306,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "16e99cdb43aa407121d4e6d5211caa6859dd92652eb63d9e60bf60ab4ecfc250"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "a33319de81e33195cc0b5a86386e9d7d04a78c98407cd50b6d5acf6cf6fe5620"
                 }
             },
             "solstice": {
@@ -15404,13 +14408,6 @@
                     "shot": "3d5e3803a1ff516b9005acb932f6e083f2888f48a7d3dd75ab7197030d3f59d3"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "1bc5390c6806f7f7e176737b5f950ab113f4f4f97f6aef60957c4762f69459ae"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -15509,13 +14506,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "f2c2b78ef16666838906f69ce07841c5067245dc7fb83933f6cd1a32f8eb5c95"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "6abee7760be94008b828b6794cc9a9ede9b833c0e8bf9d874f7bacbb7018f946"
                 }
             },
             "solstice": {
@@ -15618,13 +14608,6 @@
                     "shot": "a4b0e18c7beb83c9b3d2c917e6bc2e942c5785a25fca84a9901c3d117b9a3e96"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "37595592f4d4a0d6aab614fde8eb8cbda6bf795ae6c357b725b73acb10613f6b"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -15723,13 +14706,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "dffbf842c70f99ec5470d0dd483de51d1434b68defe179935121bbce3347c4ed"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "f3dcb5db6a56812caa11e43515b2c476b994cd26efd3b1f791dd7deefd83dc5d"
                 }
             },
             "solstice": {
@@ -15832,13 +14808,6 @@
                     "shot": "af00bd481ebc9b2d17625187aff4aab3e20fe76bbcb7fdbb43ff863fb38df075"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "dd9848c6d83e84b210e3baf9cd2f2bce88f9c3988631d72e942dc5ce9b1882d7"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -15937,13 +14906,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "995a4a2161ea6c1227555af10f5e6062334805486c5aba70d9d962b451d9936b"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "60a764c99cd9eef32ad58fe29c7047fc3e7c1d23008dad50d243eb5c23320011"
                 }
             },
             "solstice": {
@@ -16046,13 +15008,6 @@
                     "shot": "352b9895cb4abb74e8599177729a1d58f99bc5d6d71a0384db0f4b305618959f"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "84457a4c551f477970e0d820e37f6be1b2ce79be2898e6b6eb39abbc59685a34"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -16151,13 +15106,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "6e94930c78045b382d7a00c2042507c03fd3e66585d4a484f9e98157c4ea55af"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "1802b96da13290e4a0f69bae1f9143698c5aa54fdbbcf4e2ace7fa8bee672369"
                 }
             },
             "solstice": {
@@ -16260,13 +15208,6 @@
                     "shot": "51fd1b80635ed386fd0800c6579629f477530fcd0834923cfe9f5f81869f97e9"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "98eabedbb10f09307ab086e0689301c2c3cfac59789ae598f51083056e54596c"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -16365,13 +15306,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "9e5189d1082550c3458636e57cc834d5218f6d8662b1fd45687bfd25944139cb"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "7df60cd9a1257c2254f3e6dfa1dfea05b53dd7116a9ba7143bd1317422da3a01"
                 }
             },
             "solstice": {
@@ -16474,13 +15408,6 @@
                     "shot": "7eaab5de2d95de317724b0abafcfb3bb04dfc9fb36dda5646496ff731405232c"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "10d1e5d8ca17d7cd5627fbf71d525795f08b9f8073ceb3f1056d4d4f23371f5a"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -16579,13 +15506,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "a108b6c5d9d4b0a911d2295b5fbd38a63cc0899482a5dbc11d66273513a3ad7d"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "0e015f7b6cbb3729f23da3fffd1eb1c21664d5bb6d929c9931f4609777edceeb"
                 }
             },
             "solstice": {
@@ -16688,13 +15608,6 @@
                     "shot": "89a65825c3dd8a3fc7355efe5852ecc1d0221190fbe6e8a5fb4c00de0adfe1a4"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "e8530fb3a068941558a388fcdcc14b9c394a247e30c829a6168c70ea985df0b5"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -16793,13 +15706,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "b10e3f09635e17aab79d1fb25c48e2595ea4afa06df807736185a43170f43b98"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "c1b2d1a11514ec6c0a7473006bbd464775fed04aa138312129b53023de70eea3"
                 }
             },
             "solstice": {
@@ -16902,13 +15808,6 @@
                     "shot": "2af0634556bb4c64e1a65d16cf9db1b9d598a1e5eb5de37633b45076570c4299"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "4f4e52ca63e89ad3a069d85821f379b5a0b0b348366b9607b272e8bbf8aa2838"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -17007,13 +15906,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "8ca7322f1d16e8489ab207e310691c214e084355c6eccf6e2e1db158ad755381"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "cfc79167a27b3f435b633421d51ff3a5cbb8abad0fc952a60e827a167f82a8d4"
                 }
             },
             "solstice": {
@@ -17116,13 +16008,6 @@
                     "shot": "5ce137b8a3f831f50455335cfe92a705cbd2346fd8fb4881363f2852af4a6944"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "e09203cdae030219708774fb9e3adcd7cc8ca3910eb3daa5385950bdb27d7110"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -17221,13 +16106,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "70917d7f1fc32636a397a77c31b4e7385d9bb912cc02a4ae0a86858d3b077d78"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "601692ceed400f49d3b726d936dfab7dd5c003ef10adc9298cff47e76e98f2d4"
                 }
             },
             "solstice": {
@@ -17330,13 +16208,6 @@
                     "shot": "02dd00afb3b42814b1e717fd3e674083b5bfd24ca1d3787c9dcae0c9b4fb4150"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "93ce188dda2f6e529da10be988b22ec11bca7d66982276a73cc4b9f4e81be053"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -17435,13 +16306,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "72fdfcacf0532f3e5f2b4ac5c53ee2ecc9234136bce21c669fef296dfb92ee44"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "8f425b79242da3922d01073a509f18eb3ed462b3d143eae69af22d3974d16ff2"
                 }
             },
             "solstice": {
@@ -17544,13 +16408,6 @@
                     "shot": "8eade7ee689dbd47dfd28df69a3d141e5bfa9cdbad7c3f46ed46634624985a97"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "7a7b1d892e18a29311aacbd98c6fd962cd65d14765e1340b7fa145b2513fd93e"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -17649,13 +16506,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "c0944773c6fd14daeb945dd53c593532d2d8b9b224ebfe7b45ce3ddf8dedd0b2"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "9772f7bebe4f2bf776841d28769c5325169cf83e40ca4be913b6273684f4b6aa"
                 }
             },
             "solstice": {
@@ -17758,13 +16608,6 @@
                     "shot": "65e2981a19efad737abf1de160d848fe55832c1ebe68eb35d7599b3cb123037b"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "1fcba94fa2925a99b8c70987873e801299aa0283459459d81a61d43db900013d"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -17863,13 +16706,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "91b4ee2dec5ea693ed4bf3044cf3e342171b0c04a28141780daaffd4f226b9b8"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "c1e4b7d6fdd7d99ba6e610730c7ef84d23f5a0be51c067aa9b1f709d817a9ec2"
                 }
             },
             "solstice": {
@@ -17972,13 +16808,6 @@
                     "shot": "3744e5266f60fce440ceb72f4955281af79b5cd924d03a69ab0aefa6b8d72479"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "291bf71396e6e23dbee4f8e0f5354dd47ef7f3951bc5058a510ac055bfa9c56a"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -18077,13 +16906,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "d4af5f32d356547b00fb17e2310ef029922de1ac85ae465d70c78ec78ff06895"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "0b41c225233a8f7276b9047a09b0648d0cb949b42634b77ba5651f415edb6137"
                 }
             },
             "solstice": {
@@ -18186,13 +17008,6 @@
                     "shot": "ec7bc40456f4bead000083f9dfa63071908ebbf92eda72391a54476c0592357a"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "520198b9fbca03e0a15cb5a1417b5fdbe3fdfabe3d825b0a031c055f89025e4a"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -18291,13 +17106,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "33939937b8ddb3aa86ca2a93dc979d4994dc224dda043ffefb7d584661d4f13a"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "6c4cd96d687ba00a9924e4bbba4445872dba85c02275210b67ced6a38258f790"
                 }
             },
             "solstice": {
@@ -18400,13 +17208,6 @@
                     "shot": "4ac4d8e76fbdf43e2f2cc6eca710613f9ff4a911fb03cee2603f19c45c666fd2"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "bdaeebf6d4936cac0a9c918f1e905fe6139edab2eabc922bc27be4984bbe0329"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -18505,13 +17306,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "9f72c838394290efb8d502d3af63475537a3ae553a864db53d9fc451b34ae068"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "d32e049af4b97fddd1dd36ad2033b93e6007170a82c256d85ae416016dfa4dcb"
                 }
             },
             "solstice": {
@@ -18614,13 +17408,6 @@
                     "shot": "d8625ebd8f4f894d6fd1262db60c3abf793abc257451e6883febf36c9b797aa6"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "19071fca3fcb513b544921b1cb59d52a415ebd3ef7764342c332c5ca0afb75e2"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -18721,13 +17508,6 @@
                     "shot": "3f25e10b046790e577f194062b9862d53e5f39bcb3e4e11e77cdcd22e33ee97c"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "6bdd71f7779cb09fa6e3a7d918f1ca978f5698a03fed9517690bf89c412a9841"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -18826,13 +17606,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "e687a30f448041d1efeb433c13bbaa6ccb1355212fec61a88ab141eea54fe110"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "22b3ffefff80726860f49ef980f0f7d2abad587733c7b730dee002505dd39ab0"
                 }
             },
             "solstice": {
@@ -18971,13 +17744,6 @@
                     "shot": "a5a91c2398ced71c4ade29db2cd721007d3c3afc6df6b62bfb95a3533574e353"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "6d47bfaffa5d83dc9e768fa42b8e1771b32d81d055446e5603c6888d59a2b565"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -19076,13 +17842,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "1d6acf4e97092d6f84d9bff586d50bffa8473218ac1944425d1e50edaf38a7b4"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "0b12fdae78bc168f4e2195016947bd35fc8f3c8c6cd5528cc9c19b7bc2fa8585"
                 }
             },
             "solstice": {
@@ -19185,13 +17944,6 @@
                     "shot": "7c895aec77bfee43b256da34f963d476898d7c278b51387f0bde9caeacf64efa"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "3452d2784a7ce1dae45a9bfe70a26a4746e2fe99af5d2f7f776dc78c366918b0"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -19290,13 +18042,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "4ebe36c6f29221cd2be35fbd82e336d849ac22d45b5b6aad6cfc1d44900e6d8e"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "5899bfa0cd934b6f84e5bfae069cb61864e519d6c57e3bcefa81c6fbcf2b0bfe"
                 }
             },
             "solstice": {
@@ -19399,13 +18144,6 @@
                     "shot": "ac194daff0e781cf7fa32d9fe0266135e3965e49a475ccd0c3224dbc56968b67"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "6ba8777e5c92970bb9e811b875970a8d27b597f131bc1c96ac951c9ce4325b1f"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -19504,13 +18242,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "db6f05f8db0ef32c649240afd63346c40b320b52bd295da35877de3e842ca585"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "9b2f0748aabd7fb1e2a38881991aefd0a414cb4ff278ebc81926c8ba3d2f169d"
                 }
             },
             "solstice": {
@@ -19613,13 +18344,6 @@
                     "shot": "1d0d1055d79298484d730037aef0966d36c671f62e508b3af436d3141de624e8"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "41e6ae1fa625045930c16e18839d56d32bd2a801b59aee70a1ba2ff1cae1c8eb"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -19718,13 +18442,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "0ab954ebd794f6cb459f85f0b0c27bea6ee9d1b72f94138633931b2a80ef011f"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "17b810ecfe300b19fc01234fc22342979a47361dc7c9e54ebed184d0ab41fe06"
                 }
             },
             "solstice": {
@@ -19827,13 +18544,6 @@
                     "shot": "d6ce7eb754e411caa5753c3cc0c78517095d8f7bb59ef57d9e0650ad7a1846bb"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "09e6174a45a91058c30126fd6d43c6c510d3e1108a23d4fa01ea92a6eb299dd8"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -19932,13 +18642,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "e9edf0ef3445540305dcd20151cd6ede70439e50da01ae64a22815be1c79352b"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "9cd2512c77ad66d6d66401feee6b92812ae473dc0f12bc281f23d4da85590a8e"
                 }
             },
             "solstice": {
@@ -20041,13 +18744,6 @@
                     "shot": "408c4edcaa337b38ecd209d4ac853659b7569a23b36c8bd18c71b84f95c02214"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "810bc91f2cd37d69295c150638236dc7722a25a77515399fd1486d1e8c21f309"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -20146,13 +18842,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "d8d27b19d0f699872c2d828bdf20ef28d4f5eda9e01f19e8c34ca496716cfe8e"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "1e73d687309bc207e8236d8bdca524ecb75e2ab11702b2975f7bc2802842c558"
                 }
             },
             "solstice": {
@@ -20255,13 +18944,6 @@
                     "shot": "d65447e9dc65a274e1946dae4360470cc74cdfe614f90334267881945af92498"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "3e52fab36e71a15d328b1b2de3f80b85fea2f2dc3b7e2c6aa5733e5583359c3b"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -20360,13 +19042,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "5df7800a63ac1ccbbae71c9c8283ac96c0747b7394071bf264b46a757c611ae4"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "2e6403e6f9825dfec1a9958a5a86cba30a283c64486481676de6bac1c2165462"
                 }
             },
             "solstice": {
@@ -20469,13 +19144,6 @@
                     "shot": "a0d22a69876cf44f2af9b122ae53623e2e0083eb0d680ccfc91f3d4b29c156b0"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "29caf5ea8fc1be428b74b6eb741e9f73842aa980cf14cb198a4093bf6332f798"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -20574,13 +19242,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "8b2674dfaacdf21c0a41bb437a1be7b71c4b21856d5a226ef48f77a34c2b8500"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "4d8c5975b1801cc267c1f1b7b83fe2cde382f4b6747abe02c85fcfc6be248fe3"
                 }
             },
             "solstice": {
@@ -20683,13 +19344,6 @@
                     "shot": "5448189ace7252debbdaa201134ffba8e891051742999503649d35132ffd3473"
                 }
             },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "4e60773514e52c9ae55913d7c320b6ba2ecd3f23931dd534dc9e49c9e1043950"
-                }
-            },
             "solstice": {
                 "firefox": {
                     "state": "carried",
@@ -20788,13 +19442,6 @@
                     "state": "carried",
                     "from": "be2e49e19e363676a0467295c5db9f704f41f081",
                     "shot": "5b69cf0dde2f1b7d6df295094024341d85c2dd5bf0f4435cd730114e93a43750"
-                }
-            },
-            "phantom": {
-                "firefox": {
-                    "state": "carried",
-                    "from": "be2e49e19e363676a0467295c5db9f704f41f081",
-                    "shot": "189049e6c1501e5f8d9ef51312788c25de678ac8d54ba11087aecbd26489a177"
                 }
             },
             "solstice": {

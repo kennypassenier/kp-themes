@@ -1016,78 +1016,6 @@ const IDEAS = {
             },
         ],
     },
-    phantom: {
-        shape: [
-            {
-                name: 'The evidence card',
-                text: 'The words sit slightly slanted, a thin red string runs along one edge of the panel.',
-            },
-            {
-                name: 'The calling card',
-                text: 'The panel sits skewed by a degree, display capitals, a red slash across one corner.',
-            },
-            {
-                name: 'The ransom note',
-                text: 'The words sit at a slight irregular slant, torn edges down the panel’s sides.',
-            },
-        ],
-        loading: [
-            {
-                name: 'The string is pulled',
-                text: 'The red string along the edge tautens and slackens, looping, by scale not opacity.',
-            },
-            {
-                name: 'The slash redraws',
-                text: 'The red slash across the corner lengthens and shortens, looping, by scale not opacity.',
-            },
-            {
-                name: 'The note trembles',
-                text: 'The panel’s slant rocks a degree one way then the other, looping.',
-            },
-        ],
-        arrival: [
-            {
-                name: 'At once',
-                text: 'The panel is there the moment the table turns busy, full size, no entrance of its own.',
-            },
-            {
-                name: 'The card is thrown',
-                text: 'The panel slides in from the side and settles into its skewed rest, slowing as it lands.',
-            },
-            {
-                name: 'Slashed in',
-                text: 'The panel’s red slash draws itself across the corner first, then the panel fills in.',
-            },
-        ],
-        failure: [
-            {
-                name: 'The calling card',
-                text: 'The failed alert keeps the skewed angle, its slash in the destructive colour.',
-            },
-            {
-                name: 'The stamped ring',
-                text: 'A stamped ring set askew in the destructive colour sits on the alert.',
-            },
-            {
-                name: 'The torn warning',
-                text: 'The torn edges down the alert’s sides turn to the destructive colour.',
-            },
-        ],
-        phone: [
-            {
-                name: 'The flat evidence',
-                text: 'The panel sits level on the flattened layout, the red string kept along the top.',
-            },
-            {
-                name: 'The flat card',
-                text: 'The skew is dropped on the flattened panel, the corner slash kept.',
-            },
-            {
-                name: 'The flat note',
-                text: 'The torn edges soften to a single torn line along the top of the panel.',
-            },
-        ],
-    },
     grotesk: {
         shape: [
             {
@@ -1334,7 +1262,6 @@ const KEPT = {
     solstice: { loading: '3', arrival: '3', failure: '1', shape: '2', phone: '1' },
     brutalism: { loading: '2', arrival: '2', failure: '2', shape: '2', phone: '1' },
     deco: { loading: '2', arrival: '2', failure: '1', shape: '1', phone: '1' },
-    phantom: { loading: '3', arrival: '2', failure: '1', shape: '3', phone: '1' },
     grotesk: { loading: '2', arrival: '2', failure: '1', phone: '1', shape: '3' },
     nostromo: { loading: '1', arrival: '2', failure: '1', shape: '1', phone: '1' },
     titanium: { loading: '2', arrival: '2', failure: '1', shape: '2', phone: '1' },

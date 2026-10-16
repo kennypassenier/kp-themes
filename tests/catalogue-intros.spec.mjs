@@ -112,19 +112,19 @@ test.describe('the intro inspector page [scope-84]', { tag: ['@component:catalog
 
     test(
         'under reduced motion the page says so, stays at rest, and plays only when asked to anyway',
-        { tag: ['@theme:phantom'] },
+        { tag: ['@theme:synthwave'] },
         async ({ page }) => {
             await page.emulateMedia({ reducedMotion: 'reduce' });
             await page.goto('/catalogue/intros.html');
             await waitForJudging(page);
             const notice = page.locator('[data-cat-intro-reduced]');
             await expect(notice).toBeVisible();
-            const block = page.locator('#intro-phantom');
+            const block = page.locator('#intro-synthwave');
             await block.locator('[data-cat-intro-play]').click();
             await expect(block).toHaveAttribute('data-cat-intro-state', 'rested');
             await notice.getByText('Play anyway for inspection').click();
             await block.locator('[data-cat-intro-play]').click();
-            await expect(page.frameLocator('#intro-phantom iframe').locator('.kp-boot__line')).toHaveText('phantom');
+            await expect(page.frameLocator('#intro-synthwave iframe').locator('.kp-boot')).toHaveCount(1);
             await expect(block).toHaveAttribute('data-cat-intro-state', 'ended', { timeout: 10_000 });
         },
     );
@@ -134,7 +134,7 @@ test.describe('the intro inspector page [scope-84]', { tag: ['@component:catalog
         const line = page.locator('[data-cat-intro-none]');
         await expect(line).toHaveText(/^No intro: formal, /);
         await expect(line).not.toContainText('Declares an intro but has no block');
-        for (const theme of ['synthwave', 'phantom']) await expect(line).not.toContainText(theme);
+        await expect(line).not.toContainText('synthwave');
     });
 });
 
@@ -204,8 +204,6 @@ test.describe('the verdict of an intro block is kept under its own theme [scope-
             // Since scope-111 the intro page is a component page, so its blocks
             // are judged under the review page's key, not under their own page.
             expect(await storedThemes(page, 'intros--intro-synthwave')).toEqual(['synthwave']);
-            // The other blocks keep their own themes and are still open.
-            await expect(page.locator('#intro-phantom .cat-judge [data-cat-approval-state]')).toHaveText(`Not yet judged · Phantom · ${engine}`);
 
             const prompt = await page.evaluate(() => import('/catalogue/review-state.js').then((m) => m.buildPrompt().text));
             expect(prompt).toContain('Theme Synthwave:');

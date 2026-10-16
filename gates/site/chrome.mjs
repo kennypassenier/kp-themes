@@ -71,7 +71,6 @@ ${noFlashSnippet()}
              loaded them all along; these pages did not. -->
         <link rel="stylesheet" href="${up}css/cyberpunk-register.css" />
         <link rel="stylesheet" href="${up}css/synthwave-register.css" />
-        <link rel="stylesheet" href="${up}css/phantom-register.css" />
         <link rel="stylesheet" href="${up}css/brutalism-register.css" />
         <link rel="stylesheet" href="${up}css/titanium-register.css" />
         <link rel="stylesheet" href="${up}css/pastel-register.css" />

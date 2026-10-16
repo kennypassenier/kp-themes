@@ -93,13 +93,6 @@
             "card": "1",
             "next": "2"
         },
-        "phantom": {
-            "shape": "1",
-            "openclose": "1",
-            "highlight": "1",
-            "card": "3",
-            "next": "2"
-        },
         "grotesk": {
             "shape": "2",
             "openclose": "2",

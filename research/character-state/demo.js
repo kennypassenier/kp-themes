@@ -294,23 +294,6 @@ const IDEAS = {
             { name: 'Regilded', text: 'The gold dot gleams once, easing in and out.' },
         ],
     },
-    phantom: {
-        shape: [
-            { name: 'The red dot', text: 'A small red-string dot sits before the word, the word slanted on no plate.' },
-            { name: 'The evidence tag', text: 'A stamped ring frames a small tag holding the word, the dot the stamp’s ink.' },
-            { name: 'The calling card', text: 'The dot and the word sit on one card with a red slash across its corner.' },
-        ],
-        tone: [
-            { name: 'The string colour only', text: 'Only the red-string dot takes the state’s colour; the word stays the card’s ink.' },
-            { name: 'The stamped colour', text: 'The stamp ring’s ink takes the state’s colour, the word kept dark enough to read.' },
-            { name: 'The slashed warning', text: 'A warning or failed state thickens the card’s corner slash in its colour.' },
-        ],
-        change: [
-            { name: 'Pinned', text: 'The dot is pinned down once, overshooting, then settles.' },
-            { name: 'Restamped', text: 'The stamp ring is pressed once more, in a single hard step.' },
-            { name: 'Re-slashed', text: 'The corner slash is drawn once more, slowing as it lands.' },
-        ],
-    },
     grotesk: {
         shape: [
             { name: 'The colour bar dot', text: 'A small flat-colour square sits before the word, the word in bold grotesque on no plate.' },

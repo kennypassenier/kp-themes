@@ -169,16 +169,6 @@ const IDEAS = {
             text: 'A gold sunburst fans out from the foot of the plot behind the lines, under an arched gold frame. The tooltip is a deep emerald plaque between gold rules; the legend jewelled lamps that light when pressed. Loading opens the fan.',
         },
     },
-    phantom: {
-        a: {
-            name: 'The stamped ledger',
-            text: "The plot is a ledger page ruled in white, a red rubber stamp's frame pressed at a slant in its corner; the tick labels in the condensed capitals. The lines are stamp ink, grainy where the stamp did not take. The tooltip is a white index card with a red stamp line; the legend stamped labels, the pressed one in red. Loading slides the halftone screen.",
-        },
-        b: {
-            name: 'The calling card',
-            text: 'Black under a halftone screen, the lines in the violent red with a white second plate off register, the tick labels in condensed capitals. The tooltip is a cut-paper ransom note, white, set at a slant with a red shadow; the legend cut-paper scraps. Loading shuffles the halftone in hard steps.',
-        },
-    },
     grotesk: {
         a: {
             name: 'The Swiss grid',
@@ -572,25 +562,6 @@ const R2 = {
         events: [
             ['bead', 'Jewelled studs'],
             ['ring', 'Gold rings'],
-        ],
-    },
-    phantom: {
-        loading: [
-            ['stamp', 'The calling-card stamp', '--primary'],
-            ['type', 'The typewriter', '--foreground', , "'TAKE YOUR TIME'"],
-            ['blocks', 'Cut-out letters', '--primary', '--foreground'],
-        ],
-        arrival: [
-            ['stamp', 'Stamped on'],
-            ['glitch', 'Torn in'],
-        ],
-        update: [
-            ['jolt', 'A hard jolt'],
-            ['glitch', 'Torn'],
-        ],
-        events: [
-            ['target', 'Red marks'],
-            ['pin', 'Pinned notes'],
         ],
     },
     grotesk: {

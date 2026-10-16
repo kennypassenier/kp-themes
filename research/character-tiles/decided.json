@@ -106,14 +106,6 @@
             "hover": "2",
             "live": "2"
         },
-        "phantom": {
-            "shape": "2",
-            "loading": "2",
-            "arrival": "2",
-            "tone": "3",
-            "hover": "r2-ph-hover-1",
-            "live": "r2-ph-live-1"
-        },
         "grotesk": {
             "shape": "1",
             "loading": "3",

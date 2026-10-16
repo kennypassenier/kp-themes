@@ -358,8 +358,6 @@
         },
         "./css/synthwave-register": "./css/synthwave-register.css",
         "./css/synthwave-register/min": "./dist/css/synthwave-register.min.css",
-        "./css/phantom-register": "./css/phantom-register.css",
-        "./css/phantom-register/min": "./dist/css/phantom-register.min.css",
         "./css/brutalism-register": "./css/brutalism-register.css",
         "./css/titanium-register": "./css/titanium-register.css",
         "./css/brutalism-register/min": "./dist/css/brutalism-register.min.css",

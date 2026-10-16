@@ -4513,9 +4513,9 @@ var init_effects = __esm({
       "kp-bar-in": { durationMs: 520, cycles: 1, property: "opacity", luminanceSteps: [0, 1] },
       "kp-floor-drift": { durationMs: 6e3, cycles: Infinity, property: "background-position", luminanceSteps: [] },
       "kp-crt-off": { durationMs: 550, cycles: 1, property: "opacity", luminanceSteps: [1, 0] },
-      // The phantom register [PH1]: the loader's bar and its shove out to the left
-      // (the words of a headline and the toast are thrown in on the grammar's
-      // pair, below).
+      // The Phantom register (theme removed 2026-10-16) [PH1]: the arrival
+      // card's bar and its shove out to the left; js/effects/arrival.js still
+      // times a card arrival by these two rows.
       "kp-bar-run": { durationMs: 900, cycles: 1, property: "transform", luminanceSteps: [] },
       "kp-load-out": { durationMs: 640, cycles: 1, property: "transform", luminanceSteps: [] },
       // The Retro register (theme removed 2026-10-09) [RT1]: the dither clearing off a headline and off
@@ -4739,10 +4739,6 @@ var init_effects = __esm({
       "kp-sig-deco-meter-knock-o": { durationMs: 300, cycles: 1, property: "translate", luminanceSteps: [] },
       "kp-sig-deco-meter-knock-w": { durationMs: 300, cycles: 1, property: "translate", luminanceSteps: [] },
       "kp-sig-deco-meter-wipe-o": { durationMs: 900, cycles: 1, property: "clip-path", luminanceSteps: [] },
-      "kp-sig-phantom-meter-redraw-d": { durationMs: 400, cycles: 1, property: "mask-image", luminanceSteps: [] },
-      "kp-sig-phantom-meter-redraw-o": { durationMs: 400, cycles: 1, property: "mask-image", luminanceSteps: [] },
-      "kp-sig-phantom-meter-redraw-w": { durationMs: 400, cycles: 1, property: "mask-image", luminanceSteps: [] },
-      "kp-sig-phantom-meter-slant-o": { durationMs: 400, cycles: 1, property: "clip-path", luminanceSteps: [] },
       "kp-sig-nostromo-meter-scan": { durationMs: 2e3, cycles: Infinity, property: "background-position", luminanceSteps: [] },
       "kp-sig-nostromo-meter-wipe-o": { durationMs: 1600, cycles: 1, property: "clip-path", luminanceSteps: [] },
       // titanium's loading is the anodising bath on every carrier (themes/titanium/CHARACTER.md G10).
@@ -4798,25 +4794,9 @@ var init_effects = __esm({
       "kp-sig-synthwave-sink": { durationMs: 225, cycles: 1, property: "translate, clip-path", luminanceSteps: [] },
       "kp-sig-synthwave-sun": { durationMs: 225, cycles: 1, property: "translate, visibility", luminanceSteps: [] },
       "kp-sig-synthwave-update-laser": { durationMs: 225, cycles: 1, property: "opacity", luminanceSteps: [1, 1, 0] },
-      // phantom-register
-      "kp-sig-phantom-phantom-snap": { durationMs: 260, cycles: Infinity, property: "transform", luminanceSteps: [] },
-      "kp-sig-phantom-phantom-slash": { durationMs: 1400, cycles: Infinity, property: "translate", luminanceSteps: [] },
-      "kp-progressbar-phantom-shove": { durationMs: 1500, cycles: Infinity, property: "transform", luminanceSteps: [] },
-      // The grammar [themes/phantom/CHARACTER.md, Kenny, 2026-10-09]: the throw
-      // (translate, rotate, scale and a visibility that hides a part not yet
-      // drawn), its resolve in cuts of the screen (mask-image), their leaves, the
-      // bar thrown in on contact, the face of a pressed cap, the ink flipping at
-      // the second cut and a live update's six cuts. None changes a colour but
-      // the ink, once, on contact.
+      // The Phantom throw (theme removed 2026-10-16): the `shout` headline
+      // routine in js/effects/headline.js still times its words by this row.
       "kp-sig-phantom-fly": { durationMs: 700, cycles: 1, property: "translate, rotate, scale, visibility", luminanceSteps: [] },
-      "kp-sig-phantom-fly-out": { durationMs: 700, cycles: 1, property: "translate, rotate, scale, visibility", luminanceSteps: [] },
-      "kp-sig-phantom-resolve": { durationMs: 700, cycles: 1, property: "mask-image", luminanceSteps: [] },
-      "kp-sig-phantom-resolve-out": { durationMs: 700, cycles: 1, property: "mask-image", luminanceSteps: [] },
-      "kp-sig-phantom-resolve-tip": { durationMs: 300, cycles: 1, property: "mask-image", luminanceSteps: [] },
-      "kp-sig-phantom-bar": { durationMs: 120, cycles: 1, property: "mask-image", luminanceSteps: [] },
-      "kp-sig-phantom-face": { durationMs: 120, cycles: 1, property: "mask-image", luminanceSteps: [] },
-      "kp-sig-phantom-ink": { durationMs: 120, cycles: 1, property: "color", luminanceSteps: [] },
-      "kp-sig-phantom-update": { durationMs: 400, cycles: 1, property: "mask-image", luminanceSteps: [] },
       // brutalism-register
       "kp-progressbar-brutalism-hop": { durationMs: 2400, cycles: Infinity, property: "translate", luminanceSteps: [] },
       "kp-sig-brutalism-hoist": { durationMs: 1200, cycles: Infinity, property: "background-position-y", luminanceSteps: [] },
@@ -4991,7 +4971,6 @@ var init_effects = __esm({
       "kp-sig-pastel-tape-drift": { durationMs: 600, cycles: Infinity, property: "background-position", luminanceSteps: [] },
       "kp-sig-blueprint-hatch": { durationMs: 2880, cycles: Infinity, property: "background-size", luminanceSteps: [] },
       "kp-sig-blueprint-chain": { durationMs: 960, cycles: Infinity, property: "background-position", luminanceSteps: [] },
-      "kp-sig-phantom-screen": { durationMs: 1500, cycles: Infinity, property: "background-position", luminanceSteps: [] },
       "kp-sig-grotesk-train": { durationMs: 2640, cycles: Infinity, property: "translate", luminanceSteps: [] },
       "kp-sig-nostromo-bank": { durationMs: 1600, cycles: Infinity, property: "background-position", luminanceSteps: [] },
       "kp-sig-dark-run": { durationMs: 2400, cycles: Infinity, property: "background-position", luminanceSteps: [] },
@@ -31629,7 +31608,6 @@ var THEMES = Object.freeze([
   { name: "solstice", label: "Solstice", dark: true },
   { name: "brutalism", label: "Brutalism", dark: false },
   { name: "deco", label: "Art Deco", dark: true },
-  { name: "phantom", label: "Phantom", dark: true },
   { name: "grotesk", label: "Grotesk", dark: false },
   { name: "nostromo", label: "Nostromo", dark: false },
   { name: "titanium", label: "Titanium", dark: true }

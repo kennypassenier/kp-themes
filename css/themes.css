@@ -37,7 +37,7 @@
    version meets a registry from another. js/diagnostics.js reads them. */
 :root {
     --kp-themes-version: '10.1.1';
-    --kp-themes-names: 'formal light dark cyberpunk synthwave pastel forest blueprint solstice brutalism deco phantom grotesk nostromo titanium';
+    --kp-themes-names: 'formal light dark cyberpunk synthwave pastel forest blueprint solstice brutalism deco grotesk nostromo titanium';
 }
 
 :root,
@@ -1459,135 +1459,6 @@
     --destructive-disabled: hsl(350, 83%, 43%);
 }
 
-[data-theme='phantom'] {
-    /* Phantom: black, white and one violent red; cut paper and halftone, no glow. */
-    --background: hsl(0, 0%, 4%);
-    --foreground: hsl(0, 0%, 98%);
-    --card: hsl(0, 0%, 9%);
-    --card-foreground: hsl(0, 0%, 98%);
-    --popover: hsl(0, 0%, 13%);
-    --popover-foreground: hsl(0, 0%, 98%);
-    --primary: hsl(355, 100%, 58%);
-    --primary-foreground: hsl(0, 0%, 4%);
-    --secondary: hsl(0, 0%, 16%);
-    --secondary-foreground: hsl(0, 0%, 98%);
-    --muted: hsl(0, 0%, 12%);
-    --muted-foreground: hsl(0, 0%, 68%);
-    --accent: hsl(0, 0%, 86%);
-    --accent-foreground: hsl(0, 0%, 4%);
-    --destructive: hsl(355, 100%, 58%);
-    --destructive-foreground: hsl(0, 0%, 4%);
-    --success: hsl(140, 60%, 26%);
-    --success-foreground: hsl(140, 60%, 92%);
-    --warning: hsl(45, 100%, 26%);
-    --warning-foreground: hsl(45, 100%, 92%);
-    --info: hsl(210, 80%, 34%);
-    --info-foreground: hsl(210, 80%, 93%);
-    --border: hsl(0, 0%, 22%);
-    --border-strong: hsl(0, 0%, 60%);
-    --input: hsl(0, 0%, 60%);
-    --ring: hsl(355, 100%, 58%);
-    --selected: hsl(355, 100%, 58%);
-    --chart-1: hsl(355, 100%, 58%);
-    --chart-2: hsl(0, 0%, 90%);
-    --chart-3: hsl(0, 0%, 55%);
-    --chart-4: hsl(355, 80%, 45%);
-    --chart-5: hsl(45, 100%, 55%);
-    /* Code: the keyword and the string of a code block, from the chart hues, dark or light enough to be read rather than only seen [fix-58]. */
-    --code-keyword: hsl(355, 100%, 58%);
-    --code-string: hsl(0, 0%, 90%);
-    --sidebar-background: hsl(355, 100%, 45%);
-    --sidebar-foreground: hsl(0, 0%, 98%);
-    --sidebar-primary: hsl(0, 0%, 98%);
-    --sidebar-primary-foreground: hsl(0, 0%, 4%);
-    --sidebar-accent: hsl(355, 90%, 36%);
-    --sidebar-accent-foreground: hsl(0, 0%, 98%);
-    --sidebar-border: hsl(355, 80%, 30%);
-    --sidebar-ring: hsl(0, 0%, 98%);
-
-    /* Status badges (application pipeline): cut-paper plates, black ink on the bright ones, white on the dark. */
-    --status-draft: hsl(0, 0%, 22%);
-    --status-draft-foreground: hsl(0, 0%, 98%);
-    --status-sent: hsl(0, 0%, 90%);
-    --status-sent-foreground: hsl(0, 0%, 4%);
-    --status-screening: hsl(45, 100%, 55%);
-    --status-screening-foreground: hsl(0, 0%, 4%);
-    --status-interview: hsl(0, 0%, 60%);
-    --status-interview-foreground: hsl(0, 0%, 4%);
-    --status-offer: hsl(0, 0%, 98%);
-    --status-offer-foreground: hsl(0, 0%, 4%);
-    --status-rejected: hsl(355, 100%, 45%);
-    --status-rejected-foreground: hsl(0, 0%, 98%);
-    --status-withdrawn: hsl(0, 0%, 14%);
-    --status-withdrawn-foreground: hsl(0, 0%, 80%);
-    --color-scheme: dark;
-    --theme-font-body: 'Barlow', ui-sans-serif, system-ui, sans-serif;
-    --radius: 0rem;
-    --fx-signal: hsl(45, 100%, 55%);
-    --fx-signal-foreground: hsl(0, 0%, 4%);
-    --fx-notch: 6px;
-    --fx-duration: 120ms;
-    --fx-ease: cubic-bezier(0.81, 0, 0, 1);
-    --theme-font-display: 'Barlow Condensed', 'Barlow', ui-sans-serif, sans-serif;
-    --theme-font-mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
-    --fx-overprint: hsl(45, 100%, 55%);
-    --fx-scanline: hsl(0, 0%, 98%);
-    --fx-lift: 1px;
-    --fx-hot: hsl(0, 0%, 80%);
-    --fx-hot-alarm: hsl(355, 100%, 75%);
-    --fx-shadow-offset: 0px;
-    --chart-pattern-1: none;
-    --chart-pattern-2: none;
-    --chart-pattern-3: none;
-    --chart-pattern-4: none;
-    --chart-pattern-5: none;
-
-    /* The spacing scale [TH94, AR18]. xs, sm and md carry the values they already had as fallbacks in css/components.css, so declaring them shifts nothing (S20); lg, xl and 2xl are the new steps above them. A theme may retune the whole rhythm here. */
-    --kp-space-xs: 0.25rem;
-    --kp-space-sm: 0.5rem;
-    --kp-space-md: 0.75rem;
-    --kp-space-lg: 1rem;
-    --kp-space-xl: 1.5rem;
-    --kp-space-2xl: 2rem;
-    --kp-text-xs: 0.75rem;
-    --kp-text-sm: 0.8125rem;
-    --kp-text-md: 1rem;
-
-    /* The hero surface: the sources AR38 names, so a theme can give the opening surface its own ground [TH116, S47]. A one-ground theme points them at its app values. */
-    --surface-hero-bg: hsl(0, 0%, 4%);
-    --surface-hero-fg: hsl(0, 0%, 98%);
-    --surface-hero-fg-2: hsl(355, 100%, 58%);
-    --surface-hero-muted: hsl(0, 0%, 68%);
-    --surface-hero-border: hsl(0, 0%, 60%);
-    --surface-hero-primary: hsl(355, 100%, 58%);
-    --surface-hero-primary-foreground: hsl(0, 0%, 4%);
-    --surface-hero-danger: hsl(355, 100%, 58%);
-    --surface-hero-danger-foreground: hsl(0, 0%, 4%);
-    --surface-hero-card: hsl(0, 0%, 9%);
-    --surface-hero-card-foreground: hsl(0, 0%, 98%);
-
-    /* The display step of the typography scale: the size of a headline on a hero [S47, critic #19]. */
-    --kp-text-display: clamp(2rem, 4vw, 3rem);
-
-    /* Derived interaction states — see gates/generate-themes.mjs. */
-    --link: hsl(355, 100%, 58%);
-    --link-visited: hsl(315, 68%, 57%);
-    --focus-ring: hsl(0, 0%, 98%);
-    --focus-ring-contrast: hsl(0, 0%, 4%);
-    --primary-hover: hsl(357, 100%, 64%);
-    --primary-active: hsl(1, 74%, 68%);
-    --primary-disabled: hsl(352, 100%, 43%);
-    --secondary-hover: hsl(44, 0%, 22%);
-    --secondary-active: hsl(44, 0%, 28%);
-    --secondary-disabled: hsl(44, 0%, 8%);
-    --accent-hover: hsl(44, 0%, 94%);
-    --accent-active: hsl(60, 100%, 100%);
-    --accent-disabled: hsl(44, 0%, 75%);
-    --destructive-hover: hsl(357, 100%, 64%);
-    --destructive-active: hsl(1, 74%, 68%);
-    --destructive-disabled: hsl(352, 100%, 43%);
-}
-
 [data-theme='grotesk'] {
     /* Grotesk: the International Typographic Style — white, black, one red, and a grid. Identity by letter, not by colour. */
     --background: hsl(0, 0%, 100%);
@@ -2271,29 +2142,6 @@
         --destructive-active: hsl(358, 88%, 71%);
         --destructive-disabled: hsl(350, 83%, 43%);
     }
-    [data-theme='phantom'] [data-kp-surface='hero'] {
-        --background: var(--surface-hero-bg);
-        --foreground: var(--surface-hero-fg);
-        --muted-foreground: var(--surface-hero-muted);
-        --border-strong: var(--surface-hero-border);
-        --input: var(--surface-hero-border);
-        --selected: var(--surface-hero-primary);
-        --primary: var(--surface-hero-primary);
-        --primary-foreground: var(--surface-hero-primary-foreground);
-        --destructive: var(--surface-hero-danger);
-        --destructive-foreground: var(--surface-hero-danger-foreground);
-        --card: var(--surface-hero-card);
-        --card-foreground: var(--surface-hero-card-foreground);
-        --link: var(--surface-hero-fg-2);
-        --focus-ring: var(--surface-hero-fg);
-        --focus-ring-contrast: var(--surface-hero-bg);
-        --primary-hover: hsl(357, 100%, 64%);
-        --primary-active: hsl(1, 74%, 68%);
-        --primary-disabled: hsl(352, 100%, 43%);
-        --destructive-hover: hsl(357, 100%, 64%);
-        --destructive-active: hsl(1, 74%, 68%);
-        --destructive-disabled: hsl(352, 100%, 43%);
-    }
     [data-theme='grotesk'] [data-kp-surface='hero'] {
         --background: var(--surface-hero-bg);
         --foreground: var(--surface-hero-fg);
@@ -2468,20 +2316,6 @@
             repeating-linear-gradient(to bottom, hsl(from var(--primary) h s l / 1) 0 1px, transparent 1px 32px);
         --fx-texture-size: 240px 240px, 100% 32px;
         --fx-texture-opacity: 0.04;
-    }
-
-    /* Phantom: a halftone screen, the print the menus were cut from [TH70]. */
-    [data-theme='phantom'] {
-        --fx-texture: radial-gradient(hsl(from var(--foreground) h s l / 1) 1.2px, transparent 1.3px);
-        --fx-texture-size: 7px 7px;
-        --fx-texture-opacity: 0.05;
-    }
-
-    [data-theme='phantom'] h1,
-    [data-theme='phantom'] h2 {
-        text-transform: uppercase;
-        font-style: italic;
-        letter-spacing: -0.01em;
     }
 
     /* Ticker: the faint rules of a ledger, and numerals that line up [TH68]. */
@@ -3015,12 +2849,6 @@
        gesture is now the register's own headline and rule draw, gated on
        the heading entering the viewport rather than firing on every load.
        Two of them ran at once until this went. */
-
-        /* phantom — a badge slides in from the left, once. A transform only:
-       nothing changes luminance. */
-        [data-theme='phantom'] .kp-badge {
-            animation: kp-slide-in var(--fx-duration) var(--fx-ease) both;
-        }
 
         /* woodblock — lifted to a register [S48]: the hanko after a heading
        is the register's own, and this block animated the same `h1::after`

@@ -104,20 +104,6 @@
         --fx-texture-opacity: 0.04;
     }
 
-    /* Phantom: a halftone screen, the print the menus were cut from [TH70]. */
-    [data-theme='phantom'] {
-        --fx-texture: radial-gradient(hsl(from var(--foreground) h s l / 1) 1.2px, transparent 1.3px);
-        --fx-texture-size: 7px 7px;
-        --fx-texture-opacity: 0.05;
-    }
-
-    [data-theme='phantom'] h1,
-    [data-theme='phantom'] h2 {
-        text-transform: uppercase;
-        font-style: italic;
-        letter-spacing: -0.01em;
-    }
-
     /* Ticker: the faint rules of a ledger, and numerals that line up [TH68]. */
     [data-theme='ticker'] {
         --fx-texture: repeating-linear-gradient(to bottom, hsl(from var(--foreground) h s l / 1) 0 1px, transparent 1px 24px);
@@ -649,12 +635,6 @@
        gesture is now the register's own headline and rule draw, gated on
        the heading entering the viewport rather than firing on every load.
        Two of them ran at once until this went. */
-
-        /* phantom — a badge slides in from the left, once. A transform only:
-       nothing changes luminance. */
-        [data-theme='phantom'] .kp-badge {
-            animation: kp-slide-in var(--fx-duration) var(--fx-ease) both;
-        }
 
         /* woodblock — lifted to a register [S48]: the hanko after a heading
        is the register's own, and this block animated the same `h1::after`

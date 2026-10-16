@@ -120,7 +120,7 @@ const CSS = stylesheets('motion').map((file) => `../${file}`);
  */
 /** @type {Record<string, string>} */
 const OUT_OF_SCOPE = {
-    // The phantom register [PH1]: the loader's bar and its shove out, both
+    // The removed Phantom register [PH1]: the loader's bar and its shove out, both
     // transforms; the removed Retro register [RT1]: the selection bar and the
     // redaction brush, both clip-paths; the brutalism register [BR1]: the slam and the marquee.
     'kp-bar-run': 'a horizontal scale on a 3px bar, once; no luminance change and nothing over 341x256 px',
@@ -292,33 +292,6 @@ const OUT_OF_SCOPE = {
     'kp-sig-deco-meter-knock-o': 'a meter knocked up 3px and back once as its tone clears; a transform, under 341x256 px',
     'kp-sig-deco-meter-knock-w': 'a meter knocked up 3px and back once as it turns to the warning tone; a transform, under 341x256 px',
     'kp-sig-deco-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
-    'kp-sig-phantom-meter-redraw-d':
-        'a meter dissolving into its halftone dots and resolving again in six cuts of 67 ms, once, as it turns to the destructive tone; the mask changes how much of it is drawn and its colours stay, under 341x256 px',
-    'kp-sig-phantom-meter-redraw-o':
-        'a meter dissolving into its halftone dots and resolving again in six cuts of 67 ms, once, as its tone clears; the mask changes how much of it is drawn and its colours stay, under 341x256 px',
-    'kp-sig-phantom-meter-redraw-w':
-        'a meter dissolving into its halftone dots and resolving again in six cuts of 67 ms, once, as it turns to the warning tone; the mask changes how much of it is drawn and its colours stay, under 341x256 px',
-    // The phantom grammar [themes/phantom/CHARACTER.md, Kenny, 2026-10-09]: each of
-    // these changes how much of a part is drawn (a mask of halftone dots in hard
-    // cuts, or visibility) or where it is, and none changes a colour.
-    'kp-sig-phantom-fly':
-        'a part thrown in once on the shove: a translate, a rotate and a scale, hidden at the first instant and drawn from the second; it keeps its colours, only its position moves',
-    'kp-sig-phantom-fly-out':
-        "a part snatched away once on the shove's inverse: a translate, a rotate and a scale, drawn until the last instant and hidden then; one change from shown to hidden",
-    'kp-sig-phantom-resolve':
-        'a part resolving from the dots of the screen to solid in three hard cuts, once (a mask of dots at 25, 50 and 75 % of the cell, then none); it keeps its colours, only how much of it is drawn changes',
-    'kp-sig-phantom-resolve-out': 'the cuts above played as the leave, once: solid to the dots of the screen in three hard cuts',
-    'kp-sig-phantom-resolve-tip':
-        'a tooltip or a tick resolving from dots to solid in three hard cuts of 100 ms, once; a mask of dots, the colours stay, far under 341x256 px',
-    'kp-sig-phantom-bar':
-        'the red bar behind a pointed-at label resolving from dots to solid in two cuts across 120 ms, once; a mask of dots on a bar a few px tall, the colours stay',
-    'kp-sig-phantom-face':
-        'the face of a pressed key cap resolving from dots to solid in two cuts across 120 ms, once; a mask of dots, the colours stay, under 341x256 px',
-    'kp-sig-phantom-ink':
-        'the label of a pointed-at key cap changing from its ink to black once, at the second cut, 90 ms in, as the red bar behind it lands; one change, never repeated, under 341x256 px',
-    'kp-sig-phantom-update':
-        'a changed value dissolving into its halftone dots and resolving again in six cuts of 67 ms, once per update; a mask, the colours stay, far under 341x256 px',
-    'kp-sig-phantom-meter-slant-o': "a slanted clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
     'kp-sig-nostromo-meter-scan': 'a lit band sliding along the tube of a loading meter; the band keeps its colour, only its position moves',
     'kp-sig-nostromo-meter-wipe-o': "a clip-path wipe revealing a meter's share once; the share keeps its colour, under 341x256 px",
     'kp-sig-titanium-meter-grow-o': "a meter's share scaling in from its start once; a transform, under 341x256 px",

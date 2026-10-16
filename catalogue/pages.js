@@ -201,8 +201,6 @@ export const PAGES = [
             { href: 'research/sepia-anchor/demo.html', label: "What is sepia's anchor element" },
             // Decided 2026-10-08: Kenny picked the line that lays the film down, turning, as dark's anchor element, update 1 (research/dark-anchor/decided.json).
             { href: 'research/dark-anchor/demo.html', label: "What is dark's anchor element" },
-            // Decided 2026-10-08: Kenny picked the card thrown as a screen that resolves at the slap as phantom's anchor element, update 1 (research/phantom-anchor/decided.json).
-            { href: 'research/phantom-anchor/demo.html', label: "What is phantom's anchor element" },
             // Decided 2026-10-08: Kenny approved formal's grammar, every recommendation except the hover = a rule under the label and the motifs = plus the seal where picked (research/formal-character/decided.json).
             { href: 'research/formal-character/demo.html', label: 'What makes formal formal' },
             // Decided 2026-10-09: Kenny approved dark's grammar after update 1 (research/dark-character/decided.json).
@@ -211,8 +209,6 @@ export const PAGES = [
             { href: 'research/deco-character/demo.html', label: 'What makes deco deco' },
             // Decided 2026-10-09: Kenny approved all ten uniformity questions of forest (research/forest-uniformity/decided.json).
             { href: 'research/forest-uniformity/demo.html', label: 'Forest, straightened' },
-            // Decided 2026-10-09: Kenny approved phantom's grammar after update 1 (research/phantom-character/decided.json).
-            { href: 'research/phantom-character/demo.html', label: 'What makes phantom phantom' },
             // Decided 2026-10-08: Kenny approved light's grammar, every recommendation except the durations = unhurried and the busy bar = the bead orbits the line (research/light-character/decided.json).
             { href: 'research/light-character/demo.html', label: 'What makes light light' },
             // Decided 2026-10-08: Kenny picked the fan (and the progress bar is to be redone) as deco's anchor element (research/deco-anchor/decided.json).

@@ -534,39 +534,6 @@ const IDEAS = {
             ['The bulb flash', 'The changed site flashes on and off like a marquee bulb; its ray thickens.'],
         ],
     },
-    phantom: {
-        shape: [
-            ['Stamped tags and string', 'White card, red string, stamped ring tags, slanted capitals; askew ransom chips.'],
-            ['The calling card', 'Black cards under a halftone, a red slash ring, white links; slanted card kinds.'],
-            [
-                'The ransom note',
-                'Cut-out letters on black: every site a white disc with a heavy black ring, links in red and black, mixed-weight capitals; the kinds as cut-out blocks.',
-            ],
-        ],
-        loading: [
-            ['The stamp beats', 'As character 1 had it: the red stamp ring beats on and off.'],
-            ['The halftone shuffles', 'As character 2 had it: the red dashes shuffle round.'],
-            ['The calling-card spin', 'A red slash cuts round the ring in hard jumps while the halftone slides.'],
-        ],
-        arrival: [
-            ['At once', 'As both characters had it: when the reading is done the whole network stands there in one frame; nothing moves in.'],
-            ['Pinned up', 'Each tag is pinned on with a jolt, slightly askew, one after another; the strings are pulled taut after.'],
-            ['All-out attack', 'Every site slashes in from the side at once, the links cut in behind.'],
-        ],
-        focus: [
-            ['The board goes grey', 'As character 1 had it: everything not picked turns grey.'],
-            [
-                'The package’s dimming',
-                'As character 2 had it: a pick takes a heavier ring in its own colour, the rest drops back to 30 %, a hidden kind’s key turns grey.',
-            ],
-            ['The target', 'The pick gets a red target ring; the rest goes dark; a hidden kind is struck through like a struck name.'],
-        ],
-        live: [
-            ['In place', 'As both characters had it: the new numbers are simply there; nothing marks which site or link changed.'],
-            ['The slash', 'The changed site is slashed sideways in a jolt; its string snaps red.'],
-            ['The calling card', 'The changed site’s ring flashes red three times; its string is pulled again.'],
-        ],
-    },
     grotesk: {
         shape: [
             ['The transit map', '5px round-capped coloured lines, white interchange rings, bold labels; flat colour bars.'],

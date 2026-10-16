@@ -41,7 +41,6 @@
             </div>
             <ul class="cat-toc">
                 <li><a href="#intro-synthwave">Synthwave</a></li>
-                <li><a href="#intro-phantom">Phantom</a></li>
             </ul>
             <p class="cat-note" data-cat-intro-none>No intro: every other theme.</p>
 
@@ -78,39 +77,10 @@ OK</pre>
                     </div>
                 </div>
             </section>
-
-            <section class="cat-block" id="intro-phantom" data-cat-intro="phantom" data-cat-theme="phantom">
-                <h2>Phantom</h2>
-                <div class="cat-look">
-                    <b>Look at:</b> the words did not change. <b>Words were and are:</b> the theme's own name, "phantom", set uppercase in the display
-                    face — a calling card, data rather than copy. Then the look: the name on black, the red bar running under it in 900 ms at 1×, a
-                    hold of 300 ms, and the whole card shoved off to the left. <b>Skip</b> and a click anywhere end it at once.
-                </div>
-                <div class="cat-live__bar cat-intro-controls">
-                    <button type="button" class="kp-button kp-button--sm" data-cat-intro-play>Play the intro</button>
-                    <label class="kp-field__label" for="rate-phantom">Speed</label>
-                    <input id="rate-phantom" type="range" min="0.1" max="2" step="0.1" value="1" data-cat-intro-rate />
-                    <output for="rate-phantom" data-cat-intro-rate-value>1.0×</output>
-                </div>
-                <div class="cat-pair">
-                    <div class="cat-stage cat-stage--block">
-                        <iframe class="cat-viewport cat-intro-frame" title="Phantom's intro" data-cat-intro-frame></iframe>
-                    </div>
-                    <div class="cat-intro-words">
-                        <h3>All the words the package ships for this intro</h3>
-                        <pre data-cat-intro-words></pre>
-                        <h3>Words before</h3>
-                        <pre>Unchanged.</pre>
-                        <h3>The line on screen at this moment of the playback</h3>
-                        <pre data-cat-intro-live aria-live="polite">—</pre>
-                        <p class="cat-note" data-cat-intro-status>Not played yet.</p>
-                    </div>
-                </div>
-            </section>
         </main>
 
         <!-- No js/auto.js on this page, on purpose: it would attach the effects
-             to this document too, and in synthwave or phantom
+             to this document too, and in synthwave
              the review page itself would be covered by the intro it inspects. -->
         <script src="./boot-check.js"></script>
         <script type="module" src="./catalogue.js"></script>

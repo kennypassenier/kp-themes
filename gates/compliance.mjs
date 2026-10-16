@@ -44,7 +44,6 @@ function motionScope() {
     for (const rel of [
         '../css/cyberpunk-register.css',
         '../css/synthwave-register.css',
-        '../css/phantom-register.css',
         '../css/brutalism-register.css',
         '../css/solstice-register.css',
         '../css/formal-register.css',
@@ -71,7 +70,6 @@ function motionVerdicts() {
     for (const rel of [
         '../css/cyberpunk-register.css',
         '../css/synthwave-register.css',
-        '../css/phantom-register.css',
         '../css/brutalism-register.css',
         '../css/solstice-register.css',
         '../css/formal-register.css',
@@ -108,7 +106,6 @@ function layersClean() {
         '../css/components.css',
         '../css/cyberpunk-register.css',
         '../css/synthwave-register.css',
-        '../css/phantom-register.css',
         '../css/brutalism-register.css',
         '../css/solstice-register.css',
         '../css/formal-register.css',

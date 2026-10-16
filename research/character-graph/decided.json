@@ -93,13 +93,6 @@
             "focus": "3",
             "live": "2"
         },
-        "phantom": {
-            "shape": "1",
-            "loading": "r3-d-pha-load-4",
-            "arrival": "2",
-            "focus": "3",
-            "live": "2"
-        },
         "grotesk": {
             "shape": "1",
             "loading": "r5-gk-load-3",

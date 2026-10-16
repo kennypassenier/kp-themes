@@ -49,7 +49,6 @@
         "css/components.css": ["authored", "bundled", "classes", "motion"],
         "css/cyberpunk-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/synthwave-register.css": ["authored", "bundled", "classes", "motion", "texture"],
-        "css/phantom-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/brutalism-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/titanium-register.css": ["authored", "bundled", "classes", "motion", "texture"],
         "css/pastel-register.css": ["authored", "bundled", "classes", "motion", "texture"],

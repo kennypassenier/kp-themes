@@ -1,13 +1,11 @@
 {
-  "decided": "2026-10-15T02:30:00+02:00",
-  "by": "Kenny",
-  "picks": {
-    "phantom-plate": {
-      "phantom": "1 \u00b7 One hard plate"
+    "decided": "2026-10-15T02:30:00+02:00",
+    "by": "Kenny",
+    "picks": {
+        "phantom-plate": {},
+        "deco-inlay": {
+            "deco": "Under the button that opened it"
+        }
     },
-    "deco-inlay": {
-      "deco": "Under the button that opened it"
-    }
-  },
-  "note": "Round 1 deco rejected (02:12, the demo showed no deco menu); round 2 approved."
+    "note": "Round 1 deco rejected (02:12, the demo showed no deco menu); round 2 approved."
 }

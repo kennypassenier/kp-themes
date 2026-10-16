@@ -269,32 +269,6 @@
                 "quiet": "no boot overlay; the cartouche's own on-load scale is scoped to the headline, not the page, and the demo's script never touches --kp-arrival"
             }
         },
-        "phantom": {
-            "surface": {
-                "css": "css/themes.css",
-                "selector": "[data-theme='phantom'] [data-kp-surface='hero']"
-            },
-            "emphasis": {
-                "css": "css/phantom-register.css",
-                "selector": "[data-theme='phantom'] mark"
-            },
-            "reveal": {
-                "css": "css/phantom-register.css",
-                "selector": "[data-theme='phantom'] [data-kp-reveal='rule']::after"
-            },
-            "divider": {
-                "css": "css/phantom-register.css",
-                "selector": "[data-theme='phantom'] [data-kp-divider]"
-            },
-            "accent": {
-                "css": "css/phantom-register.css",
-                "selector": "[data-theme='phantom'] [data-kp-surface] h1"
-            },
-            "arrival": {
-                "css": "css/phantom-register.css",
-                "selector": "[data-theme='phantom'] .kp-boot"
-            }
-        },
         "grotesk": {
             "surface": {
                 "css": "css/themes.css",

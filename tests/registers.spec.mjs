@@ -173,8 +173,8 @@ for (const theme of SWEEP) {
 
 // CP1 — the arrival answers a click anywhere, not only on Skip.
 //
-// Two themes build one: phantom (`card`) and synthwave (`boot`; terminal
-// built one too until it was removed on 2026-10-16). The overlay is `position: fixed; inset: 0`, so until 6.0.0 it
+// One theme builds one now: synthwave (`boot`; phantom's `card` and
+// terminal's boot screen went with those themes on 2026-10-16). The overlay is `position: fixed; inset: 0`, so until 6.0.0 it
 // ate every click for up to 1100ms and only the Skip button ended it — a
 // click elsewhere did nothing and gave no sign it had been lost.
 // JobTracker reported that as "the theme picker does not work on phantom";
@@ -184,7 +184,7 @@ for (const theme of SWEEP) {
 // Drilled 2026-09-12 in firefox: the overlay's own listener removed from
 // js/effects.js → red on all four, because the click lands and the
 // overlay stays. Restored green.
-for (const theme of ['phantom', 'synthwave']) {
+for (const theme of ['synthwave']) {
     test(
         `the arrival lets go of a click anywhere under ${theme} [CP1]`,
         { tag: ['@sweep', `@theme:${theme}`, '@component:page-effects', '@component:showcase'] },

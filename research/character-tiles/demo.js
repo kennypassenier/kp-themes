@@ -534,38 +534,6 @@ const IDEAS = {
             { name: 'Gilded', text: 'The tile flares with light once, slowing as it lands.' },
         ],
     },
-    phantom: {
-        shape: [
-            { name: 'The evidence card', text: 'A white card pinned to a board, the title slanted, the mark a stamped ring.' },
-            { name: 'The calling card', text: 'A black card under a halftone, the mark a red slash corner.' },
-            { name: 'The ransom note', text: 'A halftone over the card, the mark a red offset square.' },
-        ],
-        loading: [
-            { name: 'The stamp ring', text: 'A red ring is stamped onto the body, again and again.' },
-            { name: 'Stamped askew', text: 'The halftone shuffles.' },
-            { name: 'The string is pulled', text: 'A red string is pulled across the body in jerks.' },
-        ],
-        arrival: [
-            { name: 'At once', text: 'The title and the body are there the moment loading ends.' },
-            { name: 'The card is thrown', text: 'The tile jumps into place sideways, in hard jumps.' },
-            { name: 'Slashed in', text: 'Tile after tile is drawn in backwards, easing in and out.' },
-        ],
-        tone: [
-            { name: 'The stamped ring', text: 'A warning or destructive tile shows the note on a stamped ring set askew.' },
-            { name: 'The status plate', text: 'A warning or destructive tile shows the note on its own status plate.' },
-            { name: 'The askew card', text: 'A warning or destructive tile is stamped askew on the label, in a ruled border.' },
-        ],
-        hover: [
-            { name: 'The pin tightens', text: 'The card lifts off the board slightly; Open gains a red underline; focus draws a stamped ring.' },
-            { name: 'The halftone sharpens', text: 'The halftone pattern sharpens; Open underlines in red; focus adds a slash corner.' },
-            { name: 'The string tautens', text: 'The red string straightens; Open underlines; focus traces the card’s edge in red.' },
-        ],
-        live: [
-            { name: 'Redrawn', text: 'The body text changes in place at once.' },
-            { name: 'Snatched', text: 'The tile glitches sideways for a moment, in hard jumps.' },
-            { name: 'The string twangs', text: 'The tile jolts once, as a needle does.' },
-        ],
-    },
     grotesk: {
         shape: [
             { name: 'The transit board', text: 'A column under its rule: no frame, a heavy ink rule along the top, the mark a flat colour bar.' },

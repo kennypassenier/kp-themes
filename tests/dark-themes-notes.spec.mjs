@@ -344,7 +344,7 @@ test.describe(
                 // position: top level with the trigger's top (-32px from its bottom)
                 // and 0px after its end, in every one of the 22 themes, both sizes,
                 // both engines. The two live ones were right: 4px under, start-aligned.
-                await openCatalogue(page, '/catalogue/overlays.html', theme('phantom'), { reducedMotion: 'reduce', width, height });
+                await openCatalogue(page, '/catalogue/overlays.html', theme('dark'), { reducedMotion: 'reduce', width, height });
                 const anchors = page.locator('#tooltip .kp-tooltip-anchor');
                 await expect(anchors).toHaveCount(4);
                 await page.locator('#tooltip').scrollIntoViewIfNeeded();

@@ -38,7 +38,6 @@ const root = new URL('../', import.meta.url);
 export const REGISTERS = [
     'css/cyberpunk-register.css',
     'css/synthwave-register.css',
-    'css/phantom-register.css',
     'css/brutalism-register.css',
     'css/titanium-register.css',
     'css/pastel-register.css',

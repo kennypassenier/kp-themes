@@ -38,10 +38,6 @@ const KNOWN = {
     'css/pastel-register.css': ["[data-theme='pastel'] :is(.kp-popover, .kp-theme-menu__list) :is(.kp-menu, .kp-popover)"],
     // Only a direct child: a menu button's menu is the child of its .kp-menu-button, never of the popover.
     'css/forest-register.css': ["[data-theme='forest'] .kp-popover > .kp-menu"],
-    // A list inside a surface is the surface's. The bar's More menu takes its plate back in a rule of its own.
-    'css/phantom-register.css': [
-        "[data-theme='phantom'] :is(.kp-dialog, .kp-popover, .kp-toast, .kp-confirm, .kp-datepicker__panel, .kp-palette) :is(.kp-menu, .kp-theme-menu__list)",
-    ],
 };
 
 const SURFACE = /\.kp-(menu|popover|theme-menu__list|theme-menu)(?![\w-])/;

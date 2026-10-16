@@ -16,7 +16,7 @@
 //   3. Shade (light), `button--variants`: "de primary knop heeft geen
 //      klikanimatie, of toch niet zichtbaar." Its press was a colour step
 //      of 22/9/2 of a channel away from the hover it always starts from.
-//   4. phantom, `page--theme-menu-react` (and `page--theme-menu`, which he
+//   4. phantom (theme removed 2026-10-16; its test went with it), `page--theme-menu-react` (and `page--theme-menu`, which he
 //      says he approved too quickly): "niet veel te zien?" The register put
 //      the paperclip `clip-path` on `.kp-theme-menu`, the positioning
 //      wrapper, and a clip-path clips descendants positioned outside the
@@ -222,47 +222,4 @@ test.describe('blueprint: the laurels stand in the measure frame [scope-107]', {
         }
         expect(found, found.join('\n')).toEqual([]);
     });
-});
-
-test.describe('phantom: the theme menu is painted, not clipped away [scope-107]', { tag: ['@theme:phantom', '@component:page'] }, () => {
-    for (const [name, block] of /** @type {const} */ ([
-        ['the React shape', '#theme-menu-react'],
-        ['the markup shape', '#theme-menu'],
-    ])) {
-        test(`${name}: the theme menu paints its options, each with visible text`, async ({ page }) => {
-            await open(page, '/catalogue/page.html', 'phantom');
-            const panel = await page.evaluate((id) => {
-                const root = /** @type {HTMLElement} */ (document.querySelector(id));
-                const list = /** @type {HTMLElement} */ (root.querySelector('.kp-popover'));
-                const r = list.getBoundingClientRect();
-                return { x: r.x + scrollX, y: r.y + scrollY, width: r.width, height: r.height };
-            }, block);
-            expect(panel.width, `${name}: the panel has a box`).toBeGreaterThan(80);
-
-            const ground = (await paint(page, '--background')).match(/\d+/g).slice(0, 3).map(Number);
-            const boxes = await page.evaluate((id) => {
-                const root = /** @type {HTMLElement} */ (document.querySelector(id));
-                const options = [...root.querySelectorAll('[data-kp-theme]')].slice(0, 8);
-                return options.map((option) => {
-                    // The label is a child in the React shape and a text node
-                    // in the markup one; a Range over the contents reads both.
-                    const range = document.createRange();
-                    range.selectNodeContents(option);
-                    const rects = [...range.getClientRects()].filter((r) => r.width > 4 && r.height > 4);
-                    const r = rects[rects.length - 1] ?? option.getBoundingClientRect();
-                    return { x: r.x + scrollX, y: r.y + scrollY, width: r.width, height: r.height, label: (option.textContent ?? '').trim() };
-                });
-            }, block);
-            expect(boxes.length, `${name}: the menu holds options`).toBe(8);
-
-            const dark = [];
-            for (const box of boxes) {
-                const map = await pixels(page, box);
-                let ink = 0;
-                for (let y = 0; y < map.height; y++) for (let x = 0; x < map.width; x++) if (differs(map.at(x, y), ground, 40)) ink++;
-                if (ink < 20) dark.push(`${name} "${box.label}": ${ink} inked device px in its own box — nothing is painted there`);
-            }
-            expect(dark, dark.join('\n')).toEqual([]);
-        });
-    }
 });

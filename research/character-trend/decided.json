@@ -93,13 +93,6 @@
             "tone": "3",
             "live": "3"
         },
-        "phantom": {
-            "shape": "3",
-            "loading": "1",
-            "arrival": "3",
-            "tone": "3",
-            "live": "1"
-        },
         "grotesk": {
             "shape": "1",
             "loading": "1",

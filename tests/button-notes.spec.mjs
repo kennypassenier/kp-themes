@@ -103,34 +103,6 @@ test.describe('cyberpunk: the hover ring on every variant [scope-80]', { tag: ['
     });
 });
 
-test.describe('phantom: the primary is pressed like the others [scope-80]', { tag: ['@theme:phantom', '@component:button'] }, () => {
-    test('pressing any variant moves it from where hovering put it', async ({ page }) => {
-        // Before: the primary read matrix(1, 0, 0, 1, 3, 3) hovered and pressed.
-        // Since the key-cap grammar [G17] the buttons are skewed (`transform`
-        // is the skew alone, the same in every state) and the press travels in
-        // the `translate` property: 3px 3px for a variant, 5px 5px for the
-        // primary (hovered 3px 3px), so the pose is read from both.
-        await open(page, 'phantom');
-        const pose = (/** @type {Element} */ el) => {
-            const s = getComputedStyle(el);
-            return `${s.transform} | translate ${s.translate}`;
-        };
-        const buttons = page.locator('#variants .cat-stage .kp-button');
-        const still = [];
-        for (let i = 0; i < (await buttons.count()); i++) {
-            const button = buttons.nth(i);
-            await button.hover();
-            const hovered = await button.evaluate(pose);
-            await page.mouse.down();
-            const pressed = await button.evaluate(pose);
-            await page.mouse.up();
-            if (pressed === hovered) still.push(`${await button.textContent()}: ${pressed}`);
-        }
-        await page.mouse.move(0, 0);
-        expect(still).toEqual([]);
-    });
-});
-
 test.describe('titanium: the primary answers the pointer [scope-80]', { tag: ['@theme:titanium', '@component:button'] }, () => {
     test('hover moves the primary at least 10 from rest, and pressed at least 10 from hover', async ({ page }) => {
         // Before: rest to hover 4.9 in OKLab distance, hover to pressed 15.5.

@@ -535,38 +535,6 @@ const IDEAS = {
             },
         ],
     },
-    phantom: {
-        shape: [
-            { name: 'The evidence card', text: 'A white evidence card: the title slanted, the actions as stamped rings set askew.' },
-            {
-                name: 'The calling card',
-                text: 'A black calling card under a halftone: the title skewed in display capitals, a red slash across the corner, the actions in the card’s ink.',
-            },
-            { name: 'The ransom note', text: 'A halftone over the header, the title skewed, a red offset shadow on the actions.' },
-        ],
-        menu: [
-            {
-                name: 'The card is thrown',
-                text: 'The menu jumps into place sideways in a hard jump, as a card thrown down; it jumps back the same way in reverse to close.',
-            },
-            {
-                name: 'Slashed in',
-                text: 'The menu is drawn in backwards from the bottom, easing in and out, like a slash across the card; it is drawn out the same way to close.',
-            },
-            { name: 'Stamped askew', text: 'The menu’s halftone shuffles into place as it opens; it shuffles out of place the same way to close.' },
-        ],
-        interactive: [
-            {
-                name: 'The stamp ring',
-                text: 'Hover stamps a faint ring round a button, focus skews it a touch, press presses the stamp flat for the moment held.',
-            },
-            { name: 'The red slash', text: 'Hover slashes a button’s corner in red, focus skews the slash, press holds it flat while pressed.' },
-            {
-                name: 'The string is pulled',
-                text: 'Hover pulls a red thread taut across a button, focus skews the button, press plucks the thread once.',
-            },
-        ],
-    },
     grotesk: {
         shape: [
             {

@@ -671,36 +671,6 @@ const IDEAS = {
             { name: 'The curtain parts', text: 'A hovered or focused entry’s rule parts a touch wider; a press closes it back in.' },
         ],
     },
-    phantom: {
-        shape: [
-            { name: 'The evidence card', text: 'A white plate pinned to a board look, headings slanted, a red string motif running between groups.' },
-            { name: 'The calling card', text: 'A black plate under a halftone, headings skewed in display capitals, a red slash marks the corner.' },
-            { name: 'The ransom note', text: 'A halftone over the plate, headings skewed, a red offset shadow behind the group names.' },
-        ],
-        loading: [
-            { name: 'The stamp ring', text: 'A red ring is stamped onto the loading row, again and again.' },
-            { name: 'Stamped askew', text: 'The halftone on the loading row shuffles, looping.' },
-            { name: 'The string is pulled', text: 'A red string is pulled across the loading row in jerks.' },
-        ],
-        open: [
-            { name: 'The card is thrown', text: 'The menu is thrown into place sideways in hard jumps, and snatched back the same way to close.' },
-            { name: 'Slashed in', text: 'The menu is drawn in backwards, from its end, easing in and out, and drawn back out to close.' },
-            { name: 'Pinned', text: 'The menu drops in and is pinned at a slight angle, then straightens; it tilts and lifts away to close.' },
-        ],
-        tone: [
-            {
-                name: 'The calling card',
-                text: 'The destructive entry sits on its own plate stamped askew; the disabled reason carries a ruled border.',
-            },
-            { name: 'The red slash', text: 'A red slash crosses the destructive entry’s corner; the disabled reason reads under a faint halftone.' },
-            { name: 'The ransom cut', text: 'The destructive entry’s label is cut from a different, redder type; the disabled reason reads plain.' },
-        ],
-        interact: [
-            { name: 'Snatched', text: 'A hovered or focused entry glitches sideways for a moment; a press holds it shifted while pressed.' },
-            { name: 'The string twangs', text: 'A hovered or focused entry jolts once like a plucked string; a press stills it taut.' },
-            { name: 'The halftone shifts', text: 'A hovered or focused entry’s halftone shifts a step; a press locks the shift in place.' },
-        ],
-    },
     grotesk: {
         shape: [
             {

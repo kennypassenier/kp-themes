@@ -93,13 +93,6 @@
             "tone": "3",
             "mark": "3"
         },
-        "phantom": {
-            "shape": "1",
-            "loading": "1",
-            "arrival": "1",
-            "tone": "1",
-            "mark": "2"
-        },
         "grotesk": {
             "shape": "1",
             "loading": "2",

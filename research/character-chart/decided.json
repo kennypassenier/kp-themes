@@ -106,14 +106,6 @@
             "events": "r3c-deco-ev-1",
             "tip": "a"
         },
-        "phantom": {
-            "shape": "b",
-            "loading": "r3c-pha-load-2",
-            "arrival": "r3c-pha-arr-1",
-            "update": "none",
-            "events": "r3c-pha-ev-1",
-            "tip": "b"
-        },
         "grotesk": {
             "shape": "a",
             "loading": "r3-gr-load-2",

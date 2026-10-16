@@ -44,7 +44,6 @@ const SHEETS = [
     'utilities.css',
     'cyberpunk-register.css',
     'synthwave-register.css',
-    'phantom-register.css',
     'brutalism-register.css',
     'titanium-register.css',
     'pastel-register.css',

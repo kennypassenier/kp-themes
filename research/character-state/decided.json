@@ -67,11 +67,6 @@
             "tone": "3",
             "change": "1"
         },
-        "phantom": {
-            "shape": "r2-ph-shape-3",
-            "tone": "2",
-            "change": "1"
-        },
         "grotesk": {
             "shape": "3",
             "tone": "3",

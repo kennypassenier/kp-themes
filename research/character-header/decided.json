@@ -67,11 +67,6 @@
             "menu": "1",
             "interactive": "2"
         },
-        "phantom": {
-            "shape": "3",
-            "menu": "3",
-            "interactive": "1"
-        },
         "grotesk": {
             "shape": "3",
             "menu": "1",
