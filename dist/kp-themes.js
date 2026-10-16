@@ -18839,12 +18839,13 @@ __export(tabbar_exports, {
   setTabbarBusy: () => setTabbarBusy,
   setTabbarCurrent: () => setTabbarCurrent
 });
-function setTabbarBadge(tab, count, { max = 99 } = {}) {
+function setTabbarBadge(tab, count) {
   let badge = (
     /** @type {HTMLElement | null} */
     tab.querySelector(".kp-tabbar__badge")
   );
-  const none = count === null || !Number.isFinite(count) || count <= 0;
+  const whole = count === null || !Number.isFinite(count) ? 0 : Math.trunc(count);
+  const none = whole <= 0;
   if (!badge) {
     if (none) return null;
     badge = tab.ownerDocument.createElement("span");
@@ -18852,9 +18853,9 @@ function setTabbarBadge(tab, count, { max = 99 } = {}) {
     tab.append(badge);
   }
   badge.hidden = none;
-  badge.textContent = none ? "" : count > max ? `${max}+` : String(count);
+  badge.textContent = none ? "" : String(whole);
   if (none) tab.removeAttribute("data-kp-count");
-  else tab.setAttribute("data-kp-count", String(count));
+  else tab.setAttribute("data-kp-count", String(whole));
   return badge;
 }
 function setTabbarCurrent(bar, id) {

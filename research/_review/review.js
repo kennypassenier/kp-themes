@@ -1769,7 +1769,10 @@ async function show(at) {
         if (step.theme) await switchTheme(step.theme);
         index = steps.indexOf(step);
         putBack();
-        shownPairs = stepOpen(step) ? step.pairs.filter(isOpen) : step.pairs;
+        // Only an approved pair leaves the list: a pair Kenny marked not approved stays in it, with its tick and its
+        // note, until a new round reopens it (kpadopt-nav, 2026-10-16: "option 2 disappeared from the list when I reopened
+        // the page" was the pair he had rejected, dropped because it was no longer 'open').
+        shownPairs = stepOpen(step) ? step.pairs.filter((p) => isOpen(p) || verdictOf(p) === 'rejected') : step.pairs;
         for (const pair of shownPairs) {
             if (pair.item) {
                 const placeholder = document.createComment('review');
@@ -1805,7 +1808,7 @@ async function show(at) {
             : 'Up approves the step and goes on to the next open one, Left/Right move between steps, V the previous version, L plays open and close, Escape closes. The theme switches by itself.';
         for (const pair of shownPairs) if (pair.item) focusAspect(pair.item.section, step.aspect ?? null);
         if (step.aspect) setupFlip(step, shownPairs[0]);
-        const judgedHere = step.pairs.length - shownPairs.length;
+        const judgedHere = step.pairs.filter((p) => verdictOf(p) === 'approved' && !shownPairs.includes(p)).length;
         $('[data-rv-position]').textContent =
             `Step ${index + 1}/${steps.length} · ${shownPairs.length} ${step.theme ? 'section(s)' : 'block(s)'}` +
             (judgedHere ? ` · ${judgedHere} already approved, not shown` : '');

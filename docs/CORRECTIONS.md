@@ -6842,3 +6842,32 @@ answer, and the Agenda said "1 demo has an answer you have not copied yet". Kenn
 resets its own stored state so he never clears it by hand; that rule was also among the 26 memory entries past the index
 load limit. Measure: the review kit drops answers (and carried words) of rounds recorded in VERDICTS.json (the page's
 `received` list, progress.js `dropReceivedAnswer`), and gates/check-rereview.mjs keeps that list in step with VERDICTS.json.
+
+## tabbar-facts-1016 · A tab count capped at 99+, and a rejected row vanished from the review list (2026-10-16)
+
+Kenny, 2026-10-16 (reports on kpadopt-nav round 1): the More tab "opened its options full screen on the right with no
+way back", and after pressing buttons "option 2 disappeared from the list" when he reopened the page. Both happened.
+
+**1 · What went wrong.** (a) `setTabbarBadge` wrote `99+` past a `max`, against the rule of 2026-10-03 (every counter
+shows the real number). (b) Round 1 (commit ca32be54): the drawer `#tb-more` was a plain `dialog.kp-drawer` as wide as the
+phone (390 px, no strip of page left), its close button had no glyph (`demo.html:1580`, an empty `.kp-icon-button`), and
+js/tabbar.js had no press handling, so on a touch screen (no Escape) a press on More, then on an entry (`a[href="#system"]`,
+which only changed the hash) left the drawer open: no way back. (c) review.js (`show()`, `shownPairs = stepOpen(step) ?
+step.pairs.filter(isOpen) : step.pairs`, still on main) lists only open pairs while a step has any; a pair marked "Not
+approved" has a verdict (`rejected`), so it is not open, and on the next load of the page its row (2 · The bottom tab
+bar) was missing from the list and the head said "1 already approved, not shown". Reproduced in Playwright's Firefox at
+ca32be54 with a 390 px window: Review in a dialog, tick row 2, Approve the rest, reload, Review in a dialog: three rows.
+
+**2 · Which gate let it through.** None: no test opened the review dialog a second time with a rejected pair.
+
+**3 · Where else the same fault sits.** Every research demo uses research/_review/review.js, so every demo dropped a
+rejected row on reopening within the same round. Rounds reopen rejected pairs themselves (`reopenPair`), so only the
+same-round reload was affected. Other counters: no other cap or abbreviation (`99+`, `9+`, compact notation, `k`) is in js/,
+css/ or components/; the snapshot research/kpadopt-nav/_previous keeps the old text on purpose.
+
+**4 · How we prevent recurrence.** `setTabbarBadge` writes every digit and the badge sizes to them; review.js keeps a
+rejected pair listed (ticked, with its note) until a new round reopens it and counts only approved pairs as "already
+approved". The drawer's way back was fixed in round 2 (strip, visible x, Escape, press on the strip and on an entry).
+
+**5 · What the remedy costs.** A rejected row stays in the list for the rest of its round: the dialog walks one row more.
+
