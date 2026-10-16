@@ -12201,8 +12201,11 @@
         color: var(--destructive);
     }
 
-    .kp-gantt[data-kp-state='ready'] .kp-gantt__body:not(:has(.kp-gantt__lane)) {
-        min-block-size: 5.25rem;
+    /* A timeline with no lane, empty or failed, keeps a lane-sized room under its axis for the sentence, taller when its
+     * words need more lines (`--kp-gantt-words`, measured by js/gantt.js), so the sentence never runs out of the frame
+     * onto the legend under it. */
+    .kp-gantt:is([data-kp-state='ready'], [data-kp-state='empty'], [data-kp-state='error']) .kp-gantt__body:not(:has(.kp-gantt__lane)) {
+        min-block-size: max(5.25rem, calc(var(--kp-gantt-axis, 1.75rem) + var(--kp-gantt-words, 0px)));
     }
 
     .kp-gantt__legend {

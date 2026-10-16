@@ -602,10 +602,29 @@ function paint(c) {
     c.stateLine.textContent = c.state === 'ready' && !empty ? '' : words;
     c.stateLine.dataset.kpState = empty && c.state === 'ready' ? 'empty' : c.state;
     paintGhosts(c);
+    roomForWords(c);
     holdHeight(c);
     visible(c);
     refresh(c, nowMs);
     syncTabStops(c);
+}
+
+/**
+ * A timeline with no lane (empty or failed) gives its sentence a room of its own under the axis, as tall as the words
+ * need at this width (a long failure reason wraps on a phone), so the sentence never runs out of the frame onto the
+ * legend. The room is `--kp-gantt-words` on the body, read by the body's min-block-size in css/components.css.
+ * @param {GanttModel} c
+ */
+function roomForWords(c) {
+    if (c.state === 'loading' || !c.stateLine.textContent || c.body.querySelector('.kp-gantt__lane')) {
+        c.body.style.removeProperty('--kp-gantt-words');
+        return;
+    }
+    const range = c.el.ownerDocument.createRange();
+    range.selectNodeContents(c.stateLine);
+    const style = getComputedStyle(c.stateLine);
+    const need = range.getBoundingClientRect().height + parseFloat(style.paddingBlockStart) + parseFloat(style.paddingBlockEnd);
+    c.body.style.setProperty('--kp-gantt-words', `${Math.ceil(need)}px`);
 }
 
 /**
@@ -992,6 +1011,7 @@ export function attachGantts(root = document, options = {}) {
                 last = width;
                 c.tickKey = '';
                 tick(c);
+                roomForWords(c);
             });
             c.observer.observe(c.plot);
         }

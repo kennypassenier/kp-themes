@@ -22663,10 +22663,22 @@ function paint4(c) {
   c.stateLine.textContent = c.state === "ready" && !empty ? "" : words;
   c.stateLine.dataset.kpState = empty && c.state === "ready" ? "empty" : c.state;
   paintGhosts(c);
+  roomForWords(c);
   holdHeight(c);
   visible2(c);
   refresh(c, nowMs);
   syncTabStops2(c);
+}
+function roomForWords(c) {
+  if (c.state === "loading" || !c.stateLine.textContent || c.body.querySelector(".kp-gantt__lane")) {
+    c.body.style.removeProperty("--kp-gantt-words");
+    return;
+  }
+  const range = c.el.ownerDocument.createRange();
+  range.selectNodeContents(c.stateLine);
+  const style = getComputedStyle(c.stateLine);
+  const need = range.getBoundingClientRect().height + parseFloat(style.paddingBlockStart) + parseFloat(style.paddingBlockEnd);
+  c.body.style.setProperty("--kp-gantt-words", `${Math.ceil(need)}px`);
 }
 function holdHeight(c) {
   if (c.state !== "ready" || c.lanes.length === 0) return;
@@ -23017,6 +23029,7 @@ function attachGantts(root = document, options = {}) {
         last = width;
         c.tickKey = "";
         tick3(c);
+        roomForWords(c);
       });
       c.observer.observe(c.plot);
     }
