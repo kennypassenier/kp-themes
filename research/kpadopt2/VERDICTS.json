@@ -41,6 +41,18 @@
                 }
             ],
             "generalNote": "(review kit) after finishing a demo's review, the dialog must not only close, there must be a direct way back to agenda.html."
+        },
+        {
+            "round": "3",
+            "page": "2026-10-16-r3",
+            "allJudged": true,
+            "notApproved": [
+                {
+                    "item": "week-states",
+                    "theme": "formal",
+                    "note": "Ik snap niet goed waarom dit bepaalde patroon van skeleton gebruikt wordt, sommige entries hebben twee, andere drie skeleton elementen? Kan je niet beter iets doen zoals bij table waarbij de hele table het laadicoon centraal krijgt? Dat oogt veel beter"
+                }
+            ]
         }
     ],
     "reopened": []

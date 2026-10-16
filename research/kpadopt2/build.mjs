@@ -58,10 +58,10 @@ const html = `<!doctype html>
             <header class="r2-intro">
                 <h1>Round 2 of the dashboard adoption: the one still open</h1>
                 <p class="cat-intro">
-                    Review round 3. Kenny approved ten of the eleven sections in formal, so only the <b>week agenda’s states</b> is on this page. While
-                    it loads, the week is now formal’s own loading picture, the ledger being ruled: every day holds unwritten entries of a pill’s
-                    shape and size, and a navy rule is ruled along them one after the other across the week. A week that loads again takes all of
-                    its items out first, so no old item stays under or beside the new ones and no words are drawn twice. Everything with a
+                    Review round 4. Kenny approved ten of the eleven sections in formal, so only the <b>week agenda’s states</b> is on this page. A
+                    loading week no longer draws skeleton entries: its days stay empty and steady, and the data table’s own loading card (the theme’s
+                    large spinner, the words, formal’s ruled lines) stands in the middle of the days, arriving and leaving as it does over a table. The
+                    items arrive only once the card has gone. Everything with a
                     <code>kp-</code> class and every script under <code>js/</code> is the package; the sample data and the button that drives the
                     demo are this page’s. The section says what you should see under <b>Expected</b>. Formal only, judged in the review dialog
                     (“Review in a dialog” at the top).
@@ -73,7 +73,7 @@ ${openOnly(time)}
 ${openOnly(grids).trim() ? '        <script type="module" src="demo-grids.js"></script>\n' : ''}        <script type="module" src="demo-time.js"></script>
         <script type="module" src="../../js/auto.js"></script>
         <script type="application/json" data-review-round>
-            { "round": "2026-10-16-r3", "received": ["2026-10-16-r1", "2026-10-16-r2"], "reopen": ["formal|week-states"] }
+            { "round": "2026-10-16-r4", "received": ["2026-10-16-r1", "2026-10-16-r2", "2026-10-16-r3"], "reopen": ["formal|week-states"] }
         </script>
         <script type="module" src="../_review/review.js"></script>
         <script src="../../catalogue/boot-check.js"></script>

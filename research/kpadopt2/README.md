@@ -61,6 +61,23 @@ words overlapped (his screenshot: every day's old pills stacked at 00:00 under t
   so no pill shows squeezed words or reaches over its neighbour while the row opens.
 - **Review kit:** the last open pair judged, a small dialog offers **Back to the Agenda** first (research/_review/README.md).
 
+## Round 4 of the page (2026-10-16-r4): the week agenda's states
+
+Kenny's note on round 3: the skeleton entries made no sense (two in one day, three in the next); a loading week should do what a
+loading table does, one loading picture in the middle of the whole. So:
+
+- **No skeleton entries any more:** the ghosts and their rules are gone from `js/week.js`, `css/components.css` and
+  `css/formal-register.css`. While the week loads, the days, the hours and the lines stay empty and steady.
+- **The data table's own loading card:** `drawBusy()` in `js/week.js` builds the layer and panel `drawOverlay()` in
+  `js/datatable.js` builds (`.kp-datatable__busy-overlay` > `.kp-datatable__busy-panel` > `.kp-spinner` +
+  `.kp-datatable__busy-words`), laid over the days' columns only, so every theme dresses it as it dresses its busy table. It
+  arrives the theme's way (the agenda's `easeSize()`) and leaves as the table's layer leaves (`leave()`, else `playClose()`).
+  The layer draws no veil (`--kp-busy-overlay-veil: 0%`): there is nothing under it to dim.
+- **Nothing under the card:** the items wait until the card has gone, then arrive one after the other.
+- **No height change in rows:** below 40rem a day keeps its height while the week loads again (`--kp-week-hold`) and lets go
+  once the items have arrived, so the same items move nothing.
+- **Review kit:** the small end dialog is gone; after the last pair the kit goes straight to the Agenda (or `?next=`).
+
 ## Decisions to judge
 
 - Tiles: the "only" button of the facet list is a sibling of the label, always shown on touch; a status row keeps one detail line (`--kp-statusrow-detail-lines: 2` for more); the tile reserves a mark column so a spinner never moves the title.
