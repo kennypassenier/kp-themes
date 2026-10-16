@@ -60,7 +60,20 @@ export { PAGE_SIZE, SELECT_EVENT as DATATABLE_SELECT_EVENT, VIEW_EVENT as DATATA
 export { WRAP_SELECTOR as TABLE_WRAP_SELECTOR, attachTableRegions } from './js/tables.js';
 export { VALID_EVENT as FORM_VALID_EVENT, DONE_EVENT as FORM_DONE_EVENT, attachForms, attachSwitches } from './js/forms.js';
 export { Copyable, Diff, EmptyState, Health, Timeline } from './components/patterns.jsx';
-export { COMMIT_EVENT as ACTION_COMMIT_EVENT, UNDO_EVENT as ACTION_UNDO_EVENT, UNDO_MS, attachPatterns } from './js/patterns.js';
+export {
+    COMMIT_EVENT as ACTION_COMMIT_EVENT,
+    UNDO_EVENT as ACTION_UNDO_EVENT,
+    UNDO_MS,
+    SECRET,
+    SECRET_EVENT,
+    SECRET_MASK,
+    SECRET_REQUEST_EVENT,
+    SECRET_TTL,
+    attachPatterns,
+    attachSecrets,
+    hideSecret,
+    revealSecret,
+} from './js/patterns.js';
 export { REORDER_EVENT, SPLIT_EVENT, attachStructure } from './js/structure.js';
 export {
     REMEMBER_ATTRIBUTE,
@@ -112,10 +125,14 @@ export {
     axisStep,
     packRows,
     rangeSeconds,
+    setGanttKinds,
+    setGanttLegend,
+    setGanttPoints,
     setGanttRuns,
     setGanttSelection,
     setGanttState,
     setGanttWindow,
+    setGanttZones,
 } from './js/gantt.js';
 export { BUSY_CARD, openBusyCard } from './js/busy-card.js';
 /** @typedef {import('./js/busy-card.js').BusyCard} BusyCard */
@@ -192,6 +209,18 @@ export {
 } from './js/statusrow.js';
 /** @typedef {import('./js/statusrow.js').StatusRow} StatusRow */
 export { FACETS, FACET_EVENT, attachFacets, getFacetValues, setFacetCounts, setFacetItems, setFacetValues } from './js/facets.js';
+export {
+    PIPELINE,
+    PIPELINE_MORE_EVENT,
+    PIPELINE_OPEN_EVENT,
+    PIPELINE_RETRY_EVENT,
+    attachPipelines,
+    setPipeline,
+    setPipelineSelected,
+    setPipelineState,
+} from './js/pipeline.js';
+/** @typedef {import('./js/pipeline.js').PipelineLane} PipelineLane */
+/** @typedef {import('./js/pipeline.js').PipelineCard} PipelineCard */
 /** @typedef {import('./js/facets.js').FacetItem} FacetItem */
 export { HOVERCARD_ATTRIBUTE, HOVERCARD_CARD, HOVERCARD_EVENT, attachHoverCards } from './js/hovercard.js';
 // Information that updates in place, the theme's way [research/update-motion, 2026-10-05].

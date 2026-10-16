@@ -2895,6 +2895,45 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
         ],
     },
     {
+        id: 'pipeline',
+        title: 'Pipeline',
+        group: 'Data',
+        classes: ['kp-pipeline'],
+        aliases: ['dimmed', 'lane'],
+        exports: [],
+        intro: 'Where each item stands, a lane per stage: a read-only board, not a drag-and-drop one. `attachPipelines(root)` in js/pipeline.js fills `section.kp-pipeline[data-kp-pipeline]`; the page gives the lanes and the cards with `setPipeline(el, { lanes, cards })` and the state of the whole with `setPipelineState`. Each lane has a plate with its name and exact count in the stage’s colour (`tone` 1 to 5), its share of all, and its cards (a link with `href`, else a button; `mark`, `sub` and `meta` under the title). A lane marked `closed` stands under the board across its width. `data-kp-pipeline-limit="4"` keeps four cards per lane behind “+N more”; `data-kp-pipeline-share="false"` leaves the share out. Under 40rem of its own width the lanes turn to rows.',
+        whenToUse:
+            'When a reader asks how many items stand at each stage of one process and which: applications from draft to offer, deployments from queued to live. Not for moving items between stages (that is a form), and not for counts alone (use key figures).',
+        examples: [
+            {
+                title: 'Applications by stage',
+                why: 'The markup is the empty board; the script draws the lanes and cards from what the page hands over, keeping cards by id so a refresh moves nothing that stayed.',
+                markup: `
+<section class="kp-pipeline" data-kp-pipeline data-kp-pipeline-limit="4" id="doc-pipeline" aria-label="Applications by stage"></section>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-pipeline', what: 'Marks the board; `attachPipelines` fills it.' },
+            { name: 'data-kp-pipeline-limit', what: 'Cards per lane before “+N more” (a toggle, `aria-expanded`; `data-kp-pipeline-more` names its lane); 0 or none shows every card.' },
+            { name: 'data-kp-pipeline-share', what: '`false`: no share of all under the lane’s plate.' },
+            { name: 'data-kp-pipeline-more', what: 'On a lane’s “+N more” button: the lane it opens.' },
+            { name: 'data-kp-lane', what: 'On a lane: its key.' },
+            { name: 'data-kp-tone', what: 'On a lane and its cards: the stage’s colour, 1 to 5.' },
+            { name: 'data-kp-dimmed', what: 'On a card filtered out but kept in its place: quieter ink and a dashed edge.' },
+            { name: 'data-kp-state', what: 'On the board: `loading` (the lanes kept, the table’s loading card over them, cards drawn once it has gone), `ready`, `empty` (every lane says none, one sentence over the board) or `error` (the reason with Try again).' },
+            { name: 'kp-pipeline-open', what: 'A card was opened: `{ id, card, source }`; a link is still followed.' },
+            { name: 'kp-pipeline-retry', what: 'Try again on a failed board was pressed.' },
+            { name: 'kp-pipeline-more', what: 'A lane shows more or fewer: `{ lane, open }`.' },
+            { name: 'setPipelineSelected', what: 'Marks the open card (`aria-current`), or none.' },
+        ],
+        accessibility: [
+            'Built in — the board is a list of lanes named by their plates, each a list of cards; a count is the exact number.',
+            'Built in — one tab stop: left and right to the neighbouring lane, up and down along a lane, Home and End to its first and last; Enter follows a link or presses a button.',
+            'Yours — name the board (`aria-label`), and give a card a title that says what it is without its colour.',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

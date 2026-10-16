@@ -380,6 +380,14 @@
  * @property {(count: number, labels: string) => string} ganttCluster  The name of marks too close to tell apart, "3 events: Applied, Mail, Call"
  * @property {(more: number) => string} ganttClusterMore  The count on such a mark, "+2"
  * @property {string} ganttPointsHint  The hint under a timeline of point events
+ * @property {string} pipelineLoading  The words on a pipeline's loading card (js/pipeline.js) [kpadopt4]
+ * @property {string} pipelineEmpty  The sentence over a pipeline with no cards, when the page gives none
+ * @property {(reason: string) => string} pipelineFailed  The sentence over a pipeline that could not be read
+ * @property {string} pipelineRetry  Its Try again button
+ * @property {string} pipelineNone  The word in a lane with no cards
+ * @property {(more: number) => string} pipelineMore  The button under a lane's first cards, "+4 more"
+ * @property {string} pipelineLess  The same button while the lane shows every card
+ * @property {(percent: number) => string} pipelineShare  A lane's share of all cards, "25 % of all"
  * @property {string} graphShowAll  The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
  * @property {string} graphShowAllTitle  Its title [scope-143]
  * @property {string} graphHint  The hint under the graph, and the second half of its picture's accessible name: what a pointer, a click and the keys do [scope-143]
@@ -870,6 +878,14 @@ export const DEFAULT_STRINGS = Object.freeze({
     ganttCluster: (count, labels) => `${count} events: ${labels}`,
     ganttClusterMore: (more) => `+${more}`,
     ganttPointsHint: 'Point at a mark to read it · arrows walk the marks · Enter opens one',
+    pipelineLoading: 'Reading the board',
+    pipelineEmpty: 'Nothing on the board yet.',
+    pipelineFailed: (reason) => (reason ? `Could not read the board: ${reason}` : 'Could not read the board.'),
+    pipelineRetry: 'Try again',
+    pipelineNone: 'none',
+    pipelineMore: (more) => `+${more} more`,
+    pipelineLess: 'Show fewer',
+    pipelineShare: (percent) => `${percent} % of all`,
     // The network graph [scope-143]: its own words; the nodes, kinds and
     // the sentences of its states are the page's.
     graphShowAll: 'Show all',

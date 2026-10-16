@@ -1072,6 +1072,38 @@ export type Strings = {
      */
     ganttPointsHint: string;
     /**
+     * The words on a pipeline's loading card (js/pipeline.js) [kpadopt4]
+     */
+    pipelineLoading: string;
+    /**
+     * The sentence over a pipeline with no cards, when the page gives none
+     */
+    pipelineEmpty: string;
+    /**
+     * The sentence over a pipeline that could not be read
+     */
+    pipelineFailed: (reason: string) => string;
+    /**
+     * Its Try again button
+     */
+    pipelineRetry: string;
+    /**
+     * The word in a lane with no cards
+     */
+    pipelineNone: string;
+    /**
+     * The button under a lane's first cards, "+4 more"
+     */
+    pipelineMore: (more: number) => string;
+    /**
+     * The same button while the lane shows every card
+     */
+    pipelineLess: string;
+    /**
+     * A lane's share of all cards, "25 % of all"
+     */
+    pipelineShare: (percent: number) => string;
+    /**
      * The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
      */
     graphShowAll: string;
@@ -1472,6 +1504,14 @@ export type Strings = {
  * @property {(count: number, labels: string) => string} ganttCluster  The name of marks too close to tell apart, "3 events: Applied, Mail, Call"
  * @property {(more: number) => string} ganttClusterMore  The count on such a mark, "+2"
  * @property {string} ganttPointsHint  The hint under a timeline of point events
+ * @property {string} pipelineLoading  The words on a pipeline's loading card (js/pipeline.js) [kpadopt4]
+ * @property {string} pipelineEmpty  The sentence over a pipeline with no cards, when the page gives none
+ * @property {(reason: string) => string} pipelineFailed  The sentence over a pipeline that could not be read
+ * @property {string} pipelineRetry  Its Try again button
+ * @property {string} pipelineNone  The word in a lane with no cards
+ * @property {(more: number) => string} pipelineMore  The button under a lane's first cards, "+4 more"
+ * @property {string} pipelineLess  The same button while the lane shows every card
+ * @property {(percent: number) => string} pipelineShare  A lane's share of all cards, "25 % of all"
  * @property {string} graphShowAll  The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
  * @property {string} graphShowAllTitle  Its title [scope-143]
  * @property {string} graphHint  The hint under the graph, and the second half of its picture's accessible name: what a pointer, a click and the keys do [scope-143]

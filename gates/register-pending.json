@@ -20,5 +20,6 @@
     "drawer": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports-2); each register answers it once it is judged in that theme",
     "help": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports-2); each register answers it once it is judged in that theme",
     "tour": "a dashboard component moved into the package at scope-143, approved in formal only (research/dashboard-ports-2); each register answers it once it is judged in that theme",
-    "secret": "the secret field [kpadopt4], built in formal first (research/kpadopt4-flows); each register answers it once it is judged in that theme"
+    "secret": "the secret field [kpadopt4], built in formal first (research/kpadopt4-flows); each register answers it once it is judged in that theme",
+    "pipeline": "the pipeline board [kpadopt4], built in formal first (research/kpadopt4-flows); each register answers it once it is judged in that theme"
 }

@@ -140,6 +140,12 @@ export const REQUIRED = [
         why: 'The timeline measures its own width and narrows its lane labels; the query reaches only its own parts [kpadopt-time].',
     },
     {
+        container: 'kp-pipeline',
+        class: 'kp-pipeline',
+        self: true,
+        why: 'The board measures its own width and turns its lanes into rows when narrow; the query reaches only its own parts [kpadopt4].',
+    },
+    {
         container: 'kp-journey',
         class: 'kp-steplist--journey',
         self: true,

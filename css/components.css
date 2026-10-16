@@ -9574,6 +9574,318 @@
         inset: 0 0 var(--kp-gantt-axis, 1.75rem);
     }
 
+    /* --- Pipeline: where each item stands, a lane per stage [kpadopt4] ------
+ * `section.kp-pipeline[data-kp-pipeline]` (js/pipeline.js). A read-only board: lanes side by side at one width, each as
+ * tall as the tallest, a plate with the stage's name and its exact count in the stage's colour (a tint of the chart
+ * colour, the words in the page's ink [fix-70]), the share of all under it, and the cards. A closed lane stands under the
+ * board across its width. Under 40rem of the board's own width the lanes turn to rows. The sentence of an empty or a
+ * failed board stands on its own plate over the lanes, which keep their place. Knobs [KT6]: `--kp-pipeline-gap`
+ * (0.75rem), `--kp-pipeline-min` (12rem, the board's least height), `--kp-pipeline-card-min` (12rem, a card's least
+ * width where cards flow in a row), `--kp-pipeline-mark` (1.75rem), `--kp-pipeline-tone` (the stage's colour). */
+    .kp-pipeline {
+        container: kp-pipeline / inline-size;
+        display: grid;
+        gap: var(--kp-pipeline-gap, 0.75rem);
+        min-inline-size: 0;
+    }
+
+    .kp-pipeline__frame {
+        position: relative;
+        min-inline-size: 0;
+    }
+
+    .kp-pipeline__board {
+        display: grid;
+        grid-template-columns: repeat(var(--kp-pipeline-lanes, 4), minmax(0, 1fr));
+        gap: var(--kp-pipeline-gap, 0.75rem);
+        align-items: stretch;
+        min-block-size: var(--kp-pipeline-min, 12rem);
+    }
+
+    .kp-pipeline__lane {
+        --kp-pipeline-tone: var(--muted-foreground);
+        display: grid;
+        grid-template-rows: auto auto 1fr;
+        align-content: start;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        padding: var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--muted);
+        color: var(--foreground);
+    }
+
+    :is(.kp-pipeline__lane, .kp-pipeline__card)[data-kp-tone='1'] {
+        --kp-pipeline-tone: var(--chart-1);
+    }
+
+    :is(.kp-pipeline__lane, .kp-pipeline__card)[data-kp-tone='2'] {
+        --kp-pipeline-tone: var(--chart-2);
+    }
+
+    :is(.kp-pipeline__lane, .kp-pipeline__card)[data-kp-tone='3'] {
+        --kp-pipeline-tone: var(--chart-3);
+    }
+
+    :is(.kp-pipeline__lane, .kp-pipeline__card)[data-kp-tone='4'] {
+        --kp-pipeline-tone: var(--chart-4);
+    }
+
+    :is(.kp-pipeline__lane, .kp-pipeline__card)[data-kp-tone='5'] {
+        --kp-pipeline-tone: var(--chart-5);
+    }
+
+    .kp-pipeline__head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--kp-pipeline-tone);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: color-mix(in oklab, var(--kp-pipeline-tone) 22%, var(--card));
+        color: var(--foreground);
+    }
+
+    .kp-pipeline__name {
+        min-inline-size: 0;
+        margin: 0;
+        overflow: hidden;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        line-height: 1.4;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-pipeline__count {
+        flex: none;
+        min-inline-size: 1.5rem;
+        font-size: 1.125rem;
+        font-variant-numeric: tabular-nums;
+        font-weight: 700;
+        line-height: 1.4;
+        text-align: end;
+    }
+
+    .kp-pipeline__ghost-count {
+        display: inline-block;
+        inline-size: 1.25rem;
+        block-size: 1rem;
+        vertical-align: middle;
+    }
+
+    .kp-pipeline__share {
+        min-block-size: 1.25rem;
+        margin: 0;
+        padding-inline: var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        line-height: 1.25rem;
+    }
+
+    .kp-pipeline__cards {
+        display: grid;
+        align-content: start;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-pipeline__card {
+        box-sizing: border-box;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-areas:
+            'mark title'
+            'mark sub'
+            'mark meta';
+        align-items: center;
+        column-gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+        margin: 0;
+        padding: var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--border);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+        font: inherit;
+        text-align: start;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .kp-pipeline__card:hover {
+        border-color: var(--border-strong);
+    }
+
+    .kp-pipeline__card[aria-current='true'] {
+        border-color: var(--primary);
+        box-shadow: inset 0 0 0 1px var(--primary);
+    }
+
+    /* Filtered out, kept in its place: quieter by ink and a dashed edge, not by opacity, so its words keep their contrast. */
+    .kp-pipeline__card[data-kp-dimmed] {
+        border-style: dashed;
+        background: transparent;
+        color: var(--muted-foreground);
+    }
+
+    .kp-pipeline__mark {
+        grid-area: mark;
+        display: grid;
+        place-items: center;
+        inline-size: var(--kp-pipeline-mark, 1.75rem);
+        block-size: var(--kp-pipeline-mark, 1.75rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        background: color-mix(in oklab, var(--kp-pipeline-tone, var(--muted-foreground)) 30%, var(--card));
+        color: var(--foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 700;
+        letter-spacing: 0.02em;
+        text-transform: uppercase;
+    }
+
+    .kp-pipeline__mark[hidden],
+    .kp-pipeline__sub[hidden],
+    .kp-pipeline__meta[hidden] {
+        display: none;
+    }
+
+    :is(.kp-pipeline__title, .kp-pipeline__sub, .kp-pipeline__meta) {
+        min-inline-size: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .kp-pipeline__title {
+        grid-area: title;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+    }
+
+    .kp-pipeline__sub {
+        grid-area: sub;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-pipeline__meta {
+        grid-area: meta;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-pipeline__card[data-kp-dimmed] :is(.kp-pipeline__sub, .kp-pipeline__meta) {
+        color: inherit;
+    }
+
+    .kp-pipeline__ghost {
+        grid-template-areas: none;
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: var(--kp-space-xs, 0.25rem);
+        block-size: 3.5rem;
+        align-content: center;
+        cursor: default;
+    }
+
+    .kp-pipeline__ghost > .kp-skeleton {
+        block-size: 0.75rem;
+        inline-size: 75%;
+    }
+
+    .kp-pipeline__ghost > .kp-skeleton + .kp-skeleton {
+        inline-size: 45%;
+    }
+
+    .kp-pipeline__none {
+        margin: 0;
+        padding: var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-pipeline__more {
+        justify-self: start;
+    }
+
+    .kp-pipeline__closed {
+        display: grid;
+        gap: var(--kp-pipeline-gap, 0.75rem);
+    }
+
+    .kp-pipeline__closed[hidden] {
+        display: none;
+    }
+
+    .kp-pipeline__lane--closed .kp-pipeline__cards {
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--kp-pipeline-card-min, 12rem)), 1fr));
+    }
+
+    .kp-pipeline__state {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 50%;
+        z-index: 2;
+        box-sizing: border-box;
+        display: grid;
+        justify-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        inline-size: max-content;
+        max-inline-size: min(28rem, calc(100% - 2rem));
+        padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1rem);
+        translate: -50% -50%;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+        text-align: center;
+    }
+
+    .kp-pipeline__state:dir(rtl) {
+        translate: 50% -50%;
+    }
+
+    .kp-pipeline__state[hidden] {
+        display: none;
+    }
+
+    .kp-pipeline__words {
+        margin: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-pipeline__state[data-kp-state='error'] .kp-pipeline__words {
+        padding-inline-start: var(--kp-space-sm, 0.5rem);
+        border-inline-start: 3px solid var(--destructive);
+        text-align: start;
+    }
+
+    .kp-pipeline__retry[hidden] {
+        display: none;
+    }
+
+    @container kp-pipeline (max-width: 40rem) {
+        .kp-pipeline__board {
+            grid-template-columns: minmax(0, 1fr);
+            min-block-size: 0;
+        }
+
+        .kp-pipeline__cards {
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--kp-pipeline-card-min, 12rem)), 1fr));
+        }
+
+        .kp-pipeline__more,
+        .kp-pipeline__none {
+            grid-column: 1 / -1;
+        }
+    }
+
     /* Diff view [TH54] */
     .kp-diff {
         margin: 0;
