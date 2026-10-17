@@ -87,7 +87,8 @@ export function rereviewFaults(topic, html, verdicts, archived) {
         }
     }
     // The page's round lists the page rounds Claude has recorded (the review kit drops their answers, progress.js).
-    const declared = [...(JSON.parse(/<script\b[^>]*data-review-round[^>]*>([\s\S]*?)<\/script>/.exec(html)?.[1] ?? 'null')?.received ?? [])].sort();
+    const roundData = JSON.parse(/<script\b[^>]*data-review-round[^>]*>([\s\S]*?)<\/script>/.exec(html)?.[1] ?? 'null');
+    const declared = [...(roundData?.received ?? [])].sort();
     const recorded = [...new Set((verdicts.rounds ?? []).map((/** @type {any} */ r) => r.page).filter(Boolean))].sort();
     if (declared.join('|') !== recorded.join('|')) {
         faults.push(
@@ -96,6 +97,14 @@ export function rereviewFaults(topic, html, verdicts, archived) {
         );
     }
     if (archived) return faults;
+    // A page round whose own id is already received has its answer dropped by the review kit the moment it is given
+    // (progress.js dropReceivedAnswer); a decided demo, filed under Archived research, may keep its last round received: Kenny's verdict on forest's three tick options never arrived that way
+    // (2026-10-17, correction lost-answer-1017). Every new page round takes an id of its own.
+    if (roundData?.round && declared.includes(roundData.round)) {
+        faults.push(
+            `research/${topic}: the page round "${roundData.round}" is already listed as received, so the review kit drops Kenny's answer to it; give the new round its own id`,
+        );
+    }
     const latest = latestVerdicts(verdicts, offered);
     // A review of more than 100 verdicts is split per group of components (Kenny, 2026-10-17: "demos met meer dan 100
     // beoordelingen moeten ook opgesplitst worden per group van elementen zodat ze kleiner en behapbaarder worden").

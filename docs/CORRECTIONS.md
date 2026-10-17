@@ -6945,3 +6945,34 @@ note about text against an edge.
 measures each state it reaches.
 
 **9 · When we review the measure.** At the release suite: whether it becomes a tagged browser test.
+
+## lost-answer-1017 · Kenny's verdict on forest's three tick options never arrived (2026-10-17)
+
+Waiting on Kenny's answer to the correction form.
+
+**1 · What went wrong.** The values part's page round for the three forest tick options (published 2026-10-17 03:58,
+d3830a80) kept the id `2026-10-17-r3-values`, the id of the round whose answer was already recorded and listed as
+received. The review kit drops an answer to a received round the moment it is given (progress.js `dropReceivedAnswer`),
+so Kenny's rejection of all three options was dropped; he found out from the same options still showing (Kenny,
+2026-10-17 16:28: "Ik had die toch alle drie afgekeurd?").
+
+**2 · Which gate let it through.** None. check-rereview compared "received" with VERDICTS.json, never the page's own round
+id with "received".
+
+**3 · Where else the same fault sits.** Property: an open demo whose page round id is in its own received list.
+Searched with `node gates/check-rereview.mjs` after the new check: no open demo; the ten hits before scoping were
+decided, archived demos that keep their last round received, which is correct.
+
+**4 · How we prevent recurrence.** gates/check-rereview.mjs refuses an open demo whose page round is already received;
+research/kpadopt4/build-parts.mjs gives every new part round its own id (`-<n>`).
+
+**5 · What the remedy costs.** Nothing at review time; one check in the commit gates.
+
+**6 · Who or what enforces it.** Code: the gate, in every commit.
+
+**7 · How we measure that it works, and at which moment.** Kenny's answer on the next forest tick round arrives in the
+thread.
+
+**8 · The fallback if the measurement fails.** The kit stops dropping an answer whose round equals the page's own round.
+
+**9 · When we review the measure.** At the release suite.
