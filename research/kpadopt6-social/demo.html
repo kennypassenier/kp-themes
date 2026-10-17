@@ -35,13 +35,15 @@
             <header class="kd-intro">
                 <h1>The sixth adoption round, social: five parts for people who plan and talk together</h1>
                 <p class="cat-intro">
-                    Second round: only the two parts not approved yet are asked (who can come, the console); the packing list, the QR code and the time field were approved. Formal only, as every new part starts. One topic per part, five in all: who brings what on a packing list, who can come on which day,
-                    a QR code for a link, a field for a time of day and a console with a prompt. Every section says under <b>Expected</b> what you
-                    should see and what each control does, and, for the few real choices, sets the default and lists the other options to switch to in the review dialog.
+                    Second round: only the two parts not approved yet are asked (who can come, the console); the packing list, the QR code and the
+                    time field were approved. Formal only, as every new part starts. One topic per part, five in all: who brings what on a packing
+                    list, who can come on which day, a QR code for a link, a field for a time of day and a console with a prompt. Every section says
+                    under <b>Expected</b> what you should see and what each control does, and, for the few real choices, sets the default and lists
+                    the other options to switch to in the review dialog.
                 </p>
                 <p>
-                    Everything here is the package running on its own stylesheets. Only the data is made up: the trip, the people, the dates, the links
-                    and the commands are samples, and a pretend server answers after a short wait.
+                    Everything here is the package running on its own stylesheets. Only the data is made up: the trip, the people, the dates, the
+                    links and the commands are samples, and a pretend server answers after a short wait.
                 </p>
             </header>
 
@@ -57,9 +59,9 @@
                 data-review-title="Who can come: people over days or periods"
                 aria-labelledby="h-availability-grid"
                 data-review-choices='[
-  { "id": "press", "label": "What does a press on your own cell do?", "default": "cycle", "options": [
-    { "value": "cycle", "label": "Cycle: empty, can, maybe, cannot, empty (recommended)", "hint": "One tap per cell, also on a phone. Space and Enter do the same, y m n set an answer straight away." },
-    { "value": "menu", "label": "Open the answers in a small menu", "hint": "Two taps per cell, but you never pass an answer you did not want on the way." } ] },
+  { "id": "press", "label": "What does a press on your own cell do?", "default": "menu", "options": [
+    { "value": "menu", "label": "Open the answers in a small menu", "hint": "Two taps per cell, but you never pass an answer you did not want on the way." },
+    { "value": "cycle", "label": "Cycle: empty, can, maybe, cannot, empty", "hint": "One tap per cell, also on a phone. Space and Enter do the same, y m n set an answer straight away." } ] },
   { "id": "best", "label": "Which column is marked as the best?", "default": "most", "options": [
     { "value": "most", "label": "The one with most who can, once everybody answered (recommended)", "hint": "Ties go to the column with the fewest who cannot. Several columns can share the mark." },
     { "value": "everyone", "label": "Only a column where everybody can", "hint": "Stricter: a column with one person who cannot is never marked, even when it is the closest." } ] },
@@ -75,42 +77,49 @@
                 <div class="k6-sec__head">
                     <h2 id="h-availability-grid">Who can come</h2>
                     <p>
-                        People in the rows, days or proposed periods in the columns. Each person sets their own row; the column everybody can is ringed
-                        and starred. It is the package's heat grid, made editable. An organiser can switch a trip between periods and days.
+                        People in the rows, days or proposed periods in the columns. Each person sets their own row; the column everybody can is
+                        ringed and starred. It is the package's heat grid, made editable. An organiser can switch a trip between periods and days.
                     </p>
                 </div>
                 <div class="k6-expected">
                     <p><b>Expected:</b></p>
                     <ul>
                         <li>
-                            Your own row (Kenny, on top, with a blue edge round its cells) answers a press: <b>empty, can, maybe, cannot</b>, each a glyph
-                            (check, tilde, cross) and a tone. The other rows do not react. The summary row fills from the bottom with the number who can;
-                            under the grid the legend explains the three glyphs and the ring.
+                            Your own row (Kenny, on top, with a blue edge round its cells) answers a press that opens a small menu:
+                            <b>empty, can, maybe, cannot</b> (or, as the Cycle option, one press steps through them), each a glyph (check, tilde,
+                            cross) and a tone. The other rows do not react. The summary row fills from the bottom with the number who can; under the
+                            grid the legend explains the three glyphs and the ring.
                         </li>
                         <li>
-                            Press a cell: only that cell shows the spinner for a moment, then the answer. Press <b>Make the server refuse</b> first and the
-                            cell goes back, shows a <b>!</b> on red for 3 seconds and a line says which cell was not saved.
+                            Press a cell and pick an answer: only that cell shows the spinner for a moment, then the answer. Press
+                            <b>Make the server refuse</b> first and the cell goes back, shows a <b>!</b> on red for 3 seconds and a line says which
+                            cell was not saved.
                         </li>
                         <li>
-                            <b>Drag across your own row</b> (mouse): every cell you cross gets the same answer, and one Undo (6 seconds) takes the whole stroke back.
-                            With a cell focused, <b>y</b> <b>m</b> <b>n</b> set can, maybe and cannot, <b>Backspace</b> clears; in someone else's row they do nothing.
+                            <b>Drag across your own row</b> (mouse): every cell you cross gets the same answer, and one Undo (6 seconds) takes the
+                            whole stroke back. With a cell focused, <b>y</b> <b>m</b> <b>n</b> set can, maybe and cannot, <b>Backspace</b> clears; in
+                            someone else's row they do nothing.
                         </li>
                         <li>
-                            <b>Choose these dates</b> appears once the best column is known. The switch <b>Periods / Days</b> swaps the columns (the answers
-                            are kept per set). A column header press picks the column; a summary cell's hover card names who can, maybe and cannot.
+                            <b>Choose these dates</b> appears once the best column is known. The switch <b>Periods / Days</b> swaps the columns (the
+                            answers are kept per set). A column header press picks the column; a summary cell's hover card names who can, maybe and
+                            cannot.
                         </li>
                         <li>
-                            Loading keeps the grid's shape with the busy card over it and the names beside it; <b>No dates yet</b> and <b>Failed</b> are plates
-                            at the grid's full height, the failed one with Retry; <b>Dates chosen</b> makes every cell inert and says why. At 390 px the name
-                            column stays and the columns scroll; the second phone frame shows the list per column.
+                            Loading keeps the grid's shape with the busy card over it and the names beside it; <b>No dates yet</b> and
+                            <b>Failed</b> are plates at the grid's full height, the failed one with Retry; <b>Dates chosen</b> makes every cell inert
+                            and says why. At 390 px the name column stays and the columns scroll; the second phone frame shows the list per column.
                         </li>
-                        <li>The groups marked <b>(live option)</b> change one setting of the main component while it runs and it redraws at once, nothing reloads: every choice you are asked about is a real option with a default.</li>
+                        <li>
+                            The groups marked <b>(live option)</b> change one setting of the main component while it runs and it redraws at once,
+                            nothing reloads: every choice you are asked about is a real option with a default.
+                        </li>
                     </ul>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        Formal's plain ground: the tones are the package's own quiet green, amber and red, the best column a 2 px navy ring, and your row's
-                        cells carry a thin navy edge so it is the one that looks pressable.
+                        Formal's plain ground: the tones are the package's own quiet green, amber and red, the best column a 2 px navy ring, and your
+                        row's cells carry a thin navy edge so it is the one that looks pressable.
                     </p>
                 </div>
                 <div class="k6-controls" data-review-controls>
@@ -126,7 +135,9 @@
                     <div role="group" aria-label="The server">
                         <b>The server:</b>
                         <button type="button" class="kp-button kp-button--sm" data-k6-av-server="saves" aria-pressed="true">Saves</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-av-server="refuses" aria-pressed="false">Make the server refuse</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-av-server="refuses" aria-pressed="false">
+                            Make the server refuse
+                        </button>
                     </div>
                     <div role="group" aria-label="Another person answers">
                         <b>Another person acts:</b>
@@ -134,73 +145,260 @@
                     </div>
                     <div role="group" aria-label="Press (live option)">
                         <b>Press (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-press|cycle" aria-pressed="true">Cycle (default)</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-press|menu" aria-pressed="false">Menu</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-press|cycle"
+                            aria-pressed="false"
+                        >
+                            Cycle
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-press|menu"
+                            aria-pressed="true"
+                        >
+                            Menu (default)
+                        </button>
                     </div>
                     <div role="group" aria-label="Best column (live option)">
                         <b>Best column (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-best|most" aria-pressed="true">Most can (default)</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-best|everyone" aria-pressed="false">Only everybody</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-best|none" aria-pressed="false">No best column</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-best|most"
+                            aria-pressed="true"
+                        >
+                            Most can (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-best|everyone"
+                            aria-pressed="false"
+                        >
+                            Only everybody
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-best|none"
+                            aria-pressed="false"
+                        >
+                            No best column
+                        </button>
                     </div>
                     <div role="group" aria-label="Summary (live option)">
                         <b>Summary (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-summary|both" aria-pressed="true">Number and fill (default)</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-summary|count" aria-pressed="false">Number</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-summary|bar" aria-pressed="false">Fill</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-summary|both"
+                            aria-pressed="true"
+                        >
+                            Number and fill (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-summary|count"
+                            aria-pressed="false"
+                        >
+                            Number
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-summary|bar"
+                            aria-pressed="false"
+                        >
+                            Fill
+                        </button>
                     </div>
                     <div role="group" aria-label="Answers (live option)">
                         <b>Answers (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-answers|3" aria-pressed="true">Can, maybe, cannot (default)</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-answers|2" aria-pressed="false">Can, cannot</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-answers|3"
+                            aria-pressed="true"
+                        >
+                            Can, maybe, cannot (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-answers|2"
+                            aria-pressed="false"
+                        >
+                            Can, cannot
+                        </button>
                     </div>
                     <div role="group" aria-label="Tie rule (live option)">
                         <b>Tie rule (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-best-rule|yes-count" aria-pressed="true">Most who can (default)</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-best-rule|no-nobody" aria-pressed="false">Fewest who cannot</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-best-rule|yes-count"
+                            aria-pressed="true"
+                        >
+                            Most who can (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-best-rule|no-nobody"
+                            aria-pressed="false"
+                        >
+                            Fewest who cannot
+                        </button>
                     </div>
                     <div role="group" aria-label="Quorum (live option)">
                         <b>A column counts once (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-quorum|5" aria-pressed="true">Everybody answered (default)</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-quorum|3" aria-pressed="false">Three answered</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-quorum|1" aria-pressed="false">Anyone answered</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-quorum|5" aria-pressed="true">
+                            Everybody answered (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-quorum|3"
+                            aria-pressed="false"
+                        >
+                            Three answered
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-quorum|1"
+                            aria-pressed="false"
+                        >
+                            Anyone answered
+                        </button>
                     </div>
                     <div role="group" aria-label="Periods or days switch (live option)">
                         <b>Periods or days switch (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-unit-switch|on" aria-pressed="true">Organiser switches (default)</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-unit-switch|off" aria-pressed="false">Periods only</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-unit-switch|on"
+                            aria-pressed="true"
+                        >
+                            Organiser switches (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-unit-switch|off"
+                            aria-pressed="false"
+                        >
+                            Periods only
+                        </button>
                     </div>
                     <div role="group" aria-label="Row order (live option)">
                         <b>Rows (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-sort|mine-first" aria-pressed="true">Mine first (default)</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-sort|given" aria-pressed="false">As given</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-sort|answered-first" aria-pressed="false">Most answered first</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-sort|mine-first"
+                            aria-pressed="true"
+                        >
+                            Mine first (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-sort|given"
+                            aria-pressed="false"
+                        >
+                            As given
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-sort|answered-first"
+                            aria-pressed="false"
+                        >
+                            Most answered first
+                        </button>
                     </div>
                     <div role="group" aria-label="Who edits (live option)">
                         <b>Who edits (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-heat-edit|own" aria-pressed="true">Own row (default)</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-heat-edit|all" aria-pressed="false">Every row</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-heat-edit|off" aria-pressed="false">Nobody</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-heat-edit|own" aria-pressed="true">
+                            Own row (default)
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-heat-edit|all" aria-pressed="false">
+                            Every row
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-heat-edit|off" aria-pressed="false">
+                            Nobody
+                        </button>
                     </div>
                     <div role="group" aria-label="Paint (live option)">
                         <b>Drag across a row (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-paint|on" aria-pressed="true">On (default)</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-paint|false" aria-pressed="false">Off</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-paint|on" aria-pressed="true">
+                            On (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-paint|false"
+                            aria-pressed="false"
+                        >
+                            Off
+                        </button>
                     </div>
                     <div role="group" aria-label="Narrow (live option)">
                         <b>On a phone (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-narrow|scroll" aria-pressed="true">Scroll sideways (default)</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-narrow|by-column" aria-pressed="false">A list per column</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-narrow|scroll"
+                            aria-pressed="true"
+                        >
+                            Scroll sideways (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-narrow|by-column"
+                            aria-pressed="false"
+                        >
+                            A list per column
+                        </button>
                     </div>
                     <div role="group" aria-label="Density (live option)">
                         <b>Density (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-density|comfortable" aria-pressed="true">Comfortable (default)</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-density|compact" aria-pressed="false">Compact</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-density|comfortable"
+                            aria-pressed="true"
+                        >
+                            Comfortable (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-density|compact"
+                            aria-pressed="false"
+                        >
+                            Compact
+                        </button>
                     </div>
                     <div role="group" aria-label="Choose button (live option)">
                         <b>Choose these dates (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-choose|" aria-pressed="true">Offered (default)</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-choose|-" aria-pressed="false">Not offered</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-choose|" aria-pressed="true">
+                            Offered (default)
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-av|data-kp-availability-choose|-"
+                            aria-pressed="false"
+                        >
+                            Not offered
+                        </button>
                     </div>
                 </div>
                 <p class="k6-readout" role="status" data-k6-av-readout>Nothing pressed yet.</p>
@@ -239,8 +437,15 @@
                 <p class="k6-label">Each choice, side by side</p>
                 <div class="k6-trio">
                     <div class="k6-stack">
-                        <p class="k6-note"><b>A press opens the answers</b></p>
-                        <div class="kp-availability" data-kp-availability data-kp-availability-press="menu" data-kp-availability-keys="false" id="k6-av-menu" aria-label="Who can come, menu"></div>
+                        <p class="k6-note"><b>A press steps through the answers (cycle)</b></p>
+                        <div
+                            class="kp-availability"
+                            data-kp-availability
+                            data-kp-availability-press="cycle"
+                            data-kp-availability-keys="false"
+                            id="k6-av-cycle"
+                            aria-label="Who can come, cycle"
+                        ></div>
                     </div>
                     <div class="k6-stack">
                         <p class="k6-note"><b>Best only where everybody can; number only; can or cannot</b></p>
@@ -293,33 +498,37 @@
                     <p><b>Expected:</b></p>
                     <ul>
                         <li>
-                            Type <b>uptime</b> and press <b>Enter</b> (or <b>Run</b>): a block appears with the command in the mono face, <b>Sending…</b>,
-                            then <b>Running for 1 s</b> with a spinner, then <b>exit 0 · Done</b> with the output under it. <b>Up</b> and <b>Down</b>
-                            walk your earlier lines; <b>Esc</b> clears the line; <b>Ctrl+L</b> clears the screen and a toast offers Undo for 6 seconds.
-                            The key <b>:</b> jumps to the prompt from anywhere on the page (press <b>?</b> for the list).
+                            Type <b>uptime</b> and press <b>Enter</b> (or <b>Run</b>): a block appears with the command in the mono face,
+                            <b>Sending…</b>, then <b>Running for 1 s</b> with a spinner, then <b>exit 0 · Done</b> with the output under it.
+                            <b>Up</b> and <b>Down</b> walk your earlier lines; <b>Esc</b> clears the line; <b>Ctrl+L</b> clears the screen and a toast
+                            offers Undo for 6 seconds. The key <b>:</b> jumps to the prompt from anywhere on the page (press <b>?</b> for the list).
                         </li>
                         <li>
-                            The sample buttons run the other cases: a long output (folded to 12 lines with <b>Show all</b>), one that prints as it goes with
-                            Cancel, a failing one (<b>exit 1 · Failed</b>), a line with no output (<b>(no output)</b>), one the app refuses (what and what to
-                            do now, your line stays in the prompt), a dropped connection (<b>Not sure it finished</b> with <b>Check again</b>) and one over
-                            the 4 KB limit (<b>Only the first … shown</b>). <b>rm -rf /</b> needs a second press: <b>Run it anyway?</b>
+                            The sample buttons run the other cases: a long output (folded to 12 lines with <b>Show all</b>), one that prints as it
+                            goes with Cancel, a failing one (<b>exit 1 · Failed</b>), a line with no output (<b>(no output)</b>), one the app refuses
+                            (what and what to do now, your line stays in the prompt), a dropped connection (<b>Not sure it finished</b> with
+                            <b>Check again</b>) and one over the 4 KB limit (<b>Only the first … shown</b>). <b>rm -rf /</b> needs a second press:
+                            <b>Run it anyway?</b>
                         </li>
                         <li>
-                            Each block has Copy command, Copy output (each says <b>Copied</b> in the same width), Run again and Collapse. When you scroll
-                            up in a long list, a pill says how many commands arrived out of sight and jumps back.
+                            Each block has Copy command, Copy output (each says <b>Copied</b> in the same width), Run again and Collapse. When you
+                            scroll up in a long list, a pill says how many commands arrived out of sight and jumps back.
                         </li>
                         <li>
-                            Empty, loading, failed and a console with running switched off all keep the body's height; the empty one invites you to run a
-                            command, the failed one has Retry. At 390 px the select goes above the prompt, Run takes its own full line and the bar stays
-                            at the foot.
+                            Empty, loading, failed and a console with running switched off all keep the body's height; the empty one invites you to
+                            run a command, the failed one has Retry. At 390 px the select goes above the prompt, Run takes its own full line and the
+                            bar stays at the foot.
                         </li>
-                        <li>The groups marked <b>(live option)</b> change one setting of the main component while it runs and it redraws at once, nothing reloads: every choice you are asked about is a real option with a default.</li>
+                        <li>
+                            The groups marked <b>(live option)</b> change one setting of the main component while it runs and it redraws at once,
+                            nothing reloads: every choice you are asked about is a real option with a default.
+                        </li>
                     </ul>
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        Formal keeps it plain: a card with a hairline, the output blocks on white over a pale ground, the prompt glyph and the focus ring in
-                        navy, the exit codes in the success green and the destructive red with their glyphs.
+                        Formal keeps it plain: a card with a hairline, the output blocks on white over a pale ground, the prompt glyph and the focus
+                        ring in navy, the exit codes in the success green and the destructive red with their glyphs.
                     </p>
                 </div>
                 <div class="k6-controls" data-review-controls>
@@ -330,7 +539,9 @@
                         <button type="button" class="kp-button kp-button--sm" data-k6-con-state="loading" aria-pressed="false">Loading</button>
                         <button type="button" class="kp-button kp-button--sm" data-k6-con-state="error" aria-pressed="false">Host unreachable</button>
                         <button type="button" class="kp-button kp-button--sm" data-k6-con-state="off" aria-pressed="false">Running is off</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-con-state="context" aria-pressed="false">Reading the containers</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-con-state="context" aria-pressed="false">
+                            Reading the containers
+                        </button>
                     </div>
                     <div role="group" aria-label="Run a sample command">
                         <b>Run a sample:</b>
@@ -345,23 +556,74 @@
                     </div>
                     <div role="group" aria-label="Order (live option)">
                         <b>Order (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-console|data-kp-console-order|newest-last" aria-pressed="true">Newest last</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-console|data-kp-console-order|newest-first" aria-pressed="false">Newest first</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-console|data-kp-console-order|newest-last"
+                            aria-pressed="true"
+                        >
+                            Newest last
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-console|data-kp-console-order|newest-first"
+                            aria-pressed="false"
+                        >
+                            Newest first
+                        </button>
                     </div>
                     <div role="group" aria-label="Result (live option)">
                         <b>Result (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-console|data-kp-console-status|exit-code" aria-pressed="true">Exit code</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-console|data-kp-console-status|word" aria-pressed="false">Word</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-console|data-kp-console-status|exit-code"
+                            aria-pressed="true"
+                        >
+                            Exit code
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-console|data-kp-console-status|word"
+                            aria-pressed="false"
+                        >
+                            Word
+                        </button>
                     </div>
                     <div role="group" aria-label="Cancel (live option)">
                         <b>Cancel (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-console|data-kp-console-cancel|" aria-pressed="true">Offered</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-console|data-kp-console-cancel|-" aria-pressed="false">Not offered</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-console|data-kp-console-cancel|" aria-pressed="true">
+                            Offered
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-console|data-kp-console-cancel|-"
+                            aria-pressed="false"
+                        >
+                            Not offered
+                        </button>
                     </div>
                     <div role="group" aria-label="Timer (live option)">
                         <b>Timer (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-console|data-kp-console-timer|true" aria-pressed="true">Shown</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-console|data-kp-console-timer|false" aria-pressed="false">Hidden</button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-console|data-kp-console-timer|true"
+                            aria-pressed="true"
+                        >
+                            Shown
+                        </button>
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-k6-attr="#k6-console|data-kp-console-timer|false"
+                            aria-pressed="false"
+                        >
+                            Hidden
+                        </button>
                     </div>
                 </div>
                 <p class="k6-readout" role="status" data-k6-con-readout>Nothing run yet.</p>
@@ -405,23 +667,51 @@
                 <div class="k6-trio">
                     <div class="k6-stack">
                         <p class="k6-note"><b>Newest first, like a log</b></p>
-                        <div class="kp-console" data-kp-console data-kp-console-order="newest-first" data-kp-console-focus-key="false" data-kp-console-remember="off" aria-label="Log console" id="k6-console-first"></div>
+                        <div
+                            class="kp-console"
+                            data-kp-console
+                            data-kp-console-order="newest-first"
+                            data-kp-console-focus-key="false"
+                            data-kp-console-remember="off"
+                            aria-label="Log console"
+                            id="k6-console-first"
+                        ></div>
                     </div>
                     <div class="k6-stack">
                         <p class="k6-note"><b>Words instead of exit codes, no timer</b></p>
-                        <div class="kp-console" data-kp-console data-kp-console-status="word" data-kp-console-timer="false" data-kp-console-focus-key="false" data-kp-console-remember="off" aria-label="Word console" id="k6-console-word"></div>
+                        <div
+                            class="kp-console"
+                            data-kp-console
+                            data-kp-console-status="word"
+                            data-kp-console-timer="false"
+                            data-kp-console-focus-key="false"
+                            data-kp-console-remember="off"
+                            aria-label="Word console"
+                            id="k6-console-word"
+                        ></div>
                     </div>
                     <div class="k6-stack">
                         <p class="k6-note"><b>Bar only: the blocks go to the page's own list</b></p>
-                        <div class="kp-console" data-kp-console data-kp-console-mode="bar" data-kp-console-focus-key="false" data-kp-console-remember="off" aria-label="Bar console" id="k6-console-bar"></div>
+                        <div
+                            class="kp-console"
+                            data-kp-console
+                            data-kp-console-mode="bar"
+                            data-kp-console-focus-key="false"
+                            data-kp-console-remember="off"
+                            aria-label="Bar console"
+                            id="k6-console-bar"
+                        ></div>
                         <ul class="k6-barlist" data-k6-barlist></ul>
                     </div>
                 </div>
             </section>
-<!-- @@sections -->
+            <!-- @@sections -->
         </main>
         <script type="application/json" data-review-round>
-            { "round": "social-59c461e0-c71c-4ade-9ee4-294c0a609479", "received": ["social-4b115748-8633-477e-a6b4-b9529667e8a2"] }
+            {
+                "round": "social-ab71e571-71fa-494c-b018-0c5aa0cb9abd",
+                "received": ["social-4b115748-8633-477e-a6b4-b9529667e8a2", "social-59c461e0-c71c-4ade-9ee4-294c0a609479"]
+            }
         </script>
         <script type="module" src="social.js"></script>
         <script type="module" src="../../js/auto.js"></script>

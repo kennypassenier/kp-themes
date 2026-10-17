@@ -35,210 +35,15 @@
             <header class="kd-intro">
                 <h1>The sixth adoption round, social: five parts for people who plan and talk together</h1>
                 <p class="cat-intro">
-                    Formal only, as every new part starts. One topic per part, five in all: who brings what on a packing list, who can come on which day,
+                    Second round: only the two parts not approved yet are asked (who can come, the console); the packing list, the QR code and the time field were approved. Formal only, as every new part starts. One topic per part, five in all: who brings what on a packing list, who can come on which day,
                     a QR code for a link, a field for a time of day and a console with a prompt. Every section says under <b>Expected</b> what you
-                    should see and what each control does, and offers the few real choices as boxes to tick in the review dialog.
+                    should see and what each control does, and, for the few real choices, sets the default and lists the other options to switch to in the review dialog.
                 </p>
                 <p>
                     Everything here is the package running on its own stylesheets. Only the data is made up: the trip, the people, the dates, the links
                     and the commands are samples, and a pretend server answers after a short wait.
                 </p>
             </header>
-
-            <!-- ================================================================ claim-row -->
-            <h2 class="kd-topic" id="topic-claim-row">Who brings it</h2>
-            <section
-                class="k6-sec"
-                id="claim-row"
-                data-review-item="claim-row"
-                data-review-topic="claim-row"
-                data-review-topic-title="Who brings it"
-                data-review-components="claim"
-                data-review-title="Who brings it: a claim on every row of a packing list"
-                aria-labelledby="h-claim-row"
-                data-review-choices='[
-  { "id": "gap", "label": "How loud is an item nobody brings?", "options": [
-    { "value": "loud", "label": "Loud: red edge, tint and the words Nobody yet (recommended)", "hint": "Found at a glance in a long list. The glyph and the words carry it, so colour is never the only sign." },
-    { "value": "quiet", "label": "Quiet: only the words Nobody yet in muted ink", "hint": "A calm list. Gaps are found with the Nobody yet chip or by reading." } ] },
-  { "id": "person", "label": "How is a person shown on a row?", "options": [
-    { "value": "both", "label": "Mark and name (recommended)", "hint": "The name is the fact, the coloured mark helps the eye find the same person again." },
-    { "value": "name", "label": "Name only", "hint": "The plainest row. No colour to learn." },
-    { "value": "idmark", "label": "Mark only", "hint": "Shortest, for a crowded phone row. The name is in the mark's tooltip and read out to a screen reader." } ] },
-  { "id": "sort", "label": "Do items nobody brings go to the top of their group?", "options": [
-    { "value": "keep", "label": "No: the list keeps its own order (recommended)", "hint": "The list does not move while people claim. Gaps are found by their red edge or the chip." },
-    { "value": "top", "label": "Yes: gaps first inside each group", "hint": "Useful for a list of sixty. Rows jump to the next group of claimed ones after somebody takes one." } ] }
-]'
-            >
-                <div class="k6-sec__head">
-                    <h2 id="h-claim-row">Who brings it</h2>
-                    <p>
-                        A packing list where each item shows who brings it, and an item nobody brings is loud. Several people may bring one item
-                        (a pot for the stove, two people for the tent). It is the package's checklist with
-                        <code>data-kp-checklist-claim</code> added; the page says who is looking and answers each press.
-                    </p>
-                </div>
-                <div class="k6-expected">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>
-                            Each row ends in a column of its own: the people who bring it (their coloured mark and name) and one button.
-                            Rows nobody brings have a red edge, a <b>!</b> and the words <b>Nobody yet</b>; the bar says how many.
-                        </li>
-                        <li>
-                            Press <b>I'll bring it</b> on Gas stove: the button shows the spinner for a moment (the row does not move), then your
-                            name joins and the button says <b>I'm bringing it</b>. Press it again to let go: a toast offers Undo for 6 seconds.
-                        </li>
-                        <li>
-                            Press <b>I'll bring it</b> on Tent: the pretend server answers that Tom took it first. The row gets a red outline for
-                            3 seconds, says so in words and goes back to what Tom's claim makes of it. Nothing you typed or ticked is lost.
-                        </li>
-                        <li>
-                            The chips <b>All, Nobody yet, Mine</b> carry exact counts. <b>Nobody yet</b> shows only the rows nobody brings; when none
-                            is left the list says <b>Everything is taken</b> and offers all items back. The key <b>c</b> on a focused row takes or
-                            lets go; <b>Shift C</b> toggles the gaps (press <b>?</b> for the list).
-                        </li>
-                        <li>
-                            Not signed in, the buttons are off and say why on hover or focus. The state buttons below show loading (the busy card
-                            over the list), empty and failed (with Retry), each at the list's full height. At 390 px the claim cell moves under the
-                            label and the button fills the line, 44 px high.
-                        </li>
-                        <li>The groups marked <b>(live option)</b> change one setting of the main component while it runs and it redraws at once, nothing reloads: every choice you are asked about is a real option with a default.</li>
-                    </ul>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">
-                        Formal's plain white card and navy ink: the gap is the only red on the page, a 3 px edge and a faint tint, so a missing person
-                        reads before any name does. The held button is the navy outline with a check; names are set in the body face, the marks in
-                        the palette the package already uses for people.
-                    </p>
-                </div>
-                <div class="k6-controls" data-review-controls>
-                    <div role="group" aria-label="List state">
-                        <b>List state:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-claim-state="ready" aria-pressed="true">Ready</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-claim-state="loading" aria-pressed="false">Loading</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-claim-state="empty" aria-pressed="false">Empty</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-claim-state="error" aria-pressed="false">Failed</button>
-                    </div>
-                    <div role="group" aria-label="Who is looking">
-                        <b>Who is looking:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-claim-viewer="kenny" aria-pressed="true">Kenny</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-claim-viewer="" aria-pressed="false">Nobody signed in</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-claim-viewer="locked" aria-pressed="false">Trip is closed</button>
-                    </div>
-                    <div role="group" aria-label="Push an update">
-                        <b>Another person acts:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-claim-push="">Anna takes the first free item</button>
-                    </div>
-                    <div role="group" aria-label="Gap (live option)">
-                        <b>Gap (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-claim|data-kp-claim-gap|loud" aria-pressed="true">Loud</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-claim|data-kp-claim-gap|quiet" aria-pressed="false">Quiet</button>
-                    </div>
-                    <div role="group" aria-label="People shown (live option)">
-                        <b>People shown (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-claim|data-kp-claim-person|both" aria-pressed="true">Mark and name</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-claim|data-kp-claim-person|name" aria-pressed="false">Name only</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-claim|data-kp-claim-person|idmark" aria-pressed="false">Mark only</button>
-                    </div>
-                    <div role="group" aria-label="Gaps first (live option)">
-                        <b>Gaps first (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-claim|data-kp-claim-gap-sort|keep" aria-pressed="true">Keep order</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-claim|data-kp-claim-gap-sort|top" aria-pressed="false">Gaps first</button>
-                    </div>
-                    <div role="group" aria-label="Mode (live option)">
-                        <b>Mode (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-claim|data-kp-claim-mode|claim" aria-pressed="true">A button on each row</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-claim|data-kp-claim-mode|assign" aria-pressed="false">A person menu</button>
-                    </div>
-                </div>
-                <p class="k6-readout" role="status" data-k6-claim-readout>Nothing pressed yet.</p>
-                <div class="k6-pair">
-                    <div class="k6-stack">
-                        <p class="k6-label">The packing list, full width (inside a flex row too)</p>
-                        <div class="k6-flexrow">
-                            <div
-                                class="kp-checklist"
-                                data-kp-checklist
-                                data-kp-checklist-claim
-                                data-kp-claim-viewer="kenny"
-                                data-kp-claim-viewer-name="Kenny"
-                                data-kp-claim-take-all
-                                data-kp-claim-copy
-                                data-kp-checklist-empty="Nothing on the packing list yet."
-                                id="k6-claim"
-                                aria-label="Packing list for the Ardennes weekend"
-                            ></div>
-                        </div>
-                    </div>
-                    <div class="k6-stack">
-                        <p class="k6-label">390 px</p>
-                        <div class="k6-frame k6-frame--phone">
-                            <div
-                                class="kp-checklist"
-                                data-kp-checklist
-                                data-kp-checklist-claim
-                                data-kp-claim-viewer="kenny"
-                                data-kp-claim-viewer-name="Kenny"
-                                data-kp-claim-keys="false"
-                                data-kp-claim-person="idmark"
-                                style="--kp-checklist-min-rows: 6"
-                                id="k6-claim-phone"
-                                aria-label="Packing list, phone"
-                            ></div>
-                        </div>
-                    </div>
-                </div>
-                <p class="k6-label">The same list with each choice, side by side</p>
-                <div class="k6-trio">
-                    <div class="k6-stack">
-                        <p class="k6-note"><b>Quiet gap, names only</b></p>
-                        <div
-                            class="kp-checklist"
-                            data-kp-checklist
-                            data-kp-checklist-claim
-                            data-kp-claim-gap="quiet"
-                            data-kp-claim-person="name"
-                            data-kp-claim-keys="false"
-                            data-kp-claim-viewer="kenny"
-                            data-kp-claim-viewer-name="Kenny"
-                            style="--kp-checklist-min-rows: 5"
-                            id="k6-claim-quiet"
-                            aria-label="Packing list, quiet"
-                        ></div>
-                    </div>
-                    <div class="k6-stack">
-                        <p class="k6-note"><b>Gaps first in each group</b></p>
-                        <div
-                            class="kp-checklist"
-                            data-kp-checklist
-                            data-kp-checklist-claim
-                            data-kp-claim-gap-sort="top"
-                            data-kp-claim-keys="false"
-                            data-kp-claim-viewer="kenny"
-                            data-kp-claim-viewer-name="Kenny"
-                            style="--kp-checklist-min-rows: 5"
-                            id="k6-claim-top"
-                            aria-label="Packing list, gaps first"
-                        ></div>
-                    </div>
-                    <div class="k6-stack">
-                        <p class="k6-note"><b>Assign mode: one person hands out the jobs</b></p>
-                        <div
-                            class="kp-checklist"
-                            data-kp-checklist
-                            data-kp-checklist-claim
-                            data-kp-claim-mode="assign"
-                            data-kp-claim-keys="false"
-                            data-kp-claim-viewer="kenny"
-                            data-kp-claim-viewer-name="Kenny"
-                            style="--kp-checklist-min-rows: 5"
-                            id="k6-claim-assign"
-                            aria-label="Chores, assigned"
-                        ></div>
-                    </div>
-                </div>
-            </section>
 
             <!-- ================================================================ availability-grid -->
             <h2 class="kd-topic" id="topic-availability-grid">Who can come</h2>
@@ -252,17 +57,17 @@
                 data-review-title="Who can come: people over days or periods"
                 aria-labelledby="h-availability-grid"
                 data-review-choices='[
-  { "id": "press", "label": "What does a press on your own cell do?", "options": [
+  { "id": "press", "label": "What does a press on your own cell do?", "default": "cycle", "options": [
     { "value": "cycle", "label": "Cycle: empty, can, maybe, cannot, empty (recommended)", "hint": "One tap per cell, also on a phone. Space and Enter do the same, y m n set an answer straight away." },
     { "value": "menu", "label": "Open the answers in a small menu", "hint": "Two taps per cell, but you never pass an answer you did not want on the way." } ] },
-  { "id": "best", "label": "Which column is marked as the best?", "options": [
+  { "id": "best", "label": "Which column is marked as the best?", "default": "most", "options": [
     { "value": "most", "label": "The one with most who can, once everybody answered (recommended)", "hint": "Ties go to the column with the fewest who cannot. Several columns can share the mark." },
     { "value": "everyone", "label": "Only a column where everybody can", "hint": "Stricter: a column with one person who cannot is never marked, even when it is the closest." } ] },
-  { "id": "summary", "label": "What does the summary row show?", "options": [
+  { "id": "summary", "label": "What does the summary row show?", "default": "both", "options": [
     { "value": "both", "label": "The number and a fill from the bottom (recommended)", "hint": "The number is the fact, the fill is the scan aid." },
     { "value": "count", "label": "The number only", "hint": "Plainest; no fill to compare." },
     { "value": "bar", "label": "The fill only", "hint": "Quickest to scan, but the exact number is only in the hover card." } ] },
-  { "id": "unit", "label": "Does the organiser choose per trip between periods and days?", "options": [
+  { "id": "unit", "label": "Does the organiser choose per trip between periods and days?", "default": "switch", "options": [
     { "value": "switch", "label": "Yes: a switch per trip, periods or days (Kenny, 2026-10-17)", "hint": "Periods are the dates somebody proposed; days let people paint a weekend in one stroke." },
     { "value": "period", "label": "Periods only", "hint": "No switch; every trip is asked per proposed period." } ] }
 ]'
@@ -329,24 +134,73 @@
                     </div>
                     <div role="group" aria-label="Press (live option)">
                         <b>Press (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-press|cycle" aria-pressed="true">Cycle</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-press|cycle" aria-pressed="true">Cycle (default)</button>
                         <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-press|menu" aria-pressed="false">Menu</button>
                     </div>
                     <div role="group" aria-label="Best column (live option)">
                         <b>Best column (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-best|most" aria-pressed="true">Most can</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-best|most" aria-pressed="true">Most can (default)</button>
                         <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-best|everyone" aria-pressed="false">Only everybody</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-best|none" aria-pressed="false">No best column</button>
                     </div>
                     <div role="group" aria-label="Summary (live option)">
                         <b>Summary (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-summary|both" aria-pressed="true">Number and fill</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-summary|both" aria-pressed="true">Number and fill (default)</button>
                         <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-summary|count" aria-pressed="false">Number</button>
                         <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-summary|bar" aria-pressed="false">Fill</button>
                     </div>
                     <div role="group" aria-label="Answers (live option)">
                         <b>Answers (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-answers|3" aria-pressed="true">Can, maybe, cannot</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-answers|3" aria-pressed="true">Can, maybe, cannot (default)</button>
                         <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-answers|2" aria-pressed="false">Can, cannot</button>
+                    </div>
+                    <div role="group" aria-label="Tie rule (live option)">
+                        <b>Tie rule (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-best-rule|yes-count" aria-pressed="true">Most who can (default)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-best-rule|no-nobody" aria-pressed="false">Fewest who cannot</button>
+                    </div>
+                    <div role="group" aria-label="Quorum (live option)">
+                        <b>A column counts once (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-quorum|5" aria-pressed="true">Everybody answered (default)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-quorum|3" aria-pressed="false">Three answered</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-quorum|1" aria-pressed="false">Anyone answered</button>
+                    </div>
+                    <div role="group" aria-label="Periods or days switch (live option)">
+                        <b>Periods or days switch (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-unit-switch|on" aria-pressed="true">Organiser switches (default)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-unit-switch|off" aria-pressed="false">Periods only</button>
+                    </div>
+                    <div role="group" aria-label="Row order (live option)">
+                        <b>Rows (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-sort|mine-first" aria-pressed="true">Mine first (default)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-sort|given" aria-pressed="false">As given</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-sort|answered-first" aria-pressed="false">Most answered first</button>
+                    </div>
+                    <div role="group" aria-label="Who edits (live option)">
+                        <b>Who edits (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-heat-edit|own" aria-pressed="true">Own row (default)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-heat-edit|all" aria-pressed="false">Every row</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-heat-edit|off" aria-pressed="false">Nobody</button>
+                    </div>
+                    <div role="group" aria-label="Paint (live option)">
+                        <b>Drag across a row (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-paint|on" aria-pressed="true">On (default)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-paint|false" aria-pressed="false">Off</button>
+                    </div>
+                    <div role="group" aria-label="Narrow (live option)">
+                        <b>On a phone (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-narrow|scroll" aria-pressed="true">Scroll sideways (default)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-narrow|by-column" aria-pressed="false">A list per column</button>
+                    </div>
+                    <div role="group" aria-label="Density (live option)">
+                        <b>Density (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-density|comfortable" aria-pressed="true">Comfortable (default)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-density|compact" aria-pressed="false">Compact</button>
+                    </div>
+                    <div role="group" aria-label="Choose button (live option)">
+                        <b>Choose these dates (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-choose|" aria-pressed="true">Offered (default)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-choose|-" aria-pressed="false">Not offered</button>
                     </div>
                 </div>
                 <p class="k6-readout" role="status" data-k6-av-readout>Nothing pressed yet.</p>
@@ -358,7 +212,6 @@
                                 class="kp-availability"
                                 data-kp-availability
                                 data-kp-availability-choose
-                                data-kp-availability-narrow="by-column"
                                 data-kp-remember="av-main"
                                 id="k6-av"
                                 aria-label="Who can come to the Ardennes weekend"
@@ -405,300 +258,6 @@
                 </div>
             </section>
 
-            <!-- ================================================================ qr-code -->
-            <h2 class="kd-topic" id="topic-qr-code">QR code</h2>
-            <section
-                class="k6-sec"
-                id="qr-code"
-                data-review-item="qr-code"
-                data-review-topic="qr-code"
-                data-review-topic-title="QR code"
-                data-review-components="qr"
-                data-review-title="A link as a QR code a phone can scan"
-                aria-labelledby="h-qr-code"
-                data-review-choices='[
-  { "id": "look", "label": "What colour is the code?", "options": [
-    { "value": "plate", "label": "Dark modules on a light plate, always (recommended)", "hint": "Every camera reads it. The plate stays light in dark themes too: the one place the package does not follow the theme." },
-    { "value": "theme", "label": "The theme's ink on the theme's surface, when it reads at least 7 to 1", "hint": "Matches the page, but some scanners fail on it; below 7 to 1 it falls back to the plate by itself." } ] },
-  { "id": "modules", "label": "What shape are the dots?", "options": [
-    { "value": "square", "label": "Square (recommended)", "hint": "The standard look, the crispest at any size." },
-    { "value": "round", "label": "Round dots, square corner marks", "hint": "Softer. The three corner patterns stay square so it still scans." } ] },
-  { "id": "size", "label": "How big is the code by default?", "options": [
-    { "value": "12", "label": "12 rem, about 192 px (recommended)", "hint": "Scans from 40 cm on a laptop and leaves room for the link beside other content." },
-    { "value": "16", "label": "16 rem, about 256 px", "hint": "For a projector or a printed card; takes the room of a small card." } ] },
-  { "id": "download", "label": "Does the code offer a download?", "options": [
-    { "value": "off", "label": "No: Copy link only (recommended)", "hint": "Nothing to save for an invitation that is sent as a link." },
-    { "value": "png", "label": "Yes: Download PNG", "hint": "A picture at four times the shown size, for a printed invitation. SVG is the other kind (data-kp-qr-download)." } ] }
-]'
-            >
-                <div class="k6-sec__head">
-                    <h2 id="h-qr-code">QR code</h2>
-                    <p>
-                        A link shown as a QR code that a phone can scan, with the link as text and a Copy button under it. The code is drawn on the page
-                        itself: the link never goes to a service.
-                    </p>
-                </div>
-                <div class="k6-expected">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>
-                            A square white plate with dark modules and a wide white margin all round (the quiet zone), the link as text under it that wraps
-                            at any character, and <b>Copy link</b>. Point a phone camera at the first one: it opens
-                            <code>https://kp-soft.dev/invite/7Hq2-nT9a</code>.
-                        </li>
-                        <li>
-                            <b>Copy link</b> shows <b>Copied</b> for a moment in the same width; with the focus on the code, <b>Shift+C</b> does the same.
-                            The state buttons show making the link (the busy card in the square), no link yet, a link too long for the format (the
-                            text stays copyable), an expired link (the code is gone, the link struck) and a hidden code with <b>Show QR code</b>.
-                        </li>
-                        <li>
-                            Every state has the same square and the same caption height, so nothing jumps. A link over 512 bytes still draws, with a line
-                            that says it gets dense.
-                        </li>
-                        <li>At 390 px the code is the full width up to 16 rem, centred, and Copy fills the line, 44 px high. The last frame puts the link and Copy first.</li>
-                        <li>The groups marked <b>(live option)</b> change one setting of the main component while it runs and it redraws at once, nothing reloads: every choice you are asked about is a real option with a default.</li>
-                    </ul>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">
-                        Formal frames the white plate with its own hairline border and radius and nothing else: no shadow, no tint, so the quiet zone is
-                        exactly the white a scanner needs.
-                    </p>
-                </div>
-                <div class="k6-controls" data-review-controls>
-                    <div role="group" aria-label="Code state">
-                        <b>Code state:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-qr-state="ready" aria-pressed="true">Ready</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-qr-state="loading" aria-pressed="false">Making the link</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-qr-state="empty" aria-pressed="false">No link yet</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-qr-state="long" aria-pressed="false">Link too long</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-qr-state="dense" aria-pressed="false">Long link (dense)</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-qr-state="expired" aria-pressed="false">Expired</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-qr-state="hidden" aria-pressed="false">Hidden until shown</button>
-                    </div>
-                    <div role="group" aria-label="Colour (live option)">
-                        <b>Colour (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-qr|data-kp-qr-look|plate" aria-pressed="true">Plate</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-qr|data-kp-qr-look|theme" aria-pressed="false">Theme ink</button>
-                    </div>
-                    <div role="group" aria-label="Dots (live option)">
-                        <b>Dots (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-qr|data-kp-qr-modules|square" aria-pressed="true">Square</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-qr|data-kp-qr-modules|round" aria-pressed="false">Round</button>
-                    </div>
-                    <div role="group" aria-label="Size (live option)">
-                        <b>Size (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-qr|data-kp-qr-size|12rem" aria-pressed="true">12 rem</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-qr|data-kp-qr-size|lg" aria-pressed="false">16 rem</button>
-                    </div>
-                    <div role="group" aria-label="Download (live option)">
-                        <b>Download (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-qr|data-kp-qr-download|false" aria-pressed="true">Off</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-qr|data-kp-qr-download|png" aria-pressed="false">PNG</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-qr|data-kp-qr-download|svg" aria-pressed="false">SVG</button>
-                    </div>
-                </div>
-                <p class="k6-readout" role="status" data-k6-qr-readout>Nothing copied yet.</p>
-                <div class="k6-pair">
-                    <div class="k6-stack">
-                        <p class="k6-label">The invitation link (inside a flex row too)</p>
-                        <div class="k6-flexrow">
-                            <div class="kp-qr" data-kp-qr data-kp-qr-value="https://kp-soft.dev/invite/7Hq2-nT9a" data-kp-qr-retry id="k6-qr"></div>
-                        </div>
-                    </div>
-                    <div class="k6-stack">
-                        <p class="k6-label">390 px</p>
-                        <div class="k6-frame k6-frame--phone">
-                            <div class="kp-qr" data-kp-qr data-kp-qr-value="https://kp-soft.dev/invite/7Hq2-nT9a" id="k6-qr-phone"></div>
-                        </div>
-                        <p class="k6-label">390 px, link and Copy first</p>
-                        <div class="k6-frame k6-frame--phone">
-                            <div class="kp-qr" data-kp-qr data-kp-qr-narrow="link" data-kp-qr-value="https://kp-soft.dev/invite/7Hq2-nT9a" id="k6-qr-link"></div>
-                        </div>
-                    </div>
-                </div>
-                <p class="k6-label">Each choice, side by side</p>
-                <div class="k6-trio">
-                    <div class="k6-stack">
-                        <p class="k6-note"><b>The theme's own ink (falls back when it reads under 7 to 1)</b></p>
-                        <div class="kp-qr" data-kp-qr data-kp-qr-look="theme" data-kp-qr-value="https://kp-soft.dev/invite/7Hq2-nT9a"></div>
-                    </div>
-                    <div class="k6-stack">
-                        <p class="k6-note"><b>Round dots</b></p>
-                        <div class="kp-qr" data-kp-qr data-kp-qr-modules="round" data-kp-qr-value="https://kp-soft.dev/invite/7Hq2-nT9a"></div>
-                    </div>
-                    <div class="k6-stack">
-                        <p class="k6-note"><b>16 rem, quality H, with downloads</b></p>
-                        <div class="kp-qr" data-kp-qr data-kp-qr-size="lg" data-kp-qr-ecc="H" data-kp-qr-download="png" data-kp-qr-value="https://kp-soft.dev/invite/7Hq2-nT9a"></div>
-                    </div>
-                    <div class="k6-stack">
-                        <p class="k6-note"><b>A secret link behind a button</b></p>
-                        <div class="kp-qr" data-kp-qr data-kp-qr-reveal="click" data-kp-qr-value="https://kp-soft.dev/pair/Z4k9-secret-8d2L"></div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ================================================================ time-field -->
-            <h2 class="kd-topic" id="topic-time-field">Time field</h2>
-            <section
-                class="k6-sec"
-                id="time-field"
-                data-review-item="time-field"
-                data-review-topic="time-field"
-                data-review-topic-title="Time field"
-                data-review-components="time"
-                data-review-title="A field for a time of day, in 24 hours"
-                aria-labelledby="h-time-field"
-                data-review-choices='[
-  { "id": "step", "label": "How far do the arrow keys and the list step?", "options": [
-    { "value": "5", "label": "5 minutes (recommended)", "hint": "Typing still allows any minute, so a schedule at 03:07 stays possible; the arrows do not take sixty presses." },
-    { "value": "15", "label": "15 minutes", "hint": "A shorter list (96 entries) for times that are meant to be round." },
-    { "value": "1", "label": "1 minute", "hint": "Exact, but the list is 1440 entries long and the arrows crawl." } ] },
-  { "id": "popup", "label": "What opens from the clock button?", "options": [
-    { "value": "list", "label": "The package's list of times, a sheet at the foot on a phone (Kenny, 2026-10-17)", "hint": "Presets as chips above the list, entries near a busy moment marked, the same on every device." },
-    { "value": "none", "label": "Nothing: typing and the arrow keys only", "hint": "The plainest field, for a time that is always typed." } ] },
-  { "id": "look", "label": "How is the field drawn in a sentence?", "options": [
-    { "value": "inline", "label": "Underlined, like the sentence's other fields (recommended)", "hint": "The line reads as one sentence; no clock button inside it, the list opens on Alt+Down." },
-    { "value": "field", "label": "A box with the clock button, inside the sentence", "hint": "More obviously a field, but it breaks the line more." } ] }
-]'
-            >
-                <div class="k6-sec__head">
-                    <h2 id="h-time-field">Time field</h2>
-                    <p>
-                        One field for a time of day in 24 hours: typed, stepped with the arrow keys or picked from the package's own list. Unlike the
-                        browser's own time box it never shows AM and PM, and it looks like the rest of the theme.
-                    </p>
-                </div>
-                <div class="k6-expected">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>
-                            Type <b>0230</b>, <b>2:30</b>, <b>02.30</b>, <b>2h30</b> or <b>230</b> and leave the field: it says <b>02:30</b>. Type <b>7</b>:
-                            <b>07:00</b>. Type <b>24:00</b> or <b>abc</b>: the box turns red and the line says <b>Use a time like 03:00</b>; what you typed stays.
-                            Paste <b>2:30 PM</b>: it becomes <b>14:30</b> and a quiet line says it was read as 24 hours.
-                        </li>
-                        <li>
-                            <b>Up</b> and <b>Down</b> step by 5 minutes (<b>Shift</b> or <b>Page Up and Down</b> by an hour), 23:55 up is <b>00:00</b> and is
-                            announced as the next day. The clock button (or <b>Alt+Down</b>) opens a list: the nearest time is already highlighted,
-                            <b>Night 03:00</b> and <b>Morning 08:00</b> are chips above it, times within an hour of the nightly round 03:00 carry a
-                            <b>!</b> and <b>near 03:00</b>. Enter picks, Esc closes.
-                        </li>
-                        <li>
-                            The sentence below keeps its underline look; the field with a reason is off and says why; the loading one shows its own
-                            skeleton at its final width; the one whose presets failed shows a compact plate with Retry in the list.
-                        </li>
-                        <li>At 390 px the field fills the line, 44 px high, and the list is a sheet at the foot of the screen with a title and rows 44 px high.</li>
-                        <li>The groups marked <b>(live option)</b> change one setting of the main component while it runs and it redraws at once, nothing reloads: every choice you are asked about is a real option with a default.</li>
-                    </ul>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">
-                        Formal's plain input box (navy focus ring, white ground) with a quiet clock at its end; the list is the same raised plate as a
-                        menu, the nearest time on a navy wash. In the sentence the same field is the navy underline in semibold.
-                    </p>
-                </div>
-                <div class="k6-controls" data-review-controls>
-                    <div role="group" aria-label="Field state">
-                        <b>Field state:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-time-state="ready" aria-pressed="true">Ready</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-time-state="empty" aria-pressed="false">Empty</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-time-state="invalid" aria-pressed="false">Invalid text</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-time-state="loading" aria-pressed="false">Loading</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-time-state="disabled" aria-pressed="false">Disabled</button>
-                    </div>
-                    <div role="group" aria-label="The list">
-                        <b>The list:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-time-presets="ready" aria-pressed="true">Presets ready</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-time-presets="loading" aria-pressed="false">Presets loading</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-time-presets="error" aria-pressed="false">Presets failed</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-time-open="" aria-pressed="false">Show it open</button>
-                    </div>
-                    <div role="group" aria-label="Step (live option)">
-                        <b>Step (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-time|data-kp-time-step|5" aria-pressed="true">5 min</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-time|data-kp-time-step|15" aria-pressed="false">15 min</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-time|data-kp-time-step|1" aria-pressed="false">1 min</button>
-                    </div>
-                    <div role="group" aria-label="List (live option)">
-                        <b>List (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-time|data-kp-time-popup|list" aria-pressed="true">List</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-time|data-kp-time-popup|none" aria-pressed="false">None</button>
-                    </div>
-                    <div role="group" aria-label="Look (live option)">
-                        <b>Look (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-time|data-kp-time-look|field" aria-pressed="true">Box</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-time|data-kp-time-look|inline" aria-pressed="false">Underline</button>
-                    </div>
-                </div>
-                <p class="k6-readout" role="status" data-k6-time-readout>Nothing changed yet.</p>
-                <div class="k6-pair">
-                    <div class="k6-stack">
-                        <p class="k6-label">In a form (inside a flex row too)</p>
-                        <div class="k6-flexrow">
-                            <div class="kp-field">
-                                <label class="kp-field__label" for="k6-time-a">Backup time</label>
-                                <div
-                                    class="kp-time"
-                                    data-kp-time
-                                    data-kp-time-id="k6-time-a"
-                                    data-kp-name="at"
-                                    data-kp-value="03:00"
-                                    data-kp-time-presets="Night=03:00,Morning=08:00,Evening=19:30"
-                                    data-kp-time-near="03:00"
-                                    data-kp-time-near-width="60"
-                                    data-kp-time-zone="Europe/Brussels"
-                                    id="k6-time"
-                                ></div>
-                            </div>
-                            <div class="kp-field">
-                                <label class="kp-field__label" for="k6-time-b">Quiet hours end (window 22:00 to 06:00)</label>
-                                <div class="kp-time" data-kp-time data-kp-time-id="k6-time-b" data-kp-name="quiet" data-kp-value="06:00" data-kp-time-min="22:00" data-kp-time-max="06:00" data-kp-time-step="30" data-kp-time-clear id="k6-time-window"></div>
-                            </div>
-                            <div class="kp-field">
-                                <label class="kp-field__label" for="k6-time-c">Log a time (with Now)</label>
-                                <div class="kp-time" data-kp-time data-kp-time-id="k6-time-c" data-kp-time-now data-kp-time-required id="k6-time-now"></div>
-                            </div>
-                        </div>
-                        <p class="k6-label">In a sentence</p>
-                        <form class="kp-sentence" data-kp-sentence id="k6-time-sentence">
-                            <p class="kp-sentence__text">
-                                Back up every day at
-                                <span class="kp-sentence__field"><span class="kp-time" data-kp-time data-kp-time-look="inline" data-kp-label="At" data-kp-value="03:00" data-kp-time-presets="Night=03:00,Morning=08:00"></span></span>.
-                            </p>
-                        </form>
-                    </div>
-                    <div class="k6-stack">
-                        <p class="k6-label">390 px</p>
-                        <div class="k6-frame k6-frame--phone">
-                            <div class="kp-field">
-                                <label class="kp-field__label" for="k6-time-p">Backup time</label>
-                                <div class="kp-time" data-kp-time data-kp-time-id="k6-time-p" data-kp-name="at" data-kp-value="03:00" data-kp-time-presets="Night=03:00,Morning=08:00" data-kp-time-near="03:00" id="k6-time-phone"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <p class="k6-label">Each choice, side by side</p>
-                <div class="k6-trio">
-                    <div class="k6-stack">
-                        <p class="k6-note"><b>15 minute steps</b></p>
-                        <div class="kp-time" data-kp-time data-kp-label="15 minute steps" data-kp-value="09:15" data-kp-time-step="15"></div>
-                    </div>
-                    <div class="k6-stack">
-                        <p class="k6-note"><b>No list: typing and keys only</b></p>
-                        <div class="kp-time" data-kp-time data-kp-label="No list" data-kp-value="09:15" data-kp-time-popup="none"></div>
-                    </div>
-                    <div class="k6-stack">
-                        <p class="k6-note"><b>Boxed, inside a sentence</b></p>
-                        <form class="kp-sentence" data-kp-sentence data-kp-look="boxed">
-                            <p class="kp-sentence__text">
-                                Remind me at
-                                <span class="kp-sentence__field"><span class="kp-time" data-kp-time data-kp-label="Remind at" data-kp-value="18:30"></span></span>.
-                            </p>
-                        </form>
-                    </div>
-                </div>
-            </section>
-
             <!-- ================================================================ interactive-console -->
             <h2 class="kd-topic" id="topic-interactive-console">Console</h2>
             <section
@@ -711,13 +270,13 @@
                 data-review-title="A console with a prompt and a block per command"
                 aria-labelledby="h-interactive-console"
                 data-review-choices='[
-  { "id": "order", "label": "Where does the newest command go?", "options": [
+  { "id": "order", "label": "Where does the newest command go?", "default": "newest-last", "options": [
     { "value": "newest-last", "label": "At the bottom, the prompt under it (recommended)", "hint": "Like a terminal: the page follows the newest block unless you scrolled up, then a pill counts what you missed." },
     { "value": "newest-first", "label": "At the top, the prompt above it", "hint": "Like a log: the newest is always at the top, nothing to scroll to." } ] },
-  { "id": "status", "label": "How is a finished command's result written?", "options": [
+  { "id": "status", "label": "How is a finished command&#39;s result written?", "default": "exit-code", "options": [
     { "value": "exit-code", "label": "The exit code, with a glyph and the word (recommended)", "hint": "exit 0 with a check and Done; exit 1 with a cross and Failed. The code is the fact an admin reads." },
     { "value": "word", "label": "The word only", "hint": "Done or Failed, for people who do not know exit codes." } ] },
-  { "id": "cancel", "label": "Does a running command offer Cancel?", "options": [
+  { "id": "cancel", "label": "Does a running command offer Cancel?", "default": "on", "options": [
     { "value": "on", "label": "Yes, when the app can stop it (recommended)", "hint": "A Cancel button on the block while it runs; the app decides whether a job can be cancelled." },
     { "value": "off", "label": "No: a running command runs on", "hint": "No way to stop it from here; fewer buttons on the block." } ] }
 ]'
@@ -862,7 +421,7 @@
 <!-- @@sections -->
         </main>
         <script type="application/json" data-review-round>
-            { "round": "social-4b115748-8633-477e-a6b4-b9529667e8a2", "received": [] }
+            { "round": "social-59c461e0-c71c-4ade-9ee4-294c0a609479", "received": ["social-4b115748-8633-477e-a6b4-b9529667e8a2"] }
         </script>
         <script type="module" src="social.js"></script>
         <script type="module" src="../../js/auto.js"></script>

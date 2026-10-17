@@ -3,7 +3,10 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Calm screens: a picker with the usual on top, one question per screen, a quiet today card, quotes, calm days and stars · kp-themes research demo</title>
+        <title>
+            Calm screens: a picker with the usual on top, one question per screen, a quiet today card, quotes, calm days and stars · kp-themes
+            research demo
+        </title>
         <link rel="stylesheet" href="../../css/fonts.css" />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
@@ -44,8 +47,8 @@
                     Judge in the review dialog (&ldquo;Review in a dialog&rdquo; at the top): 6 topics, one step each in formal. Every section says
                     under <b>Expected</b> what you should see and what each control does. Everything with a <code>kp-</code> class and every script
                     under <code>js/</code> is the package; the sample content (symptoms, check-in questions, the day&rsquo;s tasks, the diary
-                    sentences, recipes), the fixed clock (Saturday 17/10/2026), the frames marked &ldquo;phone width&rdquo; (390 px boxes standing
-                    in for a phone), the event readouts and the buttons that drive a state are this page&rsquo;s. Nothing here is saved anywhere.
+                    sentences, recipes), the fixed clock (Saturday 17/10/2026), the frames marked &ldquo;phone width&rdquo; (390 px boxes standing in
+                    for a phone), the event readouts and the buttons that drive a state are this page&rsquo;s. Nothing here is saved anywhere.
                 </p>
                 <nav class="k6-toc" aria-label="Topics on this page">
                     <ol>
@@ -86,21 +89,21 @@
                         <li>
                             <b>Symptoms</b> (38 items): click into the field. The list opens with <b>Nothing to log</b> (italic, always first, never
                             usual), a small <b>Usual</b> heading over five choices (Headache, Fatigue, Nausea, Neck pain, Anxiety), then
-                            <b>All</b> over nothing yet and one row <b>Show all 38</b> (the exact number). The status line says <b>5 usual, 33
-                            more</b>. Press <b>Show all 38</b>: the rest appears alphabetical and the row becomes <b>Show fewer</b>. Each row is at
-                            least 48 px and long words wrap.
+                            <b>All</b> over nothing yet and one row <b>Show all 38</b> (the exact number). The status line says
+                            <b>5 usual, 33 more</b>. Press <b>Show all 38</b>: the rest appears alphabetical and the row becomes <b>Show fewer</b>.
+                            Each row is at least 48 px and long words wrap.
                         </li>
                         <li>
                             <b>Pick</b> Headache and Fatigue: they become tags with a small <b>Not today</b> button each; press it on Fatigue: the tag
-                            turns dashed and the button filled (not the same as unticked). The grey box shows <code>kp-usual-pick</code> with where the
-                            choice came from (usual, all, pinned or typed).
+                            turns dashed and the button filled (not the same as unticked). The grey box shows <code>kp-usual-pick</code> with where
+                            the choice came from (usual, all, pinned or typed).
                         </li>
                         <li>
                             <b>Type</b> <code>hoofdpjn</code>-style slips with a real one: type <b>Headach</b> then Enter: identical after case and
                             spaces means it selects <b>Headache</b>, it never makes a second one (type <b>headache</b> in small letters). Type
-                            <b>Neksteun</b> (new) and press Enter: it is added at once, a toast says <b>Added &lsquo;Neksteun&rsquo;</b> with Undo. Type
-                            <b>Fatigu</b>, which is close to a name you have: <b>Did you mean Fatigue?</b> stands first, then <b>Add &lsquo;Fatigu&rsquo;
-                            as new</b>, which always works.
+                            <b>Neksteun</b> (new) and press Enter: it is added at once, a toast says <b>Added &lsquo;Neksteun&rsquo;</b> with Undo.
+                            Type <b>Fatigu</b>, which is close to a name you have: <b>Did you mean Fatigue?</b> stands first, then
+                            <b>Add &lsquo;Fatigu&rsquo; as new</b>, which always works.
                         </li>
                         <li>
                             <b>Alt U</b> with the field empty jumps to the first usual choice (a bare <b>u</b> would eat the first letter of a name);
@@ -111,30 +114,40 @@
                 </div>
                 <div data-review-look>
                     <p data-for="formal">
-                        The list is formal&rsquo;s own combobox plate; the group labels are its muted small text and nothing else is added. Look at the
-                        band against the rest, the margin inside each row, and the tags with Not today.
+                        The list is formal&rsquo;s own combobox plate; the group labels are its muted small text and nothing else is added. Look at
+                        the band against the rest, the margin inside each row, and the tags with Not today.
                     </p>
                 </div>
                 <div data-review-controls>
                     <div role="group" aria-label="While typing" class="k6-actions">
                         <b>While typing, the usual:</b>
-                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="usual-while-typing" data-value="first">Lead (default)</button>
-                        <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-opt="usual-while-typing" data-value="hide">Step aside</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="usual-while-typing" data-value="first">
+                            Lead (default)
+                        </button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-opt="usual-while-typing" data-value="hide">
+                            Step aside
+                        </button>
                     </div>
                     <div role="group" aria-label="Near names" class="k6-actions">
                         <b>Near name:</b>
                         <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="near" data-value="ask">Ask (default)</button>
-                        <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-opt="near" data-value="select">Take closest</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-opt="near" data-value="select">
+                            Take closest
+                        </button>
                         <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-opt="near" data-value="off">Off</button>
                     </div>
                     <div role="group" aria-label="The full list" class="k6-actions">
                         <b>Full list:</b>
-                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="all" data-value="fold">Behind Show all N (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="all" data-value="fold">
+                            Behind Show all N (default)
+                        </button>
                         <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-opt="all" data-value="open">Fully shown</button>
                     </div>
                     <div role="group" aria-label="Order of the rest" class="k6-actions">
                         <b>Rest of the list:</b>
-                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="order" data-value="alphabetical">Alphabetical (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="order" data-value="alphabetical">
+                            Alphabetical (default)
+                        </button>
                         <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-opt="order" data-value="given">As given</button>
                     </div>
                     <div role="group" aria-label="Band size" class="k6-actions">
@@ -145,84 +158,122 @@
                     </div>
                     <div role="group" aria-label="Not today button" class="k6-actions">
                         <b>Not today:</b>
-                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="not-today" data-value="on">On (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="not-today" data-value="on">
+                            On (default)
+                        </button>
                         <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-opt="not-today" data-value="off">Off</button>
                     </div>
                     <div role="group" aria-label="Add a new name" class="k6-actions">
                         <b>Add a new name:</b>
-                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="add" data-value="inline">Inline (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="add" data-value="inline">
+                            Inline (default)
+                        </button>
                         <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-opt="add" data-value="off">Off</button>
                     </div>
                 </div>
                 <div class="k6-pair k6-pair--tall">
                     <div class="k6-case k6-case--room">
                         <p class="k6-label">Symptoms: many, with the usual on top</p>
-                        <div class="kp-combobox" data-kp-combobox id="k6-usual-a" data-kp-usual='["headache","fatigue","nausea","neck","anxiety","brainfog"]' data-kp-multiple data-kp-add="inline" data-kp-not-today data-kp-pinned='[{"value":"none","label":"Nothing to log"}]' data-kp-hint="Last time you wrote: tired and a stiff neck">
-                                <label class="kp-field__label" for="k6-usual-a-input">Symptoms today</label>
-                                <div data-kp-tag-list hidden></div>
-                                <input class="kp-combobox__input kp-field__input" id="k6-usual-a-input" type="text" role="combobox" aria-expanded="false" aria-controls="k6-usual-a-list" autocomplete="off" />
-                                <ul class="kp-combobox__list" id="k6-usual-a-list" role="listbox" hidden>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="fatigue">Fatigue</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="nausea">Nausea</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="dizziness">Dizziness</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="neck">Neck pain</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="back">Back pain</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="stomach">Stomach ache</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="cramps">Cramps</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="anxiety">Anxiety</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="restless">Restless legs</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="palpitations">Palpitations</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="brainfog">Brain fog</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="cough">Cough</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="sore">Sore throat</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="congestion">Congestion</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="chills">Chills</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="sweats">Night sweats</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="rash">Rash</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="itch">Itching</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="joint">Joint pain</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="muscle">Muscle ache</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="numb">Numbness</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="tingling">Tingling</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="vision">Blurred vision</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="light">Light sensitivity</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="noise">Noise sensitivity</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="appetite">Low appetite</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="thirst">Thirst</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="heartburn">Heartburn</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="bloating">Bloating</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="constipation">Constipation</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="diarrhoea">Diarrhoea</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="insomnia">Insomnia</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="earache">Earache</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="toothache">Toothache</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="hay">Hay fever</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="wheeze">Wheezing</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="swelling">Swollen ankles</li>
-                                </ul>
-                                <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
-                            </div>
+                        <div
+                            class="kp-combobox"
+                            data-kp-combobox
+                            id="k6-usual-a"
+                            data-kp-usual='["headache","fatigue","nausea","neck","anxiety","brainfog"]'
+                            data-kp-multiple
+                            data-kp-add="inline"
+                            data-kp-not-today
+                            data-kp-pinned='[{"value":"none","label":"Nothing to log"}]'
+                            data-kp-hint="Last time you wrote: tired and a stiff neck"
+                        >
+                            <label class="kp-field__label" for="k6-usual-a-input">Symptoms today</label>
+                            <div data-kp-tag-list hidden></div>
+                            <input
+                                class="kp-combobox__input kp-field__input"
+                                id="k6-usual-a-input"
+                                type="text"
+                                role="combobox"
+                                aria-expanded="false"
+                                aria-controls="k6-usual-a-list"
+                                autocomplete="off"
+                            />
+                            <ul class="kp-combobox__list" id="k6-usual-a-list" role="listbox" hidden>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="fatigue">Fatigue</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="nausea">Nausea</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="dizziness">Dizziness</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="neck">Neck pain</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="back">Back pain</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="stomach">Stomach ache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="cramps">Cramps</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="anxiety">Anxiety</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="restless">Restless legs</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="palpitations">Palpitations</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="brainfog">Brain fog</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="cough">Cough</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="sore">Sore throat</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="congestion">Congestion</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="chills">Chills</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="sweats">Night sweats</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="rash">Rash</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="itch">Itching</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="joint">Joint pain</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="muscle">Muscle ache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="numb">Numbness</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="tingling">Tingling</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="vision">Blurred vision</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="light">Light sensitivity</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="noise">Noise sensitivity</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="appetite">Low appetite</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="thirst">Thirst</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="heartburn">Heartburn</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="bloating">Bloating</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="constipation">Constipation</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="diarrhoea">Diarrhoea</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="insomnia">Insomnia</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="earache">Earache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="toothache">Toothache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="hay">Hay fever</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="wheeze">Wheezing</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="swelling">Swollen ankles</li>
+                            </ul>
+                            <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                        </div>
                         <pre class="k6-log" id="k6-usual-log" aria-live="polite"></pre>
                     </div>
                     <div class="k6-case k6-case--room">
                         <p class="k6-label">Meal: one, ranked by how often</p>
-                        <div class="kp-combobox" data-kp-combobox id="k6-usual-b" data-kp-usual='[{"value":"oats","uses":14},{"value":"soup","uses":9},{"value":"pasta","uses":9},{"value":"salad","uses":3}]' data-kp-usual-source="counts" data-kp-usual-max="4" data-kp-add="inline">
-                                <label class="kp-field__label" for="k6-usual-b-input">Last meal</label>
-                                <div data-kp-tag-list hidden></div>
-                                <input class="kp-combobox__input kp-field__input" id="k6-usual-b-input" type="text" role="combobox" aria-expanded="false" aria-controls="k6-usual-b-list" autocomplete="off" />
-                                <ul class="kp-combobox__list" id="k6-usual-b-list" role="listbox" hidden>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="oats">Oatmeal</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="eggs">Eggs on toast</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="soup">Vegetable soup</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="pasta">Pasta with tomato</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="rice">Rice and curry</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="salad">Chicken salad</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="stew">Stoofvlees with fries</li>
-                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="fish">Baked fish</li>
-                                </ul>
-                                <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
-                            </div>
+                        <div
+                            class="kp-combobox"
+                            data-kp-combobox
+                            id="k6-usual-b"
+                            data-kp-usual='[{"value":"oats","uses":14},{"value":"soup","uses":9},{"value":"pasta","uses":9},{"value":"salad","uses":3}]'
+                            data-kp-usual-source="counts"
+                            data-kp-usual-max="4"
+                            data-kp-add="inline"
+                        >
+                            <label class="kp-field__label" for="k6-usual-b-input">Last meal</label>
+                            <div data-kp-tag-list hidden></div>
+                            <input
+                                class="kp-combobox__input kp-field__input"
+                                id="k6-usual-b-input"
+                                type="text"
+                                role="combobox"
+                                aria-expanded="false"
+                                aria-controls="k6-usual-b-list"
+                                autocomplete="off"
+                            />
+                            <ul class="kp-combobox__list" id="k6-usual-b-list" role="listbox" hidden>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="oats">Oatmeal</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="eggs">Eggs on toast</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="soup">Vegetable soup</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="pasta">Pasta with tomato</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="rice">Rice and curry</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="salad">Chicken salad</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="stew">Stoofvlees with fries</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="fish">Baked fish</li>
+                            </ul>
+                            <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -237,15 +288,15 @@
                 data-review-topic="focus"
                 data-review-topic-title="Questions, one per screen"
                 data-review-title="Questions, one per screen: a daily check-in"
-                data-review-choices='[{"id": "focus-progress", "label": "How progress shows", "default": "count", "options": [{"value": "count", "label": "Question 3 of 6 and the bar (recommended)", "hint": "What cook mode already draws: the words and the theme&#39;s bar. Never a timer. Press Count in the buttons above the check-in."}, {"value": "dots", "label": "Dots", "hint": "One dot per question: filled for done, ringed for this one. Quieter, no number to count. Press Dots."}, {"value": "off", "label": "Nothing", "hint": "No count and no bar at all; just the question. Press Off under Progress."}]}, {"id": "focus-advance", "label": "What a tap on an answer does", "default": "auto", "options": [{"value": "auto", "label": "Moves on by itself after a moment (recommended)", "hint": "One tap per screen: the answer you hit shows chosen for 350 ms and the next question comes. Press Auto under Advance."}, {"value": "button", "label": "Waits for Next", "hint": "The answer is chosen and stays; you press Next. Two taps per question, but nothing moves unless you press. Press Button under Advance."}]}]'
+                data-review-choices='[{"id": "focus-progress", "label": "How progress shows", "default": "count", "options": [{"value": "count", "label": "Question 3 of 6 and the bar (recommended)", "hint": "What cook mode already draws: the words and the theme&#39;s bar. Never a timer. Press Count in the buttons above the check-in."}, {"value": "off", "label": "Nothing", "hint": "No count and no bar at all; just the question. Press Off under Progress."}]}, {"id": "focus-advance", "label": "What a tap on an answer does", "default": "auto", "options": [{"value": "auto", "label": "Moves on by itself after a moment (recommended)", "hint": "One tap per screen: the answer you hit shows chosen for 350 ms and the next question comes. Press Auto under Advance."}, {"value": "button", "label": "Waits for Next", "hint": "The answer is chosen and stays; you press Next. Two taps per question, but nothing moves unless you press. Press Button under Advance."}]}]'
                 aria-labelledby="h-focus"
             >
                 <div class="k6-sec__head">
                     <h2 id="h-focus">Questions, one per screen: a daily check-in</h2>
                     <p>
-                        The one-step view of cook mode (<code>data-kp-focus-steps</code>, js/focus-steps.js) in answer mode: one question large,
-                        big answer buttons, &ldquo;same as yesterday&rdquo; and &ldquo;same as usual&rdquo; in one tap, and Not today. The cook mode itself does not
-                        change.
+                        The one-step view of cook mode (<code>data-kp-focus-steps</code>, js/focus-steps.js) in answer mode: one question large, big
+                        answer buttons, &ldquo;same as yesterday&rdquo; and &ldquo;same as usual&rdquo; in one tap, and Not today. The cook mode
+                        itself does not change.
                     </p>
                 </div>
                 <div class="k6-expected">
@@ -253,20 +304,20 @@
                     <ul>
                         <li>
                             <b>Six questions</b>: mood, energy, overload, what got in the way of sleep (several answers), movement, and one sentence.
-                            Each shows <b>Question 1 of 6</b> over the bar, the question in large type, answers as full-width buttons (at least 56 px),
-                            <b>Same as yesterday: Matig</b> and <b>Same as usual: Good</b> side by side where there is room, and a quiet
+                            Each shows <b>Question 1 of 6</b> over the bar, the question in large type, answers as full-width buttons (at least 56
+                            px), <b>Same as yesterday: Matig</b> and <b>Same as usual: Good</b> side by side where there is room, and a quiet
                             <b>Not today</b>. Back and Next stand at the foot and never move.
                         </li>
                         <li>
                             <b>Press an answer</b>: it fills with the primary colour and a check mark, stays chosen for a third of a second, and the
                             next question comes by itself. <b>Same as yesterday</b> does the same with yesterday&rsquo;s answer. <b>Back</b>: your
-                            earlier answer is still chosen; pick another and it moves on again. A question with several answers needs <b>Next</b>;
-                            the written line needs words before Next works (or press <b>Not today</b>).
+                            earlier answer is still chosen; pick another and it moves on again. A question with several answers needs <b>Next</b>; the
+                            written line needs words before Next works (or press <b>Not today</b>).
                         </li>
                         <li>
                             <b>Keys</b> (focus inside the view, click a question first): ArrowUp and ArrowDown move between the answers, Enter
-                            chooses, <b>s</b> takes the same as yesterday, <b>u</b> the usual, <b>n</b> Not today, ArrowLeft and ArrowRight go back and on.
-                            No digit keys. The grey box shows each answer and the final <code>kp-focus-steps-done</code>.
+                            chooses, <b>s</b> takes the same as yesterday, <b>u</b> the usual, <b>n</b> Not today, ArrowLeft and ArrowRight go back
+                            and on. No digit keys. The grey box shows each answer and the final <code>kp-focus-steps-done</code>.
                         </li>
                         <li>
                             <b>Buttons above</b> switch the options while you look (progress, advance, the same buttons, a summary screen, the
@@ -284,7 +335,6 @@
                     <div role="group" aria-label="Progress" class="k6-actions">
                         <b>Progress:</b>
                         <button type="button" class="kp-button" aria-pressed="true" data-k6-focus-opt="progress" data-value="count">Count</button>
-                        <button type="button" class="kp-button" aria-pressed="false" data-k6-focus-opt="progress" data-value="dots">Dots</button>
                         <button type="button" class="kp-button" aria-pressed="false" data-k6-focus-opt="progress" data-value="off">Off</button>
                     </div>
                     <div role="group" aria-label="Advance" class="k6-actions">
@@ -295,7 +345,9 @@
                     <div role="group" aria-label="The same buttons" class="k6-actions">
                         <b>Same:</b>
                         <button type="button" class="kp-button" aria-pressed="true" data-k6-focus-opt="same" data-value="both">Both</button>
-                        <button type="button" class="kp-button" aria-pressed="false" data-k6-focus-opt="same" data-value="yesterday">Yesterday</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-focus-opt="same" data-value="yesterday">
+                            Yesterday
+                        </button>
                         <button type="button" class="kp-button" aria-pressed="false" data-k6-focus-opt="same" data-value="usual">Usual</button>
                         <button type="button" class="kp-button" aria-pressed="false" data-k6-focus-opt="same" data-value="off">Off</button>
                     </div>
@@ -311,13 +363,26 @@
                 <div class="k6-pair">
                     <div class="k6-case">
                         <p class="k6-label">The check-in</p>
-                        <div class="kp-focus-steps k6-focus" data-kp-focus-steps data-kp-focus-mode="answer" id="k6-focus-a" aria-label="Daily check-in"></div>
+                        <div
+                            class="kp-focus-steps k6-focus"
+                            data-kp-focus-steps
+                            data-kp-focus-mode="answer"
+                            id="k6-focus-a"
+                            aria-label="Daily check-in"
+                        ></div>
                         <pre class="k6-log" id="k6-focus-log" aria-live="polite"></pre>
                     </div>
                     <div class="k6-case">
                         <p class="k6-label">Phone width (390 px): the answers stack, full width</p>
                         <div class="k6-frame k6-frame--phone">
-                            <div class="kp-focus-steps k6-focus" data-kp-focus-steps data-kp-focus-mode="answer" data-kp-pinned-first='[{"value":"unsure","label":"Not sure"}]' id="k6-focus-p" aria-label="Daily check-in"></div>
+                            <div
+                                class="kp-focus-steps k6-focus"
+                                data-kp-focus-steps
+                                data-kp-focus-mode="answer"
+                                data-kp-pinned-first='[{"value":"unsure","label":"Not sure"}]'
+                                id="k6-focus-p"
+                                aria-label="Daily check-in"
+                            ></div>
                         </div>
                     </div>
                 </div>
@@ -333,34 +398,39 @@
             >
                 <div class="k6-sec__head">
                     <h2 id="h-focus-states">Questions, one per screen: states, resume and a long text</h2>
-                    <p>Questions that are being read, a day with none, questions that could not be read, answers that could not be saved, a check-in left half way, and a question with long words.</p>
+                    <p>
+                        Questions that are being read, a day with none, questions that could not be read, answers that could not be saved, a check-in
+                        left half way, and a question with long words.
+                    </p>
                 </div>
                 <div class="k6-expected">
                     <p><b>Expected:</b></p>
                     <ul>
                         <li>
-                            <b>Loading</b>: the theme&rsquo;s loading card, moving, centred over the question area; the count, bar, Back and Next
-                            keep their places. <b>No questions</b>: one plate, centred at heading size, <b>No questions today</b> over
-                            <b>That is fine, nothing is waiting</b>. <b>Could not read</b>: the red-edged plate with <b>Could not read the questions</b>
-                            and a normal-size <b>Retry</b>. <b>Could not save</b>: after the last answer press Done on the first view then this
-                            button: <b>Could not save your answers</b> with <b>Try again</b>; the answers are kept (the grey box lists them).
-                            The view keeps its height in every state.
+                            <b>Loading</b>: the theme&rsquo;s loading card, moving, centred over the question area; the count, bar, Back and Next keep
+                            their places. <b>No questions</b>: one plate, centred at heading size, <b>No questions today</b> over
+                            <b>That is fine, nothing is waiting</b>. <b>Could not read</b>: the red-edged plate with
+                            <b>Could not read the questions</b> and a normal-size <b>Retry</b>. <b>Could not save</b>: after the last answer press
+                            Done on the first view then this button: <b>Could not save your answers</b> with <b>Try again</b>; the answers are kept
+                            (the grey box lists them). The view keeps its height in every state.
                         </li>
                         <li>
-                            <b>Resume</b> (second view, kept in this browser): answer two questions, then press <b>Phone rings: load again</b>.
-                            The view asks <b>Continue where you stopped?</b> with <b>Continue</b> and <b>Start over</b>; Continue puts back your
-                            answers and the question you were on. With <b>Resume: auto</b> it continues without asking; with <b>off</b> it starts at
-                            question 1. Progress older than midnight (Brussels) is not offered.
+                            <b>Resume</b> (second view, kept in this browser): answer two questions, then press <b>Phone rings: load again</b>. The
+                            view asks <b>Continue where you stopped?</b> with <b>Continue</b> and <b>Start over</b>; Continue puts back your answers
+                            and the question you were on. With <b>Resume: auto</b> it continues without asking; with <b>off</b> it starts at question
+                            1. Progress older than midnight (Brussels) is not offered.
                         </li>
                         <li>
                             <b>Long text and a disabled answer</b> (third view): a long question and long answers wrap and never touch the edge; the
-                            answer that cannot be picked is dimmed and says why in words under its label (<b>Not while the moves are paused</b>),
-                            not in a tooltip.
+                            answer that cannot be picked is dimmed and says why in words under its label (<b>Not while the moves are paused</b>), not
+                            in a tooltip.
                         </li>
                     </ul>
                 </div>
                 <div data-review-look>
-                    <p data-for="formal">The plates are formal&rsquo;s empty plate and destructive alert; the loading card is the one that rules the busy table.</p>
+                    <p data-for="formal">
+                        The plates are formal&rsquo;s empty plate and destructive alert; the loading card is the one that rules the busy table.
+                    </p>
                 </div>
                 <div data-review-controls>
                     <div role="group" aria-label="State of the first view" class="k6-actions">
@@ -381,16 +451,36 @@
                 <div class="k6-pair">
                     <div class="k6-case">
                         <p class="k6-label">Driven by the buttons above</p>
-                        <div class="kp-focus-steps k6-focus" data-kp-focus-steps data-kp-focus-mode="answer" id="k6-focus-s" aria-label="Daily check-in"></div>
+                        <div
+                            class="kp-focus-steps k6-focus"
+                            data-kp-focus-steps
+                            data-kp-focus-mode="answer"
+                            id="k6-focus-s"
+                            aria-label="Daily check-in"
+                        ></div>
                         <pre class="k6-log" id="k6-focus-s-log" aria-live="polite"></pre>
                     </div>
                     <div class="k6-case">
                         <p class="k6-label">Resume: left half way</p>
-                        <div class="kp-focus-steps k6-focus" data-kp-focus-steps data-kp-focus-mode="answer" data-kp-remember="k6-checkin" data-kp-resume="ask" id="k6-focus-r" aria-label="Daily check-in"></div>
+                        <div
+                            class="kp-focus-steps k6-focus"
+                            data-kp-focus-steps
+                            data-kp-focus-mode="answer"
+                            data-kp-remember="k6-checkin"
+                            data-kp-resume="ask"
+                            id="k6-focus-r"
+                            aria-label="Daily check-in"
+                        ></div>
                     </div>
                     <div class="k6-case">
                         <p class="k6-label">A long question, long answers, an answer that cannot be picked</p>
-                        <div class="kp-focus-steps k6-focus" data-kp-focus-steps data-kp-focus-mode="answer" id="k6-focus-l" aria-label="Daily check-in"></div>
+                        <div
+                            class="kp-focus-steps k6-focus"
+                            data-kp-focus-steps
+                            data-kp-focus-mode="answer"
+                            id="k6-focus-l"
+                            aria-label="Daily check-in"
+                        ></div>
                     </div>
                 </div>
             </section>
@@ -405,36 +495,37 @@
                 data-review-topic="today"
                 data-review-topic-title="Today card"
                 data-review-title="Today card: open, done, paused, not known"
-                data-review-choices='[{"id": "today-since", "label": "How a pause is told", "default": "date", "options": [{"value": "date", "label": "The date: Paused since 03/10/2026 (recommended)", "hint": "Exact and calm; it does not count the days up. The first list below shows this."}, {"value": "relative", "label": "A length: Paused for 2 weeks", "hint": "Reads like a counter that grows every day. Press Length in the buttons above the list to see it."}, {"value": "both", "label": "Both: Paused since 03/10/2026 (2 weeks)", "hint": "The most on one line. Press Both in the buttons above the list."}]}, {"id": "today-order", "label": "Where the open rows stand", "default": "given", "options": [{"value": "given", "label": "Where the page put them (recommended)", "hint": "Nothing reshuffles when a row becomes done: the thing under your thumb stays under your thumb."}, {"value": "open-first", "label": "Open rows first, once", "hint": "For a long list: the open rows are put on top when the card is first drawn and still never move afterwards. Shown in the second card."}]}]'
+                data-review-choices='[{"id": "today-since", "label": "How a pause is told", "default": "both", "options": [{"value": "both", "label": "Both: Paused since 03/10/2026 (2 weeks)", "hint": "The exact date and the length on one line. This is what the lists below show."}, {"value": "date", "label": "The date: Paused since 03/10/2026", "hint": "Exact and calm; it does not count the days up. Press Date in the buttons above the list."}, {"value": "relative", "label": "A length: Paused for 2 weeks", "hint": "Reads like a counter that grows every day. Press Length in the buttons above the list to see it."}]}, {"id": "today-order", "label": "Where the open rows stand", "default": "given", "options": [{"value": "given", "label": "Where the page put them (recommended)", "hint": "Nothing reshuffles when a row becomes done: the thing under your thumb stays under your thumb."}, {"value": "open-first", "label": "Open rows first, once", "hint": "For a long list: the open rows are put on top when the card is first drawn and still never move afterwards. Shown in the second card."}]}]'
                 aria-labelledby="h-today"
             >
                 <div class="k6-sec__head">
                     <h2 id="h-today">Today card: open, done, paused, not known</h2>
                     <p>
                         <code>data-kp-status-vocab="calm"</code> on a status list (js/statusrow.js) inside a card: one row per thing in the day, each
-                        only <b>Open</b>, <b>Done</b> or <b>Paused since a date</b> with one-press Resume. No red, no counters, no &ldquo;you still have&rdquo;.
+                        only <b>Open</b>, <b>Done</b> or <b>Paused since a date</b> with one-press Resume. No red, no counters, no &ldquo;you still
+                        have&rdquo;.
                     </p>
                 </div>
                 <div class="k6-expected">
                     <p><b>Expected:</b></p>
                     <ul>
                         <li>
-                            <b>Six rows</b>, each 56 px high with a round mark that has its own shape: <b>Morning pills</b> and <b>Walk after
-                            dinner</b> open (a grey ring with a dot), <b>Evening check-in</b> and <b>Water the plants</b> done (a soft blue disc with
-                            a check, not green), <b>Beweging</b> paused (a dashed ring with two bars, a dashed edge, <b>Paused since 03/10/2026</b>
-                            and a <b>Resume</b> button), <b>Zamioculcas Raven: water</b> not known (a dashed ring with a question mark and
-                            <b>Soil sensor has no reading</b>: a plant that reports &ldquo;ok&rdquo; without any data must never look done).
-                            There is no total anywhere on the card.
+                            <b>Six rows</b>, each 56 px high with a round mark that has its own shape: <b>Morning pills</b> and
+                            <b>Walk after dinner</b> open (a grey ring with a dot), <b>Evening check-in</b> and <b>Water the plants</b> done (a soft
+                            blue disc with a check, not green), <b>Beweging</b> paused (a dashed ring with two bars, a dashed edge,
+                            <b>Paused since 03/10/2026</b> and a <b>Resume</b> button), <b>Zamioculcas Raven: water</b> not known (a dashed ring with
+                            a question mark and <b>Soil sensor has no reading</b>: a plant that reports &ldquo;ok&rdquo; without any data must never
+                            look done). There is no total anywhere on the card.
                         </li>
                         <li>
-                            <b>Resume</b>: press it on Beweging: the row becomes open at once (same place), a toast says <b>Beweging resumed</b>
-                            with <b>Undo</b>; Undo puts it back paused <b>since 03/10/2026</b>, the original date. With the keyboard: Tab into the
-                            list (one stop), <b>ArrowDown</b> and <b>ArrowUp</b> move between rows, <b>r</b> resumes the paused row you are on.
+                            <b>Resume</b>: press it on Beweging: the row becomes open at once (same place), a toast says <b>Beweging resumed</b> with
+                            <b>Undo</b>; Undo puts it back paused <b>since 03/10/2026</b>, the original date. With the keyboard: Tab into the list
+                            (one stop), <b>ArrowDown</b> and <b>ArrowUp</b> move between rows, <b>r</b> resumes the paused row you are on.
                         </li>
                         <li>
                             <b>Buttons above the list</b>: <b>Date</b>, <b>Length</b> and <b>Both</b> change how the pause is told (the choice to
-                            tick); <b>Pause button</b> adds a quiet Pause on open rows. The second card has a pause longer than 30 days: <b>Long
-                            pauses</b> shows them as rows (the default) or gathers them in one line that opens them.
+                            tick); <b>Pause button</b> adds a quiet Pause on open rows. The second card has a pause longer than 30 days:
+                            <b>Long pauses</b> shows them as rows (the default) or gathers them in one line that opens them.
                         </li>
                         <li>
                             A row that is told it failed (the grey box under the first card has a button for it) is drawn as <b>Not known</b>, never
@@ -450,9 +541,9 @@
                 </div>
                 <div data-review-controls>
                     <div role="group" aria-label="How a pause is told" class="k6-actions">
-                        <button type="button" class="kp-button" aria-pressed="true" data-k6-today-since="date">Date</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-today-since="date">Date</button>
                         <button type="button" class="kp-button" aria-pressed="false" data-k6-today-since="relative">Length</button>
-                        <button type="button" class="kp-button" aria-pressed="false" data-k6-today-since="both">Both</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-today-since="both">Both</button>
                     </div>
                     <div role="group" aria-label="Pause button" class="k6-actions">
                         <button type="button" class="kp-button" aria-pressed="false" data-k6-today-pause="on">Pause button</button>
@@ -466,16 +557,54 @@
                         <p class="k6-label">The day</p>
                         <section class="kp-card" id="k6-today-a" data-kp-state="ready" aria-labelledby="k6-today-a-t">
                             <div class="kp-card__header"><h3 class="kp-card__title" id="k6-today-a-t">Today</h3></div>
-                            <div class="kp-card__stage"><div class="kp-card__data">
-                                <ul class="kp-statuslist kp-statuslist--rows" aria-label="Today" data-kp-status-vocab="calm" data-kp-today-now="2026-10-17T12:00:00+02:00">
-                                    <li class="kp-statusrow" data-state="open" data-kp-status-id="pills"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Morning pills</span><span class="kp-statusrow__detail"></span></span></li>
-                                    <li class="kp-statusrow" data-state="open" data-kp-status-id="walk"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Walk after dinner</span><span class="kp-statusrow__detail"></span></span></li>
-                                    <li class="kp-statusrow" data-state="done" data-kp-status-id="checkin"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Evening check-in</span><span class="kp-statusrow__detail"></span></span></li>
-                                    <li class="kp-statusrow" data-state="done" data-kp-status-id="plants"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Water the plants</span><span class="kp-statusrow__detail"></span></span></li>
-                                    <li class="kp-statusrow" data-state="paused" data-kp-status-id="move" data-kp-since="2026-10-03"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Beweging</span><span class="kp-statusrow__detail"></span></span></li>
-                                    <li class="kp-statusrow" data-state="unknown" data-kp-status-id="raven"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Zamioculcas Raven: water</span><span class="kp-statusrow__detail">Soil sensor has no reading</span></span></li>
-                                </ul>
-                            </div></div>
+                            <div class="kp-card__stage">
+                                <div class="kp-card__data">
+                                    <ul
+                                        class="kp-statuslist kp-statuslist--rows"
+                                        aria-label="Today"
+                                        data-kp-status-vocab="calm"
+                                        data-kp-today-now="2026-10-17T12:00:00+02:00"
+                                    >
+                                        <li class="kp-statusrow" data-state="open" data-kp-status-id="pills">
+                                            <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                            ><span class="kp-statusrow__body"
+                                                ><span class="kp-statusrow__label">Morning pills</span><span class="kp-statusrow__detail"></span
+                                            ></span>
+                                        </li>
+                                        <li class="kp-statusrow" data-state="open" data-kp-status-id="walk">
+                                            <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                            ><span class="kp-statusrow__body"
+                                                ><span class="kp-statusrow__label">Walk after dinner</span><span class="kp-statusrow__detail"></span
+                                            ></span>
+                                        </li>
+                                        <li class="kp-statusrow" data-state="done" data-kp-status-id="checkin">
+                                            <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                            ><span class="kp-statusrow__body"
+                                                ><span class="kp-statusrow__label">Evening check-in</span><span class="kp-statusrow__detail"></span
+                                            ></span>
+                                        </li>
+                                        <li class="kp-statusrow" data-state="done" data-kp-status-id="plants">
+                                            <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                            ><span class="kp-statusrow__body"
+                                                ><span class="kp-statusrow__label">Water the plants</span><span class="kp-statusrow__detail"></span
+                                            ></span>
+                                        </li>
+                                        <li class="kp-statusrow" data-state="paused" data-kp-status-id="move" data-kp-since="2026-10-03">
+                                            <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                            ><span class="kp-statusrow__body"
+                                                ><span class="kp-statusrow__label">Beweging</span><span class="kp-statusrow__detail"></span
+                                            ></span>
+                                        </li>
+                                        <li class="kp-statusrow" data-state="unknown" data-kp-status-id="raven">
+                                            <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                            ><span class="kp-statusrow__body"
+                                                ><span class="kp-statusrow__label">Zamioculcas Raven: water</span
+                                                ><span class="kp-statusrow__detail">Soil sensor has no reading</span></span
+                                            >
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </section>
                         <pre class="k6-log" id="k6-today-log" aria-live="polite"></pre>
                     </div>
@@ -483,15 +612,52 @@
                         <p class="k6-label">Long pauses, and a long label (open rows first)</p>
                         <section class="kp-card" id="k6-today-b" data-kp-state="ready" aria-labelledby="k6-today-b-t">
                             <div class="kp-card__header"><h3 class="kp-card__title" id="k6-today-b-t">Today</h3></div>
-                            <div class="kp-card__stage"><div class="kp-card__data">
-                                <ul class="kp-statuslist kp-statuslist--rows" aria-label="Today" data-kp-status-vocab="calm" data-kp-today-now="2026-10-17T12:00:00+02:00" data-kp-today-order="open-first" data-kp-today-paused="show">
-                                    <li class="kp-statusrow" data-state="open" data-kp-status-id="a"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Call the pharmacy about the repeat prescription and ask whether the new dose can be collected on Saturday morning</span><span class="kp-statusrow__detail"></span></span></li>
-                                    <li class="kp-statusrow" data-state="paused" data-kp-status-id="b" data-kp-since="2026-10-03"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Beweging</span><span class="kp-statusrow__detail"></span></span></li>
-                                    <li class="kp-statusrow" data-state="paused" data-kp-status-id="c" data-kp-since="2026-08-20"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Reading</span><span class="kp-statusrow__detail"></span></span></li>
-                                    <li class="kp-statusrow" data-state="paused" data-kp-status-id="d" data-kp-since="2026-07-02"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Evening stretch</span><span class="kp-statusrow__detail"></span></span></li>
-                                    <li class="kp-statusrow" data-state="paused" data-kp-status-id="e" data-kp-since="2026-05-11"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Cold shower</span><span class="kp-statusrow__detail"></span></span></li>
-                                </ul>
-                            </div></div>
+                            <div class="kp-card__stage">
+                                <div class="kp-card__data">
+                                    <ul
+                                        class="kp-statuslist kp-statuslist--rows"
+                                        aria-label="Today"
+                                        data-kp-status-vocab="calm"
+                                        data-kp-today-now="2026-10-17T12:00:00+02:00"
+                                        data-kp-today-order="open-first"
+                                        data-kp-today-paused="show"
+                                    >
+                                        <li class="kp-statusrow" data-state="open" data-kp-status-id="a">
+                                            <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                            ><span class="kp-statusrow__body"
+                                                ><span class="kp-statusrow__label"
+                                                    >Call the pharmacy about the repeat prescription and ask whether the new dose can be collected on
+                                                    Saturday morning</span
+                                                ><span class="kp-statusrow__detail"></span
+                                            ></span>
+                                        </li>
+                                        <li class="kp-statusrow" data-state="paused" data-kp-status-id="b" data-kp-since="2026-10-03">
+                                            <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                            ><span class="kp-statusrow__body"
+                                                ><span class="kp-statusrow__label">Beweging</span><span class="kp-statusrow__detail"></span
+                                            ></span>
+                                        </li>
+                                        <li class="kp-statusrow" data-state="paused" data-kp-status-id="c" data-kp-since="2026-08-20">
+                                            <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                            ><span class="kp-statusrow__body"
+                                                ><span class="kp-statusrow__label">Reading</span><span class="kp-statusrow__detail"></span
+                                            ></span>
+                                        </li>
+                                        <li class="kp-statusrow" data-state="paused" data-kp-status-id="d" data-kp-since="2026-07-02">
+                                            <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                            ><span class="kp-statusrow__body"
+                                                ><span class="kp-statusrow__label">Evening stretch</span><span class="kp-statusrow__detail"></span
+                                            ></span>
+                                        </li>
+                                        <li class="kp-statusrow" data-state="paused" data-kp-status-id="e" data-kp-since="2026-05-11">
+                                            <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                            ><span class="kp-statusrow__body"
+                                                ><span class="kp-statusrow__label">Cold shower</span><span class="kp-statusrow__detail"></span
+                                            ></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </section>
                         <div class="k6-actions k6-actions--below" role="group" aria-label="Long pauses">
                             <b>Long pauses:</b>
@@ -512,7 +678,10 @@
             >
                 <div class="k6-sec__head">
                     <h2 id="h-today-states">Today card: states and phone width</h2>
-                    <p>A card that is being read, a day with nothing planned, one that could not be read, a Resume that cannot be pressed, and the card in a 390 px box.</p>
+                    <p>
+                        A card that is being read, a day with nothing planned, one that could not be read, a Resume that cannot be pressed, and the
+                        card in a 390 px box.
+                    </p>
                 </div>
                 <div class="k6-expected">
                     <p><b>Expected:</b></p>
@@ -525,8 +694,8 @@
                             normal-size <b>Retry</b> (it shows the loading card for a second, then the rows).
                         </li>
                         <li>
-                            <b>Resume that cannot be pressed</b> (the second card): the Resume of <b>Beweging</b> is dimmed and the words <b>Wait until
-                            the sync has finished</b> are its reason (hover or focus it).
+                            <b>Resume that cannot be pressed</b> (the second card): the Resume of <b>Beweging</b> is dimmed and the words
+                            <b>Wait until the sync has finished</b> are its reason (hover or focus it).
                         </li>
                         <li>
                             <b>Phone width</b> (390 px box): one column, each row 56 px high, the date under the label, Resume at the end of the row.
@@ -535,7 +704,9 @@
                     </ul>
                 </div>
                 <div data-review-look>
-                    <p data-for="formal">The plates are formal&rsquo;s empty plate and destructive alert; the loading card is the one that rules the busy table.</p>
+                    <p data-for="formal">
+                        The plates are formal&rsquo;s empty plate and destructive alert; the loading card is the one that rules the busy table.
+                    </p>
                 </div>
                 <div data-review-controls>
                     <div role="group" aria-label="State of the first card" class="k6-actions">
@@ -550,44 +721,135 @@
                         <p class="k6-label">Driven by the buttons above</p>
                         <section class="kp-card" id="k6-today-s" data-kp-state="ready" aria-labelledby="k6-today-s-t">
                             <div class="kp-card__header"><h3 class="kp-card__title" id="k6-today-s-t">Today</h3></div>
-                            <div class="kp-card__stage"><div class="kp-card__data">
-                                <ul class="kp-statuslist kp-statuslist--rows" aria-label="Today" data-kp-status-vocab="calm" data-kp-today-now="2026-10-17T12:00:00+02:00">
-                                    <li class="kp-statusrow" data-state="open" data-kp-status-id="pills"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Morning pills</span><span class="kp-statusrow__detail"></span></span></li>
-                                    <li class="kp-statusrow" data-state="open" data-kp-status-id="walk"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Walk after dinner</span><span class="kp-statusrow__detail"></span></span></li>
-                                    <li class="kp-statusrow" data-state="done" data-kp-status-id="checkin"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Evening check-in</span><span class="kp-statusrow__detail"></span></span></li>
-                                    <li class="kp-statusrow" data-state="done" data-kp-status-id="plants"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Water the plants</span><span class="kp-statusrow__detail"></span></span></li>
-                                    <li class="kp-statusrow" data-state="paused" data-kp-status-id="move" data-kp-since="2026-10-03"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Beweging</span><span class="kp-statusrow__detail"></span></span></li>
-                                    <li class="kp-statusrow" data-state="unknown" data-kp-status-id="raven"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Zamioculcas Raven: water</span><span class="kp-statusrow__detail">Soil sensor has no reading</span></span></li>
-                                </ul>
-                            </div></div>
+                            <div class="kp-card__stage">
+                                <div class="kp-card__data">
+                                    <ul
+                                        class="kp-statuslist kp-statuslist--rows"
+                                        aria-label="Today"
+                                        data-kp-status-vocab="calm"
+                                        data-kp-today-now="2026-10-17T12:00:00+02:00"
+                                    >
+                                        <li class="kp-statusrow" data-state="open" data-kp-status-id="pills">
+                                            <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                            ><span class="kp-statusrow__body"
+                                                ><span class="kp-statusrow__label">Morning pills</span><span class="kp-statusrow__detail"></span
+                                            ></span>
+                                        </li>
+                                        <li class="kp-statusrow" data-state="open" data-kp-status-id="walk">
+                                            <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                            ><span class="kp-statusrow__body"
+                                                ><span class="kp-statusrow__label">Walk after dinner</span><span class="kp-statusrow__detail"></span
+                                            ></span>
+                                        </li>
+                                        <li class="kp-statusrow" data-state="done" data-kp-status-id="checkin">
+                                            <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                            ><span class="kp-statusrow__body"
+                                                ><span class="kp-statusrow__label">Evening check-in</span><span class="kp-statusrow__detail"></span
+                                            ></span>
+                                        </li>
+                                        <li class="kp-statusrow" data-state="done" data-kp-status-id="plants">
+                                            <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                            ><span class="kp-statusrow__body"
+                                                ><span class="kp-statusrow__label">Water the plants</span><span class="kp-statusrow__detail"></span
+                                            ></span>
+                                        </li>
+                                        <li class="kp-statusrow" data-state="paused" data-kp-status-id="move" data-kp-since="2026-10-03">
+                                            <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                            ><span class="kp-statusrow__body"
+                                                ><span class="kp-statusrow__label">Beweging</span><span class="kp-statusrow__detail"></span
+                                            ></span>
+                                        </li>
+                                        <li class="kp-statusrow" data-state="unknown" data-kp-status-id="raven">
+                                            <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                            ><span class="kp-statusrow__body"
+                                                ><span class="kp-statusrow__label">Zamioculcas Raven: water</span
+                                                ><span class="kp-statusrow__detail">Soil sensor has no reading</span></span
+                                            >
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </section>
                     </div>
                     <div class="k6-case">
                         <p class="k6-label">A Resume that cannot be pressed</p>
                         <section class="kp-card" id="k6-today-r" data-kp-state="ready" aria-labelledby="k6-today-r-t">
                             <div class="kp-card__header"><h3 class="kp-card__title" id="k6-today-r-t">Today</h3></div>
-                            <div class="kp-card__stage"><div class="kp-card__data">
-                                <ul class="kp-statuslist kp-statuslist--rows" aria-label="Today" data-kp-status-vocab="calm" data-kp-today-now="2026-10-17T12:00:00+02:00">
-                                    <li class="kp-statusrow" data-state="paused" data-kp-status-id="b" data-kp-since="2026-10-03" data-kp-resume-reason="Wait until the sync has finished"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Beweging</span><span class="kp-statusrow__detail"></span></span></li>
-                                    <li class="kp-statusrow" data-state="done" data-kp-status-id="c"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Reading</span><span class="kp-statusrow__detail"></span></span></li>
-                                </ul>
-                            </div></div>
+                            <div class="kp-card__stage">
+                                <div class="kp-card__data">
+                                    <ul
+                                        class="kp-statuslist kp-statuslist--rows"
+                                        aria-label="Today"
+                                        data-kp-status-vocab="calm"
+                                        data-kp-today-now="2026-10-17T12:00:00+02:00"
+                                    >
+                                        <li
+                                            class="kp-statusrow"
+                                            data-state="paused"
+                                            data-kp-status-id="b"
+                                            data-kp-since="2026-10-03"
+                                            data-kp-resume-reason="Wait until the sync has finished"
+                                        >
+                                            <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                            ><span class="kp-statusrow__body"
+                                                ><span class="kp-statusrow__label">Beweging</span><span class="kp-statusrow__detail"></span
+                                            ></span>
+                                        </li>
+                                        <li class="kp-statusrow" data-state="done" data-kp-status-id="c">
+                                            <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                            ><span class="kp-statusrow__body"
+                                                ><span class="kp-statusrow__label">Reading</span><span class="kp-statusrow__detail"></span
+                                            ></span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                         </section>
                     </div>
                     <div class="k6-case">
                         <p class="k6-label">Phone width (390 px)</p>
                         <div class="k6-frame k6-frame--phone">
                             <section class="kp-card" id="k6-today-p" data-kp-state="ready" aria-labelledby="k6-today-p-t">
-                            <div class="kp-card__header"><h3 class="kp-card__title" id="k6-today-p-t">Today</h3></div>
-                            <div class="kp-card__stage"><div class="kp-card__data">
-                                <ul class="kp-statuslist kp-statuslist--rows" aria-label="Today" data-kp-status-vocab="calm" data-kp-today-now="2026-10-17T12:00:00+02:00">
-                                    <li class="kp-statusrow" data-state="open" data-kp-status-id="a"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Call the pharmacy about the repeat prescription</span><span class="kp-statusrow__detail"></span></span></li>
-                                    <li class="kp-statusrow" data-state="paused" data-kp-status-id="b" data-kp-since="2026-10-03"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Beweging</span><span class="kp-statusrow__detail"></span></span></li>
-                                    <li class="kp-statusrow" data-state="done" data-kp-status-id="c"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Evening check-in</span><span class="kp-statusrow__detail"></span></span></li>
-                                    <li class="kp-statusrow" data-state="unknown" data-kp-status-id="d"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Zamioculcas Raven: water</span><span class="kp-statusrow__detail">Soil sensor has no reading</span></span></li>
-                                </ul>
-                            </div></div>
-                        </section>
+                                <div class="kp-card__header"><h3 class="kp-card__title" id="k6-today-p-t">Today</h3></div>
+                                <div class="kp-card__stage">
+                                    <div class="kp-card__data">
+                                        <ul
+                                            class="kp-statuslist kp-statuslist--rows"
+                                            aria-label="Today"
+                                            data-kp-status-vocab="calm"
+                                            data-kp-today-now="2026-10-17T12:00:00+02:00"
+                                        >
+                                            <li class="kp-statusrow" data-state="open" data-kp-status-id="a">
+                                                <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                                ><span class="kp-statusrow__body"
+                                                    ><span class="kp-statusrow__label">Call the pharmacy about the repeat prescription</span
+                                                    ><span class="kp-statusrow__detail"></span
+                                                ></span>
+                                            </li>
+                                            <li class="kp-statusrow" data-state="paused" data-kp-status-id="b" data-kp-since="2026-10-03">
+                                                <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                                ><span class="kp-statusrow__body"
+                                                    ><span class="kp-statusrow__label">Beweging</span><span class="kp-statusrow__detail"></span
+                                                ></span>
+                                            </li>
+                                            <li class="kp-statusrow" data-state="done" data-kp-status-id="c">
+                                                <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                                ><span class="kp-statusrow__body"
+                                                    ><span class="kp-statusrow__label">Evening check-in</span
+                                                    ><span class="kp-statusrow__detail"></span
+                                                ></span>
+                                            </li>
+                                            <li class="kp-statusrow" data-state="unknown" data-kp-status-id="d">
+                                                <span class="kp-statusrow__mark" aria-hidden="true"></span
+                                                ><span class="kp-statusrow__body"
+                                                    ><span class="kp-statusrow__label">Zamioculcas Raven: water</span
+                                                    ><span class="kp-statusrow__detail">Soil sensor has no reading</span></span
+                                                >
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </section>
                         </div>
                     </div>
                 </div>
@@ -603,7 +865,7 @@
                 data-review-topic="quote"
                 data-review-topic-title="Quote card"
                 data-review-title="Quote card: your own words, back to you"
-                data-review-choices='[{"id": "quote-date", "label": "How the date reads", "default": "date", "options": [{"value": "date", "label": "The date: Wednesday 14/10/2026 (recommended)", "hint": "Exact, and it does not make a note from last month feel old. This is the first and second card below."}, {"value": "relative", "label": "How long ago: 3 days ago", "hint": "Reads like a counter that grows; the exact moment is still in the tooltip. This is the card marked as relative below."}, {"value": "both", "label": "Both: Wednesday 14/10/2026 (3 days ago)", "hint": "Most to read on one line; the card marked as both below."}]}, {"id": "quote-fold", "label": "How long a quote shows before it folds", "default": "4", "options": [{"value": "4", "label": "Four lines (recommended)", "hint": "A diary entry shows its first four lines and a Show all button; the whole text stays in the page. The long card below."}, {"value": "3", "label": "Three lines", "hint": "A shorter card, so a list of quotes is easier to take in at a glance, with more folding."}, {"value": "all", "label": "Never fold", "hint": "Every quote shows whole, however long; a wall of text for a long entry."}]}]'
+                data-review-choices='[{"id": "quote-date", "label": "How the date reads", "default": "both", "options": [{"value": "both", "label": "Both: Wednesday 14/10/2026 (3 days ago)", "hint": "The exact date and how long ago on one line. This is the first and second card below."}, {"value": "date", "label": "The date: Wednesday 14/10/2026", "hint": "Exact, and it does not make a note from last month feel old. Press Date in the buttons above the cards."}, {"value": "relative", "label": "How long ago: 3 days ago", "hint": "Reads like a counter that grows; the exact moment is still in the tooltip. This is the card marked as relative below."}]}, {"id": "quote-fold", "label": "How long a quote shows before it folds", "default": "4", "options": [{"value": "4", "label": "Four lines (recommended)", "hint": "A diary entry shows its first four lines and a Show all button; the whole text stays in the page. The long card below."}, {"value": "3", "label": "Three lines", "hint": "A shorter card, so a list of quotes is easier to take in at a glance, with more folding."}, {"value": "all", "label": "Never fold", "hint": "Every quote shows whole, however long; a wall of text for a long entry."}]}]'
                 aria-labelledby="h-quote"
             >
                 <div class="k6-sec__head">
@@ -618,26 +880,27 @@
                     <p><b>Expected:</b></p>
                     <ul>
                         <li>
-                            <b>First card</b>: a navy rule along the start edge, a large quote mark, the sentence <b>Wandelen na het eten hielp</b>
-                            (Dutch, marked <code>lang="nl"</code>), the small line <b>What helped last time</b> over it, <b>You, Wednesday
-                            14/10/2026</b> under it, and a <b>Do not show this again</b> button. Hover the date: the tooltip is the exact moment,
-                            <b>14/10/2026 19:40</b>.
+                            <b>First card</b>: a navy rule along the start edge, a large quote mark, the sentence
+                            <b>Wandelen na het eten hielp</b> (Dutch, marked <code>lang="nl"</code>), the small line <b>What helped last time</b> over
+                            it, <b>You, Wednesday 14/10/2026</b> under it, and a <b>Do not show this again</b> button. Hover the date: the tooltip is
+                            the exact moment, <b>14/10/2026 19:40</b>.
                         </li>
                         <li>
-                            <b>Hide</b>: press <b>Do not show this again</b> (or press <b>h</b> while the focus is in the card): the card goes at once,
-                            a toast says <b>Hidden</b> with <b>Undo</b> and a ring that counts down 6 seconds; Undo brings it back where it was.
+                            <b>Hide</b>: press <b>Do not show this again</b> (or press <b>h</b> while the focus is in the card): the card goes at
+                            once, a toast says <b>Hidden</b> with <b>Undo</b> and a ring that counts down 6 seconds; Undo brings it back where it was.
                             When the six seconds pass, the grey box under the first card says the page was told (<code>kp-quote-hide</code>).
                         </li>
                         <li>
-                            <b>Buttons above</b> change the first card and the long one while you look (date, ago or both; fold at four lines, three or never; the Hide button on or off): each card redraws at once.
+                            <b>Buttons above</b> change the first card and the long one while you look (date, ago or both; fold at four lines, three
+                            or never; the Hide button on or off): each card redraws at once.
                         </li>
                         <li>
                             <b>Long entry</b>: the second card shows four lines and ends in an ellipsis, with <b>Show all</b> under it; press it and
                             the whole entry shows (<b>Show less</b> folds it again). The card keeps its caption under the words either way.
                         </li>
                         <li>
-                            <b>Several quotes</b> (the list): three quotes and <b>Show all 7</b> (the exact number), then all seven and <b>Show
-                            fewer</b>. <b>Hero</b>: the same card at a large size with a link, <b>Open that day</b>, and a Copy button.
+                            <b>Several quotes</b> (the list): three quotes and <b>Show all 7</b> (the exact number), then all seven and
+                            <b>Show fewer</b>. <b>Hero</b>: the same card at a large size with a link, <b>Open that day</b>, and a Copy button.
                         </li>
                     </ul>
                 </div>
@@ -651,9 +914,9 @@
                 <div data-review-controls>
                     <div role="group" aria-label="How the date reads" class="k6-actions">
                         <b>Date:</b>
-                        <button type="button" class="kp-button" aria-pressed="true" data-k6-quote-opt="date-style" data-value="date">Date</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-quote-opt="date-style" data-value="date">Date</button>
                         <button type="button" class="kp-button" aria-pressed="false" data-k6-quote-opt="date-style" data-value="relative">Ago</button>
-                        <button type="button" class="kp-button" aria-pressed="false" data-k6-quote-opt="date-style" data-value="both">Both</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-quote-opt="date-style" data-value="both">Both</button>
                     </div>
                     <div role="group" aria-label="Fold" class="k6-actions">
                         <b>Fold at:</b>
@@ -670,31 +933,76 @@
                 <div class="k6-pair">
                     <div class="k6-case">
                         <p class="k6-label">A quote, why it is here, and Hide with Undo</p>
-                        <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-14T19:40:00+02:00" data-kp-quote-lang="nl" data-kp-quote-why="What helped last time" id="k6-quote-a">
+                        <figure
+                            class="kp-quote"
+                            data-kp-quote
+                            data-kp-quote-date="2026-10-14T19:40:00+02:00"
+                            data-kp-quote-lang="nl"
+                            data-kp-quote-why="What helped last time"
+                            id="k6-quote-a"
+                        >
                             <blockquote>Wandelen na het eten hielp, mijn hoofd werd rustiger.</blockquote>
                         </figure>
                         <pre class="k6-log" id="k6-quote-log" aria-live="polite"></pre>
                     </div>
                     <div class="k6-case">
                         <p class="k6-label">A long entry folds behind Show all</p>
-                        <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-09-29T21:05:00+02:00" data-kp-quote-lang="nl" data-kp-quote-why="A year ago today" data-kp-quote-hide="off" id="k6-quote-long">
-                            <blockquote>Vandaag was een zware dag. Ik werd wakker met die zware kop en heb eerst niets gedaan, gewoon in bed gelegen en naar het plafond gekeken. Rond de middag heb ik toch een boterham gegeten en een korte wandeling gemaakt langs het kanaal. Daarna voelde het iets lichter. Ik heb niemand gesproken behalve de buurvrouw, en dat was genoeg. Morgen opnieuw proberen, zonder iets te willen bewijzen.</blockquote>
+                        <figure
+                            class="kp-quote"
+                            data-kp-quote
+                            data-kp-quote-date="2026-09-29T21:05:00+02:00"
+                            data-kp-quote-lang="nl"
+                            data-kp-quote-why="A year ago today"
+                            data-kp-quote-hide="off"
+                            id="k6-quote-long"
+                        >
+                            <blockquote>
+                                Vandaag was een zware dag. Ik werd wakker met die zware kop en heb eerst niets gedaan, gewoon in bed gelegen en naar
+                                het plafond gekeken. Rond de middag heb ik toch een boterham gegeten en een korte wandeling gemaakt langs het kanaal.
+                                Daarna voelde het iets lichter. Ik heb niemand gesproken behalve de buurvrouw, en dat was genoeg. Morgen opnieuw
+                                proberen, zonder iets te willen bewijzen.
+                            </blockquote>
                         </figure>
                     </div>
                     <div class="k6-case">
                         <p class="k6-label">As how long ago (a choice), and both</p>
                         <div class="k6-stack">
-                            <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-14T19:40:00+02:00" data-kp-quote-date-style="relative" data-kp-quote-now="2026-10-17T12:00:00+02:00" data-kp-quote-hide="off" data-kp-quote-lang="nl">
+                            <figure
+                                class="kp-quote"
+                                data-kp-quote
+                                data-kp-quote-date="2026-10-14T19:40:00+02:00"
+                                data-kp-quote-date-style="relative"
+                                data-kp-quote-now="2026-10-17T12:00:00+02:00"
+                                data-kp-quote-hide="off"
+                                data-kp-quote-lang="nl"
+                            >
                                 <blockquote>Eerst koffie, dan pas nadenken.</blockquote>
                             </figure>
-                            <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-14T19:40:00+02:00" data-kp-quote-date-style="both" data-kp-quote-now="2026-10-17T12:00:00+02:00" data-kp-quote-hide="off" data-kp-quote-lang="nl">
+                            <figure
+                                class="kp-quote"
+                                data-kp-quote
+                                data-kp-quote-date="2026-10-14T19:40:00+02:00"
+                                data-kp-quote-date-style="both"
+                                data-kp-quote-now="2026-10-17T12:00:00+02:00"
+                                data-kp-quote-hide="off"
+                                data-kp-quote-lang="nl"
+                            >
                                 <blockquote>Eerst koffie, dan pas nadenken.</blockquote>
                             </figure>
                         </div>
                     </div>
                     <div class="k6-case">
                         <p class="k6-label">Hero size, a link to the day, Copy</p>
-                        <figure class="kp-quote" data-kp-quote data-kp-quote-size="lg" data-kp-quote-copy data-kp-quote-date="2026-10-12T08:15:00+02:00" data-kp-quote-source="#k6-quote-day" data-kp-quote-lang="nl" data-kp-quote-hide="off">
+                        <figure
+                            class="kp-quote"
+                            data-kp-quote
+                            data-kp-quote-size="lg"
+                            data-kp-quote-copy
+                            data-kp-quote-date="2026-10-12T08:15:00+02:00"
+                            data-kp-quote-source="#k6-quote-day"
+                            data-kp-quote-lang="nl"
+                            data-kp-quote-hide="off"
+                        >
                             <blockquote>Kleine stappen tellen ook.</blockquote>
                         </figure>
                         <p class="k6-caption" id="k6-quote-day">(The link goes to this line: the day&rsquo;s own page does not exist in the demo.)</p>
@@ -703,13 +1011,69 @@
                 <div class="k6-case">
                     <p class="k6-label">Several quotes: three, and Show all 7</p>
                     <div class="kp-quote-list" data-kp-quote-list id="k6-quote-list">
-                        <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-14T19:40:00+02:00" data-kp-quote-lang="nl" data-kp-quote-hide="off"><blockquote>Wandelen na het eten hielp.</blockquote></figure>
-                        <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-11T20:10:00+02:00" data-kp-quote-lang="nl" data-kp-quote-hide="off"><blockquote>Vroeg naar bed, de ochtend was beter.</blockquote></figure>
-                        <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-09T18:30:00+02:00" data-kp-quote-lang="nl" data-kp-quote-hide="off"><blockquote>Even buiten zitten met thee.</blockquote></figure>
-                        <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-06T09:00:00+02:00" data-kp-quote-lang="nl" data-kp-quote-hide="off"><blockquote>Eerst de brief schrijven, daarna pas de rest.</blockquote></figure>
-                        <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-03T17:45:00+02:00" data-kp-quote-lang="nl" data-kp-quote-hide="off"><blockquote>Muziek opgezet tijdens het koken.</blockquote></figure>
-                        <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-09-30T12:20:00+02:00" data-kp-quote-lang="nl" data-kp-quote-hide="off"><blockquote>De wandeling met Sam deed deugd.</blockquote></figure>
-                        <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-09-27T19:00:00+02:00" data-kp-quote-lang="nl" data-kp-quote-hide="off"><blockquote>Niets gepland, en dat was goed.</blockquote></figure>
+                        <figure
+                            class="kp-quote"
+                            data-kp-quote
+                            data-kp-quote-date="2026-10-14T19:40:00+02:00"
+                            data-kp-quote-lang="nl"
+                            data-kp-quote-hide="off"
+                        >
+                            <blockquote>Wandelen na het eten hielp.</blockquote>
+                        </figure>
+                        <figure
+                            class="kp-quote"
+                            data-kp-quote
+                            data-kp-quote-date="2026-10-11T20:10:00+02:00"
+                            data-kp-quote-lang="nl"
+                            data-kp-quote-hide="off"
+                        >
+                            <blockquote>Vroeg naar bed, de ochtend was beter.</blockquote>
+                        </figure>
+                        <figure
+                            class="kp-quote"
+                            data-kp-quote
+                            data-kp-quote-date="2026-10-09T18:30:00+02:00"
+                            data-kp-quote-lang="nl"
+                            data-kp-quote-hide="off"
+                        >
+                            <blockquote>Even buiten zitten met thee.</blockquote>
+                        </figure>
+                        <figure
+                            class="kp-quote"
+                            data-kp-quote
+                            data-kp-quote-date="2026-10-06T09:00:00+02:00"
+                            data-kp-quote-lang="nl"
+                            data-kp-quote-hide="off"
+                        >
+                            <blockquote>Eerst de brief schrijven, daarna pas de rest.</blockquote>
+                        </figure>
+                        <figure
+                            class="kp-quote"
+                            data-kp-quote
+                            data-kp-quote-date="2026-10-03T17:45:00+02:00"
+                            data-kp-quote-lang="nl"
+                            data-kp-quote-hide="off"
+                        >
+                            <blockquote>Muziek opgezet tijdens het koken.</blockquote>
+                        </figure>
+                        <figure
+                            class="kp-quote"
+                            data-kp-quote
+                            data-kp-quote-date="2026-09-30T12:20:00+02:00"
+                            data-kp-quote-lang="nl"
+                            data-kp-quote-hide="off"
+                        >
+                            <blockquote>De wandeling met Sam deed deugd.</blockquote>
+                        </figure>
+                        <figure
+                            class="kp-quote"
+                            data-kp-quote
+                            data-kp-quote-date="2026-09-27T19:00:00+02:00"
+                            data-kp-quote-lang="nl"
+                            data-kp-quote-hide="off"
+                        >
+                            <blockquote>Niets gepland, en dat was goed.</blockquote>
+                        </figure>
                     </div>
                 </div>
             </section>
@@ -724,7 +1088,10 @@
             >
                 <div class="k6-sec__head">
                     <h2 id="h-quote-states">Quote card: states, an unbroken word and phone width</h2>
-                    <p>A card that is being read, one with nothing to show, one that could not be read, a word that will not break, and the card in a 390 px box.</p>
+                    <p>
+                        A card that is being read, one with nothing to show, one that could not be read, a word that will not break, and the card in a
+                        390 px box.
+                    </p>
                 </div>
                 <div class="k6-expected">
                     <p><b>Expected:</b></p>
@@ -768,7 +1135,14 @@
                 <div class="k6-pair">
                     <div class="k6-case">
                         <p class="k6-label">Driven by the buttons above</p>
-                        <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-14T19:40:00+02:00" data-kp-quote-lang="nl" data-kp-quote-why="What helped last time" id="k6-quote-state">
+                        <figure
+                            class="kp-quote"
+                            data-kp-quote
+                            data-kp-quote-date="2026-10-14T19:40:00+02:00"
+                            data-kp-quote-lang="nl"
+                            data-kp-quote-why="What helped last time"
+                            id="k6-quote-state"
+                        >
                             <blockquote>Wandelen na het eten hielp, mijn hoofd werd rustiger.</blockquote>
                         </figure>
                         <pre class="k6-log" id="k6-quote-state-log" aria-live="polite"></pre>
@@ -776,13 +1150,21 @@
                     <div class="k6-case">
                         <p class="k6-label">A word that will not break</p>
                         <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-01T10:00:00+02:00" data-kp-quote-hide="off">
-                            <blockquote>Vandaag-schreef-ik-het-woord-onbegrijpelijkonverstaanbaarwaardeloosvolkomenonmogelijkaaneen-en-het-bleef-doorlopen.</blockquote>
+                            <blockquote>
+                                Vandaag-schreef-ik-het-woord-onbegrijpelijkonverstaanbaarwaardeloosvolkomenonmogelijkaaneen-en-het-bleef-doorlopen.
+                            </blockquote>
                         </figure>
                     </div>
                     <div class="k6-case">
                         <p class="k6-label">Phone width (390 px)</p>
                         <div class="k6-frame k6-frame--phone">
-                            <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-14T19:40:00+02:00" data-kp-quote-lang="nl" data-kp-quote-why="What helped last time">
+                            <figure
+                                class="kp-quote"
+                                data-kp-quote
+                                data-kp-quote-date="2026-10-14T19:40:00+02:00"
+                                data-kp-quote-lang="nl"
+                                data-kp-quote-why="What helped last time"
+                            >
                                 <blockquote>Wandelen na het eten hielp, mijn hoofd werd rustiger.</blockquote>
                             </figure>
                         </div>
@@ -815,11 +1197,11 @@
                     <p><b>Expected:</b></p>
                     <ul>
                         <li>
-                            <b>First calendar</b> (October 2026, movement): days 1, 2, 7, 8, 9, 12, 13, 14 and 15 are logged (navy plates, the
-                            number of minutes under the day number); 3 to 6 are <b>paused</b> (hatched, no fill); the other past days are
-                            <b>quiet</b> (a plate barely darker than the paper, no border, no number under it, no glyph); days after today are dashed.
-                            The legend reads <b>Logged</b>, <b>Nothing logged</b>, <b>Paused</b>. Press a quiet day: you can, it is a normal 52 px target
-                            (adding a missing entry is allowed); its name is <b>14/10/2026: nothing logged</b>, never &ldquo;missed&rdquo;.
+                            <b>First calendar</b> (October 2026, movement): days 1, 2, 7, 8, 9, 12, 13, 14 and 15 are logged (navy plates, the number
+                            of minutes under the day number); 3 to 6 are <b>paused</b> (hatched, no fill); the other past days are <b>quiet</b> (a
+                            plate barely darker than the paper, no border, no number under it, no glyph); days after today are dashed. The legend
+                            reads <b>Logged</b>, <b>Nothing logged</b>, <b>Paused</b>. Press a quiet day: you can, it is a normal 52 px target (adding
+                            a missing entry is allowed); its name is <b>14/10/2026: nothing logged</b>, never &ldquo;missed&rdquo;.
                         </li>
                         <li>
                             <b>Second calendar</b>: the same days drawn for a backup with the standard tones: green for done, <b>red for a miss</b>.
@@ -827,13 +1209,15 @@
                             backups.
                         </li>
                         <li>
-                            <b>Heat grid</b> (three habits over a week) and <b>uptime strip</b> (thirty days of a plant being watered):
-                            logged is the accent, quiet is the pale plate, the strip&rsquo;s old <b>down</b> reads <b>nothing logged</b> in its tooltip, and its summary counts the good days only (<b>N of 28 days logged</b>: no share down, no incidents).
-                            A cell asked to be <code>bad</code> is drawn quiet (the console says so once).
+                            <b>Heat grid</b> (three habits over a week) and <b>uptime strip</b> (thirty days of a plant being watered): logged is the
+                            accent, quiet is the pale plate, the strip&rsquo;s old <b>down</b> reads <b>nothing logged</b> in its tooltip, and its
+                            summary counts the good days only (<b>N of 28 days logged</b>: no share down, no incidents). A cell asked to be
+                            <code>bad</code> is drawn quiet (the console says so once).
                         </li>
                         <li>
-                            <b>Buttons above</b>: <b>Accent</b> and <b>Success</b> change the colour of logged days in all three (an option of the component; the dialog sets the default);
-                            <b>Legend</b> shows or hides the legend (an option of the component; the dialog sets the default).
+                            <b>Buttons above</b>: <b>Accent</b> and <b>Success</b> change the colour of logged days in all three (an option of the
+                            component; the dialog sets the default); <b>Legend</b> shows or hides the legend (an option of the component; the dialog
+                            sets the default).
                         </li>
                     </ul>
                 </div>
@@ -857,12 +1241,26 @@
                 <div class="k6-pair">
                     <div class="k6-case">
                         <p class="k6-label">Calm: movement, October 2026</p>
-                        <div class="kp-calendar kp-calendar--busy-whole" data-kp-calendar data-kp-tones="calm" data-kp-calendar-month="2026-10" data-kp-paused-range="2026-10-03/2026-10-06" aria-label="Movement" id="k6-cal-a"></div>
+                        <div
+                            class="kp-calendar kp-calendar--busy-whole"
+                            data-kp-calendar
+                            data-kp-tones="calm"
+                            data-kp-calendar-month="2026-10"
+                            data-kp-paused-range="2026-10-03/2026-10-06"
+                            aria-label="Movement"
+                            id="k6-cal-a"
+                        ></div>
                         <pre class="k6-log" id="k6-cal-log" aria-live="polite"></pre>
                     </div>
                     <div class="k6-case">
                         <p class="k6-label">The same days for a backup: standard tones</p>
-                        <div class="kp-calendar kp-calendar--busy-days" data-kp-calendar data-kp-calendar-month="2026-10" aria-label="Nightly backup" id="k6-cal-b"></div>
+                        <div
+                            class="kp-calendar kp-calendar--busy-days"
+                            data-kp-calendar
+                            data-kp-calendar-month="2026-10"
+                            aria-label="Nightly backup"
+                            id="k6-cal-b"
+                        ></div>
                     </div>
                 </div>
                 <div class="k6-pair">
@@ -887,7 +1285,10 @@
             >
                 <div class="k6-sec__head">
                     <h2 id="h-calm-tones-states">Calm days: states and phone width</h2>
-                    <p>A calm calendar that is being read, a month with nothing logged, a month that could not be read, and the calendar in a 390 px box.</p>
+                    <p>
+                        A calm calendar that is being read, a month with nothing logged, a month that could not be read, and the calendar in a 390 px
+                        box.
+                    </p>
                 </div>
                 <div class="k6-expected">
                     <p><b>Expected:</b></p>
@@ -895,20 +1296,22 @@
                         <li>
                             <b>Loading</b>, <b>Nothing logged</b>, <b>Could not read</b> and <b>Ready</b> (buttons above the first calendar):
                             <b>Loading</b> is the calendar&rsquo;s own pulse on every day, same size. <b>Nothing logged</b>: the grid keeps its six
-                            rows, every day quiet, with one plate centred over it at heading size: <b>Nothing logged this month</b> over <b>That is
-                            fine, it starts whenever you do</b>. <b>Could not read</b>: the grid dimmed under a red-edged plate with
-                            <b>Could not read this month</b> and a normal-size <b>Retry</b> (it loads for a second and the days come back).
-                            The calendar does not change height between them.
+                            rows, every day quiet, with one plate centred over it at heading size: <b>Nothing logged this month</b> over
+                            <b>That is fine, it starts whenever you do</b>. <b>Could not read</b>: the grid dimmed under a red-edged plate with
+                            <b>Could not read this month</b> and a normal-size <b>Retry</b> (it loads for a second and the days come back). The
+                            calendar does not change height between them.
                         </li>
                         <li>
                             <b>A sentence under the grid</b> (the page&rsquo;s own words, here <b>Trends count the days that were logged</b>) is the
-                            optional caption slot. <b>Phone width</b> (390 px box): the calendar&rsquo;s own layout; a quiet day is still a 44 px
-                            or larger target.
+                            optional caption slot. <b>Phone width</b> (390 px box): the calendar&rsquo;s own layout; a quiet day is still a 44 px or
+                            larger target.
                         </li>
                     </ul>
                 </div>
                 <div data-review-look>
-                    <p data-for="formal">The plate is formal&rsquo;s empty plate or destructive alert, standing over the dimmed grid, not a line in a corner.</p>
+                    <p data-for="formal">
+                        The plate is formal&rsquo;s empty plate or destructive alert, standing over the dimmed grid, not a line in a corner.
+                    </p>
                 </div>
                 <div data-review-controls>
                     <div role="group" aria-label="State of the first calendar" class="k6-actions">
@@ -921,12 +1324,27 @@
                 <div class="k6-pair">
                     <div class="k6-case">
                         <p class="k6-label">Driven by the buttons above</p>
-                        <div class="kp-calendar kp-calendar--busy-whole" data-kp-calendar data-kp-tones="calm" data-kp-calendar-month="2026-10" aria-label="Sleep" id="k6-cal-s"></div>
+                        <div
+                            class="kp-calendar kp-calendar--busy-whole"
+                            data-kp-calendar
+                            data-kp-tones="calm"
+                            data-kp-calendar-month="2026-10"
+                            aria-label="Sleep"
+                            id="k6-cal-s"
+                        ></div>
                     </div>
                     <div class="k6-case">
                         <p class="k6-label">Phone width (390 px)</p>
                         <div class="k6-frame k6-frame--phone">
-                            <div class="kp-calendar kp-calendar--busy-days" data-kp-calendar data-kp-tones="calm" data-kp-calendar-month="2026-10" data-kp-paused-range="2026-10-03/2026-10-06" aria-label="Movement" id="k6-cal-p"></div>
+                            <div
+                                class="kp-calendar kp-calendar--busy-days"
+                                data-kp-calendar
+                                data-kp-tones="calm"
+                                data-kp-calendar-month="2026-10"
+                                data-kp-paused-range="2026-10-03/2026-10-06"
+                                aria-label="Movement"
+                                id="k6-cal-p"
+                            ></div>
                         </div>
                     </div>
                 </div>
@@ -959,8 +1377,8 @@
                             <b>Lasagne</b> (first case) starts with five outlined stars and the words <b>Tap a star</b> under them. Press the fourth
                             star: four are filled in the accent colour (navy in formal, never red or green), the words say <b>Great</b>, a small
                             <b>Clear</b> button appears under the row (on a mouse only), a toast says <b>Lasagne: 4 stars</b> with <b>Undo</b>, and
-                            the grey box under the case shows the event. Press the fourth star again: the rating goes (<b>rating removed</b>).
-                            Nothing under the row moves when the words change.
+                            the grey box under the case shows the event. Press the fourth star again: the rating goes (<b>rating removed</b>). Nothing
+                            under the row moves when the words change.
                         </li>
                         <li>
                             <b>Keys</b>: Tab reaches the row once (one tab stop); the arrows move and choose, <b>Home</b> and <b>End</b> go to the
@@ -974,9 +1392,10 @@
                             (&ldquo;Rated 4.5 of 5 by 12 people&rdquo;).
                         </li>
                         <li>
-                            <b>Buttons above</b> change the Lasagne row while you look: seven stars, half steps, a read-only row, and a tap that only picks; the row redraws at once and keeps its value. <b>Half stars</b> (an option, not the default): the same row answers to a press on the left or right half of a star;
-                            the keys step by one half. <b>Save rating</b> case: a tap only picks, the two buttons appear, and the page keeps the old
-                            value until Save.
+                            <b>Buttons above</b> change the Lasagne row while you look: seven stars, half steps, a read-only row, and a tap that only
+                            picks; the row redraws at once and keeps its value. <b>Half stars</b> (an option, not the default): the same row answers
+                            to a press on the left or right half of a star; the keys step by one half. <b>Save rating</b> case: a tap only picks, the
+                            two buttons appear, and the page keeps the old value until Save.
                         </li>
                     </ul>
                 </div>
@@ -1013,28 +1432,96 @@
                     <div class="k6-case">
                         <p class="k6-label">Give a rating: saves at once, preview on a mouse</p>
                         <div class="k6-stack">
-                            <div class="kp-rating" data-kp-rating data-kp-rating-for="Lasagne" data-kp-rating-labels="Not for me|Okay|Good|Great|Make again" id="k6-rate-a"></div>
-                            <div class="kp-rating" data-kp-rating data-kp-rating-for="Pasta e fagioli" data-kp-rating-value="3" data-kp-rating-labels="Not for me|Okay|Good|Great|Make again" data-kp-rating-preview="off"></div>
+                            <div
+                                class="kp-rating"
+                                data-kp-rating
+                                data-kp-rating-for="Lasagne"
+                                data-kp-rating-labels="Not for me|Okay|Good|Great|Make again"
+                                id="k6-rate-a"
+                            ></div>
+                            <div
+                                class="kp-rating"
+                                data-kp-rating
+                                data-kp-rating-for="Pasta e fagioli"
+                                data-kp-rating-value="3"
+                                data-kp-rating-labels="Not for me|Okay|Good|Great|Make again"
+                                data-kp-rating-preview="off"
+                            ></div>
                         </div>
                         <pre class="k6-log" id="k6-rate-log" aria-live="polite"></pre>
                     </div>
                     <div class="k6-case">
                         <p class="k6-label">Show a rating: read only</p>
                         <div class="k6-stack">
-                            <div class="k6-row"><span class="k6-rowlabel">Chili con carne</span><div class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-for="Chili con carne" data-kp-rating-value="4.5" data-kp-rating-count="12"></div></div>
-                            <div class="k6-row"><span class="k6-rowlabel">Soupe de poisson</span><div class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-for="Soupe de poisson" data-kp-rating-value="3"></div></div>
-                            <div class="k6-row"><span class="k6-rowlabel">Stoofvlees</span><div class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-for="Stoofvlees"></div></div>
-                            <div class="k6-row"><span class="k6-rowlabel">Medium, 4 of 5</span><div class="kp-rating kp-rating--md" data-kp-rating data-kp-rating-mode="display" data-kp-rating-size="md" data-kp-rating-for="Waterzooi" data-kp-rating-value="4"></div></div>
-                            <div class="k6-row"><span class="k6-rowlabel">Large, 5 of 5</span><div class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-size="lg" data-kp-rating-for="Carbonnade" data-kp-rating-value="5"></div></div>
+                            <div class="k6-row">
+                                <span class="k6-rowlabel">Chili con carne</span>
+                                <div
+                                    class="kp-rating"
+                                    data-kp-rating
+                                    data-kp-rating-mode="display"
+                                    data-kp-rating-for="Chili con carne"
+                                    data-kp-rating-value="4.5"
+                                    data-kp-rating-count="12"
+                                ></div>
+                            </div>
+                            <div class="k6-row">
+                                <span class="k6-rowlabel">Soupe de poisson</span>
+                                <div
+                                    class="kp-rating"
+                                    data-kp-rating
+                                    data-kp-rating-mode="display"
+                                    data-kp-rating-for="Soupe de poisson"
+                                    data-kp-rating-value="3"
+                                ></div>
+                            </div>
+                            <div class="k6-row">
+                                <span class="k6-rowlabel">Stoofvlees</span>
+                                <div class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-for="Stoofvlees"></div>
+                            </div>
+                            <div class="k6-row">
+                                <span class="k6-rowlabel">Medium, 4 of 5</span>
+                                <div
+                                    class="kp-rating kp-rating--md"
+                                    data-kp-rating
+                                    data-kp-rating-mode="display"
+                                    data-kp-rating-size="md"
+                                    data-kp-rating-for="Waterzooi"
+                                    data-kp-rating-value="4"
+                                ></div>
+                            </div>
+                            <div class="k6-row">
+                                <span class="k6-rowlabel">Large, 5 of 5</span>
+                                <div
+                                    class="kp-rating"
+                                    data-kp-rating
+                                    data-kp-rating-mode="display"
+                                    data-kp-rating-size="lg"
+                                    data-kp-rating-for="Carbonnade"
+                                    data-kp-rating-value="5"
+                                ></div>
+                            </div>
                         </div>
                     </div>
                     <div class="k6-case">
                         <p class="k6-label">Half stars (option): the keys step by a half</p>
-                        <div class="kp-rating" data-kp-rating data-kp-rating-step="0.5" data-kp-rating-for="Tiramisu" data-kp-rating-value="3.5" id="k6-rate-half"></div>
+                        <div
+                            class="kp-rating"
+                            data-kp-rating
+                            data-kp-rating-step="0.5"
+                            data-kp-rating-for="Tiramisu"
+                            data-kp-rating-value="3.5"
+                            id="k6-rate-half"
+                        ></div>
                     </div>
                     <div class="k6-case">
                         <p class="k6-label">Save rating (option): a tap picks, a button saves</p>
-                        <div class="kp-rating" data-kp-rating data-kp-rating-commit="confirm" data-kp-rating-for="Risotto" data-kp-rating-value="2"></div>
+                        <div
+                            class="kp-rating"
+                            data-kp-rating
+                            data-kp-rating-commit="confirm"
+                            data-kp-rating-for="Risotto"
+                            data-kp-rating-value="2"
+                        ></div>
                     </div>
                 </div>
             </section>
@@ -1049,7 +1536,10 @@
             >
                 <div class="k6-sec__head">
                     <h2 id="h-rating-states">Star rating: states, a table and phone width</h2>
-                    <p>A rating that is being read, one that could not be read, a save that is refused, one that is locked, and the stars in a table and on a phone.</p>
+                    <p>
+                        A rating that is being read, one that could not be read, a save that is refused, one that is locked, and the stars in a table
+                        and on a phone.
+                    </p>
                 </div>
                 <div class="k6-expected">
                     <p><b>Expected:</b></p>
@@ -1058,8 +1548,8 @@
                             <b>Loading</b> (button above the first case): the five stars keep their size as dashed outlines that slowly breathe,
                             nothing moves around them. <b>Could not read</b>: the stars and the words are replaced, at the same height, by one
                             red-edged plate with <b>Could not read the rating</b> centred and a normal-size <b>Retry</b>; Retry fires
-                            <code>kp-rating-retry</code> (the grey box). <b>Save is refused</b>: press a star; the row is busy for a moment, then
-                            the previous stars come back and <b>Could not save the rating for Lasagne</b> stands under the row for three seconds.
+                            <code>kp-rating-retry</code> (the grey box). <b>Save is refused</b>: press a star; the row is busy for a moment, then the
+                            previous stars come back and <b>Could not save the rating for Lasagne</b> stands under the row for three seconds.
                         </li>
                         <li>
                             <b>Locked</b>: stars dimmed, the sentence <b>Locked while the recipe is being edited</b> in muted ink under them (not a
@@ -1071,8 +1561,8 @@
                             recipe sorts last.
                         </li>
                         <li>
-                            <b>Phone width</b> (390 px box): the five stars are 56 px wide each and fill the row evenly, the words under the row,
-                            no Clear button (a phone has no pointer; press the chosen star again to remove).
+                            <b>Phone width</b> (390 px box): the five stars are 56 px wide each and fill the row evenly, the words under the row, no
+                            Clear button (a phone has no pointer; press the chosen star again to remove).
                         </li>
                     </ul>
                 </div>
@@ -1096,19 +1586,39 @@
                 <div class="k6-pair">
                     <div class="k6-case">
                         <p class="k6-label">Driven by the buttons above</p>
-                        <div class="kp-rating" data-kp-rating data-kp-rating-for="Lasagne" data-kp-rating-value="4" data-kp-rating-labels="Not for me|Okay|Good|Great|Make again" id="k6-rate-state"></div>
+                        <div
+                            class="kp-rating"
+                            data-kp-rating
+                            data-kp-rating-for="Lasagne"
+                            data-kp-rating-value="4"
+                            data-kp-rating-labels="Not for me|Okay|Good|Great|Make again"
+                            id="k6-rate-state"
+                        ></div>
                         <pre class="k6-log" id="k6-rate-state-log" aria-live="polite"></pre>
                     </div>
                     <div class="k6-case">
                         <p class="k6-label">Locked, and read only</p>
                         <div class="k6-stack">
-                            <div class="kp-rating" data-kp-rating data-kp-rating-for="Moussaka" data-kp-rating-value="3" data-kp-disabled data-kp-disabled-reason="Locked while the recipe is being edited"></div>
+                            <div
+                                class="kp-rating"
+                                data-kp-rating
+                                data-kp-rating-for="Moussaka"
+                                data-kp-rating-value="3"
+                                data-kp-disabled
+                                data-kp-disabled-reason="Locked while the recipe is being edited"
+                            ></div>
                             <div class="kp-rating" data-kp-rating data-kp-rating-for="Ratatouille" data-kp-rating-value="5" data-kp-readonly></div>
                         </div>
                     </div>
                     <div class="k6-case">
                         <p class="k6-label">Words that are long</p>
-                        <div class="kp-rating" data-kp-rating data-kp-rating-for="Slow-cooked lamb shoulder with anchovies and rosemary" data-kp-rating-value="3" data-kp-rating-labels="Please do not make this again, ever|It was fine but needed more salt and a lot more time|Good enough to cook for friends on a Sunday|Great, I would ask for the recipe|The best thing I have cooked this year"></div>
+                        <div
+                            class="kp-rating"
+                            data-kp-rating
+                            data-kp-rating-for="Slow-cooked lamb shoulder with anchovies and rosemary"
+                            data-kp-rating-value="3"
+                            data-kp-rating-labels="Please do not make this again, ever|It was fine but needed more salt and a lot more time|Good enough to cook for friends on a Sunday|Great, I would ask for the recipe|The best thing I have cooked this year"
+                        ></div>
                     </div>
                 </div>
                 <div class="k6-case">
@@ -1116,7 +1626,9 @@
                     <div class="kp-datatable" data-kp-datatable data-kp-page-sizes="none">
                         <div class="kp-table-wrap">
                             <table class="kp-table">
-                                <caption class="k6-sr-caption kp-sr-only">Recipes with their rating. Click Rating to sort by the number of stars.</caption>
+                                <caption class="k6-sr-caption kp-sr-only">
+                                    Recipes with their rating. Click Rating to sort by the number of stars.
+                                </caption>
                                 <thead>
                                     <tr>
                                         <th scope="col" data-kp-sort="text">Recipe</th>
@@ -1125,11 +1637,71 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr><td data-label="Recipe">Lasagne</td><td data-label="Rating" data-kp-sort-value="4"><span class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-for="Lasagne" data-kp-rating-value="4"></span></td><td data-label="Cooked" class="kp-text-end kp-numeric">12</td></tr>
-                                    <tr><td data-label="Recipe">Stoofvlees</td><td data-label="Rating" data-kp-sort-value="0"><span class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-for="Stoofvlees" data-kp-rating-value="0"></span></td><td data-label="Cooked" class="kp-text-end kp-numeric">2</td></tr>
-                                    <tr><td data-label="Recipe">Chili con carne</td><td data-label="Rating" data-kp-sort-value="5"><span class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-for="Chili con carne" data-kp-rating-value="5"></span></td><td data-label="Cooked" class="kp-text-end kp-numeric">9</td></tr>
-                                    <tr><td data-label="Recipe">Soupe de poisson</td><td data-label="Rating" data-kp-sort-value="3"><span class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-for="Soupe de poisson" data-kp-rating-value="3"></span></td><td data-label="Cooked" class="kp-text-end kp-numeric">4</td></tr>
-                                    <tr><td data-label="Recipe">Waterzooi</td><td data-label="Rating" data-kp-sort-value="2"><span class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-for="Waterzooi" data-kp-rating-value="2"></span></td><td data-label="Cooked" class="kp-text-end kp-numeric">1</td></tr>
+                                    <tr>
+                                        <td data-label="Recipe">Lasagne</td>
+                                        <td data-label="Rating" data-kp-sort-value="4">
+                                            <span
+                                                class="kp-rating"
+                                                data-kp-rating
+                                                data-kp-rating-mode="display"
+                                                data-kp-rating-for="Lasagne"
+                                                data-kp-rating-value="4"
+                                            ></span>
+                                        </td>
+                                        <td data-label="Cooked" class="kp-text-end kp-numeric">12</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-label="Recipe">Stoofvlees</td>
+                                        <td data-label="Rating" data-kp-sort-value="0">
+                                            <span
+                                                class="kp-rating"
+                                                data-kp-rating
+                                                data-kp-rating-mode="display"
+                                                data-kp-rating-for="Stoofvlees"
+                                                data-kp-rating-value="0"
+                                            ></span>
+                                        </td>
+                                        <td data-label="Cooked" class="kp-text-end kp-numeric">2</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-label="Recipe">Chili con carne</td>
+                                        <td data-label="Rating" data-kp-sort-value="5">
+                                            <span
+                                                class="kp-rating"
+                                                data-kp-rating
+                                                data-kp-rating-mode="display"
+                                                data-kp-rating-for="Chili con carne"
+                                                data-kp-rating-value="5"
+                                            ></span>
+                                        </td>
+                                        <td data-label="Cooked" class="kp-text-end kp-numeric">9</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-label="Recipe">Soupe de poisson</td>
+                                        <td data-label="Rating" data-kp-sort-value="3">
+                                            <span
+                                                class="kp-rating"
+                                                data-kp-rating
+                                                data-kp-rating-mode="display"
+                                                data-kp-rating-for="Soupe de poisson"
+                                                data-kp-rating-value="3"
+                                            ></span>
+                                        </td>
+                                        <td data-label="Cooked" class="kp-text-end kp-numeric">4</td>
+                                    </tr>
+                                    <tr>
+                                        <td data-label="Recipe">Waterzooi</td>
+                                        <td data-label="Rating" data-kp-sort-value="2">
+                                            <span
+                                                class="kp-rating"
+                                                data-kp-rating
+                                                data-kp-rating-mode="display"
+                                                data-kp-rating-for="Waterzooi"
+                                                data-kp-rating-value="2"
+                                            ></span>
+                                        </td>
+                                        <td data-label="Cooked" class="kp-text-end kp-numeric">1</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -1138,14 +1710,22 @@
                 <div class="k6-case">
                     <p class="k6-label">Phone width (390 px)</p>
                     <div class="k6-frame k6-frame--phone">
-                        <div class="kp-rating" data-kp-rating data-kp-rating-for="Lasagne" data-kp-rating-value="4" data-kp-rating-labels="Not for me|Okay|Good|Great|Make again"></div>
+                        <div
+                            class="kp-rating"
+                            data-kp-rating
+                            data-kp-rating-for="Lasagne"
+                            data-kp-rating-value="4"
+                            data-kp-rating-labels="Not for me|Okay|Good|Great|Make again"
+                        ></div>
                     </div>
                 </div>
             </section>
-
         </main>
         <script type="application/json" data-review-round>
-            { "round": "calm-c39372f2-91de-4620-b0fc-060c328526cc", "received": ["calm-d9f4d43f-f09f-4feb-aa4f-e447f8164594"] }
+            {
+                "round": "calm-f65cea5d-5f48-4cb8-a10f-e2147c51b128",
+                "received": ["calm-d9f4d43f-f09f-4feb-aa4f-e447f8164594", "calm-c39372f2-91de-4620-b0fc-060c328526cc"]
+            }
         </script>
         <script type="module" src="./demo.js"></script>
         <script type="module" src="../../js/auto.js"></script>

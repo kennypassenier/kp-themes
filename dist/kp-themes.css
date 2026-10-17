@@ -26885,32 +26885,6 @@
         resize: vertical;
     }
 
-    .kp-focus-steps__dots {
-        display: flex;
-        flex-wrap: wrap;
-        gap: var(--kp-space-xs, 0.25rem);
-        grid-column: 1 / -1;
-    }
-
-    .kp-focus-steps__dot {
-        box-sizing: border-box;
-        inline-size: 0.625rem;
-        block-size: 0.625rem;
-        border: 2px solid var(--border-strong);
-        border-radius: 50%;
-    }
-
-    .kp-focus-steps__dot[data-kp-done] {
-        background: var(--primary);
-        border-color: var(--primary);
-    }
-
-    .kp-focus-steps__dot[data-kp-current] {
-        border-color: var(--primary);
-        background: var(--card);
-        box-shadow: 0 0 0 2px var(--primary);
-    }
-
     .kp-focus-steps__bar[hidden],
     .kp-focus-steps__count[hidden],
     .kp-focus-steps__prev[hidden] {

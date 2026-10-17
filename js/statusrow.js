@@ -45,7 +45,7 @@
 // four states for `open`, `done`, `paused` and `unknown` (`loading` stays), with no red anywhere and no tally: a row asked for
 // `failed`, `warn` or anything else is drawn as `unknown` and says so in the console. `unknown` exists for a thing that reports
 // "ok" because it has no data (a plant with a dead soil sensor): it is never drawn as done. A paused row says "Paused since
-// 03/10/2026" from its `data-kp-since` (`data-kp-today-since`: `date`, `relative` or `both`) and offers Resume in one press
+// 03/10/2026" from its `data-kp-since` (`data-kp-today-since`: `both` by default, `date` or `relative`) and offers Resume in one press
 // (`data-kp-today-resume="off"` leaves it out): `kp-status-resume` fires, the row is open again, and a toast offers Undo that puts
 // it back paused with its original date (`kp-status-undo`). `data-kp-today-pause` adds a Pause button on open rows
 // (`kp-status-pause`). `data-kp-today-order="open-first"` orders the rows once, at attach, and never again (a row that becomes
@@ -319,7 +319,7 @@ function todayKey(list) {
 /** The whole days between two `YYYY-MM-DD` days. @param {string} from @param {string} to */
 const daysBetween = (from, to) => Math.round((Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 86_400_000);
 
-/** "Paused since 03/10/2026", as a length, or both, from the row's `data-kp-since`. @param {Element} item @param {StatusState} state @param {Element | null} list */
+/** "Paused since 03/10/2026 (2 weeks)" (both, the default), the date or the length, from the row's `data-kp-since`. @param {Element} item @param {StatusState} state @param {Element | null} list */
 function syncSince(item, state, list) {
     const detail = item.querySelector('.kp-statusrow__detail');
     if (!detail) return;
@@ -330,7 +330,7 @@ function syncSince(item, state, list) {
         const duration = s.statusDuration(Math.max(0, daysBetween(since, todayKey(list))));
         const style = list?.getAttribute('data-kp-today-since');
         detail.textContent =
-            style === 'relative' ? s.statusSinceFor(duration) : style === 'both' ? s.statusSinceBoth(date, duration) : s.statusSinceDate(date);
+            style === 'relative' ? s.statusSinceFor(duration) : style === 'date' ? s.statusSinceDate(date) : s.statusSinceBoth(date, duration);
         item.setAttribute('data-kp-detail-auto', '');
     } else if (item.hasAttribute('data-kp-detail-auto')) {
         item.removeAttribute('data-kp-detail-auto');

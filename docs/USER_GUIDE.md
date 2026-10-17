@@ -2330,7 +2330,7 @@ Your own earlier words, word for word, with who wrote them and when:
 ```
 
 `attachQuotes(root)` (`js/quote.js`, attached by `js/auto.js`) builds a `.kp-card` around it (`figure` > `blockquote` > `figcaption` with a `time` whose title is the exact `dd/mm/yyyy HH:mm`).
-It only shows: choosing which words to show, and never a negative one on a rough day, is the application's job. `data-kp-quote-date-style` is `date` ("Wednesday 14/10/2026", default), `relative` or `both`;
+It only shows: choosing which words to show, and never a negative one on a rough day, is the application's job. `data-kp-quote-date-style` is `both` ("Wednesday 14/10/2026 (3 days ago)", default), `date` or `relative`;
 `data-kp-quote-lines` (4, or `all`) folds a long entry behind Show all with the whole text still in the page; `data-kp-quote-source` adds "Open that day"; `data-kp-quote-copy` shows Copy;
 `data-kp-quote-size="lg"` is a hero place; `data-kp-quote-lang` makes a screen reader pronounce the words right. "Do not show this again" hides the card at once and offers Undo for `data-kp-undo-ms` (6000);
 when the window passes `kp-quote-hide` fires with `{ text, wait }` (call `wait(promise)` for a save: a refusal puts the card back and the toast says why). Keys while the focus is in the card: `h` hides, Mod C copies. `setQuoteState(el, 'loading' | 'empty' | 'error' | 'ready')`
@@ -2355,7 +2355,7 @@ A card with one row per thing in the day, each only open, done or paused since a
 
 `data-kp-status-vocab="calm"` on a status list (`js/statusrow.js`) gives `open`, `done`, `paused` and `unknown` (and `loading`), each with its own glyph. `done` is the info pair, never success green; `unknown` is for a thing that reports
 "ok" with no data (a plant whose soil sensor is dead) and is never drawn as done. A row told `failed`, `warn` or anything else is drawn as `unknown` and the console says so, so a red cannot slip in. A paused row says
-"Paused since 03/10/2026" from `data-kp-since` (`data-kp-today-since`: `date`, `relative` or `both`) and offers Resume (`data-kp-today-resume="off"` leaves it out; `data-kp-resume-reason` on the row disables it and says why):
+"Paused since 03/10/2026 (2 weeks)" from `data-kp-since` (`data-kp-today-since`: `both` by default, `date` or `relative`) and offers Resume (`data-kp-today-resume="off"` leaves it out; `data-kp-resume-reason` on the row disables it and says why):
 `kp-status-resume` fires (cancelable), the row is open, and a toast offers Undo for `data-kp-undo-ms` that puts it back paused with its original date (`kp-status-undo`). `data-kp-today-pause` adds Pause on open rows. `data-kp-today-order="open-first"`
 orders once at attach and never again; `data-kp-today-paused="fold"` with `data-kp-today-fold-after` (30) gathers long pauses into one line (`settleToday(list)` does it again). Keys while the focus is in the list: ArrowUp and ArrowDown, `r` resumes.
 `setTodayState(card, 'loading' | 'empty' | 'error' | 'ready')` brings the card's loading card, "Nothing planned today" over "That is fine, nothing is waiting", and a blame-free failure with a normal-size Retry. "As of 14:02" for a card fed from
@@ -2390,7 +2390,7 @@ el.addEventListener('kp-focus-steps-done', (e) => post(e.detail.answers)); // { 
 
 A step with `answer` is a question; a step without stays a reading step, so one flow can mix them (`data-kp-focus-mode="answer"` also draws the empty, failed and save-failed states as centred plates). `kind` is `choice` (a tap picks and the flow moves on after `data-kp-advance-ms`, 350),
 `multi` (taps, then Next) or `text` (a box; Next saves). Every option is an attribute and redraws the view when changed: `data-kp-advance` (`auto`, `button`), `data-kp-same` (`both`, `yesterday`, `usual`, `off`), `data-kp-skip`, `data-kp-pinned-first`
-(JSON, "Nothing to log" and "Not sure" first), `data-kp-back`, `data-kp-choice-layout` (`auto`, `stack`, `row`), `data-kp-choice-height` (`lg`, `md`), `data-kp-progress` (`count`, `dots`, `off`), `data-kp-summary` (`on`),
+(JSON, "Nothing to log" and "Not sure" first), `data-kp-back`, `data-kp-choice-layout` (`auto`, `stack`, `row`), `data-kp-choice-height` (`lg`, `md`), `data-kp-progress` (`count`, `off`), `data-kp-summary` (`on`),
 `data-kp-resume` (`auto`, `ask`, `off`) with `data-kp-remember="checkin"` and `data-kp-resume-until` (`midnight`, `hours:N`, `never`). The screen is not kept on and Read aloud is off in answer mode. `kp-focus-steps-before-answer` is cancelable.
 `setFocusStepsState(el, 'save-error')` keeps the answers and says "Could not save your answers" with Try again (`kp-focus-steps-save-retry`). Keys while the focus is in the view: ArrowUp and ArrowDown, Enter, `s` (same as yesterday), `u` (usual), `n` (Not today).
 The words are `focus…`. Knobs: `--kp-focus-answer-min`, `--kp-focus-answer-gap`.
@@ -2422,7 +2422,7 @@ Every behaviour of the picker is an option with a default, never a choice made f
 `setAvailability(el, spec)` (`js/availability.js`) turns the heat grid into a grid people edit: each person answers on their own row (press a cell: empty, can, maybe, cannot), the column everybody can is ringed and starred, "Choose these dates" fires `kp-availability-choose`. Every behaviour is an attribute with a default, and changing one redraws the grid:
 
 - `data-kp-availability-best`: `most` (default: the column with most who can, once everybody answered), `everyone` (only a column where everybody can) or `none`; `data-kp-availability-best-rule` `yes-count` (default) or `no-nobody` (fewest who cannot first); `data-kp-availability-quorum` how many must answer (default everybody).
-- `data-kp-availability-press`: `cycle` (default) or `menu`; `data-kp-availability-answers`: `3` (default) or `2`; `data-kp-availability-paint`: `false` turns the drag across a row off.
+- `data-kp-availability-press`: `menu` (default: a press opens the answers) or `cycle`; `data-kp-availability-answers`: `3` (default) or `2`; `data-kp-availability-paint`: `false` turns the drag across a row off.
 - `data-kp-availability-summary`: `both` (number and fill, default), `count` or `bar`.
 - `data-kp-availability-unit-switch`: `on` or `off` shows or hides the organiser's periods/days switch per trip (absent: the spec's `canSwitchUnit` decides); the spec carries both sets in `sets`.
 - `data-kp-heat-edit` (`own`, `all`, `off`), `data-kp-availability-sort`, `-narrow`, `-density`, `-choose`, `-locked`, `-window`.

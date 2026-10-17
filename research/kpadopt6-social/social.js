@@ -45,7 +45,13 @@ const PEOPLE = [KENNY, TOM, ANNA, BO];
 const packing = () => [
     { id: 'stove', label: 'Gas stove', detail: '1', group: 'Kitchen', claim: { by: [] } },
     { id: 'pots', label: 'Two pots and a frying pan', detail: '3', group: 'Kitchen', claim: { by: [ANNA, TOM] } },
-    { id: 'coffee', label: 'Coffee, filters and the little dripper for the mornings in the tent', detail: '1 kg', group: 'Kitchen', claim: { by: [BO] } },
+    {
+        id: 'coffee',
+        label: 'Coffee, filters and the little dripper for the mornings in the tent',
+        detail: '1 kg',
+        group: 'Kitchen',
+        claim: { by: [BO] },
+    },
     { id: 'water', label: 'Water cans', detail: '2 x 10 l', group: 'Kitchen', claim: { by: [] } },
     { id: 'tent', label: 'Tent', detail: '1', group: 'Sleeping', claim: { by: [] } },
     { id: 'mats', label: 'Sleeping mats', detail: '4', group: 'Sleeping', claim: { by: [KENNY] } },
@@ -79,7 +85,8 @@ let closed = false;
 function server(/** @type {CustomEvent} */ event) {
     const d = event.detail;
     if (typeof d.settle !== 'function') return;
-    if (readout) readout.textContent = `${d.action} ${d.id || 'all open items'}: ${d.by.map((/** @type {{name: string}} */ p) => p.name).join(', ') || 'nobody'}`;
+    if (readout)
+        readout.textContent = `${d.action} ${d.id || 'all open items'}: ${d.by.map((/** @type {{name: string}} */ p) => p.name).join(', ') || 'nobody'}`;
     d.settle(
         (async () => {
             await wait(700);
@@ -112,8 +119,16 @@ onReady(() => {
         setClaimPeople(list, PEOPLE);
         setChecklistItems(list, list === lists.assign ? chores() : packing());
     }
-    if (lists.quiet) setChecklistItems(lists.quiet, packing().filter((i) => i.group === 'Kitchen'));
-    if (lists.top) setChecklistItems(lists.top, packing().filter((i) => i.group === 'Sleeping'));
+    if (lists.quiet)
+        setChecklistItems(
+            lists.quiet,
+            packing().filter((i) => i.group === 'Kitchen'),
+        );
+    if (lists.top)
+        setChecklistItems(
+            lists.top,
+            packing().filter((i) => i.group === 'Sleeping'),
+        );
     // The phone list shows the whole packing list; the three small ones show a group each.
     for (const button of $$('[data-k6-claim-state]')) {
         button.addEventListener('click', () => {
@@ -208,7 +223,7 @@ const avs = {
     main: $('#k6-av'),
     phone: $('#k6-av-phone'),
     list: $('#k6-av-list'),
-    menu: $('#k6-av-menu'),
+    cycle: $('#k6-av-cycle'),
     strict: $('#k6-av-strict'),
 };
 const avReadout = $('[data-k6-av-readout]');
@@ -239,7 +254,7 @@ onReady(() => {
     if (avs.main) setAvailability(avs.main, avSpec({ switchable: true }));
     if (avs.phone) setAvailability(avs.phone, avSpec());
     if (avs.list) setAvailability(avs.list, avSpec());
-    if (avs.menu) setAvailability(avs.menu, avSpec({ unit: 'range' }));
+    if (avs.cycle) setAvailability(avs.cycle, avSpec({ unit: 'range' }));
     if (avs.strict) setAvailability(avs.strict, avSpec());
     for (const button of $$('[data-k6-av-state]')) {
         button.addEventListener('click', () => {
@@ -253,7 +268,12 @@ onReady(() => {
                 else el.removeAttribute('data-kp-disabled-reason');
                 const sw = el === avs.main;
                 if (state === 'loading') setAvailability(el, avSpec({ state: 'loading', switchable: sw }));
-                else if (state === 'empty') setAvailability(el, { ...avSpec({ switchable: sw }), sets: { range: { columns: [], answers: {} }, day: { columns: [], answers: {} } }, emptyAction: 'Propose a date' });
+                else if (state === 'empty')
+                    setAvailability(el, {
+                        ...avSpec({ switchable: sw }),
+                        sets: { range: { columns: [], answers: {} }, day: { columns: [], answers: {} } },
+                        emptyAction: 'Propose a date',
+                    });
                 else if (state === 'error') setAvailability(el, avSpec({ state: 'error', switchable: sw }));
                 else if (state === 'nobody') setAvailability(el, avSpec({ nobody: true, switchable: sw }));
                 else setAvailability(el, avSpec({ switchable: sw }));
@@ -393,7 +413,10 @@ const CONTAINERS = [
     { value: 'nextcloud', label: 'nextcloud' },
     { value: 'jellyfin', label: 'jellyfin' },
 ];
-const LINES = Array.from({ length: 40 }, (_, i) => `-rw-r--r-- 1 root root ${String(1200 + i * 37).padStart(6)} Oct 17 14:0${i % 10} file-${String(i + 1).padStart(2, '0')}.conf`);
+const LINES = Array.from(
+    { length: 40 },
+    (_, i) => `-rw-r--r-- 1 root root ${String(1200 + i * 37).padStart(6)} Oct 17 14:0${i % 10} file-${String(i + 1).padStart(2, '0')}.conf`,
+);
 
 /** The pretend host: what each sample command does. @type {import('../../js/console.js').ConsoleRun} */
 function host(command, context) {
@@ -403,20 +426,37 @@ function host(command, context) {
             const where = context ? ` in ${context}` : '';
             if (conReadout) conReadout.textContent = `Ran: ${command}${where}`;
             const at = (/** @type {number} */ ms, /** @type {() => void} */ f) => setTimeout(f, ms);
-            if (command.startsWith('rm -rf')) at(600, () => handler({ state: 'refused', error: 'Removing the root is not allowed on this host.', remedy: 'Run it on a copy of the container instead.' }));
-            else if (command.startsWith('mount')) at(500, () => handler({ state: 'refused', error: 'Only read-only commands are allowed here.', remedy: 'Ask for write access on the Settings page, then run it again.' }));
+            if (command.startsWith('rm -rf'))
+                at(600, () =>
+                    handler({
+                        state: 'refused',
+                        error: 'Removing the root is not allowed on this host.',
+                        remedy: 'Run it on a copy of the container instead.',
+                    }),
+                );
+            else if (command.startsWith('mount'))
+                at(500, () =>
+                    handler({
+                        state: 'refused',
+                        error: 'Only read-only commands are allowed here.',
+                        remedy: 'Ask for write access on the Settings page, then run it again.',
+                    }),
+                );
             else if (command === 'flaky-job') {
                 at(300, () => handler({ state: 'running' }));
                 at(2200, () => handler({ state: 'lost' }));
             } else if (command === 'false') at(600, () => handler({ state: 'failed', code: 1 }));
             else if (command === 'true') at(500, () => handler({ state: 'ok', code: 0 }));
             else if (command.startsWith('ls')) at(700, () => handler({ state: 'ok', code: 0, output: LINES.join('\n') }));
-            else if (command === 'dump-logs') at(700, () => handler({ state: 'ok', code: 0, output: 'line of the log that is quite long\n'.repeat(260) }));
+            else if (command === 'dump-logs')
+                at(700, () => handler({ state: 'ok', code: 0, output: 'line of the log that is quite long\n'.repeat(260) }));
             else if (command.startsWith('ping')) {
                 handler({ state: 'running' });
-                for (let i = 1; i <= 8; i += 1) at(i * 500, () => handler({ append: `64 bytes from nextcloud: icmp_seq=${i} ttl=64 time=0.${40 + i} ms\n` }));
+                for (let i = 1; i <= 8; i += 1)
+                    at(i * 500, () => handler({ append: `64 bytes from nextcloud: icmp_seq=${i} ttl=64 time=0.${40 + i} ms\n` }));
                 at(4400, () => handler({ state: 'ok', code: 0 }));
-            } else if (command === 'uptime') at(1100, () => handler({ state: 'ok', code: 0, output: ' 14:05:12 up 41 days,  3:12,  1 user,  load average: 0.12, 0.09, 0.05' }));
+            } else if (command === 'uptime')
+                at(1100, () => handler({ state: 'ok', code: 0, output: ' 14:05:12 up 41 days,  3:12,  1 user,  load average: 0.12, 0.09, 0.05' }));
             else at(800, () => handler({ state: 'failed', code: 127, output: `sh: ${command.split(' ')[0]}: command not found` }));
         },
         cancel() {
@@ -432,7 +472,10 @@ onReady(() => {
         setConsoleRun(c, host);
         if (id === 'k6-console' || id === 'k6-console-phone') setConsoleContext(c, { options: CONTAINERS, value: '', label: 'Container' });
     }
-    if (conMain) setConsoleComplete(conMain, (prefix) => ['uptime', 'ls -la /etc', 'ping -c 8 nextcloud', 'df -h', 'dump-logs'].filter((c) => c.startsWith(prefix.trim())));
+    if (conMain)
+        setConsoleComplete(conMain, (prefix) =>
+            ['uptime', 'ls -la /etc', 'ping -c 8 nextcloud', 'df -h', 'dump-logs'].filter((c) => c.startsWith(prefix.trim())),
+        );
     // The bar-only console hands its blocks to the page's own list.
     const bar = $('#k6-console-bar');
     const barList = $('[data-k6-barlist]');

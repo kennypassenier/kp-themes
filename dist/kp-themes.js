@@ -25662,7 +25662,7 @@ function syncSince(item, state2, list) {
     const date = `${since.slice(8, 10)}/${since.slice(5, 7)}/${since.slice(0, 4)}`;
     const duration2 = s2.statusDuration(Math.max(0, daysBetween(since, todayKey(list))));
     const style = list?.getAttribute("data-kp-today-since");
-    detail.textContent = style === "relative" ? s2.statusSinceFor(duration2) : style === "both" ? s2.statusSinceBoth(date, duration2) : s2.statusSinceDate(date);
+    detail.textContent = style === "relative" ? s2.statusSinceFor(duration2) : style === "date" ? s2.statusSinceDate(date) : s2.statusSinceBoth(date, duration2);
     item.setAttribute("data-kp-detail-auto", "");
   } else if (item.hasAttribute("data-kp-detail-auto")) {
     item.removeAttribute("data-kp-detail-auto");
@@ -32930,25 +32930,6 @@ function paint5(root, arrive2) {
   const progress = asking ? opt(root, "progress", "count") ?? "count" : "count";
   bar.hidden = progress !== "count";
   part3(root, "count").hidden = progress === "off";
-  let dots = (
-    /** @type {HTMLElement | null} */
-    root.querySelector(".kp-focus-steps__dots")
-  );
-  if (progress === "dots" && total) {
-    if (!dots) {
-      dots = el7("kp-focus-steps__dots");
-      dots.setAttribute("aria-hidden", "true");
-      bar.after(dots);
-    }
-    dots.replaceChildren(
-      ...Array.from({ length: shownTotal }, (_, i) => {
-        const dot = el7("kp-focus-steps__dot", "span");
-        if (i < index) dot.setAttribute("data-kp-done", "");
-        if (i === index) dot.setAttribute("data-kp-current", "");
-        return dot;
-      })
-    );
-  } else dots?.remove();
   const wakeLine = (
     /** @type {HTMLElement | null} */
     root.querySelector(".kp-focus-steps__wake")
@@ -43387,7 +43368,7 @@ function daysBetween2(from, to) {
   };
   return Math.round(dayNumber2(to) - dayNumber2(from));
 }
-function quoteWhen(ms, style = "date", now = Date.now(), locale = "en-GB") {
+function quoteWhen(ms, style = "both", now = Date.now(), locale = "en-GB") {
   const s2 = getStrings();
   const weekday2 = new Intl.DateTimeFormat(locale, { weekday: "long", timeZone: "Europe/Brussels" }).format(ms);
   const date = s2.quoteDay(weekday2, agoMoment(ms).slice(0, 10));
@@ -43454,7 +43435,7 @@ function render2(m) {
     const when = make17(
       "time",
       "kp-quote__when",
-      quoteWhen(ms, style === "relative" || style === "both" ? style : "date", Number.isFinite(nowRaw) ? nowRaw : Date.now())
+      quoteWhen(ms, style === "relative" || style === "date" ? style : "both", Number.isFinite(nowRaw) ? nowRaw : Date.now())
     );
     when.setAttribute("datetime", new Date(ms).toISOString());
     when.title = agoMoment(ms);
@@ -52758,7 +52739,8 @@ function availabilityBest(root) {
       const yes = part7.reduce((n, t) => n + t.yes, 0);
       if (yes === 0) continue;
       const score2 = rule === "no-nobody" ? [-no, yes] : [yes, -no];
-      if (!best || score2[0] > best.score[0] || score2[0] === best.score[0] && score2[1] > best.score[1]) best = { score: score2, keys: part7.map((t) => t.key) };
+      if (!best || score2[0] > best.score[0] || score2[0] === best.score[0] && score2[1] > best.score[1])
+        best = { score: score2, keys: part7.map((t) => t.key) };
     }
     return best ? best.keys : [];
   }
@@ -52865,7 +52847,10 @@ function paintSummary(root) {
       const tone = f.answered === 0 ? "muted" : f.no === 0 && f.yes === total ? "ok" : f.no === 0 ? "warn" : f.yes === 0 ? "bad" : "warn";
       cell.setAttribute("data-kp-tone", tone);
       cell.style.setProperty("--kp-heat-share", String(total ? f.yes / total : 0));
-      cell.setAttribute("aria-label", `${(st.set.columns.find((c) => c.key === cell.getAttribute("data-col-key")) ?? { label: "" }).label}: ${s2.availabilityCount(f.yes, total)}`);
+      cell.setAttribute(
+        "aria-label",
+        `${(st.set.columns.find((c) => c.key === cell.getAttribute("data-col-key")) ?? { label: "" }).label}: ${s2.availabilityCount(f.yes, total)}`
+      );
       cell.setAttribute("data-kp-hovercard", tipOf(f));
       let face = (
         /** @type {HTMLElement | null} */
@@ -53038,7 +53023,8 @@ function render4(root) {
       const cell of
       /** @type {NodeListOf<HTMLElement>} */
       grid2.querySelectorAll(".kp-heat__row:not(.kp-heat__row--summary):not(.kp-heat__axis) .kp-heat__cell[data-col-key]")
-    ) paintCell(root, cell);
+    )
+      paintCell(root, cell);
     for (const row of grid2.querySelectorAll(".kp-heat__row[data-row-key]:not(.kp-heat__row--summary)")) {
       row.toggleAttribute("data-kp-availability-mine", Boolean(people.find((p) => p.id === row.getAttribute("data-row-key"))?.mine));
     }
@@ -53049,7 +53035,8 @@ function render4(root) {
   root.toggleAttribute("data-kp-availability-nobody", total > 0 && people.every((p) => Object.keys(st.set.answers[p.id] ?? {}).length === 0));
   if (attr10(root, "narrow", "scroll") === "by-column" && !loading) body.append(columnsList(root, people));
   requestAnimationFrame(() => {
-    if (grid2 && grid2.isConnected && !loading && grid2.offsetHeight > 0) body.style.setProperty("--kp-availability-body-min", `${Math.round(grid2.offsetHeight)}px`);
+    if (grid2 && grid2.isConnected && !loading && grid2.offsetHeight > 0)
+      body.style.setProperty("--kp-availability-body-min", `${Math.round(grid2.offsetHeight)}px`);
   });
   const reason = root.getAttribute("data-kp-disabled-reason");
   if (root.hasAttribute("data-kp-availability-disabled") && reason) grid2.setAttribute("data-kp-disabled-reason-text", reason);
@@ -53060,7 +53047,8 @@ function render4(root) {
     /** @type {HTMLElement | null} */
     root.querySelector(".kp-availability__why")
   );
-  if (why && root.hasAttribute("data-kp-availability-disabled")) why.textContent = root.getAttribute("data-kp-disabled-reason") ?? s2.availabilityDisabled;
+  if (why && root.hasAttribute("data-kp-availability-disabled"))
+    why.textContent = root.getAttribute("data-kp-disabled-reason") ?? s2.availabilityDisabled;
   else if (why && why.getAttribute("data-kp-reason") !== null) why.textContent = "";
   why?.toggleAttribute("data-kp-reason", root.hasAttribute("data-kp-availability-disabled"));
   const mem = memoryFor(root, "availability");
@@ -53225,7 +53213,14 @@ async function request2(root, person, keys, answer, { stroke = false } = {}) {
     if (answer) r[k] = answer;
     else delete r[k];
   }
-  const detail = { person, keys: changing, answer, previous, answers: nextAnswers, settle: (p) => void (waiting = p) };
+  const detail = {
+    person,
+    keys: changing,
+    answer,
+    previous,
+    answers: nextAnswers,
+    settle: (p) => void (waiting = p)
+  };
   const go = root.dispatchEvent(new CustomEvent(AVAILABILITY_EVENT, { bubbles: true, cancelable: true, detail }));
   const label = (ks) => ks.map((k) => st.set.columns.find((c) => c.key === k)?.label ?? k).join(", ");
   const refuse2 = (why) => {
@@ -53273,10 +53268,12 @@ async function request2(root, person, keys, answer, { stroke = false } = {}) {
       return refuse2(why ?? s2.availabilityNotSaved(label(changing)));
     }
   }
-  const wasComplete = new Set(st.set.columns.filter((c) => {
-    const f = columnFacts(root, c.key);
-    return f.total > 0 && f.yes === f.total;
-  }).map((c) => c.key));
+  const wasComplete = new Set(
+    st.set.columns.filter((c) => {
+      const f = columnFacts(root, c.key);
+      return f.total > 0 && f.yes === f.total;
+    }).map((c) => c.key)
+  );
   for (const k of changing) setAvailabilityAnswerQuiet(st, person, k, answer);
   render4(root);
   const nowComplete = st.set.columns.filter((c) => {
@@ -53285,7 +53282,14 @@ async function request2(root, person, keys, answer, { stroke = false } = {}) {
   });
   if (stroke) {
     const mine = Object.values(st.set.answers[person] ?? {});
-    say13(root, s2.availabilityYourAnswers(mine.filter((a) => a === "yes").length, mine.filter((a) => a === "maybe").length, mine.filter((a) => a === "no").length));
+    say13(
+      root,
+      s2.availabilityYourAnswers(
+        mine.filter((a) => a === "yes").length,
+        mine.filter((a) => a === "maybe").length,
+        mine.filter((a) => a === "no").length
+      )
+    );
     const ms = Number(attr10(root, "undo-ms", String(AVAILABILITY_UNDO_MS)));
     if (ms > 0) {
       undoToast(s2.availabilityStroke(changing.length), {
@@ -53294,12 +53298,26 @@ async function request2(root, person, keys, answer, { stroke = false } = {}) {
         undo: () => {
           for (const k of changing) setAvailabilityAnswerQuiet(st, person, k, previous[k] ?? null);
           render4(root);
-          root.dispatchEvent(new CustomEvent(AVAILABILITY_EVENT, { bubbles: true, detail: { person, keys: changing, answer: null, previous: {}, answers: structuredClone(st.set.answers), restored: true, settle: () => void 0 } }));
+          root.dispatchEvent(
+            new CustomEvent(AVAILABILITY_EVENT, {
+              bubbles: true,
+              detail: {
+                person,
+                keys: changing,
+                answer: null,
+                previous: {},
+                answers: structuredClone(st.set.answers),
+                restored: true,
+                settle: () => void 0
+              }
+            })
+          );
         }
       });
     }
   } else if (nowComplete.length) say13(root, s2.availabilityEveryone(nowComplete[0].label));
-  else say13(root, s2.availabilityCellSaid(st.spec.people?.find((p) => p.id === person)?.name ?? person, label(changing), wordOf(answer ?? void 0)));
+  else
+    say13(root, s2.availabilityCellSaid(st.spec.people?.find((p) => p.id === person)?.name ?? person, label(changing), wordOf(answer ?? void 0)));
   const again2 = (
     /** @type {HTMLElement | null} */
     root.querySelector(`.kp-heat__cell[data-row-key="${CSS.escape(person)}"][data-col-key="${CSS.escape(changing[0])}"]`)
@@ -53333,7 +53351,14 @@ function openMenu2(root, cell) {
   const menu = el10("kp-popover kp-availability__menu");
   const list = el10("kp-menu", "ul");
   list.setAttribute("role", "menu");
-  list.setAttribute("aria-label", s2.availabilityCell(st.spec.people?.find((p) => p.id === person)?.name ?? person, st.set.columns.find((c) => c.key === column)?.label ?? column, ""));
+  list.setAttribute(
+    "aria-label",
+    s2.availabilityCell(
+      st.spec.people?.find((p) => p.id === person)?.name ?? person,
+      st.set.columns.find((c) => c.key === column)?.label ?? column,
+      ""
+    )
+  );
   const now = st.set.answers[person]?.[column];
   for (const answer of [...allowed(root), null]) {
     const li = el10("", "li");
@@ -53395,13 +53420,24 @@ function openMenu2(root, cell) {
 function attachAvailability(root = document) {
   const roots = (
     /** @type {HTMLElement[]} */
-    [...root instanceof HTMLElement && root.matches(AVAILABILITY) ? [root] : [], ...root.querySelectorAll(AVAILABILITY)]
+    [
+      ...root instanceof HTMLElement && root.matches(AVAILABILITY) ? [root] : [],
+      ...root.querySelectorAll(AVAILABILITY)
+    ]
   );
   const undo = [];
   for (const el_ of roots) {
     ensureParts(el_);
     if (!STATE5.has(el_)) {
-      STATE5.set(el_, { spec: {}, set: { columns: [], answers: {} }, unit: "range", refused: /* @__PURE__ */ new Map(), saving: /* @__PURE__ */ new Set(), off: [], menu: null });
+      STATE5.set(el_, {
+        spec: {},
+        set: { columns: [], answers: {} },
+        unit: "range",
+        refused: /* @__PURE__ */ new Map(),
+        saving: /* @__PURE__ */ new Set(),
+        off: [],
+        menu: null
+      });
     }
     const st = stateOf6(el_);
     if (st.off.length) continue;
@@ -53427,7 +53463,12 @@ function attachAvailability(root = document) {
       }
       const retry = target.closest("[data-kp-availability-retry]");
       if (retry) {
-        el_.dispatchEvent(new CustomEvent(AVAILABILITY_RETRY_EVENT, { bubbles: true, detail: { action: stateOf6(el_).spec.state === "empty" ? "add" : "retry" } }));
+        el_.dispatchEvent(
+          new CustomEvent(AVAILABILITY_RETRY_EVENT, {
+            bubbles: true,
+            detail: { action: stateOf6(el_).spec.state === "empty" ? "add" : "retry" }
+          })
+        );
         return;
       }
       const unit2 = target.closest(".kp-availability__unit [data-value]");
@@ -53469,17 +53510,24 @@ function attachAvailability(root = document) {
       const person = cell.getAttribute("data-row-key") ?? "";
       const column = cell.getAttribute("data-col-key") ?? "";
       if (!editable(el_, person, column)) return;
-      if (attr10(el_, "press", "cycle") === "menu") return openMenu2(el_, cell);
+      if (attr10(el_, "press", "menu") === "menu") return openMenu2(el_, cell);
       void request2(el_, person, [column], next(el_, stateOf6(el_).set.answers[person]?.[column]));
     };
     const onDown = (event) => {
-      if (event.button !== 0 || event.pointerType === "touch" || attr10(el_, "paint", "on") === "false" || attr10(el_, "press", "cycle") === "menu") return;
+      if (event.button !== 0 || event.pointerType === "touch" || attr10(el_, "paint", "on") === "false" || attr10(el_, "press", "menu") === "menu")
+        return;
       const cell = cellOf(event);
       if (!cell) return;
       const person = cell.getAttribute("data-row-key") ?? "";
       const column = cell.getAttribute("data-col-key") ?? "";
       if (!editable(el_, person, column)) return;
-      drag = { person, first: cell, answer: next(el_, stateOf6(el_).set.answers[person]?.[column]), keys: /* @__PURE__ */ new Set([column]), pointer: event.pointerId };
+      drag = {
+        person,
+        first: cell,
+        answer: next(el_, stateOf6(el_).set.answers[person]?.[column]),
+        keys: /* @__PURE__ */ new Set([column]),
+        pointer: event.pointerId
+      };
     };
     const onMove = (event) => {
       if (!drag || event.buttons !== 1) return;
@@ -53506,7 +53554,8 @@ function attachAvailability(root = document) {
     };
     const onScroll = (event) => {
       const t = event.target;
-      if (t instanceof HTMLElement && t.classList.contains("kp-availability__grid")) memoryFor(el_, "availability")?.write("scroll", t.scrollLeft);
+      if (t instanceof HTMLElement && t.classList.contains("kp-availability__grid"))
+        memoryFor(el_, "availability")?.write("scroll", t.scrollLeft);
     };
     el_.addEventListener("click", onClick, true);
     el_.addEventListener("pointerdown", onDown);
@@ -53531,10 +53580,38 @@ function attachAvailability(root = document) {
       stopKeys = registerShortcuts(
         el_,
         [
-          { keys: "y", what: s2.availabilityKeyYes, group: s2.availabilityKeyGroup, when: ownFocused, reason: s2.availabilityKeyReason, run: set("yes") },
-          { keys: "m", what: s2.availabilityKeyMaybe, group: s2.availabilityKeyGroup, when: () => ownFocused() && allowed(el_).includes("maybe"), reason: s2.availabilityKeyReason, run: set("maybe") },
-          { keys: "n", what: s2.availabilityKeyNo, group: s2.availabilityKeyGroup, when: ownFocused, reason: s2.availabilityKeyReason, run: set("no") },
-          { keys: "Backspace", what: s2.availabilityKeyClear, group: s2.availabilityKeyGroup, when: ownFocused, reason: s2.availabilityKeyReason, run: set(null) }
+          {
+            keys: "y",
+            what: s2.availabilityKeyYes,
+            group: s2.availabilityKeyGroup,
+            when: ownFocused,
+            reason: s2.availabilityKeyReason,
+            run: set("yes")
+          },
+          {
+            keys: "m",
+            what: s2.availabilityKeyMaybe,
+            group: s2.availabilityKeyGroup,
+            when: () => ownFocused() && allowed(el_).includes("maybe"),
+            reason: s2.availabilityKeyReason,
+            run: set("maybe")
+          },
+          {
+            keys: "n",
+            what: s2.availabilityKeyNo,
+            group: s2.availabilityKeyGroup,
+            when: ownFocused,
+            reason: s2.availabilityKeyReason,
+            run: set("no")
+          },
+          {
+            keys: "Backspace",
+            what: s2.availabilityKeyClear,
+            group: s2.availabilityKeyGroup,
+            when: ownFocused,
+            reason: s2.availabilityKeyReason,
+            run: set(null)
+          }
         ],
         { layoutGuard: "off" }
       );
@@ -53543,7 +53620,26 @@ function attachAvailability(root = document) {
     const watcher = new MutationObserver(() => render4(el_));
     watcher.observe(el_, {
       attributes: true,
-      attributeFilter: ["data-kp-heat-edit", "data-kp-disabled-reason", ...["answers", "press", "best", "best-rule", "window", "quorum", "sort", "summary", "locked", "narrow", "density", "disabled", "choose", "unit-switch"].map((n) => `data-kp-availability-${n}`)]
+      attributeFilter: [
+        "data-kp-heat-edit",
+        "data-kp-disabled-reason",
+        ...[
+          "answers",
+          "press",
+          "best",
+          "best-rule",
+          "window",
+          "quorum",
+          "sort",
+          "summary",
+          "locked",
+          "narrow",
+          "density",
+          "disabled",
+          "choose",
+          "unit-switch"
+        ].map((n) => `data-kp-availability-${n}`)
+      ]
     });
     st.off = [
       () => el_.removeEventListener("click", onClick, true),
