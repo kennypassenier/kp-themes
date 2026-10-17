@@ -569,6 +569,105 @@
                     <p class="ko-readout" data-ko-conn-readout aria-live="polite">Online.</p>
                 </div>
             </section>
+            <!-- ================================================================ transfer-progress -->
+            <section
+                class="ko-sec"
+                id="transfer"
+                data-review-item="transfer"
+                data-review-topic="ops-transfer-progress"
+                data-review-topic-title="A transfer with its speed and the time left"
+                data-review-title="A transfer with its speed and the time left"
+                aria-labelledby="h-transfer"
+            >
+                <div class="ko-sec__head">
+                    <h2 id="h-transfer">A transfer with its speed and the time left</h2>
+                    <p>
+                        <code>.kp-progress-group--transfer</code> with <code>js/transfer.js</code>: a bar with the file name, how much is done, the
+                        speed and the time left. The app reports bytes and moments; the package works out the rest.
+                    </p>
+                </div>
+                <div class="ko-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Three transfers in one group, waiting before the first report: the names in one column, the bars in one column, then the
+                            reading, the speed and the time left in three more, all in figures of one width, aligned right. The group is one grid, so
+                            the bars start and end together whatever the names or numbers.
+                        </li>
+                        <li>
+                            <b>Play once</b> (about 12 s; the clock runs at five times speed so you do not wait a minute): the first transfer fills
+                            formal's bar at about 12 MB/s; after three seconds the time left appears (<b>estimating…</b> first, then “about 40 s
+                            left”, rounded so it does not shimmer); “220 MB of 600 MB · 36 %”. At the end it turns to “600 MB”, “avg 12 MB/s”, and the
+                            time “in 50 s” on a green plate. The second has no known size: the bar is the busy bar and the reading says
+                            <b>1.2 GB so far</b> with the speed. The third moves for eight seconds and stops: after ten more its speed turns into a
+                            warning plate “stalled for 12 s” and the time left disappears; then it fails with a red note under its row: the reason and
+                            <b>Retry</b>.
+                        </li>
+                        <li>
+                            <b>Retry</b> starts that one again from nothing. <b>Reset</b> clears all three back to waiting. A finished transfer stays
+                            30 s and then leaves the list the theme’s way (this demo shortens it to 6 s). A screen reader hears 25, 50, 75 and 100 %
+                            per transfer, never every second.
+                        </li>
+                        <li>
+                            The phone frame (390 px) shows the same three rows folded: the name on its own line, the bar under it and the numbers
+                            under the bar.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The bar is formal's navy rule ruled to the share (the second rule only at 100 %); numbers are Instrument Sans tabular; the
+                        stalled speed is a warning plate, the finished time a green plate, the failure a red-ink entry along its start edge.
+                    </p>
+                </div>
+                <div class="ko-controls" data-review-controls>
+                    <div role="group" aria-label="Transfer demo">
+                        <b>Run:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-xfer="play">Play once</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-xfer="reset">Reset</button>
+                    </div>
+                </div>
+                <div class="ko-stack">
+                    <div>
+                        <p class="ko-label">Full width</p>
+                        <div class="kp-progress-group kp-progress-group--transfer" data-ko-xfers>
+                            <div
+                                class="kp-progress__wrap"
+                                data-kp-transfer
+                                data-kp-transfer-name="backup-2026-10-12.tar.zst"
+                                data-kp-linger="6"
+                            ></div>
+                            <div class="kp-progress__wrap" data-kp-transfer data-kp-transfer-name="photos-archive.zip" data-kp-linger="6"></div>
+                            <div
+                                class="kp-progress__wrap"
+                                data-kp-transfer
+                                data-kp-transfer-name="production-database-snapshot-for-the-reporting-replica.sql.gz"
+                                data-kp-linger="6"
+                            ></div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="ko-label">Phone width (390 px)</p>
+                        <div class="ko-frame ko-frame--phone">
+                            <div class="kp-progress-group kp-progress-group--transfer" data-ko-xfers>
+                                <div
+                                    class="kp-progress__wrap"
+                                    data-kp-transfer
+                                    data-kp-transfer-name="backup-2026-10-12.tar.zst"
+                                    data-kp-linger="6"
+                                ></div>
+                                <div class="kp-progress__wrap" data-kp-transfer data-kp-transfer-name="photos-archive.zip" data-kp-linger="6"></div>
+                                <div
+                                    class="kp-progress__wrap"
+                                    data-kp-transfer
+                                    data-kp-transfer-name="production-database-snapshot.sql.gz"
+                                    data-kp-linger="6"
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
         <script type="application/json" data-review-round>
             { "round": "ops-c17983a9-c644-4e17-b04b-bf6ed4735b60", "received": [] }

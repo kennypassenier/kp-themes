@@ -8,6 +8,7 @@ import { setMenu } from '../../js/menu-button.js';
 import { masterDetail, setPaneState } from '../../js/master-detail.js';
 import { setRefreshInterval } from '../../js/auto-refresh.js';
 import { connectionOf, setConnection } from '../../js/connection.js';
+import { attachTransfers, resetTransfer, setTransfer } from '../../js/transfer.js';
 
 /** @param {string} name @param {string} text */
 const log = (name, text) => {
@@ -412,3 +413,56 @@ function initConnection() {
 }
 
 initConnection();
+
+// ---------------------------------------------------------------- transfer
+function initTransfer() {
+    const groups = /** @type {HTMLElement[]} */ ([...document.querySelectorAll('[data-ko-xfers]')]);
+    if (!groups.length) return;
+    const MB = 1_000_000;
+    /** The demo's own clock: five simulated seconds for each real second. */
+    let sim = Date.now();
+    let timer = 0;
+    let t = 0;
+    /** @param {HTMLElement[]} rows */
+    const frame = (rows) => {
+        const now = () => sim;
+        const [a, b, c] = rows;
+        if (!a || !b || !c) return;
+        if (t <= 50) {
+            // A steady 12 MB/s with a little wobble, counted up so the bytes only ever grow.
+            const done = Math.min(600 * MB, Math.round(12 * MB * (t + 0.35 * Math.sin(t / 2))));
+            setTransfer(a, { done: Math.max(done, a.dataset.koDone ? Number(a.dataset.koDone) : 0), total: 600 * MB, at: sim }, { now });
+            a.dataset.koDone = String(done);
+        }
+        if (t === 51) setTransfer(a, { done: 600 * MB, total: 600 * MB, at: sim }, { now });
+        if (t <= 29) setTransfer(b, { done: Math.round(40 * MB * t), at: sim }, { now });
+        if (t === 30) setTransfer(b, { done: 40 * MB * 30, total: 40 * MB * 30, at: sim }, { now });
+        if (t <= 8) setTransfer(c, { done: 3 * MB * t, total: 900 * MB, at: sim }, { now });
+        if (t === 28) setTransfer(c, { failed: 'The connection was reset by the host.', at: sim }, { now });
+    };
+    const reset = () => {
+        window.clearInterval(timer);
+        t = 0;
+        for (const group of groups) for (const row of group.querySelectorAll('[data-kp-transfer]')) resetTransfer(/** @type {HTMLElement} */ (row));
+    };
+    for (const button of document.querySelectorAll('[data-ko-xfer]'))
+        button.addEventListener('click', () => {
+            const kind = /** @type {HTMLElement} */ (button).dataset.koXfer;
+            reset();
+            if (kind !== 'play') return;
+            sim = Date.now();
+            timer = window.setInterval(() => {
+                t += 1;
+                sim += 1000;
+                for (const group of groups) frame([...group.querySelectorAll('[data-kp-transfer]')].map((r) => /** @type {HTMLElement} */ (r)));
+                if (t >= 60) window.clearInterval(timer);
+            }, 200);
+        });
+    for (const group of groups)
+        group.addEventListener('kp-transfer-retry', (e) => {
+            const row = /** @type {HTMLElement} */ (e.target);
+            setTransfer(row, { done: 0, total: 900 * MB, at: sim }, { now: () => sim });
+        });
+}
+
+initTransfer();

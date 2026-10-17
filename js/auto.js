@@ -209,6 +209,8 @@ export const NEEDS = [
     { name: 'auto-refresh', when: '[data-kp-refresh]', load: () => import('./auto-refresh.js'), attach: (m, root) => [m.attachRefresh(root)] },
     // The offline and reconnecting banner [kpadopt5-ops].
     { name: 'connection', when: '[data-kp-connection]', load: () => import('./connection.js'), attach: (m, root) => [m.attachConnection(root)] },
+    // A transfer with its speed and the time left [kpadopt5-ops].
+    { name: 'transfer', when: '[data-kp-transfer]', load: () => import('./transfer.js'), attach: (m, root) => [m.attachTransfers(root)] },
     { name: 'graph', when: '[data-kp-graph]', load: () => import('./graph.js'), attach: (m, root) => [m.attachGraphs(root)] },
     {
         // A theme's loading picture made of pieces (`--kp-loading-pieces`,

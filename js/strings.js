@@ -110,6 +110,17 @@
  * @property {string} codeLoading  What the busy card over a block says
  * @property {string} codeError  A block that could not be read, when the page gives no sentence
  * @property {(title: string) => string} codeCopiedAnnouncement  Announced after a copy, naming the block
+ * @property {string} transferBar  The accessible name of a transfer's bar when it has no file name (js/transfer.js) [kpadopt5-transfer]
+ * @property {(done: string, total: string) => string} transferOf  The reading of a transfer with a known size, "1.2 GB of 4.1 GB" [kpadopt5-transfer]
+ * @property {(done: string) => string} transferSoFar  The reading of a transfer of unknown size, "1.2 GB so far" [kpadopt5-transfer]
+ * @property {string} transferEstimating  The time left while the speed is not steady yet [kpadopt5-transfer]
+ * @property {(duration: string) => string} transferLeft  The time left, "about 3 min left" [kpadopt5-transfer]
+ * @property {(duration: string) => string} transferStalled  A transfer that moved no byte for a while, "stalled for 12 s" [kpadopt5-transfer]
+ * @property {(rate: string) => string} transferAverage  A finished transfer's average speed, "avg 21 MB/s" [kpadopt5-transfer]
+ * @property {(duration: string) => string} transferTook  A finished transfer's duration, "in 3 min 12 s" [kpadopt5-transfer]
+ * @property {string} transferFailed  The first words of a failed transfer's note [kpadopt5-transfer]
+ * @property {string} transferRetry  The Retry button of a failed transfer [kpadopt5-transfer]
+ * @property {(name: string, percent: number) => string} transferAnnounce  What a screen reader hears at 25, 50, 75 and 100 % [kpadopt5-transfer]
  * @property {string} connOffline  The banner's first line when the connection is gone (js/connection.js) [kpadopt5-connection]
  * @property {string} connOfflineWhy  What is true meanwhile and what happens next [kpadopt5-connection]
  * @property {string} connReconnecting  The first line while a try is under way [kpadopt5-connection]
@@ -700,6 +711,20 @@ export const DEFAULT_STRINGS = Object.freeze({
     codeLoading: 'Reading…',
     codeError: 'Could not be read.',
     codeCopiedAnnouncement: (title) => `${title} copied`,
+    // kpadopt5-ops:transfer:start
+    // A transfer with its speed and the time left (js/transfer.js) [kpadopt5-ops].
+    transferBar: 'Transfer',
+    transferOf: (done, total) => `${done} of ${total}`,
+    transferSoFar: (done) => `${done} so far`,
+    transferEstimating: 'estimating…',
+    transferLeft: (duration) => `about ${duration} left`,
+    transferStalled: (duration) => `stalled for ${duration}`,
+    transferAverage: (rate) => `avg ${rate}`,
+    transferTook: (duration) => `in ${duration}`,
+    transferFailed: 'The transfer failed',
+    transferRetry: 'Retry',
+    transferAnnounce: (name, percent) => `${name}: ${percent} %`,
+    // kpadopt5-ops:transfer:end
     // kpadopt5-ops:connection:start
     // The connection banner (js/connection.js) [kpadopt5-ops].
     connOffline: 'You are offline',

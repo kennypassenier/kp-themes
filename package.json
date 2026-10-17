@@ -172,6 +172,10 @@
             "types": "./js/compare.d.ts",
             "default": "./js/compare.js"
         },
+        "./js/transfer": {
+            "types": "./js/transfer.d.ts",
+            "default": "./js/transfer.js"
+        },
         "./js/connection": {
             "types": "./js/connection.d.ts",
             "default": "./js/connection.js"
