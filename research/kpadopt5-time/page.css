@@ -184,3 +184,9 @@
     padding: var(--kp-space-md, 1rem);
     overflow: auto;
 }
+
+/* A page that shows its states needs no scrolling: it is as tall as its rows. */
+.kt-scroll--flat {
+    block-size: auto;
+    overflow: visible;
+}

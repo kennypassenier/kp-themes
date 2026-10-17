@@ -16828,6 +16828,7 @@
 
     .kp-snooze__trigger {
         position: relative;
+        min-inline-size: var(--kp-snooze-trigger-min, 9.75rem);
         white-space: nowrap;
     }
 
