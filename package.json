@@ -172,6 +172,30 @@
             "types": "./js/compare.d.ts",
             "default": "./js/compare.js"
         },
+        "./js/calm": {
+            "types": "./js/calm.d.ts",
+            "default": "./js/calm.js"
+        },
+        "./js/shortcuts": {
+            "types": "./js/shortcuts.d.ts",
+            "default": "./js/shortcuts.js"
+        },
+        "./js/lede": {
+            "types": "./js/lede.d.ts",
+            "default": "./js/lede.js"
+        },
+        "./js/problems": {
+            "types": "./js/problems.d.ts",
+            "default": "./js/problems.js"
+        },
+        "./js/flash": {
+            "types": "./js/flash.d.ts",
+            "default": "./js/flash.js"
+        },
+        "./js/reason": {
+            "types": "./js/reason.d.ts",
+            "default": "./js/reason.js"
+        },
         "./js/loading-pieces": {
             "types": "./js/loading-pieces.d.ts",
             "default": "./js/loading-pieces.js"

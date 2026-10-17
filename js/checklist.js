@@ -45,6 +45,7 @@
 
 import { getStrings } from './strings.js';
 import { openBusyCard } from './busy-card.js';
+import { motionAllowed } from './calm.js';
 
 /** The lists this module looks after. */
 export const CHECKLIST = '[data-kp-checklist]';
@@ -301,7 +302,7 @@ function render(list) {
  * @param {HTMLElement} list @param {Map<string, DOMRect>} before
  */
 async function glide(list, before) {
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    if (!motionAllowed()) return;
     const { themeMotion } = await import('./motion.js');
     const { size, ease } = themeMotion(list);
     if (size <= 0) return;

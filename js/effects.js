@@ -944,7 +944,7 @@ export function attachEffects(root = document, options = {}) {
     const manageRoot = options.manageRoot ?? true;
     const view = doc.defaultView;
     const query = view && typeof view.matchMedia === 'function' ? view.matchMedia('(prefers-reduced-motion: reduce)') : null;
-    const reduced = () => options.reduceMotion ?? (query ? query.matches : false);
+    const reduced = () => options.reduceMotion ?? ((query ? query.matches : false) || html.hasAttribute('data-kp-calm'));
     const rootStyle = view ? view.getComputedStyle(html) : null;
     /** @param {string} name @param {number} fallback */
     const knob = (name, fallback) => {

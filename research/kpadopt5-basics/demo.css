@@ -1,0 +1,232 @@
+/* research/kpadopt4 (recipes sections): the page's own frame. Everything with a kp- class is the package; these kb- rules only lay
+   the sections out, frame the widths and draw the readouts. */
+
+.kb-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.kb-intro,
+.kb-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.kb-intro :is(h1, p),
+.kb-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.kb-intro p,
+.kb-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.kb-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+/* The "Expected:" block: what to see and what each control does. */
+.kb-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.kb-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.kb-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.kb-label {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 600;
+}
+
+.kb-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* Two or three columns where there is room, one under the other on a phone. */
+.kb-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.kb-grid > * {
+    display: grid;
+    align-content: start;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 0;
+}
+
+/* A frame of a fixed width: what the component does at that width, whatever the page's. */
+.kb-frame {
+    box-sizing: border-box;
+    max-inline-size: 100%;
+    padding: var(--kp-space-md, 0.75rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.kb-frame--phone {
+    inline-size: min(360px, 100%);
+}
+
+.kb-frame--tall {
+    block-size: 44rem;
+    padding: 0;
+    overflow: hidden;
+}
+
+.kb-frame--phone.kb-frame--tall {
+    block-size: 40rem;
+}
+
+.kb-log {
+    min-block-size: 4.5rem;
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    overflow: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+    color: var(--muted-foreground);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--kp-text-xs, 0.75rem);
+    white-space: pre-wrap;
+}
+
+/* Code in the page's prose keeps a little room inside its plate. */
+.kb-sec__head code,
+.kb-expected code {
+    padding-inline: 0.2em;
+    box-decoration-break: clone;
+}
+
+/* The sections of the basics page: rows to press keys in, the stacks of problems and the grid the flash buttons stand in. */
+.kb-h {
+    margin: 0;
+    font-size: var(--kp-text-lg, 1.125rem);
+}
+
+.kb-small {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.kb-stack {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+}
+
+.kb-stack > * {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 0;
+}
+
+.kb-skeletons {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    margin-block-start: var(--kp-space-md, 0.75rem);
+}
+
+.kb-rows {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.kb-rows > li {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-block-start: 1px solid var(--border);
+}
+
+.kb-rows > li:first-child {
+    border-block-start: 0;
+}
+
+.kb-rows > li[aria-selected='true'] {
+    background: var(--muted);
+    box-shadow: inset 3px 0 0 var(--primary);
+}
+
+.kb-rows > li:focus-visible {
+    outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--primary));
+    outline-offset: calc(-1 * var(--focus-ring-width, 2px));
+}
+
+/* A frame that holds a dialog shown in place: the dialog is positioned inside it and the frame keeps its size. */
+.kb-frame--stage {
+    position: relative;
+    min-block-size: 24rem;
+    contain: layout;
+}
+
+.kb-card {
+    margin-block-start: var(--kp-space-md, 0.75rem);
+}
+
+/* The flash buttons stand in a grid: one column each, the button, a line of words and the room its sentence keeps. */
+.kb-flash-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.kb-flash-cell {
+    display: grid;
+    justify-items: start;
+    align-content: start;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 0;
+}
+
+.kb-flash-cell--narrow {
+    max-inline-size: 13rem;
+}
+
+.kb-grid > * {
+    justify-items: start;
+}
+
+/* A sentence of up to four lines has its room before it comes, so nothing under it moves. */
+.kb-flash-cell .kp-flash__line {
+    min-block-size: 5.5rem;
+}
+
+.kb-frame--stage {
+    justify-self: stretch;
+    inline-size: 100%;
+}

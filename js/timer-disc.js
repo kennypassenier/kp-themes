@@ -32,6 +32,7 @@
 // Nothing runs on import; attachTimerDiscs(root) returns a detach.
 
 import { getStrings } from './strings.js';
+import { motionAllowed } from './calm.js';
 import { setStateWord } from './components.js';
 import { COUNTDOWN_END_EVENT, COUNTDOWN_EVENT, countdownClock, parseDuration, timerButton } from './countdown.js';
 
@@ -89,7 +90,7 @@ export function attachTimerDiscs(root = document, { now } = {}) {
         const scaleSeconds = parseDuration(el.dataset.kpTimerDiscScale ? `${el.dataset.kpTimerDiscScale}m` : '') || 0;
         const name = el.dataset.kpTimerDiscName ?? '';
         const disabled = el.hasAttribute('data-kp-timer-disc-disabled');
-        const still = () => view.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+        const still = () => !motionAllowed(doc);
         el.classList.add('kp-timer-disc');
 
         const face = doc.createElement('div');
