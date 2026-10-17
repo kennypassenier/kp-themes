@@ -11,6 +11,7 @@
 //
 // Run: node research/kpadopt4/build-parts.mjs
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import prettier from 'prettier';
 import { latestVerdicts } from '../../gates/check-rereview.mjs';
@@ -82,6 +83,12 @@ for (const [i, part] of parts.entries()) {
         continue;
     }
     const received = [...new Set((verdicts.rounds ?? []).map((/** @type {any} */ r) => r.page).filter(Boolean))];
+    // A page round id never collides (Kenny, 2026-10-17: "een ID mag nooit colliden, gebruik desnoods UUID's"): the
+    // page keeps the id it already has while that round is not received, else it takes a fresh UUID.
+    const current = existsSync(new URL('demo.html', dir))
+        ? /"round":\s*"([^"]+)"/.exec(readFileSync(new URL('demo.html', dir), 'utf8'))?.[1]
+        : undefined;
+    const roundId = current && !received.includes(current) && /[0-9a-f]{8}-[0-9a-f]{4}-/.test(current) ? current : `${part.topic}-${randomUUID()}`;
     const intro = `            <header class="kd-intro">
                 <h1>The fourth adoption round, part ${i + 1} of ${parts.length}: ${part.title}</h1>
                 <p class="cat-intro">
@@ -115,7 +122,7 @@ for (const [i, part] of parts.entries()) {
         ) +
         local(tail).replace(
             /<script type="application\/json" data-review-round>[\s\S]*?<\/script>/,
-            `<script type="application/json" data-review-round>\n            ${JSON.stringify({ round: `${ROUND}-${part.topic}${received.length ? `-${received.length + 1}` : ''}`, received })}\n        </script>`,
+            `<script type="application/json" data-review-round>\n            ${JSON.stringify({ round: roundId, received })}\n        </script>`,
         );
     const out = fileURLToPath(new URL('demo.html', dir));
     const config = (await prettier.resolveConfig(out)) ?? {};
