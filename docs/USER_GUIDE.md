@@ -2299,6 +2299,121 @@ A growing text box, link anchors, a gallery, a document preview, a map of what i
 ```
 
 `data-kp-autosize` makes the field as tall as its text between its `rows` and 20 lines (`data-kp-autosize-max`), then it scrolls inside; `data-kp-counter` and `maxlength` give an exact count, `setAutosizeState(el, 'loading' | 'error', sentence)` the other states. `data-kp-anchors` puts a `#` beside headings of levels 2 and 3 and beside rows that carry `data-kp-anchor="<their own id>"`: it shows on hover or keyboard focus (always on a phone), a press copies the link and says "Copied", and opening a link marks the place for two seconds. `setGallery(el, { items })` draws the grid; a press opens the lightbox (arrows stop at the end, `data-kp-lightbox-loop="on"` wraps), and `openViewer()` is the shell it and the preview share. `data-kp-preview` opens a file in the viewer with Open in a new tab and Download always in the foot; `.kp-docglyph[data-kp-doc-kind]` is the page icon. `setMatrix(el, { view: 'lines', rows, columns, cell })` draws the relation as two columns joined by lines, under 640 px as cards with chips. Ctrl+P on a page with a checklist prints black on white with drawn boxes (`data-kp-print-done` show, hide or strike); `js/print.js` adds the date and the sentence for a list that has no rows. The words are `autosize…`, `anchor…`, `gallery…`, `viewer…`, `preview…`, `uses…` and `print…`.
+
+### A star rating
+
+Five whole stars to give something a score, and the same row read only to show one:
+
+```html
+<div class="kp-rating" data-kp-rating data-kp-rating-for="Lasagne" data-kp-rating-labels="Not for me|Okay|Good|Great|Make again"></div>
+<div class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-for="Lasagne" data-kp-rating-value="4.5" data-kp-rating-count="12"></div>
+```
+
+`attachRatings(root)` (`js/rating.js`, attached by `js/auto.js`) draws the stars. The input is a radio group named "Rating for Lasagne" with one tab stop: the arrows
+move and choose, Home and End go to the ends, Backspace or Delete (or the chosen star pressed again, or the small Clear on a mouse) removes the rating; no digit keys
+(they need Shift on AZERTY). `0` is "not rated", which an empty row says in words (`data-kp-rating-unrated-text`, "Not rated yet"), never as a zero score. `data-kp-rating-max` is 3 to 10 (5),
+`data-kp-rating-step="0.5"` turns the row into one slider that steps by a half, `data-kp-rating-size` is `sm`, `md` or `lg`, `data-kp-rating-labels` gives one word per level for the caption.
+`kp-rating-change` carries `{ value, previous, source, wait }` and is cancelable; `event.detail.wait(promise)` hands over a save: the row is busy, and a rejection puts the
+previous value back and says so under the row for `data-kp-flash-error-ms` (3000). A change offers Undo for `data-kp-undo-ms` (6000, 0 for none).
+`data-kp-rating-commit="confirm"` holds a tap until Save rating. `data-kp-readonly` is a viewer; `data-kp-disabled` with `data-kp-disabled-reason` is a lock, and the sentence is
+shown under the row. `setRatingState(el, 'loading' | 'error' | 'ready')`: loading keeps the stars as dashed outlines, error puts one plate of the same size over them
+(`kp-rating-retry`). A table cell: `ratingCell(td, 4, { count: 12 })` draws the display row and writes `data-kp-sort-value` for the data table. The words are `rating…`.
+Knobs: `--kp-rating-star`, `--kp-rating-hit`, `--kp-rating-ink`, `--kp-rating-empty`, `--kp-rating-stroke`, `--kp-rating-gap`.
+### A quote card
+
+Your own earlier words, word for word, with who wrote them and when:
+
+```html
+<figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-14T19:40:00+02:00" data-kp-quote-lang="nl" data-kp-quote-why="What helped last time">
+    <blockquote>Wandelen na het eten hielp, mijn hoofd werd rustiger.</blockquote>
+</figure>
+```
+
+`attachQuotes(root)` (`js/quote.js`, attached by `js/auto.js`) builds a `.kp-card` around it (`figure` > `blockquote` > `figcaption` with a `time` whose title is the exact `dd/mm/yyyy HH:mm`).
+It only shows: choosing which words to show, and never a negative one on a rough day, is the application's job. `data-kp-quote-date-style` is `date` ("Wednesday 14/10/2026", default), `relative` or `both`;
+`data-kp-quote-lines` (4, or `all`) folds a long entry behind Show all with the whole text still in the page; `data-kp-quote-source` adds "Open that day"; `data-kp-quote-copy` shows Copy;
+`data-kp-quote-size="lg"` is a hero place; `data-kp-quote-lang` makes a screen reader pronounce the words right. "Do not show this again" hides the card at once and offers Undo for `data-kp-undo-ms` (6000);
+when the window passes `kp-quote-hide` fires with `{ text, wait }` (call `wait(promise)` for a save: a refusal puts the card back and the toast says why). Keys while the focus is in the card: `h` hides, Mod C copies. `setQuoteState(el, 'loading' | 'empty' | 'error' | 'ready')`
+uses the card's four states (`kp-quote-retry`). A `data-kp-quote-list` holds several quotes: the first `data-kp-quote-max` (3) and "Show all 7". The words are `quote…`. Knobs: `--kp-quote-rule`, `--kp-quote-mark-size`, `--kp-quote-min`, `--kp-glyph-quote`.
+### A calm today card
+
+A card with one row per thing in the day, each only open, done or paused since a date, with no red and no tally:
+
+```html
+<section class="kp-card" data-kp-state="ready" aria-labelledby="today-t">
+    <div class="kp-card__header"><h3 class="kp-card__title" id="today-t">Today</h3></div>
+    <div class="kp-card__stage"><div class="kp-card__data">
+        <ul class="kp-statuslist kp-statuslist--rows" aria-label="Today" data-kp-status-vocab="calm">
+            <li class="kp-statusrow" data-state="paused" data-kp-since="2026-10-03" data-kp-status-id="move">
+                <span class="kp-statusrow__mark" aria-hidden="true"></span>
+                <span class="kp-statusrow__body"><span class="kp-statusrow__label">Movement</span><span class="kp-statusrow__detail"></span></span>
+            </li>
+        </ul>
+    </div></div>
+</section>
+```
+
+`data-kp-status-vocab="calm"` on a status list (`js/statusrow.js`) gives `open`, `done`, `paused` and `unknown` (and `loading`), each with its own glyph. `done` is the info pair, never success green; `unknown` is for a thing that reports
+"ok" with no data (a plant whose soil sensor is dead) and is never drawn as done. A row told `failed`, `warn` or anything else is drawn as `unknown` and the console says so, so a red cannot slip in. A paused row says
+"Paused since 03/10/2026" from `data-kp-since` (`data-kp-today-since`: `date`, `relative` or `both`) and offers Resume (`data-kp-today-resume="off"` leaves it out; `data-kp-resume-reason` on the row disables it and says why):
+`kp-status-resume` fires (cancelable), the row is open, and a toast offers Undo for `data-kp-undo-ms` that puts it back paused with its original date (`kp-status-undo`). `data-kp-today-pause` adds Pause on open rows. `data-kp-today-order="open-first"`
+orders once at attach and never again; `data-kp-today-paused="fold"` with `data-kp-today-fold-after` (30) gathers long pauses into one line (`settleToday(list)` does it again). Keys while the focus is in the list: ArrowUp and ArrowDown, `r` resumes.
+`setTodayState(card, 'loading' | 'empty' | 'error' | 'ready')` brings the card's loading card, "Nothing planned today" over "That is fine, nothing is waiting", and a blame-free failure with a normal-size Retry. "As of 14:02" for a card fed from
+outside is the existing freshness line (`data-kp-ago`). There is no summary line by design. The words are `status…` (`statusOpen`, `statusSinceDate`, `statusTodayEmptyTitle`). Knobs: `--kp-today-row-min`, `--kp-glyph-open`, `--kp-glyph-paused`, `--kp-glyph-unknown`.
+### Calm tones: a day with nothing logged is quiet
+
+For a tracker of a person (movement, mood, sleep, watering), not a machine:
+
+```html
+<section class="kp-calendar" data-kp-calendar data-kp-tones="calm" data-kp-paused-range="2026-10-03/2026-10-14" aria-label="Movement"></section>
+```
+
+`data-kp-tones="calm"` on a calendar, a heat grid (`.kp-heat`) or an uptime strip (`.kp-uptime`) swaps the tones `ok`, `warn` and `bad` for `logged` (the theme's accent, `--primary`; `data-kp-logged-fill="success"` asks for the success plate),
+`quiet` (nothing logged: lighter than `muted`, no border, no glyph, never a count, never the word "missed") and `paused` (hatched, from `data-kp-paused-range="from/to"`); `future`, `before` and `loading` are shared. A page that hands over
+`ok` becomes logged and anything else quiet, with one console warning per foreign tone (`data-kp-calm-map="none"` passes tones through). A quiet cell keeps an accessible name, "14/10/2026: nothing logged"
+(`data-kp-quiet-words="none"` leaves the words out) and is still a 44 px target, since adding a missing entry is allowed. The calendar prints a day's count only on a logged day, draws a legend Logged, Nothing logged, Paused (`data-kp-legend="hide"`),
+keeps its six rows under a centred plate over a month with nothing logged ("Nothing logged this month", "That is fine, it starts whenever you do") and dims a failed month under one with Retry (`kp-calendar-retry`); `setCalendarCaption(el, text)` writes the page's own sentence under the grid.
+The uptime strip maps `up` and `degraded` to logged and `down` to quiet, says "nothing logged" in its tooltip and sums up as "21 of 28 days logged", with no incident count. The helpers are in `js/calm-tones.js` (`calmTone`, `calmWord`, `inPausedRange`, `isCalmTones`).
+The standard tones stay the default: a missed backup is a fault. The words are `calm…`. Knobs: `--kp-logged-fill`, `--kp-logged-ink`, `--kp-quiet-fill`, `--kp-quiet-ink`.
+### Answering one question per screen
+
+The one-step view (`data-kp-focus-steps`, cook mode) in answer mode, for a daily check-in: one question large, big answer buttons, "Same as yesterday: Matig", "Same as usual: Good" and Not today:
+
+```js
+setFocusSteps(el, [
+    { text: 'How is your mood today?', answer: { id: 'mood', kind: 'choice', previous: 'matig', usual: 'good',
+        choices: [{ value: 'rough', label: 'Rough' }, { value: 'matig', label: 'Matig' }, { value: 'good', label: 'Good' }] } },
+]);
+el.addEventListener('kp-focus-steps-answer', (e) => save(e.detail)); // { index, id, value, source, same?, previous }
+el.addEventListener('kp-focus-steps-done', (e) => post(e.detail.answers)); // { total, answers, startedAt, finishedAt }
+```
+
+A step with `answer` is a question; a step without stays a reading step, so one flow can mix them (`data-kp-focus-mode="answer"` also draws the empty, failed and save-failed states as centred plates). `kind` is `choice` (a tap picks and the flow moves on after `data-kp-advance-ms`, 350),
+`multi` (taps, then Next) or `text` (a box; Next saves). Every option is an attribute and redraws the view when changed: `data-kp-advance` (`auto`, `button`), `data-kp-same` (`both`, `yesterday`, `usual`, `off`), `data-kp-skip`, `data-kp-pinned-first`
+(JSON, "Nothing to log" and "Not sure" first), `data-kp-back`, `data-kp-choice-layout` (`auto`, `stack`, `row`), `data-kp-choice-height` (`lg`, `md`), `data-kp-progress` (`count`, `dots`, `off`), `data-kp-summary` (`on`),
+`data-kp-resume` (`auto`, `ask`, `off`) with `data-kp-remember="checkin"` and `data-kp-resume-until` (`midnight`, `hours:N`, `never`). The screen is not kept on and Read aloud is off in answer mode. `kp-focus-steps-before-answer` is cancelable.
+`setFocusStepsState(el, 'save-error')` keeps the answers and says "Could not save your answers" with Try again (`kp-focus-steps-save-retry`). Keys while the focus is in the view: ArrowUp and ArrowDown, Enter, `s` (same as yesterday), `u` (usual), `n` (Not today).
+The words are `focus…`. Knobs: `--kp-focus-answer-min`, `--kp-focus-answer-gap`.
+### A picker with the usual on top
+
+The combobox with the choices a person uses most standing first, the rest alphabetical below, and a guard against a near-duplicate name:
+
+```html
+<div class="kp-combobox" data-kp-combobox data-kp-usual='["headache","fatigue"]' data-kp-add="inline" data-kp-multiple>
+    <input class="kp-combobox__input" type="text" role="combobox" aria-expanded="false" aria-controls="sym-list" aria-label="Symptom" />
+    <ul class="kp-combobox__list" id="sym-list" role="listbox" hidden>
+        <li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
+    </ul>
+    <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+</div>
+```
+
+`attachUsualPickers(root)` (`js/usual-picker.js`, attached by `js/auto.js`) stands on the combobox and attaches it itself (a box with `data-kp-usual` is skipped by `attachComboboxes` until it is ready). The band is `data-kp-usual` (a comma list, a JSON array, or `{ value, uses }` with
+`data-kp-usual-source="counts"`), `data-kp-usual-max` 1 to 7 (5); it is given by the app and changes slowly, never per tap (`setUsual(el, values)`). `data-kp-pinned` JSON puts "Nothing to log" and "Not sure" first, never usual. More than 12 items fold behind "Show all 38" (the exact number;
+`data-kp-all="open"` never folds; `data-kp-remember` keeps it). `data-kp-usual-while-typing` is `first` (the usual choices that match still lead) or `hide`. `data-kp-multiple` is the combobox's tag mode; `data-kp-preselect="usual"` pre-ticks the band; `data-kp-not-today` gives a ticked item a one-tap
+"Not today", distinct from unset (`usualNotToday(el)`). `data-kp-add="inline"` adds a typed name at the point of use with Undo; `kp-usual-add` is cancelable (the app keeps the vocabulary). A name identical after case, accents and spacing selects the existing item; a near one (`data-kp-near` `ask`,
+`select` or `off`, `data-kp-near-threshold` 0.8, `data-kp-near-max` 3) offers "Did you mean Hoofdpijn?" and always "Add 'hoofdpjn' as new". `data-kp-state="loading" | "empty" | "error"` (`setUsualState`) draws the busy card, a plate with Add, or a plate with Retry (`kp-usual-retry`) in the place of the list.
+Every attribute redraws the picker when changed. Alt U jumps to the first usual choice (a bare `u` would take the first letter of a name; it is on the `?` sheet; no digit keys). `kp-usual-pick` carries `{ value, from }`. The words are `usual…`. Knobs: `--kp-usual-option-min`, `--kp-usual-panel-min`.
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

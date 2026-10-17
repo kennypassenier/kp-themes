@@ -55,6 +55,7 @@ export const CARD = [
     'js/autosize.js',
     'js/qr.js',
     'js/console.js',
+    'js/usual-picker.js',
 ];
 
 /** Approved before the rule, each with its own central loading picture. @type {Record<string, string>} */
@@ -63,6 +64,7 @@ export const OWN = {
     'js/chart.js': "the plot's loading plate (`.kp-chart__state` as a skeleton block) over the whole plot",
     'js/graph.js': "the graph's loading note over the plot, at its final height",
     'js/request-inspector.js': "the request list is a card in four states: its loading state is the card's own busy card (js/card-state.js setCardState) over the whole stage [kpadopt5]",
+    'js/quote.js': "the quote card is a `.kp-card` in four states: its loading state is the card's own busy card (js/card-state.js setCardState) over a quote-shaped stage [kpadopt6]",
     'js/kpi.js': "a KPI tile's own skeleton figure and meter: one figure, not a data area",
     'js/anchors.js': "a link mark on a heading or a row: it only skips skeleton rows (a row's mark is drawn when the row is real); no data area of its own [kpadopt6-media]",
     'js/print.js': "the words a printed sheet gets when its list is still loading; the list's own busy card is js/checklist.js's [kpadopt6-media]",
@@ -85,6 +87,7 @@ export const NOT_DATA = {
     'js/tick.js': 'a number counting to its value, no loading state of its own',
     'js/barcell.js': 'a cell of a data table, which lays the card over its rows (`dataTable().busy({ overlay: true })`)',
     'js/forms.js': "a submit button's busy state",
+    'js/rating.js': "the stars themselves breathe as dashed outlines at their final size (setRatingState); one control, no data area",
     'js/unsaved.js': "the Save button's own spinner while the page saves (setUnsavedSaving); no data area",
     'js/slider.js': "the track and the value box as the package's skeleton at their final size (setSliderState); one control, no data area",
     'js/sentence.js': 'a field that waits shows its own skeleton at the width it had (setSentenceFieldState); no data area',

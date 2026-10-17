@@ -243,6 +243,57 @@ export {
     setGalleryUploading,
 } from './js/gallery.js';
 export { USES_COLLAPSE_BELOW, USES_MAP, USES_PIN_EVENT, USES_RETRY_EVENT, setUsesPin, usesPath, usesRelation } from './js/uses-map.js';
+    USUAL,
+    USUAL_ADD_EVENT,
+    USUAL_FOLD_ABOVE,
+    USUAL_NOT_TODAY_EVENT,
+    USUAL_PICK_EVENT,
+    USUAL_RETRY_EVENT,
+    USUAL_STATES,
+    attachUsualPickers,
+    nearNames,
+    normaliseName,
+    setUsual,
+    setUsualState,
+    similarity,
+    usualNotToday,
+    usualPicker,
+} from './js/usual-picker.js';
+export {
+    CALM_TONES,
+    CALM_TONES_ATTRIBUTE,
+    calmTone,
+    calmWord,
+    inPausedRange,
+    isCalmTones,
+} from './js/calm-tones.js';
+export {
+    QUOTE,
+    QUOTE_FOLD_EVENT,
+    QUOTE_HIDE_EVENT,
+    QUOTE_LINES,
+    QUOTE_LIST,
+    QUOTE_LIST_MAX,
+    QUOTE_RETRY_EVENT,
+    QUOTE_STATES,
+    attachQuotes,
+    quote,
+    quoteWhen,
+    setQuote,
+    setQuoteState,
+} from './js/quote.js';
+export {
+    RATING,
+    RATING_EVENT,
+    RATING_RETRY_EVENT,
+    RATING_STATES,
+    attachRatings,
+    rating,
+    ratingCell,
+    setRating,
+    setRatingState,
+    snapRating,
+} from './js/rating.js';
 export {
     SLIDER,
     SLIDER_CHANGE_EVENT,
@@ -402,15 +453,21 @@ export { BAR_CELL, SORT_VALUE_ATTRIBUTE, attachBarCells, setBarCell } from './js
 // Action tiles, status rows and the facet list [kpadopt2-tiles].
 export { ACTION_BUSY_EVENT, ACTION_TILE, attachActionTiles, setActionBusy } from './js/action-tiles.js';
 export {
+    CALM_STATUS_STATES,
     STATUS_EVENT,
     STATUS_ID_ATTRIBUTE,
     STATUS_LIST,
+    STATUS_PAUSE_EVENT,
+    STATUS_RESUME_EVENT,
     STATUS_RETRY_EVENT,
     STATUS_STATES,
+    STATUS_UNDO_EVENT,
     attachStatusLists,
     buildStatusList,
     countStatus,
     setStatus,
+    setTodayState,
+    settleToday,
 } from './js/statusrow.js';
 /** @typedef {import('./js/statusrow.js').StatusRow} StatusRow */
 // A card in four data states [kpadopt4-rows].
@@ -460,8 +517,13 @@ export {
 // One step at a time, with the screen kept on: cook mode [kpadopt4].
 export {
     FOCUS_STEPS,
+    FOCUS_STEPS_ANSWER_EVENT,
+    FOCUS_STEPS_BEFORE_ANSWER_EVENT,
     FOCUS_STEPS_DONE_EVENT,
     FOCUS_STEPS_EVENT,
+    FOCUS_STEPS_RESUME_EVENT,
+    FOCUS_STEPS_RETRY_EVENT,
+    FOCUS_STEPS_SAVE_RETRY_EVENT,
     FOCUS_STEPS_WAKE_EVENT,
     SWIPE_DISTANCE,
     attachFocusSteps,
@@ -471,6 +533,7 @@ export {
     setFocusStepsState,
 } from './js/focus-steps.js';
 /** @typedef {import('./js/focus-steps.js').FocusStep} FocusStep */
+/** @typedef {import('./js/focus-steps.js').FocusAnswer} FocusAnswer */
 /** @typedef {import('./js/focus-steps.js').FocusIngredient} FocusIngredient */
 // Kitchen timers: named countdowns that keep running [kpadopt4].
 export {
@@ -649,10 +712,12 @@ export {
     CALENDAR,
     CALENDAR_MONTH_EVENT,
     CALENDAR_PICK_EVENT,
+    CALENDAR_RETRY_EVENT,
     attachCalendars,
     calendarMonth,
     calendarSelect,
     monthCells,
+    setCalendarCaption,
     setCalendarDays,
     setCalendarLegend,
     setCalendarState,

@@ -105,6 +105,12 @@ export const PAGES = [
                 label: 'Social parts: who brings it, who can come, QR code, time field, console',
                 about: 'Five parts for people who plan and talk together, in formal only: a packing list that shows who brings each item, a grid of who can come on which day, a QR code for a link, a field for a time of day and a console with a prompt. One topic per part.',
             },
+            // Kenny, 2026-10-17 (kpadopt6, wave calm): six parts for a daily check-in and a quiet today screen, formal only until Kenny approves them.
+            {
+                href: 'research/kpadopt6-calm/demo.html',
+                label: 'Calm screens: a picker with the usual on top, one question per screen, a quiet today card, quotes, calm days, star rating',
+                about: 'Six parts for a daily check-in and a today screen, in formal only: a choice list with the choices you use most on top, questions answered one per screen, a card that shows what is open, done or paused without any red, a card that quotes your own earlier words, a calendar that shows a day with nothing logged as quiet, and a star rating. One topic per part, with the real choices to tick.',
+            },
             // Kenny, 2026-10-17 (kpadopt5, rows): ticking rows with the keyboard, the selection bar, the toast with Undo, the pill for new lines, the payload cell, the JSON box and the request inspector, formal first, one topic per part.
             {
                 href: 'research/kpadopt5-rows/demo.html',

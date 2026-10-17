@@ -86,7 +86,7 @@ export const REMEMBER_PREFIX = 'kp-remember';
 /**
  * The kinds of state this package remembers.
  *
- * @typedef {'sidenav' | 'disclosure' | 'tree' | 'split' | 'datatable' | 'tour' | 'refresh' | 'notices' | 'claim' | 'availability' | 'time' | 'console'} Remembered
+ * @typedef {'sidenav' | 'disclosure' | 'tree' | 'split' | 'datatable' | 'tour' | 'refresh' | 'notices' | 'claim' | 'availability' | 'time' | 'console' | 'focus-steps' | 'picker'} Remembered
  */
 
 /**
@@ -395,6 +395,9 @@ const PAINTERS = {
     availability: () => {},
     time: () => {},
     console: () => {},
+    // The check-in's progress and the picker's folded list are read by their own modules [kpadopt6].
+    'focus-steps': () => {},
+    picker: () => {},
 };
 
 /**

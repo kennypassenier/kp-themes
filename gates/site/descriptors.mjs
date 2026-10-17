@@ -2710,7 +2710,7 @@ for (const button of document.querySelectorAll('[data-doc-toast]')) {
         exports: [],
         // The calendar's own hooks follow from its class (`data-kp-calendar-…`);
         // these are the generic ones it reads or writes on its parts.
-        aliases: ['time-zone', 'locale', 'week-starts-on', 'heading-level', 'key', 'date', 'tone', 'today', 'pad', 'state'],
+        aliases: ['time-zone', 'locale', 'week-starts-on', 'heading-level', 'key', 'date', 'tone', 'today', 'pad', 'state', 'tones', 'quiet', 'logged', 'calm-map', 'paused', 'legend', 'dim', 'plate'],
         intro: 'A month as a grid of days, each a plate in the colour of its state, with a short count under the number: a month of nightly backups, of shifts covered, of readings received. js/calendar.js builds it into a `section.kp-calendar[data-kp-calendar]`: the month’s title between ‹ Prev and Next ›, Today, a line for the state, a six-week `table[role=grid]` with one tab stop and the keys of a date grid, and a legend. The page hands it every day’s state by date; today is the day in Europe/Brussels, whatever the reader’s zone.',
         whenToUse:
             'Where a reader looks for the bad days in a month of one daily outcome and picks one to see why. Not for picking a date in a form, which is the date picker, and not for a value over time, which is a time chart.',
@@ -2748,6 +2748,13 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
 </script>
 `,
             },
+            {
+                title: 'Calm tones: a quiet day is not a failed day',
+                why: '`data-kp-tones="calm"` swaps ok, warn and bad for logged (the theme’s accent), quiet (nothing logged: no border, no count, never “missed”) and paused (hatched, from `data-kp-paused-range`). The heat grid and the uptime strip take the same attribute (js/calm-tones.js).',
+                markup: `
+<section class="kp-calendar" data-kp-calendar data-kp-tones="calm" data-kp-calendar-month="2026-10" data-kp-paused-range="2026-10-03/2026-10-06" aria-label="Movement"></section>
+`,
+            },
         ],
         variants: [
             { name: '[data-kp-calendar]', what: 'The calendar; `data-kp-calendar-month="YYYY-MM"` is the month it shows first (today’s by default) and `data-kp-calendar-selected="YYYY-MM-DD"` the day picked at first.' },
@@ -2764,6 +2771,14 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
             { name: '.kp-calendar--busy-whole / --busy-days', what: 'How a loading month shows: one card with the theme’s spinner and the state’s words over the whole grid, or the theme’s spinner in every loading day. Without either, the loading days pulse.' },
             { name: 'pastel: the caterpillar', what: 'In pastel a loading day gets a pom-pom rim and two legs and rises in turn, with a head beside the last loading day of its week; the card over the whole month is a plate with its own pass, a head on its corner and stepping legs, stuck on as the landing and taken off as that backwards.' },
             { name: '--kp-calendar-busy-words', what: 'In a register: `hold` keeps the card’s words on the card while it leaves, so the card that goes is the one that came (pastel); js/calendar.js writes `data-kp-busy-words-held` on the card until it has gone. Unset, the words clear at once.' },
+            { name: 'data-kp-tones', what: '`calm` on a calendar, heat grid or uptime strip (`standard` is the default): `logged`, `quiet` and `paused` instead of ok, warn and bad.' },
+            { name: 'data-kp-quiet-words', what: '`none` leaves the words of a quiet day out of its name (`label`, “nothing logged”, is the default); a quiet cell never prints a count.' },
+            { name: 'data-kp-logged-fill', what: '`success` asks for the success plate instead of the theme’s accent.' },
+            { name: 'data-kp-calm-map', what: '`none` passes ok, warn and bad through; by default ok is logged and the rest quiet, with one console warning per foreign tone.' },
+            { name: 'data-kp-paused-range', what: '`2026-10-03/2026-10-14` (an end is optional): quiet days inside it are drawn as paused.' },
+            { name: 'data-kp-legend', what: '`hide` leaves out the calm legend (Logged, Nothing logged, Paused).' },
+            { name: 'kp-calendar-retry and setCalendarCaption', what: 'A calm month with nothing logged keeps its six quiet rows under a centred plate; a month that could not be read is dimmed under one with Retry, which fires `kp-calendar-retry`. `setCalendarCaption(el, text)` writes the page’s own sentence under the grid.' },
+            { name: 'marks the module writes', what: '`data-kp-plate` (which plate stands over the grid) and `data-kp-dim` (a failed month’s grid).' },
         ],
         accessibility: [
             'Built in — one `table[role=grid]` named by the month’s title, seven column heads with the full weekday as their `abbr`, and one tab stop: arrows, Home/End, Page Up/Down (Shift: a year), Enter or Space to pick.',
@@ -3807,6 +3822,141 @@ setGanttState(timeline, 'loading');
         ],
     },
     {
+        id: 'rating',
+        title: 'Star rating',
+        group: 'Forms',
+        classes: ['kp-rating'],
+        exports: [],
+        aliases: ['star', 'whole', 'popped', 'previewing', 'readonly'],
+        intro: 'A row of stars to give something a score, and the same row read only to show one. The input is a radio group (one tab stop, the arrows move and choose, Home and End, Backspace clears); the display is one image with a full text name (“Rated 4 of 5”). Whole stars, five of them, by default; the lit stars are the theme’s accent, never red or green. js/rating.js (`attachRatings`, `rating`, `setRating`, `setRatingState`, `ratingCell`, `snapRating`) draws the stars and fires `kp-rating-change`, which the page can refuse or answer with a save.',
+        whenToUse: 'For a score a person gives (a recipe after cooking) or one that is shown (a list sorted by it). For a yes or no use a switch; for a choice between words use the segmented control.',
+        examples: [
+            {
+                title: 'Give a rating, and show one',
+                why: 'The module draws the stars from the attributes. `data-kp-rating-for` names the item in the sentences; the words per level are optional.',
+                markup: `
+<div class="kp-rating" data-kp-rating data-kp-rating-for="Lasagne" data-kp-rating-value="4" data-kp-rating-labels="Not for me|Okay|Good|Great|Make again"></div>
+<div class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-for="Lasagne" data-kp-rating-value="4.5" data-kp-rating-count="12"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-rating-max', what: 'The scale, 3 to 10 (5).' },
+            { name: 'data-kp-rating-step', what: '`1` (whole stars, the default) or `0.5` (the row becomes one slider).' },
+            { name: 'data-kp-rating-mode', what: '`input` (the default) or `display`.' },
+            { name: 'data-kp-rating-value', what: 'The value, 0 to the scale; 0 is not rated.' },
+            { name: 'data-kp-rating-clear', what: '`off` stops the chosen star, Backspace and Delete from removing the rating (the default removes).' },
+            { name: 'data-kp-rating-labels', what: 'One word per level, `Not for me|Okay|Good` or a JSON list; the caption shows the word.' },
+            { name: 'data-kp-rating-size', what: '`sm`, `md` or `lg` (input `md`, display `sm`).' },
+            { name: 'data-kp-rating-commit', what: '`immediate` (the default) or `confirm`, which holds the pick until Save rating.' },
+            { name: 'data-kp-rating-preview', what: '`off` turns off the star shown under the pointer.' },
+            { name: 'data-kp-rating-unrated-text', what: 'The words of an empty row (“Not rated yet”).' },
+            { name: 'data-kp-rating-count', what: 'Display only: how many ratings the number averages, “4.5 (12)”.' },
+            { name: 'data-kp-rating-name', what: 'A hidden input of this name, so the value posts in a plain form.' },
+            { name: 'data-kp-rating-for', what: 'The item’s name in “Rating for Lasagne”.' },
+            { name: 'data-kp-readonly', what: 'Drawn as an input, not changeable, no reason needed.' },
+            { name: 'data-kp-disabled and data-kp-disabled-reason', what: 'A temporary lock, and the sentence under the row.' },
+            { name: 'data-kp-undo-ms and data-kp-flash-error-ms', what: 'The Undo window after a change (6000, 0 for none) and how long a refused save is told (3000).' },
+            { name: 'data-kp-state', what: '`loading` (dashed stars that breathe) or `error` (“Could not read the rating” and Retry, `kp-rating-retry`).' },
+            { name: 'ratingCell(cell, value)', what: 'A display row in a data table cell, and the number the table sorts by on the cell.' },
+            { name: 'marks the module writes', what: '`data-kp-star` (a star’s number), `data-kp-whole`, `data-kp-popped` and `data-kp-previewing` (the star just chosen and the one under the pointer), `data-kp-rating-busy` (a save is on its way).' },
+        ],
+        accessibility: [
+            'Built in — the input is a radio group named “Rating for Lasagne”; each star is “4 of 5” (with a word, “4 of 5, Good”); the display is one image, “Rated 4 of 5”, or “Not rated yet”.',
+            'Built in — a change is said politely (“Lasagne: 4 of 5”) and offers Undo; a refused save puts the previous value back and says so under the row.',
+            'Yours — name the item with `data-kp-rating-for`, and answer `kp-rating-change` (call `event.detail.wait(promise)` for a save).',
+        ],
+    },
+    {
+        id: 'quote',
+        title: 'Quote card',
+        group: 'Content',
+        classes: ['kp-quote', 'kp-quote-list'],
+        exports: [],
+        intro: 'A card that shows your own earlier words, word for word, with who wrote them and when (“Wandelen na het eten hielp”, you, Tuesday 14/10/2026). A figure with a blockquote and a caption whose time element carries the exact moment; a long entry folds behind Show all with the whole text still in the page; Hide is one press and can be undone. It shows; choosing which words to show, and never a negative one on a rough day, is the application’s job. js/quote.js (`attachQuotes`, `setQuote`, `setQuoteState`, `quote`, `quoteWhen`) draws it; the states are the card’s (js/card-state.js).',
+        whenToUse: 'To quote a person’s own notes back to them (a weekly summary, an appointment preparation). For a message from someone else in a conversation use the thread; for a plain note use the card.',
+        examples: [
+            {
+                title: 'A quote, and why it is here',
+                why: 'The words are the blockquote; the date, who and why are attributes. `data-kp-quote-lang` makes a screen reader pronounce Dutch inside an English page.',
+                markup: `
+<figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-14T19:40:00+02:00" data-kp-quote-lang="nl" data-kp-quote-why="What helped last time">
+<blockquote>Wandelen na het eten hielp, mijn hoofd werd rustiger.</blockquote>
+</figure>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-quote-by', what: 'Who wrote it (“You”).' },
+            { name: 'data-kp-quote-date and data-kp-quote-date-style', what: 'An ISO moment; `date` (“Tuesday 14/10/2026”, the default), `relative` (“3 days ago”) or `both`. The time element’s title is the exact `dd/mm/yyyy HH:mm`.' },
+            { name: 'data-kp-quote-now', what: 'An ISO moment that “now” is for the relative words, for a page with its own clock.' },
+            { name: 'data-kp-quote-lines', what: 'How many lines before it folds (4), or `all`.' },
+            { name: 'data-kp-quote-why', what: 'A small line saying why the words are here.' },
+            { name: 'data-kp-quote-source', what: 'A link, “Open that day”, and the blockquote’s `cite`.' },
+            { name: 'data-kp-quote-hide', what: '`off` leaves out “Do not show this again” (present by default; the Undo window is `data-kp-undo-ms`, 6000).' },
+            { name: 'data-kp-quote-copy', what: 'Present shows Copy (off by default).' },
+            { name: 'data-kp-quote-size', what: '`lg` for a hero place.' },
+            { name: 'data-kp-quote-lang', what: 'The language of the words.' },
+            { name: 'data-kp-quote-max', what: 'On `data-kp-quote-list`: how many quotes before “Show all 7” (1 to 5, 3).' },
+            { name: 'data-kp-quote-text', what: 'The words, instead of a blockquote.' },
+            { name: 'data-kp-folded', what: 'Written on a folded blockquote.' },
+            { name: 'data-kp-quote-list-attached and data-kp-quote-list-hidden', what: 'Written on a list and on the quotes a list folds away.' },
+            { name: 'data-kp-quote-gone', what: 'Marks a quote a page took out of a list.' },
+        ],
+        accessibility: [
+            'Built in — `figure`, `blockquote` (with `lang` and `cite`) and `figcaption` with a `time`; the key `h` hides the quote that has the focus and Mod C copies it when copy is on, both on the `?` sheet.',
+            'Built in — a hide is said politely and offers Undo; the failed and empty states are the card’s, with a normal-size Retry.',
+            'Yours — write `data-kp-quote-lang` whenever the words are in another language than the page, and answer `kp-quote-hide` by storing the hide.',
+        ],
+    },
+    {
+        id: 'usual-picker',
+        title: 'Picker with the usual on top',
+        group: 'Forms',
+        classes: ['kp-usual'],
+        exports: [],
+        aliases: ['hint', 'order', 'pinned', 'all', 'multiple', 'preselect', 'not-today', 'add', 'near', 'group', 'more', 'band', 'rest', 'panel', 'synth', 'kind'],
+        intro: 'The combobox with the choices a person uses most standing first in a band, the rest alphabetical beneath, and a guard against a near-duplicate when a new name is typed. The band is given by the application and changes slowly; it is never re-sorted per tap. “Show all 38” keeps a phone screen short with the exact number on the control; typing a name identical to an existing one selects it, a near one offers “Did you mean Hoofdpijn?” and always “Add ‘hoofdpjn’ as new”, with Undo. js/usual-picker.js (`attachUsualPickers`, `usualPicker`, `setUsual`, `setUsualState`, `usualNotToday`, `nearNames`, `similarity`) stands on the combobox, which it attaches itself.',
+        whenToUse: 'A choice from a long list where the same few are picked again and again (symptoms, meals, strategies). For a short fixed list use radio buttons or the segmented control; for a list with no habit use the plain combobox.',
+        examples: [
+            {
+                title: 'Symptoms with the usual on top',
+                why: 'The band is `data-kp-usual`; `data-kp-add="inline"` lets a new name be added at the point of use; `data-kp-multiple` makes it a tag input.',
+                markup: `
+<div class="kp-combobox" data-kp-combobox data-kp-usual='["headache","fatigue"]' data-kp-add="inline" data-kp-pinned='[{"value":"none","label":"Nothing to log"}]'>
+<input class="kp-combobox__input" type="text" role="combobox" aria-expanded="false" aria-controls="doc-usual-list" aria-label="Symptom" />
+<ul class="kp-combobox__list" id="doc-usual-list" role="listbox" hidden>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="fatigue">Fatigue</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="nausea">Nausea</li>
+</ul>
+<p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-usual and data-kp-usual-source', what: 'The band: a comma list, a JSON array, or `{ value, uses }` with the source `counts` (ranked by uses, ties alphabetical; `given` is the default).' },
+            { name: 'data-kp-usual-max, data-kp-usual-label and data-kp-usual-while-typing', what: 'The band holds 1 to 7 (5); its heading (“Usual”); `first` (matching usual items still lead while typing, the default) or `hide`.' },
+            { name: 'data-kp-order', what: '`alphabetical` (the default) or `given` for the list under the band.' },
+            { name: 'data-kp-pinned', what: 'JSON `[{ "value", "label" }]`: “Nothing to log” and “Not sure” stand first and are never usual.' },
+            { name: 'data-kp-all', what: '`open` or `fold` (the default for more than 12 items): the band and “Show all 38”.' },
+            { name: 'data-kp-multiple and data-kp-preselect', what: 'Tag mode; `usual` pre-ticks the band (`none` is the default: a stock picker never answers for a person).' },
+            { name: 'data-kp-not-today', what: 'Present gives a ticked item a one-tap “Not today”, distinct from unset (`usualNotToday(el)`).' },
+            { name: 'data-kp-add, data-kp-near, data-kp-near-threshold and data-kp-near-max', what: '`inline` adds at the point of use (`off`); `ask`, `select` or `off` for the near-match guard; similarity from 0.5 to 1 (0.8); up to 5 names (3).' },
+            { name: 'data-kp-reason', what: 'On an option: it cannot be picked, and the sentence is written under its label (and is its description for a screen reader).' },
+            { name: 'data-kp-hint, data-kp-remember and data-kp-undo-ms', what: 'The app’s line under the input once something is chosen; the folded list is remembered per picker; the Undo window after an add (6000).' },
+            { name: 'data-kp-state', what: '`loading` (the busy card in the place of the list), `empty` (a plate, with Add where adding is on) or `error` (a plate with Retry, `kp-usual-retry`).' },
+            { name: 'kp-usual-pick, kp-usual-add and kp-usual-not-today', what: '`{ value, from: usual | all | pinned | typed }`; cancelable `{ label, nearTo }` (the app keeps the vocabulary and may refuse); `{ value, on }`.' },
+            { name: 'marks the module writes', what: '`data-kp-usual-ready`, `data-kp-band`, `data-kp-rest`, `data-kp-group` (a heading), `data-kp-more`, `data-kp-near-value`, `data-kp-panel`, `data-kp-synth` (a row the module added), `data-kp-usual-add-button` and `data-kp-usual-retry`.' },
+        ],
+        accessibility: [
+            'Built in — the combobox’s listbox with virtual focus; the status line says “5 usual, 33 more” and, after an add, “Hoofdpijn added”; options are 48 px and their words wrap.',
+            'Built in — Alt U jumps to the first usual choice while the field is empty (a bare `u` would take the first letter of a name); it is on the `?` sheet. No digit key is bound.',
+            'Yours — keep the vocabulary: answer `kp-usual-add` (cancel it to refuse) and merge duplicates in your own data.',
+        ],
+    },
+    {
         id: 'claim',
         title: 'Who brings it',
         group: 'Data',
@@ -4181,7 +4331,7 @@ document.getElementById('doc-tile-backup').addEventListener('click', (event) => 
     },
     {
         id: 'status-row',
-        aliases: ['status', 'status-id', 'status-retry', 'status-retry-button', 'status-change'],
+        aliases: ['status', 'status-id', 'status-retry', 'status-retry-button', 'status-change', 'today', 'since', 'resume', 'detail', 'folded'],
         title: 'Status rows',
         group: 'Feedback',
         classes: ['kp-statuslist', 'kp-statusrow'],
@@ -4230,6 +4380,18 @@ list.addEventListener('kp-status-retry', (event) => {
 });
 `,
             },
+            {
+                title: 'A calm list: open, done, paused, not known',
+                why: '`data-kp-status-vocab="calm"` swaps the four states for ones with no red: a paused row says since when and offers Resume (one press, with Undo); a row nothing is known about is `unknown`, never done. Put it in a `.kp-card` for the loading, empty and failed states (`setTodayState`).',
+                markup: `
+<ul class="kp-statuslist kp-statuslist--rows" aria-label="Today" data-kp-status-vocab="calm" data-kp-today-now="2026-10-17T12:00:00+02:00">
+<li class="kp-statusrow" data-state="open" data-kp-status-id="meds"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Morning pills</span><span class="kp-statusrow__detail"></span></span></li>
+<li class="kp-statusrow" data-state="done" data-kp-status-id="water"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Water the plants</span><span class="kp-statusrow__detail"></span></span></li>
+<li class="kp-statusrow" data-state="paused" data-kp-since="2026-10-03" data-kp-status-id="move"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Movement</span><span class="kp-statusrow__detail"></span></span></li>
+<li class="kp-statusrow" data-state="unknown" data-kp-status-id="soil"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Zamioculcas soil</span><span class="kp-statusrow__detail">No sensor reading</span></span></li>
+</ul>
+`,
+            },
         ],
         variants: [
             { name: 'data-state', what: '`ok` (a disc with a tick), `loading` (the theme’s spinner), `failed` (a disc with a cross, a red edge and a Retry), `empty` (a dashed ring and a dashed edge).' },
@@ -4238,6 +4400,18 @@ list.addEventListener('kp-status-retry', (event) => {
             { name: '.kp-statuslist--rows', what: 'One column instead of a grid of columns of at least 16rem.' },
             { name: 'buildStatusList / setStatus / attachStatusLists', what: 'Build the list from rows `{ id, label, state, detail }`, change one row, and attach the spoken parts and the Retry. `kp-status-retry` is `{ item, id }`, `kp-status-change` is `{ item, id, state, previous }`.' },
             { name: 'statusOk / statusLoading / statusFailed / statusEmpty / statusRetry', what: 'The state words and the Retry label, in the dictionary; `statusRetryLabel` names a Retry after its row, and `statusAnnounce` and `statusAnnounceMany` are the announcements (more than three changes in one tick become one summary).' },
+            { name: 'data-kp-status-vocab', what: '`calm` (open, done, paused, unknown; `standard` is the default). A row asked for `failed`, `warn` or anything else is drawn as unknown and the console says so.' },
+            { name: 'data-kp-since', what: 'On a paused calm row: `YYYY-MM-DD`; the row says “Paused since 03/10/2026”.' },
+            { name: 'data-kp-today-since', what: '`date` (the default), `relative` (“Paused for 2 weeks”) or `both`.' },
+            { name: 'data-kp-today-resume', what: '`off` leaves out Resume (present by default); `data-kp-resume-reason` on a row disables it and says why.' },
+            { name: 'data-kp-today-pause', what: 'Present shows Pause on open rows.' },
+            { name: 'data-kp-today-order', what: '`open-first` orders the rows once, at attach (`given` is the default); nothing moves afterwards.' },
+            { name: 'data-kp-today-paused and data-kp-today-fold-after', what: '`fold` gathers rows paused longer than this many days (30) into one line that opens them; `show` is the default.' },
+            { name: 'data-kp-today-mark', what: '`none` takes the glyphs away (`glyph` is the default).' },
+            { name: 'data-kp-today-now', what: 'An ISO moment that “today” is for, for a page with its own clock.' },
+            { name: 'data-kp-undo-ms', what: 'How long Undo is offered after Resume or Pause (6000, 0 for none).' },
+            { name: 'kp-status-resume, kp-status-pause, kp-status-undo', what: 'Resume and Pause are cancelable and carry `{ item, id }`; Undo puts the row back as it was and carries `{ item, id, action }`. `settleToday(list)` orders and folds again; `setTodayState(card, state)` is the card’s loading, empty and failed.' },
+            { name: 'marks the module writes', what: '`data-kp-detail-auto` (the since line is the module’s), `data-kp-folded` (a row gathered behind the fold line).' },
         ],
         accessibility: [
             'Built in — each row reads “name, state”, a loading row has `aria-busy`, and a change is announced once through a hidden status region; more than three changes in one tick become one summary.',
@@ -4413,6 +4587,7 @@ group.addEventListener('kp-facet-change', (event) => {
         title: 'One step at a time',
         group: 'Navigation',
         classes: ['kp-focus-steps'],
+        aliases: ['focus-mode', 'advance', 'same', 'skip', 'pinned-first', 'back', 'choice-layout', 'choice-height', 'progress', 'resume', 'resume-until', 'summary', 'wake', 'speak', 'text-optional', 'value', 'pinned', 'chosen', 'done', 'current', 'layout'],
         exports: [],
         intro: 'Cook mode: one step of a recipe large on the screen, with what that step needs, a timer button and a note, the count and the theme’s progress bar on top, and two big buttons at the foot. `data-kp-focus-steps` on the root; js/focus-steps.js (`setFocusSteps`, `goToStep`, `getStepIndex`, `setFocusStepsState`, `attachFocusSteps`) keeps the screen on with the Wake Lock API while it is attached, turns the step with the arrows, PageUp/PageDown, Space and a swipe, reads it aloud on request and fires `kp-focus-steps-change` so the page can remember where a person stopped.',
         whenToUse: 'For instructions followed with the hands busy: a recipe, a repair, an exercise. For a form filled in parts use the wizard; for the steps of a running process use the step list.',
@@ -4424,12 +4599,32 @@ group.addEventListener('kp-facet-change', (event) => {
 <div class="kp-focus-steps" data-kp-focus-steps aria-label="Chicken curry"></div>
 `,
             },
+            {
+                title: 'Answering one question per screen',
+                why: '`data-kp-focus-mode="answer"` and steps that carry an `answer`: big answer buttons, “Same as yesterday” and “Same as usual” with their value in the label, and Not today. One tap on a choice moves on after 350 ms; a multi pick and a written line use Next.',
+                markup: `
+<div class="kp-focus-steps" data-kp-focus-steps data-kp-focus-mode="answer" data-kp-remember="checkin" aria-label="Daily check-in"></div>
+`,
+            },
         ],
         variants: [
             { name: 'data-kp-focus-steps-wake="false"', what: 'Do not ask for the screen to stay on.' },
             { name: 'data-kp-focus-steps-timers', what: 'The id of the timer list a step’s timer button starts in.' },
             { name: 'data-kp-focus-steps-empty', what: 'The sentence of a recipe with no steps.' },
             { name: 'data-kp-focus-steps-screen', what: 'Written: on, off or unsupported, and said in the head.' },
+            { name: 'data-kp-focus-mode', what: '`read` (the default; a step with `answer` is a question by itself) or `answer` (also draws empty, failed and save-failed as centred plates).' },
+            { name: 'data-kp-advance and data-kp-advance-ms', what: '`auto` (a tap on a choice moves on after 350 ms, the read-back of what you hit) or `button`; multi and text always use Next.' },
+            { name: 'data-kp-same', what: '`both` (the default: two buttons), `yesterday`, `usual` or `off`.' },
+            { name: 'data-kp-skip', what: '`off` leaves out Not today (present by default; a skip is an answer, `source: skip`).' },
+            { name: 'data-kp-pinned-first', what: 'JSON `[{ "value": "none", "label": "Nothing to log" }]`: choices that stand first in every question.' },
+            { name: 'data-kp-back', what: '`off` hides Back (present by default; going back keeps every answer).' },
+            { name: 'data-kp-choice-layout and data-kp-choice-height', what: '`auto`, `stack` or `row` (a row for up to three short labels, never on a phone); `lg` (56 px, the default) or `md`.' },
+            { name: 'data-kp-progress', what: '`count` (“Question 3 of 7” and the bar, the default), `dots` or `off`; never a timer, never a streak.' },
+            { name: 'data-kp-resume and data-kp-resume-until', what: '`auto`, `ask` or `off` with `data-kp-remember`; `midnight` (the default), `hours:N` or `never`.' },
+            { name: 'data-kp-summary', what: '`on` adds a summary screen after the last question (off by default).' },
+            { name: 'data-kp-wake, data-kp-speak and data-kp-text-optional', what: 'The screen is not kept on and Read aloud is off in answer mode (`true` turns them on); a written answer can always be passed with Not today.' },
+            { name: 'kp-focus-steps-answer and related events', what: '`kp-focus-steps-before-answer` (cancelable), `kp-focus-steps-answer` `{ index, id, value, source, same?, previous }`, `kp-focus-steps-resume`, `kp-focus-steps-retry`, `kp-focus-steps-save-retry`; Done carries `{ total, answers, startedAt, finishedAt }`. `setFocusStepsState(el, "save-error")` keeps the answers.' },
+            { name: 'marks the module writes', what: '`data-kp-value` and `data-kp-chosen` on an answer, `data-kp-pinned`, `data-kp-layout` on the answers, `data-kp-done` and `data-kp-current` on a dot.' },
         ],
         accessibility: [
             'Built in — every change says “Step 3 of 8” and the step; the buttons are real buttons, a step boundary is `aria-disabled` and keeps the focus.',

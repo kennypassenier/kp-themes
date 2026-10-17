@@ -242,6 +242,9 @@ export const NEEDS = [
     // The notification centre [kpadopt5-ops].
     { name: 'notices', when: '[data-kp-notices]', load: () => import('./notices.js'), attach: (m, root) => [m.attachNotices(root)] },
     // The time and sentence parts [kpadopt5-time]: the weekday picker, the next-runs list, the snooze picker, the dated option picker, the sentence form, the slider and the unsaved-changes bar.
+    { name: 'rating', when: '[data-kp-rating]', load: () => import('./rating.js'), attach: (m, root) => [m.attachRatings(root)] },
+    { name: 'quote', when: '[data-kp-quote], [data-kp-quote-list]', load: () => import('./quote.js'), attach: (m, root) => [m.attachQuotes(root)] },
+    { name: 'usual-picker', when: '[data-kp-usual]', load: () => import('./usual-picker.js'), attach: (m, root) => [m.attachUsualPickers(root)] },
     { name: 'unsaved', when: '[data-kp-unsaved]', load: () => import('./unsaved.js'), attach: (m, root) => [m.attachUnsaved(root)] },
     // The media wave [kpadopt6-media]: the growing text box, the link anchors, the print words, the document preview, the gallery.
     { name: 'autosize', when: 'textarea[data-kp-autosize]', load: () => import('./autosize.js'), attach: (m, root) => [m.attachAutosize(root)] },

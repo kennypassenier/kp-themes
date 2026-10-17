@@ -1236,6 +1236,139 @@
  * @property {string} consoleKeyFocusReason  Why the focus key does nothing now (js/console.js) [kpadopt6]
  * @property {(n: number) => string} qrShowAllChars  The button that unfolds a long link under the code (js/qr.js) [kpadopt6]
  * @property {string} qrShowLess  The button that folds it again (js/qr.js) [kpadopt6]
+ * @property {(item: string) => string} ratingGroupName  The star row's name for a screen reader: "Rating for Lasagne" (js/rating.js) [kpadopt6]
+ * @property {string} ratingGroupNameBare  The same when the row names no item [kpadopt6]
+ * @property {(n: number, max: number) => string} ratingStarName  One star's name: "4 of 5" [kpadopt6]
+ * @property {(n: number, max: number, label: string) => string} ratingStarNameLabel  The same with its word: "4 of 5, Good" [kpadopt6]
+ * @property {(value: number, max: number) => string} ratingRated  A display row's name: "Rated 4 of 5" [kpadopt6]
+ * @property {(value: number, max: number, count: number) => string} ratingRatedCount  The same with how many people rated: "Rated 4.5 of 5 by 12 people" [kpadopt6]
+ * @property {string} ratingUnrated  The line, and the name, of a row nobody has rated: "Not rated yet" [kpadopt6]
+ * @property {string} ratingTap  The caption of an input row with no rating: "Tap a star" [kpadopt6]
+ * @property {string} ratingClear  The small button that removes the rating [kpadopt6]
+ * @property {(item: string) => string} ratingClearName  That button's accessible name: "Clear the rating for Lasagne" [kpadopt6]
+ * @property {(value: number, max: number) => string} ratingOutOf  The caption of a rated row without words per level: "4 of 5" [kpadopt6]
+ * @property {(value: number, count: number) => string} ratingAverage  An aggregated score: "4.5 (12)" [kpadopt6]
+ * @property {(item: string, value: number, max: number) => string} ratingAnnounce  What is said when the rating changes: "Lasagne: 4 of 5" [kpadopt6]
+ * @property {(item: string) => string} ratingAnnounceCleared  What is said when the rating is removed: "Lasagne: rating removed" [kpadopt6]
+ * @property {(item: string, value: number) => string} ratingToast  The undo toast's line: "Lasagne: 4 stars" [kpadopt6]
+ * @property {(item: string) => string} ratingToastCleared  The undo toast's line after Clear [kpadopt6]
+ * @property {string} ratingLoading  The row's name while the saved value is read [kpadopt6]
+ * @property {string} ratingFailedRead  The words that replace the stars when the value could not be read [kpadopt6]
+ * @property {string} ratingRetry  Its button [kpadopt6]
+ * @property {(item: string) => string} ratingSaveFailed  The line under the row when a save was refused: "Could not save the rating for Lasagne" [kpadopt6]
+ * @property {string} ratingSaving  The row's description while a save is on its way [kpadopt6]
+ * @property {string} ratingConfirm  The button that saves a pending rating (commit confirm) [kpadopt6]
+ * @property {string} ratingCancel  The button that drops a pending rating [kpadopt6]
+ * @property {(value: number, max: number) => string} ratingPending  The line over those two buttons: "4 of 5, not saved yet" [kpadopt6]
+ * @property {string} ratingReadonly  What a screen reader hears on a row that cannot be changed by this person [kpadopt6]
+ * @property {string} quoteBy  Who wrote a quote when the card does not say: "You" (js/quote.js) [kpadopt6]
+ * @property {(by: string, when: string) => string} quoteCaption  The line under a quote: "You, Tuesday 14/10/2026" [kpadopt6]
+ * @property {(weekday: string, date: string) => string} quoteDay  A date with its weekday: "Tuesday 14/10/2026" [kpadopt6]
+ * @property {(days: number) => string} quoteRelative  How long ago, in words: "3 days ago", "today" [kpadopt6]
+ * @property {(date: string, relative: string) => string} quoteBoth  The date and how long ago together: "Tuesday 14/10/2026 (3 days ago)" [kpadopt6]
+ * @property {string} quoteHide  The button that stops a quote from coming back [kpadopt6]
+ * @property {string} quoteHideDone  The undo toast's line after a hide: "Hidden" [kpadopt6]
+ * @property {string} quoteHiding  What a hide that is being saved says on its button [kpadopt6]
+ * @property {string} quoteCopy  The button that copies the words [kpadopt6]
+ * @property {string} quoteCopied  The same button for a moment after the copy [kpadopt6]
+ * @property {string} quoteCopyFailed  What is said when the clipboard refused [kpadopt6]
+ * @property {string} quoteShowAll  The button that unfolds a long quote [kpadopt6]
+ * @property {string} quoteShowLess  The same button once it is open [kpadopt6]
+ * @property {(n: number) => string} quoteShowAllN  A list's button that shows every quote: "Show all 7" [kpadopt6]
+ * @property {string} quoteShowFewer  The same button once the list is open [kpadopt6]
+ * @property {string} quoteOpen  The link to the day the words were written [kpadopt6]
+ * @property {string} quoteLoading  The words under the loading card [kpadopt6]
+ * @property {string} quoteEmptyTitle  The empty card's title [kpadopt6]
+ * @property {string} quoteEmptyText  The empty card's sentence [kpadopt6]
+ * @property {string} quoteFailedTitle  The failed card's title [kpadopt6]
+ * @property {string} quoteFailedText  The failed card's sentence [kpadopt6]
+ * @property {string} quoteRetry  The failed card's button [kpadopt6]
+ * @property {string} quoteListName  A list of quotes' name for a screen reader [kpadopt6]
+ * @property {string} quoteAnnounceHidden  What is said when a quote is hidden [kpadopt6]
+ * @property {string} statusOpen  A row in the calm vocabulary that is still open (js/statusrow.js, `data-kp-status-vocab="calm"`) [kpadopt6]
+ * @property {string} statusDone  A calm row that is done [kpadopt6]
+ * @property {string} statusPaused  A calm row that is paused [kpadopt6]
+ * @property {string} statusUnknown  A calm row nothing is known about: never shown as done [kpadopt6]
+ * @property {(date: string) => string} statusSinceDate  A paused row's line: "Paused since 03/10/2026" [kpadopt6]
+ * @property {(duration: string) => string} statusSinceFor  The same as a length: "Paused for 3 weeks" [kpadopt6]
+ * @property {(date: string, duration: string) => string} statusSinceBoth  The same with both: "Paused since 03/10/2026 (2 weeks)" [kpadopt6]
+ * @property {(days: number) => string} statusDuration  A length of days in words: "5 days", "3 weeks", "4 months" [kpadopt6]
+ * @property {string} statusResume  The button that takes a paused row up again [kpadopt6]
+ * @property {(label: string) => string} statusResumeLabel  That button's accessible name: "Resume Beweging" [kpadopt6]
+ * @property {string} statusPause  The optional button that pauses a row [kpadopt6]
+ * @property {(label: string) => string} statusPauseLabel  That button's accessible name [kpadopt6]
+ * @property {(label: string) => string} statusResumed  What is said and toasted after a resume: "Beweging resumed" [kpadopt6]
+ * @property {(label: string) => string} statusPausedNow  What is said and toasted after a pause: "Beweging paused" [kpadopt6]
+ * @property {(n: number, days: number) => string} statusFoldLine  The line that gathers long-paused rows: "3 paused for more than 30 days" [kpadopt6]
+ * @property {string} statusTodayEmptyTitle  The empty today card's title [kpadopt6]
+ * @property {string} statusTodayEmptyText  Its second sentence: nothing is waiting [kpadopt6]
+ * @property {string} statusTodayFailedTitle  The failed today card's title [kpadopt6]
+ * @property {string} statusTodayFailedText  Its sentence: the fault is the system's [kpadopt6]
+ * @property {string} statusTodayLoading  The words under the loading card [kpadopt6]
+ * @property {string} statusTodayRetry  The failed card's button [kpadopt6]
+ * @property {string} calmLogged  A day with something logged, in words: "logged" (js/calm-tones.js, `data-kp-tones="calm"`) [kpadopt6]
+ * @property {string} calmQuiet  A day with nothing logged, in words: "nothing logged", never "missed" [kpadopt6]
+ * @property {string} calmPaused  A day inside a pause: "paused" [kpadopt6]
+ * @property {string} calmLegendLogged  The legend's word for a logged day [kpadopt6]
+ * @property {string} calmLegendQuiet  The legend's word for a quiet day [kpadopt6]
+ * @property {string} calmLegendPaused  The legend's word for a paused day [kpadopt6]
+ * @property {string} calmEmptyTitle  The plate over a month with nothing logged: "Nothing logged this month" [kpadopt6]
+ * @property {string} calmEmptyText  Its second sentence [kpadopt6]
+ * @property {string} calmFailedTitle  The plate over a calendar that could not be read [kpadopt6]
+ * @property {string} calmFailedText  Its sentence: the fault is the system's [kpadopt6]
+ * @property {string} calmRetry  Its button [kpadopt6]
+ * @property {string} calmTrendCaption  The words of the optional caption slot under the grid: trends over the days that were logged [kpadopt6]
+ * @property {(logged: number, total: number) => string} calmSummary  A calm uptime strip's summary: "21 of 30 days logged", with no incident count and no share down [kpadopt6]
+ * @property {(n: number, total: number) => string} focusQuestionCount  The count over a question: "Question 3 of 7" (js/focus-steps.js, answer mode) [kpadopt6]
+ * @property {(label: string, n: number, total: number) => string} focusAnswered  What a screen reader hears after an answer: "Answered Matig. Question 4 of 7" [kpadopt6]
+ * @property {(label: string) => string} focusSameYesterday  The button that repeats yesterday's answer: "Same as yesterday: Matig" [kpadopt6]
+ * @property {(label: string) => string} focusSameUsual  The button that takes the usual answer: "Same as usual: Goed" [kpadopt6]
+ * @property {string} focusSkip  The button that passes a question: "Not today" [kpadopt6]
+ * @property {string} focusSkipped  What a skipped question reads as in the summary [kpadopt6]
+ * @property {string} focusReview  The next button on the last question when a summary follows [kpadopt6]
+ * @property {string} focusSummaryTitle  The summary screen's name [kpadopt6]
+ * @property {string} focusMultiHint  The line under a question that takes several answers [kpadopt6]
+ * @property {string} focusTextLabel  The name of the box of a written answer [kpadopt6]
+ * @property {string} focusPickedMark  The word a chosen answer carries for a screen reader besides the mark [kpadopt6]
+ * @property {string} focusResumeAsk  The question when a check-in was left half way: "Continue where you stopped?" [kpadopt6]
+ * @property {string} focusResumeContinue  Its yes [kpadopt6]
+ * @property {string} focusResumeRestart  Its start over [kpadopt6]
+ * @property {(n: number) => string} focusResumed  What is said when answers are put back: "Back at question 4" [kpadopt6]
+ * @property {string} focusAnswerEmptyTitle  The plate of a day with no questions [kpadopt6]
+ * @property {string} focusAnswerEmptyText  Its sentence: nothing is waiting [kpadopt6]
+ * @property {string} focusAnswerFailedTitle  The plate of questions that could not be read [kpadopt6]
+ * @property {string} focusAnswerFailedText  Its sentence [kpadopt6]
+ * @property {string} focusRetry  Its button [kpadopt6]
+ * @property {string} focusSaveFailedTitle  The plate when the finished answers could not be saved [kpadopt6]
+ * @property {string} focusSaveFailedText  Its sentence: nothing is lost [kpadopt6]
+ * @property {string} focusSaveRetry  Its button: "Try again" [kpadopt6]
+ * @property {string} focusAnswerLoading  The words under the loading card of the questions [kpadopt6]
+ * @property {string} usualLabel  The label over the usual band of a picker (js/usual-picker.js) [kpadopt6]
+ * @property {string} usualAll  The label over the full list under the band [kpadopt6]
+ * @property {(usual: number, more: number) => string} usualStatus  The status line of a picker with a band: "5 usual, 33 more" [kpadopt6]
+ * @property {(n: number) => string} usualShowAll  The row that unfolds the full list: "Show all 38", the exact number [kpadopt6]
+ * @property {string} usualShowFewer  The same row once the list is open [kpadopt6]
+ * @property {(label: string) => string} usualAdd  The row that adds what was typed: "Add 'hoofdpjn' as new" [kpadopt6]
+ * @property {(name: string) => string} usualDidYouMean  A close name offered for what was typed: "Did you mean Hoofdpijn?" [kpadopt6]
+ * @property {string} usualNoMatchTitle  The plate over a search that matches nothing [kpadopt6]
+ * @property {string} usualNoMatchText  Its sentence when a name can be added [kpadopt6]
+ * @property {string} usualNoMatchTextFixed  Its sentence when nothing can be added [kpadopt6]
+ * @property {(label: string) => string} usualSelectedExisting  What is said when typed text named an item already in the list: "Hoofdpijn was already in the list, selected" [kpadopt6]
+ * @property {(label: string) => string} usualAdded  What is said after an add: "Hoofdpijn added" [kpadopt6]
+ * @property {(label: string) => string} usualAddedToast  The undo toast's line after an add: "Added 'Neksteun'" [kpadopt6]
+ * @property {string} usualEmptyTitle  The plate of a picker with no items at all [kpadopt6]
+ * @property {string} usualEmptyText  Its sentence when a name can be added [kpadopt6]
+ * @property {string} usualEmptyTextFixed  Its sentence when nobody can add here [kpadopt6]
+ * @property {string} usualAddButton  Its button [kpadopt6]
+ * @property {string} usualFailedTitle  The plate of a list that could not be read [kpadopt6]
+ * @property {string} usualFailedText  Its sentence [kpadopt6]
+ * @property {string} usualRetry  Its button [kpadopt6]
+ * @property {string} usualLoading  The words under the loading card of a picker [kpadopt6]
+ * @property {string} usualNotToday  The small button on a ticked item that says it is not for today [kpadopt6]
+ * @property {(label: string) => string} usualNotTodayName  That button's accessible name: "Hoofdpijn: not today" [kpadopt6]
+ * @property {(label: string) => string} usualNotTodayAnnounce  What is said when it is set: "Hoofdpijn: not today" [kpadopt6]
+ * @property {string} usualNotTodayMark  The word a not-today item carries beside its name [kpadopt6]
+ * @property {string} usualJump  The `?` sheet's words for Alt U: "Jump to the usual choices" [kpadopt6]
  */
 
 /**
@@ -2658,6 +2791,163 @@ export const DEFAULT_STRINGS = Object.freeze({
     // Qr (js/qr.js) [kpadopt6].
     qrShowAllChars: (n) => `Show all ${n} characters`,
     qrShowLess: 'Show less',
+    // The star rating (js/rating.js) [kpadopt6].
+    ratingGroupName: (item) => `Rating for ${item}`,
+    ratingGroupNameBare: 'Rating',
+    ratingStarName: (n, max) => `${n} of ${max}`,
+    ratingStarNameLabel: (n, max, label) => `${n} of ${max}, ${label}`,
+    ratingRated: (value, max) => `Rated ${value} of ${max}`,
+    ratingRatedCount: (value, max, count) => `Rated ${value} of ${max} by ${count} ${count === 1 ? 'person' : 'people'}`,
+    ratingUnrated: 'Not rated yet',
+    ratingTap: 'Tap a star',
+    ratingClear: 'Clear',
+    ratingClearName: (item) => `Clear the rating for ${item}`,
+    ratingOutOf: (value, max) => `${value} of ${max}`,
+    ratingAverage: (value, count) => `${value} (${count})`,
+    ratingAnnounce: (item, value, max) => `${item}: ${value} of ${max}`,
+    ratingAnnounceCleared: (item) => `${item}: rating removed`,
+    ratingToast: (item, value) => `${item}: ${value} ${value === 1 ? 'star' : 'stars'}`,
+    ratingToastCleared: (item) => `${item}: rating removed`,
+    ratingLoading: 'Reading the rating',
+    ratingFailedRead: 'Could not read the rating',
+    ratingRetry: 'Retry',
+    ratingSaveFailed: (item) => `Could not save the rating for ${item}`,
+    ratingSaving: 'Saving the rating',
+    ratingConfirm: 'Save rating',
+    ratingCancel: 'Cancel',
+    ratingPending: (value, max) => `${value} of ${max}, not saved yet`,
+    ratingReadonly: 'You can look at this rating but not change it',
+    // The quote card (js/quote.js) [kpadopt6].
+    quoteBy: 'You',
+    quoteCaption: (by, when) => (when === '' ? by : `${by}, ${when}`),
+    quoteDay: (weekday, date) => `${weekday} ${date}`,
+    quoteRelative: (days) =>
+        days <= 0
+            ? 'today'
+            : days === 1
+              ? 'yesterday'
+              : days < 14
+                ? `${days} days ago`
+                : days < 60
+                  ? `${Math.floor(days / 7)} weeks ago`
+                  : days < 730
+                    ? `${Math.floor(days / 30)} months ago`
+                    : `${Math.floor(days / 365)} years ago`,
+    quoteBoth: (date, relative) => `${date} (${relative})`,
+    quoteHide: 'Do not show this again',
+    quoteHideDone: 'Hidden',
+    quoteHiding: 'Saving',
+    quoteCopy: 'Copy',
+    quoteCopied: 'Copied',
+    quoteCopyFailed: 'Could not copy',
+    quoteShowAll: 'Show all',
+    quoteShowLess: 'Show less',
+    quoteShowAllN: (n) => `Show all ${n}`,
+    quoteShowFewer: 'Show fewer',
+    quoteOpen: 'Open that day',
+    quoteLoading: 'Reading your notes',
+    quoteEmptyTitle: 'Nothing from earlier yet',
+    quoteEmptyText: 'Words you write come back here',
+    quoteFailedTitle: 'Could not read your notes',
+    quoteFailedText: 'The notes could not be reached just now.',
+    quoteRetry: 'Retry',
+    quoteListName: 'Earlier words',
+    quoteAnnounceHidden: 'Quote hidden',
+    // The calm status vocabulary and the today card (js/statusrow.js) [kpadopt6].
+    statusOpen: 'Open',
+    statusDone: 'Done',
+    statusPaused: 'Paused',
+    statusUnknown: 'Not known',
+    statusSinceDate: (date) => `Paused since ${date}`,
+    statusSinceFor: (duration) => `Paused for ${duration}`,
+    statusSinceBoth: (date, duration) => `Paused since ${date} (${duration})`,
+    statusDuration: (days) =>
+        days < 14
+            ? `${days} ${days === 1 ? 'day' : 'days'}`
+            : days < 60
+              ? `${Math.floor(days / 7)} weeks`
+              : days < 730
+                ? `${Math.floor(days / 30)} months`
+                : `${Math.floor(days / 365)} years`,
+    statusResume: 'Resume',
+    statusResumeLabel: (label) => `Resume ${label}`,
+    statusPause: 'Pause',
+    statusPauseLabel: (label) => `Pause ${label}`,
+    statusResumed: (label) => `${label} resumed`,
+    statusPausedNow: (label) => `${label} paused`,
+    statusFoldLine: (n, days) => `${n} paused for more than ${days} days`,
+    statusTodayEmptyTitle: 'Nothing planned today',
+    statusTodayEmptyText: 'That is fine, nothing is waiting',
+    statusTodayFailedTitle: 'Could not read today',
+    statusTodayFailedText: 'The list could not be reached just now.',
+    statusTodayLoading: 'Reading today',
+    statusTodayRetry: 'Retry',
+    // Calm tones for a calendar, a heat grid and an uptime strip (js/calm-tones.js) [kpadopt6].
+    calmLogged: 'logged',
+    calmQuiet: 'nothing logged',
+    calmPaused: 'paused',
+    calmLegendLogged: 'Logged',
+    calmLegendQuiet: 'Nothing logged',
+    calmLegendPaused: 'Paused',
+    calmEmptyTitle: 'Nothing logged this month',
+    calmEmptyText: 'That is fine, it starts whenever you do',
+    calmFailedTitle: 'Could not read this month',
+    calmFailedText: 'The days could not be reached just now.',
+    calmRetry: 'Retry',
+    calmTrendCaption: 'Trends count the days that were logged',
+    calmSummary: (logged, total) => `${logged} of ${total} days logged`,
+    // Answering one question per screen (js/focus-steps.js, answer mode) [kpadopt6].
+    focusQuestionCount: (n, total) => `Question ${n} of ${total}`,
+    focusAnswered: (label, n, total) => `Answered ${label}. Question ${n} of ${total}`,
+    focusSameYesterday: (label) => `Same as yesterday: ${label}`,
+    focusSameUsual: (label) => `Same as usual: ${label}`,
+    focusSkip: 'Not today',
+    focusSkipped: 'Not today',
+    focusReview: 'Review',
+    focusSummaryTitle: 'Your answers',
+    focusMultiHint: 'Pick as many as fit, then press Next',
+    focusTextLabel: 'Your answer',
+    focusPickedMark: 'chosen',
+    focusResumeAsk: 'Continue where you stopped?',
+    focusResumeContinue: 'Continue',
+    focusResumeRestart: 'Start over',
+    focusResumed: (n) => `Back at question ${n}`,
+    focusAnswerEmptyTitle: 'No questions today',
+    focusAnswerEmptyText: 'That is fine, nothing is waiting',
+    focusAnswerFailedTitle: 'Could not read the questions',
+    focusAnswerFailedText: 'The questions could not be reached just now.',
+    focusRetry: 'Retry',
+    focusSaveFailedTitle: 'Could not save your answers',
+    focusSaveFailedText: 'Your answers are kept here, nothing is lost.',
+    focusSaveRetry: 'Try again',
+    focusAnswerLoading: 'Reading the questions',
+    // A picker with the usual on top (js/usual-picker.js) [kpadopt6].
+    usualLabel: 'Usual',
+    usualAll: 'All',
+    usualStatus: (usual, more) => `${usual} usual, ${more} more`,
+    usualShowAll: (n) => `Show all ${n}`,
+    usualShowFewer: 'Show fewer',
+    usualAdd: (label) => `Add '${label}' as new`,
+    usualDidYouMean: (name) => `Did you mean ${name}?`,
+    usualNoMatchTitle: 'No match',
+    usualNoMatchText: 'Pick a close name, or add it as new',
+    usualNoMatchTextFixed: 'Nothing in the list looks like that',
+    usualSelectedExisting: (label) => `${label} was already in the list, selected`,
+    usualAdded: (label) => `${label} added`,
+    usualAddedToast: (label) => `Added '${label}'`,
+    usualEmptyTitle: 'Nothing here yet',
+    usualEmptyText: 'Type a name to add the first one',
+    usualEmptyTextFixed: 'Whoever keeps this list adds the first one',
+    usualAddButton: 'Add',
+    usualFailedTitle: 'Could not read the list',
+    usualFailedText: 'The list could not be reached just now.',
+    usualRetry: 'Retry',
+    usualLoading: 'Reading the list',
+    usualNotToday: 'Not today',
+    usualNotTodayName: (label) => `${label}: not today`,
+    usualNotTodayAnnounce: (label) => `${label}: not today`,
+    usualNotTodayMark: 'not today',
+    usualJump: 'Jump to the usual choices',
 });
 
 // STRINGS_NL was removed in 4.0.0 [D3]. Kenny decided that on
