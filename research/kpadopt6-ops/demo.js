@@ -284,3 +284,75 @@ await ready;
                 b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-ack-state') === 'ready'));
         });
 }
+
+// ── dependency list ──
+{
+    const { setDeplist, deplist } = await import('../../js/deplist.js');
+    const rows = [
+        { from: 'immich', to: 'paperless' },
+        { from: 'paperless', to: 'postgres', state: 'running' },
+        { from: 'paperless', to: 'redis', state: 'running' },
+        { from: 'immich', to: 'postgres', state: 'running' },
+        { from: 'immich', to: 'redis', state: 'stopped' },
+        { from: 'vault', to: 'postgres', state: 'running' },
+        { from: 'gateway', to: 'vault', state: 'running' },
+        { from: 'jellyfin', to: 'gateway', state: 'running' },
+        { from: 'sonarr', to: 'jellyfin', state: 'unknown' },
+        { from: 'radarr', to: 'jellyfin', state: 'unknown' },
+        { from: 'café-kiosk', to: 'gateway', state: 'running' },
+        { from: 'calendar', to: 'postgres', state: 'running' },
+    ];
+    const main = document.getElementById('k6-deplist');
+    const cycle = [{ from: 'redis', to: 'paperless' }];
+    let withCycle = false;
+    const fill = () => main && setDeplist(main, withCycle ? [...rows, ...cycle] : rows);
+    fill();
+
+    /** @param {string} arrange */
+    const arrangeTo = (arrange) => {
+        if (!main) return;
+        main.setAttribute('data-kp-dep-order', arrange === 'numbers' ? 'numbers' : 'none');
+        if (arrange === 'by-to') main.setAttribute('data-kp-dep-group', 'by-to');
+        else main.removeAttribute('data-kp-dep-group');
+        for (const b of document.querySelectorAll('[data-k6-dep-arrange]'))
+            b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-dep-arrange') === arrange));
+    };
+    stateButtons('data-k6-dep-arrange', arrangeTo);
+    onChoice('dep-arrange', arrangeTo);
+    for (const b of document.querySelectorAll('[data-k6-dep-extra]'))
+        b.addEventListener('click', () => {
+            const on = b.getAttribute('aria-pressed') !== 'true';
+            b.setAttribute('aria-pressed', String(on));
+            const kind = b.getAttribute('data-k6-dep-extra');
+            if (!main) return;
+            if (kind === 'link') {
+                if (on) main.setAttribute('data-kp-dep-link', '#stack-{name}');
+                else main.removeAttribute('data-kp-dep-link');
+            } else if (kind === 'states') main.toggleAttribute('data-kp-dep-states', on);
+            else {
+                withCycle = on;
+                fill();
+            }
+        });
+
+    const states = document.getElementById('k6-deplist-states');
+    const four = rows.slice(0, 4);
+    if (states) setDeplist(states, four);
+    const phone = document.getElementById('k6-deplist-phone');
+    if (phone)
+        setDeplist(phone, [
+            { from: 'paperless', to: 'postgres', state: 'running' },
+            { from: 'immich-machine-learning-worker', to: 'paperless', state: 'stopped' },
+            { from: 'café-kiosk', to: 'gateway', state: 'unknown' },
+        ]);
+    /** @param {string} state */
+    const setState = (state) => {
+        if (!states) return;
+        if (state === 'ready') setDeplist(states, four);
+        else deplist(states)?.setState(/** @type {'loading' | 'empty' | 'error'} */ (state), { message: 'The host did not answer.' });
+        for (const b of document.querySelectorAll('[data-k6-dep-state]'))
+            b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-dep-state') === state));
+    };
+    stateButtons('data-k6-dep-state', setState);
+    states?.addEventListener('kp-deplist-retry', () => setState('ready'));
+}

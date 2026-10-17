@@ -2362,6 +2362,25 @@ A warning that holds a button back until a box is ticked ("I read the release no
 `data-kp-ack-reset="never"`; `data-kp-ack-require-link` and `-min-ms` hold the tick back until the notes were opened; `data-kp-state` is `loading`, `error` (with Retry on `data-kp-ack-retry`, event `kp-ack-retry`) or `empty` (hidden, the control on).
 `ackGate(el)` gives `set`, `setState`, `setLocked` (the tick locked while the job runs) and `remaining`. The gate is a human guard: keep the server's own check. The words are `ack…`.
 
+### The dependency list
+
+Rows "A → B" that say what needs what, numbered in the order things must go (Kenny, 2026-10-17: "Ja, met nummers"):
+
+```html
+<div class="kp-deplist" data-kp-deplist id="who" data-kp-dep-heading="{n} stacks reach these apps"></div>
+```
+
+```js
+import { setDeplist } from '@kp-soft/themes/js/deplist';
+setDeplist(document.getElementById('who'), [{ from: 'paperless', to: 'postgres' }, { from: 'immich', to: 'paperless', state: 'running' }]);
+```
+
+`attachDeplists(root)` (`js/deplist.js`, attached by `js/auto.js`) draws the rows from `setDeplist(el, items)` or `deplist(el).set(items)`: one fixed grid per row (number, mark and name, arrow, needed name, state), each name with its identity mark, the rows
+ordered so a thing stands after what it needs (`orderDependencies` is the pure part), a cycle as one red unnumbered row. `data-kp-dep-order` is `numbers` (default) or `none`; `-direction` `from-needs-to` (default) or `from-reaches-to`;
+`-group` `by-to` or `by-from` (with `none` order); `-states` adds running, stopped or unknown in words; `-collapse` (8) folds the rest behind an exact "Show all 23"; `-link` ("/stacks/{name}") makes names links; `-self` shows a thing's own row;
+`-empty`, `-heading` ("{n} stacks reach these apps") and `-copy` (a button that copies "paperless -> postgres" per line) set the words and the extras. Each attribute change draws the list again. `deplist(el).setState('loading' | 'empty' | 'error')`:
+the busy card over placeholder rows, the empty plate (no action), the failed plate with Retry (`kp-deplist-retry`), each as high as the list was. The words are `deplist…`.
+
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

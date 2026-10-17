@@ -3881,6 +3881,44 @@ setGanttState(timeline, 'loading');
         ],
     },
     {
+        id: 'deplist',
+        title: 'Dependency list',
+        group: 'Data',
+        classes: ['kp-deplist'],
+        aliases: ['cols', 'dep'],
+        exports: [],
+        intro: 'A short list of rows “paperless → postgres” that says what needs what, numbered in the order things must go. Every row is the same columns, each name carries its identity mark, a cycle is one red row, and the list folds past eight rows with an exact “Show all 23”.',
+        whenToUse: 'Before a change: who notices if this app stops or updates. Not for a picture of the whole network (a graph) and not for progress (a step list).',
+        examples: [
+            {
+                title: 'Who needs whom',
+                why: 'The rows come from the page; the list orders them so a thing stands after what it needs, and numbers them.',
+                markup: `
+<div class="kp-deplist" data-kp-deplist id="doc-deplist" data-kp-dep-heading="{n} stacks reach these apps"></div>
+`,
+                script: `
+import { setDeplist } from '@kp-soft/themes/js/deplist';
+setDeplist(document.getElementById('doc-deplist'), [
+    { from: 'paperless', to: 'postgres' },
+    { from: 'immich', to: 'paperless' },
+    { from: 'immich', to: 'redis' },
+]);
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-dep-order', what: '`numbers` (default: one row per step, numbered 1, 2, 3) or `none` (the order given).' },
+            { name: 'data-kp-dep-group', what: '`by-to` or `by-from` with `data-kp-dep-order="none"`: rows grouped under the app that changes.' },
+            { name: 'data-kp-dep-states', what: 'A word and a tone beside each needed thing: running, stopped or unknown.' },
+            { name: 'data-kp-dep-collapse', what: 'How many rows show before “Show all N”; 8 by default.' },
+            { name: 'data-kp-state', what: '`loading` (the busy card over placeholder rows), `empty` and `error` (the package’s plates with Retry), each as high as the list was.' },
+        ],
+        accessibility: [
+            'Built in — an ordered list; each row reads as one sentence (“paperless needs postgres”), the arrow is hidden from a screen reader; the heading is a polite live region with the exact count.',
+            'Yours — pass real data (`from`, `to`) and a heading that says what the rows are.',
+        ],
+    },
+    {
         id: 'unsaved',
         title: 'Unsaved changes bar',
         group: 'Forms',

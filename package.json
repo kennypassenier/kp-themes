@@ -184,6 +184,10 @@
             "types": "./js/ack-gate.d.ts",
             "default": "./js/ack-gate.js"
         },
+        "./js/deplist": {
+            "types": "./js/deplist.d.ts",
+            "default": "./js/deplist.js"
+        },
         "./js/unsaved": {
             "types": "./js/unsaved.d.ts",
             "default": "./js/unsaved.js"

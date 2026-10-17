@@ -52,6 +52,7 @@
                         <li><a href="#topic-intent">Palette that finds words in any order</a> <span class="k6-toc__count">2 sections</span></li>
                         <li><a href="#topic-version">Version jump chip</a> <span class="k6-toc__count">2 sections</span></li>
                         <li><a href="#topic-ack">Acknowledge gate</a> <span class="k6-toc__count">2 sections</span></li>
+                        <li><a href="#topic-deplist">Dependency list</a> <span class="k6-toc__count">2 sections</span></li>
                     </ol>
                 </nav>
             </header>
@@ -1683,6 +1684,131 @@
                                     <button type="button" class="kp-button kp-button--primary" id="k6-ack-go4">Update</button>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- toc: deplist | Dependency list | 2 sections -->
+            <!-- ================================================================ topic: dependency list -->
+            <h2 class="k6-topic" id="topic-deplist">Dependency list</h2>
+            <section
+                class="k6-sec"
+                id="deplist"
+                data-review-item="deplist"
+                data-review-components="deplist"
+                data-review-topic="deplist"
+                data-review-topic-title="Dependency list"
+                data-review-title="Dependency list: what needs what, in the order things must go"
+                data-review-choices='[{ "id": "dep-arrange", "label": "How the rows are arranged", "once": true, "default": "numbers", "options": [
+                    { "value": "numbers", "label": "Numbered, in the order things must go", "hint": "Recommended (Kenny: &ldquo;Ja, met nummers&rdquo;). Row 1 is what nothing else listed waits for; a row stands after the rows of what it needs. One order, one column of numbers." },
+                    { "value": "by-to", "label": "Grouped under the app that changes", "hint": "No numbers: a heading per needed app and the rows that need it under it, as the dashboard reads &ldquo;who notices this app&rdquo;. Easier to scan by app, but it says nothing about order." }] }]'
+                aria-labelledby="h-deplist"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-deplist">Dependency list: what needs what, in the order things must go</h2>
+                    <p>
+                        <code>&lt;div class="kp-deplist" data-kp-deplist&gt;</code> (js/deplist.js): rows &ldquo;A → B&rdquo;, each a fixed grid, the
+                        names with their identity marks. Switch the options below; the list draws itself again.
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The heading says the exact count: <b>12 stacks reach these apps</b>. Rows are numbered <b>1</b> to <b>12</b> in the order
+                            things must go: <b>paperless → postgres</b> comes before <b>immich → paperless</b>, which needs paperless. Only the first
+                            eight show; <b>Show all 12</b> unfolds the rest and becomes <b>Show fewer</b>. Numbers, marks, arrows and needed names
+                            stand in the same columns in every row.
+                        </li>
+                        <li>
+                            <b>Not numbered</b> drops the number column; <b>Group by app</b> puts a heading per needed app;
+                            <b>Names are links</b> makes each name a link to its page; <b>Show state</b> adds running, stopped or unknown in words and
+                            a tone beside each needed app; <b>Copy as text</b> copies <i>paperless -&gt; postgres</i> per line and says
+                            <b>Copied</b> on its own button, which keeps its width.
+                        </li>
+                        <li>
+                            A <b>cycle</b> (paperless needs redis needs paperless) is never looped: it becomes one red row at the top, unnumbered.
+                        </li>
+                        <li><b>The choice</b> (tick it in the dialog): numbered, or grouped under the app that changes. The buttons flip it too.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Each row is a line of formal&rsquo;s ledger, a hairline under it; the identity marks are small squares in the theme&rsquo;s
+                        chart colours. Look at the arrows and the needed names standing in one column down the list, and at the numbers aligned on
+                        their right.
+                    </p>
+                </div>
+                <div class="k6-controls" data-review-controls>
+                    <div role="group" aria-label="Arrangement">
+                        <b>Rows:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-dep-arrange="numbers" aria-pressed="true">Numbered</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-dep-arrange="none" aria-pressed="false">Not numbered</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-dep-arrange="by-to" aria-pressed="false">Group by app</button>
+                    </div>
+                    <div role="group" aria-label="Extras">
+                        <b>Extras:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-dep-extra="link" aria-pressed="false">Names are links</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-dep-extra="states" aria-pressed="false">Show state</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-dep-extra="cycle" aria-pressed="false">Add a cycle</button>
+                    </div>
+                </div>
+                <div class="kp-deplist" data-kp-deplist id="k6-deplist" data-kp-dep-heading="{n} stacks reach these apps" data-kp-dep-copy></div>
+            </section>
+            <section
+                class="k6-sec"
+                id="deplist-states"
+                data-review-item="deplist-states"
+                data-review-components="deplist"
+                data-review-topic="deplist"
+                data-review-title="Dependency list: loading, empty, failed and phone width"
+                aria-labelledby="h-deplist-states"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-deplist-states">Dependency list: loading, empty, failed and phone width</h2>
+                    <p>The same list while its rows are being read, with nothing in it, when it could not be read, and at the width of a phone.</p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Loading:</b> three placeholder rows with the theme&rsquo;s busy card (spinner and words) in the middle of the list, the
+                            heading saying <b>Reading what depends on what</b>. <b>Empty:</b> the empty plate, <b>Nothing depends on these</b> at
+                            heading size, centred, no button (nothing is wrong). <b>Failed:</b> the red plate
+                            <b>The dependencies could not be read</b> with a normal-size <b>Retry</b>, which brings the rows back. Each state is as
+                            tall as the list was with its rows.
+                        </li>
+                        <li>
+                            <b>Phone width:</b> each row stacks, the number at the start, the name over &ldquo;→ the needed app&rdquo;; long names
+                            wrap and nothing is cut.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The plates are formal&rsquo;s own (the dashed paper plate, the red plate); the busy card is its ruled ring. Check the
+                        text&rsquo;s centre against the plate&rsquo;s centre and that the list keeps its height.
+                    </p>
+                </div>
+                <div class="k6-controls" data-review-controls>
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-dep-state="ready" aria-pressed="true">Rows</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-dep-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-dep-state="empty" aria-pressed="false">Nothing</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-dep-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                </div>
+                <div class="k6-pair">
+                    <div class="k6-case">
+                        <p class="k6-label">Four rows, in their states</p>
+                        <div class="kp-deplist" data-kp-deplist id="k6-deplist-states" data-kp-dep-heading="{n} stacks reach these apps"></div>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">Phone width</p>
+                        <div class="k6-frame k6-frame--phone">
+                            <div class="kp-deplist" data-kp-deplist id="k6-deplist-phone" data-kp-dep-states></div>
                         </div>
                     </div>
                 </div>

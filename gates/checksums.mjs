@@ -140,6 +140,7 @@ export const FILES = [
     'js/intent.js',
     'js/version-delta.js',
     'js/ack-gate.js',
+    'js/deplist.js',
     'js/unsaved.js',
     'js/compare.js',
     'js/calm.js',

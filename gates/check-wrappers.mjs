@@ -158,6 +158,12 @@ export const REQUIRED = [
         why: 'The gate measures its own width and puts its tick under its words on a phone; the query reaches only its inner frame [kpadopt6-ops].',
     },
     {
+        container: 'kp-deplist',
+        class: 'kp-deplist',
+        self: true,
+        why: 'The list measures its own width and stacks each row on a phone; the query reaches only its rows [kpadopt6-ops].',
+    },
+    {
         container: 'kp-code',
         class: 'kp-code',
         self: true,

@@ -183,6 +183,7 @@ export {
     unsaved,
     unsavedSaved,
 } from './js/unsaved.js';
+export { DEPLIST, DEPLIST_COLLAPSE, DEPLIST_RETRY_EVENT, attachDeplists, depText, deplist, orderDependencies, setDeplist } from './js/deplist.js';
 export { ACK_EVENT, ACK_GATE, ACK_RETRY_EVENT, ackGate, attachAckGates } from './js/ack-gate.js';
 export { VERSION_COPY_EVENT, VERSION_DELTA, VERSION_LEVELS, VERSION_SORT, attachVersionDeltas, githubRepo, releaseUrl, setVersionDelta, summarizeDeltas, versionLevel, versionNumbers } from './js/version-delta.js';
 export { INTENT_MAX_SHOWN, intentRanges, intentScore, intentTokens, intentWords, matchIntent, noMatchText, queryWords, rankCommands, startsWord } from './js/intent.js';

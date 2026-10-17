@@ -51,6 +51,7 @@ export const CARD = [
     'js/runs.js',
     'js/dated-options.js',
     'js/palette.js',
+    'js/deplist.js',
 ];
 
 /** Approved before the rule, each with its own central loading picture. @type {Record<string, string>} */

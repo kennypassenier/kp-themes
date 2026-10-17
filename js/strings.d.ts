@@ -175,6 +175,74 @@ export type Strings = {
      * A gate's line when no release notes link was found [kpadopt6-ops]
      */
     ackNoLink: string;
+    /**
+     * The list's default heading, the exact count (js/deplist.js) [kpadopt6-ops]
+     */
+    deplistCount: (n: number) => string;
+    /**
+     * The heading while the rows are still being read [kpadopt6-ops]
+     */
+    deplistReading: string;
+    /**
+     * A row as a screen reader hears it, "paperless needs postgres" [kpadopt6-ops]
+     */
+    deplistNeeds: (from: string, to: string) => string;
+    /**
+     * The same for a list that says what reaches what [kpadopt6-ops]
+     */
+    deplistReaches: (from: string, to: string) => string;
+    /**
+     * The word between the names of a cycle, "paperless needs redis needs paperless" [kpadopt6-ops]
+     */
+    deplistNeedsWord: string;
+    /**
+     * The button that unfolds the rest, with the exact number of rows [kpadopt6-ops]
+     */
+    deplistMore: (n: number) => string;
+    /**
+     * The button that folds it again [kpadopt6-ops]
+     */
+    deplistFewer: string;
+    /**
+     * The empty plate's title when the page gives no sentence [kpadopt6-ops]
+     */
+    deplistEmpty: string;
+    /**
+     * The failed plate's title [kpadopt6-ops]
+     */
+    deplistFailed: string;
+    /**
+     * Its sentence when the page gives no reason [kpadopt6-ops]
+     */
+    deplistFailedText: string;
+    /**
+     * Its action [kpadopt6-ops]
+     */
+    deplistRetry: string;
+    /**
+     * The words under the busy card's spinner [kpadopt6-ops]
+     */
+    deplistLoading: string;
+    /**
+     * The word for a needed thing that is running [kpadopt6-ops]
+     */
+    deplistRunning: string;
+    /**
+     * The word for a needed thing that is stopped [kpadopt6-ops]
+     */
+    deplistStopped: string;
+    /**
+     * The word for a needed thing whose state is not known [kpadopt6-ops]
+     */
+    deplistUnknown: string;
+    /**
+     * The button that copies the rows as text [kpadopt6-ops]
+     */
+    deplistCopy: string;
+    /**
+     * Its answer once the rows are on the clipboard [kpadopt6-ops]
+     */
+    deplistCopied: string;
     alertSuccess: string;
     alertWarning: string;
     alertInfo: string;
@@ -3558,6 +3626,23 @@ export type Strings = {
  * @property {string} ackEnabled  Said once when the last gate is ticked and the button comes on [kpadopt6-ops]
  * @property {(remaining: number) => string} ackDisabled  Said once when a tick is taken away [kpadopt6-ops]
  * @property {string} ackNoLink  A gate's line when no release notes link was found [kpadopt6-ops]
+ * @property {(n: number) => string} deplistCount  The list's default heading, the exact count (js/deplist.js) [kpadopt6-ops]
+ * @property {string} deplistReading  The heading while the rows are still being read [kpadopt6-ops]
+ * @property {(from: string, to: string) => string} deplistNeeds  A row as a screen reader hears it, "paperless needs postgres" [kpadopt6-ops]
+ * @property {(from: string, to: string) => string} deplistReaches  The same for a list that says what reaches what [kpadopt6-ops]
+ * @property {string} deplistNeedsWord  The word between the names of a cycle, "paperless needs redis needs paperless" [kpadopt6-ops]
+ * @property {(n: number) => string} deplistMore  The button that unfolds the rest, with the exact number of rows [kpadopt6-ops]
+ * @property {string} deplistFewer  The button that folds it again [kpadopt6-ops]
+ * @property {string} deplistEmpty  The empty plate's title when the page gives no sentence [kpadopt6-ops]
+ * @property {string} deplistFailed  The failed plate's title [kpadopt6-ops]
+ * @property {string} deplistFailedText  Its sentence when the page gives no reason [kpadopt6-ops]
+ * @property {string} deplistRetry  Its action [kpadopt6-ops]
+ * @property {string} deplistLoading  The words under the busy card's spinner [kpadopt6-ops]
+ * @property {string} deplistRunning  The word for a needed thing that is running [kpadopt6-ops]
+ * @property {string} deplistStopped  The word for a needed thing that is stopped [kpadopt6-ops]
+ * @property {string} deplistUnknown  The word for a needed thing whose state is not known [kpadopt6-ops]
+ * @property {string} deplistCopy  The button that copies the rows as text [kpadopt6-ops]
+ * @property {string} deplistCopied  Its answer once the rows are on the clipboard [kpadopt6-ops]
  * @property {string} alertSuccess
  * @property {string} alertWarning
  * @property {string} alertInfo
