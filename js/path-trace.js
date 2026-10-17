@@ -220,6 +220,7 @@ function attachOne(el) {
         stage.append(list);
         if (ghost) {
             list.setAttribute('aria-busy', 'true');
+            for (const word of list.querySelectorAll('.kp-steplist__state')) word.remove();
             busy = openBusyCard(stage, { words: s.traceRunning, area: () => [list], className: 'kp-trace__busy', arrive: true });
         } else {
             [...list.querySelectorAll(':scope > .kp-steplist__item')].forEach((item, i) => {

@@ -149,7 +149,7 @@ const shown = (version, digest) =>
 /** One version as text parts a long value may break between (after a dot, a hyphen or an underscore). @param {Document} doc @param {string} text */
 function breakable(doc, text) {
     const frag = doc.createDocumentFragment();
-    const parts = text.split(/(?<=[._-])/);
+    const parts = text.split(/(?<=[._:-])/);
     parts.forEach((part, i) => {
         if (i > 0) frag.append(doc.createElement('wbr'));
         frag.append(part);
