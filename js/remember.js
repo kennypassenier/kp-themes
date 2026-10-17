@@ -86,7 +86,7 @@ export const REMEMBER_PREFIX = 'kp-remember';
 /**
  * The kinds of state this package remembers.
  *
- * @typedef {'sidenav' | 'disclosure' | 'tree' | 'split' | 'datatable' | 'tour' | 'refresh' | 'notices'} Remembered
+ * @typedef {'sidenav' | 'disclosure' | 'tree' | 'split' | 'datatable' | 'tour' | 'refresh' | 'notices' | 'focus-steps' | 'picker'} Remembered
  */
 
 /**
@@ -390,6 +390,9 @@ const PAINTERS = {
     // The refresh chooser and the notification centre read their own memory [kpadopt5-ops].
     refresh: () => {},
     notices: () => {},
+    // The check-in's progress and the picker's folded list are read by their own modules [kpadopt6].
+    'focus-steps': () => {},
+    picker: () => {},
 };
 
 /**

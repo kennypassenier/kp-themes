@@ -4348,6 +4348,7 @@ group.addEventListener('kp-facet-change', (event) => {
         title: 'One step at a time',
         group: 'Navigation',
         classes: ['kp-focus-steps'],
+        aliases: ['focus-mode', 'advance', 'same', 'skip', 'pinned-first', 'back', 'choice-layout', 'choice-height', 'progress', 'resume', 'resume-until', 'summary', 'wake', 'speak', 'text-optional', 'value', 'pinned', 'chosen', 'done', 'current', 'layout'],
         exports: [],
         intro: 'Cook mode: one step of a recipe large on the screen, with what that step needs, a timer button and a note, the count and the theme’s progress bar on top, and two big buttons at the foot. `data-kp-focus-steps` on the root; js/focus-steps.js (`setFocusSteps`, `goToStep`, `getStepIndex`, `setFocusStepsState`, `attachFocusSteps`) keeps the screen on with the Wake Lock API while it is attached, turns the step with the arrows, PageUp/PageDown, Space and a swipe, reads it aloud on request and fires `kp-focus-steps-change` so the page can remember where a person stopped.',
         whenToUse: 'For instructions followed with the hands busy: a recipe, a repair, an exercise. For a form filled in parts use the wizard; for the steps of a running process use the step list.',
@@ -4359,12 +4360,32 @@ group.addEventListener('kp-facet-change', (event) => {
 <div class="kp-focus-steps" data-kp-focus-steps aria-label="Chicken curry"></div>
 `,
             },
+            {
+                title: 'Answering one question per screen',
+                why: '`data-kp-focus-mode="answer"` and steps that carry an `answer`: big answer buttons, “Same as yesterday” and “Same as usual” with their value in the label, and Not today. One tap on a choice moves on after 350 ms; a multi pick and a written line use Next.',
+                markup: `
+<div class="kp-focus-steps" data-kp-focus-steps data-kp-focus-mode="answer" data-kp-remember="checkin" aria-label="Daily check-in"></div>
+`,
+            },
         ],
         variants: [
             { name: 'data-kp-focus-steps-wake="false"', what: 'Do not ask for the screen to stay on.' },
             { name: 'data-kp-focus-steps-timers', what: 'The id of the timer list a step’s timer button starts in.' },
             { name: 'data-kp-focus-steps-empty', what: 'The sentence of a recipe with no steps.' },
             { name: 'data-kp-focus-steps-screen', what: 'Written: on, off or unsupported, and said in the head.' },
+            { name: 'data-kp-focus-mode', what: '`read` (the default; a step with `answer` is a question by itself) or `answer` (also draws empty, failed and save-failed as centred plates).' },
+            { name: 'data-kp-advance and data-kp-advance-ms', what: '`auto` (a tap on a choice moves on after 350 ms, the read-back of what you hit) or `button`; multi and text always use Next.' },
+            { name: 'data-kp-same', what: '`both` (the default: two buttons), `yesterday`, `usual` or `off`.' },
+            { name: 'data-kp-skip', what: '`off` leaves out Not today (present by default; a skip is an answer, `source: skip`).' },
+            { name: 'data-kp-pinned-first', what: 'JSON `[{ "value": "none", "label": "Nothing to log" }]`: choices that stand first in every question.' },
+            { name: 'data-kp-back', what: '`off` hides Back (present by default; going back keeps every answer).' },
+            { name: 'data-kp-choice-layout and data-kp-choice-height', what: '`auto`, `stack` or `row` (a row for up to three short labels, never on a phone); `lg` (56 px, the default) or `md`.' },
+            { name: 'data-kp-progress', what: '`count` (“Question 3 of 7” and the bar, the default), `dots` or `off`; never a timer, never a streak.' },
+            { name: 'data-kp-resume and data-kp-resume-until', what: '`auto`, `ask` or `off` with `data-kp-remember`; `midnight` (the default), `hours:N` or `never`.' },
+            { name: 'data-kp-summary', what: '`on` adds a summary screen after the last question (off by default).' },
+            { name: 'data-kp-wake, data-kp-speak and data-kp-text-optional', what: 'The screen is not kept on and Read aloud is off in answer mode (`true` turns them on); a written answer can always be passed with Not today.' },
+            { name: 'kp-focus-steps-answer and related events', what: '`kp-focus-steps-before-answer` (cancelable), `kp-focus-steps-answer` `{ index, id, value, source, same?, previous }`, `kp-focus-steps-resume`, `kp-focus-steps-retry`, `kp-focus-steps-save-retry`; Done carries `{ total, answers, startedAt, finishedAt }`. `setFocusStepsState(el, "save-error")` keeps the answers.' },
+            { name: 'marks the module writes', what: '`data-kp-value` and `data-kp-chosen` on an answer, `data-kp-pinned`, `data-kp-layout` on the answers, `data-kp-done` and `data-kp-current` on a dot.' },
         ],
         accessibility: [
             'Built in — every change says “Step 3 of 8” and the step; the buttons are real buttons, a step boundary is `aria-disabled` and keeps the focus.',

@@ -164,6 +164,12 @@ export const REQUIRED = [
         why: 'The card measures its own width and sets Hide as a normal-size button at the end in a phone-wide box; the query reaches only its own parts [kpadopt6].',
     },
     {
+        container: 'kp-focus-answer',
+        class: 'kp-focus-steps__answer',
+        self: true,
+        why: 'The answers of a question measure their own width and stack in one full-width column in a phone-wide box; the query reaches only its own parts [kpadopt6].',
+    },
+    {
         container: 'kp-code',
         class: 'kp-code',
         self: true,

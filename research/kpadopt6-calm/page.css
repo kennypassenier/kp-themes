@@ -208,3 +208,14 @@
 .k6-actions--below {
     margin-block-start: var(--kp-space-sm, 0.5rem);
 }
+
+/* A one-step view needs a height to stand in; the demo gives it one. */
+.k6-focus {
+    --kp-focus-steps-height: 38rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.k6-frame--phone .k6-focus {
+    --kp-focus-steps-height: 52rem;
+}

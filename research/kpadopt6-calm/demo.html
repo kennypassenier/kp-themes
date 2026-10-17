@@ -49,6 +49,7 @@
                 </p>
                 <nav class="k6-toc" aria-label="Topics on this page">
                     <ol>
+                        <li><a href="#topic-focus">Questions, one per screen</a> <span class="k6-toc__count">2 sections</span></li>
                         <li><a href="#topic-today">Today card</a> <span class="k6-toc__count">2 sections</span></li>
                         <li><a href="#topic-quote">Quote card</a> <span class="k6-toc__count">2 sections</span></li>
                         <li><a href="#topic-calm">Calm days</a> <span class="k6-toc__count">2 sections</span></li>
@@ -56,6 +57,174 @@
                     </ol>
                 </nav>
             </header>
+
+            <!-- ================================================================ topic: Questions, one per screen -->
+            <h2 class="k6-topic" id="topic-focus">Questions, one per screen</h2>
+            <section
+                class="k6-sec"
+                id="focus"
+                data-review-item="focus"
+                data-review-components="focus-steps"
+                data-review-topic="focus"
+                data-review-topic-title="Questions, one per screen"
+                data-review-title="Questions, one per screen: a daily check-in"
+                data-review-choices='[{"id": "focus-progress", "label": "How progress shows", "default": "count", "options": [{"value": "count", "label": "Question 3 of 6 and the bar (recommended)", "hint": "What cook mode already draws: the words and the theme&#39;s bar. Never a timer. Press Count in the buttons above the check-in."}, {"value": "dots", "label": "Dots", "hint": "One dot per question: filled for done, ringed for this one. Quieter, no number to count. Press Dots."}, {"value": "off", "label": "Nothing", "hint": "No count and no bar at all; just the question. Press Off under Progress."}]}, {"id": "focus-advance", "label": "What a tap on an answer does", "default": "auto", "options": [{"value": "auto", "label": "Moves on by itself after a moment (recommended)", "hint": "One tap per screen: the answer you hit shows chosen for 350 ms and the next question comes. Press Auto under Advance."}, {"value": "button", "label": "Waits for Next", "hint": "The answer is chosen and stays; you press Next. Two taps per question, but nothing moves unless you press. Press Button under Advance."}]}]'
+                aria-labelledby="h-focus"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-focus">Questions, one per screen: a daily check-in</h2>
+                    <p>
+                        The one-step view of cook mode (<code>data-kp-focus-steps</code>, js/focus-steps.js) in answer mode: one question large,
+                        big answer buttons, &ldquo;same as yesterday&rdquo; and &ldquo;same as usual&rdquo; in one tap, and Not today. The cook mode itself does not
+                        change.
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Six questions</b>: mood, energy, overload, what got in the way of sleep (several answers), movement, and one sentence.
+                            Each shows <b>Question 1 of 6</b> over the bar, the question in large type, answers as full-width buttons (at least 56 px),
+                            <b>Same as yesterday: Matig</b> and <b>Same as usual: Good</b> side by side where there is room, and a quiet
+                            <b>Not today</b>. Back and Next stand at the foot and never move.
+                        </li>
+                        <li>
+                            <b>Press an answer</b>: it fills with the primary colour and a check mark, stays chosen for a third of a second, and the
+                            next question comes by itself. <b>Same as yesterday</b> does the same with yesterday&rsquo;s answer. <b>Back</b>: your
+                            earlier answer is still chosen; pick another and it moves on again. A question with several answers needs <b>Next</b>;
+                            the written line needs words before Next works (or press <b>Not today</b>).
+                        </li>
+                        <li>
+                            <b>Keys</b> (focus inside the view, click a question first): ArrowUp and ArrowDown move between the answers, Enter
+                            chooses, <b>s</b> takes the same as yesterday, <b>u</b> the usual, <b>n</b> Not today, ArrowLeft and ArrowRight go back and on.
+                            No digit keys. The grey box shows each answer and the final <code>kp-focus-steps-done</code>.
+                        </li>
+                        <li>
+                            <b>Buttons above</b> switch the options while you look (progress, advance, the same buttons, a summary screen, the
+                            answers&rsquo; layout): the view redraws at once, keeping your place and your answers.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s buttons at their large size; a chosen answer is the navy primary with a ruled check; the bar is formal&rsquo;s
+                        ruled bar. Look at the answers filling the width, the mark never touching the words, and Back and Next staying put.
+                    </p>
+                </div>
+                <div data-review-controls>
+                    <div role="group" aria-label="Progress" class="k6-actions">
+                        <b>Progress:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-focus-opt="progress" data-value="count">Count</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-focus-opt="progress" data-value="dots">Dots</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-focus-opt="progress" data-value="off">Off</button>
+                    </div>
+                    <div role="group" aria-label="Advance" class="k6-actions">
+                        <b>Advance:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-focus-opt="advance" data-value="auto">Auto</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-focus-opt="advance" data-value="button">Button</button>
+                    </div>
+                    <div role="group" aria-label="The same buttons" class="k6-actions">
+                        <b>Same:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-focus-opt="same" data-value="both">Both</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-focus-opt="same" data-value="yesterday">Yesterday</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-focus-opt="same" data-value="usual">Usual</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-focus-opt="same" data-value="off">Off</button>
+                    </div>
+                    <div role="group" aria-label="Summary" class="k6-actions">
+                        <b>Summary:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-focus-opt="summary" data-value="off">Off</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-focus-opt="summary" data-value="on">On</button>
+                    </div>
+                    <div role="group" aria-label="Start over" class="k6-actions">
+                        <button type="button" class="kp-button" data-k6-focus-restart>Start over</button>
+                    </div>
+                </div>
+                <div class="k6-pair">
+                    <div class="k6-case">
+                        <p class="k6-label">The check-in</p>
+                        <div class="kp-focus-steps k6-focus" data-kp-focus-steps data-kp-focus-mode="answer" id="k6-focus-a" aria-label="Daily check-in"></div>
+                        <pre class="k6-log" id="k6-focus-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">Phone width (390 px): the answers stack, full width</p>
+                        <div class="k6-frame k6-frame--phone">
+                            <div class="kp-focus-steps k6-focus" data-kp-focus-steps data-kp-focus-mode="answer" data-kp-pinned-first='[{"value":"unsure","label":"Not sure"}]' id="k6-focus-p" aria-label="Daily check-in"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section
+                class="k6-sec"
+                id="focus-states"
+                data-review-item="focus-states"
+                data-review-components="focus-steps"
+                data-review-topic="focus"
+                data-review-title="Questions, one per screen: states, resume and a long text"
+                aria-labelledby="h-focus-states"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-focus-states">Questions, one per screen: states, resume and a long text</h2>
+                    <p>Questions that are being read, a day with none, questions that could not be read, answers that could not be saved, a check-in left half way, and a question with long words.</p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Loading</b>: the theme&rsquo;s loading card, moving, centred over the question area; the count, bar, Back and Next
+                            keep their places. <b>No questions</b>: one plate, centred at heading size, <b>No questions today</b> over
+                            <b>That is fine, nothing is waiting</b>. <b>Could not read</b>: the red-edged plate with <b>Could not read the questions</b>
+                            and a normal-size <b>Retry</b>. <b>Could not save</b>: after the last answer press Done on the first view then this
+                            button: <b>Could not save your answers</b> with <b>Try again</b>; the answers are kept (the grey box lists them).
+                            The view keeps its height in every state.
+                        </li>
+                        <li>
+                            <b>Resume</b> (second view, kept in this browser): answer two questions, then press <b>Phone rings: load again</b>.
+                            The view asks <b>Continue where you stopped?</b> with <b>Continue</b> and <b>Start over</b>; Continue puts back your
+                            answers and the question you were on. With <b>Resume: auto</b> it continues without asking; with <b>off</b> it starts at
+                            question 1. Progress older than midnight (Brussels) is not offered.
+                        </li>
+                        <li>
+                            <b>Long text and a disabled answer</b> (third view): a long question and long answers wrap and never touch the edge; the
+                            answer that cannot be picked is dimmed and says why in words under its label (<b>Not while the moves are paused</b>),
+                            not in a tooltip.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The plates are formal&rsquo;s empty plate and destructive alert; the loading card is the one that rules the busy table.</p>
+                </div>
+                <div data-review-controls>
+                    <div role="group" aria-label="State of the first view" class="k6-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-focus-state="ready">Ready</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-focus-state="loading">Loading</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-focus-state="empty">No questions</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-focus-state="error">Could not read</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-focus-state="save-error">Could not save</button>
+                    </div>
+                    <div role="group" aria-label="Resume" class="k6-actions">
+                        <b>Resume:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-focus-resume="ask">Ask</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-focus-resume="auto">Auto</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-focus-resume="off">Off</button>
+                        <button type="button" class="kp-button" data-k6-focus-reload>Phone rings: load again</button>
+                    </div>
+                </div>
+                <div class="k6-pair">
+                    <div class="k6-case">
+                        <p class="k6-label">Driven by the buttons above</p>
+                        <div class="kp-focus-steps k6-focus" data-kp-focus-steps data-kp-focus-mode="answer" id="k6-focus-s" aria-label="Daily check-in"></div>
+                        <pre class="k6-log" id="k6-focus-s-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">Resume: left half way</p>
+                        <div class="kp-focus-steps k6-focus" data-kp-focus-steps data-kp-focus-mode="answer" data-kp-remember="k6-checkin" data-kp-resume="ask" id="k6-focus-r" aria-label="Daily check-in"></div>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">A long question, long answers, an answer that cannot be picked</p>
+                        <div class="kp-focus-steps k6-focus" data-kp-focus-steps data-kp-focus-mode="answer" id="k6-focus-l" aria-label="Daily check-in"></div>
+                    </div>
+                </div>
+            </section>
 
             <!-- ================================================================ topic: Today card -->
             <h2 class="k6-topic" id="topic-today">Today card</h2>

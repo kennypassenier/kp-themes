@@ -8,6 +8,7 @@ import { setQuoteState } from '../../js/quote.js';
 import { setStatus, settleToday, setTodayState } from '../../js/statusrow.js';
 import { setCalendarDays, setCalendarState, setCalendarLegend, setCalendarCaption } from '../../js/calendar.js';
 import { setHeat } from '../../js/heat.js';
+import { setFocusSteps, setFocusStepsState } from '../../js/focus-steps.js';
 import { setUptime } from '../../js/uptime.js';
 
 /** @param {string} selector @param {ParentNode} [root] */
@@ -34,6 +35,83 @@ function onButtons(attr, run) {
 const log = (box, text) => {
     if (box) box.textContent = text;
 };
+
+// ---- 2 · questions, one per screen ----------------------------------------------------------------
+{
+    /** The check-in: yesterday's and the usual answers come from the app. @returns {import('../../js/focus-steps.js').FocusStep[]} */
+    const checkin = () => [
+        { text: 'How is your mood today?', answer: { id: 'mood', kind: 'choice', previous: 'matig', usual: 'good', choices: [{ value: 'rough', label: 'Rough' }, { value: 'matig', label: 'Matig' }, { value: 'good', label: 'Good' }, { value: 'great', label: 'Great' }] } },
+        { text: 'And your energy?', answer: { id: 'energy', kind: 'choice', previous: 'okay', usual: 'okay', choices: [{ value: 'low', label: 'Low' }, { value: 'okay', label: 'Okay' }, { value: 'high', label: 'High' }] } },
+        { text: 'Did anything feel like too much?', answer: { id: 'overload', kind: 'choice', previous: 'abit', choices: [{ value: 'none', label: 'Nothing' }, { value: 'abit', label: 'A bit' }, { value: 'alot', label: 'A lot' }] } },
+        { text: 'What got in the way of sleep?', answer: { id: 'sleep', kind: 'multi', previous: ['noise'], choices: [{ value: 'noise', label: 'Noise' }, { value: 'thoughts', label: 'Thoughts' }, { value: 'pain', label: 'Pain' }, { value: 'heat', label: 'Heat' }, { value: 'nothing', label: 'Nothing' }] } },
+        { text: 'How much did you move?', answer: { id: 'move', kind: 'choice', usual: 'short', choices: [{ value: 'none', label: 'Not at all' }, { value: 'short', label: 'A short walk' }, { value: 'long', label: 'A long walk' }, { value: 'sport', label: 'Sport', disabled: true, reason: 'Not while the moves are paused' }] } },
+        { text: 'One sentence about today, if you like.', answer: { id: 'line', kind: 'text', placeholder: 'Write what you want, or press Not today' } },
+    ];
+    const root = /** @type {HTMLElement} */ (document.getElementById('k6-focus-a'));
+    const logBox = document.getElementById('k6-focus-log');
+    const lines = /** @type {string[]} */ ([]);
+    const note = (/** @type {string} */ text) => {
+        lines.push(text);
+        log(logBox, lines.slice(-6).join('\n'));
+    };
+    setFocusSteps(root, checkin());
+    root.addEventListener('kp-focus-steps-answer', (event) => {
+        const d = /** @type {CustomEvent} */ (event).detail;
+        note(`answer { id: '${d.id}', value: ${JSON.stringify(d.value)}, source: '${d.source}' }`);
+    });
+    root.addEventListener('kp-focus-steps-done', (event) => {
+        const d = /** @type {CustomEvent} */ (event).detail;
+        note(`done { total: ${d.total}, answers: ${Object.keys(d.answers ?? {}).length} }`);
+    });
+    const phone = /** @type {HTMLElement} */ (document.getElementById('k6-focus-p'));
+    setFocusSteps(phone, checkin());
+    onButtons('data-k6-focus-opt', (name, button) => {
+        const value = button.dataset.value ?? '';
+        // The options are real attributes: changing one redraws the view.
+        for (const view of [root, phone]) view.setAttribute(`data-kp-${name}`, value);
+    });
+    document.querySelector('[data-k6-focus-restart]')?.addEventListener('click', () => {
+        setFocusSteps(root, checkin());
+        lines.length = 0;
+        log(logBox, '');
+    });
+    // states
+    const driven = /** @type {HTMLElement} */ (document.getElementById('k6-focus-s'));
+    const sLog = document.getElementById('k6-focus-s-log');
+    setFocusSteps(driven, checkin());
+    driven.addEventListener('kp-focus-steps-done', (event) => {
+        const answers = /** @type {CustomEvent} */ (event).detail.answers ?? {};
+        log(sLog, `done: ${Object.keys(answers).length} answers kept in the page`);
+        setFocusStepsState(driven, 'save-error');
+    });
+    driven.addEventListener('kp-focus-steps-retry', () => {
+        setFocusStepsState(driven, 'loading');
+        void sleep(1000).then(() => setFocusStepsState(driven, 'ready'));
+    });
+    driven.addEventListener('kp-focus-steps-save-retry', () => log(sLog, 'kp-focus-steps-save-retry: the page tries to save again'));
+    onButtons('data-k6-focus-state', (value) => {
+        if (value === 'empty') {
+            setFocusSteps(driven, []);
+            setFocusStepsState(driven, 'ready');
+        } else {
+            if (!driven.querySelector('.kp-focus-steps__choices, .kp-focus-steps__input, .kp-focus-steps__text')) setFocusSteps(driven, checkin());
+            setFocusStepsState(driven, /** @type {'ready' | 'loading' | 'error' | 'save-error'} */ (value));
+        }
+    });
+    const resume = /** @type {HTMLElement} */ (document.getElementById('k6-focus-r'));
+    try {
+        localStorage.removeItem('kp-remember:focus-steps:k6-checkin:progress');
+    } catch {
+        // No storage: the demo shows the question only.
+    }
+    setFocusSteps(resume, checkin());
+    onButtons('data-k6-focus-resume', (value) => resume.setAttribute('data-kp-resume', value));
+    document.querySelector('[data-k6-focus-reload]')?.addEventListener('click', () => setFocusSteps(resume, checkin()));
+    const long = /** @type {HTMLElement} */ (document.getElementById('k6-focus-l'));
+    setFocusSteps(long, [
+        { text: 'Thinking about the whole of this week, including the evenings you spent on the phone with your family and the mornings that started too early, how would you describe the way you have been feeling in general?', answer: { id: 'week', kind: 'choice', choices: [{ value: 'a', label: 'Mostly calm, with a few hard moments that passed on their own' }, { value: 'b', label: 'Tired in a way that sleep did not fix, and short with the people around me' }, { value: 'c', label: 'Hard to say', disabled: true, reason: 'Not while the moves are paused' }] } },
+    ]);
+}
 
 // ---- 3 · today card ------------------------------------------------------------------------------
 {

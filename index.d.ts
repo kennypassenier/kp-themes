@@ -121,10 +121,12 @@ export { TICK, TICK_EVENT, TICK_KNOB, TICK_MS, attachTicks, parseTick, tickTo } 
 export { WHEEL, WHEEL_RESULT_EVENT, WHEEL_SPIN_EVENT, attachWheels, getWheelResult, pickWeighted, setWheelItems, setWheelState, spinWheel, wheelAngles, } from './js/wheel.js';
 export type WheelItem = import('./js/wheel.js').WheelItem;
 /** @typedef {import('./js/wheel.js').WheelItem} WheelItem */
-export { FOCUS_STEPS, FOCUS_STEPS_DONE_EVENT, FOCUS_STEPS_EVENT, FOCUS_STEPS_WAKE_EVENT, SWIPE_DISTANCE, attachFocusSteps, getStepIndex, goToStep, setFocusSteps, setFocusStepsState, } from './js/focus-steps.js';
+export { FOCUS_STEPS, FOCUS_STEPS_ANSWER_EVENT, FOCUS_STEPS_BEFORE_ANSWER_EVENT, FOCUS_STEPS_DONE_EVENT, FOCUS_STEPS_EVENT, FOCUS_STEPS_RESUME_EVENT, FOCUS_STEPS_RETRY_EVENT, FOCUS_STEPS_SAVE_RETRY_EVENT, FOCUS_STEPS_WAKE_EVENT, SWIPE_DISTANCE, attachFocusSteps, getStepIndex, goToStep, setFocusSteps, setFocusStepsState, } from './js/focus-steps.js';
 export type FocusStep = import('./js/focus-steps.js').FocusStep;
+export type FocusAnswer = import('./js/focus-steps.js').FocusAnswer;
 export type FocusIngredient = import('./js/focus-steps.js').FocusIngredient;
 /** @typedef {import('./js/focus-steps.js').FocusStep} FocusStep */
+/** @typedef {import('./js/focus-steps.js').FocusAnswer} FocusAnswer */
 /** @typedef {import('./js/focus-steps.js').FocusIngredient} FocusIngredient */
 export { TIMERS, TIMER_CHANGE_EVENT, TIMER_DONE_EVENT, TIMER_START, TIMER_START_EVENT, TIMER_STOP_EVENT, TIMER_TICK_MS, addTimerTime, askTimerNotifications, attachTimers, getTimers, pauseTimer, restoreTimers, resumeTimer, startTimer, stopTimer, stopTimerRing, } from './js/timer.js';
 export type TimerState = import('./js/timer.js').TimerState;

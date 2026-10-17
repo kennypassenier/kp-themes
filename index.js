@@ -441,8 +441,13 @@ export {
 // One step at a time, with the screen kept on: cook mode [kpadopt4].
 export {
     FOCUS_STEPS,
+    FOCUS_STEPS_ANSWER_EVENT,
+    FOCUS_STEPS_BEFORE_ANSWER_EVENT,
     FOCUS_STEPS_DONE_EVENT,
     FOCUS_STEPS_EVENT,
+    FOCUS_STEPS_RESUME_EVENT,
+    FOCUS_STEPS_RETRY_EVENT,
+    FOCUS_STEPS_SAVE_RETRY_EVENT,
     FOCUS_STEPS_WAKE_EVENT,
     SWIPE_DISTANCE,
     attachFocusSteps,
@@ -452,6 +457,7 @@ export {
     setFocusStepsState,
 } from './js/focus-steps.js';
 /** @typedef {import('./js/focus-steps.js').FocusStep} FocusStep */
+/** @typedef {import('./js/focus-steps.js').FocusAnswer} FocusAnswer */
 /** @typedef {import('./js/focus-steps.js').FocusIngredient} FocusIngredient */
 // Kitchen timers: named countdowns that keep running [kpadopt4].
 export {

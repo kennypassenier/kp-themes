@@ -2360,6 +2360,25 @@ For a tracker of a person (movement, mood, sleep, watering), not a machine:
 keeps its six rows under a centred plate over a month with nothing logged ("Nothing logged this month", "That is fine, it starts whenever you do") and dims a failed month under one with Retry (`kp-calendar-retry`); `setCalendarCaption(el, text)` writes the page's own sentence under the grid.
 The uptime strip maps `up` and `degraded` to logged and `down` to quiet, says "nothing logged" in its tooltip and sums up as "21 of 28 days logged", with no incident count. The helpers are in `js/calm-tones.js` (`calmTone`, `calmWord`, `inPausedRange`, `isCalmTones`).
 The standard tones stay the default: a missed backup is a fault. The words are `calm…`. Knobs: `--kp-logged-fill`, `--kp-logged-ink`, `--kp-quiet-fill`, `--kp-quiet-ink`.
+### Answering one question per screen
+
+The one-step view (`data-kp-focus-steps`, cook mode) in answer mode, for a daily check-in: one question large, big answer buttons, "Same as yesterday: Matig", "Same as usual: Good" and Not today:
+
+```js
+setFocusSteps(el, [
+    { text: 'How is your mood today?', answer: { id: 'mood', kind: 'choice', previous: 'matig', usual: 'good',
+        choices: [{ value: 'rough', label: 'Rough' }, { value: 'matig', label: 'Matig' }, { value: 'good', label: 'Good' }] } },
+]);
+el.addEventListener('kp-focus-steps-answer', (e) => save(e.detail)); // { index, id, value, source, same?, previous }
+el.addEventListener('kp-focus-steps-done', (e) => post(e.detail.answers)); // { total, answers, startedAt, finishedAt }
+```
+
+A step with `answer` is a question; a step without stays a reading step, so one flow can mix them (`data-kp-focus-mode="answer"` also draws the empty, failed and save-failed states as centred plates). `kind` is `choice` (a tap picks and the flow moves on after `data-kp-advance-ms`, 350),
+`multi` (taps, then Next) or `text` (a box; Next saves). Every option is an attribute and redraws the view when changed: `data-kp-advance` (`auto`, `button`), `data-kp-same` (`both`, `yesterday`, `usual`, `off`), `data-kp-skip`, `data-kp-pinned-first`
+(JSON, "Nothing to log" and "Not sure" first), `data-kp-back`, `data-kp-choice-layout` (`auto`, `stack`, `row`), `data-kp-choice-height` (`lg`, `md`), `data-kp-progress` (`count`, `dots`, `off`), `data-kp-summary` (`on`),
+`data-kp-resume` (`auto`, `ask`, `off`) with `data-kp-remember="checkin"` and `data-kp-resume-until` (`midnight`, `hours:N`, `never`). The screen is not kept on and Read aloud is off in answer mode. `kp-focus-steps-before-answer` is cancelable.
+`setFocusStepsState(el, 'save-error')` keeps the answers and says "Could not save your answers" with Try again (`kp-focus-steps-save-retry`). Keys while the focus is in the view: ArrowUp and ArrowDown, Enter, `s` (same as yesterday), `u` (usual), `n` (Not today).
+The words are `focus…`. Knobs: `--kp-focus-answer-min`, `--kp-focus-answer-gap`.
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

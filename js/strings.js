@@ -1048,6 +1048,30 @@
  * @property {string} calmRetry  Its button [kpadopt6]
  * @property {string} calmTrendCaption  The words of the optional caption slot under the grid: trends over the days that were logged [kpadopt6]
  * @property {(logged: number, total: number) => string} calmSummary  A calm uptime strip's summary: "21 of 30 days logged", with no incident count and no share down [kpadopt6]
+ * @property {(n: number, total: number) => string} focusQuestionCount  The count over a question: "Question 3 of 7" (js/focus-steps.js, answer mode) [kpadopt6]
+ * @property {(label: string, n: number, total: number) => string} focusAnswered  What a screen reader hears after an answer: "Answered Matig. Question 4 of 7" [kpadopt6]
+ * @property {(label: string) => string} focusSameYesterday  The button that repeats yesterday's answer: "Same as yesterday: Matig" [kpadopt6]
+ * @property {(label: string) => string} focusSameUsual  The button that takes the usual answer: "Same as usual: Goed" [kpadopt6]
+ * @property {string} focusSkip  The button that passes a question: "Not today" [kpadopt6]
+ * @property {string} focusSkipped  What a skipped question reads as in the summary [kpadopt6]
+ * @property {string} focusReview  The next button on the last question when a summary follows [kpadopt6]
+ * @property {string} focusSummaryTitle  The summary screen's name [kpadopt6]
+ * @property {string} focusMultiHint  The line under a question that takes several answers [kpadopt6]
+ * @property {string} focusTextLabel  The name of the box of a written answer [kpadopt6]
+ * @property {string} focusPickedMark  The word a chosen answer carries for a screen reader besides the mark [kpadopt6]
+ * @property {string} focusResumeAsk  The question when a check-in was left half way: "Continue where you stopped?" [kpadopt6]
+ * @property {string} focusResumeContinue  Its yes [kpadopt6]
+ * @property {string} focusResumeRestart  Its start over [kpadopt6]
+ * @property {(n: number) => string} focusResumed  What is said when answers are put back: "Back at question 4" [kpadopt6]
+ * @property {string} focusAnswerEmptyTitle  The plate of a day with no questions [kpadopt6]
+ * @property {string} focusAnswerEmptyText  Its sentence: nothing is waiting [kpadopt6]
+ * @property {string} focusAnswerFailedTitle  The plate of questions that could not be read [kpadopt6]
+ * @property {string} focusAnswerFailedText  Its sentence [kpadopt6]
+ * @property {string} focusRetry  Its button [kpadopt6]
+ * @property {string} focusSaveFailedTitle  The plate when the finished answers could not be saved [kpadopt6]
+ * @property {string} focusSaveFailedText  Its sentence: nothing is lost [kpadopt6]
+ * @property {string} focusSaveRetry  Its button: "Try again" [kpadopt6]
+ * @property {string} focusAnswerLoading  The words under the loading card of the questions [kpadopt6]
  */
 
 /**
@@ -2295,6 +2319,31 @@ export const DEFAULT_STRINGS = Object.freeze({
     calmRetry: 'Retry',
     calmTrendCaption: 'Trends count the days that were logged',
     calmSummary: (logged, total) => `${logged} of ${total} days logged`,
+    // Answering one question per screen (js/focus-steps.js, answer mode) [kpadopt6].
+    focusQuestionCount: (n, total) => `Question ${n} of ${total}`,
+    focusAnswered: (label, n, total) => `Answered ${label}. Question ${n} of ${total}`,
+    focusSameYesterday: (label) => `Same as yesterday: ${label}`,
+    focusSameUsual: (label) => `Same as usual: ${label}`,
+    focusSkip: 'Not today',
+    focusSkipped: 'Not today',
+    focusReview: 'Review',
+    focusSummaryTitle: 'Your answers',
+    focusMultiHint: 'Pick as many as fit, then press Next',
+    focusTextLabel: 'Your answer',
+    focusPickedMark: 'chosen',
+    focusResumeAsk: 'Continue where you stopped?',
+    focusResumeContinue: 'Continue',
+    focusResumeRestart: 'Start over',
+    focusResumed: (n) => `Back at question ${n}`,
+    focusAnswerEmptyTitle: 'No questions today',
+    focusAnswerEmptyText: 'That is fine, nothing is waiting',
+    focusAnswerFailedTitle: 'Could not read the questions',
+    focusAnswerFailedText: 'The questions could not be reached just now.',
+    focusRetry: 'Retry',
+    focusSaveFailedTitle: 'Could not save your answers',
+    focusSaveFailedText: 'Your answers are kept here, nothing is lost.',
+    focusSaveRetry: 'Try again',
+    focusAnswerLoading: 'Reading the questions',
 });
 
 // STRINGS_NL was removed in 4.0.0 [D3]. Kenny decided that on
