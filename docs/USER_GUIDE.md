@@ -2331,6 +2331,21 @@ list's footprint; when the first word is a verb the palette knows (`data-kp-verb
 `setState('error')` shows the failed plate with Retry (`kp-palette-retry`) above the commands marked `data-kp-static`. A consumer that draws its own list uses `rankCommands(commands, query, { context })`
 from `js/intent.js`; the React `CommandPalette` takes `match="intent"` (its default) and a `words` field on a command.
 
+### The version jump chip
+
+A chip that shows a version moving, "10.11 → 12.1", with the old version struck and lighter, the new one strong, and a big jump named in words:
+
+```html
+<span class="kp-badge kp-badge--version" data-kp-version-from="10.11.11" data-kp-version-to="12.1" data-kp-version-href="https://example.com/releases/tag/{to}"></span>
+```
+
+`attachVersionDeltas(root)` (`js/version-delta.js`, attached by `js/auto.js`) draws it and redraws it when an attribute changes. A jump is big when the **first number** differs (Kenny, 2026-10-17), plus
+the second number for the apps in `data-kp-version-big-minor` ("jellyfin immich", on the chip or anything above it; the chip names its app in `data-kp-version-app`); a big jump takes the warning tone, the word "major"
+and a "!" in a ring, a version that went back the destructive tone and "older"; the rest stays plain. A version with no number is never called big. `data-kp-version-scheme` is `numbers` (default), `semver`, `calver` or `none`;
+`-show` is `both`, `to` or `level` (the word alone); `-tones` maps levels to tones; `data-kp-state` is `loading`, `error` or `empty`. The chip carries `data-kp-level` and `data-kp-sort-value` (4 older, 3 major, 2 minor, 1 patch, 0 other)
+for a data table to sort on. `summarizeDeltas(list)` counts a list exactly for its heading; `versionLevel`, `versionNumbers` and `releaseUrl(upstream, tag)` are the pure parts. Shift+click copies "10.11 → 12.1" (`kp-version-copy`).
+The words are `version…`.
+
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

@@ -76,6 +76,7 @@ export const NOT_DATA = {
     'js/barcell.js': 'a cell of a data table, which lays the card over its rows (`dataTable().busy({ overlay: true })`)',
     'js/forms.js': "a submit button's busy state",
     'js/toggle.js': "a button's own state: a skeleton count at its final width and the theme's spinner over its words while the app answers (setCount, wait); no data area",
+    'js/version-delta.js': "one chip: a skeleton at its final width while the version is looked up; the list that holds the chips owns the area's loading state",
     'js/unsaved.js': "the Save button's own spinner while the page saves (setUnsavedSaving); no data area",
     'js/slider.js': "the track and the value box as the package's skeleton at their final size (setSliderState); one control, no data area",
     'js/sentence.js': 'a field that waits shows its own skeleton at the width it had (setSentenceFieldState); no data area',

@@ -50,6 +50,7 @@
                     <ol>
                         <li><a href="#topic-toggle">Toggle button</a> <span class="k6-toc__count">2 sections</span></li>
                         <li><a href="#topic-intent">Palette that finds words in any order</a> <span class="k6-toc__count">2 sections</span></li>
+                        <li><a href="#topic-version">Version jump chip</a> <span class="k6-toc__count">2 sections</span></li>
                     </ol>
                 </nav>
             </header>
@@ -1166,6 +1167,321 @@
                                     <p class="kp-palette__status" role="status" aria-live="polite"></p>
                                 </dialog>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- toc: version | Version jump chip | 2 sections -->
+            <!-- ================================================================ topic: version jump chip -->
+            <h2 class="k6-topic" id="topic-version">Version jump chip</h2>
+            <section
+                class="k6-sec"
+                id="version"
+                data-review-item="version"
+                data-review-components="version"
+                data-review-topic="version"
+                data-review-topic-title="Version jump chip"
+                data-review-title="Version jump chip: the levels in an update list"
+                data-review-choices='[{ "id": "version-show", "label": "How a chip reads in a tight column", "once": true, "default": "both", "options": [
+                    { "value": "both", "label": "From, arrow, to", "hint": "Recommended. &ldquo;10.11 → 12.1&rdquo; with the old version struck and lighter and the new one strong; a big jump adds the word and the ! . Reads at a glance, one chip wide." },
+                    { "value": "level", "label": "The word alone", "hint": "&ldquo;! major&rdquo;, &ldquo;minor&rdquo;, &ldquo;patch&rdquo;: very narrow, for a table whose versions are in a column of their own. The versions go to the chip&#39;s tooltip." }] }]'
+                aria-labelledby="h-version"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-version">Version jump chip: the levels in an update list</h2>
+                    <p>
+                        <code>&lt;span class="kp-badge kp-badge--version" data-kp-version-from data-kp-version-to&gt;</code> (js/version-delta.js): a
+                        version moving, and how big the jump is. Shown in an update list (the package&rsquo;s data table) with its heading counted.
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>The first number is what counts as big</b> (Kenny, 2026-10-17), plus a list of apps for which the second number counts
+                            too: here <b>immich</b>. So <b>jellyfin 10.11.11 → 12.1</b> and <b>immich 1.118.2 → 1.119.0</b> are the two loud chips:
+                            the warning plate, the word <b>major</b> with a <b>!</b> in a ring, the new version double-ruled. <b>jellyfin</b>&rsquo;s
+                            new version is a link to its release notes (new tab).
+                        </li>
+                        <li>
+                            The quiet ones stay plain: <b>paperless 2.12.0 → 2.12.1</b> (patch), <b>sonarr</b>&rsquo;s build number, <b>vault</b> (the
+                            same: the words <b>up to date</b>), <b>gateway</b> (a new digest, shown as its first 12 characters),
+                            <b>calendar</b> (dates as versions: nothing is major) and <b>scratch</b> (<b>latest → nightly</b>, no numbers: never
+                            called big, the raw words). <b>traefik 3.1.2 → 3.0.9</b> went back: destructive tone and the word <b>older</b>.
+                        </li>
+                        <li>
+                            The heading counts the list exactly: <b>2 major, 1 minor, 2 patch, 2 changed, 1 older</b> (the real numbers, from
+                            <code>summarizeDeltas</code>). Press the <b>Level</b> column&rsquo;s header: the list sorts risky first (older, major,
+                            minor, patch, the rest). <b>Shift+click</b> a chip copies <b>10.11.11 → 12.1</b>; the readout under the table says so.
+                        </li>
+                        <li>
+                            <b>Big minor list off</b> takes immich out of the list: its chip turns <b>minor</b> and quiet. <b>The choice</b> (tick it
+                            in the dialog): how a chip reads in a tight column, the three numbers or the word alone.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s badge is a small paper pill; the loud chip is on the warning plate with the new version ruled twice under it
+                        (formal&rsquo;s double rule), the old version struck in a lighter ink. Look at the gap between the old version, the arrow and
+                        the new one, at the <b>!</b> ring being a circle (so it is a shape, not only a colour), and at the chips lining up in one
+                        column.
+                    </p>
+                </div>
+                <div class="k6-controls" data-review-controls>
+                    <div role="group" aria-label="Chip content">
+                        <b>Show:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-version-show="both" aria-pressed="true">From, arrow, to</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-version-show="level" aria-pressed="false">
+                            The word alone
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Big minor list">
+                        <b>Big minor list:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-big-minor aria-pressed="true">
+                            immich counts the second number
+                        </button>
+                    </div>
+                </div>
+                <h3 class="k6-sub" id="k6-version-heading" aria-live="polite">Updates:</h3>
+                <div class="kp-datatable" data-kp-datatable data-kp-version-big-minor="immich" id="k6-version-table">
+                    <div class="kp-table-wrap">
+                        <table class="kp-table">
+                            <caption class="kp-sr-only">
+                                Updates available
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col" data-kp-sort="text">App</th>
+                                    <th scope="col" data-kp-sort="text">Kind</th>
+                                    <th scope="col" data-kp-sort="number">Version jump</th>
+                                    <th scope="col">What to know</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">jellyfin</th>
+                                    <td>media</td>
+                                    <td data-k6-chip-cell>
+                                        <span
+                                            class="kp-badge kp-badge--version"
+                                            data-kp-version-app="jellyfin"
+                                            data-kp-version-from="10.11.11"
+                                            data-kp-version-to="12.1"
+                                            data-kp-version-href="https://github.com/jellyfin/jellyfin/releases/tag/v{to}"
+                                        ></span>
+                                    </td>
+                                    <td>Moves its data format: read the notes first</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">immich</th>
+                                    <td>media</td>
+                                    <td data-k6-chip-cell>
+                                        <span
+                                            class="kp-badge kp-badge--version"
+                                            data-kp-version-app="immich"
+                                            data-kp-version-from="1.118.2"
+                                            data-kp-version-to="1.119.0"
+                                        ></span>
+                                    </td>
+                                    <td>Its second number is breaking for this app</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">paperless</th>
+                                    <td>documents</td>
+                                    <td data-k6-chip-cell>
+                                        <span
+                                            class="kp-badge kp-badge--version"
+                                            data-kp-version-app="paperless"
+                                            data-kp-version-from="2.12.0"
+                                            data-kp-version-to="2.12.1"
+                                        ></span>
+                                    </td>
+                                    <td>Bug fixes only</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">vault</th>
+                                    <td>secrets</td>
+                                    <td data-k6-chip-cell>
+                                        <span
+                                            class="kp-badge kp-badge--version"
+                                            data-kp-version-app="vault"
+                                            data-kp-version-from="1.17.4"
+                                            data-kp-version-to="1.17.4"
+                                        ></span>
+                                    </td>
+                                    <td>Nothing to do</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">traefik</th>
+                                    <td>edge</td>
+                                    <td data-k6-chip-cell>
+                                        <span
+                                            class="kp-badge kp-badge--version"
+                                            data-kp-version-app="traefik"
+                                            data-kp-version-from="3.1.2"
+                                            data-kp-version-to="3.0.9"
+                                        ></span>
+                                    </td>
+                                    <td>The tag moved back</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">sonarr</th>
+                                    <td>media</td>
+                                    <td data-k6-chip-cell>
+                                        <span
+                                            class="kp-badge kp-badge--version"
+                                            data-kp-version-app="sonarr"
+                                            data-kp-version-from="4.0.9.2244-ls289"
+                                            data-kp-version-to="4.0.9.2244-ls290"
+                                        ></span>
+                                    </td>
+                                    <td>A new build of the same release</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">gateway</th>
+                                    <td>edge</td>
+                                    <td data-k6-chip-cell>
+                                        <span
+                                            class="kp-badge kp-badge--version"
+                                            data-kp-version-app="gateway"
+                                            data-kp-version-from="sha256:3f9c1a2b7d4e8a6f0c5b9d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a"
+                                            data-kp-version-to="sha256:9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b"
+                                        ></span>
+                                    </td>
+                                    <td>A moving tag: a new image, no version</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">calendar</th>
+                                    <td>family</td>
+                                    <td data-k6-chip-cell>
+                                        <span
+                                            class="kp-badge kp-badge--version"
+                                            data-kp-version-app="calendar"
+                                            data-kp-version-from="2024.10.2"
+                                            data-kp-version-to="2025.1.0"
+                                            data-kp-version-scheme="calver"
+                                        ></span>
+                                    </td>
+                                    <td>Versions are dates: nothing is major</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">scratch</th>
+                                    <td>lab</td>
+                                    <td data-k6-chip-cell>
+                                        <span
+                                            class="kp-badge kp-badge--version"
+                                            data-kp-version-app="scratch"
+                                            data-kp-version-from="latest"
+                                            data-kp-version-to="nightly"
+                                        ></span>
+                                    </td>
+                                    <td>No numbers to compare</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <pre class="k6-log" id="k6-version-log" aria-live="polite"></pre>
+            </section>
+            <section
+                class="k6-sec"
+                id="version-states"
+                data-review-item="version-states"
+                data-review-components="version"
+                data-review-topic="version"
+                data-review-title="Version jump chip: states, long versions and phone width"
+                aria-labelledby="h-version-states"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-version-states">Version jump chip: states, long versions and phone width</h2>
+                    <p>
+                        The chip while the version is looked up, when the lookup failed and when nothing is tracked; a very long version; and the chip
+                        under a name on a phone.
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Loading:</b> a pulsing ruled line where the versions will be, in a chip of the final height. <b>Could not check:</b> a
+                            dashed chip with those words and the reason in its tooltip; the list&rsquo;s own Retry (not a button inside a small chip)
+                            is where a retry belongs. <b>Not tracked:</b> the muted words, no chip plate.
+                        </li>
+                        <li>
+                            <b>A long version</b> (a build string and a digest) breaks after a dot, a hyphen or an underscore, never in the middle of
+                            a number, and the chip grows to hold it. At <b>phone width</b> the chip stays one unit and wraps under the name.
+                        </li>
+                        <li><b>Resolve</b> turns the loading chip into the real jump (10.11.11 → 12.1) and back.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The loading line is formal&rsquo;s ruled ledger line (navy over a faint hairline); the failed chip is a dashed paper pill.
+                        Check that the chip&rsquo;s height does not change between loading, failed and loaded.
+                    </p>
+                </div>
+                <div class="k6-controls" data-review-controls>
+                    <div role="group" aria-label="Lookup">
+                        <b>The lookup:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-version-state="loading" aria-pressed="true">
+                            Still looking
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-version-state="ready" aria-pressed="false">Resolve</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-version-state="error" aria-pressed="false">It failed</button>
+                    </div>
+                </div>
+                <div class="k6-pair">
+                    <div class="k6-case">
+                        <p class="k6-label">The lookup in three states</p>
+                        <div class="k6-row">
+                            <span>jellyfin</span>
+                            <span
+                                class="kp-badge kp-badge--version"
+                                id="k6-version-live"
+                                data-kp-state="loading"
+                                data-kp-version-from="10.11.11"
+                                data-kp-version-to="12.1"
+                                data-kp-version-error="The release server did not answer"
+                            ></span>
+                        </div>
+                        <div class="k6-row"><span>vault</span><span class="kp-badge kp-badge--version" data-kp-state="empty"></span></div>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">Long versions</p>
+                        <div class="k6-row">
+                            <span
+                                class="kp-badge kp-badge--version"
+                                data-kp-version-from="4.0.9.2244-ls289-build-2026-10-02"
+                                data-kp-version-to="4.0.9.2244-ls290-build-2026-10-16"
+                            ></span>
+                        </div>
+                        <div class="k6-row">
+                            <span
+                                class="kp-badge kp-badge--version"
+                                data-kp-version-digest="full"
+                                data-kp-version-from="sha256:3f9c1a2b7d4e8a6f0c5b9d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a"
+                                data-kp-version-to="sha256:9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b"
+                            ></span>
+                        </div>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">Phone width, under the name</p>
+                        <div class="k6-frame k6-frame--phone">
+                            <p class="k6-row">
+                                <b>paperless</b>
+                                <span class="kp-badge kp-badge--version" data-kp-version-from="2.12.0" data-kp-version-to="2.12.1"></span>
+                            </p>
+                            <p class="k6-row">
+                                <b>jellyfin</b>
+                                <span
+                                    class="kp-badge kp-badge--version"
+                                    data-kp-version-from="10.11.11"
+                                    data-kp-version-to="12.1"
+                                    data-kp-version-href="https://github.com/jellyfin/jellyfin/releases/tag/v12.1"
+                                ></span>
+                            </p>
                         </div>
                     </div>
                 </div>

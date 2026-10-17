@@ -138,6 +138,7 @@ export const FILES = [
     'js/slider.js',
     'js/toggle.js',
     'js/intent.js',
+    'js/version-delta.js',
     'js/unsaved.js',
     'js/compare.js',
     'js/calm.js',

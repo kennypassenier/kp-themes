@@ -73,6 +73,7 @@
         "kp-weekdays",
         "kp-wheel",
         "kp-toggle",
-        "kp-toggles"
+        "kp-toggles",
+        "kp-version"
     ]
 }

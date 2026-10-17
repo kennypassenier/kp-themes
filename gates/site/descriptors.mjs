@@ -3818,6 +3818,37 @@ setGanttState(timeline, 'loading');
         ],
     },
     {
+        id: 'version-delta',
+        title: 'Version jump chip',
+        group: 'Feedback',
+        classes: ['kp-version'],
+        aliases: ['level', 'raw'],
+        exports: [],
+        intro: 'A small chip that shows a version moving, “10.11 → 12.1”, with the old version struck and lighter and the new one strong, the size of the jump in words (“major”, with a “!” so it is never colour alone) and a link to the release notes.',
+        whenToUse: 'An update list, a fleet table or a dialog that asks before an update: anywhere a person must see at a glance which of many moves is the risky one. Only the risky jump is loud; leave the rest plain.',
+        examples: [
+            {
+                title: 'A quiet jump, a big one and a link',
+                why: 'The first number is what counts as big; the chip says so in words and in tone, and the new version links to its release notes.',
+                markup: `
+<span class="kp-badge kp-badge--version" data-kp-version-from="1.118.2" data-kp-version-to="1.119.0"></span>
+<span class="kp-badge kp-badge--version" data-kp-version-from="10.11.11" data-kp-version-to="12.1" data-kp-version-href="https://example.com/releases/tag/{to}"></span>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-version-big-minor', what: 'A list of apps whose second number counts as a big jump as well, on the chip or anything above it; the chip names its app in `data-kp-version-app`.' },
+            { name: 'data-kp-version-show', what: '`both` (default), `to` or `level` (the word alone, for a tight table).' },
+            { name: 'data-kp-version-tones', what: 'The tone of each level, “major:warning,minor:none”; by default only a big jump (warning) and a version that went back (destructive) are loud.' },
+            { name: 'data-kp-state', what: '`loading` (a skeleton at the final width), `error` (“could not check”, dashed) or `empty` (“not tracked”).' },
+            { name: 'data-kp-version-digest', what: '`short` (default) shows the first 12 characters of a `sha256:` tag, `full` all of it.' },
+        ],
+        accessibility: [
+            'Built in — a screen reader hears “from 10.11 to 12.1, major update”, never the glyphs; the risk is a word and a “!”, not colour alone; the release-notes link says it opens in a new tab.',
+            'Yours — give a list of chips a heading with `summarizeDeltas`, and sort on `data-kp-sort-value` so the risky come first.',
+        ],
+    },
+    {
         id: 'unsaved',
         title: 'Unsaved changes bar',
         group: 'Forms',

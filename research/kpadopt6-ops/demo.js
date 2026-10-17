@@ -176,3 +176,64 @@ await ready;
     // The in-place palettes start filtered by their own markup; a phone palette starts with a query so its rows are ranked.
     void all;
 }
+
+// ── version jump chip ──
+{
+    const { setVersionDelta, summarizeDeltas } = await import('../../js/version-delta.js');
+    const table = document.getElementById('k6-version-table');
+    const chips = () => /** @type {HTMLElement[]} */ ([...document.querySelectorAll('#k6-version-table .kp-badge--version')]);
+    const heading = document.getElementById('k6-version-heading');
+    let bigMinor = true;
+
+    /** The cell sorts by its chip, so the list sorts the risky first; the heading counts the list exactly. */
+    const paint = () => {
+        for (const chip of chips()) {
+            const cell = chip.closest('td');
+            if (cell) cell.setAttribute('data-kp-sort-value', chip.getAttribute('data-kp-sort-value') ?? '0');
+        }
+        const list = chips().map((chip) => ({
+            from: chip.getAttribute('data-kp-version-from'),
+            to: chip.getAttribute('data-kp-version-to'),
+            app: chip.getAttribute('data-kp-version-app') ?? '',
+        }));
+        if (heading) heading.textContent = `Updates: ${summarizeDeltas(list, { bigMinorApps: bigMinor ? ['immich'] : [], scheme: 'numbers' }).text}`;
+    };
+    // The chips are drawn by js/auto.js; the page reads them once they are.
+    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+    paint();
+    const log = document.getElementById('k6-version-log');
+    table?.addEventListener('kp-version-copy', (event) => {
+        if (log) log.textContent = `kp-version-copy\n${JSON.stringify(/** @type {CustomEvent} */ (event).detail)}`;
+    });
+
+    /** @param {string} show */
+    const setShow = (show) => {
+        for (const chip of chips()) chip.setAttribute('data-kp-version-show', show);
+        for (const b of document.querySelectorAll('[data-k6-version-show]'))
+            b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-version-show') === show));
+        requestAnimationFrame(paint);
+    };
+    stateButtons('data-k6-version-show', setShow);
+    onChoice('version-show', setShow);
+    for (const b of document.querySelectorAll('[data-k6-big-minor]'))
+        b.addEventListener('click', () => {
+            bigMinor = !bigMinor;
+            b.setAttribute('aria-pressed', String(bigMinor));
+            if (table) {
+                if (bigMinor) table.setAttribute('data-kp-version-big-minor', 'immich');
+                else table.removeAttribute('data-kp-version-big-minor');
+            }
+            // The list is read when a chip is drawn: touch each so it draws again.
+            for (const chip of chips()) chip.setAttribute('data-kp-version-big-at', 'first');
+            requestAnimationFrame(paint);
+        });
+
+    const live = document.getElementById('k6-version-live');
+    stateButtons('data-k6-version-state', (state) => {
+        if (live)
+            setVersionDelta(live, {
+                state: /** @type {'loading' | 'error' | 'ready'} */ (state),
+                error: state === 'error' ? 'The release server did not answer' : '',
+            });
+    });
+}

@@ -63,6 +63,74 @@ export type Strings = {
      * Its action [kpadopt6-ops]
      */
     paletteRetry: string;
+    /**
+     * The word on a chip whose first number rose, and in a count: "major" (js/version-delta.js) [kpadopt6-ops]
+     */
+    versionMajor: string;
+    /**
+     * The word for a second-number jump [kpadopt6-ops]
+     */
+    versionMinor: string;
+    /**
+     * The word for a jump in a later number [kpadopt6-ops]
+     */
+    versionPatch: string;
+    /**
+     * The word for a change that has no numbers in it, such as a new digest [kpadopt6-ops]
+     */
+    versionOther: string;
+    /**
+     * The word on a chip whose number fell [kpadopt6-ops]
+     */
+    versionDowngrade: string;
+    /**
+     * The words when the two versions are the same [kpadopt6-ops]
+     */
+    versionSame: string;
+    /**
+     * The level of a chip whose versions cannot be compared [kpadopt6-ops]
+     */
+    versionUnknown: string;
+    /**
+     * The count's words when nothing is to be updated [kpadopt6-ops]
+     */
+    versionNoUpdates: string;
+    /**
+     * A chip's name while the version is still being looked up [kpadopt6-ops]
+     */
+    versionLoading: string;
+    /**
+     * The words on a chip whose lookup failed [kpadopt6-ops]
+     */
+    versionFailed: string;
+    /**
+     * The words where no version is tracked at all [kpadopt6-ops]
+     */
+    versionNone: string;
+    /**
+     * A release-notes link's extra words for a screen reader [kpadopt6-ops]
+     */
+    versionNotes: string;
+    /**
+     * What a screen reader hears for a jump, "from 10.11 to 12.1, major update" [kpadopt6-ops]
+     */
+    versionSpoken: (from: string, to: string, level: string) => string;
+    /**
+     * What it hears when nothing changes [kpadopt6-ops]
+     */
+    versionSpokenSame: (version: string) => string;
+    /**
+     * What it hears for a moving tag that only says where it goes [kpadopt6-ops]
+     */
+    versionSpokenTo: (to: string) => string;
+    /**
+     * What it hears for a version that went back [kpadopt6-ops]
+     */
+    versionSpokenDown: (from: string, to: string) => string;
+    /**
+     * What a screen reader hears for a change that has no size, "changed from latest to nightly" [kpadopt6-ops]
+     */
+    versionSpokenChanged: (from: string, to: string) => string;
     alertSuccess: string;
     alertWarning: string;
     alertInfo: string;
@@ -3418,6 +3486,23 @@ export type Strings = {
  * @property {string} paletteFailed  The title of a palette's plate when its commands could not be read [kpadopt6-ops]
  * @property {string} paletteFailedText  Its sentence when the page gives no reason [kpadopt6-ops]
  * @property {string} paletteRetry  Its action [kpadopt6-ops]
+ * @property {string} versionMajor  The word on a chip whose first number rose, and in a count: "major" (js/version-delta.js) [kpadopt6-ops]
+ * @property {string} versionMinor  The word for a second-number jump [kpadopt6-ops]
+ * @property {string} versionPatch  The word for a jump in a later number [kpadopt6-ops]
+ * @property {string} versionOther  The word for a change that has no numbers in it, such as a new digest [kpadopt6-ops]
+ * @property {string} versionDowngrade  The word on a chip whose number fell [kpadopt6-ops]
+ * @property {string} versionSame  The words when the two versions are the same [kpadopt6-ops]
+ * @property {string} versionUnknown  The level of a chip whose versions cannot be compared [kpadopt6-ops]
+ * @property {string} versionNoUpdates  The count's words when nothing is to be updated [kpadopt6-ops]
+ * @property {string} versionLoading  A chip's name while the version is still being looked up [kpadopt6-ops]
+ * @property {string} versionFailed  The words on a chip whose lookup failed [kpadopt6-ops]
+ * @property {string} versionNone  The words where no version is tracked at all [kpadopt6-ops]
+ * @property {string} versionNotes  A release-notes link's extra words for a screen reader [kpadopt6-ops]
+ * @property {(from: string, to: string, level: string) => string} versionSpoken  What a screen reader hears for a jump, "from 10.11 to 12.1, major update" [kpadopt6-ops]
+ * @property {(version: string) => string} versionSpokenSame  What it hears when nothing changes [kpadopt6-ops]
+ * @property {(to: string) => string} versionSpokenTo  What it hears for a moving tag that only says where it goes [kpadopt6-ops]
+ * @property {(from: string, to: string) => string} versionSpokenDown  What it hears for a version that went back [kpadopt6-ops]
+ * @property {(from: string, to: string) => string} versionSpokenChanged  What a screen reader hears for a change that has no size, "changed from latest to nightly" [kpadopt6-ops]
  * @property {string} alertSuccess
  * @property {string} alertWarning
  * @property {string} alertInfo

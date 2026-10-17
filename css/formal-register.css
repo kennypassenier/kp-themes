@@ -4700,3 +4700,21 @@
     }
 }
 /* ── end palette that finds words in any order ── */
+
+/* ── version jump chip [kpadopt6-ops] ──
+   The anchor: the double rule. A jump that needs care is ruled twice, a hairline under the new version with the thin
+   second rule beneath it, as formal marks what must be read. The chip that is still being looked up is one ruled line of
+   the ledger as high as the figure, so the chip keeps its height. */
+@layer kp.register {
+    [data-theme='formal'] .kp-badge--version[data-kp-level='major'] .kp-version__to {
+        text-decoration: underline double currentColor;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.2em;
+    }
+}
+@layer kp.signature {
+    [data-theme='formal'] .kp-version__bone.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        block-size: 1em;
+    }
+}
+/* ── end version jump chip ── */

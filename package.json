@@ -176,6 +176,10 @@
             "types": "./js/intent.d.ts",
             "default": "./js/intent.js"
         },
+        "./js/version-delta": {
+            "types": "./js/version-delta.d.ts",
+            "default": "./js/version-delta.js"
+        },
         "./js/unsaved": {
             "types": "./js/unsaved.d.ts",
             "default": "./js/unsaved.js"
