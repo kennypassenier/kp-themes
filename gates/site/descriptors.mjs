@@ -2534,7 +2534,7 @@ for (const button of document.querySelectorAll('[data-doc-toast]')) {
         // The marks the script writes on what it draws: a source's colour
         // (`data-kp-series`, `data-kp-dash`), a legend button kept off, a
         // pinned tooltip, an event's tone, the hint's two audiences.
-        aliases: ['series', 'dash', 'off', 'pinned', 'tone', 'when', 'outside'],
+        aliases: ['series', 'dash', 'off', 'pinned', 'tone', 'when', 'outside', 'band', 'faint', 'note', 'wait'],
         intro: 'The one time chart every page draws, so its controls mean the same everywhere. js/chart.js draws a `[data-kp-chart]` from the page’s data: a legend that singles a source out and keeps sources on or off, a crosshair every chart of a group shares, a tooltip beside it with every value, the change over the hour before and the events within reach, drag to zoom, event markers, range buttons, and a spark variant that is a tile’s 24-hour line on the same crosshair.',
         whenToUse:
             'For readings over time: pressures, flows, response times, a queue’s length. Not for a share of a whole or a comparison of categories, and not for a single number now, which is a key figure.',
@@ -3585,6 +3585,7 @@ setGanttState(timeline, 'loading');
         group: 'Forms',
         classes: ['kp-weekdays'],
         exports: [],
+        aliases: ['days', 'invalid', 'presets', 'summary'],
         intro: 'The days a schedule runs on: seven chips (or the days of a month) with the quick picks Weekdays, Weekend and Every day and a line in words under them, “Mon and Thu”. Built on the chip group in multi mode; all seven days is a real choice.',
         whenToUse: 'A schedule or a repeat that runs on chosen days. For one date use the date picker; for one of a few options use the segmented control.',
         examples: [
@@ -3616,6 +3617,7 @@ setGanttState(timeline, 'loading');
         group: 'Data',
         classes: ['kp-runs'],
         exports: [],
+        aliases: ['now'],
         intro: 'The next times a schedule will run, one to a row: the time with its weekday (dd/mm/yyyy HH:MM, Europe/Brussels), how far away it is, and a mark where the clock is turned before a run or the page names a conflict. The page computes the times; the package draws them, in the same height in every state.',
         whenToUse: 'Under a schedule or repeat, so the person sees what the setting really does. For a run history use the run timeline.',
         examples: [
@@ -3647,6 +3649,7 @@ setGanttState(timeline, 'loading');
         group: 'Forms',
         classes: ['kp-snooze'],
         exports: [],
+        aliases: ['look', 'now', 'snoozed', 'snoozed-state', 'snoozed-until'],
         intro: 'A “remind me later” picker: a button with a menu (or a row of chips) of quick choices, each over the exact moment it means, and a date and time of your own. Choices that have passed or lie too far away are left out.',
         whenToUse: 'Where a reminder, a notification or a to-do can be put off. For choosing a date only, use the date picker.',
         examples: [
@@ -3678,6 +3681,7 @@ setGanttState(timeline, 'loading');
         group: 'Forms',
         classes: ['kp-dated'],
         exports: [],
+        aliases: ['latest', 'layout', 'legend', 'meta-column', 'meta-column-off', 'now', 'order', 'picker', 'picker-inline-max', 'picker-kind', 'preselect', 'was'],
         intro: 'A choice where every option has a date and an age: radio rows with the name (or the date), how long ago, a “Latest” badge on the newest and a size or kind in one column at the end; a searchable list of the same two lines for a long list.',
         whenToUse: 'Picking a snapshot, a backup or a version. For options without a moment use the radio group; for one date use the date picker.',
         examples: [
@@ -3708,6 +3712,7 @@ setGanttState(timeline, 'loading');
         group: 'Forms',
         classes: ['kp-sentence'],
         exports: [],
+        aliases: ['block', 'hidden-off', 'invalid', 'narrow', 'own-line', 'own-line-ratio', 'show-when', 'was-enabled'],
         intro: 'A form that reads as a sentence: the fields (an input, a select, a combobox, the weekday picker) stand inside the words, an underline in the primary colour, so you read what will happen as you fill it in. The sentence wraps like text and a field too wide for the line takes a line of its own.',
         whenToUse: 'A short rule or schedule that is best read as one sentence (“Run backup on nextcloud every Monday at 03:00”). For an ordinary list of fields use the field rows.',
         examples: [
@@ -3743,6 +3748,7 @@ setGanttState(timeline, 'loading');
         group: 'Forms',
         classes: ['kp-slider'],
         exports: [],
+        aliases: ['default', 'format', 'thumb', 'ticks', 'unit', 'vertical'],
         intro: 'One value, or a range with two thumbs, on the native range input drawn by the package, with the number in a small box beside it that you can type in. Marks, a bubble over the thumb, a unit, a size or duration format and a vertical form are options.',
         whenToUse: 'A number in a range where the exact value matters less than the feel: a temperature, a volume, a price range. For an exact figure only, use a number field.',
         examples: [
@@ -3774,6 +3780,7 @@ setGanttState(timeline, 'loading');
         group: 'Forms',
         classes: ['kp-unsaved'],
         exports: [],
+        aliases: ['changed', 'compact', 'dock', 'docked', 'keep', 'keep-exclude', 'now', 'placement', 'save-label', 'scroll-root', 'track', 'untracked', 'warn-leave', 'was'],
         intro: 'A bar that counts the rows you changed (“2 changes”), lists what was and what is, offers Save and Discard with Undo, and warns when you leave. It stands in the page header and, once the header is scrolled out of view, at the foot of the screen.',
         whenToUse: 'A settings or edit page whose changes are written together. For a single field that saves itself, use the field’s own state.',
         examples: [
@@ -5712,9 +5719,9 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
         id: 'shortcut-sheet',
         title: 'Shortcut sheet',
         group: 'Navigation',
-        classes: ['kp-shortcuts'],
+        classes: ['kp-shortcuts', 'kp-shortcuts-pending'],
         exports: ['ShortcutSheet'],
-        aliases: ['hotkey'],
+        aliases: ['hotkey', 'shortcut'],
         intro: 'The dialog that lists what the keys do — the page every application with shortcuts owes its readers, and the one that is usually a paragraph in a help centre.',
         whenToUse:
             'As soon as the application has keys worth learning. Not as the only place the keys appear: a shortcut is most useful printed next to the command it repeats, which is what the palette’s key hints are for.',
@@ -5748,6 +5755,10 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
             { name: '.kp-shortcuts__list', what: 'The definition list, with room above and below.' },
             { name: '.kp-shortcuts__row', what: 'One pair: the keys in a fixed column, the description beside them in quiet ink.' },
             { name: '.kp-shortcuts__group-label', what: 'A small heading over a group of rows, for a sheet long enough to need sections.' },
+            { name: '.kp-shortcuts-pending', what: 'The hint the shortcut engine shows after the first key of a chord: the keys pressed so far and what can follow, until the chord completes or times out.' },
+            { name: 'data-kp-shortcuts-live', what: 'On the sheet: the engine fills it from the shortcuts registered, grouped, with the reserved group first.' },
+            { name: 'data-kp-shortcuts-scope / -group', what: 'On the sheet: list only the shortcuts of those scope names (comma separated), or only those groups, in that order.' },
+            { name: 'data-kp-shortcuts-reserved-group / -empty', what: 'The name of the group of fixed keys (Anywhere by default); `off` leaves out the line shown when nothing is registered.' },
             { name: 'pastel', what: 'In pastel the sheet opens as pastel’s dialog: its pass on its ::backdrop, the landing onto it; it closes as that opening backwards.' },
         ],
         accessibility: [
@@ -6064,6 +6075,7 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
         group: 'Data',
         classes: ['kp-idmark', 'kp-idmark-group', 'kp-idmark-name'],
         exports: [],
+        aliases: ['photo'],
         intro: 'A small plate made from a name, so a company or a stack is found in a list before its name is read: two letters on a wash of one of the theme’s five chart colours, or (`--pattern`) a mirrored 5 by 5 pattern. The same name gives the same mark on every page. js/idmark.js (`idmarkFor`, `idmarkColours`, `setIdmark`, `attachIdmarks`) fills every `[data-kp-idmark]`.',
         whenToUse: 'Beside the name of a company, a stack or a person in a list, a header or a cell. It is decoration: the name always stands beside it.',
         examples: [
@@ -6195,6 +6207,7 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
         group: 'Data',
         classes: ['kp-code'],
         exports: [],
+        aliases: ['binary-size', 'download', 'truncated'],
         intro: 'A payload, a request or a snippet: a head with its title, what it is and its tools (Pretty and Raw for JSON, Wrap, Copy), and the text in the mono face. js/code.js (`setCode`, `prettyJson`, `attachCodes`) fills every `[data-kp-code]`; loading lays the busy card, empty, binary and failed say so at the body’s height.',
         whenToUse: 'A message body, an HTTP request, a command to copy. For a running log use the log; for a change use the diff.',
         examples: [
@@ -6212,5 +6225,800 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
             { name: 'truncated', what: '`{ shown, total }`: the foot says only the start was sent.' },
         ],
         accessibility: ['Built in — the body is a named region that takes focus, so a keyboard can scroll it; a copy is announced.', 'Built in — line numbers are never copied or read.'],
+    },
+    {
+        id: 'connection',
+        title: 'Connection banner',
+        group: 'Feedback',
+        classes: ['kp-connection'],
+        exports: [],
+        aliases: ['announce', 'back-ms', 'pending', 'placement', 'retry', 'retry-delays'],
+        intro: 'The banner that says the connection is gone: “No connection, 3 changes waiting”, “Reconnecting…”, or “Refused” when the browser is online and the server is not. It sits directly under the navigation bar, pushes the content down instead of covering it, and takes no room at all while the connection is fine.',
+        whenToUse: 'A page that keeps working offline or on a stream: a PWA, a dashboard on a live feed. For data that is merely old, use the freshness line; for one failed action, use the toast or the problem alert.',
+        examples: [
+            {
+                title: 'Offline with changes waiting',
+                why: 'The markup is the empty box. The app reports what it sees with `setConnection`; `navigator.onLine` alone says nothing about the server, so the source is the app here.',
+                markup: `
+<div class="kp-connection" data-kp-connection data-kp-connection-source="app" data-kp-retry-delays="off"></div>
+`,
+                script: `
+import { attachConnection, setConnection } from '@kp-soft/themes/js/connection';
+
+const banner = document.querySelector('[data-kp-connection]');
+attachConnection(banner.parentElement);
+setConnection(banner, 'offline', { pending: 3 });
+`,
+            },
+        ],
+        variants: [
+            { name: 'online', what: 'Nothing is drawn and no room is taken.' },
+            { name: 'offline', what: 'The warning plate: what, why, what now, the time to the next try and Retry now.' },
+            { name: 'reconnecting', what: 'A try is under way, with its attempt number.' },
+            { name: 'back', what: 'Success: “Connected again” stays for a moment, then leaves.' },
+            { name: 'refused', what: 'The destructive plate: the browser is online and the server refuses; the app’s own sentence is the reason.' },
+            { name: 'data-kp-connection-source', what: '`browser`, `app` or `both` (default): which reports count.' },
+            { name: 'data-kp-connection-grace', what: 'Milliseconds (3000): a drop shorter than this shows nothing.' },
+            { name: 'data-kp-pending', what: 'The number of changes waiting, exact; also `setConnection(el, state, { pending })`.' },
+            { name: 'data-kp-placement', what: '`top` (default, in the flow) or `bottom` (sticks to the foot of the window).' },
+            { name: 'data-kp-back-ms', what: 'Milliseconds (3000) “Connected again” stays.' },
+            { name: 'data-kp-retry', what: '`off` leaves the Retry now button out.' },
+            { name: 'data-kp-retry-delays', what: 'Seconds between automatic tries, `3,10,30,60` by default (the last repeats); `off` for none.' },
+            { name: 'data-kp-announce', what: '`state` (default) says each change once, politely and going offline assertively; `off`.' },
+        ],
+        accessibility: [
+            'Built in — each change is announced once; going offline is assertive, the rest polite. On a phone the banner is one line plus Retry now.',
+            'Yours — report failed fetches and dropped streams with `setConnection`, answer `kp-connection-retry` with a real try, and pass the number of changes that are waiting.',
+        ],
+    },
+    {
+        id: 'refresh',
+        title: 'Automatic refresh',
+        group: 'Feedback',
+        classes: ['kp-refresh'],
+        exports: [],
+        aliases: ['look', 'run'],
+        intro: 'The small control that refreshes a page by itself: “Every 30 s” or “Paused”, with “updated 12 s ago” beside it and a thin rule that runs down to the next refresh. The app does the fetching; the control fires an event on each tick and waits to be told whether it worked.',
+        whenToUse: 'A dashboard or a list that should stay current without a reload. For a single “updated” line alone use the freshness line; for a manual reload only, a plain button.',
+        examples: [
+            {
+                title: 'Every 30 seconds, remembered',
+                why: 'The markup is the empty box. The value is the number of seconds; the app answers `kp-refresh` with `detail.done(true)` or `done(false)`.',
+                markup: `
+<div class="kp-refresh" data-kp-refresh="30" data-kp-remember="dashboard"></div>
+`,
+                script: `
+import { attachRefresh } from '@kp-soft/themes/js/auto-refresh';
+
+const control = document.querySelector('[data-kp-refresh]');
+attachRefresh(control.parentElement);
+control.addEventListener('kp-refresh', (event) => {
+    fetch('/api/overview').then(() => event.detail.done(true), () => event.detail.done(false));
+});
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-refresh', what: 'The seconds the page opens with; 30 by default, 0 opens paused.' },
+            { name: 'data-kp-refresh-choices', what: 'The seconds offered, `0,15,30,60,300` by default (0 is paused). “Other…” takes any whole number of seconds.' },
+            { name: 'data-kp-refresh-mode', what: '`event` (default: the app fetches), `page` (reload the page) or `region` (fetch the same URL and swap only the region).' },
+            { name: 'data-kp-refresh-region', what: 'The selector of the element swapped in `region` mode; focus and scroll stay.' },
+            { name: 'data-kp-look', what: '`menu` (default) or `segmented`.' },
+            { name: 'data-kp-remember', what: 'A name: the choice is kept per page and device.' },
+            { name: 'data-kp-stale-after', what: 'Seconds after which the freshness line turns stale; three times the interval by default.' },
+            { name: 'data-kp-refresh-hover', what: '`pause`: no refresh while the pointer is over a table being read.' },
+        ],
+        accessibility: [
+            'Built in — it never eats typing: a refresh waits while a dialog is open, a form field has the focus or the tab is hidden, and runs once on return. A failed refresh keeps the data and says when it retries, with Retry now; R refreshes at once outside a field.',
+            'Yours — fetch on `kp-refresh` and always answer with `done`, or the control waits for ever.',
+        ],
+    },
+    {
+        id: 'flash',
+        title: 'Flash button',
+        group: 'Buttons',
+        classes: ['kp-flash'],
+        exports: [],
+        aliases: ['failed-word', 'method', 'post', 'post-body', 'refusal', 'refused-word', 'reload', 'reload-target', 'width'],
+        intro: 'A button that shows its result for a moment: the theme’s spinner while the work runs, then a short word (“Sent”, “Copied”, “Refused”), then its own words again. It never changes width, because every face it can show shares one grid cell, so the row beside it does not re-flow under the pointer.',
+        whenToUse: 'A button whose work takes a moment and has a short answer: send a test, copy, save. For a result that needs reading use the toast; for work that can be undone use the undo toast.',
+        examples: [
+            {
+                title: 'Send a test',
+                why: 'The width holds the widest word in `data-kp-flash-words`. A refusal shows its short word on the button and the whole sentence in a line right under it, until the next press.',
+                markup: `
+<button class="kp-button" type="button" data-kp-flash-button data-kp-flash-words="Sent,Refused">Send test</button>
+`,
+                script: `
+import { attachFlashButtons, runFlashButton } from '@kp-soft/themes/js/flash';
+
+const button = document.querySelector('[data-kp-flash-button]');
+attachFlashButtons(button.parentElement);
+button.addEventListener('click', () => runFlashButton(button, async () => {
+    await new Promise((done) => setTimeout(done, 800));
+    return 'Sent';
+}));
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-flash-button', what: 'Marks the button; the script gives it its faces.' },
+            { name: 'data-kp-busy-label', what: 'A word beside the spinner while busy; none by default, so nothing widens.' },
+            { name: 'data-kp-flash-ms', what: 'How long a success stays; 1500.' },
+            { name: 'data-kp-flash-error-ms', what: 'How long a refusal’s word stays; 3000.' },
+            { name: 'data-kp-flash-word', what: 'The success word; “Done” by default.' },
+            { name: 'data-kp-flash-words', what: 'Every word the button may say, comma separated, so the width holds them all.' },
+            { name: 'data-kp-width', what: '`keep` (default) or `grow`.' },
+            { name: 'data-kp-refusal', what: '`line` (default: the sentence under the button), `button` (the button grows to hold it) or `toast`.' },
+            { name: 'data-kp-flash-line', what: 'A selector for the element that holds the line; one is made after the button by default.' },
+            { name: 'data-kp-post', what: 'A URL: pressing the button POSTs there and shows the answer. With `data-kp-method`, `data-kp-post-body` and `data-kp-reload` (`none`, `page` or `region`, the region named by `data-kp-reload-target`).' },
+        ],
+        accessibility: [
+            'Built in — a second press while busy does nothing; the result is announced politely whatever its length; the busy state is `aria-disabled`, so the focus stays.',
+            'Yours — answer a refusal with `{ error, remedy }`, so the sentence says what is wrong and what to do now.',
+        ],
+    },
+    {
+        id: 'request-inspector',
+        title: 'Request inspector',
+        group: 'Data',
+        classes: ['kp-inspector'],
+        exports: [],
+        aliases: ['request', 'requests', 'secrets-in-copy'],
+        intro: 'A foldable block for each HTTP request a service captured: the method, the path, the status in its tone and in words, and when. Opened, it shows the headers as key and value, the body as code, “showing the first N of M”, and Copy as curl, as JSON or as the body. Secret headers are masked on screen and in a copy.',
+        whenToUse: 'Debugging webhooks, client calls and delivery attempts. For a log that streams use the log; for one payload use the code block.',
+        examples: [
+            {
+                title: 'Two captured requests',
+                why: 'The markup is the card; the page hands over the requests with `setRequests`. The failed one is open by default.',
+                markup: `
+<div class="kp-card kp-inspector" data-kp-requests data-kp-requests-open="failed"></div>
+`,
+                script: `
+import { attachRequestInspectors, setRequests } from '@kp-soft/themes/js/request-inspector';
+
+const box = document.querySelector('[data-kp-requests]');
+attachRequestInspectors(box.parentElement);
+setRequests(box, [
+    { at: '2026-10-17T20:18:03+02:00', method: 'POST', path: '/hooks/backup', status: 202, headers: { 'content-type': 'application/json', authorization: 'Bearer 4f9a' }, body: '{"ok":true}', bodyBytes: 11, source: 'client' },
+    { at: '2026-10-17T20:21:40+02:00', method: 'POST', path: '/hooks/restore', status: 500, headers: { 'content-type': 'application/json' }, body: '{"error":"volume busy"}', bodyBytes: 23, source: 'client' },
+]);
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-secret-headers', what: 'Header names masked on screen and in a copy; authorization, cookie, set-cookie, x-api-key and proxy-authorization by default.' },
+            { name: 'data-kp-secrets-in-copy', what: '`masked` (default: a copy carries ******** and a separate “Copy curl with secrets” button carries the real values), `masked-only` or `real`.' },
+            { name: 'data-kp-requests-open', what: '`failed` (default: the 4xx and 5xx are open), `first` or `none`.' },
+            { name: 'data-kp-requests-max', what: 'How many show before “Show N older”; 20, newest first.' },
+            { name: 'data-kp-copy-as', what: 'The copy buttons, `curl,json,body` by default.' },
+            { name: 'data-kp-requests-test', what: '`false` leaves the Send test button out of the empty list.' },
+            { name: 'loading, empty, error', what: '`setRequestsState` lays the busy card over at least three rows; an empty list says so with Send test; a failed one has Retry.' },
+        ],
+        accessibility: [
+            'Built in — each request is an accordion item with its status in words, not only in colour; times are dd/mm/yyyy HH:MM with the exact moment in the title.',
+            'Yours — send the headers and body as the service saw them and list the header names that are secret; the masking is only as good as that list.',
+        ],
+    },
+    {
+        id: 'json-field',
+        title: 'JSON field',
+        group: 'Forms',
+        classes: ['kp-jsonfield'],
+        exports: [],
+        aliases: ['json'],
+        intro: 'A text box that knows JSON. It checks the text while it is typed, says what is wrong and where (“Line 3, column 12: expected ‘,’”) with the line marked in a gutter of line numbers, formats and minifies on request, and holds the form back while the JSON is broken.',
+        whenToUse: 'A field that takes a message body, action arguments or a settings blob. For showing JSON read-only use the code block.',
+        examples: [
+            {
+                title: 'A strict body field',
+                why: 'The attribute goes on an ordinary multiline field; the script adds the gutter, the Format and Minify buttons and the status line.',
+                markup: `
+<div class="kp-field">
+<label class="kp-field__label" for="hook-body">Message body</label>
+<textarea class="kp-field__input kp-field__input--multiline" id="hook-body" name="body" data-kp-json="strict" placeholder='{"topic":"backup.done"}'>{"topic":"backup.done","ok":true}</textarea>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-json', what: '`strict` (default: text that is not JSON blocks the form) or `allow-text` (it may be sent, and the line says so). Decided per field.' },
+            { name: 'data-kp-json-check', what: '`input` (default, debounced 300 ms) or `blur`.' },
+            { name: 'data-kp-json-format', what: '`button` (default: Format and Minify beside the field), `on-blur` or `off`.' },
+            { name: 'data-kp-json-indent', what: '`2` (default), `4` or `tab`.' },
+            { name: 'data-kp-json-gutter', what: 'On by default; `false` takes the line numbers away.' },
+            { name: 'data-kp-json-wrap', what: 'Long lines wrap and the gutter follows; by default they scroll inside the field.' },
+            { name: 'data-kp-json-schema', what: 'A URL or inline JSON handed to the page in `kp-json-validate`, whose handler may refuse a value that parses.' },
+        ],
+        accessibility: [
+            'Built in — the message sits in a status line tied to the field with `aria-describedby`; Tab indents, Shift+Tab takes one indent off, Esc then Tab leaves the field, so the keyboard is never trapped; Mod+Shift+F formats.',
+            'Yours — label the field, and decide per field whether text that is not JSON may be sent.',
+        ],
+    },
+    {
+        id: 'lede',
+        title: 'Lede',
+        group: 'Content',
+        classes: ['kp-lede'],
+        exports: [],
+        intro: 'The short paragraph under a heading that says what the section does. The markup works without the script; the script ties the lede to its heading for a screen reader, folds a long one behind “More”, adds a “Learn more” link and lists headings that have no lede.',
+        whenToUse: 'Under every card title and page section, in plain words. For a note about one field use the field’s help text; for a warning use the alert.',
+        examples: [
+            {
+                title: 'A lede under a card title',
+                why: 'One sentence of what it does and what pausing means.',
+                markup: `
+<h2 id="schedules">Schedules</h2>
+<p class="kp-lede">Each schedule starts a job at fixed times. Pause one to stop it without deleting it.</p>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-lede-measure', what: '`narrow` (48ch), `normal` (70ch, default) or `full`.' },
+            { name: 'data-kp-lede-tone', what: '`muted` (default) or `plain`.' },
+            { name: 'data-kp-lede-collapsible', what: 'A lede longer than about N characters (140 by default) shows its first sentences and folds the rest behind More and Less.' },
+            { name: 'data-kp-lede-link', what: 'A URL: a “Learn more” link at the end.' },
+            { name: 'data-kp-lede-required', what: 'On a container: every heading inside it must have a lede, and `missingLedes` lists the ones that do not. Card titles are always checked.' },
+        ],
+        accessibility: [
+            'Built in — the heading is described by its lede (`aria-describedby`), so it is read with the heading; a folded lede’s button says what it will do.',
+            'Yours — write the lede in the user’s words and keep it to one or two sentences.',
+        ],
+    },
+    {
+        id: 'new-pill',
+        title: 'New-lines pill',
+        group: 'Feedback',
+        classes: ['kp-newpill'],
+        exports: [],
+        aliases: ['follow', 'following', 'pill-placement', 'pill-unit', 'since-left'],
+        intro: 'The “12 new lines · back to the tail” pill on a list that grows while it is read. The list follows its newest row as long as the reader is at that end; once the reader scrolls away, rows that arrive out of sight are counted in the pill, which jumps back with one press.',
+        whenToUse: 'A live log, a feed of messages or any list where new rows arrive at one end. For a static list, nothing is needed.',
+        examples: [
+            {
+                title: 'A log that follows its tail',
+                why: 'The element marked `data-kp-follow` is the scroller and its children are the rows; the pill is drawn in the parent, which becomes the host.',
+                markup: `
+<div data-kp-newpill-host>
+<ul data-kp-follow="tail" data-kp-follow-threshold="24" data-kp-pill-unit="line,lines" style="max-block-size: 6rem; overflow: auto; margin: 0; padding: 0; list-style: none">
+<li>20:14 backup started</li>
+<li>20:15 photos: 1,204 files checked</li>
+<li>20:16 media: 3,880 files checked</li>
+<li>20:17 pruning old snapshots</li>
+<li>20:18 backup finished</li>
+</ul>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-follow', what: '`tail` (default) or `head` for a newest-first list: where new rows arrive.' },
+            { name: 'data-kp-follow-threshold', what: 'Pixels from the end that still count as following; 24.' },
+            { name: 'data-kp-pill-placement', what: '`bottom` or `top`; the end the rows arrive at by default.' },
+            { name: 'data-kp-pill-unit', what: '`line,lines`: the app’s word for a row, singular and plural.' },
+            { name: 'data-kp-since-left', what: 'A divider “New since 14:32” before the first row that came while the tab was away.' },
+            { name: 'data-kp-follow-key', what: 'The key that jumps back and follows again; End, or Home for `head`.' },
+            { name: 'data-kp-follow-space', what: 'Space pauses and resumes following, for a log.' },
+            { name: 'data-kp-follow-toggle', what: 'On a button, naming the list: it pauses and resumes the following and says which it will do.' },
+        ],
+        accessibility: [
+            'Built in — a row counts only while it is shown, so a filter takes it out of the count, which is exact; the count is said to a screen reader at most every ten seconds.',
+            'Yours — let the scroller really scroll (`overflow: auto`) and give it a name.',
+        ],
+    },
+    {
+        id: 'notices',
+        title: 'Notification centre',
+        group: 'Feedback',
+        classes: ['kp-notices'],
+        exports: [],
+        aliases: ['inbox-href', 'notice', 'order', 'panel-max', 'quiet', 'read', 'unread'],
+        intro: 'A counter with the exact number, a panel with the newest notices, a switch per source and “Quiet until 09:00” in plain words, plus the same list as a full Inbox page. A notice says what happened, since when, what it affects, what to do, and has a Fix button.',
+        whenToUse: 'An application that raises notices people must act on. For one passing message use the toast; for something wrong right here use the alert.',
+        examples: [
+            {
+                title: 'The counter and its panel',
+                why: 'The markup is the empty box; the page hands over the notices with `setNotices`.',
+                markup: `
+<div class="kp-notices" data-kp-notices data-kp-inbox-href="/inbox"></div>
+`,
+                script: `
+import { attachNotices, setNotices } from '@kp-soft/themes/js/notices';
+
+const centre = document.querySelector('[data-kp-notices]');
+attachNotices(centre.parentElement);
+setNotices(centre, {
+    state: 'ready',
+    items: [
+        { key: 'disk', severity: 'critical', title: 'Pool media is 93% full', since: '2026-10-17T18:02:00+02:00', consequence: 'Backups will stop at 100%.', remedy: 'Remove old snapshots.', fix: { label: 'Open snapshots' } },
+        { key: 'cert', severity: 'warning', title: 'Certificate expires in 6 days', since: '2026-10-16T09:30:00+02:00', consequence: 'Clients will refuse the connection.', remedy: 'Renew it.', fix: { label: 'Renew' } },
+    ],
+    sources: [{ key: 'storage', label: 'Storage' }, { key: 'certs', label: 'Certificates' }],
+});
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-notices-look', what: '`both` (default: counter, panel and a link to the Inbox), `panel` (no link) or `page` (the list stands in the page, with the per-source switches).' },
+            { name: 'data-kp-count', what: 'The number the counter shows when it is not the number of unread notices; exact, never “9+”.' },
+            { name: 'data-kp-count-in-title', what: '`off` leaves the tab title alone; by default it gets “(5) ” in front.' },
+            { name: 'data-kp-order', what: '`severity` (default: worst first, then newest) or `time`.' },
+            { name: 'data-kp-read', what: '`explicit` (default: Mark read per row and Mark all read) or `on-open` (opening the panel reads all).' },
+            { name: 'data-kp-panel-max', what: 'The newest notices per severity in the panel; 10, then “All 37 in the Inbox”.' },
+            { name: 'data-kp-toast-new', what: '`none`, `severe` (default: a new critical notice also toasts) or `all`.' },
+            { name: 'data-kp-inbox-href', what: 'Where the Inbox link goes; it also fires `kp-notices-open-inbox`.' },
+            { name: 'data-kp-keys', what: '`off` leaves the keys alone: g then i opens the Inbox, m marks the focused notice read.' },
+            { name: 'states', what: '`ready`, `loading` (the counter holds its place), `empty` (“Nothing waiting”), `error` (Retry; the counter says “?”) and `quiet` (a moon, “Quiet until 09:00”, End quiet).' },
+        ],
+        accessibility: [
+            'Built in — new notices are announced politely and critical ones assertively, once; the counter has a label that says what it counts; on a phone the panel is a full-height sheet.',
+            'Yours — say in each notice what it affects and what to do, and answer `kp-notice-fix` with the fix.',
+        ],
+    },
+    {
+        id: 'ops-page',
+        title: 'Operations page',
+        group: 'Layout',
+        classes: ['kp-ops'],
+        exports: [],
+        intro: 'The anatomy of a dashboard page in one fixed order whatever the source order: header, KPI strip, attention band, toolbar, card grid. Pure CSS. Empty parts take no room; the toolbar (or the header) stays reachable while the cards scroll.',
+        whenToUse: 'An operations or overview page that follows the principles of the house layout. For a free-form page use the page and stack layouts.',
+        examples: [
+            {
+                title: 'Header, KPIs and two cards',
+                why: 'A card takes six of twelve columns by default; `data-kp-span` widens one.',
+                markup: `
+<div class="kp-ops" data-kp-ops-sticky="none">
+<header class="kp-ops__head kp-page-header"><h1 class="kp-page-header__title">Overview</h1></header>
+<div class="kp-ops__kpis"><div class="kp-kpis"><div class="kp-kpi"><span class="kp-kpi__label">Stacks</span><span class="kp-kpi__value">24</span></div><div class="kp-kpi"><span class="kp-kpi__label">Failed</span><span class="kp-kpi__value">0</span></div></div></div>
+<div class="kp-ops__body">
+<section class="kp-card" data-kp-span="8"><h2 class="kp-card__title">Backups</h2><p>Last run 03:00, 31 volumes.</p></section>
+<section class="kp-card" data-kp-span="4"><h2 class="kp-card__title">Disk</h2><p>63% used.</p></section>
+</div>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-ops-width', what: '`80vw` (default, never under 64rem), `full` or `measure` (64rem).' },
+            { name: 'data-kp-ops-cards', what: 'The default span of a card in twelve columns: `12`, `8`, `6` (default), `4` or `3`.' },
+            { name: 'data-kp-ops-sticky', what: '`toolbar` (default), `head` or `none`: the part that stays reachable.' },
+            { name: 'data-kp-uniform', what: '`off`: cards in a row keep their own height; by default a row has one height.' },
+            { name: 'data-kp-density', what: '`comfortable` (default) or `compact`.' },
+            { name: 'data-kp-span', what: 'On a card: `3`, `4`, `6`, `8` or `12` columns.' },
+            { name: 'data-kp-ops-wide / data-kp-ops-narrow', what: 'On header actions: `wide` ones leave the header on a phone; `narrow` entries of its More menu appear there.' },
+        ],
+        accessibility: [
+            'Built in — the visual order is fixed but the source order is yours, so keep it the reading order; spans collapse to 6 and 12 columns on a tablet and one on a phone by the page’s own width.',
+            'Yours — give each card a title and keep the KPI strip to figures that matter.',
+        ],
+    },
+    {
+        id: 'master-detail',
+        title: 'Master and detail panes',
+        group: 'Structure',
+        classes: ['kp-pane', 'kp-stateplate'],
+        exports: [],
+        aliases: ['master-detail', 'aside', 'narrow', 'fold-at', 'resizable', 'selected'],
+        intro: 'A list and its detail side by side, folding to one pane on a phone. It extends the split with fixed columns: the list, the detail and an optional aside. The detail has four states, and an empty or failed area is drawn with the shared state plate: centred, at the heading size, filling the whole pane.',
+        whenToUse: 'A page with a list of things and the thing itself: secrets, dossiers, messages. For a draggable divider alone use the split; for a table use the data table.',
+        examples: [
+            {
+                title: 'A list and its detail',
+                why: 'The panes are marked by `data-kp-pane`. Choosing an item fires `kp-pane-select`; the page draws the detail itself and reports its state with `setPaneState`.',
+                markup: `
+<div class="kp-split kp-split--panes" data-kp-master-detail data-kp-pane-widths="14rem 1fr">
+<section class="kp-split__pane" data-kp-pane="list" aria-label="Secrets">
+<ul class="kp-pane__list" role="listbox" aria-label="Secrets">
+<li role="option" data-kp-pane-key="db">Database</li>
+<li role="option" data-kp-pane-key="smtp">Mail server</li>
+</ul>
+</section>
+<section class="kp-split__pane" data-kp-pane="detail" aria-label="Secret">
+<h2 data-kp-pane-heading tabindex="-1">Database</h2>
+<div class="kp-pane__body"><p>Rotated on 12/10/2026.</p></div>
+</section>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-pane-widths', what: 'The columns: `17rem 1fr`, and a third such as `24rem` when there is an aside.' },
+            { name: 'data-kp-fold-at', what: 'The layout width below which the panes fold; 48rem.' },
+            { name: 'data-kp-aside-fold-at', what: 'The width below which the aside moves under the other panes; 90rem.' },
+            { name: 'data-kp-narrow', what: 'What a phone shows: `one-pane` (default, with a Back button), `sheet` or `stack`.' },
+            { name: 'data-kp-resizable', what: 'Present: a separator between the list and the detail drags like the split’s; add `data-kp-remember` to keep the width.' },
+            { name: 'data-kp-pane-history', what: '`off` leaves the browser’s history alone.' },
+            { name: 'data-kp-aside-closable', what: 'Esc in the aside closes it.' },
+            { name: 'states of the detail', what: '`empty` (“Pick an item on the left”), `loading` (the busy card over the detail only; the list stays usable), `error` (the destructive plate with Retry) and `ready`.' },
+            { name: '.kp-stateplate', what: 'The plate an empty or failed area is drawn with: the title at the heading size and a normal-size action, centred in the whole box it is given.' },
+        ],
+        accessibility: [
+            'Built in — the list is a listbox: arrows move the selection without the focus leaving, Home and End jump, Enter and Space open the detail when folded. Focus moves to the detail’s heading on open and back to the row on Back; Esc in the detail returns.',
+            'Yours — load the detail on `kp-pane-open`, write the router’s item into the address, and name every pane.',
+        ],
+    },
+    {
+        id: 'passkeys',
+        title: 'Ways to sign in',
+        group: 'Data',
+        classes: ['kp-passkeys'],
+        exports: [],
+        aliases: ['passkey', 'never-used-after', 'protect-last', 'refuse-look'],
+        intro: 'The list of ways to sign in: passkeys, magic links, passwords and tokens. One row each with its icon, its name, when it was added and, in words, when it was last used; a “This device” badge on the one in use; Rename and Remove in two fixed columns. The only way in is protected from removal.',
+        whenToUse: 'An account page. For a list of API keys use the secret and copyable parts; for a plain table of records, the data table.',
+        examples: [
+            {
+                title: 'Two ways in',
+                why: 'The markup is the empty box. The page hands over the rows and the functions that remove and rename; a rejection shows the server’s reason on the row.',
+                markup: `
+<div class="kp-passkeys" data-kp-passkeys data-kp-protect-last="refuse"></div>
+`,
+                script: `
+import { attachPasskeys, setPasskeys } from '@kp-soft/themes/js/passkeys';
+
+const list = document.querySelector('[data-kp-passkeys]');
+attachPasskeys(list.parentElement);
+setPasskeys(list, {
+    rows: [
+        { key: 'pk1', label: 'Work laptop', kind: 'passkey', createdAt: Date.parse('2026-08-02T09:00:00+02:00'), lastUsedAt: Date.now() - 3600000, current: true },
+        { key: 'pk2', label: 'Phone', kind: 'passkey', createdAt: Date.parse('2026-03-11T18:40:00+01:00'), lastUsedAt: Date.parse('2026-04-01T08:00:00+02:00') },
+    ],
+    remove: async () => {},
+    rename: async () => {},
+});
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-protect-last', what: '`refuse` (default: Remove stays held off with the reason), `confirm` (through behind a typed name and a warning) or `off`.' },
+            { name: 'data-kp-confirm', what: 'How a removal is confirmed: `dialog` (default) or `type-name`. The one in use always needs the exact name typed.' },
+            { name: 'data-kp-refuse-look', what: 'How the refusal reads: `button` (default: Remove stays on the row, held off, reason under the name) or `note` (the reason takes its place).' },
+            { name: 'data-kp-mark-current', what: '`off` leaves the “This device” badge out.' },
+            { name: 'data-kp-never-used-after', what: 'Days (90): a way not used for that long is flagged as a candidate to remove; 0 never flags.' },
+            { name: 'states', what: '`loading` keeps the rows’ geometry as waiting rows; `empty` (“No passkey registered yet” and Register) and `error` (Retry) fill the list’s whole footprint; `insecure` puts a warning above the list, because passkeys need https.' },
+        ],
+        accessibility: [
+            'Built in — a refusal is said beside the button, never only by the button being dead; the exact moment of last use is in the tooltip, in Europe/Brussels; the list is sorted with the one in use on top, then by last use.',
+            'Yours — pass `remove` and `rename` that call the server and reject with a sentence, or handle the cancelable `kp-passkeys-remove` and `kp-passkeys-rename` yourself.',
+        ],
+    },
+    {
+        id: 'problems',
+        title: 'Problem alert',
+        group: 'Feedback',
+        classes: ['kp-problem', 'kp-problems'],
+        exports: [],
+        aliases: ['remedy-label', 'sig'],
+        intro: 'An alert with three fixed parts: what is wrong, why, and what to do now, with the fix beside them. It has the shape of an error and its remedy. A container updates its problems by key, so one that is still true is the same element, is not announced again and keeps the focus on its fix.',
+        whenToUse: 'Something is wrong and the person can fix it: a calendar that is not shared, a setting that is missing. For a passing message use the toast; for a plain note use the alert.',
+        examples: [
+            {
+                title: 'One alert with the three parts',
+                why: 'Plain markup, no script needed.',
+                markup: `
+<div class="kp-alert kp-alert--warning" role="alert">
+<strong class="kp-alert__what">The calendar is not shared</strong>
+<span class="kp-alert__why">Almanac cannot read it.</span>
+<span class="kp-alert__remedy">Share it with the service account.</span>
+</div>
+`,
+            },
+            {
+                title: 'Several problems in a container',
+                why: '`setProblems` takes the items; `data-kp-problems-mode` chooses `each`, `list` or `fold`.',
+                markup: `
+<div class="kp-problems" data-kp-problems data-kp-problems-mode="each"></div>
+`,
+                script: `
+import { attachProblems, setProblems } from '@kp-soft/themes/js/problems';
+
+const box = document.querySelector('[data-kp-problems]');
+attachProblems(box.parentElement);
+setProblems(box, [
+    { key: 'calendar', what: 'The calendar is not shared', why: 'Almanac cannot read it.', remedy: 'Share it with the service account.' },
+    { key: 'token', what: 'The API token has expired', why: 'Requests are refused.', remedy: 'Create a new one.', command: 'chassis token renew', severity: 'critical' },
+]);
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-problems-mode', what: '`each` (default: one alert per problem, the worst first), `list` (one alert holding every problem, the tone of the worst) or `fold`.' },
+            { name: 'data-kp-problems-fold-from', what: 'With `fold`: from this count (5) one alert holds the four worst open and “Show the other N”.' },
+            { name: 'data-kp-remedy-label', what: 'The word before the remedy; “What now” by default.' },
+            { name: 'data-kp-problem-layout', what: '`stacked` (default) or `inline`, which runs what, why and remedy into one paragraph.' },
+            { name: 'per item', what: '`severity` (`critical`, `warning` default, `info`), `command` (set in code with a Copy button), `action`, `dismissible` (default off: a real problem is not closable until it is fixed).' },
+        ],
+        accessibility: [
+            'Built in — an alert that is still true is not announced again, and the focus stays on its fix; a command has a Copy button that says it copied.',
+            'Yours — write the three parts as sentences a person can act on, and give each problem a stable key.',
+        ],
+    },
+    {
+        id: 'question',
+        title: 'Question card',
+        group: 'Feedback',
+        classes: ['kp-question'],
+        exports: [],
+        aliases: ['asked', 'frozen', 'questions', 'title'],
+        intro: 'A card for a question the host is waiting on: the question, what each answer sets in motion, and how long it still waits. The app asks, the person answers, the app sends and says whether it worked; the card shows every step: waiting, urgent, sending, answered, refused, expired.',
+        whenToUse: 'An automated process needs a human decision before a deadline. For a decision that waits for ever use a dialog; for a plain confirmation use the confirm button.',
+        examples: [
+            {
+                title: 'Remove the old backups?',
+                why: 'The container holds the cards. At zero the default answer happens; a finished card stays with its outcome and a Dismiss button.',
+                markup: `
+<div data-kp-questions></div>
+`,
+                script: `
+import { askQuestion, attachQuestions } from '@kp-soft/themes/js/question-card';
+
+const container = document.querySelector('[data-kp-questions]');
+attachQuestions(container.parentElement);
+askQuestion(container, {
+    id: 'op-42',
+    question: 'Remove the old backups?',
+    text: 'The host asks before it deletes 14 backups.',
+    deadline: Date.now() + 90000,
+    answers: [
+        { value: 'allow', label: 'Allow', consequence: 'Deletes 14 backups (3.2 GB) and goes on.', outcome: 'Allowed. The operation goes on.' },
+        { value: 'stop', label: 'Stop', consequence: 'Keeps everything and stops the operation.', outcome: 'Stopped. Nothing was deleted.', tone: 'destructive' },
+    ],
+    defaultAnswer: 'stop',
+});
+container.addEventListener('kp-question-answer', (event) => event.detail.respond(true));
+`,
+            },
+        ],
+        variants: [
+            { name: 'deadline', what: 'An ISO string or epoch milliseconds; required. The card counts to it.' },
+            { name: 'data-kp-asked', what: 'When it was asked (now by default); the countdown bar is measured from it.' },
+            { name: 'default-answer', what: 'The value that happens at zero, said on the card (“If nobody answers: stops”).' },
+            { name: 'urgent-at', what: 'Seconds (30): from here the card is stronger and its time bold, announced once.' },
+            { name: 'expired', what: '`keep` (default, the card stays with the outcome) or `remove`.' },
+            { name: 'data-kp-measure', what: 'How the time left is drawn: `bar` (default), `ring` or `text`.' },
+            { name: 'data-kp-title', what: '`off` on the container leaves the tab title alone; by default it carries “(1) waiting”.' },
+            { name: 'data-kp-frozen', what: 'Present: the clock stands still, for a demo or a test.' },
+        ],
+        accessibility: [
+            'Built in — each button’s consequence is in its `aria-describedby`; the keys 1 to n answer when the card has the focus; on a phone the buttons are full width with their consequences under them.',
+            'Yours — send the answer on `kp-question-answer` and call `respond(ok, why)`; a refusal needs its reason.',
+        ],
+    },
+    {
+        id: 'disabled-reason',
+        title: 'Disabled reason',
+        group: 'Forms',
+        classes: ['kp-reason'],
+        exports: [],
+        aliases: ['disabled-reason'],
+        intro: 'A disabled control says why it is disabled. The sentence is the attribute `data-kp-disabled-reason`; the script draws it as the package’s tooltip and hands it to a screen reader as the control’s description.',
+        whenToUse: 'Any disabled button or field whose reason is not obvious. For an error after a try, use the field’s own error.',
+        examples: [
+            {
+                title: 'Nothing is selected yet',
+                why: 'A disabled button gets no pointer events of its own, so the script wraps it once in an anchor that does. The tooltip shows only while the control is disabled.',
+                markup: `
+<button class="kp-button" type="button" disabled data-kp-disabled-reason="Nothing is selected yet">Delete</button>
+`,
+            },
+        ],
+        variants: [
+            { name: 'follows the attribute', what: 'Change or remove the sentence and the tooltip changes or goes; a control that comes back to life loses it.' },
+            { name: 'aria-disabled', what: 'A control disabled with `aria-disabled="true"` carries a reason the same way.' },
+        ],
+        accessibility: [
+            'Built in — the reason is the control’s `aria-describedby` while it is off, so a screen reader hears it with the control.',
+            'Yours — word the reason as what to do (“Select a row first”), not as a state.',
+        ],
+    },
+    {
+        id: 'selection',
+        title: 'Selection bar',
+        group: 'Data',
+        classes: ['kp-selection'],
+        exports: [],
+        aliases: ['cursor-scroll', 'cursor-visible', 'placement', 'refused', 'roving', 'selecting'],
+        intro: 'A bar that is there as soon as rows are ticked: how many (exact), which ones, the page’s actions for them and a way to untick everything. It serves a data table, a list of cards or a board. Together with the row keys, rows are ticked without the mouse: j and k walk a cursor, x ticks, Shift+x ticks a range, Esc unticks all.',
+        whenToUse: 'A list where several rows can be acted on together. For the actions of one row use the row actions.',
+        examples: [
+            {
+                title: 'Requeue or delete the ticked rows',
+                why: 'The bar keeps its place whether or not anything is ticked, so the list under it never jumps. A press on a marked button fires `kp-selection-action` with what is ticked.',
+                markup: `
+<div class="kp-selection" data-kp-selection data-kp-selection-for="orders" data-kp-placement="inline">
+<div class="kp-selection__actions">
+<button class="kp-button" type="button" data-kp-selection-action="requeue">Requeue</button>
+<button class="kp-button kp-button--destructive" type="button" data-kp-selection-action="delete">Delete</button>
+</div>
+</div>
+<ul id="orders" data-kp-select-keys>
+<li data-kp-row-key="a"><label><input type="checkbox" data-kp-select-row> Order 1041</label></li>
+<li data-kp-row-key="b"><label><input type="checkbox" data-kp-select-row> Order 1042</label></li>
+<li data-kp-row-key="c"><label><input type="checkbox" data-kp-select-row> Order 1043</label></li>
+</ul>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-selection-for', what: 'The ids of the tables or lists it serves, space separated; the nearest by default.' },
+            { name: 'data-kp-placement', what: '`sticky-top` (default), `inline` or `floating-bottom`.' },
+            { name: 'data-kp-selection-names', what: '`names` (default) or `count`.' },
+            { name: 'data-kp-selection-max', what: 'How many names show before “+N more”; 6.' },
+            { name: 'data-kp-select-matching', what: 'How many rows match in all: the bar offers “Select all 312 that match”.' },
+            { name: 'data-kp-select-range', what: '`shift` (default) or `off`: Shift-click ticks a range.' },
+            { name: 'data-kp-select-arrows', what: 'The arrow keys walk the cursor too, never inside a grid.' },
+            { name: 'data-kp-select-all-key', what: 'Ctrl+A ticks every row shown, Ctrl+Shift+A unticks them.' },
+            { name: 'data-kp-cursor-scroll', what: '`nearest` (default) or `center`.' },
+            { name: 'data-kp-select-hint', what: 'An element in the page where the keys are written as a keys line.' },
+        ],
+        accessibility: [
+            'Built in — the count is said once after a burst of ticks; the cursor is a ring on the row, not a fill, so a ticked row and the cursor row read apart; on a phone a long press starts selection mode. Rows hidden by a filter are not walked, and skipped rows are counted in what is said.',
+            'Yours — mark each box `data-kp-select-row`, give rows a key, and use `setSelectionRules` to turn an action off, with its reason, for a selection it does not fit.',
+        ],
+    },
+    {
+        id: 'undo',
+        title: 'Undo toast',
+        group: 'Feedback',
+        classes: ['kp-undo'],
+        exports: [],
+        aliases: ['undo'],
+        intro: 'A toast with Undo and a visible clock. After an action it says what happened and offers Undo for a few seconds, instead of asking “are you sure?” before. In the default mode nothing reaches the server until the window closes, so Undo only has to put the rows back.',
+        whenToUse: 'An action that is easy to take back: deleting rows, discarding a draft. For an action that cannot be undone, ask first with the confirm button.',
+        examples: [
+            {
+                title: 'Three schedules deleted',
+                why: 'The `commit` runs when the window closes; `undo` runs on Undo.',
+                markup: `
+<button class="kp-button" type="button" id="undo-demo">Delete 3 schedules</button>
+`,
+                script: `
+import { undoToast } from '@kp-soft/themes/js/undo-toast';
+
+document.getElementById('undo-demo').addEventListener('click', () => {
+    undoToast('3 schedules deleted', { commit: () => {}, undo: () => {} });
+});
+`,
+            },
+        ],
+        variants: [
+            { name: 'ms', what: 'How long Undo is offered; 6000, 0 commits at once.' },
+            { name: 'mode', what: '`defer` (default: the action waits) or `revert` (the action is done; Undo calls the page’s reverse).' },
+            { name: 'clock', what: '`ring` (default), `bar`, `text` or `none`; also `data-kp-undo-clock`.' },
+            { name: 'key', what: 'The key that undoes the newest toast; Mod+Z, `false` for none; never while typing in a field.' },
+            { name: 'leave', what: 'What a pending action does when the page is left: `carry` (default), `commit` or `cancel`.' },
+            { name: 'max', what: 'How many toasts stand at once; 3. The oldest is committed when a newer one pushes it out.' },
+            { name: 'states', what: 'Counting, committing, failed (“Not done: why”, the row comes back), undone, done.' },
+        ],
+        accessibility: [
+            'Built in — the clock stops while the pointer or the focus is on the toast; the seconds left are said in words once, not on every tick; Esc or the close accepts the action now; the clock steps once a second under reduced motion.',
+            'Yours — make `undo` really restore, and make `commit` return a rejection with a reason when it fails.',
+        ],
+    },
+    {
+        id: 'thread',
+        title: 'Conversation',
+        group: 'Content',
+        classes: ['kp-thread'],
+        exports: [],
+        aliases: ['dir', 'first', 'fold', 'fold-lines', 'message'],
+        intro: 'A conversation in bubbles: `in` on the start side, `out` on the end side and `system` as a centred line, with day dividers, attachments, grouped headers and a Jump to newest button. Each bubble is an article called “From Acme HR, 13/10/2026 14:02”.',
+        whenToUse: 'The correspondence of a dossier, a ticket or an application. For events with no sender use the timeline.',
+        examples: [
+            {
+                title: 'Three messages',
+                why: 'The markup is the empty box; the page hands over the messages with `setThread`.',
+                markup: `
+<div class="kp-thread" data-kp-thread></div>
+`,
+                script: `
+import { attachThreads, setThread } from '@kp-soft/themes/js/thread';
+
+const thread = document.querySelector('[data-kp-thread]');
+attachThreads(thread.parentElement);
+setThread(thread, {
+    messages: [
+        { key: 'm1', dir: 'in', sender: 'Acme HR', at: Date.parse('2026-10-13T14:02:00+02:00'), text: 'Thanks for applying. Could we talk on Thursday?' },
+        { key: 'm2', dir: 'out', at: Date.parse('2026-10-13T15:10:00+02:00'), text: 'Happy to. Thursday at 10:00 works.', attachments: [{ name: 'cv.pdf', size: 184000, href: '/cv.pdf' }] },
+        { key: 's1', dir: 'system', at: Date.parse('2026-10-14T09:00:00+02:00'), text: 'Status changed to Interview' },
+    ],
+});
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-thread-order', what: '`oldest` (default, like mail) or `newest`.' },
+            { name: 'data-kp-thread-fold', what: 'How a long message is shown: `newest` (default: the newest whole, older ones keep their first lines), `full`, or a number N that folds every message longer than N lines.' },
+            { name: 'data-kp-thread-fold-lines', what: 'Lines an older message keeps; 3.' },
+            { name: 'data-kp-thread-group', what: 'Minutes (5): consecutive messages of one side from one sender within it share one header.' },
+            { name: 'data-kp-thread-days', what: '`off` leaves the day dividers out.' },
+            { name: 'data-kp-thread-avatar', what: '`in` (default), `both` or `none`: the sender’s mark beside the bubble.' },
+            { name: 'data-kp-thread-bubble', what: 'How the sides are told apart: `tinted` (default), `plain` or `filled`.' },
+            { name: 'per message', what: '`attachments`, `status` (`sending`, or `failed` with Retry) and `actions` (`{ id, label }` buttons that fire `kp-thread-action`).' },
+            { name: 'states', what: '`loading` (one waiting bubble on each side), `empty` (“No messages yet” and Add) and `error` (Retry) fill the box.' },
+        ],
+        accessibility: [
+            'Built in — times are dd/mm/yyyy HH:mm in Europe/Brussels with the exact moment in each header; every bubble has a Copy text button; long words and addresses wrap anywhere; a long thread scrolls inside its box.',
+            'Yours — give each message a stable key, and answer `kp-thread-retry` by sending it again.',
+        ],
+    },
+    {
+        id: 'transfer',
+        title: 'Transfer progress',
+        group: 'Feedback',
+        classes: ['kp-transfer'],
+        exports: [],
+        aliases: ['announce', 'bytes-base', 'eta-after', 'fold-at', 'linger', 'narrow', 'rate-window', 'show', 'stall-after', 'stalled'],
+        intro: 'A progress bar with a file name, “1.2 GB of 4.1 GB”, “12 MB/s” and “about 3 min left”. It extends the progress bar and the progress group. The app reports raw numbers; the component computes the speed and the time left, and aligns the columns of several transfers.',
+        whenToUse: 'An upload, a download or a copy of known size. For work with no size use the spinner; for steps use the step list.',
+        examples: [
+            {
+                title: 'A backup being copied',
+                why: 'The app reports `{ done, total, at }`; two reports are enough for a rate.',
+                markup: `
+<div class="kp-progress-group kp-progress-group--transfer">
+<div class="kp-progress__wrap" data-kp-transfer data-kp-transfer-name="backup-2026-10-12.tar.zst"></div>
+</div>
+`,
+                script: `
+import { attachTransfers, setTransfer } from '@kp-soft/themes/js/transfer';
+
+const row = document.querySelector('[data-kp-transfer]');
+attachTransfers(row.parentElement);
+const now = Date.now();
+setTransfer(row, { done: 1000000000, total: 4100000000, at: now - 5000 });
+setTransfer(row, { done: 1200000000, total: 4100000000, at: now });
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-transfer-name', what: 'The file’s name, written in the label.' },
+            { name: 'data-kp-rate-window', what: 'Seconds (5): the moving average; a single sample jumps.' },
+            { name: 'data-kp-eta-after', what: 'Seconds (3): no time left until that much has been measured (“estimating…”).' },
+            { name: 'data-kp-stall-after', what: 'Seconds (10): no new byte for this long is “stalled”.' },
+            { name: 'data-kp-bytes-base', what: '`1000` (default) or `1024`.' },
+            { name: 'data-kp-show', what: 'The parts of the reading: `done,total,rate,eta,percent`, all by default.' },
+            { name: 'data-kp-linger', what: 'Seconds a finished transfer stays; 30, 0 keeps it.' },
+            { name: 'data-kp-announce', what: '`state` (default) says 25, 50, 75 and 100 percent; `off`.' },
+            { name: 'data-kp-fold-at', what: 'On the group: the width (46rem) below which the name stands on its own line and the numbers under the bar.' },
+            { name: 'states', what: 'Running, estimating, stalled (warning plate), done (“4.1 GB in 3 min 12 s”), failed (the app’s reason and Retry) and total unknown (an indeterminate bar).' },
+        ],
+        accessibility: [
+            'Built in — the bar carries the progress ARIA; a screen reader hears 25, 50, 75 and 100 percent, never every second; the figures are tabular so they do not jitter.',
+            'Yours — report real byte counts, answer `kp-transfer-retry` with a new try and pass the app’s own sentence in `failed`.',
+        ],
+    },
+    {
+        id: 'calm',
+        title: 'Calm mode',
+        group: 'Theming',
+        classes: [],
+        exports: [],
+        aliases: ['calm'],
+        intro: 'One page-level switch that turns movement and effects off. A flag on the root element answers every transition, entrance, glow, flicker and glitch; loading stays soft and breathes. A system that asks for less motion wins: the switch shows on, disabled, with the reason.',
+        whenToUse: 'Any application that wants to give the reader a quiet page. It does not replace reduced motion; it extends it to a choice made in the page.',
+        examples: [
+            {
+                title: 'A calm switch',
+                why: 'The attribute marks the switch; the choice is kept per device and applied before the first frame.',
+                markup: `
+<label class="kp-switch">
+<input class="kp-switch__input" type="checkbox" role="switch" data-kp-calm-switch>
+<span>Calm mode</span>
+</label>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-calm', what: 'On the root element: the page is calm.' },
+            { name: 'data-kp-calm-scope', what: '`motion` (transitions only), `effects` (default: also entrances, glow, flicker and glitch) or `all` (and loading holds still).' },
+            { name: 'data-kp-calm-loading', what: '`slow` (default: a loading part breathes as one slow pulse) or `still`.' },
+            { name: 'data-kp-calm-remember', what: '`false` keeps the choice from being remembered; by default it is kept per device.' },
+        ],
+        accessibility: [
+            'Built in — every change is announced once, politely; a system preference for reduced motion wins and is said.',
+            'Yours — ask `motionAllowed(el)` instead of the media query in your own scripts, so calm mode reaches them too.',
+        ],
     },
 ];
