@@ -49,6 +49,7 @@
                 data-review-item="ops-page"
                 data-review-topic="ops-page-scaffold"
                 data-review-topic-title="The page frame of a dashboard"
+                data-review-components="ops"
                 data-review-title="The page frame of a dashboard"
                 aria-labelledby="h-ops-page"
             >
@@ -63,15 +64,15 @@
                     <p><b>Expected:</b></p>
                     <ul>
                         <li>
-                            One page in a frame that scrolls: the header (the title <b>Pump houses</b>, the freshness line “updated … ago” right after
-                            it, a one-sentence description, the buttons at the right), a strip of four key figures of one height, one warning in the
+                            One whole page in a frame: the header (the title <b>Pump houses</b>, the freshness line “updated … ago” right after it, a
+                            one-sentence description, the buttons at the right), a strip of four key figures of one height, one warning in the
                             attention band, the toolbar (search and filter chips) and a grid of cards: 8 + 4, 6 + 6, 4 + 4 + 4 and 3 + 3 + 3 + 3.
                             Cards in a row share one height; the gaps are the same everywhere.
                         </li>
                         <li>
-                            Scroll inside the frame: the <b>toolbar</b> stays under the top edge (the default). <b>Sticky part</b> moves that to the
-                            header or turns it off. <b>Attention band</b> shows the warning or takes it away: with none, the band takes no room at
-                            all, no “all well” line.
+                            Scroll the window past the page: the <b>toolbar</b> stays under the top edge (the default). <b>Sticky part</b> moves that
+                            to the header or turns it off. <b>Attention band</b> shows the warning or takes it away: with none, the band takes no room
+                            at all, no “all well” line.
                         </li>
                         <li>
                             <b>Loading</b> shows the whole page waiting at its final size from the first frame: the key figures as ruled lines, every
@@ -134,7 +135,7 @@
                 </div>
                 <div class="ko-stack">
                     <div>
-                        <p class="ko-label">The page, scrolling inside a frame</p>
+                        <p class="ko-label">The whole page</p>
                         <div class="ko-pageframe" data-ko-pageframe>
                             <div class="kp-ops" data-ko-ops>
                                 <header class="kp-ops__head kp-page-header">
@@ -293,6 +294,7 @@
                 data-review-item="master-detail"
                 data-review-topic="ops-master-detail"
                 data-review-topic-title="A list and its detail that folds on a phone"
+                data-review-components="split"
                 data-review-title="A list and its detail that folds on a phone"
                 aria-labelledby="h-master-detail"
             >
@@ -399,6 +401,7 @@
                 data-review-item="auto-refresh"
                 data-review-topic="ops-auto-refresh"
                 data-review-topic-title="The automatic refresh chooser"
+                data-review-components="refresh"
                 data-review-title="The automatic refresh chooser"
                 data-review-choices='[{ "id": "refresh-look", "label": "How the choice looks", "once": true, "default": "menu", "options": [
                     { "value": "menu", "label": "A menu button", "hint": "One compact button that says Every 30 s; the choices open under it. Fits the right side of a page header (the default)." },
@@ -476,6 +479,7 @@
                 data-review-item="connection"
                 data-review-topic="ops-connection-banner"
                 data-review-topic-title="The offline and reconnecting banner"
+                data-review-components="connection"
                 data-review-title="The offline and reconnecting banner"
                 data-review-choices='[{ "id": "connection-placement", "label": "Where the banner stands", "once": true, "default": "top", "options": [
                     { "value": "top", "label": "Under the navigation bar", "hint": "In the page, pushing the content down; it scrolls away with it (the default)." },
@@ -576,6 +580,7 @@
                 data-review-item="transfer"
                 data-review-topic="ops-transfer-progress"
                 data-review-topic-title="A transfer with its speed and the time left"
+                data-review-components="transfer"
                 data-review-title="A transfer with its speed and the time left"
                 aria-labelledby="h-transfer"
             >
@@ -675,6 +680,7 @@
                 data-review-item="question"
                 data-review-topic="ops-question-card"
                 data-review-topic-title="A question that waits for your answer"
+                data-review-components="question"
                 data-review-title="A question that waits for your answer"
                 data-review-choices='[{ "id": "question-measure", "label": "How the time left is drawn", "once": true, "default": "bar", "options": [
                     { "value": "bar", "label": "A shrinking rule", "hint": "A thin rule under the question that shrinks over the whole wait; the same drawing as the alarm (the default)." },
@@ -756,6 +762,7 @@
                 data-review-item="notices"
                 data-review-topic="ops-notification-centre"
                 data-review-topic-title="The notification centre"
+                data-review-components="notices"
                 data-review-title="The notification centre"
                 aria-labelledby="h-notices"
             >

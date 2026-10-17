@@ -168,18 +168,15 @@
     gap: var(--kp-space-lg, 1.5rem);
 }
 
-/* A frame that scrolls inside: what a sticky part does on a long page. */
+/* A frame round a whole page: the sticky part sticks to the top of the window while the page scrolls past. */
 .ko-pageframe {
     box-sizing: border-box;
-    block-size: 36rem;
-    overflow: auto;
     border: 1px solid var(--border-strong);
     border-radius: var(--radius, 0.5rem);
     background: var(--background);
 }
 
 .ko-pageframe--phone {
-    block-size: 40rem;
     padding: 0;
 }
 

@@ -128,6 +128,24 @@ export const REQUIRED = [
         why: 'The form measures its own width and reads each row top to bottom when narrow; the query reaches only the rows’ parts [kpadopt4-data].',
     },
     {
+        container: 'kp-ops',
+        class: 'kp-ops',
+        self: true,
+        why: 'The page frame measures its own width and folds its card spans and its KPI strip; the queries reach only its own parts [kpadopt5-ops].',
+    },
+    {
+        container: 'kp-connection',
+        class: 'kp-connection',
+        self: true,
+        why: 'The banner measures its own width and hides its second line on a phone; the query reaches only its own parts [kpadopt5-ops].',
+    },
+    {
+        container: 'kp-question',
+        class: 'kp-question',
+        self: true,
+        why: 'The card measures its own width and puts each consequence under its button; the query reaches only its own parts [kpadopt5-ops].',
+    },
+    {
         container: 'kp-code',
         class: 'kp-code',
         self: true,

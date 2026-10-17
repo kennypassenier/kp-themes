@@ -17069,7 +17069,7 @@
         position: sticky;
         inset-block-start: var(--kp-ops-sticky-top, 0px);
         z-index: var(--kp-z-sticky, 10);
-        padding-block: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-xs, 0.25rem);
         background: var(--background);
     }
 
