@@ -37,6 +37,7 @@
 //   data-kp-availability-narrow         `scroll` (default) or `by-column` (a list per column on a phone)
 //   data-kp-availability-keys           `false` turns the keys off (y, m, n, Backspace on the focused own cell)
 //   data-kp-availability-undo-ms        Undo after a stroke (6000, 0 for none)
+//   data-kp-availability-unit-switch    `on` or `off`: the organiser's periods/days switch, overriding `canSwitchUnit` of the spec (absent: the spec decides)
 //   data-kp-availability-density                     `comfortable` (default) or `compact`
 //   data-kp-time-zone                   the zone the day labels are written in (Europe/Brussels)
 //   data-kp-disabled-reason             present with `disabled`: every cell is inert and says why
@@ -84,7 +85,7 @@ export const AVAILABILITY_UNDO_MS = 6000;
  * @property {AvailabilityPerson[]} [people]
  * @property {AvailabilityAnswers} [answers]
  * @property {{ range?: AvailabilitySet, day?: AvailabilitySet }} [sets]  both kinds of column, with their answers
- * @property {boolean} [canSwitchUnit]  show the organiser's switch between the two sets
+ * @property {boolean} [canSwitchUnit]  show the organiser's switch between the two sets (the attribute data-kp-availability-unit-switch on or off overrides it at run time)
  * @property {'ready' | 'loading' | 'empty' | 'error'} [state]
  * @property {string} [message]  the failed or empty plate's sentence
  * @property {string} [emptyAction]  the empty plate's action words (fires `kp-availability-retry` with `{ action: 'add' }`)
@@ -379,7 +380,9 @@ function render(root) {
     // The unit switch.
     const head = /** @type {HTMLElement} */ (root.querySelector('.kp-availability__head'));
     let unit = /** @type {HTMLElement | null} */ (head.querySelector('.kp-availability__unit'));
-    if (spec.canSwitchUnit && spec.sets) {
+    const switchAttr = root.getAttribute('data-kp-availability-unit-switch');
+    const switchable = switchAttr === 'on' ? true : switchAttr === 'off' ? false : Boolean(spec.canSwitchUnit);
+    if (switchable && spec.sets) {
         if (!unit) {
             unit = el('kp-segmented kp-availability__unit');
             unit.setAttribute('role', 'group');
@@ -967,7 +970,7 @@ export function attachAvailability(root = document) {
         const watcher = new MutationObserver(() => render(el_));
         watcher.observe(el_, {
             attributes: true,
-            attributeFilter: ['data-kp-heat-edit', 'data-kp-disabled-reason', ...['answers', 'press', 'best', 'best-rule', 'window', 'quorum', 'sort', 'summary', 'locked', 'narrow', 'density', 'disabled', 'choose'].map((n) => `data-kp-availability-${n}`)],
+            attributeFilter: ['data-kp-heat-edit', 'data-kp-disabled-reason', ...['answers', 'press', 'best', 'best-rule', 'window', 'quorum', 'sort', 'summary', 'locked', 'narrow', 'density', 'disabled', 'choose', 'unit-switch'].map((n) => `data-kp-availability-${n}`)],
         });
         st.off = [
             () => el_.removeEventListener('click', onClick, true),

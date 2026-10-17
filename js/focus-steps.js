@@ -66,7 +66,7 @@
 //   data-kp-back            present | off                       present; going back keeps every answer
 //   data-kp-choice-layout   auto | stack | row                  auto (a row for up to three short labels; always stacked on a phone)
 //   data-kp-choice-height   md | lg                             lg (56 px at least)
-//   data-kp-progress        count | dots | off                  count ("Question 3 of 7" and the bar)
+//   data-kp-progress        count | off                         count ("Question 3 of 7" and the bar)
 //   data-kp-resume          auto | ask | off                    auto, with data-kp-remember="<name>"
 //   data-kp-resume-until    midnight | hours:N | never          midnight (Europe/Brussels)
 //   data-kp-summary         on | off                            off (a summary costs one of the seven screens)
@@ -626,26 +626,10 @@ function paint(root, arrive) {
     const bar = part(root, 'bar');
     const shownTotal = total + (summaryOn(root) ? 1 : 0);
     bar.style.setProperty('--kp-value', String(shownTotal ? (index + 1) / shownTotal : 0));
-    // Progress: the count and the bar (default), dots, or nothing; never a timer, never a streak.
+    // Progress: the count and the bar (default) or nothing; never a timer, never a streak.
     const progress = asking ? (opt(root, 'progress', 'count') ?? 'count') : 'count';
     bar.hidden = progress !== 'count';
     part(root, 'count').hidden = progress === 'off';
-    let dots = /** @type {HTMLElement | null} */ (root.querySelector('.kp-focus-steps__dots'));
-    if (progress === 'dots' && total) {
-        if (!dots) {
-            dots = el('kp-focus-steps__dots');
-            dots.setAttribute('aria-hidden', 'true');
-            bar.after(dots);
-        }
-        dots.replaceChildren(
-            ...Array.from({ length: shownTotal }, (_, i) => {
-                const dot = el('kp-focus-steps__dot', 'span');
-                if (i < index) dot.setAttribute('data-kp-done', '');
-                if (i === index) dot.setAttribute('data-kp-current', '');
-                return dot;
-            }),
-        );
-    } else dots?.remove();
     // The screen line is for cook mode; a short check-in does not talk about the screen unless asked to keep it on.
     const wakeLine = /** @type {HTMLElement | null} */ (root.querySelector('.kp-focus-steps__wake'));
     if (wakeLine) wakeLine.hidden = asking && (root.getAttribute('data-kp-wake') ?? root.getAttribute('data-kp-focus-steps-wake')) !== 'true';
