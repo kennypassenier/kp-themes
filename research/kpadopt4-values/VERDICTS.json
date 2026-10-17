@@ -90,6 +90,19 @@
                     "note": "alle drie de opties afgekeurd (geplante bomen, kraftlabel, kleispoor); eerder: geen cirkel rond de waarde, zoek een meer forest optie"
                 }
             ]
+        },
+        {
+            "round": "4",
+            "page": "values-8d797289-bb2b-4139-8947-24f553915f35",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-17 17:20: tick in forest approved with the pick \"Branded digits\"; the part is decided.",
+            "choices": [
+                {
+                    "item": "tick",
+                    "choice": "forest-tick",
+                    "value": "Branded digits"
+                }
+            ]
         }
     ]
 }

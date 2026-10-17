@@ -34,7 +34,8 @@ const local = (/** @type {string} */ text) =>
 
 const parts = marks.map((m, i) => {
     const body = html.slice(m.index, i + 1 < marks.length ? marks[i + 1].index : mainEnd);
-    const topic = /data-review-topic="([^"]+)"/.exec(body)?.[1];
+    // A part is named by its topic's first word: a part may hold several topics of its own (cooking-wheel, cooking-timers).
+    const topic = /data-review-topic="([^"]+)"/.exec(body)?.[1]?.split('-')[0];
     if (!topic) throw new Error(`no data-review-topic under "${m[1]}"`);
     return { title: m[1], topic, body, sections: [...body.matchAll(/data-review-item="([^"]+)"/g)].map((s) => s[1]) };
 });
