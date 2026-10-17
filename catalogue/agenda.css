@@ -69,6 +69,87 @@
         flex: 0 0 auto;
     }
 
+    .agenda__received {
+        margin-block-start: var(--kp-space-md);
+        align-items: center;
+    }
+
+    .agenda__received-seen {
+        margin-inline-start: auto;
+        flex: 0 0 auto;
+    }
+
+    /* Saved verdicts: per demo a fold with its round picker, its one copy button and its entries, newest first. */
+    .agenda__saved {
+        margin-block-start: var(--kp-space-2xl);
+    }
+
+    .agenda__saved-list {
+        display: grid;
+        gap: var(--kp-space-md);
+    }
+
+    .agenda-saved {
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: var(--kp-space-sm) var(--kp-space-md);
+    }
+
+    .agenda-saved__summary {
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .agenda-saved__copy {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: end;
+        gap: var(--kp-space-sm);
+        margin-block: var(--kp-space-sm);
+    }
+
+    .agenda-saved__said {
+        margin: 0;
+        font-size: var(--kp-text-sm);
+    }
+
+    .agenda-saved__text {
+        margin: 0 0 var(--kp-space-sm);
+        padding: var(--kp-space-sm);
+        max-block-size: 16rem;
+        overflow: auto;
+        white-space: pre-wrap;
+        font-size: var(--kp-text-sm);
+        background: var(--muted);
+    }
+
+    .agenda-saved__entries {
+        display: grid;
+        gap: var(--kp-space-xs);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        font-size: var(--kp-text-sm);
+    }
+
+    .agenda-saved__entry {
+        display: grid;
+        grid-template-columns: 9.5rem minmax(0, 1fr);
+        gap: var(--kp-space-sm);
+        padding-block: var(--kp-space-xs);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .agenda-saved__what {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
+
+    .agenda-saved__when {
+        color: var(--muted-foreground);
+        font-variant-numeric: tabular-nums;
+    }
+
     .agenda__part {
         margin-block-start: var(--kp-space-2xl);
     }
@@ -270,6 +351,11 @@
     }
 
     @media (max-width: 40rem) {
+        .agenda-saved__entry {
+            grid-template-columns: minmax(0, 1fr);
+            gap: 0;
+        }
+
         .agenda__head {
             grid-template-columns: minmax(0, 1fr);
         }

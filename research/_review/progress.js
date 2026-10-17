@@ -390,14 +390,21 @@ export const roundReceived = (answerRound, round) => {
 export function dropReceivedAnswer(id, round) {
     const answer = answerOf(id);
     if (!answer) return false;
+    // An answer of the page's own round is never received, whatever the page lists (lost-answer-1017: a part republished
+    // under the id of a round already received dropped Kenny's fresh answer the moment he gave it).
+    const own = round?.round || '';
     try {
-        if (roundReceived(answer.round, round)) {
+        if (!(own && answer.round === own) && roundReceived(answer.round, round)) {
+            keepInJournal(id, answer.round || '', answer.text, answer.judged);
             localStorage.removeItem(answerKey(id));
+            noteReceived(id, answer.round || '');
             return true;
         }
-        if (answer.carried && roundReceived(answer.carriedRound, round)) {
+        if (answer.carried && !(own && answer.carriedRound === own) && roundReceived(answer.carriedRound, round)) {
+            keepInJournal(id, answer.carriedRound || '', answer.carried, 1);
             const { carried, carriedRound, ...rest } = answer;
             localStorage.setItem(answerKey(id), JSON.stringify(rest));
+            noteReceived(id, answer.carriedRound || '');
             return true;
         }
     } catch {
@@ -433,4 +440,184 @@ export function waitingAnswers() {
         /* storage refused: nothing waits */
     }
     return found.sort((a, b) => a.id.localeCompare(b.id));
+}
+
+/*
+ * The journal (Kenny, 2026-10-17: "ik moet altijd honderd procent absoluut zeker zijn dat mijn beoordelingen vastgelegd
+ * worden, wat ik ook doe op die site, tot het moment dat ik effectief mijn beoordelingen hier paste"; correction
+ * lost-answer-1017). Every verdict, note and tick Kenny sets in a demo's dialog is appended here, per demo, and no code
+ * path removes an entry: not a new round, not "Clear all verdicts", not an answer dropped as received. The verdicts
+ * under storeKey() and the answer under answerKey() may be cleared; the journal keeps everything, and the Agenda's
+ * "Saved verdicts" rebuilds a full answer from it for any demo and round.
+ *
+ * It grows by about 200 bytes per change (a note is written after a pause in the typing, and an entry that repeats the
+ * pair's last one is not written again); a whole review of 100 pairs with notes stays under 40 KB.
+ */
+
+/** Where a demo's journal lives: an array of JournalEntry, oldest first. */
+export const journalKey = (demo) => `${storeKey(demo)}:journal`;
+
+/**
+ * @typedef {object} JournalEntry
+ * @property {string} at      when it was set (ISO)
+ * @property {string} demo
+ * @property {string} round   the page's round id then ('' without one)
+ * @property {string} pair    `<theme>|<item>`, `catalogue|<block>|<theme>|<engine>`, or `once|<item>|<choice>`
+ * @property {'approved' | 'rejected' | null} verdict  null for a tick or a note alone
+ * @property {string} note
+ * @property {{ id: string, value: string, label?: string } | null} choice  a choice ticked, with the option's label
+ * @property {string} [label]  the pair as the answer names it (`<item> · <theme>`)
+ */
+
+/** A demo's journal, oldest first. @returns {JournalEntry[]} */
+export function journalOf(demo) {
+    try {
+        const list = JSON.parse(localStorage.getItem(journalKey(demo)) || '[]');
+        return Array.isArray(list) ? list : [];
+    } catch {
+        return [];
+    }
+}
+
+/** Fired on the document when the journal could not be written (storage full or refused), so the page can say so. */
+export const JOURNAL_FAILED_EVENT = 'kp-demo-journal-failed';
+
+/**
+ * Appends one entry to a demo's journal. Nothing here ever removes one.
+ * @param {string} demo
+ * @param {Omit<JournalEntry, 'at' | 'demo'> & { at?: string }} entry
+ * @returns {boolean} whether it is on file
+ */
+export function journal(demo, entry) {
+    const list = journalOf(demo);
+    const full = { at: entry.at || new Date().toISOString(), demo, round: entry.round || '', pair: entry.pair, verdict: entry.verdict ?? null, note: entry.note || '', choice: entry.choice ?? null, ...(entry.label ? { label: entry.label } : {}) };
+    const last = [...list].reverse().find((e) => e?.pair === full.pair && e?.round === full.round);
+    const same = (/** @type {JournalEntry} */ e) =>
+        e.verdict === full.verdict && e.note === full.note && JSON.stringify(e.choice ?? null) === JSON.stringify(full.choice);
+    if (last && same(last)) return true;
+    try {
+        localStorage.setItem(journalKey(demo), JSON.stringify([...list, full]));
+        return true;
+    } catch {
+        globalThis.document?.dispatchEvent(new CustomEvent(JOURNAL_FAILED_EVENT, { detail: { demo } }));
+        return false;
+    }
+}
+
+/** Every demo with a journal in this browser, sorted. */
+export function journalDemos() {
+    const found = [];
+    try {
+        for (let i = 0; i < localStorage.length; i++) {
+            const match = /^kp-demo-review:(.+):journal$/.exec(localStorage.key(i) ?? '');
+            if (match) found.push(match[1]);
+        }
+    } catch {
+        /* storage refused */
+    }
+    return found.sort();
+}
+
+/** The journal's pair for a whole answer text kept when the answer itself is dropped as received. */
+export const ANSWER_PAIR = '__answer';
+
+/** A pair key as the answer names it. */
+const labelOfKey = (/** @type {string} */ key) => {
+    const parts = key.split('|');
+    if (parts[0] === 'catalogue') return `${parts[1]} · ${parts[2]} · ${parts[3]}`;
+    if (parts[0] === 'once') return `${parts[1]}`;
+    return `${parts[1]} · ${parts[0]}`;
+};
+
+/**
+ * A full answer rebuilt from the journal, for one demo and one round: per pair the latest verdict, note and ticks
+ * Kenny set in that round, in the shape of the dialog's own answer. '' when the round has no entry.
+ * @param {string} demo @param {string} round
+ */
+export function rebuildAnswer(demo, round) {
+    const inRound = journalOf(demo).filter((e) => (e.round || '') === round);
+    const entries = inRound.filter((e) => e.pair !== ANSWER_PAIR);
+    // Only the answer's text was kept (an answer given before the journal existed): that text is the answer.
+    if (!entries.length) return inRound.at(-1)?.note || '';
+    /** @type {Map<string, { verdict: string | null, note: string, label: string, choices: Map<string, string> }>} */
+    const pairs = new Map();
+    for (const e of entries) {
+        const now = pairs.get(e.pair) ?? { verdict: null, note: '', label: e.label || labelOfKey(e.pair), choices: new Map() };
+        if (e.verdict) now.verdict = e.verdict;
+        if (e.verdict || e.note || !e.choice) now.note = e.note;
+        if (e.choice) now.choices.set(e.choice.id, e.choice.label || e.choice.value);
+        pairs.set(e.pair, now);
+    }
+    const all = [...pairs.entries()];
+    const judged = all.filter(([key, p]) => !key.startsWith('once|') && p.verdict);
+    const rejected = judged.filter(([, p]) => p.verdict === 'rejected');
+    const approved = judged.filter(([, p]) => p.verdict === 'approved');
+    const lines = [
+        `Demo review · ${demo} · round ${round || '(no round id)'} · rebuilt from the saved verdicts · ${judged.length} judged, ${approved.length} approved, ${rejected.length} not approved`,
+    ];
+    const plain = approved.filter(([, p]) => !p.note).map(([, p]) => p.label);
+    if (plain.length) lines.push('', 'Approved:', ...plain.map((label) => `- ${label}`));
+    if (rejected.length) lines.push('', 'Not approved:', ...rejected.map(([, p]) => `- ${p.label}: ${p.note}`));
+    const noted = approved.filter(([, p]) => p.note);
+    if (noted.length) lines.push('', 'Approved, with a note:', ...noted.map(([, p]) => `- ${p.label}: ${p.note}`));
+    const open = all.filter(([key, p]) => !key.startsWith('once|') && !p.verdict && p.note);
+    if (open.length) lines.push('', 'A note without a verdict yet:', ...open.map(([, p]) => `- ${p.label}: ${p.note}`));
+    const picked = all.filter(([key]) => !key.startsWith('once|')).flatMap(([, p]) => [...p.choices].map(([id, value]) => `- ${p.label}: ${id} = ${value}`));
+    if (picked.length) lines.push('', 'Picked per theme:', ...picked);
+    const once = all.filter(([key]) => key.startsWith('once|')).flatMap(([key, p]) => [...p.choices].map(([id, value]) => `- ${key.split('|')[1]}: ${id} = ${value}`));
+    if (once.length) lines.push('', 'Picked once, for every theme:', ...once);
+    return lines.join('\n');
+}
+
+/*
+ * An answer dropped as received is never dropped in silence: every drop is noted here (append-only, like the journal),
+ * and the Agenda's band says "received by Claude: <demo> <round>" until Kenny marks the notices seen.
+ */
+
+/** Where the drops of every demo are noted: an array of { at, demo, round }, oldest first. */
+export const RECEIVED_KEY = 'kp-demo-review:received-log';
+/** The `at` of the last notice Kenny marked seen on the Agenda. */
+export const RECEIVED_SEEN_KEY = 'kp-demo-review:received-seen';
+
+/** @returns {{ at: string, demo: string, round: string }[]} */
+export function receivedLog() {
+    try {
+        const list = JSON.parse(localStorage.getItem(RECEIVED_KEY) || '[]');
+        return Array.isArray(list) ? list : [];
+    } catch {
+        return [];
+    }
+}
+
+/** The notices not marked seen yet, oldest first. */
+export function receivedNotices() {
+    let seen = '';
+    try {
+        seen = localStorage.getItem(RECEIVED_SEEN_KEY) || '';
+    } catch {
+        seen = '';
+    }
+    return receivedLog().filter((entry) => entry.at > seen);
+}
+
+/** Marks every notice up to now as seen; the log itself stays. */
+export function markReceivedSeen() {
+    try {
+        localStorage.setItem(RECEIVED_SEEN_KEY, new Date().toISOString());
+    } catch {
+        /* storage refused */
+    }
+}
+
+/** The text of an answer about to be dropped, kept in the journal beside its verdicts (also an answer from before the journal). */
+function keepInJournal(/** @type {string} */ demo, /** @type {string} */ round, /** @type {string} */ text, /** @type {number} */ judged) {
+    if (judged > 0 && text) journal(demo, { round, pair: ANSWER_PAIR, verdict: null, note: text, choice: null });
+}
+
+function noteReceived(/** @type {string} */ demo, /** @type {string} */ round) {
+    try {
+        localStorage.setItem(RECEIVED_KEY, JSON.stringify([...receivedLog(), { at: new Date().toISOString(), demo, round: round || '(no round id)' }]));
+    } catch {
+        /* storage refused: the journal still holds the verdicts */
+    }
 }

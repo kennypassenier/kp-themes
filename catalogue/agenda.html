@@ -45,6 +45,15 @@
                 <button type="button" class="kp-button kp-button--sm agenda__answers-copy" data-agenda-answers-copy>Copy the answers</button>
             </div>
 
+            <!-- An answer the kit dropped because Claude already received its round: said here, never in silence. -->
+            <div class="kp-alert kp-alert--warning agenda__received" role="status" data-agenda-received hidden>
+                <span class="kp-alert__icon" aria-hidden="true">✓</span>
+                <span class="kp-alert__body"
+                    ><span class="kp-alert__label">Answers set aside: </span><span data-agenda-received-text></span
+                ></span>
+                <button type="button" class="kp-button kp-button--sm agenda__received-seen" data-agenda-received-seen>Seen</button>
+            </div>
+
             <section class="agenda__part" aria-labelledby="agenda-waiting-title">
                 <h2 id="agenda-waiting-title">Waiting for you</h2>
                 <p class="cat-intro">
@@ -60,6 +69,17 @@
                     themes where it is open; the dialog walks them theme by theme and switches the theme by itself.
                 </p>
                 <div data-cat-compose="agenda"></div>
+            </details>
+
+            <details class="agenda__saved" data-agenda-saved>
+                <summary class="agenda__fold-summary">Saved verdicts <span class="agenda__fold-count" data-agenda-saved-count></span></summary>
+                <p class="cat-intro">
+                    Every verdict, note and tick you set in a demo's dialog, in this browser, newest first. Nothing removes them: not a new
+                    round, not Clear all verdicts, not an answer Claude already received. Pick a round and copy its answer, rebuilt from
+                    what you set, to paste it again.
+                </p>
+                <p class="cat-note" data-agenda-saved-empty>No verdict saved in this browser yet.</p>
+                <div class="agenda__saved-list" data-agenda-saved-list></div>
             </details>
 
             <details class="agenda__done" data-agenda-done>
