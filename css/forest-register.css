@@ -1729,6 +1729,10 @@
            or a circle alike, so a page that loads breathes as one grove. The
            spinner keeps its tree a half loop (1600 ms). */
         --kp-sig-fo-breath: 6600ms;
+        /* Where in its breath a bar or a strip starts: 1000 ms in, whole trees already standing (breath about 0.3
+           when it appears), so the first frames show trees and not bare ground [cook-1017; Kenny: "Meteen bomen"]. The
+           breath itself stays 6600 ms; it is a negative delay, not another keyframe. */
+        --kp-sig-fo-head: -1000ms;
         /* js/motion.js reads its caps from the root: a close or a size
            glide of one growth time is not cut short (its defaults, 600 and
            480 ms, are other themes'). */
@@ -1849,7 +1853,7 @@
             var(--kp-fo-margin) + round(down, var(--kp-fo-breath) * (var(--kp-fo-run) + var(--kp-fo-pitch)), var(--kp-fo-pitch)),
             100cqi
         );
-        animation: kp-progressbar-forest-breath var(--kp-sig-fo-breath) linear infinite;
+        animation: kp-progressbar-forest-breath var(--kp-sig-fo-breath) linear var(--kp-sig-fo-head) infinite;
     }
 
     [data-theme='forest'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
@@ -2933,16 +2937,16 @@
                 .kp-kpi__chart .kp-chart__state[data-kp-state='loading'],
                 .kp-calendar--busy-whole > .kp-calendar__busy
             ) {
-            animation: kp-progressbar-forest-breath var(--kp-sig-fo-breath) linear infinite;
+            animation: kp-progressbar-forest-breath var(--kp-sig-fo-breath) linear var(--kp-sig-fo-head) infinite;
         }
 
         /* Lines of a skeleton stand 400 ms apart. */
         [data-theme='forest'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2) {
-            animation-delay: calc(-5 * var(--kp-sig-fo-stagger));
+            animation-delay: calc(var(--kp-sig-fo-head) - 5 * var(--kp-sig-fo-stagger));
         }
 
         [data-theme='forest'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3) {
-            animation-delay: calc(-10 * var(--kp-sig-fo-stagger));
+            animation-delay: calc(var(--kp-sig-fo-head) - 10 * var(--kp-sig-fo-stagger));
         }
     }
 
