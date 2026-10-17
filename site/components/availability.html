@@ -301,6 +301,7 @@
                             <tr><td><code>data-kp-availability-star</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-availability-summary</code></td><td>prose</td></tr>
                             <tr><td><code>data-kp-availability-undo-ms</code></td><td>prose</td></tr>
+                            <tr><td><code>data-kp-availability-unit-switch</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-availability-window</code></td><td>prose</td></tr>
                     </tbody></table></div>
                 </section>
@@ -354,13 +355,14 @@
                             <tr><td><code>data-kp-availability-answers</code></td><td>`3` (can, maybe, cannot; default) or `2`.</td></tr>
                             <tr><td><code>data-kp-availability-press</code></td><td>`cycle` (default) or `menu`.</td></tr>
                             <tr><td><code>data-kp-availability-paint</code></td><td>Drag across your row to give the same answer; `false` turns it off.</td></tr>
-                            <tr><td><code>data-kp-availability-best</code></td><td>`most` (default), `everyone` or `none`.</td></tr>
-                            <tr><td><code>data-kp-availability-best-rule</code></td><td>`yes-count` (default) or `no-nobody`.</td></tr>
-                            <tr><td><code>data-kp-availability-quorum</code></td><td>How many must answer a column before it can be best.</td></tr>
+                            <tr><td><code>data-kp-availability-best</code></td><td>`most` (default: most who can, once everybody answered), `everyone` (only where everybody can) or `none`.</td></tr>
+                            <tr><td><code>data-kp-availability-best-rule</code></td><td>`yes-count` (default: most who can first) or `no-nobody` (fewest who cannot first).</td></tr>
+                            <tr><td><code>data-kp-availability-unit-switch</code></td><td>`on` or `off`: the organiser’s switch between periods and days, overriding `canSwitchUnit` of the spec; absent, the spec decides.</td></tr>
+                            <tr><td><code>data-kp-availability-quorum</code></td><td>How many must answer a column before it can be best (default everybody).</td></tr>
                             <tr><td><code>data-kp-availability-window</code></td><td>In day mode, the best stretch of this many days is marked.</td></tr>
                             <tr><td><code>data-kp-availability-sort</code></td><td>`mine-first` (default), `given` or `answered-first`.</td></tr>
                             <tr><td><code>data-kp-availability-summary</code></td><td>`both` (default), `count` or `bar`.</td></tr>
-                            <tr><td><code>data-kp-availability-choose</code></td><td>Shows Choose these dates on the best column.</td></tr>
+                            <tr><td><code>data-kp-availability-choose</code></td><td>Present: the best column offers Choose these dates (off by default).</td></tr>
                             <tr><td><code>data-kp-availability-locked</code></td><td>Column keys nobody can change any more.</td></tr>
                             <tr><td><code>data-kp-availability-narrow</code></td><td>`scroll` (default) or `by-column`, a list per column on a phone.</td></tr>
                             <tr><td><code>data-kp-availability-undo-ms</code></td><td>Undo after a stroke (6000).</td></tr>

@@ -29340,29 +29340,44 @@
         background: var(--card);
     }
 
+    /* One grid for the bar: the context's label on its own row, then the context select and the line (prompt, input, Run) on ONE row,
+       centred on the same line and the same height, so nothing sits half a label higher or lower than its neighbour [kpadopt6-r2]. */
     .kp-console__form {
         display: grid;
         grid-template-columns: auto minmax(0, 1fr);
+        grid-template-rows: auto auto;
         align-items: center;
         gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
     }
 
     .kp-console__context-wrap {
-        display: grid;
-        gap: 2px;
+        display: contents;
     }
 
     .kp-console__context-wrap[hidden] {
         display: none;
     }
 
+    .kp-console__context-label {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .kp-console__context {
+        grid-column: 1;
+        grid-row: 2;
+        align-self: center;
+    }
+
     .kp-console__context-wrap:not([hidden]) ~ .kp-console__line,
     .kp-console__line {
         grid-column: 2;
+        grid-row: 2;
     }
 
     .kp-console__context-wrap[hidden] ~ .kp-console__line {
         grid-column: 1 / -1;
+        grid-row: 1;
     }
 
     .kp-console__context-label {
@@ -29394,6 +29409,18 @@
 
     .kp-console__run {
         min-inline-size: 7.5rem;
+    }
+
+    .kp-console__input.kp-field__input,
+    .kp-console__context,
+    .kp-console__run {
+        min-block-size: 2.25rem;
+        box-sizing: border-box;
+    }
+
+    .kp-console__prompt {
+        line-height: 1;
+        align-self: center;
     }
 
     .kp-console__hint {
@@ -29429,10 +29456,28 @@
             grid-template-columns: minmax(0, 1fr);
         }
 
+        .kp-console__form {
+            grid-template-rows: none;
+        }
+
         .kp-console__context-wrap:not([hidden]) ~ .kp-console__line,
         .kp-console__line {
             grid-column: 1;
+            grid-row: auto;
             grid-template-columns: auto minmax(0, 1fr);
+        }
+
+        .kp-console__context-wrap[hidden] ~ .kp-console__line {
+            grid-row: auto;
+        }
+
+        .kp-console__context {
+            grid-column: 1;
+            grid-row: auto;
+        }
+
+        .kp-console__context-label {
+            grid-row: auto;
         }
 
         .kp-console__run {

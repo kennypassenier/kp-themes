@@ -52912,7 +52912,9 @@ function render4(root) {
     /** @type {HTMLElement | null} */
     head.querySelector(".kp-availability__unit")
   );
-  if (spec.canSwitchUnit && spec.sets) {
+  const switchAttr = root.getAttribute("data-kp-availability-unit-switch");
+  const switchable = switchAttr === "on" ? true : switchAttr === "off" ? false : Boolean(spec.canSwitchUnit);
+  if (switchable && spec.sets) {
     if (!unit2) {
       unit2 = el10("kp-segmented kp-availability__unit");
       unit2.setAttribute("role", "group");
@@ -53513,7 +53515,7 @@ function attachAvailability(root = document) {
     const watcher = new MutationObserver(() => render4(el_));
     watcher.observe(el_, {
       attributes: true,
-      attributeFilter: ["data-kp-heat-edit", "data-kp-disabled-reason", ...["answers", "press", "best", "best-rule", "window", "quorum", "sort", "summary", "locked", "narrow", "density", "disabled", "choose"].map((n) => `data-kp-availability-${n}`)]
+      attributeFilter: ["data-kp-heat-edit", "data-kp-disabled-reason", ...["answers", "press", "best", "best-rule", "window", "quorum", "sort", "summary", "locked", "narrow", "density", "disabled", "choose", "unit-switch"].map((n) => `data-kp-availability-${n}`)]
     });
     st.off = [
       () => el_.removeEventListener("click", onClick, true),
