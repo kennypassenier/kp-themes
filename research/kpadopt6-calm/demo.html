@@ -117,19 +117,41 @@
                 </div>
                 <div data-review-controls>
                     <div role="group" aria-label="While typing" class="k6-actions">
-                        <b>While typing:</b>
-                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="usual-while-typing" data-value="first">First</button>
+                        <b>While typing, the usual:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="usual-while-typing" data-value="first">Lead (default)</button>
                         <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-opt="usual-while-typing" data-value="hide">Step aside</button>
                     </div>
                     <div role="group" aria-label="Near names" class="k6-actions">
                         <b>Near name:</b>
-                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="near" data-value="ask">Ask</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="near" data-value="ask">Ask (default)</button>
                         <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-opt="near" data-value="select">Take closest</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-opt="near" data-value="off">Off</button>
                     </div>
                     <div role="group" aria-label="The full list" class="k6-actions">
                         <b>Full list:</b>
-                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="all" data-value="fold">Fold</button>
-                        <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-opt="all" data-value="open">Open</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="all" data-value="fold">Behind Show all N (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-opt="all" data-value="open">Fully shown</button>
+                    </div>
+                    <div role="group" aria-label="Order of the rest" class="k6-actions">
+                        <b>Rest of the list:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="order" data-value="alphabetical">Alphabetical (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-opt="order" data-value="given">As given</button>
+                    </div>
+                    <div role="group" aria-label="Band size" class="k6-actions">
+                        <b>Band size:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="usual-max" data-value="5">5 (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-opt="usual-max" data-value="3">3</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-opt="usual-max" data-value="7">7</button>
+                    </div>
+                    <div role="group" aria-label="Not today button" class="k6-actions">
+                        <b>Not today:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="not-today" data-value="on">On (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-opt="not-today" data-value="off">Off</button>
+                    </div>
+                    <div role="group" aria-label="Add a new name" class="k6-actions">
+                        <b>Add a new name:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="add" data-value="inline">Inline (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-opt="add" data-value="off">Off</button>
                     </div>
                 </div>
                 <div class="k6-pair k6-pair--tall">

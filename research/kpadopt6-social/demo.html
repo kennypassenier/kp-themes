@@ -134,24 +134,73 @@
                     </div>
                     <div role="group" aria-label="Press (live option)">
                         <b>Press (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-press|cycle" aria-pressed="true">Cycle</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-press|cycle" aria-pressed="true">Cycle (default)</button>
                         <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-press|menu" aria-pressed="false">Menu</button>
                     </div>
                     <div role="group" aria-label="Best column (live option)">
                         <b>Best column (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-best|most" aria-pressed="true">Most can</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-best|most" aria-pressed="true">Most can (default)</button>
                         <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-best|everyone" aria-pressed="false">Only everybody</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-best|none" aria-pressed="false">No best column</button>
                     </div>
                     <div role="group" aria-label="Summary (live option)">
                         <b>Summary (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-summary|both" aria-pressed="true">Number and fill</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-summary|both" aria-pressed="true">Number and fill (default)</button>
                         <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-summary|count" aria-pressed="false">Number</button>
                         <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-summary|bar" aria-pressed="false">Fill</button>
                     </div>
                     <div role="group" aria-label="Answers (live option)">
                         <b>Answers (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-answers|3" aria-pressed="true">Can, maybe, cannot</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-answers|3" aria-pressed="true">Can, maybe, cannot (default)</button>
                         <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-answers|2" aria-pressed="false">Can, cannot</button>
+                    </div>
+                    <div role="group" aria-label="Tie rule (live option)">
+                        <b>Tie rule (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-best-rule|yes-count" aria-pressed="true">Most who can (default)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-best-rule|no-nobody" aria-pressed="false">Fewest who cannot</button>
+                    </div>
+                    <div role="group" aria-label="Quorum (live option)">
+                        <b>A column counts once (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-quorum|5" aria-pressed="true">Everybody answered (default)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-quorum|3" aria-pressed="false">Three answered</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-quorum|1" aria-pressed="false">Anyone answered</button>
+                    </div>
+                    <div role="group" aria-label="Periods or days switch (live option)">
+                        <b>Periods or days switch (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-unit-switch|on" aria-pressed="true">Organiser switches (default)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-unit-switch|off" aria-pressed="false">Periods only</button>
+                    </div>
+                    <div role="group" aria-label="Row order (live option)">
+                        <b>Rows (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-sort|mine-first" aria-pressed="true">Mine first (default)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-sort|given" aria-pressed="false">As given</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-sort|answered-first" aria-pressed="false">Most answered first</button>
+                    </div>
+                    <div role="group" aria-label="Who edits (live option)">
+                        <b>Who edits (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-heat-edit|own" aria-pressed="true">Own row (default)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-heat-edit|all" aria-pressed="false">Every row</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-heat-edit|off" aria-pressed="false">Nobody</button>
+                    </div>
+                    <div role="group" aria-label="Paint (live option)">
+                        <b>Drag across a row (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-paint|on" aria-pressed="true">On (default)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-paint|false" aria-pressed="false">Off</button>
+                    </div>
+                    <div role="group" aria-label="Narrow (live option)">
+                        <b>On a phone (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-narrow|scroll" aria-pressed="true">Scroll sideways (default)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-narrow|by-column" aria-pressed="false">A list per column</button>
+                    </div>
+                    <div role="group" aria-label="Density (live option)">
+                        <b>Density (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-density|comfortable" aria-pressed="true">Comfortable (default)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-density|compact" aria-pressed="false">Compact</button>
+                    </div>
+                    <div role="group" aria-label="Choose button (live option)">
+                        <b>Choose these dates (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-choose|" aria-pressed="true">Offered (default)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-choose|-" aria-pressed="false">Not offered</button>
                     </div>
                 </div>
                 <p class="k6-readout" role="status" data-k6-av-readout>Nothing pressed yet.</p>
@@ -163,7 +212,6 @@
                                 class="kp-availability"
                                 data-kp-availability
                                 data-kp-availability-choose
-                                data-kp-availability-narrow="by-column"
                                 data-kp-remember="av-main"
                                 id="k6-av"
                                 aria-label="Who can come to the Ardennes weekend"
