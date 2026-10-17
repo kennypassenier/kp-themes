@@ -4957,38 +4957,15 @@
     }
 
     /* A live number as it counts [kpadopt4, tick; Kenny, 2026-10-17: "geen fan van de cirkel rond de waarde, zoek een meer
-       forest optie", then the trees, the tag and the trail round it not approved]. The change is in the digits: nothing is
-       drawn round, behind, under or after the figure. The element, its box and its text are untouched (no pseudo-element,
-       no padding, no transform); the digits are painted with a clip of their own for as long as the count runs (--kp-tick)
-       and the paint is the plain ink again on the frame the count lands, so nothing has to be put back. The growth curve is
-       the theme's --kp-sig-fo-grow. `data-kp-tick-forest` on any ancestor picks the treatment; none is the sprout.
-         sprout (default)  the digits grow up out of the soil line: moss climbs through them from the baseline on the
-                           growth curve and cools into the ink;
-         brand             the digits are branded: stamped hot in clay with a char edge that is burned out of the wood,
-                           then cooled into the ink (the edge lies outside the glyph, the counters stay open);
-         dapple            light falls through the canopy: moss and lime shadows drift across the digits at three
-                           speeds, thinning out as the count lands. */
+       forest optie", then the trees, the tag and the trail round it not approved; he picked the branded digits]. The
+       change is in the digits: nothing is drawn round, behind, under or after the figure. The element, its box and its
+       text are untouched (no pseudo-element, no padding, no transform); the digits are branded for as long as the count
+       runs (--kp-tick): stamped hot in clay with a char edge that is burned out of the wood, then cooled into the ink
+       (the edge lies outside the glyph, the counters stay open). The paint is the plain ink again on the frame the count
+       lands, so nothing has to be put back. */
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='forest'] [data-kp-tick][data-kp-tick-state='running'] {
             --kp-fo-tick-time: calc(var(--kp-tick, 600) * 1ms);
-            animation:
-                kp-fo-tick-sprout var(--kp-fo-tick-time) var(--kp-sig-fo-grow) both,
-                kp-fo-tick-cool var(--kp-fo-tick-time) linear both;
-            background:
-                linear-gradient(
-                    to top,
-                    color-mix(in oklab, var(--selected) calc(var(--kp-fo-ember) * 100%), currentColor) calc(18% + 64% * var(--kp-fo-grown)),
-                    currentColor 0
-                );
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            /* The package dims a busy element (layout.css, --kp-busy-opacity, 0.7): the digits are what changes here, so they
-               keep their full ink. */
-            --kp-busy-opacity: 1;
-        }
-
-        [data-theme='forest'] [data-kp-tick-forest='brand'] [data-kp-tick][data-kp-tick-state='running'] {
             animation:
                 kp-fo-tick-stamp var(--kp-fo-tick-time) linear both,
                 kp-fo-tick-cool var(--kp-fo-tick-time) linear both;
@@ -4996,30 +4973,9 @@
             -webkit-text-fill-color: color-mix(in oklab, var(--chart-2) calc(var(--kp-fo-ember) * 100%), currentColor);
             -webkit-text-stroke: calc(var(--kp-fo-grown) * 0.08em) color-mix(in oklab, var(--accent-foreground) 85%, transparent);
             paint-order: stroke fill;
-        }
-
-        [data-theme='forest'] [data-kp-tick-forest='dapple'] [data-kp-tick][data-kp-tick-state='running'] {
-            animation:
-                kp-fo-tick-drift var(--kp-fo-tick-time) linear both,
-                kp-fo-tick-cool var(--kp-fo-tick-time) linear both;
-            background:
-                radial-gradient(closest-side, color-mix(in oklab, var(--selected) calc(var(--kp-fo-ember) * 100%), transparent) 45%, transparent) 0 20% / 3.1em 90% repeat-x,
-                radial-gradient(closest-side, color-mix(in oklab, var(--chart-4) calc(var(--kp-fo-ember) * 100%), transparent) 45%, transparent) 0 80% / 4.3em 80% repeat-x,
-                radial-gradient(closest-side, color-mix(in oklab, var(--selected) calc(var(--kp-fo-ember) * 85%), transparent) 40%, transparent) 0 50% / 2.2em 70% repeat-x,
-                linear-gradient(currentColor, currentColor);
-            -webkit-background-clip: text;
-            background-clip: text;
-        }
-
-        /* The soil line climbs through the digits once, on the growth curve, and the moss is cooled into the ink by the
-           same clock (kp-fo-tick-cool), so the last frame is the ink. */
-        @keyframes kp-fo-tick-sprout {
-            from {
-                --kp-fo-grown: 0;
-            }
-            to {
-                --kp-fo-grown: 1;
-            }
+            /* The package dims a busy element (layout.css, --kp-busy-opacity, 0.7): the digits are what changes here, so they
+               keep their full ink. */
+            --kp-busy-opacity: 1;
         }
 
         /* The brand lands hot in the first fifth and its char edge burns back into the wood as it cools. */
@@ -5034,24 +4990,6 @@
             }
             100% {
                 --kp-fo-grown: 0;
-            }
-        }
-
-        /* The shadows only drift: one tile of each layer in the length of the count, in opposite directions. */
-        @keyframes kp-fo-tick-drift {
-            from {
-                background-position:
-                    0 20%,
-                    0 80%,
-                    0 50%,
-                    0 0;
-            }
-            to {
-                background-position:
-                    3.1em 20%,
-                    -4.3em 80%,
-                    -2.2em 50%,
-                    0 0;
             }
         }
 
@@ -5150,7 +5088,9 @@
     [data-theme='forest'] .kp-action-list--lead > li[data-kp-state='failed'] {
         --kp-fo-blaze: var(--destructive);
     }
-    [data-theme='forest'] .kp-action-list--lead > li:is([data-kp-state='new'], [data-kp-state='next'], [data-kp-state='active'], [data-kp-state='warn'], [data-kp-state='failed']) {
+    [data-theme='forest']
+        .kp-action-list--lead
+        > li:is([data-kp-state='new'], [data-kp-state='next'], [data-kp-state='active'], [data-kp-state='warn'], [data-kp-state='failed']) {
         border-image: linear-gradient(to bottom, transparent 0.4rem, var(--kp-fo-blaze) 0.4rem 1.7rem, transparent 1.7rem) 1;
     }
     [data-theme='forest'] .kp-action-list__meta,
@@ -5201,7 +5141,9 @@
         font-style: italic;
     }
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='forest'] .kp-secret:not([data-kp-secret-ttl='0'], [data-kp-secret-reveal-on='hold'])[data-kp-secret-state='shown'] .kp-secret__drain {
+        [data-theme='forest']
+            .kp-secret:not([data-kp-secret-ttl='0'], [data-kp-secret-reveal-on='hold'])[data-kp-secret-state='shown']
+            .kp-secret__drain {
             animation-name: kp-sig-forest-secret-drain;
             animation-timing-function: linear;
         }
@@ -5442,7 +5384,9 @@
         border-style: dashed;
     }
     @media (hover: hover) {
-        [data-theme='forest'] .kp-segmented--chips[data-kp-segmented='tri']:not([aria-disabled='true']) > .kp-segmented__item:hover:not(:focus-visible) {
+        [data-theme='forest']
+            .kp-segmented--chips[data-kp-segmented='tri']:not([aria-disabled='true'])
+            > .kp-segmented__item:hover:not(:focus-visible) {
             box-shadow: none;
             outline-color: var(--primary);
             outline-offset: 2px;
@@ -5564,11 +5508,7 @@
         --kp-wheel-pointer: var(--accent-foreground);
     }
     [data-theme='forest'] .kp-wheel__spin.kp-button {
-        background: repeating-radial-gradient(
-            circle closest-side,
-            var(--primary) 0 4px,
-            hsl(from var(--primary) h s calc(l * 1.4)) 4px 5px
-        );
+        background: repeating-radial-gradient(circle closest-side, var(--primary) 0 4px, hsl(from var(--primary) h s calc(l * 1.4)) 4px 5px);
     }
     [data-theme='forest'] .kp-wheel__rim {
         stroke-width: 2.5;

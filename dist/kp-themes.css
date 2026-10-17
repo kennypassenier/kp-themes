@@ -18291,6 +18291,45 @@
         position: absolute !important;
     }
 
+    /* The hub is a still, round disc in every theme and every state [cook-1017; Kenny 2026-10-17 17:48: "bij hover bij de
+       spin knop komt er een vierkant kader rond, dat mag in geen enkele spinner, er moet geen hover animatie zijn en er
+       mogen geen vierkante kaders rond dit ronde element komen, in geen enkel thema"]. Hover, press and focus never
+       animate it, never change its shape, size or place, and never draw a square or rectangle round it: no clip-path, no
+       mask, no outline (but the keyboard's own round ring), no register plate on its pseudo-elements. A colour may
+       answer instantly. Important, as the registers are a later layer; each register keeps its own colours and its own
+       round decoration of the hub. */
+    .kp-wheel__spin.kp-button,
+    .kp-wheel__spin.kp-button:is(:hover, :active, :focus, :focus-visible),
+    .kp-wheel__spin.kp-button::before,
+    .kp-wheel__spin.kp-button::after,
+    .kp-wheel__spin.kp-button:is(:hover, :active, :focus, :focus-visible)::before,
+    .kp-wheel__spin.kp-button:is(:hover, :active, :focus, :focus-visible)::after {
+        transition: none !important;
+        animation: none !important;
+        scale: none !important;
+        rotate: none !important;
+        transform: none !important;
+        clip-path: none !important;
+        mask: none !important;
+    }
+
+    .kp-wheel__spin.kp-button:not(:focus-visible) {
+        outline: none !important;
+    }
+
+    /* Its shadow is the same at rest, pointed at, pressed and focused: --kp-wheel-hub-shadow is the register's rest
+       shadow (the collar round the disc by default), so no state paints a larger or another frame. */
+    .kp-wheel__spin.kp-button:is(:hover, :active, :focus-visible) {
+        box-shadow: var(--kp-wheel-hub-shadow, 0 0 0 var(--kp-wheel-hub-ring, 4px) var(--card)) !important;
+    }
+
+    /* Keyboard focus: a round ring that follows the disc, outside the card-coloured collar. */
+    .kp-wheel__spin.kp-button:focus-visible {
+        outline: 3px solid var(--focus-ring, currentColor) !important;
+        outline-offset: calc(var(--kp-wheel-hub-ring, 4px) + 1px) !important;
+        border-radius: 50% !important;
+    }
+
     .kp-wheel__spin[aria-disabled='true'] {
         opacity: 0.55;
         cursor: not-allowed;
@@ -28146,6 +28185,19 @@
         --kp-wheel-pointer: var(--accent);
         --kp-wheel-tint: 24%;
     }
+    /* The hub carries none of the button's plates, frames or labels on its pseudo-elements: a round disc stays round
+       [cook-1017; Kenny 2026-10-17: no square frame round the spin hub in any theme]. */
+    [data-theme='cyberpunk'] .kp-wheel__spin.kp-button::before,
+    [data-theme='cyberpunk'] .kp-wheel__spin.kp-button::after {
+        content: none !important;
+    }
+    /* No stripes of its own either: the button's two 3 px side bars and its cut-corner wedge (background layers) would
+       leave a rectangular nub on the disc's rim; the yellow stays as the colour. */
+    [data-theme='cyberpunk'] .kp-wheel__spin.kp-button,
+    [data-theme='cyberpunk'] .kp-wheel__spin.kp-button:is(:hover, :active, :focus-visible) {
+        --kp-wheel-hub-shadow: none;
+        background-image: none !important;
+    }
     [data-theme='cyberpunk'] .kp-wheel__rim {
         stroke: var(--primary);
         stroke-width: 1.2;
@@ -34072,6 +34124,17 @@
         --kp-wheel-ease: var(--kp-sw-sun);
         --kp-wheel-pointer: var(--primary);
         --kp-wheel-tint: 26%;
+    }
+    /* The hub carries none of the button's plates, frames or labels on its pseudo-elements: a round disc stays round
+       [cook-1017; Kenny 2026-10-17: no square frame round the spin hub in any theme]. */
+    [data-theme='synthwave'] .kp-wheel__spin.kp-button::before,
+    [data-theme='synthwave'] .kp-wheel__spin.kp-button::after {
+        content: none !important;
+    }
+    [data-theme='synthwave'] .kp-wheel__spin.kp-button {
+        --kp-wheel-hub-shadow:
+            inset 0 0 0.5em 0 var(--kp-glow),
+            0 0 0.5em 0 var(--kp-glow);
     }
     [data-theme='synthwave'] .kp-wheel__rim {
         stroke: var(--kp-core);
@@ -40418,6 +40481,15 @@
         letter-spacing: 0.04em;
         text-transform: uppercase;
     }
+    /* The hub carries none of the button's plates, frames or labels on its pseudo-elements: a round disc stays round
+       [cook-1017; Kenny 2026-10-17: no square frame round the spin hub in any theme]. */
+    [data-theme='brutalism'] .kp-wheel__spin.kp-button::before,
+    [data-theme='brutalism'] .kp-wheel__spin.kp-button::after {
+        content: none !important;
+    }
+    [data-theme='brutalism'] .kp-wheel__spin.kp-button {
+        --kp-wheel-hub-shadow: var(--kp-shadow);
+    }
     [data-theme='brutalism'] .kp-wheel__rim {
         stroke: var(--border-strong);
         stroke-width: 4;
@@ -45386,7 +45458,8 @@
         stroke: var(--border-strong);
     }
     [data-theme='titanium'] .kp-wheel__spin.kp-button {
-        box-shadow: 0 0 0 var(--kp-wheel-hub-ring) var(--border-strong);
+        --kp-wheel-hub-shadow: 0 0 0 var(--kp-wheel-hub-ring) var(--border-strong);
+        box-shadow: var(--kp-wheel-hub-shadow);
         clip-path: none;
     }
     [data-theme='titanium'] .kp-wheel__caption {
@@ -51116,6 +51189,15 @@
     [data-theme='pastel'] .kp-wheel__segment {
         stroke-width: 2.4;
     }
+    /* The hub carries none of the button's plates, frames or labels on its pseudo-elements: a round disc stays round
+       [cook-1017; Kenny 2026-10-17: no square frame round the spin hub in any theme]. */
+    [data-theme='pastel'] .kp-wheel__spin.kp-button::before,
+    [data-theme='pastel'] .kp-wheel__spin.kp-button::after {
+        content: none !important;
+    }
+    [data-theme='pastel'] .kp-wheel__spin.kp-button {
+        --kp-wheel-hub-shadow: 0 3px 0 var(--kp-sig-pa-peel);
+    }
     [data-theme='pastel'] .kp-wheel__rim {
         stroke: var(--primary);
         stroke-width: 2;
@@ -53047,6 +53129,10 @@
            or a circle alike, so a page that loads breathes as one grove. The
            spinner keeps its tree a half loop (1600 ms). */
         --kp-sig-fo-breath: 6600ms;
+        /* Where in its breath a bar or a strip starts: 1000 ms in, whole trees already standing (breath about 0.3
+           when it appears), so the first frames show trees and not bare ground [cook-1017; Kenny: "Meteen bomen"]. The
+           breath itself stays 6600 ms; it is a negative delay, not another keyframe. */
+        --kp-sig-fo-head: -1000ms;
         /* js/motion.js reads its caps from the root: a close or a size
            glide of one growth time is not cut short (its defaults, 600 and
            480 ms, are other themes'). */
@@ -53167,7 +53253,7 @@
             var(--kp-fo-margin) + round(down, var(--kp-fo-breath) * (var(--kp-fo-run) + var(--kp-fo-pitch)), var(--kp-fo-pitch)),
             100cqi
         );
-        animation: kp-progressbar-forest-breath var(--kp-sig-fo-breath) linear infinite;
+        animation: kp-progressbar-forest-breath var(--kp-sig-fo-breath) linear var(--kp-sig-fo-head) infinite;
     }
 
     [data-theme='forest'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
@@ -54251,16 +54337,16 @@
                 .kp-kpi__chart .kp-chart__state[data-kp-state='loading'],
                 .kp-calendar--busy-whole > .kp-calendar__busy
             ) {
-            animation: kp-progressbar-forest-breath var(--kp-sig-fo-breath) linear infinite;
+            animation: kp-progressbar-forest-breath var(--kp-sig-fo-breath) linear var(--kp-sig-fo-head) infinite;
         }
 
         /* Lines of a skeleton stand 400 ms apart. */
         [data-theme='forest'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(2) {
-            animation-delay: calc(-5 * var(--kp-sig-fo-stagger));
+            animation-delay: calc(var(--kp-sig-fo-head) - 5 * var(--kp-sig-fo-stagger));
         }
 
         [data-theme='forest'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block):nth-child(3) {
-            animation-delay: calc(-10 * var(--kp-sig-fo-stagger));
+            animation-delay: calc(var(--kp-sig-fo-head) - 10 * var(--kp-sig-fo-stagger));
         }
     }
 
@@ -60230,7 +60316,8 @@
     [data-theme='deco'] .kp-meter[data-kp-loading]::before,
     [data-theme='deco'] .kp-kpi__meter[data-kp-loading]::before,
     [data-theme='deco'] .kp-menu-button > .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading]::before,
-    [data-theme='deco'] .kp-button[aria-busy='true']::before {
+    [data-theme='deco'] .kp-button[aria-busy='true']::before,
+    [data-theme='deco'] .kp-checklist:not([data-kp-checklist-loading='spinner']) .kp-checklist__busy::before {
         content: '';
         position: absolute;
         inset-block: 0;
@@ -60306,7 +60393,8 @@
     [data-theme='deco'] .kp-meter[data-kp-loading]::after,
     [data-theme='deco'] .kp-kpi__meter[data-kp-loading]::after,
     [data-theme='deco'] .kp-menu-button > .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading]::after,
-    [data-theme='deco'] .kp-button[aria-busy='true']::after {
+    [data-theme='deco'] .kp-button[aria-busy='true']::after,
+    [data-theme='deco'] .kp-checklist:not([data-kp-checklist-loading='spinner']) .kp-checklist__busy::after {
         content: '';
         position: absolute;
         inset-block: 0;
@@ -60371,6 +60459,30 @@
             no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
         box-shadow: inset 1px 0 0 hsl(from var(--kp-sig-deco-gold-lo) h s l / 0.6);
         translate: calc(var(--kp-sig-deco-p) * 33.4%) 0;
+    }
+
+    /* The checklist's loading, two ways [cook-1017; Kenny 2026-10-17 17:48: "de loading animatie met de gordijnen werkt
+       enkel als het het hele element omvangt, dus maak een versie die dat doet, en een versie met gewoon de spinner"].
+       `data-kp-checklist-loading` on the list picks one, the curtains when it is absent:
+       - curtains: the busy card's own layer, which covers the whole body of the list, wears the two doors, so they close
+         over the entire checklist and open on it; the card's spinner and words stand under them and show in the gap.
+       - spinner: the busy card with deco's sunburst spinner and its words, centred, and no doors.
+       The card's panel never wears the doors itself here: a small pair over a long list is what was refused. */
+    [data-theme='deco'] .kp-checklist .kp-checklist__busy > .kp-datatable__busy-panel::before,
+    [data-theme='deco'] .kp-checklist .kp-checklist__busy > .kp-datatable__busy-panel::after {
+        content: none;
+    }
+
+    [data-theme='deco'] .kp-checklist:not([data-kp-checklist-loading='spinner']) .kp-checklist__busy {
+        --kp-sig-deco-p: 1;
+        isolation: isolate;
+        overflow: clip;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-checklist:not([data-kp-checklist-loading='spinner']) .kp-checklist__busy {
+            animation: kp-sig-deco-doors var(--kp-sig-deco-loop) linear infinite;
+        }
     }
 
     /* Standing still, a waiting button keeps its label readable: the other
@@ -63112,8 +63224,14 @@
         stroke: var(--primary);
         stroke-width: 1;
     }
-    [data-theme='deco'] .kp-wheel .kp-wheel__spin.kp-button {
-        translate: 0 calc(1px * var(--kp-sig-deco-pr, 0));
+    /* The hub is still: pointing and pressing turn neither the leaf's wash nor the seal's ring, and nothing sinks
+       [cook-1017; Kenny 2026-10-17: no hover animation on the spin hub in any theme]. */
+    [data-theme='deco'] .kp-wheel .kp-wheel__spin.kp-button,
+    [data-theme='deco'] .kp-wheel .kp-wheel__spin.kp-button:is(:hover, :active, :focus-visible) {
+        --kp-sig-deco-hv: 0 !important;
+        --kp-sig-deco-pr: 0 !important;
+        --kp-wheel-hub-shadow: none;
+        translate: none;
     }
     [data-theme='deco'] .kp-wheel__pointer {
         stroke: var(--kp-sig-deco-lac);
@@ -68866,6 +68984,12 @@
         stroke: var(--border-strong);
         stroke-width: 0.8;
     }
+    /* The hub carries none of the button's plates, frames or labels on its pseudo-elements: a round disc stays round
+       [cook-1017; Kenny 2026-10-17: no square frame round the spin hub in any theme]. */
+    [data-theme='blueprint'] .kp-wheel__spin.kp-button::before,
+    [data-theme='blueprint'] .kp-wheel__spin.kp-button::after {
+        content: none !important;
+    }
     [data-theme='blueprint'] .kp-wheel__rim {
         stroke-width: 1;
     }
@@ -74530,10 +74654,11 @@
             0 0 0 calc(var(--kp-wheel-hub-ring) + 1px) var(--border-strong);
     }
     [data-theme='nostromo'] .kp-wheel__spin.kp-button {
-        box-shadow:
+        --kp-wheel-hub-shadow:
             0 0 0 var(--kp-wheel-hub-ring) var(--secondary),
             0 0 0 calc(var(--kp-wheel-hub-ring) + 1px) var(--border-strong),
             var(--kp-sig-no-raised);
+        box-shadow: var(--kp-wheel-hub-shadow);
     }
     [data-theme='nostromo'] .kp-wheel__disc {
         box-shadow:
@@ -80089,6 +80214,12 @@
         stroke: var(--background);
         stroke-width: 0.8;
     }
+    /* The hub carries none of the button's plates, frames or labels on its pseudo-elements: a round disc stays round
+       [cook-1017; Kenny 2026-10-17: no square frame round the spin hub in any theme]. */
+    [data-theme='dark'] .kp-wheel__spin.kp-button::before,
+    [data-theme='dark'] .kp-wheel__spin.kp-button::after {
+        content: none !important;
+    }
     [data-theme='dark'] .kp-wheel__rim {
         stroke: var(--chart-1);
         stroke-width: 1;
@@ -84883,6 +85014,12 @@
    The anchor: the outcome is the account closed, a navy rule under the name
    with the thinner second rule under it (the double rule). */
 @layer kp.register {
+    /* The hub carries none of the button's plates, frames or labels on its pseudo-elements: a round disc stays round
+       [cook-1017; Kenny 2026-10-17: no square frame round the spin hub in any theme]. */
+    [data-theme='formal'] .kp-wheel__spin.kp-button::before,
+    [data-theme='formal'] .kp-wheel__spin.kp-button::after {
+        content: none !important;
+    }
     [data-theme='formal'] .kp-wheel__outcome:not(:empty, [data-kp-wheel-note]) {
         text-decoration: underline double var(--primary);
         text-decoration-thickness: 1px;

@@ -53,13 +53,16 @@ for (const [i, part] of parts.entries()) {
     const latest = latestVerdicts(verdicts, all);
     // A pair reopened because its component changed (formal included) is asked again, first in the list.
     const reopened = (/** @type {string} */ item) =>
-        (verdicts.reopened ?? [])
-            .filter((/** @type {any} */ r) => r.item === item && !THEMES.split(',').includes(r.theme))
-            .map((/** @type {any} */ r) => r.theme);
+        (verdicts.reopened ?? []).filter((/** @type {any} */ r) => r.item === item).map((/** @type {any} */ r) => r.theme);
     const open = new Map(
         part.sections.map((item) => [
             item,
-            [...reopened(item), ...THEMES.split(',').filter((theme) => latest.get(`${theme}|${item}`) !== 'approved')],
+            [
+                ...new Set([
+                    ...reopened(item).filter((t) => !THEMES.split(',').includes(t)),
+                    ...THEMES.split(',').filter((theme) => reopened(item).includes(theme) || latest.get(`${theme}|${item}`) !== 'approved'),
+                ]),
+            ],
         ]),
     );
     const decided = [...open.values()].every((themes) => !themes.length);
