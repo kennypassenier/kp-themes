@@ -243,6 +243,7 @@ export {
     setGalleryUploading,
 } from './js/gallery.js';
 export { USES_COLLAPSE_BELOW, USES_MAP, USES_PIN_EVENT, USES_RETRY_EVENT, setUsesPin, usesPath, usesRelation } from './js/uses-map.js';
+export {
     USUAL,
     USUAL_ADD_EVENT,
     USUAL_FOLD_ABOVE,
