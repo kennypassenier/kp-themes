@@ -15593,10 +15593,6 @@
        a later layer. */
     .kp-wheel__spin.kp-button {
         translate: none !important;
-        /* Likewise its position: six registers give every button `position: relative` (cyberpunk, blueprint, brutalism,
-           deco, nostromo, synthwave), which drops the hub out of the disc's centring and into the stage's flow corner
-           [cook-1017; Kenny: "de spin knop staat niet op zijn plaats"]. */
-        position: absolute !important;
     }
 
     .kp-wheel__spin[aria-disabled='true'] {

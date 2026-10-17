@@ -65,50 +65,13 @@
                     "note": "Maybe add a couple of other sound option, like a harsher, more traditional sound, and the option to speak which timer is done like: \"The rice has been cooked, remove it from the heat\""
                 }
             ]
-        },
-        {
-            "round": "3",
-            "page": "cooking-c4ecb855-f942-4da8-878e-a564f54c25a1",
-            "allJudged": false,
-            "comment": "Kenny, 2026-10-17 17:20: timers approved in formal; all six approved in dark; wheel not approved in cyberpunk. The kit also reported four other cyberpunk sections approved, but Kenny had judged only the wheel there (\"zet die terug\"), so they stay open with the nine other themes.",
-            "approved": [
-                {
-                    "item": "timers",
-                    "theme": "formal"
-                },
-                {
-                    "item": "wheel",
-                    "theme": "dark"
-                },
-                {
-                    "item": "cook",
-                    "theme": "dark"
-                },
-                {
-                    "item": "timers",
-                    "theme": "dark"
-                },
-                {
-                    "item": "quantity",
-                    "theme": "dark"
-                },
-                {
-                    "item": "checklist",
-                    "theme": "dark"
-                },
-                {
-                    "item": "tri",
-                    "theme": "dark"
-                }
-            ],
-            "notApproved": [
-                {
-                    "item": "wheel",
-                    "theme": "cyberpunk",
-                    "note": "de spin knop staat niet op zijn plaats"
-                }
-            ]
         }
     ],
-    "reopened": []
+    "reopened": [
+        {
+            "item": "timers",
+            "theme": "formal",
+            "reason": "Kenny's notes on dark (2026-10-17 15:37) were component faults: the fix changed the component in every theme, formal included (cook-1017)"
+        }
+    ]
 }
