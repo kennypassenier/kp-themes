@@ -1014,6 +1014,27 @@
  * @property {string} quoteRetry  The failed card's button [kpadopt6]
  * @property {string} quoteListName  A list of quotes' name for a screen reader [kpadopt6]
  * @property {string} quoteAnnounceHidden  What is said when a quote is hidden [kpadopt6]
+ * @property {string} statusOpen  A row in the calm vocabulary that is still open (js/statusrow.js, `data-kp-status-vocab="calm"`) [kpadopt6]
+ * @property {string} statusDone  A calm row that is done [kpadopt6]
+ * @property {string} statusPaused  A calm row that is paused [kpadopt6]
+ * @property {string} statusUnknown  A calm row nothing is known about: never shown as done [kpadopt6]
+ * @property {(date: string) => string} statusSinceDate  A paused row's line: "Paused since 03/10/2026" [kpadopt6]
+ * @property {(duration: string) => string} statusSinceFor  The same as a length: "Paused for 3 weeks" [kpadopt6]
+ * @property {(date: string, duration: string) => string} statusSinceBoth  The same with both: "Paused since 03/10/2026 (2 weeks)" [kpadopt6]
+ * @property {(days: number) => string} statusDuration  A length of days in words: "5 days", "3 weeks", "4 months" [kpadopt6]
+ * @property {string} statusResume  The button that takes a paused row up again [kpadopt6]
+ * @property {(label: string) => string} statusResumeLabel  That button's accessible name: "Resume Beweging" [kpadopt6]
+ * @property {string} statusPause  The optional button that pauses a row [kpadopt6]
+ * @property {(label: string) => string} statusPauseLabel  That button's accessible name [kpadopt6]
+ * @property {(label: string) => string} statusResumed  What is said and toasted after a resume: "Beweging resumed" [kpadopt6]
+ * @property {(label: string) => string} statusPausedNow  What is said and toasted after a pause: "Beweging paused" [kpadopt6]
+ * @property {(n: number, days: number) => string} statusFoldLine  The line that gathers long-paused rows: "3 paused for more than 30 days" [kpadopt6]
+ * @property {string} statusTodayEmptyTitle  The empty today card's title [kpadopt6]
+ * @property {string} statusTodayEmptyText  Its second sentence: nothing is waiting [kpadopt6]
+ * @property {string} statusTodayFailedTitle  The failed today card's title [kpadopt6]
+ * @property {string} statusTodayFailedText  Its sentence: the fault is the system's [kpadopt6]
+ * @property {string} statusTodayLoading  The words under the loading card [kpadopt6]
+ * @property {string} statusTodayRetry  The failed card's button [kpadopt6]
  */
 
 /**
@@ -2218,6 +2239,35 @@ export const DEFAULT_STRINGS = Object.freeze({
     quoteRetry: 'Retry',
     quoteListName: 'Earlier words',
     quoteAnnounceHidden: 'Quote hidden',
+    // The calm status vocabulary and the today card (js/statusrow.js) [kpadopt6].
+    statusOpen: 'Open',
+    statusDone: 'Done',
+    statusPaused: 'Paused',
+    statusUnknown: 'Not known',
+    statusSinceDate: (date) => `Paused since ${date}`,
+    statusSinceFor: (duration) => `Paused for ${duration}`,
+    statusSinceBoth: (date, duration) => `Paused since ${date} (${duration})`,
+    statusDuration: (days) =>
+        days < 14
+            ? `${days} ${days === 1 ? 'day' : 'days'}`
+            : days < 60
+              ? `${Math.floor(days / 7)} weeks`
+              : days < 730
+                ? `${Math.floor(days / 30)} months`
+                : `${Math.floor(days / 365)} years`,
+    statusResume: 'Resume',
+    statusResumeLabel: (label) => `Resume ${label}`,
+    statusPause: 'Pause',
+    statusPauseLabel: (label) => `Pause ${label}`,
+    statusResumed: (label) => `${label} resumed`,
+    statusPausedNow: (label) => `${label} paused`,
+    statusFoldLine: (n, days) => `${n} paused for more than ${days} days`,
+    statusTodayEmptyTitle: 'Nothing planned today',
+    statusTodayEmptyText: 'That is fine, nothing is waiting',
+    statusTodayFailedTitle: 'Could not read today',
+    statusTodayFailedText: 'The list could not be reached just now.',
+    statusTodayLoading: 'Reading today',
+    statusTodayRetry: 'Retry',
 });
 
 // STRINGS_NL was removed in 4.0.0 [D3]. Kenny decided that on

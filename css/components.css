@@ -23516,4 +23516,86 @@
     .kp-quote-list__more[hidden] {
         display: none;
     }
+
+    /* --- The calm vocabulary of the status list, and the today card [kpadopt6] ---
+ * `data-kp-status-vocab="calm"` on `.kp-statuslist` (js/statusrow.js): a row is `open` (neutral ink, a ring and a dot), `done`
+ * (the info pair with a check: never success green, never a flourish), `paused` (a dashed edge, a pause glyph, "Paused since
+ * 03/10/2026" and Resume) or `unknown` (dashed, a question mark: a thing that reports "ok" with no data is never done).
+ * No red, no pulse, no tally. Every state has its own glyph, so a tone is never the only carrier; `data-kp-today-mark="none"`
+ * takes the glyphs away. Knobs [KT6]: --kp-today-row-min (3.5rem, 56 px: one thumb), --kp-glyph-open, --kp-glyph-done,
+ * --kp-glyph-paused, --kp-glyph-unknown. */
+    .kp-statuslist[data-kp-status-vocab='calm'] .kp-statusrow {
+        align-items: center;
+        min-block-size: var(--kp-today-row-min, 3.5rem);
+    }
+
+    .kp-statuslist[data-kp-status-vocab='calm'] .kp-statusrow__mark {
+        margin-block-start: 0;
+    }
+
+    .kp-statuslist[data-kp-status-vocab='calm'] .kp-statusrow:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+
+    .kp-statusrow[data-state='open'] .kp-statusrow__mark {
+        border-color: var(--border-strong);
+        color: var(--muted-foreground);
+    }
+
+    .kp-statusrow[data-state='open'] .kp-statusrow__mark::after {
+        content: var(--kp-glyph-open, '·');
+    }
+
+    .kp-statusrow[data-state='done'] .kp-statusrow__mark {
+        border-color: var(--info-foreground);
+        background: var(--info);
+        color: var(--info-foreground);
+    }
+
+    .kp-statusrow[data-state='done'] .kp-statusrow__mark::after {
+        content: var(--kp-glyph-done, var(--kp-glyph-check, '✓'));
+    }
+
+    .kp-statusrow:is([data-state='paused'], [data-state='unknown']) {
+        border-style: dashed;
+        color: var(--muted-foreground);
+    }
+
+    .kp-statusrow:is([data-state='paused'], [data-state='unknown']) .kp-statusrow__mark {
+        border-style: dashed;
+        color: var(--muted-foreground);
+    }
+
+    .kp-statusrow[data-state='paused'] .kp-statusrow__mark::after {
+        content: var(--kp-glyph-paused, '||');
+        letter-spacing: -0.12em;
+    }
+
+    .kp-statusrow[data-state='unknown'] .kp-statusrow__mark::after {
+        content: var(--kp-glyph-unknown, '?');
+    }
+
+    .kp-statuslist[data-kp-today-mark='none'] .kp-statusrow__mark::after {
+        content: none;
+    }
+
+    .kp-statuslist[data-kp-status-vocab='calm'] .kp-statusrow__action {
+        display: flex;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-statusrow--fold {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 0;
+        border-style: dashed;
+    }
+
+    .kp-statusrow__fold {
+        justify-content: flex-start;
+        inline-size: 100%;
+        min-block-size: var(--kp-today-row-min, 3.5rem);
+        text-align: start;
+        white-space: normal;
+    }
 }

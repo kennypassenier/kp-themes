@@ -5,6 +5,7 @@
 // Everything drawn is drawn by the package's own functions and attributes.
 import { setRatingState } from '../../js/rating.js';
 import { setQuoteState } from '../../js/quote.js';
+import { setStatus, settleToday, setTodayState } from '../../js/statusrow.js';
 
 /** @param {string} selector @param {ParentNode} [root] */
 const all = (selector, root = document) => /** @type {HTMLElement[]} */ ([...root.querySelectorAll(selector)]);
@@ -30,6 +31,52 @@ function onButtons(attr, run) {
 const log = (box, text) => {
     if (box) box.textContent = text;
 };
+
+// ---- 3 · today card ------------------------------------------------------------------------------
+{
+    const listOf = (/** @type {string} */ id) => /** @type {HTMLElement} */ (document.querySelector(`#${id} .kp-statuslist`));
+    const a = listOf('k6-today-a');
+    for (const id of ['k6-today-a', 'k6-today-b']) {
+        listOf(id).addEventListener('kp-status-resume', (event) => {
+            log(document.getElementById('k6-today-log'), `kp-status-resume { id: '${/** @type {CustomEvent} */ (event).detail.id}' }`);
+        });
+        listOf(id).addEventListener('kp-status-undo', (event) => {
+            log(document.getElementById('k6-today-log'), `kp-status-undo { id: '${/** @type {CustomEvent} */ (event).detail.id}', action: '${/** @type {CustomEvent} */ (event).detail.action}' }`);
+        });
+    }
+    onButtons('data-k6-today-since', (value) => {
+        for (const id of ['k6-today-a', 'k6-today-b']) {
+            const list = listOf(id);
+            if (value === 'date') list.removeAttribute('data-kp-today-since');
+            else list.setAttribute('data-kp-today-since', value);
+            for (const row of list.querySelectorAll('.kp-statusrow[data-state="paused"]')) setStatus(list, row.getAttribute('data-kp-status-id') ?? '', { state: 'paused' });
+        }
+    });
+    document.querySelector('[data-k6-today-pause]')?.addEventListener('click', (event) => {
+        const button = /** @type {HTMLElement} */ (event.currentTarget);
+        const on = button.getAttribute('aria-pressed') !== 'true';
+        button.setAttribute('aria-pressed', String(on));
+        for (const id of ['k6-today-a', 'k6-today-b']) {
+            const list = listOf(id);
+            list.toggleAttribute('data-kp-today-pause', on);
+            for (const row of list.querySelectorAll('.kp-statusrow:not(.kp-statusrow--fold)')) setStatus(list, row.getAttribute('data-kp-status-id') ?? '', {});
+        }
+    });
+    document.querySelector('[data-k6-today-failed]')?.addEventListener('click', () => {
+        setStatus(a, 'walk', { state: /** @type {any} */ ('failed') });
+    });
+    onButtons('data-k6-today-fold', (value) => {
+        const list = listOf('k6-today-b');
+        list.setAttribute('data-kp-today-paused', value);
+        settleToday(list);
+    });
+    const driven = /** @type {HTMLElement} */ (document.getElementById('k6-today-s'));
+    driven.addEventListener('kp-card-retry', () => {
+        setTodayState(driven, 'loading');
+        void sleep(1000).then(() => setTodayState(driven, 'ready'));
+    });
+    onButtons('data-k6-today-state', (value) => setTodayState(driven, /** @type {'ready' | 'loading' | 'empty' | 'error'} */ (value)));
+}
 
 // ---- 4 · quote card ------------------------------------------------------------------------------
 {

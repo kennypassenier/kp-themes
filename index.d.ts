@@ -85,7 +85,7 @@ export type KeyPair = import('./js/keys.js').KeyPair;
 /** @typedef {import('./js/barcell.js').BarCell} BarCell */
 /** @typedef {import('./js/keys.js').KeyPair} KeyPair */
 export { ACTION_BUSY_EVENT, ACTION_TILE, attachActionTiles, setActionBusy } from './js/action-tiles.js';
-export { STATUS_EVENT, STATUS_ID_ATTRIBUTE, STATUS_LIST, STATUS_RETRY_EVENT, STATUS_STATES, attachStatusLists, buildStatusList, countStatus, setStatus, } from './js/statusrow.js';
+export { CALM_STATUS_STATES, STATUS_EVENT, STATUS_ID_ATTRIBUTE, STATUS_LIST, STATUS_PAUSE_EVENT, STATUS_RESUME_EVENT, STATUS_RETRY_EVENT, STATUS_STATES, STATUS_UNDO_EVENT, attachStatusLists, buildStatusList, countStatus, setStatus, setTodayState, settleToday, } from './js/statusrow.js';
 export type StatusRow = import('./js/statusrow.js').StatusRow;
 /** @typedef {import('./js/statusrow.js').StatusRow} StatusRow */
 export { CARD_RETRY_EVENT, CARD_STATE, CARD_STATES, CARD_STATE_EVENT, attachCardStates, setCardState } from './js/card-state.js';

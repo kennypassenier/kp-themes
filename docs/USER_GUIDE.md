@@ -2320,6 +2320,31 @@ It only shows: choosing which words to show, and never a negative one on a rough
 `data-kp-quote-size="lg"` is a hero place; `data-kp-quote-lang` makes a screen reader pronounce the words right. "Do not show this again" hides the card at once and offers Undo for `data-kp-undo-ms` (6000);
 when the window passes `kp-quote-hide` fires with `{ text, wait }` (call `wait(promise)` for a save: a refusal puts the card back and the toast says why). Keys while the focus is in the card: `h` hides, Mod C copies. `setQuoteState(el, 'loading' | 'empty' | 'error' | 'ready')`
 uses the card's four states (`kp-quote-retry`). A `data-kp-quote-list` holds several quotes: the first `data-kp-quote-max` (3) and "Show all 7". The words are `quote…`. Knobs: `--kp-quote-rule`, `--kp-quote-mark-size`, `--kp-quote-min`, `--kp-glyph-quote`.
+### A calm today card
+
+A card with one row per thing in the day, each only open, done or paused since a date, with no red and no tally:
+
+```html
+<section class="kp-card" data-kp-state="ready" aria-labelledby="today-t">
+    <div class="kp-card__header"><h3 class="kp-card__title" id="today-t">Today</h3></div>
+    <div class="kp-card__stage"><div class="kp-card__data">
+        <ul class="kp-statuslist kp-statuslist--rows" aria-label="Today" data-kp-status-vocab="calm">
+            <li class="kp-statusrow" data-state="paused" data-kp-since="2026-10-03" data-kp-status-id="move">
+                <span class="kp-statusrow__mark" aria-hidden="true"></span>
+                <span class="kp-statusrow__body"><span class="kp-statusrow__label">Movement</span><span class="kp-statusrow__detail"></span></span>
+            </li>
+        </ul>
+    </div></div>
+</section>
+```
+
+`data-kp-status-vocab="calm"` on a status list (`js/statusrow.js`) gives `open`, `done`, `paused` and `unknown` (and `loading`), each with its own glyph. `done` is the info pair, never success green; `unknown` is for a thing that reports
+"ok" with no data (a plant whose soil sensor is dead) and is never drawn as done. A row told `failed`, `warn` or anything else is drawn as `unknown` and the console says so, so a red cannot slip in. A paused row says
+"Paused since 03/10/2026" from `data-kp-since` (`data-kp-today-since`: `date`, `relative` or `both`) and offers Resume (`data-kp-today-resume="off"` leaves it out; `data-kp-resume-reason` on the row disables it and says why):
+`kp-status-resume` fires (cancelable), the row is open, and a toast offers Undo for `data-kp-undo-ms` that puts it back paused with its original date (`kp-status-undo`). `data-kp-today-pause` adds Pause on open rows. `data-kp-today-order="open-first"`
+orders once at attach and never again; `data-kp-today-paused="fold"` with `data-kp-today-fold-after` (30) gathers long pauses into one line (`settleToday(list)` does it again). Keys while the focus is in the list: ArrowUp and ArrowDown, `r` resumes.
+`setTodayState(card, 'loading' | 'empty' | 'error' | 'ready')` brings the card's loading card, "Nothing planned today" over "That is fine, nothing is waiting", and a blame-free failure with a normal-size Retry. "As of 14:02" for a card fed from
+outside is the existing freshness line (`data-kp-ago`). There is no summary line by design. The words are `status…` (`statusOpen`, `statusSinceDate`, `statusTodayEmptyTitle`). Knobs: `--kp-today-row-min`, `--kp-glyph-open`, `--kp-glyph-paused`, `--kp-glyph-unknown`.
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

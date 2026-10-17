@@ -4077,7 +4077,7 @@ document.getElementById('doc-tile-backup').addEventListener('click', (event) => 
     },
     {
         id: 'status-row',
-        aliases: ['status', 'status-id', 'status-retry', 'status-retry-button', 'status-change'],
+        aliases: ['status', 'status-id', 'status-retry', 'status-retry-button', 'status-change', 'today', 'since', 'resume', 'detail', 'folded'],
         title: 'Status rows',
         group: 'Feedback',
         classes: ['kp-statuslist', 'kp-statusrow'],
@@ -4126,6 +4126,18 @@ list.addEventListener('kp-status-retry', (event) => {
 });
 `,
             },
+            {
+                title: 'A calm list: open, done, paused, not known',
+                why: '`data-kp-status-vocab="calm"` swaps the four states for ones with no red: a paused row says since when and offers Resume (one press, with Undo); a row nothing is known about is `unknown`, never done. Put it in a `.kp-card` for the loading, empty and failed states (`setTodayState`).',
+                markup: `
+<ul class="kp-statuslist kp-statuslist--rows" aria-label="Today" data-kp-status-vocab="calm" data-kp-today-now="2026-10-17T12:00:00+02:00">
+<li class="kp-statusrow" data-state="open" data-kp-status-id="meds"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Morning pills</span><span class="kp-statusrow__detail"></span></span></li>
+<li class="kp-statusrow" data-state="done" data-kp-status-id="water"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Water the plants</span><span class="kp-statusrow__detail"></span></span></li>
+<li class="kp-statusrow" data-state="paused" data-kp-since="2026-10-03" data-kp-status-id="move"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Movement</span><span class="kp-statusrow__detail"></span></span></li>
+<li class="kp-statusrow" data-state="unknown" data-kp-status-id="soil"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Zamioculcas soil</span><span class="kp-statusrow__detail">No sensor reading</span></span></li>
+</ul>
+`,
+            },
         ],
         variants: [
             { name: 'data-state', what: '`ok` (a disc with a tick), `loading` (the theme’s spinner), `failed` (a disc with a cross, a red edge and a Retry), `empty` (a dashed ring and a dashed edge).' },
@@ -4134,6 +4146,18 @@ list.addEventListener('kp-status-retry', (event) => {
             { name: '.kp-statuslist--rows', what: 'One column instead of a grid of columns of at least 16rem.' },
             { name: 'buildStatusList / setStatus / attachStatusLists', what: 'Build the list from rows `{ id, label, state, detail }`, change one row, and attach the spoken parts and the Retry. `kp-status-retry` is `{ item, id }`, `kp-status-change` is `{ item, id, state, previous }`.' },
             { name: 'statusOk / statusLoading / statusFailed / statusEmpty / statusRetry', what: 'The state words and the Retry label, in the dictionary; `statusRetryLabel` names a Retry after its row, and `statusAnnounce` and `statusAnnounceMany` are the announcements (more than three changes in one tick become one summary).' },
+            { name: 'data-kp-status-vocab', what: '`calm` (open, done, paused, unknown; `standard` is the default). A row asked for `failed`, `warn` or anything else is drawn as unknown and the console says so.' },
+            { name: 'data-kp-since', what: 'On a paused calm row: `YYYY-MM-DD`; the row says “Paused since 03/10/2026”.' },
+            { name: 'data-kp-today-since', what: '`date` (the default), `relative` (“Paused for 2 weeks”) or `both`.' },
+            { name: 'data-kp-today-resume', what: '`off` leaves out Resume (present by default); `data-kp-resume-reason` on a row disables it and says why.' },
+            { name: 'data-kp-today-pause', what: 'Present shows Pause on open rows.' },
+            { name: 'data-kp-today-order', what: '`open-first` orders the rows once, at attach (`given` is the default); nothing moves afterwards.' },
+            { name: 'data-kp-today-paused and data-kp-today-fold-after', what: '`fold` gathers rows paused longer than this many days (30) into one line that opens them; `show` is the default.' },
+            { name: 'data-kp-today-mark', what: '`none` takes the glyphs away (`glyph` is the default).' },
+            { name: 'data-kp-today-now', what: 'An ISO moment that “today” is for, for a page with its own clock.' },
+            { name: 'data-kp-undo-ms', what: 'How long Undo is offered after Resume or Pause (6000, 0 for none).' },
+            { name: 'kp-status-resume, kp-status-pause, kp-status-undo', what: 'Resume and Pause are cancelable and carry `{ item, id }`; Undo puts the row back as it was and carries `{ item, id, action }`. `settleToday(list)` orders and folds again; `setTodayState(card, state)` is the card’s loading, empty and failed.' },
+            { name: 'marks the module writes', what: '`data-kp-detail-auto` (the since line is the module’s), `data-kp-folded` (a row gathered behind the fold line).' },
         ],
         accessibility: [
             'Built in — each row reads “name, state”, a loading row has `aria-busy`, and a change is announced once through a hidden status region; more than three changes in one tick become one summary.',

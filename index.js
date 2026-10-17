@@ -369,15 +369,21 @@ export { BAR_CELL, SORT_VALUE_ATTRIBUTE, attachBarCells, setBarCell } from './js
 // Action tiles, status rows and the facet list [kpadopt2-tiles].
 export { ACTION_BUSY_EVENT, ACTION_TILE, attachActionTiles, setActionBusy } from './js/action-tiles.js';
 export {
+    CALM_STATUS_STATES,
     STATUS_EVENT,
     STATUS_ID_ATTRIBUTE,
     STATUS_LIST,
+    STATUS_PAUSE_EVENT,
+    STATUS_RESUME_EVENT,
     STATUS_RETRY_EVENT,
     STATUS_STATES,
+    STATUS_UNDO_EVENT,
     attachStatusLists,
     buildStatusList,
     countStatus,
     setStatus,
+    setTodayState,
+    settleToday,
 } from './js/statusrow.js';
 /** @typedef {import('./js/statusrow.js').StatusRow} StatusRow */
 // A card in four data states [kpadopt4-rows].

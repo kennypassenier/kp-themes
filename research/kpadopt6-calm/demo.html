@@ -49,11 +49,210 @@
                 </p>
                 <nav class="k6-toc" aria-label="Topics on this page">
                     <ol>
+                        <li><a href="#topic-today">Today card</a> <span class="k6-toc__count">2 sections</span></li>
                         <li><a href="#topic-quote">Quote card</a> <span class="k6-toc__count">2 sections</span></li>
                         <li><a href="#topic-rating">Star rating</a> <span class="k6-toc__count">2 sections</span></li>
                     </ol>
                 </nav>
             </header>
+
+            <!-- ================================================================ topic: Today card -->
+            <h2 class="k6-topic" id="topic-today">Today card</h2>
+            <section
+                class="k6-sec"
+                id="today"
+                data-review-item="today"
+                data-review-components="statusrow"
+                data-review-topic="today"
+                data-review-topic-title="Today card"
+                data-review-title="Today card: open, done, paused, not known"
+                data-review-choices='[{"id": "today-since", "label": "How a pause is told", "default": "date", "options": [{"value": "date", "label": "The date: Paused since 03/10/2026 (recommended)", "hint": "Exact and calm; it does not count the days up. The first list below shows this."}, {"value": "relative", "label": "A length: Paused for 2 weeks", "hint": "Reads like a counter that grows every day. Press Length in the buttons above the list to see it."}, {"value": "both", "label": "Both: Paused since 03/10/2026 (2 weeks)", "hint": "The most on one line. Press Both in the buttons above the list."}]}, {"id": "today-order", "label": "Where the open rows stand", "default": "given", "options": [{"value": "given", "label": "Where the page put them (recommended)", "hint": "Nothing reshuffles when a row becomes done: the thing under your thumb stays under your thumb."}, {"value": "open-first", "label": "Open rows first, once", "hint": "For a long list: the open rows are put on top when the card is first drawn and still never move afterwards. Shown in the second card."}]}]'
+                aria-labelledby="h-today"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-today">Today card: open, done, paused, not known</h2>
+                    <p>
+                        <code>data-kp-status-vocab="calm"</code> on a status list (js/statusrow.js) inside a card: one row per thing in the day, each
+                        only <b>Open</b>, <b>Done</b> or <b>Paused since a date</b> with one-press Resume. No red, no counters, no &ldquo;you still have&rdquo;.
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Six rows</b>, each 56 px high with a round mark that has its own shape: <b>Morning pills</b> and <b>Walk after
+                            dinner</b> open (a grey ring with a dot), <b>Evening check-in</b> and <b>Water the plants</b> done (a soft blue disc with
+                            a check, not green), <b>Beweging</b> paused (a dashed ring with two bars, a dashed edge, <b>Paused since 03/10/2026</b>
+                            and a <b>Resume</b> button), <b>Zamioculcas Raven: water</b> not known (a dashed ring with a question mark and
+                            <b>Soil sensor has no reading</b>: a plant that reports &ldquo;ok&rdquo; without any data must never look done).
+                            There is no total anywhere on the card.
+                        </li>
+                        <li>
+                            <b>Resume</b>: press it on Beweging: the row becomes open at once (same place), a toast says <b>Beweging resumed</b>
+                            with <b>Undo</b>; Undo puts it back paused <b>since 03/10/2026</b>, the original date. With the keyboard: Tab into the
+                            list (one stop), <b>ArrowDown</b> and <b>ArrowUp</b> move between rows, <b>r</b> resumes the paused row you are on.
+                        </li>
+                        <li>
+                            <b>Buttons above the list</b>: <b>Date</b>, <b>Length</b> and <b>Both</b> change how the pause is told (the choice to
+                            tick); <b>Pause button</b> adds a quiet Pause on open rows. The second card has a pause longer than 30 days: <b>Long
+                            pauses</b> shows them as rows (the default) or gathers them in one line that opens them.
+                        </li>
+                        <li>
+                            A row that is told it failed (the grey box under the first card has a button for it) is drawn as <b>Not known</b>, never
+                            red; the console says why.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s paper card, hairline rows; done is the quiet info blue and never the success plate; paused and unknown are
+                        dashed hairlines in muted ink. Look at the marks side by side: each state has its own shape.
+                    </p>
+                </div>
+                <div data-review-controls>
+                    <div role="group" aria-label="How a pause is told" class="k6-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-today-since="date">Date</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-today-since="relative">Length</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-today-since="both">Both</button>
+                    </div>
+                    <div role="group" aria-label="Pause button" class="k6-actions">
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-today-pause="on">Pause button</button>
+                    </div>
+                    <div role="group" aria-label="A row told it failed" class="k6-actions">
+                        <button type="button" class="kp-button" data-k6-today-failed>Tell Walk after dinner it failed</button>
+                    </div>
+                </div>
+                <div class="k6-pair">
+                    <div class="k6-case">
+                        <p class="k6-label">The day</p>
+                        <section class="kp-card" id="k6-today-a" data-kp-state="ready" aria-labelledby="k6-today-a-t">
+                            <div class="kp-card__header"><h3 class="kp-card__title" id="k6-today-a-t">Today</h3></div>
+                            <div class="kp-card__stage"><div class="kp-card__data">
+                                <ul class="kp-statuslist kp-statuslist--rows" aria-label="Today" data-kp-status-vocab="calm" data-kp-today-now="2026-10-17T12:00:00+02:00">
+                                    <li class="kp-statusrow" data-state="open" data-kp-status-id="pills"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Morning pills</span><span class="kp-statusrow__detail"></span></span></li>
+                                    <li class="kp-statusrow" data-state="open" data-kp-status-id="walk"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Walk after dinner</span><span class="kp-statusrow__detail"></span></span></li>
+                                    <li class="kp-statusrow" data-state="done" data-kp-status-id="checkin"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Evening check-in</span><span class="kp-statusrow__detail"></span></span></li>
+                                    <li class="kp-statusrow" data-state="done" data-kp-status-id="plants"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Water the plants</span><span class="kp-statusrow__detail"></span></span></li>
+                                    <li class="kp-statusrow" data-state="paused" data-kp-status-id="move" data-kp-since="2026-10-03"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Beweging</span><span class="kp-statusrow__detail"></span></span></li>
+                                    <li class="kp-statusrow" data-state="unknown" data-kp-status-id="raven"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Zamioculcas Raven: water</span><span class="kp-statusrow__detail">Soil sensor has no reading</span></span></li>
+                                </ul>
+                            </div></div>
+                        </section>
+                        <pre class="k6-log" id="k6-today-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">Long pauses, and a long label (open rows first)</p>
+                        <section class="kp-card" id="k6-today-b" data-kp-state="ready" aria-labelledby="k6-today-b-t">
+                            <div class="kp-card__header"><h3 class="kp-card__title" id="k6-today-b-t">Today</h3></div>
+                            <div class="kp-card__stage"><div class="kp-card__data">
+                                <ul class="kp-statuslist kp-statuslist--rows" aria-label="Today" data-kp-status-vocab="calm" data-kp-today-now="2026-10-17T12:00:00+02:00" data-kp-today-order="open-first" data-kp-today-paused="show">
+                                    <li class="kp-statusrow" data-state="open" data-kp-status-id="a"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Call the pharmacy about the repeat prescription and ask whether the new dose can be collected on Saturday morning</span><span class="kp-statusrow__detail"></span></span></li>
+                                    <li class="kp-statusrow" data-state="paused" data-kp-status-id="b" data-kp-since="2026-10-03"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Beweging</span><span class="kp-statusrow__detail"></span></span></li>
+                                    <li class="kp-statusrow" data-state="paused" data-kp-status-id="c" data-kp-since="2026-08-20"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Reading</span><span class="kp-statusrow__detail"></span></span></li>
+                                    <li class="kp-statusrow" data-state="paused" data-kp-status-id="d" data-kp-since="2026-07-02"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Evening stretch</span><span class="kp-statusrow__detail"></span></span></li>
+                                    <li class="kp-statusrow" data-state="paused" data-kp-status-id="e" data-kp-since="2026-05-11"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Cold shower</span><span class="kp-statusrow__detail"></span></span></li>
+                                </ul>
+                            </div></div>
+                        </section>
+                        <div class="k6-actions k6-actions--below" role="group" aria-label="Long pauses">
+                            <b>Long pauses:</b>
+                            <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-k6-today-fold="show">Rows</button>
+                            <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-k6-today-fold="fold">One line</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section
+                class="k6-sec"
+                id="today-states"
+                data-review-item="today-states"
+                data-review-components="statusrow"
+                data-review-topic="today"
+                data-review-title="Today card: states and phone width"
+                aria-labelledby="h-today-states"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-today-states">Today card: states and phone width</h2>
+                    <p>A card that is being read, a day with nothing planned, one that could not be read, a Resume that cannot be pressed, and the card in a 390 px box.</p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Loading</b>, <b>Empty</b>, <b>Could not read</b> and <b>Ready</b> (buttons above the first card): the card keeps its
+                            height. <b>Loading</b>: the theme&rsquo;s loading card, moving, centred over the rows (which stay under it, dimmed).
+                            <b>Empty</b>: centred, at heading size, <b>Nothing planned today</b> over <b>That is fine, nothing is waiting</b>.
+                            <b>Could not read</b>: the red-edged plate <b>Could not read today</b> with a sentence that blames the system, and a
+                            normal-size <b>Retry</b> (it shows the loading card for a second, then the rows).
+                        </li>
+                        <li>
+                            <b>Resume that cannot be pressed</b> (the second card): the Resume of <b>Beweging</b> is dimmed and the words <b>Wait until
+                            the sync has finished</b> are its reason (hover or focus it).
+                        </li>
+                        <li>
+                            <b>Phone width</b> (390 px box): one column, each row 56 px high, the date under the label, Resume at the end of the row.
+                            A long label wraps and never touches the Resume button.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The plates are formal&rsquo;s empty plate and destructive alert; the loading card is the one that rules the busy table.</p>
+                </div>
+                <div data-review-controls>
+                    <div role="group" aria-label="State of the first card" class="k6-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-today-state="ready">Ready</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-today-state="loading">Loading</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-today-state="empty">Empty</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-today-state="error">Could not read</button>
+                    </div>
+                </div>
+                <div class="k6-pair">
+                    <div class="k6-case">
+                        <p class="k6-label">Driven by the buttons above</p>
+                        <section class="kp-card" id="k6-today-s" data-kp-state="ready" aria-labelledby="k6-today-s-t">
+                            <div class="kp-card__header"><h3 class="kp-card__title" id="k6-today-s-t">Today</h3></div>
+                            <div class="kp-card__stage"><div class="kp-card__data">
+                                <ul class="kp-statuslist kp-statuslist--rows" aria-label="Today" data-kp-status-vocab="calm" data-kp-today-now="2026-10-17T12:00:00+02:00">
+                                    <li class="kp-statusrow" data-state="open" data-kp-status-id="pills"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Morning pills</span><span class="kp-statusrow__detail"></span></span></li>
+                                    <li class="kp-statusrow" data-state="open" data-kp-status-id="walk"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Walk after dinner</span><span class="kp-statusrow__detail"></span></span></li>
+                                    <li class="kp-statusrow" data-state="done" data-kp-status-id="checkin"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Evening check-in</span><span class="kp-statusrow__detail"></span></span></li>
+                                    <li class="kp-statusrow" data-state="done" data-kp-status-id="plants"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Water the plants</span><span class="kp-statusrow__detail"></span></span></li>
+                                    <li class="kp-statusrow" data-state="paused" data-kp-status-id="move" data-kp-since="2026-10-03"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Beweging</span><span class="kp-statusrow__detail"></span></span></li>
+                                    <li class="kp-statusrow" data-state="unknown" data-kp-status-id="raven"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Zamioculcas Raven: water</span><span class="kp-statusrow__detail">Soil sensor has no reading</span></span></li>
+                                </ul>
+                            </div></div>
+                        </section>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">A Resume that cannot be pressed</p>
+                        <section class="kp-card" id="k6-today-r" data-kp-state="ready" aria-labelledby="k6-today-r-t">
+                            <div class="kp-card__header"><h3 class="kp-card__title" id="k6-today-r-t">Today</h3></div>
+                            <div class="kp-card__stage"><div class="kp-card__data">
+                                <ul class="kp-statuslist kp-statuslist--rows" aria-label="Today" data-kp-status-vocab="calm" data-kp-today-now="2026-10-17T12:00:00+02:00">
+                                    <li class="kp-statusrow" data-state="paused" data-kp-status-id="b" data-kp-since="2026-10-03" data-kp-resume-reason="Wait until the sync has finished"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Beweging</span><span class="kp-statusrow__detail"></span></span></li>
+                                    <li class="kp-statusrow" data-state="done" data-kp-status-id="c"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Reading</span><span class="kp-statusrow__detail"></span></span></li>
+                                </ul>
+                            </div></div>
+                        </section>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">Phone width (390 px)</p>
+                        <div class="k6-frame k6-frame--phone">
+                            <section class="kp-card" id="k6-today-p" data-kp-state="ready" aria-labelledby="k6-today-p-t">
+                            <div class="kp-card__header"><h3 class="kp-card__title" id="k6-today-p-t">Today</h3></div>
+                            <div class="kp-card__stage"><div class="kp-card__data">
+                                <ul class="kp-statuslist kp-statuslist--rows" aria-label="Today" data-kp-status-vocab="calm" data-kp-today-now="2026-10-17T12:00:00+02:00">
+                                    <li class="kp-statusrow" data-state="open" data-kp-status-id="a"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Call the pharmacy about the repeat prescription</span><span class="kp-statusrow__detail"></span></span></li>
+                                    <li class="kp-statusrow" data-state="paused" data-kp-status-id="b" data-kp-since="2026-10-03"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Beweging</span><span class="kp-statusrow__detail"></span></span></li>
+                                    <li class="kp-statusrow" data-state="done" data-kp-status-id="c"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Evening check-in</span><span class="kp-statusrow__detail"></span></span></li>
+                                    <li class="kp-statusrow" data-state="unknown" data-kp-status-id="d"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Zamioculcas Raven: water</span><span class="kp-statusrow__detail">Soil sensor has no reading</span></span></li>
+                                </ul>
+                            </div></div>
+                        </section>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             <!-- ================================================================ topic: Quote card -->
             <h2 class="k6-topic" id="topic-quote">Quote card</h2>

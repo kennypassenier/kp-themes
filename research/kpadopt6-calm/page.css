@@ -204,3 +204,7 @@
     font-size: var(--kp-text-sm, 0.8125rem);
     overflow-wrap: anywhere;
 }
+
+.k6-actions--below {
+    margin-block-start: var(--kp-space-sm, 0.5rem);
+}
