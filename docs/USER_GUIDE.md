@@ -2346,6 +2346,22 @@ and a "!" in a ring, a version that went back the destructive tone and "older"; 
 for a data table to sort on. `summarizeDeltas(list)` counts a list exactly for its heading; `versionLevel`, `versionNumbers` and `releaseUrl(upstream, tag)` are the pure parts. Shift+click copies "10.11 → 12.1" (`kp-version-copy`).
 The words are `version…`.
 
+### The acknowledge gate
+
+A warning that holds a button back until a box is ticked ("I read the release notes of 12.1"). The button says why it is off, and a press on it moves the focus to the first open box:
+
+```html
+<div class="kp-alert kp-alert--warning" data-kp-ack data-kp-ack-for="#update" data-kp-ack-key="jellyfin" data-kp-ack-label="I read the release notes of 12.1" data-kp-ack-link="https://example.com/notes">
+    <div class="kp-alert__body"><strong>jellyfin 10.11 → 12.1 is a major version.</strong> A major release can change its settings or move its data.</div>
+</div>
+<button class="kp-button kp-button--primary" id="update">Update</button>
+```
+
+`attachAckGates(root)` (`js/ack-gate.js`, attached by `js/auto.js`) adds the link and the tick, puts `aria-disabled` and `data-kp-disabled-reason` on the control while any gate that guards it is open ("Tick … first", or "2 of 3 release notes still to read"), and fires
+`kp-ack-change` (`{ key, checked, remaining, at }`) on the gate; the change is announced once. `data-kp-ack-mode` is `each` (default, one tick per gate) or `all`; a changed `data-kp-ack-key`, `-label` or `-version` clears the tick unless
+`data-kp-ack-reset="never"`; `data-kp-ack-require-link` and `-min-ms` hold the tick back until the notes were opened; `data-kp-state` is `loading`, `error` (with Retry on `data-kp-ack-retry`, event `kp-ack-retry`) or `empty` (hidden, the control on).
+`ackGate(el)` gives `set`, `setState`, `setLocked` (the tick locked while the job runs) and `remaining`. The gate is a human guard: keep the server's own check. The words are `ack…`.
+
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

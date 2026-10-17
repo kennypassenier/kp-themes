@@ -139,6 +139,7 @@ export const FILES = [
     'js/toggle.js',
     'js/intent.js',
     'js/version-delta.js',
+    'js/ack-gate.js',
     'js/unsaved.js',
     'js/compare.js',
     'js/calm.js',

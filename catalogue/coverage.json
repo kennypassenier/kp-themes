@@ -74,6 +74,7 @@
         "kp-wheel",
         "kp-toggle",
         "kp-toggles",
-        "kp-version"
+        "kp-version",
+        "kp-ack"
     ]
 }

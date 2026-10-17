@@ -131,6 +131,50 @@ export type Strings = {
      * What a screen reader hears for a change that has no size, "changed from latest to nightly" [kpadopt6-ops]
      */
     versionSpokenChanged: (from: string, to: string) => string;
+    /**
+     * The release-notes link's words on an acknowledge gate [kpadopt6-ops]
+     */
+    ackLink: string;
+    /**
+     * The tick's words when the page names none [kpadopt6-ops]
+     */
+    ackLabel: string;
+    /**
+     * The Retry button of a gate whose notes could not be found [kpadopt6-ops]
+     */
+    ackRetry: string;
+    /**
+     * Why the tick is off while the notes are looked up [kpadopt6-ops]
+     */
+    ackLooking: string;
+    /**
+     * Why the tick is locked while the job runs [kpadopt6-ops]
+     */
+    ackLocked: string;
+    /**
+     * Why the tick is off until the notes were opened [kpadopt6-ops]
+     */
+    ackOpenFirst: string;
+    /**
+     * Why the guarded button is off, with the tick's own words [kpadopt6-ops]
+     */
+    ackReason: (label: string) => string;
+    /**
+     * Why it is off when several gates guard it, "2 of 3 release notes still to read" [kpadopt6-ops]
+     */
+    ackReasonMany: (remaining: number, total: number) => string;
+    /**
+     * Said once when the last gate is ticked and the button comes on [kpadopt6-ops]
+     */
+    ackEnabled: string;
+    /**
+     * Said once when a tick is taken away [kpadopt6-ops]
+     */
+    ackDisabled: (remaining: number) => string;
+    /**
+     * A gate's line when no release notes link was found [kpadopt6-ops]
+     */
+    ackNoLink: string;
     alertSuccess: string;
     alertWarning: string;
     alertInfo: string;
@@ -3503,6 +3547,17 @@ export type Strings = {
  * @property {(to: string) => string} versionSpokenTo  What it hears for a moving tag that only says where it goes [kpadopt6-ops]
  * @property {(from: string, to: string) => string} versionSpokenDown  What it hears for a version that went back [kpadopt6-ops]
  * @property {(from: string, to: string) => string} versionSpokenChanged  What a screen reader hears for a change that has no size, "changed from latest to nightly" [kpadopt6-ops]
+ * @property {string} ackLink  The release-notes link's words on an acknowledge gate [kpadopt6-ops]
+ * @property {string} ackLabel  The tick's words when the page names none [kpadopt6-ops]
+ * @property {string} ackRetry  The Retry button of a gate whose notes could not be found [kpadopt6-ops]
+ * @property {string} ackLooking  Why the tick is off while the notes are looked up [kpadopt6-ops]
+ * @property {string} ackLocked  Why the tick is locked while the job runs [kpadopt6-ops]
+ * @property {string} ackOpenFirst  Why the tick is off until the notes were opened [kpadopt6-ops]
+ * @property {(label: string) => string} ackReason  Why the guarded button is off, with the tick's own words [kpadopt6-ops]
+ * @property {(remaining: number, total: number) => string} ackReasonMany  Why it is off when several gates guard it, "2 of 3 release notes still to read" [kpadopt6-ops]
+ * @property {string} ackEnabled  Said once when the last gate is ticked and the button comes on [kpadopt6-ops]
+ * @property {(remaining: number) => string} ackDisabled  Said once when a tick is taken away [kpadopt6-ops]
+ * @property {string} ackNoLink  A gate's line when no release notes link was found [kpadopt6-ops]
  * @property {string} alertSuccess
  * @property {string} alertWarning
  * @property {string} alertInfo

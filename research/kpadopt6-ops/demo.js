@@ -237,3 +237,50 @@ await ready;
             });
     });
 }
+
+// ── acknowledge gate ──
+{
+    const { ackGate } = await import('../../js/ack-gate.js');
+    const log = document.getElementById('k6-ack-log');
+    document.getElementById('k6-ack-grid')?.addEventListener('kp-ack-change', (event) => {
+        if (log) log.textContent = `kp-ack-change\n${JSON.stringify(/** @type {CustomEvent} */ (event).detail)}`;
+    });
+    /** @param {string} mode */
+    const setMode = (mode) => {
+        for (const id of ['k6-ack-1', 'k6-ack-2']) document.getElementById(id)?.setAttribute('data-kp-ack-mode', mode);
+        for (const b of document.querySelectorAll('[data-k6-ack-mode]'))
+            b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-ack-mode') === mode));
+    };
+    stateButtons('data-k6-ack-mode', setMode);
+    onChoice('ack-mode', setMode);
+    for (const b of document.querySelectorAll('[data-k6-ack-bump]'))
+        b.addEventListener('click', () => {
+            const gate = document.getElementById('k6-ack-1');
+            gate?.setAttribute('data-kp-ack-version', '12.2');
+            gate?.setAttribute('data-kp-ack-label', 'I read the release notes of 12.2');
+        });
+    for (const b of document.querySelectorAll('[data-k6-ack-lock]'))
+        b.addEventListener('click', () => {
+            const on = b.getAttribute('aria-pressed') !== 'true';
+            b.setAttribute('aria-pressed', String(on));
+            for (const id of ['k6-ack-1', 'k6-ack-2']) {
+                const gate = document.getElementById(id);
+                if (gate) ackGate(gate)?.setLocked(on);
+            }
+        });
+    stateButtons('data-k6-ack-state', (state) => {
+        for (const id of ['k6-ack-3', 'k6-ack-4']) {
+            const gate = document.getElementById(id);
+            if (gate) ackGate(gate)?.setState(/** @type {'ready' | 'loading' | 'error' | 'empty'} */ (state));
+        }
+    });
+    for (const id of ['k6-ack-3', 'k6-ack-4'])
+        document.getElementById(id)?.addEventListener('kp-ack-retry', () => {
+            for (const g of ['k6-ack-3', 'k6-ack-4']) {
+                const gate = document.getElementById(g);
+                if (gate) ackGate(gate)?.setState('ready');
+            }
+            for (const b of document.querySelectorAll('[data-k6-ack-state]'))
+                b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-ack-state') === 'ready'));
+        });
+}

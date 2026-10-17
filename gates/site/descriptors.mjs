@@ -3849,6 +3849,38 @@ setGanttState(timeline, 'loading');
         ],
     },
     {
+        id: 'ack-gate',
+        title: 'Acknowledge gate',
+        group: 'Feedback',
+        classes: ['kp-ack'],
+        aliases: ['checked'],
+        exports: [],
+        intro: 'A warning that holds a button back until a box is ticked: “I read the release notes of 12.1”. The button says why it is off, and a press on it takes you to the first box still open.',
+        whenToUse: 'Before an action whose risk the reader must have understood: a major update, a restore over live data. It is a human guard, not a security control; the server checks again. Not for a plain “are you sure”: use a confirm.',
+        examples: [
+            {
+                title: 'A gate and the button it guards',
+                why: 'The button carries the reason while it is off; ticking turns it on and the change is announced once.',
+                markup: `
+<div class="kp-alert kp-alert--warning" data-kp-ack data-kp-ack-for="#doc-ack-go" data-kp-ack-key="jellyfin" data-kp-ack-label="I read the release notes of 12.1" data-kp-ack-link="https://example.com/notes">
+<div class="kp-alert__body"><strong>jellyfin 10.11 → 12.1 is a major version.</strong> A major release can change its settings or move its data.</div>
+</div>
+<button class="kp-button kp-button--primary" type="button" id="doc-ack-go">Update</button>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-ack-mode', what: '`each` (default): one tick per gate; `all`: one tick for the lot, for low-risk batches.' },
+            { name: 'data-kp-ack-reset', what: '`on-change` (default): a changed key, label or version clears the tick; `never`.' },
+            { name: 'data-kp-ack-require-link', what: 'The tick stays off until the notes link was opened once; `data-kp-ack-min-ms` waits a time instead.' },
+            { name: 'data-kp-state', what: '`loading` (skeleton lines, the height kept), `error` (no notes link found, with Retry on `data-kp-ack-retry`) or `empty` (no gate: hidden, the button simply on).' },
+        ],
+        accessibility: [
+            'Built in — the guarded button keeps `aria-disabled` and its reason, so a press can answer by moving the focus to the first open tick; the change is announced once (“Update enabled”, “Update disabled: 1 release note still to read”); the whole label is the hit area, 44 px on a phone.',
+            'Yours — keep the server’s own check, and name the thing read in `data-kp-ack-label`.',
+        ],
+    },
+    {
         id: 'unsaved',
         title: 'Unsaved changes bar',
         group: 'Forms',

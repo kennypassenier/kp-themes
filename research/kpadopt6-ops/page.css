@@ -250,3 +250,41 @@
     inset: auto;
     margin: 0 auto;
 }
+
+/* The gates and the one button they guard: the action stands in its own fixed column, whatever the words before it. */
+.k6-ackgrid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 11rem;
+    align-items: start;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.k6-ackgrid__gates {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.k6-ackgrid__action {
+    display: grid;
+    align-content: start;
+}
+
+.k6-ackgrid__action > .kp-reason,
+.k6-ackgrid__action > .kp-button {
+    inline-size: 100%;
+}
+
+.k6-ackgrid__action .kp-button {
+    inline-size: 100%;
+}
+
+.k6-ackgrid--single {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+@media (max-width: 40rem) {
+    .k6-ackgrid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

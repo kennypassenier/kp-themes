@@ -51,6 +51,7 @@
                         <li><a href="#topic-toggle">Toggle button</a> <span class="k6-toc__count">2 sections</span></li>
                         <li><a href="#topic-intent">Palette that finds words in any order</a> <span class="k6-toc__count">2 sections</span></li>
                         <li><a href="#topic-version">Version jump chip</a> <span class="k6-toc__count">2 sections</span></li>
+                        <li><a href="#topic-ack">Acknowledge gate</a> <span class="k6-toc__count">2 sections</span></li>
                     </ol>
                 </nav>
             </header>
@@ -1482,6 +1483,206 @@
                                     data-kp-version-href="https://github.com/jellyfin/jellyfin/releases/tag/v12.1"
                                 ></span>
                             </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- toc: ack | Acknowledge gate | 2 sections -->
+            <!-- ================================================================ topic: acknowledge gate -->
+            <h2 class="k6-topic" id="topic-ack">Acknowledge gate</h2>
+            <section
+                class="k6-sec"
+                id="ack"
+                data-review-item="ack"
+                data-review-components="ack"
+                data-review-topic="ack"
+                data-review-topic-title="Acknowledge gate"
+                data-review-title="Acknowledge gate: a tick before the update may start"
+                data-review-choices='[{ "id": "ack-mode", "label": "Several release notes, one Update button", "once": true, "default": "each", "options": [
+                    { "value": "each", "label": "One tick for each", "hint": "Recommended. A batch with two major updates needs two ticks, one for the notes of each; the button says how many are still to read. Safest, and it matches today&#39;s dashboard." },
+                    { "value": "all", "label": "One tick for the lot", "hint": "Ticking one box ticks them all, and unticking clears them all. Quicker for a batch of low-risk updates; one tick no longer proves each set of notes was read." }] }]'
+                aria-labelledby="h-ack"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-ack">Acknowledge gate: a tick before the update may start</h2>
+                    <p>
+                        <code>&lt;div class="kp-alert" data-kp-ack data-kp-ack-for="#update"&gt;</code> (js/ack-gate.js): a warning that holds a
+                        button back until its box is ticked. A human guard, not a security control.
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Two warnings, <b>jellyfin 10.11 → 12.1</b> and <b>immich 1.118 → 2.0</b>, each with the link
+                            <b>Read the release notes</b> (a new tab; opening it ticks nothing) and a box with its sentence. The button
+                            <b>Update 2 apps</b> in its own fixed column on the right is dimmed. Hover or focus it:
+                            <b>2 of 2 release notes still to read</b>. Press it anyway: the focus jumps to the first open box.
+                        </li>
+                        <li>
+                            Tick jellyfin&rsquo;s box: the reason becomes <b>1 of 2 release notes still to read</b>; tick immich&rsquo;s too: the
+                            button comes on. Untick one: it goes off again. Each change is said once in the grey line below (<b>Update enabled</b> /
+                            <b>Update disabled: 1 release note still to read</b>).
+                        </li>
+                        <li>
+                            <b>One tick for the lot</b> (the choice, or the button): ticking one box ticks both. <b>The item changes</b> (jellyfin
+                            goes to 12.2): its box clears, because a tick belongs to one version. <b>The update runs</b> locks the boxes with the
+                            reason.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The gate is formal&rsquo;s warning plate (gold wash, dark ink, hairline); a ticked gate gets the thin second rule along its
+                        foot. The boxes are formal&rsquo;s ruled squares. Look at the text never touching the plate&rsquo;s edge and at the Update
+                        buttons standing in one column.
+                    </p>
+                </div>
+                <div class="k6-controls" data-review-controls>
+                    <div role="group" aria-label="Mode">
+                        <b>Ticks:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-ack-mode="each" aria-pressed="true">One for each</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-ack-mode="all" aria-pressed="false">One for the lot</button>
+                    </div>
+                    <div role="group" aria-label="Item">
+                        <b>Try:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-ack-bump>The item changes (jellyfin 12.2)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-ack-lock aria-pressed="false">The update runs</button>
+                    </div>
+                </div>
+                <div class="k6-ackgrid" id="k6-ack-grid">
+                    <div class="k6-ackgrid__gates">
+                        <div
+                            class="kp-alert kp-alert--warning"
+                            id="k6-ack-1"
+                            data-kp-ack
+                            data-kp-ack-for="#k6-ack-go"
+                            data-kp-ack-key="jellyfin"
+                            data-kp-ack-version="12.1"
+                            data-kp-ack-label="I read the release notes of 12.1"
+                            data-kp-ack-link="https://example.com/jellyfin/12.1"
+                        >
+                            <div class="kp-alert__body">
+                                <strong>jellyfin 10.11 → 12.1 is a major version.</strong> A major release can change its settings or move its data in
+                                a way the old version cannot read back. Restoring the backup is then the way back.
+                            </div>
+                        </div>
+                        <div
+                            class="kp-alert kp-alert--warning"
+                            id="k6-ack-2"
+                            data-kp-ack
+                            data-kp-ack-for="#k6-ack-go"
+                            data-kp-ack-key="immich"
+                            data-kp-ack-label="I read the release notes of 2.0"
+                            data-kp-ack-link="https://example.com/immich/2.0"
+                        >
+                            <div class="kp-alert__body">
+                                <strong>immich 1.118 → 2.0 is a major version.</strong> Its database is migrated on the first start and cannot be
+                                moved back.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="k6-ackgrid__action">
+                        <button type="button" class="kp-button kp-button--primary" id="k6-ack-go">Update 2 apps</button>
+                    </div>
+                </div>
+                <pre class="k6-log" id="k6-ack-log" aria-live="polite"></pre>
+            </section>
+            <section
+                class="k6-sec"
+                id="ack-states"
+                data-review-item="ack-states"
+                data-review-components="ack"
+                data-review-topic="ack"
+                data-review-title="Acknowledge gate: loading, failed, empty and phone width"
+                aria-labelledby="h-ack-states"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-ack-states">Acknowledge gate: loading, failed, empty and phone width</h2>
+                    <p>
+                        The same gate while its release notes are looked up, when none could be found, when there is no gate at all, and at the width
+                        of a phone.
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Loading:</b> the warning keeps exactly its height, its words held and two ruled lines over them; the box is off and the
+                            button says <b>Looking up the release notes</b>. <b>Failed:</b> the line <b>No release notes link found</b> with a
+                            normal-size <b>Retry</b>; the box still works, so a missing link never traps the update. <b>Retry</b> puts it back to
+                            ready.
+                        </li>
+                        <li>
+                            <b>No gate:</b> the warning is gone and takes no room; <b>Update</b> is simply on. <b>Phone width</b>: the box goes under
+                            the words, the whole sentence is the hit area and 44 px tall; the Update button goes under it.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The two lines are formal&rsquo;s ruled ledger lines; the failed line is plain ink on the warning plate with a normal button.
+                        Check that the gate&rsquo;s height does not change between ready and loading.
+                    </p>
+                </div>
+                <div class="k6-controls" data-review-controls>
+                    <div role="group" aria-label="Lookup">
+                        <b>The notes:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-ack-state="ready" aria-pressed="true">Found</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-ack-state="loading" aria-pressed="false">Looking</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-ack-state="error" aria-pressed="false">Not found</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-ack-state="empty" aria-pressed="false">No gate</button>
+                    </div>
+                </div>
+                <div class="k6-pair">
+                    <div class="k6-case">
+                        <p class="k6-label">One gate, one button</p>
+                        <div class="k6-ackgrid k6-ackgrid--single">
+                            <div class="k6-ackgrid__gates">
+                                <div
+                                    class="kp-alert kp-alert--warning"
+                                    id="k6-ack-3"
+                                    data-kp-ack
+                                    data-kp-ack-for="#k6-ack-go3"
+                                    data-kp-ack-key="vault"
+                                    data-kp-ack-retry
+                                    data-kp-ack-label="I read the release notes of 2.0"
+                                    data-kp-ack-link="https://example.com/vault/2.0"
+                                >
+                                    <div class="kp-alert__body">
+                                        <strong>vault 1.17 → 2.0 is a major version.</strong> Its storage format changes.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="k6-ackgrid__action">
+                                <button type="button" class="kp-button kp-button--primary" id="k6-ack-go3">Update</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">Phone width</p>
+                        <div class="k6-frame k6-frame--phone">
+                            <div class="k6-ackgrid k6-ackgrid--single">
+                                <div class="k6-ackgrid__gates">
+                                    <div
+                                        class="kp-alert kp-alert--warning"
+                                        id="k6-ack-4"
+                                        data-kp-ack
+                                        data-kp-ack-for="#k6-ack-go4"
+                                        data-kp-ack-key="traefik"
+                                        data-kp-ack-label="I read the release notes of 4.0"
+                                        data-kp-ack-link="https://example.com/traefik/4.0"
+                                    >
+                                        <div class="kp-alert__body">
+                                            <strong>traefik 3.1 → 4.0 is a major version.</strong> Several settings were renamed.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="k6-ackgrid__action">
+                                    <button type="button" class="kp-button kp-button--primary" id="k6-ack-go4">Update</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

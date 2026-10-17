@@ -152,6 +152,12 @@ export const REQUIRED = [
         why: 'The card measures its own width and puts each consequence under its button; the query reaches only its own parts [kpadopt5-ops].',
     },
     {
+        container: 'kp-ack',
+        class: 'kp-ack',
+        self: true,
+        why: 'The gate measures its own width and puts its tick under its words on a phone; the query reaches only its inner frame [kpadopt6-ops].',
+    },
+    {
         container: 'kp-code',
         class: 'kp-code',
         self: true,
