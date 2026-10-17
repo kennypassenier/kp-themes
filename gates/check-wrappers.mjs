@@ -140,6 +140,12 @@ export const REQUIRED = [
         why: 'The list measures its own width and lays each row as a card with its buttons full width when narrow; the query reaches only its own rows [kpadopt5-people].',
     },
     {
+        container: 'kp-thread',
+        class: 'kp-thread',
+        self: true,
+        why: 'The conversation measures its own width and lets a bubble take 85 % of it when narrow; the query reaches only its own bubbles [kpadopt5-people].',
+    },
+    {
         container: 'kp-range',
         class: 'kp-range',
         self: true,

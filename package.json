@@ -216,6 +216,10 @@
             "types": "./js/passkeys.d.ts",
             "default": "./js/passkeys.js"
         },
+        "./js/thread": {
+            "types": "./js/thread.d.ts",
+            "default": "./js/thread.js"
+        },
         "./js/stackbar": {
             "types": "./js/stackbar.d.ts",
             "default": "./js/stackbar.js"

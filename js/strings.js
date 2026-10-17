@@ -126,6 +126,27 @@
  * @property {string} passkeysLastWayWarn  The warning on the only way in when removing it is allowed
  * @property {string} passkeysInsecureTitle  The warning heading when the page is not secure
  * @property {string} passkeysInsecureText  What to do about it
+ * @property {string} threadLoading  What the busy card over a conversation says (js/thread.js) [kpadopt5-people]
+ * @property {string} threadLabel  The conversation's name for a screen reader
+ * @property {string} threadEmptyTitle  The empty conversation
+ * @property {string} threadEmptyText  Its sentence
+ * @property {string} threadAdd  The Add button of the empty conversation
+ * @property {string} threadError  A conversation that could not be read, when the page gives no sentence
+ * @property {string} threadRetry  The Retry button of a failed conversation, and of a message not sent
+ * @property {string} threadYou  The sender of an outgoing message with no name
+ * @property {string} threadUnknownSender  The sender of an incoming message with no name
+ * @property {(sender: string, moment: string) => string} threadBubbleLabel  A message's label, "From Acme HR, 13/10/2026 14:02"
+ * @property {(weekday: string, date: string) => string} threadDay  A day divider, "Monday 13/10/2026"
+ * @property {(count: number) => string} threadAttachments  The attachments list's name, "2 attachments"
+ * @property {(lines: number) => string} threadShowAll  The button under a folded message, "Show all 48 lines"
+ * @property {string} threadShowLess  The same button when the message is whole
+ * @property {string} threadCopy  The Copy text button of a message
+ * @property {(sender: string) => string} threadCopyOf  Copy, as a screen reader hears it with the sender
+ * @property {string} threadCopyFailed  The Copy button when the clipboard refused
+ * @property {string} threadSending  The line on a message being sent
+ * @property {(why: string) => string} threadNotSent  The line on a message that was not sent, "Not sent: why"
+ * @property {string} threadNotSentFallback  The reason when none was given
+ * @property {string} threadJump  The Jump to newest button
  * @property {string} stackbarRest  The legend row of a share bar's free rest (js/stackbar.js)
  * @property {string} stackbarOther  The legend row the parts too small to draw are merged into
  * @property {(label: string, value: string, percent: string) => string} stackbarPart  One part, as a screen reader and the hover card read it
@@ -731,6 +752,27 @@ export const DEFAULT_STRINGS = Object.freeze({
     passkeysLastWayWarn: 'This is your only way to sign in. Removing it locks you out.',
     passkeysInsecureTitle: 'Passkeys need a secure connection',
     passkeysInsecureText: 'Open this page at its https address. Until then you can still sign in another way.',
+    threadLoading: 'Reading the conversation…',
+    threadLabel: 'Conversation',
+    threadEmptyTitle: 'No messages yet',
+    threadEmptyText: 'Messages you send and receive show up here.',
+    threadAdd: 'Add a message',
+    threadError: 'The conversation could not be read.',
+    threadRetry: 'Retry',
+    threadYou: 'You',
+    threadUnknownSender: 'someone',
+    threadBubbleLabel: (sender, moment) => `From ${sender}, ${moment}`,
+    threadDay: (weekday, date) => `${weekday} ${date}`,
+    threadAttachments: (count) => `${count} ${count === 1 ? 'attachment' : 'attachments'}`,
+    threadShowAll: (lines) => `Show all ${lines} lines`,
+    threadShowLess: 'Show less',
+    threadCopy: 'Copy text',
+    threadCopyOf: (sender) => `Copy the text of the message from ${sender}`,
+    threadCopyFailed: 'Not copied',
+    threadSending: 'Sending…',
+    threadNotSent: (why) => `Not sent: ${why}`,
+    threadNotSentFallback: 'no connection.',
+    threadJump: 'Jump to newest',
     stackbarRest: 'Free',
     stackbarOther: 'Other',
     stackbarPart: (label, value, percent) => `${label}: ${value} (${percent})`,

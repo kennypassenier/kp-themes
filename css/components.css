@@ -16956,6 +16956,10 @@
  *   .kp-passkeys      passkeys, magic links, passwords and tokens, one row
  *                     each, with Rename and Remove (chassis `passkeys.html`,
  *                     JobTracker `Account.jsx`)
+ *   .kp-thread        messages as bubbles, in on the start side, out on the
+ *                     end side, system lines centred (JobTracker
+ *                     `Correspondence.jsx`)
+ *
  * Behaviour: js/passkeys.js and js/thread.js. Drawn from the tokens alone
  * until each register answers them (gates/register-pending.json).
  * ==================================================================== */
@@ -17119,6 +17123,11 @@
     }
 
     .kp-passkeys__action .kp-spinner,
+    .kp-thread__status .kp-spinner {
+        --kp-spinner-size: 0.875rem;
+        margin-inline-end: 0.375rem;
+    }
+
     .kp-passkeys__insecure-text {
         overflow-wrap: anywhere;
     }
@@ -17199,6 +17208,309 @@
         }
     }
 
+}
+
+@layer kp.components {
+    /* --- Conversation thread ------------------------------------------- */
+
+    /* Bubbles on two sides, scrolling inside a box that keeps its height in every state. Knobs: --kp-thread-height
+     * (the tallest the box grows, 32rem), --kp-thread-min (the least, 16rem), --kp-thread-bubble (the widest a
+     * bubble gets, 40rem; 85 % of a phone), --kp-thread-gap. */
+    .kp-thread {
+        container: kp-thread / inline-size;
+        position: relative;
+        display: grid;
+        min-inline-size: 0;
+    }
+
+    .kp-thread__scroll {
+        box-sizing: border-box;
+        min-block-size: var(--kp-thread-min, 16rem);
+        max-block-size: var(--kp-thread-height, 32rem);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding: var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--muted);
+        color: var(--foreground);
+    }
+
+    .kp-thread__scroll:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    .kp-thread__list {
+        display: grid;
+        gap: var(--kp-thread-gap, var(--kp-space-xs, 0.25rem));
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-thread__item {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-thread__item[data-kp-first='true'] {
+        margin-block-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-thread__item[data-kp-dir='out'] {
+        flex-direction: row-reverse;
+    }
+
+    .kp-thread__avatar {
+        flex: none;
+        inline-size: 1.5rem;
+        min-block-size: 1.5rem;
+    }
+
+    .kp-thread__bubble {
+        box-sizing: border-box;
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        max-inline-size: min(100%, var(--kp-thread-bubble, 40rem));
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        overflow-wrap: anywhere;
+    }
+
+    /* Your side: a wash of the primary colour (the default), the primary colour itself (`filled`), or the same
+     * plate as theirs (`plain`, the answer sits on the end side of the row and that is all). */
+    .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        border-color: color-mix(in oklab, var(--primary) 45%, var(--border));
+        background: color-mix(in oklab, var(--primary) 12%, var(--card));
+    }
+
+    .kp-thread[data-kp-thread-bubble='filled'] .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    .kp-thread[data-kp-thread-bubble='plain'] .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        border-color: var(--border);
+        background: var(--card);
+    }
+
+    .kp-thread__item[data-kp-dir='in'][data-kp-first='true'] > .kp-thread__bubble {
+        border-start-start-radius: 0.1875rem;
+    }
+
+    .kp-thread__item[data-kp-dir='out'][data-kp-first='true'] > .kp-thread__bubble {
+        border-start-end-radius: 0.1875rem;
+    }
+
+    .kp-thread__bubble[data-kp-status='sending'] {
+        opacity: 0.65;
+    }
+
+    .kp-thread__head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0 var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-thread__sender {
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 650;
+    }
+
+    .kp-thread__time {
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        opacity: 0.8;
+    }
+
+    .kp-thread__text {
+        white-space: pre-wrap;
+        line-height: 1.5;
+    }
+
+    /* A long message shows its first lines and fades out; "Show all N lines" is under it. */
+    .kp-thread__text[data-kp-fold='folded'] {
+        max-block-size: calc(var(--kp-thread-fold-lines, 3) * 1lh);
+        overflow: hidden;
+        mask-image: linear-gradient(to bottom, CanvasText calc(100% - 1.25lh), transparent);
+    }
+
+    .kp-thread__bubble .kp-button--ghost {
+        color: inherit;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+
+    .kp-thread__fold {
+        justify-self: start;
+    }
+
+    .kp-thread__attachments {
+        margin: 0;
+    }
+
+    .kp-thread__attachment {
+        max-inline-size: 100%;
+        min-inline-size: 0;
+        color: var(--foreground);
+    }
+
+    .kp-thread__file {
+        overflow-wrap: anywhere;
+    }
+
+    .kp-thread__file[href] {
+        color: inherit;
+        text-underline-offset: 3px;
+    }
+
+    .kp-thread__foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-thread__foot:not(:has(*)) {
+        display: none;
+    }
+
+    .kp-thread__tools {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin-inline-start: auto;
+    }
+
+    .kp-thread__status {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-thread__status--failed {
+        padding: 0.125rem 0.5rem;
+        border-radius: calc(var(--radius, 0.5rem) * 0.5);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    /* A day divider and a system line. */
+    .kp-thread__day {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-md, 0.75rem);
+        margin-block: var(--kp-space-sm, 0.5rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-thread__day::before,
+    .kp-thread__day::after {
+        content: '';
+        flex: 1;
+        border-block-start: 1px solid var(--border-strong, var(--border));
+    }
+
+    .kp-thread__system {
+        flex: 1;
+        margin: var(--kp-space-xs, 0.25rem) 0;
+        padding-inline: var(--kp-space-md, 0.75rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-thread__system > .kp-thread__time {
+        margin-inline-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    /* Jump to newest: over the box's foot, in the middle, on a plate of its own. */
+    .kp-thread__jump {
+        position: absolute;
+        inset-block-end: var(--kp-space-md, 0.75rem);
+        inset-inline: 0;
+        inline-size: max-content;
+        margin-inline: auto;
+        z-index: 1;
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: 0 0.25rem 1rem color-mix(in oklab, var(--foreground) 20%, transparent);
+    }
+
+    .kp-thread__jump[hidden] {
+        display: none;
+    }
+
+    /* Loading: a waiting bubble on each side. */
+    .kp-thread__item--wait {
+        pointer-events: none;
+    }
+
+    .kp-thread__item--wait > .kp-thread__bubble {
+        inline-size: min(70%, 26rem);
+        border-color: transparent;
+        background: transparent;
+    }
+
+    .kp-thread__item--wait[data-kp-dir='out'] > .kp-thread__bubble {
+        inline-size: min(55%, 20rem);
+    }
+
+    .kp-thread__wait-line {
+        block-size: 1rem;
+    }
+
+    /* Nothing yet, or failed: the package's empty state over the box's whole footprint. */
+    .kp-thread__note {
+        box-sizing: border-box;
+        display: grid;
+        align-content: center;
+        justify-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-block-size: var(--kp-thread-state-min, var(--kp-thread-min, 16rem));
+        margin: 0;
+        text-align: center;
+    }
+
+    .kp-thread__note > :is(.kp-thread__note-title, .kp-thread__note-text) {
+        max-inline-size: 100%;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-thread__note-title {
+        font-size: calc(var(--kp-text-md, 1rem) * 1.25);
+    }
+
+    .kp-thread__note > .kp-thread__note-button {
+        align-self: center;
+        margin-block-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    @container kp-thread (max-width: 30rem) {
+        .kp-thread__bubble {
+            max-inline-size: 85%;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kp-thread__scroll {
+            scroll-behavior: auto;
+        }
+    }
 }
 
 /* ====================================================================

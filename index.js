@@ -516,3 +516,18 @@ export {
 } from './js/passkeys.js';
 /** @typedef {import('./js/passkeys.js').PasskeyRow} PasskeyRow */
 /** @typedef {import('./js/passkeys.js').PasskeysSpec} PasskeysSpec */
+export {
+    THREAD,
+    THREAD_ACTION_EVENT,
+    THREAD_ADD_EVENT,
+    THREAD_FOLD_EVENT,
+    THREAD_RETRY_EVENT,
+    THREAD_TIME_ZONE,
+    attachThreads,
+    dayLabel,
+    groupMessages,
+    setThread,
+    threadOptions,
+} from './js/thread.js';
+/** @typedef {import('./js/thread.js').ThreadMessage} ThreadMessage */
+/** @typedef {import('./js/thread.js').ThreadSpec} ThreadSpec */
