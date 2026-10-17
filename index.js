@@ -274,7 +274,8 @@ export {
 /** @typedef {import('./js/pipeline.js').PipelineCard} PipelineCard */
 /** @typedef {import('./js/facets.js').FacetItem} FacetItem */
 // The identity mark, the share bar, the bullet list, the code block and the live tick [kpadopt4-data].
-export { IDMARK, IDMARK_GLYPHS, IDMARK_SLOTS, attachIdmarks, idmarkColours, idmarkFor, idmarkLetters, setIdmark } from './js/idmark.js';
+export { IDMARK, IDMARK_GLYPHS, IDMARK_SLOTS, IDMARK_STATUSES, attachIdmarks, idmarkColours, idmarkFor, idmarkLetters, setIdmark, setIdmarkGroup } from './js/idmark.js';
+/** @typedef {import('./js/idmark.js').IdmarkPerson} IdmarkPerson */
 export { STACKBAR, STACKBAR_PICK_EVENT, attachStackbars, setStackbar, shareText, stackbarParts } from './js/stackbar.js';
 /** @typedef {import('./js/stackbar.js').StackbarPart} StackbarPart */
 /** @typedef {import('./js/stackbar.js').StackbarSpec} StackbarSpec */

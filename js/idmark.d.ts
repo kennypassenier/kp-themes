@@ -50,6 +50,37 @@ export declare function setIdmark(el: HTMLElement, name: string, { slot, hue, ti
     hue?: 'palette' | 'free';
     title?: boolean;
 }): void;
+/** The statuses a mark can show. */
+export declare const IDMARK_STATUSES: readonly string[];
+export type IdmarkPerson = {
+    name: string;
+    /**
+     * the photo
+     */
+    src?: string;
+    status?: 'online' | 'away' | 'busy' | 'none';
+};
+/**
+ * @typedef {object} IdmarkPerson
+ * @property {string} name
+ * @property {string} [src] the photo
+ * @property {'online' | 'away' | 'busy' | 'none'} [status]
+ */
+/**
+ * Draw a group of marks with an exact "+N" for the people left out. The "+N" is
+ * a button that opens the list of their names (`list: false` leaves it a plain
+ * count). Counts are the real number, never "9+".
+ * @param {HTMLElement} el the group, a `.kp-idmark-group`
+ * @param {readonly IdmarkPerson[]} people
+ * @param {{ max?: number, size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl', round?: boolean, list?: boolean }} [options]
+ *   `max` marks shown (default 4); `size` the marks' size (default md); `round` round marks (default true)
+ */
+export declare function setIdmarkGroup(el: HTMLElement, people: readonly IdmarkPerson[], { max, size, round, list }?: {
+    max?: number;
+    size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+    round?: boolean;
+    list?: boolean;
+}): void;
 /**
  * Fill every `[data-kp-idmark]` under `root`, and each one added or renamed
  * later. Marks inside one `[data-kp-idmark-set]` share out the palette with

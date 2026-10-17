@@ -81,6 +81,13 @@
  * @property {(label: string) => string} facetShowingOnly  What a facet group's status region says after "only", "Showing only Host"
  * @property {string} facetShowingAll  What it says after "Everything"
  * @property {string} idmarkUnknown  The glyph of an identity mark with no name (js/idmark.js) [kpadopt4-data]
+ * @property {string} idmarkOnline  A mark's status word, online (js/idmark.js) [kpadopt5-people]
+ * @property {string} idmarkAway  A mark's status word, away
+ * @property {string} idmarkBusy  A mark's status word, busy
+ * @property {(name: string, status: string) => string} idmarkLabel  A mark with a status as a screen reader hears it, "Ada, online"
+ * @property {(count: number) => string} idmarkGroup  A group of marks, named by its size, "5 people"
+ * @property {(count: number) => string} idmarkMore  The "+N" button of a group, "Show the 3 more people"
+ * @property {(count: number) => string} idmarkMoreTitle  The heading of the list the "+N" opens, "3 more people"
  * @property {string} stackbarRest  The legend row of a share bar's free rest (js/stackbar.js)
  * @property {string} stackbarOther  The legend row the parts too small to draw are merged into
  * @property {(label: string, value: string, percent: string) => string} stackbarPart  One part, as a screen reader and the hover card read it
@@ -641,6 +648,13 @@ export const DEFAULT_STRINGS = Object.freeze({
     facetShowingAll: 'Showing everything',
     // Data pieces [kpadopt4-data]: the identity mark, the share bar, the bullet list and the code block.
     idmarkUnknown: '?',
+    idmarkOnline: 'online',
+    idmarkAway: 'away',
+    idmarkBusy: 'busy',
+    idmarkLabel: (name, status) => `${name}, ${status}`,
+    idmarkGroup: (count) => `${count} ${count === 1 ? 'person' : 'people'}`,
+    idmarkMore: (count) => `Show the ${count} more ${count === 1 ? 'person' : 'people'}`,
+    idmarkMoreTitle: (count) => `${count} more ${count === 1 ? 'person' : 'people'}`,
     stackbarRest: 'Free',
     stackbarOther: 'Other',
     stackbarPart: (label, value, percent) => `${label}: ${value} (${percent})`,
