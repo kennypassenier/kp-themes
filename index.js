@@ -500,3 +500,19 @@ export {
 } from './js/diagnostics.js';
 /** @typedef {import('./hooks/use-theme.js').Theme} Theme */
 /** @typedef {import('./hooks/use-theme.js').UseThemeOptions} UseThemeOptions */
+// The list of ways to sign in and the conversation in bubbles [kpadopt5-people].
+export {
+    PASSKEYS,
+    PASSKEYS_REGISTER_EVENT,
+    PASSKEYS_REMOVE_EVENT,
+    PASSKEYS_RENAME_EVENT,
+    PASSKEYS_RETRY_EVENT,
+    PASSKEY_KINDS,
+    attachPasskeys,
+    passkeyOptions,
+    setPasskeys,
+    sortPasskeys,
+    unusedDays,
+} from './js/passkeys.js';
+/** @typedef {import('./js/passkeys.js').PasskeyRow} PasskeyRow */
+/** @typedef {import('./js/passkeys.js').PasskeysSpec} PasskeysSpec */

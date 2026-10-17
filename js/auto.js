@@ -161,6 +161,7 @@ export const NEEDS = [
     { name: 'facets', when: '[data-kp-facets]', load: () => import('./facets.js'), attach: (m, root) => [m.attachFacets(root)] },
     // The identity mark, the share bar, the bullet list, the code block and the live tick [kpadopt4-data].
     { name: 'idmark', when: '[data-kp-idmark]', load: () => import('./idmark.js'), attach: (m, root) => [m.attachIdmarks(root)] },
+    { name: 'passkeys', when: '[data-kp-passkeys]', load: () => import('./passkeys.js'), attach: (m, root) => [m.attachPasskeys(root)] },
     { name: 'stackbar', when: '[data-kp-stackbar]', load: () => import('./stackbar.js'), attach: (m, root) => [m.attachStackbars(root)] },
     { name: 'bullets', when: '[data-kp-bullets]', load: () => import('./bullets.js'), attach: (m, root) => [m.attachBullets(root)] },
     { name: 'code', when: '[data-kp-code]', load: () => import('./code.js'), attach: (m, root) => [m.attachCodes(root)] },

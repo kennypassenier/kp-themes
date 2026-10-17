@@ -44,6 +44,7 @@ export const CARD = [
     'js/wheel.js',
     'js/uptime.js',
     'js/compare.js',
+    'js/passkeys.js',
 ];
 
 /** Approved before the rule, each with its own central loading picture. @type {Record<string, string>} */

@@ -134,6 +134,12 @@ export const REQUIRED = [
         why: 'The block measures its own width and puts its tools under its title when narrow; the query reaches only its head [kpadopt4-data].',
     },
     {
+        container: 'kp-passkeys',
+        class: 'kp-passkeys',
+        self: true,
+        why: 'The list measures its own width and lays each row as a card with its buttons full width when narrow; the query reaches only its own rows [kpadopt5-people].',
+    },
+    {
         container: 'kp-range',
         class: 'kp-range',
         self: true,

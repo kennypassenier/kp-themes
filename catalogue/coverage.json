@@ -25,6 +25,7 @@
         "kp-keys",
         "kp-kv",
         "kp-matrix",
+        "kp-passkeys",
         "kp-pipeline",
         "kp-quantity",
         "kp-range",

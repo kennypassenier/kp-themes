@@ -88,6 +88,44 @@
  * @property {(count: number) => string} idmarkGroup  A group of marks, named by its size, "5 people"
  * @property {(count: number) => string} idmarkMore  The "+N" button of a group, "Show the 3 more people"
  * @property {(count: number) => string} idmarkMoreTitle  The heading of the list the "+N" opens, "3 more people"
+ * @property {string} passkeysLoading  What the busy card over the sign-in methods says (js/passkeys.js) [kpadopt5-people]
+ * @property {string} passkeysListLabel  The sign-in methods list's name for a screen reader
+ * @property {string} passkeysEmptyTitle  The empty sign-in methods list
+ * @property {string} passkeysEmptyText  Its sentence, what a passkey is for
+ * @property {string} passkeysRegister  The Register button of the empty list
+ * @property {string} passkeysError  A sign-in methods list that could not be read, when the page gives no sentence
+ * @property {string} passkeysRetry  The Retry button of a failed list
+ * @property {(kind: string) => string} passkeysKind  The word for a kind of way in: passkey, magic link, password, token
+ * @property {(date: string) => string} passkeysAdded  When a way was added, "Added 12/10/2026"
+ * @property {string} passkeysLastUsedVerb  The verb of the last-used line, "Last used" (then "3 days ago")
+ * @property {string} passkeysNeverUsed  A way that was never used
+ * @property {string} passkeysCurrent  The badge on the way this session signed in with
+ * @property {string} passkeysCurrentTitle  Its tooltip
+ * @property {(days: number) => string} passkeysUnused  The badge on a way unused for long, "Unused for 120 days"
+ * @property {string} passkeysUnusedTitle  Its tooltip: a candidate to remove
+ * @property {string} passkeysRename  The Rename button
+ * @property {(label: string) => string} passkeysRenameOf  Rename, as a screen reader hears it with the way's name
+ * @property {string} passkeysRenameLabel  The name field's label while renaming
+ * @property {string} passkeysSave  Save a new name
+ * @property {string} passkeysCancel  Leave renaming
+ * @property {string} passkeysNameRequired  The line under a name left empty
+ * @property {(label: string) => string} passkeysRenamed  Announced after a rename
+ * @property {(why: string) => string} passkeysRenameRefused  A rename the server refused, with its reason
+ * @property {string} passkeysRemove  The Remove button
+ * @property {string} passkeysRemoving  The Remove button while it works
+ * @property {(label: string) => string} passkeysRemoveOf  Remove, as a screen reader hears it with the way's name
+ * @property {(label: string) => string} passkeysRemoveTitle  The confirmation's question, "Remove Work laptop?"
+ * @property {(label: string) => string} passkeysLosesWay  The first line of what a removal loses
+ * @property {string} passkeysLosesLast  What removing the only way in loses
+ * @property {string} passkeysLosesCurrent  What removing the way in use loses
+ * @property {(label: string) => string} passkeysRemoved  Announced after a removal
+ * @property {(why: string) => string} passkeysRefused  A removal the server refused, "Not removed: why"
+ * @property {string} passkeysRefusedFallback  The reason when a refusal gave none
+ * @property {string} passkeysLastWay  The reason Remove is off on the only way in, and what to do first
+ * @property {string} passkeysOnlyWay  The short note in the place of Remove on the only way in (the `note` look)
+ * @property {string} passkeysLastWayWarn  The warning on the only way in when removing it is allowed
+ * @property {string} passkeysInsecureTitle  The warning heading when the page is not secure
+ * @property {string} passkeysInsecureText  What to do about it
  * @property {string} stackbarRest  The legend row of a share bar's free rest (js/stackbar.js)
  * @property {string} stackbarOther  The legend row the parts too small to draw are merged into
  * @property {(label: string, value: string, percent: string) => string} stackbarPart  One part, as a screen reader and the hover card read it
@@ -655,6 +693,44 @@ export const DEFAULT_STRINGS = Object.freeze({
     idmarkGroup: (count) => `${count} ${count === 1 ? 'person' : 'people'}`,
     idmarkMore: (count) => `Show the ${count} more ${count === 1 ? 'person' : 'people'}`,
     idmarkMoreTitle: (count) => `${count} more ${count === 1 ? 'person' : 'people'}`,
+    passkeysLoading: 'Reading your ways to sign in…',
+    passkeysListLabel: 'Ways to sign in',
+    passkeysEmptyTitle: 'No passkey registered yet',
+    passkeysEmptyText: 'Register one to sign in with your fingerprint, your face or your device PIN.',
+    passkeysRegister: 'Register a passkey',
+    passkeysError: 'Your ways to sign in could not be read.',
+    passkeysRetry: 'Retry',
+    passkeysKind: (kind) => ({ passkey: 'Passkey', 'magic-link': 'Magic link', password: 'Password', token: 'Token' })[kind] ?? kind,
+    passkeysAdded: (date) => `Added ${date}`,
+    passkeysLastUsedVerb: 'Last used',
+    passkeysNeverUsed: 'Never used',
+    passkeysCurrent: 'This device',
+    passkeysCurrentTitle: 'You are signed in with this one',
+    passkeysUnused: (days) => `Unused for ${days} days`,
+    passkeysUnusedTitle: 'Not used for a long time: a candidate to remove',
+    passkeysRename: 'Rename',
+    passkeysRenameOf: (label) => `Rename ${label}`,
+    passkeysRenameLabel: 'Name',
+    passkeysSave: 'Save',
+    passkeysCancel: 'Cancel',
+    passkeysNameRequired: 'Give it a name.',
+    passkeysRenamed: (label) => `Renamed to ${label}`,
+    passkeysRenameRefused: (why) => `Not renamed: ${why}`,
+    passkeysRemove: 'Remove',
+    passkeysRemoving: 'Removing…',
+    passkeysRemoveOf: (label) => `Remove ${label}`,
+    passkeysRemoveTitle: (label) => `Remove ${label}?`,
+    passkeysLosesWay: (label) => `The way to sign in called "${label}"`,
+    passkeysLosesLast: 'Your only way to sign in: afterwards you cannot get in.',
+    passkeysLosesCurrent: 'The way you are signed in with right now.',
+    passkeysRemoved: (label) => `${label} removed`,
+    passkeysRefused: (why) => `Not removed: ${why}`,
+    passkeysRefusedFallback: 'the server refused it.',
+    passkeysLastWay: 'This is your only way to sign in. Add another way first, then remove this one.',
+    passkeysOnlyWay: 'Your only way in',
+    passkeysLastWayWarn: 'This is your only way to sign in. Removing it locks you out.',
+    passkeysInsecureTitle: 'Passkeys need a secure connection',
+    passkeysInsecureText: 'Open this page at its https address. Until then you can still sign in another way.',
     stackbarRest: 'Free',
     stackbarOther: 'Other',
     stackbarPart: (label, value, percent) => `${label}: ${value} (${percent})`,
