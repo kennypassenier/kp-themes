@@ -23702,3 +23702,181 @@
         }
     }
 }
+
+@layer kp.components {
+    /* --- Path of a connection: hops, each allowed or refused, stopping at the first refusal [kpadopt6-ops] ---
+ * `.kp-trace[data-kp-trace]` with `.kp-steplist.kp-steplist--trace` (js/path-trace.js). A summary line over the hops ("Blocked
+ * at rule IoT to media"), then the hops side by side, each one the step list's own item: its check or cross, the verdict word
+ * under the mark, the thing reached, a line of words and the deciding rule as a chip; a hop after a refusal is dimmed and says
+ * "not reached". Under 30rem of the trace's own width (or `data-kp-trace-layout="column"`) the hops stand in a column, as a
+ * step list does. `data-kp-trace-verdict` `mark` or `word` shows one of the two (both by default; never colour alone).
+ * Empty, failed and running are the package's plates and busy card, each as high as the trace was.
+ * Knobs [KT6]: --kp-trace-gap (the space between hops, 1.5rem), --kp-trace-min (the least width of a hop, 9rem). */
+    .kp-trace {
+        container: kp-trace / inline-size;
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        inline-size: 100%;
+        min-inline-size: 0;
+    }
+
+    .kp-trace__summary {
+        margin: 0;
+        font-weight: 600;
+        min-block-size: 1lh;
+    }
+
+    .kp-trace__summary[hidden] {
+        display: none;
+    }
+
+    .kp-trace__stage {
+        position: relative;
+        min-inline-size: 0;
+    }
+
+    .kp-trace__stage > .kp-stateplate {
+        block-size: 100%;
+        min-block-size: 10rem;
+    }
+
+    .kp-trace__foot {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-trace__foot:empty {
+        display: none;
+    }
+
+    .kp-trace[data-kp-trace-verdict='word'] .kp-steplist--trace .kp-steplist__mark {
+        display: none;
+    }
+
+    .kp-trace[data-kp-trace-verdict='mark'] .kp-steplist--trace .kp-steplist__time {
+        display: none;
+    }
+
+    .kp-steplist--trace .kp-steplist__time {
+        min-inline-size: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        text-align: start;
+        text-transform: capitalize;
+    }
+
+    .kp-steplist--trace .kp-steplist__body {
+        gap: var(--kp-space-xs, 0.25rem);
+        justify-items: start;
+    }
+
+    .kp-trace__rule {
+        border: 1px solid var(--border-strong);
+        font: inherit;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        cursor: pointer;
+    }
+
+    .kp-trace__rule:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: 2px;
+    }
+
+    .kp-trace[data-kp-density='compact'] .kp-steplist--trace .kp-steplist__note {
+        display: none;
+    }
+
+    /* The row: hops side by side with an arrow between them. */
+    .kp-trace[data-kp-trace-layout='row'] .kp-steplist--trace {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(var(--kp-trace-min, 9rem), 1fr);
+        gap: var(--kp-trace-gap, 1.5rem);
+    }
+
+    .kp-trace[data-kp-trace-layout='row'] .kp-steplist--trace > .kp-steplist__item {
+        position: relative;
+        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-areas: 'mark time' 'body body';
+        grid-template-rows: 2rem auto;
+        align-items: start;
+    }
+
+    .kp-trace[data-kp-trace-layout='row'] .kp-steplist--trace > .kp-steplist__item > .kp-steplist__mark {
+        grid-area: mark;
+    }
+
+    .kp-trace[data-kp-trace-layout='row'] .kp-steplist--trace > .kp-steplist__item > .kp-steplist__time {
+        grid-area: time;
+        align-self: center;
+    }
+
+    .kp-trace[data-kp-trace-layout='row'] .kp-steplist--trace > .kp-steplist__item > .kp-steplist__body {
+        grid-area: body;
+    }
+
+    .kp-trace[data-kp-trace-layout='row'] .kp-steplist--trace > .kp-steplist__item + .kp-steplist__item::before {
+        content: '→';
+        position: absolute;
+        inset-block-start: 1.1rem;
+        inset-inline-start: calc(-1 * var(--kp-trace-gap, 1.5rem) / 2 - 0.5ch);
+        color: var(--muted-foreground);
+    }
+
+    .kp-trace[data-kp-trace-verdict='word'][data-kp-trace-layout='row'] .kp-steplist--trace > .kp-steplist__item {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas: 'time' 'body';
+    }
+
+    @container kp-trace (min-width: 40rem) {
+        .kp-trace:not([data-kp-trace-layout]) .kp-steplist--trace,
+        .kp-trace[data-kp-trace-layout='auto'] .kp-steplist--trace {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: minmax(var(--kp-trace-min, 9rem), 1fr);
+            gap: var(--kp-trace-gap, 1.5rem);
+        }
+
+        :is(.kp-trace:not([data-kp-trace-layout]), .kp-trace[data-kp-trace-layout='auto']) .kp-steplist--trace > .kp-steplist__item {
+            position: relative;
+            grid-template-columns: auto minmax(0, 1fr);
+            grid-template-areas: 'mark time' 'body body';
+            grid-template-rows: 2rem auto;
+            align-items: start;
+        }
+
+        :is(.kp-trace:not([data-kp-trace-layout]), .kp-trace[data-kp-trace-layout='auto'])
+            .kp-steplist--trace
+            > .kp-steplist__item
+            > .kp-steplist__mark {
+            grid-area: mark;
+        }
+
+        :is(.kp-trace:not([data-kp-trace-layout]), .kp-trace[data-kp-trace-layout='auto'])
+            .kp-steplist--trace
+            > .kp-steplist__item
+            > .kp-steplist__time {
+            grid-area: time;
+            align-self: center;
+        }
+
+        :is(.kp-trace:not([data-kp-trace-layout]), .kp-trace[data-kp-trace-layout='auto'])
+            .kp-steplist--trace
+            > .kp-steplist__item
+            > .kp-steplist__body {
+            grid-area: body;
+        }
+
+        :is(.kp-trace:not([data-kp-trace-layout]), .kp-trace[data-kp-trace-layout='auto'])
+            .kp-steplist--trace
+            > .kp-steplist__item
+            + .kp-steplist__item::before {
+            content: '→';
+            position: absolute;
+            inset-block-start: 1.1rem;
+            inset-inline-start: calc(-1 * var(--kp-trace-gap, 1.5rem) / 2 - 0.5ch);
+            color: var(--muted-foreground);
+        }
+    }
+}

@@ -141,6 +141,7 @@ export const FILES = [
     'js/version-delta.js',
     'js/ack-gate.js',
     'js/deplist.js',
+    'js/path-trace.js',
     'js/unsaved.js',
     'js/compare.js',
     'js/calm.js',

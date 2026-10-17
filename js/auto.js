@@ -246,6 +246,7 @@ export const NEEDS = [
     { name: 'version-delta', when: '[data-kp-version-to], [data-kp-version-from], .kp-badge--version[data-kp-state]', load: () => import('./version-delta.js'), attach: (m, root) => [m.attachVersionDeltas(root)] },
     { name: 'ack-gate', when: '[data-kp-ack]', load: () => import('./ack-gate.js'), attach: (m, root) => [m.attachAckGates(root)] },
     { name: 'deplist', when: '[data-kp-deplist]', load: () => import('./deplist.js'), attach: (m, root) => [m.attachDeplists(root)] },
+    { name: 'path-trace', when: '[data-kp-trace]', load: () => import('./path-trace.js'), attach: (m, root) => [m.attachTraces(root)] },
     { name: 'unsaved', when: '[data-kp-unsaved]', load: () => import('./unsaved.js'), attach: (m, root) => [m.attachUnsaved(root)] },
     { name: 'slider', when: '[data-kp-slider]', load: () => import('./slider.js'), attach: (m, root) => [m.attachSliders(root)] },
     { name: 'sentence', when: '[data-kp-sentence]', load: () => import('./sentence.js'), attach: (m, root) => [m.attachSentences(root)] },

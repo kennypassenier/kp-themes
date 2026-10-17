@@ -356,3 +356,84 @@ await ready;
     stateButtons('data-k6-dep-state', setState);
     states?.addEventListener('kp-deplist-retry', () => setState('ready'));
 }
+
+// ── path of a connection ──
+{
+    const { setTrace, trace } = await import('../../js/path-trace.js');
+    const scenes = {
+        blocked: [
+            { title: 'tv', note: 'IoT network', verdict: 'allowed' },
+            { title: 'Firewall', note: 'tcp 8096', verdict: 'refused', rule: 'IoT to media' },
+            { title: 'Jellyfin', note: 'media container', verdict: 'allowed' },
+            { title: 'Media network', note: 'where it lives', verdict: 'allowed' },
+        ],
+        allowed: [
+            { title: 'laptop', note: 'LAN', verdict: 'allowed' },
+            { title: 'Firewall', note: 'tcp 8096', verdict: 'allowed', rule: 'LAN to media' },
+            { title: 'Traefik', note: 'the edge', verdict: 'allowed' },
+            { title: 'Jellyfin', note: 'media network', verdict: 'allowed' },
+        ],
+        unknown: [
+            { title: 'phone', note: 'guest Wi-Fi', verdict: 'allowed' },
+            { title: 'Firewall', note: 'tcp 443', verdict: 'allowed', rule: 'Guest to edge' },
+            { title: 'Traefik', note: 'not measured yet', verdict: 'unknown' },
+            { title: 'Paperless', note: 'documents network', verdict: 'unknown' },
+        ],
+    };
+    const main = document.getElementById('k6-trace');
+    let scene = /** @type {keyof typeof scenes} */ ('blocked');
+    if (main) setTrace(main, scenes[scene]);
+    const log = document.getElementById('k6-trace-log');
+    for (const type of ['kp-trace-rule', 'kp-trace-swap'])
+        main?.addEventListener(type, (event) => {
+            if (log) log.textContent = `${type}\n${JSON.stringify(/** @type {CustomEvent} */ (event).detail ?? {})}`;
+        });
+    stateButtons('data-k6-trace-scene', (value) => {
+        scene = /** @type {keyof typeof scenes} */ (value);
+        if (main) setTrace(main, scenes[scene]);
+    });
+    /** @param {string} name @param {string} attribute @param {(v: string) => string | null} [map] */
+    const bindAttr = (name, attribute, map = (v) => v) => {
+        stateButtons(`data-k6-trace-${name}`, (value) => {
+            const v = map(value);
+            if (!main) return;
+            if (v === null) main.removeAttribute(attribute);
+            else main.setAttribute(attribute, v);
+        });
+    };
+    bindAttr('verdict', 'data-kp-trace-verdict', (v) => (v === 'both' ? null : v));
+    bindAttr('layout', 'data-kp-trace-layout', (v) => (v === 'auto' ? null : v));
+    bindAttr('rule', 'data-kp-trace-rule', (v) => (v === 'chip' ? null : v));
+    onChoice('trace-verdict', (value) => {
+        for (const b of document.querySelectorAll('[data-k6-trace-verdict]'))
+            b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-trace-verdict') === value));
+        if (value === 'both') main?.removeAttribute('data-kp-trace-verdict');
+        else main?.setAttribute('data-kp-trace-verdict', value);
+    });
+    for (const b of document.querySelectorAll('[data-k6-trace-stop]'))
+        b.addEventListener('click', () => {
+            const on = b.getAttribute('aria-pressed') !== 'true';
+            b.setAttribute('aria-pressed', String(on));
+            if (on) main?.setAttribute('data-kp-trace-stop', 'all');
+            else main?.removeAttribute('data-kp-trace-stop');
+        });
+
+    const states = document.getElementById('k6-trace-states');
+    if (states) setTrace(states, scenes.blocked);
+    const phone = document.getElementById('k6-trace-phone');
+    if (phone)
+        setTrace(phone, [
+            ...scenes.blocked.slice(0, 3),
+            { title: 'Paperless document-consumption worker', note: 'documents network', verdict: 'allowed' },
+        ]);
+    /** @param {string} state */
+    const setState = (state) => {
+        if (!states) return;
+        if (state === 'ready') setTrace(states, scenes.blocked);
+        else trace(states)?.setState(/** @type {'running' | 'empty' | 'error'} */ (state), { message: 'The firewall did not answer.' });
+        for (const b of document.querySelectorAll('[data-k6-trace-state]'))
+            b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-trace-state') === state));
+    };
+    stateButtons('data-k6-trace-state', setState);
+    states?.addEventListener('kp-trace-retry', () => setState('ready'));
+}

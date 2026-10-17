@@ -164,6 +164,12 @@ export const REQUIRED = [
         why: 'The list measures its own width and stacks each row on a phone; the query reaches only its rows [kpadopt6-ops].',
     },
     {
+        container: 'kp-trace',
+        class: 'kp-trace',
+        self: true,
+        why: 'The trace measures its own width and stands its hops in a column on a phone; the query reaches only the hop list [kpadopt6-ops].',
+    },
+    {
         container: 'kp-code',
         class: 'kp-code',
         self: true,

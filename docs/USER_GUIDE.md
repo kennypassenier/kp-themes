@@ -2381,6 +2381,29 @@ ordered so a thing stands after what it needs (`orderDependencies` is the pure p
 `-empty`, `-heading` ("{n} stacks reach these apps") and `-copy` (a button that copies "paperless -> postgres" per line) set the words and the extras. Each attribute change draws the list again. `deplist(el).setState('loading' | 'empty' | 'error')`:
 the busy card over placeholder rows, the empty plate (no action), the failed plate with Retry (`kp-deplist-retry`), each as high as the list was. The words are `deplist…`.
 
+### The path of a connection
+
+The way one connection takes, hop by hop, stopping at the first refusal:
+
+```html
+<div class="kp-trace" data-kp-trace id="path" data-kp-trace-copy></div>
+```
+
+```js
+import { setTrace } from '@kp-soft/themes/js/path-trace';
+setTrace(document.getElementById('path'), [
+    { title: 'tv', note: 'IoT network', verdict: 'allowed' },
+    { title: 'Firewall', note: 'tcp 8096', verdict: 'refused', rule: 'IoT to media' },
+    { title: 'Jellyfin', verdict: 'allowed' },
+]);
+```
+
+`attachTraces(root)` (`js/path-trace.js`, attached by `js/auto.js`) draws the hops it is given on the step list (`.kp-steplist.kp-steplist--trace`): an allowed hop is `done`, a refused one `failed`, the hops after the first
+refusal `skipped` ("not reached") and a hop with no verdict `pending` ("not measured"); a summary line over them says the outcome ("Blocked at rule "IoT to media"") as a polite status, and the deciding rule is a chip that fires `kp-trace-rule`
+(`{ rule, hop }`). `data-kp-trace-layout` is `auto` (a row, a column under 30rem), `row` or `column`; `-stop` `first-refusal` (default) or `all`; `-verdict` `both`, `mark` or `word`; `-rule` `chip`, `inline` or `off`; `-summary` `off`;
+`-copy` adds a button that copies the trace as text; `-swap` a Swap button and the key S (`kp-trace-swap`); `data-kp-density="compact"` hides the notes. Each attribute redraws the trace. `trace(el).setState('running' | 'empty' | 'error')`:
+the busy card over placeholder hops, the empty plate "Pick a source and a target", the failed plate with Retry (`kp-trace-retry`), each as high as the trace was. The trace shows what the host measured; it decides nothing. The words are `trace…`.
+
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

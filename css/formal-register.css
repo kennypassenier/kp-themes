@@ -4743,3 +4743,20 @@
     }
 }
 /* ── end dependency list ── */
+
+/* ── path of a connection [kpadopt6-ops] ──
+   The anchor: the double rule. The hop where the packet stops is ruled twice under its title (the refusal is the rule
+   that is read); the hops it never reaches keep a single hairline. */
+@layer kp.register {
+    [data-theme='formal'] .kp-steplist--trace > .kp-steplist__item[data-state='failed'] .kp-steplist__title {
+        text-decoration: underline double var(--destructive);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.25em;
+    }
+}
+@layer kp.signature {
+    [data-theme='formal'] .kp-trace .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        block-size: 1rem;
+    }
+}
+/* ── end path of a connection ── */

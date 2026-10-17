@@ -76,6 +76,7 @@
         "kp-toggles",
         "kp-version",
         "kp-ack",
-        "kp-deplist"
+        "kp-deplist",
+        "kp-trace"
     ]
 }

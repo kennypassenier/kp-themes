@@ -3919,6 +3919,44 @@ setDeplist(document.getElementById('doc-deplist'), [
         ],
     },
     {
+        id: 'path-trace',
+        title: 'Path of a connection',
+        group: 'Feedback',
+        classes: ['kp-trace'],
+        aliases: ['trace', 'density'],
+        exports: [],
+        intro: 'The way one connection takes, hop by hop: each hop allowed (a check) or refused (a cross), the hops after the first refusal dimmed as “not reached”, a summary line over them (“Blocked at rule IoT to media”) and the deciding rule as a chip.',
+        whenToUse: 'A firewall or routing question: “can this device reach that service, and where does it stop?”. It draws hops it is given; the host works out the verdicts. Not for progress over time: use the step list.',
+        examples: [
+            {
+                title: 'A connection stopped at a rule',
+                why: 'The summary says where it stopped; the hop after it is not reached.',
+                markup: `
+<div class="kp-trace" data-kp-trace id="doc-trace" data-kp-trace-copy></div>
+`,
+                script: `
+import { setTrace } from '@kp-soft/themes/js/path-trace';
+setTrace(document.getElementById('doc-trace'), [
+    { title: 'tv', note: 'IoT network', verdict: 'allowed' },
+    { title: 'Firewall', note: 'tcp 8096', verdict: 'refused', rule: 'IoT to media' },
+    { title: 'Jellyfin', note: 'media network', verdict: 'allowed' },
+]);
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-trace-layout', what: '`auto` (default: a row, a column under 30rem of its own width), `row` or `column`.' },
+            { name: 'data-kp-trace-stop', what: '`first-refusal` (default) or `all`, each hop’s own verdict for a “what if”.' },
+            { name: 'data-kp-trace-verdict', what: '`both` (default), `mark` or `word`; never colour alone.' },
+            { name: 'data-kp-trace-rule', what: '`chip` (default, keyboard-reachable), `inline` or `off`.' },
+            { name: 'data-kp-state', what: '`running` (the busy card over placeholder hops), `empty` (“Pick a source and a target”) or `error` (Retry), each as high as the trace was.' },
+        ],
+        accessibility: [
+            'Built in — an ordered list; each hop reads “title, allowed” (or refused, not reached, not measured); the summary is a polite status, so a changed pin is announced; the rule chip is a button.',
+            'Yours — the verdicts: the trace does not decide, it shows what the host measured.',
+        ],
+    },
+    {
         id: 'unsaved',
         title: 'Unsaved changes bar',
         group: 'Forms',

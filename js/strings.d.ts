@@ -243,6 +243,86 @@ export type Strings = {
      * Its answer once the rows are on the clipboard [kpadopt6-ops]
      */
     deplistCopied: string;
+    /**
+     * The hop list's accessible name [kpadopt6-ops]
+     */
+    traceLabel: string;
+    /**
+     * The summary line when every hop lets the connection through [kpadopt6-ops]
+     */
+    traceAllowed: string;
+    /**
+     * The summary line when a hop refuses it, with the deciding rule when there is one [kpadopt6-ops]
+     */
+    traceBlocked: (hop: string, rule: string) => string;
+    /**
+     * The summary line when a hop could not be measured [kpadopt6-ops]
+     */
+    traceNotAll: string;
+    /**
+     * A hop's verdict word, allowed [kpadopt6-ops]
+     */
+    traceAllowedWord: string;
+    /**
+     * A hop's verdict word, refused [kpadopt6-ops]
+     */
+    traceRefusedWord: string;
+    /**
+     * The word for a hop after a refusal, which the connection never reaches [kpadopt6-ops]
+     */
+    traceNotReached: string;
+    /**
+     * The word for a hop whose verdict is not known [kpadopt6-ops]
+     */
+    traceNotMeasured: string;
+    /**
+     * The deciding rule's chip, "Rule IoT to media" [kpadopt6-ops]
+     */
+    traceRule: (rule: string) => string;
+    /**
+     * The words under the busy card's spinner while the path is checked [kpadopt6-ops]
+     */
+    traceRunning: string;
+    /**
+     * The empty plate's title before a question was asked [kpadopt6-ops]
+     */
+    traceEmpty: string;
+    /**
+     * Its sentence [kpadopt6-ops]
+     */
+    traceEmptyText: string;
+    /**
+     * The failed plate's title [kpadopt6-ops]
+     */
+    traceFailed: string;
+    /**
+     * Its sentence when the page gives no reason [kpadopt6-ops]
+     */
+    traceFailedText: string;
+    /**
+     * Its action [kpadopt6-ops]
+     */
+    traceRetry: string;
+    /**
+     * The button that copies the trace as text [kpadopt6-ops]
+     */
+    traceCopy: string;
+    /**
+     * Its answer once the text is on the clipboard [kpadopt6-ops]
+     */
+    traceCopied: string;
+    /**
+     * The button that swaps source and target [kpadopt6-ops]
+     */
+    traceSwap: string;
+    /**
+     * What the swap key does in the shortcut sheet [kpadopt6-ops]
+     */
+    traceKeySwap: string;
+    /**
+     * The group the swap key is listed under [kpadopt6-ops]
+     */
+    traceKeyGroup: string;
     alertSuccess: string;
     alertWarning: string;
     alertInfo: string;
@@ -3643,6 +3723,26 @@ export type Strings = {
  * @property {string} deplistUnknown  The word for a needed thing whose state is not known [kpadopt6-ops]
  * @property {string} deplistCopy  The button that copies the rows as text [kpadopt6-ops]
  * @property {string} deplistCopied  Its answer once the rows are on the clipboard [kpadopt6-ops]
+ * @property {string} traceLabel  The hop list's accessible name [kpadopt6-ops]
+ * @property {string} traceAllowed  The summary line when every hop lets the connection through [kpadopt6-ops]
+ * @property {(hop: string, rule: string) => string} traceBlocked  The summary line when a hop refuses it, with the deciding rule when there is one [kpadopt6-ops]
+ * @property {string} traceNotAll  The summary line when a hop could not be measured [kpadopt6-ops]
+ * @property {string} traceAllowedWord  A hop's verdict word, allowed [kpadopt6-ops]
+ * @property {string} traceRefusedWord  A hop's verdict word, refused [kpadopt6-ops]
+ * @property {string} traceNotReached  The word for a hop after a refusal, which the connection never reaches [kpadopt6-ops]
+ * @property {string} traceNotMeasured  The word for a hop whose verdict is not known [kpadopt6-ops]
+ * @property {(rule: string) => string} traceRule  The deciding rule's chip, "Rule IoT to media" [kpadopt6-ops]
+ * @property {string} traceRunning  The words under the busy card's spinner while the path is checked [kpadopt6-ops]
+ * @property {string} traceEmpty  The empty plate's title before a question was asked [kpadopt6-ops]
+ * @property {string} traceEmptyText  Its sentence [kpadopt6-ops]
+ * @property {string} traceFailed  The failed plate's title [kpadopt6-ops]
+ * @property {string} traceFailedText  Its sentence when the page gives no reason [kpadopt6-ops]
+ * @property {string} traceRetry  Its action [kpadopt6-ops]
+ * @property {string} traceCopy  The button that copies the trace as text [kpadopt6-ops]
+ * @property {string} traceCopied  Its answer once the text is on the clipboard [kpadopt6-ops]
+ * @property {string} traceSwap  The button that swaps source and target [kpadopt6-ops]
+ * @property {string} traceKeySwap  What the swap key does in the shortcut sheet [kpadopt6-ops]
+ * @property {string} traceKeyGroup  The group the swap key is listed under [kpadopt6-ops]
  * @property {string} alertSuccess
  * @property {string} alertWarning
  * @property {string} alertInfo

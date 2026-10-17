@@ -53,6 +53,7 @@
                         <li><a href="#topic-version">Version jump chip</a> <span class="k6-toc__count">2 sections</span></li>
                         <li><a href="#topic-ack">Acknowledge gate</a> <span class="k6-toc__count">2 sections</span></li>
                         <li><a href="#topic-deplist">Dependency list</a> <span class="k6-toc__count">2 sections</span></li>
+                        <li><a href="#topic-trace">Path of a connection</a> <span class="k6-toc__count">2 sections</span></li>
                     </ol>
                 </nav>
             </header>
@@ -1809,6 +1810,153 @@
                         <p class="k6-label">Phone width</p>
                         <div class="k6-frame k6-frame--phone">
                             <div class="kp-deplist" data-kp-deplist id="k6-deplist-phone" data-kp-dep-states></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- toc: trace | Path of a connection | 2 sections -->
+            <!-- ================================================================ topic: path of a connection -->
+            <h2 class="k6-topic" id="topic-trace">Path of a connection</h2>
+            <section
+                class="k6-sec"
+                id="trace"
+                data-review-item="trace"
+                data-review-components="trace steplist"
+                data-review-topic="trace"
+                data-review-topic-title="Path of a connection"
+                data-review-title="Path of a connection: hops, allowed or refused"
+                data-review-choices='[{ "id": "trace-verdict", "label": "How each hop says allowed or refused", "once": true, "default": "both", "options": [
+                    { "value": "both", "label": "Mark and word", "hint": "Recommended. A check or a cross in the mark AND the word allowed, refused or not reached under it. Never colour alone; the most to read." },
+                    { "value": "mark", "label": "The mark alone", "hint": "Only the check and the cross; the words are left to a screen reader. Compact, but a reader must know what the cross means." },
+                    { "value": "word", "label": "The word alone", "hint": "Only the words allowed, refused, not reached. No icons: plain, and as clear, but less quick to scan along a row." }] }]'
+                aria-labelledby="h-trace"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-trace">Path of a connection: hops, allowed or refused</h2>
+                    <p>
+                        <code>&lt;div class="kp-trace" data-kp-trace&gt;</code> (js/path-trace.js, on the step list): the way one connection takes,
+                        stopping at the first refusal. The page gives the hops; nothing here is measured.
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Blocked</b> (the first scene): the summary says <b>Blocked at rule &ldquo;IoT to media&rdquo;</b>; four hops stand side
+                            by side with an arrow between them: <b>tv</b> (allowed, a check), <b>Firewall</b> (refused, a cross, its title ruled
+                            twice, the chip <b>Rule IoT to media</b>), then <b>Jellyfin</b> and <b>Media network</b> dimmed and saying
+                            <b>not reached</b>. Press the chip (or Tab to it and press Enter): the readout says which rule.
+                        </li>
+                        <li>
+                            <b>Allowed</b> shows every hop with a check and the summary <b>Allowed</b>. <b>Not all measured</b> shows a hop that is
+                            <b>not measured</b> (an open ring) and says <b>Not every step could be measured</b>.
+                            <b>Every hop&rsquo;s own verdict</b> shows what each hop says alone, with no hop dimmed (a &ldquo;what if&rdquo;).
+                        </li>
+                        <li>
+                            <b>Copy as text</b> puts <i>tv allowed &gt; Firewall refused (Rule IoT to media) &gt; …</i> on the clipboard and says
+                            <b>Copied</b> on its own button. <b>Swap direction</b> (or the key S, outside a field) fires the swap event; the readout
+                            shows it. The layout switches (row, column) and the rule as chip, inline or off redraw the trace at once.
+                        </li>
+                        <li><b>The choice</b> (tick it in the dialog): mark and word, the mark alone, or the word alone. The buttons flip it too.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The marks are formal&rsquo;s own step marks (a navy-green check, a red cross); the refusing hop is ruled twice under its
+                        title, as formal rules what is read. Look at the hops sharing one height and one start line, the arrows centred in the gaps,
+                        and the words never touching a hop&rsquo;s edge.
+                    </p>
+                </div>
+                <div class="k6-controls" data-review-controls>
+                    <div role="group" aria-label="Scene">
+                        <b>The case:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-trace-scene="blocked" aria-pressed="true">Blocked</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-trace-scene="allowed" aria-pressed="false">Allowed</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-trace-scene="unknown" aria-pressed="false">
+                            Not all measured
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Look">
+                        <b>Verdict:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-trace-verdict="both" aria-pressed="true">Mark and word</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-trace-verdict="mark" aria-pressed="false">Mark</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-trace-verdict="word" aria-pressed="false">Word</button>
+                    </div>
+                    <div role="group" aria-label="Layout">
+                        <b>Layout:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-trace-layout="auto" aria-pressed="true">Automatic</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-trace-layout="row" aria-pressed="false">Row</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-trace-layout="column" aria-pressed="false">Column</button>
+                    </div>
+                    <div role="group" aria-label="Rule and stop">
+                        <b>Rule:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-trace-rule="chip" aria-pressed="true">Chip</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-trace-rule="inline" aria-pressed="false">In the note</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-trace-rule="off" aria-pressed="false">Off</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-trace-stop aria-pressed="false">
+                            Every hop&rsquo;s own verdict
+                        </button>
+                    </div>
+                </div>
+                <div class="kp-trace" data-kp-trace id="k6-trace" data-kp-trace-copy data-kp-trace-swap></div>
+                <pre class="k6-log" id="k6-trace-log" aria-live="polite"></pre>
+            </section>
+            <section
+                class="k6-sec"
+                id="trace-states"
+                data-review-item="trace-states"
+                data-review-components="trace steplist"
+                data-review-topic="trace"
+                data-review-title="Path of a connection: running, nothing chosen, failed and phone width"
+                aria-labelledby="h-trace-states"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-trace-states">Path of a connection: running, nothing chosen, failed and phone width</h2>
+                    <p>
+                        The same trace while the question is in flight, before one was asked, when it could not be answered, and at the width of a
+                        phone.
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Running:</b> three placeholder hops under the theme&rsquo;s busy card (spinner and <b>Checking the path…</b>), the
+                            summary saying the same. <b>Nothing chosen:</b> the empty plate <b>Pick a source and a target</b> at heading size,
+                            centred, no button. <b>Failed:</b> the red plate <b>The path could not be checked</b> with a normal <b>Retry</b>, which
+                            brings the hops back. Each state is as tall as the trace was.
+                        </li>
+                        <li>
+                            <b>Phone width:</b> the hops stand in a column, each hop a full-width row with its mark, its word and its words; long
+                            names wrap and nothing is cut.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The plates are formal&rsquo;s own; the busy card is its ruled ring. Check the plate&rsquo;s text against its centre and that
+                        the trace keeps its height.
+                    </p>
+                </div>
+                <div class="k6-controls" data-review-controls>
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-trace-state="ready" aria-pressed="true">Hops</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-trace-state="running" aria-pressed="false">Running</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-trace-state="empty" aria-pressed="false">Nothing chosen</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-trace-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                </div>
+                <div class="k6-pair">
+                    <div class="k6-case">
+                        <p class="k6-label">A trace in its states</p>
+                        <div class="kp-trace" data-kp-trace id="k6-trace-states"></div>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">Phone width</p>
+                        <div class="k6-frame k6-frame--phone">
+                            <div class="kp-trace" data-kp-trace id="k6-trace-phone"></div>
                         </div>
                     </div>
                 </div>
