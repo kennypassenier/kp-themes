@@ -86,7 +86,7 @@ export declare function dayAt(now: number, days: number, at: {
  * @param {SnoozeRules} rules
  * @returns {SnoozeChoice[]}
  */
-export declare function snoozeChoices({ now, choices, morning, evening, max, zone, last, locale }: SnoozeRules): SnoozeChoice[];
+export declare function snoozeChoices({ now, choices, morning, evening, max, zone, last, locale, }: SnoozeRules): SnoozeChoice[];
 export type SnoozeHandle = {
     element: HTMLElement;
     /**

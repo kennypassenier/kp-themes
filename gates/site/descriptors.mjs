@@ -3673,6 +3673,36 @@ setGanttState(timeline, 'loading');
         ],
     },
     {
+        id: 'dated-options',
+        title: 'Dated option picker',
+        group: 'Forms',
+        classes: ['kp-dated'],
+        exports: [],
+        intro: 'A choice where every option has a date and an age: radio rows with the name (or the date), how long ago, a “Latest” badge on the newest and a size or kind in one column at the end; a searchable list of the same two lines for a long list.',
+        whenToUse: 'Picking a snapshot, a backup or a version. For options without a moment use the radio group; for one date use the date picker.',
+        examples: [
+            {
+                title: 'Snapshots',
+                why: 'The markup is the empty box; the page hands over the options with `setDatedOptions`.',
+                markup: `
+<div class="kp-dated" data-kp-dated aria-label="Snapshot to restore"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-picker', what: '`radio`, `combobox` or `auto` (default): rows up to the inline maximum, a search above it.' },
+            { name: 'data-kp-picker-inline-max', what: 'The longest list drawn as rows; 7.' },
+            { name: 'data-kp-latest', what: '`first` (default) labels the newest; `none`.' },
+            { name: 'data-kp-order', what: '`newest` (default), `oldest` or `given`.' },
+            { name: 'data-kp-meta-column', what: '`false` writes the meta under the name instead of in a column.' },
+            { name: 'data-kp-rows', what: 'The rows a first load or a state keeps the height of.' },
+        ],
+        accessibility: [
+            'Built in — the rows are one radio group with arrow keys and type-ahead; the long list is the package’s combobox; the choice is announced; a disabled option says why in its own text.',
+            'Yours — name the picker after what it restores (`aria-label`), and format the meta (`formatBytes`).',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

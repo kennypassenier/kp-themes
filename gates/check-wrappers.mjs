@@ -134,6 +134,12 @@ export const REQUIRED = [
         why: 'The block measures its own width and puts its tools under its title when narrow; the query reaches only its head [kpadopt4-data].',
     },
     {
+        container: 'kp-dated',
+        class: 'kp-dated',
+        self: true,
+        why: 'The dated option picker measures its own width and drops the meta column under the name on a phone; the query reaches only its own parts [kpadopt5-time].',
+    },
+    {
         container: 'kp-snooze',
         class: 'kp-snooze',
         self: true,

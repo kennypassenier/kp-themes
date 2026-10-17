@@ -40,7 +40,7 @@
                     approved.
                 </p>
                 <p>
-                    Judge in the review dialog (&ldquo;Review in a dialog&rdquo; at the top): 3 topics, one step each in formal. Every section says
+                    Judge in the review dialog (&ldquo;Review in a dialog&rdquo; at the top): 4 topics, one step each in formal. Every section says
                     under <b>Expected</b> what you should see and what each control does. Everything with a <code>kp-</code> class and every script
                     under <code>js/</code> is the package; the sample data, the frames marked &ldquo;phone width&rdquo; (390 px boxes standing in for
                     a phone), the fixed clock (Saturday 17/10/2026, so a reminder for &ldquo;tomorrow&rdquo; always means 18/10/2026), the event
@@ -51,6 +51,7 @@
                         <li><a href="#topic-weekdays">Weekday picker</a> <span class="kt-toc__count">2 sections</span></li>
                         <li><a href="#topic-runs">Next times of a schedule</a> <span class="kt-toc__count">2 sections</span></li>
                         <li><a href="#topic-snooze">Snooze picker</a> <span class="kt-toc__count">2 sections</span></li>
+                        <li><a href="#topic-dated">Options with a date and an age</a> <span class="kt-toc__count">2 sections</span></li>
                     </ol>
                 </nav>
             </header>
@@ -540,6 +541,182 @@
                                 data-kp-now="2026-10-17T14:05:00+02:00"
                             ></div>
                             <div class="kp-snooze" data-kp-snooze data-kp-look="chips" data-kp-now="2026-10-17T14:05:00+02:00"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- ================================================================ topic: Options with a date and an age -->
+            <h2 class="kt-topic" id="topic-dated">Options with a date and an age</h2>
+            <section
+                class="kt-sec"
+                id="dated"
+                data-review-item="dated"
+                data-review-topic="dated"
+                data-review-topic-title="Options with a date and an age"
+                data-review-title="Dated options: radio rows, and a search for a long list"
+                aria-labelledby="h-dated"
+            >
+                <div class="kt-sec__head">
+                    <h2 id="h-dated">Dated options: radio rows, and a search for a long list</h2>
+                    <p>
+                        <code>&lt;div class="kp-dated" data-kp-dated&gt;</code> (js/dated-options.js): choose a snapshot, a backup or a version; every
+                        option carries its date, its age and a size. The demo clock stands at Saturday 17/10/2026 14:05.
+                    </p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Six snapshots:</b> radio rows, the newest first and <b>already chosen</b>: <b>17/10/2026 04:00</b> with a blue
+                            <b>Latest</b> badge, <b>10 h 5 min ago</b> under it, and <b>4.3 GB</b> at the end of the row. The sizes (4.3 GB, 812 MB)
+                            end on one line down the page.
+                        </li>
+                        <li>
+                            Choose another row (click, or the arrow keys): the row takes the primary edge and the grey box shows the
+                            <code>kp-dated-change</code> event. Type <b>b</b> on the focused rows of the second picker and the option starting with b
+                            is chosen.
+                        </li>
+                        <li>
+                            <b>Named options:</b> each has its name in bold and, under it, the age and the date. <b>Being written</b> is dashed and
+                            grey, says why, and cannot be chosen.
+                        </li>
+                        <li>
+                            <b>Twelve snapshots</b> are too many for rows: one search field. Type <b>04/10</b> and the list narrows to the options
+                            with that date; choosing one writes only its date in the field. The list is shown open in its own frame too.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The rows are formal&rsquo;s tile rows (a hairline, the primary navy edge and a faint tint when chosen); the badge is
+                        formal&rsquo;s info badge; the list is formal&rsquo;s combobox plate.
+                    </p>
+                </div>
+                <div class="kt-pair">
+                    <div class="kt-case">
+                        <p class="kt-label">Six snapshots, the newest chosen</p>
+                        <div
+                            class="kp-dated"
+                            data-kp-dated
+                            aria-label="Snapshot to restore"
+                            data-kp-now="2026-10-17T14:05:00+02:00"
+                            id="kt-dated-a"
+                        ></div>
+                        <pre class="kt-log" id="kt-dated-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">With names, one that cannot be chosen</p>
+                        <div
+                            class="kp-dated"
+                            data-kp-dated
+                            aria-label="Backup to restore"
+                            data-kp-now="2026-10-17T14:05:00+02:00"
+                            id="kt-dated-b"
+                        ></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">Twelve snapshots: a search</p>
+                        <div
+                            class="kp-dated"
+                            data-kp-dated
+                            aria-label="Snapshot to restore, long list"
+                            data-kp-now="2026-10-17T14:05:00+02:00"
+                            id="kt-dated-c"
+                        ></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">The search, opened</p>
+                        <div class="kt-frame kt-frame--menu">
+                            <div
+                                class="kp-dated"
+                                data-kp-dated
+                                aria-label="Snapshot to restore, opened list"
+                                data-kp-now="2026-10-17T14:05:00+02:00"
+                                id="kt-dated-open"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section
+                class="kt-sec"
+                id="dated-states"
+                data-review-item="dated-states"
+                data-review-topic="dated"
+                data-review-title="Dated options: states, order and phone width"
+                aria-labelledby="h-dated-states"
+            >
+                <div class="kt-sec__head">
+                    <h2 id="h-dated-states">Dated options: states, order and phone width</h2>
+                    <p>Ready, empty, loading and failed in the same height; the oldest first without the badge; the picker in a 390 px box.</p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Press <b>Ready</b>, <b>Empty</b>, <b>Loading</b> and <b>Failed</b> in the box above the pickers: the first picker changes
+                            and its frame <b>never changes height</b>. <b>Empty</b>: <b>No snapshots yet</b> in the middle at heading size with a
+                            normal <b>Take a snapshot</b> button. <b>Loading</b>: the busy card over four grey bars. <b>Failed</b>: the red alert with
+                            <b>Could not load the snapshots</b> and a normal <b>Try again</b>, which loads and then fills the rows.
+                        </li>
+                        <li>
+                            <b>Oldest first, no badge:</b> 17/09/2026 04:00 at the top and nothing is labelled Latest; the newest is still the one
+                            chosen.
+                        </li>
+                        <li>
+                            In the 390 px box the size drops under the name and the age, in the same column as the text; the radios stay centred on
+                            their rows; no text touches an edge.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The empty plate is formal&rsquo;s ruled sheet, the failure formal&rsquo;s destructive alert, loading formal&rsquo;s busy card
+                        over the bars.
+                    </p>
+                </div>
+                <div data-review-controls>
+                    <div role="group" aria-label="State of the first picker" class="kt-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-kt-dated-state="ready">Ready</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kt-dated-state="empty">Empty</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kt-dated-state="loading">Loading</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kt-dated-state="error">Failed</button>
+                    </div>
+                </div>
+                <div class="kt-pair">
+                    <div class="kt-case">
+                        <p class="kt-label">The picker the buttons drive</p>
+                        <div
+                            class="kp-dated"
+                            data-kp-dated
+                            aria-label="Snapshot, states"
+                            data-kp-now="2026-10-17T14:05:00+02:00"
+                            id="kt-dated-live"
+                            data-kp-rows="6"
+                        ></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">Oldest first, no Latest badge</p>
+                        <div
+                            class="kp-dated"
+                            data-kp-dated
+                            data-kp-order="oldest"
+                            data-kp-latest="none"
+                            aria-label="Snapshot, oldest first"
+                            data-kp-now="2026-10-17T14:05:00+02:00"
+                            id="kt-dated-old"
+                        ></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">Phone width</p>
+                        <div class="kt-frame kt-frame--phone">
+                            <div
+                                class="kp-dated"
+                                data-kp-dated
+                                aria-label="Snapshot, phone"
+                                data-kp-now="2026-10-17T14:05:00+02:00"
+                                id="kt-dated-phone"
+                            ></div>
                         </div>
                     </div>
                 </div>

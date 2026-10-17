@@ -168,6 +168,10 @@
             "types": "./js/range.d.ts",
             "default": "./js/range.js"
         },
+        "./js/dated-options": {
+            "types": "./js/dated-options.d.ts",
+            "default": "./js/dated-options.js"
+        },
         "./js/snooze": {
             "types": "./js/snooze.d.ts",
             "default": "./js/snooze.js"

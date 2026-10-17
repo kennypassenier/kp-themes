@@ -1688,6 +1688,46 @@ export type Strings = {
      */
     snoozeErrorMax: (days: number) => string;
     /**
+     * A dated option picker's name when the page gives none (js/dated-options.js) [kpadopt5-time]
+     */
+    datedGroup: string;
+    /**
+     * The badge on the newest option [kpadopt5-time]
+     */
+    datedLatest: string;
+    /**
+     * An option made under a minute ago [kpadopt5-time]
+     */
+    datedJustNow: string;
+    /**
+     * How long ago an option was made: "3 days ago" [kpadopt5-time]
+     */
+    datedAgo: (distance: string) => string;
+    /**
+     * The search field's placeholder, for a long list [kpadopt5-time]
+     */
+    datedSearch: string;
+    /**
+     * What the status region says when an option is chosen [kpadopt5-time]
+     */
+    datedChosen: (name: string) => string;
+    /**
+     * An empty picker's sentence when the page gives none [kpadopt5-time]
+     */
+    datedEmpty: string;
+    /**
+     * A failed picker's first line [kpadopt5-time]
+     */
+    datedFailed: string;
+    /**
+     * The failed picker's button [kpadopt5-time]
+     */
+    datedRetry: string;
+    /**
+     * What the busy card says while the options load [kpadopt5-time]
+     */
+    datedLoading: string;
+    /**
      * The compare slider's label on the before side (js/compare.js) [kpadopt4-ideas]
      */
     compareBefore: string;
@@ -2502,6 +2542,16 @@ export type Strings = {
  * @property {string} snoozeErrorTime  A time that is not a time of day [kpadopt5-time]
  * @property {string} snoozeErrorPast  A moment that has passed [kpadopt5-time]
  * @property {(days: number) => string} snoozeErrorMax  A moment past the longest a reminder may be put off [kpadopt5-time]
+ * @property {string} datedGroup  A dated option picker's name when the page gives none (js/dated-options.js) [kpadopt5-time]
+ * @property {string} datedLatest  The badge on the newest option [kpadopt5-time]
+ * @property {string} datedJustNow  An option made under a minute ago [kpadopt5-time]
+ * @property {(distance: string) => string} datedAgo  How long ago an option was made: "3 days ago" [kpadopt5-time]
+ * @property {string} datedSearch  The search field's placeholder, for a long list [kpadopt5-time]
+ * @property {(name: string) => string} datedChosen  What the status region says when an option is chosen [kpadopt5-time]
+ * @property {string} datedEmpty  An empty picker's sentence when the page gives none [kpadopt5-time]
+ * @property {string} datedFailed  A failed picker's first line [kpadopt5-time]
+ * @property {string} datedRetry  The failed picker's button [kpadopt5-time]
+ * @property {string} datedLoading  What the busy card says while the options load [kpadopt5-time]
  * @property {string} compareBefore  The compare slider's label on the before side (js/compare.js) [kpadopt4-ideas]
  * @property {string} compareAfter  Its label on the after side [kpadopt4-ideas]
  * @property {(before: string, after: string) => string} compareSlider  The divider's name for a screen reader [kpadopt4-ideas]

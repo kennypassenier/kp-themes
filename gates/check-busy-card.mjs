@@ -45,6 +45,7 @@ export const CARD = [
     'js/uptime.js',
     'js/compare.js',
     'js/runs.js',
+    'js/dated-options.js',
 ];
 
 /** Approved before the rule, each with its own central loading picture. @type {Record<string, string>} */

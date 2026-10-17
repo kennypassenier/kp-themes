@@ -100,3 +100,64 @@ await ready;
     };
     stateButtons('data-kt-snooze-state', apply);
 }
+
+// ── dated options ──
+{
+    const { setDatedOptions, setDatedState } = await import('../../js/dated-options.js');
+    const { combobox } = await import('../../js/combobox.js');
+    /** @type {import('../../js/dated-options.js').DatedOption[]} */
+    const six = [
+        { value: 's6', when: '2026-10-17T04:00:00+02:00', meta: '4.3 GB' },
+        { value: 's5', when: '2026-10-16T04:00:00+02:00', meta: '4.2 GB' },
+        { value: 's4', when: '2026-10-15T04:00:00+02:00', meta: '4.1 GB' },
+        { value: 's3', when: '2026-10-12T04:00:00+02:00', meta: '3.9 GB' },
+        { value: 's2', when: '2026-10-05T04:00:00+02:00', meta: '3.2 GB' },
+        { value: 's1', when: '2026-09-17T04:00:00+02:00', meta: '812 MB' },
+    ];
+    const named = [
+        { value: 'n4', label: 'Nightly', when: '2026-10-17T04:00:00+02:00', meta: '4.3 GB' },
+        { value: 'n3', label: 'Before the upgrade', when: '2026-10-14T16:40:00+02:00', meta: '4.1 GB' },
+        { value: 'n2', label: 'Being written', when: '2026-10-17T14:02:00+02:00', meta: '0 B', disabled: 'Still being written' },
+        { value: 'n1', label: 'Weekly', when: '2026-10-10T04:00:00+02:00', meta: '3.8 GB' },
+    ];
+    const twelve = Array.from({ length: 12 }, (_, i) => {
+        const day = new Date(Date.parse('2026-10-17T04:00:00+02:00') - i * 86400000 * (i < 6 ? 1 : 2));
+        return { value: `d${i}`, when: day.toISOString(), meta: `${(4.3 - i * 0.1).toFixed(1)} GB` };
+    });
+    const at = (/** @type {string} */ id) => document.getElementById(id);
+    for (const [id, options] of /** @type {const} */ ([
+        ['kt-dated-a', six],
+        ['kt-dated-b', named],
+        ['kt-dated-c', twelve],
+        ['kt-dated-open', twelve],
+        ['kt-dated-live', six],
+        ['kt-dated-old', six],
+        ['kt-dated-phone', six],
+    ])) {
+        const el = at(id);
+        if (el) setDatedOptions(el, options);
+    }
+    readout('#kt-dated-a', 'kp-dated-change', 'kt-dated-log', (d) => JSON.stringify({ value: d.value }));
+    const box = at('kt-dated-open')?.querySelector('.kp-combobox');
+    if (box) combobox(box)?.open();
+    const live = at('kt-dated-live');
+    const show = (/** @type {string} */ state) => {
+        if (!live) return;
+        if (state === 'ready') setDatedOptions(live, six);
+        else if (state === 'empty') {
+            const take = document.createElement('button');
+            take.type = 'button';
+            take.className = 'kp-button kp-button--primary';
+            take.textContent = 'Take a snapshot';
+            setDatedOptions(live, []);
+            setDatedState(live, 'empty', { reason: 'No snapshots yet', action: take });
+        } else setDatedState(live, /** @type {'loading' | 'error'} */ (state), { title: 'Could not load the snapshots' });
+    };
+    stateButtons('data-kt-dated-state', show);
+    live?.addEventListener('kp-dated-retry', () => {
+        setDatedState(live, 'loading');
+        for (const b of document.querySelectorAll('[data-kt-dated-state]'))
+            b.setAttribute('aria-pressed', String(b.getAttribute('data-kt-dated-state') === 'loading'));
+        setTimeout(() => show('ready'), 1400);
+    });
+}

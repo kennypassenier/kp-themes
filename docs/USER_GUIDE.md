@@ -2203,6 +2203,25 @@ length in m, h, d or w and `next-week` work too. Each shows the exact moment, "S
 A choice fires `kp-snooze` with `{ until, choice }` (an ISO moment); the page stores it and calls
 `setSnoozedUntil(el, iso)` to show "Snoozed until …" with End snooze (`kp-snooze-end`), and `setSnoozeBusy(el, true)` while it
 saves. `snoozeChoices({ now, … })` is the same list as a pure function, for a server or a test. The words are `snooze…`.
+### Options with a date and an age
+
+A choice of snapshots, backups or versions, where every option carries its moment:
+
+```html
+<div class="kp-dated" data-kp-dated aria-label="Snapshot to restore"></div>
+```
+
+The page hands over the options, `setDatedOptions(el, [{ value, when, meta, label?, disabled? }])` (`js/dated-options.js`, attached by
+`js/auto.js`). `when` (ISO, ms or a Date) is the moment: the component writes "3 days ago" and the date in rule 52 (Europe/Brussels);
+`meta` is a short text the page has formatted (`formatBytes`); `label` names the option (the date stands in without it); `disabled`
+is the sentence that says why it cannot be chosen. Up to `data-kp-picker-inline-max` (7) options draw as radio rows of one group,
+the meta in one column; beyond that a search field and a list of the same two lines (`data-kp-picker="radio"` or `"combobox"`
+forces one). The newest is ordered first, labelled Latest (`data-kp-latest="none"`) and chosen (`data-kp-preselect="false"`);
+`data-kp-order` is `newest`, `oldest` or `given`. Typing letters on the rows chooses the option whose name starts with them.
+`kp-dated-change` carries `{ value, option }`; `datedValue(el)` reads the choice and the radios carry `data-kp-name` for a form.
+States: `setDatedState(el, 'loading')` lays the busy card over placeholder rows, `'empty'` shows the page's `reason` and `action`
+centred, `'error'` the alert whose Try again fires `kp-dated-retry`; each keeps the height the picker had (`data-kp-rows` says how many
+rows the first load keeps). The words are `dated…`. Knobs: `--kp-dated-row` (3.5rem), `--kp-dated-gap`.
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]
