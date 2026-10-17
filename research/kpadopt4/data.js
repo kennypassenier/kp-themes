@@ -254,12 +254,6 @@ const numbers = {
     requests: { value: 1204, write: (n) => new Intl.NumberFormat('en').format(n) },
     euro: { value: 1118204.75, write: (n) => `€ ${new Intl.NumberFormat('nl', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n)}` },
 };
-// forest's treatment of a counting number is a choice in the review dialog; the page shows the ticked one
-// (css/forest-register.css reads `data-kp-tick-forest`; no pick is the sprout).
-document.addEventListener('review:choice', (event) => {
-    const { id, value } = /** @type {CustomEvent<{ id: string, value: string }>} */ (event).detail;
-    if (id === 'forest-tick') for (const host of all('[data-dd-tick-forest]')) host.setAttribute('data-kp-tick-forest', value);
-});
 for (const button of all('[data-dd-tick]')) {
     button.addEventListener('click', () => {
         const [name, by] = (button.getAttribute('data-dd-tick') ?? '').split(':');

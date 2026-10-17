@@ -1,5 +1,7 @@
 # Demo review kit
 
+What Kenny expects from every demo and round: [DEMO_RULES.md](DEMO_RULES.md) (binding, read it first).
+
 Judge every section of a research demo in every theme from one dialog, and
 copy one structured answer back into the conversation [scope-141].
 
