@@ -46,7 +46,7 @@ export type AvailabilitySpec = {
         day?: AvailabilitySet;
     };
     /**
-     * show the organiser's switch between the two sets
+     * show the organiser's switch between the two sets (the attribute data-kp-availability-unit-switch on or off overrides it at run time)
      */
     canSwitchUnit?: boolean;
     state?: 'ready' | 'loading' | 'empty' | 'error';
