@@ -94,7 +94,7 @@ import {
     staleKeys,
     storeKey,
 } from './progress.js';
-import { isolate, mountBlockTools } from './block-tools.js';
+import { early, isolate, mountBlockTools } from './block-tools.js';
 
 const root = document.documentElement;
 const DEMO = root.dataset.review;
@@ -1818,34 +1818,6 @@ function laneFor(pair) {
         early(frame, pair.item.id);
     };
     return card;
-}
-
-/**
- * A lane frame loads the whole demo, every section of it, for the one section it shows. As soon as its document
- * exists, before the demo's modules run, the other sections are laid aside, so they neither lay out nor animate
- * while the step loads, and nothing in the frame may scroll the dialog around it: a section that focuses or scrolls
- * itself into view while it boots pulled the dialog down to the last frame (Kenny, 2026-10-17: "vroeger laadden die
- * toch veel sneller? en nu als alles geladen is dan moet ik manueel naar boven scrollen").
- * @param {HTMLIFrameElement} frame @param {string} item
- */
-function early(frame, item) {
-    const started = performance.now();
-    const tick = () => {
-        const doc = frame.contentDocument;
-        const win = frame.contentWindow;
-        if (!frame.isConnected || performance.now() - started > 20000) return;
-        if (!doc || !win || !doc.URL.includes('rv-lane=') || !doc.head) return void requestAnimationFrame(tick);
-        const style = doc.createElement('style');
-        style.textContent = `[data-review-item]:not([data-review-item="${CSS.escape(item)}"]) { display: none !important; }`;
-        doc.head.append(style);
-        const proto = /** @type {any} */ (win).HTMLElement.prototype;
-        const focus = proto.focus;
-        proto.focus = function (/** @type {FocusOptions | undefined} */ options) {
-            return focus.call(this, { ...options, preventScroll: true });
-        };
-        /** @type {any} */ (win).Element.prototype.scrollIntoView = function () {};
-    };
-    tick();
 }
 
 /** The stage of a topic step: per section a heading and its frame, in the step's one theme. @param {Pair[]} shown */
