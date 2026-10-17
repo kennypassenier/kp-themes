@@ -1,5 +1,7 @@
 # research/kpadopt5-ops: the fifth adoption round, the operations components
 
+**Decided (2026-10-18 01:21):** Kenny approved every part in formal, defaults kept. Recorded in `VERDICTS.json`; the part is not offered again.
+
 One page, `demo.html`, formal only (`data-review-themes="formal"`): seven parts a dashboard needs and today draws itself, one review topic
 per part, each with an Expected block, a look-at line and the controls that press its states. Nothing moves until a button is pressed.
 

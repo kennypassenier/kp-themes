@@ -1,5 +1,7 @@
 # research/kpadopt5-rows: the fifth adoption round, rows
 
+**Decided (2026-10-18 01:21):** Kenny approved every part in formal, defaults kept. Recorded in `VERDICTS.json`; the part is not offered again.
+
 Formal only (Kenny's rule: a new demo starts in formal, then asks to extend). Seven parts, one review topic each: ticking rows with the keyboard
 (`js/row-select.js`), the selection bar (`js/selection-bar.js`), the toast with Undo and a clock (`js/undo-toast.js`), the pill for new lines
 (`js/newpill.js`), the payload cell (`.kp-code--cell` in `js/code.js`), the JSON box (`js/json-field.js`) and the request inspector

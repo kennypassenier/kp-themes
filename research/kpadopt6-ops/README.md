@@ -1,5 +1,7 @@
 # research/kpadopt6-ops: the sixth adoption round, second round (three parts sent back)
 
+**Decided (2026-10-18 01:21):** Kenny approved every part in formal, defaults kept. Recorded in `VERDICTS.json`; the part is not offered again.
+
 One page, `demo.html`, formal only (`data-review-themes="formal"`): the three parts of round one that Kenny did not approve on 2026-10-18 (the other
 four, version, ack, deplist and trace, are approved and left the page). Each has an Expected block, a look-at line and the controls that press its
 states. Nothing moves until a button is pressed. The first round's page is kept under `_previous/`.

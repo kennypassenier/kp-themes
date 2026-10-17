@@ -93,12 +93,6 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
-            // Kenny, 2026-10-17 (kpadopt5, rows): ticking rows with the keyboard, the selection bar, the toast with Undo, the pill for new lines, the payload cell, the JSON box and the request inspector, formal first, one topic per part.
-            {
-                href: 'research/kpadopt5-rows/demo.html',
-                label: 'The fifth adoption round, rows: ticking rows, selection bar, undo toast, new-lines pill, payload cell, JSON box, request inspector',
-                about: 'Seven new parts for lists that are worked through, in formal only, one review topic per part, with the real choices to tick.',
-            },
             // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
             // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             // Kenny, 2026-10-08 (update 1): deco's grammar did not convince him ("fancy, distinguished … lots of gold accents and fancy blue backgrounds … elegance without being too in your face"); thirteen questions redrawn as thin gold on lacquer with the wallpaper, his six picks kept.
@@ -113,18 +107,6 @@ export const PAGES = [
             // Kenny, 2026-10-12: "Cyberpunk lijkt af, zie dat dezelfde fouten nu niet terugkomen in andere thema's": every other theme mended so a close is its open backwards with the theme's own effect; only what changed, each block in the themes where it did (research/all-themes).
             // Kenny, 2026-10-16 (kp-adopt-rest, round 2): eight things the admin dashboard still draws itself (action tiles, status rows, the facet list, the coverage heat grid, the reachability matrix, bars in table cells with data-kp-sort-value, the week agenda, the run timeline), built in the package first as ONE demo, formal only until Kenny approves it.
             // Kenny, 2026-10-16 (kp-adopt-rest, round 3): six things the dashboard still drew itself, each an opt-in option of an approved component (nav separator, choice-filter value, timeline day buttons and series legend, the week's next-N phone list, facet identity patterns, the heat grid's jump to the latest), formal only.
-            // Kenny, 2026-10-17 (kpadopt6, wave ops): seven more parts the admin dashboard draws by hand (a toggle button, the palette that finds words in any order, a version-jump chip, an acknowledge tick, a dependency list, the path of one connection, the fixed card of one stack), one demo, formal only until Kenny approves it.
-            {
-                href: 'research/kpadopt6-ops/demo.html',
-                label: 'More parts for a dashboard, second round (toggle button, word-order search, stack card)',
-                about: 'The three parts of the sixth ops round that came back, in formal only: the button that stays pressed (beside the segmented control the package already has), the command palette that finds words in any order (now always the same list) and the fixed card for one stack (buttons only from the data). One topic per part.',
-            },
-            // Kenny, 2026-10-17 (kpadopt5, wave ops): seven operations components a dashboard drew itself, built in the package first as ONE demo, formal only until Kenny approves it.
-            {
-                href: 'research/kpadopt5-ops/demo.html',
-                label: 'Operations parts for a dashboard (page frame, list and detail, auto refresh, connection banner, transfers, questions, notifications)',
-                about: 'Seven parts a dashboard needs, in formal only: the page frame, a list with its detail that folds on a phone, the automatic refresh chooser, the offline banner, a transfer with speed and time left, a question that waits for an answer and the notification centre. One topic per part.',
-            },
         ],
     },
     {
@@ -135,6 +117,24 @@ export const PAGES = [
         // Decided demos stay reachable from the Agenda's Done list, not from the side navigation (Kenny, 2026-10-13).
         nav: false,
         pages: [
+            // Decided 2026-10-18 01:21: Kenny approved every kpadopt6 ops part in formal, defaults kept (research/kpadopt6-ops/decided.json).
+            {
+                href: 'research/kpadopt6-ops/demo.html',
+                label: 'More parts for a dashboard, second round (toggle button, word-order search, stack card)',
+                about: 'The three parts of the sixth ops round that came back, in formal only: the button that stays pressed (beside the segmented control the package already has), the command palette that finds words in any order (now always the same list) and the fixed card for one stack (buttons only from the data). One topic per part.',
+            },
+            // Decided 2026-10-18 01:21: Kenny approved every kpadopt5 ops part in formal, defaults kept (research/kpadopt5-ops/decided.json).
+            {
+                href: 'research/kpadopt5-ops/demo.html',
+                label: 'Operations parts for a dashboard (page frame, list and detail, auto refresh, connection banner, transfers, questions, notifications)',
+                about: 'Seven parts a dashboard needs, in formal only: the page frame, a list with its detail that folds on a phone, the automatic refresh chooser, the offline banner, a transfer with speed and time left, a question that waits for an answer and the notification centre. One topic per part.',
+            },
+            // Decided 2026-10-18 01:21: Kenny approved every kpadopt5 rows part in formal, defaults kept (research/kpadopt5-rows/decided.json).
+            {
+                href: 'research/kpadopt5-rows/demo.html',
+                label: 'The fifth adoption round, rows: ticking rows, selection bar, undo toast, new-lines pill, payload cell, JSON box, request inspector',
+                about: 'Seven new parts for lists that are worked through, in formal only, one review topic per part, with the real choices to tick.',
+            },
             // Decided 2026-10-18 00:28: Kenny approved every kpadopt5 basics pair in formal (research/kpadopt5-basics/decided.json).
             {
                 href: 'research/kpadopt5-basics/demo.html',
