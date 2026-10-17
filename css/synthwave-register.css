@@ -5952,3 +5952,25 @@
     }
 }
 /* ── end the kpadopt4 secrets, time, cooking and commands ── */
+
+/* ── t56: the kpadopt5/6 parts inside synthwave ── */
+@layer kp.signature {
+    /* A segmented track that outgrows a phone wraps its labels between words instead of scrolling a label under the
+       edge: the columns keep the longest word and share the rest. */
+    @media (max-width: 30rem) {
+        [data-theme='synthwave'] .kp-segmented:not(.kp-segmented--chips):not(.kp-segmented--block) {
+            grid-auto-columns: minmax(min-content, 1fr);
+        }
+        [data-theme='synthwave'] .kp-segmented:not(.kp-segmented--chips) > .kp-segmented__item {
+            white-space: normal;
+        }
+    }
+    /* The weekday chips are seven equal columns: on a narrow picker the track letters close up so a day keeps room. */
+    @container kp-weekdays (max-width: 22rem) {
+        [data-theme='synthwave'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+            letter-spacing: 0;
+            font-size: 0.6875rem;
+        }
+    }
+}
+/* ── end t56 ── */

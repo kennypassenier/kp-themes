@@ -38125,6 +38125,28 @@
 }
 /* ── end the kpadopt4 secrets, time, cooking and commands ── */
 
+/* ── t56: the kpadopt5/6 parts inside cyberpunk ── */
+@layer kp.signature {
+    /* A segmented track that outgrows a phone wraps its labels between words instead of scrolling a label under the
+       edge: the columns keep the longest word and share the rest. */
+    @media (max-width: 30rem) {
+        [data-theme='cyberpunk'] .kp-segmented:not(.kp-segmented--chips):not(.kp-segmented--block) {
+            grid-auto-columns: minmax(min-content, 1fr);
+        }
+        [data-theme='cyberpunk'] .kp-segmented:not(.kp-segmented--chips) > .kp-segmented__item {
+            white-space: normal;
+        }
+    }
+    /* The weekday chips are seven equal columns: on a narrow picker the track letters close up so a day keeps room. */
+    @container kp-weekdays (max-width: 22rem) {
+        [data-theme='cyberpunk'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+            letter-spacing: 0;
+            font-size: 0.6875rem;
+        }
+    }
+}
+/* ── end t56 ── */
+
 @layer kp.register {
     /* @kp-soft/themes — css/synthwave-register.css
    The synthwave register, 5.0.0 [S48, LIFT_PLAN row 1]: the horizon
@@ -44079,6 +44101,28 @@
     }
 }
 /* ── end the kpadopt4 secrets, time, cooking and commands ── */
+
+/* ── t56: the kpadopt5/6 parts inside synthwave ── */
+@layer kp.signature {
+    /* A segmented track that outgrows a phone wraps its labels between words instead of scrolling a label under the
+       edge: the columns keep the longest word and share the rest. */
+    @media (max-width: 30rem) {
+        [data-theme='synthwave'] .kp-segmented:not(.kp-segmented--chips):not(.kp-segmented--block) {
+            grid-auto-columns: minmax(min-content, 1fr);
+        }
+        [data-theme='synthwave'] .kp-segmented:not(.kp-segmented--chips) > .kp-segmented__item {
+            white-space: normal;
+        }
+    }
+    /* The weekday chips are seven equal columns: on a narrow picker the track letters close up so a day keeps room. */
+    @container kp-weekdays (max-width: 22rem) {
+        [data-theme='synthwave'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+            letter-spacing: 0;
+            font-size: 0.6875rem;
+        }
+    }
+}
+/* ── end t56 ── */
 
 /* A share, 0 to 1 (a progress bar's, a meter's), is walked to its value on
    two registered copies, one on each mirror of the motion, so that a rise is
@@ -90110,6 +90154,28 @@
     }
 }
 /* ── end the kpadopt4 secrets, time, cooking and commands ── */
+
+/* ── t56: the kpadopt5/6 parts inside dark ── */
+@layer kp.signature {
+    /* A segmented track that outgrows a phone wraps its labels between words instead of scrolling a label under the
+       edge: the columns keep the longest word and share the rest. */
+    @media (max-width: 30rem) {
+        [data-theme='dark'] .kp-segmented:not(.kp-segmented--chips):not(.kp-segmented--block) {
+            grid-auto-columns: minmax(min-content, 1fr);
+        }
+        [data-theme='dark'] .kp-segmented:not(.kp-segmented--chips) > .kp-segmented__item {
+            white-space: normal;
+        }
+    }
+    /* The weekday chips are seven equal columns: on a narrow picker the track letters close up so a day keeps room. */
+    @container kp-weekdays (max-width: 22rem) {
+        [data-theme='dark'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+            letter-spacing: 0;
+            font-size: 0.65rem;
+        }
+    }
+}
+/* ── end t56 ── */
 
 /* The numbers formal's motion is made of, registered at the top level
    because Firefox does not register an @property inside a cascade layer;
