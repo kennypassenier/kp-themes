@@ -5266,3 +5266,19 @@
         }
     }
 }
+
+/* ── kpadopt5/6 fit: the weekday chips [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* Seven (and thirty-one) chips share one phone-wide row; the tracked mono capitals touched the chip edge. */
+    @media (max-width: 34rem) {
+        [data-theme='titanium'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+            font-size: 0.625rem;
+            letter-spacing: 0.02em;
+        }
+        /* The month's thirty-one cells are narrower still: "Last" is four of Martian Mono's wide capitals. */
+        [data-theme='titanium'] .kp-weekdays .kp-weekdays__chips--month > .kp-segmented__item {
+            font-size: 0.5625rem;
+            letter-spacing: 0;
+        }
+    }
+}
