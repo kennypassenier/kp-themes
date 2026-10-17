@@ -718,6 +718,7 @@ var init_strings = __esm({
       timerRunning: "Running",
       timerDoneWord: "Done",
       timerDone: (name) => `${name} is done`,
+      timerSpoken: (name) => `${name} is done`,
       timerStopRing: "Stop",
       timerAddMinuteTo: (name) => `One more minute for ${name}`,
       timerRemove: (name) => `Remove ${name}`,
@@ -17140,9 +17141,9 @@ function buildSteplist(rows, { label } = {}) {
   });
   return list;
 }
-function writeText(item, { title, note, time }) {
+function writeText(item, { title, note: note2, time }) {
   if (title !== void 0) item.querySelector(".kp-steplist__title")?.replaceChildren(title);
-  if (note !== void 0) item.querySelector(".kp-steplist__note")?.replaceChildren(note);
+  if (note2 !== void 0) item.querySelector(".kp-steplist__note")?.replaceChildren(note2);
   if (time !== void 0) item.querySelector(".kp-steplist__time")?.replaceChildren(time);
 }
 function syncItem(item, { announce: announce2 = false } = {}) {
@@ -18741,8 +18742,8 @@ function plotChart(host, group, locale, ctx) {
   const tipEvents = h(doc, "div", { class: "kp-chart__tip-events" });
   const tip = h(doc, "div", { class: "kp-chart__tip" }, h(doc, "p", { class: "kp-chart__tip-head" }, tipTime, pin), tipRows, tipFoot, tipEvents);
   tip.hidden = true;
-  const note = h(doc, "p", { class: "kp-chart__note" }, strings.onePoint);
-  note.hidden = true;
+  const note2 = h(doc, "p", { class: "kp-chart__note" }, strings.onePoint);
+  note2.hidden = true;
   const readout = h(doc, "p", { class: "kp-chart__readout kp-sr-only", "aria-live": "polite" });
   const legend = h(doc, "div", { class: "kp-chart__legend", role: "group" });
   const showAll = h(doc, "button", { type: "button", class: "kp-chart__show-all", title: strings.showAllTitle }, strings.showAll);
@@ -18754,7 +18755,7 @@ function plotChart(host, group, locale, ctx) {
     h(doc, "span", { "data-kp-when": "pointer" }, strings.hintPointer),
     h(doc, "span", { "data-kp-when": "touch" }, strings.hintTouch)
   );
-  const parts = [plot, tip, note, readout, legend, hint];
+  const parts = [plot, tip, note2, readout, legend, hint];
   host.append(...parts);
   let items = [];
   let skeleton = false;
@@ -18843,7 +18844,7 @@ function plotChart(host, group, locale, ctx) {
   function drawState(kind, H) {
     geo = null;
     tip.hidden = true;
-    note.hidden = true;
+    note2.hidden = true;
     hint.hidden = true;
     const box = h(doc, "div", {
       class: kind === "loading" ? "kp-chart__state kp-skeleton kp-skeleton--block" : "kp-chart__state",
@@ -19024,7 +19025,7 @@ function plotChart(host, group, locale, ctx) {
     plot.replaceChildren(svg2);
     geo = { x, inv: (px3) => from + (px3 - P.l) / (W - P.l - P.r) * (to - from), W, P, from, to, svg: svg2 };
     const withPoints = vis.filter((si) => points[si].length > 0);
-    note.hidden = !(data.onePointNote && withPoints.length > 0 && withPoints.every((si) => points[si].length === 1));
+    note2.hidden = !(data.onePointNote && withPoints.length > 0 && withPoints.every((si) => points[si].length === 1));
     paintLegend();
     paintTip();
   }
@@ -21714,20 +21715,20 @@ function partsOf(card) {
     data = el3(doc, "kp-card__data");
     stage.prepend(data);
   }
-  let note = (
+  let note2 = (
     /** @type {HTMLElement | null} */
     stage.querySelector(":scope > .kp-card__state")
   );
-  if (!note) {
-    note = el3(doc, "kp-card__state");
-    note.setAttribute("data-kp-card-built", "");
-    stage.append(note);
+  if (!note2) {
+    note2 = el3(doc, "kp-card__state");
+    note2.setAttribute("data-kp-card-built", "");
+    stage.append(note2);
   }
-  return { stage, data, note };
+  return { stage, data, note: note2 };
 }
-function buildNote(note, state, options) {
-  if (!note.hasAttribute("data-kp-card-built")) return;
-  const doc = note.ownerDocument;
+function buildNote(note2, state, options) {
+  if (!note2.hasAttribute("data-kp-card-built")) return;
+  const doc = note2.ownerDocument;
   const s2 = getStrings();
   const title = el3(doc, "kp-card__state-title", "strong");
   title.textContent = options.title ?? (state === "error" ? s2.cardFailed : s2.cardEmpty);
@@ -21745,8 +21746,8 @@ function buildNote(note, state, options) {
       actions.append(options.action);
       box.append(actions);
     }
-    note.setAttribute("role", "status");
-    note.replaceChildren(box);
+    note2.setAttribute("role", "status");
+    note2.replaceChildren(box);
     return;
   }
   const alert = el3(doc, "kp-alert kp-alert--destructive kp-card__failure");
@@ -21760,19 +21761,19 @@ function buildNote(note, state, options) {
     button.textContent = s2.cardRetry;
     alert.append(button);
   }
-  note.setAttribute("role", "alert");
-  note.replaceChildren(alert);
+  note2.setAttribute("role", "alert");
+  note2.replaceChildren(alert);
 }
 function syncCard(card, { announce: announce2 = false, options } = {}) {
   const state = known3(card.getAttribute("data-kp-state"));
   if (card.getAttribute("data-kp-state") !== state) card.setAttribute("data-kp-state", state);
-  const { stage, data, note } = partsOf(card);
+  const { stage, data, note: note2 } = partsOf(card);
   const previous = synced4.get(card);
   const opts = options ?? given.get(card) ?? {};
   if (options) given.set(card, options);
   const doc = card.ownerDocument;
   const active = doc.activeElement;
-  const leaving = active instanceof HTMLElement && (state !== "ready" && data.contains(active) || note.contains(active) && previous !== state);
+  const leaving = active instanceof HTMLElement && (state !== "ready" && data.contains(active) || note2.contains(active) && previous !== state);
   if (leaving) {
     stage.tabIndex = -1;
     stage.focus({ preventScroll: true });
@@ -21782,13 +21783,13 @@ function syncCard(card, { announce: announce2 = false, options } = {}) {
   if (loading) data.setAttribute("aria-busy", "true");
   else data.removeAttribute("aria-busy");
   if (state === "empty" || state === "error") {
-    if (previous !== state || options || !note.hasChildNodes()) buildNote(note, state, opts);
-    note.hidden = false;
+    if (previous !== state || options || !note2.hasChildNodes()) buildNote(note2, state, opts);
+    note2.hidden = false;
   } else {
-    note.hidden = true;
-    if (note.hasAttribute("data-kp-card-built")) {
-      note.removeAttribute("role");
-      note.replaceChildren();
+    note2.hidden = true;
+    if (note2.hasAttribute("data-kp-card-built")) {
+      note2.removeAttribute("role");
+      note2.replaceChildren();
     }
   }
   const busy = cards.get(card);
@@ -22429,20 +22430,20 @@ function setStackbar(el9, spec) {
       bar.setAttribute("tabindex", "0");
     } else {
       refocus = el9.querySelector(":scope > .kp-stackbar__note")?.contains(doc.activeElement) ?? false;
-      const note = make2(doc, "kp-stackbar__note", "div");
-      if (memory.height > 0) note.style.minBlockSize = `${memory.height}px`;
-      note.setAttribute("role", failed ? "alert" : "status");
+      const note2 = make2(doc, "kp-stackbar__note", "div");
+      if (memory.height > 0) note2.style.minBlockSize = `${memory.height}px`;
+      note2.setAttribute("role", failed ? "alert" : "status");
       const said = make2(doc, "kp-empty__title kp-stackbar__note-title", "p");
       said.textContent = words;
-      note.append(said);
+      note2.append(said);
       if (failed && spec.retry !== false) {
         const retry = make2(doc, "kp-button kp-stackbar__retry", "button");
         retry.setAttribute("type", "button");
         retry.setAttribute("data-kp-stackbar-retry", "");
         retry.textContent = strings.stackbarRetry;
-        note.append(retry);
+        note2.append(retry);
       }
-      nodes.push(note);
+      nodes.push(note2);
     }
   } else {
     memory.parts = Math.max(2, calc.parts.length + (calc.rest > 0 || calc.over > 0 ? 1 : 0));
@@ -22736,26 +22737,26 @@ function draw(el9, spec, memory) {
     const was = el9.querySelector(":scope > :is(.kp-bullets__list, .kp-bullets__note)")?.getBoundingClientRect().height ?? 0;
     memory.height = Math.max(was, memory.height);
     const refocus = el9.querySelector(":scope > .kp-bullets__note")?.contains(doc.activeElement) ?? false;
-    const note = make3(doc, "kp-empty kp-bullets__note", "div");
-    if (memory.height > 0) note.style.minBlockSize = `${memory.height}px`;
-    if (failed) note.setAttribute("data-kp-tone", "error");
-    note.setAttribute("role", failed ? "alert" : "status");
+    const note2 = make3(doc, "kp-empty kp-bullets__note", "div");
+    if (memory.height > 0) note2.style.minBlockSize = `${memory.height}px`;
+    if (failed) note2.setAttribute("data-kp-tone", "error");
+    note2.setAttribute("role", failed ? "alert" : "status");
     const title = make3(doc, "kp-empty__title kp-bullets__note-title", "p");
     title.textContent = failed ? spec.message ?? strings.bulletsError : spec.emptyTitle ?? strings.bulletsEmpty;
-    note.append(title);
+    note2.append(title);
     if (!failed && spec.emptyText) {
       const text = make3(doc, "kp-empty__body kp-bullets__note-text", "p");
       text.textContent = spec.emptyText;
-      note.append(text);
+      note2.append(text);
     }
     if (failed && spec.retry !== false) {
       const retry = make3(doc, "kp-button kp-bullets__retry", "button");
       retry.setAttribute("type", "button");
       retry.setAttribute("data-kp-bullets-retry", "");
       retry.textContent = strings.bulletsRetry;
-      note.append(retry);
+      note2.append(retry);
     }
-    el9.replaceChildren(note);
+    el9.replaceChildren(note2);
     if (refocus) {
       el9.tabIndex = -1;
       el9.focus({ preventScroll: true });
@@ -23125,11 +23126,11 @@ function drawBody(el9, memory) {
     const kind = state === "ready" ? "empty" : state;
     el9.setAttribute("data-kp-state", kind);
     el9.removeAttribute("data-kp-code-folded");
-    const note = make4(doc, "kp-code__note", "p");
-    note.setAttribute("role", "status");
-    if (was > 0) note.style.minBlockSize = `${was}px`;
-    note.textContent = spec.message ?? (kind === "binary" ? strings.codeBinary(spec.size ?? "") : kind === "error" ? strings.codeError : strings.codeEmpty);
-    el9.append(note);
+    const note2 = make4(doc, "kp-code__note", "p");
+    note2.setAttribute("role", "status");
+    if (was > 0) note2.style.minBlockSize = `${was}px`;
+    note2.textContent = spec.message ?? (kind === "binary" ? strings.codeBinary(spec.size ?? "") : kind === "error" ? strings.codeError : strings.codeEmpty);
+    el9.append(note2);
     memory.shown = "";
     return;
   }
@@ -23165,9 +23166,9 @@ function drawBody(el9, memory) {
   el9.append(body);
   const foot = make4(doc, "kp-code__foot", "div");
   if (spec.truncated) {
-    const note = make4(doc, "kp-code__truncated");
-    note.textContent = strings.codeTruncated(spec.truncated.shown, spec.truncated.total);
-    foot.append(note);
+    const note2 = make4(doc, "kp-code__truncated");
+    note2.textContent = strings.codeTruncated(spec.truncated.shown, spec.truncated.total);
+    foot.append(note2);
   }
   if (foldable) {
     const more = (
@@ -23616,8 +23617,8 @@ function paint3(root) {
   const won = root.getAttribute("data-kp-wheel-won");
   const chosen = won !== null ? state.items.find((item) => item.id === won) : void 0;
   result.toggleAttribute("data-kp-wheel-failed", error !== null && !busy);
-  const note = busy || error !== null || !state.items.length;
-  outcome.toggleAttribute("data-kp-wheel-note", note);
+  const note2 = busy || error !== null || !state.items.length;
+  outcome.toggleAttribute("data-kp-wheel-note", note2);
   if (busy) {
     caption.textContent = "";
     outcome.textContent = "";
@@ -24165,6 +24166,7 @@ __export(timer_exports, {
   TIMERS: () => TIMERS,
   TIMER_CHANGE_EVENT: () => TIMER_CHANGE_EVENT,
   TIMER_DONE_EVENT: () => TIMER_DONE_EVENT,
+  TIMER_SOUNDS: () => TIMER_SOUNDS,
   TIMER_START: () => TIMER_START,
   TIMER_START_EVENT: () => TIMER_START_EVENT,
   TIMER_STOP_EVENT: () => TIMER_STOP_EVENT,
@@ -24175,8 +24177,10 @@ __export(timer_exports, {
   getTimers: () => getTimers,
   parseDuration: () => parseDuration,
   pauseTimer: () => pauseTimer,
+  playTimerSound: () => playTimerSound,
   restoreTimers: () => restoreTimers,
   resumeTimer: () => resumeTimer,
+  speakTimerMessage: () => speakTimerMessage,
   startTimer: () => startTimer,
   stopTimer: () => stopTimer,
   stopTimerRing: () => stopTimerRing
@@ -24341,45 +24345,65 @@ function tick2(list) {
   }
   sync(list);
 }
-function chime() {
+function context() {
+  const Context = window.AudioContext ?? /** @type {any} */
+  window.webkitAudioContext;
+  if (!Context) return null;
+  if (audio === null && /** @type {any} */
+  navigator.userActivation?.isActive === false) return null;
+  audio ??= new Context();
+  const ctx = (
+    /** @type {AudioContext} */
+    audio
+  );
+  if (ctx.state === "suspended") void ctx.resume();
+  return ctx;
+}
+function note(ctx, out, at, hz, { type = "sine", peak, attack, decay }) {
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  osc.type = type;
+  osc.frequency.value = hz;
+  gain.gain.setValueAtTime(1e-4, at);
+  gain.gain.exponentialRampToValueAtTime(peak, at + attack);
+  gain.gain.exponentialRampToValueAtTime(1e-4, at + decay);
+  osc.connect(gain).connect(out);
+  osc.start(at);
+  osc.stop(at + decay + 0.05);
+}
+function soften(ctx, cutoff) {
+  const filter = ctx.createBiquadFilter();
+  filter.type = "lowpass";
+  filter.frequency.value = cutoff;
+  filter.connect(ctx.destination);
+  return filter;
+}
+function playTimerSound(sound = "chime") {
+  if (sound === "off") return 0;
   try {
-    const Context = window.AudioContext ?? /** @type {any} */
-    window.webkitAudioContext;
-    if (!Context) return;
-    if (audio === null && /** @type {any} */
-    navigator.userActivation?.isActive === false) return;
-    audio ??= new Context();
-    const ctx = (
-      /** @type {AudioContext} */
-      audio
-    );
-    if (ctx.state === "suspended") void ctx.resume();
-    const at = ctx.currentTime + 0.02;
-    [659.25, 880].forEach((hz, i) => {
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "sine";
-      osc.frequency.value = hz;
-      const start = at + i * 0.32;
-      gain.gain.setValueAtTime(1e-4, start);
-      gain.gain.exponentialRampToValueAtTime(0.16, start + 0.03);
-      gain.gain.exponentialRampToValueAtTime(1e-4, start + 0.9);
-      osc.connect(gain).connect(ctx.destination);
-      osc.start(start);
-      osc.stop(start + 0.95);
-    });
+    const ctx = context();
+    if (!ctx) return 0;
+    return (SOUNDS[sound] ?? SOUNDS.chime)(ctx, ctx.currentTime + 0.02);
   } catch {
+    return 0;
+  }
+}
+function speakTimerMessage(text) {
+  try {
+    if (typeof speechSynthesis === "undefined" || typeof SpeechSynthesisUtterance === "undefined" || !text) return false;
+    const utterance = new SpeechSynthesisUtterance(text);
+    const lang = document.documentElement.lang;
+    if (lang) utterance.lang = lang;
+    speechSynthesis.cancel();
+    speechSynthesis.speak(utterance);
+    return true;
+  } catch {
+    return false;
   }
 }
 function primeSound() {
   try {
-    const Context = window.AudioContext ?? /** @type {any} */
-    window.webkitAudioContext;
-    if (!Context) return;
-    if (audio === null && /** @type {any} */
-    navigator.userActivation?.isActive === false) return;
-    audio ??= new Context();
-    if (audio.state === "suspended") void audio.resume();
+    context();
   } catch {
   }
 }
@@ -24387,6 +24411,7 @@ function stopRing(timer2) {
   if (timer2.ring !== null) clearInterval(timer2.ring);
   timer2.ring = null;
   timer2.card.removeAttribute("data-kp-timer-ringing");
+  if (timer2.state === "done" && typeof speechSynthesis !== "undefined") speechSynthesis.cancel();
 }
 function finish(list, timer2, { quiet = false } = {}) {
   timer2.state = "done";
@@ -24396,15 +24421,21 @@ function finish(list, timer2, { quiet = false } = {}) {
   const strings = getStrings();
   say4(list, strings.timerDone(timer2.name), "alert");
   if (!quiet) {
-    if (list.getAttribute("data-kp-timers-sound") !== "off") {
-      chime();
+    const sound = list.getAttribute("data-kp-timers-sound") ?? "chime";
+    const speak = list.getAttribute("data-kp-timers-speak") === "on";
+    const announce2 = () => {
+      const length = playTimerSound(sound);
+      if (speak) setTimeout(() => listOf2(list).get(timer2.id) === timer2 && timer2.state === "done" && speakTimerMessage(timer2.say || strings.timerSpoken(timer2.name)), length * 1e3);
+    };
+    if (sound !== "off" || speak) {
+      announce2();
       const ring = Number(list.getAttribute("data-kp-timers-ring") ?? 60);
       if (ring > 0) {
         const until = Date.now() + ring * 1e3;
         timer2.card.setAttribute("data-kp-timer-ringing", "");
         timer2.ring = setInterval(() => {
           if (Date.now() >= until || timer2.state !== "done") return stopRing(timer2);
-          chime();
+          announce2();
         }, 4e3);
       }
     }
@@ -24423,7 +24454,7 @@ async function askTimerNotifications() {
   if (Notification.permission !== "default") return Notification.permission;
   return Notification.requestPermission();
 }
-function startTimer(list, { name, seconds, id }) {
+function startTimer(list, { name, seconds, id, say: message = "" }) {
   if (!(list instanceof HTMLElement) || !(seconds > 0)) return null;
   const timers = listOf2(list);
   const key = id ?? `t${Date.now().toString(36)}${serial4 += 1}`;
@@ -24440,6 +24471,7 @@ function startTimer(list, { name, seconds, id }) {
     left: seconds * 1e3,
     state: "running",
     warned: false,
+    say: message,
     ring: null,
     card
   };
@@ -24530,6 +24562,7 @@ function restoreTimers(list, saved) {
       left: s2.remaining * 1e3,
       state: s2.state,
       warned: s2.remaining <= 60,
+      say: s2.say ?? "",
       ring: null,
       card
     };
@@ -24605,7 +24638,8 @@ function attachTimers(root = document) {
       say4(list, getStrings().timerAlready(name));
       return;
     }
-    if (startTimer(list, { name, seconds, id })) starter.setAttribute("data-kp-timer-running", id);
+    const message = starter.getAttribute("data-kp-timer-say") ?? "";
+    if (startTimer(list, { name, seconds, id, say: message })) starter.setAttribute("data-kp-timer-running", id);
   };
   const ended = (event) => {
     const id = (
@@ -24632,7 +24666,7 @@ function attachTimers(root = document) {
   });
   return () => undo.forEach((u) => u());
 }
-var TIMERS, TIMER_START, TIMER_START_EVENT, TIMER_CHANGE_EVENT, TIMER_DONE_EVENT, TIMER_STOP_EVENT, TIMER_TICK_MS, LISTS, TICKERS, WIRED2, HANDLED2, audio, serial4, clockOf, leftOf, stateOf2, el6, listOf2, emit2, find, targetOf;
+var TIMERS, TIMER_START, TIMER_START_EVENT, TIMER_CHANGE_EVENT, TIMER_DONE_EVENT, TIMER_STOP_EVENT, TIMER_TICK_MS, LISTS, TICKERS, WIRED2, HANDLED2, audio, serial4, clockOf, leftOf, stateOf2, el6, listOf2, TIMER_SOUNDS, SOUNDS, emit2, find, targetOf;
 var init_timer = __esm({
   "js/timer.js"() {
     "use strict";
@@ -24660,7 +24694,8 @@ var init_timer = __esm({
       seconds: Math.round(timer2.total / 1e3),
       remaining: Math.ceil(leftOf(timer2) / 1e3),
       endsAt: timer2.state === "running" ? timer2.endsAt : null,
-      state: timer2.state
+      state: timer2.state,
+      ...timer2.say ? { say: timer2.say } : {}
     });
     el6 = (className, tag = "div") => {
       const node = document.createElement(tag);
@@ -24674,6 +24709,40 @@ var init_timer = __esm({
         LISTS.set(list, timers);
       }
       return timers;
+    };
+    TIMER_SOUNDS = ["chime", "bell", "buzzer"];
+    SOUNDS = {
+      // A soft two-note chime.
+      chime(ctx, at) {
+        [659.25, 880].forEach((hz, i) => note(ctx, ctx.destination, at + i * 0.32, hz, { peak: 0.16, attack: 0.03, decay: 0.9 }));
+        return 1.25;
+      },
+      // A wind-up kitchen timer: a hammer striking two bells in turn, twice, ten strikes each, with the bell metal's
+      // inharmonic overtones; softened above 4.5 kHz so it is loud without being shrill.
+      bell(ctx, at) {
+        const out = soften(ctx, 4500);
+        for (let burst = 0; burst < 2; burst += 1)
+          for (let hit = 0; hit < 10; hit += 1) {
+            const start = at + burst * 0.95 + hit * 0.075;
+            const base = hit % 2 === 0 ? 1180 : 1330;
+            [
+              [1, 0.11],
+              [2.4, 0.06],
+              [4.1, 0.03]
+            ].forEach(([ratio, peak]) => note(ctx, out, start, base * ratio, { peak, attack: 2e-3, decay: 0.26 }));
+          }
+        return 1.9;
+      },
+      // An electronic beeper: four short, slightly detuned saw beeps, twice. Harsh on purpose, softened above 3 kHz.
+      buzzer(ctx, at) {
+        const out = soften(ctx, 3e3);
+        for (let group = 0; group < 2; group += 1)
+          for (let beep = 0; beep < 4; beep += 1) {
+            const start = at + group * 1.3 + beep * 0.26;
+            for (const hz of [740, 749]) note(ctx, out, start, hz, { type: "sawtooth", peak: 0.1, attack: 8e-3, decay: 0.17 });
+          }
+        return 2.2;
+      }
     };
     emit2 = (list, timer2, type, extra = {}) => list.dispatchEvent(new CustomEvent(type, { bubbles: true, detail: { timer: stateOf2(timer2), ...extra } }));
     find = (list, id) => LISTS.get(list)?.get(id) ?? null;
@@ -24835,9 +24904,9 @@ function paint5(root, arrive2) {
       holder.append(button);
     }
     if (step.note) {
-      const note = el7(`kp-alert kp-alert--${step.noteTone === "warning" ? "warning" : "info"} kp-focus-steps__note`, "p");
-      note.textContent = step.note;
-      holder.append(note);
+      const note2 = el7(`kp-alert kp-alert--${step.noteTone === "warning" ? "warning" : "info"} kp-focus-steps__note`, "p");
+      note2.textContent = step.note;
+      holder.append(note2);
     }
   }
   const prev = (
@@ -26637,10 +26706,10 @@ function setHeat(el9, spec) {
   if (picked == null) el9.removeAttribute("data-kp-heat-picked");
   else el9.setAttribute("data-kp-heat-picked", picked);
   if (state === "empty" || state === "error") {
-    const note = make6(doc, "div", "kp-heat__state", { role: state === "error" ? "alert" : "status", "data-kp-state": state });
-    note.textContent = spec.message ?? (state === "error" ? s2.heatFailed : s2.heatEmpty);
+    const note2 = make6(doc, "div", "kp-heat__state", { role: state === "error" ? "alert" : "status", "data-kp-state": state });
+    note2.textContent = spec.message ?? (state === "error" ? s2.heatFailed : s2.heatEmpty);
     markDrawn(el9);
-    el9.replaceChildren(note);
+    el9.replaceChildren(note2);
     return;
   }
   const column = (key, text, minor) => {
@@ -26943,10 +27012,10 @@ function setMatrix(el9, spec) {
   if (spec.label && !grid2.hasAttribute("aria-label")) grid2.setAttribute("aria-label", spec.label);
   grid2.style.setProperty("--kp-matrix-cols", String(Math.max(1, columns.length)));
   if (state === "empty" || state === "error") {
-    const note = make6(doc, "div", "kp-matrix__state", { role: state === "error" ? "alert" : "status" });
-    note.textContent = spec.message ?? (state === "error" ? s2.heatFailed : s2.heatEmpty);
+    const note2 = make6(doc, "div", "kp-matrix__state", { role: state === "error" ? "alert" : "status" });
+    note2.textContent = spec.message ?? (state === "error" ? s2.heatFailed : s2.heatEmpty);
     markDrawn(el9);
-    el9.replaceChildren(note);
+    el9.replaceChildren(note2);
     return;
   }
   if (grid2.parentElement !== el9) replaceKeepingCard(el9, [grid2]);
@@ -31323,9 +31392,9 @@ function attachCompares(root = document) {
         const failed = !held2 && img.complete && img.naturalWidth === 0;
         const known4 = notes.find((n) => n.parentElement === pane);
         if (failed && !known4) {
-          const note = doc.createElement("div");
-          note.className = "kp-compare__failed";
-          note.setAttribute("role", "alert");
+          const note2 = doc.createElement("div");
+          note2.className = "kp-compare__failed";
+          note2.setAttribute("role", "alert");
           const said = doc.createElement("p");
           said.className = "kp-compare__failed-words";
           said.textContent = s2.compareFailed;
@@ -31335,8 +31404,8 @@ function attachCompares(root = document) {
           retry.textContent = s2.compareRetry;
           retry.addEventListener("click", () => {
             const side = pane === before ? "before" : "after";
-            note.remove();
-            notes.splice(notes.indexOf(note), 1);
+            note2.remove();
+            notes.splice(notes.indexOf(note2), 1);
             for (const one of pane.querySelectorAll("img")) {
               const src = one.getAttribute("src");
               if (src !== null) one.setAttribute("src", src);
@@ -31344,9 +31413,9 @@ function attachCompares(root = document) {
             settle();
             el9.dispatchEvent(new CustomEvent(COMPARE_RETRY_EVENT, { bubbles: true, detail: { pane: side } }));
           });
-          note.append(said, retry);
-          pane.append(note);
-          notes.push(note);
+          note2.append(said, retry);
+          pane.append(note2);
+          notes.push(note2);
         }
       }
     };
@@ -31783,9 +31852,9 @@ function attachGraphs(root = document, { decorate, strings } = {}) {
       svgEl(doc, "svg", { class: "kp-graph__svg", role: "group" })
     );
     svg2.setAttribute("aria-label", `${el9.getAttribute("aria-label") ?? s2.graphUnnamed}. ${s2.graphHint}`);
-    const note = make11(doc, "p", "kp-graph__note");
-    note.setAttribute("role", "status");
-    box.append(svg2, note);
+    const note2 = make11(doc, "p", "kp-graph__note");
+    note2.setAttribute("role", "status");
+    box.append(svg2, note2);
     const hint = make11(doc, "p", "kp-graph__hint", s2.graphHint);
     el9.replaceChildren(bar, box, hint, ...script ? [script] : []);
     const g = {
@@ -31803,7 +31872,7 @@ function attachGraphs(root = document, { decorate, strings } = {}) {
       legend,
       box,
       svg: svg2,
-      note,
+      note: note2,
       hint,
       decorate,
       strings: s2,
@@ -34004,6 +34073,7 @@ export {
   TIMER_DISC,
   TIMER_DISC_LEFT,
   TIMER_DONE_EVENT,
+  TIMER_SOUNDS,
   TIMER_START,
   TIMER_START_EVENT,
   TIMER_STOP_EVENT,
@@ -34360,6 +34430,7 @@ export {
   playArrivalBackwards,
   playClose,
   playEntranceBackwards,
+  playTimerSound,
   pointsOf,
   presetMs,
   prettyJson,
@@ -34481,6 +34552,7 @@ export {
   skipTo,
   sortAttention,
   sparkPaths,
+  speakTimerMessage,
   spinWheel,
   stackPills,
   stackbar_exports as stackbarExports,

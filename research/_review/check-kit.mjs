@@ -119,7 +119,8 @@ async function checkStep() {
         const count = rowIds.filter((id) => id === section.id).length;
         if (count !== 1) fault(`${where}: section ${section.key} has ${count} rows`);
         const keyed = step.rows.filter((row) => row.key !== null);
-        if (keyed.length && keyed.filter((row) => row.key === section.key).length !== 1) fault(`${where}: section ${section.key} has no row filed under its own key`);
+        if (keyed.length && keyed.filter((row) => row.key === section.key).length !== 1)
+            fault(`${where}: section ${section.key} has no row filed under its own key`);
         const row = step.rows.find((r) => r.id === section.id);
         if (!row) continue;
         if (!row.box) fault(`${where}: the row of ${section.key} has no "Not approved" box`);
@@ -136,7 +137,9 @@ async function checkStep() {
     // typed in the checklist's row).
     const xs = step.rows.map((row) => row.boxX).filter((x) => x !== null);
     if (xs.length > 1 && Math.max(...xs) - Math.min(...xs) > 2)
-        fault(`${where}: the "Not approved" boxes do not stand in one column (x ${Math.min(...xs)} to ${Math.max(...xs)} px), so a box can read as another row's`);
+        fault(
+            `${where}: the "Not approved" boxes do not stand in one column (x ${Math.min(...xs)} to ${Math.max(...xs)} px), so a box can read as another row's`,
+        );
     for (const row of step.rows) if (row.box && !row.underName) fault(`${where}: the "Not approved" box of "${row.title}" is not under its name`);
     if (step.banner) fault(`${where}: the dialog's integrity banner says: ${step.banner}`);
     return step;
@@ -175,12 +178,24 @@ for (const [i, id] of ends.entries()) {
 // The journal writes a note after a short pause in the typing.
 await page.waitForTimeout(1500);
 await openDialog();
+// The dialog reopens at the first OPEN step; a step whose every row is now marked is judged, so walk back to it.
+for (let i = 0; i < total && (await readStep()).position !== first.position; i++) {
+    const was = (await readStep()).position;
+    await page.click('dialog.rv-dialog [data-rv-go="-1"]');
+    await page.waitForFunction((w) => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent !== w, was, { timeout: 15000 });
+    await page.waitForTimeout(500);
+}
 const again = await page.evaluate(
     (ids) =>
         ids.map((id) => {
             const box = /** @type {HTMLInputElement | null} */ (document.querySelector(`dialog.rv-dialog #rv-${CSS.escape(id)}`));
             const row = box?.closest('.rv-row');
-            return { id, there: Boolean(row), checked: Boolean(box?.checked), note: /** @type {HTMLTextAreaElement | null} */ (row?.querySelector('[data-rv-row-note]'))?.value ?? '' };
+            return {
+                id,
+                there: Boolean(row),
+                checked: Boolean(box?.checked),
+                note: /** @type {HTMLTextAreaElement | null} */ (row?.querySelector('[data-rv-row-note]'))?.value ?? '',
+            };
         }),
     ends,
 );
@@ -226,7 +241,8 @@ for (const [id, text] of Object.entries(written)) {
 await go(`${ORIGIN}/catalogue/agenda.html`);
 await page.waitForTimeout(2500);
 const band = await page.evaluate(() => document.querySelector('[data-agenda-received]')?.textContent || '');
-if (!band.includes(`received by Claude: ${demo}`)) fault(`new round ${next.round}: the Agenda does not say the answer of ${demo} ${now} was received`);
+if (!band.includes(`received by Claude: ${demo}`))
+    fault(`new round ${next.round}: the Agenda does not say the answer of ${demo} ${now} was received`);
 
 await browser.close();
 console.log(`${path}: ${faults.length ? `${faults.length} fault(s)` : 'clear'}`);
