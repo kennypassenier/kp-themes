@@ -51,6 +51,7 @@ export const OWN = {
     'js/calendar.js': "the busy month's own card over the days (`.kp-calendar__busy`, --busy-whole) or every day's loading tone",
     'js/chart.js': "the plot's loading plate (`.kp-chart__state` as a skeleton block) over the whole plot",
     'js/graph.js': "the graph's loading note over the plot, at its final height",
+    'js/request-inspector.js': "the request list is a card in four states: its loading state is the card's own busy card (js/card-state.js setCardState) over the whole stage [kpadopt5]",
     'js/kpi.js': "a KPI tile's own skeleton figure and meter: one figure, not a data area",
 };
 
@@ -60,6 +61,7 @@ export const NOT_DATA = {
     'js/statusrow.js': 'each row carries its own spinner while that one item is read; the list stays usable',
     'js/actions.js': "a row's own action at work (setRowBusy: the pressed button's spinner); the list stays usable",
     'js/facets.js': 'only the counts wait (quiet bars); the rows stay usable to filter with',
+    'js/selection-bar.js': "an action at work: the bar's count gives way to its own spinner and words, the list stays usable [kpadopt5]",
     'js/idmark.js': "a mark is one small plate: a loading mark is the plate's own skeleton",
     'js/stackbar.js': "one figure, as a meter is: its bar shows the meter's own loading picture (js/kpi.js setMeter) and the legend keeps its rows",
     'js/tick.js': 'a number counting to its value, no loading state of its own',

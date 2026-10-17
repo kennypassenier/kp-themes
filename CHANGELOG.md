@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- **Added: the rows group, formal first** [kpadopt5; research/kpadopt5-rows]. `js/row-select.js` (j / k, x, Shift+x, Esc, Shift-click ranges, optional arrows and Ctrl+A, a cursor ring `is-cursor`, long-press selection mode; on for every data table with a select column, `data-kp-select-keys="false"` off), `.kp-selection` with `js/selection-bar.js` (sticky-top, inline or floating-bottom; names with an exact "+N more"; the offer for all matching rows; busy, result with refused rows, actions off with a reason), `undoToast()` in `js/undo-toast.js` (ring, rule, text or no clock that stops while held; `defer` or `revert`; Mod+Z; leave `carry`; stack of 3), `.kp-newpill` with `js/newpill.js` (following, an exact count, a divider "New since"), `.kp-code--cell` in `js/code.js` (the payload cell: three lines, binary, truncated, dialog or inline), `textarea[data-kp-json]` with `js/json-field.js` (line and column of the error, gutter, Format and Minify, Tab that never traps) and `.kp-inspector` with `js/request-inspector.js` (requests with masked secrets, `toCurl`, the card's four states). 98 strings.
+
 - **Removed: four themes, `terminal`, `phantom`, `light` and `grotesk`** [breaking; Kenny, 2026-10-16
   23:38 to 23:40: "we gaan het terminal thema bij deze ook verwijderen uit ons pakket", "En phantom ook", "en light ook",
   "en grotesk ook"]. Twelve themes remain: formal, dark, cyberpunk, synthwave, pastel, forest, blueprint, solstice,

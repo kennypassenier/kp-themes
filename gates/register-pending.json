@@ -40,5 +40,10 @@
     "countdown": "a new component approved by Kenny on 2026-10-16 (research/kpadopt4), demoed in formal only; each register answers it once it is judged in that theme",
     "timer-disc": "a new component approved by Kenny on 2026-10-16 (research/kpadopt4), demoed in formal only; each register answers it once it is judged in that theme",
     "range": "a new component approved by Kenny on 2026-10-16 (research/kpadopt4), demoed in formal only; each register answers it once it is judged in that theme",
-    "compare": "a new component approved by Kenny on 2026-10-16 (research/kpadopt4), demoed in formal only; each register answers it once it is judged in that theme"
+    "compare": "a new component approved by Kenny on 2026-10-16 (research/kpadopt4), demoed in formal only; each register answers it once it is judged in that theme",
+    "selection": "a component of the rows group [kpadopt5], built from the package's parts and judged in formal only first (research/kpadopt5-rows); each register answers it once it is judged in that theme",
+    "undo": "a component of the rows group [kpadopt5], built from the package's parts and judged in formal only first (research/kpadopt5-rows); each register answers it once it is judged in that theme",
+    "newpill": "a component of the rows group [kpadopt5], built from the package's parts and judged in formal only first (research/kpadopt5-rows); each register answers it once it is judged in that theme",
+    "jsonfield": "a component of the rows group [kpadopt5], built from the package's parts and judged in formal only first (research/kpadopt5-rows); each register answers it once it is judged in that theme",
+    "inspector": "a component of the rows group [kpadopt5], built from the package's parts and judged in formal only first (research/kpadopt5-rows); each register answers it once it is judged in that theme"
 }
