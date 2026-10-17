@@ -6,6 +6,9 @@
 import { setRatingState } from '../../js/rating.js';
 import { setQuoteState } from '../../js/quote.js';
 import { setStatus, settleToday, setTodayState } from '../../js/statusrow.js';
+import { setCalendarDays, setCalendarState, setCalendarLegend, setCalendarCaption } from '../../js/calendar.js';
+import { setHeat } from '../../js/heat.js';
+import { setUptime } from '../../js/uptime.js';
 
 /** @param {string} selector @param {ParentNode} [root] */
 const all = (selector, root = document) => /** @type {HTMLElement[]} */ ([...root.querySelectorAll(selector)]);
@@ -104,6 +107,108 @@ const log = (box, text) => {
     });
     onButtons('data-k6-quote-hide', (value) => {
         refuse = value === 'refused';
+    });
+}
+
+// ---- 5 · calm days -------------------------------------------------------------------------------
+{
+    const LOGGED = [1, 2, 7, 8, 9, 12, 13, 14, 15];
+    const MINUTES = { 1: 20, 2: 35, 7: 15, 8: 40, 9: 25, 12: 30, 13: 45, 14: 20, 15: 10 };
+    const iso = (/** @type {number} */ d) => `2026-10-${String(d).padStart(2, '0')}`;
+    /** @type {Record<string, import('../../js/calendar.js').CalendarDay>} */
+    const calm = {};
+    /** @type {Record<string, import('../../js/calendar.js').CalendarDay>} */
+    const standard = {};
+    for (let d = 1; d <= 16; d += 1) {
+        const minutes = /** @type {Record<number, number>} */ (MINUTES)[d];
+        if (LOGGED.includes(d)) {
+            calm[iso(d)] = { tone: 'logged', count: String(minutes), label: `${minutes} minutes` };
+            standard[iso(d)] = { tone: 'ok', count: String(minutes), label: `${minutes} minutes` };
+        } else standard[iso(d)] = { tone: 'bad', label: 'missed' };
+    }
+    const calmSet = ['k6-cal-a', 'k6-cal-s', 'k6-cal-p'].map((id) => /** @type {HTMLElement} */ (document.getElementById(id)));
+    const apply = () => {
+        for (const el of calmSet) setCalendarDays(el, calm);
+        const b = document.getElementById('k6-cal-b');
+        if (b) setCalendarDays(b, standard);
+    };
+    // The calendars are built by js/auto.js; wait for them.
+    const ready = () => calmSet.every((el) => el?.querySelector('.kp-calendar__grid'));
+    const wait = async () => {
+        for (let i = 0; i < 60 && !ready(); i += 1) await sleep(100);
+        apply();
+        setCalendarCaption(calmSet[1], 'Trends count the days that were logged');
+        const b = document.getElementById('k6-cal-b');
+        if (b) setCalendarLegend(b, [{ tone: 'ok', label: 'Done' }, { tone: 'bad', label: 'Missed' }]);
+    };
+    void wait();
+    calmSet[0]?.addEventListener('kp-calendar-pick', (event) => {
+        log(document.getElementById('k6-cal-log'), `kp-calendar-pick { date: '${/** @type {CustomEvent} */ (event).detail.date}' }`);
+    });
+    // The heat grid: three habits over the last fourteen days.
+    const heat = document.getElementById('k6-heat');
+    if (heat) {
+        const days = Array.from({ length: 14 }, (_, i) => ({ key: iso(i + 3), label: String(i + 3), minor: i % 2 === 1 }));
+        /** @param {string} pattern */
+        const cells = (pattern) =>
+            [...pattern].map((c, i) =>
+                c === 'x'
+                    ? { tone: /** @type {const} */ ('logged'), label: 'logged' }
+                    : c === 'p'
+                      ? { tone: /** @type {const} */ ('paused'), label: 'paused' }
+                      : i === 9
+                        ? { tone: /** @type {any} */ ('bad'), label: 'missed' }
+                        : { tone: /** @type {const} */ ('quiet'), label: 'nothing logged' },
+            );
+        setHeat(heat, {
+            columns: days,
+            rows: [
+                { key: 'walk', label: 'Walk', cells: cells('ppppx..xx.x.xx') },
+                { key: 'stretch', label: 'Stretch', cells: cells('x.x.x.x..xx..x') },
+                { key: 'journal', label: 'Journal', cells: cells('xxx.xxx.x.xx.x') },
+            ],
+            every: 2,
+        });
+    }
+    // The uptime strip: thirty days of a plant being watered; `down` is a day nothing was logged.
+    const up = document.getElementById('k6-up');
+    if (up) {
+        const periods = Array.from({ length: 30 }, (_, i) => {
+            const day = new Date(Date.UTC(2026, 8, 18 + i));
+            const label = `${String(day.getUTCDate()).padStart(2, '0')}/${String(day.getUTCMonth() + 1).padStart(2, '0')}/2026`;
+            const state = /** @type {'up' | 'down' | 'none'} */ (i % 7 === 3 || i % 11 === 5 ? 'down' : i > 27 ? 'none' : 'up');
+            return { key: day.toISOString().slice(0, 10), label, state };
+        });
+        setUptime(up, { label: 'Zamioculcas Raven: water', periods, from: '30 days ago', to: 'Today' });
+    }
+    onButtons('data-k6-calm-fill', (value) => {
+        for (const el of document.querySelectorAll('.kp-calendar[data-kp-tones="calm"], .kp-heat[data-kp-tones="calm"], .kp-uptime[data-kp-tones="calm"]')) {
+            if (value === 'success') el.setAttribute('data-kp-logged-fill', 'success');
+            else el.removeAttribute('data-kp-logged-fill');
+        }
+    });
+    onButtons('data-k6-calm-legend', (value) => {
+        for (const el of [calmSet[0], calmSet[1], calmSet[2]]) {
+            if (!el) continue;
+            setCalendarLegend(
+                el,
+                value === 'hide'
+                    ? []
+                    : [
+                          { tone: 'logged', label: 'Logged' },
+                          { tone: 'quiet', label: 'Nothing logged' },
+                          { tone: 'paused', label: 'Paused' },
+                      ],
+            );
+        }
+    });
+    const driven = calmSet[1];
+    driven?.addEventListener('kp-calendar-retry', () => {
+        setCalendarState(driven, 'loading');
+        void sleep(1000).then(() => setCalendarState(driven, 'ready'));
+    });
+    onButtons('data-k6-cal-state', (value) => {
+        if (driven) setCalendarState(driven, /** @type {'ready' | 'loading' | 'empty' | 'error'} */ (value));
     });
 }
 

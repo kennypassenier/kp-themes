@@ -12,7 +12,7 @@ export declare const HEAT_PAGE_EVENT = "kp-heat-page";
 export declare const MATRIX_PICK_EVENT = "kp-matrix-pick";
 /** Fired on a matrix when the lit headers change. */
 export declare const MATRIX_LIGHT_EVENT = "kp-matrix-light";
-export type GridTone = 'ok' | 'warn' | 'bad' | 'muted' | 'future' | 'before' | 'none' | 'level' | 'loading' | 'self';
+export type GridTone = 'ok' | 'warn' | 'bad' | 'muted' | 'future' | 'before' | 'none' | 'level' | 'loading' | 'self' | 'logged' | 'quiet' | 'paused';
 export type HeatCell = {
     /**
      * default `muted`

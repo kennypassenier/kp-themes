@@ -51,6 +51,7 @@
                     <ol>
                         <li><a href="#topic-today">Today card</a> <span class="k6-toc__count">2 sections</span></li>
                         <li><a href="#topic-quote">Quote card</a> <span class="k6-toc__count">2 sections</span></li>
+                        <li><a href="#topic-calm">Calm days</a> <span class="k6-toc__count">2 sections</span></li>
                         <li><a href="#topic-rating">Star rating</a> <span class="k6-toc__count">2 sections</span></li>
                     </ol>
                 </nav>
@@ -424,6 +425,148 @@
                             <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-14T19:40:00+02:00" data-kp-quote-lang="nl" data-kp-quote-why="What helped last time">
                                 <blockquote>Wandelen na het eten hielp, mijn hoofd werd rustiger.</blockquote>
                             </figure>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ topic: Calm days -->
+            <h2 class="k6-topic" id="topic-calm">Calm days</h2>
+            <section
+                class="k6-sec"
+                id="calm-tones"
+                data-review-item="calm-tones"
+                data-review-components="calendar heat uptime"
+                data-review-topic="calm"
+                data-review-topic-title="Calm days"
+                data-review-title="Calm days: a day with nothing logged is quiet, not failed"
+                data-review-choices='[{"id": "calm-fill", "label": "The colour of a logged day", "default": "accent", "options": [{"value": "accent", "label": "The theme&#39;s accent (recommended, and your earlier answer)", "hint": "Navy in formal: it reads &quot;this is mine&quot;, so the days you did not log are just plain paper and not failures. The calendars below."}, {"value": "success", "label": "The success colour", "hint": "Green reads &quot;passed&quot;, which turns every unfilled day into a day that did not pass. Press Success in the buttons above to see it."}]}, {"id": "calm-legend", "label": "The legend under a calm calendar", "default": "show", "options": [{"value": "show", "label": "Show Logged, Nothing logged, Paused (recommended)", "hint": "Three swatches with neutral words, so the colours are never a guess."}, {"value": "hide", "label": "Leave it out", "hint": "A cleaner card; the days still carry their words for a screen reader and a tooltip. Press Hide in the buttons above."}]}]'
+                aria-labelledby="h-calm-tones"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-calm-tones">Calm days: a day with nothing logged is quiet, not failed</h2>
+                    <p>
+                        <code>data-kp-tones="calm"</code> on the month calendar, the heat grid and the uptime strip: the plates for a tracker of a
+                        person. A day you logged is filled in the theme&rsquo;s accent, a day you did not is simply quiet, and a pause is hatched. No
+                        red, no green, no &ldquo;missed&rdquo;, no count of the empty days.
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>First calendar</b> (October 2026, movement): days 1, 2, 7, 8, 9, 12, 13, 14 and 15 are logged (navy plates, the
+                            number of minutes under the day number); 3 to 6 are <b>paused</b> (hatched, no fill); the other past days are
+                            <b>quiet</b> (a plate barely darker than the paper, no border, no number under it, no glyph); days after today are dashed.
+                            The legend reads <b>Logged</b>, <b>Nothing logged</b>, <b>Paused</b>. Press a quiet day: you can, it is a normal 52 px target
+                            (adding a missing entry is allowed); its name is <b>14/10/2026: nothing logged</b>, never &ldquo;missed&rdquo;.
+                        </li>
+                        <li>
+                            <b>Second calendar</b>: the same days drawn for a backup with the standard tones: green for done, <b>red for a miss</b>.
+                            That is right for a machine and is what calm replaces for a person. Standard stays the default; nothing changes for
+                            backups.
+                        </li>
+                        <li>
+                            <b>Heat grid</b> (three habits over fourteen days) and <b>uptime strip</b> (thirty days of a plant being watered):
+                            logged is the accent, quiet is the pale plate, the strip&rsquo;s old <b>down</b> reads <b>nothing logged</b> in its tooltip, and its summary counts the good days only (<b>N of 28 days logged</b>: no share down, no incidents).
+                            A cell asked to be <code>bad</code> is drawn quiet (the console says so once).
+                        </li>
+                        <li>
+                            <b>Buttons above</b>: <b>Accent</b> and <b>Success</b> change the colour of logged days in all three (a choice to tick);
+                            <b>Legend</b> shows or hides the legend (a choice to tick).
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s paper and navy: a logged day is a navy plate with paper ink, a quiet one a barely-there tone of the paper
+                        (lighter than the grey of &ldquo;nothing to do&rdquo;), the paused hatch is the one the heat grid already uses before a record
+                        begins. Look at the three tones side by side and at the quiet days not drawing any eye.
+                    </p>
+                </div>
+                <div data-review-controls>
+                    <div role="group" aria-label="The colour of a logged day" class="k6-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-calm-fill="accent">Accent</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-calm-fill="success">Success</button>
+                    </div>
+                    <div role="group" aria-label="The legend" class="k6-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-calm-legend="show">Legend</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-calm-legend="hide">Hide</button>
+                    </div>
+                </div>
+                <div class="k6-pair">
+                    <div class="k6-case">
+                        <p class="k6-label">Calm: movement, October 2026</p>
+                        <section class="kp-calendar kp-calendar--busy-whole" data-kp-calendar data-kp-tones="calm" data-kp-calendar-month="2026-10" data-kp-paused-range="2026-10-03/2026-10-06" aria-label="Movement" id="k6-cal-a"></section>
+                        <pre class="k6-log" id="k6-cal-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">The same days for a backup: standard tones</p>
+                        <section class="kp-calendar kp-calendar--busy-days" data-kp-calendar data-kp-calendar-month="2026-10" aria-label="Nightly backup" id="k6-cal-b"></section>
+                    </div>
+                </div>
+                <div class="k6-pair">
+                    <div class="k6-case">
+                        <p class="k6-label">Heat grid, calm: three habits, fourteen days</p>
+                        <div class="kp-heat" data-kp-heat data-kp-tones="calm" id="k6-heat" aria-label="Habits"></div>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">Uptime strip, calm: watering, thirty days</p>
+                        <div class="kp-uptime" data-kp-uptime data-kp-tones="calm" data-kp-uptime-label="Zamioculcas Raven: water" id="k6-up"></div>
+                    </div>
+                </div>
+            </section>
+            <section
+                class="k6-sec"
+                id="calm-tones-states"
+                data-review-item="calm-tones-states"
+                data-review-components="calendar"
+                data-review-topic="calm"
+                data-review-title="Calm days: states and phone width"
+                aria-labelledby="h-calm-tones-states"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-calm-tones-states">Calm days: states and phone width</h2>
+                    <p>A calm calendar that is being read, a month with nothing logged, a month that could not be read, and the calendar in a 390 px box.</p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Loading</b>, <b>Nothing logged</b>, <b>Could not read</b> and <b>Ready</b> (buttons above the first calendar):
+                            <b>Loading</b> is the calendar&rsquo;s own pulse on every day, same size. <b>Nothing logged</b>: the grid keeps its six
+                            rows, every day quiet, with one plate centred over it at heading size: <b>Nothing logged this month</b> over <b>That is
+                            fine, it starts whenever you do</b>. <b>Could not read</b>: the grid dimmed under a red-edged plate with
+                            <b>Could not read this month</b> and a normal-size <b>Retry</b> (it loads for a second and the days come back).
+                            The calendar does not change height between them.
+                        </li>
+                        <li>
+                            <b>A sentence under the grid</b> (the page&rsquo;s own words, here <b>Trends count the days that were logged</b>) is the
+                            optional caption slot. <b>Phone width</b> (390 px box): the calendar&rsquo;s own layout; a quiet day is still a 44 px
+                            or larger target.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The plate is formal&rsquo;s empty plate or destructive alert, standing over the dimmed grid, not a line in a corner.</p>
+                </div>
+                <div data-review-controls>
+                    <div role="group" aria-label="State of the first calendar" class="k6-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-cal-state="ready">Ready</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-cal-state="loading">Loading</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-cal-state="empty">Nothing logged</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-cal-state="error">Could not read</button>
+                    </div>
+                </div>
+                <div class="k6-pair">
+                    <div class="k6-case">
+                        <p class="k6-label">Driven by the buttons above</p>
+                        <section class="kp-calendar kp-calendar--busy-whole" data-kp-calendar data-kp-tones="calm" data-kp-calendar-month="2026-10" aria-label="Sleep" id="k6-cal-s"></section>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">Phone width (390 px)</p>
+                        <div class="k6-frame k6-frame--phone">
+                            <section class="kp-calendar kp-calendar--busy-days" data-kp-calendar data-kp-tones="calm" data-kp-calendar-month="2026-10" data-kp-paused-range="2026-10-03/2026-10-06" aria-label="Movement" id="k6-cal-p"></section>
                         </div>
                     </div>
                 </div>

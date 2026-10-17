@@ -3615,6 +3615,58 @@ export type Strings = {
      * The failed card's button [kpadopt6]
      */
     statusTodayRetry: string;
+    /**
+     * A day with something logged, in words: "logged" (js/calm-tones.js, `data-kp-tones="calm"`) [kpadopt6]
+     */
+    calmLogged: string;
+    /**
+     * A day with nothing logged, in words: "nothing logged", never "missed" [kpadopt6]
+     */
+    calmQuiet: string;
+    /**
+     * A day inside a pause: "paused" [kpadopt6]
+     */
+    calmPaused: string;
+    /**
+     * The legend's word for a logged day [kpadopt6]
+     */
+    calmLegendLogged: string;
+    /**
+     * The legend's word for a quiet day [kpadopt6]
+     */
+    calmLegendQuiet: string;
+    /**
+     * The legend's word for a paused day [kpadopt6]
+     */
+    calmLegendPaused: string;
+    /**
+     * The plate over a month with nothing logged: "Nothing logged this month" [kpadopt6]
+     */
+    calmEmptyTitle: string;
+    /**
+     * Its second sentence [kpadopt6]
+     */
+    calmEmptyText: string;
+    /**
+     * The plate over a calendar that could not be read [kpadopt6]
+     */
+    calmFailedTitle: string;
+    /**
+     * Its sentence: the fault is the system's [kpadopt6]
+     */
+    calmFailedText: string;
+    /**
+     * Its button [kpadopt6]
+     */
+    calmRetry: string;
+    /**
+     * The words of the optional caption slot under the grid: trends over the days that were logged [kpadopt6]
+     */
+    calmTrendCaption: string;
+    /**
+     * A calm uptime strip's summary: "21 of 30 days logged", with no incident count and no share down [kpadopt6]
+     */
+    calmSummary: (logged: number, total: number) => string;
 };
 /**
  * @typedef {object} Strings
@@ -4615,6 +4667,19 @@ export type Strings = {
  * @property {string} statusTodayFailedText  Its sentence: the fault is the system's [kpadopt6]
  * @property {string} statusTodayLoading  The words under the loading card [kpadopt6]
  * @property {string} statusTodayRetry  The failed card's button [kpadopt6]
+ * @property {string} calmLogged  A day with something logged, in words: "logged" (js/calm-tones.js, `data-kp-tones="calm"`) [kpadopt6]
+ * @property {string} calmQuiet  A day with nothing logged, in words: "nothing logged", never "missed" [kpadopt6]
+ * @property {string} calmPaused  A day inside a pause: "paused" [kpadopt6]
+ * @property {string} calmLegendLogged  The legend's word for a logged day [kpadopt6]
+ * @property {string} calmLegendQuiet  The legend's word for a quiet day [kpadopt6]
+ * @property {string} calmLegendPaused  The legend's word for a paused day [kpadopt6]
+ * @property {string} calmEmptyTitle  The plate over a month with nothing logged: "Nothing logged this month" [kpadopt6]
+ * @property {string} calmEmptyText  Its second sentence [kpadopt6]
+ * @property {string} calmFailedTitle  The plate over a calendar that could not be read [kpadopt6]
+ * @property {string} calmFailedText  Its sentence: the fault is the system's [kpadopt6]
+ * @property {string} calmRetry  Its button [kpadopt6]
+ * @property {string} calmTrendCaption  The words of the optional caption slot under the grid: trends over the days that were logged [kpadopt6]
+ * @property {(logged: number, total: number) => string} calmSummary  A calm uptime strip's summary: "21 of 30 days logged", with no incident count and no share down [kpadopt6]
  */
 /**
  * The defaults. English, by Kenny's decision of 2026-09-04 — the package

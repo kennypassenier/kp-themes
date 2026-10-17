@@ -1035,6 +1035,19 @@
  * @property {string} statusTodayFailedText  Its sentence: the fault is the system's [kpadopt6]
  * @property {string} statusTodayLoading  The words under the loading card [kpadopt6]
  * @property {string} statusTodayRetry  The failed card's button [kpadopt6]
+ * @property {string} calmLogged  A day with something logged, in words: "logged" (js/calm-tones.js, `data-kp-tones="calm"`) [kpadopt6]
+ * @property {string} calmQuiet  A day with nothing logged, in words: "nothing logged", never "missed" [kpadopt6]
+ * @property {string} calmPaused  A day inside a pause: "paused" [kpadopt6]
+ * @property {string} calmLegendLogged  The legend's word for a logged day [kpadopt6]
+ * @property {string} calmLegendQuiet  The legend's word for a quiet day [kpadopt6]
+ * @property {string} calmLegendPaused  The legend's word for a paused day [kpadopt6]
+ * @property {string} calmEmptyTitle  The plate over a month with nothing logged: "Nothing logged this month" [kpadopt6]
+ * @property {string} calmEmptyText  Its second sentence [kpadopt6]
+ * @property {string} calmFailedTitle  The plate over a calendar that could not be read [kpadopt6]
+ * @property {string} calmFailedText  Its sentence: the fault is the system's [kpadopt6]
+ * @property {string} calmRetry  Its button [kpadopt6]
+ * @property {string} calmTrendCaption  The words of the optional caption slot under the grid: trends over the days that were logged [kpadopt6]
+ * @property {(logged: number, total: number) => string} calmSummary  A calm uptime strip's summary: "21 of 30 days logged", with no incident count and no share down [kpadopt6]
  */
 
 /**
@@ -2268,6 +2281,20 @@ export const DEFAULT_STRINGS = Object.freeze({
     statusTodayFailedText: 'The list could not be reached just now.',
     statusTodayLoading: 'Reading today',
     statusTodayRetry: 'Retry',
+    // Calm tones for a calendar, a heat grid and an uptime strip (js/calm-tones.js) [kpadopt6].
+    calmLogged: 'logged',
+    calmQuiet: 'nothing logged',
+    calmPaused: 'paused',
+    calmLegendLogged: 'Logged',
+    calmLegendQuiet: 'Nothing logged',
+    calmLegendPaused: 'Paused',
+    calmEmptyTitle: 'Nothing logged this month',
+    calmEmptyText: 'That is fine, it starts whenever you do',
+    calmFailedTitle: 'Could not read this month',
+    calmFailedText: 'The days could not be reached just now.',
+    calmRetry: 'Retry',
+    calmTrendCaption: 'Trends count the days that were logged',
+    calmSummary: (logged, total) => `${logged} of ${total} days logged`,
 });
 
 // STRINGS_NL was removed in 4.0.0 [D3]. Kenny decided that on

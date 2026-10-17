@@ -184,6 +184,14 @@ export {
     unsavedSaved,
 } from './js/unsaved.js';
 export {
+    CALM_TONES,
+    CALM_TONES_ATTRIBUTE,
+    calmTone,
+    calmWord,
+    inPausedRange,
+    isCalmTones,
+} from './js/calm-tones.js';
+export {
     QUOTE,
     QUOTE_FOLD_EVENT,
     QUOTE_HIDE_EVENT,
@@ -622,10 +630,12 @@ export {
     CALENDAR,
     CALENDAR_MONTH_EVENT,
     CALENDAR_PICK_EVENT,
+    CALENDAR_RETRY_EVENT,
     attachCalendars,
     calendarMonth,
     calendarSelect,
     monthCells,
+    setCalendarCaption,
     setCalendarDays,
     setCalendarLegend,
     setCalendarState,

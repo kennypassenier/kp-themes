@@ -179,6 +179,7 @@
         { "path": "js/sentence.js", "tags": ["@component:field"], "why": "the sentence form [kpadopt5-time]" },
         { "path": "js/slider.js", "tags": ["@component:field"], "why": "the slider [kpadopt5-time]" },
         { "path": "js/unsaved.js", "tags": ["@component:feedback"], "why": "the unsaved-changes bar [kpadopt5-time]" },
+        { "path": "js/calm-tones.js", "tags": ["@component:data"], "why": "calm tones for the calendar, the heat grid and the uptime strip [kpadopt6]" },
         { "path": "js/quote.js", "tags": ["@component:feedback"], "why": "the quote card [kpadopt6]" },
         { "path": "js/rating.js", "tags": ["@component:field"], "why": "the star rating [kpadopt6]" },
         { "path": "js/calm.js", "tags": ["@component:foundations"], "why": "calm mode [kpadopt5]" },

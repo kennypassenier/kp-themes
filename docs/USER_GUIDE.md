@@ -2345,6 +2345,21 @@ A card with one row per thing in the day, each only open, done or paused since a
 orders once at attach and never again; `data-kp-today-paused="fold"` with `data-kp-today-fold-after` (30) gathers long pauses into one line (`settleToday(list)` does it again). Keys while the focus is in the list: ArrowUp and ArrowDown, `r` resumes.
 `setTodayState(card, 'loading' | 'empty' | 'error' | 'ready')` brings the card's loading card, "Nothing planned today" over "That is fine, nothing is waiting", and a blame-free failure with a normal-size Retry. "As of 14:02" for a card fed from
 outside is the existing freshness line (`data-kp-ago`). There is no summary line by design. The words are `status…` (`statusOpen`, `statusSinceDate`, `statusTodayEmptyTitle`). Knobs: `--kp-today-row-min`, `--kp-glyph-open`, `--kp-glyph-paused`, `--kp-glyph-unknown`.
+### Calm tones: a day with nothing logged is quiet
+
+For a tracker of a person (movement, mood, sleep, watering), not a machine:
+
+```html
+<section class="kp-calendar" data-kp-calendar data-kp-tones="calm" data-kp-paused-range="2026-10-03/2026-10-14" aria-label="Movement"></section>
+```
+
+`data-kp-tones="calm"` on a calendar, a heat grid (`.kp-heat`) or an uptime strip (`.kp-uptime`) swaps the tones `ok`, `warn` and `bad` for `logged` (the theme's accent, `--primary`; `data-kp-logged-fill="success"` asks for the success plate),
+`quiet` (nothing logged: lighter than `muted`, no border, no glyph, never a count, never the word "missed") and `paused` (hatched, from `data-kp-paused-range="from/to"`); `future`, `before` and `loading` are shared. A page that hands over
+`ok` becomes logged and anything else quiet, with one console warning per foreign tone (`data-kp-calm-map="none"` passes tones through). A quiet cell keeps an accessible name, "14/10/2026: nothing logged"
+(`data-kp-quiet-words="none"` leaves the words out) and is still a 44 px target, since adding a missing entry is allowed. The calendar prints a day's count only on a logged day, draws a legend Logged, Nothing logged, Paused (`data-kp-legend="hide"`),
+keeps its six rows under a centred plate over a month with nothing logged ("Nothing logged this month", "That is fine, it starts whenever you do") and dims a failed month under one with Retry (`kp-calendar-retry`); `setCalendarCaption(el, text)` writes the page's own sentence under the grid.
+The uptime strip maps `up` and `degraded` to logged and `down` to quiet, says "nothing logged" in its tooltip and sums up as "21 of 28 days logged", with no incident count. The helpers are in `js/calm-tones.js` (`calmTone`, `calmWord`, `inPausedRange`, `isCalmTones`).
+The standard tones stay the default: a missed backup is a fault. The words are `calm…`. Knobs: `--kp-logged-fill`, `--kp-logged-ink`, `--kp-quiet-fill`, `--kp-quiet-ink`.
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

@@ -176,6 +176,10 @@
             "types": "./js/quote.d.ts",
             "default": "./js/quote.js"
         },
+        "./js/calm-tones": {
+            "types": "./js/calm-tones.d.ts",
+            "default": "./js/calm-tones.js"
+        },
         "./js/unsaved": {
             "types": "./js/unsaved.d.ts",
             "default": "./js/unsaved.js"

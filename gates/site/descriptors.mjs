@@ -2710,7 +2710,7 @@ for (const button of document.querySelectorAll('[data-doc-toast]')) {
         exports: [],
         // The calendar's own hooks follow from its class (`data-kp-calendar-…`);
         // these are the generic ones it reads or writes on its parts.
-        aliases: ['time-zone', 'locale', 'week-starts-on', 'heading-level', 'key', 'date', 'tone', 'today', 'pad', 'state'],
+        aliases: ['time-zone', 'locale', 'week-starts-on', 'heading-level', 'key', 'date', 'tone', 'today', 'pad', 'state', 'tones', 'quiet', 'logged', 'calm-map', 'paused', 'legend', 'dim', 'plate'],
         intro: 'A month as a grid of days, each a plate in the colour of its state, with a short count under the number: a month of nightly backups, of shifts covered, of readings received. js/calendar.js builds it into a `section.kp-calendar[data-kp-calendar]`: the month’s title between ‹ Prev and Next ›, Today, a line for the state, a six-week `table[role=grid]` with one tab stop and the keys of a date grid, and a legend. The page hands it every day’s state by date; today is the day in Europe/Brussels, whatever the reader’s zone.',
         whenToUse:
             'Where a reader looks for the bad days in a month of one daily outcome and picks one to see why. Not for picking a date in a form, which is the date picker, and not for a value over time, which is a time chart.',
@@ -2748,6 +2748,13 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
 </script>
 `,
             },
+            {
+                title: 'Calm tones: a quiet day is not a failed day',
+                why: '`data-kp-tones="calm"` swaps ok, warn and bad for logged (the theme’s accent), quiet (nothing logged: no border, no count, never “missed”) and paused (hatched, from `data-kp-paused-range`). The heat grid and the uptime strip take the same attribute (js/calm-tones.js).',
+                markup: `
+<section class="kp-calendar" data-kp-calendar data-kp-tones="calm" data-kp-calendar-month="2026-10" data-kp-paused-range="2026-10-03/2026-10-06" aria-label="Movement"></section>
+`,
+            },
         ],
         variants: [
             { name: '[data-kp-calendar]', what: 'The calendar; `data-kp-calendar-month="YYYY-MM"` is the month it shows first (today’s by default) and `data-kp-calendar-selected="YYYY-MM-DD"` the day picked at first.' },
@@ -2764,6 +2771,14 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
             { name: '.kp-calendar--busy-whole / --busy-days', what: 'How a loading month shows: one card with the theme’s spinner and the state’s words over the whole grid, or the theme’s spinner in every loading day. Without either, the loading days pulse.' },
             { name: 'pastel: the caterpillar', what: 'In pastel a loading day gets a pom-pom rim and two legs and rises in turn, with a head beside the last loading day of its week; the card over the whole month is a plate with its own pass, a head on its corner and stepping legs, stuck on as the landing and taken off as that backwards.' },
             { name: '--kp-calendar-busy-words', what: 'In a register: `hold` keeps the card’s words on the card while it leaves, so the card that goes is the one that came (pastel); js/calendar.js writes `data-kp-busy-words-held` on the card until it has gone. Unset, the words clear at once.' },
+            { name: 'data-kp-tones', what: '`calm` on a calendar, heat grid or uptime strip (`standard` is the default): `logged`, `quiet` and `paused` instead of ok, warn and bad.' },
+            { name: 'data-kp-quiet-words', what: '`none` leaves the words of a quiet day out of its name (`label`, “nothing logged”, is the default); a quiet cell never prints a count.' },
+            { name: 'data-kp-logged-fill', what: '`success` asks for the success plate instead of the theme’s accent.' },
+            { name: 'data-kp-calm-map', what: '`none` passes ok, warn and bad through; by default ok is logged and the rest quiet, with one console warning per foreign tone.' },
+            { name: 'data-kp-paused-range', what: '`2026-10-03/2026-10-14` (an end is optional): quiet days inside it are drawn as paused.' },
+            { name: 'data-kp-legend', what: '`hide` leaves out the calm legend (Logged, Nothing logged, Paused).' },
+            { name: 'kp-calendar-retry and setCalendarCaption', what: 'A calm month with nothing logged keeps its six quiet rows under a centred plate; a month that could not be read is dimmed under one with Retry, which fires `kp-calendar-retry`. `setCalendarCaption(el, text)` writes the page’s own sentence under the grid.' },
+            { name: 'marks the module writes', what: '`data-kp-plate` (which plate stands over the grid) and `data-kp-dim` (a failed month’s grid).' },
         ],
         accessibility: [
             'Built in — one `table[role=grid]` named by the month’s title, seven column heads with the full weekday as their `abbr`, and one tab stop: arrows, Home/End, Page Up/Down (Shift: a year), Enter or Space to pick.',
