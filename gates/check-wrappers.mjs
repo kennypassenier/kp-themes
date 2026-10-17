@@ -158,6 +158,24 @@ export const REQUIRED = [
         why: 'The card measures its own width and gives a request path a line of its own when narrow; the query reaches only its own parts [kpadopt5].',
     },
     {
+        container: 'kp-chart',
+        class: 'kp-chart',
+        self: true,
+        why: 'The chart measures its own width and takes the median’s words off the plot on a phone (the tooltip carries them); the query reaches only its own parts [kpadopt5-people].',
+    },
+    {
+        container: 'kp-passkeys',
+        class: 'kp-passkeys',
+        self: true,
+        why: 'The list measures its own width and lays each row as a card with its buttons full width when narrow; the query reaches only its own rows [kpadopt5-people].',
+    },
+    {
+        container: 'kp-thread',
+        class: 'kp-thread',
+        self: true,
+        why: 'The conversation measures its own width and lets a bubble take 85 % of it when narrow; the query reaches only its own bubbles [kpadopt5-people].',
+    },
+    {
         container: 'kp-range',
         class: 'kp-range',
         self: true,

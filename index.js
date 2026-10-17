@@ -274,7 +274,8 @@ export {
 /** @typedef {import('./js/pipeline.js').PipelineCard} PipelineCard */
 /** @typedef {import('./js/facets.js').FacetItem} FacetItem */
 // The identity mark, the share bar, the bullet list, the code block and the live tick [kpadopt4-data].
-export { IDMARK, IDMARK_GLYPHS, IDMARK_SLOTS, attachIdmarks, idmarkColours, idmarkFor, idmarkLetters, setIdmark } from './js/idmark.js';
+export { IDMARK, IDMARK_GLYPHS, IDMARK_SLOTS, IDMARK_STATUSES, attachIdmarks, idmarkColours, idmarkFor, idmarkLetters, setIdmark, setIdmarkGroup } from './js/idmark.js';
+/** @typedef {import('./js/idmark.js').IdmarkPerson} IdmarkPerson */
 export { STACKBAR, STACKBAR_PICK_EVENT, attachStackbars, setStackbar, shareText, stackbarParts } from './js/stackbar.js';
 /** @typedef {import('./js/stackbar.js').StackbarPart} StackbarPart */
 /** @typedef {import('./js/stackbar.js').StackbarSpec} StackbarSpec */
@@ -441,6 +442,8 @@ export {
     TREND_CHART,
     attachCharts,
     attachTrendCharts,
+    chartMedian,
+    chartRuns,
     chartSelect,
     chartWords,
     chartZoom,
@@ -554,3 +557,34 @@ export {
 } from './js/diagnostics.js';
 /** @typedef {import('./hooks/use-theme.js').Theme} Theme */
 /** @typedef {import('./hooks/use-theme.js').UseThemeOptions} UseThemeOptions */
+// The list of ways to sign in and the conversation in bubbles [kpadopt5-people].
+export {
+    PASSKEYS,
+    PASSKEYS_REGISTER_EVENT,
+    PASSKEYS_REMOVE_EVENT,
+    PASSKEYS_RENAME_EVENT,
+    PASSKEYS_RETRY_EVENT,
+    PASSKEY_KINDS,
+    attachPasskeys,
+    passkeyOptions,
+    setPasskeys,
+    sortPasskeys,
+    unusedDays,
+} from './js/passkeys.js';
+/** @typedef {import('./js/passkeys.js').PasskeyRow} PasskeyRow */
+/** @typedef {import('./js/passkeys.js').PasskeysSpec} PasskeysSpec */
+export {
+    THREAD,
+    THREAD_ACTION_EVENT,
+    THREAD_ADD_EVENT,
+    THREAD_FOLD_EVENT,
+    THREAD_RETRY_EVENT,
+    THREAD_TIME_ZONE,
+    attachThreads,
+    dayLabel,
+    groupMessages,
+    setThread,
+    threadOptions,
+} from './js/thread.js';
+/** @typedef {import('./js/thread.js').ThreadMessage} ThreadMessage */
+/** @typedef {import('./js/thread.js').ThreadSpec} ThreadSpec */

@@ -29,6 +29,31 @@
 // marks its current one with `aria-current` or `data-kp-idmark-selected`, and a
 // loading mark is `.kp-idmark.kp-skeleton`. `.kp-idmark-group` overlaps marks with
 // an exact `.kp-idmark-group__more` ("+3", never "9+").
+//
+// The avatar [kpadopt5-people; kp-soft's shadcn avatar, JobTracker's recruiter
+// photos]: the same mark with a photo on it, so a person without one looks
+// exactly like today's marks.
+//
+//   <span class="kp-idmark kp-idmark--round" data-kp-idmark="Ada Lovelace"
+//         data-kp-idmark-src="/people/ada.jpg" data-kp-idmark-status="online"></span>
+//
+//   data-kp-idmark-src      the photo. The plate keeps its size and its letters
+//                           underneath while the photo loads; the photo fades in
+//                           (`data-kp-photo` loading, loaded, failed). A photo
+//                           that fails leaves the letters, with no error mark:
+//                           the person is still identified. Fires
+//                           `kp-idmark-photo` `{ state, src }`;
+//   data-kp-idmark-loading  `lazy` (default) or `eager`, as the img's `loading`;
+//   data-kp-idmark-alt      `decorative` (default: hidden from a screen reader,
+//                           the name stands beside it) or `name` (the mark is an
+//                           image called by the name);
+//   data-kp-idmark-status   `online`, `away`, `busy` or `none` (default): a dot at
+//                           the foot corner whose shape differs too (full, ring,
+//                           barred), and its word joins the mark's label, so it is
+//                           never colour alone. A status makes the mark an image.
+//
+// `setIdmarkGroup(el, people, { max })` draws a group with an exact "+N" that is
+// a button: it opens the list of the names left out.
 
 import { getStrings } from './strings.js';
 import { identityCells } from './facets.js';
@@ -162,7 +187,212 @@ export function setIdmark(el, name, { slot, hue, title = true } = {}) {
     letters.className = 'kp-idmark__letters';
     letters.textContent = mark.empty ? getStrings().idmarkUnknown : idmarkLetters(mark.name, xs ? 1 : 2);
     el.replaceChildren(letters, ...(mark.empty ? [] : [patternSvg(doc, mark.cells)]));
+    decorateAvatar(el, mark.name);
+    DRAWN.set(el, { base: baseKey(el), slot: slot ?? mark.slot });
 }
+
+/** What each mark was last drawn from, so a mark drawn by setIdmark() is not drawn a second time by attachIdmarks(). @type {WeakMap<Element, { base: string, slot: number }>} */
+const DRAWN = new WeakMap();
+
+/** What a mark is drawn from, apart from its palette slot. @param {Element} el */
+const baseKey = (el) =>
+    `${el.getAttribute('data-kp-idmark') ?? ''}|${AVATAR_ATTRIBUTES.map((attr) => el.getAttribute(attr) ?? '').join('|')}|${el.className}`;
+
+/** The attributes of a mark that redraw it when they change. */
+const AVATAR_ATTRIBUTES = ['data-kp-idmark-hue', 'data-kp-idmark-src', 'data-kp-idmark-status', 'data-kp-idmark-alt', 'data-kp-idmark-loading'];
+
+/** The statuses a mark can show. */
+export const IDMARK_STATUSES = Object.freeze(['online', 'away', 'busy']);
+
+/** Whether this call gave `aria-hidden` to the mark itself (a mark the markup hid keeps it). @type {WeakSet<Element>} */
+const OWN_LABEL = new WeakSet();
+/** The photo a mark last asked for. @type {WeakMap<Element, string>} */
+const ASKED = new WeakMap();
+
+/**
+ * The avatar part of a mark: its photo, its status dot and how a screen reader
+ * hears it.
+ * @param {HTMLElement} el @param {string} name
+ */
+function decorateAvatar(el, name) {
+    const doc = el.ownerDocument;
+    const strings = getStrings();
+    const src = (el.getAttribute('data-kp-idmark-src') ?? '').trim();
+    const rawStatus = el.getAttribute('data-kp-idmark-status') ?? 'none';
+    const status = IDMARK_STATUSES.includes(rawStatus) ? rawStatus : 'none';
+    const alt = el.getAttribute('data-kp-idmark-alt') === 'name' ? 'name' : 'decorative';
+
+    // A status dot with its word in the label: the mark becomes an image called "Ada, online".
+    el.querySelector(':scope > .kp-idmark__status')?.remove();
+    if (status !== 'none') {
+        const dot = doc.createElement('span');
+        dot.className = 'kp-idmark__status';
+        dot.setAttribute('data-kp-status', status);
+        el.append(dot);
+    }
+    const statusWord = status === 'none' ? '' : /** @type {Record<string, string>} */ ({
+        online: strings.idmarkOnline,
+        away: strings.idmarkAway,
+        busy: strings.idmarkBusy,
+    })[status];
+    const speaks = name !== '' && (alt === 'name' || status !== 'none');
+    if (speaks) {
+        el.setAttribute('role', 'img');
+        el.setAttribute('aria-label', statusWord ? strings.idmarkLabel(name, statusWord) : name);
+        if (statusWord) el.title = strings.idmarkLabel(name, statusWord);
+        el.removeAttribute('aria-hidden');
+        OWN_LABEL.add(el);
+    } else if (OWN_LABEL.has(el)) {
+        el.removeAttribute('role');
+        el.removeAttribute('aria-label');
+        el.setAttribute('aria-hidden', 'true');
+        OWN_LABEL.delete(el);
+    }
+
+    // The photo: the letters stay underneath until it has loaded; the plate's size is fixed, so nothing shifts.
+    el.querySelector(':scope > .kp-idmark__photo')?.remove();
+    ASKED.set(el, src);
+    if (src === '' || name === '') {
+        el.removeAttribute('data-kp-photo');
+        return;
+    }
+    const img = doc.createElement('img');
+    img.className = 'kp-idmark__photo';
+    img.alt = '';
+    img.decoding = 'async';
+    img.draggable = false;
+    img.loading = el.getAttribute('data-kp-idmark-loading') === 'eager' ? 'eager' : 'lazy';
+    /** @param {'loaded' | 'failed'} state */
+    const settle = (state) => {
+        if (ASKED.get(el) !== src) return;
+        if (state === 'failed') img.remove();
+        el.setAttribute('data-kp-photo', state);
+        el.dispatchEvent(new CustomEvent('kp-idmark-photo', { bubbles: true, detail: { state, src } }));
+    };
+    img.addEventListener('load', () => settle('loaded'));
+    img.addEventListener('error', () => settle('failed'));
+    el.setAttribute('data-kp-photo', 'loading');
+    img.src = src;
+    el.prepend(img);
+    if (img.complete && img.naturalWidth > 0) settle('loaded');
+}
+
+/**
+ * @typedef {object} IdmarkPerson
+ * @property {string} name
+ * @property {string} [src] the photo
+ * @property {'online' | 'away' | 'busy' | 'none'} [status]
+ */
+
+/**
+ * Draw a group of marks with an exact "+N" for the people left out. The "+N" is
+ * a button that opens the list of their names (`list: false` leaves it a plain
+ * count). Counts are the real number, never "9+".
+ * @param {HTMLElement} el the group, a `.kp-idmark-group`
+ * @param {readonly IdmarkPerson[]} people
+ * @param {{ max?: number, size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl', round?: boolean, list?: boolean }} [options]
+ *   `max` marks shown (default 4); `size` the marks' size (default md); `round` round marks (default true)
+ */
+export function setIdmarkGroup(el, people, { max = 4, size = 'md', round = true, list = true } = {}) {
+    const doc = el.ownerDocument;
+    const strings = getStrings();
+    el.classList.add('kp-idmark-group');
+    el.classList.toggle('kp-idmark-group--sm', size === 'sm' || size === 'xs');
+    el.setAttribute('role', 'group');
+    el.setAttribute('aria-label', strings.idmarkGroup(people.length));
+    const shown = people.slice(0, Math.max(0, max));
+    const rest = people.slice(shown.length);
+    const colours = idmarkColours(people.map((person) => person.name));
+    const marks = shown.map((person) => {
+        const mark = doc.createElement('span');
+        mark.className = ['kp-idmark', size === 'md' ? '' : `kp-idmark--${size}`, round ? 'kp-idmark--round' : ''].filter(Boolean).join(' ');
+        mark.setAttribute('data-kp-idmark', person.name);
+        if (person.src) mark.setAttribute('data-kp-idmark-src', person.src);
+        if (person.status && person.status !== 'none') mark.setAttribute('data-kp-idmark-status', person.status);
+        mark.setAttribute('data-kp-idmark-alt', 'name');
+        setIdmark(mark, person.name, { slot: colours.get(person.name.trim()) });
+        return mark;
+    });
+    /** @type {HTMLElement[]} */
+    const tail = [];
+    if (rest.length > 0) {
+        if (!list) {
+            const more = doc.createElement('span');
+            more.className = 'kp-idmark-group__more';
+            more.textContent = `+${rest.length}`;
+            more.title = rest.map((person) => person.name).join(', ');
+            tail.push(more);
+        } else {
+            const id = `kp-idmark-more-${++moreSeq}`;
+            const more = doc.createElement('button');
+            more.type = 'button';
+            more.className = 'kp-idmark-group__more';
+            more.textContent = `+${rest.length}`;
+            more.setAttribute('aria-haspopup', 'true');
+            more.setAttribute('aria-expanded', 'false');
+            more.setAttribute('aria-controls', id);
+            more.setAttribute('aria-label', strings.idmarkMore(rest.length));
+            const panel = doc.createElement('div');
+            panel.className = 'kp-idmark-group__list';
+            panel.id = id;
+            panel.hidden = true;
+            const heading = doc.createElement('p');
+            heading.className = 'kp-idmark-group__list-title';
+            heading.textContent = strings.idmarkMoreTitle(rest.length);
+            const ul = doc.createElement('ul');
+            for (const person of rest) {
+                const li = doc.createElement('li');
+                const row = doc.createElement('span');
+                row.className = 'kp-idmark-name';
+                const mark = doc.createElement('span');
+                mark.className = `kp-idmark kp-idmark--sm${round ? ' kp-idmark--round' : ''}`;
+                mark.setAttribute('data-kp-idmark', person.name);
+                if (person.src) mark.setAttribute('data-kp-idmark-src', person.src);
+                mark.setAttribute('aria-hidden', 'true');
+                setIdmark(mark, person.name, { slot: colours.get(person.name.trim()), title: false });
+                const text = doc.createElement('span');
+                text.textContent = person.name;
+                row.append(mark, text);
+                li.append(row);
+                ul.append(li);
+            }
+            panel.append(heading, ul);
+            const close = () => {
+                panel.hidden = true;
+                more.setAttribute('aria-expanded', 'false');
+                doc.removeEventListener('pointerdown', away, true);
+            };
+            /** @param {Event} event */
+            const away = (event) => {
+                if (!(event.target instanceof Node) || (!panel.contains(event.target) && !more.contains(event.target))) close();
+            };
+            more.addEventListener('click', () => {
+                const open = panel.hidden;
+                panel.hidden = !open;
+                more.setAttribute('aria-expanded', String(open));
+                if (open) doc.addEventListener('pointerdown', away, true);
+                else doc.removeEventListener('pointerdown', away, true);
+            });
+            panel.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape') {
+                    event.stopPropagation();
+                    close();
+                    more.focus();
+                }
+            });
+            more.addEventListener('keydown', (event) => {
+                if (event.key === 'Escape' && !panel.hidden) {
+                    event.stopPropagation();
+                    close();
+                }
+            });
+            tail.push(more, panel);
+        }
+    }
+    el.replaceChildren(...marks, ...tail);
+}
+
+let moreSeq = 0;
 
 /**
  * Fill every `[data-kp-idmark]` under `root`, and each one added or renamed
@@ -172,8 +402,6 @@ export function setIdmark(el, name, { slot, hue, title = true } = {}) {
  * @returns {() => void} detach
  */
 export function attachIdmarks(root = document) {
-    /** @type {WeakMap<Element, string>} */
-    const drawn = new WeakMap();
     const paint = () => {
         /** @type {Map<Element, Element[]>} */
         const sets = new Map();
@@ -196,10 +424,10 @@ export function attachIdmarks(root = document) {
         }
         for (const el of all) {
             const name = el.getAttribute('data-kp-idmark') ?? '';
-            const key = `${name}|${slots.get(el) ?? ''}|${el.getAttribute('data-kp-idmark-hue') ?? ''}|${el.className}`;
-            if (drawn.get(el) === key && el.querySelector(':scope > .kp-idmark__letters')) continue;
-            setIdmark(el, name, { slot: slots.get(el) });
-            drawn.set(el, `${el.getAttribute('data-kp-idmark') ?? ''}|${slots.get(el) ?? ''}|${el.getAttribute('data-kp-idmark-hue') ?? ''}|${el.className}`);
+            const before = DRAWN.get(el);
+            const want = slots.get(el);
+            if (before?.base === baseKey(el) && (want === undefined || want === before.slot) && el.querySelector(':scope > .kp-idmark__letters')) continue;
+            setIdmark(el, name, { slot: want });
         }
     };
     paint();
@@ -219,6 +447,6 @@ export function attachIdmarks(root = document) {
             paint();
         });
     });
-    observer.observe(root, { subtree: true, childList: true, attributes: true, attributeFilter: ['data-kp-idmark', 'data-kp-idmark-hue'] });
+    observer.observe(root, { subtree: true, childList: true, attributes: true, attributeFilter: ['data-kp-idmark', ...AVATAR_ATTRIBUTES] });
     return () => observer.disconnect();
 }

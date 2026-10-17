@@ -2066,6 +2066,203 @@
         stroke: var(--foreground);
     }
 
+    /* --- Annotations [kpadopt5-people] ----------------------------------- */
+
+    /* A band: an event with an end (a maintenance window), tinted in its tone across the plot with a solid edge
+     * where it begins and ends, so it is told from a dashed event line. */
+    .kp-chart__band {
+        --kp-chart-tone: var(--info-foreground);
+    }
+
+    .kp-chart__band-fill {
+        fill: var(--kp-chart-tone);
+        fill-opacity: var(--kp-chart-band-opacity, 0.14);
+        stroke: none;
+    }
+
+    /* `hatch`: diagonal lines in the tone instead of a wash, readable without the colour. */
+    .kp-chart__band-fill[fill^='url'] {
+        fill-opacity: 1;
+    }
+
+    .kp-chart__hatch {
+        stroke: var(--kp-chart-tone, var(--info-foreground));
+        stroke-width: 1.5;
+        opacity: 0.55;
+    }
+
+    pattern[data-kp-tone='warning'] {
+        --kp-chart-tone: var(--warning-foreground);
+    }
+
+    pattern[data-kp-tone='critical'] {
+        --kp-chart-tone: var(--destructive);
+    }
+
+    pattern[data-kp-tone='info'] {
+        --kp-chart-tone: var(--info-foreground);
+    }
+
+    /* `bracket`: a bar along the top between two short ticks. */
+    .kp-chart__band-bar {
+        stroke: var(--kp-chart-tone);
+        stroke-width: 3;
+        stroke-linecap: round;
+    }
+
+    .kp-chart__band-edge {
+        stroke: var(--kp-chart-tone);
+        stroke-width: 1.5;
+        opacity: 0.85;
+    }
+
+    /* The median of a source: its own colour, long dashes, and its value written on the plot. */
+    .kp-chart__median {
+        fill: none;
+        stroke: var(--kp-chart-series);
+        stroke-width: 1.5;
+        stroke-dasharray: 10 4;
+    }
+
+    .kp-chart__median-label {
+        fill: var(--foreground);
+        font-size: var(--kp-chart-tick-size, 11px);
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        paint-order: stroke;
+        stroke: var(--card);
+        stroke-width: 3px;
+        stroke-linejoin: round;
+    }
+
+    /* A point of a run of six or more on one side of the median: ringed. */
+    .kp-chart__run {
+        fill: var(--card);
+        stroke: var(--kp-chart-series);
+        stroke-width: 2;
+    }
+
+    /* Events past the window's edge: an arrow and their count. */
+    .kp-chart__edge-text {
+        fill: var(--muted-foreground);
+        font-size: var(--kp-chart-tick-size, 11px);
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+    }
+
+    /* Too early for a trend: the readings so far stay, faint, under one sentence in the middle of the plot. */
+    .kp-chart__plot > svg[data-kp-faint] {
+        opacity: 0.5;
+    }
+
+    .kp-chart__few {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        padding: var(--kp-space-md, 0.75rem);
+        border-radius: calc(var(--radius, 0.5rem) * 0.5);
+        background: color-mix(in oklab, var(--card) 50%, transparent);
+        pointer-events: none;
+    }
+
+    .kp-chart__few-plate {
+        box-sizing: border-box;
+        max-inline-size: min(36ch, 100%);
+        margin: 0;
+        padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1rem);
+        color: var(--foreground);
+        font-size: calc(var(--kp-text-md, 1rem) * 1.25);
+        font-weight: 600;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+    }
+
+    /* The key above the plot: one switch per kind of event, and a note for the median and the runs. */
+    .kp-chart__annkey {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-chart__annkey[hidden] {
+        display: none;
+    }
+
+    .kp-chart__annkey[data-kp-wait] {
+        visibility: hidden;
+    }
+
+    .kp-chart__annkey-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        padding: 0.125rem 0.5rem;
+        border: 1px solid var(--border);
+        border-radius: var(--kp-radius-pill, 999px);
+        background: none;
+        color: var(--foreground);
+        font: inherit;
+        cursor: pointer;
+    }
+
+    .kp-chart__annkey-item:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    .kp-chart__annkey-item[data-kp-off] {
+        color: var(--muted-foreground);
+        border-style: dashed;
+    }
+
+    .kp-chart__annkey-item[data-kp-off] .kp-chart__dot {
+        opacity: 0.35;
+    }
+
+    .kp-chart__annkey-count {
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+    }
+
+    .kp-chart__annkey-note {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+
+    .kp-chart__annkey-line {
+        inline-size: 1.25rem;
+        border-block-start: 2px dashed var(--chart-1);
+    }
+
+    .kp-chart__annkey-ring {
+        inline-size: 0.625rem;
+        block-size: 0.625rem;
+        box-sizing: border-box;
+        border: 2px solid var(--chart-1);
+        border-radius: 50%;
+        background: var(--card);
+    }
+
+    .kp-chart__tip-median {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* On a phone the median's words leave the plot (the tooltip carries them). */
+    @container kp-chart (max-width: 26rem) {
+        .kp-chart__median-label {
+            display: none;
+        }
+    }
+
     .kp-chart__crosshair {
         stroke: var(--foreground);
         opacity: 0.35;
@@ -17734,6 +17931,571 @@
 }
 
 /* ====================================================================
+ * People [kpadopt5-people]: the list of ways to sign in and the
+ * conversation in bubbles. (The avatar extends .kp-idmark, and the chart
+ * annotations extend .kp-chart, where those are.)
+ *
+ *   .kp-passkeys      passkeys, magic links, passwords and tokens, one row
+ *                     each, with Rename and Remove (chassis `passkeys.html`,
+ *                     JobTracker `Account.jsx`)
+ *   .kp-thread        messages as bubbles, in on the start side, out on the
+ *                     end side, system lines centred (JobTracker
+ *                     `Correspondence.jsx`)
+ *
+ * Behaviour: js/passkeys.js and js/thread.js. Drawn from the tokens alone
+ * until each register answers them (gates/register-pending.json).
+ * ==================================================================== */
+@layer kp.components {
+    /* --- Passkey list --------------------------------------------------- */
+
+    /* One row per way in on a grid the rows share, so the icons, the names, the badges and the two buttons begin
+     * in the same column from row to row (fix-64); the badge column is as wide as the widest badge and no wider.
+     * Knobs: --kp-passkeys-gap, --kp-passkeys-row-min (the height a row is counted at for the least list, 5rem),
+     * --kp-passkeys-state-min (14rem), --kp-passkeys-action-min (5.5rem). */
+    .kp-passkeys {
+        container: kp-passkeys / inline-size;
+        position: relative;
+        display: grid;
+        gap: var(--kp-space-md, 0.75rem);
+        min-inline-size: 0;
+    }
+
+    .kp-passkeys__list {
+        display: grid;
+        grid-template-columns: [way] auto [what] minmax(0, 1fr) [flags] max-content [actions] max-content;
+        align-content: start;
+        gap: var(--kp-passkeys-gap, var(--kp-space-sm, 0.5rem)) 0;
+        min-block-size: calc(var(--kp-passkeys-row-min, 5rem) * 2 + var(--kp-passkeys-gap, var(--kp-space-sm, 0.5rem)));
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-passkeys__row {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: subgrid;
+        align-items: center;
+        column-gap: var(--kp-space-md, 0.75rem);
+        box-sizing: border-box;
+        min-inline-size: 0;
+        min-block-size: var(--kp-passkeys-row-min, 5rem);
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    .kp-passkeys__row[data-kp-current] {
+        border-color: var(--border-strong, var(--border));
+    }
+
+    .kp-passkeys__row[aria-busy='true'] > :not(.kp-passkeys__actions) {
+        opacity: 0.7;
+    }
+
+    .kp-passkeys__way {
+        display: grid;
+        place-items: center;
+        inline-size: 2.5rem;
+        block-size: 2.5rem;
+        box-sizing: border-box;
+        border: 1px solid var(--border);
+        border-radius: calc(var(--radius, 0.5rem) * 0.75);
+        background: var(--muted);
+        color: var(--foreground);
+    }
+
+    .kp-passkeys__glyph {
+        inline-size: 1.25rem;
+        block-size: 1.25rem;
+    }
+
+    .kp-passkeys__what {
+        display: grid;
+        gap: 0.125rem;
+        min-inline-size: 0;
+    }
+
+    .kp-passkeys__label {
+        margin: 0;
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-passkeys__meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0 var(--kp-space-md, 0.75rem);
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-passkeys__when {
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* The reason a button is off, the server's refusal: on a plate of its own, so the words keep their air. */
+    .kp-passkeys__hint {
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        padding: 0.25rem 0.5rem;
+        border-radius: calc(var(--radius, 0.5rem) * 0.5);
+        background: var(--muted);
+        color: var(--foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-passkeys__hint[hidden] {
+        display: none;
+    }
+
+    .kp-passkeys__hint[data-kp-tone='warning'] {
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+
+    .kp-passkeys__hint[data-kp-tone='error'] {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    .kp-passkeys__flags {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-passkeys__actions {
+        display: flex;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-passkeys__action {
+        min-inline-size: var(--kp-passkeys-action-min, 5.5rem);
+        white-space: nowrap;
+    }
+
+    /* The `note` look: where Remove would stand, the reason in the button's own footprint. */
+    .kp-passkeys__only {
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-inline-size: var(--kp-passkeys-action-min, 5.5rem);
+        padding: 0.25rem 0.75rem;
+        border: 1px dashed var(--border-strong, var(--border));
+        border-radius: var(--radius, 0.5rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
+    }
+
+    .kp-passkeys__action[aria-disabled='true'] {
+        opacity: 0.55;
+        cursor: not-allowed;
+    }
+
+    .kp-passkeys__rename-input {
+        inline-size: 100%;
+        box-sizing: border-box;
+    }
+
+    .kp-passkeys__action .kp-spinner,
+    .kp-thread__status .kp-spinner {
+        --kp-spinner-size: 0.875rem;
+        margin-inline-end: 0.375rem;
+    }
+
+    .kp-passkeys__insecure-text {
+        overflow-wrap: anywhere;
+    }
+
+    /* Loading: the rows' own geometry as waiting blocks. */
+    .kp-passkeys__row--wait {
+        pointer-events: none;
+    }
+
+    .kp-passkeys__wait-line {
+        block-size: 1rem;
+        inline-size: 70%;
+    }
+
+    .kp-passkeys__wait-line--short {
+        inline-size: 45%;
+    }
+
+    .kp-passkeys__way.kp-skeleton {
+        border-color: transparent;
+    }
+
+    /* Nothing yet, or failed: the package's empty state over the list's whole footprint. */
+    .kp-passkeys__note {
+        box-sizing: border-box;
+        display: grid;
+        align-content: center;
+        justify-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-block-size: var(--kp-passkeys-state-min, 14rem);
+        margin: 0;
+        text-align: center;
+    }
+
+    .kp-passkeys__note > :is(.kp-passkeys__note-title, .kp-passkeys__note-text) {
+        max-inline-size: 100%;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-passkeys__note-title {
+        font-size: calc(var(--kp-text-md, 1rem) * 1.25);
+    }
+
+    .kp-passkeys__note > .kp-passkeys__note-button {
+        align-self: center;
+        margin-block-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    /* A phone: each row a card, the buttons the full width under it. */
+    @container kp-passkeys (max-width: 36rem) {
+        .kp-passkeys__list {
+            grid-template-columns: [way] auto [what] minmax(0, 1fr);
+        }
+
+        .kp-passkeys__row {
+            row-gap: var(--kp-space-sm, 0.5rem);
+        }
+
+        .kp-passkeys__flags {
+            grid-column: what;
+            flex-direction: row;
+            flex-wrap: wrap;
+        }
+
+        .kp-passkeys__flags:empty {
+            display: none;
+        }
+
+        .kp-passkeys__actions {
+            grid-column: 1 / -1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+        }
+
+        .kp-passkeys__action {
+            inline-size: 100%;
+            min-block-size: 2.5rem;
+        }
+    }
+
+}
+
+@layer kp.components {
+    /* --- Conversation thread ------------------------------------------- */
+
+    /* Bubbles on two sides, scrolling inside a box that keeps its height in every state. Knobs: --kp-thread-height
+     * (the tallest the box grows, 32rem), --kp-thread-min (the least, 16rem), --kp-thread-bubble (the widest a
+     * bubble gets, 40rem; 85 % of a phone), --kp-thread-gap. */
+    .kp-thread {
+        container: kp-thread / inline-size;
+        position: relative;
+        display: grid;
+        min-inline-size: 0;
+    }
+
+    .kp-thread__scroll {
+        box-sizing: border-box;
+        min-block-size: var(--kp-thread-min, 16rem);
+        max-block-size: var(--kp-thread-height, 32rem);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        padding: var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--muted);
+        color: var(--foreground);
+    }
+
+    .kp-thread__scroll:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    .kp-thread__list {
+        display: grid;
+        gap: var(--kp-thread-gap, var(--kp-space-xs, 0.25rem));
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-thread__item {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-thread__item[data-kp-first='true'] {
+        margin-block-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-thread__item[data-kp-dir='out'] {
+        flex-direction: row-reverse;
+    }
+
+    .kp-thread__avatar {
+        flex: none;
+        inline-size: 1.5rem;
+        min-block-size: 1.5rem;
+    }
+
+    .kp-thread__bubble {
+        box-sizing: border-box;
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        max-inline-size: min(100%, var(--kp-thread-bubble, 40rem));
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        overflow-wrap: anywhere;
+    }
+
+    /* Your side: a wash of the primary colour (the default), the primary colour itself (`filled`), or the same
+     * plate as theirs (`plain`, the answer sits on the end side of the row and that is all). */
+    .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        border-color: color-mix(in oklab, var(--primary) 45%, var(--border));
+        background: color-mix(in oklab, var(--primary) 12%, var(--card));
+    }
+
+    .kp-thread[data-kp-thread-bubble='filled'] .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        border-color: var(--primary);
+        background: var(--primary);
+        color: var(--primary-foreground);
+    }
+
+    .kp-thread[data-kp-thread-bubble='plain'] .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        border-color: var(--border);
+        background: var(--card);
+    }
+
+    .kp-thread__item[data-kp-dir='in'][data-kp-first='true'] > .kp-thread__bubble {
+        border-start-start-radius: 0.1875rem;
+    }
+
+    .kp-thread__item[data-kp-dir='out'][data-kp-first='true'] > .kp-thread__bubble {
+        border-start-end-radius: 0.1875rem;
+    }
+
+    .kp-thread__bubble[data-kp-status='sending'] {
+        opacity: 0.65;
+    }
+
+    .kp-thread__head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 0 var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-thread__sender {
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 650;
+    }
+
+    .kp-thread__time {
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        opacity: 0.8;
+    }
+
+    .kp-thread__text {
+        white-space: pre-wrap;
+        line-height: 1.5;
+    }
+
+    /* A long message shows its first lines and fades out; "Show all N lines" is under it. */
+    .kp-thread__text[data-kp-fold='folded'] {
+        max-block-size: calc(var(--kp-thread-fold-lines, 3) * 1lh);
+        overflow: hidden;
+        mask-image: linear-gradient(to bottom, CanvasText calc(100% - 1.25lh), transparent);
+    }
+
+    .kp-thread__bubble .kp-button--ghost {
+        color: inherit;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+    }
+
+    .kp-thread__fold {
+        justify-self: start;
+    }
+
+    .kp-thread__attachments {
+        margin: 0;
+    }
+
+    .kp-thread__attachment {
+        max-inline-size: 100%;
+        min-inline-size: 0;
+        color: var(--foreground);
+    }
+
+    .kp-thread__file {
+        overflow-wrap: anywhere;
+    }
+
+    .kp-thread__file[href] {
+        color: inherit;
+        text-underline-offset: 3px;
+    }
+
+    .kp-thread__foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-thread__foot:not(:has(*)) {
+        display: none;
+    }
+
+    .kp-thread__tools {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin-inline-start: auto;
+    }
+
+    .kp-thread__status {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-thread__status--failed {
+        padding: 0.125rem 0.5rem;
+        border-radius: calc(var(--radius, 0.5rem) * 0.5);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    /* A day divider and a system line. */
+    .kp-thread__day {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-md, 0.75rem);
+        margin-block: var(--kp-space-sm, 0.5rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-thread__day::before,
+    .kp-thread__day::after {
+        content: '';
+        flex: 1;
+        border-block-start: 1px solid var(--border-strong, var(--border));
+    }
+
+    .kp-thread__system {
+        flex: 1;
+        margin: var(--kp-space-xs, 0.25rem) 0;
+        padding-inline: var(--kp-space-md, 0.75rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-thread__system > .kp-thread__time {
+        margin-inline-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    /* Jump to newest: over the box's foot, in the middle, on a plate of its own. */
+    .kp-thread__jump {
+        position: absolute;
+        inset-block-end: var(--kp-space-md, 0.75rem);
+        inset-inline: 0;
+        inline-size: max-content;
+        margin-inline: auto;
+        z-index: 1;
+        background: var(--card);
+        color: var(--card-foreground);
+        box-shadow: 0 0.25rem 1rem color-mix(in oklab, var(--foreground) 20%, transparent);
+    }
+
+    .kp-thread__jump[hidden] {
+        display: none;
+    }
+
+    /* Loading: a waiting bubble on each side. */
+    .kp-thread__item--wait {
+        pointer-events: none;
+    }
+
+    .kp-thread__item--wait > .kp-thread__bubble {
+        inline-size: min(70%, 26rem);
+        border-color: transparent;
+        background: transparent;
+    }
+
+    .kp-thread__item--wait[data-kp-dir='out'] > .kp-thread__bubble {
+        inline-size: min(55%, 20rem);
+    }
+
+    .kp-thread__wait-line {
+        block-size: 1rem;
+    }
+
+    /* Nothing yet, or failed: the package's empty state over the box's whole footprint. */
+    .kp-thread__note {
+        box-sizing: border-box;
+        display: grid;
+        align-content: center;
+        justify-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-block-size: var(--kp-thread-state-min, var(--kp-thread-min, 16rem));
+        margin: 0;
+        text-align: center;
+    }
+
+    .kp-thread__note > :is(.kp-thread__note-title, .kp-thread__note-text) {
+        max-inline-size: 100%;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-thread__note-title {
+        font-size: calc(var(--kp-text-md, 1rem) * 1.25);
+    }
+
+    .kp-thread__note > .kp-thread__note-button {
+        align-self: center;
+        margin-block-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    @container kp-thread (max-width: 30rem) {
+        .kp-thread__bubble {
+            max-inline-size: 85%;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kp-thread__scroll {
+            scroll-behavior: auto;
+        }
+    }
+}
+
+/* ====================================================================
  * Data pieces every app drew itself [kpadopt4-data]: the identity mark,
  * the share bar, the bullet list, the key-value grid and the form rows,
  * the code block, and the page header's heading line.
@@ -17900,6 +18662,101 @@
         visibility: hidden;
     }
 
+    /* --- Avatar: the mark with a photo [kpadopt5-people] ----------------- */
+
+    /* The photo lies over the letters and fills the plate; its box is the plate's, so it shifts nothing while it
+     * loads. The letters stay underneath until it has arrived, then it fades in (the theme's own duration and curve).
+     * A photo that fails is taken out and the letters stay: the person is still identified. */
+    .kp-idmark__photo {
+        position: absolute;
+        inset: 0;
+        inline-size: 100%;
+        block-size: 100%;
+        box-sizing: border-box;
+        border-radius: inherit;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity var(--fx-duration, 200ms) var(--fx-ease, ease);
+    }
+
+    .kp-idmark[data-kp-photo='loaded'] > .kp-idmark__photo {
+        opacity: 1;
+    }
+
+    .kp-idmark[data-kp-photo='loaded'] > :is(.kp-idmark__letters, .kp-idmark__pattern) {
+        visibility: hidden;
+    }
+
+    /* The photo's frame: the plate's own edge in the person's colour, a hair inside the picture. */
+    .kp-idmark[data-kp-photo='loaded'] {
+        background: var(--card);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kp-idmark__photo {
+            transition: none;
+        }
+    }
+
+    /* The photo's frame, three ways (`data-kp-idmark-frame`): `edge` (the default: the plate's own edge in the name's
+     * colour), `ring` (no edge, a ring in the name's colour held off the photo by the card colour) and `inset` (the
+     * photo set into the plate, the name's colour showing round it like a mount). */
+    .kp-idmark[data-kp-idmark-frame='ring'] {
+        border-color: transparent;
+        box-shadow:
+            0 0 0 2px var(--card),
+            0 0 0 4px var(--kp-idmark-c);
+    }
+
+    .kp-idmark[data-kp-idmark-frame='inset'] {
+        background: var(--kp-idmark-c);
+    }
+
+    .kp-idmark[data-kp-idmark-frame='inset'] > .kp-idmark__photo {
+        inset: 2px;
+        inline-size: calc(100% - 4px);
+        block-size: calc(100% - 4px);
+    }
+
+    .kp-idmark[data-kp-idmark-frame='inset'][data-kp-photo='loaded'] {
+        background: var(--kp-idmark-c);
+    }
+
+    /* A status dot at the foot corner (the corner glyph keeps the top): its word is in the mark's label, and its
+     * shape differs as well as its colour (full, ring, barred), so it is never colour alone. */
+    .kp-idmark__status {
+        position: absolute;
+        inset-block-end: calc(var(--kp-idmark-s) * -0.06);
+        inset-inline-end: calc(var(--kp-idmark-s) * -0.06);
+        box-sizing: border-box;
+        inline-size: max(0.5rem, calc(var(--kp-idmark-s) * 0.3));
+        block-size: max(0.5rem, calc(var(--kp-idmark-s) * 0.3));
+        border: 2px solid var(--card);
+        border-radius: 50%;
+        background: var(--kp-idmark-status, var(--muted-foreground));
+        box-shadow: 0 0 0 1px var(--kp-idmark-status, var(--muted-foreground));
+    }
+
+    .kp-idmark__status[data-kp-status='online'] {
+        --kp-idmark-status: var(--success-foreground, var(--chart-2));
+    }
+
+    .kp-idmark__status[data-kp-status='away'] {
+        --kp-idmark-status: var(--warning-foreground, var(--chart-4));
+        background: var(--card);
+        border-color: var(--kp-idmark-status);
+        box-shadow: 0 0 0 1px var(--card);
+    }
+
+    .kp-idmark__status[data-kp-status='busy'] {
+        --kp-idmark-status: var(--destructive, var(--chart-5));
+        background-image: linear-gradient(var(--card), var(--card));
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 55% 2px;
+        background-color: var(--kp-idmark-status);
+    }
+
     @media (forced-colors: active) {
         .kp-idmark {
             border-color: CanvasText;
@@ -17944,6 +18801,81 @@
 
     .kp-idmark-group--sm > .kp-idmark-group__more {
         --kp-idmark-s: var(--kp-idmark-size, 1.5rem);
+    }
+
+    /* The "+N" as a button: it opens the names left out. The panel is the popover's own plate, opaque. */
+    button.kp-idmark-group__more {
+        font-family: inherit;
+        cursor: pointer;
+    }
+
+    button.kp-idmark-group__more:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    .kp-idmark-group:has(> .kp-idmark-group__list) {
+        position: relative;
+    }
+
+    .kp-idmark-group__list {
+        position: absolute;
+        inset-block-start: calc(100% + 0.375rem);
+        inset-inline-start: 0;
+        z-index: 2;
+        box-sizing: border-box;
+        min-inline-size: 12rem;
+        max-inline-size: min(20rem, 80vw);
+        max-block-size: 16rem;
+        overflow: auto;
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--popover, var(--card));
+        color: var(--popover-foreground, var(--card-foreground));
+        box-shadow: 0 0.5rem 1.5rem color-mix(in oklab, var(--foreground) 18%, transparent);
+    }
+
+    .kp-idmark-group__list[hidden] {
+        display: none;
+    }
+
+    .kp-idmark-group__list-title {
+        margin: 0 0 var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 600;
+    }
+
+    .kp-idmark-group__list > ul {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    /* A name that wraps instead of being cut (`kp-idmark-name--wrap`): for a heading or a list, not a table cell. */
+    .kp-idmark-name--wrap {
+        align-items: flex-start;
+    }
+
+    .kp-idmark-name--wrap > :last-child {
+        overflow: visible;
+        text-overflow: clip;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-idmark-group__list .kp-idmark-name {
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-idmark-group__list .kp-idmark-name > :last-child {
+        overflow: visible;
+        text-overflow: clip;
+        white-space: normal;
     }
 
     /* A name with its mark in front, for a cell or a heading: the gap keeps

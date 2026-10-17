@@ -48,6 +48,14 @@ export type ChartEvent = {
      * offered once the event is pinned
      */
     href?: string;
+    /**
+     * the app's own name for it ("operation", "update", "failure"); `kinds` maps it to a tone and a word
+     */
+    kind?: string;
+    /**
+     * ms: the event is a band from `at` to here (a maintenance window) instead of a line
+     */
+    until?: number;
 };
 export type ChartUnitKind = 'percent' | 'bytes' | 'bytes/s' | 'rate' | 'celsius' | 'count' | 'flag';
 export type ChartValueWhere = 'axis' | 'tip' | 'delta' | 'legend' | 'readout' | 'spark';
@@ -113,6 +121,37 @@ export type ChartData = {
     onePointNote?: boolean;
     series: ChartSeries[];
     events?: ChartEvent[];
+    /**
+     * what each event `kind` is called in the key, and its tone
+     */
+    kinds?: Record<string, {
+        label?: string;
+        tone?: 'critical' | 'warning' | 'info';
+    }>;
+    /**
+     * a dashed median line per shown source; a string is the words in front of its value (`data-kp-chart-median`, `-median-label`)
+     */
+    median?: boolean | string;
+    /**
+     * `mark` rings the points of every run of six or more on one side of the median (`data-kp-chart-runs`)
+     */
+    runs?: 'off' | 'mark';
+    /**
+     * below this many readings the chart says it is too early for a trend (`data-kp-chart-min-points`)
+     */
+    minPoints?: number;
+    /**
+     * what the readings are called in that sentence ("days"; `data-kp-chart-min-unit`)
+     */
+    minUnit?: string;
+    /**
+     * how a band is drawn: a `tint` across the plot (default), `hatch` diagonal lines (readable without colour) or a `bracket` along the top with short ticks (`data-kp-chart-band`)
+     */
+    band?: 'tint' | 'hatch' | 'bracket';
+    /**
+     * false leaves the key above the plot out (`data-kp-chart-annotation-key="off"`)
+     */
+    annotationKey?: boolean;
     /**
      * the window, when the group's range should not set it
      */
@@ -206,6 +245,8 @@ export type Strings = import('./strings.js').Strings;
  * @property {string} label
  * @property {'critical' | 'warning' | 'info'} [tone]
  * @property {string} [href] offered once the event is pinned
+ * @property {string} [kind] the app's own name for it ("operation", "update", "failure"); `kinds` maps it to a tone and a word
+ * @property {number} [until] ms: the event is a band from `at` to here (a maintenance window) instead of a line
  * @typedef {'percent' | 'bytes' | 'bytes/s' | 'rate' | 'celsius' | 'count' | 'flag'} ChartUnitKind a value's kind:
  *   `bytes` and `bytes/s` (`rate` is the same) in binary steps, B to PiB; `percent` with an axis of 10, 25, 50 or
  *   100 (above 100 only when a value is); `celsius` whole degrees; `count` and `flag` exact numbers, abbreviated
@@ -236,6 +277,13 @@ export type Strings = import('./strings.js').Strings;
  * @property {boolean} [onePointNote] while every source has a single reading, say so under the plot (`chartOnePoint`)
  * @property {ChartSeries[]} series
  * @property {ChartEvent[]} [events]
+ * @property {Record<string, { label?: string, tone?: 'critical' | 'warning' | 'info' }>} [kinds] what each event `kind` is called in the key, and its tone
+ * @property {boolean | string} [median] a dashed median line per shown source; a string is the words in front of its value (`data-kp-chart-median`, `-median-label`)
+ * @property {'off' | 'mark'} [runs] `mark` rings the points of every run of six or more on one side of the median (`data-kp-chart-runs`)
+ * @property {number} [minPoints] below this many readings the chart says it is too early for a trend (`data-kp-chart-min-points`)
+ * @property {string} [minUnit] what the readings are called in that sentence ("days"; `data-kp-chart-min-unit`)
+ * @property {'tint' | 'hatch' | 'bracket'} [band] how a band is drawn: a `tint` across the plot (default), `hatch` diagonal lines (readable without colour) or a `bracket` along the top with short ticks (`data-kp-chart-band`)
+ * @property {boolean} [annotationKey] false leaves the key above the plot out (`data-kp-chart-annotation-key="off"`)
  * @property {number} [from] the window, when the group's range should not set it
  * @property {number} [to]
  * @property {number} [yMax] the top of the axis; else a round number above the highest value
@@ -302,6 +350,17 @@ export declare function chartWords(overrides?: Partial<Strings>): {
     today: string;
     yesterday: string;
     trendKeys: string;
+    median: string;
+    few: (have: number, need: number, unit: string) => string;
+    fewUnit: string;
+    keyLabel: string;
+    kindTone: (tone: string) => string;
+    runsKey: string;
+    markBand: (label: string, from: string, until: string) => string;
+    bandWhen: (from: string, until: string) => string;
+    edgeBefore: (count: number) => string;
+    edgeAfter: (count: number) => string;
+    kindOn: (kind: string) => string;
 };
 /**
  * The dash of the `i`-th source's line: none for the first five (each its
@@ -316,6 +375,23 @@ export declare const dashOf: (i: number) => 0 | 1 | 2 | 3;
  * @returns {number | null}
  */
 export declare function parseSpan(text: string | null | undefined): number | null;
+/**
+ * The median of a list of numbers (the mean of the two in the middle when
+ * their count is even), or null for none [kpadopt5-people].
+ * @param {readonly number[]} values
+ * @returns {number | null}
+ */
+export declare function chartMedian(values: readonly number[]): number | null;
+/**
+ * The places of the points that belong to a run: six or more in a row on one
+ * side of the median (the run-chart rule). A point exactly on the median
+ * neither breaks a run nor counts in it.
+ * @param {readonly number[]} values oldest first
+ * @param {number} median
+ * @param {number} [least] the run's least length, 6
+ * @returns {Set<number>} indexes into `values`
+ */
+export declare function chartRuns(values: readonly number[], median: number, least?: number): Set<number>;
 /**
  * The top of the y axis: a round number just above the highest value. For
  * `percent` 10, 25, 50 or 100 (above 100 the round number, so nothing is

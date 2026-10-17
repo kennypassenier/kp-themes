@@ -119,6 +119,12 @@ export const PAGES = [
                 label: 'The fifth adoption round, the basics: calm mode, shortcuts, explaining lines, problem alerts and a button that shows its result',
                 about: 'Five small parts every page needs, in formal: a switch that stops movement, keys that know their own list, the line under a heading, a problem that says what, why and what now, and a button that shows its result without changing width.',
             },
+            // Kenny, 2026-10-17 (kpadopt5, people): four things every app still draws itself, built in the package first as ONE demo, formal only until Kenny approves it.
+            {
+                href: 'research/kpadopt5-people/demo.html',
+                label: 'People: avatar with a photo, ways to sign in, a conversation, chart markers',
+                about: 'An avatar with a photo, the list of ways to sign in (passkeys, magic links, passwords, tokens), a conversation in bubbles, and markers, windows and a median line on a chart, in formal.',
+            },
         ],
     },
     {

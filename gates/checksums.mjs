@@ -160,6 +160,8 @@ export const FILES = [
     'js/card-state.js',
     'js/facets.js',
     'js/idmark.js',
+    'js/passkeys.js',
+    'js/thread.js',
     'js/stackbar.js',
     'js/bullets.js',
     'js/code.js',
