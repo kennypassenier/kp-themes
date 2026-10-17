@@ -292,6 +292,7 @@ setEntityGrid(document.getElementById(<span class="kp-code__string">'doc-entitie
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
                             <tr><td><code>data-kp-density</code></td><td>prose</td></tr>
                             <tr><td><code>data-kp-entity</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-entity-actions</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-entity-flags-max</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-entity-framed</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-entity-grid</code></td><td>selector, written</td></tr>
@@ -328,9 +329,11 @@ setEntityGrid(document.getElementById(<span class="kp-code__string">'doc-entitie
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-entity-action-row</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-entity-actions-gap</code></td><td><code>var(--kp-space-md, 0.75rem)</code></td></tr>
                             <tr><td><code>--kp-entity-cols</code></td><td><code>4</code></td></tr>
                             <tr><td><code>--kp-entity-gap</code></td><td><code>var(--kp-space-md, 0.75rem)</code></td></tr>
-                            <tr><td><code>--kp-entity-meters</code></td><td><code>2</code></td></tr>
+                            <tr><td><code>--kp-entity-meters-height</code></td><td><code></code></td></tr>
                             <tr><td><code>--kp-entity-min</code></td><td><code>22rem</code></td></tr>
                             <tr><td><code>--kp-entity-row</code></td><td><code>1.5rem</code></td></tr>
                             <tr><td><code>--kp-space-md</code></td><td><code>1rem</code></td></tr>
@@ -351,7 +354,7 @@ setEntityGrid(document.getElementById(<span class="kp-code__string">'doc-entitie
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
                             <tr><td><code>data-kp-entity-meters</code></td><td>How many meter rows a card holds, 0 to 3; two by default.</td></tr>
                             <tr><td><code>data-kp-entity-flags-max</code></td><td>How many flags show; the rest are an exact “+2” that opens the package’s own menu. Three by default.</td></tr>
-                            <tr><td><code>data-kp-entity-inline</code></td><td>How many actions stand as buttons; the rest go in “More”. Under 30rem every action folds into “More”.</td></tr>
+                            <tr><td><code>data-kp-entity-inline</code></td><td>The most actions that stand as buttons; the rest go in “More”. The buttons come only from the data: a card with no action has no row for them, and every card has as many columns as the grid’s busiest card. Under 30rem every action folds into “More”.</td></tr>
                             <tr><td><code>data-kp-selectable</code></td><td>A tick at the start of the card, a row of a selection with the keys j, k and x.</td></tr>
                             <tr><td><code>data-kp-state</code></td><td>On a card: `loading` (the same five rows as bones), `empty` (“not measured”) or `error` (a destructive state and Retry). On the grid: `loading` (skeleton cards under the busy card), `empty` or `error` (the package’s plates).</td></tr>
                     </tbody></table></div>

@@ -14993,6 +14993,7 @@ function createIntentFilter(dialog, list, status) {
     const failed = state2 === "error";
     const valueOf3 = (option) => option.dataset.value ?? (option.textContent ?? "").trim();
     const items = options.map((option) => {
+      clearMarks2(option);
       if (dialog.dataset.kpHighlight !== "off" && !option.querySelector(":scope > .kp-palette__label")) wrapLabel(option);
       const { label, hint: hint2 } = textsOf(option);
       const value = valueOf3(option);
@@ -15284,7 +15285,7 @@ function attachPalettes(root = document, {
     const onInput = () => filter();
     input.addEventListener("input", onInput);
     const onClose = () => {
-      if (clears) {
+      if (clears && !dialog.open) {
         input.value = "";
         filter();
       }
@@ -46367,6 +46368,19 @@ function frame2(card) {
   card.setAttribute("data-kp-entity", "");
   card.replaceChildren(...SLOTS.map((slot) => made5(doc, "div", `kp-entity__${slot}`)));
 }
+function columnsFor(host, inline) {
+  const cards2 = host.matches(ENTITY_GRID) ? [...host.querySelectorAll(":scope > .kp-card--entity")] : [host];
+  let most = 0;
+  let more = false;
+  for (const card of cards2) {
+    const data = DRAWN4.get(card)?.data;
+    if (!data || data.status === "loading") continue;
+    const n = (data.actions ?? []).length;
+    most = Math.max(most, Math.min(n, inline));
+    if (n > inline) more = true;
+  }
+  return Math.max(1, most + (more ? 1 : 0));
+}
 function fitFlags(card, shown4) {
   const view = card.ownerDocument.defaultView;
   view?.requestAnimationFrame(() => {
@@ -46406,6 +46420,8 @@ function setEntity(card, data) {
   };
   const loading = status === "loading";
   if (loading) {
+    card.removeAttribute("data-kp-entity-actions");
+    slotOf(card, "actions").hidden = false;
     for (const name of SLOTS) {
       slot(name, "loading", (el14) => {
         const bone = made5(doc, "span", "kp-skeleton kp-entity__bone");
@@ -46532,12 +46548,20 @@ function setEntity(card, data) {
   });
   const narrow = card.closest(ENTITY_GRID)?.hasAttribute("data-kp-entity-narrow") ?? false;
   const inline = narrow ? 0 : Math.max(0, Number(opt2(card, "data-kp-entity-inline") ?? 3));
-  card.style.setProperty("--kp-entity-cols", String(Math.max(1, inline + 1)));
+  const noActions = status !== "error" && (data.actions ?? []).length === 0;
+  if (noActions) card.setAttribute("data-kp-entity-actions", "none");
+  else card.removeAttribute("data-kp-entity-actions");
+  slotOf(card, "actions").hidden = noActions;
+  const host = (
+    /** @type {HTMLElement} */
+    card.closest(ENTITY_GRID) ?? card
+  );
+  host.style.setProperty("--kp-entity-cols", String(columnsFor(host, inline)));
   slot("actions", { a: data.actions, inline, status }, (el14) => {
     if (status === "error") {
       const retry = (
         /** @type {HTMLButtonElement} */
-        made5(doc, "button", "kp-button kp-entity__action")
+        made5(doc, "button", "kp-button kp-entity__action kp-entity__retry")
       );
       retry.type = "button";
       retry.textContent = s2.entityRetry;

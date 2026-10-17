@@ -123,9 +123,6 @@ await ready;
 {
     const { palette } = await import('../../js/palette.js');
     const main = document.getElementById('k6-intent-pal');
-    const states = document.getElementById('k6-intent-states');
-    const phone = document.getElementById('k6-intent-phone');
-    const all = [main, states, phone].filter((el) => el instanceof HTMLDialogElement);
 
     /** Type into a palette's input as a person would: the input event does the filtering. @param {HTMLElement | null} dialog @param {string} text */
     const typeInto = (dialog, text) => {
@@ -136,8 +133,16 @@ await ready;
     };
     for (const b of document.querySelectorAll('[data-k6-query]'))
         b.addEventListener('click', () => typeInto(main, b.getAttribute('data-k6-query') ?? ''));
-    for (const b of document.querySelectorAll('[data-k6-query2]'))
-        b.addEventListener('click', () => typeInto(states, b.getAttribute('data-k6-query2') ?? ''));
+
+    for (const b of document.querySelectorAll('[data-k6-typed]'))
+        b.addEventListener('click', async () => {
+            const text = b.getAttribute('data-k6-typed') ?? '';
+            typeInto(main, '');
+            for (let at = 1; at <= text.length; at++) {
+                await new Promise((resolve) => setTimeout(resolve, 150));
+                typeInto(main, text.slice(0, at));
+            }
+        });
 
     const log = document.getElementById('k6-intent-log');
     main?.addEventListener('kp-palette-run', (event) => {
@@ -146,7 +151,7 @@ await ready;
 
     /** @param {string} look */
     const setMarkLook = (look) => {
-        for (const el of [main, states, phone]) {
+        for (const el of [main]) {
             if (!el) continue;
             el.removeAttribute('data-kp-mark-look');
             el.removeAttribute('data-kp-highlight');
@@ -159,288 +164,11 @@ await ready;
     };
     stateButtons('data-k6-mark-look', setMarkLook);
     onChoice('intent-mark', setMarkLook);
-
-    /** @param {string} state */
-    const setState = (state) => {
-        if (!states) return;
-        palette(states)?.setState(/** @type {'ready' | 'loading' | 'error'} */ (state), { message: 'The host did not answer.' });
-        for (const b of document.querySelectorAll('[data-k6-intent-state]'))
-            b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-intent-state') === state));
-    };
-    stateButtons('data-k6-intent-state', setState);
-    states?.addEventListener('kp-palette-retry', () => setState('ready'));
-    stateButtons('data-k6-cap', (cap) => {
-        states?.setAttribute('data-kp-max-shown', cap);
-        if (states) palette(states)?.refresh();
-    });
-    // The in-place palettes start filtered by their own markup; a phone palette starts with a query so its rows are ranked.
-    void all;
-}
-
-// ── version jump chip ──
-{
-    const { setVersionDelta, summarizeDeltas } = await import('../../js/version-delta.js');
-    const table = document.getElementById('k6-version-table');
-    const chips = () => /** @type {HTMLElement[]} */ ([...document.querySelectorAll('#k6-version-table .kp-badge--version')]);
-    const heading = document.getElementById('k6-version-heading');
-    let bigMinor = true;
-
-    /** The cell sorts by its chip, so the list sorts the risky first; the heading counts the list exactly. */
-    const paint = () => {
-        for (const chip of chips()) {
-            const cell = chip.closest('td');
-            if (cell) cell.setAttribute('data-kp-sort-value', chip.getAttribute('data-kp-sort-value') ?? '0');
-        }
-        const list = chips().map((chip) => ({
-            from: chip.getAttribute('data-kp-version-from'),
-            to: chip.getAttribute('data-kp-version-to'),
-            app: chip.getAttribute('data-kp-version-app') ?? '',
-        }));
-        if (heading) heading.textContent = `Updates: ${summarizeDeltas(list, { bigMinorApps: bigMinor ? ['immich'] : [], scheme: 'numbers' }).text}`;
-    };
-    // The chips are drawn by js/auto.js; the page reads them once they are.
-    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-    paint();
-    const log = document.getElementById('k6-version-log');
-    table?.addEventListener('kp-version-copy', (event) => {
-        if (log) log.textContent = `kp-version-copy\n${JSON.stringify(/** @type {CustomEvent} */ (event).detail)}`;
-    });
-
-    /** @param {string} show */
-    const setShow = (show) => {
-        for (const chip of chips()) chip.setAttribute('data-kp-version-show', show);
-        for (const b of document.querySelectorAll('[data-k6-version-show]'))
-            b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-version-show') === show));
-        requestAnimationFrame(paint);
-    };
-    stateButtons('data-k6-version-show', setShow);
-    onChoice('version-show', setShow);
-    for (const b of document.querySelectorAll('[data-k6-big-minor]'))
-        b.addEventListener('click', () => {
-            bigMinor = !bigMinor;
-            b.setAttribute('aria-pressed', String(bigMinor));
-            if (table) {
-                if (bigMinor) table.setAttribute('data-kp-version-big-minor', 'immich');
-                else table.removeAttribute('data-kp-version-big-minor');
-            }
-            // The list is read when a chip is drawn: touch each so it draws again.
-            for (const chip of chips()) chip.setAttribute('data-kp-version-big-at', 'first');
-            requestAnimationFrame(paint);
-        });
-
-    const live = document.getElementById('k6-version-live');
-    stateButtons('data-k6-version-state', (state) => {
-        if (live)
-            setVersionDelta(live, {
-                state: /** @type {'loading' | 'error' | 'ready'} */ (state),
-                error: state === 'error' ? 'The release server did not answer' : '',
-            });
-    });
-}
-
-// ── acknowledge gate ──
-{
-    const { ackGate } = await import('../../js/ack-gate.js');
-    const log = document.getElementById('k6-ack-log');
-    document.getElementById('k6-ack-grid')?.addEventListener('kp-ack-change', (event) => {
-        if (log) log.textContent = `kp-ack-change\n${JSON.stringify(/** @type {CustomEvent} */ (event).detail)}`;
-    });
-    /** @param {string} mode */
-    const setMode = (mode) => {
-        for (const id of ['k6-ack-1', 'k6-ack-2']) document.getElementById(id)?.setAttribute('data-kp-ack-mode', mode);
-        for (const b of document.querySelectorAll('[data-k6-ack-mode]'))
-            b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-ack-mode') === mode));
-    };
-    stateButtons('data-k6-ack-mode', setMode);
-    onChoice('ack-mode', setMode);
-    for (const b of document.querySelectorAll('[data-k6-ack-bump]'))
-        b.addEventListener('click', () => {
-            const gate = document.getElementById('k6-ack-1');
-            gate?.setAttribute('data-kp-ack-version', '12.2');
-            gate?.setAttribute('data-kp-ack-label', 'I read the release notes of 12.2');
-        });
-    for (const b of document.querySelectorAll('[data-k6-ack-lock]'))
-        b.addEventListener('click', () => {
-            const on = b.getAttribute('aria-pressed') !== 'true';
-            b.setAttribute('aria-pressed', String(on));
-            for (const id of ['k6-ack-1', 'k6-ack-2']) {
-                const gate = document.getElementById(id);
-                if (gate) ackGate(gate)?.setLocked(on);
-            }
-        });
-    stateButtons('data-k6-ack-state', (state) => {
-        for (const id of ['k6-ack-3', 'k6-ack-4']) {
-            const gate = document.getElementById(id);
-            if (gate) ackGate(gate)?.setState(/** @type {'ready' | 'loading' | 'error' | 'empty'} */ (state));
-        }
-    });
-    for (const id of ['k6-ack-3', 'k6-ack-4'])
-        document.getElementById(id)?.addEventListener('kp-ack-retry', () => {
-            for (const g of ['k6-ack-3', 'k6-ack-4']) {
-                const gate = document.getElementById(g);
-                if (gate) ackGate(gate)?.setState('ready');
-            }
-            for (const b of document.querySelectorAll('[data-k6-ack-state]'))
-                b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-ack-state') === 'ready'));
-        });
-}
-
-// ── dependency list ──
-{
-    const { setDeplist, deplist } = await import('../../js/deplist.js');
-    const rows = [
-        { from: 'immich', to: 'paperless' },
-        { from: 'paperless', to: 'postgres', state: 'running' },
-        { from: 'paperless', to: 'redis', state: 'running' },
-        { from: 'immich', to: 'postgres', state: 'running' },
-        { from: 'immich', to: 'redis', state: 'stopped' },
-        { from: 'vault', to: 'postgres', state: 'running' },
-        { from: 'gateway', to: 'vault', state: 'running' },
-        { from: 'jellyfin', to: 'gateway', state: 'running' },
-        { from: 'sonarr', to: 'jellyfin', state: 'unknown' },
-        { from: 'radarr', to: 'jellyfin', state: 'unknown' },
-        { from: 'café-kiosk', to: 'gateway', state: 'running' },
-        { from: 'calendar', to: 'postgres', state: 'running' },
-    ];
-    const main = document.getElementById('k6-deplist');
-    const cycle = [{ from: 'redis', to: 'paperless' }];
-    let withCycle = false;
-    const fill = () => main && setDeplist(main, withCycle ? [...rows, ...cycle] : rows);
-    fill();
-
-    /** @param {string} arrange */
-    const arrangeTo = (arrange) => {
-        if (!main) return;
-        main.setAttribute('data-kp-dep-order', arrange === 'numbers' ? 'numbers' : 'none');
-        if (arrange === 'by-to') main.setAttribute('data-kp-dep-group', 'by-to');
-        else main.removeAttribute('data-kp-dep-group');
-        for (const b of document.querySelectorAll('[data-k6-dep-arrange]'))
-            b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-dep-arrange') === arrange));
-    };
-    stateButtons('data-k6-dep-arrange', arrangeTo);
-    onChoice('dep-arrange', arrangeTo);
-    for (const b of document.querySelectorAll('[data-k6-dep-extra]'))
-        b.addEventListener('click', () => {
-            const on = b.getAttribute('aria-pressed') !== 'true';
-            b.setAttribute('aria-pressed', String(on));
-            const kind = b.getAttribute('data-k6-dep-extra');
-            if (!main) return;
-            if (kind === 'link') {
-                if (on) main.setAttribute('data-kp-dep-link', '#stack-{name}');
-                else main.removeAttribute('data-kp-dep-link');
-            } else if (kind === 'states') main.toggleAttribute('data-kp-dep-states', on);
-            else {
-                withCycle = on;
-                fill();
-            }
-        });
-
-    const states = document.getElementById('k6-deplist-states');
-    const four = rows.slice(0, 4);
-    if (states) setDeplist(states, four);
-    const phone = document.getElementById('k6-deplist-phone');
-    if (phone)
-        setDeplist(phone, [
-            { from: 'paperless', to: 'postgres', state: 'running' },
-            { from: 'immich-machine-learning-worker', to: 'paperless', state: 'stopped' },
-            { from: 'café-kiosk', to: 'gateway', state: 'unknown' },
-        ]);
-    /** @param {string} state */
-    const setState = (state) => {
-        if (!states) return;
-        if (state === 'ready') setDeplist(states, four);
-        else deplist(states)?.setState(/** @type {'loading' | 'empty' | 'error'} */ (state), { message: 'The host did not answer.' });
-        for (const b of document.querySelectorAll('[data-k6-dep-state]'))
-            b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-dep-state') === state));
-    };
-    stateButtons('data-k6-dep-state', setState);
-    states?.addEventListener('kp-deplist-retry', () => setState('ready'));
-}
-
-// ── path of a connection ──
-{
-    const { setTrace, trace } = await import('../../js/path-trace.js');
-    const scenes = {
-        blocked: [
-            { title: 'tv', note: 'IoT network', verdict: 'allowed' },
-            { title: 'Firewall', note: 'tcp 8096', verdict: 'refused', rule: 'IoT to media' },
-            { title: 'Jellyfin', note: 'media container', verdict: 'allowed' },
-            { title: 'Media network', note: 'where it lives', verdict: 'allowed' },
-        ],
-        allowed: [
-            { title: 'laptop', note: 'LAN', verdict: 'allowed' },
-            { title: 'Firewall', note: 'tcp 8096', verdict: 'allowed', rule: 'LAN to media' },
-            { title: 'Traefik', note: 'the edge', verdict: 'allowed' },
-            { title: 'Jellyfin', note: 'media network', verdict: 'allowed' },
-        ],
-        unknown: [
-            { title: 'phone', note: 'guest Wi-Fi', verdict: 'allowed' },
-            { title: 'Firewall', note: 'tcp 443', verdict: 'allowed', rule: 'Guest to edge' },
-            { title: 'Traefik', note: 'not measured yet', verdict: 'unknown' },
-            { title: 'Paperless', note: 'documents network', verdict: 'unknown' },
-        ],
-    };
-    const main = document.getElementById('k6-trace');
-    let scene = /** @type {keyof typeof scenes} */ ('blocked');
-    if (main) setTrace(main, scenes[scene]);
-    const log = document.getElementById('k6-trace-log');
-    for (const type of ['kp-trace-rule', 'kp-trace-swap'])
-        main?.addEventListener(type, (event) => {
-            if (log) log.textContent = `${type}\n${JSON.stringify(/** @type {CustomEvent} */ (event).detail ?? {})}`;
-        });
-    stateButtons('data-k6-trace-scene', (value) => {
-        scene = /** @type {keyof typeof scenes} */ (value);
-        if (main) setTrace(main, scenes[scene]);
-    });
-    /** @param {string} name @param {string} attribute @param {(v: string) => string | null} [map] */
-    const bindAttr = (name, attribute, map = (v) => v) => {
-        stateButtons(`data-k6-trace-${name}`, (value) => {
-            const v = map(value);
-            if (!main) return;
-            if (v === null) main.removeAttribute(attribute);
-            else main.setAttribute(attribute, v);
-        });
-    };
-    bindAttr('verdict', 'data-kp-trace-verdict', (v) => (v === 'both' ? null : v));
-    bindAttr('layout', 'data-kp-trace-layout', (v) => (v === 'auto' ? null : v));
-    bindAttr('rule', 'data-kp-trace-rule', (v) => (v === 'chip' ? null : v));
-    onChoice('trace-verdict', (value) => {
-        for (const b of document.querySelectorAll('[data-k6-trace-verdict]'))
-            b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-trace-verdict') === value));
-        if (value === 'both') main?.removeAttribute('data-kp-trace-verdict');
-        else main?.setAttribute('data-kp-trace-verdict', value);
-    });
-    for (const b of document.querySelectorAll('[data-k6-trace-stop]'))
-        b.addEventListener('click', () => {
-            const on = b.getAttribute('aria-pressed') !== 'true';
-            b.setAttribute('aria-pressed', String(on));
-            if (on) main?.setAttribute('data-kp-trace-stop', 'all');
-            else main?.removeAttribute('data-kp-trace-stop');
-        });
-
-    const states = document.getElementById('k6-trace-states');
-    if (states) setTrace(states, scenes.blocked);
-    const phone = document.getElementById('k6-trace-phone');
-    if (phone)
-        setTrace(phone, [
-            ...scenes.blocked.slice(0, 3),
-            { title: 'Paperless document-consumption worker', note: 'documents network', verdict: 'allowed' },
-        ]);
-    /** @param {string} state */
-    const setState = (state) => {
-        if (!states) return;
-        if (state === 'ready') setTrace(states, scenes.blocked);
-        else trace(states)?.setState(/** @type {'running' | 'empty' | 'error'} */ (state), { message: 'The firewall did not answer.' });
-        for (const b of document.querySelectorAll('[data-k6-trace-state]'))
-            b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-trace-state') === state));
-    };
-    stateButtons('data-k6-trace-state', setState);
-    states?.addEventListener('kp-trace-retry', () => setState('ready'));
 }
 
 // ── entity card ──
 {
-    const { setEntityGrid, setEntityGridState, setEntity } = await import('../../js/entity-card.js');
+    const { setEntityGrid } = await import('../../js/entity-card.js');
     const { openMenu, closeMenu, setMenu } = await import('../../js/menu-button.js');
     const acts = [
         { id: 'restart', label: 'Restart' },
@@ -453,8 +181,21 @@ await ready;
         { label: 'RAM', value: ram, text },
         { label: 'Disk', value: 0.41 },
     ];
+    /** The buttons come only from the data: none, two, four (three stand, the fourth goes in More) or a mix on one grid. */
+    let actionMode = 'four';
+    /** @param {number} at */
+    const actionsFor = (at) =>
+        actionMode === 'none'
+            ? []
+            : actionMode === 'two'
+              ? acts.slice(0, 2)
+              : actionMode === 'mixed'
+                ? [acts, [], acts.slice(0, 2), acts, acts.slice(0, 1), []][at % 6]
+                : acts;
     /** @type {() => import('../../js/entity-card.js').EntityData[]} */
-    const make = () => [
+    const make = () => makeBase().map((d, at) => ({ ...d, actions: actionsFor(at) }));
+    /** @type {() => import('../../js/entity-card.js').EntityData[]} */
+    const makeBase = () => [
         {
             key: 'media',
             name: 'media',
@@ -565,8 +306,7 @@ await ready;
             if (kind === 'selectable') {
                 grid.toggleAttribute('data-kp-selectable', on);
                 grid.toggleAttribute('data-kp-select-keys', on);
-            } else if (kind === 'meters') grid.setAttribute('data-kp-entity-meters', on ? '3' : '2');
-            else if (kind === 'flags') grid.setAttribute('data-kp-entity-flags-max', on ? '1' : '3');
+            } else if (kind === 'flags') grid.setAttribute('data-kp-entity-flags-max', on ? '1' : '3');
             else if (kind === 'compact') grid.setAttribute('data-kp-density', on ? 'compact' : 'comfortable');
             else grid.toggleAttribute('data-kp-entity-link', on) || null;
             if (kind === 'link') {
@@ -574,6 +314,21 @@ await ready;
                 else grid.removeAttribute('data-kp-entity-link');
             }
         });
+    /** @param {string} n */
+    const setMeters = (n) => {
+        grid?.setAttribute('data-kp-entity-meters', n);
+        for (const b of document.querySelectorAll('[data-k6-entity-meters]'))
+            b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-entity-meters') === n));
+    };
+    stateButtons('data-k6-entity-meters', setMeters);
+    /** @param {string} mode */
+    const setActions = (mode) => {
+        actionMode = mode;
+        if (grid) setEntityGrid(grid, make());
+        for (const b of document.querySelectorAll('[data-k6-entity-actions]'))
+            b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-entity-actions') === mode));
+    };
+    stateButtons('data-k6-entity-actions', setActions);
     /** @param {string} n */
     const setInline = (n) => {
         grid?.setAttribute('data-kp-entity-inline', n);
@@ -622,43 +377,4 @@ await ready;
                         : null;
             if (target) openMenu(/** @type {HTMLElement} */ (target), { focus: 'first' });
         });
-
-    const cards = document.getElementById('k6-entity-cards');
-    const three = make().slice(0, 3);
-    const drawCards = (/** @type {string} */ mode) => {
-        if (!cards) return;
-        const list = three.map((d) => ({ ...d }));
-        if (mode === 'states') {
-            list[0] = { ...list[0], status: 'loading' };
-            list[1] = { ...list[1], status: 'empty' };
-            list[2] = { ...list[2], status: 'error', error: 'The host did not answer' };
-        }
-        setEntityGrid(cards, list);
-        for (const b of document.querySelectorAll('[data-k6-entity-card]'))
-            b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-entity-card') === mode));
-    };
-    drawCards('ready');
-    stateButtons('data-k6-entity-card', drawCards);
-    cards?.addEventListener('kp-entity-retry', () => drawCards('ready'));
-    void setEntity;
-
-    const gs = document.getElementById('k6-entity-gstates');
-    const four = make().slice(0, 4);
-    if (gs) setEntityGrid(gs, four);
-    const phone = document.getElementById('k6-entity-phone');
-    if (phone) setEntityGrid(phone, make().slice(0, 2));
-    stateButtons('data-k6-entity-gstate', (state) => {
-        if (!gs) return;
-        if (state === 'ready') setEntityGrid(gs, four);
-        else
-            setEntityGridState(gs, /** @type {'loading' | 'empty' | 'error'} */ (state), {
-                count: 4,
-                message: state === 'error' ? 'The host did not answer.' : undefined,
-            });
-    });
-    gs?.addEventListener('kp-entity-grid-retry', () => {
-        setEntityGrid(gs, four);
-        for (const b of document.querySelectorAll('[data-k6-entity-gstate]'))
-            b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-entity-gstate') === 'ready'));
-    });
 }

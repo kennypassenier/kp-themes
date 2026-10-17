@@ -4002,7 +4002,7 @@ setEntityGrid(document.getElementById('doc-entities'), [
         variants: [
             { name: 'data-kp-entity-meters', what: 'How many meter rows a card holds, 0 to 3; two by default.' },
             { name: 'data-kp-entity-flags-max', what: 'How many flags show; the rest are an exact “+2” that opens the package’s own menu. Three by default.' },
-            { name: 'data-kp-entity-inline', what: 'How many actions stand as buttons; the rest go in “More”. Under 30rem every action folds into “More”.' },
+            { name: 'data-kp-entity-inline', what: 'The most actions that stand as buttons; the rest go in “More”. The buttons come only from the data: a card with no action has no row for them, and every card has as many columns as the grid’s busiest card. Under 30rem every action folds into “More”.' },
             { name: 'data-kp-selectable', what: 'A tick at the start of the card, a row of a selection with the keys j, k and x.' },
             { name: 'data-kp-state', what: 'On a card: `loading` (the same five rows as bones), `empty` (“not measured”) or `error` (a destructive state and Retry). On the grid: `loading` (skeleton cards under the busy card), `empty` or `error` (the package’s plates).' },
         ],

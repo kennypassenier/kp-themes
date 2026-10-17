@@ -429,6 +429,10 @@ function createIntentFilter(dialog, list, status) {
         const failed = state === 'error';
         const valueOf = (/** @type {HTMLElement} */ option) => option.dataset.value ?? (option.textContent ?? '').trim();
         const items = options.map((option) => {
+            // The marks of the last run come off before the words are read: a mark splits a word into several text
+            // nodes ("new" + "est"), and a description reads its nodes apart, so "newest" typed letter by letter
+            // found nothing once "new" was marked [kpadopt6-r2: Kenny, 2026-10-18 "sometimes an empty list"].
+            clearMarks(option);
             if (dialog.dataset.kpHighlight !== 'off' && !option.querySelector(':scope > .kp-palette__label')) wrapLabel(option);
             const { label, hint } = textsOf(option);
             const value = valueOf(option);
@@ -768,7 +772,8 @@ export function attachPalettes(
         // Reopening with the last query still in the box is a small trap:
         // the list looks filtered for no visible reason.
         const onClose = () => {
-            if (clears) {
+            // The close event arrives a task later: a palette opened again with a query in between keeps that query.
+            if (clears && !dialog.open) {
                 input.value = '';
                 filter();
             }

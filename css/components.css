@@ -26363,12 +26363,24 @@
         visibility: hidden;
     }
 
-    .kp-console__tool[data-kp-console-tool='copy-command'] { grid-column: 1; }
-    .kp-console__tool[data-kp-console-tool='copy-output'] { grid-column: 2; }
-    .kp-console__tool[data-kp-console-tool='again'] { grid-column: 3; }
-    .kp-console__tool[data-kp-console-tool='recheck'] { grid-column: 4; }
-    .kp-console__tool[data-kp-console-tool='cancel'] { grid-column: 5; }
-    .kp-console__tool[data-kp-console-tool='collapse'] { grid-column: 6; }
+    .kp-console__tool[data-kp-console-tool='copy-command'] {
+        grid-column: 1;
+    }
+    .kp-console__tool[data-kp-console-tool='copy-output'] {
+        grid-column: 2;
+    }
+    .kp-console__tool[data-kp-console-tool='again'] {
+        grid-column: 3;
+    }
+    .kp-console__tool[data-kp-console-tool='recheck'] {
+        grid-column: 4;
+    }
+    .kp-console__tool[data-kp-console-tool='cancel'] {
+        grid-column: 5;
+    }
+    .kp-console__tool[data-kp-console-tool='collapse'] {
+        grid-column: 6;
+    }
 
     .kp-console__problem {
         display: grid;
@@ -26569,12 +26581,30 @@
             grid-template-columns: repeat(3, 1fr);
         }
 
-        .kp-console__tool[data-kp-console-tool='copy-command'] { grid-column: 1; grid-row: 1; }
-        .kp-console__tool[data-kp-console-tool='copy-output'] { grid-column: 2; grid-row: 1; }
-        .kp-console__tool[data-kp-console-tool='again'] { grid-column: 3; grid-row: 1; }
-        .kp-console__tool[data-kp-console-tool='recheck'] { grid-column: 1; grid-row: 2; }
-        .kp-console__tool[data-kp-console-tool='cancel'] { grid-column: 2; grid-row: 2; }
-        .kp-console__tool[data-kp-console-tool='collapse'] { grid-column: 3; grid-row: 2; }
+        .kp-console__tool[data-kp-console-tool='copy-command'] {
+            grid-column: 1;
+            grid-row: 1;
+        }
+        .kp-console__tool[data-kp-console-tool='copy-output'] {
+            grid-column: 2;
+            grid-row: 1;
+        }
+        .kp-console__tool[data-kp-console-tool='again'] {
+            grid-column: 3;
+            grid-row: 1;
+        }
+        .kp-console__tool[data-kp-console-tool='recheck'] {
+            grid-column: 1;
+            grid-row: 2;
+        }
+        .kp-console__tool[data-kp-console-tool='cancel'] {
+            grid-column: 2;
+            grid-row: 2;
+        }
+        .kp-console__tool[data-kp-console-tool='collapse'] {
+            grid-column: 3;
+            grid-row: 2;
+        }
     }
 }
 
@@ -27419,7 +27449,9 @@
  * stand in fixed columns (the first action is always in the first column, whatever the words before it). The name is the
  * card's one link, its click target stretched over the whole card; the tick, the actions and the menus stand above it.
  * Under 30rem of the grid's own width the inline actions fold into "More". Selected is `is-ticked`, the cursor `is-cursor`.
- * Knobs [KT6]: --kp-entity-min (the least card width, 22rem), --kp-entity-row (the row's height, 1.5rem), --kp-entity-gap. */
+ * Knobs [KT6]: --kp-entity-min (the least card width, 22rem), --kp-entity-row (the row's height, 1.5rem), --kp-entity-gap,
+ * --kp-entity-actions-gap (the air between the last meter and the actions, --kp-space-md). The buttons come only from the data:
+ * no action, no row. */
     .kp-entity-grid {
         position: relative;
         display: grid;
@@ -27438,7 +27470,17 @@
     .kp-card--entity {
         position: relative;
         display: grid;
-        grid-template-rows: minmax(1.75rem, auto) var(--kp-entity-row, 1.5rem) var(--kp-entity-row, 1.5rem) calc(var(--kp-entity-meters, 2) * var(--kp-entity-row, 1.5rem)) 2.25rem;
+        /* The meters' track holds their rows AND the gaps between them (the rows are parted by --kp-space-sm): before, only the
+         * rows were counted, so two meters overflowed the track by one gap and three by two, into the buttons' gap. */
+        --kp-entity-meters-height: calc(
+            var(--kp-entity-meters, 2) * var(--kp-entity-row, 1.5rem) + max(0rem, (var(--kp-entity-meters, 2) - 1) * var(--kp-space-sm, 0.5rem))
+        );
+        /* The actions' row is a button's height and the gap that parts it from the last meter (its own padding). A card with no
+         * actions has no such row at all. */
+        --kp-entity-action-row: calc(2.25rem + var(--kp-entity-actions-gap, var(--kp-space-md, 0.75rem)));
+        grid-template-rows: minmax(1.75rem, auto) var(--kp-entity-row, 1.5rem) var(--kp-entity-row, 1.5rem) var(--kp-entity-meters-height) var(
+                --kp-entity-action-row
+            );
         gap: var(--kp-space-xs, 0.375rem);
         align-content: start;
         padding: var(--kp-space-md, 0.75rem);
@@ -27454,7 +27496,21 @@
 
     .kp-entity-grid[data-kp-density='compact'] > .kp-card--entity,
     .kp-card--entity[data-kp-density='compact'] {
-        grid-template-rows: minmax(1.75rem, auto) var(--kp-entity-row, 1.5rem) calc(var(--kp-entity-meters, 2) * var(--kp-entity-row, 1.5rem)) 2.25rem;
+        grid-template-rows: minmax(1.75rem, auto) var(--kp-entity-row, 1.5rem) var(--kp-entity-meters-height) var(--kp-entity-action-row);
+    }
+
+    /* No actions in the data: no row for them, and no gap left behind. */
+    .kp-card--entity[data-kp-entity-actions='none'] {
+        grid-template-rows: minmax(1.75rem, auto) var(--kp-entity-row, 1.5rem) var(--kp-entity-row, 1.5rem) var(--kp-entity-meters-height);
+    }
+
+    .kp-entity-grid[data-kp-density='compact'] > .kp-card--entity[data-kp-entity-actions='none'],
+    .kp-card--entity[data-kp-density='compact'][data-kp-entity-actions='none'] {
+        grid-template-rows: minmax(1.75rem, auto) var(--kp-entity-row, 1.5rem) var(--kp-entity-meters-height);
+    }
+
+    .kp-card--entity > .kp-entity__actions[hidden] {
+        display: none !important;
     }
 
     .kp-entity-grid[data-kp-density='compact'] > .kp-card--entity > .kp-entity__figures,
@@ -27561,6 +27617,7 @@
         grid-template-columns: repeat(var(--kp-entity-cols, 4), minmax(0, 1fr));
         gap: var(--kp-space-sm, 0.5rem);
         align-items: center;
+        padding-block-start: var(--kp-entity-actions-gap, var(--kp-space-md, 0.75rem));
     }
 
     .kp-entity__actions > :is(.kp-button, .kp-menu-button, .kp-reason),
@@ -27575,7 +27632,7 @@
         inline-size: 100%;
     }
 
-    .kp-entity__actions > .kp-entity__action:only-child {
+    .kp-entity__actions > .kp-entity__retry {
         grid-column: 1 / -1;
     }
 

@@ -146,8 +146,8 @@ export const PAGES = [
             // Kenny, 2026-10-17 (kpadopt6, wave ops): seven more parts the admin dashboard draws by hand (a toggle button, the palette that finds words in any order, a version-jump chip, an acknowledge tick, a dependency list, the path of one connection, the fixed card of one stack), one demo, formal only until Kenny approves it.
             {
                 href: 'research/kpadopt6-ops/demo.html',
-                label: 'More parts for a dashboard (toggle button, word-order search, version jump, acknowledge tick, dependency list, path of a connection, stack card)',
-                about: 'Seven more parts the admin dashboard draws by hand, in formal only: a button that stays pressed, the command palette that finds words in any order, a chip that shows a version jump, the tick that must be set before an update may start, the list of what depends on what, the path one connection takes, and the fixed card for one stack. One topic per part.',
+                label: 'More parts for a dashboard, second round (toggle button, word-order search, stack card)',
+                about: 'The three parts of the sixth ops round that came back, in formal only: the button that stays pressed (beside the segmented control the package already has), the command palette that finds words in any order (now always the same list) and the fixed card for one stack (buttons only from the data). One topic per part.',
             },
             // Kenny, 2026-10-17 (kpadopt5, wave ops): seven operations components a dashboard drew itself, built in the package first as ONE demo, formal only until Kenny approves it.
             {

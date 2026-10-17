@@ -16,7 +16,9 @@
 //
 //   data-kp-entity-meters      how many meter rows a card holds, 0 to 3 (default 2)
 //   data-kp-entity-flags-max   how many flags show; the rest are an exact "+2" that opens the package's own menu (default 3)
-//   data-kp-entity-inline      how many actions stand as buttons; the rest go in a "More" menu (default 3); a phone folds all
+//   data-kp-entity-inline      the most actions that stand as buttons; the rest go in a "More" menu (default 3); a phone folds all.
+//                              The actions come only from the data: none means no actions row at all, and the columns are as
+//                              many as the grid's busiest card needs, the same for every card
 //   data-kp-entity-link        the name's link: a template with `{key}`; the whole card is its click target (one tab stop)
 //   data-kp-selectable         a tick at the start of the card (it is a row of a selection: `data-kp-row-key`, the keys j k x)
 //   data-kp-entity-mark        `idmark` (default, from the name), `icon` or `none`
@@ -104,6 +106,26 @@ function frame(card) {
 }
 
 /**
+ * How many columns the actions stand in: the most buttons any card of the grid shows (at most `inline`), and one more for
+ * a "More" when some card has actions left over. Never fewer than one.
+ * @param {HTMLElement} host the grid, or the card when it stands alone
+ * @param {number} inline
+ */
+function columnsFor(host, inline) {
+    const cards = host.matches(ENTITY_GRID) ? [...host.querySelectorAll(':scope > .kp-card--entity')] : [host];
+    let most = 0;
+    let more = false;
+    for (const card of cards) {
+        const data = DRAWN.get(card)?.data;
+        if (!data || data.status === 'loading') continue;
+        const n = (data.actions ?? []).length;
+        most = Math.max(most, Math.min(n, inline));
+        if (n > inline) more = true;
+    }
+    return Math.max(1, most + (more ? 1 : 0));
+}
+
+/**
  * Take a flag out of the row (into the "+N") while the row is wider than the card, one at a time, as soon as the card is laid out.
  * @param {HTMLElement} card
  * @param {number} shown how many flags are drawn now
@@ -157,6 +179,9 @@ export function setEntity(card, data) {
 
     const loading = status === 'loading';
     if (loading) {
+        // A skeleton keeps every row: what the card will hold is not known yet.
+        card.removeAttribute('data-kp-entity-actions');
+        slotOf(card, 'actions').hidden = false;
         for (const name of SLOTS) {
             slot(name, 'loading', (el) => {
                 const bone = made(doc, 'span', 'kp-skeleton kp-entity__bone');
@@ -287,10 +312,17 @@ export function setEntity(card, data) {
     // 5. actions: at most a few inline, the rest in the package's menu; a failed card puts Retry here
     const narrow = card.closest(ENTITY_GRID)?.hasAttribute('data-kp-entity-narrow') ?? false;
     const inline = narrow ? 0 : Math.max(0, Number(opt(card, 'data-kp-entity-inline') ?? 3));
-    card.style.setProperty('--kp-entity-cols', String(Math.max(1, inline + 1)));
+    // The buttons come only from the data: a card with no action has no actions row, and no space where it would be.
+    const noActions = status !== 'error' && (data.actions ?? []).length === 0;
+    if (noActions) card.setAttribute('data-kp-entity-actions', 'none');
+    else card.removeAttribute('data-kp-entity-actions');
+    slotOf(card, 'actions').hidden = noActions;
+    // One set of columns for the whole grid, so the same action stands in the same column on every card.
+    const host = /** @type {HTMLElement} */ (card.closest(ENTITY_GRID) ?? card);
+    host.style.setProperty('--kp-entity-cols', String(columnsFor(host, inline)));
     slot('actions', { a: data.actions, inline, status }, (el) => {
         if (status === 'error') {
-            const retry = /** @type {HTMLButtonElement} */ (made(doc, 'button', 'kp-button kp-entity__action'));
+            const retry = /** @type {HTMLButtonElement} */ (made(doc, 'button', 'kp-button kp-entity__action kp-entity__retry'));
             retry.type = 'button';
             retry.textContent = s.entityRetry;
             if (data.error) retry.title = data.error;

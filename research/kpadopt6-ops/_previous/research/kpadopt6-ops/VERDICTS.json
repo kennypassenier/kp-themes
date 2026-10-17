@@ -1,0 +1,76 @@
+{
+    "demo": "kpadopt6-ops",
+    "rounds": [
+        {
+            "round": "1",
+            "page": "ops-7ffed8d2-ee39-4201-801a-d337a3ceb71f",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 00:28: 14 of 14 judged in formal, 11 approved, 3 not approved.",
+            "approved": [
+                {
+                    "item": "toggle-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "intent-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "version",
+                    "theme": "formal"
+                },
+                {
+                    "item": "version-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "ack",
+                    "theme": "formal"
+                },
+                {
+                    "item": "ack-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "deplist",
+                    "theme": "formal"
+                },
+                {
+                    "item": "deplist-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "trace",
+                    "theme": "formal"
+                },
+                {
+                    "item": "trace-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "entity-states",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "toggle",
+                    "theme": "formal",
+                    "note": "hadden we dit niet al?"
+                },
+                {
+                    "item": "intent",
+                    "theme": "formal",
+                    "note": "I actually like it, but when I wrote \"newest\" it sometimes showed me an empty list, same with pressing the button, and sometimes it did work? so there is some inconsistency there, but I like the component and its shape"
+                },
+                {
+                    "item": "entity",
+                    "theme": "formal",
+                    "note": "amount of buttons is purely dynamic, no defaults. this could be without buttons if there were no actions. Ook kan er meer marge tussen de knoppen en waar de vorige lijn eindigd, bv onder RAM is niet veel plek, al sik een derde meter toevoeg plakken de knoppen er zo goed als tegen, dat is niet mooi"
+                }
+            ],
+            "choices": [],
+            "generalNote": "General (00:28): the review bar with Previous version, Play open and Play close is shown only where it is relevant; Kenny judges each demo as soon as it is ready, Claude does not wait for all of them."
+        }
+    ]
+}
