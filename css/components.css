@@ -23382,6 +23382,7 @@
     }
 
     .kp-availability__grid .kp-heat__label {
+        padding-inline-start: var(--kp-space-sm, 0.5rem);
         position: sticky;
         inset-inline-start: 0;
         z-index: 1;
@@ -24211,9 +24212,6 @@
     }
 
     .kp-console__bar {
-        position: sticky;
-        inset-block-end: 0;
-        z-index: 2;
         padding: var(--kp-space-sm, 0.5rem);
         padding-block-end: max(var(--kp-space-sm, 0.5rem), env(safe-area-inset-bottom));
         border-block-start: 1px solid var(--border);
@@ -24301,6 +24299,10 @@
     }
 
     @container kp-console (max-width: 34rem) {
+        .kp-console {
+            --kp-console-height: min(26rem, 55svh);
+        }
+
         .kp-console__form {
             grid-template-columns: minmax(0, 1fr);
         }
