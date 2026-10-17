@@ -42,6 +42,250 @@
                     Every section says under <b>Expected</b> what you should see and what each control does. Nothing moves until you press a button.
                 </p>
             </header>
+            <!-- ================================================================ ops-page-scaffold -->
+            <section
+                class="ko-sec"
+                id="ops-page"
+                data-review-item="ops-page"
+                data-review-topic="ops-page-scaffold"
+                data-review-topic-title="The page frame of a dashboard"
+                data-review-title="The page frame of a dashboard"
+                aria-labelledby="h-ops-page"
+            >
+                <div class="ko-sec__head">
+                    <h2 id="h-ops-page">The page frame of a dashboard</h2>
+                    <p>
+                        <code>.kp-ops</code>, CSS only: the header, the key figures, the attention band, the toolbar and a grid of cards in one fixed
+                        order, with the spacing and the 12-column spans written once.
+                    </p>
+                </div>
+                <div class="ko-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            One page in a frame that scrolls: the header (the title <b>Pump houses</b>, the freshness line “updated … ago” right after
+                            it, a one-sentence description, the buttons at the right), a strip of four key figures of one height, one warning in the
+                            attention band, the toolbar (search and filter chips) and a grid of cards: 8 + 4, 6 + 6, 4 + 4 + 4 and 3 + 3 + 3 + 3.
+                            Cards in a row share one height; the gaps are the same everywhere.
+                        </li>
+                        <li>
+                            Scroll inside the frame: the <b>toolbar</b> stays under the top edge (the default). <b>Sticky part</b> moves that to the
+                            header or turns it off. <b>Attention band</b> shows the warning or takes it away: with none, the band takes no room at
+                            all, no “all well” line.
+                        </li>
+                        <li>
+                            <b>Loading</b> shows the whole page waiting at its final size from the first frame: the key figures as ruled lines, every
+                            card with formal’s busy card in its middle. <b>Page failed</b> puts one red entry in the attention band with
+                            <b>Retry</b> and the cards keep their place and their data. <b>Ready</b> brings it all back.
+                        </li>
+                        <li>
+                            <b>Page width</b> switches the rule between 80 % of the window (never under 64 rem, the default), the whole width and a
+                            reading measure (64 rem). The frame is narrower than every one of them, so the readout beside the buttons says the widest
+                            the page may be at this window. <b>Density</b> tightens the gaps.
+                        </li>
+                        <li>
+                            The phone frame (390 px) is the same page folded: every card on its own row, the key figures two to a row, only the
+                            primary button in the header and the rest behind <b>More</b>.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Ledger paper: cards ruled with hairlines, the toolbar a ruled band that stays put, the loading as ledger lines ruled across
+                        the key figures and the busy card in each card, the failed page one red-ink entry along its start edge.
+                    </p>
+                </div>
+                <div class="ko-controls" data-review-controls>
+                    <div role="group" aria-label="State of the page">
+                        <b>State of the page:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-state="error" aria-pressed="false">Page failed</button>
+                    </div>
+                    <div role="group" aria-label="Attention band">
+                        <b>Attention band:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-band="one" aria-pressed="true">One warning</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-band="none" aria-pressed="false">
+                            Nothing needs attention
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Sticky part">
+                        <b>Sticky part:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-sticky="toolbar" aria-pressed="true">Toolbar</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-sticky="head" aria-pressed="false">Header</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-sticky="none" aria-pressed="false">Nothing</button>
+                    </div>
+                    <div role="group" aria-label="Page width">
+                        <b>Page width:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-width="80vw" aria-pressed="true">80 % of the window</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-width="full" aria-pressed="false">The whole width</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-width="measure" aria-pressed="false">
+                            A reading measure
+                        </button>
+                        <span class="ko-readout" data-ko-ops-readout aria-live="polite"></span>
+                    </div>
+                    <div role="group" aria-label="Density">
+                        <b>Density:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-density="comfortable" aria-pressed="true">
+                            Comfortable
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-density="compact" aria-pressed="false">Compact</button>
+                    </div>
+                </div>
+                <div class="ko-stack">
+                    <div>
+                        <p class="ko-label">The page, scrolling inside a frame</p>
+                        <div class="ko-pageframe" data-ko-pageframe>
+                            <div class="kp-ops" data-ko-ops>
+                                <header class="kp-ops__head kp-page-header">
+                                    <div class="kp-page-header__inner">
+                                        <div>
+                                            <div class="kp-page-header__line">
+                                                <h1 class="kp-page-header__title">Pump houses</h1>
+                                                <time
+                                                    class="kp-ago"
+                                                    data-kp-ago
+                                                    data-kp-ago-verb="updated"
+                                                    data-kp-stale-after="180"
+                                                    data-ko-ago
+                                                ></time>
+                                            </div>
+                                            <p class="kp-page-header__description">
+                                                Fifteen pump houses on the northern network: their state, the last reading of each, and what needs a
+                                                visit.
+                                            </p>
+                                        </div>
+                                        <div class="kp-page-header__actions">
+                                            <button type="button" class="kp-button" data-kp-ops-wide>Export readings</button>
+                                            <button type="button" class="kp-button kp-button--primary">Add a pump house</button>
+                                            <div class="kp-menu-button" data-kp-menu-button data-ko-ops-more>
+                                                <button type="button" class="kp-button">More ▾</button>
+                                                <div class="kp-menu kp-menu--rich" role="menu" aria-label="Every other action"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </header>
+                                <div class="kp-ops__kpis" data-ko-ops-kpis>
+                                    <div class="kp-kpis" role="group" aria-label="Network at a glance">
+                                        <div class="kp-kpi">
+                                            <span class="kp-kpi__label">Pump houses online</span>
+                                            <span class="kp-kpi__value">14<small>of 15</small></span>
+                                            <span class="kp-kpi__trend">Pump house 7 offline</span>
+                                        </div>
+                                        <div class="kp-kpi">
+                                            <span class="kp-kpi__label">Flow now</span>
+                                            <span class="kp-kpi__value">412<small>m³/h</small></span>
+                                            <span class="kp-kpi__trend">Average over 15 minutes</span>
+                                        </div>
+                                        <div class="kp-kpi">
+                                            <span class="kp-kpi__label">Open incidents</span>
+                                            <span class="kp-kpi__value">3</span>
+                                            <span class="kp-kpi__trend">2 new today</span>
+                                        </div>
+                                        <div class="kp-kpi">
+                                            <span class="kp-kpi__label">Pressure alarms</span>
+                                            <span class="kp-kpi__value">1</span>
+                                            <span class="kp-kpi__trend">Pump house 3</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="kp-ops__attention kp-attention" data-ko-ops-attention></div>
+                                <div class="kp-ops__toolbar kp-toolbar" data-kp-toolbar role="group" aria-label="Pump houses">
+                                    <div class="kp-toolbar__search">
+                                        <input
+                                            type="search"
+                                            class="kp-field__input kp-toolbar__input"
+                                            placeholder="Search pump houses"
+                                            aria-label="Search pump houses"
+                                        />
+                                    </div>
+                                    <div class="kp-toolbar__filters">
+                                        <div class="kp-toolbar__group" role="group" aria-labelledby="ko-ops-status">
+                                            <b class="kp-toolbar__label" id="ko-ops-status">Status</b>
+                                            <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" aria-label="Status">
+                                                <button
+                                                    type="button"
+                                                    class="kp-segmented__item"
+                                                    data-value="all"
+                                                    data-kp-segmented-all
+                                                    aria-pressed="true"
+                                                >
+                                                    All
+                                                </button>
+                                                <button type="button" class="kp-segmented__item" data-value="online" aria-pressed="false">
+                                                    Online
+                                                </button>
+                                                <button type="button" class="kp-segmented__item" data-value="offline" aria-pressed="false">
+                                                    Offline
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="kp-ops__body" data-ko-ops-body></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="ko-label">Phone width (390 px)</p>
+                        <div class="ko-frame ko-frame--phone ko-pageframe ko-pageframe--phone" data-ko-pageframe>
+                            <div class="kp-ops" data-ko-ops data-ko-ops-phone>
+                                <header class="kp-ops__head kp-page-header">
+                                    <div class="kp-page-header__inner">
+                                        <div>
+                                            <div class="kp-page-header__line">
+                                                <h1 class="kp-page-header__title">Pump houses</h1>
+                                                <time
+                                                    class="kp-ago"
+                                                    data-kp-ago
+                                                    data-kp-ago-verb="updated"
+                                                    data-kp-stale-after="180"
+                                                    data-ko-ago
+                                                ></time>
+                                            </div>
+                                            <p class="kp-page-header__description">The state of each pump house, and what needs a visit.</p>
+                                        </div>
+                                        <div class="kp-page-header__actions">
+                                            <button type="button" class="kp-button" data-kp-ops-wide>Export readings</button>
+                                            <button type="button" class="kp-button kp-button--primary">Add a pump house</button>
+                                            <div class="kp-menu-button" data-kp-menu-button data-ko-ops-more>
+                                                <button type="button" class="kp-button">More ▾</button>
+                                                <div class="kp-menu kp-menu--rich" role="menu" aria-label="Every other action"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </header>
+                                <div class="kp-ops__kpis" data-ko-ops-kpis>
+                                    <div class="kp-kpis" role="group" aria-label="Network at a glance">
+                                        <div class="kp-kpi">
+                                            <span class="kp-kpi__label">Pump houses online</span>
+                                            <span class="kp-kpi__value">14<small>of 15</small></span>
+                                            <span class="kp-kpi__trend">Pump house 7 offline</span>
+                                        </div>
+                                        <div class="kp-kpi">
+                                            <span class="kp-kpi__label">Flow now</span>
+                                            <span class="kp-kpi__value">412<small>m³/h</small></span>
+                                            <span class="kp-kpi__trend">Average over 15 minutes</span>
+                                        </div>
+                                        <div class="kp-kpi">
+                                            <span class="kp-kpi__label">Open incidents</span>
+                                            <span class="kp-kpi__value">3</span>
+                                            <span class="kp-kpi__trend">2 new today</span>
+                                        </div>
+                                        <div class="kp-kpi">
+                                            <span class="kp-kpi__label">Pressure alarms</span>
+                                            <span class="kp-kpi__value">1</span>
+                                            <span class="kp-kpi__trend">Pump house 3</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="kp-ops__attention kp-attention" data-ko-ops-attention></div>
+                                <div class="kp-ops__body" data-ko-ops-body></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
             <!-- ================================================================ responsive-master-detail -->
             <section
                 class="ko-sec"

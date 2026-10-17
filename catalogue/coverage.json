@@ -25,6 +25,7 @@
         "kp-keys",
         "kp-kv",
         "kp-matrix",
+        "kp-ops",
         "kp-pane",
         "kp-pipeline",
         "kp-quantity",

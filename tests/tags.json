@@ -315,6 +315,7 @@
         "kp-week": ["@component:data"],
         "kp-gantt": ["@component:data"],
         "kp-compare": ["@component:media"],
+        "kp-ops": ["@component:structure"],
         "kp-stateplate": ["@component:structure"],
         "kp-pane": ["@component:structure"],
         "kp-range": ["@component:data"],
