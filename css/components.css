@@ -22846,6 +22846,20 @@
         display: none;
     }
 
+    /* The numbers are laid over the gutter, not in it: a long text has more numbers than the box shows, and numbers that
+     * take part in the layout made the gutter (and so the whole frame) as tall as all of them. The gutter is exactly as tall
+     * as the text box and clips; the numbers move with the text's scroll [kpadopt5-r2]. */
+    .kp-jsonfield__gutter {
+        position: relative;
+    }
+
+    .kp-jsonfield__numbers {
+        position: absolute;
+        inset-block-start: calc(var(--kp-space-sm, 0.5rem) * 0.75);
+        inset-inline: 0 var(--kp-space-sm, 0.5rem);
+        will-change: transform;
+    }
+
     .kp-jsonfield__number {
         display: block;
         line-height: var(--kp-line-height, 1.5);
