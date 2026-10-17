@@ -205,6 +205,8 @@ export const NEEDS = [
         load: () => import('./master-detail.js'),
         attach: (m, root) => [m.attachMasterDetails(root)],
     },
+    // The automatic refresh chooser [kpadopt5-ops].
+    { name: 'auto-refresh', when: '[data-kp-refresh]', load: () => import('./auto-refresh.js'), attach: (m, root) => [m.attachRefresh(root)] },
     { name: 'graph', when: '[data-kp-graph]', load: () => import('./graph.js'), attach: (m, root) => [m.attachGraphs(root)] },
     {
         // A theme's loading picture made of pieces (`--kp-loading-pieces`,

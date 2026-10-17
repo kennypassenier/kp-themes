@@ -6,6 +6,7 @@ import { setAttention } from '../../js/attention.js';
 import { setCardState } from '../../js/card-state.js';
 import { setMenu } from '../../js/menu-button.js';
 import { masterDetail, setPaneState } from '../../js/master-detail.js';
+import { setRefreshInterval } from '../../js/auto-refresh.js';
 
 /** @param {string} name @param {string} text */
 const log = (name, text) => {
@@ -323,3 +324,41 @@ function initMasterDetail() {
 }
 
 initMasterDetail();
+
+// ---------------------------------------------------------------- auto-refresh
+function initRefresh() {
+    const controls = /** @type {HTMLElement[]} */ ([...document.querySelectorAll('[data-ko-refresh]')]);
+    if (!controls.length) return;
+    let reads = 0;
+    let fail = false;
+    const readout = document.querySelector('[data-ko-refresh-readout]');
+    for (const control of controls) {
+        control.addEventListener('kp-refresh', (e) => {
+            const detail = /** @type {CustomEvent} */ (e).detail;
+            reads += 1;
+            if (readout) readout.textContent = `Data read ${reads} times (${detail.reason}, every ${detail.interval} s).`;
+            window.setTimeout(() => {
+                const ok = !fail;
+                fail = false;
+                for (const b of document.querySelectorAll('[data-ko-refresh-fail]')) b.setAttribute('aria-pressed', 'false');
+                detail.done(ok);
+            }, 700);
+        });
+        control.addEventListener('kp-refresh-interval', (e) => {
+            if (readout)
+                readout.textContent = `Interval set to ${/** @type {CustomEvent} */ (e).detail.seconds} s by ${/** @type {CustomEvent} */ (e).detail.by}. Data read ${reads} times.`;
+        });
+    }
+    for (const button of document.querySelectorAll('[data-ko-refresh-default]'))
+        button.addEventListener('click', () => {
+            const first = controls[0];
+            if (first) setRefreshInterval(first, 30);
+        });
+    for (const button of document.querySelectorAll('[data-ko-refresh-fail]'))
+        button.addEventListener('click', () => {
+            fail = !fail;
+            button.setAttribute('aria-pressed', String(fail));
+        });
+}
+
+initRefresh();

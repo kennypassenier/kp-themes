@@ -172,6 +172,7 @@
         { "path": "js/timer-disc.js", "tags": ["@component:data"], "why": "the visual timer, a shrinking disc [kpadopt4-ideas]" },
         { "path": "js/range.js", "tags": ["@component:data"], "why": "the range picker [kpadopt4-ideas]" },
         { "path": "js/compare.js", "tags": ["@component:media"], "why": "the compare slider [kpadopt4-ideas]" },
+        { "path": "js/auto-refresh.js", "tags": ["@component:data"], "why": "the automatic refresh chooser [kpadopt5-ops]" },
         { "path": "js/master-detail.js", "tags": ["@component:structure"], "why": "a list and its detail that folds on a phone [kpadopt5-ops]" },
         {
             "path": "js/state-plate.js",
@@ -315,6 +316,7 @@
         "kp-week": ["@component:data"],
         "kp-gantt": ["@component:data"],
         "kp-compare": ["@component:media"],
+        "kp-refresh": ["@component:data"],
         "kp-ops": ["@component:structure"],
         "kp-stateplate": ["@component:structure"],
         "kp-pane": ["@component:structure"],

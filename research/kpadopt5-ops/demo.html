@@ -392,6 +392,83 @@
                 </div>
                 <pre class="ko-log" data-ko-log="master-detail" aria-live="polite">Nothing happened yet.</pre>
             </section>
+            <!-- ================================================================ auto-refresh -->
+            <section
+                class="ko-sec"
+                id="auto-refresh"
+                data-review-item="auto-refresh"
+                data-review-topic="ops-auto-refresh"
+                data-review-topic-title="The automatic refresh chooser"
+                data-review-title="The automatic refresh chooser"
+                data-review-choices='[{ "id": "refresh-look", "label": "How the choice looks", "once": true, "default": "menu", "options": [
+                    { "value": "menu", "label": "A menu button", "hint": "One compact button that says Every 30 s; the choices open under it. Fits the right side of a page header (the default)." },
+                    { "value": "segmented", "label": "Segments", "hint": "All the choices side by side, one tap each. Wider, but nothing is hidden." }] }]'
+                aria-labelledby="h-auto-refresh"
+            >
+                <div class="ko-sec__head">
+                    <h2 id="h-auto-refresh">The automatic refresh chooser</h2>
+                    <p>
+                        <code>.kp-refresh</code> with <code>js/auto-refresh.js</code>: “Every 30 s”, a freshness line and Refresh now. The app does
+                        the reading; the control only says when.
+                    </p>
+                </div>
+                <div class="ko-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The first control opens <b>Paused</b> so the page stays still: a button that says <b>Paused ▾</b>, “updated … ago” (here
+                            the moment the page opened), <b>Refresh now</b>, and under them an empty rule. The second one is the same control as
+                            segments. <b>Start at the default (30 s)</b> sets the first one to the default.
+                        </li>
+                        <li>
+                            Open the menu: Paused, Every 15 s, 30 s, 1 min, 5 min and <b>Other…</b>, which opens a field for any number of seconds
+                            (try 3, then Apply; a 0 or a word is refused in words). Pick an interval: the thin navy rule under the control shrinks
+                            from full to nothing at an even pace towards the next refresh; at the end “updating…” takes the place of “updated … ago”
+                            (the line keeps its width), the readout below counts one more read, and the line starts again at “0 s”.
+                        </li>
+                        <li>
+                            <b>Fail the next refresh</b>, then wait for a tick or press Refresh now: the data stays, the line keeps counting (it turns
+                            stale, on a warning plate, once refreshes have stopped arriving for three intervals or a minute) and a red-ink entry says
+                            “Last refresh failed, retrying in …” with <b>Retry now</b>. The retries back off (the interval, twice that, four times
+                            that) and a success clears the entry.
+                        </li>
+                        <li>
+                            Click in the text field under the controls: no refresh happens while it has the focus (the readout keeps its number);
+                            leave the field and it refreshes. The R key refreshes now anywhere outside a field. A tab that is hidden does not refresh
+                            and refreshes once when you return. With <code>data-kp-remember</code> the choice is kept per page on the device (this
+                            demo does not store it, so it always opens still).
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The countdown is a navy rule ruled off from its end at an even pace, square-ended; the failed entry is a red-ink entry along
+                        its start edge; the buttons and the menu are formal's own.
+                    </p>
+                </div>
+                <div class="ko-controls" data-review-controls>
+                    <div role="group" aria-label="Refresh demo">
+                        <b>Try it:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-refresh-default>Start at the default (30 s)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-refresh-fail aria-pressed="false">Fail the next refresh</button>
+                    </div>
+                </div>
+                <div class="ko-stack">
+                    <div>
+                        <p class="ko-label">A menu button</p>
+                        <div data-kp-refresh="0" data-ko-refresh="menu"></div>
+                    </div>
+                    <div>
+                        <p class="ko-label">Segments</p>
+                        <div data-kp-refresh="0" data-kp-look="segmented" data-kp-refresh-choices="0,15,30,60,300" data-ko-refresh="segmented"></div>
+                    </div>
+                    <div>
+                        <label class="ko-label" for="ko-refresh-type">A field: a refresh waits while you type here</label>
+                        <input id="ko-refresh-type" class="kp-field__input" type="text" placeholder="Type something" />
+                    </div>
+                    <p class="ko-readout" data-ko-refresh-readout aria-live="polite">Data read 0 times.</p>
+                </div>
+            </section>
         </main>
         <script type="application/json" data-review-round>
             { "round": "ops-c17983a9-c644-4e17-b04b-bf6ed4735b60", "received": [] }

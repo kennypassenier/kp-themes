@@ -110,6 +110,17 @@
  * @property {string} codeLoading  What the busy card over a block says
  * @property {string} codeError  A block that could not be read, when the page gives no sentence
  * @property {(title: string) => string} codeCopiedAnnouncement  Announced after a copy, naming the block
+ * @property {(duration: string) => string} refreshEvery  A refresh choice, "Every 30 s" (js/auto-refresh.js) [kpadopt5-auto-refresh]
+ * @property {string} refreshPaused  The choice that stops the refreshing [kpadopt5-auto-refresh]
+ * @property {string} refreshOther  The entry that lets a person type any number of seconds [kpadopt5-auto-refresh]
+ * @property {string} refreshLabel  The accessible name of the refresh chooser [kpadopt5-auto-refresh]
+ * @property {string} refreshNow  The button that refreshes at once [kpadopt5-auto-refresh]
+ * @property {string} refreshUpdating  The freshness line's words while the app reads [kpadopt5-auto-refresh]
+ * @property {(next: string) => string} refreshFailed  The note after a failed refresh, "Last refresh failed, retrying in 30 s" [kpadopt5-auto-refresh]
+ * @property {string} refreshRetryNow  The button that retries a failed refresh at once [kpadopt5-auto-refresh]
+ * @property {string} refreshCustomLabel  The label of the field for any number of seconds [kpadopt5-auto-refresh]
+ * @property {string} refreshApply  The button that sets that number [kpadopt5-auto-refresh]
+ * @property {string} refreshInvalid  What a number that is not a whole number of seconds says [kpadopt5-auto-refresh]
  * @property {string} paneEmpty  The detail pane's plate while nothing is picked (js/master-detail.js) [kpadopt5-master-detail]
  * @property {string} paneBack  The Back button at the top of a folded detail pane [kpadopt5-master-detail]
  * @property {string} paneLoading  What the busy card over the detail pane says [kpadopt5-master-detail]
@@ -676,6 +687,20 @@ export const DEFAULT_STRINGS = Object.freeze({
     codeLoading: 'Reading…',
     codeError: 'Could not be read.',
     codeCopiedAnnouncement: (title) => `${title} copied`,
+    // kpadopt5-ops:auto-refresh:start
+    // The automatic refresh chooser (js/auto-refresh.js) [kpadopt5-ops].
+    refreshEvery: (duration) => `Every ${duration}`,
+    refreshPaused: 'Paused',
+    refreshOther: 'Other…',
+    refreshLabel: 'Refresh automatically',
+    refreshNow: 'Refresh now',
+    refreshUpdating: 'updating…',
+    refreshFailed: (next) => `Last refresh failed, retrying in ${next}.`,
+    refreshRetryNow: 'Retry now',
+    refreshCustomLabel: 'Seconds between refreshes',
+    refreshApply: 'Apply',
+    refreshInvalid: 'Type a whole number of seconds, 1 or more.',
+    // kpadopt5-ops:auto-refresh:end
     // kpadopt5-ops:master-detail:start
     // A list and its detail (js/master-detail.js) [kpadopt5-ops].
     paneEmpty: 'Pick an item on the left',

@@ -30,6 +30,7 @@
         "kp-pipeline",
         "kp-quantity",
         "kp-range",
+        "kp-refresh",
         "kp-secret",
         "kp-segmented",
         "kp-stackbar",

@@ -172,6 +172,10 @@
             "types": "./js/compare.d.ts",
             "default": "./js/compare.js"
         },
+        "./js/auto-refresh": {
+            "types": "./js/auto-refresh.d.ts",
+            "default": "./js/auto-refresh.js"
+        },
         "./js/master-detail": {
             "types": "./js/master-detail.d.ts",
             "default": "./js/master-detail.js"
