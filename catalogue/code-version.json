@@ -6575,6 +6575,7 @@
         "titanium||@container kp-nav (max-width: 40rem)||.kp-nav__sep": "a8f3c5f1ac3de29c",
         "titanium||@media (forced-colors: active)||a)": "fe9f3e27a950290b",
         "titanium||@media (hover: hover)||.kp-segmented__item[data-kp-segmented-tri]": "82ac8c40d27b60a3",
+        "titanium||@media (max-width: 30rem)||.kp-rating__body": "5a4b9246c0655493",
         "titanium||@media (max-width: 40rem)||.kp-side-note": "112345f6aef8b683",
         "titanium||@media (prefers-reduced-motion: no-preference) § @container kp-nav (max-width: 40rem)||.kp-nav__links": "b105a0a8016439ae",
         "titanium||@media (prefers-reduced-motion: no-preference) § @container kp-nav (max-width: 40rem)||.kp-nav__menu.kp-nav__menu": "c4a3caf37f82be76",
