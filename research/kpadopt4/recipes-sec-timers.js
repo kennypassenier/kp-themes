@@ -1,5 +1,6 @@
 // research/kpadopt4 (recipes sections) · 3, kitchen timers (mock data; the timers are js/timer.js).
 import { byId, say } from './recipes-kit.js';
+import { SEGMENTED_EVENT } from '../../js/segmented.js';
 import {
     TIMER_CHANGE_EVENT,
     TIMER_DONE_EVENT,
@@ -9,6 +10,7 @@ import {
     attachTimers,
     getTimers,
     pauseTimer,
+    playTimerSound,
     startTimer,
 } from '../../js/timer.js';
 
@@ -24,6 +26,19 @@ startTimer(byId('kc-timers-phone'), { name: 'Pasta', seconds: 9 * 60, id: 'pasta
 
 byId('kc-t-five').addEventListener('click', () => startTimer(list, { name: 'Soft-boiled egg', seconds: 5 }));
 const log = byId('kc-t-log');
+// The sound picker and the speak switch only write the list's own two attributes.
+byId('kc-t-sound').addEventListener(SEGMENTED_EVENT, (event) => {
+    const { value } = /** @type {CustomEvent} */ (event).detail;
+    list.setAttribute('data-kp-timers-sound', value);
+    playTimerSound(value);
+});
+byId('kc-t-preview').addEventListener('click', () => {
+    const picked = list.getAttribute('data-kp-timers-sound') ?? 'chime';
+    say(log, `preview · ${picked} · ${playTimerSound(picked).toFixed(1)} s`);
+});
+byId('kc-t-speak').addEventListener('change', (event) =>
+    list.setAttribute('data-kp-timers-speak', /** @type {HTMLInputElement} */ (event.target).checked ? 'on' : 'off'),
+);
 byId('kc-t-allow').addEventListener('click', async () => say(log, `notification permission: ${await askTimerNotifications()}`));
 byId('kc-t-state').addEventListener('click', () => {
     say(

@@ -5751,8 +5751,20 @@ The NAS sleeps after 02:00; the copy wakes it first.</textarea>
                             </li>
                             <li>
                                 <b>Start a 5-second timer</b>: after 5 s the card becomes formal’s red-ink entry (a red rule along its start, paper
-                                ground) with “Soft-boiled egg is done” large in the time’s place and a primary <b>Stop</b>; a soft two-note chime
-                                plays every 4 s for a minute. Stop ends the chime and takes the card away; +1 min starts it again for a minute.
+                                ground) with “Soft-boiled egg is done” large in the time’s place and a primary <b>Stop</b>; the chosen sound plays
+                                every 4 s for a minute. Stop ends the sound and takes the card away; +1 min starts it again for a minute.
+                            </li>
+                            <li>
+                                <b>Chime</b> (the soft two notes, the default), <b>Bell</b> (a wind-up kitchen timer’s hammer on two bells) and
+                                <b>Buzzer</b> (a harsher electronic beep, four at a time): pick one and press <b>Hear it</b> to preview. Bell and
+                                Buzzer are loud enough for across a kitchen, with the shrillest top cut off. The picker is the package’s segmented
+                                control and the switch its switch; both keep each theme’s own look.
+                            </li>
+                            <li>
+                                With <b>Speak the message</b> on, the voice says the message once the sound has played: press
+                                <b>Start the rice timer (5 s)</b> and it says “The rice has been cooked, remove it from the heat”; the egg timer,
+                                which has no message of its own, says “Soft-boiled egg is done”. Off, nothing is spoken. Where the browser has no
+                                voice, nothing is said and nothing fails: the card and the sound still tell it.
                             </li>
                             <li>
                                 <b>Allow notifications</b> asks the browser once; allowed, an ended timer also shows a system notification. Switch to
@@ -5825,8 +5837,48 @@ The NAS sleeps after 02:00; the copy wakes it first.</textarea>
                             10 minutes</button
                         >, stirring now and then.
                     </p>
-                    <div class="kp-timers" id="kc-timers" data-kp-timers aria-label="Kitchen timers"></div>
+                    <div
+                        class="kp-timers"
+                        id="kc-timers"
+                        data-kp-timers
+                        data-kp-timers-sound="chime"
+                        data-kp-timers-speak="on"
+                        aria-label="Kitchen timers"
+                    ></div>
+                    <p class="kc-label" id="kc-t-sound-label">The sound when a timer ends, and whether it is spoken</p>
                     <div class="kc-actions">
+                        <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-labelledby="kc-t-sound-label" id="kc-t-sound">
+                            <button type="button" class="kp-segmented__item" data-value="chime" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">Chime</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="bell" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Bell</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="buzzer" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Buzzer</span>
+                            </button>
+                        </div>
+                        <button type="button" class="kp-button kp-button--sm" id="kc-t-preview">Hear it</button>
+                        <label class="kp-switch"
+                            ><input class="kp-switch__input" type="checkbox" role="switch" checked id="kc-t-speak" /><span
+                                class="kp-switch__state"
+                                aria-hidden="true"
+                            ></span
+                            ><span>Speak the message</span></label
+                        >
+                    </div>
+                    <div class="kc-actions">
+                        <button
+                            type="button"
+                            class="kp-button kp-button--sm"
+                            data-kp-timer-start="5s"
+                            data-kp-timer-name="Rice"
+                            data-kp-timer-id="rice-ready"
+                            data-kp-timer-for="kc-timers"
+                            data-kp-timer-say="The rice has been cooked, remove it from the heat"
+                        >
+                            Start the rice timer (5 s)
+                        </button>
                         <button type="button" class="kp-button kp-button--sm" id="kc-t-five">Start a 5-second timer</button>
                         <button type="button" class="kp-button kp-button--sm" id="kc-t-allow">Allow notifications</button>
                         <button type="button" class="kp-button kp-button--sm" id="kc-t-state">Write the saved state to the log</button>
