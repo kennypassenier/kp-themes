@@ -17847,6 +17847,25 @@
         text-overflow: clip;
     }
 
+    /* The list a sentence's select opens is the platform's own, and it paints the select's background: the field is
+     * transparent (an underline), so the list came up almost black in formal [kpadopt5-r2]. It wears the popover's surface
+     * and ink, the same tokens the package's other opened lists use (`select.kp-field__input` below, the combobox). */
+    .kp-sentence__field > select:open,
+    .kp-sentence__field > select option,
+    .kp-sentence__field > select optgroup {
+        background-color: var(--popover, var(--background));
+        color: var(--popover-foreground, var(--foreground));
+    }
+
+    /* Its drawn list is as wide as its longest option, never narrower than the field: "every week" stays on one line. */
+    .kp-sentence__field [data-kp-select-list] {
+        min-inline-size: max-content;
+    }
+
+    .kp-sentence__field [data-kp-select-list] > [role='option'] {
+        white-space: nowrap;
+    }
+
     .kp-sentence__field:has(> select)::after {
         content: var(--kp-glyph-caret, '▾');
         position: absolute;
@@ -18171,6 +18190,13 @@
 
     .kp-slider__bubble[data-kp-thumb='1'] {
         inset-inline-start: calc(var(--kp-slider-thumb) / 2 + (100% - var(--kp-slider-thumb)) * var(--kp-slider-at-1, 1));
+    }
+
+    /* Where the number is shown is an option (`data-kp-slider-value`, stamped as `data-kp-slider-show`): the bubble only for
+     * `bubble` and `both`, the box only for `field` and `both`. The default is the box; the bubble is off [kpadopt5-r2]. */
+    .kp-slider:not([data-kp-slider-show='bubble'], [data-kp-slider-show='both']) .kp-slider__bubble,
+    .kp-slider:is([data-kp-slider-show='bubble'], [data-kp-slider-show='none']) .kp-slider__fields {
+        display: none;
     }
 
     .kp-slider[data-kp-dragging] .kp-slider__bubble,
@@ -19129,6 +19155,20 @@
  * button does not, and its tooltip shows only while the control is off. */
     .kp-reason {
         display: inline-flex;
+    }
+
+    /* A control that fills its line (a slider, the weekday picker) is an inline-size container with no intrinsic width: in a
+     * shrink-wrapped anchor it collapsed to 0, and its reason broke one letter per line [kpadopt5-r2]. The anchor then takes
+     * the line, and the control the anchor's width. */
+    .kp-reason:has(> :is(.kp-slider, .kp-weekdays, .kp-sentence)) {
+        display: flex;
+        inline-size: 100%;
+        min-inline-size: 0;
+    }
+
+    .kp-reason > :is(.kp-slider, .kp-sentence) {
+        inline-size: 100%;
+        min-inline-size: 0;
     }
 
     .kp-reason:not([data-kp-reason-off]) > .kp-tooltip {
