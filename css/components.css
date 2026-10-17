@@ -23740,3 +23740,291 @@
         }
     }
 }
+
+@layer kp.components {
+    /* --- A field for a time of day [kpadopt6] -----------------------------
+ *
+ * One 24 hour box with a button that opens the package's own list of times (a sheet at the foot of a phone). It is a
+ * `kp-field__input` family member; inside a sentence (`.kp-time--inline`) it keeps the underline look of the sentence's
+ * fields. Waiting, it shows its own skeleton at its final width, so nothing re-flows. The list is raised into the top
+ * layer on the theme's popover plate. */
+    .kp-time {
+        position: relative;
+        display: inline-block;
+        vertical-align: baseline;
+        max-inline-size: 100%;
+        min-inline-size: 0;
+    }
+
+    .kp-time__control {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        max-inline-size: 100%;
+    }
+
+    .kp-time__input.kp-field__input {
+        inline-size: var(--kp-time-width, 8.5rem);
+        padding-inline-end: 2.5rem;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.02em;
+    }
+
+    .kp-time__toggle {
+        position: absolute;
+        inset-block: 1px;
+        inset-inline-end: 1px;
+        display: grid;
+        place-items: center;
+        inline-size: 2.25rem;
+        padding: 0;
+        border: 0;
+        border-radius: calc(var(--radius, 0.5rem) - 1px);
+        background: transparent;
+        color: var(--muted-foreground);
+        cursor: pointer;
+    }
+
+    .kp-time__toggle:hover:not(:disabled) {
+        color: var(--foreground);
+    }
+
+    .kp-time__toggle:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: -2px;
+    }
+
+    .kp-time__toggle[hidden] {
+        display: none;
+    }
+
+    .kp-time__glyph::before {
+        content: var(--kp-glyph-clock, '◷');
+        font-size: 1.125rem;
+    }
+
+    .kp-time__why {
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        color: var(--destructive);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-time__why[data-kp-time-note] {
+        color: var(--muted-foreground);
+        font-weight: 400;
+    }
+
+    .kp-time__why[hidden],
+    .kp-time__zone[hidden],
+    .kp-time__popup[hidden] {
+        display: none;
+    }
+
+    .kp-time__zone {
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-time__input[aria-invalid='true'] {
+        border-color: var(--destructive);
+    }
+
+    .kp-time__input:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+    .kp-time__skeleton {
+        display: none;
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        inline-size: var(--kp-time-width, 8.5rem);
+        block-size: var(--kp-control-height, 2.25rem);
+        border-radius: var(--radius, 0.5rem);
+    }
+
+    .kp-time[data-kp-state='loading'] > .kp-time__skeleton {
+        display: block;
+    }
+
+    .kp-time[data-kp-state='loading'] > .kp-time__control {
+        visibility: hidden;
+    }
+
+    /* The list. */
+    .kp-time__popup {
+        position: fixed;
+        box-sizing: border-box;
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        inline-size: 13rem;
+        margin: 0;
+        padding: var(--kp-space-xs, 0.25rem);
+        overflow: hidden;
+    }
+
+    .kp-time__sheet-title {
+        display: none;
+        margin: 0;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        font-weight: 600;
+    }
+
+    .kp-time__presets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+        padding: var(--kp-space-xs, 0.25rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-time__preset {
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-time__preset-skeleton {
+        display: inline-block;
+        inline-size: 5rem;
+        block-size: var(--kp-button-height-sm, 1.75rem);
+        border-radius: var(--radius, 0.5rem);
+    }
+
+    .kp-time__presets-error {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-sm, 0.5rem);
+        inline-size: 100%;
+        box-sizing: border-box;
+        min-block-size: 3.5rem;
+    }
+
+    .kp-time__list {
+        max-block-size: 14rem;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
+    .kp-time__option {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        min-block-size: 2.25rem;
+        padding: 0.375rem var(--kp-space-sm, 0.5rem);
+        border-radius: calc(var(--radius, 0.5rem) / 2);
+        font-variant-numeric: tabular-nums;
+        cursor: pointer;
+    }
+
+    .kp-time__option-note {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-time__option[aria-selected='true'] {
+        font-weight: 700;
+    }
+
+    .kp-time__option[aria-selected='true'] .kp-time__option-time::before {
+        content: var(--kp-glyph-check, '✓') '\00a0';
+    }
+
+    .kp-time__option[data-kp-time-near-mark] .kp-time__option-note::before {
+        content: var(--kp-glyph-alert, '!') '\00a0';
+        color: var(--warning-foreground, currentColor);
+    }
+
+    .kp-time__option[data-kp-active] {
+        background: hsl(from var(--primary) h s l / 0.14);
+    }
+
+    @media (hover: hover) {
+        .kp-time__option:hover {
+            background: hsl(from var(--primary) h s l / 0.08);
+        }
+    }
+
+    /* In a sentence: the underline look of the sentence's own fields. */
+    .kp-time--inline {
+        margin-inline: 0.125em;
+        line-height: 1.5;
+    }
+
+    .kp-time--inline .kp-time__input.kp-field__input {
+        inline-size: 5.5ch;
+        min-block-size: 0;
+        block-size: auto;
+        padding: 0 0.25em;
+        border: 0;
+        border-block-end: var(--kp-sentence-edge-width, 2px) solid var(--kp-sentence-edge, var(--primary));
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+        font-weight: 600;
+        line-height: inherit;
+    }
+
+    .kp-time--inline .kp-time__input[aria-invalid='true'] {
+        border-block-end-color: var(--destructive);
+    }
+
+    .kp-time--inline .kp-time__toggle {
+        display: none;
+    }
+
+    .kp-time--inline .kp-time__skeleton {
+        inline-size: 5.5ch;
+        block-size: 1.5em;
+    }
+
+    .kp-time--inline .kp-time__why,
+    .kp-time--inline .kp-time__zone {
+        display: block;
+    }
+
+    /* A phone: the field fills a form's line, and the list is a sheet at the foot of the screen, rows 44 px high. */
+    @media (max-width: 40rem) {
+        .kp-time:not(.kp-time--inline) {
+            display: block;
+            inline-size: 100%;
+        }
+
+        .kp-time:not(.kp-time--inline) .kp-time__control,
+        .kp-time:not(.kp-time--inline) .kp-time__input.kp-field__input {
+            inline-size: 100%;
+        }
+
+        .kp-time__input.kp-field__input {
+            min-block-size: 2.75rem;
+        }
+
+        .kp-time__popup {
+            inline-size: auto;
+            max-block-size: 70vh;
+            padding-block-end: max(var(--kp-space-sm, 0.5rem), env(safe-area-inset-bottom));
+            border-end-start-radius: 0;
+            border-end-end-radius: 0;
+        }
+
+        .kp-time__sheet-title {
+            display: block;
+        }
+
+        .kp-time__list {
+            max-block-size: 45vh;
+        }
+
+        .kp-time__option {
+            min-block-size: 2.75rem;
+            align-items: center;
+        }
+    }
+}

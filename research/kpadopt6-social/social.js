@@ -3,6 +3,7 @@
 import { getChecklistItems, setChecklistItems, setChecklistState } from '../../js/checklist.js';
 import { setClaim, setClaimPeople, setClaimViewer } from '../../js/claim.js';
 import { setQr } from '../../js/qr.js';
+import { setTime, setTimePresets } from '../../js/timefield.js';
 import { availabilityAnswers, availabilityDays, availabilityRange, setAvailability, setAvailabilityAnswer } from '../../js/availability.js';
 
 /** @param {string} sel @param {ParentNode} [root] @returns {HTMLElement | null} */
@@ -313,4 +314,70 @@ onReady(() => {
             }
         });
     }
+});
+
+// ---------------------------------------------------------------- time-field
+
+const timeReadout = $('[data-k6-time-readout]');
+for (const field of $$('[data-kp-time]')) {
+    field.addEventListener('kp-time-change', (event) => {
+        const d = /** @type {CustomEvent} */ (event).detail;
+        if (timeReadout) timeReadout.textContent = `Value: ${d.value || '(empty)'}${d.converted ? ' (read from 12 hours)' : ''}`;
+    });
+}
+const timeMain = $('#k6-time');
+timeMain?.addEventListener('kp-time-retry', () => {
+    setTimePresets(timeMain, 'loading');
+    setTimeout(() => {
+        setTimePresets(timeMain, [
+            { label: 'Night', value: '03:00' },
+            { label: 'Morning', value: '08:00' },
+        ]);
+        const b = $('[data-k6-time-presets="ready"]');
+        if (b) pick(b);
+    }, 1200);
+});
+onReady(() => {
+    for (const button of $$('[data-k6-time-state]')) {
+        button.addEventListener('click', () => {
+            pick(button);
+            const state = button.getAttribute('data-k6-time-state') ?? 'ready';
+            for (const field of [timeMain, $('#k6-time-phone')]) {
+                if (!field) continue;
+                field.removeAttribute('data-kp-state');
+                field.removeAttribute('disabled');
+                field.removeAttribute('data-kp-disabled-reason');
+                const input = /** @type {HTMLInputElement | null} */ (field.querySelector('.kp-time__input'));
+                if (state === 'ready') setTime(field, '03:00');
+                else if (state === 'empty') setTime(field, '');
+                else if (state === 'invalid' && input) {
+                    input.focus();
+                    input.value = '24:00';
+                    input.blur();
+                } else if (state === 'loading') field.setAttribute('data-kp-state', 'loading');
+                else if (state === 'disabled') {
+                    field.setAttribute('disabled', '');
+                    field.setAttribute('data-kp-disabled-reason', 'The schedule is paused, so its time cannot change.');
+                }
+            }
+        });
+    }
+    for (const button of $$('[data-k6-time-presets]')) {
+        button.addEventListener('click', () => {
+            pick(button);
+            const state = button.getAttribute('data-k6-time-presets') ?? 'ready';
+            if (!timeMain) return;
+            if (state === 'ready')
+                setTimePresets(timeMain, [
+                    { label: 'Night', value: '03:00' },
+                    { label: 'Morning', value: '08:00' },
+                    { label: 'Evening', value: '19:30' },
+                ]);
+            else setTimePresets(timeMain, /** @type {'loading' | 'error'} */ (state));
+            /** @type {HTMLElement | null} */ (timeMain.querySelector('.kp-time__toggle'))?.click();
+        });
+    }
+    $('[data-k6-time-open]')?.addEventListener('click', () => {
+        /** @type {HTMLElement | null} */ (timeMain?.querySelector('.kp-time__toggle'))?.click();
+    });
 });

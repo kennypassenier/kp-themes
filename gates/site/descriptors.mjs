@@ -3916,6 +3916,47 @@ setGanttState(timeline, 'loading');
         ],
     },
     {
+        id: 'time',
+        title: 'Time field',
+        group: 'Forms',
+        classes: ['kp-time'],
+        exports: [],
+        intro: 'A field for a time of day in 24 hours: typed (0230, 2:30, 2h30), stepped with the arrow keys or picked from the package’s own list of times, with presets and a mark on times near a busy moment. It posts HH:MM and never shows AM or PM.',
+        whenToUse: 'A schedule, a reminder or a log entry that needs a time of day. For a date use the date picker; for a duration use the countdown’s field.',
+        examples: [
+            {
+                title: 'A backup time',
+                why: 'The label points at the input the module builds (`data-kp-time-id`); the hidden input posts the value under `data-kp-name`.',
+                markup: `
+<div class="kp-field">
+    <label class="kp-field__label" for="backup-at">Backup time</label>
+    <div class="kp-time" data-kp-time data-kp-time-id="backup-at" data-kp-name="at" data-kp-value="03:00"></div>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-time-step', what: 'Minutes for the keys and the list: 1, 5 (default), 10, 15, 30 or 60.' },
+            { name: 'data-kp-time-min', what: 'The start of a window; later than the max, it wraps midnight.' },
+            { name: 'data-kp-time-max', what: 'The end of the window.' },
+            { name: 'data-kp-time-seconds', what: 'HH:MM:SS.' },
+            { name: 'data-kp-time-popup', what: '`list` (default) or `none`.' },
+            { name: 'data-kp-time-presets', what: '`Night=03:00,Morning=08:00`: chips above the list.' },
+            { name: 'data-kp-time-now', what: 'Adds a Now entry.' },
+            { name: 'data-kp-time-zone', what: 'An IANA name: a quiet line says whose clock it is.' },
+            { name: 'data-kp-time-look', what: '`field` (default) or `inline` (the underline form inside a sentence).' },
+            { name: 'data-kp-time-clear', what: 'Adds an explicit no time.' },
+            { name: 'data-kp-time-required', what: 'Empty is invalid, with a line.' },
+            { name: 'data-kp-time-near', what: 'Busy moments: list entries within `data-kp-time-near-width` minutes (60) are marked.' },
+            { name: 'data-kp-time-id', what: 'The id of the input, for a label.' },
+            { name: 'data-kp-time-touched', what: 'Set by the module once the field was left (so a required field only complains then).' },
+        ],
+        accessibility: [
+            'Built in — a combobox with a listbox, the active entry named by `aria-activedescendant`; an invalid text is `aria-invalid` with an alert line; every change and a 12 hour conversion are announced politely.',
+            'Yours — name the field (`data-kp-label` or a label for its id), and word the near-a-busy-moment sentence with the problem alert.',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

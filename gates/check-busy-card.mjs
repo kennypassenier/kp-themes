@@ -64,6 +64,7 @@ export const OWN = {
 
 /** Modules whose loading is not a data area's. @type {Record<string, string>} */
 export const NOT_DATA = {
+    'js/timefield.js': "a field's own skeleton at its final width (like the sentence form's fields); a field is not a data area",
     'js/availability.js': "loading is js/heat.js's own busy card over the grid's cells, with the names beside it; this module only hands heat the state",
     'js/claim.js': "the loading state is the checklist's own busy card over its body; the claim cell adds no loading area of its own",
     'js/action-tiles.js': "a tile is a button: its spinner stands in the tile's own mark",

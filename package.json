@@ -460,6 +460,10 @@
             "types": "./js/qr.d.ts",
             "default": "./js/qr.js"
         },
+        "./js/timefield": {
+            "types": "./js/timefield.d.ts",
+            "default": "./js/timefield.js"
+        },
         "./js/strings": {
             "types": "./js/strings.d.ts",
             "default": "./js/strings.js"

@@ -1071,6 +1071,22 @@
  * @property {string} qrKey  The shortcut sheet's line for Shift C (js/qr.js) [kpadopt6]
  * @property {string} qrKeyGroup  The sheet's heading (js/qr.js) [kpadopt6]
  * @property {string} qrKeyReason  Why the key does nothing now (js/qr.js) [kpadopt6]
+ * @property {string} timeChoose  The button that opens the list of times, and the sheet's title when the field has no name (js/timefield.js) [kpadopt6]
+ * @property {string} timeRequired  The line under an empty required field (js/timefield.js) [kpadopt6]
+ * @property {string} timeInvalid  The line under a text that is not a time (js/timefield.js) [kpadopt6]
+ * @property {(min: string, max: string) => string} timeOutside  The line under a time outside the window (js/timefield.js) [kpadopt6]
+ * @property {(value: string) => string} timeConverted  The polite line after a 12 hour time was pasted (js/timefield.js) [kpadopt6]
+ * @property {(value: string) => string} timeSaid  What is said after the value changed (js/timefield.js) [kpadopt6]
+ * @property {string} timePresets  The name of the group of preset chips (js/timefield.js) [kpadopt6]
+ * @property {string} timePresetsFailed  The compact plate when presets failed (js/timefield.js) [kpadopt6]
+ * @property {string} timeRetry  Its button (js/timefield.js) [kpadopt6]
+ * @property {string} timeList  The list's name for a screen reader (js/timefield.js) [kpadopt6]
+ * @property {string} timeNone  The list's entry that clears the field (js/timefield.js) [kpadopt6]
+ * @property {string} timeNow  The note on the list's entry for the current time (js/timefield.js) [kpadopt6]
+ * @property {(busy: string) => string} timeNear  The mark on a time close to a busy moment (js/timefield.js) [kpadopt6]
+ * @property {(zone: string) => string} timeZoneNote  The quiet line that says whose clock the time is (js/timefield.js) [kpadopt6]
+ * @property {(value: string) => string} timeWrappedNext  Said when stepping up went past midnight (js/timefield.js) [kpadopt6]
+ * @property {(value: string) => string} timeWrappedPrevious  Said when stepping down went past midnight (js/timefield.js) [kpadopt6]
  */
 
 /**
@@ -2322,6 +2338,23 @@ export const DEFAULT_STRINGS = Object.freeze({
     qrKey: 'Copy the link of the focused QR code',
     qrKeyGroup: 'QR code',
     qrKeyReason: 'Put the focus on a QR code that has a link first.',
+    // Timefield (js/timefield.js) [kpadopt6].
+    timeChoose: 'Choose a time',
+    timeRequired: 'Choose a time.',
+    timeInvalid: 'Use a time like 03:00',
+    timeOutside: (min, max) => `Choose a time from ${min} to ${max}.`,
+    timeConverted: (value) => `Read as ${value}. Times here use 24 hours.`,
+    timeSaid: (value) => value,
+    timePresets: 'Common times',
+    timePresetsFailed: 'The common times could not be loaded.',
+    timeRetry: 'Retry',
+    timeList: 'Times',
+    timeNone: 'No time',
+    timeNow: 'Now',
+    timeNear: (busy) => `near ${busy}`,
+    timeZoneNote: (zone) => `Clock of the host, ${zone}`,
+    timeWrappedNext: (value) => `${value}, the next day`,
+    timeWrappedPrevious: (value) => `${value}, the day before`,
 });
 
 // STRINGS_NL was removed in 4.0.0 [D3]. Kenny decided that on

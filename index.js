@@ -745,3 +745,21 @@ export {
     setQr,
 } from './js/qr.js';
 /** @typedef {import('./js/qr.js').QrSpec} QrSpec */
+// A field for a time of day [kpadopt6].
+export {
+    TIME,
+    TIME_EVENT,
+    TIME_RETRY_EVENT,
+    TIME_STEPS,
+    attachTimes,
+    parseTimeOfDay,
+    setTime,
+    setTimePresets,
+    stepTime,
+    timeInWindow,
+    timeMinutes,
+    timeText,
+    timeValid,
+    timeValue,
+} from './js/timefield.js';
+/** @typedef {import('./js/timefield.js').TimePreset} TimePreset */

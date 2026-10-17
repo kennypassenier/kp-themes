@@ -471,6 +471,150 @@
                     </div>
                 </div>
             </section>
+
+            <!-- ================================================================ time-field -->
+            <h2 class="kd-topic" id="topic-time-field">Time field</h2>
+            <section
+                class="k6-sec"
+                id="time-field"
+                data-review-item="time-field"
+                data-review-topic="time-field"
+                data-review-topic-title="Time field"
+                data-review-components="time"
+                data-review-title="A field for a time of day, in 24 hours"
+                aria-labelledby="h-time-field"
+                data-review-choices='[
+  { "id": "step", "label": "How far do the arrow keys and the list step?", "options": [
+    { "value": "5", "label": "5 minutes (recommended)", "hint": "Typing still allows any minute, so a schedule at 03:07 stays possible; the arrows do not take sixty presses." },
+    { "value": "15", "label": "15 minutes", "hint": "A shorter list (96 entries) for times that are meant to be round." },
+    { "value": "1", "label": "1 minute", "hint": "Exact, but the list is 1440 entries long and the arrows crawl." } ] },
+  { "id": "popup", "label": "What opens from the clock button?", "options": [
+    { "value": "list", "label": "The package's list of times, a sheet at the foot on a phone (Kenny, 2026-10-17)", "hint": "Presets as chips above the list, entries near a busy moment marked, the same on every device." },
+    { "value": "none", "label": "Nothing: typing and the arrow keys only", "hint": "The plainest field, for a time that is always typed." } ] },
+  { "id": "look", "label": "How is the field drawn in a sentence?", "options": [
+    { "value": "inline", "label": "Underlined, like the sentence's other fields (recommended)", "hint": "The line reads as one sentence; no clock button inside it, the list opens on Alt+Down." },
+    { "value": "field", "label": "A box with the clock button, inside the sentence", "hint": "More obviously a field, but it breaks the line more." } ] }
+]'
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-time-field">Time field</h2>
+                    <p>
+                        One field for a time of day in 24 hours: typed, stepped with the arrow keys or picked from the package's own list. Unlike the
+                        browser's own time box it never shows AM and PM, and it looks like the rest of the theme.
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Type <b>0230</b>, <b>2:30</b>, <b>02.30</b>, <b>2h30</b> or <b>230</b> and leave the field: it says <b>02:30</b>. Type <b>7</b>:
+                            <b>07:00</b>. Type <b>24:00</b> or <b>abc</b>: the box turns red and the line says <b>Use a time like 03:00</b>; what you typed stays.
+                            Paste <b>2:30 PM</b>: it becomes <b>14:30</b> and a quiet line says it was read as 24 hours.
+                        </li>
+                        <li>
+                            <b>Up</b> and <b>Down</b> step by 5 minutes (<b>Shift</b> or <b>Page Up and Down</b> by an hour), 23:55 up is <b>00:00</b> and is
+                            announced as the next day. The clock button (or <b>Alt+Down</b>) opens a list: the nearest time is already highlighted,
+                            <b>Night 03:00</b> and <b>Morning 08:00</b> are chips above it, times within an hour of the nightly round 03:00 carry a
+                            <b>!</b> and <b>near 03:00</b>. Enter picks, Esc closes.
+                        </li>
+                        <li>
+                            The sentence below keeps its underline look; the field with a reason is off and says why; the loading one shows its own
+                            skeleton at its final width; the one whose presets failed shows a compact plate with Retry in the list.
+                        </li>
+                        <li>At 390 px the field fills the line, 44 px high, and the list is a sheet at the foot of the screen with a title and rows 44 px high.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal's plain input box (navy focus ring, white ground) with a quiet clock at its end; the list is the same raised plate as a
+                        menu, the nearest time on a navy wash. In the sentence the same field is the navy underline in semibold.
+                    </p>
+                </div>
+                <div class="k6-controls" data-review-controls>
+                    <div role="group" aria-label="Field state">
+                        <b>Field state:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-time-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-time-state="empty" aria-pressed="false">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-time-state="invalid" aria-pressed="false">Invalid text</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-time-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-time-state="disabled" aria-pressed="false">Disabled</button>
+                    </div>
+                    <div role="group" aria-label="The list">
+                        <b>The list:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-time-presets="ready" aria-pressed="true">Presets ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-time-presets="loading" aria-pressed="false">Presets loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-time-presets="error" aria-pressed="false">Presets failed</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-time-open="" aria-pressed="false">Show it open</button>
+                    </div>
+                </div>
+                <p class="k6-readout" role="status" data-k6-time-readout>Nothing changed yet.</p>
+                <div class="k6-pair">
+                    <div class="k6-stack">
+                        <p class="k6-label">In a form (inside a flex row too)</p>
+                        <div class="k6-flexrow">
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="k6-time-a">Backup time</label>
+                                <div
+                                    class="kp-time"
+                                    data-kp-time
+                                    data-kp-time-id="k6-time-a"
+                                    data-kp-name="at"
+                                    data-kp-value="03:00"
+                                    data-kp-time-presets="Night=03:00,Morning=08:00,Evening=19:30"
+                                    data-kp-time-near="03:00"
+                                    data-kp-time-near-width="60"
+                                    data-kp-time-zone="Europe/Brussels"
+                                    id="k6-time"
+                                ></div>
+                            </div>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="k6-time-b">Quiet hours end (window 22:00 to 06:00)</label>
+                                <div class="kp-time" data-kp-time data-kp-time-id="k6-time-b" data-kp-name="quiet" data-kp-value="06:00" data-kp-time-min="22:00" data-kp-time-max="06:00" data-kp-time-step="30" data-kp-time-clear id="k6-time-window"></div>
+                            </div>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="k6-time-c">Log a time (with Now)</label>
+                                <div class="kp-time" data-kp-time data-kp-time-id="k6-time-c" data-kp-time-now data-kp-time-required id="k6-time-now"></div>
+                            </div>
+                        </div>
+                        <p class="k6-label">In a sentence</p>
+                        <form class="kp-sentence" data-kp-sentence id="k6-time-sentence">
+                            <p class="kp-sentence__text">
+                                Back up every day at
+                                <span class="kp-sentence__field"><span class="kp-time" data-kp-time data-kp-time-look="inline" data-kp-label="At" data-kp-value="03:00" data-kp-time-presets="Night=03:00,Morning=08:00"></span></span>.
+                            </p>
+                        </form>
+                    </div>
+                    <div class="k6-stack">
+                        <p class="k6-label">390 px</p>
+                        <div class="k6-frame k6-frame--phone">
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="k6-time-p">Backup time</label>
+                                <div class="kp-time" data-kp-time data-kp-time-id="k6-time-p" data-kp-name="at" data-kp-value="03:00" data-kp-time-presets="Night=03:00,Morning=08:00" data-kp-time-near="03:00" id="k6-time-phone"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="k6-label">Each choice, side by side</p>
+                <div class="k6-trio">
+                    <div class="k6-stack">
+                        <p class="k6-note"><b>15 minute steps</b></p>
+                        <div class="kp-time" data-kp-time data-kp-label="15 minute steps" data-kp-value="09:15" data-kp-time-step="15"></div>
+                    </div>
+                    <div class="k6-stack">
+                        <p class="k6-note"><b>No list: typing and keys only</b></p>
+                        <div class="kp-time" data-kp-time data-kp-label="No list" data-kp-value="09:15" data-kp-time-popup="none"></div>
+                    </div>
+                    <div class="k6-stack">
+                        <p class="k6-note"><b>Boxed, inside a sentence</b></p>
+                        <form class="kp-sentence" data-kp-sentence data-kp-look="boxed">
+                            <p class="kp-sentence__text">
+                                Remind me at
+                                <span class="kp-sentence__field"><span class="kp-time" data-kp-time data-kp-label="Remind at" data-kp-value="18:30"></span></span>.
+                            </p>
+                        </form>
+                    </div>
+                </div>
+            </section>
 <!-- @@sections -->
         </main>
         <script type="application/json" data-review-round>

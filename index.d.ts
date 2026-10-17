@@ -222,3 +222,6 @@ export type AvailabilityAnswer = import('./js/availability.js').AvailabilityAnsw
 export { QR, QR_COPY_EVENT, QR_EXPIRED_EVENT, QR_LEVELS, QR_PLATE, QR_RETRY_EVENT, QR_REVEAL_EVENT, attachQr, qrContrast, qrMatrix, qrSvg, setQr, } from './js/qr.js';
 export type QrSpec = import('./js/qr.js').QrSpec;
 /** @typedef {import('./js/qr.js').QrSpec} QrSpec */
+export { TIME, TIME_EVENT, TIME_RETRY_EVENT, TIME_STEPS, attachTimes, parseTimeOfDay, setTime, setTimePresets, stepTime, timeInWindow, timeMinutes, timeText, timeValid, timeValue, } from './js/timefield.js';
+export type TimePreset = import('./js/timefield.js').TimePreset;
+/** @typedef {import('./js/timefield.js').TimePreset} TimePreset */
