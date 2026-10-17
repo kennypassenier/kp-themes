@@ -182,8 +182,7 @@ export function attachTicks(root = document) {
             const target = record.target instanceof View.Element ? record.target : record.target.parentElement;
             const el = target?.closest(TICK);
             if (el && (root === doc || root.contains(el))) touched.add(el);
-            for (const node of record.addedNodes)
-                if (node instanceof View.Element) for (const one of [node, ...node.querySelectorAll(TICK)]) if (one.matches(TICK)) remember(one);
+            for (const node of record.addedNodes) if (node instanceof View.Element) for (const one of [node, ...node.querySelectorAll(TICK)]) if (one.matches(TICK)) remember(one);
         }
         for (const el of touched) {
             const state = STATE.get(el);

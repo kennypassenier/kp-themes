@@ -4918,7 +4918,9 @@
     }
     [data-theme='blueprint'] .kp-stackbar__swatch {
         border-radius: 0;
-        background: repeating-linear-gradient(45deg, var(--kp-stackbar-colour, var(--chart-1)) 0 1px, transparent 1px 3px), transparent;
+        background:
+            repeating-linear-gradient(45deg, var(--kp-stackbar-colour, var(--chart-1)) 0 1px, transparent 1px 3px),
+            transparent;
         box-shadow: inset 0 0 0 1px var(--kp-stackbar-colour, var(--chart-1));
     }
     [data-theme='blueprint'] .kp-stackbar__item[data-kp-stackbar-rest] .kp-stackbar__swatch {
@@ -5196,9 +5198,7 @@
             linear-gradient(var(--accent), var(--accent)) 0 0 / 1px 100% no-repeat,
             linear-gradient(var(--accent), var(--accent)) 100% 0 / 1px 100% no-repeat;
     }
-    [data-theme='blueprint']
-        .kp-action-list--lead
-        > li:is([data-kp-state='new'], [data-kp-state='active'], [data-kp-state='warn'], [data-kp-state='failed'], [data-kp-state='next']) {
+    [data-theme='blueprint'] .kp-action-list--lead > li:is([data-kp-state='new'], [data-kp-state='active'], [data-kp-state='warn'], [data-kp-state='failed'], [data-kp-state='next']) {
         border-image: repeating-linear-gradient(to bottom, var(--kp-bp-state) 0 6px, transparent 6px 9px) 1;
     }
     [data-theme='blueprint'] .kp-action-list--lead > li[data-kp-state='warn'] .kp-action-list__title::before {
@@ -5259,9 +5259,7 @@
         font-size: 0.8em;
     }
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='blueprint']
-            .kp-secret:not([data-kp-secret-ttl='0'], [data-kp-secret-reveal-on='hold'])[data-kp-secret-state='shown']
-            .kp-secret__drain {
+        [data-theme='blueprint'] .kp-secret:not([data-kp-secret-ttl='0'], [data-kp-secret-reveal-on='hold'])[data-kp-secret-state='shown'] .kp-secret__drain {
             animation-timing-function: var(--kp-sig-bp-feed);
         }
     }
@@ -5330,7 +5328,9 @@
        pen's frame round it; a count on a cluster is lettering; a stretch under them is a hatched section, an area across
        the lanes between chain-dashed edges. */
     [data-theme='blueprint'] :is(.kp-gantt__point, .kp-gantt__mark)::before {
-        background: repeating-linear-gradient(45deg, var(--kp-gantt-mark) 0 1px, transparent 1px 3px), transparent;
+        background:
+            repeating-linear-gradient(45deg, var(--kp-gantt-mark) 0 1px, transparent 1px 3px),
+            transparent;
     }
     [data-theme='blueprint'] :is(.kp-gantt__point, .kp-gantt__mark)[data-kp-shape='square']::before {
         border-radius: 0;
@@ -5436,7 +5436,9 @@
     }
     [data-theme='blueprint'] .kp-pipeline__head {
         border-radius: 0;
-        background: repeating-linear-gradient(45deg, hsl(from var(--kp-pipeline-tone) h s l / 0.5) 0 1px, transparent 1px 5px), transparent;
+        background:
+            repeating-linear-gradient(45deg, hsl(from var(--kp-pipeline-tone) h s l / 0.5) 0 1px, transparent 1px 5px),
+            transparent;
     }
     [data-theme='blueprint'] :is(.kp-pipeline__name, .kp-pipeline__share, .kp-pipeline__sub, .kp-pipeline__meta, .kp-pipeline__none) {
         font-family: var(--theme-font-mono);
@@ -5474,11 +5476,7 @@
     [data-theme='blueprint'] .kp-pipeline__mark {
         border: 1px solid var(--kp-pipeline-tone, var(--border-strong));
         border-radius: 0;
-        background: repeating-linear-gradient(
-            45deg,
-            hsl(from var(--kp-pipeline-tone, var(--muted-foreground)) h s l / 0.5) 0 1px,
-            transparent 1px 4px
-        );
+        background: repeating-linear-gradient(45deg, hsl(from var(--kp-pipeline-tone, var(--muted-foreground)) h s l / 0.5) 0 1px, transparent 1px 4px);
         font-family: var(--theme-font-mono);
         font-style: oblique 15deg;
     }
@@ -5556,14 +5554,10 @@
     }
     [data-theme='blueprint'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item[data-kp-segmented-tri='include'] {
         border-color: var(--primary);
-        background:
-            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.34) 0 1px, transparent 1px 5px), hsl(from var(--primary) h s l / 0.1);
+        background: repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.34) 0 1px, transparent 1px 5px), hsl(from var(--primary) h s l / 0.1);
         color: var(--foreground);
     }
-    [data-theme='blueprint']
-        .kp-segmented--chips[data-kp-segmented='tri']
-        > .kp-segmented__item[data-kp-segmented-tri='include']
-        > .kp-segmented__mark::before {
+    [data-theme='blueprint'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item[data-kp-segmented-tri='include'] > .kp-segmented__mark::before {
         color: var(--background);
     }
     [data-theme='blueprint'] .kp-segmented--chips[data-kp-segmented='tri'] > .kp-segmented__item[data-kp-segmented-tri='exclude'] {
@@ -5669,20 +5663,8 @@
         pointer-events: none;
         background:
             linear-gradient(var(--accent), var(--accent)) 0 50% / 100% 1px no-repeat,
-            linear-gradient(
-                    to top left,
-                    transparent calc(50% - 0.5px),
-                    var(--accent) calc(50% - 0.5px) calc(50% + 0.5px),
-                    transparent calc(50% + 0.5px)
-                )
-                0 50% / 7px 7px no-repeat,
-            linear-gradient(
-                    to top left,
-                    transparent calc(50% - 0.5px),
-                    var(--accent) calc(50% - 0.5px) calc(50% + 0.5px),
-                    transparent calc(50% + 0.5px)
-                )
-                100% 50% / 7px 7px no-repeat;
+            linear-gradient(to top left, transparent calc(50% - 0.5px), var(--accent) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px)) 0 50% / 7px 7px no-repeat,
+            linear-gradient(to top left, transparent calc(50% - 0.5px), var(--accent) calc(50% - 0.5px) calc(50% + 0.5px), transparent calc(50% + 0.5px)) 100% 50% / 7px 7px no-repeat;
     }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='blueprint'] .kp-timer[data-kp-timer-ringing]::after,
@@ -5863,8 +5845,7 @@
     /* Range picker: the custom window in force is a hatched section in the pen's frame; its label is lettering. */
     [data-theme='blueprint'] .kp-range__custom[aria-pressed='true'] {
         border-color: var(--primary);
-        background:
-            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.34) 0 1px, transparent 1px 5px), hsl(from var(--primary) h s l / 0.1);
+        background: repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / 0.34) 0 1px, transparent 1px 5px), hsl(from var(--primary) h s l / 0.1);
         box-shadow: none;
     }
     [data-theme='blueprint'] .kp-range__label {

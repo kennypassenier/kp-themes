@@ -412,9 +412,7 @@ function wire(el, memory) {
             memory.folded = !memory.folded;
             el.toggleAttribute('data-kp-code-folded', memory.folded);
             button.setAttribute('aria-expanded', String(!memory.folded));
-            /** @type {HTMLElement} */ (button.firstElementChild).textContent = memory.folded
-                ? strings.codeShowAll(memory.lines)
-                : strings.codeShowLess;
+            /** @type {HTMLElement} */ (button.firstElementChild).textContent = memory.folded ? strings.codeShowAll(memory.lines) : strings.codeShowLess;
             el.dispatchEvent(new CustomEvent('kp-code-fold', { bubbles: true, detail: { folded: memory.folded } }));
         } else if (tool === 'copy') {
             const word = /** @type {HTMLElement} */ (button.firstElementChild);
@@ -433,12 +431,11 @@ function wire(el, memory) {
                 if (status) status.textContent = strings.copyBlockedAnnouncement;
                 el.dispatchEvent(new CustomEvent('kp-code-copy-failed', { bubbles: true, detail: { error } }));
             }
-            memory.revert =
-                view?.setTimeout(() => {
-                    word.textContent = getStrings().copy;
-                    button.removeAttribute('data-kp-code-copied');
-                    if (status) status.textContent = '';
-                }, CODE_COPIED_MS) ?? 0;
+            memory.revert = view?.setTimeout(() => {
+                word.textContent = getStrings().copy;
+                button.removeAttribute('data-kp-code-copied');
+                if (status) status.textContent = '';
+            }, CODE_COPIED_MS) ?? 0;
         }
     });
 }

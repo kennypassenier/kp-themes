@@ -4918,8 +4918,7 @@
 
     /* A hollow neon ring before a title or a figure: the near-white core, the bloom in the tone's ink. Set --kp-sw4-tone
        on the part and give it the class's ::before. */
-    [data-theme='synthwave']
-        :is(
+    [data-theme='synthwave'] :is(
             .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure,
             .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure,
             .kp-action-list--lead > li[data-kp-state='failed'] .kp-action-list__title,
@@ -5281,10 +5280,7 @@
         border-color: var(--kp-pink-text);
         box-shadow: 0 0 8px hsl(from var(--primary) h s l / 0.5);
     }
-    [data-theme='synthwave']
-        .kp-fieldset[data-kp-layout='tiles']
-        > .kp-field__option:hover:not(:has(> .kp-field__check:disabled))
-        .kp-field__option-title {
+    [data-theme='synthwave'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:hover:not(:has(> .kp-field__check:disabled)) .kp-field__option-title {
         text-shadow: var(--kp-tube-pink);
     }
     [data-theme='synthwave'] .kp-fieldset[data-kp-layout='tiles'] > .kp-field__option:active:not(:has(> .kp-field__check:disabled)) {
@@ -5342,9 +5338,7 @@
        turns its tube up and keeps it ── */
     [data-theme='synthwave'] .kp-pipeline__lane {
         border-radius: 0;
-        background:
-            var(--kp-sw4-stripe) 0 0 / 100% 3px no-repeat,
-            var(--muted);
+        background: var(--kp-sw4-stripe) 0 0 / 100% 3px no-repeat, var(--muted);
     }
     [data-theme='synthwave'] .kp-pipeline__head {
         border-radius: 2px;
@@ -5416,25 +5410,13 @@
         background: var(--kp-sw4-stripe);
         box-shadow: 0 0 6px hsl(from var(--primary) h s l / 0.5);
     }
-    [data-theme='synthwave']
-        .kp-steplist--journey
-        > .kp-steplist__item
-        + .kp-steplist__item:not([data-state='done'], [data-state='current'], [data-state='failed'])::before {
+    [data-theme='synthwave'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item:not([data-state='done'], [data-state='current'], [data-state='failed'])::before {
         background: repeating-linear-gradient(90deg, var(--kp-hairline) 0 0.375rem, transparent 0.375rem 0.625rem);
     }
     [data-theme='synthwave'] .kp-steplist__item[data-state='current'] .kp-steplist__mark {
         border-color: transparent;
         background:
-            repeating-linear-gradient(
-                to bottom,
-                transparent 0 55%,
-                var(--card) 55% 62%,
-                transparent 62% 70%,
-                var(--card) 70% 78%,
-                transparent 78% 86%,
-                var(--card) 86% 94%,
-                transparent 94%
-            ),
+            repeating-linear-gradient(to bottom, transparent 0 55%, var(--card) 55% 62%, transparent 62% 70%, var(--card) 70% 78%, transparent 78% 86%, var(--card) 86% 94%, transparent 94%),
             var(--kp-sw4-sun);
         box-shadow: 0 0 10px hsl(from var(--kp-sun-glow) h s l / 0.7);
     }
@@ -5682,6 +5664,12 @@
         letter-spacing: 0.1em;
         text-transform: uppercase;
     }
+    /* The card's three buttons take the small button's padding, so Pause, +1 min and the close fit one line in the card. */
+    [data-theme='synthwave'] .kp-timer__toggle,
+    [data-theme='synthwave'] .kp-timer__sizer,
+    [data-theme='synthwave'] .kp-timer__more {
+        padding-inline: 1rem;
+    }
     [data-theme='synthwave'] .kp-timer__time {
         font-family: var(--theme-font-display);
         font-weight: 400;
@@ -5811,16 +5799,7 @@
     }
     [data-theme='synthwave'] .kp-timer-disc__sector {
         background:
-            repeating-linear-gradient(
-                to bottom,
-                transparent 0 56%,
-                var(--sidebar-background) 56% 60%,
-                transparent 60% 68%,
-                var(--sidebar-background) 68% 74%,
-                transparent 74% 82%,
-                var(--sidebar-background) 82% 90%,
-                transparent 90%
-            ),
+            repeating-linear-gradient(to bottom, transparent 0 56%, var(--sidebar-background) 56% 60%, transparent 60% 68%, var(--sidebar-background) 68% 74%, transparent 74% 82%, var(--sidebar-background) 82% 90%, transparent 90%),
             var(--kp-sw4-sun);
         -webkit-mask: conic-gradient(var(--foreground) calc(var(--kp-timer-disc-left, 1) * 360deg), transparent 0);
         mask: conic-gradient(var(--foreground) calc(var(--kp-timer-disc-left, 1) * 360deg), transparent 0);

@@ -4782,7 +4782,7 @@
         padding-inline: 0.5rem;
         background: var(--background);
         box-shadow: var(--kp-ti-pocket);
-        text-align: center;
+        text-align: end;
         text-shadow: var(--kp-ti-engrave);
     }
     [data-theme='titanium'] .kp-timer[data-kp-timer-state='running'] .kp-timer__time {
@@ -4971,7 +4971,7 @@
         background: var(--chart-1);
     }
     [data-theme='titanium'] .kp-focus-steps__needs {
-        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        padding: var(--kp-space-md, 0.75rem);
         border: 0;
         background: var(--background);
         box-shadow: var(--kp-ti-pocket);

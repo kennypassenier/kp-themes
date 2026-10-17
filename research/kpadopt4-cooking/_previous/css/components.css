@@ -14866,6 +14866,7 @@
  * says so with the theme's check before its count. The bar holds the count of
  * what is done, or after a clear its Undo, in one line that never moves. */
     .kp-checklist {
+        --kp-checklist-body-min: calc(var(--kp-checklist-min-rows, 10) * (var(--kp-checklist-row, 2.75rem) + 1px));
         display: grid;
         grid-template-columns: minmax(0, 1fr);
         gap: var(--kp-space-sm, 0.5rem);
@@ -14903,15 +14904,16 @@
         margin-inline-start: auto;
     }
 
+    /* The body is never shorter than a number of rows (`--kp-checklist-min-rows`, 10): loading, ready, empty and failed
+       all stand in the same height, and a short list does not make the page jump when it has loaded [cook-1017; Kenny:
+       "een minimum aantal items ... er minder plaats verspringt"]. A longer list simply grows. */
     .kp-checklist__body {
         position: relative;
         display: grid;
+        align-content: start;
         gap: var(--kp-space-md, 0.75rem);
+        min-block-size: var(--kp-checklist-body-min);
         min-inline-size: 0;
-    }
-
-    .kp-checklist[aria-busy='true'] .kp-checklist__body {
-        min-block-size: var(--kp-checklist-busy-height, 10rem);
     }
 
     .kp-checklist__head {
@@ -14996,13 +14998,28 @@
         text-decoration-thickness: 1.5px;
     }
 
+    /* Empty and failed fill the body (its minimum rows) and say it at the heading size in the middle [cook-1017; Kenny's
+       rule of 2026-10-17, docs/RULES.md]. */
     .kp-checklist__empty {
+        display: grid;
+        place-content: center;
+        min-block-size: var(--kp-checklist-body-min);
+        box-sizing: border-box;
         margin: 0;
-        padding: var(--kp-space-lg, 1.5rem);
+        padding: var(--kp-space-xl, 2rem) var(--kp-space-lg, 1.5rem);
         border: 1px dashed var(--border-strong);
         border-radius: var(--radius, 0.5rem);
         color: var(--muted-foreground);
-        text-align: center;
+        font-size: var(--kp-checklist-state-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem));
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+        /* Important: a register's empty plate may set `text-align: start` (a later layer). */
+        text-align: center !important;
+        text-wrap: balance;
+    }
+
+    .kp-checklist__empty[hidden] {
+        display: none;
     }
 
     .kp-checklist__empty[data-kp-checklist-failed] {
@@ -15036,7 +15053,7 @@
 
     .kp-timers__list {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(min(var(--kp-timer-min, 16rem), 100%), 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(min(var(--kp-timer-min, 19.5rem), 100%), 1fr));
         gap: var(--kp-space-md, 0.75rem);
         margin: 0;
         padding: 0;
@@ -15106,6 +15123,7 @@
         font-weight: 600;
         line-height: 1.15;
         font-variant-numeric: tabular-nums lining-nums;
+        text-align: end;
         white-space: nowrap;
         text-overflow: ellipsis;
     }
@@ -15114,9 +15132,13 @@
         color: var(--muted-foreground);
     }
 
+    /* A label is one line, whole: never "Paus" over "e" [cook-1017; Kenny: "Paus/e ... dat is lelijk"]. The first button's
+       column is as wide as the widest of its words (Pause, Resume, Stop) in the button's own face, in every state: a
+       hidden sizer (`__sizer`, js/timer.js) in the same cell holds them, so the button does not change width when the
+       state does. */
     .kp-timer__actions {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) auto auto;
+        grid-template-columns: minmax(min-content, 1fr) auto auto;
         gap: var(--kp-space-xs, 0.25rem);
     }
 
@@ -15124,9 +15146,47 @@
         min-block-size: var(--kp-timer-target, 2.75rem);
     }
 
+    .kp-timer__toggle,
+    .kp-timer__more,
+    .kp-timer__remove,
+    .kp-timer__sizer {
+        overflow-wrap: normal;
+        white-space: nowrap;
+        word-break: normal;
+        hyphens: none;
+    }
+
+    .kp-timer__toggle,
+    .kp-timer__sizer {
+        grid-area: 1 / 1;
+    }
+
+    .kp-timer__more {
+        grid-area: 1 / 2;
+    }
+
+    .kp-timer__remove {
+        grid-area: 1 / 3;
+    }
+
+    .kp-timer__sizer.kp-button {
+        /* Important: a register's button rule (a later layer) must not give the sizer a height of its own. */
+        block-size: 0 !important;
+        min-block-size: 0 !important;
+        margin: 0 !important;
+        padding-block: 0 !important;
+        border-block-width: 0 !important;
+        overflow: hidden;
+        visibility: hidden;
+        white-space: pre;
+        pointer-events: none;
+    }
+
+    /* The glyph button is a square of the target, whatever padding a register gives a button. */
     .kp-timer__remove.kp-button {
-        inline-size: var(--kp-timer-target, 2.75rem);
-        padding: 0;
+        inline-size: var(--kp-timer-target, 2.75rem) !important;
+        min-inline-size: 0 !important;
+        padding-inline: 0 !important;
     }
 
     .kp-timer__remove-glyph::before {
@@ -15271,8 +15331,11 @@
         text-wrap: pretty;
     }
 
+    /* What the step needs sits in a box with room of its own on every side: the title and the rows never touch its
+       edge, whatever a register draws there (a bar, a clip, a border) [cook-1017; Kenny: "text die tegen de rand plakt
+       zonder marge"]. `--kp-focus-steps-needs-pad` sets it (1rem on the sides). */
     .kp-focus-steps__needs {
-        padding-block-start: var(--kp-space-md, 0.75rem);
+        padding: var(--kp-space-md, 0.75rem) var(--kp-focus-steps-needs-pad, 1rem);
         border-block-start: 1px solid var(--border);
     }
 
@@ -15283,7 +15346,8 @@
         font-weight: 600;
     }
 
-    /* The amounts in one column as wide as the longest, the names in the next [fix-64]. */
+    /* The amounts in one column as wide as the longest, the names in the next [fix-64]. The amounts start on the same
+       line, so "450 ml water" stands under "300 g rinsed rice" and not indented by its shorter amount [cook-1017]. */
     .kp-focus-steps__needs-list {
         display: grid;
         grid-template-columns: auto minmax(0, 1fr);
@@ -15301,7 +15365,7 @@
     .kp-focus-steps__amount {
         font-weight: 600;
         font-variant-numeric: tabular-nums;
-        text-align: end;
+        text-align: start;
         white-space: nowrap;
     }
 
@@ -15317,6 +15381,31 @@
     .kp-focus-steps__note,
     .kp-focus-steps__message {
         margin: 0;
+    }
+
+    /* Empty and failed are the whole body's size and say it large, centred: the sentence at the heading size in the
+       middle of the body, in the theme's own empty plate or alert (a register's drawing on it stays), so it is in
+       proportion to the step it stands in for [cook-1017; Kenny's rule of 2026-10-17, docs/RULES.md]. */
+    .kp-focus-steps__step[data-kp-focus-steps-kind] {
+        align-content: stretch;
+        max-inline-size: none;
+        min-block-size: 100%;
+    }
+
+    .kp-focus-steps .kp-focus-steps__step > .kp-focus-steps__message {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        min-block-size: 100%;
+        padding: var(--kp-space-xl, 2rem) var(--kp-space-lg, 1.5rem);
+        font-size: var(--kp-focus-steps-state-text, clamp(1.25rem, 1.05rem + 1vw, 1.75rem));
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+        /* Important: a register's empty plate may set `text-align: start` (a later layer). */
+        text-align: center !important;
+        text-wrap: balance;
     }
 
     .kp-focus-steps[aria-busy='true'] .kp-focus-steps__body {
@@ -15483,17 +15572,31 @@
         top: 50%;
         left: 50%;
         box-sizing: border-box;
-        inline-size: var(--kp-wheel-hub, 30%);
-        min-inline-size: 4.5rem;
-        aspect-ratio: 1;
+        /* Centred by its insets and auto margins, never by a `translate`: the button's own hover and press lift
+           (`.kp-button:hover { translate: 0 -lift }`, and every register's) would replace the centring and throw the
+           hub half its size off the disc's middle [cook-1017; Kenny: "bij hover glitched de spin knop"]. */
+        inset: 0;
+        margin: auto;
+        inline-size: max(var(--kp-wheel-hub, 30%), 4.5rem);
+        block-size: max(var(--kp-wheel-hub, 30%), 4.5rem);
         padding: 0;
-        translate: -50% -50%;
         /* Round in every theme: a register's button corner (kp.register) would square the hub off and lay its corners
            over the labels. The register keeps every other part of its button. */
         border-radius: 50% !important;
         box-shadow: 0 0 0 var(--kp-wheel-hub-ring, 4px) var(--card);
         font-size: var(--kp-text-md, 1rem);
         font-weight: 700;
+    }
+
+    /* The hub does not move in any theme: not on hover, not on focus, not pressed (a register's lift or press `translate`
+       would take it off the disc's middle). Its colours, ring and shadow answer instead. Important, as the registers are
+       a later layer. */
+    .kp-wheel__spin.kp-button {
+        translate: none !important;
+        /* Likewise its position: six registers give every button `position: relative` (cyberpunk, blueprint, brutalism,
+           deco, nostromo, synthwave), which drops the hub out of the disc's centring and into the stage's flow corner
+           [cook-1017; Kenny: "de spin knop staat niet op zijn plaats"]. */
+        position: absolute !important;
     }
 
     .kp-wheel__spin[aria-disabled='true'] {

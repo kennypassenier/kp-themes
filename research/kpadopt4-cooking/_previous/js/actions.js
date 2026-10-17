@@ -268,13 +268,11 @@ export async function removeRow(row) {
     const doc = row.ownerDocument;
     const active = doc.activeElement;
     if (list && active instanceof HTMLElement && row.contains(active)) {
-        const rows = /** @type {HTMLElement[]} */ ([...list.children]).filter(
-            (r) => r !== row && !r.hidden && !r.classList.contains('kp-action-list__group'),
-        );
+        const rows = /** @type {HTMLElement[]} */ ([...list.children]).filter((r) => r !== row && !r.hidden && !r.classList.contains('kp-action-list__group'));
         const at = [...list.children].indexOf(row);
         const next = rows.find((r) => [...list.children].indexOf(r) > at) ?? rows.reverse().find((r) => [...list.children].indexOf(r) < at) ?? null;
         const place = [...row.querySelectorAll(`${ROW_ACTIONS} > *`)].indexOf(active);
-        const into = next ? /** @type {HTMLElement | undefined} */ ((next.querySelectorAll(`${ROW_ACTIONS} > *`)[place]) ?? next) : list;
+        const into = next ? (/** @type {HTMLElement | undefined} */ (next.querySelectorAll(`${ROW_ACTIONS} > *`)[place]) ?? next) : list;
         if (!into.matches('a[href], button, input, select, textarea, [tabindex]')) into.tabIndex = -1;
         into.focus({ preventScroll: true });
     }

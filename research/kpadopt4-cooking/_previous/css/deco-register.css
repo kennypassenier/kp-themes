@@ -6137,7 +6137,7 @@
         stroke-width: 1;
     }
     [data-theme='deco'] .kp-wheel .kp-wheel__spin.kp-button {
-        translate: -50% calc(-50% + 1px * var(--kp-sig-deco-pr, 0));
+        translate: 0 calc(1px * var(--kp-sig-deco-pr, 0));
     }
     [data-theme='deco'] .kp-wheel__pointer {
         stroke: var(--kp-sig-deco-lac);

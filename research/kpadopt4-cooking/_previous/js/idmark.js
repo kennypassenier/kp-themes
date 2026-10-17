@@ -199,10 +199,7 @@ export function attachIdmarks(root = document) {
             const key = `${name}|${slots.get(el) ?? ''}|${el.getAttribute('data-kp-idmark-hue') ?? ''}|${el.className}`;
             if (drawn.get(el) === key && el.querySelector(':scope > .kp-idmark__letters')) continue;
             setIdmark(el, name, { slot: slots.get(el) });
-            drawn.set(
-                el,
-                `${el.getAttribute('data-kp-idmark') ?? ''}|${slots.get(el) ?? ''}|${el.getAttribute('data-kp-idmark-hue') ?? ''}|${el.className}`,
-            );
+            drawn.set(el, `${el.getAttribute('data-kp-idmark') ?? ''}|${slots.get(el) ?? ''}|${el.getAttribute('data-kp-idmark-hue') ?? ''}|${el.className}`);
         }
     };
     paint();

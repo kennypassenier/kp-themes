@@ -420,18 +420,7 @@ const goingToasts = new WeakSet();
  */
 export function toast(
     content,
-    {
-        ms = TOAST_MS,
-        region = null,
-        live,
-        className = 'kp-toast',
-        action,
-        max,
-        pause = true,
-        linger = TOAST_LINGER_MS,
-        close = false,
-        sticky = false,
-    } = {},
+    { ms = TOAST_MS, region = null, live, className = 'kp-toast', action, max, pause = true, linger = TOAST_LINGER_MS, close = false, sticky = false } = {},
 ) {
     const host =
         live === 'assertive'
@@ -490,13 +479,7 @@ export function toast(
     const lasting = sticky ? 0 : ms;
     if (lasting > 0) {
         timer = window.setTimeout(el.dismiss, lasting);
-        if (pause)
-            holdWhileAttended(
-                el,
-                () => timer,
-                (next) => (timer = next),
-                linger,
-            );
+        if (pause) holdWhileAttended(el, () => timer, (next) => (timer = next), linger);
     }
     // Esc on a toast with focus in it closes it, with or without a clock.
     el.addEventListener('keydown', (event) => {

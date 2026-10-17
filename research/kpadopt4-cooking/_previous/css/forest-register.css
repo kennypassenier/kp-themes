@@ -15,8 +15,15 @@
     initial-value: 360deg;
 }
 
-/* How far the marks of a ticking number have grown, 0 (nothing) to 1 (all of it). */
+/* How far the treatment of a ticking number has gone, 0 (nothing) to 1 (all of it). */
 @property --kp-fo-grown {
+    syntax: '<number>';
+    inherits: false;
+    initial-value: 0;
+}
+
+/* How much of the treatment is left in the colour of a ticking number: 1 (all of it) cooling to 0 (the plain ink). */
+@property --kp-fo-ember {
     syntax: '<number>';
     inherits: false;
     initial-value: 0;
@@ -4950,117 +4957,51 @@
     }
 
     /* A live number as it counts [kpadopt4, tick; Kenny, 2026-10-17: "geen fan van de cirkel rond de waarde, zoek een meer
-       forest optie"]. Nothing is drawn round the figure and the figure itself never moves. The box is the one the figure
-       already has: the marks are pseudo-elements that stay empty at rest, so the box is the same at rest, while it counts
-       and after, and the marks grow on the growth curve for as long as the count runs (--kp-tick) and wither on the
-       way out. `data-kp-tick-forest` on any ancestor picks the treatment; none is the grove.
-         grove (default)  a row of whole planted trees grows in the free line after the figure, the progress bar's trees;
-         tag              a kraft hang tag with the leaf corner and a dashed blaze unrolls behind the figure;
-         trail            a clay dashed trail is laid under the figure, a clay blaze walking at its head. */
+       forest optie", then the trees, the tag and the trail round it not approved; he picked the branded digits]. The
+       change is in the digits: nothing is drawn round, behind, under or after the figure. The element, its box and its
+       text are untouched (no pseudo-element, no padding, no transform); the digits are branded for as long as the count
+       runs (--kp-tick): stamped hot in clay with a char edge that is burned out of the wood, then cooled into the ink
+       (the edge lies outside the glyph, the counters stay open). The paint is the plain ink again on the frame the count
+       lands, so nothing has to be put back. */
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='forest'] [data-kp-tick] {
+        [data-theme='forest'] [data-kp-tick][data-kp-tick-state='running'] {
             --kp-fo-tick-time: calc(var(--kp-tick, 600) * 1ms);
-            --kp-fo-tick-pitch: 0.5em;
-            --kp-fo-tick-lead: 0.75em;
-            position: relative;
-            isolation: isolate;
+            animation:
+                kp-fo-tick-stamp var(--kp-fo-tick-time) linear both,
+                kp-fo-tick-cool var(--kp-fo-tick-time) linear both;
+            background: none;
+            -webkit-text-fill-color: color-mix(in oklab, var(--chart-2) calc(var(--kp-fo-ember) * 100%), currentColor);
+            -webkit-text-stroke: calc(var(--kp-fo-grown) * 0.08em) color-mix(in oklab, var(--accent-foreground) 85%, transparent);
+            paint-order: stroke fill;
+            /* The package dims a busy element (layout.css, --kp-busy-opacity, 0.7): the digits are what changes here, so they
+               keep their full ink. */
+            --kp-busy-opacity: 1;
         }
 
-        /* At rest the marks are not there; on the way out they wither, and the growth is put back only once they are gone. */
-        [data-theme='forest'] [data-kp-tick]::before,
-        [data-theme='forest'] [data-kp-tick]::after {
-            --kp-fo-grown: 0;
-            opacity: 0;
-            pointer-events: none;
-            transition:
-                opacity calc(var(--kp-sig-fo-time) * 0.6) var(--kp-sig-fo-wither) 200ms,
-                --kp-fo-grown 0s linear calc(var(--kp-sig-fo-time) * 0.6 + 200ms);
-        }
-        [data-theme='forest'] [data-kp-tick][data-kp-tick-state='running']::before,
-        [data-theme='forest'] [data-kp-tick][data-kp-tick-state='running']::after {
-            --kp-fo-grown: 1;
-            opacity: 1;
-            transition:
-                opacity 120ms linear,
-                --kp-fo-grown var(--kp-fo-tick-time) var(--kp-sig-fo-grow);
+        /* The brand lands hot in the first fifth and its char edge burns back into the wood as it cools. */
+        @keyframes kp-fo-tick-stamp {
+            0% {
+                --kp-fo-grown: 0;
+                animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
+            }
+            18% {
+                --kp-fo-grown: 1;
+                animation-timing-function: var(--kp-sig-fo-wither);
+            }
+            100% {
+                --kp-fo-grown: 0;
+            }
         }
 
-        /* grove: the free line after the figure. A flex item that takes only what is left (its margin cancels the gap, so it
-           adds nothing to the line and can never wrap); the trees stand on whole slots of half the figure's size. */
-        [data-theme='forest'] [data-kp-tick]::before {
-            content: none;
-        }
-        [data-theme='forest'] [data-kp-tick]::after {
-            content: '';
-            flex: 1 1 0;
-            min-inline-size: 0;
-            align-self: center;
-            block-size: 1em;
-            margin-inline-start: calc(-1 * var(--kp-space-sm, 0.5rem));
-            background: var(--primary);
-            mask: var(--kp-fo-trees) var(--kp-fo-tick-lead) 0 / calc(var(--kp-fo-tick-pitch) * 7) 100% repeat-x;
-            clip-path: inset(
-                0
-                    calc(
-                        100% - var(--kp-fo-tick-lead) -
-                            round(down, max(0px, (100% - var(--kp-fo-tick-lead)) * var(--kp-fo-grown)), var(--kp-fo-tick-pitch))
-                    )
-                    0 var(--kp-fo-tick-lead)
-            );
-        }
-
-        /* tag: a kraft tag behind the figure, hugging it with a margin of its own that the box gives back (padding and
-           negative margin cancel), the leaf corner, the wood grain and a dashed blaze stitched inside; unrolled left to
-           right. The ink turns to the clay pairing of the plate while it is there. */
-        [data-theme='forest'] [data-kp-tick-forest='tag'] [data-kp-tick] {
-            inline-size: fit-content;
-            padding-inline: 0.3em;
-            margin-inline: -0.3em;
-            transition: color 200ms linear;
-        }
-        [data-theme='forest'] [data-kp-tick-forest='tag'] [data-kp-tick][data-kp-tick-state='running'] {
-            color: var(--accent-foreground);
-        }
-        [data-theme='forest'] [data-kp-tick-forest='tag'] [data-kp-tick]::after {
-            content: none;
-        }
-        [data-theme='forest'] [data-kp-tick-forest='tag'] [data-kp-tick]::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: -1;
-            background: var(--kp-sig-fo-wood), color-mix(in oklab, var(--accent) 78%, var(--chart-2));
-            border: 1px dashed hsl(from var(--accent-foreground) h s l / 0.55);
-            border-radius: var(--kp-sig-fo-part);
-            clip-path: inset(0 calc(100% - 100% * var(--kp-fo-grown)) 0 0);
-        }
-
-        /* trail: a dashed clay trail under the figure, dash by dash, and the clay blaze of the meter walking at its head.
-           The figure gets a foot of its own, so nothing reaches into its digits. */
-        [data-theme='forest'] [data-kp-tick-forest='trail'] [data-kp-tick] {
-            padding-block-end: 0.3em;
-        }
-        [data-theme='forest'] [data-kp-tick-forest='trail'] [data-kp-tick]::before {
-            content: '';
-            position: absolute;
-            inset-inline: 0;
-            inset-block-end: 0.12em;
-            block-size: 2px;
-            background: repeating-linear-gradient(to right, var(--chart-2) 0 6px, transparent 6px 11px);
-            clip-path: inset(0 calc(100% - round(down, 100% * var(--kp-fo-grown), 11px)) 0 0);
-        }
-        [data-theme='forest'] [data-kp-tick-forest='trail'] [data-kp-tick]::after {
-            content: '';
-            position: absolute;
-            flex: none;
-            inset-block-end: calc(0.12em - 2px);
-            inset-inline-start: calc((100% - 0.4375rem) * var(--kp-fo-grown));
-            inline-size: 0.4375rem;
-            block-size: 0.375rem;
-            margin: 0;
-            background: var(--chart-2);
-            mask: none;
-            clip-path: polygon(0 0, 45% 0, 100% 50%, 45% 100%, 0 100%, 55% 50%);
+        /* How much of the treatment is left: all of it for the first half, then none by the time the count lands. */
+        @keyframes kp-fo-tick-cool {
+            0%,
+            50% {
+                --kp-fo-ember: 1;
+            }
+            100% {
+                --kp-fo-ember: 0;
+            }
         }
     }
 }
@@ -5147,9 +5088,7 @@
     [data-theme='forest'] .kp-action-list--lead > li[data-kp-state='failed'] {
         --kp-fo-blaze: var(--destructive);
     }
-    [data-theme='forest']
-        .kp-action-list--lead
-        > li:is([data-kp-state='new'], [data-kp-state='next'], [data-kp-state='active'], [data-kp-state='warn'], [data-kp-state='failed']) {
+    [data-theme='forest'] .kp-action-list--lead > li:is([data-kp-state='new'], [data-kp-state='next'], [data-kp-state='active'], [data-kp-state='warn'], [data-kp-state='failed']) {
         border-image: linear-gradient(to bottom, transparent 0.4rem, var(--kp-fo-blaze) 0.4rem 1.7rem, transparent 1.7rem) 1;
     }
     [data-theme='forest'] .kp-action-list__meta,
@@ -5200,9 +5139,7 @@
         font-style: italic;
     }
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='forest']
-            .kp-secret:not([data-kp-secret-ttl='0'], [data-kp-secret-reveal-on='hold'])[data-kp-secret-state='shown']
-            .kp-secret__drain {
+        [data-theme='forest'] .kp-secret:not([data-kp-secret-ttl='0'], [data-kp-secret-reveal-on='hold'])[data-kp-secret-state='shown'] .kp-secret__drain {
             animation-name: kp-sig-forest-secret-drain;
             animation-timing-function: linear;
         }
@@ -5443,9 +5380,7 @@
         border-style: dashed;
     }
     @media (hover: hover) {
-        [data-theme='forest']
-            .kp-segmented--chips[data-kp-segmented='tri']:not([aria-disabled='true'])
-            > .kp-segmented__item:hover:not(:focus-visible) {
+        [data-theme='forest'] .kp-segmented--chips[data-kp-segmented='tri']:not([aria-disabled='true']) > .kp-segmented__item:hover:not(:focus-visible) {
             box-shadow: none;
             outline-color: var(--primary);
             outline-offset: 2px;
@@ -5567,7 +5502,11 @@
         --kp-wheel-pointer: var(--accent-foreground);
     }
     [data-theme='forest'] .kp-wheel__spin.kp-button {
-        background: repeating-radial-gradient(circle closest-side, var(--primary) 0 4px, hsl(from var(--primary) h s calc(l * 1.4)) 4px 5px);
+        background: repeating-radial-gradient(
+            circle closest-side,
+            var(--primary) 0 4px,
+            hsl(from var(--primary) h s calc(l * 1.4)) 4px 5px
+        );
     }
     [data-theme='forest'] .kp-wheel__rim {
         stroke-width: 2.5;

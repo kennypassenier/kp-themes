@@ -5107,10 +5107,7 @@
     [data-theme='pastel'] .kp-steplist--journey .kp-steplist__item[data-state='current'] .kp-steplist__mark {
         box-shadow: calc(3px * var(--kp-sig-pa-dir)) 3px 0 var(--kp-sig-pa-pass-c);
     }
-    [data-theme='pastel']
-        .kp-steplist--journey
-        .kp-steplist__item:is([data-state='skipped'], [data-state='pending'], :not([data-state]))
-        .kp-steplist__mark {
+    [data-theme='pastel'] .kp-steplist--journey .kp-steplist__item:is([data-state='skipped'], [data-state='pending'], :not([data-state])) .kp-steplist__mark {
         box-shadow: none;
     }
     @container kp-journey (max-width: 30rem) {
@@ -5264,9 +5261,7 @@
             box-shadow: 0 5px 0 var(--kp-sig-pa-peel);
             translate: 0 -2px;
         }
-        [data-theme='pastel']
-            .kp-segmented--chips[data-kp-segmented='tri']:not([aria-disabled='true'])
-            > .kp-segmented__item[data-kp-segmented-tri='exclude']:hover {
+        [data-theme='pastel'] .kp-segmented--chips[data-kp-segmented='tri']:not([aria-disabled='true']) > .kp-segmented__item[data-kp-segmented-tri='exclude']:hover {
             box-shadow: none;
         }
     }
@@ -5421,17 +5416,6 @@
     }
     [data-theme='pastel'] .kp-wheel__stage {
         filter: drop-shadow(calc(5px * var(--kp-sig-pa-dir)) 5px 0 var(--kp-sig-pa-pass-c));
-    }
-    /* The hub stays centred: pastel's button lifts and presses with `translate`, which the hub also uses to sit on the
-       disc's centre, so each state keeps the centring and adds its own lift. */
-    [data-theme='pastel'] .kp-wheel__spin.kp-button {
-        translate: -50% -50%;
-    }
-    [data-theme='pastel'] .kp-wheel__spin.kp-button:hover:not([aria-disabled='true']) {
-        translate: -50% calc(-50% - 2px);
-    }
-    [data-theme='pastel'] .kp-wheel__spin.kp-button:active:not([aria-disabled='true']) {
-        translate: -50% calc(-50% + 3px);
     }
     [data-theme='pastel'] .kp-wheel__segment {
         stroke-width: 2.4;
@@ -5603,7 +5587,9 @@
     }
     [data-theme='pastel'] .kp-compare__divider {
         border-inline-start-color: transparent;
-        background: repeating-linear-gradient(0deg, var(--accent) 0 6px, transparent 6px 12px), var(--kp-sig-pa-tape-stripe);
+        background:
+            repeating-linear-gradient(0deg, var(--accent) 0 6px, transparent 6px 12px),
+            var(--kp-sig-pa-tape-stripe);
     }
     [data-theme='pastel'] .kp-compare__handle {
         box-shadow: 0 3px 0 var(--kp-sig-pa-peel);

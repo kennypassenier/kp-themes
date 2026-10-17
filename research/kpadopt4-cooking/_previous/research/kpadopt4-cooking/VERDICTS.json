@@ -1,4 +1,114 @@
 {
     "demo": "kpadopt4-cooking",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "2026-10-17-r3-cooking",
+            "allJudged": false,
+            "comment": "Kenny, 2026-10-17 15:37: 6 of 66 judged (dark only): quantity and tri approved; wheel, cook, timers and checklist not approved. The ten other themes were not judged and stay open.",
+            "approved": [
+                {
+                    "item": "quantity",
+                    "theme": "dark"
+                },
+                {
+                    "item": "tri",
+                    "theme": "dark"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "wheel",
+                    "theme": "dark",
+                    "note": "bij hover glitched de \"spin\" knop in het midden naar een andere locatie? zie dat er zeker de optie is om items een andere grootte te geven, op basis van hoe we de kansverdeling zelf willen indelen. En maak het spinnen zelf ook dynamisch zodat we niet altijd evenveel spin geven, maar misschien wel binnen bepaalde minimum en maximum waardes?"
+                },
+                {
+                    "item": "cook",
+                    "theme": "dark",
+                    "note": "ik had toch gezegd dat ik nooit text wil die tegen de rand plakt zonder marge tussen die elementen? \"For this step\" en \"450 ml water\" plakken beide tegen de rand. In dit tweede voorbeeld is het extra raar, want je zou verwachten dat die mooi onder \"300 g rinsed rice\" zou staan. En ik had gezegd dat de empty en de fail versies vanaf nu een veel prominentere plaats moeten innemen zodat ze proportioneel groot zijn ten opzichte van het element dat ze vullen. En meer centraal staan. Dit is een vaste regel die we vanaf nu handhaven dus sla het op"
+                },
+                {
+                    "item": "timers",
+                    "theme": "dark",
+                    "note": "De tekst op de knoppen staat afgekapt zodat je \"Paus\ne\" krijgt, dat is lelijk. Zet de tekst van de timers zelf rechts uitgelijnd"
+                },
+                {
+                    "item": "checklist",
+                    "theme": "dark",
+                    "note": "als er check all is moet er ook uncheck all zijn. Fail en empty zijn hier al veel beter, want pakken meer plaats in, maar de lijst zelf is nog wat te klein verticaal, er moeten een minimum aantal items zogezegd zijn zodat als hij geladen is, er minder plaats \"verspringt\" veticaal"
+                }
+            ]
+        },
+        {
+            "round": "2",
+            "page": "2026-10-17-r3-cooking-2",
+            "allJudged": false,
+            "comment": "Kenny, 2026-10-17 16:34: formal judged (4 of 68): wheel and cook approved; the dialog showed no row for checklist, which Kenny says is approved; the one note, filed under checklist by the dialog, asks for timer sounds and a spoken message, so it is recorded on timers. The eleven other themes stay open.",
+            "approved": [
+                {
+                    "item": "wheel",
+                    "theme": "formal"
+                },
+                {
+                    "item": "cook",
+                    "theme": "formal"
+                },
+                {
+                    "item": "checklist",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "timers",
+                    "theme": "formal",
+                    "note": "Maybe add a couple of other sound option, like a harsher, more traditional sound, and the option to speak which timer is done like: \"The rice has been cooked, remove it from the heat\""
+                }
+            ]
+        },
+        {
+            "round": "3",
+            "page": "cooking-c4ecb855-f942-4da8-878e-a564f54c25a1",
+            "allJudged": false,
+            "comment": "Kenny, 2026-10-17 17:20: timers approved in formal; all six approved in dark; wheel not approved in cyberpunk. The kit also reported four other cyberpunk sections approved, but Kenny had judged only the wheel there (\"zet die terug\"), so they stay open with the nine other themes.",
+            "approved": [
+                {
+                    "item": "timers",
+                    "theme": "formal"
+                },
+                {
+                    "item": "wheel",
+                    "theme": "dark"
+                },
+                {
+                    "item": "cook",
+                    "theme": "dark"
+                },
+                {
+                    "item": "timers",
+                    "theme": "dark"
+                },
+                {
+                    "item": "quantity",
+                    "theme": "dark"
+                },
+                {
+                    "item": "checklist",
+                    "theme": "dark"
+                },
+                {
+                    "item": "tri",
+                    "theme": "dark"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "wheel",
+                    "theme": "cyberpunk",
+                    "note": "de spin knop staat niet op zijn plaats"
+                }
+            ]
+        }
+    ],
+    "reopened": []
 }

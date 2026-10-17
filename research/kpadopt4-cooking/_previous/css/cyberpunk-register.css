@@ -6534,8 +6534,7 @@
         --kp-art-stroke: 1.5px;
     }
     /* Four 2 px corner brackets in the tone, as background layers (set --kp-cp4-tone on the part). */
-    [data-theme='cyberpunk']
-        :is(
+    [data-theme='cyberpunk'] :is(
             .kp-bullets__row[data-kp-tone='destructive'] .kp-bullets__figure,
             .kp-bullets__row[data-kp-tone='warning'] .kp-bullets__figure,
             .kp-action-list--lead > li[data-kp-state='failed'],
@@ -6561,10 +6560,8 @@
             linear-gradient(var(--kp-cp4-tone) 0 0) calc(100% - var(--kp-cp4-o)) var(--kp-cp4-o) / var(--kp-cp4-b) var(--kp-cp4-a) no-repeat,
             linear-gradient(var(--kp-cp4-tone) 0 0) var(--kp-cp4-o) calc(100% - var(--kp-cp4-o)) / var(--kp-cp4-a) var(--kp-cp4-b) no-repeat,
             linear-gradient(var(--kp-cp4-tone) 0 0) var(--kp-cp4-o) calc(100% - var(--kp-cp4-o)) / var(--kp-cp4-b) var(--kp-cp4-a) no-repeat,
-            linear-gradient(var(--kp-cp4-tone) 0 0) calc(100% - var(--kp-cp4-o)) calc(100% - var(--kp-cp4-o)) / var(--kp-cp4-a) var(--kp-cp4-b)
-                no-repeat,
-            linear-gradient(var(--kp-cp4-tone) 0 0) calc(100% - var(--kp-cp4-o)) calc(100% - var(--kp-cp4-o)) / var(--kp-cp4-b) var(--kp-cp4-a)
-                no-repeat;
+            linear-gradient(var(--kp-cp4-tone) 0 0) calc(100% - var(--kp-cp4-o)) calc(100% - var(--kp-cp4-o)) / var(--kp-cp4-a) var(--kp-cp4-b) no-repeat,
+            linear-gradient(var(--kp-cp4-tone) 0 0) calc(100% - var(--kp-cp4-o)) calc(100% - var(--kp-cp4-o)) / var(--kp-cp4-b) var(--kp-cp4-a) no-repeat;
     }
 
     /* ── Identity mark: the plate in the name's colour, cut at its end corner; the letters are the machine's mono ── */
@@ -7064,10 +7061,7 @@
         border-radius: 0;
         clip-path: polygon(0 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%);
     }
-    [data-theme='cyberpunk']
-        .kp-steplist--journey
-        > .kp-steplist__item
-        + .kp-steplist__item:not([data-state='done'], [data-state='current'], [data-state='failed'])::before {
+    [data-theme='cyberpunk'] .kp-steplist--journey > .kp-steplist__item + .kp-steplist__item:not([data-state='done'], [data-state='current'], [data-state='failed'])::before {
         background: repeating-linear-gradient(90deg, var(--border-strong) 0 6px, transparent 6px 10px);
     }
     [data-theme='cyberpunk'] .kp-steplist--journey > .kp-steplist__item:is([data-state='done'], [data-state='current'])::before {

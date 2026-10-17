@@ -236,7 +236,20 @@ export function buildTypeConfirm(doc, { name, anyCase = false, loses = null, str
  */
 export function openConfirmation(
     button,
-    { phrase, strings, onAccept, onCancel, className = '', initialFocus = 'cancel', dependents, blocked, typeName, anyCase, loses, acceptLabel } = {},
+    {
+        phrase,
+        strings,
+        onAccept,
+        onCancel,
+        className = '',
+        initialFocus = 'cancel',
+        dependents,
+        blocked,
+        typeName,
+        anyCase,
+        loses,
+        acceptLabel,
+    } = {},
 ) {
     const s = { ...getStrings(), ...strings };
     const text = phrase ?? button.getAttribute('data-kp-confirm') ?? s.confirm;
