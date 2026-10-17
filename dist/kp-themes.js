@@ -703,6 +703,7 @@ var init_strings = __esm({
       checklistCount: (done, total) => `${done} of ${total}`,
       checklistSummary: (done, total) => `${done} of ${total} done`,
       checklistCheckAll: "Check all",
+      checklistUncheckAll: "Uncheck all",
       checklistClear: "Clear checked",
       checklistUndo: "Undo",
       checklistCleared: (n) => `${n} cleared`,
@@ -23748,16 +23749,26 @@ async function spinWheel(root, { random = Math.random } = {}) {
   const [a0, a1] = wheelAngles(state.items.map(weightOf))[index];
   const land = a0 + (a1 - a0) * (0.5 + (random() - 0.5) * 0.6);
   const short = reduced3();
-  const turns = short ? 0 : Math.max(0, Math.round(Number(root.getAttribute("data-kp-wheel-turns") ?? 4)));
-  const duration2 = short ? Math.max(0, Number(root.getAttribute("data-kp-wheel-reduced-ms") ?? 600)) : Math.max(0, Number(root.getAttribute("data-kp-wheel-duration") ?? 3600));
+  const attr = (name) => {
+    const raw = root.getAttribute(name);
+    const value = raw === null || raw.trim() === "" ? NaN : Number(raw);
+    return Number.isFinite(value) ? Math.max(0, Math.round(value)) : null;
+  };
+  const fixed = attr("data-kp-wheel-turns");
+  const least = attr("data-kp-wheel-turns-min") ?? fixed ?? DEFAULT_TURNS_MIN;
+  const most = Math.max(least, attr("data-kp-wheel-turns-max") ?? fixed ?? DEFAULT_TURNS_MAX);
+  const turns = short ? 0 : least + Math.min(most - least, Math.floor(random() * (most - least + 1)));
+  const base = short ? Math.max(0, Number(root.getAttribute("data-kp-wheel-reduced-ms") ?? 600)) : Math.max(0, Number(root.getAttribute("data-kp-wheel-duration") ?? 3600));
   const from = state.angle;
   const rest = ((-land - from) % 360 + 360) % 360;
   const to = from + turns * 360 + rest;
+  const mean = ((least + most) / 2 + 0.5) * 360;
+  const duration2 = short ? base : base * Math.min(1.4, Math.max(0.6, (to - from) / mean));
   state.spinning = true;
   root.setAttribute("data-kp-wheel-spinning", "");
   part(root, "result").setAttribute("aria-busy", "true");
   paint3(root);
-  root.dispatchEvent(new CustomEvent(WHEEL_SPIN_EVENT, { bubbles: true, detail: { item: { ...item }, index } }));
+  root.dispatchEvent(new CustomEvent(WHEEL_SPIN_EVENT, { bubbles: true, detail: { item: { ...item }, index, turns: (to - from) / 360 } }));
   const disc = part(root, "disc");
   if (duration2 > 0 && to !== from) {
     const ease = getComputedStyle(root).getPropertyValue("--kp-wheel-ease").trim() || "cubic-bezier(0.12, 0.6, 0.1, 1)";
@@ -23812,7 +23823,7 @@ function attachWheels(scope = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var WHEEL, WHEEL_SPIN_EVENT, WHEEL_RESULT_EVENT, STATES, WIRED, SVG2, R, LABEL_IN, LABEL_OUT, weightOf, point, svg, el5, stateOf, part, reduced3;
+var WHEEL, WHEEL_SPIN_EVENT, WHEEL_RESULT_EVENT, STATES, WIRED, SVG2, R, LABEL_IN, LABEL_OUT, DEFAULT_TURNS_MIN, DEFAULT_TURNS_MAX, weightOf, point, svg, el5, stateOf, part, reduced3;
 var init_wheel = __esm({
   "js/wheel.js"() {
     "use strict";
@@ -23827,6 +23838,8 @@ var init_wheel = __esm({
     R = 96;
     LABEL_IN = 34;
     LABEL_OUT = 84;
+    DEFAULT_TURNS_MIN = 3;
+    DEFAULT_TURNS_MAX = 6;
     weightOf = (item) => Math.max(0.05, Number.isFinite(item.weight) ? Number(item.weight) : 1);
     point = (deg, r) => {
       const rad = deg * Math.PI / 180;
@@ -24232,7 +24245,9 @@ function buildCard(id) {
   const glyph = el6("kp-timer__remove-glyph", "span");
   glyph.setAttribute("aria-hidden", "true");
   remove.append(glyph);
-  actions.append(toggle, more, remove);
+  const sizer = el6("kp-button kp-timer__sizer", "span");
+  sizer.setAttribute("aria-hidden", "true");
+  actions.append(sizer, toggle, more, remove);
   card.append(head, time, bar, actions);
   card.setAttribute("aria-labelledby", name.id);
   return card;
@@ -24275,6 +24290,12 @@ function paint4(timer2) {
   if (toggle.textContent !== label) toggle.textContent = label;
   toggle.classList.toggle("kp-button--primary", timer2.state === "done");
   toggle.setAttribute("data-kp-words", [strings.timerPause, strings.timerResume, strings.timerStopRing].join("\n"));
+  const sizer = (
+    /** @type {HTMLElement} */
+    card.querySelector(".kp-timer__sizer")
+  );
+  const widest2 = [strings.timerPause, strings.timerResume, strings.timerStopRing].join("\n");
+  if (sizer.textContent !== widest2) sizer.textContent = widest2;
   const more = (
     /** @type {HTMLButtonElement} */
     card.querySelector(".kp-timer__more")
@@ -25115,12 +25136,17 @@ function part4(list, name) {
       el8("kp-button kp-button--ghost kp-button--sm kp-checklist__all", "button")
     );
     all.type = "button";
+    const none = (
+      /** @type {HTMLButtonElement} */
+      el8("kp-button kp-button--ghost kp-button--sm kp-checklist__none", "button")
+    );
+    none.type = "button";
     const clear = (
       /** @type {HTMLButtonElement} */
       el8("kp-button kp-button--ghost kp-button--sm kp-checklist__clear", "button")
     );
     clear.type = "button";
-    actions.append(all, clear);
+    actions.append(all, none, clear);
     node.append(status, actions);
     list.prepend(node);
   } else if (name === "body") {
@@ -25286,6 +25312,12 @@ function render(list) {
   );
   all.textContent = strings.checklistCheckAll;
   all.disabled = total === 0 || done === total || list.hasAttribute("aria-busy");
+  const none = (
+    /** @type {HTMLButtonElement} */
+    bar.querySelector(".kp-checklist__none")
+  );
+  none.textContent = strings.checklistUncheckAll;
+  none.disabled = done === 0 || list.hasAttribute("aria-busy");
   const clear = (
     /** @type {HTMLButtonElement} */
     bar.querySelector(".kp-checklist__clear")
@@ -25377,7 +25409,7 @@ function endUndo(list) {
   button.hidden = true;
   render(list);
   if (hadFocus)
-    part4(list, "bar").querySelector(".kp-checklist__clear:not(:disabled), .kp-checklist__all:not(:disabled)")?.focus();
+    part4(list, "bar").querySelector(".kp-checklist__clear:not(:disabled), .kp-checklist__none:not(:disabled), .kp-checklist__all:not(:disabled)")?.focus();
 }
 function attachChecklists(root = document) {
   const lists = (
@@ -25432,8 +25464,18 @@ function attachChecklists(root = document) {
       if (target.closest(".kp-checklist__all")) {
         for (const item of items) item.checked = true;
         void glide2(list, render(list));
+        if (document.activeElement === document.body || target.closest(".kp-checklist__all")?.matches(":disabled"))
+          part4(list, "bar").querySelector(".kp-checklist__none:not(:disabled)")?.focus();
         say6(list, strings.checklistSummary(items.length, items.length));
         emit3(list, CHECKLIST_EVENT, { id: null, checked: true });
+      } else if (target.closest(".kp-checklist__none")) {
+        if (!items.some((item) => item.checked)) return;
+        for (const item of items) item.checked = false;
+        void glide2(list, render(list));
+        if (document.activeElement === document.body || target.closest(".kp-checklist__none")?.matches(":disabled"))
+          part4(list, "bar").querySelector(".kp-checklist__all:not(:disabled)")?.focus();
+        say6(list, strings.checklistSummary(0, items.length));
+        emit3(list, CHECKLIST_EVENT, { id: null, checked: false });
       } else if (target.closest(".kp-checklist__clear")) {
         const removed = items.filter((i) => i.checked);
         if (!removed.length) return;

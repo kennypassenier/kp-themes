@@ -59,6 +59,7 @@
                 class="kc-sec"
                 id="wheel"
                 data-review-item="wheel"
+                data-review-themes="formal,dark,cyberpunk,synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium"
                 data-review-topic="cooking"
                 data-review-topic-title="Cooking (AuDHD recipes)"
                 data-review-components="wheel"
@@ -82,10 +83,18 @@
                             middle, and under the wheel “Press Spin to let the wheel choose.”
                         </li>
                         <li>
-                            Press <b>Spin</b> (or Tab to it and press Space): the line says “Turning…”, the wheel turns four times and slows evenly to
-                            a stop with no bounce, about 3.6 s. The chosen segment is filled deeper, the others step back, and under the wheel “The
-                            wheel chose” and the full name in Fraunces over formal’s double rule. The button now says <b>Again</b>; the next spin
-                            never lands on the same dish.
+                            Press <b>Spin</b> (or Tab to it and press Space): the line says “Turning…”, the wheel turns three to six whole turns (a
+                            different number each spin, the log says how many) and slows evenly to a stop with no bounce, about 3.6 s for the mean
+                            travel and a little longer or shorter for a longer or shorter one. The chosen segment is filled deeper, the others step
+                            back, and under the wheel “The wheel chose” and the full name in Fraunces over formal’s double rule. The button now says
+                            <b>Again</b>; the next spin never lands on the same dish.
+                        </li>
+                        <li>
+                            The Spin button in the middle does not move when the pointer is on it, nor when it has focus (it stays on the disc’s
+                            centre; only its colours answer). <b>How the chances are divided</b> resizes the segments: “All equal” makes them the same
+                            size, “Soup ×12” makes soup most of the disc, and the odds follow the size (the log shows the weight of each draw).
+                            <b>How far a spin turns</b> sets the least and most whole turns; each spin draws a number between them, and the wheel
+                            always lands on the dish drawn by the weights.
                         </li>
                         <li>
                             The filter chips change the dishes: the segments grow and shrink to their new size in formal’s time; the wheel and the
@@ -175,6 +184,42 @@
                                 <span class="kp-segmented__label">Nothing fits</span>
                             </button>
                         </div>
+                        <p class="kc-label">How the chances are divided (a segment is as large as its odds)</p>
+                        <div
+                            class="kp-segmented kp-segmented--chips"
+                            id="kc-wheel-weights"
+                            data-kp-segmented="single"
+                            role="radiogroup"
+                            aria-label="How the chances are divided"
+                        >
+                            <button type="button" class="kp-segmented__item" data-value="recency" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">By last eaten</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="equal" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">All equal</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="soup" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Soup ×12</span>
+                            </button>
+                        </div>
+                        <p class="kc-label">How far a spin turns (whole turns, drawn per spin)</p>
+                        <div
+                            class="kp-segmented kp-segmented--chips"
+                            id="kc-wheel-turns"
+                            data-kp-segmented="single"
+                            role="radiogroup"
+                            aria-label="How far a spin turns"
+                        >
+                            <button type="button" class="kp-segmented__item" data-value="3-6" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">3 to 6 turns</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="1-2" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">1 to 2 turns</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="8-10" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">8 to 10 turns</span>
+                            </button>
+                        </div>
                         <div class="kp-wheel" id="kc-wheel" data-kp-wheel aria-label="Tonight’s dinner"></div>
                         <div class="kc-actions">
                             <button type="button" class="kp-button kp-button--sm" id="kc-wheel-load">Load again</button>
@@ -194,6 +239,7 @@
                 class="kc-sec"
                 id="cook"
                 data-review-item="cook"
+                data-review-themes="formal,dark,cyberpunk,synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium"
                 data-review-topic="cooking"
                 data-review-components="focus-steps"
                 data-review-title="One step at a time (cook mode)"
@@ -211,7 +257,8 @@
                     <ul>
                         <li>
                             The large frame opens at <b>Step 3 of 6</b> (as if you came back where you stopped): the count, formal’s progress bar at a
-                            half, the step in large type, “For this step” with the amounts in one column and the names beside them, a
+                            half, the step in large type, “For this step” in a box with room on every side (nothing touches its edge), the amounts in
+                            one column starting on the same line (“450 ml water” stands under “300 g rinsed rice”) and the names beside them, a
                             <b>Start a timer · 10 min</b> button and a warning note. At the foot, <b>Back</b> and <b>Next</b>, each half the width and
                             4 rem high.
                         </li>
@@ -230,7 +277,9 @@
                         </li>
                         <li>
                             <b>Load again</b> shows formal’s busy card over the step (2.5 s, the spinner turning) with both buttons dimmed;
-                            <b>Fail</b> shows a red alert in the step’s place; <b>Empty</b> the dashed empty line. The 390 px frame is the phone.
+                            <b>Fail</b> and <b>Empty</b> fill the whole step area (the same size as a step) and say their sentence large, in the
+                            middle of it: a red alert for Fail, the theme’s empty plate for Empty. The 390 px frame is the phone, its needs box has
+                            the same room.
                         </li>
                         <li>The log shows each <code>kp-focus-steps-change</code>, done, and the screen line’s state.</li>
                     </ul>
@@ -329,6 +378,7 @@
                 class="kc-sec"
                 id="timers"
                 data-review-item="timers"
+                data-review-themes="formal,dark,cyberpunk,synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium"
                 data-review-topic="cooking"
                 data-review-components="timer"
                 data-review-title="Kitchen timers"
@@ -347,11 +397,13 @@
                         <li>
                             Three cards of one height: <b>Rice</b> running, <b>Preheat the oven</b> paused (its time grey, its word “Paused”), and a
                             timer with a long name, cut with an ellipsis (the full name is its tooltip). The time is large, in Fraunces, in figures of
-                            one width; the bar under it is formal’s own progress bar, filling as time passes. Nothing in a card moves while it ticks.
+                            one width, and stands against the right edge of the card; the bar under it is formal’s own progress bar, filling as time
+                            passes. Nothing in a card moves while it ticks.
                         </li>
                         <li>
-                            <b>Pause</b> and <b>Resume</b> swap in the same button, which keeps its size. <b>+1 min</b> adds a minute. <b>✕</b> takes
-                            the card away the theme’s way; the focus goes to the next card.
+                            <b>Pause</b> and <b>Resume</b> swap in the same button, which keeps its width (it is as wide as the widest word) and never
+                            breaks a word over two lines; the same for <b>+1 min</b>. <b>+1 min</b> adds a minute. <b>✕</b> takes the card away the
+                            theme’s way; the focus goes to the next card.
                         </li>
                         <li>
                             In the recipe line, press <b>10 minutes</b>: a new card “Simmer the sauce” arrives the theme’s way. Press it again: no
@@ -455,6 +507,7 @@
                 class="kc-sec"
                 id="quantity"
                 data-review-item="quantity"
+                data-review-themes="cyberpunk,synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium"
                 data-review-topic="cooking"
                 data-review-components="quantity"
                 data-review-title="Quantity with minus and plus"
@@ -657,6 +710,7 @@
                 class="kc-sec"
                 id="checklist"
                 data-review-item="checklist"
+                data-review-themes="formal,dark,cyberpunk,synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium"
                 data-review-topic="cooking"
                 data-review-components="checklist"
                 data-review-title="Checklist whose ticked items sink"
@@ -688,13 +742,17 @@
                         </li>
                         <li>
                             <b>Clear checked</b> takes the ticked rows away; the bar’s line becomes “3 cleared” with an <b>Undo</b> button in the same
-                            place (6 s), which puts them back where they were. <b>Check all</b> ticks everything and dims while all is done.
+                            place (6 s), which puts them back where they were. <b>Check all</b> ticks everything and dims while all is done;
+                            <b>Uncheck all</b> takes every tick off and dims while nothing is ticked (the focus moves to the other one when the one
+                            you pressed dims).
                         </li>
                         <li>
                             The buttons below the list: <b>Load again</b> shows formal’s busy card in the middle of the list (2.5 s, the spinner
                             turning) and then the list; <b>Fail</b> shows a red-edged sentence where the rows were; <b>Empty</b> the dashed empty
-                            line. The second list keeps ticked rows in place (<code>data-kp-checklist-sink="false"</code>). The 360 px frame wraps the
-                            long name onto a second line, with room around it.
+                            line; both fill the list’s whole height and say it large in the middle. The list is never shorter than twelve rows here
+                            (<code>--kp-checklist-min-rows</code>), so loading, ready, empty and failed stand in about the same height and the page
+                            below does not jump. The second list keeps ticked rows in place (<code>data-kp-checklist-sink="false"</code>). The 360 px
+                            frame wraps the long name onto a second line, with room around it.
                         </li>
                         <li>Reduced motion: rows move at once, without the glide. The log shows every event.</li>
                     </ul>
@@ -777,6 +835,7 @@
                 class="kc-sec"
                 id="tri"
                 data-review-item="tri"
+                data-review-themes="cyberpunk,synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium"
                 data-review-topic="cooking"
                 data-review-components="segmented"
                 data-review-title="Three-way filter chips"
@@ -6993,7 +7052,7 @@ pct config 109</code></pre>
             </div>
         </main>
         <script type="application/json" data-review-round>
-            { "round": "2026-10-17-r3-cooking", "received": [] }
+            { "round": "2026-10-17-r3-cooking-2", "received": ["2026-10-17-r3-cooking"] }
         </script>
         <script type="module" src="../kpadopt4/rows.js"></script>
         <script type="module" src="../kpadopt4/flows.js"></script>

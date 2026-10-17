@@ -49,12 +49,22 @@ for (const [i, part] of parts.entries()) {
     // approved the part is decided and keeps the page of its last round.
     const all = part.sections.flatMap((item) => THEMES.split(',').map((theme) => ({ item, theme })));
     const latest = latestVerdicts(verdicts, all);
-    const open = new Map(part.sections.map((item) => [item, THEMES.split(',').filter((theme) => latest.get(`${theme}|${item}`) !== 'approved')]));
+    // A pair reopened because its component changed (formal included) is asked again, first in the list.
+    const reopened = (/** @type {string} */ item) =>
+        (verdicts.reopened ?? [])
+            .filter((/** @type {any} */ r) => r.item === item && !THEMES.split(',').includes(r.theme))
+            .map((/** @type {any} */ r) => r.theme);
+    const open = new Map(
+        part.sections.map((item) => [
+            item,
+            [...reopened(item), ...THEMES.split(',').filter((theme) => latest.get(`${theme}|${item}`) !== 'approved')],
+        ]),
+    );
     const decided = [...open.values()].every((themes) => !themes.length);
     let body = part.body;
     if (!decided)
         for (const [item, left] of open) {
-            if (left.length === 11) continue;
+            if (left.length === 11 && left.join(',') === THEMES) continue;
             const tag = new RegExp(`(<section\\b(?:(?!>)[\\s\\S])*?data-review-item="${item}")`);
             body = left.length
                 ? body.replace(tag, `$1 data-review-themes="${left.join(',')}"`)
@@ -102,7 +112,7 @@ for (const [i, part] of parts.entries()) {
         ) +
         local(tail).replace(
             /<script type="application\/json" data-review-round>[\s\S]*?<\/script>/,
-            `<script type="application/json" data-review-round>\n            ${JSON.stringify({ round: `${ROUND}-${part.topic}`, received })}\n        </script>`,
+            `<script type="application/json" data-review-round>\n            ${JSON.stringify({ round: `${ROUND}-${part.topic}${received.length ? `-${received.length + 1}` : ''}`, received })}\n        </script>`,
         );
     const out = fileURLToPath(new URL('demo.html', dir));
     const config = (await prettier.resolveConfig(out)) ?? {};
