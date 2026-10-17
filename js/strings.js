@@ -553,6 +553,42 @@
  * @property {(label: string) => string} sliderValue  The value box's name: "Temperature, value" [kpadopt5-time]
  * @property {(min: string, max: string, unit: string) => string} sliderInvalid  The line under a slider for a typed value that is not a number in range [kpadopt5-time]
  * @property {(gap: string, unit: string) => string} sliderGap  The line for a typed value that would bring the two thumbs too close [kpadopt5-time]
+ * @property {string} unsavedGroup  The unsaved-changes bar's name for a screen reader (js/unsaved.js) [kpadopt5-time]
+ * @property {string} unsavedNone  The line while nothing is changed [kpadopt5-time]
+ * @property {(n: number) => string} unsavedCount  The chip: "2 changes" [kpadopt5-time]
+ * @property {(n: number) => string} unsavedSave  The Save button with its count: "Save 2 changes" [kpadopt5-time]
+ * @property {string} unsavedSaveNone  The Save button while nothing is changed [kpadopt5-time]
+ * @property {string} unsavedDiscard  The Discard button [kpadopt5-time]
+ * @property {string} unsavedMore  The menu that holds Discard on a narrow bar [kpadopt5-time]
+ * @property {string} unsavedDiscardChanges  Its Discard entry [kpadopt5-time]
+ * @property {string} unsavedDiscardHint  What it does [kpadopt5-time]
+ * @property {string} unsavedShowChanges  Its entry that opens the list [kpadopt5-time]
+ * @property {string} unsavedShowHint  What it does [kpadopt5-time]
+ * @property {string} unsavedNothingToSave  Why Save and Discard are off while nothing is changed [kpadopt5-time]
+ * @property {string} unsavedSavingNow  Why they are off while saving [kpadopt5-time]
+ * @property {string} unsavedListTitle  The list of changes' name [kpadopt5-time]
+ * @property {string} unsavedGoFirst  The button that takes you to the first changed row [kpadopt5-time]
+ * @property {(key: string) => string} unsavedGoTo  A change's name as a link to its row [kpadopt5-time]
+ * @property {string} unsavedRevert  A change's own revert button [kpadopt5-time]
+ * @property {(key: string) => string} unsavedRevertOne  That button's accessible name [kpadopt5-time]
+ * @property {string} unsavedUnnamed  A change whose row has no name [kpadopt5-time]
+ * @property {string} unsavedSecret  A secret's value in the list [kpadopt5-time]
+ * @property {string} unsavedOn  A switch that is on, in the list [kpadopt5-time]
+ * @property {string} unsavedOff  A switch that is off, in the list [kpadopt5-time]
+ * @property {string} unsavedEmpty  An empty value, in the list [kpadopt5-time]
+ * @property {(n: number) => string} unsavedDropped  What the toast says after Discard: "Dropped 2 changes" [kpadopt5-time]
+ * @property {string} unsavedUndo  Its Undo button [kpadopt5-time]
+ * @property {(n: number) => string} unsavedRestoredUndo  What is said after Undo [kpadopt5-time]
+ * @property {(n: number) => string} unsavedRestored  The toast when kept changes come back after a reload [kpadopt5-time]
+ * @property {(n: number) => string} unsavedSavedAll  What is said when every change was saved [kpadopt5-time]
+ * @property {(saved: number, refused: number) => string} unsavedPartly  The alert's first line when some were refused: "1 saved, 1 refused" [kpadopt5-time]
+ * @property {(n: number) => string} unsavedRefused  The alert's first line when none was saved [kpadopt5-time]
+ * @property {(key: string, why: string) => string} unsavedWhy  One refused change and its reason [kpadopt5-time]
+ * @property {string} unsavedDismiss  The alert's close [kpadopt5-time]
+ * @property {string} unsavedLeaveTitle  The question on following a link with unsaved changes [kpadopt5-time]
+ * @property {(n: number) => string} unsavedLeaveText  Its sentence [kpadopt5-time]
+ * @property {string} unsavedLeaveAccept  Its leave button [kpadopt5-time]
+ * @property {string} unsavedLeaveStay  Its stay button [kpadopt5-time]
  * @property {string} compareBefore  The compare slider's label on the before side (js/compare.js) [kpadopt4-ideas]
  * @property {string} compareAfter  Its label on the after side [kpadopt4-ideas]
  * @property {(before: string, after: string) => string} compareSlider  The divider's name for a screen reader [kpadopt4-ideas]
@@ -1325,6 +1361,43 @@ export const DEFAULT_STRINGS = Object.freeze({
     sliderValue: (label) => `${label}, value`,
     sliderInvalid: (min, max, unit) => `Type a number from ${min} to ${max}${unit ? ` ${unit}` : ''}.`,
     sliderGap: (gap, unit) => `The two values must be at least ${gap}${unit ? ` ${unit}` : ''} apart.`,
+    // The unsaved-changes bar (js/unsaved.js) [kpadopt5-time].
+    unsavedGroup: 'Unsaved changes',
+    unsavedNone: 'No changes',
+    unsavedCount: (n) => `${n} ${n === 1 ? 'change' : 'changes'}`,
+    unsavedSave: (n) => `Save ${n} ${n === 1 ? 'change' : 'changes'}`,
+    unsavedSaveNone: 'Save',
+    unsavedDiscard: 'Discard',
+    unsavedMore: 'More',
+    unsavedDiscardChanges: 'Discard changes',
+    unsavedDiscardHint: 'Put every value back; you can undo it',
+    unsavedShowChanges: 'Show the changes',
+    unsavedShowHint: 'What was, and what it is now',
+    unsavedNothingToSave: 'Nothing has changed yet.',
+    unsavedSavingNow: 'Saving the changes.',
+    unsavedListTitle: 'Unsaved changes',
+    unsavedGoFirst: 'Go to the first',
+    unsavedGoTo: (key) => `Go to ${key}`,
+    unsavedRevert: 'Revert',
+    unsavedRevertOne: (key) => `Revert ${key}`,
+    unsavedUnnamed: 'Unnamed setting',
+    unsavedSecret: '••••••',
+    unsavedOn: 'on',
+    unsavedOff: 'off',
+    unsavedEmpty: '(empty)',
+    unsavedDropped: (n) => `Dropped ${n} ${n === 1 ? 'change' : 'changes'}`,
+    unsavedUndo: 'Undo',
+    unsavedRestoredUndo: (n) => `${n} ${n === 1 ? 'change' : 'changes'} back`,
+    unsavedRestored: (n) => `${n} ${n === 1 ? 'change' : 'changes'} kept from before you left`,
+    unsavedSavedAll: (n) => `Saved ${n} ${n === 1 ? 'change' : 'changes'}`,
+    unsavedPartly: (saved, refused) => `${saved} saved, ${refused} refused`,
+    unsavedRefused: (n) => (n === 1 ? 'Could not save 1 change' : `Could not save ${n} changes`),
+    unsavedWhy: (key, why) => `${key}: ${why}`,
+    unsavedDismiss: 'Dismiss',
+    unsavedLeaveTitle: 'Leave without saving?',
+    unsavedLeaveText: (n) => `${n} ${n === 1 ? 'change is' : 'changes are'} not saved yet and will be lost if you leave.`,
+    unsavedLeaveAccept: 'Leave',
+    unsavedLeaveStay: 'Stay',
     // The compare slider [kpadopt4-ideas].
     compareBefore: 'Before',
     compareAfter: 'After',

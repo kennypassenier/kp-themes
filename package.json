@@ -168,6 +168,10 @@
             "types": "./js/range.d.ts",
             "default": "./js/range.js"
         },
+        "./js/unsaved": {
+            "types": "./js/unsaved.d.ts",
+            "default": "./js/unsaved.js"
+        },
         "./js/slider": {
             "types": "./js/slider.d.ts",
             "default": "./js/slider.js"

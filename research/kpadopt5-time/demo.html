@@ -40,7 +40,7 @@
                     approved.
                 </p>
                 <p>
-                    Judge in the review dialog (&ldquo;Review in a dialog&rdquo; at the top): 6 topics, one step each in formal. Every section says
+                    Judge in the review dialog (&ldquo;Review in a dialog&rdquo; at the top): 7 topics, one step each in formal. Every section says
                     under <b>Expected</b> what you should see and what each control does. Everything with a <code>kp-</code> class and every script
                     under <code>js/</code> is the package; the sample data, the frames marked &ldquo;phone width&rdquo; (390 px boxes standing in for
                     a phone), the fixed clock (Saturday 17/10/2026, so a reminder for &ldquo;tomorrow&rdquo; always means 18/10/2026), the event
@@ -54,6 +54,7 @@
                         <li><a href="#topic-dated">Options with a date and an age</a> <span class="kt-toc__count">2 sections</span></li>
                         <li><a href="#topic-sentence">Sentence form</a> <span class="kt-toc__count">2 sections</span></li>
                         <li><a href="#topic-slider">Slider</a> <span class="kt-toc__count">2 sections</span></li>
+                        <li><a href="#topic-unsaved">Unsaved changes</a> <span class="kt-toc__count">2 sections</span></li>
                     </ol>
                 </nav>
             </header>
@@ -1457,6 +1458,610 @@
                                 data-kp-unit="€"
                                 aria-label="Price, phone"
                             ></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- ================================================================ topic: Unsaved changes -->
+            <h2 class="kt-topic" id="topic-unsaved">Unsaved changes</h2>
+            <section
+                class="kt-sec"
+                id="unsaved"
+                data-review-item="unsaved"
+                data-review-topic="unsaved"
+                data-review-topic-title="Unsaved changes"
+                data-review-title="Unsaved changes: the bar in the header and at the foot"
+                data-review-choices='[{"id": "placement", "label": "Where the bar stands", "options": [{"value": "header+sticky", "label": "In the header, at the foot once the header is out of view (the default)", "hint": "Your answer of 17/10/2026: in the header while you see it; scroll on and the same bar appears at the foot of the screen."}, {"value": "header", "label": "Only in the header", "hint": "Never at the foot: a long page loses sight of what is open."}, {"value": "sticky-bottom", "label": "Only at the foot", "hint": "The bar sticks to the foot while anything is changed; the header shows nothing."}]}]'
+                aria-labelledby="h-unsaved"
+            >
+                <div class="kt-sec__head">
+                    <h2 id="h-unsaved">Unsaved changes: the bar in the header and at the foot</h2>
+                    <p>
+                        <code>&lt;div class="kp-unsaved" data-kp-unsaved&gt;</code> (js/unsaved.js): it counts the rows you change, offers Save and
+                        Discard, and warns on leaving. A settings page in a box you can scroll; nothing is written anywhere.
+                    </p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Nothing changed:</b> the header shows <b>No changes</b> and Save and Discard dimmed; hover them for the reason (<i
+                                >Nothing has changed yet.</i
+                            >). Change <b>http.port</b>: the row gets a primary rule at its start, the header shows the chip <b>1 change</b>,
+                            <b>Discard</b> and <b>Save 1 change</b>; change a second row and it reads <b>2 changes</b>. Put a value back by hand and
+                            the count drops; the bar never changes size or moves the header.
+                        </li>
+                        <li>
+                            Press the chip: the list <b>http.port 8080 → 9090</b> with a <b>Revert</b> for each; the row name takes you to the row,
+                            <b>Go to the first</b> too; Esc closes it. <b>Discard</b> puts every value back and a toast
+                            <b>Dropped 2 changes</b> offers <b>Undo</b> for six seconds. <b>notify.token</b> is a password: its list entry reads
+                            <b>••••••</b>.
+                        </li>
+                        <li>
+                            <b>Scroll the box down</b> (or press <b>Header scrolled away</b>): the bar leaves the header's place (which keeps its
+                            size) and stands at the <b>foot of the box</b> on a raised plate with the same chip, Discard and Save. Scroll up: it goes
+                            home.
+                        </li>
+                        <li>
+                            <b>Save</b> puts the spinner in the button and the grey box shows <code>kp-unsaved-save</code>; the demo then answers
+                            after a moment. <b>Ctrl+S</b> saves too. Following a link with changes open asks <b>Leave without saving?</b>; closing the
+                            tab asks the browser's own question.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The chip is formal's info badge; Save is the primary navy button; the docked bar is formal's raised plate (hairline, soft
+                        shadow); a changed row wears formal's primary rule in the gap before its label.
+                    </p>
+                </div>
+                <div data-review-controls>
+                    <div role="group" aria-label="Where the page is scrolled" class="kt-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-kt-unsaved-scroll="top">Header in view</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kt-unsaved-scroll="away">Header scrolled away</button>
+                    </div>
+                </div>
+                <div class="kt-scrollframe">
+                    <div class="kt-scroll" id="kt-unsaved-a-scroll">
+                        <header class="kp-page-header">
+                            <div class="kp-page-header__inner">
+                                <div>
+                                    <h3 class="kp-page-header__title">Host settings</h3>
+                                    <p class="kp-page-header__description">
+                                        What the host reads from host.toml. Edit a value; nothing is written until you save.
+                                    </p>
+                                </div>
+                                <div class="kp-page-header__actions">
+                                    <div
+                                        class="kp-unsaved"
+                                        data-kp-unsaved
+                                        id="kt-unsaved-a"
+                                        data-kp-unsaved-for="#kt-unsaved-a-form"
+                                        data-kp-name="kt-unsaved-a"
+                                        data-kp-dock="container"
+                                        data-kp-scroll-root="#kt-unsaved-a-scroll"
+                                        data-kp-keep="off"
+                                    ></div>
+                                </div>
+                            </div>
+                        </header>
+                        <form class="kp-formrows kp-formrows--lines" id="kt-unsaved-a-form" action="#" data-kt-form>
+                            <div class="kp-formrow">
+                                <div class="kp-formrow__label">http.port<small>The port the dashboard listens on</small></div>
+                                <div class="kp-formrow__control">
+                                    <input class="kp-field__input" type="number" name="kt-unsaved-a-port" value="8080" aria-label="http.port" />
+                                </div>
+                                <div class="kp-formrow__aside">default 8080</div>
+                            </div>
+                            <div class="kp-formrow">
+                                <div class="kp-formrow__label">http.bind<small>The address it listens on</small></div>
+                                <div class="kp-formrow__control">
+                                    <input class="kp-field__input" type="text" name="kt-unsaved-a-bind" value="0.0.0.0" aria-label="http.bind" />
+                                </div>
+                                <div class="kp-formrow__aside">default 0.0.0.0</div>
+                            </div>
+                            <div class="kp-formrow">
+                                <div class="kp-formrow__label">log.level<small>How much the host writes to its journal</small></div>
+                                <div class="kp-formrow__control">
+                                    <select class="kp-field__input" name="kt-unsaved-a-level" aria-label="log.level">
+                                        <option value="warn">warn</option>
+                                        <option value="info" selected>info</option>
+                                        <option value="debug">debug</option>
+                                    </select>
+                                </div>
+                                <div class="kp-formrow__aside">default info</div>
+                            </div>
+                            <div class="kp-formrow">
+                                <div class="kp-formrow__label">backup.enabled<small>Back the host up every night</small></div>
+                                <div class="kp-formrow__control">
+                                    <label class="kp-field__option"
+                                        ><input class="kp-field__check" type="checkbox" name="kt-unsaved-a-backup" checked /> Enabled</label
+                                    >
+                                </div>
+                                <div class="kp-formrow__aside"></div>
+                            </div>
+                            <div class="kp-formrow">
+                                <div class="kp-formrow__label">backup.hour<small>The time the nightly backup starts</small></div>
+                                <div class="kp-formrow__control">
+                                    <input class="kp-field__input" type="text" name="kt-unsaved-a-hour" value="03:00" aria-label="backup.hour" />
+                                </div>
+                                <div class="kp-formrow__aside">HH:MM</div>
+                            </div>
+                            <div class="kp-formrow">
+                                <div class="kp-formrow__label">notify.token<small>The token the notifications are sent with</small></div>
+                                <div class="kp-formrow__control">
+                                    <input
+                                        class="kp-field__input"
+                                        type="password"
+                                        name="kt-unsaved-a-token"
+                                        value="s3cr3t-token"
+                                        aria-label="notify.token"
+                                    />
+                                </div>
+                                <div class="kp-formrow__aside">a secret: never kept</div>
+                            </div>
+                            <div class="kp-formrow">
+                                <div class="kp-formrow__label">ui.theme<small>The theme the dashboard opens in</small></div>
+                                <div class="kp-formrow__control">
+                                    <select class="kp-field__input" name="kt-unsaved-a-theme" aria-label="ui.theme">
+                                        <option value="formal" selected>formal</option>
+                                        <option value="dark">dark</option>
+                                        <option value="titanium">titanium</option>
+                                    </select>
+                                </div>
+                                <div class="kp-formrow__aside">default formal</div>
+                            </div>
+                            <div class="kp-formrow">
+                                <div class="kp-formrow__label">ui.density<small>How close the rows stand</small></div>
+                                <div class="kp-formrow__control">
+                                    <select class="kp-field__input" name="kt-unsaved-a-density" aria-label="ui.density">
+                                        <option value="comfortable" selected>comfortable</option>
+                                        <option value="compact">compact</option>
+                                    </select>
+                                </div>
+                                <div class="kp-formrow__aside">default comfortable</div>
+                            </div>
+                            <div class="kp-formrow">
+                                <div class="kp-formrow__label">cache.size.1<small>The size of the 1. cache, in MB</small></div>
+                                <div class="kp-formrow__control">
+                                    <input class="kp-field__input" type="number" name="kt-unsaved-a-cache1" value="64" aria-label="cache.size.1" />
+                                </div>
+                                <div class="kp-formrow__aside">MB</div>
+                            </div>
+                            <div class="kp-formrow">
+                                <div class="kp-formrow__label">cache.size.2<small>The size of the 2. cache, in MB</small></div>
+                                <div class="kp-formrow__control">
+                                    <input class="kp-field__input" type="number" name="kt-unsaved-a-cache2" value="128" aria-label="cache.size.2" />
+                                </div>
+                                <div class="kp-formrow__aside">MB</div>
+                            </div>
+                            <div class="kp-formrow">
+                                <div class="kp-formrow__label">cache.size.3<small>The size of the 3. cache, in MB</small></div>
+                                <div class="kp-formrow__control">
+                                    <input class="kp-field__input" type="number" name="kt-unsaved-a-cache3" value="192" aria-label="cache.size.3" />
+                                </div>
+                                <div class="kp-formrow__aside">MB</div>
+                            </div>
+                            <div class="kp-formrow">
+                                <div class="kp-formrow__label">cache.size.4<small>The size of the 4. cache, in MB</small></div>
+                                <div class="kp-formrow__control">
+                                    <input class="kp-field__input" type="number" name="kt-unsaved-a-cache4" value="256" aria-label="cache.size.4" />
+                                </div>
+                                <div class="kp-formrow__aside">MB</div>
+                            </div>
+                            <div class="kp-formrow">
+                                <div class="kp-formrow__label">cache.size.5<small>The size of the 5. cache, in MB</small></div>
+                                <div class="kp-formrow__control">
+                                    <input class="kp-field__input" type="number" name="kt-unsaved-a-cache5" value="320" aria-label="cache.size.5" />
+                                </div>
+                                <div class="kp-formrow__aside">MB</div>
+                            </div>
+                            <div class="kp-formrow">
+                                <div class="kp-formrow__label">cache.size.6<small>The size of the 6. cache, in MB</small></div>
+                                <div class="kp-formrow__control">
+                                    <input class="kp-field__input" type="number" name="kt-unsaved-a-cache6" value="384" aria-label="cache.size.6" />
+                                </div>
+                                <div class="kp-formrow__aside">MB</div>
+                            </div>
+                            <div class="kp-formrow">
+                                <div class="kp-formrow__label">cache.size.7<small>The size of the 7. cache, in MB</small></div>
+                                <div class="kp-formrow__control">
+                                    <input class="kp-field__input" type="number" name="kt-unsaved-a-cache7" value="448" aria-label="cache.size.7" />
+                                </div>
+                                <div class="kp-formrow__aside">MB</div>
+                            </div>
+                            <div class="kp-formrow">
+                                <div class="kp-formrow__label">cache.size.8<small>The size of the 8. cache, in MB</small></div>
+                                <div class="kp-formrow__control">
+                                    <input class="kp-field__input" type="number" name="kt-unsaved-a-cache8" value="512" aria-label="cache.size.8" />
+                                </div>
+                                <div class="kp-formrow__aside">MB</div>
+                            </div>
+                        </form>
+                        <p><a href="../../catalogue/agenda.html">Back to the agenda</a> (a link: with changes open it asks first)</p>
+                    </div>
+                </div>
+                <pre class="kt-log" id="kt-unsaved-log" aria-live="polite"></pre>
+            </section>
+            <section
+                class="kt-sec"
+                id="unsaved-states"
+                data-review-item="unsaved-states"
+                data-review-topic="unsaved"
+                data-review-title="Unsaved changes: every state and phone width"
+                aria-labelledby="h-unsaved-states"
+            >
+                <div class="kt-sec__head">
+                    <h2 id="h-unsaved-states">Unsaved changes: every state and phone width</h2>
+                    <p>
+                        Clean, two changes, saving, partly refused and kept across a reload; then the bar in a 390 px box, where Discard moves behind
+                        More.
+                    </p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Press <b>Clean</b>, <b>Two changes</b>, <b>Saving</b> and <b>Partly refused</b> in the box above the page: the first page
+                            follows. <b>Saving</b>: the spinner in Save in place of its words (same width), the buttons off with the reason
+                            <i>Saving the changes.</i> <b>Partly refused</b>: one change goes through (its row loses the rule), the other stays marked
+                            with a red rule and an alert says <b>1 saved, 1 refused</b> with
+                            <b>http.port: The port is already used by another service.</b>; the count is now <b>1 change</b> and Save tries again.
+                        </li>
+                        <li>
+                            <b>Reload with changes kept</b>: the page reloads and a toast says <b>2 changes kept from before you left</b>; the two
+                            rows are marked again. The password row is never kept.
+                        </li>
+                        <li>
+                            <b>Phone width</b>: in the 390 px box the bar shows the chip, <b>More</b> and Save; More holds <b>Discard changes</b> and
+                            <b>Show the changes</b>; nothing is cut.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The refused alert is formal's destructive alert under the bar; the spinner is formal's own; the red rule on a refused row is
+                        the destructive pair.
+                    </p>
+                </div>
+                <div data-review-controls>
+                    <div role="group" aria-label="State of the first page" class="kt-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-kt-unsaved-state="clean">Clean</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kt-unsaved-state="dirty">Two changes</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kt-unsaved-state="saving">Saving</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kt-unsaved-state="refused">Partly refused</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kt-unsaved-state="reload">Reload with changes kept</button>
+                    </div>
+                </div>
+                <div class="kt-stack">
+                    <div class="kt-case">
+                        <p class="kt-label">The page the buttons drive</p>
+                        <div class="kt-scrollframe">
+                            <div class="kt-scroll" id="kt-unsaved-live-scroll">
+                                <header class="kp-page-header">
+                                    <div class="kp-page-header__inner">
+                                        <div>
+                                            <h3 class="kp-page-header__title">Host settings</h3>
+                                            <p class="kp-page-header__description">
+                                                What the host reads from host.toml. Edit a value; nothing is written until you save.
+                                            </p>
+                                        </div>
+                                        <div class="kp-page-header__actions">
+                                            <div
+                                                class="kp-unsaved"
+                                                data-kp-unsaved
+                                                id="kt-unsaved-live"
+                                                data-kp-unsaved-for="#kt-unsaved-live-form"
+                                                data-kp-name="kt-unsaved-live"
+                                                data-kp-dock="container"
+                                                data-kp-scroll-root="#kt-unsaved-live-scroll"
+                                                data-kp-keep="session"
+                                            ></div>
+                                        </div>
+                                    </div>
+                                </header>
+                                <form class="kp-formrows kp-formrows--lines" id="kt-unsaved-live-form" action="#" data-kt-form>
+                                    <div class="kp-formrow">
+                                        <div class="kp-formrow__label">http.port<small>The port the dashboard listens on</small></div>
+                                        <div class="kp-formrow__control">
+                                            <input
+                                                class="kp-field__input"
+                                                type="number"
+                                                name="kt-unsaved-live-port"
+                                                value="8080"
+                                                aria-label="http.port"
+                                            />
+                                        </div>
+                                        <div class="kp-formrow__aside">default 8080</div>
+                                    </div>
+                                    <div class="kp-formrow">
+                                        <div class="kp-formrow__label">http.bind<small>The address it listens on</small></div>
+                                        <div class="kp-formrow__control">
+                                            <input
+                                                class="kp-field__input"
+                                                type="text"
+                                                name="kt-unsaved-live-bind"
+                                                value="0.0.0.0"
+                                                aria-label="http.bind"
+                                            />
+                                        </div>
+                                        <div class="kp-formrow__aside">default 0.0.0.0</div>
+                                    </div>
+                                    <div class="kp-formrow">
+                                        <div class="kp-formrow__label">log.level<small>How much the host writes to its journal</small></div>
+                                        <div class="kp-formrow__control">
+                                            <select class="kp-field__input" name="kt-unsaved-live-level" aria-label="log.level">
+                                                <option value="warn">warn</option>
+                                                <option value="info" selected>info</option>
+                                                <option value="debug">debug</option>
+                                            </select>
+                                        </div>
+                                        <div class="kp-formrow__aside">default info</div>
+                                    </div>
+                                    <div class="kp-formrow">
+                                        <div class="kp-formrow__label">backup.enabled<small>Back the host up every night</small></div>
+                                        <div class="kp-formrow__control">
+                                            <label class="kp-field__option"
+                                                ><input class="kp-field__check" type="checkbox" name="kt-unsaved-live-backup" checked />
+                                                Enabled</label
+                                            >
+                                        </div>
+                                        <div class="kp-formrow__aside"></div>
+                                    </div>
+                                    <div class="kp-formrow">
+                                        <div class="kp-formrow__label">backup.hour<small>The time the nightly backup starts</small></div>
+                                        <div class="kp-formrow__control">
+                                            <input
+                                                class="kp-field__input"
+                                                type="text"
+                                                name="kt-unsaved-live-hour"
+                                                value="03:00"
+                                                aria-label="backup.hour"
+                                            />
+                                        </div>
+                                        <div class="kp-formrow__aside">HH:MM</div>
+                                    </div>
+                                    <div class="kp-formrow">
+                                        <div class="kp-formrow__label">notify.token<small>The token the notifications are sent with</small></div>
+                                        <div class="kp-formrow__control">
+                                            <input
+                                                class="kp-field__input"
+                                                type="password"
+                                                name="kt-unsaved-live-token"
+                                                value="s3cr3t-token"
+                                                aria-label="notify.token"
+                                            />
+                                        </div>
+                                        <div class="kp-formrow__aside">a secret: never kept</div>
+                                    </div>
+                                    <div class="kp-formrow">
+                                        <div class="kp-formrow__label">ui.theme<small>The theme the dashboard opens in</small></div>
+                                        <div class="kp-formrow__control">
+                                            <select class="kp-field__input" name="kt-unsaved-live-theme" aria-label="ui.theme">
+                                                <option value="formal" selected>formal</option>
+                                                <option value="dark">dark</option>
+                                                <option value="titanium">titanium</option>
+                                            </select>
+                                        </div>
+                                        <div class="kp-formrow__aside">default formal</div>
+                                    </div>
+                                    <div class="kp-formrow">
+                                        <div class="kp-formrow__label">ui.density<small>How close the rows stand</small></div>
+                                        <div class="kp-formrow__control">
+                                            <select class="kp-field__input" name="kt-unsaved-live-density" aria-label="ui.density">
+                                                <option value="comfortable" selected>comfortable</option>
+                                                <option value="compact">compact</option>
+                                            </select>
+                                        </div>
+                                        <div class="kp-formrow__aside">default comfortable</div>
+                                    </div>
+                                    <div class="kp-formrow">
+                                        <div class="kp-formrow__label">cache.size.1<small>The size of the 1. cache, in MB</small></div>
+                                        <div class="kp-formrow__control">
+                                            <input
+                                                class="kp-field__input"
+                                                type="number"
+                                                name="kt-unsaved-live-cache1"
+                                                value="64"
+                                                aria-label="cache.size.1"
+                                            />
+                                        </div>
+                                        <div class="kp-formrow__aside">MB</div>
+                                    </div>
+                                    <div class="kp-formrow">
+                                        <div class="kp-formrow__label">cache.size.2<small>The size of the 2. cache, in MB</small></div>
+                                        <div class="kp-formrow__control">
+                                            <input
+                                                class="kp-field__input"
+                                                type="number"
+                                                name="kt-unsaved-live-cache2"
+                                                value="128"
+                                                aria-label="cache.size.2"
+                                            />
+                                        </div>
+                                        <div class="kp-formrow__aside">MB</div>
+                                    </div>
+                                    <div class="kp-formrow">
+                                        <div class="kp-formrow__label">cache.size.3<small>The size of the 3. cache, in MB</small></div>
+                                        <div class="kp-formrow__control">
+                                            <input
+                                                class="kp-field__input"
+                                                type="number"
+                                                name="kt-unsaved-live-cache3"
+                                                value="192"
+                                                aria-label="cache.size.3"
+                                            />
+                                        </div>
+                                        <div class="kp-formrow__aside">MB</div>
+                                    </div>
+                                    <div class="kp-formrow">
+                                        <div class="kp-formrow__label">cache.size.4<small>The size of the 4. cache, in MB</small></div>
+                                        <div class="kp-formrow__control">
+                                            <input
+                                                class="kp-field__input"
+                                                type="number"
+                                                name="kt-unsaved-live-cache4"
+                                                value="256"
+                                                aria-label="cache.size.4"
+                                            />
+                                        </div>
+                                        <div class="kp-formrow__aside">MB</div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">Phone width</p>
+                        <div class="kt-frame kt-frame--phone">
+                            <div class="kt-scrollframe">
+                                <div class="kt-scroll" id="kt-unsaved-narrow-scroll">
+                                    <header class="kp-page-header">
+                                        <div class="kp-page-header__inner">
+                                            <div>
+                                                <h3 class="kp-page-header__title">Settings</h3>
+                                                <p class="kp-page-header__description">
+                                                    What the host reads from host.toml. Edit a value; nothing is written until you save.
+                                                </p>
+                                            </div>
+                                            <div class="kp-page-header__actions">
+                                                <div
+                                                    class="kp-unsaved"
+                                                    data-kp-unsaved
+                                                    id="kt-unsaved-narrow"
+                                                    data-kp-unsaved-for="#kt-unsaved-narrow-form"
+                                                    data-kp-name="kt-unsaved-narrow"
+                                                    data-kp-dock="container"
+                                                    data-kp-scroll-root="#kt-unsaved-narrow-scroll"
+                                                    data-kp-keep="off"
+                                                ></div>
+                                            </div>
+                                        </div>
+                                    </header>
+                                    <form class="kp-formrows kp-formrows--lines" id="kt-unsaved-narrow-form" action="#" data-kt-form>
+                                        <div class="kp-formrow">
+                                            <div class="kp-formrow__label">http.port<small>The port the dashboard listens on</small></div>
+                                            <div class="kp-formrow__control">
+                                                <input
+                                                    class="kp-field__input"
+                                                    type="number"
+                                                    name="kt-unsaved-narrow-port"
+                                                    value="8080"
+                                                    aria-label="http.port"
+                                                />
+                                            </div>
+                                            <div class="kp-formrow__aside">default 8080</div>
+                                        </div>
+                                        <div class="kp-formrow">
+                                            <div class="kp-formrow__label">http.bind<small>The address it listens on</small></div>
+                                            <div class="kp-formrow__control">
+                                                <input
+                                                    class="kp-field__input"
+                                                    type="text"
+                                                    name="kt-unsaved-narrow-bind"
+                                                    value="0.0.0.0"
+                                                    aria-label="http.bind"
+                                                />
+                                            </div>
+                                            <div class="kp-formrow__aside">default 0.0.0.0</div>
+                                        </div>
+                                        <div class="kp-formrow">
+                                            <div class="kp-formrow__label">log.level<small>How much the host writes to its journal</small></div>
+                                            <div class="kp-formrow__control">
+                                                <select class="kp-field__input" name="kt-unsaved-narrow-level" aria-label="log.level">
+                                                    <option value="warn">warn</option>
+                                                    <option value="info" selected>info</option>
+                                                    <option value="debug">debug</option>
+                                                </select>
+                                            </div>
+                                            <div class="kp-formrow__aside">default info</div>
+                                        </div>
+                                        <div class="kp-formrow">
+                                            <div class="kp-formrow__label">backup.enabled<small>Back the host up every night</small></div>
+                                            <div class="kp-formrow__control">
+                                                <label class="kp-field__option"
+                                                    ><input class="kp-field__check" type="checkbox" name="kt-unsaved-narrow-backup" checked />
+                                                    Enabled</label
+                                                >
+                                            </div>
+                                            <div class="kp-formrow__aside"></div>
+                                        </div>
+                                        <div class="kp-formrow">
+                                            <div class="kp-formrow__label">backup.hour<small>The time the nightly backup starts</small></div>
+                                            <div class="kp-formrow__control">
+                                                <input
+                                                    class="kp-field__input"
+                                                    type="text"
+                                                    name="kt-unsaved-narrow-hour"
+                                                    value="03:00"
+                                                    aria-label="backup.hour"
+                                                />
+                                            </div>
+                                            <div class="kp-formrow__aside">HH:MM</div>
+                                        </div>
+                                        <div class="kp-formrow">
+                                            <div class="kp-formrow__label">notify.token<small>The token the notifications are sent with</small></div>
+                                            <div class="kp-formrow__control">
+                                                <input
+                                                    class="kp-field__input"
+                                                    type="password"
+                                                    name="kt-unsaved-narrow-token"
+                                                    value="s3cr3t-token"
+                                                    aria-label="notify.token"
+                                                />
+                                            </div>
+                                            <div class="kp-formrow__aside">a secret: never kept</div>
+                                        </div>
+                                        <div class="kp-formrow">
+                                            <div class="kp-formrow__label">ui.theme<small>The theme the dashboard opens in</small></div>
+                                            <div class="kp-formrow__control">
+                                                <select class="kp-field__input" name="kt-unsaved-narrow-theme" aria-label="ui.theme">
+                                                    <option value="formal" selected>formal</option>
+                                                    <option value="dark">dark</option>
+                                                    <option value="titanium">titanium</option>
+                                                </select>
+                                            </div>
+                                            <div class="kp-formrow__aside">default formal</div>
+                                        </div>
+                                        <div class="kp-formrow">
+                                            <div class="kp-formrow__label">ui.density<small>How close the rows stand</small></div>
+                                            <div class="kp-formrow__control">
+                                                <select class="kp-field__input" name="kt-unsaved-narrow-density" aria-label="ui.density">
+                                                    <option value="comfortable" selected>comfortable</option>
+                                                    <option value="compact">compact</option>
+                                                </select>
+                                            </div>
+                                            <div class="kp-formrow__aside">default comfortable</div>
+                                        </div>
+                                        <div class="kp-formrow">
+                                            <div class="kp-formrow__label">cache.size.1<small>The size of the 1. cache, in MB</small></div>
+                                            <div class="kp-formrow__control">
+                                                <input
+                                                    class="kp-field__input"
+                                                    type="number"
+                                                    name="kt-unsaved-narrow-cache1"
+                                                    value="64"
+                                                    aria-label="cache.size.1"
+                                                />
+                                            </div>
+                                            <div class="kp-formrow__aside">MB</div>
+                                        </div>
+                                        <div class="kp-formrow">
+                                            <div class="kp-formrow__label">cache.size.2<small>The size of the 2. cache, in MB</small></div>
+                                            <div class="kp-formrow__control">
+                                                <input
+                                                    class="kp-field__input"
+                                                    type="number"
+                                                    name="kt-unsaved-narrow-cache2"
+                                                    value="128"
+                                                    aria-label="cache.size.2"
+                                                />
+                                            </div>
+                                            <div class="kp-formrow__aside">MB</div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

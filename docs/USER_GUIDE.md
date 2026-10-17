@@ -2264,6 +2264,27 @@ to the step, and refused with a line under the slider if it is not a number in r
 `data-kp-default` is what a double-click on a thumb goes back to, `data-kp-commit="input"` makes `kp-slider-change` fire on every move instead of
 on release. `kp-slider-input` and `kp-slider-change` carry `{ values, value, thumb, text }`; `setSliderValues(el, [..])` sets without an event;
 `setSliderState(el, 'loading')` shows the skeleton. The words are `slider…`. Knobs: `--kp-slider-thumb` (2.75rem), `--kp-slider-rail`, `--kp-slider-fill`.
+### Unsaved changes
+
+A bar that says "2 changes", offers Save and Discard, and warns on leaving, in the page header and, once the header is scrolled away, at the foot of the screen:
+
+```html
+<div class="kp-page-header__actions">
+    <div class="kp-unsaved" data-kp-unsaved data-kp-unsaved-for="#settings" data-kp-name="settings"></div>
+</div>
+```
+
+`attachUnsaved(root)` (`js/unsaved.js`, attached by `js/auto.js`) watches the form (or the area `data-kp-unsaved-for` names) and counts the rows marked
+`data-kp-changed` (`.kp-formrow`, `.kp-kv__row`, or any `[data-kp-row]`); it marks them itself as the form is edited, against the values
+the markup carries (`value`, `checked`, `selected` as written; `data-kp-track="app"` leaves the marking to the page). Call `markUnsavedClean(el)` after your own
+script has loaded values into the form. The chip opens the list `key old → new` with a Revert for each change; a password or a `[data-kp-secret]` shows `••••••`.
+Save fires the cancelable `kp-unsaved-save` with `{ changes }` and puts the spinner in the button; answer with
+`unsavedSaved(el, { refused: { 'http.port': 'The port is already used.' } })`: what went through stops counting, what was refused stays marked and the bar says why.
+Discard puts every value back and offers Undo for `data-kp-undo-ms` (6000, 0 for none). Ctrl or Cmd+S saves. `data-kp-warn-leave` (`both`) asks before the tab closes and
+before a link leaves the page (`kp-unsaved-leave`, cancelable, then the package's confirmation). `data-kp-keep="session"` keeps the changes through a reload
+(never `[type=password], [data-kp-secret]`, or what `data-kp-keep-exclude` names) and says so in a toast. `data-kp-placement` is `header+sticky` (default), `header` or
+`sticky-bottom`; for a page that scrolls inside a box use `data-kp-dock="container"` and `data-kp-scroll-root="#box"`. The words are `unsaved…`.
+Knobs: `--kp-unsaved-dock-width`, `--kp-unsaved-dock-offset`, `--kp-unsaved-save-min`.
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

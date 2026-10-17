@@ -3769,6 +3769,37 @@ setGanttState(timeline, 'loading');
         ],
     },
     {
+        id: 'unsaved',
+        title: 'Unsaved changes bar',
+        group: 'Forms',
+        classes: ['kp-unsaved'],
+        exports: [],
+        intro: 'A bar that counts the rows you changed (“2 changes”), lists what was and what is, offers Save and Discard with Undo, and warns when you leave. It stands in the page header and, once the header is scrolled out of view, at the foot of the screen.',
+        whenToUse: 'A settings or edit page whose changes are written together. For a single field that saves itself, use the field’s own state.',
+        examples: [
+            {
+                title: 'In a page header',
+                why: 'The bar watches the form and marks the changed rows; the page answers Save.',
+                markup: `
+<div class="kp-unsaved" data-kp-unsaved data-kp-unsaved-for="#settings" data-kp-name="settings"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-placement', what: '`header+sticky` (default), `header` or `sticky-bottom`.' },
+            { name: 'data-kp-dock', what: '`viewport` (default) or `container`, with `data-kp-scroll-root`.' },
+            { name: 'data-kp-track', what: '`auto` (default) marks the rows as they are edited; `app` leaves it to the page.' },
+            { name: 'data-kp-warn-leave', what: '`both` (default), `browser`, `app` or `off`.' },
+            { name: 'data-kp-keep', what: '`session` (default) keeps the changes through a reload; `off`.' },
+            { name: 'data-kp-undo-ms', what: 'How long Undo is offered after Discard; 6000, 0 for none.' },
+            { name: 'data-kp-save-label', what: 'The Save words, `{n}` for the count.' },
+        ],
+        accessibility: [
+            'Built in — the count is announced politely, Save and Discard say why they are off, the list is a dialog with Esc, a refused save is an alert, Ctrl or Cmd+S saves.',
+            'Yours — answer `kp-unsaved-save` with `unsavedSaved`, and name the rows (`.kp-formrow__label`): the list uses them.',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

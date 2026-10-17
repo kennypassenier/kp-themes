@@ -169,6 +169,21 @@ export {
 export { TIMER_DISC, TIMER_DISC_LEFT, attachTimerDiscs, discShare, timerDiscOf } from './js/timer-disc.js';
 export { RANGE, RANGE_EVENT, RANGE_PRESETS, attachRanges, parseTime, presetMs, rangeFaults, rangeMoment, rangeOf, setRange } from './js/range.js';
 export {
+    UNSAVED,
+    UNSAVED_CHANGE_EVENT,
+    UNSAVED_DISCARD_EVENT,
+    UNSAVED_LEAVE_EVENT,
+    UNSAVED_REVERT_EVENT,
+    UNSAVED_SAVE_EVENT,
+    UNSAVED_UNDO_EVENT,
+    attachUnsaved,
+    discardUnsaved,
+    markUnsavedClean,
+    setUnsavedSaving,
+    unsaved,
+    unsavedSaved,
+} from './js/unsaved.js';
+export {
     SLIDER,
     SLIDER_CHANGE_EVENT,
     SLIDER_INPUT_EVENT,

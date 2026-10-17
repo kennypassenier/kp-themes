@@ -212,3 +212,77 @@ const shows = (item) => {
     };
     stateButtons('data-kt-slider-state', apply);
 }
+
+// ── unsaved changes ──
+{
+    const { unsavedSaved, setUnsavedSaving, discardUnsaved } = await import('../../js/unsaved.js');
+    /** Put values into a form's controls the way a person does, so the bar counts them. @param {string} formId @param {Record<string, string>} values */
+    const edit = (formId, values) => {
+        const form = document.getElementById(formId);
+        for (const [name, value] of Object.entries(values)) {
+            const c = form?.querySelector(`[name="${name}"]`);
+            if (!(c instanceof HTMLInputElement || c instanceof HTMLSelectElement)) continue;
+            if (c instanceof HTMLInputElement && c.type === 'checkbox') c.checked = value === 'on';
+            else c.value = value;
+            c.dispatchEvent(new Event('input', { bubbles: true }));
+            c.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    };
+    // The first page: Save is answered after a moment.
+    const a = document.getElementById('kt-unsaved-a');
+    readout(
+        '#kt-unsaved-a',
+        'kp-unsaved-save',
+        'kt-unsaved-log',
+        (d) =>
+            `${d.changes.length} changes: ${d.changes.map((/** @type {{ key: string, was: string, now: string }} */ c) => `${c.key} ${c.was} -> ${c.now}`).join('; ')}`,
+    );
+    a?.addEventListener('kp-unsaved-save', () => setTimeout(() => unsavedSaved(a), 1200));
+    // A link in the page asks before it leaves.
+    for (const form of document.querySelectorAll('[data-kt-form]')) form.addEventListener('submit', (event) => event.preventDefault());
+    const scroller = document.getElementById('kt-unsaved-a-scroll');
+    stateButtons('data-kt-unsaved-scroll', (where) => scroller?.scrollTo({ top: where === 'away' ? 420 : 0, behavior: 'auto' }));
+
+    // The states page.
+    const live = document.getElementById('kt-unsaved-live');
+    const two = { 'kt-unsaved-live-port': '9090', 'kt-unsaved-live-bind': '127.0.0.1' };
+    const put = (/** @type {string} */ state) => {
+        if (!live) return;
+        const form = document.getElementById('kt-unsaved-live-form');
+        if (state === 'reload') {
+            try {
+                sessionStorage.setItem('kt-unsaved-reload', '1');
+                sessionStorage.setItem('kp-unsaved:' + location.pathname + ':kt-unsaved-live', JSON.stringify(two));
+            } catch {
+                // No storage: nothing to reload with.
+            }
+            location.reload();
+            return;
+        }
+        discardUnsavedQuietly();
+        if (state === 'clean') return;
+        edit('kt-unsaved-live-form', two);
+        if (state === 'saving') setUnsavedSaving(live, true);
+        if (state === 'refused') {
+            const save = live.querySelector('.kp-unsaved__save');
+            if (save instanceof HTMLElement) save.click();
+        }
+        void form;
+    };
+    const discardUnsavedQuietly = () => {
+        if (!live) return;
+        setUnsavedSaving(live, false);
+        const bar = live.querySelector('.kp-unsaved__alert');
+        bar?.closest('.kp-unsaved__problem')?.setAttribute('hidden', '');
+        document.querySelectorAll('.kp-toast').forEach((t) => t.remove());
+        discardUnsaved(live);
+    };
+    live?.addEventListener('kp-unsaved-save', (event) => {
+        const only = /** @type {CustomEvent} */ (event).detail.changes;
+        setTimeout(
+            () => unsavedSaved(live, only.length > 1 ? { refused: { [only[0].key]: 'The port is already used by another service.' } } : {}),
+            1000,
+        );
+    });
+    stateButtons('data-kt-unsaved-state', put);
+}

@@ -17739,6 +17739,310 @@
         }
     }
 
+    /* --- Unsaved-changes bar: "2 changes", Save and Discard, in the header and at the foot of the screen [kpadopt5-time] ---
+ * `.kp-unsaved[data-kp-unsaved]` (js/unsaved.js). In the page header's actions: a chip with the count that opens the list of
+ * `key old → new` (each with its own Revert), Discard and Save with its count; while nothing is changed the same place says
+ * "No changes" with Save and Discard off, each carrying the reason, so the header never changes size. When the header has been
+ * scrolled out of view and something is changed, the same bar stands at the foot of the screen on the theme's raised plate
+ * (`data-kp-docked`, fixed to the window, or absolute in the nearest positioned ancestor with `data-kp-dock="container"`),
+ * and its place in the header keeps its size. Where there is less than 30rem for it Discard goes behind a More menu
+ * (`data-kp-compact`). Saving shows the theme's spinner in Save; refused changes are an alert above the bar.
+ * Knobs [KT6]: --kp-unsaved-gap (--kp-space-sm), --kp-unsaved-dock-width (40rem), --kp-unsaved-panel-width (26rem),
+ * --kp-unsaved-dock-offset (--kp-space-md, the bar's distance from the screen's foot), --kp-unsaved-count-min (7rem) and
+ * --kp-unsaved-save-min (9rem), the least widths of the chip and of Save, so the header does not shift as the count grows. */
+    .kp-unsaved {
+        position: relative;
+        display: inline-grid;
+        align-items: center;
+        min-inline-size: var(--kp-unsaved-w, 0);
+        min-block-size: max(var(--kp-unsaved-h, 0px), var(--kp-control-height, 2.25rem));
+        max-inline-size: 100%;
+    }
+
+    .kp-unsaved[data-kp-docked='container'] {
+        position: static;
+    }
+
+    .kp-unsaved__bar {
+        grid-area: 1 / 1;
+        justify-self: end;
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: var(--kp-unsaved-gap, var(--kp-space-sm, 0.5rem));
+        min-inline-size: 0;
+        max-inline-size: 100%;
+    }
+
+    .kp-unsaved__none {
+        min-inline-size: var(--kp-unsaved-count-min, 7rem);
+        text-align: end;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        white-space: nowrap;
+    }
+
+    .kp-unsaved__none[hidden],
+    .kp-unsaved__count[hidden],
+    .kp-unsaved__problem[hidden],
+    .kp-unsaved__panel[hidden] {
+        display: none;
+    }
+
+    .kp-unsaved__count {
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-block-size: 2rem;
+        min-inline-size: var(--kp-unsaved-count-min, 7rem);
+        padding-inline: var(--kp-space-md, 0.75rem);
+        border: 1px solid transparent;
+        text-align: center;
+        font: inherit;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+
+    .kp-unsaved__count:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: 2px;
+    }
+
+    .kp-unsaved__actions {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-unsaved-gap, var(--kp-space-sm, 0.5rem));
+    }
+
+    .kp-unsaved__discard,
+    .kp-unsaved__save,
+    .kp-unsaved__more-button {
+        position: relative;
+        white-space: nowrap;
+    }
+
+    .kp-unsaved__bar :is(button, [role='button'])[aria-disabled='true'] {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        cursor: not-allowed;
+    }
+
+    .kp-unsaved__save {
+        min-inline-size: var(--kp-unsaved-save-min, 9rem);
+    }
+
+    .kp-unsaved__save[data-kp-busy] > :not(.kp-button__busy) {
+        visibility: hidden;
+    }
+
+    .kp-unsaved__save[aria-busy='true'] {
+        opacity: 1;
+        cursor: progress;
+    }
+
+    .kp-unsaved__more {
+        display: none;
+    }
+
+    .kp-unsaved__bar[data-kp-compact] .kp-unsaved__discard {
+        display: none;
+    }
+
+    /* Compact: the count over the buttons, Save taking what More leaves; nothing reaches past the header. */
+    .kp-unsaved:has(> .kp-unsaved__bar[data-kp-compact]) {
+        display: grid;
+        inline-size: 100%;
+    }
+
+    .kp-unsaved__bar[data-kp-compact] {
+        flex-wrap: wrap;
+        justify-self: stretch;
+        justify-content: flex-start;
+    }
+
+    .kp-unsaved__bar[data-kp-compact] > :is(.kp-unsaved__none, .kp-unsaved__count) {
+        flex: 1 1 100%;
+        min-inline-size: 0;
+        text-align: start;
+    }
+
+    .kp-unsaved__bar[data-kp-compact] > .kp-unsaved__count {
+        flex: 0 0 auto;
+    }
+
+    .kp-unsaved__bar[data-kp-compact] > .kp-unsaved__actions {
+        flex: 1 1 100%;
+    }
+
+    .kp-unsaved__bar[data-kp-compact] .kp-unsaved__save {
+        flex: 1 1 auto;
+        min-inline-size: 0;
+    }
+
+    .kp-unsaved__bar[data-kp-compact] .kp-unsaved__more {
+        display: inline-flex;
+    }
+
+    .kp-unsaved__bar[data-kp-compact] .kp-unsaved__more > .kp-menu {
+        inset-inline-end: 0;
+    }
+
+    /* At the foot of the screen: the theme's raised plate, centred. */
+    .kp-unsaved[data-kp-docked] > .kp-unsaved__bar {
+        position: fixed;
+        z-index: var(--kp-z-sticky, 40);
+        inset-inline: 0;
+        inset-block-end: max(var(--kp-unsaved-dock-offset, var(--kp-space-md, 1rem)), env(safe-area-inset-bottom, 0px));
+        box-sizing: border-box;
+        inline-size: min(var(--kp-unsaved-dock-width, 40rem), calc(100vw - 1rem));
+        margin-inline: auto;
+        justify-content: space-between;
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--popover, var(--card));
+        color: var(--popover-foreground, var(--foreground));
+        box-shadow: 0 0.5rem 1.5rem hsl(from var(--foreground) h s l / 0.18);
+    }
+
+    .kp-unsaved[data-kp-docked='container'] > .kp-unsaved__bar {
+        position: absolute;
+    }
+
+    /* What was refused: an alert under the bar in the header, over it at the foot. */
+    .kp-unsaved__problem {
+        position: absolute;
+        z-index: calc(var(--kp-z-sticky, 40) + 1);
+        inset-block-start: calc(100% + var(--kp-space-sm, 0.5rem));
+        inset-inline-end: 0;
+        inline-size: min(26rem, calc(100vw - 1rem));
+    }
+
+    .kp-unsaved[data-kp-docked] > .kp-unsaved__problem {
+        position: fixed;
+        inset-block: auto calc(var(--kp-unsaved-dock-offset, var(--kp-space-md, 1rem)) + 4.5rem);
+        inset-inline: 0;
+        inline-size: min(var(--kp-unsaved-dock-width, 40rem), calc(100vw - 1rem));
+        margin-inline: auto;
+    }
+
+    .kp-unsaved[data-kp-docked='container'] > .kp-unsaved__problem {
+        position: absolute;
+    }
+
+    .kp-unsaved__alert {
+        align-items: flex-start;
+    }
+
+    .kp-unsaved__alert-title {
+        display: block;
+    }
+
+    .kp-unsaved__alert-list {
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        padding-inline-start: 1.25rem;
+        overflow-wrap: anywhere;
+    }
+
+    /* The list of changes, on the popover plate. */
+    .kp-popover.kp-unsaved__panel {
+        position: fixed;
+        position-area: none;
+        box-sizing: border-box;
+        inline-size: min(var(--kp-unsaved-panel-width, 26rem), calc(100vw - 1rem));
+        margin: 0;
+        padding: var(--kp-space-md, 0.75rem);
+        overflow: visible;
+    }
+
+    .kp-unsaved__panel-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-sm, 0.5rem);
+        margin-block-end: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-unsaved__panel-title {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .kp-unsaved__entries {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        max-block-size: 18rem;
+        margin: 0;
+        padding: 0;
+        overflow-y: auto;
+        list-style: none;
+    }
+
+    .kp-unsaved__entry {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        column-gap: var(--kp-space-sm, 0.5rem);
+        row-gap: 0.125rem;
+        padding: var(--kp-space-xs, 0.25rem) 0;
+        border-block-start: 1px solid var(--border);
+    }
+
+    .kp-unsaved__entry:first-child {
+        border-block-start: 0;
+    }
+
+    .kp-unsaved__jump {
+        grid-column: 1;
+        justify-self: start;
+        padding: 0;
+        border: 0;
+        background: none;
+        color: var(--foreground);
+        font: inherit;
+        font-weight: 600;
+        text-align: start;
+        text-decoration: underline dotted;
+        text-underline-offset: 0.2em;
+        overflow-wrap: anywhere;
+        cursor: pointer;
+    }
+
+    .kp-unsaved__jump:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: 2px;
+    }
+
+    .kp-unsaved__diff {
+        grid-column: 1;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0 var(--kp-space-xs, 0.25rem);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-unsaved__was {
+        color: var(--muted-foreground);
+    }
+
+    .kp-unsaved__arrow {
+        color: var(--muted-foreground);
+    }
+
+    .kp-unsaved__now {
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .kp-unsaved__revert {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+    }
+
     /* --- Compare slider: two versions, a divider between them [kpadopt4-ideas] ---
  * `.kp-compare[data-kp-compare]` (js/compare.js). The before and after panes lie on top of each other in one grid
  * cell; the before pane shows on the start side of the divider and the after pane on the end side, each cut by

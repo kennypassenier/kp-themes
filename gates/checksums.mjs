@@ -136,6 +136,7 @@ export const FILES = [
     'js/dated-options.js',
     'js/sentence.js',
     'js/slider.js',
+    'js/unsaved.js',
     'js/compare.js',
     'js/loading-pieces.js',
     'js/busy-card.js',
