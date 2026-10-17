@@ -33,6 +33,13 @@ const stay = byId('kc-list-stay');
 attachChecklists(byId('checklist'));
 setChecklistItems(stay, PACKING);
 
+// deco's loading of this list is a choice in the review dialog (css/deco-register.css reads
+// `data-kp-checklist-loading` on the list; no pick is the curtains over the whole list).
+document.addEventListener('review:choice', (event) => {
+    const { id, value } = /** @type {CustomEvent<{ id: string, value: string }>} */ (event).detail;
+    if (id === 'deco-checklist-loading') for (const host of [list, stay]) host.setAttribute('data-kp-checklist-loading', value);
+});
+
 const load = () => {
     setChecklistState(list, 'loading');
     setChecklistItems(list, []);

@@ -3254,7 +3254,8 @@
     [data-theme='deco'] .kp-meter[data-kp-loading]::before,
     [data-theme='deco'] .kp-kpi__meter[data-kp-loading]::before,
     [data-theme='deco'] .kp-menu-button > .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading]::before,
-    [data-theme='deco'] .kp-button[aria-busy='true']::before {
+    [data-theme='deco'] .kp-button[aria-busy='true']::before,
+    [data-theme='deco'] .kp-checklist:not([data-kp-checklist-loading='spinner']) .kp-checklist__busy::before {
         content: '';
         position: absolute;
         inset-block: 0;
@@ -3330,7 +3331,8 @@
     [data-theme='deco'] .kp-meter[data-kp-loading]::after,
     [data-theme='deco'] .kp-kpi__meter[data-kp-loading]::after,
     [data-theme='deco'] .kp-menu-button > .kp-menu[aria-busy='true'] .kp-menu__item[data-kp-loading]::after,
-    [data-theme='deco'] .kp-button[aria-busy='true']::after {
+    [data-theme='deco'] .kp-button[aria-busy='true']::after,
+    [data-theme='deco'] .kp-checklist:not([data-kp-checklist-loading='spinner']) .kp-checklist__busy::after {
         content: '';
         position: absolute;
         inset-block: 0;
@@ -3395,6 +3397,30 @@
             no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat;
         box-shadow: inset 1px 0 0 hsl(from var(--kp-sig-deco-gold-lo) h s l / 0.6);
         translate: calc(var(--kp-sig-deco-p) * 33.4%) 0;
+    }
+
+    /* The checklist's loading, two ways [cook-1017; Kenny 2026-10-17 17:48: "de loading animatie met de gordijnen werkt
+       enkel als het het hele element omvangt, dus maak een versie die dat doet, en een versie met gewoon de spinner"].
+       `data-kp-checklist-loading` on the list picks one, the curtains when it is absent:
+       - curtains: the busy card's own layer, which covers the whole body of the list, wears the two doors, so they close
+         over the entire checklist and open on it; the card's spinner and words stand under them and show in the gap.
+       - spinner: the busy card with deco's sunburst spinner and its words, centred, and no doors.
+       The card's panel never wears the doors itself here: a small pair over a long list is what was refused. */
+    [data-theme='deco'] .kp-checklist .kp-checklist__busy > .kp-datatable__busy-panel::before,
+    [data-theme='deco'] .kp-checklist .kp-checklist__busy > .kp-datatable__busy-panel::after {
+        content: none;
+    }
+
+    [data-theme='deco'] .kp-checklist:not([data-kp-checklist-loading='spinner']) .kp-checklist__busy {
+        --kp-sig-deco-p: 1;
+        isolation: isolate;
+        overflow: clip;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='deco'] .kp-checklist:not([data-kp-checklist-loading='spinner']) .kp-checklist__busy {
+            animation: kp-sig-deco-doors var(--kp-sig-deco-loop) linear infinite;
+        }
     }
 
     /* Standing still, a waiting button keeps its label readable: the other
