@@ -212,6 +212,14 @@ function calmDayFor(c, iso, today) {
     return given ? { ...given, tone: /** @type {CalendarTone} */ (tone) } : { tone: 'quiet', label: words };
 }
 
+/** The calm legend's entries. @param {{ calmLegendLogged: string, calmLegendQuiet: string, calmLegendPaused: string }} s */
+const calmLegend = (s) =>
+    /** @type {{ tone: CalendarTone, label: string }[]} */ ([
+        { tone: 'logged', label: s.calmLegendLogged },
+        { tone: 'quiet', label: s.calmLegendQuiet },
+        { tone: 'paused', label: s.calmLegendPaused },
+    ]);
+
 /** @param {CalendarModel} c @param {string} iso @param {string} today @returns {CalendarDay} */
 function dayFor(c, iso, today) {
     if (isCalmTones(c.el) && c.el.getAttribute('data-kp-calm-map') !== 'none') return calmDayFor(c, iso, today);
@@ -326,7 +334,7 @@ function syncCalmPlate(c) {
     const calm = isCalmTones(c.el);
     const kind = calm && c.state === 'empty' ? 'empty' : calm && c.state === 'error' ? 'error' : null;
     const old = c.el.querySelector(':scope > .kp-calendar__plate');
-    c.grid.toggleAttribute('data-kp-dim', kind === 'error');
+    c.grid.toggleAttribute('data-kp-dim', kind !== null);
     c.grid.toggleAttribute('inert', kind === 'error');
     if (kind === null) {
         old?.remove();
@@ -513,17 +521,18 @@ export function attachCalendars(root = document, options = {}) {
         decorate?.(next, { kind: 'month-next', host: el, key: keyOf(el) });
         decorate?.(todayButton, { kind: 'today', host: el, key: keyOf(el) });
         paintCalendar(c);
-        if (isCalmTones(el) && el.getAttribute('data-kp-legend') !== 'hide') {
-            setCalendarLegend(el, [
-                { tone: 'logged', label: s.calmLegendLogged },
-                { tone: 'quiet', label: s.calmLegendQuiet },
-                { tone: 'paused', label: s.calmLegendPaused },
-            ]);
-        }
-        const watch = new MutationObserver(() => paintCalendar(c));
+        if (isCalmTones(el) && el.getAttribute('data-kp-legend') !== 'hide') setCalendarLegend(el, calmLegend(s));
+        const watch = new MutationObserver(() => {
+            // The legend follows its option: `hide` takes the calm legend away, anything else puts it back.
+            if (isCalmTones(el)) {
+                if (el.getAttribute('data-kp-legend') === 'hide') setCalendarLegend(el, []);
+                else if (c.legend.hidden) setCalendarLegend(el, calmLegend(s));
+            }
+            paintCalendar(c);
+        });
         watch.observe(el, {
             attributes: true,
-            attributeFilter: ['data-kp-tones', 'data-kp-paused-range', 'data-kp-quiet-words', 'data-kp-calm-map'],
+            attributeFilter: ['data-kp-tones', 'data-kp-paused-range', 'data-kp-quiet-words', 'data-kp-calm-map', 'data-kp-legend'],
         });
         const step = (/** @type {number} */ months) => {
             const [y = 0, m = 1] = shiftMonth(isoOf(c.year, c.month, 1), months)

@@ -549,10 +549,43 @@ function wire(el, options) {
     row.addEventListener('keydown', onKey);
     actions.addEventListener('click', onActions);
     retry.addEventListener('click', onRetry);
-    const watch = new MutationObserver(syncState);
+    // A change of the scale, the step or the mode draws the row again; the other options are read as they are used.
+    const watch = new MutationObserver((records) => {
+        if (
+            records.some(
+                (r) =>
+                    r.attributeName === 'data-kp-rating-max' ||
+                    r.attributeName === 'data-kp-rating-step' ||
+                    r.attributeName === 'data-kp-rating-mode',
+            )
+        ) {
+            const value = number('value', m.value);
+            detach();
+            const again = wire(el, options);
+            const next = models.get(el);
+            if (next) {
+                next.value = next.draft = snapRating(value, next.max, next.mode === 'display' ? 0.01 : next.step);
+                paint(next);
+            }
+            void again;
+            return;
+        }
+        m.labels = parseLabels(el.getAttribute('data-kp-rating-labels') ?? undefined);
+        if (records.some((r) => r.attributeName === 'data-kp-rating-value'))
+            m.value = m.draft = snapRating(number('value', m.value), m.max, m.mode === 'display' ? 0.01 : m.step);
+        syncState();
+    });
     watch.observe(el, {
         attributes: true,
         attributeFilter: [
+            'data-kp-rating-max',
+            'data-kp-rating-step',
+            'data-kp-rating-mode',
+            'data-kp-rating-value',
+            'data-kp-rating-labels',
+            'data-kp-rating-size',
+            'data-kp-rating-unrated-text',
+            'data-kp-rating-clear',
             'data-kp-state',
             'data-kp-disabled',
             'data-kp-disabled-reason',
@@ -562,7 +595,7 @@ function wire(el, options) {
             'data-kp-rating-count',
         ],
     });
-    return () => {
+    const detach = () => {
         window.clearTimeout(m.flashTimer);
         watch.disconnect();
         row.removeEventListener('pointerover', onOver);
@@ -576,6 +609,7 @@ function wire(el, options) {
         el.style.removeProperty('--kp-rating-max');
         models.delete(el);
     };
+    return detach;
 }
 
 /**

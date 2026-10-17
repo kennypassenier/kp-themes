@@ -44,7 +44,9 @@ function measure(min) {
                 for (let a = el; a && a !== s.parentElement; a = a.parentElement) {
                     if (getComputedStyle(a).overflowX === 'visible') continue;
                     const ar = a.getBoundingClientRect();
-                    clip = clip ? { left: Math.max(clip.left, ar.left), right: Math.min(clip.right, ar.right) } : { left: ar.left, right: ar.right };
+                    clip = clip
+                        ? { left: Math.max(clip.left, ar.left), right: Math.min(clip.right, ar.right), top: Math.max(clip.top, ar.top), bottom: Math.min(clip.bottom, ar.bottom) }
+                        : { left: ar.left, right: ar.right, top: ar.top, bottom: ar.bottom };
                 }
                 for (const raw of [...range.getClientRects()].filter(visible)) {
                     const rect = clip
@@ -55,6 +57,8 @@ function measure(min) {
                               raw.height,
                           )
                         : raw;
+                    // A line the clip cuts away altogether (a folded quote's hidden lines) is not on screen.
+                    if (clip && (raw.bottom <= clip.top + 0.5 || raw.top >= clip.bottom - 0.5)) continue;
                     if (visible(rect)) texts.push({ el, rect, t: n.textContent.trim().slice(0, 28) });
                 }
             }

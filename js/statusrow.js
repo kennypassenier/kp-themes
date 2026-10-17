@@ -237,7 +237,7 @@ function syncItem(item, { announce = false } = {}) {
     }
     let word = item.querySelector('.kp-statusrow__state');
     if (!word) {
-        word = el('kp-statusrow__state');
+        word = el('kp-statusrow__state kp-sr-only');
         body.append(word);
     }
     // ", failed" after the label: the comma makes the reader pause.
@@ -651,7 +651,27 @@ export function attachStatusLists(root = document) {
         };
         list.addEventListener('click', press);
         undo.push(() => list.removeEventListener('click', press));
-        if (isCalm(list)) undo.push(wireCalmKeys(list));
+        if (isCalm(list)) {
+            undo.push(wireCalmKeys(list));
+            // An option changed at run time is drawn at once: the since words, Resume, Pause, the order and the fold.
+            const options = new MutationObserver(() => {
+                for (const item of list.querySelectorAll(':scope > .kp-statusrow:not(.kp-statusrow--fold)')) syncItem(item);
+                settleToday(list);
+            });
+            options.observe(list, {
+                attributes: true,
+                attributeFilter: [
+                    'data-kp-today-since',
+                    'data-kp-today-resume',
+                    'data-kp-today-pause',
+                    'data-kp-today-order',
+                    'data-kp-today-paused',
+                    'data-kp-today-fold-after',
+                    'data-kp-today-mark',
+                ],
+            });
+            undo.push(() => options.disconnect());
+        }
     }
     if (typeof MutationObserver === 'undefined' || lists.length === 0) return () => undo.forEach((u) => u());
     const watch = new MutationObserver((records) => {

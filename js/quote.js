@@ -176,7 +176,7 @@ function render(m) {
         );
         when.setAttribute('datetime', new Date(ms).toISOString());
         when.title = agoMoment(ms);
-        caption.append(by, make('span', 'kp-quote__sep', ','), when);
+        caption.append(by, when);
     } else caption.append(by);
     if (source) {
         const link = make('a', 'kp-quote__source', s.quoteOpen);
