@@ -69,16 +69,6 @@
         flex: 0 0 auto;
     }
 
-    .agenda__received {
-        margin-block-start: var(--kp-space-md);
-        align-items: center;
-    }
-
-    .agenda__received-seen {
-        margin-inline-start: auto;
-        flex: 0 0 auto;
-    }
-
     /* Saved verdicts: per demo a fold with its round picker, its one copy button and its entries, newest first. */
     .agenda__saved {
         margin-block-start: var(--kp-space-2xl);

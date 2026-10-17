@@ -7341,6 +7341,19 @@
         --kp-wheel-pointer: var(--accent);
         --kp-wheel-tint: 24%;
     }
+    /* The hub carries none of the button's plates, frames or labels on its pseudo-elements: a round disc stays round
+       [cook-1017; Kenny 2026-10-17: no square frame round the spin hub in any theme]. */
+    [data-theme='cyberpunk'] .kp-wheel__spin.kp-button::before,
+    [data-theme='cyberpunk'] .kp-wheel__spin.kp-button::after {
+        content: none !important;
+    }
+    /* No stripes of its own either: the button's two 3 px side bars and its cut-corner wedge (background layers) would
+       leave a rectangular nub on the disc's rim; the yellow stays as the colour. */
+    [data-theme='cyberpunk'] .kp-wheel__spin.kp-button,
+    [data-theme='cyberpunk'] .kp-wheel__spin.kp-button:is(:hover, :active, :focus-visible) {
+        --kp-wheel-hub-shadow: none;
+        background-image: none !important;
+    }
     [data-theme='cyberpunk'] .kp-wheel__rim {
         stroke: var(--primary);
         stroke-width: 1.2;

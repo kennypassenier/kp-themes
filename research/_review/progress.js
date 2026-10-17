@@ -570,14 +570,13 @@ export function rebuildAnswer(demo, round) {
 }
 
 /*
- * An answer dropped as received is never dropped in silence: every drop is noted here (append-only, like the journal),
- * and the Agenda's band says "received by Claude: <demo> <round>" until Kenny marks the notices seen.
+ * An answer dropped as received is never dropped in silence: its text goes into the journal whole and every drop is
+ * noted here (append-only, like the journal). The log is data only; the Agenda shows no notice of it and asks for no
+ * "Seen" (Kenny, 2026-10-17: what is it for, why must I click Seen).
  */
 
 /** Where the drops of every demo are noted: an array of { at, demo, round }, oldest first. */
 export const RECEIVED_KEY = 'kp-demo-review:received-log';
-/** The `at` of the last notice Kenny marked seen on the Agenda. */
-export const RECEIVED_SEEN_KEY = 'kp-demo-review:received-seen';
 
 /** @returns {{ at: string, demo: string, round: string }[]} */
 export function receivedLog() {
@@ -586,26 +585,6 @@ export function receivedLog() {
         return Array.isArray(list) ? list : [];
     } catch {
         return [];
-    }
-}
-
-/** The notices not marked seen yet, oldest first. */
-export function receivedNotices() {
-    let seen = '';
-    try {
-        seen = localStorage.getItem(RECEIVED_SEEN_KEY) || '';
-    } catch {
-        seen = '';
-    }
-    return receivedLog().filter((entry) => entry.at > seen);
-}
-
-/** Marks every notice up to now as seen; the log itself stays. */
-export function markReceivedSeen() {
-    try {
-        localStorage.setItem(RECEIVED_SEEN_KEY, new Date().toISOString());
-    } catch {
-        /* storage refused */
     }
 }
 

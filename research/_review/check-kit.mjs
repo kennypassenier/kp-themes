@@ -240,9 +240,17 @@ for (const [id, text] of Object.entries(written)) {
 }
 await go(`${ORIGIN}/catalogue/agenda.html`);
 await page.waitForTimeout(2500);
-const band = await page.evaluate(() => document.querySelector('[data-agenda-received]')?.textContent || '');
-if (!band.includes(`received by Claude: ${demo}`))
-    fault(`new round ${next.round}: the Agenda does not say the answer of ${demo} ${now} was received`);
+// The drop is noted as data (progress.js, noteReceived); the Agenda shows no notice and asks for no click.
+const noted = await page.evaluate(() => {
+    try {
+        return JSON.parse(localStorage.getItem('kp-demo-review:received-log') || '[]');
+    } catch {
+        return [];
+    }
+});
+if (!noted.some((entry) => entry?.demo === demo)) fault(`new round ${next.round}: the received log does not note the answer of ${demo} ${now}`);
+if (await page.evaluate(() => Boolean(document.querySelector('[data-agenda-received], [data-agenda-received-seen]'))))
+    fault('the Agenda shows a received notice or a Seen button');
 
 await browser.close();
 console.log(`${path}: ${faults.length ? `${faults.length} fault(s)` : 'clear'}`);

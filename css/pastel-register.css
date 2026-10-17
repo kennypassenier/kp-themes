@@ -5420,6 +5420,15 @@
     [data-theme='pastel'] .kp-wheel__segment {
         stroke-width: 2.4;
     }
+    /* The hub carries none of the button's plates, frames or labels on its pseudo-elements: a round disc stays round
+       [cook-1017; Kenny 2026-10-17: no square frame round the spin hub in any theme]. */
+    [data-theme='pastel'] .kp-wheel__spin.kp-button::before,
+    [data-theme='pastel'] .kp-wheel__spin.kp-button::after {
+        content: none !important;
+    }
+    [data-theme='pastel'] .kp-wheel__spin.kp-button {
+        --kp-wheel-hub-shadow: 0 3px 0 var(--kp-sig-pa-peel);
+    }
     [data-theme='pastel'] .kp-wheel__rim {
         stroke: var(--primary);
         stroke-width: 2;
