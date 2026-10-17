@@ -117,6 +117,7 @@
  * @property {(n: number) => string} noticesUnread  The counter's label, "5 unread" [kpadopt5-notices]
  * @property {string} noticesNoneUnread  The counter's label with nothing unread [kpadopt5-notices]
  * @property {(why: string) => string} noticesCounterError  The counter's label when the notices could not be read [kpadopt5-notices]
+ * @property {(inbox: string, label: string, quiet: string) => string} noticesCounterName  The counter button's accessible name, "Inbox: 5 unread. Quiet until 09:00" [kpadopt5-notices]
  * @property {string} noticesLoading  What the busy card over the list says, and the counter's label while it loads [kpadopt5-notices]
  * @property {(time: string) => string} noticesQuiet  The quiet line, "Quiet until 09:00" [kpadopt5-notices]
  * @property {string} noticesEndQuiet  The button that ends the quiet time [kpadopt5-notices]
@@ -758,6 +759,7 @@ export const DEFAULT_STRINGS = Object.freeze({
     noticesUnread: (n) => `${n} unread`,
     noticesNoneUnread: 'none unread',
     noticesCounterError: (why) => `could not be read: ${why}`,
+    noticesCounterName: (inbox, label, quiet) => `${inbox}: ${label}${quiet ? `. ${quiet}` : ''}`,
     noticesLoading: 'Reading the notifications…',
     noticesQuiet: (time) => `Quiet until ${time}`,
     noticesEndQuiet: 'End quiet',

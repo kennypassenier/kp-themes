@@ -296,7 +296,7 @@ function wire(el) {
         badge.classList.toggle('kp-notices__count--zero', !text);
         badge.setAttribute('data-kp-count', text);
         triggerLabel.textContent = t.noticesInbox;
-        trigger.setAttribute('aria-label', `${t.noticesInbox}: ${counterLabel()}${q !== null ? `. ${quietText()}` : ''}`);
+        trigger.setAttribute('aria-label', t.noticesCounterName(t.noticesInbox, counterLabel(), q !== null ? quietText() : ''));
         moon.hidden = q === null;
         quietLine.textContent = quietText();
         quietLine.hidden = q === null;
