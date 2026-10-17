@@ -6871,3 +6871,41 @@ approved". The drawer's way back was fixed in round 2 (strip, visible x, Escape,
 
 **5 · What the remedy costs.** A rejected row stays in the list for the rest of its round: the dialog walks one row more.
 
+
+## lane-1017 · A topic step loaded slowly and left the view at its bottom (2026-10-17)
+
+Waiting on Kenny's answer to the correction form.
+
+**1 · What went wrong.** Round 3 of research/kpadopt4 loaded its topic steps far slower than earlier rounds, and once
+every frame was in, the dialog stood at its bottom (Kenny, 2026-10-17: "vroeger laadden die toch veel sneller? en nu als
+alles geladen is dan moet ik manueel naar boven scrollen"). Measured in Firefox on step 1 (seven frames): the view ended
+at 4775 px and the measuring run took 19.9 s. Each lane frame loads the whole demo, so seven frames laid out and
+animated 51 sections each, and a section that focused or scrolled itself into view while booting pulled the dialog down.
+
+**2 · Which gate let it through.** None. No check opens a topic step of a large demo; the round-3 helper checked that
+the dialog walks its steps, not how long a step takes nor where the view stands after it loads.
+
+**3 · Where else the same fault sits.** The property: a review-kit frame that loads a whole demo page for one section.
+Searched with `grep -n "<iframe" research/_review/*.js`: three frames. The lane frame and the previous version's frame
+(block-tools.js) both had it; the catalogue block frame (block.html) builds only its one block and does not.
+
+**4 · How we prevent recurrence.** `early()` in research/_review/block-tools.js: as soon as a frame's document exists,
+before the demo's modules run, every other section is laid aside, and nothing in the frame may scroll the dialog
+(focus without scrolling, no scrollIntoView). A frame that loads leaves the view at its top until the reviewer moves it
+(0b69c9aa, da62d1d2).
+
+**5 · What the remedy costs.** About thirty lines in the kit. A section that scrolls itself into view inside a frame no
+longer does; the frames take their section's height, so there is nothing to scroll to.
+
+**6 · Who or what enforces it.** Code: the kit applies it to every frame it builds. No automatic check: a browser test of
+the dialog is a test run and waits for a release go.
+
+**7 · How we measure that it works, and at which moment.** Taken at the fix: seven frames loaded, the view at 0 px,
+0 page errors, the run 5.1 s instead of 19.9 s. The real measure is Kenny's next topic steps of round 3: each opens at
+its top without scrolling.
+
+**8 · The fallback if the measurement fails.** Load the frames one after another from the top, and show a frame only
+once its section is in.
+
+**9 · When we review the measure.** At the release suite: whether a short review-dialog test of one topic step (time and
+view position) earns its place.
