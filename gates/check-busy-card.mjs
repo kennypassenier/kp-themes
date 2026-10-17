@@ -53,6 +53,7 @@ export const CARD = [
     'js/palette.js',
     'js/deplist.js',
     'js/path-trace.js',
+    'js/entity-card.js',
 ];
 
 /** Approved before the rule, each with its own central loading picture. @type {Record<string, string>} */

@@ -2404,6 +2404,29 @@ refusal `skipped` ("not reached") and a hop with no verdict `pending` ("not meas
 `-copy` adds a button that copies the trace as text; `-swap` a Swap button and the key S (`kp-trace-swap`); `data-kp-density="compact"` hides the notes. Each attribute redraws the trace. `trace(el).setState('running' | 'empty' | 'error')`:
 the busy card over placeholder hops, the empty plate "Pick a source and a target", the failed plate with Retry (`kp-trace-retry`), each as high as the trace was. The trace shows what the host measured; it decides nothing. The words are `trace…`.
 
+### The entity card
+
+One fixed card per thing (a stack, a host): its identity mark, name, state in words, a few exact figures, flags, two meters and its actions, in the same five rows on every card:
+
+```html
+<div class="kp-entity-grid" data-kp-entity-grid id="stacks" data-kp-entity-link="/stacks/{key}"></div>
+```
+
+```js
+import { setEntityGrid } from '@kp-soft/themes/js/entity-card';
+setEntityGrid(document.getElementById('stacks'), [{ key: 'media', name: 'media', vmid: '106', state: { label: 'running', tone: 'success' },
+    figures: [{ value: '3/5', label: 'apps up' }], flags: [{ label: 'update available', tone: 'warning' }],
+    meters: [{ label: 'CPU', value: 0.34 }, { label: 'RAM', value: 0.71, text: '5.6 of 8 GB' }],
+    actions: [{ id: 'restart', label: 'Restart' }, { id: 'logs', label: 'Logs' }] }]);
+```
+
+`attachEntityCards(root)` (`js/entity-card.js`, attached by `js/auto.js`) keeps the cards in step with the grid's options; `setEntityGrid(grid, list)` draws or refills by key (a card already there changes its words in place, so a card under the pointer never moves)
+and `setEntity(card, data)` draws one. Every row is kept whether it holds anything or not and every card of a grid is as high as the tallest. `data-kp-entity-meters` (0 to 3, default 2), `-flags-max` (3; more are an exact "+2" that opens the package's menu
+button, and a flag that does not fit the width goes there too), `-inline` (3 action buttons in fixed columns, the rest in "More"; under 30rem all fold into "More"), `-link` (the name's link template, stretched over the card), `-mark`, `-min` (22rem) on the grid or a card,
+`data-kp-selectable` (a tick; the card is a row of a selection) and `data-kp-density="compact"` (no figures row); every attribute draws the cards again. Events `kp-entity-action`, `kp-entity-flag`, `kp-entity-tick`, `kp-entity-retry`, `kp-entity-new`,
+`kp-entity-grid-retry`. A card with `status: 'loading' | 'empty' | 'error'` shows bones, "not measured" or a failed state with Retry at the same height; `setEntityGridState(grid, 'loading' | 'empty' | 'error')` shows skeleton cards under the busy card,
+the empty plate "No stacks yet" with its action, or the failed plate with Retry. The words are `entity…`.
+
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

@@ -437,3 +437,228 @@ await ready;
     stateButtons('data-k6-trace-state', setState);
     states?.addEventListener('kp-trace-retry', () => setState('ready'));
 }
+
+// ── entity card ──
+{
+    const { setEntityGrid, setEntityGridState, setEntity } = await import('../../js/entity-card.js');
+    const { openMenu, closeMenu, setMenu } = await import('../../js/menu-button.js');
+    const acts = [
+        { id: 'restart', label: 'Restart' },
+        { id: 'logs', label: 'Logs' },
+        { id: 'update', label: 'Update' },
+        { id: 'remove', label: 'Remove', danger: true },
+    ];
+    const meters = (/** @type {number} */ cpu, /** @type {number} */ ram, /** @type {string} */ text) => [
+        { label: 'CPU', value: cpu },
+        { label: 'RAM', value: ram, text },
+        { label: 'Disk', value: 0.41 },
+    ];
+    /** @type {() => import('../../js/entity-card.js').EntityData[]} */
+    const make = () => [
+        {
+            key: 'media',
+            name: 'media',
+            vmid: '106',
+            state: { label: 'running', tone: 'success' },
+            figures: [
+                { value: '3/5', label: 'apps up' },
+                { value: '12', label: 'restarts' },
+            ],
+            flags: [{ label: 'update available', tone: 'warning' }],
+            meters: meters(0.34, 0.71, '5.6 of 8 GB'),
+            actions: acts,
+        },
+        {
+            key: 'vault',
+            name: 'vault',
+            vmid: '110',
+            state: { label: 'running', tone: 'success' },
+            figures: [
+                { value: '2/2', label: 'apps up' },
+                { value: '0', label: 'restarts' },
+            ],
+            flags: [],
+            meters: meters(0.08, 0.22, '0.9 of 4 GB'),
+            actions: acts,
+        },
+        {
+            key: 'gateway',
+            name: 'gateway',
+            vmid: '101',
+            state: { label: 'degraded', tone: 'warning' },
+            figures: [
+                { value: '4/5', label: 'apps up' },
+                { value: '31', label: 'restarts' },
+            ],
+            flags: [
+                { label: 'update available', tone: 'warning' },
+                { label: 'backup is old', tone: 'destructive' },
+                { label: 'pinned image' },
+                { label: 'no healthcheck' },
+                { label: 'port 8443 open' },
+            ],
+            meters: meters(0.82, 0.93, '7.4 of 8 GB'),
+            actions: acts,
+        },
+        {
+            key: 'paperless',
+            name: 'paperless',
+            vmid: '112',
+            state: { label: 'running', tone: 'success' },
+            figures: [
+                { value: '3/3', label: 'apps up' },
+                { value: '1', label: 'restarts' },
+            ],
+            flags: [{ label: 'pinned image' }],
+            meters: meters(0.12, 0.35, '2.8 of 8 GB'),
+            actions: acts,
+        },
+        {
+            key: 'immich',
+            name: 'immich-machine-learning-worker-with-a-long-name',
+            vmid: '114',
+            state: { label: 'stopped', tone: 'destructive' },
+            figures: [
+                { value: '0/4', label: 'apps up' },
+                { value: '1534', label: 'restarts' },
+            ],
+            flags: [{ label: 'stopped by hand' }],
+            meters: meters(0, 0, '0 of 16 GB'),
+            actions: acts,
+        },
+        {
+            key: 'café-kiosk',
+            name: 'café-kiosk',
+            vmid: '120',
+            state: { label: 'running', tone: 'success' },
+            figures: [
+                { value: '1/1', label: 'apps up' },
+                { value: '2', label: 'restarts' },
+            ],
+            flags: [],
+            meters: meters(0.05, 0.18, '0.7 of 4 GB'),
+            actions: acts,
+        },
+    ];
+    const grid = document.getElementById('k6-entity-grid');
+    const log = document.getElementById('k6-entity-log');
+    /** @param {string} text */
+    const say = (text) => {
+        if (log) log.textContent = text;
+    };
+    if (grid) {
+        grid.setAttribute('data-kp-entity-meters', '2');
+        setEntityGrid(grid, make());
+        grid.addEventListener('kp-entity-action', (e) => say(`kp-entity-action\n${JSON.stringify(/** @type {CustomEvent} */ (e).detail)}`));
+        grid.addEventListener('kp-entity-flag', (e) => say(`kp-entity-flag\n${JSON.stringify(/** @type {CustomEvent} */ (e).detail)}`));
+        grid.addEventListener('kp-entity-tick', () => {
+            const keys = [...grid.querySelectorAll('.is-ticked')].map((c) => c.getAttribute('data-kp-entity-key'));
+            say(`ticked: ${keys.join(', ') || 'none'}`);
+        });
+    }
+    for (const b of document.querySelectorAll('[data-k6-entity-opt]'))
+        b.addEventListener('click', () => {
+            const on = b.getAttribute('aria-pressed') !== 'true';
+            b.setAttribute('aria-pressed', String(on));
+            const kind = b.getAttribute('data-k6-entity-opt');
+            if (!grid) return;
+            if (kind === 'selectable') {
+                grid.toggleAttribute('data-kp-selectable', on);
+                grid.toggleAttribute('data-kp-select-keys', on);
+            } else if (kind === 'meters') grid.setAttribute('data-kp-entity-meters', on ? '3' : '2');
+            else if (kind === 'flags') grid.setAttribute('data-kp-entity-flags-max', on ? '1' : '3');
+            else if (kind === 'compact') grid.setAttribute('data-kp-density', on ? 'compact' : 'comfortable');
+            else grid.toggleAttribute('data-kp-entity-link', on) || null;
+            if (kind === 'link') {
+                if (on) grid.setAttribute('data-kp-entity-link', '#stack-{key}');
+                else grid.removeAttribute('data-kp-entity-link');
+            }
+        });
+    /** @param {string} n */
+    const setInline = (n) => {
+        grid?.setAttribute('data-kp-entity-inline', n);
+        for (const b of document.querySelectorAll('[data-k6-entity-inline]'))
+            b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-entity-inline') === n));
+    };
+    stateButtons('data-k6-entity-inline', setInline);
+    onChoice('entity-inline', setInline);
+    for (const b of document.querySelectorAll('[data-k6-entity-refresh]'))
+        b.addEventListener('click', () => {
+            if (!grid) return;
+            const list = make();
+            const first = list[0];
+            first.meters = meters(0.55 + Math.random() * 0.1, 0.72, '5.8 of 8 GB');
+            first.flags = [{ label: 'update available', tone: 'warning' }, { label: 'restarted just now' }];
+            const same = grid.firstElementChild;
+            setEntityGrid(grid, list);
+            say(`A live refresh: the first card is ${grid.firstElementChild === same ? 'the same element' : 'a new element'}.`);
+        });
+    const compare = document.getElementById('k6-entity-compare');
+    if (compare)
+        setMenu(compare, [
+            {
+                group: '',
+                items: [
+                    { label: 'Restart', value: 'restart' },
+                    { label: 'Logs', value: 'logs' },
+                    { label: 'Update', value: 'update' },
+                    { label: 'Remove', value: 'remove', danger: true },
+                ],
+            },
+        ]);
+    const wrappers = () =>
+        [grid?.querySelector('[data-kp-key="media-more"]'), grid?.querySelector('[data-kp-key="gateway-flags"]'), compare].filter(Boolean);
+    for (const b of document.querySelectorAll('[data-k6-entity-menu]'))
+        b.addEventListener('click', () => {
+            const which = b.getAttribute('data-k6-entity-menu');
+            for (const w of wrappers()) closeMenu(/** @type {HTMLElement} */ (w));
+            const target =
+                which === 'more'
+                    ? grid?.querySelector('[data-kp-key="media-more"]')
+                    : which === 'flags'
+                      ? grid?.querySelector('[data-kp-key="gateway-flags"]')
+                      : which === 'compare'
+                        ? compare
+                        : null;
+            if (target) openMenu(/** @type {HTMLElement} */ (target), { focus: 'first' });
+        });
+
+    const cards = document.getElementById('k6-entity-cards');
+    const three = make().slice(0, 3);
+    const drawCards = (/** @type {string} */ mode) => {
+        if (!cards) return;
+        const list = three.map((d) => ({ ...d }));
+        if (mode === 'states') {
+            list[0] = { ...list[0], status: 'loading' };
+            list[1] = { ...list[1], status: 'empty' };
+            list[2] = { ...list[2], status: 'error', error: 'The host did not answer' };
+        }
+        setEntityGrid(cards, list);
+        for (const b of document.querySelectorAll('[data-k6-entity-card]'))
+            b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-entity-card') === mode));
+    };
+    drawCards('ready');
+    stateButtons('data-k6-entity-card', drawCards);
+    cards?.addEventListener('kp-entity-retry', () => drawCards('ready'));
+    void setEntity;
+
+    const gs = document.getElementById('k6-entity-gstates');
+    const four = make().slice(0, 4);
+    if (gs) setEntityGrid(gs, four);
+    const phone = document.getElementById('k6-entity-phone');
+    if (phone) setEntityGrid(phone, make().slice(0, 2));
+    stateButtons('data-k6-entity-gstate', (state) => {
+        if (!gs) return;
+        if (state === 'ready') setEntityGrid(gs, four);
+        else
+            setEntityGridState(gs, /** @type {'loading' | 'empty' | 'error'} */ (state), {
+                count: 4,
+                message: state === 'error' ? 'The host did not answer.' : undefined,
+            });
+    });
+    gs?.addEventListener('kp-entity-grid-retry', () => {
+        setEntityGrid(gs, four);
+        for (const b of document.querySelectorAll('[data-k6-entity-gstate]'))
+            b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-entity-gstate') === 'ready'));
+    });
+}

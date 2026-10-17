@@ -23880,3 +23880,182 @@
         }
     }
 }
+
+@layer kp.components {
+    /* --- Entity card: one fixed card per thing, the same height in every state [kpadopt6-ops] ---
+ * `.kp-card.kp-card--entity[data-kp-entity]` in `.kp-entity-grid[data-kp-entity-grid]` (js/entity-card.js). Every card is
+ * the same five rows, kept whether a row holds anything or not (identity, figures, flags, meters, actions), and every card of
+ * the grid is as high as the tallest, so a card with no flag, a loading card and a failed card all stand level. The actions
+ * stand in fixed columns (the first action is always in the first column, whatever the words before it). The name is the
+ * card's one link, its click target stretched over the whole card; the tick, the actions and the menus stand above it.
+ * Under 30rem of the grid's own width the inline actions fold into "More". Selected is `is-ticked`, the cursor `is-cursor`.
+ * Knobs [KT6]: --kp-entity-min (the least card width, 22rem), --kp-entity-row (the row's height, 1.5rem), --kp-entity-gap. */
+    .kp-entity-grid {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--kp-entity-min, 22rem)), 1fr));
+        grid-auto-rows: 1fr;
+        gap: var(--kp-entity-gap, var(--kp-space-md, 0.75rem));
+        min-block-size: 8rem;
+        min-inline-size: 0;
+    }
+
+    .kp-entity-grid > .kp-stateplate {
+        grid-column: 1 / -1;
+        min-block-size: 16rem;
+    }
+
+    .kp-card--entity {
+        position: relative;
+        display: grid;
+        grid-template-rows: minmax(1.75rem, auto) var(--kp-entity-row, 1.5rem) var(--kp-entity-row, 1.5rem) calc(var(--kp-entity-meters, 2) * var(--kp-entity-row, 1.5rem)) 2.25rem;
+        gap: var(--kp-space-xs, 0.375rem);
+        align-content: start;
+        padding: var(--kp-space-md, 0.75rem);
+        min-inline-size: 0;
+    }
+
+    .kp-card--entity > [class^='kp-entity__'] {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-entity-grid[data-kp-density='compact'] > .kp-card--entity,
+    .kp-card--entity[data-kp-density='compact'] {
+        grid-template-rows: minmax(1.75rem, auto) var(--kp-entity-row, 1.5rem) calc(var(--kp-entity-meters, 2) * var(--kp-entity-row, 1.5rem)) 2.25rem;
+    }
+
+    .kp-entity-grid[data-kp-density='compact'] > .kp-card--entity > .kp-entity__figures,
+    .kp-card--entity[data-kp-density='compact'] > .kp-entity__figures {
+        display: none;
+    }
+
+    .kp-card--entity.is-ticked {
+        border-color: var(--primary);
+        box-shadow: inset 0 0 0 1px var(--primary);
+    }
+
+    .kp-card--entity.is-cursor {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: 2px;
+    }
+
+    .kp-entity__id .kp-idmark {
+        flex: none;
+    }
+
+    .kp-entity__name {
+        flex: 1 1 auto;
+        min-inline-size: 0;
+        color: inherit;
+        font-weight: 600;
+        overflow-wrap: anywhere;
+        text-decoration: none;
+    }
+
+    a.kp-entity__name::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+    }
+
+    a.kp-entity__name:hover {
+        text-decoration: underline;
+    }
+
+    .kp-entity__vmid {
+        color: var(--muted-foreground);
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-entity__vmid:empty {
+        display: none;
+    }
+
+    .kp-entity__state {
+        flex: none;
+    }
+
+    .kp-entity__figures {
+        flex-wrap: nowrap;
+        gap: var(--kp-space-md, 0.75rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-entity__value {
+        color: var(--foreground);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-entity__none {
+        color: var(--muted-foreground);
+    }
+
+    .kp-entity__flags {
+        flex-wrap: nowrap;
+    }
+
+    .kp-entity__flag {
+        flex: none;
+    }
+
+    .kp-entity__meters {
+        display: grid !important;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        grid-auto-rows: var(--kp-entity-row, 1.5rem);
+        column-gap: var(--kp-space-sm, 0.5rem);
+        align-items: center;
+    }
+
+    .kp-entity__meter {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: subgrid;
+        align-items: center;
+        font-size: var(--kp-text-xs, 0.75rem);
+        color: var(--muted-foreground);
+    }
+
+    .kp-entity__meter-value {
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+        white-space: nowrap;
+    }
+
+    .kp-entity__actions {
+        display: grid !important;
+        grid-template-columns: repeat(var(--kp-entity-cols, 4), minmax(0, 1fr));
+        gap: var(--kp-space-sm, 0.5rem);
+        align-items: center;
+    }
+
+    .kp-entity__actions > :is(.kp-button, .kp-menu-button, .kp-reason),
+    .kp-entity__tick,
+    .kp-entity__more-flags {
+        position: relative;
+        z-index: 1;
+    }
+
+    .kp-entity__actions .kp-button,
+    .kp-entity__actions .kp-menu-button {
+        inline-size: 100%;
+    }
+
+    .kp-entity__actions > .kp-entity__action:only-child {
+        grid-column: 1 / -1;
+    }
+
+    .kp-entity__bone {
+        display: block;
+        inline-size: 70%;
+        block-size: 1rem;
+    }
+
+    .kp-card--ghost {
+        pointer-events: none;
+    }
+}

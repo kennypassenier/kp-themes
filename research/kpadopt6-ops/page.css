@@ -288,3 +288,8 @@
         grid-template-columns: minmax(0, 1fr);
     }
 }
+
+/* The package's own menu button beside the card's, for comparing the plates. */
+.k6-compare {
+    min-block-size: 14rem;
+}

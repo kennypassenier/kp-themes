@@ -3957,6 +3957,46 @@ setTrace(document.getElementById('doc-trace'), [
         ],
     },
     {
+        id: 'entity-card',
+        title: 'Entity card',
+        group: 'Data',
+        classes: ['kp-entity-grid', 'kp-entity'],
+        aliases: ['entity', 'selectable', 'density', 'flags'],
+        exports: [],
+        intro: 'One card per thing (a stack, a host): its identity mark, name, state in words, a few exact figures, flags, two meters and its actions. Every card is the same five rows, kept whether a row holds anything or not, so every card in every state is exactly as high as the next.',
+        whenToUse: 'An overview of a handful to a few dozen things that each have a state and a few actions. For many rows to sort and compare, use the data table.',
+        examples: [
+            {
+                title: 'A grid of cards',
+                why: 'The page gives the data; a refill with the same key changes the words in place, so a card under the pointer never moves.',
+                markup: `
+<div class="kp-entity-grid" data-kp-entity-grid id="doc-entities" role="list"></div>
+`,
+                script: `
+import { setEntityGrid } from '@kp-soft/themes/js/entity-card';
+setEntityGrid(document.getElementById('doc-entities'), [
+    { key: 'media', name: 'media', vmid: '106', state: { label: 'running', tone: 'success' },
+      figures: [{ value: '3/5', label: 'apps up' }, { value: '12', label: 'restarts' }],
+      flags: [{ label: 'update available', tone: 'warning' }],
+      meters: [{ label: 'CPU', value: 0.34 }, { label: 'RAM', value: 0.71, text: '5.6 of 8 GB' }],
+      actions: [{ id: 'restart', label: 'Restart' }, { id: 'logs', label: 'Logs' }] },
+]);
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-entity-meters', what: 'How many meter rows a card holds, 0 to 3; two by default.' },
+            { name: 'data-kp-entity-flags-max', what: 'How many flags show; the rest are an exact “+2” that opens the package’s own menu. Three by default.' },
+            { name: 'data-kp-entity-inline', what: 'How many actions stand as buttons; the rest go in “More”. Under 30rem every action folds into “More”.' },
+            { name: 'data-kp-selectable', what: 'A tick at the start of the card, a row of a selection with the keys j, k and x.' },
+            { name: 'data-kp-state', what: 'On a card: `loading` (the same five rows as bones), `empty` (“not measured”) or `error` (a destructive state and Retry). On the grid: `loading` (skeleton cards under the busy card), `empty` or `error` (the package’s plates).' },
+        ],
+        accessibility: [
+            'Built in — the name is the card’s one link and stretches over the card (one tab stop); every figure is an exact number; the “+2” and “More” are the package’s menu button with its keys; a ticked card is a checked box with its own name.',
+            'Yours — keep the key of a card stable, so a refill changes it in place.',
+        ],
+    },
+    {
         id: 'unsaved',
         title: 'Unsaved changes bar',
         group: 'Forms',

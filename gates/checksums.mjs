@@ -142,6 +142,7 @@ export const FILES = [
     'js/ack-gate.js',
     'js/deplist.js',
     'js/path-trace.js',
+    'js/entity-card.js',
     'js/unsaved.js',
     'js/compare.js',
     'js/calm.js',

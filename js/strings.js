@@ -119,6 +119,19 @@
  * @property {string} traceSwap  The button that swaps source and target [kpadopt6-ops]
  * @property {string} traceKeySwap  What the swap key does in the shortcut sheet [kpadopt6-ops]
  * @property {string} traceKeyGroup  The group the swap key is listed under [kpadopt6-ops]
+ * @property {(name: string) => string} entitySelect  A card's tick, named for a screen reader, "Select media" [kpadopt6-ops]
+ * @property {string} entityFailed  The state word of a card that could not be read [kpadopt6-ops]
+ * @property {string} entityNotMeasured  What a card says where it has nothing measured [kpadopt6-ops]
+ * @property {(n: number) => string} entityMoreFlags  The "+2" button's accessible name [kpadopt6-ops]
+ * @property {string} entityFlagsLabel  The name of the menu the "+2" opens [kpadopt6-ops]
+ * @property {string} entityRetry  A failed card's or grid's Retry [kpadopt6-ops]
+ * @property {string} entityMore  The button that opens the rest of a card's actions [kpadopt6-ops]
+ * @property {string} entityMoreLabel  The name of that menu [kpadopt6-ops]
+ * @property {string} entityLoading  The words under the busy card's spinner while the cards are read [kpadopt6-ops]
+ * @property {string} entityGridFailed  The failed plate's title for a grid of cards [kpadopt6-ops]
+ * @property {string} entityGridFailedText  Its sentence when the page gives no reason [kpadopt6-ops]
+ * @property {string} entityGridEmpty  The empty plate's title for a grid with no cards [kpadopt6-ops]
+ * @property {string} entityNew  The empty plate's action [kpadopt6-ops]
  * @property {string} alertSuccess
  * @property {string} alertWarning
  * @property {string} alertInfo
@@ -1143,6 +1156,20 @@ export const DEFAULT_STRINGS = Object.freeze({
     traceSwap: 'Swap direction',
     traceKeySwap: 'Swap source and target',
     traceKeyGroup: 'Path',
+    // The entity card (js/entity-card.js) [kpadopt6-ops].
+    entitySelect: (name) => `Select ${name}`,
+    entityFailed: 'failed',
+    entityNotMeasured: 'not measured',
+    entityMoreFlags: (n) => `${n} more ${n === 1 ? 'flag' : 'flags'}`,
+    entityFlagsLabel: 'More flags',
+    entityRetry: 'Retry',
+    entityMore: 'More',
+    entityMoreLabel: 'More actions',
+    entityLoading: 'Reading the stacks…',
+    entityGridFailed: 'The stacks could not be read',
+    entityGridFailedText: 'Try again in a moment.',
+    entityGridEmpty: 'No stacks yet',
+    entityNew: 'New stack',
     alertSuccess: 'Success',
     alertWarning: 'Warning',
     alertInfo: 'Info',

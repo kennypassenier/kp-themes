@@ -48,6 +48,7 @@ export { COUNTDOWN, COUNTDOWN_END_EVENT, COUNTDOWN_EVENT, COUNTDOWN_STEP, attach
 export { TIMER_DISC, TIMER_DISC_LEFT, attachTimerDiscs, discShare, timerDiscOf } from './js/timer-disc.js';
 export { RANGE, RANGE_EVENT, RANGE_PRESETS, attachRanges, parseTime, presetMs, rangeFaults, rangeMoment, rangeOf, setRange } from './js/range.js';
 export { UNSAVED, UNSAVED_CHANGE_EVENT, UNSAVED_DISCARD_EVENT, UNSAVED_LEAVE_EVENT, UNSAVED_REVERT_EVENT, UNSAVED_SAVE_EVENT, UNSAVED_UNDO_EVENT, attachUnsaved, discardUnsaved, markUnsavedClean, setUnsavedSaving, unsaved, unsavedSaved, } from './js/unsaved.js';
+export { ENTITY_ACTION_EVENT, ENTITY_CARD, ENTITY_FLAG_EVENT, ENTITY_GRID, ENTITY_GRID_RETRY_EVENT, ENTITY_NEW_EVENT, ENTITY_RETRY_EVENT, ENTITY_TICK_EVENT, attachEntityCards, setEntity, setEntityGrid, setEntityGridState } from './js/entity-card.js';
 export { TRACE, TRACE_RETRY_EVENT, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, attachTraces, setTrace, trace, traceStates, traceSummary, traceText } from './js/path-trace.js';
 export { DEPLIST, DEPLIST_COLLAPSE, DEPLIST_RETRY_EVENT, attachDeplists, depText, deplist, orderDependencies, setDeplist } from './js/deplist.js';
 export { ACK_EVENT, ACK_GATE, ACK_RETRY_EVENT, ackGate, attachAckGates } from './js/ack-gate.js';

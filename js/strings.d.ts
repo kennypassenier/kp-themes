@@ -323,6 +323,58 @@ export type Strings = {
      * The group the swap key is listed under [kpadopt6-ops]
      */
     traceKeyGroup: string;
+    /**
+     * A card's tick, named for a screen reader, "Select media" [kpadopt6-ops]
+     */
+    entitySelect: (name: string) => string;
+    /**
+     * The state word of a card that could not be read [kpadopt6-ops]
+     */
+    entityFailed: string;
+    /**
+     * What a card says where it has nothing measured [kpadopt6-ops]
+     */
+    entityNotMeasured: string;
+    /**
+     * The "+2" button's accessible name [kpadopt6-ops]
+     */
+    entityMoreFlags: (n: number) => string;
+    /**
+     * The name of the menu the "+2" opens [kpadopt6-ops]
+     */
+    entityFlagsLabel: string;
+    /**
+     * A failed card's or grid's Retry [kpadopt6-ops]
+     */
+    entityRetry: string;
+    /**
+     * The button that opens the rest of a card's actions [kpadopt6-ops]
+     */
+    entityMore: string;
+    /**
+     * The name of that menu [kpadopt6-ops]
+     */
+    entityMoreLabel: string;
+    /**
+     * The words under the busy card's spinner while the cards are read [kpadopt6-ops]
+     */
+    entityLoading: string;
+    /**
+     * The failed plate's title for a grid of cards [kpadopt6-ops]
+     */
+    entityGridFailed: string;
+    /**
+     * Its sentence when the page gives no reason [kpadopt6-ops]
+     */
+    entityGridFailedText: string;
+    /**
+     * The empty plate's title for a grid with no cards [kpadopt6-ops]
+     */
+    entityGridEmpty: string;
+    /**
+     * The empty plate's action [kpadopt6-ops]
+     */
+    entityNew: string;
     alertSuccess: string;
     alertWarning: string;
     alertInfo: string;
@@ -3743,6 +3795,19 @@ export type Strings = {
  * @property {string} traceSwap  The button that swaps source and target [kpadopt6-ops]
  * @property {string} traceKeySwap  What the swap key does in the shortcut sheet [kpadopt6-ops]
  * @property {string} traceKeyGroup  The group the swap key is listed under [kpadopt6-ops]
+ * @property {(name: string) => string} entitySelect  A card's tick, named for a screen reader, "Select media" [kpadopt6-ops]
+ * @property {string} entityFailed  The state word of a card that could not be read [kpadopt6-ops]
+ * @property {string} entityNotMeasured  What a card says where it has nothing measured [kpadopt6-ops]
+ * @property {(n: number) => string} entityMoreFlags  The "+2" button's accessible name [kpadopt6-ops]
+ * @property {string} entityFlagsLabel  The name of the menu the "+2" opens [kpadopt6-ops]
+ * @property {string} entityRetry  A failed card's or grid's Retry [kpadopt6-ops]
+ * @property {string} entityMore  The button that opens the rest of a card's actions [kpadopt6-ops]
+ * @property {string} entityMoreLabel  The name of that menu [kpadopt6-ops]
+ * @property {string} entityLoading  The words under the busy card's spinner while the cards are read [kpadopt6-ops]
+ * @property {string} entityGridFailed  The failed plate's title for a grid of cards [kpadopt6-ops]
+ * @property {string} entityGridFailedText  Its sentence when the page gives no reason [kpadopt6-ops]
+ * @property {string} entityGridEmpty  The empty plate's title for a grid with no cards [kpadopt6-ops]
+ * @property {string} entityNew  The empty plate's action [kpadopt6-ops]
  * @property {string} alertSuccess
  * @property {string} alertWarning
  * @property {string} alertInfo

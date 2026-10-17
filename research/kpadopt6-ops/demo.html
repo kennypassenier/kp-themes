@@ -54,6 +54,7 @@
                         <li><a href="#topic-ack">Acknowledge gate</a> <span class="k6-toc__count">2 sections</span></li>
                         <li><a href="#topic-deplist">Dependency list</a> <span class="k6-toc__count">2 sections</span></li>
                         <li><a href="#topic-trace">Path of a connection</a> <span class="k6-toc__count">2 sections</span></li>
+                        <li><a href="#topic-entity">Entity card</a> <span class="k6-toc__count">2 sections</span></li>
                     </ol>
                 </nav>
             </header>
@@ -1957,6 +1958,164 @@
                         <p class="k6-label">Phone width</p>
                         <div class="k6-frame k6-frame--phone">
                             <div class="kp-trace" data-kp-trace id="k6-trace-phone"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- toc: entity | Entity card | 2 sections -->
+            <!-- ================================================================ topic: entity card -->
+            <h2 class="k6-topic" id="topic-entity">Entity card</h2>
+            <section
+                class="k6-sec"
+                id="entity"
+                data-review-item="entity"
+                data-review-components="entity-grid entity"
+                data-review-topic="entity"
+                data-review-topic-title="Entity card"
+                data-review-title="Entity card: one fixed card per stack"
+                data-review-choices='[{ "id": "entity-inline", "label": "How many actions stand as buttons", "once": true, "default": "3", "options": [
+                    { "value": "3", "label": "Three buttons, the rest in More", "hint": "Recommended. Restart, Logs and the next action are always one tap; only a fourth and later hide behind More. The buttons stand in the same columns on every card." },
+                    { "value": "2", "label": "Two buttons and More", "hint": "A quieter card: the two most used actions as buttons, everything else in More. Fewer buttons per card, one more tap for the third action." }] }]'
+                aria-labelledby="h-entity"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-entity">Entity card: one fixed card per stack</h2>
+                    <p>
+                        <code>&lt;div class="kp-entity-grid" data-kp-entity-grid&gt;</code> (js/entity-card.js): the same five rows on every card,
+                        kept whether a row has anything or not. Switch the options below; the cards draw again.
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Six cards in a grid (two columns here, one on a phone), every card exactly as high as the next: <b>media</b> has a flag,
+                            <b>vault</b> has none and keeps its flag row empty, <b>gateway</b> has five flags (three show and <b>+2</b> opens the rest
+                            in the package&rsquo;s menu). Each card: the mark made from the name, the name (the card&rsquo;s one link), the id, the
+                            state in words; the figures with exact numbers; two meters with their number always beside the bar (<b>CPU 34%</b>,
+                            <b>RAM 5.6 of 8 GB</b>; a full one turns warning or destructive); then <b>Restart</b>, <b>Logs</b>, <b>Update</b> in three
+                            fixed columns and <b>More</b> in the fourth.
+                        </li>
+                        <li>
+                            <b>More</b> and <b>+2</b> open the package&rsquo;s own menu (the buttons below open them one at a time, each beside the
+                            package&rsquo;s own menu button under the cards, so the plates can be compared); the arrow keys move in it and Esc closes
+                            it. <b>Remove</b> in More is destructive. <b>A live refresh</b> changes the numbers and a flag in place: the cards are the
+                            same elements, so nothing under the pointer moves.
+                        </li>
+                        <li>
+                            <b>Selectable</b> adds a tick on each card: tick one (or press <b>j</b> to move the ring, <b>x</b> to tick) and its edge
+                            doubles; the readout says which are ticked. <b>Third meter</b>, <b>One flag</b>, <b>Compact</b> (the figures go),
+                            <b>Names are links</b>
+                            and the choice (three or two buttons) each draw every card again at the same height.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s card is a page of the ledger: the identity row ruled off by a hairline, the ticked card ruled twice round. Look
+                        at the buttons standing in the same columns on every card, the meters starting at one point, and every card the same height.
+                    </p>
+                </div>
+                <div class="k6-controls" data-review-controls>
+                    <div role="group" aria-label="Options">
+                        <b>Options:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-entity-opt="selectable" aria-pressed="false">Selectable</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-entity-opt="meters" aria-pressed="false">Third meter</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-entity-opt="flags" aria-pressed="false">One flag</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-entity-opt="compact" aria-pressed="false">Compact</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-entity-opt="link" aria-pressed="false">Names are links</button>
+                    </div>
+                    <div role="group" aria-label="Buttons">
+                        <b>Buttons:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-entity-inline="3" aria-pressed="true">Three</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-entity-inline="2" aria-pressed="false">Two</button>
+                    </div>
+                    <div role="group" aria-label="Try">
+                        <b>Try:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-entity-refresh>A live refresh</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-entity-menu="more">Open a card&rsquo;s More</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-entity-menu="flags">Open the +N</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-entity-menu="compare">Open the package&rsquo;s menu</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-entity-menu="close">Close menus</button>
+                    </div>
+                </div>
+                <div class="kp-entity-grid" data-kp-entity-grid id="k6-entity-grid" data-kp-entity-min="22rem"></div>
+                <div class="k6-case k6-compare">
+                    <p class="k6-label">For comparison: the package&rsquo;s own menu button (not part of the card), opened by the same button</p>
+                    <div class="kp-menu-button" data-kp-menu-button data-kp-key="k6-compare-menu" id="k6-entity-compare">
+                        <button type="button" class="kp-button kp-button--sm">More</button>
+                        <div class="kp-menu kp-menu--rich" role="menu" aria-label="Every other action" hidden></div>
+                    </div>
+                </div>
+                <pre class="k6-log" id="k6-entity-log" aria-live="polite"></pre>
+            </section>
+            <section
+                class="k6-sec"
+                id="entity-states"
+                data-review-item="entity-states"
+                data-review-components="entity-grid entity"
+                data-review-topic="entity"
+                data-review-title="Entity card: loading, empty, failed and phone width"
+                aria-labelledby="h-entity-states"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-entity-states">Entity card: loading, empty, failed and phone width</h2>
+                    <p>
+                        A card with nothing measured, a card that failed, the whole grid loading, empty and failed, and the grid at the width of a
+                        phone.
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Card states</b> (three cards side by side): the first is <b>loading</b> (the five rows as ruled bones, the card keeps
+                            its height), the second <b>empty</b> (its figures and meters say <b>not measured</b> at normal size), the third
+                            <b>failed</b> (its state word turns <b>failed</b> on a red plate and a normal-size <b>Retry</b> takes the buttons&rsquo;
+                            place). The other cards are unaffected.
+                        </li>
+                        <li>
+                            <b>The grid</b>: <b>Loading</b> shows six skeleton cards of the final height under the theme&rsquo;s busy card;
+                            <b>Nothing</b> the empty plate <b>No stacks yet</b> with <b>New stack</b>; <b>Failed</b> the red plate with <b>Retry</b>.
+                            Each fills the grid&rsquo;s height and its text is centred.
+                        </li>
+                        <li><b>Phone width</b>: one column; the buttons fold into <b>More</b> and the card keeps its height; long names wrap.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The plates are formal&rsquo;s own and the busy card its ruled ring. Check that no word touches an edge of its card and that
+                        the cards keep one height in every state.
+                    </p>
+                </div>
+                <div class="k6-controls" data-review-controls>
+                    <div role="group" aria-label="Cards">
+                        <b>The three cards:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-entity-card="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-entity-card="states" aria-pressed="false">
+                            Loading, empty, failed
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Grid">
+                        <b>The grid:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-entity-gstate="ready" aria-pressed="true">Cards</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-entity-gstate="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-entity-gstate="empty" aria-pressed="false">Nothing</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-entity-gstate="error" aria-pressed="false">Failed</button>
+                    </div>
+                </div>
+                <p class="k6-label">Three cards in three states</p>
+                <div class="kp-entity-grid" data-kp-entity-grid id="k6-entity-cards" data-kp-entity-min="18rem"></div>
+                <div class="k6-pair">
+                    <div class="k6-case">
+                        <p class="k6-label">The grid in its states</p>
+                        <div class="kp-entity-grid" data-kp-entity-grid id="k6-entity-gstates" data-kp-entity-min="18rem"></div>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">Phone width</p>
+                        <div class="k6-frame k6-frame--phone">
+                            <div class="kp-entity-grid" data-kp-entity-grid id="k6-entity-phone"></div>
                         </div>
                     </div>
                 </div>

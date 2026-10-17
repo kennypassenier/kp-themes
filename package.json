@@ -192,6 +192,10 @@
             "types": "./js/path-trace.d.ts",
             "default": "./js/path-trace.js"
         },
+        "./js/entity-card": {
+            "types": "./js/entity-card.d.ts",
+            "default": "./js/entity-card.js"
+        },
         "./js/unsaved": {
             "types": "./js/unsaved.d.ts",
             "default": "./js/unsaved.js"

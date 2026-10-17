@@ -77,6 +77,8 @@
         "kp-version",
         "kp-ack",
         "kp-deplist",
-        "kp-trace"
+        "kp-trace",
+        "kp-entity-grid",
+        "kp-entity"
     ]
 }
