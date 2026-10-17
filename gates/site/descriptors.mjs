@@ -3611,6 +3611,37 @@ setGanttState(timeline, 'loading');
         ],
     },
     {
+        id: 'runs',
+        title: 'Next times',
+        group: 'Data',
+        classes: ['kp-runs'],
+        exports: [],
+        intro: 'The next times a schedule will run, one to a row: the time with its weekday (dd/mm/yyyy HH:MM, Europe/Brussels), how far away it is, and a mark where the clock is turned before a run or the page names a conflict. The page computes the times; the package draws them, in the same height in every state.',
+        whenToUse: 'Under a schedule or repeat, so the person sees what the setting really does. For a run history use the run timeline.',
+        examples: [
+            {
+                title: 'Three nights',
+                why: 'The markup is the empty box; the page hands over the times.',
+                markup: `
+<div class="kp-runs" data-kp-runs data-kp-runs-count="3" data-kp-runs-values="2026-10-18T03:00:00+02:00,2026-10-19T03:00:00+02:00,2026-10-20T03:00:00+02:00"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-runs-count', what: 'How many rows; 3 by default.' },
+            { name: 'data-kp-runs-relative', what: '`false` leaves the “in 2 days” out.' },
+            { name: 'data-kp-runs-warn', what: '`false` leaves the clock-change and conflict marks out.' },
+            { name: 'data-kp-runs-more', what: 'N: a “Show N more” for times past the count.' },
+            { name: 'data-kp-time-zone', what: 'The zone the times are written in; Europe/Brussels by default.' },
+            { name: 'data-kp-now', what: 'A fixed clock (ISO) for a demo or a test.' },
+            { name: 'data-kp-state', what: '`loading` at first; the script writes `ready`, `empty`, `loading` and `error`.' },
+        ],
+        accessibility: [
+            'Built in — each time is a `<time>` with its datetime; a status region says the first run when it changes; the failed state is an alert.',
+            'Yours — word the reason of an empty list (“Pick at least one weekday”) and the conflicts, and name the list after the schedule.',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

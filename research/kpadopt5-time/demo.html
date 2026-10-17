@@ -40,7 +40,7 @@
                     approved.
                 </p>
                 <p>
-                    Judge in the review dialog (&ldquo;Review in a dialog&rdquo; at the top): 1 topics, one step each in formal. Every section says
+                    Judge in the review dialog (&ldquo;Review in a dialog&rdquo; at the top): 2 topics, one step each in formal. Every section says
                     under <b>Expected</b> what you should see and what each control does. Everything with a <code>kp-</code> class and every script
                     under <code>js/</code> is the package; the sample data, the frames marked &ldquo;phone width&rdquo; (390 px boxes standing in for
                     a phone), the fixed clock (Saturday 17/10/2026, so a reminder for &ldquo;tomorrow&rdquo; always means 18/10/2026), the event
@@ -49,6 +49,7 @@
                 <nav class="kt-toc" aria-label="Topics on this page">
                     <ol>
                         <li><a href="#topic-weekdays">Weekday picker</a> <span class="kt-toc__count">2 sections</span></li>
+                        <li><a href="#topic-runs">Next times of a schedule</a> <span class="kt-toc__count">2 sections</span></li>
                     </ol>
                 </nav>
             </header>
@@ -216,6 +217,170 @@
                                 data-kp-days="month"
                                 data-kp-value="1,last"
                                 aria-label="Run on the days, phone"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- ================================================================ topic: Next times -->
+            <h2 class="kt-topic" id="topic-runs">Next times of a schedule</h2>
+            <section
+                class="kt-sec"
+                id="runs"
+                data-review-item="runs"
+                data-review-topic="runs"
+                data-review-topic-title="Next times of a schedule"
+                data-review-title="Next times: the list under a repetition"
+                aria-labelledby="h-runs"
+            >
+                <div class="kt-sec__head">
+                    <h2 id="h-runs">Next times: the list under a repetition</h2>
+                    <p>
+                        <code>&lt;div class="kp-runs" data-kp-runs&gt;</code> (js/runs.js): the page works out the times, the package draws them with
+                        the weekday, the distance and a mark where the clock is turned. The demo clock stands at Saturday 17/10/2026 14:05.
+                    </p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Every night at 03:00:</b> three rows, <b>Sun 18/10/2026 03:00 · in 12 h 55 min</b>,
+                            <b>Mon 19/10/2026 03:00 · in 1 day</b> and <b>Tue 20/10/2026 03:00 · in 2 days</b>. The first row is in bold. The times
+                            and the distances line up in two columns.
+                        </li>
+                        <li>
+                            <b>Every night at 02:30 over the clock change:</b> the third row, Mon 26/10/2026 02:30, carries an amber mark
+                            <b>Clock goes back 1 h</b>; the other two do not.
+                        </li>
+                        <li><b>A conflict:</b> the second row carries the mark <b>Overlaps the backup of vault</b>.</li>
+                        <li><b>More:</b> three rows and <b>Show 3 more</b>; pressing it shows all six and the button says <b>Show fewer</b>.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The rows sit on one hairline plate with a rule between them; the distances are muted, the marks are formal&rsquo;s warning
+                        badge (amber plate, its own ink on it).
+                    </p>
+                </div>
+                <div class="kt-pair">
+                    <div class="kt-case">
+                        <p class="kt-label">Every night at 03:00</p>
+                        <div
+                            class="kp-runs"
+                            data-kp-runs
+                            data-kp-now="2026-10-17T14:05:00+02:00"
+                            data-kp-runs-values="2026-10-18T03:00:00+02:00,2026-10-19T03:00:00+02:00,2026-10-20T03:00:00+02:00"
+                        ></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">Every night at 02:30, over the clock change</p>
+                        <div
+                            class="kp-runs"
+                            data-kp-runs
+                            data-kp-now="2026-10-17T14:05:00+02:00"
+                            data-kp-runs-values="2026-10-24T02:30:00+02:00,2026-10-25T02:30:00+02:00,2026-10-26T02:30:00+01:00"
+                        ></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">With a conflict the page names</p>
+                        <div class="kp-runs" data-kp-runs data-kp-now="2026-10-17T14:05:00+02:00" id="kt-runs-conflict"></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">Six times, three shown</p>
+                        <div
+                            class="kp-runs"
+                            data-kp-runs
+                            data-kp-runs-more="3"
+                            data-kp-now="2026-10-17T14:05:00+02:00"
+                            data-kp-runs-values="2026-10-18T03:00:00+02:00,2026-10-19T03:00:00+02:00,2026-10-20T03:00:00+02:00,2026-10-21T03:00:00+02:00,2026-10-22T03:00:00+02:00,2026-10-23T03:00:00+02:00"
+                        ></div>
+                    </div>
+                </div>
+            </section>
+            <section
+                class="kt-sec"
+                id="runs-states"
+                data-review-item="runs-states"
+                data-review-topic="runs"
+                data-review-title="Next times: every state and phone width"
+                aria-labelledby="h-runs-states"
+            >
+                <div class="kt-sec__head">
+                    <h2 id="h-runs-states">Next times: every state and phone width</h2>
+                    <p>
+                        Ready, empty (with the page&rsquo;s reason), loading and failed, each the height of three rows; the same list in a 390 px box.
+                    </p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Press <b>Ready</b>, <b>Empty</b>, <b>Loading</b> and <b>Failed</b> in the box above the lists: the first list changes
+                            state and its frame <b>never changes height</b>.
+                        </li>
+                        <li>
+                            <b>Empty</b>: the sentence <b>Pick at least one weekday</b> in the middle of the frame at heading size, in the dashed
+                            empty plate. <b>Loading</b>: the busy card (spinner and words) over three placeholder rows, spinning. <b>Failed</b>: a red
+                            alert in the middle with <b>Could not work out the next times</b> and a normal-size <b>Try again</b>; pressing it loads,
+                            then shows the rows again.
+                        </li>
+                        <li>
+                            Beside it, the same four states stand at once. In the 390 px box each row is two lines: the time, then the distance and
+                            the mark; no text touches an edge.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The empty plate is formal&rsquo;s dashed plate, the failure formal&rsquo;s destructive alert, loading formal&rsquo;s busy card
+                        (the same as a loading data table).
+                    </p>
+                </div>
+                <div data-review-controls>
+                    <div role="group" aria-label="State of the first list" class="kt-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-kt-runs-state="ready">Ready</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kt-runs-state="empty">Empty</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kt-runs-state="loading">Loading</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kt-runs-state="error">Failed</button>
+                    </div>
+                </div>
+                <div class="kt-pair">
+                    <div class="kt-case">
+                        <p class="kt-label">The list the buttons drive</p>
+                        <div
+                            class="kp-runs"
+                            data-kp-runs
+                            data-kp-now="2026-10-17T14:05:00+02:00"
+                            data-kp-runs-values="2026-10-18T03:00:00+02:00,2026-10-19T03:00:00+02:00,2026-10-20T03:00:00+02:00"
+                            id="kt-runs-live"
+                        ></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">Empty, with the page&rsquo;s reason</p>
+                        <div class="kp-runs" data-kp-runs id="kt-runs-empty"></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">Loading</p>
+                        <div class="kp-runs" data-kp-runs data-kp-state="loading"></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">Failed</p>
+                        <div class="kp-runs" data-kp-runs id="kt-runs-failed"></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">Phone width, with a mark and without the distance</p>
+                        <div class="kt-frame kt-frame--phone kt-stack">
+                            <div
+                                class="kp-runs"
+                                data-kp-runs
+                                data-kp-now="2026-10-17T14:05:00+02:00"
+                                data-kp-runs-values="2026-10-24T02:30:00+02:00,2026-10-25T02:30:00+02:00,2026-10-26T02:30:00+01:00"
+                            ></div>
+                            <div
+                                class="kp-runs"
+                                data-kp-runs
+                                data-kp-runs-relative="false"
+                                data-kp-runs-values="2026-10-18T03:00:00+02:00,2026-10-19T03:00:00+02:00,2026-10-20T03:00:00+02:00"
                             ></div>
                         </div>
                     </div>

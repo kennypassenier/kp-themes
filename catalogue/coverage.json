@@ -28,6 +28,7 @@
         "kp-pipeline",
         "kp-quantity",
         "kp-range",
+        "kp-runs",
         "kp-secret",
         "kp-segmented",
         "kp-stackbar",

@@ -1548,6 +1548,50 @@ export type Strings = {
      */
     weekdaysMin: (n: number) => string;
     /**
+     * The heading over a next-times list (js/runs.js) [kpadopt5-time]
+     */
+    runsTitle: string;
+    /**
+     * A run that is due now, where "in 2 days" would stand [kpadopt5-time]
+     */
+    runsNow: string;
+    /**
+     * How far away a run is: "in 2 days" [kpadopt5-time]
+     */
+    runsIn: (distance: string) => string;
+    /**
+     * The mark on a run after the clock was turned, positive hours forward: "Clock goes back 1 h" [kpadopt5-time]
+     */
+    runsClockChange: (hours: number) => string;
+    /**
+     * The button that shows the times past the count: "Show 10 more" [kpadopt5-time]
+     */
+    runsMore: (n: number) => string;
+    /**
+     * The same button once they are shown [kpadopt5-time]
+     */
+    runsFewer: string;
+    /**
+     * An empty list's sentence when the page gives none [kpadopt5-time]
+     */
+    runsEmpty: string;
+    /**
+     * A failed list's first line [kpadopt5-time]
+     */
+    runsFailed: string;
+    /**
+     * The failed list's button [kpadopt5-time]
+     */
+    runsRetry: string;
+    /**
+     * What the busy card says while the times are worked out [kpadopt5-time]
+     */
+    runsLoading: string;
+    /**
+     * What the status region says when the first run changes [kpadopt5-time]
+     */
+    runsNext: (moment: string) => string;
+    /**
      * The compare slider's label on the before side (js/compare.js) [kpadopt4-ideas]
      */
     compareBefore: string;
@@ -2327,6 +2371,17 @@ export type Strings = {
  * @property {(n: number) => string} weekdaysOrdinal  A day of the month in words: "1st", "22nd" [kpadopt5-time]
  * @property {(list: string) => string} weekdaysOnThe  The days of a month in a sentence: "On the 1st and 15th" [kpadopt5-time]
  * @property {(n: number) => string} weekdaysMin  What a picker below its least says: "Pick at least one day" [kpadopt5-time]
+ * @property {string} runsTitle  The heading over a next-times list (js/runs.js) [kpadopt5-time]
+ * @property {string} runsNow  A run that is due now, where "in 2 days" would stand [kpadopt5-time]
+ * @property {(distance: string) => string} runsIn  How far away a run is: "in 2 days" [kpadopt5-time]
+ * @property {(hours: number) => string} runsClockChange  The mark on a run after the clock was turned, positive hours forward: "Clock goes back 1 h" [kpadopt5-time]
+ * @property {(n: number) => string} runsMore  The button that shows the times past the count: "Show 10 more" [kpadopt5-time]
+ * @property {string} runsFewer  The same button once they are shown [kpadopt5-time]
+ * @property {string} runsEmpty  An empty list's sentence when the page gives none [kpadopt5-time]
+ * @property {string} runsFailed  A failed list's first line [kpadopt5-time]
+ * @property {string} runsRetry  The failed list's button [kpadopt5-time]
+ * @property {string} runsLoading  What the busy card says while the times are worked out [kpadopt5-time]
+ * @property {(moment: string) => string} runsNext  What the status region says when the first run changes [kpadopt5-time]
  * @property {string} compareBefore  The compare slider's label on the before side (js/compare.js) [kpadopt4-ideas]
  * @property {string} compareAfter  Its label on the after side [kpadopt4-ideas]
  * @property {(before: string, after: string) => string} compareSlider  The divider's name for a screen reader [kpadopt4-ideas]

@@ -16634,6 +16634,175 @@
         pointer-events: none;
     }
 
+    /* --- Next times: what a repetition really does [kpadopt5-time] ---
+ * `.kp-runs[data-kp-runs]` (js/runs.js). A heading and a plate of rows, one run to a row: the time with its weekday in
+ * rule 52, how far away it is, and a warning mark where the clock is turned before the run or the app names a conflict. The
+ * three columns are one grid for every row, so a long weekday or a short distance moves nothing. The plate keeps the height of
+ * `--kp-runs-count` rows in every state: empty and failed are the package's empty plate and alert, centred over it at heading
+ * size with a normal Try again; loading is the busy card over placeholder rows. Narrower than 26rem of its own a row is two
+ * lines (the time, then the distance and the mark).
+ * Knobs [KT6]: --kp-runs-row (2.75rem, 3.75rem on a phone), --kp-runs-pad, --kp-runs-gap (--kp-space-sm). */
+    .kp-runs {
+        container: kp-runs / inline-size;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-runs-gap, var(--kp-space-sm, 0.5rem));
+        min-inline-size: 0;
+        --kp-runs-row: 2.75rem;
+    }
+
+    .kp-runs__title {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .kp-runs__stage {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        min-block-size: calc(var(--kp-runs-count, 3) * var(--kp-runs-row) + 2px);
+    }
+
+    .kp-runs__stage > * {
+        grid-area: 1 / 1;
+        min-inline-size: 0;
+    }
+
+    .kp-runs__list {
+        box-sizing: border-box;
+        display: grid;
+        grid-template-columns: max-content max-content minmax(0, 1fr);
+        align-content: start;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    .kp-runs[data-kp-state='empty'] .kp-runs__list,
+    .kp-runs[data-kp-state='error'] .kp-runs__list {
+        visibility: hidden;
+    }
+
+    .kp-runs__row {
+        display: grid;
+        grid-template-columns: subgrid;
+        grid-column: 1 / -1;
+        align-items: center;
+        column-gap: var(--kp-space-lg, 1.5rem);
+        min-block-size: var(--kp-runs-row);
+        padding: var(--kp-runs-pad, var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem));
+        box-sizing: border-box;
+    }
+
+    .kp-runs__row + .kp-runs__row {
+        border-block-start: 1px solid var(--border);
+    }
+
+    .kp-runs__when {
+        grid-column: 1;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    .kp-runs__row[data-kp-runs-next] .kp-runs__when {
+        font-weight: 600;
+    }
+
+    .kp-runs__rel {
+        grid-column: 2;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-runs__flag {
+        grid-column: 3;
+        justify-self: start;
+        max-inline-size: 100%;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-runs__row--wait {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kp-runs__bar {
+        inline-size: min(16rem, 60%);
+    }
+
+    /* Empty and failed: one note, the stage's whole footprint, centred, at heading size. */
+    .kp-runs__state {
+        display: grid;
+        align-items: stretch;
+    }
+
+    .kp-runs__state[hidden] {
+        display: none;
+    }
+
+    .kp-runs__empty,
+    .kp-runs__failure {
+        box-sizing: border-box;
+        block-size: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-md, 1rem);
+        text-align: center;
+    }
+
+    .kp-runs__failure > .kp-alert__body {
+        flex: none;
+        display: grid;
+        justify-items: center;
+        gap: calc(var(--kp-space-xs, 0.25rem) / 2);
+        max-inline-size: 100%;
+    }
+
+    .kp-runs__empty-title,
+    .kp-runs__failure-title {
+        margin: 0;
+        font-size: var(--kp-text-lg, 1.125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-runs__failure-text {
+        overflow-wrap: anywhere;
+    }
+
+    .kp-runs__more {
+        justify-self: start;
+    }
+
+    @container kp-runs (max-width: 26rem) {
+        .kp-runs {
+            --kp-runs-row: 3.75rem;
+        }
+
+        .kp-runs__list {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-runs__row {
+            display: flex;
+            flex-wrap: wrap;
+            align-content: center;
+            align-items: center;
+            gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        }
+
+        .kp-runs__when {
+            flex: 1 0 100%;
+        }
+    }
+
     /* --- Compare slider: two versions, a divider between them [kpadopt4-ideas] ---
  * `.kp-compare[data-kp-compare]` (js/compare.js). The before and after panes lie on top of each other in one grid
  * cell; the before pane shows on the start side of the divider and the after pane on the end side, each cut by

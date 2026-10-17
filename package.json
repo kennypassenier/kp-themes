@@ -168,6 +168,10 @@
             "types": "./js/range.d.ts",
             "default": "./js/range.js"
         },
+        "./js/runs": {
+            "types": "./js/runs.d.ts",
+            "default": "./js/runs.js"
+        },
         "./js/weekdays": {
             "types": "./js/weekdays.d.ts",
             "default": "./js/weekdays.js"

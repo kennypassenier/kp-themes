@@ -23,3 +23,62 @@ export function readout(selector, type, log, say = (detail) => JSON.stringify(de
 
 readout('#kt-week', 'kp-weekdays-change', 'kt-week-log');
 readout('#kt-month', 'kp-weekdays-change', 'kt-month-log');
+
+/** Resolves once js/auto.js has attached everything the page carries. */
+export const ready = new Promise((resolve) => {
+    const done = () => document.documentElement.hasAttribute('data-kp-auto-ready');
+    if (done()) return resolve(undefined);
+    new MutationObserver((_, watch) => {
+        if (done()) {
+            watch.disconnect();
+            resolve(undefined);
+        }
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-kp-auto-ready'] });
+});
+
+/** Press a state button: exactly one of the group is pressed. @param {string} attribute the data attribute on the buttons @param {(value: string) => void} apply */
+export function stateButtons(attribute, apply) {
+    const buttons = /** @type {HTMLButtonElement[]} */ ([...document.querySelectorAll(`[${attribute}]`)]);
+    for (const button of buttons) {
+        button.addEventListener('click', () => {
+            for (const other of buttons) other.setAttribute('aria-pressed', String(other === button));
+            apply(button.getAttribute(attribute) ?? '');
+        });
+    }
+}
+
+await ready;
+
+// ── next times ──
+{
+    const { setRuns, setRunsState } = await import('../../js/runs.js');
+    const at = (/** @type {string} */ v) => Date.parse(v);
+    const conflict = document.getElementById('kt-runs-conflict');
+    if (conflict)
+        setRuns(conflict, [
+            at('2026-10-18T03:00:00+02:00'),
+            { at: at('2026-10-19T03:00:00+02:00'), conflict: 'Overlaps the backup of vault' },
+            at('2026-10-20T03:00:00+02:00'),
+        ]);
+    const empty = document.getElementById('kt-runs-empty');
+    if (empty) setRuns(empty, [], { reason: 'Pick at least one weekday' });
+    const failed = document.getElementById('kt-runs-failed');
+    if (failed) setRunsState(failed, 'error');
+    const live = document.getElementById('kt-runs-live');
+    const times = [at('2026-10-18T03:00:00+02:00'), at('2026-10-19T03:00:00+02:00'), at('2026-10-20T03:00:00+02:00')];
+    const show = (/** @type {string} */ state) => {
+        if (!live) return;
+        if (state === 'ready') setRuns(live, times);
+        else if (state === 'empty') setRuns(live, [], { reason: 'Pick at least one weekday' });
+        else setRunsState(live, /** @type {'loading' | 'error'} */ (state));
+    };
+    stateButtons('data-kt-runs-state', show);
+    for (const list of document.querySelectorAll('[data-kp-runs]'))
+        list.addEventListener('kp-runs-retry', () => {
+            setRunsState(/** @type {HTMLElement} */ (list), 'loading');
+            setTimeout(() => (list === live ? show('ready') : setRuns(/** @type {HTMLElement} */ (list), times)), 1400);
+            if (list === live)
+                for (const b of document.querySelectorAll('[data-kt-runs-state]'))
+                    b.setAttribute('aria-pressed', String(b.getAttribute('data-kt-runs-state') === 'loading'));
+        });
+}

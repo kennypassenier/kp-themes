@@ -2170,6 +2170,23 @@ days is a real choice, so the group never falls back to "All". `data-kp-days="mo
 a list of numbers (0 is Sunday) or names. `kp-weekdays-change` carries `{ values, summary, valid }`; `setWeekdays(el, values)`
 sets the days without the event, `weekdaysOf(el)` reads them. The words are `weekdays…` in the dictionary. Knobs:
 `--kp-weekdays-gap`, `--kp-weekdays-max` (32rem), `--kp-weekdays-chip-height` (2.5rem).
+### The next times of a schedule
+
+Under a repetition, the times it will really run:
+
+```html
+<div class="kp-runs" data-kp-runs data-kp-runs-count="3"></div>
+```
+
+The page works out the times (it owns the rule); `setRuns(el, times, { reason })` draws them (`js/runs.js`, attached by `js/auto.js`).
+A time is a number of ms, an ISO string or a Date, or `{ at, conflict }` with a sentence the page words. Each row shows the time
+with its weekday in rule 52, in Europe/Brussels unless `data-kp-time-zone` says otherwise, how far away it is ("in 12 h 55 min",
+"in 2 days"; `data-kp-runs-relative="false"` leaves it out) and an amber mark where the clock is turned before the run
+("Clock goes back 1 h") or a conflict is named (`data-kp-runs-warn="false"` leaves the marks out). `data-kp-runs-more="10"` adds
+"Show 10 more" for times past the count. No times is the empty state with `reason` ("Pick a time") centred at heading size;
+`setRunsState(el, 'loading')` lays the busy card over placeholder rows and `'error'` shows the alert with Try again, which fires
+`kp-runs-retry`; every state keeps the height of `count` rows. A fixed clock, `data-kp-now="2026-10-17T14:05:00+02:00"`, is
+for a demo or a test. The words are `runs…` in the dictionary. Knobs: `--kp-runs-row` (2.75rem), `--kp-runs-pad`, `--kp-runs-gap`.
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]
