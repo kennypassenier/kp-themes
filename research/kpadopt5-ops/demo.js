@@ -9,6 +9,7 @@ import { masterDetail, setPaneState } from '../../js/master-detail.js';
 import { setRefreshInterval } from '../../js/auto-refresh.js';
 import { connectionOf, setConnection } from '../../js/connection.js';
 import { attachTransfers, resetTransfer, setTransfer } from '../../js/transfer.js';
+import { askQuestion } from '../../js/question-card.js';
 
 /** @param {string} name @param {string} text */
 const log = (name, text) => {
@@ -466,3 +467,109 @@ function initTransfer() {
 }
 
 initTransfer();
+
+// ---------------------------------------------------------------- question
+function initQuestion() {
+    const live = /** @type {HTMLElement | null} */ (document.querySelector('[data-ko-q-live]'));
+    const frozenBox = /** @type {HTMLElement | null} */ (document.querySelector('[data-ko-q-frozen]'));
+    const phone = /** @type {HTMLElement | null} */ (document.querySelector('[data-ko-q-phone]'));
+    if (!live || !frozenBox || !phone) return;
+    const readout = document.querySelector('[data-ko-q-readout]');
+    let refuse = false;
+    let counter = 0;
+    const ANSWERS = [
+        {
+            value: 'allow',
+            label: 'Allow',
+            consequence: 'Deletes the 14 old backups (3.2 GB) and the operation goes on.',
+            outcome: 'Allowed. The operation goes on.',
+        },
+        {
+            value: 'stop',
+            label: 'Stop',
+            consequence: 'Keeps every backup and stops the operation.',
+            outcome: 'Stopped. Nothing was deleted.',
+            tone: /** @type {const} */ ('destructive'),
+        },
+    ];
+    const base = {
+        question: 'Remove the 14 old backups?',
+        text: 'The host asks before it deletes anything.',
+        answers: ANSWERS,
+        defaultAnswer: 'stop',
+    };
+    const FROZEN = 1_000_000_000;
+    const still = () => FROZEN;
+    /** The app: accepts or refuses. @param {HTMLElement} box */
+    const wire = (box) =>
+        box.addEventListener('kp-question-answer', (e) => {
+            const detail = /** @type {CustomEvent} */ (e).detail;
+            if (readout) readout.textContent = `Answered ${detail.value}; the app ${refuse ? 'refuses' : 'accepts'} it.`;
+            window.setTimeout(() => (refuse ? detail.respond(false, 'the host did not answer') : detail.respond(true)), 900);
+        });
+    wire(live);
+    const make = (/** @type {HTMLElement} */ into, /** @type {string} */ id, /** @type {object} */ extra, /** @type {string} */ caption) => {
+        const cell = document.createElement('div');
+        const label = document.createElement('p');
+        label.className = 'ko-label';
+        label.textContent = caption;
+        const box = document.createElement('div');
+        box.setAttribute('data-kp-questions', '');
+        box.setAttribute('data-kp-title', 'off');
+        cell.append(label, box);
+        into.append(cell);
+        return { box, handle: askQuestion(box, { id, ...base, ...extra }, { now: still, frozen: true }) };
+    };
+    const ahead = (/** @type {number} */ s) => FROZEN + s * 1000;
+    const asked = FROZEN - 40_000;
+    make(frozenBox, 'f-wait', { deadline: ahead(50), asked }, 'Waiting (a rule)');
+    make(frozenBox, 'f-ring', { deadline: ahead(50), asked, countdown: 'ring' }, 'Waiting (a ring)');
+    make(frozenBox, 'f-text', { deadline: ahead(50), asked, countdown: 'text' }, 'Waiting (words only)');
+    make(frozenBox, 'f-urgent', { deadline: ahead(20), asked }, 'Urgent (20 s left)');
+    const sending = make(frozenBox, 'f-send', { deadline: ahead(50), asked }, 'Sending');
+    sending.handle.answer('allow');
+    const answered = make(frozenBox, 'f-done', { deadline: ahead(50), asked }, 'Answered');
+    answered.box.addEventListener('kp-question-answer', (e) => window.setTimeout(() => /** @type {CustomEvent} */ (e).detail.respond(true), 0));
+    answered.handle.answer('allow');
+    const refused = make(frozenBox, 'f-refused', { deadline: ahead(50), asked }, 'Refused');
+    refused.box.addEventListener('kp-question-answer', (e) =>
+        window.setTimeout(() => /** @type {CustomEvent} */ (e).detail.respond(false, 'the host did not answer'), 0),
+    );
+    refused.handle.answer('stop');
+    make(frozenBox, 'f-expired', { deadline: ahead(-1), asked }, 'Expired (the card stays)');
+    const phoneCard = askQuestion(phone, { id: 'p', ...base, deadline: ahead(50), asked }, { now: still, frozen: true });
+    void phoneCard;
+
+    /** @param {number} seconds @param {object} [extra] */
+    const ask = (seconds, extra = {}) => {
+        counter += 1;
+        askQuestion(live, {
+            id: `live-${counter}`,
+            ...base,
+            question: `Remove the old backups? (#${counter})`,
+            deadline: Date.now() + seconds * 1000,
+            ...extra,
+        });
+        if (readout) readout.textContent = `Question #${counter} asked; it waits ${seconds} s.`;
+    };
+    for (const button of document.querySelectorAll('[data-ko-q]'))
+        button.addEventListener('click', () => {
+            const kind = /** @type {HTMLElement} */ (button).dataset.koQ;
+            if (kind === 'ask') ask(90);
+            else if (kind === 'short') ask(12);
+            else if (kind === 'remove') ask(10, { expired: 'remove' });
+            else for (const card of live.querySelectorAll('.kp-question')) card.remove();
+        });
+    for (const button of document.querySelectorAll('[data-ko-q-app]'))
+        button.addEventListener('click', () => {
+            press(/** @type {Element} */ (button.closest('[role="group"]')), button);
+            refuse = /** @type {HTMLElement} */ (button).dataset.koQApp === 'refuse';
+        });
+    for (const box of [live])
+        box.addEventListener('kp-question-expire', (e) => {
+            if (readout)
+                readout.textContent = `Question ${/** @type {CustomEvent} */ (e).detail.id} expired; the default was ${/** @type {CustomEvent} */ (e).detail.defaultAnswer}.`;
+        });
+}
+
+initQuestion();

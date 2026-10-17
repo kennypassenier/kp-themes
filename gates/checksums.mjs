@@ -131,6 +131,7 @@ export const FILES = [
     'js/timer-disc.js',
     'js/range.js',
     'js/compare.js',
+    'js/question-card.js',
     'js/transfer.js',
     'js/connection.js',
     'js/auto-refresh.js',

@@ -668,6 +668,87 @@
                     </div>
                 </div>
             </section>
+            <!-- ================================================================ question-card -->
+            <section
+                class="ko-sec"
+                id="question"
+                data-review-item="question"
+                data-review-topic="ops-question-card"
+                data-review-topic-title="A question that waits for your answer"
+                data-review-title="A question that waits for your answer"
+                data-review-choices='[{ "id": "question-measure", "label": "How the time left is drawn", "once": true, "default": "bar", "options": [
+                    { "value": "bar", "label": "A shrinking rule", "hint": "A thin rule under the question that shrinks over the whole wait; the same drawing as the alarm (the default)." },
+                    { "value": "ring", "label": "A ring", "hint": "A small ring beside the time that empties; takes less width, reads as a clock." },
+                    { "value": "text", "label": "Words only", "hint": "Only “Waits 1 min 12 s more”; the quietest, nothing moves but the numbers." }] }]'
+                aria-labelledby="h-question"
+            >
+                <div class="ko-sec__head">
+                    <h2 id="h-question">A question that waits for your answer</h2>
+                    <p>
+                        <code>.kp-question</code> with <code>js/question-card.js</code>: the host asks before it goes on, says what each answer sets
+                        in motion and how long it waits. The card shows the sending, the outcome and a refusal.
+                    </p>
+                </div>
+                <div class="ko-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>All the states, frozen</b>: the page opens with the clock stopped so nothing moves. Waiting is a warning plate with the
+                            question, “Waits 50 s more”, “If nobody answers: Stop.” and two buttons (<b>Allow</b>, <b>Stop</b>) in one column with
+                            what each does beside them. Urgent (20 s left) is the stronger red-ink plate with the time in bold. Sending has the
+                            pressed button busy. Answered is green with “Allowed. The operation goes on.” and <b>Dismiss</b>. Refused says “Not sent:
+                            …” and the buttons work again. Expired is a plain plate saying nobody answered and what the default did; it stays (Kenny:
+                            the card stays with its outcome). The three ways of drawing the time are side by side.
+                        </li>
+                        <li>
+                            <b>Ask a question</b> adds a live card (90 s) that counts down for real: the rule shrinks from its end at an even pace;
+                            under 30 s the card turns urgent (and a screen reader hears it once). Press a button (or the key 1 or 2 with the card
+                            focused): it is sent; with <b>The app accepts</b> it turns to its outcome, with <b>The app refuses</b> it says why and you
+                            may answer again. Several questions stack, the oldest first. The tab title carries “(1) waiting” while one is open.
+                        </li>
+                        <li>
+                            <b>Ask one with 12 s left</b> shows the whole end: urgent at once, then at zero the card is the expired plate with the
+                            default’s outcome. <b>Ask one that leaves at zero</b> is the other choice: it is taken away the theme’s way.
+                        </li>
+                        <li>The phone frame (390 px): the buttons full width, each consequence under its button.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The warning is a red-ink entry on paper (a rule along the start edge); the countdown is a navy rule ruled off from its end at
+                        an even pace (linear, no ease); the answered card is the green plate; the buttons are formal's own.
+                    </p>
+                </div>
+                <div class="ko-controls" data-review-controls>
+                    <div role="group" aria-label="Ask a question">
+                        <b>Ask:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-q="ask">Ask a question (90 s)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-q="short">Ask one with 12 s left</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-q="remove">Ask one that leaves at zero</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-q="clear">Take the live ones away</button>
+                    </div>
+                    <div role="group" aria-label="The app's answer">
+                        <b>The app:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-q-app="ok" aria-pressed="true">The app accepts</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-q-app="refuse" aria-pressed="false">The app refuses</button>
+                    </div>
+                </div>
+                <div class="ko-stack">
+                    <div>
+                        <p class="ko-label">Live questions</p>
+                        <div data-kp-questions data-ko-q-live></div>
+                        <p class="ko-readout" data-ko-q-readout aria-live="polite">No live question yet. Press Ask.</p>
+                    </div>
+                    <div>
+                        <p class="ko-label">All the states, frozen</p>
+                        <div class="ko-grid" data-ko-q-frozen></div>
+                    </div>
+                    <div>
+                        <p class="ko-label">Phone width (390 px)</p>
+                        <div class="ko-frame ko-frame--phone"><div data-kp-questions data-kp-title="off" data-ko-q-phone></div></div>
+                    </div>
+                </div>
+            </section>
         </main>
         <script type="application/json" data-review-round>
             { "round": "ops-c17983a9-c644-4e17-b04b-bf6ed4735b60", "received": [] }

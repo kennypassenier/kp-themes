@@ -276,6 +276,58 @@ export type Strings = {
      */
     codeCopiedAnnouncement: (title: string) => string;
     /**
+     * The default first answer (js/question-card.js) [kpadopt5-question-card]
+     */
+    questionAllow: string;
+    /**
+     * The default second answer [kpadopt5-question-card]
+     */
+    questionStop: string;
+    /**
+     * The accessible name of the region that holds the open questions [kpadopt5-question-card]
+     */
+    questionsLabel: string;
+    /**
+     * How long a question still waits, "Waits 1 min 12 s more" [kpadopt5-question-card]
+     */
+    questionLeft: (duration: string) => string;
+    /**
+     * The time line when the time ran out [kpadopt5-question-card]
+     */
+    questionTimeUp: string;
+    /**
+     * What happens at zero, "If nobody answers: Stop." [kpadopt5-question-card]
+     */
+    questionDefault: (label: string) => string;
+    /**
+     * Announced once when the time gets short [kpadopt5-question-card]
+     */
+    questionUrgent: (duration: string) => string;
+    /**
+     * The outcome of a question nobody answered, when there is no default answer [kpadopt5-question-card]
+     */
+    questionNobody: string;
+    /**
+     * The outcome when the default answer applied [kpadopt5-question-card]
+     */
+    questionNobodyDefault: (label: string) => string;
+    /**
+     * The outcome of an answer that has no sentence of its own [kpadopt5-question-card]
+     */
+    questionAnswered: (label: string) => string;
+    /**
+     * The note when the app could not send the answer, "Not sent: why. Nothing changed; answer again." [kpadopt5-question-card]
+     */
+    questionRefused: (why: string) => string;
+    /**
+     * The button that takes a finished card away [kpadopt5-question-card]
+     */
+    questionDismiss: string;
+    /**
+     * The tab title's prefix while questions wait, "(1) waiting" [kpadopt5-question-card]
+     */
+    questionWaiting: (count: number) => string;
+    /**
      * The accessible name of a transfer's bar when it has no file name (js/transfer.js) [kpadopt5-transfer]
      */
     transferBar: string;
@@ -2030,6 +2082,19 @@ export type Strings = {
  * @property {string} codeLoading  What the busy card over a block says
  * @property {string} codeError  A block that could not be read, when the page gives no sentence
  * @property {(title: string) => string} codeCopiedAnnouncement  Announced after a copy, naming the block
+ * @property {string} questionAllow  The default first answer (js/question-card.js) [kpadopt5-question-card]
+ * @property {string} questionStop  The default second answer [kpadopt5-question-card]
+ * @property {string} questionsLabel  The accessible name of the region that holds the open questions [kpadopt5-question-card]
+ * @property {(duration: string) => string} questionLeft  How long a question still waits, "Waits 1 min 12 s more" [kpadopt5-question-card]
+ * @property {string} questionTimeUp  The time line when the time ran out [kpadopt5-question-card]
+ * @property {(label: string) => string} questionDefault  What happens at zero, "If nobody answers: Stop." [kpadopt5-question-card]
+ * @property {(duration: string) => string} questionUrgent  Announced once when the time gets short [kpadopt5-question-card]
+ * @property {string} questionNobody  The outcome of a question nobody answered, when there is no default answer [kpadopt5-question-card]
+ * @property {(label: string) => string} questionNobodyDefault  The outcome when the default answer applied [kpadopt5-question-card]
+ * @property {(label: string) => string} questionAnswered  The outcome of an answer that has no sentence of its own [kpadopt5-question-card]
+ * @property {(why: string) => string} questionRefused  The note when the app could not send the answer, "Not sent: why. Nothing changed; answer again." [kpadopt5-question-card]
+ * @property {string} questionDismiss  The button that takes a finished card away [kpadopt5-question-card]
+ * @property {(count: number) => string} questionWaiting  The tab title's prefix while questions wait, "(1) waiting" [kpadopt5-question-card]
  * @property {string} transferBar  The accessible name of a transfer's bar when it has no file name (js/transfer.js) [kpadopt5-transfer]
  * @property {(done: string, total: string) => string} transferOf  The reading of a transfer with a known size, "1.2 GB of 4.1 GB" [kpadopt5-transfer]
  * @property {(done: string) => string} transferSoFar  The reading of a transfer of unknown size, "1.2 GB so far" [kpadopt5-transfer]

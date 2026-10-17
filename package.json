@@ -172,6 +172,10 @@
             "types": "./js/compare.d.ts",
             "default": "./js/compare.js"
         },
+        "./js/question-card": {
+            "types": "./js/question-card.d.ts",
+            "default": "./js/question-card.js"
+        },
         "./js/transfer": {
             "types": "./js/transfer.d.ts",
             "default": "./js/transfer.js"

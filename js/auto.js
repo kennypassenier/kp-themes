@@ -211,6 +211,8 @@ export const NEEDS = [
     { name: 'connection', when: '[data-kp-connection]', load: () => import('./connection.js'), attach: (m, root) => [m.attachConnection(root)] },
     // A transfer with its speed and the time left [kpadopt5-ops].
     { name: 'transfer', when: '[data-kp-transfer]', load: () => import('./transfer.js'), attach: (m, root) => [m.attachTransfers(root)] },
+    // The question card's region [kpadopt5-ops]; the cards are made with askQuestion().
+    { name: 'question-card', when: '[data-kp-questions]', load: () => import('./question-card.js'), attach: (m, root) => [m.attachQuestions(root)] },
     { name: 'graph', when: '[data-kp-graph]', load: () => import('./graph.js'), attach: (m, root) => [m.attachGraphs(root)] },
     {
         // A theme's loading picture made of pieces (`--kp-loading-pieces`,

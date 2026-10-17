@@ -75,6 +75,7 @@ export const NOT_DATA = {
     'js/motion.js': 'the motion a loading state arrives and leaves with',
     'js/loading-pieces.js': 'the pieces a theme dresses a waiting part with (the card included)',
     'js/busy-card.js': 'the busy card itself',
+    'js/question-card.js': "a card's own sending state (the pressed button is busy); the card is not a data area",
     'js/auto-refresh.js': "a control's own busy state (the freshness line says updating…); the data it refreshes stays on screen",
 };
 
