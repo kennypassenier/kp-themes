@@ -3703,6 +3703,41 @@ setGanttState(timeline, 'loading');
         ],
     },
     {
+        id: 'sentence',
+        title: 'Sentence form',
+        group: 'Forms',
+        classes: ['kp-sentence'],
+        exports: [],
+        intro: 'A form that reads as a sentence: the fields (an input, a select, a combobox, the weekday picker) stand inside the words, an underline in the primary colour, so you read what will happen as you fill it in. The sentence wraps like text and a field too wide for the line takes a line of its own.',
+        whenToUse: 'A short rule or schedule that is best read as one sentence (“Run backup on nextcloud every Monday at 03:00”). For an ordinary list of fields use the field rows.',
+        examples: [
+            {
+                title: 'A schedule',
+                why: 'Each control carries its own `aria-label`; the words round it are not its label.',
+                markup: `
+<fieldset class="kp-sentence" data-kp-sentence>
+    <p class="kp-sentence__text">
+        Run <span class="kp-sentence__field"><select name="job" aria-label="What to run"><option>backup</option><option>cleanup</option></select></span>
+        at <span class="kp-sentence__field"><input name="at" size="5" value="03:00" aria-label="At (HH:MM)" /></span>.
+    </p>
+</fieldset>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-look', what: '`underline` (default) or `boxed`.' },
+            { name: 'data-kp-sentence-size', what: '`lg` (default, 1.125rem on a 2.4 line) or `md`.' },
+            { name: 'data-kp-narrow', what: '`wrap` (default), `stack` or `flow`: what a narrow screen does.' },
+            { name: 'data-kp-own-line-ratio', what: 'How much of the line a field may take before it goes on a line of its own; 0.7.' },
+            { name: 'data-kp-show-when', what: 'On a phrase: `field=value`; the phrase shows only then.' },
+            { name: 'data-kp-block', what: 'On a field: always a line of its own.' },
+        ],
+        accessibility: [
+            'Built in — a status region says the whole sentence after a change; a hidden phrase is inert and its controls are disabled; an invalid control is marked and described by the line that names it.',
+            'Yours — an `aria-label` on every control (“At”, “How often”): the sentence words are not labels.',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

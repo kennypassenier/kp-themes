@@ -2222,6 +2222,30 @@ forces one). The newest is ordered first, labelled Latest (`data-kp-latest="none
 States: `setDatedState(el, 'loading')` lays the busy card over placeholder rows, `'empty'` shows the page's `reason` and `action`
 centred, `'error'` the alert whose Try again fires `kp-dated-retry`; each keeps the height the picker had (`data-kp-rows` says how many
 rows the first load keeps). The words are `dated…`. Knobs: `--kp-dated-row` (3.5rem), `--kp-dated-gap`.
+### A form that reads as a sentence
+
+"Run [backup] on [nextcloud] every [week] at [03:00]": the fields stand inside the words.
+
+```html
+<fieldset class="kp-sentence" data-kp-sentence>
+    <p class="kp-sentence__text">
+        Run <span class="kp-sentence__field"><select name="job" aria-label="What to run">…</select></span>
+        at <span class="kp-sentence__field"><input name="at" size="5" value="03:00" aria-label="At (HH:MM)" /></span>.
+    </p>
+</fieldset>
+```
+
+`attachSentences(root)` (`js/sentence.js`, attached by `js/auto.js`) keeps every field's own behaviour and draws it inline: an
+underline in the primary colour in semibold (`data-kp-look="boxed"` draws a small box; `data-kp-sentence-size="md"` makes the
+text 1rem). The sentence wraps like text; a field whose natural width is more than 70 % of the line (`data-kp-own-line-ratio`)
+takes a line of its own, the full width (`data-kp-narrow="stack"` does it for every field below 30rem, `flow` never;
+`data-kp-block` on a field always). `data-kp-show-when="how=once"` on a phrase shows it only then (a comma lists values) and
+takes its controls out of reach. Give every control an `aria-label` (the words round it are not its label): a status region says
+the whole sentence ("Run backup on nextcloud every week at 03:00.") after a change, `sentenceSummary(el)` reads the same text, and
+`kp-sentence-change` carries it. Enter in the last field submits the form. `setSentenceInvalid(el, 'at', why)` underlines a control
+in red and writes the line under the sentence that names it; `setSentenceFieldState(field, 'loading')` shows the field's own
+skeleton at the width it had; `disabled` on the fieldset with `data-kp-disabled-reason` says why it is off. The words are
+`sentence…`. Knobs: `--kp-sentence-size`, `--kp-sentence-line`, `--kp-sentence-edge`.
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

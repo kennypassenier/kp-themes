@@ -168,6 +168,10 @@
             "types": "./js/range.d.ts",
             "default": "./js/range.js"
         },
+        "./js/sentence": {
+            "types": "./js/sentence.d.ts",
+            "default": "./js/sentence.js"
+        },
         "./js/dated-options": {
             "types": "./js/dated-options.d.ts",
             "default": "./js/dated-options.js"

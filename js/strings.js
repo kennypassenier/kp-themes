@@ -544,6 +544,9 @@
  * @property {string} datedFailed  A failed picker's first line [kpadopt5-time]
  * @property {string} datedRetry  The failed picker's button [kpadopt5-time]
  * @property {string} datedLoading  What the busy card says while the options load [kpadopt5-time]
+ * @property {(label: string) => string} sentenceEmpty  What a sentence's summary says for a field with nothing in it: "(At)" (js/sentence.js) [kpadopt5-time]
+ * @property {(field: string, why: string) => string} sentenceWhy  The line under a sentence that names the field that is wrong: "At: Type a time of day." [kpadopt5-time]
+ * @property {string} sentenceField  The name of a control that has none and no words before it [kpadopt5-time]
  * @property {string} compareBefore  The compare slider's label on the before side (js/compare.js) [kpadopt4-ideas]
  * @property {string} compareAfter  Its label on the after side [kpadopt4-ideas]
  * @property {(before: string, after: string) => string} compareSlider  The divider's name for a screen reader [kpadopt4-ideas]
@@ -1305,6 +1308,10 @@ export const DEFAULT_STRINGS = Object.freeze({
     datedFailed: 'Could not load the options',
     datedRetry: 'Try again',
     datedLoading: 'Loading the options…',
+    // The sentence form (js/sentence.js) [kpadopt5-time].
+    sentenceEmpty: (label) => `(${label || '…'})`,
+    sentenceWhy: (field, why) => `${field}: ${why}`,
+    sentenceField: 'Field',
     // The compare slider [kpadopt4-ideas].
     compareBefore: 'Before',
     compareAfter: 'After',

@@ -161,3 +161,23 @@ await ready;
         setTimeout(() => show('ready'), 1400);
     });
 }
+
+// ── sentence form ──
+{
+    const { setSentenceFieldState, setSentenceInvalid } = await import('../../js/sentence.js');
+    for (const form of document.querySelectorAll('[data-kt-form]'))
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const log = document.getElementById('kt-sentence-log');
+            if (log && form.contains(document.getElementById('kt-sentence-a'))) log.textContent = 'submit\nSchedule saved (nothing is stored here).';
+        });
+    readout('#kt-sentence-a', 'kp-sentence-change', 'kt-sentence-log', (d) => d.summary);
+    const live = document.getElementById('kt-sentence-live');
+    const stack = live?.querySelector('[name="stack"]')?.closest('.kp-sentence__field');
+    const apply = (/** @type {string} */ state) => {
+        if (!live || !stack) return;
+        setSentenceFieldState(stack, state === 'loading' ? 'loading' : 'ready');
+        setSentenceInvalid(live, 'at', state === 'invalid' ? 'Type a time of day, 00:00 to 23:59.' : null);
+    };
+    stateButtons('data-kt-sentence-state', apply);
+}

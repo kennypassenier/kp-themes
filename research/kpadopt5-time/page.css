@@ -156,3 +156,12 @@
 .kt-frame--menu {
     min-block-size: 24rem;
 }
+
+.kt-form {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.kt-frame--narrow {
+    inline-size: min(26rem, 100%);
+}

@@ -40,7 +40,7 @@
                     approved.
                 </p>
                 <p>
-                    Judge in the review dialog (&ldquo;Review in a dialog&rdquo; at the top): 4 topics, one step each in formal. Every section says
+                    Judge in the review dialog (&ldquo;Review in a dialog&rdquo; at the top): 5 topics, one step each in formal. Every section says
                     under <b>Expected</b> what you should see and what each control does. Everything with a <code>kp-</code> class and every script
                     under <code>js/</code> is the package; the sample data, the frames marked &ldquo;phone width&rdquo; (390 px boxes standing in for
                     a phone), the fixed clock (Saturday 17/10/2026, so a reminder for &ldquo;tomorrow&rdquo; always means 18/10/2026), the event
@@ -52,6 +52,7 @@
                         <li><a href="#topic-runs">Next times of a schedule</a> <span class="kt-toc__count">2 sections</span></li>
                         <li><a href="#topic-snooze">Snooze picker</a> <span class="kt-toc__count">2 sections</span></li>
                         <li><a href="#topic-dated">Options with a date and an age</a> <span class="kt-toc__count">2 sections</span></li>
+                        <li><a href="#topic-sentence">Sentence form</a> <span class="kt-toc__count">2 sections</span></li>
                     </ol>
                 </nav>
             </header>
@@ -397,6 +398,7 @@
                 data-review-topic="snooze"
                 data-review-topic-title="Snooze picker"
                 data-review-title="Snooze picker: the mix of lengths and moments"
+                data-review-choices='[{"id": "look", "label": "How the quick choices are shown", "options": [{"value": "menu", "label": "A button with a menu (the default)", "hint": "One small button that fits a row action; the choices and their exact moments open under it."}, {"value": "chips", "label": "A row of chips", "hint": "Every choice and its moment visible at once: for a settings page with room."}]}]'
                 aria-labelledby="h-snooze"
             >
                 <div class="kt-sec__head">
@@ -717,6 +719,498 @@
                                 data-kp-now="2026-10-17T14:05:00+02:00"
                                 id="kt-dated-phone"
                             ></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- ================================================================ topic: Sentence form -->
+            <h2 class="kt-topic" id="topic-sentence">Sentence form</h2>
+            <section
+                class="kt-sec"
+                id="sentence"
+                data-review-item="sentence"
+                data-review-topic="sentence"
+                data-review-topic-title="Sentence form"
+                data-review-title="Sentence form: a schedule that reads as a sentence"
+                data-review-choices='[{"id": "field-look", "label": "How a field is drawn in the sentence", "options": [{"value": "underline", "label": "Underline (the default)", "hint": "A line in the primary colour under the value, in semibold: the sentence reads as words with blanks to fill in."}, {"value": "boxed", "label": "Boxed", "hint": "Each field a small box with a hairline: clearer where to click, less like running text."}]}, {"id": "field-size", "label": "How big the sentence is", "options": [{"value": "lg", "label": "Large (the default)", "hint": "1.125rem on a 2.4 line: reads as a sentence, not a form."}, {"value": "md", "label": "Medium", "hint": "1rem on a 2.2 line: sits in a dense settings page."}]}]'
+                aria-labelledby="h-sentence"
+            >
+                <div class="kt-sec__head">
+                    <h2 id="h-sentence">Sentence form: a schedule that reads as a sentence</h2>
+                    <p>
+                        <code>&lt;fieldset class="kp-sentence" data-kp-sentence&gt;</code> (js/sentence.js): the fields stand inside the words, so you
+                        read what will happen as you fill it in. The sentence runs on over several lines, and a field too wide for the line takes a
+                        line of its own.
+                    </p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Run [backup] on [nextcloud] [every week] on [Mon Thu chips] at [03:00].</b> The fields are underlined in the primary
+                            colour in semibold; the words are plain. Choose <b>once</b> in <i>every week</i>: the weekday chips go and
+                            <b>on [20/10/2026]</b> appears; <b>every day</b> shows neither. Nothing else moves except the line that gets shorter.
+                        </li>
+                        <li>
+                            The weekday chips stand on a line of their own (they are wider than the line allows next to words); a long stack name does
+                            the same when it does not fit (see the next section).
+                        </li>
+                        <li>
+                            The grey box shows what a screen reader hears after a change:
+                            <b>Run backup on nextcloud every week on Mon and Thu at 03:00.</b> Pressing Enter in the time field saves the schedule
+                            (the box under the buttons confirms).
+                        </li>
+                        <li>
+                            <b>Boxed look</b> and <b>smaller text</b> are shown below the first sentence so you can tick the look and the size you
+                            want in the dialog: the same sentence with each field as a small box, and with 1rem text on a 2.2 line.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The underline is formal&rsquo;s navy primary, the focus is formal&rsquo;s ring around the field, and the words are
+                        formal&rsquo;s ink; the chips are the approved chip pills.
+                    </p>
+                </div>
+                <div class="kt-stack">
+                    <div class="kt-case">
+                        <p class="kt-label">Underline look (the default)</p>
+                        <form class="kt-form" action="#" data-kt-form>
+                            <fieldset class="kp-sentence" data-kp-sentence id="kt-sentence-a">
+                                <legend class="kp-sr-only">Schedule</legend>
+                                <p class="kp-sentence__text">
+                                    Run
+                                    <span class="kp-sentence__field"
+                                        ><select name="job" aria-label="What to run">
+                                            <option value="backup" selected>backup</option>
+                                            <option value="restore-test">restore test</option>
+                                            <option value="cleanup">cleanup</option>
+                                        </select></span
+                                    >
+                                    on
+                                    <span class="kp-sentence__field"
+                                        ><select name="stack" aria-label="Which stack">
+                                            <option value="nextcloud" selected>nextcloud</option>
+                                            <option value="vault">vault</option>
+                                            <option value="jellyfin">jellyfin</option>
+                                        </select></span
+                                    >
+                                    <span class="kp-sentence__field"
+                                        ><select name="how" aria-label="How often">
+                                            <option value="day">every day</option>
+                                            <option value="week" selected>every week</option>
+                                            <option value="once">once</option>
+                                        </select></span
+                                    ><span class="kp-sentence__when" data-kp-show-when="how=week">
+                                        on
+                                        <span class="kp-sentence__field" data-kp-block
+                                            ><span
+                                                class="kp-weekdays"
+                                                data-kp-weekdays
+                                                data-kp-presets="false"
+                                                data-kp-summary="false"
+                                                data-kp-value="1,4"
+                                                aria-label="Run on"
+                                            ></span></span></span
+                                    ><span class="kp-sentence__when" data-kp-show-when="how=once" hidden>
+                                        on
+                                        <span class="kp-sentence__field"
+                                            ><input
+                                                name="date"
+                                                size="10"
+                                                placeholder="dd/mm/yyyy"
+                                                aria-label="Date (dd/mm/yyyy)"
+                                                value="20/10/2026" /></span
+                                    ></span>
+                                    at
+                                    <span class="kp-sentence__field"
+                                        ><input name="at" size="5" value="03:00" aria-label="At (HH:MM, 24 hours)" /></span
+                                    >.
+                                </p>
+                            </fieldset>
+                            <div class="kt-actions"><button type="submit" class="kp-button kp-button--primary">Save schedule</button></div>
+                        </form>
+                        <pre class="kt-log" id="kt-sentence-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="kt-pair">
+                        <div class="kt-case">
+                            <p class="kt-label">Boxed look</p>
+                            <form class="kt-form" action="#" data-kt-form>
+                                <fieldset class="kp-sentence" data-kp-sentence id="kt-sentence-b" data-kp-look="boxed">
+                                    <legend class="kp-sr-only">Schedule</legend>
+                                    <p class="kp-sentence__text">
+                                        Run
+                                        <span class="kp-sentence__field"
+                                            ><select name="job" aria-label="What to run">
+                                                <option value="backup" selected>backup</option>
+                                                <option value="restore-test">restore test</option>
+                                                <option value="cleanup">cleanup</option>
+                                            </select></span
+                                        >
+                                        on
+                                        <span class="kp-sentence__field"
+                                            ><select name="stack" aria-label="Which stack">
+                                                <option value="nextcloud" selected>nextcloud</option>
+                                                <option value="vault">vault</option>
+                                                <option value="jellyfin">jellyfin</option>
+                                            </select></span
+                                        >
+                                        <span class="kp-sentence__field"
+                                            ><select name="how" aria-label="How often">
+                                                <option value="day">every day</option>
+                                                <option value="week" selected>every week</option>
+                                                <option value="once">once</option>
+                                            </select></span
+                                        ><span class="kp-sentence__when" data-kp-show-when="how=week">
+                                            on
+                                            <span class="kp-sentence__field" data-kp-block
+                                                ><span
+                                                    class="kp-weekdays"
+                                                    data-kp-weekdays
+                                                    data-kp-presets="false"
+                                                    data-kp-summary="false"
+                                                    data-kp-value="1,4"
+                                                    aria-label="Run on"
+                                                ></span></span></span
+                                        ><span class="kp-sentence__when" data-kp-show-when="how=once" hidden>
+                                            on
+                                            <span class="kp-sentence__field"
+                                                ><input
+                                                    name="date"
+                                                    size="10"
+                                                    placeholder="dd/mm/yyyy"
+                                                    aria-label="Date (dd/mm/yyyy)"
+                                                    value="20/10/2026" /></span
+                                        ></span>
+                                        at
+                                        <span class="kp-sentence__field"
+                                            ><input name="at" size="5" value="03:00" aria-label="At (HH:MM, 24 hours)" /></span
+                                        >.
+                                    </p>
+                                </fieldset>
+                                <div class="kt-actions"><button type="submit" class="kp-button kp-button--primary">Save schedule</button></div>
+                            </form>
+                        </div>
+                        <div class="kt-case">
+                            <p class="kt-label">Smaller text (data-kp-sentence-size="md")</p>
+                            <form class="kt-form" action="#" data-kt-form>
+                                <fieldset class="kp-sentence" data-kp-sentence id="kt-sentence-c" data-kp-sentence-size="md">
+                                    <legend class="kp-sr-only">Schedule</legend>
+                                    <p class="kp-sentence__text">
+                                        Run
+                                        <span class="kp-sentence__field"
+                                            ><select name="job" aria-label="What to run">
+                                                <option value="backup" selected>backup</option>
+                                                <option value="restore-test">restore test</option>
+                                                <option value="cleanup">cleanup</option>
+                                            </select></span
+                                        >
+                                        on
+                                        <span class="kp-sentence__field"
+                                            ><select name="stack" aria-label="Which stack">
+                                                <option value="nextcloud" selected>nextcloud</option>
+                                                <option value="vault">vault</option>
+                                                <option value="jellyfin">jellyfin</option>
+                                            </select></span
+                                        >
+                                        <span class="kp-sentence__field"
+                                            ><select name="how" aria-label="How often">
+                                                <option value="day">every day</option>
+                                                <option value="week" selected>every week</option>
+                                                <option value="once">once</option>
+                                            </select></span
+                                        ><span class="kp-sentence__when" data-kp-show-when="how=once" hidden>
+                                            on
+                                            <span class="kp-sentence__field"
+                                                ><input
+                                                    name="date"
+                                                    size="10"
+                                                    placeholder="dd/mm/yyyy"
+                                                    aria-label="Date (dd/mm/yyyy)"
+                                                    value="20/10/2026" /></span
+                                        ></span>
+                                        at
+                                        <span class="kp-sentence__field"
+                                            ><input name="at" size="5" value="03:00" aria-label="At (HH:MM, 24 hours)" /></span
+                                        >.
+                                    </p>
+                                </fieldset>
+                                <div class="kt-actions"><button type="submit" class="kp-button kp-button--primary">Save schedule</button></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section
+                class="kt-sec"
+                id="sentence-states"
+                data-review-item="sentence-states"
+                data-review-topic="sentence"
+                data-review-title="Sentence form: states, a long value and phone width"
+                aria-labelledby="h-sentence-states"
+            >
+                <div class="kt-sec__head">
+                    <h2 id="h-sentence-states">Sentence form: states, a long value and phone width</h2>
+                    <p>
+                        A wrong field, choices that are still loading, a disabled sentence, a stack name too long for the line, and the sentence in a
+                        390 px box.
+                    </p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Press <b>Ready</b>, <b>Loading choices</b> and <b>Wrong time</b> in the box above the sentences: the first sentence
+                            follows. <b>Loading choices</b>: the stack field shows its own grey, moving bar at the width it had and cannot be used;
+                            the words round it <b>do not move</b>. <b>Wrong time</b>: the time field is underlined in red and the line
+                            <b>At (HH:MM, 24 hours): Type a time of day, 00:00 to 23:59.</b> stands under the sentence; <b>Ready</b> clears both.
+                        </li>
+                        <li>
+                            <b>Disabled</b>: the words are muted, the fields dashed and dimmed, the reason <b>The schedule is paused</b> stands under
+                            them.
+                        </li>
+                        <li>
+                            <b>A long stack name</b> (home-automation-gateway-stack): the field is too wide to share the line, so it takes a line of
+                            its own, the full width, and its text is never cut. The same in the 390 px box, where the weekday chips also keep one row.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Invalid is formal&rsquo;s destructive red on the underline; the loading bar is formal&rsquo;s skeleton rule; the disabled
+                        sentence keeps its words readable.
+                    </p>
+                </div>
+                <div data-review-controls>
+                    <div role="group" aria-label="State of the first sentence" class="kt-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-kt-sentence-state="ready">Ready</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kt-sentence-state="loading">Loading choices</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kt-sentence-state="invalid">Wrong time</button>
+                    </div>
+                </div>
+                <div class="kt-stack">
+                    <div class="kt-case">
+                        <p class="kt-label">The sentence the buttons drive</p>
+                        <form class="kt-form" action="#" data-kt-form>
+                            <fieldset class="kp-sentence" data-kp-sentence id="kt-sentence-live">
+                                <legend class="kp-sr-only">Schedule</legend>
+                                <p class="kp-sentence__text">
+                                    Run
+                                    <span class="kp-sentence__field"
+                                        ><select name="job" aria-label="What to run">
+                                            <option value="backup" selected>backup</option>
+                                            <option value="restore-test">restore test</option>
+                                            <option value="cleanup">cleanup</option>
+                                        </select></span
+                                    >
+                                    on
+                                    <span class="kp-sentence__field"
+                                        ><select name="stack" aria-label="Which stack">
+                                            <option value="nextcloud" selected>nextcloud</option>
+                                            <option value="vault">vault</option>
+                                            <option value="jellyfin">jellyfin</option>
+                                        </select></span
+                                    >
+                                    <span class="kp-sentence__field"
+                                        ><select name="how" aria-label="How often">
+                                            <option value="day">every day</option>
+                                            <option value="week" selected>every week</option>
+                                            <option value="once">once</option>
+                                        </select></span
+                                    ><span class="kp-sentence__when" data-kp-show-when="how=week">
+                                        on
+                                        <span class="kp-sentence__field" data-kp-block
+                                            ><span
+                                                class="kp-weekdays"
+                                                data-kp-weekdays
+                                                data-kp-presets="false"
+                                                data-kp-summary="false"
+                                                data-kp-value="1,4"
+                                                aria-label="Run on"
+                                            ></span></span></span
+                                    ><span class="kp-sentence__when" data-kp-show-when="how=once" hidden>
+                                        on
+                                        <span class="kp-sentence__field"
+                                            ><input
+                                                name="date"
+                                                size="10"
+                                                placeholder="dd/mm/yyyy"
+                                                aria-label="Date (dd/mm/yyyy)"
+                                                value="20/10/2026" /></span
+                                    ></span>
+                                    at
+                                    <span class="kp-sentence__field"
+                                        ><input name="at" size="5" value="03:00" aria-label="At (HH:MM, 24 hours)" /></span
+                                    >.
+                                </p>
+                            </fieldset>
+                            <div class="kt-actions"><button type="submit" class="kp-button kp-button--primary">Save schedule</button></div>
+                        </form>
+                    </div>
+                    <div class="kt-pair">
+                        <div class="kt-case">
+                            <p class="kt-label">Disabled, with its reason</p>
+                            <form class="kt-form" action="#" data-kt-form>
+                                <fieldset
+                                    class="kp-sentence"
+                                    data-kp-sentence
+                                    id="kt-sentence-off"
+                                    disabled
+                                    data-kp-disabled-reason="The schedule is paused"
+                                >
+                                    <legend class="kp-sr-only">Schedule</legend>
+                                    <p class="kp-sentence__text">
+                                        Run
+                                        <span class="kp-sentence__field"
+                                            ><select name="job" aria-label="What to run">
+                                                <option value="backup" selected>backup</option>
+                                                <option value="restore-test">restore test</option>
+                                                <option value="cleanup">cleanup</option>
+                                            </select></span
+                                        >
+                                        on
+                                        <span class="kp-sentence__field"
+                                            ><select name="stack" aria-label="Which stack">
+                                                <option value="nextcloud" selected>nextcloud</option>
+                                                <option value="vault">vault</option>
+                                                <option value="jellyfin">jellyfin</option>
+                                            </select></span
+                                        >
+                                        <span class="kp-sentence__field"
+                                            ><select name="how" aria-label="How often">
+                                                <option value="day">every day</option>
+                                                <option value="week" selected>every week</option>
+                                                <option value="once">once</option>
+                                            </select></span
+                                        ><span class="kp-sentence__when" data-kp-show-when="how=once" hidden>
+                                            on
+                                            <span class="kp-sentence__field"
+                                                ><input
+                                                    name="date"
+                                                    size="10"
+                                                    placeholder="dd/mm/yyyy"
+                                                    aria-label="Date (dd/mm/yyyy)"
+                                                    value="20/10/2026" /></span
+                                        ></span>
+                                        at
+                                        <span class="kp-sentence__field"
+                                            ><input name="at" size="5" value="03:00" aria-label="At (HH:MM, 24 hours)" /></span
+                                        >.
+                                    </p>
+                                </fieldset>
+                                <div class="kt-actions"><button type="submit" class="kp-button kp-button--primary">Save schedule</button></div>
+                            </form>
+                        </div>
+                        <div class="kt-case">
+                            <p class="kt-label">A stack name too long for the line (a 26rem column)</p>
+                            <div class="kt-frame kt-frame--narrow">
+                                <form class="kt-form" action="#" data-kt-form>
+                                    <fieldset class="kp-sentence" data-kp-sentence id="kt-sentence-long">
+                                        <legend class="kp-sr-only">Schedule</legend>
+                                        <p class="kp-sentence__text">
+                                            Run
+                                            <span class="kp-sentence__field"
+                                                ><select name="job" aria-label="What to run">
+                                                    <option value="backup" selected>backup</option>
+                                                    <option value="restore-test">restore test</option>
+                                                    <option value="cleanup">cleanup</option>
+                                                </select></span
+                                            >
+                                            on
+                                            <span class="kp-sentence__field"
+                                                ><select name="stack" aria-label="Which stack">
+                                                    <option value="nextcloud">nextcloud</option>
+                                                    <option value="vault">vault</option>
+                                                    <option value="jellyfin">jellyfin</option>
+                                                    <option value="home-automation-gateway-stack" selected>home-automation-gateway-stack</option>
+                                                </select></span
+                                            >
+                                            <span class="kp-sentence__field"
+                                                ><select name="how" aria-label="How often">
+                                                    <option value="day">every day</option>
+                                                    <option value="week" selected>every week</option>
+                                                    <option value="once">once</option>
+                                                </select></span
+                                            ><span class="kp-sentence__when" data-kp-show-when="how=once" hidden>
+                                                on
+                                                <span class="kp-sentence__field"
+                                                    ><input
+                                                        name="date"
+                                                        size="10"
+                                                        placeholder="dd/mm/yyyy"
+                                                        aria-label="Date (dd/mm/yyyy)"
+                                                        value="20/10/2026" /></span
+                                            ></span>
+                                            at
+                                            <span class="kp-sentence__field"
+                                                ><input name="at" size="5" value="03:00" aria-label="At (HH:MM, 24 hours)" /></span
+                                            >.
+                                        </p>
+                                    </fieldset>
+                                    <div class="kt-actions"><button type="submit" class="kp-button kp-button--primary">Save schedule</button></div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="kt-case">
+                            <p class="kt-label">Phone width, long name and chips</p>
+                            <div class="kt-frame kt-frame--phone">
+                                <form class="kt-form" action="#" data-kt-form>
+                                    <fieldset class="kp-sentence" data-kp-sentence id="kt-sentence-phone">
+                                        <legend class="kp-sr-only">Schedule</legend>
+                                        <p class="kp-sentence__text">
+                                            Run
+                                            <span class="kp-sentence__field"
+                                                ><select name="job" aria-label="What to run">
+                                                    <option value="backup" selected>backup</option>
+                                                    <option value="restore-test">restore test</option>
+                                                    <option value="cleanup">cleanup</option>
+                                                </select></span
+                                            >
+                                            on
+                                            <span class="kp-sentence__field"
+                                                ><select name="stack" aria-label="Which stack">
+                                                    <option value="nextcloud">nextcloud</option>
+                                                    <option value="vault">vault</option>
+                                                    <option value="jellyfin">jellyfin</option>
+                                                    <option value="home-automation-gateway-stack" selected>home-automation-gateway-stack</option>
+                                                </select></span
+                                            >
+                                            <span class="kp-sentence__field"
+                                                ><select name="how" aria-label="How often">
+                                                    <option value="day">every day</option>
+                                                    <option value="week" selected>every week</option>
+                                                    <option value="once">once</option>
+                                                </select></span
+                                            ><span class="kp-sentence__when" data-kp-show-when="how=week">
+                                                on
+                                                <span class="kp-sentence__field" data-kp-block
+                                                    ><span
+                                                        class="kp-weekdays"
+                                                        data-kp-weekdays
+                                                        data-kp-presets="false"
+                                                        data-kp-summary="false"
+                                                        data-kp-value="1,4"
+                                                        aria-label="Run on"
+                                                    ></span></span></span
+                                            ><span class="kp-sentence__when" data-kp-show-when="how=once" hidden>
+                                                on
+                                                <span class="kp-sentence__field"
+                                                    ><input
+                                                        name="date"
+                                                        size="10"
+                                                        placeholder="dd/mm/yyyy"
+                                                        aria-label="Date (dd/mm/yyyy)"
+                                                        value="20/10/2026" /></span
+                                            ></span>
+                                            at
+                                            <span class="kp-sentence__field"
+                                                ><input name="at" size="5" value="03:00" aria-label="At (HH:MM, 24 hours)" /></span
+                                            >.
+                                        </p>
+                                    </fieldset>
+                                    <div class="kt-actions"><button type="submit" class="kp-button kp-button--primary">Save schedule</button></div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -169,6 +169,16 @@ export {
 export { TIMER_DISC, TIMER_DISC_LEFT, attachTimerDiscs, discShare, timerDiscOf } from './js/timer-disc.js';
 export { RANGE, RANGE_EVENT, RANGE_PRESETS, attachRanges, parseTime, presetMs, rangeFaults, rangeMoment, rangeOf, setRange } from './js/range.js';
 export {
+    SENTENCE,
+    SENTENCE_EVENT,
+    attachSentences,
+    sentence,
+    sentenceSummary,
+    setSentenceFieldState,
+    setSentenceInvalid,
+    setSentenceWhy,
+} from './js/sentence.js';
+export {
     DATED,
     DATED_EVENT,
     DATED_RETRY_EVENT,
