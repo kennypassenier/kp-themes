@@ -18,7 +18,7 @@
 import { THEMES } from '../js/theme-registry.js';
 import { JUDGEMENT_EVENT, loadJudgements } from './judgements.js';
 import { gatherBlocks, isOpen } from './open-pairs.js';
-import { ANSWER_EVENT, answerWaiting, dropReceivedAnswer } from '../research/_review/progress.js';
+import { ANSWER_EVENT, answerWaiting, dropReceivedAnswer, markReceivedSeen, receivedNotices } from '../research/_review/progress.js';
 import { composeBlocks, counted, demoStatus, dependentsOf, inOrder, labelOf, readDecided, readDemo, researchPages, reviewUrl } from './waiting.js';
 
 const ROOT = new URL('../', import.meta.url);
@@ -40,6 +40,9 @@ const ui = {
     blocksPart: $('[data-agenda-blocks-part]'),
     blocksCount: $('[data-agenda-blocks-count]'),
     blocksHost: $('[data-cat-compose="agenda"]'),
+    received: $('[data-agenda-received]'),
+    receivedText: $('[data-agenda-received-text]'),
+    receivedSeen: /** @type {HTMLButtonElement} */ ($('[data-agenda-received-seen]')),
 };
 
 /* ------------------------------------------------------------------ model */
@@ -408,6 +411,7 @@ function render() {
     renderStatus({ open, reading });
     renderStart(open, reading);
     renderAnswers();
+    renderReceived();
     document.title = `${reading ? '…' : open.length} waiting · Agenda · kp-themes catalogue`;
 }
 
@@ -479,6 +483,22 @@ function renderAnswers() {
         list.length === 1 ? 'has an answer' : 'have answers'
     } you have not copied yet. "Copy the answers" is the bar's Copy prompt: one press copies every answer and verdict together.`;
 }
+
+/*
+ * An answer set aside because Claude already received its round (progress.js, dropReceivedAnswer) is said here, never
+ * dropped in silence (lost-answer-1017); its verdicts stay under Saved verdicts.
+ */
+function renderReceived() {
+    const notices = receivedNotices();
+    ui.received.hidden = !notices.length;
+    if (!notices.length) return;
+    const named = [...new Set(notices.map((n) => `received by Claude: ${n.demo} ${n.round}`))];
+    ui.receivedText.textContent = `${named.join('; ')}. The answer was set aside because its round is recorded as received; every verdict in it is still under Saved verdicts, to copy again if it never arrived.`;
+}
+ui.receivedSeen.addEventListener('click', () => {
+    markReceivedSeen();
+    renderReceived();
+});
 
 // One copy for everything (Kenny, 2026-10-13: "Dat moet gelijk getrokken worden"): this button presses the bar's
 // "Copy prompt", which carries the demo answers waiting here and the catalogue's verdicts alike.

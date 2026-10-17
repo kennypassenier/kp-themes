@@ -390,14 +390,21 @@ export const roundReceived = (answerRound, round) => {
 export function dropReceivedAnswer(id, round) {
     const answer = answerOf(id);
     if (!answer) return false;
+    // An answer of the page's own round is never received, whatever the page lists (lost-answer-1017: a part republished
+    // under the id of a round already received dropped Kenny's fresh answer the moment he gave it).
+    const own = round?.round || '';
     try {
-        if (roundReceived(answer.round, round)) {
+        if (!(own && answer.round === own) && roundReceived(answer.round, round)) {
+            keepInJournal(id, answer.round || '', answer.text, answer.judged);
             localStorage.removeItem(answerKey(id));
+            noteReceived(id, answer.round || '');
             return true;
         }
-        if (answer.carried && roundReceived(answer.carriedRound, round)) {
+        if (answer.carried && !(own && answer.carriedRound === own) && roundReceived(answer.carriedRound, round)) {
+            keepInJournal(id, answer.carriedRound || '', answer.carried, 1);
             const { carried, carriedRound, ...rest } = answer;
             localStorage.setItem(answerKey(id), JSON.stringify(rest));
+            noteReceived(id, answer.carriedRound || '');
             return true;
         }
     } catch {
@@ -511,3 +518,58 @@ export function journalDemos() {
     return found.sort();
 }
 
+/** The journal's pair for a whole answer text kept when the answer itself is dropped as received. */
+export const ANSWER_PAIR = '__answer';
+
+/*
+ * An answer dropped as received is never dropped in silence: every drop is noted here (append-only, like the journal),
+ * and the Agenda's band says "received by Claude: <demo> <round>" until Kenny marks the notices seen.
+ */
+
+/** Where the drops of every demo are noted: an array of { at, demo, round }, oldest first. */
+export const RECEIVED_KEY = 'kp-demo-review:received-log';
+/** The `at` of the last notice Kenny marked seen on the Agenda. */
+export const RECEIVED_SEEN_KEY = 'kp-demo-review:received-seen';
+
+/** @returns {{ at: string, demo: string, round: string }[]} */
+export function receivedLog() {
+    try {
+        const list = JSON.parse(localStorage.getItem(RECEIVED_KEY) || '[]');
+        return Array.isArray(list) ? list : [];
+    } catch {
+        return [];
+    }
+}
+
+/** The notices not marked seen yet, oldest first. */
+export function receivedNotices() {
+    let seen = '';
+    try {
+        seen = localStorage.getItem(RECEIVED_SEEN_KEY) || '';
+    } catch {
+        seen = '';
+    }
+    return receivedLog().filter((entry) => entry.at > seen);
+}
+
+/** Marks every notice up to now as seen; the log itself stays. */
+export function markReceivedSeen() {
+    try {
+        localStorage.setItem(RECEIVED_SEEN_KEY, new Date().toISOString());
+    } catch {
+        /* storage refused */
+    }
+}
+
+/** The text of an answer about to be dropped, kept in the journal beside its verdicts (also an answer from before the journal). */
+function keepInJournal(/** @type {string} */ demo, /** @type {string} */ round, /** @type {string} */ text, /** @type {number} */ judged) {
+    if (judged > 0 && text) journal(demo, { round, pair: ANSWER_PAIR, verdict: null, note: text, choice: null });
+}
+
+function noteReceived(/** @type {string} */ demo, /** @type {string} */ round) {
+    try {
+        localStorage.setItem(RECEIVED_KEY, JSON.stringify([...receivedLog(), { at: new Date().toISOString(), demo, round: round || '(no round id)' }]));
+    } catch {
+        /* storage refused: the journal still holds the verdicts */
+    }
+}
