@@ -16545,6 +16545,95 @@
         }
     }
 
+    /* --- Weekday picker: seven chips, or the days of a month [kpadopt5-time] ---
+ * `.kp-weekdays[data-kp-weekdays]` (js/weekdays.js). The package's chip group in `multi` mode, one chip per day, seven
+ * equal columns so the week reads as a week at any width (a month is the same seven columns, five rows); under the chips the
+ * quick picks (Weekdays, Weekend, Every day), one line in words ("Mon and Thu") and, below the least a schedule needs, the
+ * reason. The line and the reason keep their room, so a pick moves nothing under them.
+ * Knobs [KT6]: --kp-weekdays-gap (--kp-space-sm), --kp-weekdays-max (32rem), --kp-weekdays-chip-height (2.5rem). */
+    .kp-weekdays {
+        container: kp-weekdays / inline-size;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-weekdays-gap, var(--kp-space-sm, 0.5rem));
+        min-inline-size: 0;
+        max-inline-size: var(--kp-weekdays-max, 32rem);
+    }
+
+    .kp-weekdays .kp-weekdays__chips {
+        --kp-chip-pad-inline: var(--kp-space-xs, 0.25rem);
+        display: grid;
+        grid-auto-flow: row;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        grid-auto-columns: auto;
+        gap: var(--kp-weekdays-chip-gap, var(--kp-space-xs, 0.25rem));
+        inline-size: 100%;
+    }
+
+    .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+        justify-content: center;
+        min-block-size: var(--kp-weekdays-chip-height, 2.5rem);
+        padding-inline: var(--kp-space-xs, 0.25rem);
+    }
+
+    /* A day's name is never cut: the label shows whole and the chip's own padding gives way first. */
+    .kp-weekdays .kp-segmented__label {
+        max-inline-size: none;
+        overflow: visible;
+        text-overflow: clip;
+    }
+
+    @container kp-weekdays (max-width: 22rem) {
+        .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+            padding-inline: 0;
+            font-size: var(--kp-text-xs, 0.75rem);
+        }
+    }
+
+    .kp-weekdays .kp-weekdays__chips--month > .kp-segmented__item {
+        min-block-size: var(--kp-weekdays-month-chip-height, 2.25rem);
+    }
+
+    .kp-weekdays__presets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-weekdays__presets[hidden] {
+        display: none;
+    }
+
+    .kp-weekdays__summary {
+        min-block-size: 1lh;
+        margin: 0;
+        color: var(--foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-weekdays__why,
+    .kp-weekdays__reason {
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-weekdays__reason {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    /* One wrong answer, one mark: an outline round the whole group, as a fieldset's [gap-11]. */
+    .kp-weekdays[data-kp-invalid] .kp-weekdays__chips {
+        outline: var(--focus-ring-width, 2px) solid var(--destructive);
+        outline-offset: var(--kp-weekdays-invalid-offset, 0.375rem);
+    }
+
+    .kp-weekdays[data-kp-disabled] .kp-weekdays__presets {
+        pointer-events: none;
+    }
+
     /* --- Compare slider: two versions, a divider between them [kpadopt4-ideas] ---
  * `.kp-compare[data-kp-compare]` (js/compare.js). The before and after panes lie on top of each other in one grid
  * cell; the before pane shows on the start side of the divider and the after pane on the end side, each cut by

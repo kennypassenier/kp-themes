@@ -47,6 +47,7 @@ export { COMMAND, COMMAND_SHELLS, attachCommands, commandLines } from './js/comm
 export { COUNTDOWN, COUNTDOWN_END_EVENT, COUNTDOWN_EVENT, COUNTDOWN_STEP, attachCountdowns, countdownClock, countdownOf, formatCountdown, parseDuration, timerButton, } from './js/countdown.js';
 export { TIMER_DISC, TIMER_DISC_LEFT, attachTimerDiscs, discShare, timerDiscOf } from './js/timer-disc.js';
 export { RANGE, RANGE_EVENT, RANGE_PRESETS, attachRanges, parseTime, presetMs, rangeFaults, rangeMoment, rangeOf, setRange } from './js/range.js';
+export { WEEKDAYS, WEEKDAYS_EVENT, WEEKDAY_PRESETS, attachWeekdays, dayNames, dayNumber, joinWords, monthSummary, setWeekdays, weekdaySummary, weekdays, weekdaysOf, } from './js/weekdays.js';
 export { COMPARE, COMPARE_EVENT, attachCompares, compareKey, setCompare } from './js/compare.js';
 export { ACTION_LIST, ROW_ACTIONS, ROW_KEYS, ROW_OPEN_EVENT, attachActionColumns, attachRowKeys, fitActionColumns, mergeRoles, removeRow, rowRoles, setRowBusy, } from './js/actions.js';
 export { KPI_STRIP, KPI_TOGGLE, KPI_TOGGLE_EVENT, METER, SPARK, attachKpiStrips, attachKpiToggles, attachSparklines, drawSparkline, fitKpiStrip, kpiColumns, meterParts, meterText, setMeter, sparkPaths, } from './js/kpi.js';

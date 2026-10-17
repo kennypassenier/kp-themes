@@ -2154,6 +2154,22 @@ first frame; while an image loads the theme's skeleton covers the box, and an im
 `compareBefore`, `compareAfter`, `compareSlider`, `compareValue` and `compareFailed`. Knobs: `--kp-compare-ratio`,
 `--kp-compare-line` (2px), `--kp-compare-handle` (2.25rem), `--kp-compare-ink` (--primary).
 
+### Days of the week and of the month
+
+The days a schedule runs on, as chips with a line in words under them:
+
+```html
+<div class="kp-weekdays" data-kp-weekdays data-kp-value="1,4" aria-label="Run on"></div>
+```
+
+`attachWeekdays(root)` (`js/weekdays.js`, attached by `js/auto.js`) builds the package's chip group in `multi` mode: seven chips of
+one width, the week starting where the locale's week starts (Monday for nl-BE and en-GB; `data-kp-week-starts-on` says it
+outright), the quick picks Weekdays, Weekend and Every day, and a line in words ("Mon and Thu", "Every weekday"). All seven
+days is a real choice, so the group never falls back to "All". `data-kp-days="month"` draws 1 to 31 and Last; `data-kp-min`
+(1) is the fewest days a schedule needs, and below it the group says so under the chips and in `aria-describedby`. A value is
+a list of numbers (0 is Sunday) or names. `kp-weekdays-change` carries `{ values, summary, valid }`; `setWeekdays(el, values)`
+sets the days without the event, `weekdaysOf(el)` reads them. The words are `weekdays…` in the dictionary. Knobs:
+`--kp-weekdays-gap`, `--kp-weekdays-max` (32rem), `--kp-weekdays-chip-height` (2.5rem).
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

@@ -481,6 +481,24 @@
  * @property {string} rangeErrorOrder  A window whose end does not come after its start [kpadopt4-ideas]
  * @property {string} rangeErrorFuture  A window that ends in the future [kpadopt4-ideas]
  * @property {(days: number) => string} rangeErrorSpan  A window longer than the picker allows [kpadopt4-ideas]
+ * @property {string} weekdaysGroup  The weekday picker's name when the page gives none (js/weekdays.js) [kpadopt5-time]
+ * @property {string[]} weekdaysShort  The short day names, Monday first: "Mon" [kpadopt5-time]
+ * @property {string[]} weekdaysNarrow  The one-letter day names, Monday first: "M" [kpadopt5-time]
+ * @property {string[]} weekdaysLong  The full day names, Monday first, a chip's hint and name [kpadopt5-time]
+ * @property {string} weekdaysLast  The month picker's chip for the last day [kpadopt5-time]
+ * @property {string} weekdaysLastDay  The last day of the month in words [kpadopt5-time]
+ * @property {string} weekdaysAnd  The word that joins the last two days of a list: "Mon and Thu" [kpadopt5-time]
+ * @property {string} weekdaysPresets  The quick picks' group name for a screen reader [kpadopt5-time]
+ * @property {string} weekdaysPresetWeekdays  The quick pick for Monday to Friday [kpadopt5-time]
+ * @property {string} weekdaysPresetWeekend  The quick pick for Saturday and Sunday [kpadopt5-time]
+ * @property {string} weekdaysPresetEvery  The quick pick for all seven days [kpadopt5-time]
+ * @property {string} weekdaysNone  The line while no day is picked [kpadopt5-time]
+ * @property {string} weekdaysEvery  The line for all seven days [kpadopt5-time]
+ * @property {string} weekdaysWeekdays  The line for Monday to Friday [kpadopt5-time]
+ * @property {string} weekdaysWeekend  The line for Saturday and Sunday [kpadopt5-time]
+ * @property {(n: number) => string} weekdaysOrdinal  A day of the month in words: "1st", "22nd" [kpadopt5-time]
+ * @property {(list: string) => string} weekdaysOnThe  The days of a month in a sentence: "On the 1st and 15th" [kpadopt5-time]
+ * @property {(n: number) => string} weekdaysMin  What a picker below its least says: "Pick at least one day" [kpadopt5-time]
  * @property {string} compareBefore  The compare slider's label on the before side (js/compare.js) [kpadopt4-ideas]
  * @property {string} compareAfter  Its label on the after side [kpadopt4-ideas]
  * @property {(before: string, after: string) => string} compareSlider  The divider's name for a screen reader [kpadopt4-ideas]
@@ -1165,6 +1183,29 @@ export const DEFAULT_STRINGS = Object.freeze({
     rangeErrorOrder: 'The end must come after the start.',
     rangeErrorFuture: 'The end lies in the future.',
     rangeErrorSpan: (days) => `A range spans at most ${days} days.`,
+    // The weekday picker (js/weekdays.js) [kpadopt5-time].
+    weekdaysGroup: 'Days',
+    weekdaysShort: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    weekdaysNarrow: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+    weekdaysLong: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    weekdaysLast: 'Last',
+    weekdaysLastDay: 'last day',
+    weekdaysAnd: 'and',
+    weekdaysPresets: 'Quick picks',
+    weekdaysPresetWeekdays: 'Weekdays',
+    weekdaysPresetWeekend: 'Weekend',
+    weekdaysPresetEvery: 'Every day',
+    weekdaysNone: 'No day picked',
+    weekdaysEvery: 'Every day',
+    weekdaysWeekdays: 'Every weekday',
+    weekdaysWeekend: 'Every weekend',
+    weekdaysOrdinal: (n) => {
+        const rest = n % 100;
+        const suffix = rest >= 11 && rest <= 13 ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' }[n % 10] ?? 'th');
+        return `${n}${suffix}`;
+    },
+    weekdaysOnThe: (list) => `On the ${list}`,
+    weekdaysMin: (n) => (n === 1 ? 'Pick at least one day.' : `Pick at least ${n} days.`),
     // The compare slider [kpadopt4-ideas].
     compareBefore: 'Before',
     compareAfter: 'After',

@@ -93,6 +93,12 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
+            // Kenny, 2026-10-17 (kpadopt5, wave time): seven new parts for schedules, reminders and forms, formal only until Kenny approves them.
+            {
+                href: 'research/kpadopt5-time/demo.html',
+                label: 'Time and sentence: seven new parts (weekday picker, next runs, snooze, dated options, sentence form, slider, unsaved changes)',
+                about: 'Seven parts that schedules, reminders and settings forms draw by hand today, built in the package and shown in formal only: a weekday picker, a list of the next times a schedule runs, a snooze picker, a picker for options with a date and an age, a form that reads as a sentence, a slider with a typed value, and a bar for unsaved changes.',
+            },
             // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
             // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             // Kenny, 2026-10-08 (update 1): deco's grammar did not convince him ("fancy, distinguished … lots of gold accents and fancy blue backgrounds … elegance without being too in your face"); thirteen questions redrawn as thin gold on lacquer with the wallpaper, his six picks kept.

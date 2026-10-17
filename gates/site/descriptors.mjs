@@ -3580,6 +3580,37 @@ setGanttState(timeline, 'loading');
         ],
     },
     {
+        id: 'weekdays',
+        title: 'Weekday picker',
+        group: 'Forms',
+        classes: ['kp-weekdays'],
+        exports: [],
+        intro: 'The days a schedule runs on: seven chips (or the days of a month) with the quick picks Weekdays, Weekend and Every day and a line in words under them, “Mon and Thu”. Built on the chip group in multi mode; all seven days is a real choice.',
+        whenToUse: 'A schedule or a repeat that runs on chosen days. For one date use the date picker; for one of a few options use the segmented control.',
+        examples: [
+            {
+                title: 'Mondays and Thursdays',
+                why: 'The markup is the empty box; the script builds the chips, the quick picks and the line.',
+                markup: `
+<div class="kp-weekdays" data-kp-weekdays data-kp-value="1,4" aria-label="Run on"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-days', what: '`week` (default) or `month`: the days 1 to 31 and Last.' },
+            { name: 'data-kp-week-starts-on', what: 'The first day, 0 (Sunday) to 6; the locale’s by default.' },
+            { name: 'data-kp-day-names', what: '`short` (Mon) or `narrow` (M).' },
+            { name: 'data-kp-min', what: 'The fewest days that make a schedule; 1 by default, 0 allows none.' },
+            { name: 'data-kp-presets', what: 'The quick picks, `weekdays,weekend,every`, or `false` for none.' },
+            { name: 'data-kp-value', what: 'The days at first, `1,4` or `mon,thu`.' },
+            { name: 'data-kp-disabled', what: 'The whole picker is off; `data-kp-disabled-reason` says why, under the chips.' },
+        ],
+        accessibility: [
+            'Built in — the chips are one tab stop with arrow keys; each is a toggle button with its full day name; the line in words is read when it changes.',
+            'Yours — name the picker (`aria-label`) after what it chooses, and keep your own copy of the days: the picker holds no data of yours.',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

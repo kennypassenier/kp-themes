@@ -134,6 +134,12 @@ export const REQUIRED = [
         why: 'The block measures its own width and puts its tools under its title when narrow; the query reaches only its head [kpadopt4-data].',
     },
     {
+        container: 'kp-weekdays',
+        class: 'kp-weekdays',
+        self: true,
+        why: 'The weekday picker measures its own width and shrinks its chips on a phone; the query reaches only its own parts [kpadopt5-time].',
+    },
+    {
         container: 'kp-range',
         class: 'kp-range',
         self: true,

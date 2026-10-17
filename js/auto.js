@@ -198,6 +198,8 @@ export const NEEDS = [
     { name: 'range', when: '[data-kp-range]', load: () => import('./range.js'), attach: (m, root) => [m.attachRanges(root)] },
     // The compare slider [kpadopt4-ideas]: two versions stacked with a divider between them.
     { name: 'compare', when: '[data-kp-compare]', load: () => import('./compare.js'), attach: (m, root) => [m.attachCompares(root)] },
+    // The time and sentence parts [kpadopt5-time]: the weekday picker, the next-runs list, the snooze picker, the dated option picker, the sentence form, the slider and the unsaved-changes bar.
+    { name: 'weekdays', when: '[data-kp-weekdays]', load: () => import('./weekdays.js'), attach: (m, root) => [m.attachWeekdays(root)] },
     { name: 'graph', when: '[data-kp-graph]', load: () => import('./graph.js'), attach: (m, root) => [m.attachGraphs(root)] },
     {
         // A theme's loading picture made of pieces (`--kp-loading-pieces`,

@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en-GB" data-theme="formal" data-review="kpadopt5-time" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Time and sentence: seven new parts for schedules, reminders and forms · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main kt-page">
+            <header class="kt-intro">
+                <h1>Time and sentence: seven new parts</h1>
+                <p class="cat-intro">
+                    Seven parts that schedules, reminders and settings forms draw by hand today, built in the package: a weekday picker, a list of the
+                    next times a schedule runs, a snooze picker, a picker for options that carry a date and an age, a form that reads as a sentence, a
+                    slider with a typed value, and a bar for unsaved changes. This page asks formal only; the other themes follow once formal is
+                    approved.
+                </p>
+                <p>
+                    Judge in the review dialog (&ldquo;Review in a dialog&rdquo; at the top): 1 topics, one step each in formal. Every section says
+                    under <b>Expected</b> what you should see and what each control does. Everything with a <code>kp-</code> class and every script
+                    under <code>js/</code> is the package; the sample data, the frames marked &ldquo;phone width&rdquo; (390 px boxes standing in for
+                    a phone), the fixed clock (Saturday 17/10/2026, so a reminder for &ldquo;tomorrow&rdquo; always means 18/10/2026), the event
+                    readouts and the buttons that drive a state are this page&rsquo;s.
+                </p>
+                <nav class="kt-toc" aria-label="Topics on this page">
+                    <ol>
+                        <li><a href="#topic-weekdays">Weekday picker</a> <span class="kt-toc__count">2 sections</span></li>
+                    </ol>
+                </nav>
+            </header>
+
+            <!-- ================================================================ topic: Weekday picker -->
+            <h2 class="kt-topic" id="topic-weekdays">Weekday picker</h2>
+            <section
+                class="kt-sec"
+                id="weekdays"
+                data-review-item="weekdays"
+                data-review-topic="weekdays"
+                data-review-topic-title="Weekday picker"
+                data-review-title="Weekday picker: a week and a month"
+                aria-labelledby="h-weekdays"
+            >
+                <div class="kt-sec__head">
+                    <h2 id="h-weekdays">Weekday picker: a week and a month</h2>
+                    <p>
+                        <code>&lt;div class="kp-weekdays" data-kp-weekdays&gt;</code> (js/weekdays.js): the days a schedule runs, as chips, with a
+                        line in words under them. Press chips; nothing here is stored.
+                    </p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Week:</b> seven chips of one width, Mon to Sun, <b>Mon</b> and <b>Thu</b> filled. Under them the quick picks
+                            <b>Weekdays</b>, <b>Weekend</b> and <b>Every day</b>, and the line <b>Mon and Thu</b>.
+                        </li>
+                        <li>
+                            Press a chip: it fills or empties and the line follows (<b>Mon, Wed and Fri</b>). All seven is allowed and reads
+                            <b>Every day</b>; Mon to Fri reads <b>Every weekday</b>. A quick pick fills its days, shows pressed while they match, and
+                            pressing it again clears them.
+                        </li>
+                        <li>
+                            <b>Month:</b> the days <b>1</b> to <b>31</b> and <b>Last</b> in seven columns; 1 and 15 filled, the line
+                            <b>On the 1st and 15th</b>; the last day reads <b>On the last day</b>.
+                        </li>
+                        <li>
+                            Keyboard: Tab enters the chips once, the arrow keys move along them, Space or Enter turns one. The grey box under each
+                            picker shows the event the page received.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The chips are formal&rsquo;s own pills (white with a hairline, navy when on); the line under them is plain ink, the quick
+                        picks are small ghost buttons. Seven chips, all one width, and the month&rsquo;s days line up in the same seven columns.
+                    </p>
+                </div>
+                <div class="kt-pair">
+                    <div class="kt-case">
+                        <p class="kt-label">A week, starting on Monday</p>
+                        <div class="kp-weekdays" data-kp-weekdays data-kp-value="1,4" aria-label="Run on" id="kt-week"></div>
+                        <pre class="kt-log" id="kt-week-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">A month</p>
+                        <div
+                            class="kp-weekdays"
+                            data-kp-weekdays
+                            data-kp-days="month"
+                            data-kp-value="1,15"
+                            aria-label="Run on the days"
+                            id="kt-month"
+                        ></div>
+                        <pre class="kt-log" id="kt-month-log" aria-live="polite"></pre>
+                    </div>
+                </div>
+            </section>
+            <section
+                class="kt-sec"
+                id="weekdays-states"
+                data-review-item="weekdays-states"
+                data-review-topic="weekdays"
+                data-review-title="Weekday picker: options, limits and phone width"
+                aria-labelledby="h-weekdays-states"
+            >
+                <div class="kt-sec__head">
+                    <h2 id="h-weekdays-states">Weekday picker: options, limits and phone width</h2>
+                    <p>
+                        The options a page can turn, what happens below the least, a disabled picker with its reason, and the picker in a 390 px box.
+                    </p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Week starts on Sunday, one-letter names:</b> Sun first, then Mon to Sat as M T W T F S; every chip still has its full
+                            day name as its hint. Wed and Fri filled, the line is written Mon-first anyway (<b>Wed and Fri</b>).
+                        </li>
+                        <li>
+                            <b>Nothing picked, at least one needed:</b> a red outline round the chips and the line <b>Pick at least one day.</b> under
+                            them; the line in words says <b>No day picked</b>. Pick a day and both go.
+                        </li>
+                        <li><b>At least three needed:</b> with one day picked the line says <b>Pick at least 3 days.</b>; with three it is gone.</li>
+                        <li>
+                            <b>Disabled:</b> the chips and quick picks are dimmed and do nothing; the reason, <b>The schedule is paused</b>, stands
+                            under them in muted ink.
+                        </li>
+                        <li>
+                            <b>No quick picks:</b> the chips and the line only. <b>Long list:</b> six days read
+                            <b>Mon, Tue, Wed, Thu, Sat and Sun</b>.
+                        </li>
+                        <li>
+                            In the 390 px box the seven chips stay in one row, each at least 40 px wide, and the month stays seven columns. Nothing
+                            scrolls sideways; no text touches a chip&rsquo;s edge.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The error is the field error&rsquo;s red text with the outline in the destructive red; the disabled picker is dimmed, not
+                        faded to nothing, and its reason keeps its contrast.
+                    </p>
+                </div>
+                <div class="kt-pair">
+                    <div class="kt-case">
+                        <p class="kt-label">Week starts on Sunday, one-letter names</p>
+                        <div
+                            class="kp-weekdays"
+                            data-kp-weekdays
+                            data-kp-week-starts-on="0"
+                            data-kp-day-names="narrow"
+                            data-kp-value="wed,fri"
+                            aria-label="Run on, Sunday first"
+                        ></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">Nothing picked, at least one needed</p>
+                        <div class="kp-weekdays" data-kp-weekdays aria-label="Run on, none picked"></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">At least three needed, one picked</p>
+                        <div class="kp-weekdays" data-kp-weekdays data-kp-min="3" data-kp-value="2" aria-label="Run on, three needed"></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">Disabled, with its reason</p>
+                        <div
+                            class="kp-weekdays"
+                            data-kp-weekdays
+                            data-kp-disabled
+                            data-kp-disabled-reason="The schedule is paused"
+                            data-kp-value="1,2,3,4,5"
+                            aria-label="Run on, disabled"
+                        ></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">No quick picks, six days</p>
+                        <div
+                            class="kp-weekdays"
+                            data-kp-weekdays
+                            data-kp-presets="false"
+                            data-kp-value="1,2,3,4,6,0"
+                            aria-label="Run on, no quick picks"
+                        ></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">Phone width, week and month</p>
+                        <div class="kt-frame kt-frame--phone kt-stack">
+                            <div class="kp-weekdays" data-kp-weekdays data-kp-value="sat,sun" aria-label="Run on, phone"></div>
+                            <div
+                                class="kp-weekdays"
+                                data-kp-weekdays
+                                data-kp-days="month"
+                                data-kp-value="1,last"
+                                aria-label="Run on the days, phone"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "time-f7d1cbc1-7727-45af-8279-033f39184101", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

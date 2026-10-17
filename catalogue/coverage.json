@@ -42,6 +42,7 @@
         "kp-type-confirm",
         "kp-uptime",
         "kp-week",
+        "kp-weekdays",
         "kp-wheel"
     ]
 }
