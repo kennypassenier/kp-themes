@@ -2415,6 +2415,18 @@ The combobox with the choices a person uses most standing first, the rest alphab
 `select` or `off`, `data-kp-near-threshold` 0.8, `data-kp-near-max` 3) offers "Did you mean Hoofdpijn?" and always "Add 'hoofdpjn' as new". `data-kp-state="loading" | "empty" | "error"` (`setUsualState`) draws the busy card, a plate with Add, or a plate with Retry (`kp-usual-retry`) in the place of the list.
 Every attribute redraws the picker when changed. Alt U jumps to the first usual choice (a bare `u` would take the first letter of a name; it is on the `?` sheet; no digit keys). `kp-usual-pick` carries `{ value, from }`. The words are `usual…`. Knobs: `--kp-usual-option-min`, `--kp-usual-panel-min`.
 
+Every behaviour of the picker is an option with a default, never a choice made for you (Kenny, 2026-10-17): the usual band **leads** while typing (`data-kp-usual-while-typing="hide"` steps it aside), a near name **asks** "Did you mean ...?" (`data-kp-near="select"` takes the closest at once, `off` turns the guard off), the full list stays **behind "Show all N"** (`data-kp-all="open"` shows it fully), the rest is **alphabetical** (`data-kp-order="given"`), the band holds **5** (`data-kp-usual-max`), "Not today" and adding a typed name are **opt-in** (`data-kp-not-today`, `data-kp-add="inline"`). Each is also settable at run time; the picker redraws.
+
+### Who can come (availability grid)
+
+`setAvailability(el, spec)` (`js/availability.js`) turns the heat grid into a grid people edit: each person answers on their own row (press a cell: empty, can, maybe, cannot), the column everybody can is ringed and starred, "Choose these dates" fires `kp-availability-choose`. Every behaviour is an attribute with a default, and changing one redraws the grid:
+
+- `data-kp-availability-best`: `most` (default: the column with most who can, once everybody answered), `everyone` (only a column where everybody can) or `none`; `data-kp-availability-best-rule` `yes-count` (default) or `no-nobody` (fewest who cannot first); `data-kp-availability-quorum` how many must answer (default everybody).
+- `data-kp-availability-press`: `cycle` (default) or `menu`; `data-kp-availability-answers`: `3` (default) or `2`; `data-kp-availability-paint`: `false` turns the drag across a row off.
+- `data-kp-availability-summary`: `both` (number and fill, default), `count` or `bar`.
+- `data-kp-availability-unit-switch`: `on` or `off` shows or hides the organiser's periods/days switch per trip (absent: the spec's `canSwitchUnit` decides); the spec carries both sets in `sets`.
+- `data-kp-heat-edit` (`own`, `all`, `off`), `data-kp-availability-sort`, `-narrow`, `-density`, `-choose`, `-locked`, `-window`.
+
 ### Toggle button
 
 A button that stays pressed until it is pressed again, for a filter, a pin or a follow. The state is `aria-pressed`; the words never change:
