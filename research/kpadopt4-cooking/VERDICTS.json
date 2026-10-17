@@ -126,68 +126,21 @@
                     "note": "de loading animatie met de \"gordijnen\" werkt enkel als het het hele element omvangt, dus maak een versie die dat doet, en een versie met gewoon de spinner"
                 }
             ]
+        },
+        {
+            "round": "5",
+            "page": "cooking-2dcd507c-3250-47fb-9ed3-8926fbceecf6",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-17 18:30: 13 of 13 approved (the wheel in all twelve themes, deco's checklist with the pick \"Curtains over the whole list\"); the part is decided.",
+            "choices": [
+                {
+                    "item": "checklist",
+                    "theme": "deco",
+                    "choice": "deco-checklist-loading",
+                    "value": "Curtains over the whole list"
+                }
+            ]
         }
     ],
-    "reopened": [
-        {
-            "item": "wheel",
-            "theme": "formal",
-            "reason": "Kenny, 2026-10-17 17:48: his wheel approvals stand under his cyberpunk note (no hover animation, no square frame around the Spin hub, in every theme); the hub changed in all twelve themes (a14f3baa)"
-        },
-        {
-            "item": "wheel",
-            "theme": "dark",
-            "reason": "Kenny, 2026-10-17 17:48: his wheel approvals stand under his cyberpunk note (no hover animation, no square frame around the Spin hub, in every theme); the hub changed in all twelve themes (a14f3baa)"
-        },
-        {
-            "item": "wheel",
-            "theme": "cyberpunk",
-            "reason": "Kenny, 2026-10-17 17:48: his wheel approvals stand under his cyberpunk note (no hover animation, no square frame around the Spin hub, in every theme); the hub changed in all twelve themes (a14f3baa)"
-        },
-        {
-            "item": "wheel",
-            "theme": "synthwave",
-            "reason": "Kenny, 2026-10-17 17:48: his wheel approvals stand under his cyberpunk note (no hover animation, no square frame around the Spin hub, in every theme); the hub changed in all twelve themes (a14f3baa)"
-        },
-        {
-            "item": "wheel",
-            "theme": "pastel",
-            "reason": "Kenny, 2026-10-17 17:48: his wheel approvals stand under his cyberpunk note (no hover animation, no square frame around the Spin hub, in every theme); the hub changed in all twelve themes (a14f3baa)"
-        },
-        {
-            "item": "wheel",
-            "theme": "forest",
-            "reason": "Kenny, 2026-10-17 17:48: his wheel approvals stand under his cyberpunk note (no hover animation, no square frame around the Spin hub, in every theme); the hub changed in all twelve themes (a14f3baa)"
-        },
-        {
-            "item": "wheel",
-            "theme": "blueprint",
-            "reason": "Kenny, 2026-10-17 17:48: his wheel approvals stand under his cyberpunk note (no hover animation, no square frame around the Spin hub, in every theme); the hub changed in all twelve themes (a14f3baa)"
-        },
-        {
-            "item": "wheel",
-            "theme": "solstice",
-            "reason": "Kenny, 2026-10-17 17:48: his wheel approvals stand under his cyberpunk note (no hover animation, no square frame around the Spin hub, in every theme); the hub changed in all twelve themes (a14f3baa)"
-        },
-        {
-            "item": "wheel",
-            "theme": "brutalism",
-            "reason": "Kenny, 2026-10-17 17:48: his wheel approvals stand under his cyberpunk note (no hover animation, no square frame around the Spin hub, in every theme); the hub changed in all twelve themes (a14f3baa)"
-        },
-        {
-            "item": "wheel",
-            "theme": "deco",
-            "reason": "Kenny, 2026-10-17 17:48: his wheel approvals stand under his cyberpunk note (no hover animation, no square frame around the Spin hub, in every theme); the hub changed in all twelve themes (a14f3baa)"
-        },
-        {
-            "item": "wheel",
-            "theme": "nostromo",
-            "reason": "Kenny, 2026-10-17 17:48: his wheel approvals stand under his cyberpunk note (no hover animation, no square frame around the Spin hub, in every theme); the hub changed in all twelve themes (a14f3baa)"
-        },
-        {
-            "item": "wheel",
-            "theme": "titanium",
-            "reason": "Kenny, 2026-10-17 17:48: his wheel approvals stand under his cyberpunk note (no hover animation, no square frame around the Spin hub, in every theme); the hub changed in all twelve themes (a14f3baa)"
-        }
-    ]
+    "reopened": []
 }
