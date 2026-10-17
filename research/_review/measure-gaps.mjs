@@ -111,7 +111,12 @@ let found = 0;
 for (const width of widthArg.split(',').map(Number))
     for (const theme of themeArg.split(',')) {
         const page = await browser.newPage({ viewport: { width, height: 900 } });
-        await page.goto(`http://127.0.0.1:${port}/${path}?theme=${theme}`);
+        const response = await page.goto(`http://127.0.0.1:${port}/${path}?theme=${theme}`);
+        // A missing page must never read as clear: another server on the same port once answered 404 [port-1017].
+        if (!response || !response.ok()) {
+            console.error(`${path} answered ${response ? response.status() : 'nothing'} on port ${port}; is this worktree's server on that port?`);
+            process.exit(2);
+        }
         await page.waitForTimeout(1500);
         const out = await page.evaluate(measure, MIN);
         found += out.length;

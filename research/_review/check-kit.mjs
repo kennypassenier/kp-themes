@@ -41,7 +41,11 @@ page.on('pageerror', (error) => {
 /** Goes to `url`, the page left behind allowed to cut its loading short. @param {string} url */
 async function go(url) {
     leaving = true;
-    await page.goto(url);
+    const response = await page.goto(url);
+    // A page that is not there must never read as clear: another server on the same port once answered 404 and
+    // every measurement said clear [port-1017].
+    if (!response || !response.ok())
+        throw new Error(`${url} answered ${response ? response.status() : 'nothing'}; is this worktree's server on that port?`);
     await page.waitForLoadState('load');
     leaving = false;
 }
