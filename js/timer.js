@@ -31,6 +31,17 @@
 //     the system shows a notification when the page has the permission
 //     (askTimerNotifications() asks, from a press). +1 min on a done timer
 //     starts it again for a minute.
+//   - The sound is a choice: `data-kp-timers-sound="chime"` (default, the soft
+//     two-note chime), `"bell"` (a wind-up kitchen timer's hammer on two
+//     bells) or `"buzzer"` (a harsher electronic beep, four at a time), or
+//     `"off"`. All are made with Web Audio, no file. playTimerSound() plays
+//     one, for a picker's preview (call it from a press).
+//   - It can also say it: `data-kp-timers-speak="on"` (default off) speaks the
+//     timer's message with speechSynthesis once the sound has played, again at
+//     every ring. The message is `data-kp-timer-say` on a starter or `say` in
+//     startTimer, else "<name> is done" from the dictionary. Where
+//     speechSynthesis is missing nothing is said and nothing fails: the card,
+//     the sound and the alert still tell it.
 //   - A screen reader hears a start, the last minute and the end (the end
 //     at once, the rest politely), never every second.
 //
@@ -68,6 +79,7 @@ export const TIMER_TICK_MS = 250;
  * @property {number} remaining  seconds left, now
  * @property {number | null} endsAt  epoch ms it ends at while running, else null
  * @property {'running' | 'paused' | 'done'} state
+ * @property {string} [say]  the sentence spoken when it ends, if the list speaks
  */
 
 /**
@@ -79,6 +91,7 @@ export const TIMER_TICK_MS = 250;
  * @property {number} left  ms, while paused or done
  * @property {'running' | 'paused' | 'done'} state
  * @property {boolean} warned  the last minute was said
+ * @property {string} say  the sentence spoken when it ends ('' = the dictionary's)
  * @property {ReturnType<typeof setInterval> | null} ring
  * @property {HTMLElement} card
  */
@@ -113,6 +126,7 @@ const stateOf = (timer) => ({
     remaining: Math.ceil(leftOf(timer) / 1000),
     endsAt: timer.state === 'running' ? timer.endsAt : null,
     state: timer.state,
+    ...(timer.say ? { say: timer.say } : {}),
 });
 
 /** @param {Element} list @returns {TimerState[]} */
@@ -275,46 +289,128 @@ function tick(list) {
     sync(list);
 }
 
-/** A soft two-note chime, from the page's own sound: no file to fetch. */
-function chime() {
+/** The sounds a list may choose. @type {readonly ['chime', 'bell', 'buzzer']} */
+export const TIMER_SOUNDS = ['chime', 'bell', 'buzzer'];
+
+/** The page's one audio context, or null where there is none or no press has woken it yet. @returns {AudioContext | null} */
+function context() {
+    const Context = window.AudioContext ?? /** @type {any} */ (window).webkitAudioContext;
+    if (!Context) return null;
+    // No press has woken the sound yet (a timer the page started or restored on its own): a context made now is
+    // refused by the browser, with a warning in the console, so wait for one.
+    if (audio === null && /** @type {any} */ (navigator).userActivation?.isActive === false) return null;
+    audio ??= new Context();
+    const ctx = /** @type {AudioContext} */ (audio);
+    if (ctx.state === 'suspended') void ctx.resume();
+    return ctx;
+}
+
+/**
+ * One note: partials with a quick attack and an exponential decay.
+ * @param {AudioContext} ctx @param {AudioNode} out @param {number} at @param {number} hz
+ * @param {{ type?: OscillatorType, peak: number, attack: number, decay: number }} shape
+ */
+function note(ctx, out, at, hz, { type = 'sine', peak, attack, decay }) {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = type;
+    osc.frequency.value = hz;
+    gain.gain.setValueAtTime(0.0001, at);
+    gain.gain.exponentialRampToValueAtTime(peak, at + attack);
+    gain.gain.exponentialRampToValueAtTime(0.0001, at + decay);
+    osc.connect(gain).connect(out);
+    osc.start(at);
+    osc.stop(at + decay + 0.05);
+}
+
+/** @param {AudioContext} ctx @param {number} cutoff @returns {BiquadFilterNode} a low-pass into the speakers, so nothing is shrill */
+function soften(ctx, cutoff) {
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = cutoff;
+    filter.connect(ctx.destination);
+    return filter;
+}
+
+/**
+ * The sounds, each given the context and its start; each returns how long it lasts [s].
+ * @type {Record<string, (ctx: AudioContext, at: number) => number>}
+ */
+const SOUNDS = {
+    // A soft two-note chime.
+    chime(ctx, at) {
+        [659.25, 880].forEach((hz, i) => note(ctx, ctx.destination, at + i * 0.32, hz, { peak: 0.16, attack: 0.03, decay: 0.9 }));
+        return 1.25;
+    },
+    // A wind-up kitchen timer: a hammer striking two bells in turn, twice, ten strikes each, with the bell metal's
+    // inharmonic overtones; softened above 4.5 kHz so it is loud without being shrill.
+    bell(ctx, at) {
+        const out = soften(ctx, 4500);
+        for (let burst = 0; burst < 2; burst += 1)
+            for (let hit = 0; hit < 10; hit += 1) {
+                const start = at + burst * 0.95 + hit * 0.075;
+                const base = hit % 2 === 0 ? 1180 : 1330;
+                [
+                    [1, 0.11],
+                    [2.4, 0.06],
+                    [4.1, 0.03],
+                ].forEach(([ratio, peak]) => note(ctx, out, start, base * ratio, { peak, attack: 0.002, decay: 0.26 }));
+            }
+        return 1.9;
+    },
+    // An electronic beeper: four short, slightly detuned saw beeps, twice. Harsh on purpose, softened above 3 kHz.
+    buzzer(ctx, at) {
+        const out = soften(ctx, 3000);
+        for (let group = 0; group < 2; group += 1)
+            for (let beep = 0; beep < 4; beep += 1) {
+                const start = at + group * 1.3 + beep * 0.26;
+                for (const hz of [740, 749]) note(ctx, out, start, hz, { type: 'sawtooth', peak: 0.1, attack: 0.008, decay: 0.17 });
+            }
+        return 2.2;
+    },
+};
+
+/**
+ * Play one of the sounds, once. Call it from a press (a preview) or let a timer's end call it.
+ * @param {string} [sound]  'chime' (default), 'bell' or 'buzzer'; anything else is the chime, 'off' is silence
+ * @returns {number} how long it lasts in seconds (0 where nothing played)
+ */
+export function playTimerSound(sound = 'chime') {
+    if (sound === 'off') return 0;
     try {
-        const Context = window.AudioContext ?? /** @type {any} */ (window).webkitAudioContext;
-        if (!Context) return;
-        // No press has woken the sound yet (a timer the page started or restored on its own): a context made now is
-        // refused by the browser, with a warning in the console, so wait for one.
-        if (audio === null && /** @type {any} */ (navigator).userActivation?.isActive === false) return;
-        audio ??= new Context();
-        const ctx = /** @type {AudioContext} */ (audio);
-        if (ctx.state === 'suspended') void ctx.resume();
-        const at = ctx.currentTime + 0.02;
-        [659.25, 880].forEach((hz, i) => {
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.type = 'sine';
-            osc.frequency.value = hz;
-            const start = at + i * 0.32;
-            gain.gain.setValueAtTime(0.0001, start);
-            gain.gain.exponentialRampToValueAtTime(0.16, start + 0.03);
-            gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.9);
-            osc.connect(gain).connect(ctx.destination);
-            osc.start(start);
-            osc.stop(start + 0.95);
-        });
+        const ctx = context();
+        if (!ctx) return 0;
+        return (SOUNDS[sound] ?? SOUNDS.chime)(ctx, ctx.currentTime + 0.02);
     } catch {
         // No sound where the page may not make one; the card and the alert still say it.
+        return 0;
     }
 }
 
-/** Wake the sound up from a press, so the chime may play later without one. */
+/**
+ * Say a sentence aloud with the browser's voice, in the page's language. Where there is no speech nothing happens.
+ * @param {string} text
+ * @returns {boolean} whether it was handed to the voice
+ */
+export function speakTimerMessage(text) {
+    try {
+        if (typeof speechSynthesis === 'undefined' || typeof SpeechSynthesisUtterance === 'undefined' || !text) return false;
+        const utterance = new SpeechSynthesisUtterance(text);
+        const lang = document.documentElement.lang;
+        if (lang) utterance.lang = lang;
+        speechSynthesis.cancel();
+        speechSynthesis.speak(utterance);
+        return true;
+    } catch {
+        // A voice that fails to start leaves the card and the sound to say it.
+        return false;
+    }
+}
+
+/** Wake the sound up from a press, so a sound may play later without one. */
 function primeSound() {
     try {
-        const Context = window.AudioContext ?? /** @type {any} */ (window).webkitAudioContext;
-        if (!Context) return;
-        // No press has woken the sound yet (a timer the page started or restored on its own): a context made now is
-        // refused by the browser, with a warning in the console, so wait for one.
-        if (audio === null && /** @type {any} */ (navigator).userActivation?.isActive === false) return;
-        audio ??= new Context();
-        if (audio.state === 'suspended') void audio.resume();
+        context();
     } catch {
         // As above.
     }
@@ -325,6 +421,7 @@ function stopRing(timer) {
     if (timer.ring !== null) clearInterval(timer.ring);
     timer.ring = null;
     timer.card.removeAttribute('data-kp-timer-ringing');
+    if (timer.state === 'done' && typeof speechSynthesis !== 'undefined') speechSynthesis.cancel();
 }
 
 /**
@@ -340,15 +437,22 @@ function finish(list, timer, { quiet = false } = {}) {
     const strings = getStrings();
     say(list, strings.timerDone(timer.name), 'alert');
     if (!quiet) {
-        if (list.getAttribute('data-kp-timers-sound') !== 'off') {
-            chime();
+        const sound = list.getAttribute('data-kp-timers-sound') ?? 'chime';
+        const speak = list.getAttribute('data-kp-timers-speak') === 'on';
+        /** The sound, then (once it has played) the sentence. */
+        const announce = () => {
+            const length = playTimerSound(sound);
+            if (speak) setTimeout(() => listOf(list).get(timer.id) === timer && timer.state === 'done' && speakTimerMessage(timer.say || strings.timerSpoken(timer.name)), length * 1000);
+        };
+        if (sound !== 'off' || speak) {
+            announce();
             const ring = Number(list.getAttribute('data-kp-timers-ring') ?? 60);
             if (ring > 0) {
                 const until = Date.now() + ring * 1000;
                 timer.card.setAttribute('data-kp-timer-ringing', '');
                 timer.ring = setInterval(() => {
                     if (Date.now() >= until || timer.state !== 'done') return stopRing(timer);
-                    chime();
+                    announce();
                 }, 4000);
             }
         }
@@ -386,10 +490,10 @@ const find = (list, id) => LISTS.get(list)?.get(id) ?? null;
  * Start a timer. With an `id` that already runs, nothing new starts and that
  * id is returned.
  * @param {Element} list
- * @param {{ name: string, seconds: number, id?: string }} options
+ * @param {{ name: string, seconds: number, id?: string, say?: string }} options  `say`: what is spoken when it ends
  * @returns {string | null} the timer's id
  */
-export function startTimer(list, { name, seconds, id }) {
+export function startTimer(list, { name, seconds, id, say: message = '' }) {
     if (!(list instanceof HTMLElement) || !(seconds > 0)) return null;
     const timers = listOf(list);
     const key = id ?? `t${Date.now().toString(36)}${(serial += 1)}`;
@@ -407,6 +511,7 @@ export function startTimer(list, { name, seconds, id }) {
         left: seconds * 1000,
         state: 'running',
         warned: false,
+        say: message,
         ring: null,
         card,
     };
@@ -523,6 +628,7 @@ export function restoreTimers(list, saved) {
             left: s.remaining * 1000,
             state: s.state,
             warned: s.remaining <= 60,
+            say: s.say ?? '',
             ring: null,
             card,
         };
@@ -614,7 +720,8 @@ export function attachTimers(root = document) {
             say(list, getStrings().timerAlready(name));
             return;
         }
-        if (startTimer(list, { name, seconds, id })) starter.setAttribute('data-kp-timer-running', id);
+        const message = starter.getAttribute('data-kp-timer-say') ?? '';
+        if (startTimer(list, { name, seconds, id, say: message })) starter.setAttribute('data-kp-timer-running', id);
     };
     /** @param {Event} event */
     const ended = (event) => {

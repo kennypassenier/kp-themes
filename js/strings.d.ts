@@ -1668,6 +1668,10 @@ export type Strings = {
      */
     timerDone: (name: string) => string;
     /**
+     * What a timer says aloud when it ends and the list speaks, "Rice is done" [cook-1017]
+     */
+    timerSpoken: (name: string) => string;
+    /**
      * The button on an ended timer that stops it and takes it away [kpadopt4]
      */
     timerStopRing: string;
@@ -2300,6 +2304,7 @@ export type Strings = {
  * @property {string} timerRunning  A kitchen timer's state word while it runs (js/timer.js) [kpadopt4]
  * @property {string} timerDoneWord  Its state word once it has ended [kpadopt4]
  * @property {(name: string) => string} timerDone  The large line on an ended timer, its notification and its alert, "Rice is done" [kpadopt4]
+ * @property {(name: string) => string} timerSpoken  What a timer says aloud when it ends and the list speaks, "Rice is done" [cook-1017]
  * @property {string} timerStopRing  The button on an ended timer that stops it and takes it away [kpadopt4]
  * @property {(name: string) => string} timerAddMinuteTo  That button's accessible name [kpadopt4]
  * @property {(name: string) => string} timerRemove  The remove button's accessible name and tooltip [kpadopt4]
