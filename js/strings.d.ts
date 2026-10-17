@@ -979,6 +979,7 @@ export type Strings = {
      * A request's accessible name [kpadopt5]
      */
     reqSummary: (method: string, path: string, status: string) => string;
+    /**
      * The counter button's word (js/notices.js) [kpadopt5-notices]
      */
     noticesInbox: string;
