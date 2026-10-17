@@ -49,6 +49,21 @@
                     "picked": "How a window (a band of time) is drawn = A wash across the plot"
                 }
             ]
+        },
+        {
+            "round": "2",
+            "page": "people-a203e400-3d47-4628-bd20-da306b111179",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 00:28: 1 of 1 judged in formal, 1 approved, 0 not approved.",
+            "approved": [
+                {
+                    "item": "conversation-thread",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [],
+            "choices": [],
+            "generalNote": "General (00:28): the review bar with Previous version, Play open and Play close is shown only where it is relevant; Kenny judges each demo as soon as it is ready, Claude does not wait for all of them."
         }
     ]
 }

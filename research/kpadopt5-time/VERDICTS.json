@@ -87,6 +87,33 @@
                     "picked": "Where the bar stands = In the header, at the foot once the header is out of view (the default)"
                 }
             ]
+        },
+        {
+            "round": "2",
+            "page": "time-c1323c49-63e2-41c1-8a1e-20419bf2678f",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 00:28: 4 of 4 judged in formal, 4 approved, 0 not approved.",
+            "approved": [
+                {
+                    "item": "sentence",
+                    "theme": "formal"
+                },
+                {
+                    "item": "sentence-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "slider",
+                    "theme": "formal"
+                },
+                {
+                    "item": "slider-states",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [],
+            "choices": [],
+            "generalNote": "General (00:28): the review bar with Previous version, Play open and Play close is shown only where it is relevant; Kenny judges each demo as soon as it is ready, Claude does not wait for all of them."
         }
     ]
 }

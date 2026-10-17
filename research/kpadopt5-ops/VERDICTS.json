@@ -58,6 +58,31 @@
                     "picked": "How the time left is drawn = A ring"
                 }
             ]
+        },
+        {
+            "round": "2",
+            "page": "ops-553b88cf-7ad0-4d60-b4b1-19d4090d8b91",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 00:28: 3 of 3 judged in formal, 2 approved, 1 not approved.",
+            "approved": [
+                {
+                    "item": "connection",
+                    "theme": "formal"
+                },
+                {
+                    "item": "notices",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "transfer",
+                    "theme": "formal",
+                    "note": "Die tweede balk toonde weer geen vooruitgang? of is dat de bedoeling? waarom werkt die niet zoals de eerste? leg deftig uit, zowel in de chat als in de volgende demo"
+                }
+            ],
+            "choices": [],
+            "generalNote": "General (00:28): the review bar with Previous version, Play open and Play close is shown only where it is relevant; Kenny judges each demo as soon as it is ready, Claude does not wait for all of them."
         }
     ]
 }

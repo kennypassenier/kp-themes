@@ -40,6 +40,31 @@
                 }
             ],
             "generalNote": "General (23:33): 'Ik wil niet kiezen tussen A en B als beide nuttig zijn, dan moet enkel bepaald worden wat het default gedrag is van de component.' Every useful variant becomes an option; a demo asks only for the default."
+        },
+        {
+            "round": "2",
+            "page": "social-59c461e0-c71c-4ade-9ee4-294c0a609479",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 00:28: 2 of 2 judged in formal, 2 approved, 0 not approved.",
+            "approved": [
+                {
+                    "item": "availability-grid",
+                    "theme": "formal"
+                },
+                {
+                    "item": "interactive-console",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [],
+            "choices": [
+                {
+                    "item": "availability-grid",
+                    "theme": "formal",
+                    "picked": "What does a press on your own cell do?: default changed to Open the answers in a small menu"
+                }
+            ],
+            "generalNote": "General (00:28): the review bar with Previous version, Play open and Play close is shown only where it is relevant; Kenny judges each demo as soon as it is ready, Claude does not wait for all of them."
         }
     ]
 }

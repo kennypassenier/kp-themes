@@ -32,6 +32,21 @@
                 }
             ],
             "choices": []
+        },
+        {
+            "round": "2",
+            "page": "basics-b055f637-303b-45f2-a8d4-f7780bd6591b",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 00:28: 1 of 1 judged in formal, 1 approved, 0 not approved.",
+            "approved": [
+                {
+                    "item": "problem-alert",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [],
+            "choices": [],
+            "generalNote": "General (00:28): the review bar with Previous version, Play open and Play close is shown only where it is relevant; Kenny judges each demo as soon as it is ready, Claude does not wait for all of them."
         }
     ]
 }
