@@ -96,7 +96,7 @@ for (const [i, part] of parts.entries()) {
             `            <div hidden style="display: none" data-kpadopt4-other>\n` +
                 parts
                     .filter((other) => other !== part)
-                    .map((other) => other.body.replace(/\bdata-review-(item|topic|topic-title|title)=/g, 'data-kpadopt4-$1='))
+                    .map((other) => other.body.replace(/\bdata-review-(item|topic|topic-title|title|choices)=/g, 'data-kpadopt4-$1='))
                     .join('') +
                 `            </div>\n`,
         ) +

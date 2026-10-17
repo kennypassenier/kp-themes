@@ -1203,6 +1203,10 @@ pct config 109</code></pre>
                     data-kpadopt4-topic="values"
                     data-kpadopt4-title="A live number that ticks"
                     aria-label="Live number"
+                    data-kpadopt4-choices='[{ "id": "forest-tick", "label": "How forest shows a counting number", "once": true, "options": [
+                    { "value": "grove", "label": "Planted trees", "hint": "Recommended. A row of whole trees, the progress bar&#39;s trees, is planted in the free line after the figure while it counts and withers when it lands." },
+                    { "value": "tag", "label": "Kraft tag", "hint": "A kraft hang tag with the leaf corner, wood grain and a dashed stitched edge unrolls behind the figure and rolls away when it lands." },
+                    { "value": "trail", "label": "Clay trail", "hint": "A dashed clay trail is laid dash by dash under the figure with the clay blaze walking at its head, then it fades." }]}]'
                 >
                     <div class="dd-sec__head">
                         <h2>A live number that ticks to its new value</h2>
@@ -1231,8 +1235,9 @@ pct config 109</code></pre>
                             swells and nothing flashes. Press the page's button that changes the number and watch the figure rock and settle.
                         </p>
                         <p data-for="forest">
-                            A live number that counts has a growth ring drawn round it once, clockwise from the top on the growth curve, which then
-                            fades; the number itself never moves or swells. Change the number from the page and watch the ring.
+                            A live number that counts shows it without anything round it: a row of planted trees grows in the free line after the
+                            figure on the growth curve, the progress bar's trees, and withers when the number lands (the kraft tag and the clay trail
+                            are the other two to tick). The figure itself never moves or swells. Tick one, then change the number from the page.
                         </p>
                         <p data-for="blueprint">
                             A live number that counts is read again: a short ruler is set under it with an amber pointer that slides from the old
@@ -1288,7 +1293,7 @@ pct config 109</code></pre>
                             <button type="button" class="kp-button kp-button--sm" data-dd-tick="euro:1234.5">+€ 1.234,50</button>
                         </div>
                     </div>
-                    <div class="dd-block">
+                    <div class="dd-block" data-dd-tick-forest>
                         <div class="kp-kpis" role="group" aria-label="Live numbers">
                             <div class="kp-kpi">
                                 <span class="kp-kpi__label">Open items</span
