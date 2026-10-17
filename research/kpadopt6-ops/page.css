@@ -227,3 +227,26 @@
     color: var(--muted-foreground);
     font-size: var(--kp-text-sm, 0.8125rem);
 }
+
+/* A palette shown in place: the dialog is positioned inside this box, so the box needs a height of its own. */
+.k6-stage {
+    position: relative;
+    min-inline-size: 0;
+}
+
+.k6-stage--palette {
+    contain: layout;
+    min-block-size: 36rem;
+}
+
+.k6-stage--phone {
+    min-block-size: 28rem;
+}
+
+.k6-stage--palette > .kp-palette {
+    /* In the flow of the page, as tall as its rows: the stage grows with a long list instead of the palette running over what follows. */
+    --kp-palette-list-max-height: none;
+    position: relative;
+    inset: auto;
+    margin: 0 auto;
+}

@@ -172,6 +172,10 @@
             "types": "./js/toggle.d.ts",
             "default": "./js/toggle.js"
         },
+        "./js/intent": {
+            "types": "./js/intent.d.ts",
+            "default": "./js/intent.js"
+        },
         "./js/unsaved": {
             "types": "./js/unsaved.d.ts",
             "default": "./js/unsaved.js"

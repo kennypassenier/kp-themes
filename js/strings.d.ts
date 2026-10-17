@@ -31,6 +31,38 @@ export type Strings = {
      * The group a toggle's key is listed under in the shortcut sheet [kpadopt6-ops]
      */
     toggleKeyGroup: string;
+    /**
+     * What a palette says under "Nothing matches" when it knows nothing better [kpadopt6-ops]
+     */
+    intentNoMatch: string;
+    /**
+     * A palette's line when the first word is a verb it knows but the rest names nothing it can act on [kpadopt6-ops]
+     */
+    intentNoSubject: (name: string, verb: string, subjects: string[], noun: string) => string;
+    /**
+     * The title of a palette's empty plate when no command answers [kpadopt6-ops]
+     */
+    paletteNothing: string;
+    /**
+     * A palette's status line when more commands match than are shown [kpadopt6-ops]
+     */
+    paletteCapped: (shown: number, total: number) => string;
+    /**
+     * The words under the spinner while a palette's commands are still arriving [kpadopt6-ops]
+     */
+    paletteLoading: string;
+    /**
+     * The title of a palette's plate when its commands could not be read [kpadopt6-ops]
+     */
+    paletteFailed: string;
+    /**
+     * Its sentence when the page gives no reason [kpadopt6-ops]
+     */
+    paletteFailedText: string;
+    /**
+     * Its action [kpadopt6-ops]
+     */
+    paletteRetry: string;
     alertSuccess: string;
     alertWarning: string;
     alertInfo: string;
@@ -3378,6 +3410,14 @@ export type Strings = {
  * @property {string} toggleRefused  The word on a toggle whose change the app refused [kpadopt6-ops]
  * @property {(label: string) => string} toggleKeyWhat  What a toggle's key does in the shortcut sheet [kpadopt6-ops]
  * @property {string} toggleKeyGroup  The group a toggle's key is listed under in the shortcut sheet [kpadopt6-ops]
+ * @property {string} intentNoMatch  What a palette says under "Nothing matches" when it knows nothing better [kpadopt6-ops]
+ * @property {(name: string, verb: string, subjects: string[], noun: string) => string} intentNoSubject  A palette's line when the first word is a verb it knows but the rest names nothing it can act on [kpadopt6-ops]
+ * @property {string} paletteNothing  The title of a palette's empty plate when no command answers [kpadopt6-ops]
+ * @property {(shown: number, total: number) => string} paletteCapped  A palette's status line when more commands match than are shown [kpadopt6-ops]
+ * @property {string} paletteLoading  The words under the spinner while a palette's commands are still arriving [kpadopt6-ops]
+ * @property {string} paletteFailed  The title of a palette's plate when its commands could not be read [kpadopt6-ops]
+ * @property {string} paletteFailedText  Its sentence when the page gives no reason [kpadopt6-ops]
+ * @property {string} paletteRetry  Its action [kpadopt6-ops]
  * @property {string} alertSuccess
  * @property {string} alertWarning
  * @property {string} alertInfo

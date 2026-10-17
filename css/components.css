@@ -23271,3 +23271,48 @@
         }
     }
 }
+
+@layer kp.components {
+    /* --- Palette that finds words in any order [kpadopt6-ops] ---
+ * `data-kp-match="intent"` (js/palette.js, js/intent.js) is the default matcher of every palette. The matched words
+ * are marked (`.kp-palette__mark`, a wash and a heavier weight, never colour alone), a query nothing answers is the
+ * package's empty plate in the list's footprint (`.kp-palette__nomatch`, as high as the list was, 11rem at least), and a
+ * palette whose commands could not be read shows the failed plate above the commands marked `data-kp-static`.
+ * `data-kp-mark-look="wash"` keeps the wash in a theme that rules its marks instead.
+ * Knobs [KT6]: --kp-palette-mark (the wash behind a matched word), --kp-palette-plate-height (set by the script). */
+    .kp-palette__mark {
+        padding: 0;
+        border-radius: var(--kp-radius-sm, 0.25rem);
+        background: var(--kp-palette-mark, hsl(from var(--foreground) h s l / 0.14));
+        color: inherit;
+        font-weight: 700;
+    }
+
+    /* While the commands arrive the busy card lies over the list (js/busy-card.js). */
+    .kp-palette__list:has(> .kp-datatable__busy-card) {
+        position: relative;
+    }
+
+    /* The command's own words, wrapped by the script so a mark inside them is not a new item of the row. */
+    .kp-palette__label {
+        min-inline-size: 0;
+    }
+
+    .kp-palette__nomatch {
+        display: grid;
+        min-block-size: max(var(--kp-palette-plate-height, 0px), 11rem);
+        padding: 0.25rem;
+    }
+
+    .kp-palette__nomatch[hidden] {
+        display: none;
+    }
+
+    .kp-palette__nomatch > .kp-stateplate {
+        block-size: 100%;
+    }
+
+    .kp-palette__nomatch[data-kp-above] {
+        min-block-size: 11rem;
+    }
+}

@@ -5683,7 +5683,7 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
         group: 'Navigation',
         classes: ['kp-palette'],
         exports: ['CommandPalette', 'PaletteTrigger'],
-        aliases: ['listbox', 'option', 'disabled', 'group', 'keys', 'generated', 'primary', 'match', 'hotkey', 'clear-on-close', 'close-on-run'],
+        aliases: ['listbox', 'option', 'disabled', 'group', 'keys', 'generated', 'primary', 'match', 'hotkey', 'clear-on-close', 'close-on-run', 'above', 'context', 'context-of', 'featured', 'highlight', 'hint', 'hint-text', 'nomatch', 'nomatch-hint', 'recent', 'static', 'subject-name', 'typo', 'verb'],
         intro: 'A dialog with a filter box and a list of commands, opened by a key from anywhere on the page. The commands are markup a server wrote, not an array this module owns, so they are there before any script runs.',
         whenToUse:
             'In an application dense enough that a reader will want to jump rather than navigate — and only as a second route, never the only one. Not as a menu for three commands; not as a search over data, which is a search field with results.',
@@ -5745,7 +5745,10 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
             { name: '.kp-palette__keys', what: 'The key hint at the end of a row, which never competes with the label.' },
             { name: '.kp-palette__status', what: 'The live region that says how many commands are left after typing.' },
             { name: 'a link as a command', what: 'An `<a href>` carrying the option’s role and `data-kp-option`, inside a presentational list item (a command with an `href` in React). Enter and a click follow it; the module keeps it out of the Tab order so focus stays in the filter, and a page without JavaScript still has a list of working links.' },
-            { name: 'matching', what: 'The filter matches literally by default — “read” finds “Readings for line 2” and not “Report an incident” — and `data-kp-match="subsequence"` (the `match` prop in React) makes “nap” find “new application” instead.' },
+            { name: 'matching', what: 'The filter matches by words in any order by default — every typed word has to start a word of the command, so “read” finds “Readings for line 2” and not “Report an incident”, and “line readings” finds it too. The best answer comes first in its group and the matched words are marked. `data-kp-match` (the `match` prop in React) brings back `substring`, `prefix` or `subsequence` (“nap” finds “new application”).' },
+            { name: 'data-kp-words / data-kp-hint', what: 'On a command: words that are never shown (synonyms) and a hint that is; both count as a weaker match than the label.' },
+            { name: 'data-kp-context / data-kp-context-of / data-kp-featured / data-kp-recent', what: 'The open subject’s commands rank higher and, with what is featured and the last few run, are all that shows before anything is typed; a palette with none of these shows every command.' },
+            { name: 'data-kp-max-shown / data-kp-nomatch / data-kp-verb', what: 'At most 40 rows show and the status line says how many matched; a query nothing answers is the empty plate, naming what a known verb works on.' },
             { name: 'pastel', what: 'In pastel the palette opens as pastel’s dialog: its pass on its ::backdrop, the landing onto it, a strip of washi tape across its corner; it closes as that opening backwards. An entry under the pointer or the keys is a sticker on its plate.' },
         ],
         accessibility: [

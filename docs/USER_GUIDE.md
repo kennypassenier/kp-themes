@@ -2308,6 +2308,29 @@ skeleton, never 0), `data-kp-pressed-hint` a line under them while on, `data-kp-
 `toggle(el).set(true|false|'mixed')`, `.setCount(n)` and `.setHint(text)` drive it from script. Every press is announced once, politely. The words are `toggle…`.
 Knobs: `--kp-toggle-on`, `--kp-toggle-on-ink`, `--kp-toggle-count-size`, `--kp-toggle-hit`.
 
+### The palette finds words in any order
+
+Every command palette matches by words now (`data-kp-match="intent"`, the default; Kenny, 2026-10-17): each typed word has to start a word of the command, in any order, so
+"jellyfin upd", "upd jellyfin" and "update jelly" all find "Update jellyfin" while "read" still does not find "Report an incident". The older matchers stay one attribute away
+(`data-kp-match="substring" | "prefix" | "subsequence"`).
+
+```html
+<dialog class="kp-palette" data-kp-palette data-kp-context="jellyfin" data-kp-subject-name="stack">
+    …
+    <li class="kp-palette__option" role="option" data-kp-option data-value="update-jellyfin" data-kp-verb="Update" data-kp-context-of="jellyfin"
+        data-kp-words="upgrade pull">Update jellyfin<span class="kp-palette__description">Pull the newest image</span></li>
+</dialog>
+```
+
+The best answer comes first in its group and the matched words are marked (`.kp-palette__mark`; `data-kp-highlight="off"` keeps them plain). A description (`.kp-palette__description`, or `data-kp-hint`)
+and `data-kp-words` (never shown) count as a weaker match than the label. Letters match without their accents and a hyphenated word is also found by its parts
+(`data-kp-fold-diacritics="off"`, `data-kp-split-hyphen="off"`); `data-kp-typo="1"` also finds a word one letter off. Before anything is typed a palette that marks commands
+`data-kp-featured`, `data-kp-context-of` the open subject (`data-kp-context` on the palette) or run last (`data-kp-recent="5"`) shows only those, the open subject's first; a palette
+with none of those shows every command. At most `data-kp-max-shown` (40) rows show and the status line says "40 of 112 shown, type more words". A query nothing answers is the empty plate in the
+list's footprint; when the first word is a verb the palette knows (`data-kp-verb`) it names what the verb works on. `palette(el).setState('loading')` lays the busy card over the list,
+`setState('error')` shows the failed plate with Retry (`kp-palette-retry`) above the commands marked `data-kp-static`. A consumer that draws its own list uses `rankCommands(commands, query, { context })`
+from `js/intent.js`; the React `CommandPalette` takes `match="intent"` (its default) and a `words` field on a command.
+
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

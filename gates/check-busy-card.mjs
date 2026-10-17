@@ -50,6 +50,7 @@ export const CARD = [
     'js/notices.js',
     'js/runs.js',
     'js/dated-options.js',
+    'js/palette.js',
 ];
 
 /** Approved before the rule, each with its own central loading picture. @type {Record<string, string>} */

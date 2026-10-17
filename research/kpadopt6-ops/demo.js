@@ -118,3 +118,61 @@ await ready;
         });
     void attachToggles;
 }
+
+// ── the palette that finds words in any order ──
+{
+    const { palette } = await import('../../js/palette.js');
+    const main = document.getElementById('k6-intent-pal');
+    const states = document.getElementById('k6-intent-states');
+    const phone = document.getElementById('k6-intent-phone');
+    const all = [main, states, phone].filter((el) => el instanceof HTMLDialogElement);
+
+    /** Type into a palette's input as a person would: the input event does the filtering. @param {HTMLElement | null} dialog @param {string} text */
+    const typeInto = (dialog, text) => {
+        const input = dialog?.querySelector('input');
+        if (!(input instanceof HTMLInputElement)) return;
+        input.value = text;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+    };
+    for (const b of document.querySelectorAll('[data-k6-query]'))
+        b.addEventListener('click', () => typeInto(main, b.getAttribute('data-k6-query') ?? ''));
+    for (const b of document.querySelectorAll('[data-k6-query2]'))
+        b.addEventListener('click', () => typeInto(states, b.getAttribute('data-k6-query2') ?? ''));
+
+    const log = document.getElementById('k6-intent-log');
+    main?.addEventListener('kp-palette-run', (event) => {
+        if (log) log.textContent = `kp-palette-run\n${JSON.stringify({ value: /** @type {CustomEvent} */ (event).detail.value })}`;
+    });
+
+    /** @param {string} look */
+    const setMarkLook = (look) => {
+        for (const el of [main, states, phone]) {
+            if (!el) continue;
+            el.removeAttribute('data-kp-mark-look');
+            el.removeAttribute('data-kp-highlight');
+            if (look === 'wash') el.setAttribute('data-kp-mark-look', 'wash');
+            if (look === 'none') el.setAttribute('data-kp-highlight', 'off');
+            palette(el)?.refresh();
+        }
+        for (const b of document.querySelectorAll('[data-k6-mark-look]'))
+            b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-mark-look') === look));
+    };
+    stateButtons('data-k6-mark-look', setMarkLook);
+    onChoice('intent-mark', setMarkLook);
+
+    /** @param {string} state */
+    const setState = (state) => {
+        if (!states) return;
+        palette(states)?.setState(/** @type {'ready' | 'loading' | 'error'} */ (state), { message: 'The host did not answer.' });
+        for (const b of document.querySelectorAll('[data-k6-intent-state]'))
+            b.setAttribute('aria-pressed', String(b.getAttribute('data-k6-intent-state') === state));
+    };
+    stateButtons('data-k6-intent-state', setState);
+    states?.addEventListener('kp-palette-retry', () => setState('ready'));
+    stateButtons('data-k6-cap', (cap) => {
+        states?.setAttribute('data-kp-max-shown', cap);
+        if (states) palette(states)?.refresh();
+    });
+    // The in-place palettes start filtered by their own markup; a phone palette starts with a query so its rows are ranked.
+    void all;
+}

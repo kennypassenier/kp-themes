@@ -137,6 +137,7 @@ export const FILES = [
     'js/sentence.js',
     'js/slider.js',
     'js/toggle.js',
+    'js/intent.js',
     'js/unsaved.js',
     'js/compare.js',
     'js/calm.js',

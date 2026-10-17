@@ -49,6 +49,7 @@
                 <nav class="k6-toc" aria-label="Topics on this page">
                     <ol>
                         <li><a href="#topic-toggle">Toggle button</a> <span class="k6-toc__count">2 sections</span></li>
+                        <li><a href="#topic-intent">Palette that finds words in any order</a> <span class="k6-toc__count">2 sections</span></li>
                     </ol>
                 </nav>
             </header>
@@ -362,6 +363,808 @@
                                 <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="31">Warning</button>
                                 <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="95">Info</button>
                                 <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="1534">Debug</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- toc: intent | Palette that finds words in any order | 2 sections -->
+            <!-- ================================================================ topic: the palette, words in any order -->
+            <h2 class="k6-topic" id="topic-intent">Palette that finds words in any order</h2>
+            <section
+                class="k6-sec"
+                id="intent"
+                data-review-item="intent"
+                data-review-components="palette"
+                data-review-topic="intent"
+                data-review-topic-title="Palette that finds words in any order"
+                data-review-title="Palette: words in any order, best answer first"
+                data-review-choices='[{ "id": "intent-mark", "label": "How the matched words are marked", "once": true, "default": "rule", "options": [
+                    { "value": "rule", "label": "Ruled under in navy", "hint": "Recommended. Formal rules what it points at: each matched word has a navy rule under it and is heavier. Quiet, and it never hides the letters." },
+                    { "value": "wash", "label": "A wash behind the word", "hint": "The package&#39;s neutral mark: a soft grey wash behind each matched word, heavier too. Reads as a highlighter; louder in a long list." },
+                    { "value": "none", "label": "Not marked", "hint": "Plain words. The best answer still comes first, but the reader is not shown why a row matched." }] }]'
+                aria-labelledby="h-intent"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-intent">Palette: words in any order, best answer first</h2>
+                    <p>
+                        <code>&lt;dialog class="kp-palette" data-kp-palette&gt;</code> (js/palette.js with js/intent.js): the default match of every
+                        palette now. Every typed word has to start a word of the command, in any order. The palette is shown open in place; type in it
+                        or press a query below.
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Nothing typed:</b> not the whole list but a short start: the two Inbox items, what is featured (<b
+                                >Deploy all changes</b
+                            >, <b>New stack</b>, <b>Overview</b>, <b>Backups</b>) and what is about the stack that is open, <b>jellyfin</b> (its
+                            Update, Restart and logs first in <b>Do</b>). The status line says how many commands are shown (9).
+                        </li>
+                        <li>
+                            <b>jellyfin upd</b>, <b>upd jellyfin</b> and <b>update jelly</b> all show <b>Update jellyfin</b> first, the typed words
+                            ruled under. <b>logs gateway</b> and <b>gateway logs</b> find <b>Show the logs of gateway</b>. <b>reboot gate</b> finds
+                            <b>Restart gateway</b> by a hidden word (it is never shown). <b>cafe</b> finds the stack <b>café-kiosk</b> (accents do not
+                            matter) and <b>kiosk</b> too (a hyphenated name is found by its parts).
+                        </li>
+                        <li>
+                            A word has to <b>start</b> a word: <b>read</b> does not find <b>Restart</b>, <b>ate</b> finds nothing. The matches in the
+                            description count less than the ones in the label (<b>newest</b> finds the commands that say it in their description,
+                            after any whose name says it).
+                        </li>
+                        <li>
+                            <b>Enter</b> runs the first row (the readout under the palette says which); the arrow keys walk the rows in the order they
+                            stand in; the commands stay in their groups, the groups in the order <b>Inbox, Do, Go to</b>.
+                        </li>
+                        <li><b>The choice</b> (tick it in the dialog): how the matched words are marked. The buttons below flip it too.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s palette is the card with a strong boundary; a matched word is ruled under in navy, as formal rules what it
+                        points at, and the active row is the soft wash of the ink. Look at the rule under the words (a little air under the letters),
+                        at the order of the rows changing as you type, and at the status line staying exact.
+                    </p>
+                </div>
+                <div class="k6-controls" data-review-controls>
+                    <div role="group" aria-label="Queries">
+                        <b>Type for me:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-query="">Nothing</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-query="jellyfin upd">jellyfin upd</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-query="logs gateway">logs gateway</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-query="reboot gate">reboot gate</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-query="cafe">cafe</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-query="newest">newest</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-query="read">read</button>
+                    </div>
+                    <div role="group" aria-label="The mark">
+                        <b>Mark:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-mark-look="rule" aria-pressed="true">Ruled under</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-mark-look="wash" aria-pressed="false">Washed</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-mark-look="none" aria-pressed="false">Not marked</button>
+                    </div>
+                </div>
+                <div class="k6-stage k6-stage--palette">
+                    <dialog
+                        class="kp-palette"
+                        id="k6-intent-pal"
+                        data-kp-palette
+                        data-kp-hotkey="none"
+                        data-kp-close-on-run="false"
+                        data-kp-context="jellyfin"
+                        data-kp-subject-name="stack"
+                        data-kp-group-order="Inbox, Do, Go to"
+                        aria-label="Commands"
+                        open
+                    >
+                        <input
+                            class="kp-palette__input"
+                            type="text"
+                            role="combobox"
+                            aria-label="Commands"
+                            aria-expanded="true"
+                            aria-controls="k6-intent-pal-list"
+                            autocomplete="off"
+                            placeholder="Type a command or a page…"
+                        />
+                        <ul class="kp-palette__list" id="k6-intent-pal-list" role="listbox" aria-label="Commands">
+                            <li role="presentation" class="kp-palette__group" data-kp-group>
+                                <span class="kp-palette__group-label">Inbox</span>
+                                <ul role="group" aria-label="Inbox">
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="inbox-immich" data-kp-featured>
+                                        Update available for immich<span class="kp-palette__description">Release 1.118 to 1.119, a minor update</span>
+                                    </li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="inbox-vault" data-kp-featured>
+                                        vault has not been backed up for 3 days<span class="kp-palette__description">The nightly backup failed</span>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li role="presentation" class="kp-palette__group" data-kp-group>
+                                <span class="kp-palette__group-label">Do</span>
+                                <ul role="group" aria-label="Do">
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="deploy-all" data-kp-featured>
+                                        Deploy all changes<span class="kp-palette__description">Write every staged change to the stacks</span>
+                                    </li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="new-stack" data-kp-featured>
+                                        New stack<span class="kp-palette__description">Create a stack from a template</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="update-jellyfin"
+                                        data-kp-verb="Update"
+                                        data-kp-context-of="jellyfin"
+                                        data-kp-words="upgrade pull"
+                                    >
+                                        Update jellyfin<span class="kp-palette__description">Pull the newest images</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="restart-jellyfin"
+                                        data-kp-verb="Restart"
+                                        data-kp-context-of="jellyfin"
+                                        data-kp-words="reboot bounce"
+                                    >
+                                        Restart jellyfin<span class="kp-palette__description">Stop and start every container</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="logs-jellyfin"
+                                        data-kp-verb="Show"
+                                        data-kp-context-of="jellyfin"
+                                    >
+                                        Show the logs of jellyfin<span class="kp-palette__description">The last hour, newest first</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="update-gateway"
+                                        data-kp-verb="Update"
+                                        data-kp-context-of="gateway"
+                                        data-kp-words="upgrade pull"
+                                    >
+                                        Update gateway<span class="kp-palette__description">Pull the newest images</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="restart-gateway"
+                                        data-kp-verb="Restart"
+                                        data-kp-context-of="gateway"
+                                        data-kp-words="reboot bounce"
+                                    >
+                                        Restart gateway<span class="kp-palette__description">Stop and start every container</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="logs-gateway"
+                                        data-kp-verb="Show"
+                                        data-kp-context-of="gateway"
+                                    >
+                                        Show the logs of gateway<span class="kp-palette__description">The last hour, newest first</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="update-paperless"
+                                        data-kp-verb="Update"
+                                        data-kp-context-of="paperless"
+                                        data-kp-words="upgrade pull"
+                                    >
+                                        Update paperless<span class="kp-palette__description">Pull the newest images</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="restart-paperless"
+                                        data-kp-verb="Restart"
+                                        data-kp-context-of="paperless"
+                                        data-kp-words="reboot bounce"
+                                    >
+                                        Restart paperless<span class="kp-palette__description">Stop and start every container</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="logs-paperless"
+                                        data-kp-verb="Show"
+                                        data-kp-context-of="paperless"
+                                    >
+                                        Show the logs of paperless<span class="kp-palette__description">The last hour, newest first</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="update-immich"
+                                        data-kp-verb="Update"
+                                        data-kp-context-of="immich"
+                                        data-kp-words="upgrade pull"
+                                    >
+                                        Update immich<span class="kp-palette__description">Pull the newest images</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="restart-immich"
+                                        data-kp-verb="Restart"
+                                        data-kp-context-of="immich"
+                                        data-kp-words="reboot bounce"
+                                    >
+                                        Restart immich<span class="kp-palette__description">Stop and start every container</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="logs-immich"
+                                        data-kp-verb="Show"
+                                        data-kp-context-of="immich"
+                                    >
+                                        Show the logs of immich<span class="kp-palette__description">The last hour, newest first</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="update-vault"
+                                        data-kp-verb="Update"
+                                        data-kp-context-of="vault"
+                                        data-kp-words="upgrade pull"
+                                    >
+                                        Update vault<span class="kp-palette__description">Pull the newest images</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="restart-vault"
+                                        data-kp-verb="Restart"
+                                        data-kp-context-of="vault"
+                                        data-kp-words="reboot bounce"
+                                    >
+                                        Restart vault<span class="kp-palette__description">Stop and start every container</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="logs-vault"
+                                        data-kp-verb="Show"
+                                        data-kp-context-of="vault"
+                                    >
+                                        Show the logs of vault<span class="kp-palette__description">The last hour, newest first</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="update-café-kiosk"
+                                        data-kp-verb="Update"
+                                        data-kp-context-of="café-kiosk"
+                                        data-kp-words="upgrade pull"
+                                    >
+                                        Update café-kiosk<span class="kp-palette__description">Pull the newest images</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="restart-café-kiosk"
+                                        data-kp-verb="Restart"
+                                        data-kp-context-of="café-kiosk"
+                                        data-kp-words="reboot bounce"
+                                    >
+                                        Restart café-kiosk<span class="kp-palette__description">Stop and start every container</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="logs-café-kiosk"
+                                        data-kp-verb="Show"
+                                        data-kp-context-of="café-kiosk"
+                                    >
+                                        Show the logs of café-kiosk<span class="kp-palette__description">The last hour, newest first</span>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li role="presentation" class="kp-palette__group" data-kp-group>
+                                <span class="kp-palette__group-label">Go to</span>
+                                <ul role="group" aria-label="Go to">
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="go-overview"
+                                        data-kp-featured
+                                        data-kp-static
+                                    >
+                                        Overview
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="go-backups"
+                                        data-kp-featured
+                                        data-kp-static
+                                    >
+                                        Backups
+                                    </li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="go-host" data-kp-static>Host</li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="go-firewall" data-kp-static>
+                                        Firewall<span class="kp-palette__description">Who may reach whom</span>
+                                    </li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="go-settings" data-kp-static>Settings</li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="go-log" data-kp-static>
+                                        Log<span class="kp-palette__description">Every line the host wrote</span>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <p class="kp-palette__status" role="status" aria-live="polite"></p>
+                    </dialog>
+                </div>
+                <pre class="k6-log" id="k6-intent-log" aria-live="polite"></pre>
+            </section>
+            <section
+                class="k6-sec"
+                id="intent-states"
+                data-review-item="intent-states"
+                data-review-components="palette"
+                data-review-topic="intent"
+                data-review-title="Palette: no match, a cap, loading, failed and phone width"
+                aria-labelledby="h-intent-states"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-intent-states">Palette: no match, a cap, loading, failed and phone width</h2>
+                    <p>
+                        The same palette when nothing answers, when more match than are shown, while its commands are still arriving and when they
+                        could not be read; and a palette at the width of a phone.
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>No match</b> (<b>zzz</b>): the list gives way to the package&rsquo;s empty plate, as high as the list was, the words
+                            <b>Nothing matches</b> centred at heading size and a hint under them. <b>update zzz</b> knows its verb:
+                            <i
+                                >There is no stack called &ldquo;zzz&rdquo;. Update works on: jellyfin, gateway, paperless, immich, vault,
+                                café-kiosk.</i
+                            >
+                            The status line says <b>No commands</b>.
+                        </li>
+                        <li>
+                            <b>Cap at 5</b> with <b>e</b> typed: five rows show and the status line says <b>5 of N shown, type more words</b> (the
+                            real number, never &ldquo;many&rdquo;); one more letter narrows it.
+                        </li>
+                        <li>
+                            <b>Loading</b>: the theme&rsquo;s busy card (spinner and words) sits in the middle of the list, which keeps its size; the
+                            input stays usable. <b>Failed</b>: a red plate &ldquo;The commands could not be read&rdquo; with a normal-size
+                            <b>Retry</b> above the places (<b>Overview</b>, <b>Backups</b>, <b>Host</b> and the rest of <b>Go to</b>), which still
+                            work; Retry puts the palette back to ready.
+                        </li>
+                        <li><b>Phone width</b>: the same palette in a 390 px box; long commands wrap and nothing is cut, no word touches an edge.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The empty and the failed plate are formal&rsquo;s own (the dashed paper plate, the red plate with its rule); the busy card is
+                        formal&rsquo;s ruled ring. Check the text&rsquo;s centre against the plate&rsquo;s centre and that nothing changes the
+                        palette&rsquo;s height when a state is switched.
+                    </p>
+                </div>
+                <div class="k6-controls" data-review-controls>
+                    <div role="group" aria-label="States">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-intent-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-intent-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-intent-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Queries">
+                        <b>Type for me:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-query2="zzz">zzz</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-query2="update zzz">update zzz</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-query2="e">e (with the cap at 5)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-query2="">Nothing</button>
+                    </div>
+                    <div role="group" aria-label="The cap">
+                        <b>Cap:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-cap="40" aria-pressed="true">40 (default)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-cap="5" aria-pressed="false">5</button>
+                    </div>
+                </div>
+                <div class="k6-pair">
+                    <div class="k6-case">
+                        <p class="k6-label">The palette above, in its states</p>
+                        <div class="k6-stage k6-stage--palette">
+                            <dialog
+                                class="kp-palette"
+                                id="k6-intent-states"
+                                data-kp-palette
+                                data-kp-hotkey="none"
+                                data-kp-close-on-run="false"
+                                data-kp-context="jellyfin"
+                                data-kp-subject-name="stack"
+                                data-kp-group-order="Inbox, Do, Go to"
+                                aria-label="Commands"
+                                open
+                            >
+                                <input
+                                    class="kp-palette__input"
+                                    type="text"
+                                    role="combobox"
+                                    aria-label="Commands"
+                                    aria-expanded="true"
+                                    aria-controls="k6-intent-states-list"
+                                    autocomplete="off"
+                                    placeholder="Type a command or a page…"
+                                />
+                                <ul class="kp-palette__list" id="k6-intent-states-list" role="listbox" aria-label="Commands">
+                                    <li role="presentation" class="kp-palette__group" data-kp-group>
+                                        <span class="kp-palette__group-label">Inbox</span>
+                                        <ul role="group" aria-label="Inbox">
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-inbox-immich" data-kp-featured>
+                                                Update available for immich<span class="kp-palette__description"
+                                                    >Release 1.118 to 1.119, a minor update</span
+                                                >
+                                            </li>
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-inbox-vault" data-kp-featured>
+                                                vault has not been backed up for 3 days<span class="kp-palette__description"
+                                                    >The nightly backup failed</span
+                                                >
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li role="presentation" class="kp-palette__group" data-kp-group>
+                                        <span class="kp-palette__group-label">Do</span>
+                                        <ul role="group" aria-label="Do">
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-deploy-all" data-kp-featured>
+                                                Deploy all changes<span class="kp-palette__description">Write every staged change to the stacks</span>
+                                            </li>
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-new-stack" data-kp-featured>
+                                                New stack<span class="kp-palette__description">Create a stack from a template</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-update-jellyfin"
+                                                data-kp-verb="Update"
+                                                data-kp-context-of="jellyfin"
+                                                data-kp-words="upgrade pull"
+                                            >
+                                                Update jellyfin<span class="kp-palette__description">Pull the newest images</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-restart-jellyfin"
+                                                data-kp-verb="Restart"
+                                                data-kp-context-of="jellyfin"
+                                                data-kp-words="reboot bounce"
+                                            >
+                                                Restart jellyfin<span class="kp-palette__description">Stop and start every container</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-logs-jellyfin"
+                                                data-kp-verb="Show"
+                                                data-kp-context-of="jellyfin"
+                                            >
+                                                Show the logs of jellyfin<span class="kp-palette__description">The last hour, newest first</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-update-gateway"
+                                                data-kp-verb="Update"
+                                                data-kp-context-of="gateway"
+                                                data-kp-words="upgrade pull"
+                                            >
+                                                Update gateway<span class="kp-palette__description">Pull the newest images</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-restart-gateway"
+                                                data-kp-verb="Restart"
+                                                data-kp-context-of="gateway"
+                                                data-kp-words="reboot bounce"
+                                            >
+                                                Restart gateway<span class="kp-palette__description">Stop and start every container</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-logs-gateway"
+                                                data-kp-verb="Show"
+                                                data-kp-context-of="gateway"
+                                            >
+                                                Show the logs of gateway<span class="kp-palette__description">The last hour, newest first</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-update-paperless"
+                                                data-kp-verb="Update"
+                                                data-kp-context-of="paperless"
+                                                data-kp-words="upgrade pull"
+                                            >
+                                                Update paperless<span class="kp-palette__description">Pull the newest images</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-restart-paperless"
+                                                data-kp-verb="Restart"
+                                                data-kp-context-of="paperless"
+                                                data-kp-words="reboot bounce"
+                                            >
+                                                Restart paperless<span class="kp-palette__description">Stop and start every container</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-logs-paperless"
+                                                data-kp-verb="Show"
+                                                data-kp-context-of="paperless"
+                                            >
+                                                Show the logs of paperless<span class="kp-palette__description">The last hour, newest first</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-update-immich"
+                                                data-kp-verb="Update"
+                                                data-kp-context-of="immich"
+                                                data-kp-words="upgrade pull"
+                                            >
+                                                Update immich<span class="kp-palette__description">Pull the newest images</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-restart-immich"
+                                                data-kp-verb="Restart"
+                                                data-kp-context-of="immich"
+                                                data-kp-words="reboot bounce"
+                                            >
+                                                Restart immich<span class="kp-palette__description">Stop and start every container</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-logs-immich"
+                                                data-kp-verb="Show"
+                                                data-kp-context-of="immich"
+                                            >
+                                                Show the logs of immich<span class="kp-palette__description">The last hour, newest first</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-update-vault"
+                                                data-kp-verb="Update"
+                                                data-kp-context-of="vault"
+                                                data-kp-words="upgrade pull"
+                                            >
+                                                Update vault<span class="kp-palette__description">Pull the newest images</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-restart-vault"
+                                                data-kp-verb="Restart"
+                                                data-kp-context-of="vault"
+                                                data-kp-words="reboot bounce"
+                                            >
+                                                Restart vault<span class="kp-palette__description">Stop and start every container</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-logs-vault"
+                                                data-kp-verb="Show"
+                                                data-kp-context-of="vault"
+                                            >
+                                                Show the logs of vault<span class="kp-palette__description">The last hour, newest first</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-update-café-kiosk"
+                                                data-kp-verb="Update"
+                                                data-kp-context-of="café-kiosk"
+                                                data-kp-words="upgrade pull"
+                                            >
+                                                Update café-kiosk<span class="kp-palette__description">Pull the newest images</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-restart-café-kiosk"
+                                                data-kp-verb="Restart"
+                                                data-kp-context-of="café-kiosk"
+                                                data-kp-words="reboot bounce"
+                                            >
+                                                Restart café-kiosk<span class="kp-palette__description">Stop and start every container</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-logs-café-kiosk"
+                                                data-kp-verb="Show"
+                                                data-kp-context-of="café-kiosk"
+                                            >
+                                                Show the logs of café-kiosk<span class="kp-palette__description">The last hour, newest first</span>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li role="presentation" class="kp-palette__group" data-kp-group>
+                                        <span class="kp-palette__group-label">Go to</span>
+                                        <ul role="group" aria-label="Go to">
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-go-overview"
+                                                data-kp-featured
+                                                data-kp-static
+                                            >
+                                                Overview
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-go-backups"
+                                                data-kp-featured
+                                                data-kp-static
+                                            >
+                                                Backups
+                                            </li>
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-go-host" data-kp-static>
+                                                Host
+                                            </li>
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-go-firewall" data-kp-static>
+                                                Firewall<span class="kp-palette__description">Who may reach whom</span>
+                                            </li>
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-go-settings" data-kp-static>
+                                                Settings
+                                            </li>
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-go-log" data-kp-static>
+                                                Log<span class="kp-palette__description">Every line the host wrote</span>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <p class="kp-palette__status" role="status" aria-live="polite"></p>
+                            </dialog>
+                        </div>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">Phone width</p>
+                        <div class="k6-frame k6-frame--phone">
+                            <div class="k6-stage k6-stage--palette k6-stage--phone">
+                                <dialog
+                                    class="kp-palette"
+                                    id="k6-intent-phone"
+                                    data-kp-palette
+                                    data-kp-hotkey="none"
+                                    data-kp-close-on-run="false"
+                                    data-kp-subject-name="stack"
+                                    aria-label="Commands on a phone"
+                                    open
+                                >
+                                    <input
+                                        class="kp-palette__input"
+                                        type="text"
+                                        role="combobox"
+                                        aria-label="Commands on a phone"
+                                        aria-expanded="true"
+                                        aria-controls="k6-intent-phone-list"
+                                        autocomplete="off"
+                                        placeholder="Type a command or a page…"
+                                    />
+                                    <ul class="kp-palette__list" id="k6-intent-phone-list" role="listbox" aria-label="Commands on a phone">
+                                        <li role="presentation" class="kp-palette__group" data-kp-group>
+                                            <span class="kp-palette__group-label">Do</span>
+                                            <ul role="group" aria-label="Do">
+                                                <li
+                                                    class="kp-palette__option"
+                                                    role="option"
+                                                    data-kp-option
+                                                    data-value="ph-update-jellyfin"
+                                                    data-kp-verb="Update"
+                                                    data-kp-context-of="jellyfin"
+                                                    data-kp-words="upgrade pull"
+                                                >
+                                                    Update jellyfin<span class="kp-palette__description">Pull the newest images</span>
+                                                </li>
+                                                <li
+                                                    class="kp-palette__option"
+                                                    role="option"
+                                                    data-kp-option
+                                                    data-value="ph-restart-jellyfin"
+                                                    data-kp-verb="Restart"
+                                                    data-kp-context-of="jellyfin"
+                                                    data-kp-words="reboot bounce"
+                                                >
+                                                    Restart jellyfin<span class="kp-palette__description">Stop and start every container</span>
+                                                </li>
+                                                <li
+                                                    class="kp-palette__option"
+                                                    role="option"
+                                                    data-kp-option
+                                                    data-value="ph-update-gateway"
+                                                    data-kp-verb="Update"
+                                                    data-kp-context-of="gateway"
+                                                    data-kp-words="upgrade pull"
+                                                >
+                                                    Update gateway<span class="kp-palette__description">Pull the newest images</span>
+                                                </li>
+                                                <li
+                                                    class="kp-palette__option"
+                                                    role="option"
+                                                    data-kp-option
+                                                    data-value="ph-logs-gateway"
+                                                    data-kp-verb="Show"
+                                                    data-kp-context-of="gateway"
+                                                >
+                                                    Show the logs of gateway<span class="kp-palette__description">The last hour, newest first</span>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li role="presentation" class="kp-palette__group" data-kp-group>
+                                            <span class="kp-palette__group-label">Go to</span>
+                                            <ul role="group" aria-label="Go to">
+                                                <li class="kp-palette__option" role="option" data-kp-option data-value="ph-go-backups" data-kp-static>
+                                                    Backups
+                                                </li>
+                                                <li class="kp-palette__option" role="option" data-kp-option data-value="ph-go-host" data-kp-static>
+                                                    Host
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                    <p class="kp-palette__status" role="status" aria-live="polite"></p>
+                                </dialog>
                             </div>
                         </div>
                     </div>

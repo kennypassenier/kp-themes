@@ -4,6 +4,7 @@ export type Command = {
     keys?: string;
     group?: string;
     description?: string;
+    words?: string;
     icon?: import('react').ReactNode;
     disabled?: boolean;
     href?: string;
@@ -11,7 +12,7 @@ export type Command = {
     rel?: string;
 };
 export type Matcher = (label: string, query: string, command: Command) => boolean;
-/** @typedef {{ value: string, label: string, keys?: string, group?: string, description?: string, icon?: import('react').ReactNode, disabled?: boolean, href?: string, target?: string, rel?: string }} Command */
+/** @typedef {{ value: string, label: string, keys?: string, group?: string, description?: string, words?: string, icon?: import('react').ReactNode, disabled?: boolean, href?: string, target?: string, rel?: string }} Command */
 /** @typedef {(label: string, query: string, command: Command) => boolean} Matcher */
 /** @type {Record<string, Matcher>} */
 export declare const MATCHERS: Record<string, Matcher>;
@@ -38,7 +39,7 @@ export type CommandPaletteProps = {
      */
     primary?: boolean;
     /**
-     * Default substring; 'subsequence' lets "thm" find "Theme" [scope-56].
+     * Default 'intent' (words in any order); 'substring', 'prefix' and 'subsequence' (lets "thm" find "Theme", scope-56) on request.
      */
     match?: keyof typeof MATCHERS | Matcher;
     /**

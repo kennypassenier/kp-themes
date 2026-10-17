@@ -179,6 +179,7 @@
         { "path": "js/sentence.js", "tags": ["@component:field"], "why": "the sentence form [kpadopt5-time]" },
         { "path": "js/slider.js", "tags": ["@component:field"], "why": "the slider [kpadopt5-time]" },
         { "path": "js/toggle.js", "tags": ["@component:button"], "why": "the toggle button [kpadopt6-ops]" },
+        { "path": "js/intent.js", "tags": ["@component:page"], "why": "the words-in-any-order matcher of the command palette [kpadopt6-ops]" },
         { "path": "js/unsaved.js", "tags": ["@component:feedback"], "why": "the unsaved-changes bar [kpadopt5-time]" },
         { "path": "js/calm.js", "tags": ["@component:foundations"], "why": "calm mode [kpadopt5]" },
         { "path": "js/shortcuts.js", "tags": ["@component:foundations"], "why": "the shortcut engine [kpadopt5]" },
