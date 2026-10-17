@@ -1,4 +1,11 @@
 {
     "demo": "kpadopt4-flows",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "2026-10-17-r3-flows",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-17 03:43: every asked pair approved; the part is decided."
+        }
+    ]
 }

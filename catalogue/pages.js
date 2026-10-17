@@ -115,6 +115,27 @@ export const PAGES = [
                 about: 'The values and figures group of the fourth adoption round in the eleven themes other than formal, one theme per step.',
             },
             {
+                href: 'research/kpadopt4-cooking/demo.html',
+                label: 'The fourth adoption round, part 8 of 9: Cooking (AuDHD recipes)',
+                about: 'The cooking (audhd recipes) group of the fourth adoption round in the eleven themes other than formal, one theme per step.',
+            },
+            {
+                href: 'research/kpadopt4-commands/demo.html',
+                label: 'The fourth adoption round, part 9 of 9: Commands and comparison',
+                about: 'The commands and comparison group of the fourth adoption round in the eleven themes other than formal, one theme per step.',
+            },
+        ],
+    },
+    {
+        // Every demo here has its decision taken. A new research demo goes in
+        // a 'Research to look at' group of its own, above this one, and moves
+        // down here once Kenny has decided on it [scope-81].
+        group: 'Archived research',
+        // Decided demos stay reachable from the Agenda's Done list, not from the side navigation (Kenny, 2026-10-13).
+        nav: false,
+        pages: [
+            // Decided 2026-10-17 03:43: Kenny approved six kpadopt4 parts in all eleven themes (rows, records, cards, flows, secrets, time).
+            {
                 href: 'research/kpadopt4-rows/demo.html',
                 label: 'The fourth adoption round, part 2 of 9: Rows and lists',
                 about: 'The rows and lists group of the fourth adoption round in the eleven themes other than formal, one theme per step.',
@@ -144,26 +165,6 @@ export const PAGES = [
                 label: 'The fourth adoption round, part 7 of 9: Time and timers',
                 about: 'The time and timers group of the fourth adoption round in the eleven themes other than formal, one theme per step.',
             },
-            {
-                href: 'research/kpadopt4-cooking/demo.html',
-                label: 'The fourth adoption round, part 8 of 9: Cooking (AuDHD recipes)',
-                about: 'The cooking (audhd recipes) group of the fourth adoption round in the eleven themes other than formal, one theme per step.',
-            },
-            {
-                href: 'research/kpadopt4-commands/demo.html',
-                label: 'The fourth adoption round, part 9 of 9: Commands and comparison',
-                about: 'The commands and comparison group of the fourth adoption round in the eleven themes other than formal, one theme per step.',
-            },
-        ],
-    },
-    {
-        // Every demo here has its decision taken. A new research demo goes in
-        // a 'Research to look at' group of its own, above this one, and moves
-        // down here once Kenny has decided on it [scope-81].
-        group: 'Archived research',
-        // Decided demos stay reachable from the Agenda's Done list, not from the side navigation (Kenny, 2026-10-13).
-        nav: false,
-        pages: [
             // Decided 2026-10-17 00:31: Kenny approved all 51 sections of kpadopt4 in formal (round 2); the other themes are asked in its nine parts.
             {
                 href: 'research/kpadopt4/demo.html',

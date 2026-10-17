@@ -13,6 +13,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import prettier from 'prettier';
+import { latestVerdicts } from '../../gates/check-rereview.mjs';
 
 const here = new URL('./', import.meta.url);
 const SOURCE = fileURLToPath(new URL('demo.html', here));
@@ -44,14 +45,28 @@ for (const [i, part] of parts.entries()) {
     const verdictsFile = new URL('VERDICTS.json', dir);
     const verdicts = existsSync(verdictsFile) ? JSON.parse(readFileSync(verdictsFile, 'utf8')) : { demo: id, rounds: [] };
     if (!existsSync(verdictsFile)) writeFileSync(verdictsFile, `${JSON.stringify(verdicts, null, 4)}\n`);
-    // A pair Kenny approved stays off the page: its section asks only the themes still open.
-    const approved = new Map();
-    for (const round of verdicts.rounds ?? [])
-        for (const pair of round.approved ?? []) approved.set(pair.item, [...(approved.get(pair.item) ?? []), pair.theme]);
+    // A pair Kenny approved stays off the page: its section asks only the themes still open. Once every pair is
+    // approved the part is decided and keeps the page of its last round.
+    const all = part.sections.flatMap((item) => THEMES.split(',').map((theme) => ({ item, theme })));
+    const latest = latestVerdicts(verdicts, all);
+    const open = new Map(part.sections.map((item) => [item, THEMES.split(',').filter((theme) => latest.get(`${theme}|${item}`) !== 'approved')]));
+    const decided = [...open.values()].every((themes) => !themes.length);
     let body = part.body;
-    for (const [item, themes] of approved) {
-        const left = THEMES.split(',').filter((t) => !themes.includes(t));
-        body = body.replace(new RegExp(`(<section\\b(?:(?!>)[\\s\\S])*?data-review-item="${item}")`), `$1 data-review-themes="${left.join(',')}"`);
+    if (!decided)
+        for (const [item, left] of open) {
+            if (left.length === 11) continue;
+            const tag = new RegExp(`(<section\\b(?:(?!>)[\\s\\S])*?data-review-item="${item}")`);
+            body = left.length
+                ? body.replace(tag, `$1 data-review-themes="${left.join(',')}"`)
+                : body.replace(tag, (m) => m.replace(/\bdata-review-(item|topic|topic-title|title)=/g, 'data-kpadopt4-$1='));
+        }
+    if (decided && existsSync(new URL('demo.html', dir))) {
+        // The page of the last round stays; it only learns that its answer has been received.
+        const kept = fileURLToPath(new URL('demo.html', dir));
+        const pages = [...new Set((verdicts.rounds ?? []).map((/** @type {any} */ r) => r.page).filter(Boolean))];
+        writeFileSync(kept, readFileSync(kept, 'utf8').replace(/("received": )\[[^\]]*\]/, `$1${JSON.stringify(pages).replace(/","/g, '", "')}`));
+        console.log(`${id}: decided, page kept`);
+        continue;
     }
     const received = [...new Set((verdicts.rounds ?? []).map((/** @type {any} */ r) => r.page).filter(Boolean))];
     const intro = `            <header class="kd-intro">
@@ -102,5 +117,5 @@ for (const [i, part] of parts.entries()) {
                 `never this page. Split off on Kenny's rule of 2026-10-17: a review of more than 100 verdicts is split per group of ` +
                 `components.\n`,
         );
-    console.log(`${id}: ${part.sections.length} sections, ${part.sections.length * 11 - [...approved.values()].flat().length} pairs`);
+    console.log(`${id}: ${[...open.values()].flat().length} pairs to judge`);
 }

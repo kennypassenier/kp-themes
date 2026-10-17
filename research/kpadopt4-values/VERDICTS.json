@@ -64,6 +64,19 @@
                     "theme": "cyberpunk"
                 }
             ]
+        },
+        {
+            "round": "2",
+            "page": "2026-10-17-r3-values",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-17 03:43: 63 of 63 judged, 62 approved; tick in forest not approved.",
+            "notApproved": [
+                {
+                    "item": "tick",
+                    "theme": "forest",
+                    "note": "geen fan van de cirkel rond de waarde, zoek een meer \"forest\" optie"
+                }
+            ]
         }
     ]
 }
