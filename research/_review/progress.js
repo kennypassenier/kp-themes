@@ -434,3 +434,80 @@ export function waitingAnswers() {
     }
     return found.sort((a, b) => a.id.localeCompare(b.id));
 }
+
+/*
+ * The journal (Kenny, 2026-10-17: "ik moet altijd honderd procent absoluut zeker zijn dat mijn beoordelingen vastgelegd
+ * worden, wat ik ook doe op die site, tot het moment dat ik effectief mijn beoordelingen hier paste"; correction
+ * lost-answer-1017). Every verdict, note and tick Kenny sets in a demo's dialog is appended here, per demo, and no code
+ * path removes an entry: not a new round, not "Clear all verdicts", not an answer dropped as received. The verdicts
+ * under storeKey() and the answer under answerKey() may be cleared; the journal keeps everything, and the Agenda's
+ * "Saved verdicts" rebuilds a full answer from it for any demo and round.
+ *
+ * It grows by about 200 bytes per change (a note is written after a pause in the typing, and an entry that repeats the
+ * pair's last one is not written again); a whole review of 100 pairs with notes stays under 40 KB.
+ */
+
+/** Where a demo's journal lives: an array of JournalEntry, oldest first. */
+export const journalKey = (demo) => `${storeKey(demo)}:journal`;
+
+/**
+ * @typedef {object} JournalEntry
+ * @property {string} at      when it was set (ISO)
+ * @property {string} demo
+ * @property {string} round   the page's round id then ('' without one)
+ * @property {string} pair    `<theme>|<item>`, `catalogue|<block>|<theme>|<engine>`, or `once|<item>|<choice>`
+ * @property {'approved' | 'rejected' | null} verdict  null for a tick or a note alone
+ * @property {string} note
+ * @property {{ id: string, value: string, label?: string } | null} choice  a choice ticked, with the option's label
+ * @property {string} [label]  the pair as the answer names it (`<item> · <theme>`)
+ */
+
+/** A demo's journal, oldest first. @returns {JournalEntry[]} */
+export function journalOf(demo) {
+    try {
+        const list = JSON.parse(localStorage.getItem(journalKey(demo)) || '[]');
+        return Array.isArray(list) ? list : [];
+    } catch {
+        return [];
+    }
+}
+
+/** Fired on the document when the journal could not be written (storage full or refused), so the page can say so. */
+export const JOURNAL_FAILED_EVENT = 'kp-demo-journal-failed';
+
+/**
+ * Appends one entry to a demo's journal. Nothing here ever removes one.
+ * @param {string} demo
+ * @param {Omit<JournalEntry, 'at' | 'demo'> & { at?: string }} entry
+ * @returns {boolean} whether it is on file
+ */
+export function journal(demo, entry) {
+    const list = journalOf(demo);
+    const full = { at: entry.at || new Date().toISOString(), demo, round: entry.round || '', pair: entry.pair, verdict: entry.verdict ?? null, note: entry.note || '', choice: entry.choice ?? null, ...(entry.label ? { label: entry.label } : {}) };
+    const last = [...list].reverse().find((e) => e?.pair === full.pair && e?.round === full.round);
+    const same = (/** @type {JournalEntry} */ e) =>
+        e.verdict === full.verdict && e.note === full.note && JSON.stringify(e.choice ?? null) === JSON.stringify(full.choice);
+    if (last && same(last)) return true;
+    try {
+        localStorage.setItem(journalKey(demo), JSON.stringify([...list, full]));
+        return true;
+    } catch {
+        globalThis.document?.dispatchEvent(new CustomEvent(JOURNAL_FAILED_EVENT, { detail: { demo } }));
+        return false;
+    }
+}
+
+/** Every demo with a journal in this browser, sorted. */
+export function journalDemos() {
+    const found = [];
+    try {
+        for (let i = 0; i < localStorage.length; i++) {
+            const match = /^kp-demo-review:(.+):journal$/.exec(localStorage.key(i) ?? '');
+            if (match) found.push(match[1]);
+        }
+    } catch {
+        /* storage refused */
+    }
+    return found.sort();
+}
+

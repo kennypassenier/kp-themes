@@ -88,6 +88,8 @@ import {
     carryAnswer,
     dropReceivedAnswer,
     fingerprintOf,
+    journal,
+    JOURNAL_FAILED_EVENT,
     keepAnswer,
     loadUpdate,
     markAnswerCopied,
@@ -808,6 +810,53 @@ if (wiped) carryAnswer(DEMO);
 }
 const verdictOf = (pair) => state[pair.key]?.verdict;
 const noteOf = (pair) => state[pair.key]?.note || '';
+
+/*
+ * The journal (progress.js, journal): every verdict, note and tick set here is appended to an append-only log per demo,
+ * which nothing removes (lost-answer-1017). A note is written after a short pause in the typing, and at once when the
+ * row loses the focus, the step changes or the page is left.
+ */
+const NOTE_PAUSE_MS = 600;
+/** Notes typed and not yet in the journal, per pair key. @type {Map<string, { timer: ReturnType<typeof setTimeout>, write: () => void }>} */
+const pendingNotes = new Map();
+/** Writes one change of a pair to the journal. @param {Pair} pair @param {{ verdict?: string | null, note?: string, choice?: { id: string, value: string, label?: string } | null, key?: string }} change */
+function record(pair, change) {
+    const key = change.key || pair.key;
+    pendingNotes.get(key) && clearTimeout(/** @type {any} */ (pendingNotes.get(key)).timer);
+    pendingNotes.delete(key);
+    journal(DEMO, {
+        round: round?.round || '',
+        pair: key,
+        verdict: /** @type {any} */ (change.verdict ?? null),
+        note: change.note ?? '',
+        choice: change.choice ?? null,
+        label: key === pair.key ? pair.label : undefined,
+    });
+}
+/** A note being typed: into the journal after a pause. @param {Pair} pair @param {() => { verdict: string | null, note: string }} read */
+function recordSoon(pair, read) {
+    const before = pendingNotes.get(pair.key);
+    if (before) clearTimeout(before.timer);
+    const write = () => record(pair, read());
+    pendingNotes.set(pair.key, { timer: setTimeout(write, NOTE_PAUSE_MS), write });
+}
+/** Every note still waiting for its pause, written now. */
+function flushNotes() {
+    for (const { timer, write } of [...pendingNotes.values()]) {
+        clearTimeout(timer);
+        write();
+    }
+    pendingNotes.clear();
+}
+addEventListener('pagehide', flushNotes);
+// Storage full or refused: said at once, on the page and in the dialog, never in silence.
+document.addEventListener(JOURNAL_FAILED_EVENT, () => {
+    const message = 'This browser refused to save your last verdict in the journal (storage full or blocked). Copy the answer now.';
+    foot.querySelector('[data-rv-status]').textContent = message;
+    refused.textContent = message;
+    refused.hidden = false;
+});
+document.addEventListener('visibilitychange', () => document.visibilityState === 'hidden' && flushNotes());
 /** Where a choice's answer is kept: on the pair, or once for the demo. */
 const onceKey = (item, choice) => `once|${item.id}|${choice.id}`;
 /** A choice group's `default` (a value, or { theme: value }) counts as the answer until the reviewer picks otherwise. */
@@ -1925,6 +1974,10 @@ function rowFor(pair, only = null, name = '') {
                 if (choice.once) state[onceKey(pair.item, choice)] = { value: option.value };
                 else state[pair.key] = { ...state[pair.key], choices: { ...state[pair.key]?.choices, [choice.id]: option.value } };
                 save();
+                record(pair, {
+                    key: choice.once ? onceKey(pair.item, choice) : pair.key,
+                    choice: { id: choice.id, value: option.value, label: option.label },
+                });
                 render();
                 pair.item.section.dispatchEvent(new CustomEvent('review:choice', { bubbles: true, detail: { id: choice.id, value: option.value } }));
                 const lane = lanes.find((l) => l.pair === pair);
@@ -1970,12 +2023,17 @@ function rowFor(pair, only = null, name = '') {
                 at: new Date().toISOString(),
             };
             save();
+            record(pair, { verdict: box.checked ? 'rejected' : 'approved', note: note.value.trim() });
             render();
-        }
+        } else record(pair, { verdict: null, note: `${only}: ${box.checked ? 'none of these' : 'picked'}${note.value.trim() ? ` · ${note.value.trim()}` : ''}` });
         updateApprove();
     });
     note.addEventListener('input', () => {
-        if (only) return; // kept when the step is answered, with the aspect's name
+        if (only) {
+            // kept in the verdicts when the step is answered, with the aspect's name; in the journal as it is typed
+            recordSoon(pair, () => ({ verdict: null, note: `${only}: ${note.value.trim()}` }));
+            return;
+        }
         state[pair.key] = {
             ...state[pair.key],
             verdict: box.checked ? 'rejected' : state[pair.key]?.verdict || 'approved',
@@ -1983,8 +2041,10 @@ function rowFor(pair, only = null, name = '') {
             at: new Date().toISOString(),
         };
         save();
+        recordSoon(pair, () => ({ verdict: box.checked ? 'rejected' : state[pair.key]?.verdict || 'approved', note: note.value.trim() }));
         render();
     });
+    note.addEventListener('blur', () => pendingNotes.get(pair.key)?.write());
     li.querySelector('[data-rv-jump]').addEventListener('click', () => {
         stage.querySelector(`[data-rv-pair="${CSS.escape(pair.key)}"]`)?.scrollIntoView({ block: 'start', behavior: 'smooth' });
     });
@@ -2042,6 +2102,7 @@ function paintUpdate(step) {
 
 async function show(at) {
     if (busy) return;
+    flushNotes();
     busy = true;
     try {
         await booted;
@@ -2145,6 +2206,7 @@ function nextOpenStep(from) {
 function approveStep() {
     if (busy) return;
     const current = steps[index];
+    flushNotes();
     if (current?.aspect) return answerAspect(current);
     const rows = [...list.querySelectorAll('.rv-row')];
     // A rejection needs no note (Kenny, 2026-10-06 23:09: "ik wil de eis dat
@@ -2164,6 +2226,7 @@ function approveStep() {
         const rejected = rows[i].querySelector('[data-rv-reject]').checked;
         const note = rows[i].querySelector('[data-rv-row-note]').value.trim();
         state[pair.key] = { ...state[pair.key], verdict: rejected ? 'rejected' : 'approved', note, at };
+        record(pair, { verdict: rejected ? 'rejected' : 'approved', note });
     }
     save();
     render();
@@ -2199,6 +2262,8 @@ function answerAspect(step) {
         delete entry.redo[step.aspect];
     }
     state[pair.key] = entry;
+    const choiceLabel = choice?.options[flipAt]?.label || value;
+    record(pair, { verdict: null, note: none ? note : '', choice: { id: step.aspect, value: none ? 'none of these' : value, label: none ? 'None of these' : choiceLabel } });
     const themeSteps = steps.filter((s) => s.aspect && s.pairs[0] === pair);
     if (themeSteps.every((s) => aspectDone(pair, s.aspect))) {
         const redo = themeSteps.filter((s) => entry.redo[s.aspect]);
@@ -2209,6 +2274,7 @@ function answerAspect(step) {
             note: redo.map((s) => `${label(s.aspect)}: ${entry.redo[s.aspect]}`).join(' · '),
             at: new Date().toISOString(),
         };
+        record(pair, { verdict: state[pair.key].verdict, note: state[pair.key].note });
     }
     save();
     render();
@@ -2334,6 +2400,7 @@ document.addEventListener(
 );
 
 dialog.addEventListener('close', putBack);
+dialog.addEventListener('close', flushNotes);
 // A state button pressed on the demo itself counts as the reviewer's own too.
 document.addEventListener(
     'click',
