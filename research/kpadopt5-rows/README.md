@@ -16,4 +16,10 @@ runtime); the JSON gutter is laid over a gutter that is exactly as tall as the t
 payload opening in the cell, checking while typing with Format and Minify buttons, requests all folded) are the defaults of
 their components. The round-1 page is in `_previous/`.
 
-Page round id: `rows-b7aeeae6-3b7f-4f9f-a823-d4447a1816e7`, received: `rows-dfb064e2-85b0-4f84-8cb7-706a0b868f2f`.
+Round 3 (2026-10-18): only the JSON box is back (the new-lines pill is approved and left the page). Long could not be scrolled in the
+review dialog: the box measured its height with a twin textarea appended to the page's body, and the dialog hides every part of the
+page outside the section, so the twin measured 0 and the box stayed six lines high with scrolling off. The box now measures from
+its own lines (and its mirror when wrapping), grows to 20 lines and scrolls inside itself with wheel, keys and scrollbar; the wheel
+also works over the line numbers. The 390 px box takes the sample buttons too. The round-2 page is in `_previous/`.
+
+Page round id: `rows-8e808b98-7c3f-4fba-adea-9781e6b60e63`, received: `rows-dfb064e2-85b0-4f84-8cb7-706a0b868f2f`, `rows-b7aeeae6-3b7f-4f9f-a823-d4447a1816e7`.

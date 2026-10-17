@@ -27,6 +27,8 @@
 // the full width; `stack` puts every field on its own line below 30rem; `flow` never does. A phrase that is hidden is
 // `hidden` and `inert`, its controls disabled, so they are neither tabbed to nor submitted.
 //
+// A select in a sentence opens the package's drawn list (data-kp-select="native" keeps the browser's).
+//
 // Every control needs a name of its own (`aria-label`): the words round it are not its label to a screen reader. A
 // control without one takes the words before it. A status region says the whole sentence in words when it changes
 // ("Run backup on nextcloud every Monday at 03:00."), politely and after a pause, and `sentenceSummary(el)` reads the same
@@ -227,6 +229,12 @@ export function attachSentences(root = document) {
         const doc = el.ownerDocument;
         const id = `kp-sentence-${++seq}`;
         el.classList.add('kp-sentence');
+        // A select in a sentence opens the package's drawn list (the combobox's own plate, js/combobox.js), not the
+        // browser's, which Firefox paints from the transparent field: almost black in formal [Kenny, 2026-10-17 22:09].
+        // `data-kp-select="native"` on a select keeps the browser's.
+        const drawn = [...el.querySelectorAll('.kp-sentence__field > select:not([multiple]):not([data-kp-select])')];
+        for (const select of drawn) select.setAttribute('data-kp-select', '');
+        if (drawn.length) void import('./combobox.js').then((m) => m.attachSelects(el));
         const narrow = el.dataset.kpNarrow === 'stack' || el.dataset.kpNarrow === 'flow' ? el.dataset.kpNarrow : 'wrap';
         const ratio = Math.min(1, Math.max(0.2, Number(el.dataset.kpOwnLineRatio) || 0.7));
 

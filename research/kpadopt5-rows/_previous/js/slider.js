@@ -161,6 +161,13 @@ export function attachSliders(root = document) {
         if (!el.hasAttribute('aria-label') && !el.hasAttribute('aria-labelledby')) el.setAttribute('aria-label', label);
         el.dataset.kpSliderKind = isRange ? 'range' : 'single';
         el.dataset.kpSliderShow = show;
+        // The number's place is an option with a default (field), switchable at runtime: change `data-kp-slider-value`
+        // and the box and the bubble follow [Kenny, 2026-10-17 22:09: "no by default, but it should be optional"].
+        const showWatch = new MutationObserver(() => {
+            const next = ['bubble', 'both', 'none'].includes(el.dataset.kpSliderValue ?? '') ? el.dataset.kpSliderValue : 'field';
+            if (el.dataset.kpSliderShow !== next) el.dataset.kpSliderShow = next;
+        });
+        showWatch.observe(el, { attributes: true, attributeFilter: ['data-kp-slider-value'] });
         if (vertical) el.dataset.kpVertical = '';
 
         /** Text of a value for the field's readout, the bubble and `aria-valuetext`. @param {number} v */
@@ -233,7 +240,9 @@ export function attachSliders(root = document) {
             input.setAttribute('aria-label', isRange ? (i === 0 ? s.sliderMin(label) : s.sliderMax(label)) : label);
             if (vertical) input.setAttribute('aria-orientation', 'vertical');
             track.append(input);
-            if (show === 'bubble' || show === 'both') {
+            // Built for every slider and shown by `data-kp-slider-show` (stamped from `data-kp-slider-value`), so the option
+            // switches at runtime without a rebuild.
+            {
                 const bubble = doc.createElement('output');
                 bubble.className = 'kp-slider__bubble';
                 bubble.dataset.kpThumb = String(i);
@@ -287,7 +296,7 @@ export function attachSliders(root = document) {
         why.id = `${id}-why`;
         why.setAttribute('role', 'alert');
         why.hidden = true;
-        if (show === 'field' || show === 'both') {
+        {
             let longest = 0;
             // The longest text the box can show: the ends and twenty values between them (a size reads "9.9 GB", not "10 GB").
             for (let i = 0; i <= 20; i++) longest = Math.max(longest, plain(snapSlider(min + ((max - min) * i) / 20, min, max, step)).length);
@@ -553,6 +562,7 @@ export function attachSliders(root = document) {
             el.removeEventListener('pointerdown', onDown);
             doc.removeEventListener('pointerup', onUp);
             for (const box of boxes) box.removeEventListener('blur', onBoxBlur);
+            showWatch.disconnect();
             HANDLES.delete(el);
             el.replaceChildren();
             for (const p of ['--kp-slider-from', '--kp-slider-to', '--kp-slider-field-ch', '--kp-slider-at-0', '--kp-slider-at-1'])

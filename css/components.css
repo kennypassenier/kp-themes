@@ -20043,21 +20043,29 @@
         text-align: start;
     }
 
-    /* A transfer of unknown size is a full band that breathes in place (an alternating opacity, so nothing restarts) and
-     * settles into the finished bar when the size is known, instead of a busy sweep that loops from the start and then
-     * jumps to full [kpadopt5-r2]. A register that draws its own busy bar repeats these two rules for its theme. */
+    /* A transfer of unknown size has no share to fill, so the bar says "busy, size unknown" instead: one full band of diagonal
+     * stripes that drifts at an even pace. The drift is one stripe period per loop on a linear pace, the same picture every
+     * period, so nothing restarts or jumps; the words in the row ("size unknown", the bytes so far, the speed) carry the
+     * progress [kpadopt5-r3]. When the size turns out, the band settles into the normal bar: it shrinks from full to the real
+     * share. A register that draws its own busy bar repeats these rules for its theme. */
+    .kp-transfer[data-kp-transfer-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        inset-inline: 0;
+        inline-size: auto;
+        transform: none;
+        background-color: transparent;
+        background-image: linear-gradient(-45deg, var(--primary) 25%, transparent 25% 50%, var(--primary) 50% 75%, transparent 75%);
+        background-size: var(--kp-transfer-stripe, 0.75rem) var(--kp-transfer-stripe, 0.75rem);
+    }
+
     @media (prefers-reduced-motion: no-preference) {
         .kp-transfer[data-kp-transfer-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
-            inset-inline: 0;
-            inline-size: auto;
-            transform: none;
             animation:
                 kp-transfer-enter 700ms ease-out,
-                kp-transfer-breathe 2600ms ease-in-out infinite alternate;
+                kp-transfer-drift 1200ms linear infinite;
         }
 
         .kp-transfer[data-kp-transfer-settle] .kp-progressbar__fill {
-            animation: kp-transfer-settle 480ms ease-out;
+            animation: kp-transfer-settle 700ms ease-out;
         }
     }
 
@@ -20070,21 +20078,19 @@
         }
     }
 
-    @keyframes kp-transfer-breathe {
+    @keyframes kp-transfer-drift {
         from {
-            opacity: 0.4;
+            background-position: 0 0;
         }
         to {
-            opacity: 0.85;
+            background-position: var(--kp-transfer-stripe, 0.75rem) 0;
         }
     }
 
+    /* No `to`: the bar ends on its own share. */
     @keyframes kp-transfer-settle {
         from {
-            opacity: var(--kp-settle-from, 0.85);
-        }
-        to {
-            opacity: 1;
+            clip-path: inset(0 0 0 0);
         }
     }
 
@@ -26363,12 +26369,24 @@
         visibility: hidden;
     }
 
-    .kp-console__tool[data-kp-console-tool='copy-command'] { grid-column: 1; }
-    .kp-console__tool[data-kp-console-tool='copy-output'] { grid-column: 2; }
-    .kp-console__tool[data-kp-console-tool='again'] { grid-column: 3; }
-    .kp-console__tool[data-kp-console-tool='recheck'] { grid-column: 4; }
-    .kp-console__tool[data-kp-console-tool='cancel'] { grid-column: 5; }
-    .kp-console__tool[data-kp-console-tool='collapse'] { grid-column: 6; }
+    .kp-console__tool[data-kp-console-tool='copy-command'] {
+        grid-column: 1;
+    }
+    .kp-console__tool[data-kp-console-tool='copy-output'] {
+        grid-column: 2;
+    }
+    .kp-console__tool[data-kp-console-tool='again'] {
+        grid-column: 3;
+    }
+    .kp-console__tool[data-kp-console-tool='recheck'] {
+        grid-column: 4;
+    }
+    .kp-console__tool[data-kp-console-tool='cancel'] {
+        grid-column: 5;
+    }
+    .kp-console__tool[data-kp-console-tool='collapse'] {
+        grid-column: 6;
+    }
 
     .kp-console__problem {
         display: grid;
@@ -26569,12 +26587,30 @@
             grid-template-columns: repeat(3, 1fr);
         }
 
-        .kp-console__tool[data-kp-console-tool='copy-command'] { grid-column: 1; grid-row: 1; }
-        .kp-console__tool[data-kp-console-tool='copy-output'] { grid-column: 2; grid-row: 1; }
-        .kp-console__tool[data-kp-console-tool='again'] { grid-column: 3; grid-row: 1; }
-        .kp-console__tool[data-kp-console-tool='recheck'] { grid-column: 1; grid-row: 2; }
-        .kp-console__tool[data-kp-console-tool='cancel'] { grid-column: 2; grid-row: 2; }
-        .kp-console__tool[data-kp-console-tool='collapse'] { grid-column: 3; grid-row: 2; }
+        .kp-console__tool[data-kp-console-tool='copy-command'] {
+            grid-column: 1;
+            grid-row: 1;
+        }
+        .kp-console__tool[data-kp-console-tool='copy-output'] {
+            grid-column: 2;
+            grid-row: 1;
+        }
+        .kp-console__tool[data-kp-console-tool='again'] {
+            grid-column: 3;
+            grid-row: 1;
+        }
+        .kp-console__tool[data-kp-console-tool='recheck'] {
+            grid-column: 1;
+            grid-row: 2;
+        }
+        .kp-console__tool[data-kp-console-tool='cancel'] {
+            grid-column: 2;
+            grid-row: 2;
+        }
+        .kp-console__tool[data-kp-console-tool='collapse'] {
+            grid-column: 3;
+            grid-row: 2;
+        }
     }
 }
 
@@ -27438,7 +27474,9 @@
     .kp-card--entity {
         position: relative;
         display: grid;
-        grid-template-rows: minmax(1.75rem, auto) var(--kp-entity-row, 1.5rem) var(--kp-entity-row, 1.5rem) calc(var(--kp-entity-meters, 2) * var(--kp-entity-row, 1.5rem)) 2.25rem;
+        grid-template-rows: minmax(1.75rem, auto) var(--kp-entity-row, 1.5rem) var(--kp-entity-row, 1.5rem) calc(
+                var(--kp-entity-meters, 2) * var(--kp-entity-row, 1.5rem)
+            ) 2.25rem;
         gap: var(--kp-space-xs, 0.375rem);
         align-content: start;
         padding: var(--kp-space-md, 0.75rem);

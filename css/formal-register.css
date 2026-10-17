@@ -1667,9 +1667,10 @@
         }
     }
 
-    /* A transfer of unknown size [kpadopt5-r2; Kenny, 2026-10-17 22:09: "the second bar keeps starting from the beginning
-       before suddenly filling completely. Make it less hectic"]: the ruled band stands across the whole track and breathes
-       in place, the second rule waits for the end, and the finished bar settles from it without a jump. */
+    /* A transfer of unknown size [kpadopt5-r3; Kenny, 2026-10-18 00:28: "Die tweede balk toonde weer geen vooruitgang? ... leg
+       deftig uit"]: no total, so no share to rule. The band is ruled in diagonal hatching across the whole track that drifts
+       at an even pace, the second rule waits for the end, and the words in the row say the size is unknown. The size turning
+       out shrinks the band to its share. */
     [data-theme='formal'] .kp-transfer[data-kp-transfer-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::after {
         animation: none;
         opacity: 0;
@@ -1680,15 +1681,22 @@
         display: none;
     }
 
+    [data-theme='formal'] .kp-transfer[data-kp-transfer-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        --kp-transfer-stripe: calc(8 * var(--kp-ps-px));
+        background-color: transparent;
+        background-image: linear-gradient(-45deg, var(--primary) 25%, transparent 25% 50%, var(--primary) 50% 75%, transparent 75%);
+        background-size: var(--kp-transfer-stripe) var(--kp-transfer-stripe);
+    }
+
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='formal'] .kp-transfer[data-kp-transfer-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
             animation:
                 kp-transfer-enter 700ms ease-out,
-                kp-transfer-breathe 2600ms ease-in-out infinite alternate;
+                kp-transfer-drift 1200ms linear infinite;
         }
 
         [data-theme='formal'] .kp-transfer[data-kp-transfer-settle] .kp-progressbar__fill {
-            animation: kp-transfer-settle 480ms ease-out;
+            animation: kp-transfer-settle 700ms ease-out;
         }
     }
 

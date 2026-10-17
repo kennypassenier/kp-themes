@@ -55,6 +55,8 @@ export const CHECKLIST_EVENT = 'kp-checklist-change';
 export const CHECKLIST_CLEAR_EVENT = 'kp-checklist-clear';
 /** Fired on Undo: `{ restored, items }`. */
 export const CHECKLIST_UNDO_EVENT = 'kp-checklist-undo';
+/** Fired on the list (not bubbling) after every draw, so a part that adds to the rows can draw its cells [kpadopt6]. */
+export const CHECKLIST_RENDER_EVENT = 'kp-checklist-render';
 /** How long Undo is offered after a clear, unless the list says otherwise [ms]. */
 export const CHECKLIST_UNDO_MS = 6000;
 
@@ -65,6 +67,7 @@ export const CHECKLIST_UNDO_MS = 6000;
  * @property {string} [detail]  the amount or a note, after the label ("3 pieces")
  * @property {string} [group]  a shop or a section; items without one share a group without a heading
  * @property {boolean} [checked]
+ * @property {import('./claim.js').ClaimInfo} [claim]  who brings it (js/claim.js, `data-kp-checklist-claim`) [kpadopt6]
  */
 
 /** @typedef {{ removed: ChecklistItem[], at: Map<string, number>, timer: ReturnType<typeof setTimeout> }} Undo */
@@ -293,6 +296,8 @@ function render(list) {
     empty.toggleAttribute('data-kp-checklist-failed', error !== null);
     empty.setAttribute('role', error !== null ? 'alert' : 'note');
     body.append(empty);
+    // A part that adds to the rows (js/claim.js) draws its own cells once the rows stand [kpadopt6].
+    list.dispatchEvent(new CustomEvent(CHECKLIST_RENDER_EVENT));
     return before;
 }
 

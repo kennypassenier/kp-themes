@@ -28,6 +28,9 @@
 // cell also takes `level` (a value, `--kp-heat-level` 0 to 1) and a matrix
 // cell `self` (a pair with itself: dashed, inert).
 //
+// Calm tones [kpadopt6]: `data-kp-tones="calm"` on a heat grid swaps ok, warn and bad for `logged`, `quiet` and `paused`
+// (js/calm-tones.js): a cell with nothing logged is quiet, never failed, and its words never say "missed".
+//
 // A page may write the markup itself (see docs/USER_GUIDE.md) or give the
 // data:
 //
@@ -76,6 +79,8 @@
 import { getStrings } from './strings.js';
 import { attachHoverCards } from './hovercard.js';
 import { openBusyCard } from './busy-card.js';
+import { drawUsesMap, leaveUsesMap, rememberView, rememberedView } from './uses-map.js';
+import { calmTone, calmWord, isCalmTones } from './calm-tones.js';
 
 /** A heat grid. */
 export const HEAT = '[data-kp-heat]';
@@ -93,10 +98,10 @@ export const MATRIX_PICK_EVENT = 'kp-matrix-pick';
 export const MATRIX_LIGHT_EVENT = 'kp-matrix-light';
 
 /** The tones a cell may carry. */
-const TONES = ['ok', 'warn', 'bad', 'muted', 'future', 'before', 'none', 'level', 'loading', 'self'];
+const TONES = ['ok', 'warn', 'bad', 'muted', 'future', 'before', 'none', 'level', 'loading', 'self', 'logged', 'quiet', 'paused'];
 
 /**
- * @typedef {'ok' | 'warn' | 'bad' | 'muted' | 'future' | 'before' | 'none' | 'level' | 'loading' | 'self'} GridTone
+ * @typedef {'ok' | 'warn' | 'bad' | 'muted' | 'future' | 'before' | 'none' | 'level' | 'loading' | 'self' | 'logged' | 'quiet' | 'paused'} GridTone
  */
 
 /**
@@ -150,8 +155,8 @@ const TONES = ['ok', 'warn', 'bad', 'muted', 'future', 'before', 'none', 'level'
 /**
  * @typedef {object} MatrixSpec
  * @property {string} [corner]  the words in the corner ("from ↓ to →")
- * @property {readonly { key: string, label: string, mark?: string }[]} [rows]
- * @property {readonly { key: string, label: string, mark?: string }[]} [columns]
+ * @property {readonly (import('./uses-map.js').UsesNode)[]} [rows]  the sources, in the lines view with their node content (`sub`, `glyph`, `href`, `ghost`, `dashed`)
+ * @property {readonly (import('./uses-map.js').UsesNode)[]} [columns]  the things that use them
  * @property {(row: string, column: string) => MatrixCell | null | undefined} [cell]  null: unknown; the same key on both axes with nothing given: itself
  * @property {'ready' | 'loading' | 'empty' | 'error'} [state]
  * @property {string} [message]
@@ -159,6 +164,10 @@ const TONES = ['ok', 'warn', 'bad', 'muted', 'future', 'before', 'none', 'level'
  * @property {{ row: string, column: string } | null} [picked]
  * @property {readonly string[]} [lit]  the header keys that are lit
  * @property {string} [label]
+ * @property {'grid' | 'lines'} [view]  `lines`: the two columns joined by lines (js/uses-map.js); default `grid`
+ * @property {(count: number) => string} [countLabel]  lines view: the words after the number of uses ("2 applications")
+ * @property {string} [sourcesLabel]  lines view: the sources column's name for a screen reader
+ * @property {string} [usersLabel]  lines view: the users column's name
  */
 
 /**
@@ -409,7 +418,11 @@ export function setHeat(el, spec) {
                 );
                 return;
             }
-            const tone = toneOf(cell?.tone);
+            const calm = isCalmTones(el);
+            const tone = calm ? /** @type {GridTone} */ (calmTone(cell?.tone ?? 'quiet', el)) : toneOf(cell?.tone);
+            // A quiet cell says "nothing logged" (or nothing, with `data-kp-quiet-words="none"`), whatever the page wrote.
+            const said =
+                calm && tone === 'quiet' ? (el.getAttribute('data-kp-quiet-words') === 'none' ? '' : (calmWord('quiet') ?? '')) : cell?.label;
             const button = make(doc, 'button', 'kp-heat__cell', {
                 type: 'button',
                 role: 'gridcell',
@@ -419,7 +432,7 @@ export function setHeat(el, spec) {
                 'data-c': String(c),
                 'data-row-key': row.key,
                 'data-col-key': col.key,
-                'aria-label': cell?.aria ?? `${row.label}, ${col.label}${cell?.label ? `: ${cell.label}` : ''}`,
+                'aria-label': cell?.aria && !(calm && tone === 'quiet') ? cell.aria : `${row.label}, ${col.label}${said ? `: ${said}` : ''}`,
             });
             if (tone === 'level') button.style.setProperty('--kp-heat-level', unit(cell?.level));
             if (summary && cell?.share != null) button.style.setProperty('--kp-heat-share', unit(cell.share));
@@ -638,6 +651,16 @@ export function setMatrix(el, spec) {
     const s = getStrings();
     const state = spec.state ?? 'ready';
     const loading = state === 'loading';
+    // The second view of the same relation: two columns joined by lines (js/uses-map.js) [kpadopt6-media].
+    const view = spec.view ?? el.getAttribute('data-kp-view') ?? rememberedView(el) ?? 'grid';
+    if (spec.view) rememberView(el, spec.view);
+    if (view === 'lines') {
+        if (waitForCard(el, spec, loading, setMatrix)) return;
+        drawUsesMap(el, spec, { replaceKeepingCard, syncCard, markDrawn });
+        return;
+    }
+    if (el.classList.contains('kp-matrix--lines')) leaveUsesMap(el);
+    el.setAttribute('data-kp-view', 'grid');
     if (waitForCard(el, spec, loading, setMatrix)) return;
     const hadFocus = el.contains(doc.activeElement) && doc.activeElement?.matches(MATRIX_CELL);
     const focusAt = hadFocus

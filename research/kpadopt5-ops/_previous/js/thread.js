@@ -219,6 +219,7 @@ export function setThread(el, spec) {
     if (!memory.wired) {
         memory.wired = true;
         wire(el, memory);
+        watchOptions(el, memory);
     }
     const state = spec.state ?? 'ready';
     if (state === 'loading') {
@@ -238,6 +239,42 @@ export function setThread(el, spec) {
         return;
     }
     draw(el, memory);
+}
+
+/** The options an attribute of the root changes at runtime, with the spec key each one stands for. */
+const OPTION_ATTRIBUTES = /** @type {const} */ ({
+    'data-kp-thread-order': 'order',
+    'data-kp-thread-fold': 'fold',
+    'data-kp-thread-fold-lines': 'foldLines',
+    'data-kp-thread-group': 'group',
+    'data-kp-thread-days': 'days',
+    'data-kp-thread-avatar': 'avatar',
+    'data-kp-thread-bubble': 'bubble',
+});
+
+/**
+ * Every option is switchable at runtime: change its attribute and the thread redraws. The attribute then wins over the
+ * option the spec carried, so a page that set both keeps working [Kenny, 2026-10-17 22:09: "some things are options that
+ * the component can give, like Long messages and Order"].
+ * @param {HTMLElement} el @param {Memory} memory
+ */
+function watchOptions(el, memory) {
+    /** @type {Record<string, string | null>} */
+    const seen = {};
+    for (const name of Object.keys(OPTION_ATTRIBUTES)) seen[name] = el.getAttribute(name);
+    new MutationObserver((records) => {
+        /** @type {Record<string, unknown>} */
+        const spec = { ...memory.spec };
+        let changed = false;
+        for (const record of records) {
+            const name = /** @type {keyof typeof OPTION_ATTRIBUTES} */ (record.attributeName);
+            if (!name || !(name in OPTION_ATTRIBUTES) || el.getAttribute(name) === seen[name]) continue;
+            seen[name] = el.getAttribute(name);
+            delete spec[OPTION_ATTRIBUTES[name]];
+            changed = true;
+        }
+        if (changed) setThread(el, /** @type {ThreadSpec} */ (spec));
+    }).observe(el, { attributes: true, attributeFilter: Object.keys(OPTION_ATTRIBUTES) });
 }
 
 /** @param {HTMLElement} el @param {Memory} memory */
@@ -267,7 +304,8 @@ function wire(el, memory) {
         const copy = /** @type {HTMLElement | null} */ (target.closest('.kp-thread__copy'));
         if (copy) void copyText(copy, memory.spec.messages?.find((m) => m.key === key)?.text ?? '');
         const act = target.closest('[data-kp-thread-act]');
-        if (act) el.dispatchEvent(new CustomEvent(THREAD_ACTION_EVENT, { bubbles: true, detail: { key, id: act.getAttribute('data-kp-thread-act') } }));
+        if (act)
+            el.dispatchEvent(new CustomEvent(THREAD_ACTION_EVENT, { bubbles: true, detail: { key, id: act.getAttribute('data-kp-thread-act') } }));
     });
 }
 
@@ -397,7 +435,7 @@ function draw(el, memory) {
     el.setAttribute('data-kp-state', 'ready');
     const options = threadOptions(el, spec);
     // The look is the root's, so the CSS keys off one place.
-    if (spec.bubble) el.setAttribute('data-kp-thread-bubble', spec.bubble);
+    if (spec.bubble && el.getAttribute('data-kp-thread-bubble') !== spec.bubble) el.setAttribute('data-kp-thread-bubble', spec.bubble);
     const locale = /** @type {HTMLElement | null} */ (el.closest('[lang]'))?.lang || 'en-GB';
     const oldBox = /** @type {HTMLElement | null} */ (el.querySelector('.kp-thread__scroll'));
     const stick = !oldBox || atNewest(oldBox, options.order);

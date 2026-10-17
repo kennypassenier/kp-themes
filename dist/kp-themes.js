@@ -469,6 +469,7 @@ var init_strings = __esm({
       transferBar: "Transfer",
       transferOf: (done, total) => `${done} of ${total}`,
       transferSoFar: (done) => `${done} so far`,
+      transferSizeUnknown: "size unknown",
       transferEstimating: "estimating\u2026",
       transferLeft: (duration2) => `about ${duration2} left`,
       transferStalled: (duration2) => `stalled for ${duration2}`,
@@ -30053,513 +30054,6 @@ var init_newpill = __esm({
   }
 });
 
-// js/autosize.js
-var autosize_exports = {};
-__export(autosize_exports, {
-  AUTOSIZE: () => AUTOSIZE,
-  AUTOSIZE_EVENT: () => AUTOSIZE_EVENT,
-  AUTOSIZE_MAX_LINES: () => AUTOSIZE_MAX_LINES,
-  AUTOSIZE_MIN_LINES: () => AUTOSIZE_MIN_LINES,
-  AUTOSIZE_STATES: () => AUTOSIZE_STATES,
-  attachAutosize: () => attachAutosize,
-  autosize: () => autosize,
-  cssAutosizeSupported: () => cssAutosizeSupported,
-  fitTextarea: () => fitTextarea,
-  lineHeightOf: () => lineHeightOf,
-  refreshAutosize: () => refreshAutosize,
-  setAutosizeState: () => setAutosizeState
-});
-function lineHeightOf(cs) {
-  const n = Number.parseFloat(cs.lineHeight);
-  return Number.isFinite(n) ? n : px2(cs.fontSize, 16) * 1.2;
-}
-function chromeOf(cs) {
-  return px2(cs.paddingTop) + px2(cs.paddingBottom) + px2(cs.borderTopWidth) + px2(cs.borderBottomWidth);
-}
-function twinOf(area) {
-  let twin = TWINS.get(area);
-  if (!twin || !twin.isConnected) {
-    twin = area.ownerDocument.createElement("textarea");
-    twin.setAttribute("aria-hidden", "true");
-    twin.setAttribute("tabindex", "-1");
-    twin.readOnly = true;
-    twin.rows = 1;
-    twin.style.cssText = "position:absolute;visibility:hidden;pointer-events:none;inset-block-start:0;inset-inline-start:-9999px;block-size:0;min-block-size:0;max-block-size:none;overflow:hidden;resize:none;margin:0;";
-    area.ownerDocument.body.append(twin);
-    TWINS.set(area, twin);
-  }
-  return twin;
-}
-function fitTextarea(area, { minRows = AUTOSIZE_MIN_LINES, maxRows = AUTOSIZE_MAX_LINES, maxPx, keepPx = 0, apply = true } = {}) {
-  const view = area.ownerDocument.defaultView;
-  const cs = (
-    /** @type {Window} */
-    view.getComputedStyle(area)
-  );
-  const lh = lineHeightOf(cs);
-  const chrome = chromeOf(cs);
-  const twin = twinOf(area);
-  const ts = twin.style;
-  for (const name of WRAP_PROPS) ts[name] = /** @type {any} */
-  cs[name];
-  ts.inlineSize = `${area.getBoundingClientRect().width}px`;
-  twin.value = area.value === "" ? " " : area.value;
-  const border = px2(cs.borderTopWidth) + px2(cs.borderBottomWidth);
-  const content = twin.scrollHeight + border;
-  const least = Math.max(1, minRows) * lh + chrome;
-  let most = maxRows === null ? Number.POSITIVE_INFINITY : Math.max(maxRows, minRows) * lh + chrome;
-  if (maxPx !== void 0) most = Math.max(least, Math.min(most, maxPx));
-  const wanted = Math.max(least, keepPx, content);
-  const height = Math.ceil(Math.min(most, wanted));
-  const scrolls = content > height + 1;
-  if (apply) {
-    area.style.blockSize = `${height}px`;
-    area.style.overflowY = scrolls ? "auto" : "hidden";
-  }
-  return { height, scrolls, capped: wanted > most, lines: Math.max(1, Math.round((twin.scrollHeight - (chrome - border)) / lh)), lineHeight: lh };
-}
-function dropTwin(area) {
-  TWINS.get(area)?.remove();
-  TWINS.delete(area);
-}
-function autosize(element) {
-  return HANDLES4.get(element) ?? null;
-}
-function refreshAutosize(element) {
-  HANDLES4.get(element)?.refresh();
-}
-function setAutosizeState(element, state2, message) {
-  HANDLES4.get(element)?.setState(state2, message);
-}
-function cssAutosizeSupported() {
-  return typeof CSS !== "undefined" && CSS.supports("field-sizing", "content");
-}
-function attachAutosize(root = document, options = {}) {
-  const cleanups = [];
-  const found = (
-    /** @type {HTMLTextAreaElement[]} */
-    [
-      ...root instanceof HTMLTextAreaElement && root.matches(AUTOSIZE) ? [root] : [],
-      ...root.querySelectorAll(AUTOSIZE)
-    ]
-  );
-  for (const area of found) {
-    let remember4 = function() {
-      const key2 = draftKey();
-      if (!key2) return;
-      try {
-        if (area.value === "") localStorage.removeItem(key2);
-        else localStorage.setItem(key2, area.value);
-      } catch {
-      }
-    };
-    var remember3 = remember4;
-    if (HANDLES4.has(area) || area.getAttribute("data-kp-autosize") === "off") continue;
-    const doc = area.ownerDocument;
-    const view = (
-      /** @type {Window} */
-      doc.defaultView
-    );
-    const strings = getStrings();
-    const locale = resolveLocale(void 0, area);
-    const number = new Intl.NumberFormat(locale);
-    const minRows = () => Math.max(1, options.rows ?? (Number(area.getAttribute("rows")) || AUTOSIZE_MIN_LINES));
-    const maxRows = () => {
-      if (area.disabled || area.readOnly) return null;
-      const raw = options.max ?? attr2(area, "data-kp-autosize-max", String(AUTOSIZE_MAX_LINES));
-      if (raw === "none") return null;
-      const n = Number(raw);
-      return Number.isFinite(n) && n > 0 ? n : AUTOSIZE_MAX_LINES;
-    };
-    const shrinks = () => (options.shrink ?? attr2(area, "data-kp-autosize-shrink", "on") !== "off") !== false;
-    const counterMode = () => options.counter ?? /** @type {'off' | 'chars' | 'lines' | 'both'} */
-    attr2(area, "data-kp-counter", "off");
-    const wantedEngine = () => options.engine ?? attr2(area, "data-kp-autosize-engine", "auto");
-    const engineInUse = () => {
-      const want = wantedEngine();
-      if (want === "js" || !shrinks()) return "js";
-      if (want === "css") return cssAutosizeSupported() ? "css" : "js";
-      return cssAutosizeSupported() ? "css" : "js";
-    };
-    let state2 = "ready";
-    let tallest = 0;
-    let lastHeight = -1;
-    let card = null;
-    let frame3 = null;
-    let wasReadOnly = area.readOnly;
-    const phoneQuery = view.matchMedia?.(PHONE);
-    area.classList.add("kp-autosize");
-    if (!area.hasAttribute("data-kp-resize")) area.setAttribute("data-kp-resize", "vertical");
-    const phoneCap = () => phoneQuery?.matches ? Math.floor((view.visualViewport?.height ?? view.innerHeight) * 0.6) : void 0;
-    const measure = () => {
-      if (state2 === "loading") {
-        const cs2 = view.getComputedStyle(area);
-        area.style.blockSize = `${Math.ceil(minRows() * lineHeightOf(cs2) + chromeOf(cs2))}px`;
-        area.style.overflowY = "hidden";
-        return;
-      }
-      const engine = engineInUse();
-      area.setAttribute("data-kp-autosize-engine-used", engine);
-      const cs = view.getComputedStyle(area);
-      const lh = lineHeightOf(cs);
-      const chrome = chromeOf(cs);
-      const rows = maxRows();
-      const cap = phoneCap();
-      if (engine === "css") {
-        area.style.blockSize = "";
-        area.style.overflowY = "";
-        area.style.setProperty("--kp-autosize-min", `${Math.ceil(minRows() * lh + chrome)}px`);
-        const most = rows === null ? "none" : `${Math.ceil(Math.min(rows * lh + chrome, cap ?? Number.POSITIVE_INFINITY))}px`;
-        area.style.setProperty("--kp-autosize-max", most);
-        const result2 = fitTextarea(area, { minRows: minRows(), maxRows: rows, ...cap !== void 0 ? { maxPx: cap } : {}, apply: false });
-        report(result2.height, result2.lines, result2.capped);
-        return;
-      }
-      area.style.removeProperty("--kp-autosize-min");
-      area.style.removeProperty("--kp-autosize-max");
-      const result = fitTextarea(area, {
-        minRows: minRows(),
-        maxRows: rows,
-        ...cap !== void 0 ? { maxPx: cap } : {},
-        keepPx: shrinks() ? 0 : tallest
-      });
-      tallest = Math.max(tallest, result.height);
-      report(result.height, result.lines, result.capped);
-    };
-    const report = (height, lines, capped) => {
-      area.toggleAttribute("data-kp-autosize-capped", capped);
-      if (height === lastHeight) return;
-      lastHeight = height;
-      area.dispatchEvent(new CustomEvent(AUTOSIZE_EVENT, { bubbles: true, detail: { height, lines, capped } }));
-    };
-    const keepCaretInView = () => {
-      if (doc.activeElement !== area) return;
-      const box = area.getBoundingClientRect();
-      const visible3 = view.visualViewport?.height ?? view.innerHeight;
-      if (box.bottom > visible3 || box.top < 0) {
-        if (area.selectionStart === area.value.length) area.scrollIntoView({ block: "nearest" });
-      }
-    };
-    let counter5 = null;
-    let live4 = null;
-    let announced = 0;
-    const drawCounter = () => {
-      const mode2 = counterMode();
-      if (mode2 === "off") {
-        counter5?.remove();
-        live4?.remove();
-        counter5 = null;
-        live4 = null;
-        return;
-      }
-      if (!counter5) {
-        counter5 = doc.createElement("p");
-        counter5.className = "kp-autosize__counter";
-        (frame3 ?? area).after(counter5);
-      }
-      const { chars, lines } = count();
-      const max = area.maxLength > 0 ? area.maxLength : 0;
-      let text;
-      if (max > 0 && mode2 !== "lines") text = strings.autosizeOf(number.format(chars), number.format(max));
-      else if (mode2 === "lines") text = strings.autosizeLines(lines, number.format(lines));
-      else if (mode2 === "both") text = strings.autosizeBoth(chars, number.format(chars), lines, number.format(lines));
-      else text = strings.autosizeChars(chars, number.format(chars));
-      if (counter5.textContent !== text) counter5.textContent = text;
-      const share = max > 0 ? chars / max : 0;
-      if (max > 0 && share >= 0.9) counter5.setAttribute("data-kp-tone", "warning");
-      else counter5.removeAttribute("data-kp-tone");
-      if (max > 0) {
-        const level = share >= 1 ? 2 : share >= 0.9 ? 1 : 0;
-        if (level !== announced) {
-          announced = level;
-          if (level > 0) {
-            if (!live4) {
-              live4 = doc.createElement("span");
-              live4.className = "kp-sr-only";
-              live4.setAttribute("role", "status");
-              counter5.after(live4);
-            }
-            live4.textContent = level === 2 ? strings.autosizeFull(number.format(max)) : strings.autosizeNear(number.format(chars), number.format(max));
-          } else if (live4) live4.textContent = "";
-        }
-      }
-    };
-    const count = () => {
-      const value = area.value;
-      return { chars: value.length, lines: value === "" ? 0 : value.split("\n").length };
-    };
-    let pasteAt = -1;
-    const onInput = () => {
-      measure();
-      drawCounter();
-      keepCaretInView();
-      if (pasteAt >= 0) {
-        if (area.hasAttribute("data-kp-autosize-capped")) {
-          const lh = lineHeightOf(view.getComputedStyle(area));
-          area.scrollTop = Math.max(0, area.value.slice(0, pasteAt).split("\n").length - 1) * lh;
-        }
-        pasteAt = -1;
-      }
-      remember4();
-    };
-    const onPaste = () => {
-      pasteAt = area.selectionStart;
-    };
-    const onChange = () => {
-      measure();
-      drawCounter();
-    };
-    const descriptor = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, "value");
-    if (descriptor?.get && descriptor.set) {
-      const { get, set } = descriptor;
-      Object.defineProperty(area, "value", {
-        configurable: true,
-        get() {
-          return get.call(this);
-        },
-        set(v) {
-          set.call(this, v);
-          measure();
-          drawCounter();
-        }
-      });
-      cleanups.push(() => {
-        delete /** @type {any} */
-        area.value;
-      });
-    }
-    let width = -1;
-    const resizes = typeof ResizeObserver === "function" ? new ResizeObserver(() => {
-      const w = Math.round(area.getBoundingClientRect().width);
-      if (w === width) return;
-      width = w;
-      measure();
-    }) : null;
-    resizes?.observe(area);
-    const onViewport = () => measure();
-    view.visualViewport?.addEventListener("resize", onViewport);
-    phoneQuery?.addEventListener("change", onViewport);
-    void doc.fonts?.ready.then(() => measure());
-    const draftKey = () => {
-      const name = area.getAttribute("data-kp-remember");
-      return name ? `kp-remember:autosize:${name}:draft` : null;
-    };
-    const key = draftKey();
-    if (key && area.value === "") {
-      try {
-        const draft = localStorage.getItem(key);
-        if (draft) area.value = draft;
-      } catch {
-      }
-    }
-    const form2 = area.form;
-    const onSubmit = () => {
-      const k = draftKey();
-      if (!k) return;
-      try {
-        localStorage.removeItem(k);
-      } catch {
-      }
-    };
-    form2?.addEventListener("submit", onSubmit);
-    form2?.addEventListener("reset", onChange);
-    let unregister = null;
-    if (attr2(area, "data-kp-submit-key", "off") === "mod-enter") {
-      void Promise.resolve().then(() => (init_shortcuts(), shortcuts_exports)).then(({ registerShortcuts: registerShortcuts2 }) => {
-        if (!HANDLES4.has(area)) return;
-        unregister = registerShortcuts2(
-          area,
-          [
-            {
-              keys: "Mod Enter",
-              what: strings.autosizeSubmit,
-              group: strings.autosizeGroup,
-              when: () => doc.activeElement === area && !area.disabled && !area.readOnly,
-              run: () => {
-                if (area.form?.requestSubmit) area.form.requestSubmit();
-                else area.form?.submit();
-              }
-            }
-          ],
-          { dev: false }
-        );
-      });
-    }
-    const framed = () => {
-      if (frame3) return frame3;
-      frame3 = doc.createElement("div");
-      frame3.className = "kp-autosize__frame";
-      area.before(frame3);
-      frame3.append(area);
-      return frame3;
-    };
-    const unframe = () => {
-      if (!frame3) return;
-      frame3.replaceWith(area);
-      frame3 = null;
-    };
-    const setState2 = (next2, message) => {
-      if (next2 === state2 && next2 !== "error") return;
-      const field = area.closest(".kp-field");
-      const holder = () => {
-        let h2 = (
-          /** @type {HTMLElement | null} */
-          field?.querySelector("[data-kp-field-error]") ?? null
-        );
-        if (!h2) {
-          h2 = doc.createElement("p");
-          h2.className = "kp-field__error";
-          h2.setAttribute("data-kp-field-error", "");
-          h2.id = `kp-autosize-${++seq2}-error`;
-          (counter5 ?? frame3 ?? area).after(h2);
-        }
-        return h2;
-      };
-      if (state2 === "loading" && next2 !== "loading") {
-        area.readOnly = wasReadOnly;
-        area.removeAttribute("aria-busy");
-        const closing2 = card;
-        card = null;
-        void closing2?.close().then(() => {
-          if (state2 !== "loading") unframe();
-        });
-      }
-      if (next2 === "loading") {
-        wasReadOnly = area.readOnly;
-        area.readOnly = true;
-        area.setAttribute("aria-busy", "true");
-        card ??= openBusyCard(framed(), { words: strings.autosizeLoading, area: () => [area], className: "kp-autosize__busy" });
-      }
-      if (next2 === "error") {
-        const h2 = holder();
-        h2.textContent = message ?? strings.autosizeFailed;
-        h2.hidden = false;
-        area.setAttribute("aria-invalid", "true");
-        area.setAttribute("aria-describedby", [...new Set([...(area.getAttribute("aria-describedby") ?? "").split(/\s+/), h2.id].filter(Boolean))].join(" "));
-        field?.classList.add("kp-field--invalid");
-      } else {
-        const h2 = (
-          /** @type {HTMLElement | null} */
-          field?.querySelector("[data-kp-field-error]") ?? null
-        );
-        if (h2 && state2 === "error") {
-          h2.hidden = true;
-          h2.textContent = "";
-          area.removeAttribute("aria-invalid");
-          field?.classList.remove("kp-field--invalid");
-        }
-      }
-      state2 = next2;
-      area.setAttribute("data-kp-state", next2);
-      measure();
-    };
-    const handle = {
-      element: area,
-      refresh() {
-        measure();
-        drawCounter();
-      },
-      setState: setState2,
-      count,
-      get engine() {
-        return (
-          /** @type {'css' | 'js'} */
-          engineInUse()
-        );
-      }
-    };
-    HANDLES4.set(area, handle);
-    area.addEventListener("input", onInput);
-    area.addEventListener("paste", onPaste);
-    area.addEventListener("change", onChange);
-    measure();
-    drawCounter();
-    if (area.getAttribute("data-kp-state") === "loading") setState2("loading");
-    cleanups.push(() => {
-      area.removeEventListener("input", onInput);
-      area.removeEventListener("paste", onPaste);
-      area.removeEventListener("change", onChange);
-      form2?.removeEventListener("submit", onSubmit);
-      form2?.removeEventListener("reset", onChange);
-      resizes?.disconnect();
-      view.visualViewport?.removeEventListener("resize", onViewport);
-      phoneQuery?.removeEventListener("change", onViewport);
-      unregister?.();
-      card?.remove();
-      unframe();
-      counter5?.remove();
-      live4?.remove();
-      dropTwin(area);
-      area.style.blockSize = "";
-      area.style.overflowY = "";
-      area.style.removeProperty("--kp-autosize-min");
-      area.style.removeProperty("--kp-autosize-max");
-      area.classList.remove("kp-autosize");
-      area.removeAttribute("data-kp-autosize-engine-used");
-      area.removeAttribute("data-kp-autosize-capped");
-      HANDLES4.delete(area);
-    });
-  }
-  return () => {
-    for (const clean of cleanups) clean();
-  };
-}
-var AUTOSIZE, AUTOSIZE_EVENT, AUTOSIZE_MAX_LINES, AUTOSIZE_MIN_LINES, AUTOSIZE_STATES, PHONE, px2, WRAP_PROPS, TWINS, HANDLES4, seq2, attr2;
-var init_autosize = __esm({
-  "js/autosize.js"() {
-    "use strict";
-    init_strings();
-    init_locale();
-    init_busy_card();
-    AUTOSIZE = "textarea[data-kp-autosize]";
-    AUTOSIZE_EVENT = "kp-autosize-resize";
-    AUTOSIZE_MAX_LINES = 20;
-    AUTOSIZE_MIN_LINES = 3;
-    AUTOSIZE_STATES = /** @type {const} */
-    ["ready", "loading", "error"];
-    PHONE = "(max-width: 40em)";
-    px2 = (value, fallback2 = 0) => {
-      const n = Number.parseFloat(value);
-      return Number.isFinite(n) ? n : fallback2;
-    };
-    WRAP_PROPS = [
-      "fontFamily",
-      "fontSize",
-      "fontWeight",
-      "fontStyle",
-      "fontVariant",
-      "fontStretch",
-      "letterSpacing",
-      "wordSpacing",
-      "textTransform",
-      "textIndent",
-      "lineHeight",
-      "tabSize",
-      "whiteSpace",
-      "wordBreak",
-      "overflowWrap",
-      "hyphens",
-      "boxSizing",
-      "paddingTop",
-      "paddingRight",
-      "paddingBottom",
-      "paddingLeft",
-      "borderTopWidth",
-      "borderRightWidth",
-      "borderBottomWidth",
-      "borderLeftWidth",
-      "borderTopStyle",
-      "borderRightStyle",
-      "borderBottomStyle",
-      "borderLeftStyle"
-    ];
-    TWINS = /* @__PURE__ */ new WeakMap();
-    HANDLES4 = /* @__PURE__ */ new WeakMap();
-    seq2 = 0;
-    attr2 = (el14, name, fallback2) => el14.getAttribute(name) ?? fallback2;
-  }
-});
-
 // js/json-field.js
 var json_field_exports = {};
 __export(json_field_exports, {
@@ -30597,7 +30091,7 @@ function explainJson(text) {
   }
 }
 function attachOne5(area, options) {
-  if (HANDLES5.has(area)) return () => void 0;
+  if (HANDLES4.has(area)) return () => void 0;
   const doc = area.ownerDocument;
   const view = doc.defaultView;
   const strings = getStrings();
@@ -30694,27 +30188,28 @@ function attachOne5(area, options) {
     const n = Number.parseFloat(cs?.lineHeight ?? "");
     return Number.isFinite(n) ? n : 20;
   };
+  const lineHeights = (lines) => {
+    const lh = lineHeight();
+    if (!wrap) return lines.map(() => lh);
+    const cs = view?.getComputedStyle(area);
+    mirror.style.width = `${area.clientWidth}px`;
+    mirror.style.font = cs?.font ?? "";
+    mirror.style.letterSpacing = cs?.letterSpacing ?? "";
+    mirror.style.tabSize = cs?.tabSize ?? "";
+    mirror.style.paddingInline = cs?.paddingInline ?? "";
+    mirror.replaceChildren(
+      ...lines.map((line) => {
+        const row = doc.createElement("div");
+        row.textContent = line === "" ? " " : line;
+        return row;
+      })
+    );
+    return [...mirror.children].map((row) => row.getBoundingClientRect().height || lh);
+  };
   const drawGutter = () => {
     if (!gutterWanted()) return;
     const lines = area.value.split("\n");
-    const lh = lineHeight();
-    let heights = lines.map(() => lh);
-    if (wrap) {
-      const cs = view?.getComputedStyle(area);
-      mirror.style.width = `${area.clientWidth}px`;
-      mirror.style.font = cs?.font ?? "";
-      mirror.style.letterSpacing = cs?.letterSpacing ?? "";
-      mirror.style.tabSize = cs?.tabSize ?? "";
-      mirror.style.paddingInline = cs?.paddingInline ?? "";
-      mirror.replaceChildren(
-        ...lines.map((line) => {
-          const row = doc.createElement("div");
-          row.textContent = line === "" ? " " : line;
-          return row;
-        })
-      );
-      heights = [...mirror.children].map((row) => row.getBoundingClientRect().height || lh);
-    }
+    const heights = lineHeights(lines);
     const nodes = lines.map((_, i) => {
       const n = doc.createElement("span");
       n.className = "kp-jsonfield__number";
@@ -30728,7 +30223,19 @@ function attachOne5(area, options) {
     numbers2.style.transform = `translateY(${-area.scrollTop}px)`;
   };
   const grow = () => {
-    fitTextarea(area, { minRows, maxRows: JSON_MAX_ROWS });
+    const cs = view?.getComputedStyle(area);
+    if (!cs) return;
+    const lh = lineHeight();
+    const px4 = (v) => Number.parseFloat(v) || 0;
+    const chrome = px4(cs.paddingTop) + px4(cs.paddingBottom) + px4(cs.borderTopWidth) + px4(cs.borderBottomWidth);
+    const text = lineHeights(area.value.split("\n")).reduce((sum, h2) => sum + h2, 0);
+    const bar = Math.max(0, area.offsetHeight - area.clientHeight - px4(cs.borderTopWidth) - px4(cs.borderBottomWidth));
+    const content = text + chrome + bar;
+    const least = minRows * lh + chrome;
+    const most = Math.max(JSON_MAX_ROWS, minRows) * lh + chrome;
+    const height = Math.ceil(Math.min(most, Math.max(least, content)));
+    area.style.blockSize = `${height}px`;
+    area.style.overflowY = content > height + 1 ? "auto" : "hidden";
   };
   const set = (next2, message, where = {}) => {
     const changed2 = next2 !== state2 || status.textContent !== message;
@@ -30825,6 +30332,11 @@ function attachOne5(area, options) {
     view?.clearTimeout(debounce);
     check();
     if (getFormat() === "on-blur" && state2 === "valid") format();
+  };
+  const onGutterWheel = (event) => {
+    const before = area.scrollTop;
+    area.scrollTop += event.deltaMode === 1 ? event.deltaY * lineHeight() : event.deltaMode === 2 ? event.deltaY * area.clientHeight : event.deltaY;
+    if (area.scrollTop !== before) event.preventDefault();
   };
   const onScroll = () => {
     numbers2.style.transform = `translateY(${-area.scrollTop}px)`;
@@ -30929,19 +30441,21 @@ function attachOne5(area, options) {
   area.addEventListener("input", onInput);
   area.addEventListener("blur", onBlur);
   area.addEventListener("scroll", onScroll, { passive: true });
+  gutter.addEventListener("wheel", onGutterWheel, { passive: false });
   area.addEventListener("keydown", onKey3);
   area.addEventListener("pointerdown", () => escaped = false);
   tools.addEventListener("click", onTool);
   lock();
   check();
   grow();
-  HANDLES5.set(area, { state: () => state2, check, format, minify, value: () => parsed });
+  HANDLES4.set(area, { state: () => state2, check, format, minify, value: () => parsed });
   return () => {
     view?.clearTimeout(debounce);
     view?.clearTimeout(copyTimer);
     area.removeEventListener("input", onInput);
     area.removeEventListener("blur", onBlur);
     area.removeEventListener("scroll", onScroll);
+    gutter.removeEventListener("wheel", onGutterWheel);
     area.removeEventListener("keydown", onKey3);
     area.form?.removeEventListener("reset", reset);
     attrs?.disconnect();
@@ -30952,11 +30466,11 @@ function attachOne5(area, options) {
     area.style.blockSize = "";
     area.style.overflowY = "";
     root.replaceWith(area);
-    HANDLES5.delete(area);
+    HANDLES4.delete(area);
   };
 }
 function jsonField(area) {
-  return HANDLES5.get(area) ?? null;
+  return HANDLES4.get(area) ?? null;
 }
 function attachJsonFields(root = document, options = {}) {
   const found = (
@@ -30969,20 +30483,19 @@ function attachJsonFields(root = document, options = {}) {
   const undo = found.map((area) => attachOne5(area, options));
   return () => undo.forEach((u) => u());
 }
-var JSON_FIELD, JSON_STATE_EVENT, JSON_VALIDATE_EVENT, JSON_CHECK_MS, JSON_MAX_ROWS, JSON_COPIED_MS, HANDLES5, serial4;
+var JSON_FIELD, JSON_STATE_EVENT, JSON_VALIDATE_EVENT, JSON_CHECK_MS, JSON_MAX_ROWS, JSON_COPIED_MS, HANDLES4, serial4;
 var init_json_field = __esm({
   "js/json-field.js"() {
     "use strict";
     init_strings();
     init_forms();
-    init_autosize();
     JSON_FIELD = "textarea[data-kp-json]";
     JSON_STATE_EVENT = "kp-json-state";
     JSON_VALIDATE_EVENT = "kp-json-validate";
     JSON_CHECK_MS = 300;
     JSON_MAX_ROWS = 20;
     JSON_COPIED_MS = 1500;
-    HANDLES5 = /* @__PURE__ */ new WeakMap();
+    HANDLES4 = /* @__PURE__ */ new WeakMap();
     serial4 = 0;
   }
 });
@@ -35511,15 +35024,15 @@ function drawUsesMap(el14, spec, ctx) {
   el14.setAttribute("data-kp-state", state2);
   el14.toggleAttribute("aria-busy", loading);
   el14.removeAttribute("data-kp-lit");
-  const side = attr3(el14, "data-kp-lines-side", "sources-left");
+  const side = attr2(el14, "data-kp-lines-side", "sources-left");
   const shape = (
     /** @type {'curve' | 'elbow' | 'straight'} */
-    attr3(el14, "data-kp-lines-shape", "curve")
+    attr2(el14, "data-kp-lines-shape", "curve")
   );
-  const lightMode = attr3(el14, "data-kp-lines-light", "both");
-  const countOn = attr3(el14, "data-kp-lines-count", "on") !== "off";
-  const hideEmpty = attr3(el14, "data-kp-lines-empty-sources", "show") === "hide";
-  const collapseBelow = Number(attr3(el14, "data-kp-lines-collapse-below", String(USES_COLLAPSE_BELOW))) || USES_COLLAPSE_BELOW;
+  const lightMode = attr2(el14, "data-kp-lines-light", "both");
+  const countOn = attr2(el14, "data-kp-lines-count", "on") !== "off";
+  const hideEmpty = attr2(el14, "data-kp-lines-empty-sources", "show") === "hide";
+  const collapseBelow = Number(attr2(el14, "data-kp-lines-collapse-below", String(USES_COLLAPSE_BELOW))) || USES_COLLAPSE_BELOW;
   if (state2 === "empty" || state2 === "error") {
     const box = make10(doc, "div", "kp-uses__state");
     const isError = state2 === "error";
@@ -35905,7 +35418,7 @@ function leaveUsesMap(el14) {
   el14.removeAttribute("data-kp-collapsed");
   el14.removeAttribute("data-kp-lit");
 }
-var USES_MAP, USES_PIN_EVENT, USES_RETRY_EVENT, USES_COLLAPSE_BELOW, MEMORY8, make10, attr3, rememberKey;
+var USES_MAP, USES_PIN_EVENT, USES_RETRY_EVENT, USES_COLLAPSE_BELOW, MEMORY8, make10, attr2, rememberKey;
 var init_uses_map = __esm({
   "js/uses-map.js"() {
     "use strict";
@@ -35921,7 +35434,7 @@ var init_uses_map = __esm({
       node.className = cls;
       return node;
     };
-    attr3 = (el14, name, fallback2) => el14.getAttribute(name) ?? fallback2;
+    attr2 = (el14, name, fallback2) => el14.getAttribute(name) ?? fallback2;
     rememberKey = (el14) => {
       const name = el14.getAttribute("data-kp-remember");
       return name ? `kp-remember:uses:${name}` : null;
@@ -39858,7 +39371,7 @@ function attachCommands(root = document) {
     if (!pre) continue;
     const s2 = getStrings();
     const doc = el14.ownerDocument;
-    const id = `kp-command-${++seq3}`;
+    const id = `kp-command-${++seq2}`;
     const key = (el14.dataset.kpCommand ?? "").toLowerCase();
     const shell = COMMAND_SHELLS[
       /** @type {keyof typeof COMMAND_SHELLS} */
@@ -39982,7 +39495,7 @@ function attachCommands(root = document) {
     for (const c of cleanups) c();
   };
 }
-var COMMAND, COMMAND_SHELLS, seq3;
+var COMMAND, COMMAND_SHELLS, seq2;
 var init_command = __esm({
   "js/command.js"() {
     "use strict";
@@ -39997,7 +39510,7 @@ var init_command = __esm({
       powershell: { prompt: "PS>", continues: ["`", "|"], windows: true },
       cmd: { prompt: ">", continues: ["^"], windows: true }
     };
-    seq3 = 0;
+    seq2 = 0;
   }
 });
 
@@ -40276,7 +39789,7 @@ function attachRanges(root = document, { now = () => Date.now() } = {}) {
     if (STATE3.has(el14)) continue;
     const s2 = getStrings();
     const doc = el14.ownerDocument;
-    const id = `kp-range-${++seq4}`;
+    const id = `kp-range-${++seq3}`;
     const zone = el14.dataset.kpTimeZone || CHART_TIME_ZONE;
     const presets = (el14.dataset.kpRangePresets ?? RANGE_PRESETS.join(" ")).split(/\s+/).filter((k) => presetMs(k) > 0);
     const disabled2 = el14.hasAttribute("data-kp-range-disabled");
@@ -40585,7 +40098,7 @@ function attachRanges(root = document, { now = () => Date.now() } = {}) {
     for (const c of cleanups) c();
   };
 }
-var RANGE, RANGE_EVENT, RANGE_PRESETS, UNIT, two5, STATE3, seq4;
+var RANGE, RANGE_EVENT, RANGE_PRESETS, UNIT, two5, STATE3, seq3;
 var init_range = __esm({
   "js/range.js"() {
     "use strict";
@@ -40601,7 +40114,7 @@ var init_range = __esm({
     UNIT = { m: 6e4, h: 36e5, d: 864e5, w: 6048e5 };
     two5 = (n) => String(n).padStart(2, "0");
     STATE3 = /* @__PURE__ */ new WeakMap();
-    seq4 = 0;
+    seq3 = 0;
   }
 });
 
@@ -41406,7 +40919,7 @@ function wire8(button, options) {
   const stack = doc.createElement("span");
   stack.className = "kp-flash__stack";
   stack.append(rest, busy, result);
-  const words = (button.getAttribute("data-kp-flash-words") ?? `${attr4(button, "data-kp-flash-word", s2.flashDone)},${attr4(button, "data-kp-refused-word", s2.flashRefused)}`).split(",").map((w) => w.trim()).filter(Boolean);
+  const words = (button.getAttribute("data-kp-flash-words") ?? `${attr3(button, "data-kp-flash-word", s2.flashDone)},${attr3(button, "data-kp-refused-word", s2.flashRefused)}`).split(",").map((w) => w.trim()).filter(Boolean);
   for (const word of words) {
     const ghost = doc.createElement("span");
     ghost.className = "kp-flash__ghost";
@@ -41497,20 +41010,20 @@ async function runFlashButton(button, work, options = {}) {
     const answer = await work();
     if (answer && typeof answer === "object" && "error" in answer) {
       ok = false;
-      word = answer.word ?? attr4(button, "data-kp-refused-word", s2.flashRefused);
+      word = answer.word ?? attr3(button, "data-kp-refused-word", s2.flashRefused);
       line = [answer.error, answer.remedy].filter(Boolean).join(" ");
     } else if (answer && typeof answer === "object") {
-      word = answer.word ?? attr4(button, "data-kp-flash-word", s2.flashDone);
+      word = answer.word ?? attr3(button, "data-kp-flash-word", s2.flashDone);
       line = answer.line ?? "";
-    } else word = typeof answer === "string" && answer !== "" ? answer : attr4(button, "data-kp-flash-word", s2.flashDone);
+    } else word = typeof answer === "string" && answer !== "" ? answer : attr3(button, "data-kp-flash-word", s2.flashDone);
   } catch (error) {
     ok = false;
-    word = attr4(button, "data-kp-failed-word", s2.flashFailed);
+    word = attr3(button, "data-kp-failed-word", s2.flashFailed);
     line = error instanceof Error ? error.message : String(error);
   }
   const refusal = (
     /** @type {'line' | 'button' | 'toast'} */
-    options.refusal ?? attr4(button, "data-kp-refusal", "line")
+    options.refusal ?? attr3(button, "data-kp-refusal", "line")
   );
   const onButton = !ok && refusal === "button" ? line : "";
   w.result.replaceChildren();
@@ -41554,7 +41067,7 @@ async function post(button) {
   } catch {
   }
   if (!response.ok) return { error: json?.error ?? (response.statusText || `HTTP ${response.status}`), remedy: json?.remedy };
-  const reload = attr4(button, "data-kp-reload", "none");
+  const reload = attr3(button, "data-kp-reload", "none");
   if (reload === "page") window.setTimeout(() => location.reload(), 600);
   else if (reload === "region")
     button.dispatchEvent(
@@ -41594,7 +41107,7 @@ function attachFlashButtons(root = document, options = {}) {
     for (const clean of cleanups) clean();
   };
 }
-var FLASH_BUTTON, FLASH_EVENT, FLASH_RELOAD_EVENT, FLASH_MS, FLASH_ERROR_MS, wired2, attr4, num;
+var FLASH_BUTTON, FLASH_EVENT, FLASH_RELOAD_EVENT, FLASH_MS, FLASH_ERROR_MS, wired2, attr3, num;
 var init_flash = __esm({
   "js/flash.js"() {
     "use strict";
@@ -41606,7 +41119,7 @@ var init_flash = __esm({
     FLASH_MS = 1500;
     FLASH_ERROR_MS = 3e3;
     wired2 = /* @__PURE__ */ new WeakMap();
-    attr4 = (button, name, fallback2) => button.getAttribute(name) ?? fallback2;
+    attr3 = (button, name, fallback2) => button.getAttribute(name) ?? fallback2;
     num = (button, name, fallback2) => {
       const n = Number.parseInt(button.getAttribute(name) ?? "", 10);
       return Number.isFinite(n) && n >= 0 ? n : fallback2;
@@ -42333,14 +41846,18 @@ function paint11(row, st, p) {
   if (known4 && row.hasAttribute("data-kp-transfer-unknown")) {
     const fill2 = p.bar.querySelector(".kp-progressbar__fill");
     if (fill2) {
-      row.style.setProperty("--kp-settle-from", getComputedStyle(fill2).opacity);
       row.setAttribute("data-kp-transfer-settle", "");
       fill2.addEventListener("animationend", () => row.removeAttribute("data-kp-transfer-settle"), { once: true });
     }
   }
   row.toggleAttribute("data-kp-transfer-unknown", !known4);
-  if (known4) setProgress2(p.bar, percent ?? 0);
-  else setIndeterminate(p.bar, true);
+  if (known4) {
+    setProgress2(p.bar, percent ?? 0);
+    p.bar.removeAttribute("aria-valuetext");
+  } else {
+    setIndeterminate(p.bar, true);
+    p.bar.setAttribute("aria-valuetext", `${s2.transferSizeUnknown}, ${s2.transferSoFar(size(row, done))}`);
+  }
   const readingParts = [];
   if (st.phase === "done" && known4) {
     readingParts.push(size(
@@ -42380,6 +41897,7 @@ function paint11(row, st, p) {
     etaText = "";
   } else {
     rateText = rate !== null && shows(row, "rate") ? `${size(row, rate)}/s` : "";
+    if (shows(row, "eta") && !known4) etaText = s2.transferSizeUnknown;
     if (shows(row, "eta") && known4) {
       if (rate === null || measured2 < numberOf2(row, "data-kp-eta-after", 3) * 1e3 || rate <= 0) etaText = s2.transferEstimating;
       else etaText = s2.transferLeft(transferEta(
@@ -42497,6 +42015,9 @@ function resetTransfer(row) {
   setProgress2(p.bar, 0);
   p.value.textContent = "";
   p.rate.textContent = "";
+  row.removeAttribute("data-kp-transfer-unknown");
+  row.removeAttribute("data-kp-transfer-settle");
+  p.bar.removeAttribute("aria-valuetext");
   p.rate.removeAttribute("data-kp-stalled");
   p.eta.textContent = "";
 }
@@ -43338,8 +42859,8 @@ function wordsOf4(m, value) {
   const level = levelOf(value);
   const label = level > 0 ? m.labels[level - 1] : void 0;
   if (m.mode === "display") {
-    if (value <= 0) return attr5(m, "unrated-text") ?? s2.ratingUnrated;
-    const count = Number(attr5(m, "count"));
+    if (value <= 0) return attr4(m, "unrated-text") ?? s2.ratingUnrated;
+    const count = Number(attr4(m, "count"));
     if (Number.isFinite(count) && count > 0) return s2.ratingAverage(plain(value), count);
     return label ?? s2.ratingOutOf(plain(value), m.max);
   }
@@ -43355,7 +42876,7 @@ function paint12(m) {
   m.el.toggleAttribute("data-kp-rating-busy", m.busy);
   m.el.classList.toggle("kp-rating--display", mode2 === "display");
   m.el.classList.toggle("kp-rating--input", mode2 === "input");
-  const size2 = attr5(m, "size") ?? (mode2 === "display" ? "sm" : "md");
+  const size2 = attr4(m, "size") ?? (mode2 === "display" ? "sm" : "md");
   for (const name of ["sm", "md", "lg"]) m.el.classList.toggle(`kp-rating--${name}`, name === size2);
   m.el.setAttribute("aria-busy", String(st === "loading" || m.busy));
   m.el.toggleAttribute("data-kp-previewing", m.preview !== null);
@@ -43369,11 +42890,11 @@ function paint12(m) {
   const unrated = m.value <= 0;
   const total = m.max;
   if (mode2 === "display") {
-    const count = Number(attr5(m, "count"));
+    const count = Number(attr4(m, "count"));
     m.row.setAttribute("role", "img");
     m.row.setAttribute(
       "aria-label",
-      unrated ? attr5(m, "unrated-text") ?? s2.ratingUnrated : Number.isFinite(count) && count > 0 ? s2.ratingRatedCount(plain(m.value), total, count) : s2.ratingRated(plain(m.value), total)
+      unrated ? attr4(m, "unrated-text") ?? s2.ratingUnrated : Number.isFinite(count) && count > 0 ? s2.ratingRatedCount(plain(m.value), total, count) : s2.ratingRated(plain(m.value), total)
     );
   } else if (m.step === 0.5) {
     m.row.setAttribute("role", "slider");
@@ -43416,7 +42937,7 @@ function paint12(m) {
   );
   clearButton.textContent = s2.ratingClear;
   clearButton.setAttribute("aria-label", item ? s2.ratingClearName(item) : s2.ratingClear);
-  const canClear = mode2 === "input" && attr5(m, "clear") !== "off";
+  const canClear = mode2 === "input" && attr4(m, "clear") !== "off";
   const clearNow = canClear && interactive(m) && m.value > 0 && !pending5;
   clearButton.hidden = !canClear;
   clearButton.toggleAttribute("data-kp-off", !clearNow);
@@ -43520,14 +43041,14 @@ function valueAt(m, n, event) {
   return left ? n - 0.5 : n;
 }
 function choose2(m, value, source) {
-  const confirm = attr5(m, "commit") === "confirm";
+  const confirm = attr4(m, "commit") === "confirm";
   const next2 = snapRating(value, m.max, m.step);
   if (confirm && source !== "clear" && source !== "undo") {
     m.draft = next2;
     paint12(m);
     return;
   }
-  if (attr5(m, "clear") !== "off" && next2 === m.value && next2 > 0 && source !== "keyboard") commit(m, 0, "clear");
+  if (attr4(m, "clear") !== "off" && next2 === m.value && next2 > 0 && source !== "keyboard") commit(m, 0, "clear");
   else commit(m, next2, source);
 }
 function focusStar(m) {
@@ -43625,7 +43146,7 @@ function wire12(el14, options) {
     return star instanceof HTMLElement ? Number(star.dataset.kpStar) : 0;
   };
   const onOver = (event) => {
-    if (attr5(m, "preview") === "off" || event.pointerType !== "mouse" || !interactive(m)) return;
+    if (attr4(m, "preview") === "off" || event.pointerType !== "mouse" || !interactive(m)) return;
     const n = starOf(event);
     if (!n) return;
     m.preview = valueAt(m, n, event);
@@ -43652,7 +43173,7 @@ function wire12(el14, options) {
     else if (event.key === "ArrowLeft" || event.key === "ArrowDown") to = at - (event.key === "ArrowLeft" && rtl ? -m.step : m.step);
     else if (event.key === "Home") to = m.step;
     else if (event.key === "End") to = m.max;
-    else if ((event.key === "Backspace" || event.key === "Delete") && attr5(m, "clear") !== "off") {
+    else if ((event.key === "Backspace" || event.key === "Delete") && attr4(m, "clear") !== "off") {
       event.preventDefault();
       if (m.value > 0 || m.draft > 0) {
         m.draft = 0;
@@ -43807,7 +43328,7 @@ function ratingCell(cell, value, { max = 5, count, for: item } = {}) {
   }
   return host;
 }
-var RATING, RATING_EVENT, RATING_RETRY_EVENT, RATING_STATES, STAR_PATH, models, serial8, make16, clamp, plain, attr5, itemName, disabled, readonly, state, interactive, focusable, levelOf, announceLevel;
+var RATING, RATING_EVENT, RATING_RETRY_EVENT, RATING_STATES, STAR_PATH, models, serial8, make16, clamp, plain, attr4, itemName, disabled, readonly, state, interactive, focusable, levelOf, announceLevel;
 var init_rating = __esm({
   "js/rating.js"() {
     "use strict";
@@ -43830,7 +43351,7 @@ var init_rating = __esm({
     };
     clamp = (n, lo, hi) => Math.min(hi, Math.max(lo, n));
     plain = (n) => Number(n.toFixed(2));
-    attr5 = (m, name) => m.el.getAttribute(`data-kp-rating-${name}`) ?? void 0;
+    attr4 = (m, name) => m.el.getAttribute(`data-kp-rating-${name}`) ?? void 0;
     itemName = (m) => m.el.getAttribute("data-kp-rating-for") ?? m.el.getAttribute("aria-label") ?? "";
     disabled = (m) => m.el.hasAttribute("data-kp-disabled");
     readonly = (m) => m.el.hasAttribute("data-kp-readonly");
@@ -43883,7 +43404,7 @@ function say10(m, text) {
 function measureFold(m) {
   const { textEl, more } = m;
   if (!textEl || !more) return;
-  const lines = attr6(m, "lines") ?? String(QUOTE_LINES);
+  const lines = attr5(m, "lines") ?? String(QUOTE_LINES);
   const folds2 = lines !== "all" && Number(lines) > 0;
   const open4 = m.expanded || !folds2;
   textEl.removeAttribute("data-kp-folded");
@@ -43906,15 +43427,15 @@ function render2(m) {
     /** @type {HTMLElement} */
     stage.querySelector(":scope > .kp-card__data")
   );
-  el14.classList.toggle("kp-quote--lg", attr6(m, "size") === "lg");
-  el14.style.setProperty("--kp-quote-lines", attr6(m, "lines") === "all" ? "none" : String(Number(attr6(m, "lines")) || QUOTE_LINES));
+  el14.classList.toggle("kp-quote--lg", attr5(m, "size") === "lg");
+  el14.style.setProperty("--kp-quote-lines", attr5(m, "lines") === "all" ? "none" : String(Number(attr5(m, "lines")) || QUOTE_LINES));
   const parts2 = [];
-  const why = attr6(m, "why");
+  const why = attr5(m, "why");
   if (why) parts2.push(make17("p", "kp-quote__why", why));
   const text = make17("blockquote", "kp-quote__text", m.text);
-  const lang = attr6(m, "lang");
+  const lang = attr5(m, "lang");
   if (lang) text.setAttribute("lang", lang);
-  const source = attr6(m, "source");
+  const source = attr5(m, "source");
   if (source) text.setAttribute("cite", source);
   m.textEl = text;
   parts2.push(text);
@@ -43924,12 +43445,12 @@ function render2(m) {
   m.more = more;
   parts2.push(more);
   const caption = make17("figcaption", "kp-quote__caption");
-  const by = make17("span", "kp-quote__by", attr6(m, "by") ?? s2.quoteBy);
-  const dateRaw = attr6(m, "date");
+  const by = make17("span", "kp-quote__by", attr5(m, "by") ?? s2.quoteBy);
+  const dateRaw = attr5(m, "date");
   const ms = dateRaw ? Date.parse(dateRaw) : Number.NaN;
   if (Number.isFinite(ms)) {
-    const style = attr6(m, "date-style");
-    const nowRaw = Date.parse(attr6(m, "now") ?? "");
+    const style = attr5(m, "date-style");
+    const nowRaw = Date.parse(attr5(m, "now") ?? "");
     const when = make17(
       "time",
       "kp-quote__when",
@@ -43946,14 +43467,14 @@ function render2(m) {
   }
   parts2.push(caption);
   const actions = make17("div", "kp-quote__actions");
-  if (attr6(m, "hide") !== "off") {
+  if (attr5(m, "hide") !== "off") {
     const hide2 = make17("button", "kp-button kp-button--sm kp-quote__hide", s2.quoteHide);
     hide2.type = "button";
     hide2.disabled = m.hiding;
     if (m.hiding) hide2.setAttribute("data-kp-disabled-reason", s2.quoteHiding);
     actions.append(hide2);
   }
-  if (attr6(m, "copy") !== void 0 && attr6(m, "copy") !== "off") {
+  if (attr5(m, "copy") !== void 0 && attr5(m, "copy") !== "off") {
     const copy3 = make17("button", "kp-button kp-button--sm kp-quote__copy", s2.quoteCopy);
     copy3.type = "button";
     actions.append(copy3);
@@ -43963,7 +43484,7 @@ function render2(m) {
   measureFold(m);
 }
 function hide(m) {
-  if (m.hiding || attr6(m, "hide") === "off") return;
+  if (m.hiding || attr5(m, "hide") === "off") return;
   const s2 = getStrings();
   const { el: el14 } = m;
   m.hiding = true;
@@ -44070,14 +43591,14 @@ function wire13(el14, options) {
       keys: "h",
       what: getStrings().quoteHide,
       group: "Quote",
-      when: () => el14.contains(document.activeElement) && attr6(m, "hide") !== "off" && !el14.hidden,
+      when: () => el14.contains(document.activeElement) && attr5(m, "hide") !== "off" && !el14.hidden,
       run: () => hide(m)
     },
     {
       keys: "Mod C",
       what: getStrings().quoteCopy,
       group: "Quote",
-      when: () => el14.contains(document.activeElement) && attr6(m, "copy") !== void 0 && attr6(m, "copy") !== "off" && (window.getSelection()?.isCollapsed ?? true),
+      when: () => el14.contains(document.activeElement) && attr5(m, "copy") !== void 0 && attr5(m, "copy") !== "off" && (window.getSelection()?.isCollapsed ?? true),
       run: () => void copy2(m)
     }
   ]);
@@ -44244,7 +43765,7 @@ function quote2(element) {
     hide: () => hide(m)
   };
 }
-var QUOTE, QUOTE_LIST, QUOTE_HIDE_EVENT, QUOTE_RETRY_EVENT, QUOTE_FOLD_EVENT, QUOTE_STATES, QUOTE_LINES, QUOTE_LIST_MAX, models2, make17, attr6;
+var QUOTE, QUOTE_LIST, QUOTE_HIDE_EVENT, QUOTE_RETRY_EVENT, QUOTE_FOLD_EVENT, QUOTE_STATES, QUOTE_LINES, QUOTE_LIST_MAX, models2, make17, attr5;
 var init_quote = __esm({
   "js/quote.js"() {
     "use strict";
@@ -44269,7 +43790,7 @@ var init_quote = __esm({
       if (text !== void 0) node.textContent = text;
       return node;
     };
-    attr6 = (m, name) => m.el.getAttribute(`data-kp-quote-${name}`) ?? void 0;
+    attr5 = (m, name) => m.el.getAttribute(`data-kp-quote-${name}`) ?? void 0;
   }
 });
 
@@ -44322,7 +43843,7 @@ function readItems(m) {
 }
 function readPinned(m) {
   try {
-    const raw = JSON.parse(attr7(m, "pinned", "[]") ?? "[]");
+    const raw = JSON.parse(attr6(m, "pinned", "[]") ?? "[]");
     return Array.isArray(raw) ? raw.filter((p) => p && typeof p.value === "string" && typeof p.label === "string") : [];
   } catch {
     return [];
@@ -44330,7 +43851,7 @@ function readPinned(m) {
 }
 function bandValues(m) {
   let entries3 = [];
-  const raw = attr7(m, "usual", "") ?? "";
+  const raw = attr6(m, "usual", "") ?? "";
   if (m.given) entries3 = m.given;
   else if (raw.trim().startsWith("[")) {
     try {
@@ -44342,21 +43863,21 @@ function bandValues(m) {
     }
   } else
     entries3 = raw.split(",").map((v) => ({ value: v.trim() })).filter((e) => e.value !== "");
-  if (attr7(m, "usual-source") === "counts") {
+  if (attr6(m, "usual-source") === "counts") {
     const label = (v) => m.items.find((i) => i.value === v)?.label ?? v;
     entries3 = [...entries3].sort((a, b) => (b.uses ?? 0) - (a.uses ?? 0) || label(a.value).localeCompare(label(b.value)));
   }
   const have = new Set(m.items.map((i) => i.value));
-  const max = clamp2(Number(attr7(m, "usual-max")) || 5, 1, 7);
+  const max = clamp2(Number(attr6(m, "usual-max")) || 5, 1, 7);
   return entries3.map((e) => e.value).filter((v) => have.has(v)).slice(0, max);
 }
 function folded(m) {
-  const mode2 = attr7(m, "all");
+  const mode2 = attr6(m, "all");
   const fold2 = mode2 === "fold" || mode2 !== "open" && m.items.length > USUAL_FOLD_ABOVE;
   return fold2 && !m.expanded;
 }
 function canFold(m) {
-  const mode2 = attr7(m, "all");
+  const mode2 = attr6(m, "all");
   return mode2 === "fold" || mode2 !== "open" && m.items.length > USUAL_FOLD_ABOVE;
 }
 function say11(m, text) {
@@ -44367,12 +43888,12 @@ function arrange(m) {
   for (const node of m.list.querySelectorAll("[data-kp-synth]")) node.remove();
   readItems(m);
   const query = m.input.value.trim();
-  const hideBand = query !== "" && attr7(m, "usual-while-typing") === "hide";
+  const hideBand = query !== "" && attr6(m, "usual-while-typing") === "hide";
   const band = hideBand ? [] : bandValues(m);
   const inBand = new Set(band);
   const byValue = new Map(m.items.map((i) => [i.value, i]));
   const rest = m.items.filter((i) => !inBand.has(i.value));
-  if (attr7(m, "order", "alphabetical") !== "given") rest.sort((a, b) => a.label.localeCompare(b.label));
+  if (attr6(m, "order", "alphabetical") !== "given") rest.sort((a, b) => a.label.localeCompare(b.label));
   for (const item of m.items) {
     const why = item.el.getAttribute("data-kp-reason");
     if (!why || item.el.querySelector(".kp-usual__reason")) continue;
@@ -44405,7 +43926,7 @@ function arrange(m) {
     h2.setAttribute("data-kp-group", kind);
     return h2;
   };
-  if (band.length > 0) order2.push(header(attr7(m, "usual-label") ?? s2.usualLabel, "usual"));
+  if (band.length > 0) order2.push(header(attr6(m, "usual-label") ?? s2.usualLabel, "usual"));
   for (const v of band) {
     const item = byValue.get(v);
     if (item) order2.push(item.el);
@@ -44428,14 +43949,14 @@ function paintTail(m, typed, realVisible) {
   for (const node of m.list.querySelectorAll(".kp-usual__tail")) node.remove();
   if (typed === "") return;
   const empty = m.list.querySelector("[data-kp-combobox-empty]");
-  const exact = attr7(m, "near", "ask") !== "off" ? exactItem(m, typed) : void 0;
+  const exact = attr6(m, "near", "ask") !== "off" ? exactItem(m, typed) : void 0;
   if (exact) return;
-  const addOn = attr7(m, "add", "off") === "inline";
-  const near2 = attr7(m, "near", "ask") === "off" ? [] : nearNames(
+  const addOn = attr6(m, "add", "off") === "inline";
+  const near2 = attr6(m, "near", "ask") === "off" ? [] : nearNames(
     typed,
     m.items,
-    clamp2(Number(attr7(m, "near-threshold")) || 0.8, 0.5, 1),
-    clamp2(Number(attr7(m, "near-max")) || 3, 1, 5)
+    clamp2(Number(attr6(m, "near-threshold")) || 0.8, 0.5, 1),
+    clamp2(Number(attr6(m, "near-max")) || 3, 1, 5)
   ).filter((i) => i.el.hidden);
   const rows = [];
   if (realVisible === 0 || near2.length > 0) {
@@ -44532,7 +44053,7 @@ function addName(m, label, nearTo) {
 }
 function syncPanel(m) {
   const s2 = getStrings();
-  const given2 = attr7(m, "state");
+  const given2 = attr6(m, "state");
   const state2 = given2 === "loading" || given2 === "error" || given2 === "empty" ? given2 : m.items.length === 0 ? "empty" : "ready";
   const was = m.panel.getAttribute("data-kp-panel");
   if (was === state2) return;
@@ -44553,7 +44074,7 @@ function syncPanel(m) {
     m.handle.close();
     m.busy = openBusyCard(m.panel, { words: s2.usualLoading, area: () => [m.panel], className: "kp-usual__busy" });
   } else if (state2 === "empty") {
-    const addOn = attr7(m, "add", "off") === "inline";
+    const addOn = attr6(m, "add", "off") === "inline";
     m.panel.append(
       statePlate(document, {
         kind: "empty",
@@ -44575,7 +44096,7 @@ function syncPanel(m) {
   }
 }
 function syncHint(m) {
-  const text = attr7(m, "hint", "") ?? "";
+  const text = attr6(m, "hint", "") ?? "";
   const has = m.box.hasAttribute("data-kp-tags") ? m.handle.values().length > 0 : m.input.value.trim() !== "";
   m.hintEl.textContent = text;
   m.hintEl.hidden = !(text !== "" && has);
@@ -44745,7 +44266,7 @@ function wire14(box) {
     if (event.key !== "Enter" || event.defaultPrevented || event.isComposing) return;
     const typed = input.value.trim();
     if (typed === "") return;
-    const near2 = attr7(m, "near", "ask") ?? "ask";
+    const near2 = attr6(m, "near", "ask") ?? "ask";
     if (near2 !== "off") {
       const exact = exactItem(m, typed);
       if (exact) {
@@ -44756,9 +44277,9 @@ function wire14(box) {
         return;
       }
     }
-    if (attr7(m, "add", "off") !== "inline") return;
+    if (attr6(m, "add", "off") !== "inline") return;
     event.preventDefault();
-    const close = near2 === "off" ? [] : nearNames(typed, m.items, clamp2(Number(attr7(m, "near-threshold")) || 0.8, 0.5, 1), clamp2(Number(attr7(m, "near-max")) || 3, 1, 5));
+    const close = near2 === "off" ? [] : nearNames(typed, m.items, clamp2(Number(attr6(m, "near-threshold")) || 0.8, 0.5, 1), clamp2(Number(attr6(m, "near-max")) || 3, 1, 5));
     if (close[0] && near2 === "select") pick2(m, close[0].value, "typed");
     else if (close[0]) handle.open();
     else addName(m, typed, null);
@@ -44789,7 +44310,7 @@ function wire14(box) {
   };
   box.addEventListener("click", onClick);
   const onInput = () => {
-    if (attr7(m, "usual-while-typing") === "hide") {
+    if (attr6(m, "usual-while-typing") === "hide") {
       arrange(m);
       handle.refresh();
     }
@@ -44826,7 +44347,7 @@ function wire14(box) {
       "data-kp-state"
     ]
   });
-  if (attr7(m, "preselect") === "usual" && box.hasAttribute("data-kp-tags") && handle.values().length === 0) {
+  if (attr6(m, "preselect") === "usual" && box.hasAttribute("data-kp-tags") && handle.values().length === 0) {
     handle.set(bandValues(m));
     dressTags(m);
   }
@@ -44891,7 +44412,7 @@ function setUsualState(element, state2) {
 function usualNotToday(element) {
   return [...models3.get(element)?.notToday ?? []];
 }
-var USUAL, USUAL_PICK_EVENT, USUAL_ADD_EVENT, USUAL_NOT_TODAY_EVENT, USUAL_RETRY_EVENT, USUAL_STATES, USUAL_FOLD_ABOVE, models3, serial9, make18, attr7, flag, clamp2, realOptions, exactItem;
+var USUAL, USUAL_PICK_EVENT, USUAL_ADD_EVENT, USUAL_NOT_TODAY_EVENT, USUAL_RETRY_EVENT, USUAL_STATES, USUAL_FOLD_ABOVE, models3, serial9, make18, attr6, flag, clamp2, realOptions, exactItem;
 var init_usual_picker = __esm({
   "js/usual-picker.js"() {
     "use strict";
@@ -44919,7 +44440,7 @@ var init_usual_picker = __esm({
       if (text !== void 0) node.textContent = text;
       return node;
     };
-    attr7 = (m, name, fallback2) => m.box.getAttribute(`data-kp-${name}`) ?? fallback2;
+    attr6 = (m, name, fallback2) => m.box.getAttribute(`data-kp-${name}`) ?? fallback2;
     flag = (m, name) => m.box.hasAttribute(`data-kp-${name}`) && m.box.getAttribute(`data-kp-${name}`) !== "off";
     clamp2 = (n, lo, hi) => Math.min(hi, Math.max(lo, n));
     realOptions = (list) => (
@@ -44948,7 +44469,7 @@ __export(toggle_exports, {
   togglePressedKeys: () => togglePressedKeys
 });
 function toggle(el14) {
-  return HANDLES6.get(el14) ?? null;
+  return HANDLES5.get(el14) ?? null;
 }
 function toggleGroup(button) {
   const holder = (
@@ -44982,7 +44503,7 @@ function togglePressedKeys(anyMember) {
   return list.filter((m) => !m.hasAttribute("data-kp-toggle-all") && stateOf4(m) === "true").map(toggleKey);
 }
 function attachOne7(button, options) {
-  if (HANDLES6.has(button)) return () => void 0;
+  if (HANDLES5.has(button)) return () => void 0;
   const doc = button.ownerDocument;
   const s2 = getStrings();
   const undo = [];
@@ -45334,7 +44855,7 @@ function attachOne7(button, options) {
       }, options.refusedMs ?? TOGGLE_REFUSED_MS);
     }
   };
-  HANDLES6.set(button, handle0);
+  HANDLES5.set(button, handle0);
   {
     const g = group0;
     const holder = g?.container?.hasAttribute("data-kp-remember") ? g.container : button.hasAttribute("data-kp-remember") ? button : null;
@@ -45437,7 +44958,7 @@ function attachOne7(button, options) {
     refusedWord?.remove();
     spinner?.remove();
     for (const fn of undo.reverse()) fn();
-    HANDLES6.delete(button);
+    HANDLES5.delete(button);
   };
 }
 function attachToggles(root = document, options = {}) {
@@ -45451,7 +44972,7 @@ function attachToggles(root = document, options = {}) {
   const undo = found.map((el14) => attachOne7(el14, options));
   return () => undo.forEach((u) => u());
 }
-var TOGGLE, TOGGLE_EVENT, TOGGLE_CHANGED_EVENT, TOGGLE_LOOKS, TOGGLE_MODES, TOGGLE_REFUSED_MS, HANDLES6, stateOf4, toggleKey, storeKey, readStore, writeStore, made2;
+var TOGGLE, TOGGLE_EVENT, TOGGLE_CHANGED_EVENT, TOGGLE_LOOKS, TOGGLE_MODES, TOGGLE_REFUSED_MS, HANDLES5, stateOf4, toggleKey, storeKey, readStore, writeStore, made2;
 var init_toggle = __esm({
   "js/toggle.js"() {
     "use strict";
@@ -45466,7 +44987,7 @@ var init_toggle = __esm({
     TOGGLE_MODES = /** @type {const} */
     ["multi", "single", "single-or-none"];
     TOGGLE_REFUSED_MS = 3e3;
-    HANDLES6 = /* @__PURE__ */ new WeakMap();
+    HANDLES5 = /* @__PURE__ */ new WeakMap();
     stateOf4 = (el14) => {
       const v = el14.getAttribute("aria-pressed");
       return v === "true" || v === "mixed" ? v : "false";
@@ -45815,10 +45336,10 @@ function orderDependencies(items, { numbers: numbers2 = true } = {}) {
   return { rows: ordered2.map((r, i) => ({ item: r.item, number: numbers2 ? i + 1 : null })), cycles };
 }
 function deplist(el14) {
-  return HANDLES7.get(el14) ?? null;
+  return HANDLES6.get(el14) ?? null;
 }
 function attachOne8(el14) {
-  if (HANDLES7.has(el14)) return () => void 0;
+  if (HANDLES6.has(el14)) return () => void 0;
   const doc = el14.ownerDocument;
   const undo = [];
   el14.classList.add("kp-deplist");
@@ -46022,10 +45543,10 @@ function attachOne8(el14) {
     },
     rows: () => drawn2
   };
-  HANDLES7.set(el14, handle);
+  HANDLES6.set(el14, handle);
   undo.push(() => {
     busy?.remove();
-    HANDLES7.delete(el14);
+    HANDLES6.delete(el14);
   });
   const watch2 = new MutationObserver(() => draw8());
   watch2.observe(el14, {
@@ -46061,10 +45582,10 @@ function attachDeplists(root = document) {
   return () => undo.forEach((u) => u());
 }
 function setDeplist(el14, items) {
-  if (!HANDLES7.has(el14)) attachOne8(el14);
-  HANDLES7.get(el14)?.set(items);
+  if (!HANDLES6.has(el14)) attachOne8(el14);
+  HANDLES6.get(el14)?.set(items);
 }
-var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, depText, HANDLES7, made3;
+var DEPLIST, DEPLIST_RETRY_EVENT, DEPLIST_COLLAPSE, depText, HANDLES6, made3;
 var init_deplist = __esm({
   "js/deplist.js"() {
     "use strict";
@@ -46077,7 +45598,7 @@ var init_deplist = __esm({
     DEPLIST_RETRY_EVENT = "kp-deplist-retry";
     DEPLIST_COLLAPSE = 8;
     depText = (items) => items.map((i) => `${i.from} -> ${i.to}`).join("\n");
-    HANDLES7 = /* @__PURE__ */ new WeakMap();
+    HANDLES6 = /* @__PURE__ */ new WeakMap();
     made3 = (doc, tag, className) => {
       const el14 = doc.createElement(tag);
       el14.className = className;
@@ -46127,10 +45648,10 @@ function traceText(hops, stop = "first-refusal") {
   }).join(" > ");
 }
 function trace(el14) {
-  return HANDLES8.get(el14) ?? null;
+  return HANDLES7.get(el14) ?? null;
 }
 function attachOne9(el14) {
-  if (HANDLES8.has(el14)) return () => void 0;
+  if (HANDLES7.has(el14)) return () => void 0;
   const doc = el14.ownerDocument;
   const undo = [];
   el14.classList.add("kp-trace");
@@ -46268,10 +45789,10 @@ function attachOne9(el14) {
     },
     text: () => traceText(hops, attr14("data-kp-trace-stop", "first-refusal") === "all" ? "all" : "first-refusal")
   };
-  HANDLES8.set(el14, handle);
+  HANDLES7.set(el14, handle);
   undo.push(() => {
     busy?.remove();
-    HANDLES8.delete(el14);
+    HANDLES7.delete(el14);
   });
   const watch2 = new MutationObserver(draw8);
   watch2.observe(el14, {
@@ -46317,10 +45838,10 @@ function attachTraces(root = document) {
   return () => undo.forEach((u) => u());
 }
 function setTrace(el14, hops) {
-  if (!HANDLES8.has(el14)) attachOne9(el14);
-  HANDLES8.get(el14)?.set(hops);
+  if (!HANDLES7.has(el14)) attachOne9(el14);
+  HANDLES7.get(el14)?.set(hops);
 }
-var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, HANDLES8, made4;
+var TRACE, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, TRACE_RETRY_EVENT, HANDLES7, made4;
 var init_path_trace = __esm({
   "js/path-trace.js"() {
     "use strict";
@@ -46334,7 +45855,7 @@ var init_path_trace = __esm({
     TRACE_RULE_EVENT = "kp-trace-rule";
     TRACE_SWAP_EVENT = "kp-trace-swap";
     TRACE_RETRY_EVENT = "kp-trace-retry";
-    HANDLES8 = /* @__PURE__ */ new WeakMap();
+    HANDLES7 = /* @__PURE__ */ new WeakMap();
     made4 = (doc, tag, className) => {
       const el14 = doc.createElement(tag);
       el14.className = className;
@@ -46795,19 +46316,19 @@ __export(unsaved_exports, {
   unsavedSaved: () => unsavedSaved
 });
 function unsaved(element) {
-  return HANDLES9.get(element) ?? null;
+  return HANDLES8.get(element) ?? null;
 }
 function unsavedSaved(element, result) {
-  HANDLES9.get(element)?.saved(result);
+  HANDLES8.get(element)?.saved(result);
 }
 function markUnsavedClean(element) {
-  HANDLES9.get(element)?.markClean();
+  HANDLES8.get(element)?.markClean();
 }
 function discardUnsaved(element) {
-  HANDLES9.get(element)?.discard();
+  HANDLES8.get(element)?.discard();
 }
 function setUnsavedSaving(element, saving) {
-  HANDLES9.get(element)?.setSaving(saving);
+  HANDLES8.get(element)?.setSaving(saving);
 }
 function readValue(c) {
   if (c instanceof HTMLInputElement && c.type === "checkbox") return c.checked ? "on" : "off";
@@ -46875,11 +46396,11 @@ function attachUnsaved(root = document) {
     ]
   );
   for (const el14 of found) {
-    if (HANDLES9.has(el14)) continue;
+    if (HANDLES8.has(el14)) continue;
     const s2 = getStrings();
     const doc = el14.ownerDocument;
     const win = doc.defaultView ?? window;
-    const id = el14.id || `kp-unsaved-${++seq5}`;
+    const id = el14.id || `kp-unsaved-${++seq4}`;
     const scopeSelector = el14.dataset.kpUnsavedFor;
     const scope = (
       /** @type {HTMLElement} */
@@ -47337,7 +46858,7 @@ function attachUnsaved(root = document) {
         paint13();
       }
     };
-    HANDLES9.set(el14, handle);
+    HANDLES8.set(el14, handle);
     let lower = null;
     const place2 = (p) => {
       const box = chip.getBoundingClientRect();
@@ -47504,7 +47025,7 @@ function attachUnsaved(root = document) {
       doc.removeEventListener("pointerdown", onOutside, true);
       doc.removeEventListener("click", onLink, true);
       win.removeEventListener("beforeunload", onBeforeUnload);
-      HANDLES9.delete(el14);
+      HANDLES8.delete(el14);
       el14.replaceChildren();
       el14.removeAttribute("data-kp-docked");
       el14.removeAttribute("data-kp-state");
@@ -47517,7 +47038,7 @@ function attachUnsaved(root = document) {
     for (const c of cleanups) c();
   };
 }
-var UNSAVED, UNSAVED_CHANGE_EVENT, UNSAVED_SAVE_EVENT, UNSAVED_DISCARD_EVENT, UNSAVED_UNDO_EVENT, UNSAVED_LEAVE_EVENT, UNSAVED_REVERT_EVENT, ROW, CONTROL, HANDLES9, seq5;
+var UNSAVED, UNSAVED_CHANGE_EVENT, UNSAVED_SAVE_EVENT, UNSAVED_DISCARD_EVENT, UNSAVED_UNDO_EVENT, UNSAVED_LEAVE_EVENT, UNSAVED_REVERT_EVENT, ROW, CONTROL, HANDLES8, seq4;
 var init_unsaved = __esm({
   "js/unsaved.js"() {
     "use strict";
@@ -47536,8 +47057,515 @@ var init_unsaved = __esm({
     UNSAVED_REVERT_EVENT = "kp-unsaved-revert";
     ROW = ".kp-formrow, .kp-kv__row, [data-kp-row]";
     CONTROL = 'input:not([type="hidden"], [type="button"], [type="submit"], [type="reset"], [type="file"], [type="image"]), select, textarea';
+    HANDLES8 = /* @__PURE__ */ new WeakMap();
+    seq4 = 0;
+  }
+});
+
+// js/autosize.js
+var autosize_exports = {};
+__export(autosize_exports, {
+  AUTOSIZE: () => AUTOSIZE,
+  AUTOSIZE_EVENT: () => AUTOSIZE_EVENT,
+  AUTOSIZE_MAX_LINES: () => AUTOSIZE_MAX_LINES,
+  AUTOSIZE_MIN_LINES: () => AUTOSIZE_MIN_LINES,
+  AUTOSIZE_STATES: () => AUTOSIZE_STATES,
+  attachAutosize: () => attachAutosize,
+  autosize: () => autosize,
+  cssAutosizeSupported: () => cssAutosizeSupported,
+  fitTextarea: () => fitTextarea,
+  lineHeightOf: () => lineHeightOf,
+  refreshAutosize: () => refreshAutosize,
+  setAutosizeState: () => setAutosizeState
+});
+function lineHeightOf(cs) {
+  const n = Number.parseFloat(cs.lineHeight);
+  return Number.isFinite(n) ? n : px2(cs.fontSize, 16) * 1.2;
+}
+function chromeOf(cs) {
+  return px2(cs.paddingTop) + px2(cs.paddingBottom) + px2(cs.borderTopWidth) + px2(cs.borderBottomWidth);
+}
+function twinOf(area) {
+  let twin = TWINS.get(area);
+  if (!twin || !twin.isConnected) {
+    twin = area.ownerDocument.createElement("textarea");
+    twin.setAttribute("aria-hidden", "true");
+    twin.setAttribute("tabindex", "-1");
+    twin.readOnly = true;
+    twin.rows = 1;
+    twin.style.cssText = "position:absolute;visibility:hidden;pointer-events:none;inset-block-start:0;inset-inline-start:-9999px;block-size:0;min-block-size:0;max-block-size:none;overflow:hidden;resize:none;margin:0;";
+    area.ownerDocument.body.append(twin);
+    TWINS.set(area, twin);
+  }
+  return twin;
+}
+function fitTextarea(area, { minRows = AUTOSIZE_MIN_LINES, maxRows = AUTOSIZE_MAX_LINES, maxPx, keepPx = 0, apply = true } = {}) {
+  const view = area.ownerDocument.defaultView;
+  const cs = (
+    /** @type {Window} */
+    view.getComputedStyle(area)
+  );
+  const lh = lineHeightOf(cs);
+  const chrome = chromeOf(cs);
+  const twin = twinOf(area);
+  const ts = twin.style;
+  for (const name of WRAP_PROPS) ts[name] = /** @type {any} */
+  cs[name];
+  ts.inlineSize = `${area.getBoundingClientRect().width}px`;
+  twin.value = area.value === "" ? " " : area.value;
+  const border = px2(cs.borderTopWidth) + px2(cs.borderBottomWidth);
+  const content = twin.scrollHeight + border;
+  const least = Math.max(1, minRows) * lh + chrome;
+  let most = maxRows === null ? Number.POSITIVE_INFINITY : Math.max(maxRows, minRows) * lh + chrome;
+  if (maxPx !== void 0) most = Math.max(least, Math.min(most, maxPx));
+  const wanted = Math.max(least, keepPx, content);
+  const height = Math.ceil(Math.min(most, wanted));
+  const scrolls = content > height + 1;
+  if (apply) {
+    area.style.blockSize = `${height}px`;
+    area.style.overflowY = scrolls ? "auto" : "hidden";
+  }
+  return { height, scrolls, capped: wanted > most, lines: Math.max(1, Math.round((twin.scrollHeight - (chrome - border)) / lh)), lineHeight: lh };
+}
+function dropTwin(area) {
+  TWINS.get(area)?.remove();
+  TWINS.delete(area);
+}
+function autosize(element) {
+  return HANDLES9.get(element) ?? null;
+}
+function refreshAutosize(element) {
+  HANDLES9.get(element)?.refresh();
+}
+function setAutosizeState(element, state2, message) {
+  HANDLES9.get(element)?.setState(state2, message);
+}
+function cssAutosizeSupported() {
+  return typeof CSS !== "undefined" && CSS.supports("field-sizing", "content");
+}
+function attachAutosize(root = document, options = {}) {
+  const cleanups = [];
+  const found = (
+    /** @type {HTMLTextAreaElement[]} */
+    [
+      ...root instanceof HTMLTextAreaElement && root.matches(AUTOSIZE) ? [root] : [],
+      ...root.querySelectorAll(AUTOSIZE)
+    ]
+  );
+  for (const area of found) {
+    let remember4 = function() {
+      const key2 = draftKey();
+      if (!key2) return;
+      try {
+        if (area.value === "") localStorage.removeItem(key2);
+        else localStorage.setItem(key2, area.value);
+      } catch {
+      }
+    };
+    var remember3 = remember4;
+    if (HANDLES9.has(area) || area.getAttribute("data-kp-autosize") === "off") continue;
+    const doc = area.ownerDocument;
+    const view = (
+      /** @type {Window} */
+      doc.defaultView
+    );
+    const strings = getStrings();
+    const locale = resolveLocale(void 0, area);
+    const number = new Intl.NumberFormat(locale);
+    const minRows = () => Math.max(1, options.rows ?? (Number(area.getAttribute("rows")) || AUTOSIZE_MIN_LINES));
+    const maxRows = () => {
+      if (area.disabled || area.readOnly) return null;
+      const raw = options.max ?? attr7(area, "data-kp-autosize-max", String(AUTOSIZE_MAX_LINES));
+      if (raw === "none") return null;
+      const n = Number(raw);
+      return Number.isFinite(n) && n > 0 ? n : AUTOSIZE_MAX_LINES;
+    };
+    const shrinks = () => (options.shrink ?? attr7(area, "data-kp-autosize-shrink", "on") !== "off") !== false;
+    const counterMode = () => options.counter ?? /** @type {'off' | 'chars' | 'lines' | 'both'} */
+    attr7(area, "data-kp-counter", "off");
+    const wantedEngine = () => options.engine ?? attr7(area, "data-kp-autosize-engine", "auto");
+    const engineInUse = () => {
+      const want = wantedEngine();
+      if (want === "js" || !shrinks()) return "js";
+      if (want === "css") return cssAutosizeSupported() ? "css" : "js";
+      return cssAutosizeSupported() ? "css" : "js";
+    };
+    let state2 = "ready";
+    let tallest = 0;
+    let lastHeight = -1;
+    let card = null;
+    let frame3 = null;
+    let wasReadOnly = area.readOnly;
+    const phoneQuery = view.matchMedia?.(PHONE);
+    area.classList.add("kp-autosize");
+    if (!area.hasAttribute("data-kp-resize")) area.setAttribute("data-kp-resize", "vertical");
+    const phoneCap = () => phoneQuery?.matches ? Math.floor((view.visualViewport?.height ?? view.innerHeight) * 0.6) : void 0;
+    const measure = () => {
+      if (state2 === "loading") {
+        const cs2 = view.getComputedStyle(area);
+        area.style.blockSize = `${Math.ceil(minRows() * lineHeightOf(cs2) + chromeOf(cs2))}px`;
+        area.style.overflowY = "hidden";
+        return;
+      }
+      const engine = engineInUse();
+      area.setAttribute("data-kp-autosize-engine-used", engine);
+      const cs = view.getComputedStyle(area);
+      const lh = lineHeightOf(cs);
+      const chrome = chromeOf(cs);
+      const rows = maxRows();
+      const cap = phoneCap();
+      if (engine === "css") {
+        area.style.blockSize = "";
+        area.style.overflowY = "";
+        area.style.setProperty("--kp-autosize-min", `${Math.ceil(minRows() * lh + chrome)}px`);
+        const most = rows === null ? "none" : `${Math.ceil(Math.min(rows * lh + chrome, cap ?? Number.POSITIVE_INFINITY))}px`;
+        area.style.setProperty("--kp-autosize-max", most);
+        const result2 = fitTextarea(area, { minRows: minRows(), maxRows: rows, ...cap !== void 0 ? { maxPx: cap } : {}, apply: false });
+        report(result2.height, result2.lines, result2.capped);
+        return;
+      }
+      area.style.removeProperty("--kp-autosize-min");
+      area.style.removeProperty("--kp-autosize-max");
+      const result = fitTextarea(area, {
+        minRows: minRows(),
+        maxRows: rows,
+        ...cap !== void 0 ? { maxPx: cap } : {},
+        keepPx: shrinks() ? 0 : tallest
+      });
+      tallest = Math.max(tallest, result.height);
+      report(result.height, result.lines, result.capped);
+    };
+    const report = (height, lines, capped) => {
+      area.toggleAttribute("data-kp-autosize-capped", capped);
+      if (height === lastHeight) return;
+      lastHeight = height;
+      area.dispatchEvent(new CustomEvent(AUTOSIZE_EVENT, { bubbles: true, detail: { height, lines, capped } }));
+    };
+    const keepCaretInView = () => {
+      if (doc.activeElement !== area) return;
+      const box = area.getBoundingClientRect();
+      const visible3 = view.visualViewport?.height ?? view.innerHeight;
+      if (box.bottom > visible3 || box.top < 0) {
+        if (area.selectionStart === area.value.length) area.scrollIntoView({ block: "nearest" });
+      }
+    };
+    let counter5 = null;
+    let live4 = null;
+    let announced = 0;
+    const drawCounter = () => {
+      const mode2 = counterMode();
+      if (mode2 === "off") {
+        counter5?.remove();
+        live4?.remove();
+        counter5 = null;
+        live4 = null;
+        return;
+      }
+      if (!counter5) {
+        counter5 = doc.createElement("p");
+        counter5.className = "kp-autosize__counter";
+        (frame3 ?? area).after(counter5);
+      }
+      const { chars, lines } = count();
+      const max = area.maxLength > 0 ? area.maxLength : 0;
+      let text;
+      if (max > 0 && mode2 !== "lines") text = strings.autosizeOf(number.format(chars), number.format(max));
+      else if (mode2 === "lines") text = strings.autosizeLines(lines, number.format(lines));
+      else if (mode2 === "both") text = strings.autosizeBoth(chars, number.format(chars), lines, number.format(lines));
+      else text = strings.autosizeChars(chars, number.format(chars));
+      if (counter5.textContent !== text) counter5.textContent = text;
+      const share = max > 0 ? chars / max : 0;
+      if (max > 0 && share >= 0.9) counter5.setAttribute("data-kp-tone", "warning");
+      else counter5.removeAttribute("data-kp-tone");
+      if (max > 0) {
+        const level = share >= 1 ? 2 : share >= 0.9 ? 1 : 0;
+        if (level !== announced) {
+          announced = level;
+          if (level > 0) {
+            if (!live4) {
+              live4 = doc.createElement("span");
+              live4.className = "kp-sr-only";
+              live4.setAttribute("role", "status");
+              counter5.after(live4);
+            }
+            live4.textContent = level === 2 ? strings.autosizeFull(number.format(max)) : strings.autosizeNear(number.format(chars), number.format(max));
+          } else if (live4) live4.textContent = "";
+        }
+      }
+    };
+    const count = () => {
+      const value = area.value;
+      return { chars: value.length, lines: value === "" ? 0 : value.split("\n").length };
+    };
+    let pasteAt = -1;
+    const onInput = () => {
+      measure();
+      drawCounter();
+      keepCaretInView();
+      if (pasteAt >= 0) {
+        if (area.hasAttribute("data-kp-autosize-capped")) {
+          const lh = lineHeightOf(view.getComputedStyle(area));
+          area.scrollTop = Math.max(0, area.value.slice(0, pasteAt).split("\n").length - 1) * lh;
+        }
+        pasteAt = -1;
+      }
+      remember4();
+    };
+    const onPaste = () => {
+      pasteAt = area.selectionStart;
+    };
+    const onChange = () => {
+      measure();
+      drawCounter();
+    };
+    const descriptor = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, "value");
+    if (descriptor?.get && descriptor.set) {
+      const { get, set } = descriptor;
+      Object.defineProperty(area, "value", {
+        configurable: true,
+        get() {
+          return get.call(this);
+        },
+        set(v) {
+          set.call(this, v);
+          measure();
+          drawCounter();
+        }
+      });
+      cleanups.push(() => {
+        delete /** @type {any} */
+        area.value;
+      });
+    }
+    let width = -1;
+    const resizes = typeof ResizeObserver === "function" ? new ResizeObserver(() => {
+      const w = Math.round(area.getBoundingClientRect().width);
+      if (w === width) return;
+      width = w;
+      measure();
+    }) : null;
+    resizes?.observe(area);
+    const onViewport = () => measure();
+    view.visualViewport?.addEventListener("resize", onViewport);
+    phoneQuery?.addEventListener("change", onViewport);
+    void doc.fonts?.ready.then(() => measure());
+    const draftKey = () => {
+      const name = area.getAttribute("data-kp-remember");
+      return name ? `kp-remember:autosize:${name}:draft` : null;
+    };
+    const key = draftKey();
+    if (key && area.value === "") {
+      try {
+        const draft = localStorage.getItem(key);
+        if (draft) area.value = draft;
+      } catch {
+      }
+    }
+    const form2 = area.form;
+    const onSubmit = () => {
+      const k = draftKey();
+      if (!k) return;
+      try {
+        localStorage.removeItem(k);
+      } catch {
+      }
+    };
+    form2?.addEventListener("submit", onSubmit);
+    form2?.addEventListener("reset", onChange);
+    let unregister = null;
+    if (attr7(area, "data-kp-submit-key", "off") === "mod-enter") {
+      void Promise.resolve().then(() => (init_shortcuts(), shortcuts_exports)).then(({ registerShortcuts: registerShortcuts2 }) => {
+        if (!HANDLES9.has(area)) return;
+        unregister = registerShortcuts2(
+          area,
+          [
+            {
+              keys: "Mod Enter",
+              what: strings.autosizeSubmit,
+              group: strings.autosizeGroup,
+              when: () => doc.activeElement === area && !area.disabled && !area.readOnly,
+              run: () => {
+                if (area.form?.requestSubmit) area.form.requestSubmit();
+                else area.form?.submit();
+              }
+            }
+          ],
+          { dev: false }
+        );
+      });
+    }
+    const framed = () => {
+      if (frame3) return frame3;
+      frame3 = doc.createElement("div");
+      frame3.className = "kp-autosize__frame";
+      area.before(frame3);
+      frame3.append(area);
+      return frame3;
+    };
+    const unframe = () => {
+      if (!frame3) return;
+      frame3.replaceWith(area);
+      frame3 = null;
+    };
+    const setState2 = (next2, message) => {
+      if (next2 === state2 && next2 !== "error") return;
+      const field = area.closest(".kp-field");
+      const holder = () => {
+        let h2 = (
+          /** @type {HTMLElement | null} */
+          field?.querySelector("[data-kp-field-error]") ?? null
+        );
+        if (!h2) {
+          h2 = doc.createElement("p");
+          h2.className = "kp-field__error";
+          h2.setAttribute("data-kp-field-error", "");
+          h2.id = `kp-autosize-${++seq5}-error`;
+          (counter5 ?? frame3 ?? area).after(h2);
+        }
+        return h2;
+      };
+      if (state2 === "loading" && next2 !== "loading") {
+        area.readOnly = wasReadOnly;
+        area.removeAttribute("aria-busy");
+        const closing2 = card;
+        card = null;
+        void closing2?.close().then(() => {
+          if (state2 !== "loading") unframe();
+        });
+      }
+      if (next2 === "loading") {
+        wasReadOnly = area.readOnly;
+        area.readOnly = true;
+        area.setAttribute("aria-busy", "true");
+        card ??= openBusyCard(framed(), { words: strings.autosizeLoading, area: () => [area], className: "kp-autosize__busy" });
+      }
+      if (next2 === "error") {
+        const h2 = holder();
+        h2.textContent = message ?? strings.autosizeFailed;
+        h2.hidden = false;
+        area.setAttribute("aria-invalid", "true");
+        area.setAttribute("aria-describedby", [...new Set([...(area.getAttribute("aria-describedby") ?? "").split(/\s+/), h2.id].filter(Boolean))].join(" "));
+        field?.classList.add("kp-field--invalid");
+      } else {
+        const h2 = (
+          /** @type {HTMLElement | null} */
+          field?.querySelector("[data-kp-field-error]") ?? null
+        );
+        if (h2 && state2 === "error") {
+          h2.hidden = true;
+          h2.textContent = "";
+          area.removeAttribute("aria-invalid");
+          field?.classList.remove("kp-field--invalid");
+        }
+      }
+      state2 = next2;
+      area.setAttribute("data-kp-state", next2);
+      measure();
+    };
+    const handle = {
+      element: area,
+      refresh() {
+        measure();
+        drawCounter();
+      },
+      setState: setState2,
+      count,
+      get engine() {
+        return (
+          /** @type {'css' | 'js'} */
+          engineInUse()
+        );
+      }
+    };
+    HANDLES9.set(area, handle);
+    area.addEventListener("input", onInput);
+    area.addEventListener("paste", onPaste);
+    area.addEventListener("change", onChange);
+    measure();
+    drawCounter();
+    if (area.getAttribute("data-kp-state") === "loading") setState2("loading");
+    cleanups.push(() => {
+      area.removeEventListener("input", onInput);
+      area.removeEventListener("paste", onPaste);
+      area.removeEventListener("change", onChange);
+      form2?.removeEventListener("submit", onSubmit);
+      form2?.removeEventListener("reset", onChange);
+      resizes?.disconnect();
+      view.visualViewport?.removeEventListener("resize", onViewport);
+      phoneQuery?.removeEventListener("change", onViewport);
+      unregister?.();
+      card?.remove();
+      unframe();
+      counter5?.remove();
+      live4?.remove();
+      dropTwin(area);
+      area.style.blockSize = "";
+      area.style.overflowY = "";
+      area.style.removeProperty("--kp-autosize-min");
+      area.style.removeProperty("--kp-autosize-max");
+      area.classList.remove("kp-autosize");
+      area.removeAttribute("data-kp-autosize-engine-used");
+      area.removeAttribute("data-kp-autosize-capped");
+      HANDLES9.delete(area);
+    });
+  }
+  return () => {
+    for (const clean of cleanups) clean();
+  };
+}
+var AUTOSIZE, AUTOSIZE_EVENT, AUTOSIZE_MAX_LINES, AUTOSIZE_MIN_LINES, AUTOSIZE_STATES, PHONE, px2, WRAP_PROPS, TWINS, HANDLES9, seq5, attr7;
+var init_autosize = __esm({
+  "js/autosize.js"() {
+    "use strict";
+    init_strings();
+    init_locale();
+    init_busy_card();
+    AUTOSIZE = "textarea[data-kp-autosize]";
+    AUTOSIZE_EVENT = "kp-autosize-resize";
+    AUTOSIZE_MAX_LINES = 20;
+    AUTOSIZE_MIN_LINES = 3;
+    AUTOSIZE_STATES = /** @type {const} */
+    ["ready", "loading", "error"];
+    PHONE = "(max-width: 40em)";
+    px2 = (value, fallback2 = 0) => {
+      const n = Number.parseFloat(value);
+      return Number.isFinite(n) ? n : fallback2;
+    };
+    WRAP_PROPS = [
+      "fontFamily",
+      "fontSize",
+      "fontWeight",
+      "fontStyle",
+      "fontVariant",
+      "fontStretch",
+      "letterSpacing",
+      "wordSpacing",
+      "textTransform",
+      "textIndent",
+      "lineHeight",
+      "tabSize",
+      "whiteSpace",
+      "wordBreak",
+      "overflowWrap",
+      "hyphens",
+      "boxSizing",
+      "paddingTop",
+      "paddingRight",
+      "paddingBottom",
+      "paddingLeft",
+      "borderTopWidth",
+      "borderRightWidth",
+      "borderBottomWidth",
+      "borderLeftWidth",
+      "borderTopStyle",
+      "borderRightStyle",
+      "borderBottomStyle",
+      "borderLeftStyle"
+    ];
+    TWINS = /* @__PURE__ */ new WeakMap();
     HANDLES9 = /* @__PURE__ */ new WeakMap();
     seq5 = 0;
+    attr7 = (el14, name, fallback2) => el14.getAttribute(name) ?? fallback2;
   }
 });
 

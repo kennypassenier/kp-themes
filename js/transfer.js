@@ -17,7 +17,7 @@
 //
 // States: running; estimating (no time left until the rate is steady: "estimating…"); stalled (no byte for 10 s: "stalled for
 // 12 s", warning plate, time left hidden); done ("4.1 GB in 3 min 12 s", success); failed (a destructive note with the app's
-// reason and Retry, which fires `kp-transfer-retry`); total unknown (an indeterminate bar that breathes in place, never restarting: "1.2 GB so far · 12 MB/s").
+// reason and Retry, which fires `kp-transfer-retry`); total unknown (no total means no share to fill, so the row says so in words: "1.2 GB so far", "12 MB/s" and "size unknown" in the time column, over a band of ruled stripes that drifts at an even pace and never restarts; the bytes counting up are the progress; when a report brings the total, the band settles into a normal bar and shrinks to the real share).
 //
 // Options, each an attribute on the row and a JS option of attachTransfers(root, options):
 //
@@ -182,21 +182,26 @@ function paint(row, st, p) {
     const measured = (last?.t ?? now) - st.start;
     const percent = known ? Math.min(100, Math.floor((done / /** @type {number} */ (total)) * 100)) : null;
 
-    // The bar: ARIA is the source. A transfer of unknown size does not loop a busy bar from the start (round 1 of
-    // kpadopt5-ops: it kept restarting, then jumped to full): `data-kp-transfer-unknown` makes the bar one full band that breathes
-    // slowly and, when the size turns out, settles into the finished bar without a jump.
+    // The bar: ARIA is the source. A transfer of unknown size has no share to fill, and a bar that sweeps or restarts reads
+    // as stuck or hectic (kpadopt5-ops rounds 1 and 2). `data-kp-transfer-unknown` makes the bar one full band of stripes that
+    // drifts at an even pace, a loop that is the same picture every period so nothing restarts; the words beside it say the
+    // size is unknown and the bytes so far count up. When the size turns out the band settles into the normal bar, which
+    // shrinks from full to the real share instead of jumping.
     if (known && row.hasAttribute('data-kp-transfer-unknown')) {
-        // The size turned out: settle from where the breathing was (opacity) into the bar, instead of jumping to full.
         const fill = p.bar.querySelector('.kp-progressbar__fill');
         if (fill) {
-            row.style.setProperty('--kp-settle-from', getComputedStyle(fill).opacity);
             row.setAttribute('data-kp-transfer-settle', '');
             fill.addEventListener('animationend', () => row.removeAttribute('data-kp-transfer-settle'), { once: true });
         }
     }
     row.toggleAttribute('data-kp-transfer-unknown', !known);
-    if (known) setProgress(p.bar, percent ?? 0);
-    else setIndeterminate(p.bar, true);
+    if (known) {
+        setProgress(p.bar, percent ?? 0);
+        p.bar.removeAttribute('aria-valuetext');
+    } else {
+        setIndeterminate(p.bar, true);
+        p.bar.setAttribute('aria-valuetext', `${s.transferSizeUnknown}, ${s.transferSoFar(size(row, done))}`);
+    }
 
     // The reading.
     const readingParts = [];
@@ -228,6 +233,7 @@ function paint(row, st, p) {
         etaText = '';
     } else {
         rateText = rate !== null && shows(row, 'rate') ? `${size(row, rate)}/s` : '';
+        if (shows(row, 'eta') && !known) etaText = s.transferSizeUnknown;
         if (shows(row, 'eta') && known) {
             if (rate === null || measured < numberOf(row, 'data-kp-eta-after', 3) * 1000 || rate <= 0) etaText = s.transferEstimating;
             else etaText = s.transferLeft(transferEta(/** @type {number} */ (total - done) / rate));
@@ -359,6 +365,9 @@ export function resetTransfer(row) {
     setProgress(p.bar, 0);
     p.value.textContent = '';
     p.rate.textContent = '';
+    row.removeAttribute('data-kp-transfer-unknown');
+    row.removeAttribute('data-kp-transfer-settle');
+    p.bar.removeAttribute('aria-valuetext');
     p.rate.removeAttribute('data-kp-stalled');
     p.eta.textContent = '';
 }

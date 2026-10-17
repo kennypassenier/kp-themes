@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>kpadopt5, the operations components</title>
+        <title>kpadopt5, the operations components, round 2</title>
         <link rel="stylesheet" href="../../css/fonts.css" />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
@@ -32,446 +32,12 @@
 
         <main id="main" class="cat-main ko-page">
             <header class="ko-intro">
-                <h1>The fifth adoption round: the operations components</h1>
+                <h1>The operations components, round 2</h1>
                 <p class="cat-intro">
-                    Seven parts a dashboard needs and today draws itself: a page frame, a list and its detail, an automatic refresh, a connection
-                    banner, a transfer with its speed, a question that waits for an answer and a notification centre. Formal only, one topic per
-                    component in the review dialog.
-                </p>
-                <p>
-                    Every section says under <b>Expected</b> what you should see and what each control does. Nothing moves until you press a button.
+                    Formal only. Only the three sections you did not approve are back: the connection banner, the transfer and the notification
+                    centre. Under <b>Expected</b> each says in one line what changed since round 1. Nothing moves until you press a button.
                 </p>
             </header>
-            <!-- ================================================================ ops-page-scaffold -->
-            <section
-                class="ko-sec"
-                id="ops-page"
-                data-review-item="ops-page"
-                data-review-topic="ops-page-scaffold"
-                data-review-topic-title="The page frame of a dashboard"
-                data-review-components="ops"
-                data-review-title="The page frame of a dashboard"
-                aria-labelledby="h-ops-page"
-            >
-                <div class="ko-sec__head">
-                    <h2 id="h-ops-page">The page frame of a dashboard</h2>
-                    <p>
-                        <code>.kp-ops</code>, CSS only: the header, the key figures, the attention band, the toolbar and a grid of cards in one fixed
-                        order, with the spacing and the 12-column spans written once.
-                    </p>
-                </div>
-                <div class="ko-expected">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>
-                            One whole page in a frame: the header (the title <b>Pump houses</b>, the freshness line “updated … ago” right after it, a
-                            one-sentence description, the buttons at the right), a strip of four key figures of one height, one warning in the
-                            attention band, the toolbar (search and filter chips) and a grid of cards: 8 + 4, 6 + 6, 4 + 4 + 4 and 3 + 3 + 3 + 3.
-                            Cards in a row share one height; the gaps are the same everywhere.
-                        </li>
-                        <li>
-                            Scroll the window past the page: the <b>toolbar</b> stays under the top edge (the default). <b>Sticky part</b> moves that
-                            to the header or turns it off. <b>Attention band</b> shows the warning or takes it away: with none, the band takes no room
-                            at all, no “all well” line.
-                        </li>
-                        <li>
-                            <b>Loading</b> shows the whole page waiting at its final size from the first frame: the key figures as ruled lines, every
-                            card with formal’s busy card in its middle. <b>Page failed</b> puts one red entry in the attention band with
-                            <b>Retry</b> and the cards keep their place and their data. <b>Ready</b> brings it all back.
-                        </li>
-                        <li>
-                            <b>Page width</b> switches the rule between 80 % of the window (never under 64 rem, the default), the whole width and a
-                            reading measure (64 rem). The frame is narrower than every one of them, so the readout beside the buttons says the widest
-                            the page may be at this window. <b>Density</b> tightens the gaps.
-                        </li>
-                        <li>
-                            The phone frame (390 px) is the same page folded: every card on its own row, the key figures two to a row, only the
-                            primary button in the header and the rest behind <b>More</b>.
-                        </li>
-                    </ul>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">
-                        Ledger paper: cards ruled with hairlines, the toolbar a ruled band that stays put, the loading as ledger lines ruled across
-                        the key figures and the busy card in each card, the failed page one red-ink entry along its start edge.
-                    </p>
-                </div>
-                <div class="ko-controls" data-review-controls>
-                    <div role="group" aria-label="State of the page">
-                        <b>State of the page:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-state="ready" aria-pressed="true">Ready</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-state="loading" aria-pressed="false">Loading</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-state="error" aria-pressed="false">Page failed</button>
-                    </div>
-                    <div role="group" aria-label="Attention band">
-                        <b>Attention band:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-band="one" aria-pressed="true">One warning</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-band="none" aria-pressed="false">
-                            Nothing needs attention
-                        </button>
-                    </div>
-                    <div role="group" aria-label="Sticky part">
-                        <b>Sticky part:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-sticky="toolbar" aria-pressed="true">Toolbar</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-sticky="head" aria-pressed="false">Header</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-sticky="none" aria-pressed="false">Nothing</button>
-                    </div>
-                    <div role="group" aria-label="Page width">
-                        <b>Page width:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-width="80vw" aria-pressed="true">80 % of the window</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-width="full" aria-pressed="false">The whole width</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-width="measure" aria-pressed="false">
-                            A reading measure
-                        </button>
-                        <span class="ko-readout" data-ko-ops-readout aria-live="polite"></span>
-                    </div>
-                    <div role="group" aria-label="Density">
-                        <b>Density:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-density="comfortable" aria-pressed="true">
-                            Comfortable
-                        </button>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-density="compact" aria-pressed="false">Compact</button>
-                    </div>
-                </div>
-                <div class="ko-stack">
-                    <div>
-                        <p class="ko-label">The whole page</p>
-                        <div class="ko-pageframe" data-ko-pageframe>
-                            <div class="kp-ops" data-ko-ops>
-                                <header class="kp-ops__head kp-page-header">
-                                    <div class="kp-page-header__inner">
-                                        <div>
-                                            <div class="kp-page-header__line">
-                                                <h1 class="kp-page-header__title">Pump houses</h1>
-                                                <time
-                                                    class="kp-ago"
-                                                    data-kp-ago
-                                                    data-kp-ago-verb="updated"
-                                                    data-kp-stale-after="180"
-                                                    data-ko-ago
-                                                ></time>
-                                            </div>
-                                            <p class="kp-page-header__description">
-                                                Fifteen pump houses on the northern network: their state, the last reading of each, and what needs a
-                                                visit.
-                                            </p>
-                                        </div>
-                                        <div class="kp-page-header__actions">
-                                            <button type="button" class="kp-button" data-kp-ops-wide>Export readings</button>
-                                            <button type="button" class="kp-button kp-button--primary">Add a pump house</button>
-                                            <div class="kp-menu-button" data-kp-menu-button data-ko-ops-more>
-                                                <button type="button" class="kp-button">More ▾</button>
-                                                <div class="kp-menu kp-menu--rich" role="menu" aria-label="Every other action"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </header>
-                                <div class="kp-ops__kpis" data-ko-ops-kpis>
-                                    <div class="kp-kpis" role="group" aria-label="Network at a glance">
-                                        <div class="kp-kpi">
-                                            <span class="kp-kpi__label">Pump houses online</span>
-                                            <span class="kp-kpi__value">14<small>of 15</small></span>
-                                            <span class="kp-kpi__trend">Pump house 7 offline</span>
-                                        </div>
-                                        <div class="kp-kpi">
-                                            <span class="kp-kpi__label">Flow now</span>
-                                            <span class="kp-kpi__value">412<small>m³/h</small></span>
-                                            <span class="kp-kpi__trend">Average over 15 minutes</span>
-                                        </div>
-                                        <div class="kp-kpi">
-                                            <span class="kp-kpi__label">Open incidents</span>
-                                            <span class="kp-kpi__value">3</span>
-                                            <span class="kp-kpi__trend">2 new today</span>
-                                        </div>
-                                        <div class="kp-kpi">
-                                            <span class="kp-kpi__label">Pressure alarms</span>
-                                            <span class="kp-kpi__value">1</span>
-                                            <span class="kp-kpi__trend">Pump house 3</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="kp-ops__attention kp-attention" data-ko-ops-attention></div>
-                                <div class="kp-ops__toolbar kp-toolbar" data-kp-toolbar role="group" aria-label="Pump houses">
-                                    <div class="kp-toolbar__search">
-                                        <input
-                                            type="search"
-                                            class="kp-field__input kp-toolbar__input"
-                                            placeholder="Search pump houses"
-                                            aria-label="Search pump houses"
-                                        />
-                                    </div>
-                                    <div class="kp-toolbar__filters">
-                                        <div class="kp-toolbar__group" role="group" aria-labelledby="ko-ops-status">
-                                            <b class="kp-toolbar__label" id="ko-ops-status">Status</b>
-                                            <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" aria-label="Status">
-                                                <button
-                                                    type="button"
-                                                    class="kp-segmented__item"
-                                                    data-value="all"
-                                                    data-kp-segmented-all
-                                                    aria-pressed="true"
-                                                >
-                                                    All
-                                                </button>
-                                                <button type="button" class="kp-segmented__item" data-value="online" aria-pressed="false">
-                                                    Online
-                                                </button>
-                                                <button type="button" class="kp-segmented__item" data-value="offline" aria-pressed="false">
-                                                    Offline
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="kp-ops__body" data-ko-ops-body></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <p class="ko-label">Phone width (390 px)</p>
-                        <div class="ko-frame ko-frame--phone ko-pageframe ko-pageframe--phone" data-ko-pageframe>
-                            <div class="kp-ops" data-ko-ops data-ko-ops-phone>
-                                <header class="kp-ops__head kp-page-header">
-                                    <div class="kp-page-header__inner">
-                                        <div>
-                                            <div class="kp-page-header__line">
-                                                <h1 class="kp-page-header__title">Pump houses</h1>
-                                                <time
-                                                    class="kp-ago"
-                                                    data-kp-ago
-                                                    data-kp-ago-verb="updated"
-                                                    data-kp-stale-after="180"
-                                                    data-ko-ago
-                                                ></time>
-                                            </div>
-                                            <p class="kp-page-header__description">The state of each pump house, and what needs a visit.</p>
-                                        </div>
-                                        <div class="kp-page-header__actions">
-                                            <button type="button" class="kp-button" data-kp-ops-wide>Export readings</button>
-                                            <button type="button" class="kp-button kp-button--primary">Add a pump house</button>
-                                            <div class="kp-menu-button" data-kp-menu-button data-ko-ops-more>
-                                                <button type="button" class="kp-button">More ▾</button>
-                                                <div class="kp-menu kp-menu--rich" role="menu" aria-label="Every other action"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </header>
-                                <div class="kp-ops__kpis" data-ko-ops-kpis>
-                                    <div class="kp-kpis" role="group" aria-label="Network at a glance">
-                                        <div class="kp-kpi">
-                                            <span class="kp-kpi__label">Pump houses online</span>
-                                            <span class="kp-kpi__value">14<small>of 15</small></span>
-                                            <span class="kp-kpi__trend">Pump house 7 offline</span>
-                                        </div>
-                                        <div class="kp-kpi">
-                                            <span class="kp-kpi__label">Flow now</span>
-                                            <span class="kp-kpi__value">412<small>m³/h</small></span>
-                                            <span class="kp-kpi__trend">Average over 15 minutes</span>
-                                        </div>
-                                        <div class="kp-kpi">
-                                            <span class="kp-kpi__label">Open incidents</span>
-                                            <span class="kp-kpi__value">3</span>
-                                            <span class="kp-kpi__trend">2 new today</span>
-                                        </div>
-                                        <div class="kp-kpi">
-                                            <span class="kp-kpi__label">Pressure alarms</span>
-                                            <span class="kp-kpi__value">1</span>
-                                            <span class="kp-kpi__trend">Pump house 3</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="kp-ops__attention kp-attention" data-ko-ops-attention></div>
-                                <div class="kp-ops__body" data-ko-ops-body></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <!-- ================================================================ responsive-master-detail -->
-            <section
-                class="ko-sec"
-                id="master-detail"
-                data-review-item="master-detail"
-                data-review-topic="ops-master-detail"
-                data-review-topic-title="A list and its detail that folds on a phone"
-                data-review-components="split"
-                data-review-title="A list and its detail that folds on a phone"
-                aria-labelledby="h-master-detail"
-            >
-                <div class="ko-sec__head">
-                    <h2 id="h-master-detail">A list and its detail that folds on a phone</h2>
-                    <p>
-                        <code>.kp-split--panes</code> with <code>js/master-detail.js</code>: a list, a detail and an optional side panel next to each
-                        other; on a narrow screen one pane at a time, with a Back button.
-                    </p>
-                </div>
-                <div class="ko-expected">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>
-                            Three panes side by side in a ruled frame: the list of secrets (17 rem), the detail (the rest) and, when the page is wide
-                            enough, a History panel (18 rem). Nothing is picked yet, so the detail is an empty plate that says
-                            <b>Pick an item on the left</b> large, in the middle of the whole pane, with the list still usable.
-                        </li>
-                        <li>
-                            Press an item, or move with the up and down arrow keys (the focus stays in the list, Home and End jump): the detail fills
-                            for the item you are on after a short load. The picked row has a navy bar along its start. A long name wraps, it is never
-                            cut.
-                        </li>
-                        <li>
-                            <b>Loading</b> lays formal's busy card over the detail pane only; the list stays usable. <b>Failed</b> fills the pane with
-                            the red-ink plate, the sentence large, and a normal-size <b>Retry</b> that loads the item again.
-                            <b>Nothing picked</b> brings the empty plate back. The pane keeps its size in every state.
-                        </li>
-                        <li>
-                            The phone frame (390 px) shows the same layout folded: the list alone. Press an item: the detail arrives (the theme's way)
-                            with <b>Back to the list</b> at the top and the focus on the heading. Back, the browser's Back, or Esc returns to the list
-                            at the same scroll with the same row picked and the focus on it. <b>What a phone shows</b> switches between one pane (the
-                            default), a sheet that slides over the list and everything stacked.
-                        </li>
-                        <li>The log shows each select, open, close and retry event.</li>
-                    </ul>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">
-                        Ledger paper with the faint rules between the panes; the picked row carries the navy rule along its start, the empty and
-                        failed plates are the theme's own (dashed paper, red-ink entry) set large in the middle.
-                    </p>
-                </div>
-                <div class="ko-controls" data-review-controls>
-                    <div role="group" aria-label="State of the detail">
-                        <b>State of the detail:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-md-state="ready" aria-pressed="false">Ready</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-md-state="loading" aria-pressed="false">Loading</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-md-state="error" aria-pressed="false">Failed</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-md-state="empty" aria-pressed="true">Nothing picked</button>
-                    </div>
-                    <div role="group" aria-label="What a phone shows">
-                        <b>What a phone shows:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-md-narrow="one-pane" aria-pressed="true">One pane</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-md-narrow="sheet" aria-pressed="false">Sheet</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-md-narrow="stack" aria-pressed="false">Stacked</button>
-                    </div>
-                </div>
-                <div class="ko-stack">
-                    <div>
-                        <p class="ko-label">Wide, with the History panel</p>
-                        <div
-                            class="kp-split kp-split--panes"
-                            data-kp-master-detail
-                            data-kp-aside-closable
-                            data-kp-pane-widths="17rem 1fr 18rem"
-                            data-kp-aside-fold-at="52rem"
-                            data-ko-md="wide"
-                        >
-                            <section data-kp-pane="list" aria-label="Secrets">
-                                <ul class="kp-pane__list" role="listbox" aria-label="Secrets" data-ko-md-list></ul>
-                            </section>
-                            <section data-kp-pane="detail" aria-label="Secret">
-                                <h3 data-kp-pane-heading tabindex="-1"></h3>
-                                <div class="kp-pane__body" data-ko-md-body></div>
-                            </section>
-                            <aside data-kp-pane="aside" aria-label="History">
-                                <h3 class="ko-label">History</h3>
-                                <ul class="ko-history" data-ko-md-history></ul>
-                            </aside>
-                        </div>
-                    </div>
-                    <div>
-                        <p class="ko-label">Phone width (390 px)</p>
-                        <div class="ko-frame ko-frame--phone">
-                            <div class="kp-split kp-split--panes" data-kp-master-detail data-kp-pane-widths="12rem 1fr" data-ko-md="phone">
-                                <section data-kp-pane="list" aria-label="Secrets">
-                                    <ul class="kp-pane__list" role="listbox" aria-label="Secrets" data-ko-md-list></ul>
-                                </section>
-                                <section data-kp-pane="detail" aria-label="Secret">
-                                    <h3 data-kp-pane-heading tabindex="-1"></h3>
-                                    <div class="kp-pane__body" data-ko-md-body></div>
-                                </section>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <pre class="ko-log" data-ko-log="master-detail" aria-live="polite">Nothing happened yet.</pre>
-            </section>
-            <!-- ================================================================ auto-refresh -->
-            <section
-                class="ko-sec"
-                id="auto-refresh"
-                data-review-item="auto-refresh"
-                data-review-topic="ops-auto-refresh"
-                data-review-topic-title="The automatic refresh chooser"
-                data-review-components="refresh"
-                data-review-title="The automatic refresh chooser"
-                data-review-choices='[{ "id": "refresh-look", "label": "How the choice looks", "once": true, "default": "menu", "options": [
-                    { "value": "menu", "label": "A menu button", "hint": "One compact button that says Every 30 s; the choices open under it. Fits the right side of a page header (the default)." },
-                    { "value": "segmented", "label": "Segments", "hint": "All the choices side by side, one tap each. Wider, but nothing is hidden." }] }]'
-                aria-labelledby="h-auto-refresh"
-            >
-                <div class="ko-sec__head">
-                    <h2 id="h-auto-refresh">The automatic refresh chooser</h2>
-                    <p>
-                        <code>.kp-refresh</code> with <code>js/auto-refresh.js</code>: “Every 30 s”, a freshness line and Refresh now. The app does
-                        the reading; the control only says when.
-                    </p>
-                </div>
-                <div class="ko-expected">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>
-                            The first control opens <b>Paused</b> so the page stays still: a button that says <b>Paused ▾</b>, “updated … ago” (here
-                            the moment the page opened), <b>Refresh now</b>, and under them an empty rule. The second one is the same control as
-                            segments. <b>Start at the default (30 s)</b> sets the first one to the default.
-                        </li>
-                        <li>
-                            Open the menu: Paused, Every 15 s, 30 s, 1 min, 5 min and <b>Other…</b>, which opens a field for any number of seconds
-                            (try 3, then Apply; a 0 or a word is refused in words). Pick an interval: the thin navy rule under the control shrinks
-                            from full to nothing at an even pace towards the next refresh; at the end “updating…” takes the place of “updated … ago”
-                            (the line keeps its width), the readout below counts one more read, and the line starts again at “0 s”.
-                        </li>
-                        <li>
-                            <b>Fail the next refresh</b>, then wait for a tick or press Refresh now: the data stays, the line keeps counting (it turns
-                            stale, on a warning plate, once refreshes have stopped arriving for three intervals or a minute) and a red-ink entry says
-                            “Last refresh failed, retrying in …” with <b>Retry now</b>. The retries back off (the interval, twice that, four times
-                            that) and a success clears the entry.
-                        </li>
-                        <li>
-                            Click in the text field under the controls: no refresh happens while it has the focus (the readout keeps its number);
-                            leave the field and it refreshes. The R key refreshes now anywhere outside a field. A tab that is hidden does not refresh
-                            and refreshes once when you return. With <code>data-kp-remember</code> the choice is kept per page on the device (this
-                            demo does not store it, so it always opens still).
-                        </li>
-                    </ul>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">
-                        The countdown is a navy rule ruled off from its end at an even pace, square-ended; the failed entry is a red-ink entry along
-                        its start edge; the buttons and the menu are formal's own.
-                    </p>
-                </div>
-                <div class="ko-controls" data-review-controls>
-                    <div role="group" aria-label="Refresh demo">
-                        <b>Try it:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-refresh-default>Start at the default (30 s)</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-refresh-fail aria-pressed="false">Fail the next refresh</button>
-                    </div>
-                </div>
-                <div class="ko-stack">
-                    <div>
-                        <p class="ko-label">A menu button</p>
-                        <div data-kp-refresh="0" data-ko-refresh="menu"></div>
-                    </div>
-                    <div>
-                        <p class="ko-label">Segments</p>
-                        <div data-kp-refresh="0" data-kp-look="segmented" data-kp-refresh-choices="0,15,30,60,300" data-ko-refresh="segmented"></div>
-                    </div>
-                    <div>
-                        <label class="ko-label" for="ko-refresh-type">A field: a refresh waits while you type here</label>
-                        <input id="ko-refresh-type" class="kp-field__input" type="text" placeholder="Type something" />
-                    </div>
-                    <p class="ko-readout" data-ko-refresh-readout aria-live="polite">Data read 0 times.</p>
-                </div>
-            </section>
             <!-- ================================================================ connection-banner -->
             <section
                 class="ko-sec"
@@ -481,9 +47,6 @@
                 data-review-topic-title="The offline and reconnecting banner"
                 data-review-components="connection"
                 data-review-title="The offline and reconnecting banner"
-                data-review-choices='[{ "id": "connection-placement", "label": "Where the banner stands", "once": true, "default": "top", "options": [
-                    { "value": "top", "label": "Under the navigation bar", "hint": "In the page, pushing the content down; it scrolls away with it (the default)." },
-                    { "value": "bottom", "label": "At the foot of the window", "hint": "Sticks to the bottom edge while you scroll, so it is always in view; it covers the last lines until it goes." }] }]'
                 aria-labelledby="h-connection"
             >
                 <div class="ko-sec__head">
@@ -494,28 +57,20 @@
                     </p>
                 </div>
                 <div class="ko-expected">
-                    <p><b>Expected:</b></p>
+                    <p>
+                        <b>Expected:</b> changed since round 1: the banner stands at the foot of its window by default; “under the navigation bar” is
+                        the option <code>data-kp-placement="top"</code>. Both are shown here.
+                    </p>
                     <ul>
                         <li>
-                            Two mock pages (one at full width, one at 390 px), each an app bar, the banner slot and some content. Online, the slot
-                            takes no room at all: the content sits directly under the app bar.
+                            Four mock pages: the first two stand at the <b>foot</b> (the default), the last two <b>under the navigation bar</b> (the
+                            option); each pair has one at full width and one at 390 px. Online, the banner takes no room in any of them.
                         </li>
                         <li>
-                            <b>Lose the connection</b>: after a grace of 1.5 s (a drop shorter than that shows nothing) the band is ruled in under the
-                            app bar and pushes the content down: a warning, <b>You are offline</b>, “Changes are kept here and sent when the
-                            connection is back.”, the exact count “2 changes waiting” and “next try in 3 s” counting down, and <b>Retry now</b>. At
-                            zero (or on Retry now) it says <b>Reconnecting…</b> with a spinner and “Attempt 2”; the app then answers (the
-                            <b>Still offline</b> button is that answer) and the next wait is longer (3, 10, 30, 60 s). The band keeps one height in
-                            every state; on the phone it is one line plus Retry now.
-                        </li>
-                        <li>
-                            <b>Add a waiting change</b> raises the count by one (“3 changes waiting”, “1 change waiting” in the singular, never a
-                            capped number). <b>A one-second drop</b> shows nothing at all. <b>Server refuses</b> is the red plate: you are online, but
-                            the server did not accept the request, with the app’s own sentence.
-                        </li>
-                        <li>
-                            <b>Come back</b>: a green <b>Connected again</b> (“Sending 2 changes.”) stays 3 s and then leaves the way it came, ruled
-                            off; the content slides back up. A screen reader hears each change once, politely, and going offline at once.
+                            <b>Lose the connection</b> (after 1.5 s): at the foot the band slides in over the last lines of its page, under the bar it
+                            pushes the content down. It says <b>You are offline</b>, the exact count of waiting changes and “next try in 3 s”, with
+                            <b>Retry now</b>; then <b>Reconnecting…</b>, <b>Still offline</b>, <b>Server refuses</b>, and <b>Come back</b> (a green
+                            <b>Connected again</b> for 3 s, then it leaves). <b>A one-second drop</b> shows nothing.
                         </li>
                     </ul>
                 </div>
@@ -538,14 +93,50 @@
                 </div>
                 <div class="ko-stack">
                     <div>
-                        <p class="ko-label">Full width</p>
-                        <div class="ko-mockpage">
+                        <p class="ko-label">At the foot (the default), full width</p>
+                        <div class="ko-mockpage ko-mockpage--page">
+                            <div class="ko-mockbar"><b>Pump houses</b><span>Readings · Visits · Alarms</span></div>
+                            <div class="ko-mockbody">
+                                <p>Fifteen pump houses on the northern network. Pump house 7 sent its last reading at 06:00.</p>
+                                <p>Everything on this page stays readable while the connection is gone.</p>
+                            </div>
+                            <div
+                                data-kp-connection
+                                data-kp-connection-source="app"
+                                data-kp-connection-grace="1500"
+                                data-kp-pending="2"
+                                data-kp-placement="bottom"
+                                data-ko-conn-banner
+                            ></div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="ko-label">At the foot (the default), phone width (390 px)</p>
+                        <div class="ko-frame ko-frame--phone">
+                            <div class="ko-mockpage ko-mockpage--page">
+                                <div class="ko-mockbar"><b>Pump houses</b></div>
+                                <div class="ko-mockbody"><p>Fifteen pump houses on the northern network.</p></div>
+                                <div
+                                    data-kp-connection
+                                    data-kp-connection-source="app"
+                                    data-kp-connection-grace="1500"
+                                    data-kp-pending="2"
+                                    data-kp-placement="bottom"
+                                    data-ko-conn-banner
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="ko-label">Under the navigation bar (option), full width</p>
+                        <div class="ko-mockpage ko-mockpage--page">
                             <div class="ko-mockbar"><b>Pump houses</b><span>Readings · Visits · Alarms</span></div>
                             <div
                                 data-kp-connection
                                 data-kp-connection-source="app"
                                 data-kp-connection-grace="1500"
                                 data-kp-pending="2"
+                                data-kp-placement="top"
                                 data-ko-conn-banner
                             ></div>
                             <div class="ko-mockbody">
@@ -555,15 +146,16 @@
                         </div>
                     </div>
                     <div>
-                        <p class="ko-label">Phone width (390 px)</p>
+                        <p class="ko-label">Under the navigation bar (option), phone width (390 px)</p>
                         <div class="ko-frame ko-frame--phone">
-                            <div class="ko-mockpage">
+                            <div class="ko-mockpage ko-mockpage--page">
                                 <div class="ko-mockbar"><b>Pump houses</b></div>
                                 <div
                                     data-kp-connection
                                     data-kp-connection-source="app"
                                     data-kp-connection-grace="1500"
                                     data-kp-pending="2"
+                                    data-kp-placement="top"
                                     data-ko-conn-banner
                                 ></div>
                                 <div class="ko-mockbody"><p>Fifteen pump houses on the northern network.</p></div>
@@ -592,30 +184,16 @@
                     </p>
                 </div>
                 <div class="ko-expected">
-                    <p><b>Expected:</b></p>
+                    <p>
+                        <b>Expected:</b> changed since round 1: the second bar (the one with no known size) no longer loops from the start and then
+                        jumps to full; it is one full band that breathes slowly in place, and when its size is known it settles into the finished bar
+                        without a jump. The first and third rows are as before.
+                    </p>
                     <ul>
                         <li>
-                            Three transfers in one group, waiting before the first report: the names in one column, the bars in one column, then the
-                            reading, the speed and the time left in three more, all in figures of one width, aligned right. The group is one grid, so
-                            the bars start and end together whatever the names or numbers.
-                        </li>
-                        <li>
-                            <b>Play once</b> (about 12 s; the clock runs at five times speed so you do not wait a minute): the first transfer fills
-                            formal's bar at about 12 MB/s; after three seconds the time left appears (<b>estimating…</b> first, then “about 40 s
-                            left”, rounded so it does not shimmer); “220 MB of 600 MB · 36 %”. At the end it turns to “600 MB”, “avg 12 MB/s”, and the
-                            time “in 50 s” on a green plate. The second has no known size: the bar is the busy bar and the reading says
-                            <b>1.2 GB so far</b> with the speed. The third moves for eight seconds and stops: after ten more its speed turns into a
-                            warning plate “stalled for 12 s” and the time left disappears; then it fails with a red note under its row: the reason and
-                            <b>Retry</b>.
-                        </li>
-                        <li>
-                            <b>Retry</b> starts that one again from nothing. <b>Reset</b> clears all three back to waiting. A finished transfer stays
-                            30 s and then leaves the list the theme’s way (this demo shortens it to 6 s). A screen reader hears 25, 50, 75 and 100 %
-                            per transfer, never every second.
-                        </li>
-                        <li>
-                            The phone frame (390 px) shows the same three rows folded: the name on its own line, the bar under it and the numbers
-                            under the bar.
+                            Press <b>Play once</b> (about 12 s, the clock runs at five times speed): the first fills at about 12 MB/s, the second says
+                            “so far” and breathes, finishes on its own at about 6 s, the third stalls and fails with <b>Retry</b>. <b>Reset</b>
+                            clears all three.
                         </li>
                     </ul>
                 </div>
@@ -673,88 +251,6 @@
                     </div>
                 </div>
             </section>
-            <!-- ================================================================ question-card -->
-            <section
-                class="ko-sec"
-                id="question"
-                data-review-item="question"
-                data-review-topic="ops-question-card"
-                data-review-topic-title="A question that waits for your answer"
-                data-review-components="question"
-                data-review-title="A question that waits for your answer"
-                data-review-choices='[{ "id": "question-measure", "label": "How the time left is drawn", "once": true, "default": "bar", "options": [
-                    { "value": "bar", "label": "A shrinking rule", "hint": "A thin rule under the question that shrinks over the whole wait; the same drawing as the alarm (the default)." },
-                    { "value": "ring", "label": "A ring", "hint": "A small ring beside the time that empties; takes less width, reads as a clock." },
-                    { "value": "text", "label": "Words only", "hint": "Only “Waits 1 min 12 s more”; the quietest, nothing moves but the numbers." }] }]'
-                aria-labelledby="h-question"
-            >
-                <div class="ko-sec__head">
-                    <h2 id="h-question">A question that waits for your answer</h2>
-                    <p>
-                        <code>.kp-question</code> with <code>js/question-card.js</code>: the host asks before it goes on, says what each answer sets
-                        in motion and how long it waits. The card shows the sending, the outcome and a refusal.
-                    </p>
-                </div>
-                <div class="ko-expected">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>
-                            <b>All the states, frozen</b>: the page opens with the clock stopped so nothing moves. Waiting is a warning plate with the
-                            question, “Waits 50 s more”, “If nobody answers: Stop.” and two buttons (<b>Allow</b>, <b>Stop</b>) in one column with
-                            what each does beside them. Urgent (20 s left) is the stronger red-ink plate with the time in bold. Sending has the
-                            pressed button busy. Answered is green with “Allowed. The operation goes on.” and <b>Dismiss</b>. Refused says “Not sent:
-                            …” and the buttons work again. Expired is a plain plate saying nobody answered and what the default did; it stays (Kenny:
-                            the card stays with its outcome). The three ways of drawing the time are side by side.
-                        </li>
-                        <li>
-                            <b>Ask a question</b> adds a live card (90 s) that counts down for real: the rule shrinks from its end at an even pace;
-                            under 30 s the card turns urgent (and a screen reader hears it once). Press a button (or the key 1 or 2 with the card
-                            focused): it is sent; with <b>The app accepts</b> it turns to its outcome, with <b>The app refuses</b> it says why and you
-                            may answer again. Several questions stack, the oldest first. The tab title carries “(1) waiting” while one is open.
-                        </li>
-                        <li>
-                            <b>Ask one with 12 s left</b> shows the whole end: urgent at once, then at zero the card is the expired plate with the
-                            default’s outcome. <b>Ask one that leaves at zero</b> is the other choice: it is taken away the theme’s way.
-                        </li>
-                        <li>The phone frame (390 px): the buttons full width, each consequence under its button.</li>
-                    </ul>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">
-                        The warning is a red-ink entry on paper (a rule along the start edge); the countdown is a navy rule ruled off from its end at
-                        an even pace (linear, no ease); the answered card is the green plate; the buttons are formal's own.
-                    </p>
-                </div>
-                <div class="ko-controls" data-review-controls>
-                    <div role="group" aria-label="Ask a question">
-                        <b>Ask:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-q="ask">Ask a question (90 s)</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-q="short">Ask one with 12 s left</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-q="remove">Ask one that leaves at zero</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-q="clear">Take the live ones away</button>
-                    </div>
-                    <div role="group" aria-label="The app's answer">
-                        <b>The app:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-q-app="ok" aria-pressed="true">The app accepts</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-q-app="refuse" aria-pressed="false">The app refuses</button>
-                    </div>
-                </div>
-                <div class="ko-stack">
-                    <div>
-                        <p class="ko-label">Live questions</p>
-                        <div data-kp-questions data-ko-q-live></div>
-                        <p class="ko-readout" data-ko-q-readout aria-live="polite">No live question yet. Press Ask.</p>
-                    </div>
-                    <div>
-                        <p class="ko-label">All the states, frozen</p>
-                        <div class="ko-grid" data-ko-q-frozen></div>
-                    </div>
-                    <div>
-                        <p class="ko-label">Phone width (390 px)</p>
-                        <div class="ko-frame ko-frame--phone"><div data-kp-questions data-kp-title="off" data-ko-q-phone></div></div>
-                    </div>
-                </div>
-            </section>
             <!-- ================================================================ notification-centre -->
             <section
                 class="ko-sec"
@@ -774,30 +270,14 @@
                     </p>
                 </div>
                 <div class="ko-expected">
-                    <p><b>Expected:</b></p>
+                    <p>
+                        <b>Expected:</b> changed since round 1: <b>Mark read</b> / <b>Mark unread</b> is the first button of every row, in one column
+                        under each other whether the notice has a Fix button or not; <b>Fix</b> is the second. The rest is as before.
+                    </p>
                     <ul>
                         <li>
-                            In the mock bar, <b>Inbox</b> with the number of unread notices (here 6) in a badge, always the real number. Press it: a
-                            raised panel on formal’s opaque paper opens at the button with the newest notices, worst first and newest first within a
-                            severity: a round mark, what happened in bold with a dot while unread, “since 12 min ago”, what it affects, what to do and
-                            <b>Fix</b> and <b>Mark read</b>. At the foot: <b>All 8 in the Inbox</b> (the exact count). Esc or a click outside closes
-                            it. <b>Mark all read</b> reads everything (the badge goes to none; its label says “none unread”).
-                        </li>
-                        <li>
-                            Below the bar, the same notices as the <b>Inbox page</b>: every notice, plus <b>Sources</b> with one switch per source
-                            (mute a source: the word beside it changes and an event fires). The keys: <b>g</b> then <b>i</b> opens the Inbox, <b>m</b>
-                            marks the focused notice read.
-                        </li>
-                        <li>
-                            <b>Loading</b> lays formal’s busy card over the list at its full height while the counter holds its place;
-                            <b>Nothing waiting</b> is the large centred empty plate; <b>Failed</b> is the red plate with a normal-size Retry and the
-                            counter shows “?”. All fill the same height as the filled list. <b>Quiet until 09:00</b> mutes the counter, shows a moon
-                            and the words with <b>End quiet</b>. <b>134 unread</b> feeds a number past 99: the badge shows 134, never “99+”.
-                        </li>
-                        <li>
-                            <b>A new critical notice</b> adds a row at the top (the focus stays where it was), the counter goes up, a screen reader
-                            hears it at once, a toast shows it, and the tab title carries the count. The phone frame (390 px) shows the same bar; on a
-                            phone the panel opens as a full-height sheet.
+                            Press <b>Inbox</b> (the panel) and look at the Inbox page below: the Mark buttons stand at the same distance from the left
+                            of the text in every row. Press one: the row turns read (the button says “Mark unread”) and the button does not move.
                         </li>
                     </ul>
                 </div>
@@ -853,7 +333,7 @@
             </section>
         </main>
         <script type="application/json" data-review-round>
-            { "round": "ops-c17983a9-c644-4e17-b04b-bf6ed4735b60", "received": [] }
+            { "round": "ops-553b88cf-7ad0-4d60-b4b1-19d4090d8b91", "received": ["ops-c17983a9-c644-4e17-b04b-bf6ed4735b60"] }
         </script>
         <script type="module" src="demo.js"></script>
         <script type="module" src="../../js/auto.js"></script>

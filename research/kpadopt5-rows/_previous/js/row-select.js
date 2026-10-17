@@ -19,8 +19,8 @@
 // as the second argument of attachRowSelect():
 //
 //   data-kp-select-range   `shift` (default) | `off`
-//   data-kp-select-arrows  the arrow keys walk too (never inside a `data-kp-grid`, which owns them)
-//   data-kp-select-all-key Ctrl+A ticks every row shown, `Ctrl+Shift+A` unticks them
+//   data-kp-select-arrows  the arrow keys walk too, on by default, `false` turns them off (never inside a `data-kp-grid`, which owns them)
+//   data-kp-select-all-key Ctrl+A ticks every row shown, `Ctrl+Shift+A` unticks them: on by default, `false` turns it off
 //   data-kp-cursor-scroll  `nearest` (default) | `center`
 //   data-kp-select-hint    an element in the page; the keys are written into it as a `.kp-keys` line
 //
@@ -59,6 +59,8 @@ export const LONG_PRESS_MS = 500;
 
 /** @param {Element} el @param {string} name */
 const flag = (el, name) => el.hasAttribute(name) && el.getAttribute(name) !== 'false';
+/** An option that is on unless the attribute says `false` (Kenny, 2026-10-17: the arrows walk and Ctrl+A ticks, by default). @param {Element} el @param {string} name */
+const onByDefault = (el, name) => el.getAttribute(name) !== 'false';
 
 /** Every box of the element in document order. @param {Element} el @returns {HTMLInputElement[]} */
 const boxesOf = (el) => /** @type {HTMLInputElement[]} */ ([...el.querySelectorAll(SELECT_BOX)]).filter((b) => b instanceof HTMLInputElement);
@@ -131,8 +133,8 @@ function attachOne(el, options = {}) {
     // The options are read when they are used, so a page that flips an attribute is heard at once.
     const isRange = () => (options.range ?? el.getAttribute('data-kp-select-range') ?? 'shift') !== 'off';
     const owned = () => el.matches('[data-kp-grid]') || el.querySelector('[data-kp-grid]') !== null;
-    const useArrows = () => (options.arrows ?? flag(el, 'data-kp-select-arrows')) && !owned();
-    const useAllKey = () => options.allKey ?? flag(el, 'data-kp-select-all-key');
+    const useArrows = () => (options.arrows ?? onByDefault(el, 'data-kp-select-arrows')) && !owned();
+    const useAllKey = () => options.allKey ?? onByDefault(el, 'data-kp-select-all-key');
     const scrollTo = () => ((options.scroll ?? el.getAttribute('data-kp-cursor-scroll')) === 'center' ? 'center' : 'nearest');
 
     const live = doc.createElement('div');

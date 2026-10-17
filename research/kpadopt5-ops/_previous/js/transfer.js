@@ -17,7 +17,7 @@
 //
 // States: running; estimating (no time left until the rate is steady: "estimating…"); stalled (no byte for 10 s: "stalled for
 // 12 s", warning plate, time left hidden); done ("4.1 GB in 3 min 12 s", success); failed (a destructive note with the app's
-// reason and Retry, which fires `kp-transfer-retry`); total unknown (an indeterminate bar, "1.2 GB so far · 12 MB/s").
+// reason and Retry, which fires `kp-transfer-retry`); total unknown (an indeterminate bar that breathes in place, never restarting: "1.2 GB so far · 12 MB/s").
 //
 // Options, each an attribute on the row and a JS option of attachTransfers(root, options):
 //
@@ -152,7 +152,11 @@ function build(row) {
     value.classList.add('kp-transfer__done');
     row.classList.add('kp-transfer');
     // Order in the grid: label, bar, reading, rate, eta.
-    for (const node of [label, bar, value, rate, eta]) row.append(node);
+    // Moving a node restarts its CSS animations, and build() runs on every report: only a node out of place is moved
+    // (round 1 of kpadopt5-ops: the busy bar restarted from the beginning on every report).
+    [label, bar, value, rate, eta].forEach((node, at) => {
+        if (row.children[at] !== node) row.insertBefore(node, row.children[at] ?? null);
+    });
     let status = /** @type {HTMLElement | null} */ (row.querySelector(':scope > .kp-transfer__voice'));
     if (!status) {
         status = row.ownerDocument.createElement('span');
@@ -178,7 +182,19 @@ function paint(row, st, p) {
     const measured = (last?.t ?? now) - st.start;
     const percent = known ? Math.min(100, Math.floor((done / /** @type {number} */ (total)) * 100)) : null;
 
-    // The bar: ARIA is the source.
+    // The bar: ARIA is the source. A transfer of unknown size does not loop a busy bar from the start (round 1 of
+    // kpadopt5-ops: it kept restarting, then jumped to full): `data-kp-transfer-unknown` makes the bar one full band that breathes
+    // slowly and, when the size turns out, settles into the finished bar without a jump.
+    if (known && row.hasAttribute('data-kp-transfer-unknown')) {
+        // The size turned out: settle from where the breathing was (opacity) into the bar, instead of jumping to full.
+        const fill = p.bar.querySelector('.kp-progressbar__fill');
+        if (fill) {
+            row.style.setProperty('--kp-settle-from', getComputedStyle(fill).opacity);
+            row.setAttribute('data-kp-transfer-settle', '');
+            fill.addEventListener('animationend', () => row.removeAttribute('data-kp-transfer-settle'), { once: true });
+        }
+    }
+    row.toggleAttribute('data-kp-transfer-unknown', !known);
     if (known) setProgress(p.bar, percent ?? 0);
     else setIndeterminate(p.bar, true);
 
@@ -214,7 +230,7 @@ function paint(row, st, p) {
         rateText = rate !== null && shows(row, 'rate') ? `${size(row, rate)}/s` : '';
         if (shows(row, 'eta') && known) {
             if (rate === null || measured < numberOf(row, 'data-kp-eta-after', 3) * 1000 || rate <= 0) etaText = s.transferEstimating;
-            else etaText = s.transferLeft(transferEta(/** @type {number} */ ((total) - done) / rate));
+            else etaText = s.transferLeft(transferEta(/** @type {number} */ (total - done) / rate));
         }
     }
     p.rate.textContent = rateText;

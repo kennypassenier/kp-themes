@@ -1524,6 +1524,10 @@ export type Strings = {
      */
     transferSoFar: (done: string) => string;
     /**
+     * The time column of a transfer whose total size is not known, beside "1.2 GB so far" [kpadopt5-r3]
+     */
+    transferSizeUnknown: string;
+    /**
      * The time left while the speed is not steady yet [kpadopt5-transfer]
      */
     transferEstimating: string;
@@ -5714,6 +5718,7 @@ export type Strings = {
  * @property {string} transferBar  The accessible name of a transfer's bar when it has no file name (js/transfer.js) [kpadopt5-transfer]
  * @property {(done: string, total: string) => string} transferOf  The reading of a transfer with a known size, "1.2 GB of 4.1 GB" [kpadopt5-transfer]
  * @property {(done: string) => string} transferSoFar  The reading of a transfer of unknown size, "1.2 GB so far" [kpadopt5-transfer]
+ * @property {string} transferSizeUnknown  The time column of a transfer whose total size is not known, beside "1.2 GB so far" [kpadopt5-r3]
  * @property {string} transferEstimating  The time left while the speed is not steady yet [kpadopt5-transfer]
  * @property {(duration: string) => string} transferLeft  The time left, "about 3 min left" [kpadopt5-transfer]
  * @property {(duration: string) => string} transferStalled  A transfer that moved no byte for a while, "stalled for 12 s" [kpadopt5-transfer]

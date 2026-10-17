@@ -34,6 +34,7 @@
 
 import { getStrings } from './strings.js';
 import { showError, clearError } from './forms.js';
+import { fitTextarea } from './autosize.js';
 
 /** The fields this module looks after. */
 export const JSON_FIELD = 'textarea[data-kp-json]';
@@ -256,15 +257,9 @@ function attachOne(area, options) {
         numbers.style.transform = `translateY(${-area.scrollTop}px)`;
     };
 
+    // One implementation of the growing box, shared with js/autosize.js [kpadopt6-media].
     const grow = () => {
-        const lh = lineHeight();
-        const cs = view?.getComputedStyle(area);
-        const pad = (Number.parseFloat(cs?.paddingTop ?? '0') || 0) + (Number.parseFloat(cs?.paddingBottom ?? '0') || 0);
-        const border = (Number.parseFloat(cs?.borderTopWidth ?? '0') || 0) + (Number.parseFloat(cs?.borderBottomWidth ?? '0') || 0);
-        area.style.blockSize = 'auto';
-        const wanted = Math.min(JSON_MAX_ROWS * lh + pad + border, Math.max(minRows * lh + pad + border, area.scrollHeight + border));
-        area.style.blockSize = `${Math.ceil(wanted)}px`;
-        area.style.overflowY = area.scrollHeight + border > wanted + 1 ? 'auto' : 'hidden';
+        fitTextarea(area, { minRows, maxRows: JSON_MAX_ROWS });
     };
 
     /** @param {'empty' | 'valid' | 'invalid' | 'text'} next @param {string} message @param {{ line?: number | null, column?: number | null, keys?: number | null }} [where] */

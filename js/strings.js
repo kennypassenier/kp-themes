@@ -422,6 +422,7 @@
  * @property {string} transferBar  The accessible name of a transfer's bar when it has no file name (js/transfer.js) [kpadopt5-transfer]
  * @property {(done: string, total: string) => string} transferOf  The reading of a transfer with a known size, "1.2 GB of 4.1 GB" [kpadopt5-transfer]
  * @property {(done: string) => string} transferSoFar  The reading of a transfer of unknown size, "1.2 GB so far" [kpadopt5-transfer]
+ * @property {string} transferSizeUnknown  The time column of a transfer whose total size is not known, beside "1.2 GB so far" [kpadopt5-r3]
  * @property {string} transferEstimating  The time left while the speed is not steady yet [kpadopt5-transfer]
  * @property {(duration: string) => string} transferLeft  The time left, "about 3 min left" [kpadopt5-transfer]
  * @property {(duration: string) => string} transferStalled  A transfer that moved no byte for a while, "stalled for 12 s" [kpadopt5-transfer]
@@ -1484,7 +1485,8 @@ export const DEFAULT_STRINGS = Object.freeze({
     toggleKeyGroup: 'Filters',
     // The palette that finds words in any order (js/intent.js, js/palette.js) [kpadopt6-ops].
     intentNoMatch: 'Try other words, or fewer of them.',
-    intentNoSubject: (name, verb, subjects, noun) => `There is no ${noun === '' ? 'match' : noun} called "${name}". ${verb} works on: ${subjects.join(', ')}.`,
+    intentNoSubject: (name, verb, subjects, noun) =>
+        `There is no ${noun === '' ? 'match' : noun} called "${name}". ${verb} works on: ${subjects.join(', ')}.`,
     paletteNothing: 'Nothing matches',
     paletteCapped: (shown, total) => `${shown} of ${total} shown, type more words`,
     paletteLoading: 'Loading the commands…',
@@ -1883,6 +1885,7 @@ export const DEFAULT_STRINGS = Object.freeze({
     transferBar: 'Transfer',
     transferOf: (done, total) => `${done} of ${total}`,
     transferSoFar: (done) => `${done} so far`,
+    transferSizeUnknown: 'size unknown',
     transferEstimating: 'estimating…',
     transferLeft: (duration) => `about ${duration} left`,
     transferStalled: (duration) => `stalled for ${duration}`,
@@ -2518,7 +2521,8 @@ export const DEFAULT_STRINGS = Object.freeze({
     // kpadopt6-media:start
     autosizeChars: (n, text) => `${text} ${n === 1 ? 'character' : 'characters'}`,
     autosizeLines: (n, text) => `${text} ${n === 1 ? 'line' : 'lines'}`,
-    autosizeBoth: (chars, charsText, lines, linesText) => `${charsText} ${chars === 1 ? 'character' : 'characters'}, ${linesText} ${lines === 1 ? 'line' : 'lines'}`,
+    autosizeBoth: (chars, charsText, lines, linesText) =>
+        `${charsText} ${chars === 1 ? 'character' : 'characters'}, ${linesText} ${lines === 1 ? 'line' : 'lines'}`,
     autosizeOf: (text, maxText) => `${text} of ${maxText} characters`,
     autosizeFull: (maxText) => `Limit of ${maxText} characters reached.`,
     autosizeNear: (charsText, maxText) => `${charsText} of ${maxText} characters used.`,
@@ -2558,14 +2562,15 @@ export const DEFAULT_STRINGS = Object.freeze({
     previewTimeout: 'The file took too long to open.',
     previewGone: 'The server says this file is gone.',
     previewServer: (status) => `The server could not give the file (error ${status}).`,
-    previewNoPdf: "This browser cannot show PDFs here. Open the file in a new tab or download it.",
+    previewNoPdf: 'This browser cannot show PDFs here. Open the file in a new tab or download it.',
     previewShownByBrowser: "Shown by your browser's PDF viewer",
     previewImage: 'The picture could not be loaded.',
     previewNoFile: 'No file yet',
     docKindImage: 'Picture',
     docKindText: 'Text',
     docMissing: 'No file yet',
-    docKindName: (kind) => ({ pdf: 'PDF document', doc: 'Word document', sheet: 'Spreadsheet', image: 'Picture', text: 'Text file' })[kind] ?? 'Document',
+    docKindName: (kind) =>
+        ({ pdf: 'PDF document', doc: 'Word document', sheet: 'Spreadsheet', image: 'Picture', text: 'Text file' })[kind] ?? 'Document',
     galleryContinue: 'Continue where you were',
     galleryFailed: 'The pictures could not be loaded',
     galleryFailedText: 'Nothing was changed. Try again in a moment.',

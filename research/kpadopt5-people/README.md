@@ -1,5 +1,7 @@
 # research/kpadopt5-people: the fifth adoption round, people
 
+**Decided (2026-10-18 00:28):** Kenny approved every pair in formal. Recorded in `VERDICTS.json`; the part is not offered again.
+
 Four components the apps still draw themselves, built in the package and shown in formal only until Kenny has judged them (Kenny, 2026-10-17):
 
 - **Avatar** (`kp-idmark` with `data-kp-idmark-src`, `-status`, `-alt`, `-loading`, `-frame`; `setIdmarkGroup` with a "+N" that opens the hidden names). Choice: the photo's frame (edge, ring, mount).
