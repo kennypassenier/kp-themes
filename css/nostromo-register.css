@@ -5575,7 +5575,7 @@
             0 0 6px hsl(from var(--kp-sig-no-led) h s l / 0.7);
     }
     [data-theme='nostromo'] .kp-focus-steps__needs {
-        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        padding: var(--kp-space-md, 0.75rem);
         border: 0;
         border-radius: 0.5rem;
         background: var(--kp-sig-no-scan), var(--sidebar-background);

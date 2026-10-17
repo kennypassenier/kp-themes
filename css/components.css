@@ -15271,8 +15271,11 @@
         text-wrap: pretty;
     }
 
+    /* What the step needs sits in a box with room of its own on every side: the title and the rows never touch its
+       edge, whatever a register draws there (a bar, a clip, a border) [cook-1017; Kenny: "text die tegen de rand plakt
+       zonder marge"]. `--kp-focus-steps-needs-pad` sets it (1rem on the sides). */
     .kp-focus-steps__needs {
-        padding-block-start: var(--kp-space-md, 0.75rem);
+        padding: var(--kp-space-md, 0.75rem) var(--kp-focus-steps-needs-pad, 1rem);
         border-block-start: 1px solid var(--border);
     }
 
@@ -15283,7 +15286,8 @@
         font-weight: 600;
     }
 
-    /* The amounts in one column as wide as the longest, the names in the next [fix-64]. */
+    /* The amounts in one column as wide as the longest, the names in the next [fix-64]. The amounts start on the same
+       line, so "450 ml water" stands under "300 g rinsed rice" and not indented by its shorter amount [cook-1017]. */
     .kp-focus-steps__needs-list {
         display: grid;
         grid-template-columns: auto minmax(0, 1fr);
@@ -15301,7 +15305,7 @@
     .kp-focus-steps__amount {
         font-weight: 600;
         font-variant-numeric: tabular-nums;
-        text-align: end;
+        text-align: start;
         white-space: nowrap;
     }
 
@@ -15317,6 +15321,31 @@
     .kp-focus-steps__note,
     .kp-focus-steps__message {
         margin: 0;
+    }
+
+    /* Empty and failed are the whole body's size and say it large, centred: the sentence at the heading size in the
+       middle of the body, in the theme's own empty plate or alert (a register's drawing on it stays), so it is in
+       proportion to the step it stands in for [cook-1017; Kenny's rule of 2026-10-17, docs/RULES.md]. */
+    .kp-focus-steps__step[data-kp-focus-steps-kind] {
+        align-content: stretch;
+        max-inline-size: none;
+        min-block-size: 100%;
+    }
+
+    .kp-focus-steps .kp-focus-steps__step > .kp-focus-steps__message {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        min-block-size: 100%;
+        padding: var(--kp-space-xl, 2rem) var(--kp-space-lg, 1.5rem);
+        font-size: var(--kp-focus-steps-state-text, clamp(1.25rem, 1.05rem + 1vw, 1.75rem));
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+        /* Important: a register's empty plate may set `text-align: start` (a later layer). */
+        text-align: center !important;
+        text-wrap: balance;
     }
 
     .kp-focus-steps[aria-busy='true'] .kp-focus-steps__body {
