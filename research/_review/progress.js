@@ -521,6 +521,54 @@ export function journalDemos() {
 /** The journal's pair for a whole answer text kept when the answer itself is dropped as received. */
 export const ANSWER_PAIR = '__answer';
 
+/** A pair key as the answer names it. */
+const labelOfKey = (/** @type {string} */ key) => {
+    const parts = key.split('|');
+    if (parts[0] === 'catalogue') return `${parts[1]} · ${parts[2]} · ${parts[3]}`;
+    if (parts[0] === 'once') return `${parts[1]}`;
+    return `${parts[1]} · ${parts[0]}`;
+};
+
+/**
+ * A full answer rebuilt from the journal, for one demo and one round: per pair the latest verdict, note and ticks
+ * Kenny set in that round, in the shape of the dialog's own answer. '' when the round has no entry.
+ * @param {string} demo @param {string} round
+ */
+export function rebuildAnswer(demo, round) {
+    const inRound = journalOf(demo).filter((e) => (e.round || '') === round);
+    const entries = inRound.filter((e) => e.pair !== ANSWER_PAIR);
+    // Only the answer's text was kept (an answer given before the journal existed): that text is the answer.
+    if (!entries.length) return inRound.at(-1)?.note || '';
+    /** @type {Map<string, { verdict: string | null, note: string, label: string, choices: Map<string, string> }>} */
+    const pairs = new Map();
+    for (const e of entries) {
+        const now = pairs.get(e.pair) ?? { verdict: null, note: '', label: e.label || labelOfKey(e.pair), choices: new Map() };
+        if (e.verdict) now.verdict = e.verdict;
+        if (e.verdict || e.note || !e.choice) now.note = e.note;
+        if (e.choice) now.choices.set(e.choice.id, e.choice.label || e.choice.value);
+        pairs.set(e.pair, now);
+    }
+    const all = [...pairs.entries()];
+    const judged = all.filter(([key, p]) => !key.startsWith('once|') && p.verdict);
+    const rejected = judged.filter(([, p]) => p.verdict === 'rejected');
+    const approved = judged.filter(([, p]) => p.verdict === 'approved');
+    const lines = [
+        `Demo review · ${demo} · round ${round || '(no round id)'} · rebuilt from the saved verdicts · ${judged.length} judged, ${approved.length} approved, ${rejected.length} not approved`,
+    ];
+    const plain = approved.filter(([, p]) => !p.note).map(([, p]) => p.label);
+    if (plain.length) lines.push('', 'Approved:', ...plain.map((label) => `- ${label}`));
+    if (rejected.length) lines.push('', 'Not approved:', ...rejected.map(([, p]) => `- ${p.label}: ${p.note}`));
+    const noted = approved.filter(([, p]) => p.note);
+    if (noted.length) lines.push('', 'Approved, with a note:', ...noted.map(([, p]) => `- ${p.label}: ${p.note}`));
+    const open = all.filter(([key, p]) => !key.startsWith('once|') && !p.verdict && p.note);
+    if (open.length) lines.push('', 'A note without a verdict yet:', ...open.map(([, p]) => `- ${p.label}: ${p.note}`));
+    const picked = all.filter(([key]) => !key.startsWith('once|')).flatMap(([, p]) => [...p.choices].map(([id, value]) => `- ${p.label}: ${id} = ${value}`));
+    if (picked.length) lines.push('', 'Picked per theme:', ...picked);
+    const once = all.filter(([key]) => key.startsWith('once|')).flatMap(([key, p]) => [...p.choices].map(([id, value]) => `- ${key.split('|')[1]}: ${id} = ${value}`));
+    if (once.length) lines.push('', 'Picked once, for every theme:', ...once);
+    return lines.join('\n');
+}
+
 /*
  * An answer dropped as received is never dropped in silence: every drop is noted here (append-only, like the journal),
  * and the Agenda's band says "received by Claude: <demo> <round>" until Kenny marks the notices seen.

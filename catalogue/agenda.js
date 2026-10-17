@@ -18,7 +18,17 @@
 import { THEMES } from '../js/theme-registry.js';
 import { JUDGEMENT_EVENT, loadJudgements } from './judgements.js';
 import { gatherBlocks, isOpen } from './open-pairs.js';
-import { ANSWER_EVENT, answerWaiting, dropReceivedAnswer, markReceivedSeen, receivedNotices } from '../research/_review/progress.js';
+import {
+    ANSWER_EVENT,
+    ANSWER_PAIR,
+    answerWaiting,
+    dropReceivedAnswer,
+    journalDemos,
+    journalOf,
+    markReceivedSeen,
+    rebuildAnswer,
+    receivedNotices,
+} from '../research/_review/progress.js';
 import { composeBlocks, counted, demoStatus, dependentsOf, inOrder, labelOf, readDecided, readDemo, researchPages, reviewUrl } from './waiting.js';
 
 const ROOT = new URL('../', import.meta.url);
@@ -43,6 +53,10 @@ const ui = {
     received: $('[data-agenda-received]'),
     receivedText: $('[data-agenda-received-text]'),
     receivedSeen: /** @type {HTMLButtonElement} */ ($('[data-agenda-received-seen]')),
+    saved: /** @type {HTMLDetailsElement} */ ($('[data-agenda-saved]')),
+    savedCount: $('[data-agenda-saved-count]'),
+    savedEmpty: $('[data-agenda-saved-empty]'),
+    savedList: $('[data-agenda-saved-list]'),
 };
 
 /* ------------------------------------------------------------------ model */
@@ -412,6 +426,7 @@ function render() {
     renderStart(open, reading);
     renderAnswers();
     renderReceived();
+    renderSaved();
     document.title = `${reading ? '…' : open.length} waiting · Agenda · kp-themes catalogue`;
 }
 
@@ -499,6 +514,109 @@ ui.receivedSeen.addEventListener('click', () => {
     markReceivedSeen();
     renderReceived();
 });
+
+/*
+ * Saved verdicts: the journal of every demo (progress.js, journal), newest first, and per demo one button that copies
+ * the answer rebuilt from it for the round picked (Kenny, 2026-10-17: "ik moet altijd honderd procent absoluut zeker zijn
+ * dat mijn beoordelingen vastgelegd worden").
+ */
+/** The journal as drawn last, so a refresh that changes nothing keeps the folds, the picks and the focus. */
+let savedDrawn = '';
+const when = (/** @type {string} */ at) => {
+    const d = new Date(at);
+    return Number.isNaN(d.getTime())
+        ? at
+        : `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()} ${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`;
+};
+/** One journal entry in words. @param {import('../research/_review/progress.js').JournalEntry} e */
+const entryWords = (e) => {
+    if (e.pair === ANSWER_PAIR) return `the whole answer, kept when it was set aside as received:\n${e.note}`;
+    const label = e.label || e.pair;
+    const parts = [label];
+    if (e.verdict) parts.push(e.verdict === 'rejected' ? 'Not approved' : 'Approved');
+    if (e.choice) parts.push(`ticked ${e.choice.id} = ${e.choice.label || e.choice.value}`);
+    const head = parts.join(' · ');
+    return e.note ? `${head}: ${e.note}` : head;
+};
+
+function renderSaved() {
+    const demosWith = journalDemos();
+    const journals = demosWith.map((id) => ({ id, entries: journalOf(id) })).filter((j) => j.entries.length);
+    const drawn = JSON.stringify(journals.map((j) => [j.id, j.entries.length, j.entries.at(-1)?.at]));
+    if (drawn === savedDrawn) return;
+    savedDrawn = drawn;
+    const total = journals.reduce((sum, j) => sum + j.entries.length, 0);
+    ui.savedCount.textContent = journals.length ? `(${counted(total, 'entry', 'entries')} in ${counted(journals.length, 'demo')})` : '';
+    ui.savedEmpty.hidden = journals.length > 0;
+    /** @type {Set<string>} */
+    const open = new Set([...ui.savedList.querySelectorAll('details[open]')].map((d) => /** @type {HTMLElement} */ (d).dataset.demo || ''));
+    ui.savedList.replaceChildren(
+        ...journals.map(({ id, entries }) => {
+            const box = document.createElement('details');
+            box.className = 'agenda-saved';
+            box.dataset.demo = id;
+            box.open = open.has(id);
+            const rounds = [...new Set([...entries].reverse().map((e) => e.round || ''))];
+            const newest = entries.at(-1);
+            box.innerHTML = `
+                <summary class="agenda-saved__summary"></summary>
+                <div class="agenda-saved__copy">
+                    <span class="kp-field">
+                        <label class="kp-field__label"></label>
+                        <select class="kp-field__input agenda-saved__round"></select>
+                    </span>
+                    <button type="button" class="kp-button kp-button--primary agenda-saved__button">Copy this answer</button>
+                </div>
+                <p class="agenda-saved__said" role="status" aria-live="polite"></p>
+                <pre class="agenda-saved__text" hidden></pre>
+                <ol class="agenda-saved__entries"></ol>`;
+            /** @type {HTMLElement} */ (box.querySelector('summary')).textContent =
+                `${id} · ${counted(entries.length, 'entry', 'entries')} · last ${when(newest?.at || '')}`;
+            const select = /** @type {HTMLSelectElement} */ (box.querySelector('select'));
+            select.id = `agenda-saved-${id.replace(/[^a-z0-9-]+/gi, '-')}`;
+            const label = /** @type {HTMLLabelElement} */ (box.querySelector('label'));
+            label.htmlFor = select.id;
+            label.textContent = 'Round';
+            for (const r of rounds) {
+                const option = document.createElement('option');
+                option.value = r;
+                option.textContent = r || '(no round id)';
+                select.append(option);
+            }
+            const said = /** @type {HTMLElement} */ (box.querySelector('.agenda-saved__said'));
+            const pre = /** @type {HTMLElement} */ (box.querySelector('pre'));
+            box.querySelector('button')?.addEventListener('click', async () => {
+                const text = rebuildAnswer(id, select.value);
+                pre.textContent = text;
+                pre.hidden = false;
+                try {
+                    await navigator.clipboard.writeText(text);
+                    said.textContent = `Copied the answer of ${id}, round ${select.value || '(no round id)'}. Paste it into the conversation.`;
+                } catch {
+                    const range = document.createRange();
+                    range.selectNodeContents(pre);
+                    getSelection()?.removeAllRanges();
+                    getSelection()?.addRange(range);
+                    said.textContent = 'Selected below. Press Ctrl+C to copy.';
+                }
+            });
+            const list = /** @type {HTMLElement} */ (box.querySelector('ol'));
+            for (const e of [...entries].reverse()) {
+                const li = document.createElement('li');
+                li.className = 'agenda-saved__entry';
+                const at = document.createElement('span');
+                at.className = 'agenda-saved__when';
+                at.textContent = when(e.at);
+                const what = document.createElement('span');
+                what.className = 'agenda-saved__what';
+                what.textContent = `${e.round || '(no round id)'} · ${entryWords(e)}`;
+                li.append(at, what);
+                list.append(li);
+            }
+            return box;
+        }),
+    );
+}
 
 // One copy for everything (Kenny, 2026-10-13: "Dat moet gelijk getrokken worden"): this button presses the bar's
 // "Copy prompt", which carries the demo answers waiting here and the catalogue's verdicts alike.
