@@ -1089,6 +1089,7 @@ dialog.innerHTML = `
         <div class="rv-dialog__side">
             <p class="rv-meta" data-rv-intro>Everything on the left is approved together. Tick only what is wrong, and say why.</p>
             <div class="rv-update" data-rv-update></div>
+            <p class="kp-alert kp-alert--destructive rv-integrity" role="alert" data-rv-integrity hidden></p>
             <ol class="rv-dialog__list" data-rv-list></ol>
             <p class="kp-field__error" role="alert" data-rv-refused hidden></p>
             <div class="rv-dialog__actions">
@@ -1105,6 +1106,7 @@ const stage = $('[data-rv-stage]');
 const list = $('[data-rv-list]');
 const refused = $('[data-rv-refused]');
 const approveButton = $('[data-rv-approve]');
+const integrityBox = $('[data-rv-integrity]');
 const flipWrap = $('[data-rv-flip]');
 const flipPrev = $('[data-rv-flip-prev]');
 const flipNext = $('[data-rv-flip-next]');
@@ -1933,6 +1935,8 @@ function frameFor(pair) {
 function rowFor(pair, only = null, name = '') {
     const li = document.createElement('li');
     li.className = 'rv-row';
+    // The row's own pair: every verdict and note is filed by this key, never by the row's place in the list.
+    li.dataset.rvKey = pair.key;
     const id = `rv-${pair.key.replace(/[^a-z0-9-]/gi, '-')}`;
     li.innerHTML = `
         <div class="rv-row__head">
@@ -2005,9 +2009,11 @@ function rowFor(pair, only = null, name = '') {
     const box = /** @type {HTMLInputElement} */ (li.querySelector('[data-rv-reject]'));
     const note = /** @type {HTMLTextAreaElement} */ (li.querySelector('[data-rv-row-note]'));
     note.setAttribute('aria-label', `What should change in ${pair.title}`);
+    // The note names its own section, so a note can only be typed where it belongs.
+    note.placeholder = `What should change in ${pair.title}`;
     box.checked = only ? Boolean(state[pair.key]?.redo?.[only]) : verdictOf(pair) === 'rejected';
     note.value = only ? state[pair.key]?.redo?.[only] || '' : noteOf(pair);
-    if (only) note.placeholder = 'What should change in this aspect';
+    if (only) note.placeholder = `What should change in this aspect of ${pair.title}`;
     note.hidden = !box.checked && !note.value;
     li.classList.toggle('rv-row--rejected', box.checked);
     box.addEventListener('change', () => {
@@ -2058,6 +2064,62 @@ function topicRows(/** @type {Pair[]} */ shown) {
     head.textContent = LABEL[shown[0]?.theme] || shown[0]?.theme || '';
     return [head, ...shown.map((pair) => rowFor(pair, null, pair.title))];
 }
+
+/*
+ * The step's integrity (lost-answer-1017: a step showed a section without its row, and a note landed under another
+ * section). On every step, and whenever its rows or its sections change: every section shown has exactly one row, with
+ * its "Not approved" box, its note and its choice ticks; every row belongs to a section shown. Anything off blocks the
+ * step with a banner that names it, and Approve refuses, instead of letting a verdict be filed under the wrong pair.
+ */
+/** What is off on the step on screen, in words; [] when it holds. */
+function checkIntegrity() {
+    const step = steps[index];
+    if (!dialog.open || !step) return [];
+    /** @type {string[]} */
+    const problems = [];
+    const top = /** @type {HTMLElement[]} */ ([...stage.querySelectorAll('[data-rv-pair]')]).filter((el) => !el.parentElement?.closest('[data-rv-pair]'));
+    const rows = /** @type {HTMLElement[]} */ ([...list.querySelectorAll('.rv-row')]);
+    const keys = new Set(shownPairs.map((pair) => pair.key));
+    for (const pair of shownPairs) {
+        const shown = top.filter((el) => el.dataset.rvPair === pair.key).length;
+        if (shown !== 1) problems.push(`“${pair.title}” is shown ${shown} times on the left`);
+        const own = rows.filter((row) => row.dataset.rvKey === pair.key);
+        if (own.length !== 1) {
+            problems.push(`“${pair.title}” has ${own.length ? `${own.length} rows` : 'no row'} on the right`);
+            continue;
+        }
+        if (!own[0].querySelector('input[type="checkbox"][data-rv-reject]')) problems.push(`the row of “${pair.title}” has no “Not approved” box`);
+        if (!own[0].querySelector('textarea[data-rv-row-note]')) problems.push(`the row of “${pair.title}” has no note`);
+        if (step.aspect) continue;
+        for (const choice of pair.item?.choices || []) {
+            if (fixedFor(pair, choice)) continue;
+            const set = own[0].querySelector(`fieldset[data-rv-choice="${CSS.escape(choice.id)}"]`);
+            const ticks = set ? set.querySelectorAll('input[type="radio"]').length : 0;
+            if (ticks !== choice.options.length) problems.push(`the row of “${pair.title}” shows ${ticks} of the ${choice.options.length} ticks of “${choice.label}”`);
+        }
+    }
+    for (const row of rows)
+        if (!keys.has(row.dataset.rvKey || '')) problems.push(`the row “${row.querySelector('[data-rv-jump]')?.textContent || '?'}” belongs to no section shown`);
+    for (const el of top) if (!keys.has(el.dataset.rvPair || '')) problems.push(`a section on the left (${el.dataset.rvPair}) has no row`);
+    integrityBox.hidden = !problems.length;
+    integrityBox.textContent = problems.length
+        ? `Approve is blocked on this step: ${problems.join('; ')}. Close the dialog and tell Claude. Every verdict and note you set so far is kept, also in Saved verdicts on the Agenda.`
+        : '';
+    approveButton.setAttribute('aria-disabled', String(problems.length > 0));
+    return problems;
+}
+/** Checks again once a frame, whenever the step's rows or sections change. */
+let integrityQueued = false;
+const integrityWatch = new MutationObserver(() => {
+    if (integrityQueued) return;
+    integrityQueued = true;
+    requestAnimationFrame(() => {
+        integrityQueued = false;
+        checkIntegrity();
+    });
+});
+integrityWatch.observe(list, { childList: true, subtree: true });
+integrityWatch.observe(stage, { childList: true });
 
 function updateApprove() {
     const step = steps[index];
@@ -2171,6 +2233,7 @@ async function show(at) {
         refused.hidden = true;
         updateApprove();
         if (!dialog.open) dialog.showModal();
+        checkIntegrity();
         approveButton.focus({ preventScroll: true });
         // Every page starts at its top, the demo on the left and the rows on the right (Kenny, 2026-10-13: "als ik van
         // één dialog pagina naar de andere ga, scroll dan naar boven en doe hetzelfde voor de items rechts").
@@ -2207,24 +2270,29 @@ function approveStep() {
     if (busy) return;
     const current = steps[index];
     flushNotes();
+    // Nothing is judged on a step whose rows do not match its sections (lost-answer-1017): the banner says what is off.
+    const problems = checkIntegrity();
+    if (problems.length) return;
     if (current?.aspect) return answerAspect(current);
-    const rows = [...list.querySelectorAll('.rv-row')];
+    /** The row of a pair, found by its own key. */
+    const rowOf = (/** @type {Pair} */ pair) => /** @type {HTMLElement} */ (list.querySelector(`.rv-row[data-rv-key="${CSS.escape(pair.key)}"]`));
     // A rejection needs no note (Kenny, 2026-10-06 23:09: "ik wil de eis dat
     // een afkeuring een text heeft ook afschaffen … je moet zelf weten dat je
     // veel beter moet doen"); a note stays welcome.
     const unpicked = shownPairs.filter(
-        (pair, i) => !rows[i].querySelector('[data-rv-reject]').checked && (pair.item?.choices || []).some((c) => !choiceOf(pair, c)),
+        (pair) => !rowOf(pair).querySelector('[data-rv-reject]').checked && (pair.item?.choices || []).some((c) => !fixedFor(pair, c) && !choiceOf(pair, c)),
     );
     if (unpicked.length) {
-        const names = unpicked.flatMap((pair) => pair.item.choices.filter((c) => !choiceOf(pair, c)).map((c) => `${pair.title}: ${c.label}`));
+        const names = unpicked.flatMap((pair) => pair.item.choices.filter((c) => !fixedFor(pair, c) && !choiceOf(pair, c)).map((c) => `${pair.title}: ${c.label}`));
         refused.textContent = `Pick before approving: ${names.join('; ')}.`;
         refused.hidden = false;
         return;
     }
     const at = new Date().toISOString();
-    for (const [i, pair] of shownPairs.entries()) {
-        const rejected = rows[i].querySelector('[data-rv-reject]').checked;
-        const note = rows[i].querySelector('[data-rv-row-note]').value.trim();
+    for (const pair of shownPairs) {
+        const row = rowOf(pair);
+        const rejected = /** @type {HTMLInputElement} */ (row.querySelector('[data-rv-reject]')).checked;
+        const note = /** @type {HTMLTextAreaElement} */ (row.querySelector('[data-rv-row-note]')).value.trim();
         state[pair.key] = { ...state[pair.key], verdict: rejected ? 'rejected' : 'approved', note, at };
         record(pair, { verdict: rejected ? 'rejected' : 'approved', note });
     }

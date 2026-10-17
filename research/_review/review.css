@@ -266,12 +266,14 @@
     padding-inline-start: 0.6rem;
 }
 
+/* The section's name on its own line, its "Not approved" box always on the line under it, at the start: the box sat
+   beside a short name and under a long one, so the boxes of neighbouring rows read as one row's (lost-answer-1017,
+   kpadopt4-cooking: a note meant for the timers was typed in the checklist's row). */
 .rv-row__head {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.25rem 0.75rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: start;
+    gap: 0.25rem;
 }
 
 .rv-row__jump {
@@ -304,6 +306,11 @@
     inline-size: 100%;
     box-sizing: border-box;
     resize: vertical;
+}
+
+/* A step whose rows do not match its sections: it blocks the step (review.js, checkIntegrity). */
+.rv-integrity {
+    margin: 0;
 }
 
 .rv-dialog__side > .kp-field__error {
