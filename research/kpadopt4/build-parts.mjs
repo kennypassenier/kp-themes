@@ -61,6 +61,9 @@ for (const [i, part] of parts.entries()) {
         ]),
     );
     const decided = [...open.values()].every((themes) => !themes.length);
+    // The page walks every theme still asked somewhere on it, a reopened one (formal) first.
+    const asked = new Set([...open.values()].flat());
+    const pageThemes = [...asked].filter((t) => !THEMES.split(',').includes(t)).concat(THEMES.split(',').filter((t) => asked.has(t)));
     let body = part.body;
     if (!decided)
         for (const [item, left] of open) {
@@ -97,7 +100,7 @@ for (const [i, part] of parts.entries()) {
         local(
             head
                 .replace(/data-review="kpadopt4"/, `data-review="${id}"`)
-                .replace(/data-review-themes="[^"]*"/, `data-review-themes="${THEMES}"`)
+                .replace(/data-review-themes="[^"]*"/, `data-review-themes="${pageThemes.join(',')}"`)
                 .replace(/<title>[^<]*<\/title>/, `<title>kpadopt4, part ${i + 1}: ${part.title}</title>`)
                 .replace(/<header class="kd-intro">[\s\S]*?<\/header>\s*/, intro),
         ) +
