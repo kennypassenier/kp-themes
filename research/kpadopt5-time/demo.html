@@ -40,7 +40,7 @@
                     approved.
                 </p>
                 <p>
-                    Judge in the review dialog (&ldquo;Review in a dialog&rdquo; at the top): 5 topics, one step each in formal. Every section says
+                    Judge in the review dialog (&ldquo;Review in a dialog&rdquo; at the top): 6 topics, one step each in formal. Every section says
                     under <b>Expected</b> what you should see and what each control does. Everything with a <code>kp-</code> class and every script
                     under <code>js/</code> is the package; the sample data, the frames marked &ldquo;phone width&rdquo; (390 px boxes standing in for
                     a phone), the fixed clock (Saturday 17/10/2026, so a reminder for &ldquo;tomorrow&rdquo; always means 18/10/2026), the event
@@ -53,6 +53,7 @@
                         <li><a href="#topic-snooze">Snooze picker</a> <span class="kt-toc__count">2 sections</span></li>
                         <li><a href="#topic-dated">Options with a date and an age</a> <span class="kt-toc__count">2 sections</span></li>
                         <li><a href="#topic-sentence">Sentence form</a> <span class="kt-toc__count">2 sections</span></li>
+                        <li><a href="#topic-slider">Slider</a> <span class="kt-toc__count">2 sections</span></li>
                     </ol>
                 </nav>
             </header>
@@ -1211,6 +1212,251 @@
                                     <div class="kt-actions"><button type="submit" class="kp-button kp-button--primary">Save schedule</button></div>
                                 </form>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- ================================================================ topic: Slider -->
+            <h2 class="kt-topic" id="topic-slider">Slider</h2>
+            <section
+                class="kt-sec"
+                id="slider"
+                data-review-item="slider"
+                data-review-topic="slider"
+                data-review-topic-title="Slider"
+                data-review-title="Slider: one value and a range, with the value in a box"
+                data-review-choices='[{"id": "bubble", "label": "Show the number over the thumb while dragging too", "options": [{"value": "field", "label": "No: the box beside the track only (the default)", "hint": "The number is always in the box, you can type in it, and nothing jumps above the track while you drag."}, {"value": "both", "label": "Yes: the box and a bubble over the thumb", "hint": "The number also follows your finger above the thumb, which a thumb under a finger on a phone otherwise hides."}]}]'
+                aria-labelledby="h-slider"
+            >
+                <div class="kt-sec__head">
+                    <h2 id="h-slider">Slider: one value and a range, with the value in a box</h2>
+                    <p>
+                        <code>&lt;div class="kp-slider" data-kp-slider&gt;</code> (js/slider.js): the native range input, drawn by the package, with
+                        the number in a small box beside it that you can type in. Drag, use the keys or type.
+                    </p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Temperature</b> 10 to 30 in steps of 0.5, at <b>21.0 °C</b>: a rail with a navy fill up to a round thumb, and a box
+                            reading <b>21.0</b> with <b>°C</b> after it. Drag the thumb: the box follows. Type <b>23.5</b> and press Enter (or leave
+                            the box): the thumb moves. Type <b>abc</b> or <b>99</b>: the box gets a red outline and the line
+                            <b>Type a number from 10.0 to 30.0 °C.</b> stands under the slider while the thumb keeps its last good value; Esc puts
+                            that value back.
+                        </li>
+                        <li>
+                            <b>Keys</b> on a thumb: the arrows step (0.5), <b>Shift</b> with an arrow steps ten times as far, Page Up and Page Down a
+                            tenth of the range, Home and End the ends. <b>Double-click</b> the thumb: back to its default (21.0). The grey box shows
+                            <code>kp-slider-input</code> on every move and <code>kp-slider-change</code> on release.
+                        </li>
+                        <li>
+                            <b>Volume</b> with marks <b>0, 25, 50, 75, 100</b> under the rail and <b>%</b> after the number. <b>Price range</b>: two
+                            thumbs (€ 120 and € 340) that never cross, two boxes joined by a dash; the fill is between them. <b>Quota</b> reads as a
+                            size (<b>2.5 GB</b>) and <b>Timeout</b> as a duration (<b>5 min</b>); both boxes are read-only readouts.
+                        </li>
+                        <li>
+                            <b>Brightness</b> (the bubble shown, so you can judge it): the number above the thumb as well as in the box.
+                            <b>Vertical</b>: the track stands, 0 at the bottom.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The rail is formal&rsquo;s hairline groove with the navy primary as the fill; the thumb is a white disc ringed in navy (its
+                        focus ring a second, wider ring); the box is formal&rsquo;s own field.
+                    </p>
+                </div>
+                <div class="kt-pair">
+                    <div class="kt-case">
+                        <p class="kt-label">One value, with a unit and a default</p>
+                        <div
+                            class="kp-slider"
+                            data-kp-slider
+                            data-kp-min="10"
+                            data-kp-max="30"
+                            data-kp-step="0.5"
+                            data-kp-value="21"
+                            data-kp-default="21"
+                            data-kp-unit="°C"
+                            aria-label="Temperature"
+                            id="kt-slider-a"
+                        ></div>
+                        <pre class="kt-log" id="kt-slider-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">Marks, and a percent</p>
+                        <div
+                            class="kp-slider"
+                            data-kp-slider
+                            data-kp-format="percent"
+                            data-kp-value="40"
+                            data-kp-ticks="0,25,50,75,100"
+                            aria-label="Volume"
+                        ></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">A range with two thumbs</p>
+                        <div
+                            class="kp-slider"
+                            data-kp-slider="range"
+                            data-kp-min="0"
+                            data-kp-max="500"
+                            data-kp-step="10"
+                            data-kp-value="120,340"
+                            data-kp-unit="€"
+                            data-kp-min-gap="20"
+                            aria-label="Price"
+                        ></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">A size, and a duration</p>
+                        <div class="kt-stack">
+                            <div
+                                class="kp-slider"
+                                data-kp-slider
+                                data-kp-format="bytes"
+                                data-kp-min="0"
+                                data-kp-max="10000000000"
+                                data-kp-step="100000000"
+                                data-kp-value="2500000000"
+                                aria-label="Quota"
+                            ></div>
+                            <div
+                                class="kp-slider"
+                                data-kp-slider
+                                data-kp-format="duration"
+                                data-kp-min="0"
+                                data-kp-max="3600"
+                                data-kp-step="60"
+                                data-kp-value="300"
+                                aria-label="Timeout"
+                            ></div>
+                        </div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">With a bubble over the thumb</p>
+                        <div
+                            class="kp-slider"
+                            data-kp-slider
+                            data-kp-slider-value="both"
+                            data-kp-value="65"
+                            data-kp-format="percent"
+                            data-kp-dragging
+                            aria-label="Brightness"
+                        ></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">Vertical</p>
+                        <div
+                            class="kp-slider"
+                            data-kp-slider
+                            data-kp-orientation="vertical"
+                            data-kp-value="30"
+                            data-kp-format="percent"
+                            aria-label="Level"
+                        ></div>
+                    </div>
+                </div>
+            </section>
+            <section
+                class="kt-sec"
+                id="slider-states"
+                data-review-item="slider-states"
+                data-review-topic="slider"
+                data-review-title="Slider: states and phone width"
+                aria-labelledby="h-slider-states"
+            >
+                <div class="kt-sec__head">
+                    <h2 id="h-slider-states">Slider: states and phone width</h2>
+                    <p>A slider that waits, one that is off with its reason, a wrong typed value, and the slider in a 390 px box.</p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Press <b>Ready</b>, <b>Loading</b> and <b>Wrong value</b> in the box above the sliders: the first slider follows.
+                            <b>Loading</b>: the track and the box are one moving ruled bar at the size they had, the thumb and box cannot be used and
+                            nothing around moves. <b>Wrong value</b>: <b>abc</b> typed into the box, red outline and the line under the slider; the
+                            thumb stays where it was.
+                        </li>
+                        <li>
+                            <b>Disabled</b>: thumb and box dimmed, the fill grey, and <b>Locked by the thermostat schedule</b> in muted ink under
+                            them.
+                        </li>
+                        <li>
+                            In the 390 px box the box stands under the track at the end of the line; the thumb is still a 44 px target (the ring and
+                            the round disc are smaller, the touch area is not); two thumbs of a range stay separately grabbable.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The waiting slider is formal&rsquo;s ruled loading bar; disabled keeps its number readable; the wrong value is the destructive
+                        red.
+                    </p>
+                </div>
+                <div data-review-controls>
+                    <div role="group" aria-label="State of the first slider" class="kt-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-kt-slider-state="ready">Ready</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kt-slider-state="loading">Loading</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kt-slider-state="wrong">Wrong value</button>
+                    </div>
+                </div>
+                <div class="kt-pair">
+                    <div class="kt-case">
+                        <p class="kt-label">The slider the buttons drive</p>
+                        <div
+                            class="kp-slider"
+                            data-kp-slider
+                            data-kp-min="10"
+                            data-kp-max="30"
+                            data-kp-step="0.5"
+                            data-kp-value="21"
+                            data-kp-unit="°C"
+                            aria-label="Temperature, states"
+                            id="kt-slider-live"
+                        ></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">Disabled, with its reason</p>
+                        <div
+                            class="kp-slider"
+                            data-kp-slider
+                            data-kp-min="10"
+                            data-kp-max="30"
+                            data-kp-step="0.5"
+                            data-kp-value="19.5"
+                            data-kp-unit="°C"
+                            data-kp-disabled
+                            data-kp-disabled-reason="Locked by the thermostat schedule"
+                            aria-label="Temperature, locked"
+                        ></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">Phone width, one value and a range</p>
+                        <div class="kt-frame kt-frame--phone kt-stack">
+                            <div
+                                class="kp-slider"
+                                data-kp-slider
+                                data-kp-min="10"
+                                data-kp-max="30"
+                                data-kp-step="0.5"
+                                data-kp-value="21"
+                                data-kp-unit="°C"
+                                data-kp-ticks="10,20,30"
+                                aria-label="Temperature, phone"
+                            ></div>
+                            <div
+                                class="kp-slider"
+                                data-kp-slider="range"
+                                data-kp-min="0"
+                                data-kp-max="500"
+                                data-kp-step="10"
+                                data-kp-value="120,340"
+                                data-kp-unit="€"
+                                aria-label="Price, phone"
+                            ></div>
                         </div>
                     </div>
                 </div>

@@ -2246,6 +2246,24 @@ the whole sentence ("Run backup on nextcloud every week at 03:00.") after a chan
 in red and writes the line under the sentence that names it; `setSentenceFieldState(field, 'loading')` shows the field's own
 skeleton at the width it had; `disabled` on the fieldset with `data-kp-disabled-reason` says why it is off. The words are
 `sentence…`. Knobs: `--kp-sentence-size`, `--kp-sentence-line`, `--kp-sentence-edge`.
+### A slider
+
+One value, or a range with two thumbs, with the number in a box you can type in:
+
+```html
+<div class="kp-slider" data-kp-slider data-kp-min="10" data-kp-max="30" data-kp-step="0.5" data-kp-value="21" data-kp-unit="°C" aria-label="Temperature"></div>
+```
+
+`attachSliders(root)` (`js/slider.js`, attached by `js/auto.js`) builds the track around the native `input[type=range]` (or around the one or
+two you wrote yourself), which keeps the keyboard, the screen reader and the touch: the arrows step, Shift with an arrow steps ten
+times as far, Page Up and Page Down a tenth of the range, Home and End the ends; `aria-valuetext` says "21 °C". `data-kp-slider="range"`
+is two thumbs (`data-kp-value="20,60"`) that never come closer than `data-kp-min-gap`. The box beside the track shows the number
+(`data-kp-slider-value`: `field`, `bubble`, `both` or `none`); a typed value is read on Enter or when the box loses the focus, snapped
+to the step, and refused with a line under the slider if it is not a number in range, while the thumb keeps its last good value. `data-kp-format` is `number`, `percent`,
+`bytes` or `duration` (the value is seconds; the box is then a readout). `data-kp-ticks="auto"` or `"0,25,50:Half,100"` marks the track,
+`data-kp-default` is what a double-click on a thumb goes back to, `data-kp-commit="input"` makes `kp-slider-change` fire on every move instead of
+on release. `kp-slider-input` and `kp-slider-change` carry `{ values, value, thumb, text }`; `setSliderValues(el, [..])` sets without an event;
+`setSliderState(el, 'loading')` shows the skeleton. The words are `slider…`. Knobs: `--kp-slider-thumb` (2.75rem), `--kp-slider-rail`, `--kp-slider-fill`.
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

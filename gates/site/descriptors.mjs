@@ -3738,6 +3738,37 @@ setGanttState(timeline, 'loading');
         ],
     },
     {
+        id: 'slider',
+        title: 'Slider',
+        group: 'Forms',
+        classes: ['kp-slider'],
+        exports: [],
+        intro: 'One value, or a range with two thumbs, on the native range input drawn by the package, with the number in a small box beside it that you can type in. Marks, a bubble over the thumb, a unit, a size or duration format and a vertical form are options.',
+        whenToUse: 'A number in a range where the exact value matters less than the feel: a temperature, a volume, a price range. For an exact figure only, use a number field.',
+        examples: [
+            {
+                title: 'Temperature',
+                why: 'The markup is the empty box; the script builds the track, the thumb and the box from the attributes.',
+                markup: `
+<div class="kp-slider" data-kp-slider data-kp-min="10" data-kp-max="30" data-kp-step="0.5" data-kp-value="21" data-kp-unit="°C" aria-label="Temperature"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-slider', what: '`single` (default) or `range`: two thumbs that never cross.' },
+            { name: 'data-kp-slider-value', what: '`field` (default), `bubble`, `both` or `none`: how the number is shown.' },
+            { name: 'data-kp-format', what: '`number` (default), `percent`, `bytes` or `duration`.' },
+            { name: 'data-kp-ticks', what: '`auto` or a list, `0,25,50:Half,100`.' },
+            { name: 'data-kp-commit', what: '`change` (default, on release) or `input`.' },
+            { name: 'data-kp-orientation', what: '`horizontal` (default) or `vertical`.' },
+            { name: 'data-kp-state', what: '`loading` shows the skeleton over track and box.' },
+        ],
+        accessibility: [
+            'Built in — the native range input: arrows, Shift+arrows, Page Up and Down, Home and End, `aria-valuetext` with the unit; the box is a labelled field; a refused value is described by the line under the slider.',
+            'Yours — name the slider (`aria-label`) after what it sets, and do the work on `kp-slider-change`, not on every `kp-slider-input`.',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

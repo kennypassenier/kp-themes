@@ -17400,6 +17400,345 @@
         color: var(--muted-foreground);
     }
 
+    /* --- Slider: one value, or two thumbs, with the value in a box beside it [kpadopt5-time] ---
+ * `.kp-slider[data-kp-slider]` (js/slider.js). The native `<input type="range">` carries the keyboard, the screen reader
+ * and the touch; the package draws the rail, the fill, the thumb and the value box. The thumb is drawn 1.375rem across inside
+ * a 2.75rem box that is the touch target (44 px), and the rail runs from one thumb centre to the other, so the fill is
+ * exact at both ends. A range is two inputs laid over one rail, that never cross. Below 26rem of its own the value box
+ * goes under the track. Ticks and a bubble over the thumb while it is dragged are options; a waiting slider shows the
+ * package's skeleton over its track and box at their final size.
+ * Knobs [KT6]: --kp-slider-thumb (2.75rem, the target), --kp-slider-rail (0.375rem), --kp-slider-fill, --kp-slider-thumb-fill,
+ * --kp-slider-thumb-edge, --kp-slider-length (10rem, vertical), --kp-slider-gap. */
+    .kp-slider {
+        container: kp-slider / inline-size;
+        --kp-slider-thumb: 2.75rem;
+        --kp-slider-rail: 0.375rem;
+        --kp-slider-from: 0;
+        --kp-slider-to: 0.5;
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-slider__body {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: start;
+        column-gap: var(--kp-slider-gap, var(--kp-space-md, 0.75rem));
+        min-inline-size: 0;
+    }
+
+    .kp-slider[data-kp-slider-show='none'] .kp-slider__body,
+    .kp-slider[data-kp-slider-show='bubble'] .kp-slider__body {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kp-slider__track {
+        position: relative;
+        min-inline-size: 0;
+        block-size: var(--kp-slider-thumb);
+    }
+
+    .kp-slider[data-kp-slider-show='bubble'] .kp-slider__track,
+    .kp-slider[data-kp-slider-show='both'] .kp-slider__track {
+        margin-block-start: 1.875rem;
+    }
+
+    .kp-slider__track[data-kp-ticks] {
+        margin-block-end: 1.5rem;
+    }
+
+    .kp-slider__rail {
+        position: absolute;
+        inset-inline: calc(var(--kp-slider-thumb) / 2);
+        inset-block-start: 50%;
+        block-size: var(--kp-slider-rail);
+        translate: 0 -50%;
+        box-sizing: border-box;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-radius-pill, 999px);
+        background: var(--muted);
+        overflow: hidden;
+    }
+
+    .kp-slider__fill {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc(var(--kp-slider-from) * 100%);
+        inline-size: calc((var(--kp-slider-to) - var(--kp-slider-from)) * 100%);
+        background: var(--kp-slider-fill, var(--primary));
+    }
+
+    .kp-slider__input {
+        --kp-slider-thumb-art: radial-gradient(
+            circle at 50% 50%,
+            var(--kp-slider-thumb-fill, var(--background)) 0 0.5rem,
+            var(--kp-slider-thumb-edge, var(--primary)) 0.5rem 0.6875rem,
+            transparent 0.75rem
+        );
+        position: absolute;
+        inset: 0;
+        box-sizing: border-box;
+        inline-size: 100%;
+        block-size: 100%;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        appearance: none;
+        cursor: pointer;
+        outline: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .kp-slider[data-kp-slider-kind='range'] .kp-slider__input {
+        pointer-events: none;
+    }
+
+    .kp-slider__input::-webkit-slider-runnable-track {
+        background: transparent;
+        border: 0;
+    }
+
+    .kp-slider__input::-moz-range-track {
+        background: transparent;
+        border: 0;
+    }
+
+    .kp-slider__input::-webkit-slider-thumb {
+        box-sizing: border-box;
+        inline-size: var(--kp-slider-thumb);
+        block-size: var(--kp-slider-thumb);
+        border: 0;
+        border-radius: 0;
+        background: var(--kp-slider-thumb-art);
+        appearance: none;
+        pointer-events: auto;
+        cursor: grab;
+    }
+
+    .kp-slider__input::-moz-range-thumb {
+        box-sizing: border-box;
+        inline-size: var(--kp-slider-thumb);
+        block-size: var(--kp-slider-thumb);
+        border: 0;
+        border-radius: 0;
+        background: var(--kp-slider-thumb-art);
+        pointer-events: auto;
+        cursor: grab;
+    }
+
+    .kp-slider__input:focus-visible {
+        --kp-slider-thumb-art:
+            radial-gradient(
+                circle at 50% 50%,
+                transparent 0 0.8125rem,
+                var(--focus-ring-contrast, var(--focus-ring)) 0.8125rem 1rem,
+                transparent 1.0625rem
+            ),
+            radial-gradient(
+                circle at 50% 50%,
+                var(--kp-slider-thumb-fill, var(--background)) 0 0.5rem,
+                var(--kp-slider-thumb-edge, var(--primary)) 0.5rem 0.6875rem,
+                transparent 0.75rem
+            );
+    }
+
+    .kp-slider__input:active::-webkit-slider-thumb {
+        cursor: grabbing;
+    }
+
+    .kp-slider__input:active::-moz-range-thumb {
+        cursor: grabbing;
+    }
+
+    .kp-slider__input:disabled {
+        --kp-slider-thumb-art: radial-gradient(circle at 50% 50%, var(--muted) 0 0.5rem, var(--border-strong) 0.5rem 0.6875rem, transparent 0.75rem);
+        cursor: not-allowed;
+    }
+
+    .kp-slider[data-kp-disabled] .kp-slider__fill,
+    .kp-slider__input:disabled ~ .kp-slider__rail .kp-slider__fill {
+        background: var(--border-strong);
+    }
+
+    /* The marks along the track, with their words under them. */
+    .kp-slider__ticks {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: calc(50% + var(--kp-slider-rail) / 2 + 0.375rem);
+        pointer-events: none;
+    }
+
+    .kp-slider__tick {
+        position: absolute;
+        inset-inline-start: calc(var(--kp-slider-thumb) / 2 + (100% - var(--kp-slider-thumb)) * var(--kp-slider-at));
+        translate: -50% 0;
+        display: grid;
+        justify-items: center;
+        gap: 0.125rem;
+    }
+
+    .kp-slider__tick::before {
+        content: '';
+        inline-size: 1px;
+        block-size: 0.375rem;
+        background: var(--border-strong);
+    }
+
+    .kp-slider__tick-label {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    /* The bubble over a thumb, while it is dragged or has the focus. */
+    .kp-slider__bubble {
+        position: absolute;
+        inset-block-end: calc(100% - 0.375rem);
+        inset-inline-start: calc(var(--kp-slider-thumb) / 2 + (100% - var(--kp-slider-thumb)) * var(--kp-slider-at-0, 0));
+        translate: -50% 0;
+        box-sizing: border-box;
+        padding: 0.125rem 0.5rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--popover, var(--card));
+        color: var(--popover-foreground, var(--foreground));
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        pointer-events: none;
+        visibility: hidden;
+    }
+
+    .kp-slider__bubble[data-kp-thumb='1'] {
+        inset-inline-start: calc(var(--kp-slider-thumb) / 2 + (100% - var(--kp-slider-thumb)) * var(--kp-slider-at-1, 1));
+    }
+
+    .kp-slider[data-kp-dragging] .kp-slider__bubble,
+    .kp-slider:has(.kp-slider__input:focus-visible) .kp-slider__bubble {
+        visibility: visible;
+    }
+
+    /* The value box: a small field with the number, the unit after it; the width is the longest value's, so it never moves. */
+    .kp-slider__fields {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        block-size: var(--kp-slider-thumb);
+    }
+
+    .kp-slider__field-wrap {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-slider__field {
+        box-sizing: content-box;
+        inline-size: calc(var(--kp-slider-field-ch, 4) * 1ch);
+        text-align: end;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-slider__field[readonly] {
+        text-align: center;
+    }
+
+    .kp-slider__field[aria-invalid='true'] {
+        border-color: var(--destructive);
+        box-shadow: inset 0 0 0 1px var(--destructive);
+    }
+
+    .kp-slider__unit,
+    .kp-slider__dash {
+        color: var(--muted-foreground);
+        white-space: nowrap;
+    }
+
+    .kp-slider__why {
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-slider__why[hidden] {
+        display: none;
+    }
+
+    .kp-slider__reason {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-slider__skeleton {
+        position: absolute;
+        inset: 0;
+        display: block;
+    }
+
+    .kp-slider__skeleton[hidden] {
+        display: none;
+    }
+
+    .kp-slider__bar {
+        --kp-skeleton-block: 100%;
+        block-size: 100%;
+        min-block-size: 0;
+    }
+
+    /* A vertical slider: the track stands up, the box goes under it. */
+    .kp-slider[data-kp-vertical] {
+        justify-items: start;
+    }
+
+    .kp-slider[data-kp-vertical] .kp-slider__body {
+        grid-template-columns: auto;
+        justify-items: start;
+        row-gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-slider[data-kp-vertical] .kp-slider__track {
+        inline-size: var(--kp-slider-thumb);
+        block-size: var(--kp-slider-length, 10rem);
+        margin: 0;
+    }
+
+    .kp-slider[data-kp-vertical] .kp-slider__input {
+        writing-mode: vertical-lr;
+        direction: rtl;
+    }
+
+    .kp-slider[data-kp-vertical] .kp-slider__rail {
+        inset-inline: auto;
+        inset-block: calc(var(--kp-slider-thumb) / 2);
+        inset-inline-start: 50%;
+        inline-size: var(--kp-slider-rail);
+        block-size: auto;
+        translate: -50% 0;
+    }
+
+    .kp-slider[data-kp-vertical] .kp-slider__fill {
+        inset-block: auto;
+        inset-inline: 0;
+        inset-block-end: calc(var(--kp-slider-from) * 100%);
+        block-size: calc((var(--kp-slider-to) - var(--kp-slider-from)) * 100%);
+        inline-size: auto;
+    }
+
+    @container kp-slider (max-width: 26rem) {
+        .kp-slider__body {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-slider__fields {
+            block-size: auto;
+            justify-content: flex-end;
+        }
+    }
+
     /* --- Compare slider: two versions, a divider between them [kpadopt4-ideas] ---
  * `.kp-compare[data-kp-compare]` (js/compare.js). The before and after panes lie on top of each other in one grid
  * cell; the before pane shows on the start side of the divider and the after pane on the end side, each cut by

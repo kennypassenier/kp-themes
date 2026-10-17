@@ -168,6 +168,10 @@
             "types": "./js/range.d.ts",
             "default": "./js/range.js"
         },
+        "./js/slider": {
+            "types": "./js/slider.d.ts",
+            "default": "./js/slider.js"
+        },
         "./js/sentence": {
             "types": "./js/sentence.d.ts",
             "default": "./js/sentence.js"

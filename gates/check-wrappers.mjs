@@ -134,6 +134,12 @@ export const REQUIRED = [
         why: 'The block measures its own width and puts its tools under its title when narrow; the query reaches only its head [kpadopt4-data].',
     },
     {
+        container: 'kp-slider',
+        class: 'kp-slider',
+        self: true,
+        why: 'The slider measures its own width and puts the value box under the track on a phone; the query reaches only its own parts [kpadopt5-time].',
+    },
+    {
         container: 'kp-dated',
         class: 'kp-dated',
         self: true,

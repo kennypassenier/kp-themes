@@ -1740,6 +1740,30 @@ export type Strings = {
      */
     sentenceField: string;
     /**
+     * A slider's name when the page gives none (js/slider.js) [kpadopt5-time]
+     */
+    sliderGroup: string;
+    /**
+     * The lower thumb's and box's name: "Temperature, minimum" [kpadopt5-time]
+     */
+    sliderMin: (label: string) => string;
+    /**
+     * The upper thumb's and box's name: "Temperature, maximum" [kpadopt5-time]
+     */
+    sliderMax: (label: string) => string;
+    /**
+     * The value box's name: "Temperature, value" [kpadopt5-time]
+     */
+    sliderValue: (label: string) => string;
+    /**
+     * The line under a slider for a typed value that is not a number in range [kpadopt5-time]
+     */
+    sliderInvalid: (min: string, max: string, unit: string) => string;
+    /**
+     * The line for a typed value that would bring the two thumbs too close [kpadopt5-time]
+     */
+    sliderGap: (gap: string, unit: string) => string;
+    /**
      * The compare slider's label on the before side (js/compare.js) [kpadopt4-ideas]
      */
     compareBefore: string;
@@ -2567,6 +2591,12 @@ export type Strings = {
  * @property {(label: string) => string} sentenceEmpty  What a sentence's summary says for a field with nothing in it: "(At)" (js/sentence.js) [kpadopt5-time]
  * @property {(field: string, why: string) => string} sentenceWhy  The line under a sentence that names the field that is wrong: "At: Type a time of day." [kpadopt5-time]
  * @property {string} sentenceField  The name of a control that has none and no words before it [kpadopt5-time]
+ * @property {string} sliderGroup  A slider's name when the page gives none (js/slider.js) [kpadopt5-time]
+ * @property {(label: string) => string} sliderMin  The lower thumb's and box's name: "Temperature, minimum" [kpadopt5-time]
+ * @property {(label: string) => string} sliderMax  The upper thumb's and box's name: "Temperature, maximum" [kpadopt5-time]
+ * @property {(label: string) => string} sliderValue  The value box's name: "Temperature, value" [kpadopt5-time]
+ * @property {(min: string, max: string, unit: string) => string} sliderInvalid  The line under a slider for a typed value that is not a number in range [kpadopt5-time]
+ * @property {(gap: string, unit: string) => string} sliderGap  The line for a typed value that would bring the two thumbs too close [kpadopt5-time]
  * @property {string} compareBefore  The compare slider's label on the before side (js/compare.js) [kpadopt4-ideas]
  * @property {string} compareAfter  Its label on the after side [kpadopt4-ideas]
  * @property {(before: string, after: string) => string} compareSlider  The divider's name for a screen reader [kpadopt4-ideas]

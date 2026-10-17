@@ -547,6 +547,12 @@
  * @property {(label: string) => string} sentenceEmpty  What a sentence's summary says for a field with nothing in it: "(At)" (js/sentence.js) [kpadopt5-time]
  * @property {(field: string, why: string) => string} sentenceWhy  The line under a sentence that names the field that is wrong: "At: Type a time of day." [kpadopt5-time]
  * @property {string} sentenceField  The name of a control that has none and no words before it [kpadopt5-time]
+ * @property {string} sliderGroup  A slider's name when the page gives none (js/slider.js) [kpadopt5-time]
+ * @property {(label: string) => string} sliderMin  The lower thumb's and box's name: "Temperature, minimum" [kpadopt5-time]
+ * @property {(label: string) => string} sliderMax  The upper thumb's and box's name: "Temperature, maximum" [kpadopt5-time]
+ * @property {(label: string) => string} sliderValue  The value box's name: "Temperature, value" [kpadopt5-time]
+ * @property {(min: string, max: string, unit: string) => string} sliderInvalid  The line under a slider for a typed value that is not a number in range [kpadopt5-time]
+ * @property {(gap: string, unit: string) => string} sliderGap  The line for a typed value that would bring the two thumbs too close [kpadopt5-time]
  * @property {string} compareBefore  The compare slider's label on the before side (js/compare.js) [kpadopt4-ideas]
  * @property {string} compareAfter  Its label on the after side [kpadopt4-ideas]
  * @property {(before: string, after: string) => string} compareSlider  The divider's name for a screen reader [kpadopt4-ideas]
@@ -1312,6 +1318,13 @@ export const DEFAULT_STRINGS = Object.freeze({
     sentenceEmpty: (label) => `(${label || '…'})`,
     sentenceWhy: (field, why) => `${field}: ${why}`,
     sentenceField: 'Field',
+    // The slider (js/slider.js) [kpadopt5-time].
+    sliderGroup: 'Value',
+    sliderMin: (label) => `${label}, minimum`,
+    sliderMax: (label) => `${label}, maximum`,
+    sliderValue: (label) => `${label}, value`,
+    sliderInvalid: (min, max, unit) => `Type a number from ${min} to ${max}${unit ? ` ${unit}` : ''}.`,
+    sliderGap: (gap, unit) => `The two values must be at least ${gap}${unit ? ` ${unit}` : ''} apart.`,
     // The compare slider [kpadopt4-ideas].
     compareBefore: 'Before',
     compareAfter: 'After',

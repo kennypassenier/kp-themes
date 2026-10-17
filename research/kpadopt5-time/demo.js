@@ -49,6 +49,16 @@ export function stateButtons(attribute, apply) {
 
 await ready;
 
+/**
+ * Whether a section's opened state should be showing: on the whole page, and in the review dialog's frame of that very section.
+ * A frame of another section leaves it closed, because an open menu or list listens for Escape on the whole document.
+ * @param {string} item
+ */
+const shows = (item) => {
+    const lane = new URLSearchParams(location.search).get('rv-lane');
+    return !lane || lane === item;
+};
+
 // ── next times ──
 {
     const { setRuns, setRunsState } = await import('../../js/runs.js');
@@ -90,7 +100,7 @@ await ready;
     readout('#kt-snooze-menu', 'kp-snooze', 'kt-snooze-log');
     readout('#kt-snooze-menu', 'kp-snooze-end', 'kt-snooze-log', () => 'snooze ended');
     const opened = document.querySelector('#kt-snooze-open .kp-menu-button');
-    if (opened instanceof HTMLElement) openMenu(opened, { focus: 'none' });
+    if (opened instanceof HTMLElement && shows('snooze')) openMenu(opened, { focus: 'none' });
     const live = document.getElementById('kt-snooze-live');
     const apply = (/** @type {string} */ state) => {
         if (!live) return;
@@ -139,7 +149,7 @@ await ready;
     }
     readout('#kt-dated-a', 'kp-dated-change', 'kt-dated-log', (d) => JSON.stringify({ value: d.value }));
     const box = at('kt-dated-open')?.querySelector('.kp-combobox');
-    if (box) combobox(box)?.open();
+    if (box && shows('dated')) combobox(box)?.open();
     const live = at('kt-dated-live');
     const show = (/** @type {string} */ state) => {
         if (!live) return;
@@ -180,4 +190,25 @@ await ready;
         setSentenceInvalid(live, 'at', state === 'invalid' ? 'Type a time of day, 00:00 to 23:59.' : null);
     };
     stateButtons('data-kt-sentence-state', apply);
+}
+
+// ── slider ──
+{
+    const { setSliderState } = await import('../../js/slider.js');
+    readout('#kt-slider-a', 'kp-slider-input', 'kt-slider-log', (d) => JSON.stringify({ values: d.values, text: d.text }));
+    readout('#kt-slider-a', 'kp-slider-change', 'kt-slider-log', (d) => `released at ${d.text}`);
+    const live = document.getElementById('kt-slider-live');
+    const apply = (/** @type {string} */ state) => {
+        if (!live) return;
+        setSliderState(live, state === 'loading' ? 'loading' : 'ready');
+        const box = live.querySelector('.kp-slider__field');
+        if (!(box instanceof HTMLInputElement)) return;
+        if (state === 'wrong') {
+            box.value = 'abc';
+            box.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true, cancelable: true }));
+        } else if (state === 'ready') {
+            box.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+        }
+    };
+    stateButtons('data-kt-slider-state', apply);
 }
