@@ -172,6 +172,10 @@
             "types": "./js/compare.d.ts",
             "default": "./js/compare.js"
         },
+        "./js/notices": {
+            "types": "./js/notices.d.ts",
+            "default": "./js/notices.js"
+        },
         "./js/question-card": {
             "types": "./js/question-card.d.ts",
             "default": "./js/question-card.js"

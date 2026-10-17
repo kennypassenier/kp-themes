@@ -110,6 +110,31 @@
  * @property {string} codeLoading  What the busy card over a block says
  * @property {string} codeError  A block that could not be read, when the page gives no sentence
  * @property {(title: string) => string} codeCopiedAnnouncement  Announced after a copy, naming the block
+ * @property {string} noticesInbox  The counter button's word (js/notices.js) [kpadopt5-notices]
+ * @property {string} noticesTitle  The panel's heading [kpadopt5-notices]
+ * @property {string} noticesPageTitle  The Inbox page's heading [kpadopt5-notices]
+ * @property {string} noticesList  The accessible name of the list of notices [kpadopt5-notices]
+ * @property {(n: number) => string} noticesUnread  The counter's label, "5 unread" [kpadopt5-notices]
+ * @property {string} noticesNoneUnread  The counter's label with nothing unread [kpadopt5-notices]
+ * @property {(why: string) => string} noticesCounterError  The counter's label when the notices could not be read [kpadopt5-notices]
+ * @property {string} noticesLoading  What the busy card over the list says, and the counter's label while it loads [kpadopt5-notices]
+ * @property {(time: string) => string} noticesQuiet  The quiet line, "Quiet until 09:00" [kpadopt5-notices]
+ * @property {string} noticesEndQuiet  The button that ends the quiet time [kpadopt5-notices]
+ * @property {string} noticesSinceVerb  The verb of a notice's age line, "since 2 min ago" [kpadopt5-notices]
+ * @property {string} noticesMarkRead  The per-row button that marks a notice read [kpadopt5-notices]
+ * @property {string} noticesMarkUnread  The per-row button that marks it unread again [kpadopt5-notices]
+ * @property {string} noticesReadAll  The button that marks every notice read [kpadopt5-notices]
+ * @property {(n: number) => string} noticesAllInInbox  The footer link, "All 37 in the Inbox", with the exact count [kpadopt5-notices]
+ * @property {string} noticesEmpty  The empty plate's title [kpadopt5-notices]
+ * @property {string} noticesEmptyText  Its sentence [kpadopt5-notices]
+ * @property {string} noticesErrorTitle  The failed plate's title [kpadopt5-notices]
+ * @property {string} noticesErrorText  Its sentence when the page gives no reason [kpadopt5-notices]
+ * @property {string} noticesRetry  The failed plate's Retry button [kpadopt5-notices]
+ * @property {string} noticesSources  The title of the per-source switches [kpadopt5-notices]
+ * @property {string} noticesMuted  A muted source's state word [kpadopt5-notices]
+ * @property {string} noticesNotMuted  A source that is on [kpadopt5-notices]
+ * @property {(title: string) => string} noticesNew  Announced when one new notice arrived [kpadopt5-notices]
+ * @property {(n: number, title: string) => string} noticesNewMany  Announced when several arrived, naming the worst [kpadopt5-notices]
  * @property {string} questionAllow  The default first answer (js/question-card.js) [kpadopt5-question-card]
  * @property {string} questionStop  The default second answer [kpadopt5-question-card]
  * @property {string} questionsLabel  The accessible name of the region that holds the open questions [kpadopt5-question-card]
@@ -724,6 +749,34 @@ export const DEFAULT_STRINGS = Object.freeze({
     codeLoading: 'Reading…',
     codeError: 'Could not be read.',
     codeCopiedAnnouncement: (title) => `${title} copied`,
+    // kpadopt5-ops:notices:start
+    // The notification centre (js/notices.js) [kpadopt5-ops].
+    noticesInbox: 'Inbox',
+    noticesTitle: 'Notifications',
+    noticesPageTitle: 'Inbox',
+    noticesList: 'Notifications',
+    noticesUnread: (n) => `${n} unread`,
+    noticesNoneUnread: 'none unread',
+    noticesCounterError: (why) => `could not be read: ${why}`,
+    noticesLoading: 'Reading the notifications…',
+    noticesQuiet: (time) => `Quiet until ${time}`,
+    noticesEndQuiet: 'End quiet',
+    noticesSinceVerb: 'since',
+    noticesMarkRead: 'Mark read',
+    noticesMarkUnread: 'Mark unread',
+    noticesReadAll: 'Mark all read',
+    noticesAllInInbox: (n) => `All ${n} in the Inbox`,
+    noticesEmpty: 'Nothing waiting',
+    noticesEmptyText: 'Nothing needs you right now.',
+    noticesErrorTitle: 'The notifications could not be read',
+    noticesErrorText: 'The host did not answer. Nothing was lost.',
+    noticesRetry: 'Retry',
+    noticesSources: 'Sources',
+    noticesMuted: 'Muted',
+    noticesNotMuted: 'On',
+    noticesNew: (title) => `New: ${title}`,
+    noticesNewMany: (n, title) => `${n} new notifications, the worst: ${title}`,
+    // kpadopt5-ops:notices:end
     // kpadopt5-ops:question-card:start
     // The question card (js/question-card.js) [kpadopt5-ops].
     questionAllow: 'Allow',

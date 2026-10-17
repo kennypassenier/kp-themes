@@ -215,3 +215,8 @@
 .ko-mockbody p {
     margin: 0;
 }
+
+.ko-mockbar--end {
+    align-items: center;
+    justify-content: space-between;
+}

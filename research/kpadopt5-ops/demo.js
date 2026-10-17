@@ -10,6 +10,7 @@ import { setRefreshInterval } from '../../js/auto-refresh.js';
 import { connectionOf, setConnection } from '../../js/connection.js';
 import { attachTransfers, resetTransfer, setTransfer } from '../../js/transfer.js';
 import { askQuestion } from '../../js/question-card.js';
+import { noticesOf, setNotices } from '../../js/notices.js';
 
 /** @param {string} name @param {string} text */
 const log = (name, text) => {
@@ -573,3 +574,151 @@ function initQuestion() {
 }
 
 initQuestion();
+
+// ---------------------------------------------------------------- notices
+function initNotices() {
+    const boxes = /** @type {HTMLElement[]} */ ([...document.querySelectorAll('[data-ko-n]')]);
+    if (!boxes.length) return;
+    const min = (/** @type {number} */ m) => Date.now() - m * 60_000;
+    /** @type {import('../../js/notices.js').Notice[]} */
+    let items = [
+        {
+            key: 'p3',
+            severity: 'critical',
+            title: 'Pump house 3 is below 2.1 bar',
+            since: min(41),
+            consequence: 'The homes on the ring main lose pressure first.',
+            remedy: 'Open the incident and start the standby pump.',
+            fix: { label: 'Open the incident' },
+        },
+        {
+            key: 'p7',
+            severity: 'warning',
+            title: 'Pump house 7 has sent no reading since 06:00',
+            since: min(190),
+            consequence: 'Its readings are missing from today’s totals.',
+            remedy: 'Restart its modem.',
+            fix: { label: 'Restart the modem' },
+        },
+        {
+            key: 'res',
+            severity: 'warning',
+            title: 'Reservoir South fills slower than forecast',
+            since: min(75),
+            consequence: '64 % now, 70 % expected by 09:00.',
+            remedy: 'Check valve 2 on the next visit.',
+        },
+        {
+            key: 'fw',
+            severity: 'info',
+            title: 'Firmware 4.2 is out for six field units',
+            since: min(1400),
+            consequence: 'It fixes the flow meter’s drift after a power cut.',
+            remedy: 'Plan the update.',
+            fix: { label: 'Plan the update' },
+        },
+        { key: 'bk', severity: 'info', title: 'The nightly backup finished', since: min(600), consequence: '4.1 GB in 3 min 12 s.', read: true },
+        { key: 'c1', severity: 'info', title: 'A new visitor account was created', since: min(2200), read: true },
+        { key: 'c2', severity: 'info', title: 'The certificate renews in 12 days', since: min(3000), remedy: 'Nothing to do; it renews by itself.' },
+        {
+            key: 'c3',
+            severity: 'warning',
+            title: 'Disk usage on the archive passed 80 %',
+            since: min(4000),
+            remedy: 'Clear old exports.',
+            fix: { label: 'Open the archive' },
+        },
+    ];
+    const sources = [
+        { key: 'north', label: 'Northern network' },
+        { key: 'south', label: 'Southern network' },
+        { key: 'archive', label: 'Archive', muted: true },
+    ];
+    /** @type {'ready' | 'loading' | 'empty' | 'error'} */
+    let state = 'ready';
+    let quietOn = false;
+    let many = false;
+    const quietUntil = () => {
+        const d = new Date();
+        d.setHours(d.getHours() + 3);
+        return d.getTime();
+    };
+    const push = () => {
+        for (const box of boxes) {
+            box.toggleAttribute('data-kp-count', many);
+            if (many) box.setAttribute('data-kp-count', '134');
+            setNotices(box, {
+                state,
+                items: state === 'ready' ? items : [],
+                sources,
+                quietUntil: quietOn ? quietUntil() : null,
+                error: 'The host did not answer.',
+            });
+        }
+    };
+    const all = boxes.map((box) => box);
+    for (const box of all) {
+        for (const type of [
+            'kp-notice-fix',
+            'kp-notice-read',
+            'kp-notices-read-all',
+            'kp-notices-source',
+            'kp-notices-retry',
+            'kp-notices-end-quiet',
+            'kp-notices-open-inbox',
+        ])
+            box.addEventListener(type, (e) => {
+                const d = /** @type {CustomEvent} */ (e).detail;
+                log('notices', `${box.dataset.koN}: ${type} ${JSON.stringify(d)}`);
+                if (type === 'kp-notices-retry') {
+                    state = 'loading';
+                    push();
+                    window.setTimeout(() => {
+                        state = 'ready';
+                        for (const b of document.querySelectorAll('[data-ko-n-state]'))
+                            b.setAttribute('aria-pressed', String(/** @type {HTMLElement} */ (b).dataset.koNState === 'ready'));
+                        push();
+                    }, 1200);
+                }
+                if (type === 'kp-notices-end-quiet') {
+                    quietOn = false;
+                    for (const b of document.querySelectorAll('[data-ko-n-act=quiet]')) b.setAttribute('aria-pressed', 'false');
+                    push();
+                }
+            });
+    }
+    void Promise.all(boxes.map((b) => until(b, () => noticesOf(b)))).then(push);
+    for (const button of document.querySelectorAll('[data-ko-n-state]'))
+        button.addEventListener('click', () => {
+            press(/** @type {Element} */ (button.closest('[role="group"]')), button);
+            state = /** @type {'ready' | 'loading' | 'empty' | 'error'} */ (/** @type {HTMLElement} */ (button).dataset.koNState);
+            push();
+        });
+    for (const button of document.querySelectorAll('[data-ko-n-act]'))
+        button.addEventListener('click', () => {
+            const act = /** @type {HTMLElement} */ (button).dataset.koNAct;
+            if (act === 'quiet') {
+                quietOn = !quietOn;
+                button.setAttribute('aria-pressed', String(quietOn));
+            } else if (act === 'many') {
+                many = !many;
+                button.setAttribute('aria-pressed', String(many));
+            } else {
+                items = [
+                    {
+                        key: `new-${Date.now()}`,
+                        severity: 'critical',
+                        title: 'Pump house 5 has stopped',
+                        since: Date.now(),
+                        consequence: 'Zone 5 has no supply.',
+                        remedy: 'Send the standby crew.',
+                        fix: { label: 'Open the incident' },
+                    },
+                    ...items,
+                ];
+            }
+            push();
+        });
+}
+
+initNotices();

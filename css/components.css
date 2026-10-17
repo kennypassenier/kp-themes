@@ -17722,6 +17722,253 @@
     /* kpadopt5-ops:question-card:end */
 }
 
+@layer kp.components {
+    /* kpadopt5-ops:notices:start */
+    /* --- The notification centre [kpadopt5-ops] -----------------------------------
+     * js/notices.js. The counter (a button with the exact number of unread notices in a
+     * `.kp-badge`, muted with a moon while quiet) opens a raised panel of the newest
+     * notices on the theme's opaque popover plate; `data-kp-notices-look="page"` stands
+     * the same list in the page as the Inbox. A notice row is a mark for its severity,
+     * what happened with its age, what it affects, what to do, and Fix and Mark read at
+     * its end. The list keeps a least height (--kp-notices-min, four rows) in loading,
+     * ready, empty and failed, so nothing jumps. On a phone the panel is a full-height
+     * sheet. Knobs [KT6]: --kp-notices-width (26rem), --kp-notices-min (22rem). */
+    .kp-notices {
+        position: relative;
+        display: inline-block;
+        min-inline-size: 0;
+    }
+
+    .kp-notices[data-kp-notices-look='page'] {
+        display: block;
+    }
+
+    .kp-notices__trigger {
+        gap: var(--kp-space-sm, 0.5rem);
+        white-space: nowrap;
+    }
+
+    .kp-notices__count {
+        min-inline-size: 2ch;
+        justify-content: center;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-notices__count--zero {
+        visibility: hidden;
+    }
+
+    .kp-notices[data-kp-quiet] .kp-notices__count {
+        opacity: 0.6;
+    }
+
+    .kp-notices__moon[hidden] {
+        display: none;
+    }
+
+    .kp-notices__panel {
+        inline-size: var(--kp-notices-width, min(26rem, calc(100vw - 2rem)));
+        max-block-size: min(80vh, 40rem);
+        box-sizing: border-box;
+        padding: 0;
+        position-area: block-end span-inline-start;
+    }
+
+    .kp-notices__page,
+    .kp-notices__panel {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto auto;
+    }
+
+    .kp-notices__panel:not(:popover-open) {
+        display: none;
+    }
+
+    .kp-notices__head {
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-md, 0.75rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-notices__tools {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-notices__quiet {
+        flex: 1 1 auto;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-notices__quiet[hidden],
+    .kp-notices__end-quiet[hidden] {
+        display: none;
+    }
+
+    .kp-notices__read-all {
+        margin-inline-start: auto;
+    }
+
+    .kp-notices__body {
+        position: relative;
+        display: grid;
+        min-block-size: var(--kp-notices-min, 22rem);
+        overflow: auto;
+    }
+
+    .kp-notices__body > * {
+        grid-area: 1 / 1;
+        min-inline-size: 0;
+    }
+
+    .kp-notices__list {
+        display: grid;
+        align-content: start;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-notices__list[hidden],
+    .kp-notices__state[hidden] {
+        display: none;
+    }
+
+    .kp-notices__state {
+        display: grid;
+        padding: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-notices__item {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        padding: var(--kp-space-md, 0.75rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-notices__item:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring);
+        outline-offset: -2px;
+    }
+
+    .kp-notices__mark {
+        display: grid;
+        place-items: center;
+        inline-size: 1.5rem;
+        block-size: 1.5rem;
+        border-radius: 50%;
+        background: var(--muted);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 700;
+    }
+
+    .kp-notices__item[data-kp-severity='critical'] .kp-notices__mark {
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    .kp-notices__item[data-kp-severity='warning'] .kp-notices__mark {
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+
+    .kp-notices__text {
+        display: grid;
+        gap: 2px;
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-notices__item:not([data-kp-unread]) .kp-notices__title {
+        font-weight: 400;
+        color: var(--muted-foreground);
+    }
+
+    .kp-notices__item[data-kp-unread] .kp-notices__title::before {
+        content: '';
+        display: inline-block;
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+        margin-inline-end: 0.375rem;
+        border-radius: 50%;
+        background: var(--primary);
+    }
+
+    .kp-notices__since,
+    .kp-notices__consequence {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-notices__remedy {
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-notices__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-sm, 0.5rem);
+        grid-column: 2;
+        margin-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-notices__foot {
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border-block-start: 1px solid var(--border);
+    }
+
+    .kp-notices__foot[hidden],
+    .kp-notices__sources[hidden] {
+        display: none;
+    }
+
+    .kp-notices__sources {
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-md, 0.75rem);
+        border-block-start: 1px solid var(--border);
+    }
+
+    .kp-notices__source {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-notices__source-state {
+        margin-inline-start: auto;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-notices__page {
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    @media (max-width: 48rem) {
+        .kp-notices__panel {
+            position: fixed;
+            inset: 0;
+            inline-size: 100%;
+            max-block-size: none;
+            block-size: 100%;
+            margin: 0;
+            border-radius: 0;
+        }
+    }
+
+    /* kpadopt5-ops:notices:end */
+}
+
 /* The tour's dim is the target's box-shadow, and a register that gives the part a shadow of its own (a card's rim) wins over
  * kp.components, so on such a step the page was not dimmed at all and the dim flashed off and on between steps (Kenny,
  * 2026-10-13: "an effect that flashes over the screen when going from the second window ... into the last"). Restated in the

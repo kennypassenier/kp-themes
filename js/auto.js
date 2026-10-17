@@ -213,6 +213,8 @@ export const NEEDS = [
     { name: 'transfer', when: '[data-kp-transfer]', load: () => import('./transfer.js'), attach: (m, root) => [m.attachTransfers(root)] },
     // The question card's region [kpadopt5-ops]; the cards are made with askQuestion().
     { name: 'question-card', when: '[data-kp-questions]', load: () => import('./question-card.js'), attach: (m, root) => [m.attachQuestions(root)] },
+    // The notification centre [kpadopt5-ops].
+    { name: 'notices', when: '[data-kp-notices]', load: () => import('./notices.js'), attach: (m, root) => [m.attachNotices(root)] },
     { name: 'graph', when: '[data-kp-graph]', load: () => import('./graph.js'), attach: (m, root) => [m.attachGraphs(root)] },
     {
         // A theme's loading picture made of pieces (`--kp-loading-pieces`,

@@ -276,6 +276,106 @@ export type Strings = {
      */
     codeCopiedAnnouncement: (title: string) => string;
     /**
+     * The counter button's word (js/notices.js) [kpadopt5-notices]
+     */
+    noticesInbox: string;
+    /**
+     * The panel's heading [kpadopt5-notices]
+     */
+    noticesTitle: string;
+    /**
+     * The Inbox page's heading [kpadopt5-notices]
+     */
+    noticesPageTitle: string;
+    /**
+     * The accessible name of the list of notices [kpadopt5-notices]
+     */
+    noticesList: string;
+    /**
+     * The counter's label, "5 unread" [kpadopt5-notices]
+     */
+    noticesUnread: (n: number) => string;
+    /**
+     * The counter's label with nothing unread [kpadopt5-notices]
+     */
+    noticesNoneUnread: string;
+    /**
+     * The counter's label when the notices could not be read [kpadopt5-notices]
+     */
+    noticesCounterError: (why: string) => string;
+    /**
+     * What the busy card over the list says, and the counter's label while it loads [kpadopt5-notices]
+     */
+    noticesLoading: string;
+    /**
+     * The quiet line, "Quiet until 09:00" [kpadopt5-notices]
+     */
+    noticesQuiet: (time: string) => string;
+    /**
+     * The button that ends the quiet time [kpadopt5-notices]
+     */
+    noticesEndQuiet: string;
+    /**
+     * The verb of a notice's age line, "since 2 min ago" [kpadopt5-notices]
+     */
+    noticesSinceVerb: string;
+    /**
+     * The per-row button that marks a notice read [kpadopt5-notices]
+     */
+    noticesMarkRead: string;
+    /**
+     * The per-row button that marks it unread again [kpadopt5-notices]
+     */
+    noticesMarkUnread: string;
+    /**
+     * The button that marks every notice read [kpadopt5-notices]
+     */
+    noticesReadAll: string;
+    /**
+     * The footer link, "All 37 in the Inbox", with the exact count [kpadopt5-notices]
+     */
+    noticesAllInInbox: (n: number) => string;
+    /**
+     * The empty plate's title [kpadopt5-notices]
+     */
+    noticesEmpty: string;
+    /**
+     * Its sentence [kpadopt5-notices]
+     */
+    noticesEmptyText: string;
+    /**
+     * The failed plate's title [kpadopt5-notices]
+     */
+    noticesErrorTitle: string;
+    /**
+     * Its sentence when the page gives no reason [kpadopt5-notices]
+     */
+    noticesErrorText: string;
+    /**
+     * The failed plate's Retry button [kpadopt5-notices]
+     */
+    noticesRetry: string;
+    /**
+     * The title of the per-source switches [kpadopt5-notices]
+     */
+    noticesSources: string;
+    /**
+     * A muted source's state word [kpadopt5-notices]
+     */
+    noticesMuted: string;
+    /**
+     * A source that is on [kpadopt5-notices]
+     */
+    noticesNotMuted: string;
+    /**
+     * Announced when one new notice arrived [kpadopt5-notices]
+     */
+    noticesNew: (title: string) => string;
+    /**
+     * Announced when several arrived, naming the worst [kpadopt5-notices]
+     */
+    noticesNewMany: (n: number, title: string) => string;
+    /**
      * The default first answer (js/question-card.js) [kpadopt5-question-card]
      */
     questionAllow: string;
@@ -2082,6 +2182,31 @@ export type Strings = {
  * @property {string} codeLoading  What the busy card over a block says
  * @property {string} codeError  A block that could not be read, when the page gives no sentence
  * @property {(title: string) => string} codeCopiedAnnouncement  Announced after a copy, naming the block
+ * @property {string} noticesInbox  The counter button's word (js/notices.js) [kpadopt5-notices]
+ * @property {string} noticesTitle  The panel's heading [kpadopt5-notices]
+ * @property {string} noticesPageTitle  The Inbox page's heading [kpadopt5-notices]
+ * @property {string} noticesList  The accessible name of the list of notices [kpadopt5-notices]
+ * @property {(n: number) => string} noticesUnread  The counter's label, "5 unread" [kpadopt5-notices]
+ * @property {string} noticesNoneUnread  The counter's label with nothing unread [kpadopt5-notices]
+ * @property {(why: string) => string} noticesCounterError  The counter's label when the notices could not be read [kpadopt5-notices]
+ * @property {string} noticesLoading  What the busy card over the list says, and the counter's label while it loads [kpadopt5-notices]
+ * @property {(time: string) => string} noticesQuiet  The quiet line, "Quiet until 09:00" [kpadopt5-notices]
+ * @property {string} noticesEndQuiet  The button that ends the quiet time [kpadopt5-notices]
+ * @property {string} noticesSinceVerb  The verb of a notice's age line, "since 2 min ago" [kpadopt5-notices]
+ * @property {string} noticesMarkRead  The per-row button that marks a notice read [kpadopt5-notices]
+ * @property {string} noticesMarkUnread  The per-row button that marks it unread again [kpadopt5-notices]
+ * @property {string} noticesReadAll  The button that marks every notice read [kpadopt5-notices]
+ * @property {(n: number) => string} noticesAllInInbox  The footer link, "All 37 in the Inbox", with the exact count [kpadopt5-notices]
+ * @property {string} noticesEmpty  The empty plate's title [kpadopt5-notices]
+ * @property {string} noticesEmptyText  Its sentence [kpadopt5-notices]
+ * @property {string} noticesErrorTitle  The failed plate's title [kpadopt5-notices]
+ * @property {string} noticesErrorText  Its sentence when the page gives no reason [kpadopt5-notices]
+ * @property {string} noticesRetry  The failed plate's Retry button [kpadopt5-notices]
+ * @property {string} noticesSources  The title of the per-source switches [kpadopt5-notices]
+ * @property {string} noticesMuted  A muted source's state word [kpadopt5-notices]
+ * @property {string} noticesNotMuted  A source that is on [kpadopt5-notices]
+ * @property {(title: string) => string} noticesNew  Announced when one new notice arrived [kpadopt5-notices]
+ * @property {(n: number, title: string) => string} noticesNewMany  Announced when several arrived, naming the worst [kpadopt5-notices]
  * @property {string} questionAllow  The default first answer (js/question-card.js) [kpadopt5-question-card]
  * @property {string} questionStop  The default second answer [kpadopt5-question-card]
  * @property {string} questionsLabel  The accessible name of the region that holds the open questions [kpadopt5-question-card]

@@ -749,6 +749,101 @@
                     </div>
                 </div>
             </section>
+            <!-- ================================================================ notification-centre -->
+            <section
+                class="ko-sec"
+                id="notices"
+                data-review-item="notices"
+                data-review-topic="ops-notification-centre"
+                data-review-topic-title="The notification centre"
+                data-review-title="The notification centre"
+                aria-labelledby="h-notices"
+            >
+                <div class="ko-sec__head">
+                    <h2 id="h-notices">The notification centre</h2>
+                    <p>
+                        <code>.kp-notices</code> with <code>js/notices.js</code>: a counter with the exact number, a panel with the newest notices and
+                        the same list as an Inbox page, with a switch per source and a quiet time in plain words.
+                    </p>
+                </div>
+                <div class="ko-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            In the mock bar, <b>Inbox</b> with the number of unread notices (here 6) in a badge, always the real number. Press it: a
+                            raised panel on formal’s opaque paper opens at the button with the newest notices, worst first and newest first within a
+                            severity: a round mark, what happened in bold with a dot while unread, “since 12 min ago”, what it affects, what to do and
+                            <b>Fix</b> and <b>Mark read</b>. At the foot: <b>All 8 in the Inbox</b> (the exact count). Esc or a click outside closes
+                            it. <b>Mark all read</b> reads everything (the badge goes to none; its label says “none unread”).
+                        </li>
+                        <li>
+                            Below the bar, the same notices as the <b>Inbox page</b>: every notice, plus <b>Sources</b> with one switch per source
+                            (mute a source: the word beside it changes and an event fires). The keys: <b>g</b> then <b>i</b> opens the Inbox, <b>m</b>
+                            marks the focused notice read.
+                        </li>
+                        <li>
+                            <b>Loading</b> lays formal’s busy card over the list at its full height while the counter holds its place;
+                            <b>Nothing waiting</b> is the large centred empty plate; <b>Failed</b> is the red plate with a normal-size Retry and the
+                            counter shows “?”. All fill the same height as the filled list. <b>Quiet until 09:00</b> mutes the counter, shows a moon
+                            and the words with <b>End quiet</b>. <b>134 unread</b> feeds a number past 99: the badge shows 134, never “99+”.
+                        </li>
+                        <li>
+                            <b>A new critical notice</b> adds a row at the top (the focus stays where it was), the counter goes up, a screen reader
+                            hears it at once, a toast shows it, and the tab title carries the count. The phone frame (390 px) shows the same bar; on a
+                            phone the panel opens as a full-height sheet.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal's raised paper plate for the panel, the red-ink mark for a critical notice, navy dot for unread, the badge a small
+                        engraved plate; the empty plate with its ledger lines and the failed plate a red-ink entry, both large and centred.
+                    </p>
+                </div>
+                <div class="ko-controls" data-review-controls>
+                    <div role="group" aria-label="State of the notices">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-n-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-n-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-n-state="empty" aria-pressed="false">Nothing waiting</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-n-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="More">
+                        <b>More:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-n-act="quiet" aria-pressed="false">Quiet until 09:00</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-n-act="many" aria-pressed="false">134 unread</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-n-act="new">A new critical notice</button>
+                    </div>
+                </div>
+                <div class="ko-stack">
+                    <div>
+                        <p class="ko-label">The counter and its panel</p>
+                        <div class="ko-mockpage">
+                            <div class="ko-mockbar ko-mockbar--end">
+                                <b>Pump houses</b>
+                                <div data-kp-notices data-kp-inbox-href="#ko-inbox" data-ko-n="bar"></div>
+                            </div>
+                            <div class="ko-mockbody"><p>Press Inbox. The page under the bar does not move.</p></div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="ko-label">The Inbox page</p>
+                        <div id="ko-inbox" data-kp-notices data-kp-notices-look="page" data-kp-count-in-title="off" data-ko-n="page"></div>
+                    </div>
+                    <div>
+                        <p class="ko-label">Phone width (390 px)</p>
+                        <div class="ko-frame ko-frame--phone">
+                            <div class="ko-mockpage">
+                                <div class="ko-mockbar ko-mockbar--end">
+                                    <b>Pump houses</b>
+                                    <div data-kp-notices data-kp-inbox-href="#ko-inbox" data-kp-count-in-title="off" data-ko-n="phone"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <pre class="ko-log" data-ko-log="notices" aria-live="polite">Nothing happened yet.</pre>
+                </div>
+            </section>
         </main>
         <script type="application/json" data-review-round>
             { "round": "ops-c17983a9-c644-4e17-b04b-bf6ed4735b60", "received": [] }
