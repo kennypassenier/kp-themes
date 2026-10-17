@@ -268,18 +268,20 @@ function wire(el) {
         if (n.consequence) text.append(make('span', 'kp-notices__consequence', n.consequence));
         if (n.remedy) text.append(make('span', 'kp-notices__remedy', n.remedy));
         const actions = make('div', 'kp-notices__actions');
-        if (n.fix) {
-            const fix = /** @type {HTMLButtonElement} */ (make('button', 'kp-button kp-button--sm kp-notices__fix', n.fix.label));
-            fix.type = 'button';
-            fix.setAttribute('data-kp-notice-fix', n.key);
-            actions.append(fix);
-        }
+        // Same function, same place [Kenny, 2026-10-17 22:09]: Mark read / Mark unread is the first slot of the actions
+        // grid in every row, the fix (when the notice has one) the second, so the buttons stand under each other.
         const mine = /** @type {HTMLButtonElement} */ (
             make('button', 'kp-button kp-button--sm kp-button--ghost kp-notices__mark-read', isRead(n) ? s().noticesMarkUnread : s().noticesMarkRead)
         );
         mine.type = 'button';
         mine.setAttribute('data-kp-notice-read', n.key);
         actions.append(mine);
+        if (n.fix) {
+            const fix = /** @type {HTMLButtonElement} */ (make('button', 'kp-button kp-button--sm kp-notices__fix', n.fix.label));
+            fix.type = 'button';
+            fix.setAttribute('data-kp-notice-fix', n.key);
+            actions.append(fix);
+        }
         li.append(mark, text, actions);
         setAgo(since, n.since);
         return li;

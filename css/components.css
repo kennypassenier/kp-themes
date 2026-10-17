@@ -19823,8 +19823,8 @@
      * what / why / what now lines and the exact count of waiting changes sit in one
      * block; Retry now stays at the end. The plate keeps one height in every state
      * (--kp-connection-min), so a state change moves nothing under it. On a phone it is
-     * one line plus Retry now. `data-kp-placement="bottom"` sticks it to the window's
-     * foot. Knobs [KT6]: --kp-connection-min (6.25rem wide, 6rem on a phone). */
+     * one line plus Retry now. The foot of the window is the default;
+     * `data-kp-placement="top"` puts it in the flow under the navigation bar. Knobs [KT6]: --kp-connection-min (6.25rem wide, 6rem on a phone). */
     .kp-connection {
         container: kp-connection / inline-size;
         display: block;
@@ -19835,8 +19835,11 @@
         display: none;
     }
 
-    .kp-connection[data-kp-placement='bottom'] {
-        position: sticky;
+    /* The foot is the default: fixed to the bottom edge of the window (of the nearest frame that contains fixed boxes), over
+     * the last lines until it goes. `top` puts it in the flow under the navigation bar. */
+    .kp-connection:not([data-kp-placement='top']) {
+        position: fixed;
+        inset-inline: 0;
         inset-block-end: 0;
         z-index: var(--kp-z-sticky, 10);
     }
@@ -19998,6 +20001,51 @@
 
     .kp-progress-group--transfer[data-kp-narrow] .kp-transfer > .kp-progress__value {
         text-align: start;
+    }
+
+    /* A transfer of unknown size is a full band that breathes in place (an alternating opacity, so nothing restarts) and
+     * settles into the finished bar when the size is known, instead of a busy sweep that loops from the start and then
+     * jumps to full [kpadopt5-r2]. A register that draws its own busy bar repeats these two rules for its theme. */
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-transfer[data-kp-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            inset-inline: 0;
+            inline-size: auto;
+            transform: none;
+            animation:
+                kp-transfer-enter 700ms ease-out,
+                kp-transfer-breathe 2600ms ease-in-out infinite alternate;
+        }
+
+        .kp-transfer[data-kp-settle] .kp-progressbar__fill {
+            animation: kp-transfer-settle 480ms ease-out;
+        }
+    }
+
+    @keyframes kp-transfer-enter {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    @keyframes kp-transfer-breathe {
+        from {
+            opacity: 0.4;
+        }
+        to {
+            opacity: 0.85;
+        }
+    }
+
+    @keyframes kp-transfer-settle {
+        from {
+            opacity: var(--kp-settle-from, 0.85);
+        }
+        to {
+            opacity: 1;
+        }
     }
 
     /* kpadopt5-ops:transfer:end */
@@ -20397,12 +20445,27 @@
         font-size: var(--kp-text-sm, 0.8125rem);
     }
 
+    /* Two fixed slots: Mark read / Mark unread is always the first, at the same place in every row; the fix, when the
+     * notice has one, is the second. Never placed by the flow of what comes before it [kpadopt5-r2]. Knob
+     * --kp-notices-read-col (7.5rem, wide enough for "Mark unread"). */
     .kp-notices__actions {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: var(--kp-notices-read-col, 7.5rem) minmax(0, max-content);
+        justify-content: start;
+        align-items: center;
         gap: var(--kp-space-sm, 0.5rem);
         grid-column: 2;
         margin-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-notices__actions > .kp-notices__mark-read {
+        grid-column: 1;
+        justify-self: start;
+        white-space: nowrap;
+    }
+
+    .kp-notices__actions > .kp-notices__fix {
+        grid-column: 2;
     }
 
     .kp-notices__foot {
@@ -20915,7 +20978,6 @@
             min-block-size: 2.5rem;
         }
     }
-
 }
 
 @layer kp.components {

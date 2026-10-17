@@ -1,0 +1,63 @@
+{
+    "demo": "kpadopt5-ops",
+    "rounds": [
+        {
+            "round": "1",
+            "page": "ops-c17983a9-c644-4e17-b04b-bf6ed4735b60",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-17 22:09: 7 of 7 judged in formal, 4 approved, 3 not approved. The page asked formal only.",
+            "approved": [
+                {
+                    "item": "ops-page",
+                    "theme": "formal"
+                },
+                {
+                    "item": "master-detail",
+                    "theme": "formal"
+                },
+                {
+                    "item": "auto-refresh",
+                    "theme": "formal"
+                },
+                {
+                    "item": "question",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "connection",
+                    "theme": "formal",
+                    "note": "both should be an option, default to foot"
+                },
+                {
+                    "item": "transfer",
+                    "theme": "formal",
+                    "note": "the second bar keps starting from the beginning before suddenly filling completely. Make it less hectic, it didn't seem fluid"
+                },
+                {
+                    "item": "notices",
+                    "theme": "formal",
+                    "note": "I told you before, I don't like when things are just left aligned for the sake of it. The buttons mark unread need to be under each other. Same functionality needs to be in the same position every time"
+                }
+            ],
+            "choices": [
+                {
+                    "item": "auto-refresh",
+                    "theme": "every theme",
+                    "picked": "How the choice looks = Segments"
+                },
+                {
+                    "item": "connection",
+                    "theme": "every theme",
+                    "picked": "Where the banner stands = Under the navigation bar"
+                },
+                {
+                    "item": "question",
+                    "theme": "every theme",
+                    "picked": "How the time left is drawn = A ring"
+                }
+            ]
+        }
+    ]
+}

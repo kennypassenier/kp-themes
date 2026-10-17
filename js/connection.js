@@ -5,8 +5,9 @@
 //
 //   <div class="kp-connection" data-kp-connection></div>
 //
-// Put it directly under the navigation bar: it pushes the content down (never overlaps) and takes no room at all
-// while the connection is fine. The app reports what it sees:
+// It takes no room at all while the connection is fine. By default it stands at the foot of the window (fixed to the
+// bottom edge of its nearest positioned frame, so it is always in view); `data-kp-placement="top"` puts it in the flow
+// directly under the navigation bar instead, where it pushes the content down. Both are options, switchable at runtime. The app reports what it sees:
 //
 //   setConnection(el, 'offline')                       the connection is gone
 //   setConnection(el, 'offline', { pending: 3 })       ...and 3 changes wait to be sent
@@ -23,7 +24,7 @@
 //                              app reports its fetch or stream failures through setConnection; `both` listens to both
 //   data-kp-connection-grace   ms (default 3000): a drop shorter than this shows nothing (no flicker on a Wi-Fi hiccup)
 //   data-kp-pending            the app's queue count, exact ("3 changes waiting"); also setConnection(…, { pending })
-//   data-kp-placement          top (default, in the flow) | bottom (sticks to the foot of the window)
+//   data-kp-placement          bottom (default, the foot of the window) | top (in the flow, under the navigation bar)
 //   data-kp-back-ms            ms (default 3000) "Connected again" stays
 //   data-kp-retry              "off" leaves the Retry now button out (default: on)
 //   data-kp-retry-delays       seconds between automatic tries, default "3,10,30,60" (the last repeats); "off" = none
@@ -135,7 +136,7 @@ function wire(el) {
     const voice = make('span', 'kp-sr-only');
     voice.setAttribute('role', 'status');
     el.replaceChildren(band, voice);
-    if (el.getAttribute('data-kp-placement') === 'bottom') el.setAttribute('data-kp-placement', 'bottom');
+    if (el.getAttribute('data-kp-placement') !== 'top') el.setAttribute('data-kp-placement', 'bottom');
 
     /** @type {ConnectionState} */
     let shown = 'online';
