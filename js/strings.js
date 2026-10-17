@@ -110,6 +110,12 @@
  * @property {string} codeLoading  What the busy card over a block says
  * @property {string} codeError  A block that could not be read, when the page gives no sentence
  * @property {(title: string) => string} codeCopiedAnnouncement  Announced after a copy, naming the block
+ * @property {string} paneEmpty  The detail pane's plate while nothing is picked (js/master-detail.js) [kpadopt5-master-detail]
+ * @property {string} paneBack  The Back button at the top of a folded detail pane [kpadopt5-master-detail]
+ * @property {string} paneLoading  What the busy card over the detail pane says [kpadopt5-master-detail]
+ * @property {string} paneErrorTitle  The errored detail's first line, when the page gives none [kpadopt5-master-detail]
+ * @property {string} paneErrorText  Its sentence, when the page gives none [kpadopt5-master-detail]
+ * @property {string} paneRetry  The Retry button of an errored detail [kpadopt5-master-detail]
  * @property {string} busy
  * @property {string} close
  * @property {string} menu          The accessible name of a collapsed navigation's toggle
@@ -670,6 +676,15 @@ export const DEFAULT_STRINGS = Object.freeze({
     codeLoading: 'Reading…',
     codeError: 'Could not be read.',
     codeCopiedAnnouncement: (title) => `${title} copied`,
+    // kpadopt5-ops:master-detail:start
+    // A list and its detail (js/master-detail.js) [kpadopt5-ops].
+    paneEmpty: 'Pick an item on the left',
+    paneBack: 'Back to the list',
+    paneLoading: 'Loading…',
+    paneErrorTitle: 'This item could not be loaded',
+    paneErrorText: 'Nothing was changed. Try again in a moment.',
+    paneRetry: 'Retry',
+    // kpadopt5-ops:master-detail:end
     busy: 'Working…',
     close: 'Close',
     // The nav toggle carries no glyph of its own — this package ships

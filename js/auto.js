@@ -198,6 +198,13 @@ export const NEEDS = [
     { name: 'range', when: '[data-kp-range]', load: () => import('./range.js'), attach: (m, root) => [m.attachRanges(root)] },
     // The compare slider [kpadopt4-ideas]: two versions stacked with a divider between them.
     { name: 'compare', when: '[data-kp-compare]', load: () => import('./compare.js'), attach: (m, root) => [m.attachCompares(root)] },
+    // A list and its detail that folds on a phone [kpadopt5-ops].
+    {
+        name: 'master-detail',
+        when: '[data-kp-master-detail]',
+        load: () => import('./master-detail.js'),
+        attach: (m, root) => [m.attachMasterDetails(root)],
+    },
     { name: 'graph', when: '[data-kp-graph]', load: () => import('./graph.js'), attach: (m, root) => [m.attachGraphs(root)] },
     {
         // A theme's loading picture made of pieces (`--kp-loading-pieces`,

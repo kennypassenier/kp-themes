@@ -275,6 +275,30 @@ export type Strings = {
      * Announced after a copy, naming the block
      */
     codeCopiedAnnouncement: (title: string) => string;
+    /**
+     * The detail pane's plate while nothing is picked (js/master-detail.js) [kpadopt5-master-detail]
+     */
+    paneEmpty: string;
+    /**
+     * The Back button at the top of a folded detail pane [kpadopt5-master-detail]
+     */
+    paneBack: string;
+    /**
+     * What the busy card over the detail pane says [kpadopt5-master-detail]
+     */
+    paneLoading: string;
+    /**
+     * The errored detail's first line, when the page gives none [kpadopt5-master-detail]
+     */
+    paneErrorTitle: string;
+    /**
+     * Its sentence, when the page gives none [kpadopt5-master-detail]
+     */
+    paneErrorText: string;
+    /**
+     * The Retry button of an errored detail [kpadopt5-master-detail]
+     */
+    paneRetry: string;
     busy: string;
     close: string;
     /**
@@ -1866,6 +1890,12 @@ export type Strings = {
  * @property {string} codeLoading  What the busy card over a block says
  * @property {string} codeError  A block that could not be read, when the page gives no sentence
  * @property {(title: string) => string} codeCopiedAnnouncement  Announced after a copy, naming the block
+ * @property {string} paneEmpty  The detail pane's plate while nothing is picked (js/master-detail.js) [kpadopt5-master-detail]
+ * @property {string} paneBack  The Back button at the top of a folded detail pane [kpadopt5-master-detail]
+ * @property {string} paneLoading  What the busy card over the detail pane says [kpadopt5-master-detail]
+ * @property {string} paneErrorTitle  The errored detail's first line, when the page gives none [kpadopt5-master-detail]
+ * @property {string} paneErrorText  Its sentence, when the page gives none [kpadopt5-master-detail]
+ * @property {string} paneRetry  The Retry button of an errored detail [kpadopt5-master-detail]
  * @property {string} busy
  * @property {string} close
  * @property {string} menu          The accessible name of a collapsed navigation's toggle

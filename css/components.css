@@ -16748,6 +16748,235 @@
     }
 }
 
+@layer kp.components {
+    /* kpadopt5-ops:stateplate:start */
+    /* --- The plate an empty or failed area is drawn with [kpadopt5-ops] -----
+     * js/state-plate.js. Kenny's rules of 2026-10-16 and 2026-10-17: failed and
+     * empty fill the component's whole normal footprint, set at the heading
+     * size in the middle of the theme's own empty plate (.kp-empty) or alert
+     * (.kp-alert--destructive), with a normal-size action and air on every side
+     * of the words. Give the plate the whole area (`block-size: 100%` in a grid
+     * cell). Knobs [KT6]: --kp-stateplate-text (the title's size),
+     * --kp-stateplate-pad (the air round the words). */
+    .kp-stateplate {
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        inline-size: 100%;
+        block-size: 100%;
+        min-block-size: 0;
+        margin: 0;
+        padding: var(--kp-stateplate-pad, var(--kp-space-xl, 2rem) var(--kp-space-lg, 1.5rem));
+        font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem));
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+        /* Important: a register's empty plate or alert may set `text-align: start` in a later layer. */
+        text-align: center !important;
+        text-wrap: balance;
+    }
+
+    .kp-stateplate__title {
+        font-weight: 600;
+    }
+
+    .kp-stateplate__text {
+        font-size: var(--kp-text-md, 1rem);
+        max-inline-size: 36ch;
+    }
+
+    .kp-stateplate--empty .kp-stateplate__title {
+        color: var(--foreground);
+    }
+
+    .kp-stateplate__action {
+        margin-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    /* kpadopt5-ops:stateplate:end */
+}
+
+@layer kp.components {
+    /* kpadopt5-ops:master-detail:start */
+    /* --- Master and detail: a list and its detail, folding on a phone [kpadopt5-ops] ---
+     * js/master-detail.js. Extends .kp-split (fixed columns instead of a
+     * dragged divider unless `data-kp-resizable`): the list, the detail and an
+     * optional aside, `data-kp-pane="list|detail|aside"`. The columns come from
+     * `data-kp-pane-widths` (17rem 1fr, plus 24rem with an aside); the script
+     * writes them as --kp-pane-columns. Below `data-kp-fold-at` (48rem) the
+     * script sets `data-kp-narrow-on` and the panes fold the way
+     * `data-kp-narrow` says: `one-pane` (the list, then the detail with a Back
+     * button), `sheet` (the detail slides over the list, which keeps its
+     * scroll) or `stack` (one under the other). Below `data-kp-aside-fold-at`
+     * (90rem) the aside moves under the other two (`data-kp-aside-folded`).
+     * The detail keeps its place and size in empty, loading, error and ready.
+     * Knobs [KT6]: --kp-pane-columns, --kp-pane-min (least height, 24rem),
+     * --kp-pane-pad (the panes' padding). */
+    .kp-split--panes {
+        position: relative;
+        grid-template-columns: var(--kp-pane-columns, 17rem minmax(0, 1fr));
+        min-block-size: var(--kp-pane-min, 24rem);
+    }
+
+    .kp-split--panes[data-kp-split] {
+        grid-template-columns: var(--kp-split, var(--kp-pane-list, 17rem)) auto minmax(0, 1fr);
+    }
+
+    .kp-split--panes > [data-kp-pane] {
+        min-inline-size: 0;
+        padding: var(--kp-pane-pad, var(--kp-space-md, 1rem));
+    }
+
+    .kp-split--panes:not([data-kp-split]) > [data-kp-pane] + [data-kp-pane] {
+        border-inline-start: 1px solid var(--border);
+    }
+
+    .kp-split--panes[data-kp-aside-folded] {
+        grid-template-columns: var(--kp-pane-columns-two, var(--kp-pane-list, 17rem) minmax(0, 1fr));
+    }
+
+    .kp-split--panes[data-kp-aside-folded] > [data-kp-pane='aside'] {
+        grid-column: 1 / -1;
+        border-inline-start: 0;
+        border-block-start: 1px solid var(--border);
+    }
+
+    .kp-split--panes[data-kp-narrow-on]:not([data-kp-narrow='stack']),
+    .kp-split--panes[data-kp-narrow-on][data-kp-narrow='stack'] {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kp-split--panes[data-kp-narrow-on] > [data-kp-pane] + [data-kp-pane] {
+        border-inline-start: 0;
+        border-block-start: 1px solid var(--border);
+    }
+
+    .kp-split--panes[data-kp-narrow-on][data-kp-pane-shown='list'] > :is([data-kp-pane='detail'], [data-kp-pane='aside']),
+    .kp-split--panes[data-kp-narrow-on][data-kp-pane-shown='detail'] > [data-kp-pane='list'] {
+        display: none;
+    }
+
+    /* A sheet: the detail covers the list, which stays drawn under it and keeps its scroll. */
+    .kp-split--panes[data-kp-narrow-on][data-kp-narrow='sheet'][data-kp-pane-shown='detail'] > [data-kp-pane='list'] {
+        display: block;
+        visibility: hidden;
+    }
+
+    .kp-split--panes[data-kp-narrow-on][data-kp-narrow='sheet'][data-kp-pane-shown='detail'] > [data-kp-pane='detail'] {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        overflow: auto;
+        background: var(--background);
+        border-block-start: 0;
+    }
+
+    .kp-pane__list {
+        display: grid;
+        gap: 2px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-pane__list > [data-kp-pane-key] {
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+        overflow-wrap: anywhere;
+        cursor: pointer;
+    }
+
+    .kp-pane__list > [data-kp-pane-key]:hover {
+        background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
+    }
+
+    .kp-pane__list > [data-kp-pane-key][aria-selected='true'] {
+        background: var(--muted);
+        box-shadow: inset 3px 0 0 var(--primary);
+        font-weight: 600;
+    }
+
+    .kp-pane__list > [data-kp-pane-key]:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring);
+        outline-offset: -2px;
+    }
+
+    .kp-pane__detail {
+        position: relative;
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr);
+        align-content: stretch;
+        row-gap: var(--kp-space-md, 1rem);
+    }
+
+    .kp-pane__head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        min-block-size: 0;
+    }
+
+    .kp-pane__head > [data-kp-pane-heading] {
+        flex: 1 1 8rem;
+        min-inline-size: 0;
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+
+    /* Folded, the Back button stands over the heading, which takes the whole line under it. */
+    .kp-split--panes[data-kp-narrow-on]:not([data-kp-narrow='stack']) .kp-pane__head > [data-kp-pane-heading] {
+        flex-basis: 100%;
+    }
+
+    .kp-pane__head > [data-kp-pane-heading]:focus {
+        outline: none;
+    }
+
+    .kp-pane__head:not(:has(*)) {
+        display: none;
+    }
+
+    .kp-pane__back {
+        display: none;
+        white-space: nowrap;
+    }
+
+    .kp-split--panes[data-kp-narrow-on]:not([data-kp-narrow='stack']) .kp-pane__back {
+        display: inline-flex;
+    }
+
+    .kp-pane__body,
+    .kp-pane__state {
+        grid-area: 2 / 1;
+        min-inline-size: 0;
+        min-block-size: 0;
+    }
+
+    .kp-pane__state {
+        display: grid;
+    }
+
+    .kp-pane__state[hidden] {
+        display: none;
+    }
+
+    .kp-split--panes:is([data-kp-state='empty'], [data-kp-state='error']) .kp-pane__body {
+        visibility: hidden;
+    }
+
+    .kp-split--panes[data-kp-state='empty']:not([data-kp-narrow-on]) .kp-pane__head > [data-kp-pane-heading] {
+        visibility: hidden;
+    }
+
+    .kp-split--panes[data-kp-state='loading'] .kp-pane__body {
+        cursor: progress;
+    }
+
+    /* kpadopt5-ops:master-detail:end */
+}
+
 /* The tour's dim is the target's box-shadow, and a register that gives the part a shadow of its own (a card's rim) wins over
  * kp.components, so on such a step the page was not dimmed at all and the dim flashed off and on between steps (Kenny,
  * 2026-10-13: "an effect that flashes over the screen when going from the second window ... into the last"). Restated in the

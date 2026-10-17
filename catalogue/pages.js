@@ -107,6 +107,12 @@ export const PAGES = [
             // Kenny, 2026-10-12: "Cyberpunk lijkt af, zie dat dezelfde fouten nu niet terugkomen in andere thema's": every other theme mended so a close is its open backwards with the theme's own effect; only what changed, each block in the themes where it did (research/all-themes).
             // Kenny, 2026-10-16 (kp-adopt-rest, round 2): eight things the admin dashboard still draws itself (action tiles, status rows, the facet list, the coverage heat grid, the reachability matrix, bars in table cells with data-kp-sort-value, the week agenda, the run timeline), built in the package first as ONE demo, formal only until Kenny approves it.
             // Kenny, 2026-10-16 (kp-adopt-rest, round 3): six things the dashboard still drew itself, each an opt-in option of an approved component (nav separator, choice-filter value, timeline day buttons and series legend, the week's next-N phone list, facet identity patterns, the heat grid's jump to the latest), formal only.
+            // Kenny, 2026-10-17 (kpadopt5, wave ops): seven operations components a dashboard drew itself, built in the package first as ONE demo, formal only until Kenny approves it.
+            {
+                href: 'research/kpadopt5-ops/demo.html',
+                label: 'Operations parts for a dashboard (page frame, list and detail, auto refresh, connection banner, transfers, questions, notifications)',
+                about: 'Seven parts a dashboard needs, in formal only: the page frame, a list with its detail that folds on a phone, the automatic refresh chooser, the offline banner, a transfer with speed and time left, a question that waits for an answer and the notification centre. One topic per part.',
+            },
         ],
     },
     {

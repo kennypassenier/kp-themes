@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="kpadopt5-ops" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kpadopt5, the operations components</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main ko-page">
+            <header class="ko-intro">
+                <h1>The fifth adoption round: the operations components</h1>
+                <p class="cat-intro">
+                    Seven parts a dashboard needs and today draws itself: a page frame, a list and its detail, an automatic refresh, a connection
+                    banner, a transfer with its speed, a question that waits for an answer and a notification centre. Formal only, one topic per
+                    component in the review dialog.
+                </p>
+                <p>
+                    Every section says under <b>Expected</b> what you should see and what each control does. Nothing moves until you press a button.
+                </p>
+            </header>
+            <!-- ================================================================ responsive-master-detail -->
+            <section
+                class="ko-sec"
+                id="master-detail"
+                data-review-item="master-detail"
+                data-review-topic="ops-master-detail"
+                data-review-topic-title="A list and its detail that folds on a phone"
+                data-review-title="A list and its detail that folds on a phone"
+                aria-labelledby="h-master-detail"
+            >
+                <div class="ko-sec__head">
+                    <h2 id="h-master-detail">A list and its detail that folds on a phone</h2>
+                    <p>
+                        <code>.kp-split--panes</code> with <code>js/master-detail.js</code>: a list, a detail and an optional side panel next to each
+                        other; on a narrow screen one pane at a time, with a Back button.
+                    </p>
+                </div>
+                <div class="ko-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Three panes side by side in a ruled frame: the list of secrets (17 rem), the detail (the rest) and, when the page is wide
+                            enough, a History panel (18 rem). Nothing is picked yet, so the detail is an empty plate that says
+                            <b>Pick an item on the left</b> large, in the middle of the whole pane, with the list still usable.
+                        </li>
+                        <li>
+                            Press an item, or move with the up and down arrow keys (the focus stays in the list, Home and End jump): the detail fills
+                            for the item you are on after a short load. The picked row has a navy bar along its start. A long name wraps, it is never
+                            cut.
+                        </li>
+                        <li>
+                            <b>Loading</b> lays formal's busy card over the detail pane only; the list stays usable. <b>Failed</b> fills the pane with
+                            the red-ink plate, the sentence large, and a normal-size <b>Retry</b> that loads the item again.
+                            <b>Nothing picked</b> brings the empty plate back. The pane keeps its size in every state.
+                        </li>
+                        <li>
+                            The phone frame (390 px) shows the same layout folded: the list alone. Press an item: the detail arrives (the theme's way)
+                            with <b>Back to the list</b> at the top and the focus on the heading. Back, the browser's Back, or Esc returns to the list
+                            at the same scroll with the same row picked and the focus on it. <b>What a phone shows</b> switches between one pane (the
+                            default), a sheet that slides over the list and everything stacked.
+                        </li>
+                        <li>The log shows each select, open, close and retry event.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Ledger paper with the faint rules between the panes; the picked row carries the navy rule along its start, the empty and
+                        failed plates are the theme's own (dashed paper, red-ink entry) set large in the middle.
+                    </p>
+                </div>
+                <div class="ko-controls" data-review-controls>
+                    <div role="group" aria-label="State of the detail">
+                        <b>State of the detail:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-md-state="ready" aria-pressed="false">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-md-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-md-state="error" aria-pressed="false">Failed</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-md-state="empty" aria-pressed="true">Nothing picked</button>
+                    </div>
+                    <div role="group" aria-label="What a phone shows">
+                        <b>What a phone shows:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-md-narrow="one-pane" aria-pressed="true">One pane</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-md-narrow="sheet" aria-pressed="false">Sheet</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-md-narrow="stack" aria-pressed="false">Stacked</button>
+                    </div>
+                </div>
+                <div class="ko-stack">
+                    <div>
+                        <p class="ko-label">Wide, with the History panel</p>
+                        <div
+                            class="kp-split kp-split--panes"
+                            data-kp-master-detail
+                            data-kp-aside-closable
+                            data-kp-pane-widths="17rem 1fr 18rem"
+                            data-kp-aside-fold-at="52rem"
+                            data-ko-md="wide"
+                        >
+                            <section data-kp-pane="list" aria-label="Secrets">
+                                <ul class="kp-pane__list" role="listbox" aria-label="Secrets" data-ko-md-list></ul>
+                            </section>
+                            <section data-kp-pane="detail" aria-label="Secret">
+                                <h3 data-kp-pane-heading tabindex="-1"></h3>
+                                <div class="kp-pane__body" data-ko-md-body></div>
+                            </section>
+                            <aside data-kp-pane="aside" aria-label="History">
+                                <h3 class="ko-label">History</h3>
+                                <ul class="ko-history" data-ko-md-history></ul>
+                            </aside>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="ko-label">Phone width (390 px)</p>
+                        <div class="ko-frame ko-frame--phone">
+                            <div class="kp-split kp-split--panes" data-kp-master-detail data-kp-pane-widths="12rem 1fr" data-ko-md="phone">
+                                <section data-kp-pane="list" aria-label="Secrets">
+                                    <ul class="kp-pane__list" role="listbox" aria-label="Secrets" data-ko-md-list></ul>
+                                </section>
+                                <section data-kp-pane="detail" aria-label="Secret">
+                                    <h3 data-kp-pane-heading tabindex="-1"></h3>
+                                    <div class="kp-pane__body" data-ko-md-body></div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <pre class="ko-log" data-ko-log="master-detail" aria-live="polite">Nothing happened yet.</pre>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "ops-c17983a9-c644-4e17-b04b-bf6ed4735b60", "received": [] }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

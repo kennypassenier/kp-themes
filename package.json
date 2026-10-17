@@ -172,6 +172,10 @@
             "types": "./js/compare.d.ts",
             "default": "./js/compare.js"
         },
+        "./js/master-detail": {
+            "types": "./js/master-detail.d.ts",
+            "default": "./js/master-detail.js"
+        },
         "./js/loading-pieces": {
             "types": "./js/loading-pieces.d.ts",
             "default": "./js/loading-pieces.js"
