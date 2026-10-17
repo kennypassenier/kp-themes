@@ -4782,7 +4782,7 @@
         padding-inline: 0.5rem;
         background: var(--background);
         box-shadow: var(--kp-ti-pocket);
-        text-align: center;
+        text-align: end;
         text-shadow: var(--kp-ti-engrave);
     }
     [data-theme='titanium'] .kp-timer[data-kp-timer-state='running'] .kp-timer__time {

@@ -5354,7 +5354,7 @@
         background: var(--kp-sig-no-scan), var(--sidebar-background);
         box-shadow: var(--kp-no-bezel);
         color: var(--kp-no-phosphor);
-        text-align: center;
+        text-align: end;
         text-shadow: 0 0 6px hsl(from var(--sidebar-primary) h s l / 0.6);
         font-weight: 700;
     }
