@@ -100,8 +100,9 @@
                     under the list says how many commands match. Press <b>Open the commands</b> (<code>data-kp-palette-open</code>, so it opens
                     through the palette's own open and fires <code>kp-palette-open</code>), or Ctrl+K: the live palette opens modal near the top of
                     the window with focus in the input; type "lock" and the list must filter to <b>Lock out a line</b> and the status must say "1
-                    command". The match is literal by default: "read" must show only <b>Readings for line 2</b>, not also <b>Report an incident</b>,
-                    and "lk" finds nothing (a palette that wants letters in order says <code>data-kp-match="subsequence"</code>). Escape closes it and
+                    command". The match is by words, in any order: every typed word must start a word of a command. "read" must show only
+                    <b>Readings for line 2</b>, not also <b>Report an incident</b>; "line read" finds it too; and "lk" finds nothing (a palette
+                    that wants letters in order says <code>data-kp-match="subsequence"</code>). Escape closes it and
                     clears the query.
                 </div>
                 <div class="cat-stage cat-stage--block" style="contain: layout; min-block-size: 27rem">

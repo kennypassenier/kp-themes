@@ -3790,6 +3790,228 @@ setGanttState(timeline, 'loading');
         ],
     },
     {
+        id: 'toggle',
+        title: 'Toggle button',
+        group: 'Buttons',
+        classes: ['kp-toggle', 'kp-toggles'],
+        exports: [],
+        intro: 'A button that stays pressed until it is pressed again: “Only errors”, “Pin”, “Follow”. It keeps its words, shows the state by shape and weight as well as colour, can carry an exact count and a short hint, and a group of them can behave as filters, as a one-of switch or as an “All” chip.',
+        whenToUse: 'A filter, a pin, a follow or a show/hide that is on or off. For a setting that is saved with a form, use the switch; for one choice from a few that are always shown together, use the segmented control.',
+        examples: [
+            {
+                title: 'One toggle',
+                why: 'The platform attribute `aria-pressed` is the state; the label never changes.',
+                markup: `
+<button class="kp-button" type="button" data-kp-toggle aria-pressed="false" data-kp-pressed-hint="Showing errors only">Only errors</button>
+`,
+            },
+            {
+                title: 'Filter chips with exact counts and an All chip',
+                why: 'The All chip is on while nothing else is, and pressing it clears the rest; Clear filters keeps its place.',
+                markup: `
+<div class="kp-toggles" role="group" aria-label="Level" data-kp-toggle-group="level" data-kp-toggle-clear>
+    <button class="kp-button" type="button" data-kp-toggle data-kp-toggle-all data-kp-look="chip" aria-pressed="true" data-kp-count="138">All</button>
+    <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="12">Error</button>
+    <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="31">Warning</button>
+    <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="95">Info</button>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-look', what: '`button` (default), `chip` (a pill) or `icon` (a square).' },
+            { name: 'aria-pressed', what: '`false` (default), `true` or `mixed` (a dashed edge on a half wash).' },
+            { name: 'data-kp-toggle-mode', what: 'On the group: `multi` (default), `single` (one is always on, arrow keys walk) or `single-or-none`.' },
+            { name: 'data-kp-count', what: 'An exact number beside the label, or `loading` for a skeleton; the room for the next digit is held.' },
+            { name: 'data-kp-pressed-mark', what: '`check` draws a tick while it is on, its room kept while it is off.' },
+            { name: 'data-kp-toggle-async', what: 'The app answers `kp-toggle` with `detail.wait(promise)`: busy, rolled back and the word “Refused” if it fails.' },
+            { name: 'data-kp-toggle-key', what: 'A key that presses it, listed in the shortcut sheet; never a bare digit.' },
+        ],
+        accessibility: [
+            'Built in — `aria-pressed` is the one source of the state, `mixed` is announced as partly pressed, a group says one polite line per change (“Only errors on, 12 shown”), the hit area is 44 px on a phone, the label never changes with the state.',
+            'Yours — name the group (`aria-label` on the container), and answer `kp-toggle` with a promise when the change takes time; the toggle is its own undo, so no undo is offered.',
+        ],
+    },
+    {
+        id: 'version-delta',
+        title: 'Version jump chip',
+        group: 'Feedback',
+        classes: ['kp-version'],
+        aliases: ['level', 'raw'],
+        exports: [],
+        intro: 'A small chip that shows a version moving, “10.11 → 12.1”, with the old version struck and lighter and the new one strong, the size of the jump in words (“major”, with a “!” so it is never colour alone) and a link to the release notes.',
+        whenToUse: 'An update list, a fleet table or a dialog that asks before an update: anywhere a person must see at a glance which of many moves is the risky one. Only the risky jump is loud; leave the rest plain.',
+        examples: [
+            {
+                title: 'A quiet jump, a big one and a link',
+                why: 'The first number is what counts as big; the chip says so in words and in tone, and the new version links to its release notes.',
+                markup: `
+<span class="kp-badge kp-badge--version" data-kp-version-from="1.118.2" data-kp-version-to="1.119.0"></span>
+<span class="kp-badge kp-badge--version" data-kp-version-from="10.11.11" data-kp-version-to="12.1" data-kp-version-href="https://example.com/releases/tag/{to}"></span>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-version-big-minor', what: 'A list of apps whose second number counts as a big jump as well, on the chip or anything above it; the chip names its app in `data-kp-version-app`.' },
+            { name: 'data-kp-version-show', what: '`both` (default), `to` or `level` (the word alone, for a tight table).' },
+            { name: 'data-kp-version-tones', what: 'The tone of each level, “major:warning,minor:none”; by default only a big jump (warning) and a version that went back (destructive) are loud.' },
+            { name: 'data-kp-state', what: '`loading` (a skeleton at the final width), `error` (“could not check”, dashed) or `empty` (“not tracked”).' },
+            { name: 'data-kp-version-digest', what: '`short` (default) shows the first 12 characters of a `sha256:` tag, `full` all of it.' },
+        ],
+        accessibility: [
+            'Built in — a screen reader hears “from 10.11 to 12.1, major update”, never the glyphs; the risk is a word and a “!”, not colour alone; the release-notes link says it opens in a new tab.',
+            'Yours — give a list of chips a heading with `summarizeDeltas`, and sort on `data-kp-sort-value` so the risky come first.',
+        ],
+    },
+    {
+        id: 'ack-gate',
+        title: 'Acknowledge gate',
+        group: 'Feedback',
+        classes: ['kp-ack'],
+        aliases: ['checked'],
+        exports: [],
+        intro: 'A warning that holds a button back until a box is ticked: “I read the release notes of 12.1”. The button says why it is off, and a press on it takes you to the first box still open.',
+        whenToUse: 'Before an action whose risk the reader must have understood: a major update, a restore over live data. It is a human guard, not a security control; the server checks again. Not for a plain “are you sure”: use a confirm.',
+        examples: [
+            {
+                title: 'A gate and the button it guards',
+                why: 'The button carries the reason while it is off; ticking turns it on and the change is announced once.',
+                markup: `
+<div class="kp-alert kp-alert--warning" data-kp-ack data-kp-ack-for="#doc-ack-go" data-kp-ack-key="jellyfin" data-kp-ack-label="I read the release notes of 12.1" data-kp-ack-link="https://example.com/notes">
+<div class="kp-alert__body"><strong>jellyfin 10.11 → 12.1 is a major version.</strong> A major release can change its settings or move its data.</div>
+</div>
+<button class="kp-button kp-button--primary" type="button" id="doc-ack-go">Update</button>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-ack-mode', what: '`each` (default): one tick per gate; `all`: one tick for the lot, for low-risk batches.' },
+            { name: 'data-kp-ack-reset', what: '`on-change` (default): a changed key, label or version clears the tick; `never`.' },
+            { name: 'data-kp-ack-require-link', what: 'The tick stays off until the notes link was opened once; `data-kp-ack-min-ms` waits a time instead.' },
+            { name: 'data-kp-state', what: '`loading` (skeleton lines, the height kept), `error` (no notes link found, with Retry on `data-kp-ack-retry`) or `empty` (no gate: hidden, the button simply on).' },
+        ],
+        accessibility: [
+            'Built in — the guarded button keeps `aria-disabled` and its reason, so a press can answer by moving the focus to the first open tick; the change is announced once (“Update enabled”, “Update disabled: 1 release note still to read”); the whole label is the hit area, 44 px on a phone.',
+            'Yours — keep the server’s own check, and name the thing read in `data-kp-ack-label`.',
+        ],
+    },
+    {
+        id: 'deplist',
+        title: 'Dependency list',
+        group: 'Data',
+        classes: ['kp-deplist'],
+        aliases: ['cols', 'dep'],
+        exports: [],
+        intro: 'A short list of rows “paperless → postgres” that says what needs what, numbered in the order things must go. Every row is the same columns, each name carries its identity mark, a cycle is one red row, and the list folds past eight rows with an exact “Show all 23”.',
+        whenToUse: 'Before a change: who notices if this app stops or updates. Not for a picture of the whole network (a graph) and not for progress (a step list).',
+        examples: [
+            {
+                title: 'Who needs whom',
+                why: 'The rows come from the page; the list orders them so a thing stands after what it needs, and numbers them.',
+                markup: `
+<div class="kp-deplist" data-kp-deplist id="doc-deplist" data-kp-dep-heading="{n} stacks reach these apps"></div>
+`,
+                script: `
+import { setDeplist } from '@kp-soft/themes/js/deplist';
+setDeplist(document.getElementById('doc-deplist'), [
+    { from: 'paperless', to: 'postgres' },
+    { from: 'immich', to: 'paperless' },
+    { from: 'immich', to: 'redis' },
+]);
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-dep-order', what: '`numbers` (default: one row per step, numbered 1, 2, 3) or `none` (the order given).' },
+            { name: 'data-kp-dep-group', what: '`by-to` or `by-from` with `data-kp-dep-order="none"`: rows grouped under the app that changes.' },
+            { name: 'data-kp-dep-states', what: 'A word and a tone beside each needed thing: running, stopped or unknown.' },
+            { name: 'data-kp-dep-collapse', what: 'How many rows show before “Show all N”; 8 by default.' },
+            { name: 'data-kp-state', what: '`loading` (the busy card over placeholder rows), `empty` and `error` (the package’s plates with Retry), each as high as the list was.' },
+        ],
+        accessibility: [
+            'Built in — an ordered list; each row reads as one sentence (“paperless needs postgres”), the arrow is hidden from a screen reader; the heading is a polite live region with the exact count.',
+            'Yours — pass real data (`from`, `to`) and a heading that says what the rows are.',
+        ],
+    },
+    {
+        id: 'path-trace',
+        title: 'Path of a connection',
+        group: 'Feedback',
+        classes: ['kp-trace'],
+        aliases: ['trace', 'density'],
+        exports: [],
+        intro: 'The way one connection takes, hop by hop: each hop allowed (a check) or refused (a cross), the hops after the first refusal dimmed as “not reached”, a summary line over them (“Blocked at rule IoT to media”) and the deciding rule as a chip.',
+        whenToUse: 'A firewall or routing question: “can this device reach that service, and where does it stop?”. It draws hops it is given; the host works out the verdicts. Not for progress over time: use the step list.',
+        examples: [
+            {
+                title: 'A connection stopped at a rule',
+                why: 'The summary says where it stopped; the hop after it is not reached.',
+                markup: `
+<div class="kp-trace" data-kp-trace id="doc-trace" data-kp-trace-copy></div>
+`,
+                script: `
+import { setTrace } from '@kp-soft/themes/js/path-trace';
+setTrace(document.getElementById('doc-trace'), [
+    { title: 'tv', note: 'IoT network', verdict: 'allowed' },
+    { title: 'Firewall', note: 'tcp 8096', verdict: 'refused', rule: 'IoT to media' },
+    { title: 'Jellyfin', note: 'media network', verdict: 'allowed' },
+]);
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-trace-layout', what: '`auto` (default: a row, a column under 30rem of its own width), `row` or `column`.' },
+            { name: 'data-kp-trace-stop', what: '`first-refusal` (default) or `all`, each hop’s own verdict for a “what if”.' },
+            { name: 'data-kp-trace-verdict', what: '`both` (default), `mark` or `word`; never colour alone.' },
+            { name: 'data-kp-trace-rule', what: '`chip` (default, keyboard-reachable), `inline` or `off`.' },
+            { name: 'data-kp-state', what: '`running` (the busy card over placeholder hops), `empty` (“Pick a source and a target”) or `error` (Retry), each as high as the trace was.' },
+        ],
+        accessibility: [
+            'Built in — an ordered list; each hop reads “title, allowed” (or refused, not reached, not measured); the summary is a polite status, so a changed pin is announced; the rule chip is a button.',
+            'Yours — the verdicts: the trace does not decide, it shows what the host measured.',
+        ],
+    },
+    {
+        id: 'entity-card',
+        title: 'Entity card',
+        group: 'Data',
+        classes: ['kp-entity-grid', 'kp-entity'],
+        aliases: ['entity', 'selectable', 'density', 'flags'],
+        exports: [],
+        intro: 'One card per thing (a stack, a host): its identity mark, name, state in words, a few exact figures, flags, two meters and its actions. Every card is the same five rows, kept whether a row holds anything or not, so every card in every state is exactly as high as the next.',
+        whenToUse: 'An overview of a handful to a few dozen things that each have a state and a few actions. For many rows to sort and compare, use the data table.',
+        examples: [
+            {
+                title: 'A grid of cards',
+                why: 'The page gives the data; a refill with the same key changes the words in place, so a card under the pointer never moves.',
+                markup: `
+<div class="kp-entity-grid" data-kp-entity-grid id="doc-entities" role="list"></div>
+`,
+                script: `
+import { setEntityGrid } from '@kp-soft/themes/js/entity-card';
+setEntityGrid(document.getElementById('doc-entities'), [
+    { key: 'media', name: 'media', vmid: '106', state: { label: 'running', tone: 'success' },
+      figures: [{ value: '3/5', label: 'apps up' }, { value: '12', label: 'restarts' }],
+      flags: [{ label: 'update available', tone: 'warning' }],
+      meters: [{ label: 'CPU', value: 0.34 }, { label: 'RAM', value: 0.71, text: '5.6 of 8 GB' }],
+      actions: [{ id: 'restart', label: 'Restart' }, { id: 'logs', label: 'Logs' }] },
+]);
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-entity-meters', what: 'How many meter rows a card holds, 0 to 3; two by default.' },
+            { name: 'data-kp-entity-flags-max', what: 'How many flags show; the rest are an exact “+2” that opens the package’s own menu. Three by default.' },
+            { name: 'data-kp-entity-inline', what: 'How many actions stand as buttons; the rest go in “More”. Under 30rem every action folds into “More”.' },
+            { name: 'data-kp-selectable', what: 'A tick at the start of the card, a row of a selection with the keys j, k and x.' },
+            { name: 'data-kp-state', what: 'On a card: `loading` (the same five rows as bones), `empty` (“not measured”) or `error` (a destructive state and Retry). On the grid: `loading` (skeleton cards under the busy card), `empty` or `error` (the package’s plates).' },
+        ],
+        accessibility: [
+            'Built in — the name is the card’s one link and stretches over the card (one tab stop); every figure is an exact number; the “+2” and “More” are the package’s menu button with its keys; a ticked card is a checked box with its own name.',
+            'Yours — keep the key of a card stable, so a refill changes it in place.',
+        ],
+    },
+    {
         id: 'unsaved',
         title: 'Unsaved changes bar',
         group: 'Forms',
@@ -6027,7 +6249,7 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
         group: 'Navigation',
         classes: ['kp-palette'],
         exports: ['CommandPalette', 'PaletteTrigger'],
-        aliases: ['listbox', 'option', 'disabled', 'group', 'keys', 'generated', 'primary', 'match', 'hotkey', 'clear-on-close', 'close-on-run'],
+        aliases: ['listbox', 'option', 'disabled', 'group', 'keys', 'generated', 'primary', 'match', 'hotkey', 'clear-on-close', 'close-on-run', 'above', 'context', 'context-of', 'featured', 'highlight', 'hint', 'hint-text', 'nomatch', 'nomatch-hint', 'recent', 'static', 'subject-name', 'typo', 'verb'],
         intro: 'A dialog with a filter box and a list of commands, opened by a key from anywhere on the page. The commands are markup a server wrote, not an array this module owns, so they are there before any script runs.',
         whenToUse:
             'In an application dense enough that a reader will want to jump rather than navigate — and only as a second route, never the only one. Not as a menu for three commands; not as a search over data, which is a search field with results.',
@@ -6089,7 +6311,10 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
             { name: '.kp-palette__keys', what: 'The key hint at the end of a row, which never competes with the label.' },
             { name: '.kp-palette__status', what: 'The live region that says how many commands are left after typing.' },
             { name: 'a link as a command', what: 'An `<a href>` carrying the option’s role and `data-kp-option`, inside a presentational list item (a command with an `href` in React). Enter and a click follow it; the module keeps it out of the Tab order so focus stays in the filter, and a page without JavaScript still has a list of working links.' },
-            { name: 'matching', what: 'The filter matches literally by default — “read” finds “Readings for line 2” and not “Report an incident” — and `data-kp-match="subsequence"` (the `match` prop in React) makes “nap” find “new application” instead.' },
+            { name: 'matching', what: 'The filter matches by words in any order by default — every typed word has to start a word of the command, so “read” finds “Readings for line 2” and not “Report an incident”, and “line readings” finds it too. The best answer comes first in its group and the matched words are marked. `data-kp-match` (the `match` prop in React) brings back `substring`, `prefix` or `subsequence` (“nap” finds “new application”).' },
+            { name: 'data-kp-words / data-kp-hint', what: 'On a command: words that are never shown (synonyms) and a hint that is; both count as a weaker match than the label.' },
+            { name: 'data-kp-context / data-kp-context-of / data-kp-featured / data-kp-recent', what: 'The open subject’s commands rank higher and, with what is featured and the last few run, are all that shows before anything is typed; a palette with none of these shows every command.' },
+            { name: 'data-kp-max-shown / data-kp-nomatch / data-kp-verb', what: 'At most 40 rows show and the status line says how many matched; a query nothing answers is the empty plate, naming what a known verb works on.' },
             { name: 'pastel', what: 'In pastel the palette opens as pastel’s dialog: its pass on its ::backdrop, the landing onto it, a strip of washi tape across its corner; it closes as that opening backwards. An entry under the pointer or the keys is a sticker on its plate.' },
         ],
         accessibility: [

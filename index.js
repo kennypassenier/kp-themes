@@ -183,6 +183,13 @@ export {
     unsaved,
     unsavedSaved,
 } from './js/unsaved.js';
+export { ENTITY_ACTION_EVENT, ENTITY_CARD, ENTITY_FLAG_EVENT, ENTITY_GRID, ENTITY_GRID_RETRY_EVENT, ENTITY_NEW_EVENT, ENTITY_RETRY_EVENT, ENTITY_TICK_EVENT, attachEntityCards, setEntity, setEntityGrid, setEntityGridState } from './js/entity-card.js';
+export { TRACE, TRACE_RETRY_EVENT, TRACE_RULE_EVENT, TRACE_SWAP_EVENT, attachTraces, setTrace, trace, traceStates, traceSummary, traceText } from './js/path-trace.js';
+export { DEPLIST, DEPLIST_COLLAPSE, DEPLIST_RETRY_EVENT, attachDeplists, depText, deplist, orderDependencies, setDeplist } from './js/deplist.js';
+export { ACK_EVENT, ACK_GATE, ACK_RETRY_EVENT, ackGate, attachAckGates } from './js/ack-gate.js';
+export { VERSION_COPY_EVENT, VERSION_DELTA, VERSION_LEVELS, VERSION_SORT, attachVersionDeltas, githubRepo, releaseUrl, setVersionDelta, summarizeDeltas, versionLevel, versionNumbers } from './js/version-delta.js';
+export { INTENT_MAX_SHOWN, intentRanges, intentScore, intentTokens, intentWords, matchIntent, noMatchText, queryWords, rankCommands, startsWord } from './js/intent.js';
+export { TOGGLE, TOGGLE_CHANGED_EVENT, TOGGLE_EVENT, TOGGLE_LOOKS, TOGGLE_MODES, TOGGLE_REFUSED_MS, attachToggles, toggle, toggleGroup, toggleKey, togglePressedKeys } from './js/toggle.js';
 export {
     AUTOSIZE,
     AUTOSIZE_EVENT,

@@ -1,5 +1,6 @@
 import { forwardRef, useEffect, useId, useImperativeHandle, useRef, useState } from 'react';
 import { subsequence } from '../js/listbox.js';
+import { intentScore, queryWords } from '../js/intent.js';
 import { closeOnOutsidePress, isMac } from '../js/palette.js';
 import { useStrings } from '../hooks/use-strings.jsx';
 import { useControllable } from '../hooks/use-controllable.js';
@@ -7,8 +8,8 @@ import { useControllable } from '../hooks/use-controllable.js';
 // Command palette and shortcut sheet, React [TH40, TH49].
 //
 // Same contract as js/palette.js: a <dialog>, virtual focus, a
-// literal match by default (subsequence on request, scope-56), and the command's value handed back rather than run
-// here. What a command DOES is the application's business.
+// match by words in any order by default (js/intent.js, kpadopt6-ops; substring, prefix and subsequence on request,
+// scope-56), and the command's value handed back rather than run here. What a command DOES is the application's business.
 //
 // The dialog element is used through a ref because `showModal()` is a
 // method, not a prop — and it is the method that trapped focus, Escape
@@ -29,11 +30,13 @@ import { useControllable } from '../hooks/use-controllable.js';
 // `data-kp-palette-open` naming this palette's id open it, as they open the
 // framework-free one.
 
-/** @typedef {{ value: string, label: string, keys?: string, group?: string, description?: string, icon?: import('react').ReactNode, disabled?: boolean, href?: string, target?: string, rel?: string }} Command */
+/** @typedef {{ value: string, label: string, keys?: string, group?: string, description?: string, words?: string, icon?: import('react').ReactNode, disabled?: boolean, href?: string, target?: string, rel?: string }} Command */
 /** @typedef {(label: string, query: string, command: Command) => boolean} Matcher */
 
 /** @type {Record<string, Matcher>} */
 export const MATCHERS = {
+    // Words in any order, each starting a word of the label, the description or the hidden `words` [kpadopt6-ops].
+    intent: (label, query, command) => intentScore({ label, hint: command?.description ?? '', words: command?.words ?? '' }, queryWords(query)) >= 0,
     subsequence: (label, query) => subsequence(label, query),
     substring: (label, query) => label.toLowerCase().includes(query.toLowerCase()),
     prefix: (label, query) => label.toLowerCase().startsWith(query.toLowerCase()),
@@ -50,7 +53,7 @@ export const MATCHERS = {
  * @property {(query: string) => void} [onQueryChange]
  * @property {string | null} [hotkey]   The letter, with Ctrl/⌘. Default 'k'; null disables it.
  * @property {boolean} [primary]        This palette answers the key when there are several. Default: the first in the document.
- * @property {keyof typeof MATCHERS | Matcher} [match]  Default substring; 'subsequence' lets "thm" find "Theme" [scope-56].
+ * @property {keyof typeof MATCHERS | Matcher} [match]  Default 'intent' (words in any order); 'substring', 'prefix' and 'subsequence' (lets "thm" find "Theme", scope-56) on request.
  * @property {boolean} [resetOnClose]   Default true.
  * @property {boolean} [closeOnRun]     Default true.
  * @property {boolean} [loading]
@@ -80,7 +83,7 @@ function CommandPaletteInner(
         onQueryChange,
         hotkey = 'k',
         primary = false,
-        match = 'substring',
+        match = 'intent',
         resetOnClose = true,
         closeOnRun = true,
         loading = false,
@@ -110,13 +113,25 @@ function CommandPaletteInner(
     const [active, setActive] = useState(0);
     const matcher = typeof match === 'function' ? match : (MATCHERS[match] ?? MATCHERS.substring);
 
-    const visible = commands.filter((command) => matcher(command.label, query, command));
+    let visible = commands.filter((command) => matcher(command.label, query, command));
+    // The best answer first, as the framework-free palette does it; the sections keep the order the commands came in.
+    const words = match === 'intent' ? queryWords(query) : [];
+    if (words.length > 0)
+        visible = visible
+            .map((command, at) => ({
+                command,
+                at,
+                score: intentScore({ label: command.label, hint: command.description ?? '', words: command.words ?? '' }, words),
+            }))
+            .sort((a, b) => b.score - a.score || a.at - b.at)
+            .map((x) => x.command);
     /** @type {Map<string, Command[]>} */
     const groups = new Map();
-    for (const command of visible) {
-        const key = command.group ?? '';
-        groups.set(key, [...(groups.get(key) ?? []), command]);
-    }
+    for (const key of new Set(commands.map((command) => command.group ?? ''))) groups.set(key, []);
+    for (const command of visible) groups.set(command.group ?? '', [...(groups.get(command.group ?? '') ?? []), command]);
+    for (const [key, list] of [...groups]) if (list.length === 0) groups.delete(key);
+    // The arrow keys walk in the order the rows stand in.
+    visible = [...groups.values()].flat();
 
     // The state drives the element: showModal() when it opens, close()
     // when it closes, whichever side asked.

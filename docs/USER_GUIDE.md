@@ -2414,6 +2414,149 @@ The combobox with the choices a person uses most standing first, the rest alphab
 "Not today", distinct from unset (`usualNotToday(el)`). `data-kp-add="inline"` adds a typed name at the point of use with Undo; `kp-usual-add` is cancelable (the app keeps the vocabulary). A name identical after case, accents and spacing selects the existing item; a near one (`data-kp-near` `ask`,
 `select` or `off`, `data-kp-near-threshold` 0.8, `data-kp-near-max` 3) offers "Did you mean Hoofdpijn?" and always "Add 'hoofdpjn' as new". `data-kp-state="loading" | "empty" | "error"` (`setUsualState`) draws the busy card, a plate with Add, or a plate with Retry (`kp-usual-retry`) in the place of the list.
 Every attribute redraws the picker when changed. Alt U jumps to the first usual choice (a bare `u` would take the first letter of a name; it is on the `?` sheet; no digit keys). `kp-usual-pick` carries `{ value, from }`. The words are `usual…`. Knobs: `--kp-usual-option-min`, `--kp-usual-panel-min`.
+
+### Toggle button
+
+A button that stays pressed until it is pressed again, for a filter, a pin or a follow. The state is `aria-pressed`; the words never change:
+
+```html
+<button class="kp-button" type="button" data-kp-toggle aria-pressed="false">Only errors</button>
+
+<div class="kp-toggles" role="group" aria-label="Level" data-kp-toggle-group="level" data-kp-toggle-clear>
+    <button class="kp-button" type="button" data-kp-toggle data-kp-toggle-all data-kp-look="chip" aria-pressed="true" data-kp-count="138">All</button>
+    <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="12">Error</button>
+</div>
+```
+
+`attachToggles(root)` (`js/toggle.js`, attached by `js/auto.js`) flips `aria-pressed`, keeps a group coherent and fires the cancelable `kp-toggle`
+(`{ button, pressed, previous, group, pressedKeys, wait }`) before anything changes, then `kp-toggle-changed`. `data-kp-toggle-mode` on the group is
+`multi` (default), `single` (one is always on, the arrow keys walk) or `single-or-none`; `data-kp-toggle-all` marks the All chip, on while nothing else is;
+`data-kp-toggle-clear` adds "Clear filters (N)", which keeps its place when idle. `data-kp-count` is the exact number beside the words (`loading` is a
+skeleton, never 0), `data-kp-pressed-hint` a line under them while on, `data-kp-pressed-mark="check"` a tick whose room is kept, `data-kp-look` `button`,
+`chip` or `icon`. `data-kp-toggle-key` presses it from the keyboard through the shortcut sheet (never a bare digit). When the change takes time call
+`detail.wait(promise)` from `kp-toggle`: the theme's spinner covers the words, and a rejection puts the state back and shows "Refused" on the button for 3 s.
+`toggle(el).set(true|false|'mixed')`, `.setCount(n)` and `.setHint(text)` drive it from script. Every press is announced once, politely. The words are `toggle…`.
+Knobs: `--kp-toggle-on`, `--kp-toggle-on-ink`, `--kp-toggle-count-size`, `--kp-toggle-hit`.
+
+### The palette finds words in any order
+
+Every command palette matches by words now (`data-kp-match="intent"`, the default; Kenny, 2026-10-17): each typed word has to start a word of the command, in any order, so
+"jellyfin upd", "upd jellyfin" and "update jelly" all find "Update jellyfin" while "read" still does not find "Report an incident". The older matchers stay one attribute away
+(`data-kp-match="substring" | "prefix" | "subsequence"`).
+
+```html
+<dialog class="kp-palette" data-kp-palette data-kp-context="jellyfin" data-kp-subject-name="stack">
+    …
+    <li class="kp-palette__option" role="option" data-kp-option data-value="update-jellyfin" data-kp-verb="Update" data-kp-context-of="jellyfin"
+        data-kp-words="upgrade pull">Update jellyfin<span class="kp-palette__description">Pull the newest image</span></li>
+</dialog>
+```
+
+The best answer comes first in its group and the matched words are marked (`.kp-palette__mark`; `data-kp-highlight="off"` keeps them plain). A description (`.kp-palette__description`, or `data-kp-hint`)
+and `data-kp-words` (never shown) count as a weaker match than the label. Letters match without their accents and a hyphenated word is also found by its parts
+(`data-kp-fold-diacritics="off"`, `data-kp-split-hyphen="off"`); `data-kp-typo="1"` also finds a word one letter off. Before anything is typed a palette that marks commands
+`data-kp-featured`, `data-kp-context-of` the open subject (`data-kp-context` on the palette) or run last (`data-kp-recent="5"`) shows only those, the open subject's first; a palette
+with none of those shows every command. At most `data-kp-max-shown` (40) rows show and the status line says "40 of 112 shown, type more words". A query nothing answers is the empty plate in the
+list's footprint; when the first word is a verb the palette knows (`data-kp-verb`) it names what the verb works on. `palette(el).setState('loading')` lays the busy card over the list,
+`setState('error')` shows the failed plate with Retry (`kp-palette-retry`) above the commands marked `data-kp-static`. A consumer that draws its own list uses `rankCommands(commands, query, { context })`
+from `js/intent.js`; the React `CommandPalette` takes `match="intent"` (its default) and a `words` field on a command.
+
+### The version jump chip
+
+A chip that shows a version moving, "10.11 → 12.1", with the old version struck and lighter, the new one strong, and a big jump named in words:
+
+```html
+<span class="kp-badge kp-badge--version" data-kp-version-from="10.11.11" data-kp-version-to="12.1" data-kp-version-href="https://example.com/releases/tag/{to}"></span>
+```
+
+`attachVersionDeltas(root)` (`js/version-delta.js`, attached by `js/auto.js`) draws it and redraws it when an attribute changes. A jump is big when the **first number** differs (Kenny, 2026-10-17), plus
+the second number for the apps in `data-kp-version-big-minor` ("jellyfin immich", on the chip or anything above it; the chip names its app in `data-kp-version-app`); a big jump takes the warning tone, the word "major"
+and a "!" in a ring, a version that went back the destructive tone and "older"; the rest stays plain. A version with no number is never called big. `data-kp-version-scheme` is `numbers` (default), `semver`, `calver` or `none`;
+`-show` is `both`, `to` or `level` (the word alone); `-tones` maps levels to tones; `data-kp-state` is `loading`, `error` or `empty`. The chip carries `data-kp-level` and `data-kp-sort-value` (4 older, 3 major, 2 minor, 1 patch, 0 other)
+for a data table to sort on. `summarizeDeltas(list)` counts a list exactly for its heading; `versionLevel`, `versionNumbers` and `releaseUrl(upstream, tag)` are the pure parts. Shift+click copies "10.11 → 12.1" (`kp-version-copy`).
+The words are `version…`.
+
+### The acknowledge gate
+
+A warning that holds a button back until a box is ticked ("I read the release notes of 12.1"). The button says why it is off, and a press on it moves the focus to the first open box:
+
+```html
+<div class="kp-alert kp-alert--warning" data-kp-ack data-kp-ack-for="#update" data-kp-ack-key="jellyfin" data-kp-ack-label="I read the release notes of 12.1" data-kp-ack-link="https://example.com/notes">
+    <div class="kp-alert__body"><strong>jellyfin 10.11 → 12.1 is a major version.</strong> A major release can change its settings or move its data.</div>
+</div>
+<button class="kp-button kp-button--primary" id="update">Update</button>
+```
+
+`attachAckGates(root)` (`js/ack-gate.js`, attached by `js/auto.js`) adds the link and the tick, puts `aria-disabled` and `data-kp-disabled-reason` on the control while any gate that guards it is open ("Tick … first", or "2 of 3 release notes still to read"), and fires
+`kp-ack-change` (`{ key, checked, remaining, at }`) on the gate; the change is announced once. `data-kp-ack-mode` is `each` (default, one tick per gate) or `all`; a changed `data-kp-ack-key`, `-label` or `-version` clears the tick unless
+`data-kp-ack-reset="never"`; `data-kp-ack-require-link` and `-min-ms` hold the tick back until the notes were opened; `data-kp-state` is `loading`, `error` (with Retry on `data-kp-ack-retry`, event `kp-ack-retry`) or `empty` (hidden, the control on).
+`ackGate(el)` gives `set`, `setState`, `setLocked` (the tick locked while the job runs) and `remaining`. The gate is a human guard: keep the server's own check. The words are `ack…`.
+
+### The dependency list
+
+Rows "A → B" that say what needs what, numbered in the order things must go (Kenny, 2026-10-17: "Ja, met nummers"):
+
+```html
+<div class="kp-deplist" data-kp-deplist id="who" data-kp-dep-heading="{n} stacks reach these apps"></div>
+```
+
+```js
+import { setDeplist } from '@kp-soft/themes/js/deplist';
+setDeplist(document.getElementById('who'), [{ from: 'paperless', to: 'postgres' }, { from: 'immich', to: 'paperless', state: 'running' }]);
+```
+
+`attachDeplists(root)` (`js/deplist.js`, attached by `js/auto.js`) draws the rows from `setDeplist(el, items)` or `deplist(el).set(items)`: one fixed grid per row (number, mark and name, arrow, needed name, state), each name with its identity mark, the rows
+ordered so a thing stands after what it needs (`orderDependencies` is the pure part), a cycle as one red unnumbered row. `data-kp-dep-order` is `numbers` (default) or `none`; `-direction` `from-needs-to` (default) or `from-reaches-to`;
+`-group` `by-to` or `by-from` (with `none` order); `-states` adds running, stopped or unknown in words; `-collapse` (8) folds the rest behind an exact "Show all 23"; `-link` ("/stacks/{name}") makes names links; `-self` shows a thing's own row;
+`-empty`, `-heading` ("{n} stacks reach these apps") and `-copy` (a button that copies "paperless -> postgres" per line) set the words and the extras. Each attribute change draws the list again. `deplist(el).setState('loading' | 'empty' | 'error')`:
+the busy card over placeholder rows, the empty plate (no action), the failed plate with Retry (`kp-deplist-retry`), each as high as the list was. The words are `deplist…`.
+
+### The path of a connection
+
+The way one connection takes, hop by hop, stopping at the first refusal:
+
+```html
+<div class="kp-trace" data-kp-trace id="path" data-kp-trace-copy></div>
+```
+
+```js
+import { setTrace } from '@kp-soft/themes/js/path-trace';
+setTrace(document.getElementById('path'), [
+    { title: 'tv', note: 'IoT network', verdict: 'allowed' },
+    { title: 'Firewall', note: 'tcp 8096', verdict: 'refused', rule: 'IoT to media' },
+    { title: 'Jellyfin', verdict: 'allowed' },
+]);
+```
+
+`attachTraces(root)` (`js/path-trace.js`, attached by `js/auto.js`) draws the hops it is given on the step list (`.kp-steplist.kp-steplist--trace`): an allowed hop is `done`, a refused one `failed`, the hops after the first
+refusal `skipped` ("not reached") and a hop with no verdict `pending` ("not measured"); a summary line over them says the outcome ("Blocked at rule "IoT to media"") as a polite status, and the deciding rule is a chip that fires `kp-trace-rule`
+(`{ rule, hop }`). `data-kp-trace-layout` is `auto` (a row, a column under 30rem), `row` or `column`; `-stop` `first-refusal` (default) or `all`; `-verdict` `both`, `mark` or `word`; `-rule` `chip`, `inline` or `off`; `-summary` `off`;
+`-copy` adds a button that copies the trace as text; `-swap` a Swap button and the key S (`kp-trace-swap`); `data-kp-density="compact"` hides the notes. Each attribute redraws the trace. `trace(el).setState('running' | 'empty' | 'error')`:
+the busy card over placeholder hops, the empty plate "Pick a source and a target", the failed plate with Retry (`kp-trace-retry`), each as high as the trace was. The trace shows what the host measured; it decides nothing. The words are `trace…`.
+
+### The entity card
+
+One fixed card per thing (a stack, a host): its identity mark, name, state in words, a few exact figures, flags, two meters and its actions, in the same five rows on every card:
+
+```html
+<div class="kp-entity-grid" data-kp-entity-grid id="stacks" data-kp-entity-link="/stacks/{key}"></div>
+```
+
+```js
+import { setEntityGrid } from '@kp-soft/themes/js/entity-card';
+setEntityGrid(document.getElementById('stacks'), [{ key: 'media', name: 'media', vmid: '106', state: { label: 'running', tone: 'success' },
+    figures: [{ value: '3/5', label: 'apps up' }], flags: [{ label: 'update available', tone: 'warning' }],
+    meters: [{ label: 'CPU', value: 0.34 }, { label: 'RAM', value: 0.71, text: '5.6 of 8 GB' }],
+    actions: [{ id: 'restart', label: 'Restart' }, { id: 'logs', label: 'Logs' }] }]);
+```
+
+`attachEntityCards(root)` (`js/entity-card.js`, attached by `js/auto.js`) keeps the cards in step with the grid's options; `setEntityGrid(grid, list)` draws or refills by key (a card already there changes its words in place, so a card under the pointer never moves)
+and `setEntity(card, data)` draws one. Every row is kept whether it holds anything or not and every card of a grid is as high as the tallest. `data-kp-entity-meters` (0 to 3, default 2), `-flags-max` (3; more are an exact "+2" that opens the package's menu
+button, and a flag that does not fit the width goes there too), `-inline` (3 action buttons in fixed columns, the rest in "More"; under 30rem all fold into "More"), `-link` (the name's link template, stretched over the card), `-mark`, `-min` (22rem) on the grid or a card,
+`data-kp-selectable` (a tick; the card is a row of a selection) and `data-kp-density="compact"` (no figures row); every attribute draws the cards again. Events `kp-entity-action`, `kp-entity-flag`, `kp-entity-tick`, `kp-entity-retry`, `kp-entity-new`,
+`kp-entity-grid-retry`. A card with `status: 'loading' | 'empty' | 'error'` shows bones, "not measured" or a failed state with Retry at the same height; `setEntityGridState(grid, 'loading' | 'empty' | 'error')` shows skeleton cards under the busy card,
+the empty plate "No stacks yet" with its action, or the failed plate with Retry. The words are `entity…`.
+
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

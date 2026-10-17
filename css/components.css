@@ -26412,3 +26412,1015 @@
         .kp-console__tool[data-kp-console-tool='collapse'] { grid-column: 3; grid-row: 2; }
     }
 }
+
+@layer kp.components {
+    /* --- Toggle button: a button that stays pressed until it is pressed again [kpadopt6-ops] ---
+ * `.kp-button[data-kp-toggle][aria-pressed]` (js/toggle.js). One rule family for the filter chip, the pin, the follow
+ * button and the segmented switch that twenty places drew by hand. Pressed is a shape and a weight as well as a colour:
+ * the face is inverted (`--kp-toggle-on` on `--kp-toggle-on-ink`), `mixed` is a dashed edge on a half wash, and the
+ * optional check (`data-kp-pressed-mark="check"`) keeps its room whether or not it is drawn. The label never changes;
+ * the count keeps the room of its next digit; a hint row under the label is always there, so nothing moves when the
+ * state does. Looks: `data-kp-look` `button` (default), `chip` (a pill) and `icon` (a square). Busy lays the theme's
+ * spinner over the words, which keep their room; a refusal lays its word over them for a moment.
+ * Knobs [KT6]: --kp-toggle-on, --kp-toggle-on-ink, --kp-toggle-mixed (the half wash), --kp-toggle-gap,
+ * --kp-toggle-count-size (--kp-text-xs), --kp-toggle-hit (the least height on a phone, 2.75rem). */
+    .kp-button[data-kp-toggle] {
+        flex-wrap: nowrap;
+        column-gap: var(--kp-toggle-gap, 0.4em);
+        row-gap: 0;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    /* The hint row is the only reason the face wraps: it takes the line under the words. */
+    .kp-button[data-kp-toggle]:has(> .kp-toggle__hint) {
+        flex-wrap: wrap;
+    }
+
+    .kp-button[data-kp-toggle][aria-pressed='true'] {
+        background: var(--kp-toggle-on, var(--foreground));
+        border-color: var(--kp-toggle-on, var(--foreground));
+        color: var(--kp-toggle-on-ink, var(--background));
+    }
+
+    .kp-button[data-kp-toggle][aria-pressed='true']:hover:not(:disabled, [aria-disabled='true']) {
+        background: color-mix(in oklab, var(--kp-toggle-on, var(--foreground)) 86%, var(--kp-toggle-on-ink, var(--background)));
+    }
+
+    .kp-button[data-kp-toggle][aria-pressed='true']:active:not(:disabled, [aria-disabled='true']) {
+        background: color-mix(in oklab, var(--kp-toggle-on, var(--foreground)) 72%, var(--kp-toggle-on-ink, var(--background)));
+    }
+
+    .kp-button[data-kp-toggle][aria-pressed='mixed'] {
+        border-style: dashed;
+        border-color: var(--kp-toggle-on, var(--foreground));
+        background: var(--kp-toggle-mixed, color-mix(in oklab, var(--kp-toggle-on, var(--foreground)) 14%, var(--card)));
+        color: var(--foreground);
+    }
+
+    .kp-button[data-kp-toggle]:is(:disabled, [aria-disabled='true']) {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        cursor: not-allowed;
+    }
+
+    .kp-button[data-kp-toggle][aria-busy='true'] {
+        opacity: 1;
+        cursor: progress;
+    }
+
+    /* The chip: a pill that wraps in a row, as the segmented chips are drawn. */
+    .kp-button[data-kp-toggle][data-kp-look='chip'] {
+        min-block-size: var(--kp-chip-height, max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem))));
+        padding-inline: var(--kp-chip-pad-inline, var(--kp-space-md, 0.75rem));
+        border-radius: var(--kp-chip-radius, var(--kp-radius-pill, 999px));
+        background: var(--kp-chip-ground, var(--card));
+        color: var(--kp-chip-ink, var(--foreground));
+        border-color: var(--kp-chip-edge, var(--border-strong));
+        box-shadow: none;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-button[data-kp-toggle][data-kp-look='chip'][aria-pressed='true'] {
+        background: var(--kp-toggle-on, var(--foreground));
+        border-color: var(--kp-toggle-on, var(--foreground));
+        color: var(--kp-toggle-on-ink, var(--background));
+    }
+
+    @media (hover: hover) {
+        .kp-button[data-kp-toggle][data-kp-look='chip']:not([aria-pressed='true'], [aria-pressed='mixed'], :disabled, [aria-disabled='true']):hover {
+            border-color: var(--ring);
+            background: var(--kp-chip-hover, var(--card));
+        }
+    }
+
+    .kp-button[data-kp-toggle][data-kp-look='chip'][aria-pressed='mixed'] {
+        background: var(--kp-toggle-mixed, color-mix(in oklab, var(--kp-toggle-on, var(--foreground)) 14%, var(--card)));
+        color: var(--foreground);
+    }
+
+    /* The icon: a square the height of a control, the glyph in the middle. */
+    .kp-button[data-kp-toggle][data-kp-look='icon'] {
+        inline-size: var(--kp-control-height, 2.25rem);
+        padding-inline: 0;
+    }
+
+    .kp-toggle__label {
+        display: inline-flex;
+        flex: 0 1 auto;
+        align-items: center;
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+        text-align: center;
+    }
+
+    /* The count: the exact number, the room of the next digit held, the figures tabular. */
+    .kp-toggle__count {
+        display: inline-block;
+        min-inline-size: calc(var(--kp-toggle-digits, 2) * 1ch);
+        font-size: var(--kp-toggle-count-size, var(--kp-text-xs, 0.75rem));
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        text-align: end;
+    }
+
+    .kp-toggle__count[hidden] {
+        display: none;
+    }
+
+    .kp-toggle__bone {
+        display: block;
+        inline-size: 2ch;
+        block-size: 0.75em;
+    }
+
+    /* The check: its room is kept in both states, so pressing moves no word. */
+    .kp-button[data-kp-toggle][data-kp-look='icon'] .kp-toggle__mark {
+        display: none;
+    }
+
+    .kp-toggle__mark {
+        display: inline-grid;
+        place-items: center;
+        inline-size: 1em;
+        flex: none;
+    }
+
+    .kp-button[data-kp-toggle][aria-pressed='true'] .kp-toggle__mark::before {
+        content: var(--kp-glyph-check, '✓');
+    }
+
+    .kp-button[data-kp-toggle][aria-pressed='mixed'] .kp-toggle__mark::before {
+        content: '–';
+    }
+
+    /* The hint row: always there, empty while the toggle is off. */
+    .kp-toggle__hint {
+        flex: 1 0 100%;
+        min-block-size: 1lh;
+        font-size: var(--kp-text-xs, 0.75rem);
+        line-height: 1.3;
+        text-align: center;
+    }
+
+    .kp-button[data-kp-toggle]:has(> .kp-toggle__hint) {
+        padding-block: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-button[data-kp-toggle][data-kp-busy] > :not(.kp-button__busy),
+    .kp-button[data-kp-toggle][data-kp-refused] > :not(.kp-toggle__refused) {
+        visibility: hidden;
+    }
+
+    .kp-toggle__refused {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        padding-inline: var(--kp-space-sm, 0.5rem);
+        border-radius: inherit;
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-weight: 600;
+        text-align: center;
+    }
+
+    /* A group: the toggles in a row that wraps, the Clear button last and in its place whether or not it is needed. */
+    .kp-toggles {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-chip-gap, var(--kp-space-sm, 0.375rem));
+    }
+
+    .kp-toggle__clear {
+        min-block-size: var(--kp-chip-height, max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem))));
+        margin-inline-start: auto;
+        padding-inline: var(--kp-chip-pad-inline, var(--kp-space-md, 0.75rem));
+        font-size: var(--kp-text-sm, 0.8125rem);
+        white-space: nowrap;
+    }
+
+    .kp-toggle__clear[data-kp-idle] {
+        visibility: hidden;
+    }
+
+    @media (pointer: coarse), (max-width: 30rem) {
+        .kp-button[data-kp-toggle],
+        .kp-button[data-kp-toggle][data-kp-look],
+        .kp-toggles > .kp-toggle__clear {
+            min-block-size: var(--kp-toggle-hit, 2.75rem);
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-button[data-kp-toggle] {
+            transition:
+                background-color var(--fx-duration, 150ms) var(--fx-ease, ease),
+                border-color var(--fx-duration, 150ms) var(--fx-ease, ease),
+                color var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+    }
+}
+
+@layer kp.components {
+    /* --- Palette that finds words in any order [kpadopt6-ops] ---
+ * `data-kp-match="intent"` (js/palette.js, js/intent.js) is the default matcher of every palette. The matched words
+ * are marked (`.kp-palette__mark`, a wash and a heavier weight, never colour alone), a query nothing answers is the
+ * package's empty plate in the list's footprint (`.kp-palette__nomatch`, as high as the list was, 11rem at least), and a
+ * palette whose commands could not be read shows the failed plate above the commands marked `data-kp-static`.
+ * `data-kp-mark-look="wash"` keeps the wash in a theme that rules its marks instead.
+ * Knobs [KT6]: --kp-palette-mark (the wash behind a matched word), --kp-palette-plate-height (set by the script). */
+    .kp-palette__mark {
+        padding: 0;
+        border-radius: var(--kp-radius-sm, 0.25rem);
+        background: var(--kp-palette-mark, hsl(from var(--foreground) h s l / 0.14));
+        color: inherit;
+        font-weight: 700;
+    }
+
+    /* While the commands arrive the busy card lies over the list (js/busy-card.js). */
+    .kp-palette__list:has(> .kp-datatable__busy-card) {
+        position: relative;
+    }
+
+    /* Under the busy card the rows wait unseen: the list keeps its height and the card is the only thing to read. */
+    .kp-palette__list[aria-busy='true'] > :not(.kp-datatable__busy-card) {
+        visibility: hidden;
+    }
+
+    /* The command's own words, wrapped by the script so a mark inside them is not a new item of the row. */
+    .kp-palette__label {
+        min-inline-size: 0;
+    }
+
+    .kp-palette__nomatch {
+        display: grid;
+        min-block-size: max(var(--kp-palette-plate-height, 0px), 11rem);
+        padding: 0.25rem;
+    }
+
+    .kp-palette__nomatch[hidden] {
+        display: none;
+    }
+
+    .kp-palette__nomatch > .kp-stateplate {
+        block-size: 100%;
+    }
+
+    .kp-palette__nomatch[data-kp-above] {
+        min-block-size: 11rem;
+    }
+}
+
+@layer kp.components {
+    /* --- Version jump chip: "10.11 → 12.1" [kpadopt6-ops] ---
+ * `.kp-badge.kp-badge--version` (js/version-delta.js). The old version is struck and lighter, the new one strong and, when it
+ * has release notes, a link; a jump that needs care adds the word "major" with a "!" in a ring, so the risk is never colour
+ * alone, and takes the warning tone (a version that went back, the destructive one). A quiet chip stays plain on purpose.
+ * Long versions break after a dot, a hyphen or an underscore and the chip grows to hold them; on a phone it wraps under its
+ * name as one unit. Knobs [KT6]: --kp-version-gap (0.4em), --kp-version-from (how much lighter the old version is, 70%). */
+    .kp-badge--version {
+        flex-wrap: wrap;
+        align-items: baseline;
+        column-gap: var(--kp-version-gap, 0.4em);
+        row-gap: 0;
+        font-variant-numeric: tabular-nums;
+        /* A version breaks only where it was given a place to (after a dot, a hyphen, an underscore or a colon), never in a number. */
+        overflow-wrap: normal;
+    }
+
+    .kp-badge--version[data-kp-size='md'] {
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    .kp-version__from {
+        color: color-mix(in oklab, currentColor var(--kp-version-from, 70%), transparent);
+        font-weight: 400;
+        text-decoration: line-through;
+    }
+
+    .kp-version__from[data-kp-raw] {
+        text-decoration: none;
+    }
+
+    .kp-version__arrow {
+        flex: none;
+    }
+
+    .kp-version__to {
+        font-weight: 700;
+        color: inherit;
+    }
+
+    a.kp-version__to {
+        text-decoration: underline;
+        text-underline-offset: 0.15em;
+    }
+
+    .kp-version__level {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3em;
+        font-weight: 700;
+    }
+
+    .kp-version__bang {
+        display: inline-grid;
+        place-items: center;
+        inline-size: 1.25em;
+        block-size: 1.25em;
+        border: 1.5px solid currentColor;
+        border-radius: 50%;
+        font-size: 0.85em;
+        line-height: 1;
+    }
+
+    .kp-badge--version[data-kp-state='error'],
+    .kp-badge--version[data-kp-level='none'][data-kp-state='empty'] {
+        border: 1px dashed var(--border-strong);
+        background: none;
+        color: var(--muted-foreground);
+    }
+
+    .kp-version__bone {
+        display: block;
+        inline-size: 6rem;
+        block-size: 1em;
+    }
+}
+
+@layer kp.components {
+    /* --- Acknowledge gate: a tick before a button may be pressed [kpadopt6-ops] ---
+ * `.kp-alert.kp-ack[data-kp-ack]` (js/ack-gate.js). The warning alert's words, then the side: the release-notes link and
+ * the tick with its sentence, the whole label one hit area. Wide: the side stands at the end of the alert; under 30rem of
+ * its own width it goes under the words and the label is 44 px tall. While the notes are looked up the words are held in
+ * place and two skeleton lines lie over them, so the alert keeps its height (`--kp-ack-keep`, written by the script); a
+ * failed lookup says so in a line and, with `data-kp-ack-retry`, offers Retry. Knobs [KT6]: --kp-ack-gap, --kp-ack-side
+ * (the side's width, 18rem). */
+    .kp-ack {
+        position: relative;
+        container: kp-ack / inline-size;
+        display: block;
+        inline-size: 100%;
+        min-inline-size: 0;
+        box-sizing: border-box;
+    }
+
+    .kp-ack__frame {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, var(--kp-ack-side, 18rem));
+        align-items: center;
+        gap: var(--kp-ack-gap, var(--kp-space-md, 0.75rem));
+        min-inline-size: 0;
+    }
+
+    /* The control a gate holds back is dimmed and says why (js/reason.js); it still answers a press. */
+    [data-kp-ack-held][aria-disabled='true'] {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        cursor: not-allowed;
+    }
+
+    .kp-ack[hidden] {
+        display: none;
+    }
+
+    .kp-ack[data-kp-state='loading'],
+    .kp-ack[data-kp-state='error'] {
+        min-block-size: var(--kp-ack-keep, 0px);
+    }
+
+    .kp-ack__frame > :not(.kp-ack__side, .kp-ack__problem) {
+        grid-column: 1;
+        min-inline-size: 0;
+    }
+
+    .kp-ack__side {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        justify-items: start;
+    }
+
+    .kp-ack__link {
+        display: inline-flex;
+        align-items: center;
+        min-block-size: var(--kp-control-height, 2.25rem);
+        color: inherit;
+        text-decoration: underline;
+        text-underline-offset: 0.15em;
+    }
+
+    .kp-ack__tick {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-block-size: 2.25rem;
+        padding-block: var(--kp-space-xs, 0.25rem);
+        cursor: pointer;
+        overflow-wrap: break-word;
+    }
+
+    .kp-ack__tick:has(:disabled) {
+        cursor: not-allowed;
+    }
+
+    .kp-ack__tick > input {
+        flex: none;
+        margin-block-start: 0.2em;
+    }
+
+    .kp-ack__label {
+        min-inline-size: 0;
+    }
+
+    .kp-ack[data-kp-state='loading'] > .kp-ack__frame {
+        visibility: hidden;
+    }
+
+    .kp-ack__wait {
+        position: absolute;
+        inset: var(--kp-space-md, 0.75rem);
+        display: grid;
+        align-content: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-ack__wait[hidden],
+    .kp-ack__problem[hidden],
+    .kp-ack__retry[hidden] {
+        display: none;
+    }
+
+    .kp-ack__bone {
+        display: block;
+        block-size: 1rem;
+        inline-size: 70%;
+    }
+
+    .kp-ack__bone + .kp-ack__bone {
+        inline-size: 45%;
+    }
+
+    .kp-ack__problem {
+        min-block-size: var(--kp-control-height, 2.25rem);
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        font-weight: 600;
+    }
+
+    @container kp-ack (max-width: 30rem) {
+        .kp-ack__frame {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-ack__side {
+            grid-column: 1;
+            grid-row: auto;
+            inline-size: 100%;
+        }
+
+        .kp-ack__tick {
+            inline-size: 100%;
+            min-block-size: 2.75rem;
+            align-items: center;
+        }
+    }
+}
+
+@layer kp.components {
+    /* --- Dependency list: rows "A → B", numbered in the order things must go [kpadopt6-ops] ---
+ * `.kp-deplist[data-kp-deplist]` (js/deplist.js). Every row is one subgrid of the list: the number, the thing that needs
+ * (an identity mark and its name), the arrow, the thing needed, its state; the same columns in every row, so nothing sits
+ * under a neighbour's shorter name. A name wraps, never cut. Under 30rem of the list's own width each row stacks: the number
+ * at the start, the name over "→ the needed thing". Loading lays the busy card over three placeholder rows, empty and failed
+ * are the package's plates, each as high as the list was with its rows (at least `--kp-deplist-min-rows`, 3).
+ * Knobs [KT6]: --kp-deplist-row (the row's height, 2.5rem), --kp-deplist-min-rows (3), --kp-deplist-gap (--kp-space-md). */
+    .kp-deplist {
+        container: kp-deplist / inline-size;
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        inline-size: 100%;
+        min-inline-size: 0;
+    }
+
+    .kp-deplist__heading {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .kp-deplist__body {
+        position: relative;
+        min-block-size: calc(var(--kp-deplist-min-rows, 3) * var(--kp-deplist-row, 2.5rem));
+        min-inline-size: 0;
+    }
+
+    .kp-deplist__body > .kp-stateplate {
+        block-size: 100%;
+        min-block-size: calc(var(--kp-deplist-min-rows, 3) * var(--kp-deplist-row, 2.5rem));
+    }
+
+    .kp-deplist__list {
+        display: grid;
+        grid-template-columns: auto auto auto auto minmax(0, 1fr);
+        column-gap: var(--kp-deplist-gap, var(--kp-space-md, 0.75rem));
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-deplist__list[data-kp-cols='plain'] {
+        grid-template-columns: auto auto auto minmax(0, 1fr);
+    }
+
+    .kp-deplist__list[hidden] {
+        display: none;
+    }
+
+    .kp-deplist__row,
+    .kp-deplist__group {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: subgrid;
+        align-items: center;
+        min-block-size: var(--kp-deplist-row, 2.5rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-deplist__row[hidden] {
+        display: none;
+    }
+
+    .kp-deplist__group {
+        font-weight: 600;
+        color: var(--muted-foreground);
+    }
+
+    .kp-deplist__no {
+        min-inline-size: 1.5rem;
+        color: var(--muted-foreground);
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        text-align: end;
+    }
+
+    .kp-deplist__name {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.375rem);
+        min-inline-size: 0;
+        color: inherit;
+        overflow-wrap: anywhere;
+        text-decoration: none;
+    }
+
+    a.kp-deplist__name:hover .kp-deplist__text {
+        text-decoration: underline;
+    }
+
+    .kp-deplist__name .kp-idmark {
+        flex: none;
+    }
+
+    .kp-deplist__arrow {
+        color: var(--muted-foreground);
+    }
+
+    .kp-deplist__state {
+        justify-self: start;
+    }
+
+    .kp-deplist__row--cycle {
+        display: block;
+        grid-template-columns: none;
+        padding-block: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-deplist__cycle {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        font-weight: 600;
+    }
+
+    .kp-deplist__foot {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-deplist__foot:empty {
+        display: none;
+    }
+
+    .kp-deplist__bone {
+        grid-column: 1 / -1;
+        display: block;
+        inline-size: 60%;
+        block-size: 1rem;
+    }
+
+    @container kp-deplist (max-width: 30rem) {
+        .kp-deplist__list,
+        .kp-deplist__list[data-kp-cols='plain'] {
+            grid-template-columns: auto minmax(0, 1fr);
+        }
+
+        .kp-deplist__list[data-kp-cols='plain'] {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-deplist__row {
+            grid-template-columns: subgrid;
+            row-gap: 0;
+            padding-block: var(--kp-space-xs, 0.25rem);
+        }
+
+        .kp-deplist__arrow {
+            display: none;
+        }
+
+        .kp-deplist__row > .kp-deplist__no {
+            grid-row: span 3;
+            align-self: start;
+        }
+
+        .kp-deplist__row > .kp-deplist__name--to::before {
+            content: var(--kp-deplist-arrow, '→');
+            color: var(--muted-foreground);
+        }
+
+        .kp-deplist__row > .kp-deplist__state {
+            grid-column: 2;
+        }
+    }
+}
+
+@layer kp.components {
+    /* --- Path of a connection: hops, each allowed or refused, stopping at the first refusal [kpadopt6-ops] ---
+ * `.kp-trace[data-kp-trace]` with `.kp-steplist.kp-steplist--trace` (js/path-trace.js). A summary line over the hops ("Blocked
+ * at rule IoT to media"), then the hops side by side, each one the step list's own item: its check or cross, the verdict word
+ * under the mark, the thing reached, a line of words and the deciding rule as a chip; a hop after a refusal is dimmed and says
+ * "not reached". Under 30rem of the trace's own width (or `data-kp-trace-layout="column"`) the hops stand in a column, as a
+ * step list does. `data-kp-trace-verdict` `mark` or `word` shows one of the two (both by default; never colour alone).
+ * Empty, failed and running are the package's plates and busy card, each as high as the trace was.
+ * Knobs [KT6]: --kp-trace-gap (the space between hops, 1.5rem), --kp-trace-min (the least width of a hop, 9rem). */
+    .kp-trace {
+        container: kp-trace / inline-size;
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        inline-size: 100%;
+        min-inline-size: 0;
+    }
+
+    .kp-trace__summary {
+        margin: 0;
+        font-weight: 600;
+        min-block-size: 1lh;
+    }
+
+    .kp-trace__summary[hidden] {
+        display: none;
+    }
+
+    .kp-trace__stage {
+        position: relative;
+        min-inline-size: 0;
+    }
+
+    .kp-trace__stage > .kp-stateplate {
+        block-size: 100%;
+        min-block-size: 10rem;
+    }
+
+    .kp-trace__foot {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-trace__foot:empty {
+        display: none;
+    }
+
+    .kp-trace[data-kp-trace-verdict='word'] .kp-steplist--trace .kp-steplist__mark {
+        display: none;
+    }
+
+    .kp-trace[data-kp-trace-verdict='mark'] .kp-steplist--trace .kp-steplist__time {
+        display: none;
+    }
+
+    .kp-steplist--trace .kp-steplist__time {
+        min-inline-size: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        text-align: start;
+        text-transform: capitalize;
+    }
+
+    .kp-steplist--trace .kp-steplist__body {
+        gap: var(--kp-space-xs, 0.25rem);
+        justify-items: start;
+    }
+
+    .kp-trace__rule {
+        border: 1px solid var(--border-strong);
+        font: inherit;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        cursor: pointer;
+    }
+
+    .kp-trace__rule:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: 2px;
+    }
+
+    /* Without the mark the words are the verdict: the item's columns are the words and the verdict word. */
+    .kp-trace[data-kp-trace-verdict='word'] .kp-steplist--trace > .kp-steplist__item {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .kp-trace[data-kp-density='compact'] .kp-steplist--trace .kp-steplist__note {
+        display: none;
+    }
+
+    /* The row: hops side by side with an arrow between them. */
+    .kp-trace[data-kp-trace-layout='row'] .kp-steplist--trace {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(var(--kp-trace-min, 9rem), 1fr);
+        gap: var(--kp-trace-gap, 1.5rem);
+    }
+
+    .kp-trace[data-kp-trace-layout='row'] .kp-steplist--trace > .kp-steplist__item {
+        position: relative;
+        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-areas: 'mark time' 'body body';
+        grid-template-rows: 2rem auto;
+        align-items: start;
+    }
+
+    .kp-trace[data-kp-trace-layout='row'] .kp-steplist--trace > .kp-steplist__item > .kp-steplist__mark {
+        grid-area: mark;
+    }
+
+    .kp-trace[data-kp-trace-layout='row'] .kp-steplist--trace > .kp-steplist__item > .kp-steplist__time {
+        grid-area: time;
+        align-self: center;
+    }
+
+    .kp-trace[data-kp-trace-layout='row'] .kp-steplist--trace > .kp-steplist__item > .kp-steplist__body {
+        grid-area: body;
+    }
+
+    .kp-trace[data-kp-trace-layout='row'] .kp-steplist--trace > .kp-steplist__item + .kp-steplist__item::before {
+        content: '→';
+        position: absolute;
+        inset-block-start: 1.1rem;
+        inset-inline-start: calc(-1 * var(--kp-trace-gap, 1.5rem) / 2 - 0.5ch);
+        color: var(--muted-foreground);
+    }
+
+    .kp-trace[data-kp-trace-verdict='word'][data-kp-trace-layout='row'] .kp-steplist--trace > .kp-steplist__item {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas: 'time' 'body';
+    }
+
+    @container kp-trace (min-width: 40rem) {
+        .kp-trace:not([data-kp-trace-layout]) .kp-steplist--trace,
+        .kp-trace[data-kp-trace-layout='auto'] .kp-steplist--trace {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: minmax(var(--kp-trace-min, 9rem), 1fr);
+            gap: var(--kp-trace-gap, 1.5rem);
+        }
+
+        :is(.kp-trace:not([data-kp-trace-layout]), .kp-trace[data-kp-trace-layout='auto']) .kp-steplist--trace > .kp-steplist__item {
+            position: relative;
+            grid-template-columns: auto minmax(0, 1fr);
+            grid-template-areas: 'mark time' 'body body';
+            grid-template-rows: 2rem auto;
+            align-items: start;
+        }
+
+        :is(.kp-trace:not([data-kp-trace-layout]), .kp-trace[data-kp-trace-layout='auto'])
+            .kp-steplist--trace
+            > .kp-steplist__item
+            > .kp-steplist__mark {
+            grid-area: mark;
+        }
+
+        :is(.kp-trace:not([data-kp-trace-layout]), .kp-trace[data-kp-trace-layout='auto'])
+            .kp-steplist--trace
+            > .kp-steplist__item
+            > .kp-steplist__time {
+            grid-area: time;
+            align-self: center;
+        }
+
+        :is(.kp-trace:not([data-kp-trace-layout]), .kp-trace[data-kp-trace-layout='auto'])
+            .kp-steplist--trace
+            > .kp-steplist__item
+            > .kp-steplist__body {
+            grid-area: body;
+        }
+
+        :is(.kp-trace:not([data-kp-trace-layout]), .kp-trace[data-kp-trace-layout='auto'])
+            .kp-steplist--trace
+            > .kp-steplist__item
+            + .kp-steplist__item::before {
+            content: '→';
+            position: absolute;
+            inset-block-start: 1.1rem;
+            inset-inline-start: calc(-1 * var(--kp-trace-gap, 1.5rem) / 2 - 0.5ch);
+            color: var(--muted-foreground);
+        }
+
+        .kp-trace[data-kp-trace-verdict='word']:not([data-kp-trace-layout='column']) .kp-steplist--trace > .kp-steplist__item {
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-areas: 'time' 'body';
+        }
+    }
+}
+
+@layer kp.components {
+    /* --- Entity card: one fixed card per thing, the same height in every state [kpadopt6-ops] ---
+ * `.kp-card.kp-card--entity[data-kp-entity]` in `.kp-entity-grid[data-kp-entity-grid]` (js/entity-card.js). Every card is
+ * the same five rows, kept whether a row holds anything or not (identity, figures, flags, meters, actions), and every card of
+ * the grid is as high as the tallest, so a card with no flag, a loading card and a failed card all stand level. The actions
+ * stand in fixed columns (the first action is always in the first column, whatever the words before it). The name is the
+ * card's one link, its click target stretched over the whole card; the tick, the actions and the menus stand above it.
+ * Under 30rem of the grid's own width the inline actions fold into "More". Selected is `is-ticked`, the cursor `is-cursor`.
+ * Knobs [KT6]: --kp-entity-min (the least card width, 22rem), --kp-entity-row (the row's height, 1.5rem), --kp-entity-gap. */
+    .kp-entity-grid {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--kp-entity-min, 22rem)), 1fr));
+        grid-auto-rows: 1fr;
+        gap: var(--kp-entity-gap, var(--kp-space-md, 0.75rem));
+        min-block-size: 8rem;
+        min-inline-size: 0;
+    }
+
+    .kp-entity-grid > .kp-stateplate {
+        grid-column: 1 / -1;
+        min-block-size: 16rem;
+    }
+
+    .kp-card--entity {
+        position: relative;
+        display: grid;
+        grid-template-rows: minmax(1.75rem, auto) var(--kp-entity-row, 1.5rem) var(--kp-entity-row, 1.5rem) calc(var(--kp-entity-meters, 2) * var(--kp-entity-row, 1.5rem)) 2.25rem;
+        gap: var(--kp-space-xs, 0.375rem);
+        align-content: start;
+        padding: var(--kp-space-md, 0.75rem);
+        min-inline-size: 0;
+    }
+
+    .kp-card--entity > [class^='kp-entity__'] {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-entity-grid[data-kp-density='compact'] > .kp-card--entity,
+    .kp-card--entity[data-kp-density='compact'] {
+        grid-template-rows: minmax(1.75rem, auto) var(--kp-entity-row, 1.5rem) calc(var(--kp-entity-meters, 2) * var(--kp-entity-row, 1.5rem)) 2.25rem;
+    }
+
+    .kp-entity-grid[data-kp-density='compact'] > .kp-card--entity > .kp-entity__figures,
+    .kp-card--entity[data-kp-density='compact'] > .kp-entity__figures {
+        display: none;
+    }
+
+    .kp-card--entity.is-ticked {
+        border-color: var(--primary);
+        box-shadow: inset 0 0 0 1px var(--primary);
+    }
+
+    .kp-card--entity.is-cursor {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: 2px;
+    }
+
+    .kp-entity__id .kp-idmark {
+        flex: none;
+    }
+
+    .kp-entity__name {
+        flex: 1 1 auto;
+        min-inline-size: 0;
+        color: inherit;
+        font-weight: 600;
+        overflow-wrap: anywhere;
+        text-decoration: none;
+    }
+
+    a.kp-entity__name::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+    }
+
+    a.kp-entity__name:hover {
+        text-decoration: underline;
+    }
+
+    .kp-entity__vmid {
+        color: var(--muted-foreground);
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-entity__vmid:empty {
+        display: none;
+    }
+
+    .kp-entity__state {
+        flex: none;
+    }
+
+    .kp-entity__figures {
+        flex-wrap: nowrap;
+        gap: var(--kp-space-md, 0.75rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-entity__value {
+        color: var(--foreground);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-entity__none {
+        color: var(--muted-foreground);
+    }
+
+    .kp-entity__flags {
+        flex-wrap: nowrap;
+    }
+
+    .kp-entity__flag {
+        flex: none;
+    }
+
+    .kp-entity__meters {
+        display: grid !important;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        grid-auto-rows: var(--kp-entity-row, 1.5rem);
+        column-gap: var(--kp-space-sm, 0.5rem);
+        align-items: center;
+    }
+
+    .kp-entity__meter {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: subgrid;
+        align-items: center;
+        font-size: var(--kp-text-xs, 0.75rem);
+        color: var(--muted-foreground);
+    }
+
+    .kp-entity__meter-value {
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+        white-space: nowrap;
+    }
+
+    .kp-entity__actions {
+        display: grid !important;
+        grid-template-columns: repeat(var(--kp-entity-cols, 4), minmax(0, 1fr));
+        gap: var(--kp-space-sm, 0.5rem);
+        align-items: center;
+    }
+
+    .kp-entity__actions > :is(.kp-button, .kp-menu-button, .kp-reason),
+    .kp-entity__tick,
+    .kp-entity__more-flags {
+        position: relative;
+        z-index: 1;
+    }
+
+    .kp-entity__actions .kp-button,
+    .kp-entity__actions .kp-menu-button {
+        inline-size: 100%;
+    }
+
+    .kp-entity__actions > .kp-entity__action:only-child {
+        grid-column: 1 / -1;
+    }
+
+    .kp-entity__bone {
+        display: block;
+        inline-size: 70%;
+        block-size: 1rem;
+    }
+
+    .kp-card--ghost {
+        pointer-events: none;
+    }
+}

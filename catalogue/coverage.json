@@ -88,6 +88,14 @@
         "kp-docpreview",
         "kp-gallery",
         "kp-uses",
-        "kp-viewer"
+        "kp-viewer",
+        "kp-toggle",
+        "kp-toggles",
+        "kp-version",
+        "kp-ack",
+        "kp-deplist",
+        "kp-trace",
+        "kp-entity-grid",
+        "kp-entity"
     ]
 }

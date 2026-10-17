@@ -170,6 +170,24 @@ export const REQUIRED = [
         why: 'The answers of a question measure their own width and stack in one full-width column in a phone-wide box; the query reaches only its own parts [kpadopt6].',
     },
     {
+        container: 'kp-ack',
+        class: 'kp-ack',
+        self: true,
+        why: 'The gate measures its own width and puts its tick under its words on a phone; the query reaches only its inner frame [kpadopt6-ops].',
+    },
+    {
+        container: 'kp-deplist',
+        class: 'kp-deplist',
+        self: true,
+        why: 'The list measures its own width and stacks each row on a phone; the query reaches only its rows [kpadopt6-ops].',
+    },
+    {
+        container: 'kp-trace',
+        class: 'kp-trace',
+        self: true,
+        why: 'The trace measures its own width and stands its hops in a column on a phone; the query reaches only the hop list [kpadopt6-ops].',
+    },
+    {
         container: 'kp-code',
         class: 'kp-code',
         self: true,

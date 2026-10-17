@@ -245,6 +245,12 @@ export const NEEDS = [
     { name: 'rating', when: '[data-kp-rating]', load: () => import('./rating.js'), attach: (m, root) => [m.attachRatings(root)] },
     { name: 'quote', when: '[data-kp-quote], [data-kp-quote-list]', load: () => import('./quote.js'), attach: (m, root) => [m.attachQuotes(root)] },
     { name: 'usual-picker', when: '[data-kp-usual]', load: () => import('./usual-picker.js'), attach: (m, root) => [m.attachUsualPickers(root)] },
+    { name: 'toggle', when: '[data-kp-toggle]', load: () => import('./toggle.js'), attach: (m, root) => [m.attachToggles(root)] },
+    { name: 'version-delta', when: '[data-kp-version-to], [data-kp-version-from], .kp-badge--version[data-kp-state]', load: () => import('./version-delta.js'), attach: (m, root) => [m.attachVersionDeltas(root)] },
+    { name: 'ack-gate', when: '[data-kp-ack]', load: () => import('./ack-gate.js'), attach: (m, root) => [m.attachAckGates(root)] },
+    { name: 'deplist', when: '[data-kp-deplist]', load: () => import('./deplist.js'), attach: (m, root) => [m.attachDeplists(root)] },
+    { name: 'path-trace', when: '[data-kp-trace]', load: () => import('./path-trace.js'), attach: (m, root) => [m.attachTraces(root)] },
+    { name: 'entity-card', when: '[data-kp-entity-grid]', load: () => import('./entity-card.js'), attach: (m, root) => [m.attachEntityCards(root)] },
     { name: 'unsaved', when: '[data-kp-unsaved]', load: () => import('./unsaved.js'), attach: (m, root) => [m.attachUnsaved(root)] },
     // The media wave [kpadopt6-media]: the growing text box, the link anchors, the print words, the document preview, the gallery.
     { name: 'autosize', when: 'textarea[data-kp-autosize]', load: () => import('./autosize.js'), attach: (m, root) => [m.attachAutosize(root)] },

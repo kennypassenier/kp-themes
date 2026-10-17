@@ -38,6 +38,100 @@
 
 /**
  * @typedef {object} Strings
+ * @property {string} toggleCounting  The count's name while it is still being counted (js/toggle.js) [kpadopt6-ops]
+ * @property {(label: string, count: number | null) => string} toggleOn  The line said once a toggle is switched on, "Only errors on, 12 shown" [kpadopt6-ops]
+ * @property {(label: string, count: number | null) => string} toggleOff  The line said once it is switched off [kpadopt6-ops]
+ * @property {(label: string, n: number) => string} toggleCount  The line said when the count beside a toggle changed (data-kp-announce="all") [kpadopt6-ops]
+ * @property {(n: number) => string} toggleClear  The button that switches a group's toggles off, "Clear filters (2)" [kpadopt6-ops]
+ * @property {string} toggleRefused  The word on a toggle whose change the app refused [kpadopt6-ops]
+ * @property {(label: string) => string} toggleKeyWhat  What a toggle's key does in the shortcut sheet [kpadopt6-ops]
+ * @property {string} toggleKeyGroup  The group a toggle's key is listed under in the shortcut sheet [kpadopt6-ops]
+ * @property {string} intentNoMatch  What a palette says under "Nothing matches" when it knows nothing better [kpadopt6-ops]
+ * @property {(name: string, verb: string, subjects: string[], noun: string) => string} intentNoSubject  A palette's line when the first word is a verb it knows but the rest names nothing it can act on [kpadopt6-ops]
+ * @property {string} paletteNothing  The title of a palette's empty plate when no command answers [kpadopt6-ops]
+ * @property {(shown: number, total: number) => string} paletteCapped  A palette's status line when more commands match than are shown [kpadopt6-ops]
+ * @property {string} paletteLoading  The words under the spinner while a palette's commands are still arriving [kpadopt6-ops]
+ * @property {string} paletteFailed  The title of a palette's plate when its commands could not be read [kpadopt6-ops]
+ * @property {string} paletteFailedText  Its sentence when the page gives no reason [kpadopt6-ops]
+ * @property {string} paletteRetry  Its action [kpadopt6-ops]
+ * @property {string} versionMajor  The word on a chip whose first number rose, and in a count: "major" (js/version-delta.js) [kpadopt6-ops]
+ * @property {string} versionMinor  The word for a second-number jump [kpadopt6-ops]
+ * @property {string} versionPatch  The word for a jump in a later number [kpadopt6-ops]
+ * @property {string} versionOther  The word for a change that has no numbers in it, such as a new digest [kpadopt6-ops]
+ * @property {string} versionDowngrade  The word on a chip whose number fell [kpadopt6-ops]
+ * @property {string} versionSame  The words when the two versions are the same [kpadopt6-ops]
+ * @property {string} versionUnknown  The level of a chip whose versions cannot be compared [kpadopt6-ops]
+ * @property {string} versionNoUpdates  The count's words when nothing is to be updated [kpadopt6-ops]
+ * @property {string} versionLoading  A chip's name while the version is still being looked up [kpadopt6-ops]
+ * @property {string} versionFailed  The words on a chip whose lookup failed [kpadopt6-ops]
+ * @property {string} versionNone  The words where no version is tracked at all [kpadopt6-ops]
+ * @property {string} versionNotes  A release-notes link's extra words for a screen reader [kpadopt6-ops]
+ * @property {(from: string, to: string, level: string) => string} versionSpoken  What a screen reader hears for a jump, "from 10.11 to 12.1, major update" [kpadopt6-ops]
+ * @property {(version: string) => string} versionSpokenSame  What it hears when nothing changes [kpadopt6-ops]
+ * @property {(to: string) => string} versionSpokenTo  What it hears for a moving tag that only says where it goes [kpadopt6-ops]
+ * @property {(from: string, to: string) => string} versionSpokenDown  What it hears for a version that went back [kpadopt6-ops]
+ * @property {(from: string, to: string) => string} versionSpokenChanged  What a screen reader hears for a change that has no size, "changed from latest to nightly" [kpadopt6-ops]
+ * @property {string} ackLink  The release-notes link's words on an acknowledge gate [kpadopt6-ops]
+ * @property {string} ackLabel  The tick's words when the page names none [kpadopt6-ops]
+ * @property {string} ackRetry  The Retry button of a gate whose notes could not be found [kpadopt6-ops]
+ * @property {string} ackLooking  Why the tick is off while the notes are looked up [kpadopt6-ops]
+ * @property {string} ackLocked  Why the tick is locked while the job runs [kpadopt6-ops]
+ * @property {string} ackOpenFirst  Why the tick is off until the notes were opened [kpadopt6-ops]
+ * @property {(label: string) => string} ackReason  Why the guarded button is off, with the tick's own words [kpadopt6-ops]
+ * @property {(remaining: number, total: number) => string} ackReasonMany  Why it is off when several gates guard it, "2 of 3 release notes still to read" [kpadopt6-ops]
+ * @property {string} ackEnabled  Said once when the last gate is ticked and the button comes on [kpadopt6-ops]
+ * @property {(remaining: number) => string} ackDisabled  Said once when a tick is taken away [kpadopt6-ops]
+ * @property {string} ackNoLink  A gate's line when no release notes link was found [kpadopt6-ops]
+ * @property {(n: number) => string} deplistCount  The list's default heading, the exact count (js/deplist.js) [kpadopt6-ops]
+ * @property {string} deplistReading  The heading while the rows are still being read [kpadopt6-ops]
+ * @property {(from: string, to: string) => string} deplistNeeds  A row as a screen reader hears it, "paperless needs postgres" [kpadopt6-ops]
+ * @property {(from: string, to: string) => string} deplistReaches  The same for a list that says what reaches what [kpadopt6-ops]
+ * @property {string} deplistNeedsWord  The word between the names of a cycle, "paperless needs redis needs paperless" [kpadopt6-ops]
+ * @property {(n: number) => string} deplistMore  The button that unfolds the rest, with the exact number of rows [kpadopt6-ops]
+ * @property {string} deplistFewer  The button that folds it again [kpadopt6-ops]
+ * @property {string} deplistEmpty  The empty plate's title when the page gives no sentence [kpadopt6-ops]
+ * @property {string} deplistFailed  The failed plate's title [kpadopt6-ops]
+ * @property {string} deplistFailedText  Its sentence when the page gives no reason [kpadopt6-ops]
+ * @property {string} deplistRetry  Its action [kpadopt6-ops]
+ * @property {string} deplistLoading  The words under the busy card's spinner [kpadopt6-ops]
+ * @property {string} deplistRunning  The word for a needed thing that is running [kpadopt6-ops]
+ * @property {string} deplistStopped  The word for a needed thing that is stopped [kpadopt6-ops]
+ * @property {string} deplistUnknown  The word for a needed thing whose state is not known [kpadopt6-ops]
+ * @property {string} deplistCopy  The button that copies the rows as text [kpadopt6-ops]
+ * @property {string} deplistCopied  Its answer once the rows are on the clipboard [kpadopt6-ops]
+ * @property {string} traceLabel  The hop list's accessible name [kpadopt6-ops]
+ * @property {string} traceAllowed  The summary line when every hop lets the connection through [kpadopt6-ops]
+ * @property {(hop: string, rule: string) => string} traceBlocked  The summary line when a hop refuses it, with the deciding rule when there is one [kpadopt6-ops]
+ * @property {string} traceNotAll  The summary line when a hop could not be measured [kpadopt6-ops]
+ * @property {string} traceAllowedWord  A hop's verdict word, allowed [kpadopt6-ops]
+ * @property {string} traceRefusedWord  A hop's verdict word, refused [kpadopt6-ops]
+ * @property {string} traceNotReached  The word for a hop after a refusal, which the connection never reaches [kpadopt6-ops]
+ * @property {string} traceNotMeasured  The word for a hop whose verdict is not known [kpadopt6-ops]
+ * @property {(rule: string) => string} traceRule  The deciding rule's chip, "Rule IoT to media" [kpadopt6-ops]
+ * @property {string} traceRunning  The words under the busy card's spinner while the path is checked [kpadopt6-ops]
+ * @property {string} traceEmpty  The empty plate's title before a question was asked [kpadopt6-ops]
+ * @property {string} traceEmptyText  Its sentence [kpadopt6-ops]
+ * @property {string} traceFailed  The failed plate's title [kpadopt6-ops]
+ * @property {string} traceFailedText  Its sentence when the page gives no reason [kpadopt6-ops]
+ * @property {string} traceRetry  Its action [kpadopt6-ops]
+ * @property {string} traceCopy  The button that copies the trace as text [kpadopt6-ops]
+ * @property {string} traceCopied  Its answer once the text is on the clipboard [kpadopt6-ops]
+ * @property {string} traceSwap  The button that swaps source and target [kpadopt6-ops]
+ * @property {string} traceKeySwap  What the swap key does in the shortcut sheet [kpadopt6-ops]
+ * @property {string} traceKeyGroup  The group the swap key is listed under [kpadopt6-ops]
+ * @property {(name: string) => string} entitySelect  A card's tick, named for a screen reader, "Select media" [kpadopt6-ops]
+ * @property {string} entityFailed  The state word of a card that could not be read [kpadopt6-ops]
+ * @property {string} entityNotMeasured  What a card says where it has nothing measured [kpadopt6-ops]
+ * @property {(n: number) => string} entityMoreFlags  The "+2" button's accessible name [kpadopt6-ops]
+ * @property {string} entityFlagsLabel  The name of the menu the "+2" opens [kpadopt6-ops]
+ * @property {string} entityRetry  A failed card's or grid's Retry [kpadopt6-ops]
+ * @property {string} entityMore  The button that opens the rest of a card's actions [kpadopt6-ops]
+ * @property {string} entityMoreLabel  The name of that menu [kpadopt6-ops]
+ * @property {string} entityLoading  The words under the busy card's spinner while the cards are read [kpadopt6-ops]
+ * @property {string} entityGridFailed  The failed plate's title for a grid of cards [kpadopt6-ops]
+ * @property {string} entityGridFailedText  Its sentence when the page gives no reason [kpadopt6-ops]
+ * @property {string} entityGridEmpty  The empty plate's title for a grid with no cards [kpadopt6-ops]
+ * @property {string} entityNew  The empty plate's action [kpadopt6-ops]
  * @property {string} alertSuccess
  * @property {string} alertWarning
  * @property {string} alertInfo
@@ -1379,6 +1473,107 @@
  * @type {Strings}
  */
 export const DEFAULT_STRINGS = Object.freeze({
+    // The toggle button (js/toggle.js) [kpadopt6-ops].
+    toggleCounting: 'counting',
+    toggleOn: (label, count) => (count === null ? `${label} on` : `${label} on, ${count} shown`),
+    toggleOff: (label, count) => (count === null ? `${label} off` : `${label} off, ${count} shown`),
+    toggleCount: (label, n) => `${label}: ${n}`,
+    toggleClear: (n) => `Clear filters (${n})`,
+    toggleRefused: 'Refused',
+    toggleKeyWhat: (label) => `Turn ${label} on or off`,
+    toggleKeyGroup: 'Filters',
+    // The palette that finds words in any order (js/intent.js, js/palette.js) [kpadopt6-ops].
+    intentNoMatch: 'Try other words, or fewer of them.',
+    intentNoSubject: (name, verb, subjects, noun) => `There is no ${noun === '' ? 'match' : noun} called "${name}". ${verb} works on: ${subjects.join(', ')}.`,
+    paletteNothing: 'Nothing matches',
+    paletteCapped: (shown, total) => `${shown} of ${total} shown, type more words`,
+    paletteLoading: 'Loading the commands…',
+    paletteFailed: 'The commands could not be read',
+    paletteFailedText: 'The places below still work.',
+    paletteRetry: 'Retry',
+    // The version jump chip (js/version-delta.js) [kpadopt6-ops].
+    versionMajor: 'major',
+    versionMinor: 'minor',
+    versionPatch: 'patch',
+    versionOther: 'changed',
+    versionDowngrade: 'older',
+    versionSame: 'up to date',
+    versionUnknown: 'unknown',
+    versionNoUpdates: 'nothing to update',
+    versionLoading: 'checking the version',
+    versionFailed: 'could not check',
+    versionNone: 'not tracked',
+    versionNotes: 'release notes, opens in a new tab',
+    versionSpoken: (from, to, level) => `from ${from} to ${to}, ${level} update`,
+    versionSpokenSame: (version) => `${version}, up to date`,
+    versionSpokenTo: (to) => `going to ${to}`,
+    versionSpokenDown: (from, to) => `from ${from} back to ${to}, an older version`,
+    versionSpokenChanged: (from, to) => `changed from ${from} to ${to}`,
+    // The acknowledge gate (js/ack-gate.js) [kpadopt6-ops].
+    ackLink: 'Read the release notes',
+    ackLabel: 'I read the release notes',
+    ackRetry: 'Retry',
+    ackLooking: 'Looking up the release notes',
+    ackLocked: 'The update is running',
+    ackOpenFirst: 'Open the release notes first',
+    ackReason: (label) => `Tick "${label}" first`,
+    ackReasonMany: (remaining, total) => `${remaining} of ${total} release notes still to read`,
+    ackEnabled: 'Update enabled',
+    ackDisabled: (remaining) => `Update disabled: ${remaining} release ${remaining === 1 ? 'note' : 'notes'} still to read`,
+    ackNoLink: 'No release notes link found',
+    // The dependency list (js/deplist.js) [kpadopt6-ops].
+    deplistCount: (n) => `${n} ${n === 1 ? 'dependency' : 'dependencies'}`,
+    deplistReading: 'Reading what depends on what',
+    deplistNeeds: (from, to) => `${from} needs ${to}`,
+    deplistReaches: (from, to) => `${from} reaches ${to}`,
+    deplistNeedsWord: 'needs',
+    deplistMore: (n) => `Show all ${n}`,
+    deplistFewer: 'Show fewer',
+    deplistEmpty: 'Nothing depends on these',
+    deplistFailed: 'The dependencies could not be read',
+    deplistFailedText: 'Try again in a moment.',
+    deplistRetry: 'Retry',
+    deplistLoading: 'Reading the dependencies…',
+    deplistRunning: 'running',
+    deplistStopped: 'stopped',
+    deplistUnknown: 'unknown',
+    deplistCopy: 'Copy as text',
+    deplistCopied: 'Copied',
+    // The path of a connection (js/path-trace.js) [kpadopt6-ops].
+    traceLabel: 'The path of the connection',
+    traceAllowed: 'Allowed',
+    traceBlocked: (hop, rule) => (rule === '' ? `Blocked at ${hop}` : `Blocked at rule "${rule}"`),
+    traceNotAll: 'Not every step could be measured',
+    traceAllowedWord: 'allowed',
+    traceRefusedWord: 'refused',
+    traceNotReached: 'not reached',
+    traceNotMeasured: 'not measured',
+    traceRule: (rule) => `Rule ${rule}`,
+    traceRunning: 'Checking the path…',
+    traceEmpty: 'Pick a source and a target',
+    traceEmptyText: 'The path they take shows here.',
+    traceFailed: 'The path could not be checked',
+    traceFailedText: 'Try again in a moment.',
+    traceRetry: 'Retry',
+    traceCopy: 'Copy as text',
+    traceCopied: 'Copied',
+    traceSwap: 'Swap direction',
+    traceKeySwap: 'Swap source and target',
+    traceKeyGroup: 'Path',
+    // The entity card (js/entity-card.js) [kpadopt6-ops].
+    entitySelect: (name) => `Select ${name}`,
+    entityFailed: 'failed',
+    entityNotMeasured: 'not measured',
+    entityMoreFlags: (n) => `${n} more ${n === 1 ? 'flag' : 'flags'}`,
+    entityFlagsLabel: 'More flags',
+    entityRetry: 'Retry',
+    entityMore: 'More',
+    entityMoreLabel: 'More actions',
+    entityLoading: 'Reading the stacks…',
+    entityGridFailed: 'The stacks could not be read',
+    entityGridFailedText: 'Try again in a moment.',
+    entityGridEmpty: 'No stacks yet',
+    entityNew: 'New stack',
     alertSuccess: 'Success',
     alertWarning: 'Warning',
     alertInfo: 'Info',

@@ -4659,3 +4659,127 @@
     }
 }
 /* ── end wheel ── */
+
+/* ── toggle button [kpadopt6-ops] ──
+   The anchor: the double rule. A press draws the two rules for as long as the finger is down; a toggle that stays
+   pressed keeps them drawn, and the underline stays under its label, so "on" is a ruled line and not a colour alone. */
+@layer kp.register {
+    [data-theme='formal'] .kp-button[data-kp-toggle][aria-pressed='true']::after,
+    [data-theme='formal'] .kp-button[data-kp-toggle][aria-pressed='true']::before {
+        border-color: currentColor;
+        opacity: 1;
+    }
+    [data-theme='formal'] .kp-button[data-kp-toggle][aria-pressed='true'] {
+        text-decoration-color: currentColor;
+    }
+    [data-theme='formal'] .kp-button[data-kp-toggle][aria-pressed='mixed']::after {
+        border-color: currentColor;
+        border-style: dashed;
+        opacity: 1;
+    }
+}
+/* The count that is still being counted is one ruled line of the ledger, as high as the figure it stands for and not
+   the 1.5rem of a text line, so the pill keeps its height. */
+@layer kp.signature {
+    [data-theme='formal'] .kp-toggle__bone.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        block-size: 1em;
+    }
+}
+/* ── end toggle button ── */
+
+/* ── palette that finds words in any order [kpadopt6-ops] ──
+   The anchor: ruling. A matched word is ruled under in navy, as formal rules what it points at, and not washed. */
+@layer kp.register {
+    [data-theme='formal'] .kp-palette:not([data-kp-mark-look='wash']) .kp-palette__mark {
+        background: none;
+        font-weight: 700;
+        text-decoration: underline;
+        text-decoration-color: var(--primary);
+        text-decoration-thickness: 2px;
+        text-underline-offset: 0.2em;
+    }
+}
+/* ── end palette that finds words in any order ── */
+
+/* ── version jump chip [kpadopt6-ops] ──
+   The anchor: the double rule. A jump that needs care is ruled twice, a hairline under the new version with the thin
+   second rule beneath it, as formal marks what must be read. The chip that is still being looked up is one ruled line of
+   the ledger as high as the figure, so the chip keeps its height. */
+@layer kp.register {
+    [data-theme='formal'] .kp-badge--version[data-kp-level='major'] .kp-version__to {
+        text-decoration: underline double currentColor;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.2em;
+    }
+}
+@layer kp.signature {
+    [data-theme='formal'] .kp-version__bone.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        block-size: 1em;
+    }
+}
+/* ── end version jump chip ── */
+
+/* ── acknowledge gate [kpadopt6-ops] ──
+   The anchor: the double rule. A gate that is ticked is ruled off with the thin second rule under its words, as formal
+   signs what has been read; the alert's two skeleton lines are the ruled ledger line. */
+@layer kp.register {
+    [data-theme='formal'] .kp-ack[data-kp-checked] {
+        box-shadow: inset 0 -3px 0 -2px var(--warning-foreground);
+    }
+}
+@layer kp.signature {
+    [data-theme='formal'] .kp-ack__bone.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        block-size: 1rem;
+    }
+}
+/* ── end acknowledge gate ── */
+
+/* ── dependency list [kpadopt6-ops] ──
+   The anchor: ruled lines. Each row is a line of the ledger, a hairline under it with the number set in the margin; a cycle is
+   ruled in the destructive ink. The waiting rows are the ledger's ruled lines. */
+@layer kp.signature {
+    [data-theme='formal'] .kp-deplist__bone.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        block-size: 1rem;
+    }
+}
+/* ── end dependency list ── */
+
+/* ── path of a connection [kpadopt6-ops] ──
+   The anchor: the double rule. The hop where the packet stops is ruled twice under its title (the refusal is the rule
+   that is read); the hops it never reaches keep a single hairline. */
+@layer kp.register {
+    [data-theme='formal'] .kp-steplist--trace > .kp-steplist__item[data-state='failed'] .kp-steplist__title {
+        text-decoration: underline double var(--destructive);
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.25em;
+    }
+}
+@layer kp.signature {
+    [data-theme='formal'] .kp-trace .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        block-size: 1rem;
+    }
+}
+/* ── end path of a connection ── */
+
+/* ── entity card [kpadopt6-ops] ──
+   The anchor: ruled lines. The card is a page of the ledger: the identity row is ruled off from the rows under it by a
+   hairline, and a selected card takes the navy double rule round it (the thin second rule inside the first). The waiting
+   card is the ledger's ruled lines. */
+@layer kp.register {
+    [data-theme='formal'] .kp-card--entity > .kp-entity__id {
+        padding-block-end: var(--kp-space-xs, 0.375rem);
+        border-block-end: 1px solid var(--border);
+    }
+    [data-theme='formal'] .kp-card--entity.is-ticked {
+        box-shadow:
+            inset 0 0 0 1px var(--primary),
+            inset 0 0 0 4px var(--card),
+            inset 0 0 0 5px var(--primary);
+    }
+}
+@layer kp.signature {
+    [data-theme='formal'] .kp-entity__bone.kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        block-size: 1rem;
+    }
+}
+/* ── end entity card ── */

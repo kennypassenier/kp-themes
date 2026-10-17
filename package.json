@@ -184,6 +184,34 @@
             "types": "./js/usual-picker.d.ts",
             "default": "./js/usual-picker.js"
         },
+        "./js/toggle": {
+            "types": "./js/toggle.d.ts",
+            "default": "./js/toggle.js"
+        },
+        "./js/intent": {
+            "types": "./js/intent.d.ts",
+            "default": "./js/intent.js"
+        },
+        "./js/version-delta": {
+            "types": "./js/version-delta.d.ts",
+            "default": "./js/version-delta.js"
+        },
+        "./js/ack-gate": {
+            "types": "./js/ack-gate.d.ts",
+            "default": "./js/ack-gate.js"
+        },
+        "./js/deplist": {
+            "types": "./js/deplist.d.ts",
+            "default": "./js/deplist.js"
+        },
+        "./js/path-trace": {
+            "types": "./js/path-trace.d.ts",
+            "default": "./js/path-trace.js"
+        },
+        "./js/entity-card": {
+            "types": "./js/entity-card.d.ts",
+            "default": "./js/entity-card.js"
+        },
         "./js/unsaved": {
             "types": "./js/unsaved.d.ts",
             "default": "./js/unsaved.js"
