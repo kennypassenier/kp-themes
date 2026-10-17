@@ -107,14 +107,52 @@ export const PAGES = [
             // Kenny, 2026-10-12: "Cyberpunk lijkt af, zie dat dezelfde fouten nu niet terugkomen in andere thema's": every other theme mended so a close is its open backwards with the theme's own effect; only what changed, each block in the themes where it did (research/all-themes).
             // Kenny, 2026-10-16 (kp-adopt-rest, round 2): eight things the admin dashboard still draws itself (action tiles, status rows, the facet list, the coverage heat grid, the reachability matrix, bars in table cells with data-kp-sort-value, the week agenda, the run timeline), built in the package first as ONE demo, formal only until Kenny approves it.
             // Kenny, 2026-10-16 (kp-adopt-rest, round 3): six things the dashboard still drew itself, each an opt-in option of an approved component (nav separator, choice-filter value, timeline day buttons and series legend, the week's next-N phone list, facet identity patterns, the heat grid's jump to the latest), formal only.
-            // Kenny, 2026-10-16: one central demo for the fourth adoption round (the data pieces, the rows, cards and choices,
-            // the flows and records, the AuDHD recipe components and the seven "Onmisbaar" ideas), formal only, nine topics.
-            // Round 2 (2026-10-16): 45 of 51 approved; the six open sections only (share bar, bullet rows, uptime, journey, contact timeline, compare).
-            // Round 3 (2026-10-17): all 51 approved in formal; the eleven other themes are asked, topic by topic, one theme per step.
+            // Kenny, 2026-10-17: a review of more than 100 verdicts is split per group of components; the fourth adoption round's
+            // eleven other themes (561 pairs) are asked in nine parts, one per topic, generated from research/kpadopt4/demo.html.
             {
-                href: 'research/kpadopt4/demo.html',
-                label: 'The fourth adoption round, round 3: the eleven other themes',
-                about: 'Everything the component survey of 16/10/2026 found missing from the apps, built in the package, approved in formal and now asked in the eleven other themes, every state, grouped into nine topics: values and figures (.kp-idmark, .kp-stackbar, .kp-bullets, data-kp-tick, .kp-uptime), rows and lists (.kp-action-list--lead, status rows with warn and the fix, a sort the page carries out), records and forms (.kp-kv, .kp-formrows, choices as tiles), cards and states (.kp-card[data-kp-state], the page header with a mark, drawings for an empty state), flows and timelines (.kp-pipeline, the journey stepper, the contact timeline), secrets and confirmation (.kp-secret, dialog sections, a confirmation that depends on something, the typed confirmation), time and timers (.kp-timer-disc, .kp-countdown, .kp-range), cooking for the AuDHD recipe app (.kp-wheel, .kp-focus-steps, .kp-timers, .kp-quantity, .kp-checklist, three-way filter chips) and commands and comparison (.kp-code, .kp-command, .kp-compare).',
+                href: 'research/kpadopt4-values/demo.html',
+                label: 'The fourth adoption round, part 1 of 9: Values and figures',
+                about: 'The values and figures group of the fourth adoption round in the eleven themes other than formal, one theme per step.',
+            },
+            {
+                href: 'research/kpadopt4-rows/demo.html',
+                label: 'The fourth adoption round, part 2 of 9: Rows and lists',
+                about: 'The rows and lists group of the fourth adoption round in the eleven themes other than formal, one theme per step.',
+            },
+            {
+                href: 'research/kpadopt4-records/demo.html',
+                label: 'The fourth adoption round, part 3 of 9: Records and forms',
+                about: 'The records and forms group of the fourth adoption round in the eleven themes other than formal, one theme per step.',
+            },
+            {
+                href: 'research/kpadopt4-cards/demo.html',
+                label: 'The fourth adoption round, part 4 of 9: Cards and states',
+                about: 'The cards and states group of the fourth adoption round in the eleven themes other than formal, one theme per step.',
+            },
+            {
+                href: 'research/kpadopt4-flows/demo.html',
+                label: 'The fourth adoption round, part 5 of 9: Flows and timelines',
+                about: 'The flows and timelines group of the fourth adoption round in the eleven themes other than formal, one theme per step.',
+            },
+            {
+                href: 'research/kpadopt4-secrets/demo.html',
+                label: 'The fourth adoption round, part 6 of 9: Secrets and confirmation',
+                about: 'The secrets and confirmation group of the fourth adoption round in the eleven themes other than formal, one theme per step.',
+            },
+            {
+                href: 'research/kpadopt4-time/demo.html',
+                label: 'The fourth adoption round, part 7 of 9: Time and timers',
+                about: 'The time and timers group of the fourth adoption round in the eleven themes other than formal, one theme per step.',
+            },
+            {
+                href: 'research/kpadopt4-cooking/demo.html',
+                label: 'The fourth adoption round, part 8 of 9: Cooking (AuDHD recipes)',
+                about: 'The cooking (audhd recipes) group of the fourth adoption round in the eleven themes other than formal, one theme per step.',
+            },
+            {
+                href: 'research/kpadopt4-commands/demo.html',
+                label: 'The fourth adoption round, part 9 of 9: Commands and comparison',
+                about: 'The commands and comparison group of the fourth adoption round in the eleven themes other than formal, one theme per step.',
             },
         ],
     },
@@ -126,6 +164,12 @@ export const PAGES = [
         // Decided demos stay reachable from the Agenda's Done list, not from the side navigation (Kenny, 2026-10-13).
         nav: false,
         pages: [
+            // Decided 2026-10-17 00:31: Kenny approved all 51 sections of kpadopt4 in formal (round 2); the other themes are asked in its nine parts.
+            {
+                href: 'research/kpadopt4/demo.html',
+                label: 'The fourth adoption round in formal: 51 sections in nine topics',
+                about: 'Everything the component survey of 16/10/2026 found missing from the apps, built in the package and approved in formal; the source page of the nine parts that ask the eleven other themes.',
+            },
             // Decided 2026-10-16 19:17: Kenny approved kpadopt2 (round 6) and kpadopt3 (round 2) in all 16 themes; recorded in their VERDICTS.json.
             {
                 href: 'research/kpadopt3/demo.html',

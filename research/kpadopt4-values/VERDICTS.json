@@ -1,0 +1,69 @@
+{
+    "demo": "kpadopt4-values",
+    "rounds": [
+        {
+            "round": "1",
+            "page": "2026-10-17-r3",
+            "allJudged": false,
+            "comment": "Kenny, 2026-10-17 03:06, on research/kpadopt4 page round 2026-10-17-r3 before it was split per topic: 14 of 561 judged, all approved (Values and figures in dark and cyberpunk). Carried here so the part does not ask them again.",
+            "approved": [
+                {
+                    "item": "mark",
+                    "theme": "dark"
+                },
+                {
+                    "item": "stackbar",
+                    "theme": "dark"
+                },
+                {
+                    "item": "bullets",
+                    "theme": "dark"
+                },
+                {
+                    "item": "tick",
+                    "theme": "dark"
+                },
+                {
+                    "item": "uptime",
+                    "theme": "dark"
+                },
+                {
+                    "item": "uptime-states",
+                    "theme": "dark"
+                },
+                {
+                    "item": "uptime-phone",
+                    "theme": "dark"
+                },
+                {
+                    "item": "mark",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "stackbar",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "bullets",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "tick",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "uptime",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "uptime-states",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "uptime-phone",
+                    "theme": "cyberpunk"
+                }
+            ]
+        }
+    ]
+}

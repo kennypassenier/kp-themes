@@ -31,6 +31,9 @@ const root = new URL('../', import.meta.url);
 /** @type {string[]} */
 const ALL = THEMES.map((t) => t.name);
 
+/** The most verdicts one review may ask (Kenny, 2026-10-17). */
+export const MAX_PAIRS = 100;
+
 /** @param {string | undefined} value */
 const split = (value) => (value ? value.split(/[\s,]+/).filter((s) => ALL.includes(s)) : null);
 
@@ -94,6 +97,14 @@ export function rereviewFaults(topic, html, verdicts, archived) {
     }
     if (archived) return faults;
     const latest = latestVerdicts(verdicts, offered);
+    // A review of more than 100 verdicts is split per group of components (Kenny, 2026-10-17: "demos met meer dan 100
+    // beoordelingen moeten ook opgesplitst worden per group van elementen zodat ze kleiner en behapbaarder worden").
+    const asked = offered.filter((p) => latest.get(`${p.theme}|${p.item}`) !== 'approved').length;
+    if (asked > MAX_PAIRS) {
+        faults.push(
+            `research/${topic}: the review asks ${asked} pairs, more than ${MAX_PAIRS}; split it into one demo per group of components (research/kpadopt4/build-parts.mjs is the pattern)`,
+        );
+    }
     const reopened = new Set(
         (verdicts.reopened ?? [])
             .filter((/** @type {any} */ r) => String(r.reason ?? '').trim())
@@ -128,7 +139,16 @@ function main() {
     let checked = 0;
     for (const topic of readdirSync(path('research'))) {
         const file = `research/${topic}/VERDICTS.json`;
-        if (!existsSync(path(file))) continue;
+        if (!existsSync(path(file))) {
+            // A demo with no verdicts yet asks every pair it offers.
+            const page = `research/${topic}/demo.html`;
+            const asked = existsSync(path(page)) && !archived.has(topic) ? offeredPairs(readFileSync(path(page), 'utf8')).length : 0;
+            if (asked > MAX_PAIRS)
+                faults.push(
+                    `research/${topic}: the review asks ${asked} pairs, more than ${MAX_PAIRS}; split it into one demo per group of components`,
+                );
+            continue;
+        }
         checked++;
         const demo = `research/${topic}/demo.html`;
         if (!existsSync(path(demo))) {
