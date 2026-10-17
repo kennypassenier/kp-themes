@@ -6874,7 +6874,7 @@ approved". The drawer's way back was fixed in round 2 (strip, visible x, Escape,
 
 ## lane-1017 · A topic step loaded slowly and left the view at its bottom (2026-10-17)
 
-Waiting on Kenny's answer to the correction form.
+Kenny, 2026-10-17 03:20: approved ("Klopt").
 
 **1 · What went wrong.** Round 3 of research/kpadopt4 loaded its topic steps far slower than earlier rounds, and once
 every frame was in, the dialog stood at its bottom (Kenny, 2026-10-17: "vroeger laadden die toch veel sneller? en nu als
