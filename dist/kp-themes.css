@@ -84886,6 +84886,15 @@
     }
 }
 
+/* ── kpadopt5/6 fit: the folded quote [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* Titillium Web's line box is taller than a 1.5 line pitch, so the clamped fifth line's box reached into the Show all
+       button below it. At 1.6 every line box ends where the next begins and the fold cuts exactly under line four. */
+    [data-theme='nostromo'] .kp-quote__text {
+        line-height: 1.6;
+    }
+}
+
 /* The numbers dark's motion is made of, registered at the top level because
    Firefox does not register an @property inside a cascade layer; with no
    registration every keyframe that moves one would flip between its two poses
