@@ -15599,6 +15599,45 @@
         position: absolute !important;
     }
 
+    /* The hub is a still, round disc in every theme and every state [cook-1017; Kenny 2026-10-17 17:48: "bij hover bij de
+       spin knop komt er een vierkant kader rond, dat mag in geen enkele spinner, er moet geen hover animatie zijn en er
+       mogen geen vierkante kaders rond dit ronde element komen, in geen enkel thema"]. Hover, press and focus never
+       animate it, never change its shape, size or place, and never draw a square or rectangle round it: no clip-path, no
+       mask, no outline (but the keyboard's own round ring), no register plate on its pseudo-elements. A colour may
+       answer instantly. Important, as the registers are a later layer; each register keeps its own colours and its own
+       round decoration of the hub. */
+    .kp-wheel__spin.kp-button,
+    .kp-wheel__spin.kp-button:is(:hover, :active, :focus, :focus-visible),
+    .kp-wheel__spin.kp-button::before,
+    .kp-wheel__spin.kp-button::after,
+    .kp-wheel__spin.kp-button:is(:hover, :active, :focus, :focus-visible)::before,
+    .kp-wheel__spin.kp-button:is(:hover, :active, :focus, :focus-visible)::after {
+        transition: none !important;
+        animation: none !important;
+        scale: none !important;
+        rotate: none !important;
+        transform: none !important;
+        clip-path: none !important;
+        mask: none !important;
+    }
+
+    .kp-wheel__spin.kp-button:not(:focus-visible) {
+        outline: none !important;
+    }
+
+    /* Its shadow is the same at rest, pointed at, pressed and focused: --kp-wheel-hub-shadow is the register's rest
+       shadow (the collar round the disc by default), so no state paints a larger or another frame. */
+    .kp-wheel__spin.kp-button:is(:hover, :active, :focus-visible) {
+        box-shadow: var(--kp-wheel-hub-shadow, 0 0 0 var(--kp-wheel-hub-ring, 4px) var(--card)) !important;
+    }
+
+    /* Keyboard focus: a round ring that follows the disc, outside the card-coloured collar. */
+    .kp-wheel__spin.kp-button:focus-visible {
+        outline: 3px solid var(--focus-ring, currentColor) !important;
+        outline-offset: calc(var(--kp-wheel-hub-ring, 4px) + 1px) !important;
+        border-radius: 50% !important;
+    }
+
     .kp-wheel__spin[aria-disabled='true'] {
         opacity: 0.55;
         cursor: not-allowed;

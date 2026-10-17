@@ -5492,10 +5492,11 @@
             0 0 0 calc(var(--kp-wheel-hub-ring) + 1px) var(--border-strong);
     }
     [data-theme='nostromo'] .kp-wheel__spin.kp-button {
-        box-shadow:
+        --kp-wheel-hub-shadow:
             0 0 0 var(--kp-wheel-hub-ring) var(--secondary),
             0 0 0 calc(var(--kp-wheel-hub-ring) + 1px) var(--border-strong),
             var(--kp-sig-no-raised);
+        box-shadow: var(--kp-wheel-hub-shadow);
     }
     [data-theme='nostromo'] .kp-wheel__disc {
         box-shadow:

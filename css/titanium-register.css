@@ -4929,7 +4929,8 @@
         stroke: var(--border-strong);
     }
     [data-theme='titanium'] .kp-wheel__spin.kp-button {
-        box-shadow: 0 0 0 var(--kp-wheel-hub-ring) var(--border-strong);
+        --kp-wheel-hub-shadow: 0 0 0 var(--kp-wheel-hub-ring) var(--border-strong);
+        box-shadow: var(--kp-wheel-hub-shadow);
         clip-path: none;
     }
     [data-theme='titanium'] .kp-wheel__caption {

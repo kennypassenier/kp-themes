@@ -5718,6 +5718,17 @@
         --kp-wheel-pointer: var(--primary);
         --kp-wheel-tint: 26%;
     }
+    /* The hub carries none of the button's plates, frames or labels on its pseudo-elements: a round disc stays round
+       [cook-1017; Kenny 2026-10-17: no square frame round the spin hub in any theme]. */
+    [data-theme='synthwave'] .kp-wheel__spin.kp-button::before,
+    [data-theme='synthwave'] .kp-wheel__spin.kp-button::after {
+        content: none !important;
+    }
+    [data-theme='synthwave'] .kp-wheel__spin.kp-button {
+        --kp-wheel-hub-shadow:
+            inset 0 0 0.5em 0 var(--kp-glow),
+            0 0 0.5em 0 var(--kp-glow);
+    }
     [data-theme='synthwave'] .kp-wheel__rim {
         stroke: var(--kp-core);
         stroke-width: 3;

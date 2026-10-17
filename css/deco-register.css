@@ -6136,8 +6136,14 @@
         stroke: var(--primary);
         stroke-width: 1;
     }
-    [data-theme='deco'] .kp-wheel .kp-wheel__spin.kp-button {
-        translate: 0 calc(1px * var(--kp-sig-deco-pr, 0));
+    /* The hub is still: pointing and pressing turn neither the leaf's wash nor the seal's ring, and nothing sinks
+       [cook-1017; Kenny 2026-10-17: no hover animation on the spin hub in any theme]. */
+    [data-theme='deco'] .kp-wheel .kp-wheel__spin.kp-button,
+    [data-theme='deco'] .kp-wheel .kp-wheel__spin.kp-button:is(:hover, :active, :focus-visible) {
+        --kp-sig-deco-hv: 0 !important;
+        --kp-sig-deco-pr: 0 !important;
+        --kp-wheel-hub-shadow: none;
+        translate: none;
     }
     [data-theme='deco'] .kp-wheel__pointer {
         stroke: var(--kp-sig-deco-lac);
