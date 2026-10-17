@@ -5894,3 +5894,35 @@
         }
     }
 }
+
+/* ── kpadopt5/6 fit: the fold button of a code cell [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* "Show all 38 lines" sizes the button to its longest word; in a 200 px cell its wide capitals outgrew the button. */
+    [data-theme='nostromo'] .kp-code--cell .kp-code__foot .kp-button {
+        font-size: 0.6875rem;
+        letter-spacing: 0.02em;
+    }
+}
+
+/* ── kpadopt5/6 fit: the request inspector's row in a narrow card [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* In the card of a phone the row is 250 px and method, status, source and time cannot share one line in this
+       theme's wide letters (the source tag was squeezed to single letters over the date). Method and status take the
+       first line, the path the next, the source and the time share the last, the time always at its end. */
+    @container kp-inspector (max-width: 40rem) {
+        [data-theme='nostromo'] .kp-inspector__row {
+            grid-template-columns: auto minmax(0, 1fr);
+            grid-template-areas:
+                'method status'
+                'path path'
+                'source time';
+        }
+        [data-theme='nostromo'] .kp-inspector__status {
+            justify-self: start;
+        }
+        [data-theme='nostromo'] .kp-inspector__time {
+            justify-self: end;
+            text-align: end;
+        }
+    }
+}
