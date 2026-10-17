@@ -763,3 +763,25 @@ export {
     timeValue,
 } from './js/timefield.js';
 /** @typedef {import('./js/timefield.js').TimePreset} TimePreset */
+// An interactive console [kpadopt6].
+export {
+    CONSOLE,
+    CONSOLE_BLOCK_EVENT,
+    CONSOLE_HISTORY,
+    CONSOLE_MAX_BYTES,
+    CONSOLE_RETRY_EVENT,
+    CONSOLE_RUN_EVENT,
+    CONSOLE_STATES,
+    attachConsoles,
+    clearConsole,
+    consoleBlocks,
+    runConsoleCommand,
+    setConsole,
+    setConsoleComplete,
+    setConsoleContext,
+    setConsoleRun,
+} from './js/console.js';
+/** @typedef {import('./js/console.js').ConsoleBlock} ConsoleBlock */
+/** @typedef {import('./js/console.js').ConsoleChange} ConsoleChange */
+/** @typedef {import('./js/console.js').ConsoleJob} ConsoleJob */
+/** @typedef {import('./js/console.js').ConsoleRun} ConsoleRun */

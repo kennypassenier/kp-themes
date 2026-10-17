@@ -464,6 +464,10 @@
             "types": "./js/timefield.d.ts",
             "default": "./js/timefield.js"
         },
+        "./js/console": {
+            "types": "./js/console.d.ts",
+            "default": "./js/console.js"
+        },
         "./js/strings": {
             "types": "./js/strings.d.ts",
             "default": "./js/strings.js"

@@ -3957,6 +3957,48 @@ setGanttState(timeline, 'loading');
         ],
     },
     {
+        id: 'console',
+        title: 'Console',
+        group: 'Data',
+        classes: ['kp-console'],
+        exports: [],
+        intro: 'A prompt and, per command, a block that shows whether it still runs, worked or failed: the command, its exit code, its output folded and copyable, and a refusal in what and what to do now. The app runs the commands; the package draws the shell of the interaction and remembers your earlier lines for as long as the tab is open.',
+        whenToUse: 'An admin page that runs a command on a host or a container and shows what came back. For a stream of log lines use the log; for one captured request use the request inspector.',
+        examples: [
+            {
+                title: 'A host console',
+                why: 'The page gives `run(command, context)`; the module does everything around it.',
+                markup: `
+<div class="kp-console" data-kp-console data-kp-console-prompt="#" aria-label="Host console"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-console-prompt', what: 'The prompt glyph (#).' },
+            { name: 'data-kp-console-context', what: '`select`: a select before the prompt whose value goes to `run`.' },
+            { name: 'data-kp-console-history', what: 'How many lines Up recalls (50).' },
+            { name: 'data-kp-console-remember', what: '`session` (default, only while the tab is open), `device` or `off`.' },
+            { name: 'data-kp-console-dedupe', what: '`false` keeps a line typed twice in a row twice.' },
+            { name: 'data-kp-console-order', what: '`newest-last` (default) or `newest-first`.' },
+            { name: 'data-kp-console-follow', what: '`stick` (default) or `off`.' },
+            { name: 'data-kp-console-max-blocks', what: 'Blocks kept (200); older ones fold.' },
+            { name: 'data-kp-console-max-lines', what: 'Lines of output shown before the fold (12).' },
+            { name: 'data-kp-console-max-bytes', what: 'Bytes of output kept per block (262144).' },
+            { name: 'data-kp-console-status', what: '`exit-code` (default) or `word`.' },
+            { name: 'data-kp-console-timer', what: '`false` hides the elapsed time of a running block.' },
+            { name: 'data-kp-console-cancel', what: 'A running block offers Cancel when the job can.' },
+            { name: 'data-kp-console-tab', what: '`none` (default) or `complete`.' },
+            { name: 'data-kp-console-focus-key', what: 'The key that jumps to the prompt (:).' },
+            { name: 'data-kp-console-confirm', what: 'Words or a /regular expression/: a matching line needs a second press.' },
+            { name: 'data-kp-console-hint', what: 'The line under the prompt, its height reserved.' },
+            { name: 'data-kp-console-mode', what: '`full` (default) or `bar`: only the prompt; blocks go out as `kp-console-block`.' },
+        ],
+        accessibility: [
+            'Built in — the output is a log region, a running block is busy, only the last command’s result is announced (never its output), a refusal is an alert, the prompt says why it is off.',
+            'Yours — everything about what a command may do, and masking secrets in the output.',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

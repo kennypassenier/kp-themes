@@ -225,3 +225,12 @@ export type QrSpec = import('./js/qr.js').QrSpec;
 export { TIME, TIME_EVENT, TIME_RETRY_EVENT, TIME_STEPS, attachTimes, parseTimeOfDay, setTime, setTimePresets, stepTime, timeInWindow, timeMinutes, timeText, timeValid, timeValue, } from './js/timefield.js';
 export type TimePreset = import('./js/timefield.js').TimePreset;
 /** @typedef {import('./js/timefield.js').TimePreset} TimePreset */
+export { CONSOLE, CONSOLE_BLOCK_EVENT, CONSOLE_HISTORY, CONSOLE_MAX_BYTES, CONSOLE_RETRY_EVENT, CONSOLE_RUN_EVENT, CONSOLE_STATES, attachConsoles, clearConsole, consoleBlocks, runConsoleCommand, setConsole, setConsoleComplete, setConsoleContext, setConsoleRun, } from './js/console.js';
+export type ConsoleBlock = import('./js/console.js').ConsoleBlock;
+export type ConsoleChange = import('./js/console.js').ConsoleChange;
+export type ConsoleJob = import('./js/console.js').ConsoleJob;
+export type ConsoleRun = import('./js/console.js').ConsoleRun;
+/** @typedef {import('./js/console.js').ConsoleBlock} ConsoleBlock */
+/** @typedef {import('./js/console.js').ConsoleChange} ConsoleChange */
+/** @typedef {import('./js/console.js').ConsoleJob} ConsoleJob */
+/** @typedef {import('./js/console.js').ConsoleRun} ConsoleRun */

@@ -161,3 +161,21 @@
     flex: 1 1 18rem;
     min-inline-size: 0;
 }
+
+/* The page's own list the bar-only console hands its blocks to. */
+.k6-barlist {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.k6-barlist > li {
+    padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    overflow-wrap: anywhere;
+}

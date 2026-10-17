@@ -242,6 +242,12 @@ export const REQUIRED = [
         why: 'The code measures its own width and puts the link and Copy first on a narrow screen when asked; the query reaches only its own parts [kpadopt6-social].',
     },
     {
+        container: 'kp-console',
+        class: 'kp-console',
+        self: true,
+        why: 'The console measures its own width and stacks the select, prompt and Run on a phone; the query reaches only its own parts [kpadopt6-social].',
+    },
+    {
         container: 'kp-range',
         class: 'kp-range',
         self: true,

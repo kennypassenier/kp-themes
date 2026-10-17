@@ -4,6 +4,7 @@ import { getChecklistItems, setChecklistItems, setChecklistState } from '../../j
 import { setClaim, setClaimPeople, setClaimViewer } from '../../js/claim.js';
 import { setQr } from '../../js/qr.js';
 import { setTime, setTimePresets } from '../../js/timefield.js';
+import { clearConsole, runConsoleCommand, setConsole, setConsoleComplete, setConsoleContext, setConsoleRun } from '../../js/console.js';
 import { availabilityAnswers, availabilityDays, availabilityRange, setAvailability, setAvailabilityAnswer } from '../../js/availability.js';
 
 /** @param {string} sel @param {ParentNode} [root] @returns {HTMLElement | null} */
@@ -380,4 +381,110 @@ onReady(() => {
     $('[data-k6-time-open]')?.addEventListener('click', () => {
         /** @type {HTMLElement | null} */ (timeMain?.querySelector('.kp-time__toggle'))?.click();
     });
+});
+
+// ---------------------------------------------------------------- interactive-console
+
+const conMain = $('#k6-console');
+const conReadout = $('[data-k6-con-readout]');
+const CONTAINERS = [
+    { value: '', label: 'Host (root)' },
+    { value: 'nextcloud', label: 'nextcloud' },
+    { value: 'jellyfin', label: 'jellyfin' },
+];
+const LINES = Array.from({ length: 40 }, (_, i) => `-rw-r--r-- 1 root root ${String(1200 + i * 37).padStart(6)} Oct 17 14:0${i % 10} file-${String(i + 1).padStart(2, '0')}.conf`);
+
+/** The pretend host: what each sample command does. @type {import('../../js/console.js').ConsoleRun} */
+function host(command, context) {
+    return {
+        /** @param {(change: import('../../js/console.js').ConsoleChange) => void} handler */
+        update(handler) {
+            const where = context ? ` in ${context}` : '';
+            if (conReadout) conReadout.textContent = `Ran: ${command}${where}`;
+            const at = (/** @type {number} */ ms, /** @type {() => void} */ f) => setTimeout(f, ms);
+            if (command.startsWith('rm -rf')) at(600, () => handler({ state: 'refused', error: 'Removing the root is not allowed on this host.', remedy: 'Run it on a copy of the container instead.' }));
+            else if (command.startsWith('mount')) at(500, () => handler({ state: 'refused', error: 'Only read-only commands are allowed here.', remedy: 'Ask for write access on the Settings page, then run it again.' }));
+            else if (command === 'flaky-job') {
+                at(300, () => handler({ state: 'running' }));
+                at(2200, () => handler({ state: 'lost' }));
+            } else if (command === 'false') at(600, () => handler({ state: 'failed', code: 1 }));
+            else if (command === 'true') at(500, () => handler({ state: 'ok', code: 0 }));
+            else if (command.startsWith('ls')) at(700, () => handler({ state: 'ok', code: 0, output: LINES.join('\n') }));
+            else if (command === 'dump-logs') at(700, () => handler({ state: 'ok', code: 0, output: 'line of the log that is quite long\n'.repeat(260) }));
+            else if (command.startsWith('ping')) {
+                handler({ state: 'running' });
+                for (let i = 1; i <= 8; i += 1) at(i * 500, () => handler({ append: `64 bytes from nextcloud: icmp_seq=${i} ttl=64 time=0.${40 + i} ms\n` }));
+                at(4400, () => handler({ state: 'ok', code: 0 }));
+            } else if (command === 'uptime') at(1100, () => handler({ state: 'ok', code: 0, output: ' 14:05:12 up 41 days,  3:12,  1 user,  load average: 0.12, 0.09, 0.05' }));
+            else at(800, () => handler({ state: 'failed', code: 127, output: `sh: ${command.split(' ')[0]}: command not found` }));
+        },
+        cancel() {
+            if (conReadout) conReadout.textContent = `Cancelled: ${command}`;
+        },
+    };
+}
+
+onReady(() => {
+    for (const id of ['k6-console', 'k6-console-phone', 'k6-console-first', 'k6-console-word']) {
+        const c = $(`#${id}`);
+        if (!c) continue;
+        setConsoleRun(c, host);
+        if (id === 'k6-console' || id === 'k6-console-phone') setConsoleContext(c, { options: CONTAINERS, value: '', label: 'Container' });
+    }
+    if (conMain) setConsoleComplete(conMain, (prefix) => ['uptime', 'ls -la /etc', 'ping -c 8 nextcloud', 'df -h', 'dump-logs'].filter((c) => c.startsWith(prefix.trim())));
+    // The bar-only console hands its blocks to the page's own list.
+    const bar = $('#k6-console-bar');
+    const barList = $('[data-k6-barlist]');
+    if (bar && barList) {
+        setConsoleRun(bar, host);
+        bar.addEventListener('kp-console-block', (event) => {
+            const b = /** @type {CustomEvent} */ (event).detail.block;
+            let row = barList.querySelector(`[data-id="${b.id}"]`);
+            if (!row) {
+                row = document.createElement('li');
+                row.setAttribute('data-id', b.id);
+                barList.prepend(row);
+            }
+            row.textContent = `${b.command}: ${b.state}${b.code !== undefined ? ` (exit ${b.code})` : ''}`;
+        });
+    }
+    for (const button of $$('[data-k6-con-run]')) {
+        button.addEventListener('click', () => {
+            if (conMain) void runConsoleCommand(conMain, button.getAttribute('data-k6-con-run') ?? '');
+        });
+    }
+    conMain?.addEventListener('kp-console-retry', () => {
+        setConsole(conMain, { state: 'loading' });
+        setTimeout(() => {
+            setConsole(conMain, { state: 'ready' });
+            const b = $('[data-k6-con-state="ready"]');
+            if (b) pick(b);
+        }, 1200);
+    });
+    for (const button of $$('[data-k6-con-state]')) {
+        button.addEventListener('click', () => {
+            pick(button);
+            const state = button.getAttribute('data-k6-con-state') ?? 'ready';
+            for (const c of [conMain, $('#k6-console-phone')]) {
+                if (!c) continue;
+                c.removeAttribute('disabled');
+                c.removeAttribute('data-kp-disabled-reason');
+                setConsoleContext(c, { state: 'ready' });
+                if (state === 'ready') setConsole(c, { state: 'ready' });
+                else if (state === 'empty') {
+                    setConsole(c, { state: 'ready' });
+                    clearConsole(c, { undo: false });
+                } else if (state === 'loading') setConsole(c, { state: 'loading' });
+                else if (state === 'error') setConsole(c, { state: 'error' });
+                else if (state === 'off') {
+                    setConsole(c, { state: 'ready' });
+                    c.setAttribute('disabled', '');
+                    c.setAttribute('data-kp-disabled-reason', 'Remote exec is off on this host. Turn it on in Settings.');
+                } else if (state === 'context') {
+                    setConsole(c, { state: 'ready' });
+                    setConsoleContext(c, { state: 'loading' });
+                }
+            }
+        });
+    }
 });

@@ -615,6 +615,146 @@
                     </div>
                 </div>
             </section>
+
+            <!-- ================================================================ interactive-console -->
+            <h2 class="kd-topic" id="topic-interactive-console">Console</h2>
+            <section
+                class="k6-sec"
+                id="interactive-console"
+                data-review-item="interactive-console"
+                data-review-topic="interactive-console"
+                data-review-topic-title="Console"
+                data-review-components="console"
+                data-review-title="A console with a prompt and a block per command"
+                aria-labelledby="h-interactive-console"
+                data-review-choices='[
+  { "id": "order", "label": "Where does the newest command go?", "options": [
+    { "value": "newest-last", "label": "At the bottom, the prompt under it (recommended)", "hint": "Like a terminal: the page follows the newest block unless you scrolled up, then a pill counts what you missed." },
+    { "value": "newest-first", "label": "At the top, the prompt above it", "hint": "Like a log: the newest is always at the top, nothing to scroll to." } ] },
+  { "id": "status", "label": "How is a finished command's result written?", "options": [
+    { "value": "exit-code", "label": "The exit code, with a glyph and the word (recommended)", "hint": "exit 0 with a check and Done; exit 1 with a cross and Failed. The code is the fact an admin reads." },
+    { "value": "word", "label": "The word only", "hint": "Done or Failed, for people who do not know exit codes." } ] },
+  { "id": "cancel", "label": "Does a running command offer Cancel?", "options": [
+    { "value": "on", "label": "Yes, when the app can stop it (recommended)", "hint": "A Cancel button on the block while it runs; the app decides whether a job can be cancelled." },
+    { "value": "off", "label": "No: a running command runs on", "hint": "No way to stop it from here; fewer buttons on the block." } ] }
+]'
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-interactive-console">Console</h2>
+                    <p>
+                        A prompt and, for every command, a block that shows whether it still runs, worked or failed. The package draws the prompt, the
+                        recall of earlier lines and the blocks; what a command may do stays with the app. Your earlier lines are kept only while this
+                        tab is open (a line can hold a secret).
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Type <b>uptime</b> and press <b>Enter</b> (or <b>Run</b>): a block appears with the command in the mono face, <b>Sending…</b>,
+                            then <b>Running for 1 s</b> with a spinner, then <b>exit 0 · Done</b> with the output under it. <b>Up</b> and <b>Down</b>
+                            walk your earlier lines; <b>Esc</b> clears the line; <b>Ctrl+L</b> clears the screen and a toast offers Undo for 6 seconds.
+                            The key <b>:</b> jumps to the prompt from anywhere on the page (press <b>?</b> for the list).
+                        </li>
+                        <li>
+                            The sample buttons run the other cases: a long output (folded to 12 lines with <b>Show all</b>), one that prints as it goes with
+                            Cancel, a failing one (<b>exit 1 · Failed</b>), a line with no output (<b>(no output)</b>), one the app refuses (what and what to
+                            do now, your line stays in the prompt), a dropped connection (<b>Not sure it finished</b> with <b>Check again</b>) and one over
+                            the 4 KB limit (<b>Only the first … shown</b>). <b>rm -rf /</b> needs a second press: <b>Run it anyway?</b>
+                        </li>
+                        <li>
+                            Each block has Copy command, Copy output (each says <b>Copied</b> in the same width), Run again and Collapse. When you scroll
+                            up in a long list, a pill says how many commands arrived out of sight and jumps back.
+                        </li>
+                        <li>
+                            Empty, loading, failed and a console with running switched off all keep the body's height; the empty one invites you to run a
+                            command, the failed one has Retry. At 390 px the select goes above the prompt, Run takes its own full line and the bar stays
+                            at the foot.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal keeps it plain: a card with a hairline, the output blocks on white over a pale ground, the prompt glyph and the focus ring in
+                        navy, the exit codes in the success green and the destructive red with their glyphs.
+                    </p>
+                </div>
+                <div class="k6-controls" data-review-controls>
+                    <div role="group" aria-label="Console state">
+                        <b>Console state:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-con-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-con-state="empty" aria-pressed="false">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-con-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-con-state="error" aria-pressed="false">Host unreachable</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-con-state="off" aria-pressed="false">Running is off</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-con-state="context" aria-pressed="false">Reading the containers</button>
+                    </div>
+                    <div role="group" aria-label="Run a sample command">
+                        <b>Run a sample:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-con-run="uptime">uptime</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-con-run="ls -la /etc">Long output</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-con-run="ping -c 8 nextcloud">Prints as it goes</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-con-run="false">Fails</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-con-run="true">No output</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-con-run="mount /dev/sdb1">Refused</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-con-run="flaky-job">Connection drops</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-con-run="dump-logs">Over the limit</button>
+                    </div>
+                </div>
+                <p class="k6-readout" role="status" data-k6-con-readout>Nothing run yet.</p>
+                <div class="k6-pair">
+                    <div class="k6-stack">
+                        <p class="k6-label">The console (inside a flex row too)</p>
+                        <div class="k6-flexrow">
+                            <div
+                                class="kp-console"
+                                data-kp-console
+                                data-kp-console-prompt="#"
+                                data-kp-console-context="select"
+                                data-kp-console-cancel
+                                data-kp-console-confirm="rm -rf,shutdown"
+                                data-kp-console-max-bytes="4096"
+                                data-kp-console-tab="complete"
+                                data-kp-console-hint="Up and Down walk your earlier lines. Tab completes a command. Nothing is kept after this tab closes."
+                                data-kp-name="demo-console"
+                                aria-label="Host console"
+                                data-kp-label="Command to run on the host"
+                                id="k6-console"
+                            ></div>
+                        </div>
+                    </div>
+                    <div class="k6-stack">
+                        <p class="k6-label">390 px</p>
+                        <div class="k6-frame k6-frame--phone">
+                            <div
+                                class="kp-console"
+                                data-kp-console
+                                data-kp-console-context="select"
+                                data-kp-console-focus-key="false"
+                                data-kp-console-remember="off"
+                                aria-label="Host console, phone"
+                                id="k6-console-phone"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="k6-label">Each choice, side by side</p>
+                <div class="k6-trio">
+                    <div class="k6-stack">
+                        <p class="k6-note"><b>Newest first, like a log</b></p>
+                        <div class="kp-console" data-kp-console data-kp-console-order="newest-first" data-kp-console-focus-key="false" data-kp-console-remember="off" aria-label="Log console" id="k6-console-first"></div>
+                    </div>
+                    <div class="k6-stack">
+                        <p class="k6-note"><b>Words instead of exit codes, no timer</b></p>
+                        <div class="kp-console" data-kp-console data-kp-console-status="word" data-kp-console-timer="false" data-kp-console-focus-key="false" data-kp-console-remember="off" aria-label="Word console" id="k6-console-word"></div>
+                    </div>
+                    <div class="k6-stack">
+                        <p class="k6-note"><b>Bar only: the blocks go to the page's own list</b></p>
+                        <div class="kp-console" data-kp-console data-kp-console-mode="bar" data-kp-console-focus-key="false" data-kp-console-remember="off" aria-label="Bar console" id="k6-console-bar"></div>
+                        <ul class="k6-barlist" data-k6-barlist></ul>
+                    </div>
+                </div>
+            </section>
 <!-- @@sections -->
         </main>
         <script type="application/json" data-review-round>
