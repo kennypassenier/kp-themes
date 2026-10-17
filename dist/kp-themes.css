@@ -90204,6 +90204,17 @@
 }
 /* ── end t56 ── */
 
+/* ── t56: the version badge ── */
+@layer kp.signature {
+    /* A sha256 is 64 characters that break only after the colon. The badge is one row wide, so it stays inside the row
+       (border box) and the digest is set at 12 px, which leaves it 8 px clear of the cut edge at the widest row. */
+    [data-theme='dark'] .kp-badge--version {
+        box-sizing: border-box;
+        font-size: 0.75rem;
+    }
+}
+/* ── end t56 ── */
+
 /* The numbers formal's motion is made of, registered at the top level
    because Firefox does not register an @property inside a cascade layer;
    with no registration every keyframe below would flip between its two
