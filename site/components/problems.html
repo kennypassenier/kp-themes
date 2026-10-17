@@ -289,7 +289,7 @@ setProblems(box, [
                             <tr><td><code>data-kp-problems</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-problems-attached</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-problems-count</code></td><td>written</td></tr>
-                            <tr><td><code>data-kp-problems-fold-from</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-problems-fold-from</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-problems-mode</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-remedy-label</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-sig</code></td><td>read, written</td></tr>
@@ -332,7 +332,7 @@ setProblems(box, [
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
                             <tr><td><code>data-kp-problems-mode</code></td><td>`each` (default: one alert per problem, the worst first), `list` (one alert holding every problem, the tone of the worst) or `fold`.</td></tr>
-                            <tr><td><code>data-kp-problems-fold-from</code></td><td>With `fold`: from this count (5) one alert holds the four worst open and “Show the other N”.</td></tr>
+                            <tr><td><code>data-kp-problems-fold-from</code></td><td>With `fold`: from this count (5 by default, at least 2) one alert holds the worst open and “Show the other N”. Change it at any time, like the mode.</td></tr>
                             <tr><td><code>data-kp-remedy-label</code></td><td>The word before the remedy; “What now” by default.</td></tr>
                             <tr><td><code>data-kp-problem-layout</code></td><td>`stacked` (default) or `inline`, which runs what, why and remedy into one paragraph.</td></tr>
                             <tr><td><code>per item</code></td><td>`severity` (`critical`, `warning` default, `info`), `command` (set in code with a Copy button), `action`, `dismissible` (default off: a real problem is not closable until it is fixed).</td></tr>
