@@ -5935,3 +5935,18 @@
         line-height: 1.6;
     }
 }
+
+/* ── kpadopt5/6 fit: the availability list on a phone [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* The signed-in person's own row carries three answer keys; with the lamp and the label tape they are wider than the
+       row, and the key row pushed the person's name down to nothing. The name takes its own line over the keys. */
+    [data-theme='nostromo'] .kp-availability__column-row:has(> .kp-availability__column-answers) {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 0.25rem;
+        padding-block: 0.25rem;
+    }
+    [data-theme='nostromo'] .kp-availability__column-answers > .kp-availability__pick {
+        letter-spacing: 0.04em;
+        padding-inline-end: 0.5rem;
+    }
+}
