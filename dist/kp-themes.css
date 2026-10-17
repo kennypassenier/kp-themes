@@ -55564,6 +55564,20 @@
     }
 }
 
+/* ── kpadopt5/6 fit: the checklist's detail on a phone [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* The detail never wraps in the shared part; in this theme's mono it is wider than the row and ran off the plate
+       (cut at the screen edge) while it squeezed the label to a column of single letters. On a phone it wraps in a
+       column of at most 9rem, at its end. */
+    @media (max-width: 34rem) {
+        [data-theme='titanium'] .kp-checklist__detail {
+            max-inline-size: 9rem;
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+    }
+}
+
 /* The redaction plate's alpha, registered so it can be transitioned: an
    unregistered custom property flips at the end of its transition instead
    of passing through values, and the plate's background reads it through
@@ -84918,6 +84932,20 @@
        `--kp-size-step`; 0 means the size time). */
     [data-theme='nostromo'] .kp-field:has(> .kp-autosize) {
         --kp-size-step: 0ms;
+    }
+}
+
+/* ── kpadopt5/6 fit: the checklist's detail on a phone [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* The detail never wraps in the shared part; in this theme's mono it is wider than the row and ran off the plate
+       (cut at the screen edge) while it squeezed the label to a column of single letters. On a phone it wraps in a
+       column of at most 9rem, at its end. */
+    @media (max-width: 34rem) {
+        [data-theme='nostromo'] .kp-checklist__detail {
+            max-inline-size: 9rem;
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
     }
 }
 
