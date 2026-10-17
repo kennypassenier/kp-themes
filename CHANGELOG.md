@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Added: the basics, five parts and one helper** [kpadopt5; Kenny, 2026-10-17, answers to the option questions]. Calm mode (`html[data-kp-calm]`, `js/calm.js`; calm stops transitions and animations in every theme while a spinner or skeleton breathes as one slow pulse, scope `motion`, `effects` or `all`; the seven scripts that read `prefers-reduced-motion` now ask `motionAllowed`); the shortcut engine (`js/shortcuts.js`, one list for the keys and the help sheet, chords, scopes, a warning for AltGr keys); `.kp-lede` and `.kp-field__why` (`js/lede.js`); the problem alert (`.kp-alert__what|why|remedy|actions`, `.kp-problems`, `setProblems` with the layouts `each`, `list` and `fold`); the flash button (`js/flash.js`, busy, a short word, the sentence in a line under the button, one width); `data-kp-disabled-reason` (`js/reason.js`). Formal's register answers the problem alert and the flash button; the other themes follow Kenny's verdict. Demo: research/kpadopt5-basics.
 - **Removed: four themes, `terminal`, `phantom`, `light` and `grotesk`** [breaking; Kenny, 2026-10-16
   23:38 to 23:40: "we gaan het terminal thema bij deze ook verwijderen uit ons pakket", "En phantom ook", "en light ook",
   "en grotesk ook"]. Twelve themes remain: formal, dark, cyberpunk, synthwave, pastel, forest, blueprint, solstice,

@@ -110,6 +110,12 @@ export const REQUIRED = [
         why: 'The band measures its own width and moves each problem’s fix under its words when narrow; the query reaches only its own items [scope-143].',
     },
     {
+        container: 'kp-problems',
+        class: 'kp-problems',
+        self: true,
+        why: 'The list of problems measures its own width and moves each fix under its words when narrow; the query reaches only its own alerts [kpadopt5].',
+    },
+    {
         container: 'kp-calendar-layout',
         class: 'kp-calendar-layout',
         self: true,

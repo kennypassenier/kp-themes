@@ -42,6 +42,7 @@ import { attachDialogs, attachDismissals, attachScrollbars, attachTabs, attachTo
 import { attachThemePickers } from './theme-picker.js';
 import { attachEffects } from './effects.js';
 import { asOf, presentUnder, settleAfter } from './as-of.js';
+import { applyStoredCalm } from './calm.js';
 
 /**
  * @typedef {object} Need
@@ -198,6 +199,18 @@ export const NEEDS = [
     { name: 'range', when: '[data-kp-range]', load: () => import('./range.js'), attach: (m, root) => [m.attachRanges(root)] },
     // The compare slider [kpadopt4-ideas]: two versions stacked with a divider between them.
     { name: 'compare', when: '[data-kp-compare]', load: () => import('./compare.js'), attach: (m, root) => [m.attachCompares(root)] },
+    // Calm mode's switch, the live shortcut sheet, the lede, the problem alerts, the flash button and the reason of a disabled control [kpadopt5].
+    { name: 'calm', when: '[data-kp-calm-switch]', load: () => import('./calm.js'), attach: (m, root) => [m.attachCalm(root)] },
+    {
+        name: 'shortcuts',
+        when: '[data-kp-shortcuts][data-kp-shortcuts-live]',
+        load: () => import('./shortcuts.js'),
+        attach: (m, root) => [m.attachShortcuts(root)],
+    },
+    { name: 'lede', when: '.kp-lede', load: () => import('./lede.js'), attach: (m, root) => [m.attachLedes(root)] },
+    { name: 'problems', when: '[data-kp-problems]', load: () => import('./problems.js'), attach: (m, root) => [m.attachProblems(root)] },
+    { name: 'flash', when: '[data-kp-flash-button], [data-kp-post]', load: () => import('./flash.js'), attach: (m, root) => [m.attachFlashButtons(root)] },
+    { name: 'reason', when: '[data-kp-disabled-reason]', load: () => import('./reason.js'), attach: (m, root) => [m.attachDisabledReasons(root)] },
     { name: 'graph', when: '[data-kp-graph]', load: () => import('./graph.js'), attach: (m, root) => [m.attachGraphs(root)] },
     {
         // A theme's loading picture made of pieces (`--kp-loading-pieces`,
@@ -290,6 +303,8 @@ export function attachAll(root = document) {
 
 if (typeof document !== 'undefined') {
     applyStoredTheme();
+    // Calm mode is kept per device and goes back on the root before the first frame [kpadopt5].
+    applyStoredCalm();
     // The same moment, for the same reason: this module is deferred, so it
     // runs after the parse and before the first frame. A state restored at
     // DOMContentLoaded instead would be a state the reader saw flip.

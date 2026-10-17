@@ -1504,6 +1504,94 @@ export type Strings = {
      */
     compareLoading: string;
     /**
+     * The polite announcement when calm mode is switched on (js/calm.js) [kpadopt5]
+     */
+    calmOn: string;
+    /**
+     * The same, when it is switched off [kpadopt5]
+     */
+    calmOff: string;
+    /**
+     * The reason the calm switch is disabled while the system itself asks for less motion [kpadopt5]
+     */
+    calmSystem: string;
+    /**
+     * The shortcut sheet's empty state, when no shortcut is registered (js/shortcuts.js) [kpadopt5]
+     */
+    shortcutsEmptyTitle: string;
+    /**
+     * Its second line [kpadopt5]
+     */
+    shortcutsEmptyText: string;
+    /**
+     * The sheet's fixed row for the command palette key [kpadopt5]
+     */
+    shortcutsPalette: string;
+    /**
+     * The sheet's fixed row for the key that opens the sheet [kpadopt5]
+     */
+    shortcutsSheet: string;
+    /**
+     * What a screen reader hears while a chord waits for its second key [kpadopt5]
+     */
+    shortcutsPending: string;
+    /**
+     * The short line after a chord that does nothing, "No shortcut on g x" [kpadopt5]
+     */
+    shortcutsUnknown: (keys: string) => string;
+    /**
+     * The warning for a key that needs AltGr on an AZERTY keyboard [kpadopt5]
+     */
+    shortcutsAltGr: (keys: string, suggestion: string) => string;
+    /**
+     * The sheet's note on a shortcut that is not available right now [kpadopt5]
+     */
+    shortcutsUnavailable: string;
+    /**
+     * The button that opens a collapsed lede (js/lede.js) [kpadopt5]
+     */
+    ledeMore: string;
+    /**
+     * The button that folds it again [kpadopt5]
+     */
+    ledeLess: string;
+    /**
+     * The link at the end of a lede that carries `data-kp-lede-link` [kpadopt5]
+     */
+    ledeLearnMore: string;
+    /**
+     * The label before the remedy of a problem, "What now" (js/problems.js) [kpadopt5]
+     */
+    problemRemedy: string;
+    /**
+     * The button that opens the problems folded away, "Show the other 3" [kpadopt5]
+     */
+    problemShowOthers: (n: number) => string;
+    /**
+     * The button that folds them again [kpadopt5]
+     */
+    problemShowFewer: string;
+    /**
+     * The copy button on a remedy that is a command [kpadopt5]
+     */
+    problemCopy: string;
+    /**
+     * The name of a list of problems for a screen reader, "3 problems" [kpadopt5]
+     */
+    problemListLabel: (n: number) => string;
+    /**
+     * The word on a button after its work went well and the page gave no word of its own (js/flash.js) [kpadopt5]
+     */
+    flashDone: string;
+    /**
+     * The word on a button after the work was refused [kpadopt5]
+     */
+    flashRefused: string;
+    /**
+     * The word on a button after the work failed without an answer [kpadopt5]
+     */
+    flashFailed: string;
+    /**
      * The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
      */
     graphShowAll: string;
@@ -2244,6 +2332,28 @@ export type Strings = {
  * @property {string} compareFailed  A pane whose image could not be loaded [kpadopt4-ideas]
  * @property {string} compareRetry  The Retry button of a pane whose image could not be loaded [kpadopt4 r2]
  * @property {string} compareLoading  What the busy card over a compare slider says while its images load [kpadopt4 r2]
+ * @property {string} calmOn  The polite announcement when calm mode is switched on (js/calm.js) [kpadopt5]
+ * @property {string} calmOff  The same, when it is switched off [kpadopt5]
+ * @property {string} calmSystem  The reason the calm switch is disabled while the system itself asks for less motion [kpadopt5]
+ * @property {string} shortcutsEmptyTitle  The shortcut sheet's empty state, when no shortcut is registered (js/shortcuts.js) [kpadopt5]
+ * @property {string} shortcutsEmptyText  Its second line [kpadopt5]
+ * @property {string} shortcutsPalette  The sheet's fixed row for the command palette key [kpadopt5]
+ * @property {string} shortcutsSheet  The sheet's fixed row for the key that opens the sheet [kpadopt5]
+ * @property {string} shortcutsPending  What a screen reader hears while a chord waits for its second key [kpadopt5]
+ * @property {(keys: string) => string} shortcutsUnknown  The short line after a chord that does nothing, "No shortcut on g x" [kpadopt5]
+ * @property {(keys: string, suggestion: string) => string} shortcutsAltGr  The warning for a key that needs AltGr on an AZERTY keyboard [kpadopt5]
+ * @property {string} shortcutsUnavailable  The sheet's note on a shortcut that is not available right now [kpadopt5]
+ * @property {string} ledeMore  The button that opens a collapsed lede (js/lede.js) [kpadopt5]
+ * @property {string} ledeLess  The button that folds it again [kpadopt5]
+ * @property {string} ledeLearnMore  The link at the end of a lede that carries `data-kp-lede-link` [kpadopt5]
+ * @property {string} problemRemedy  The label before the remedy of a problem, "What now" (js/problems.js) [kpadopt5]
+ * @property {(n: number) => string} problemShowOthers  The button that opens the problems folded away, "Show the other 3" [kpadopt5]
+ * @property {string} problemShowFewer  The button that folds them again [kpadopt5]
+ * @property {string} problemCopy  The copy button on a remedy that is a command [kpadopt5]
+ * @property {(n: number) => string} problemListLabel  The name of a list of problems for a screen reader, "3 problems" [kpadopt5]
+ * @property {string} flashDone  The word on a button after its work went well and the page gave no word of its own (js/flash.js) [kpadopt5]
+ * @property {string} flashRefused  The word on a button after the work was refused [kpadopt5]
+ * @property {string} flashFailed  The word on a button after the work failed without an answer [kpadopt5]
  * @property {string} graphShowAll  The network graph's way back to every node and every kind of link (js/graph.js) [scope-143]
  * @property {string} graphShowAllTitle  Its title [scope-143]
  * @property {string} graphHint  The hint under the graph, and the second half of its picture's accessible name: what a pointer, a click and the keys do [scope-143]

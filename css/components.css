@@ -16748,6 +16748,436 @@
     }
 }
 
+/* ===== kpadopt5-basics: calm mode, the shortcut engine, the lede, the problem alert, the flash button ===== */
+@layer kp.components {
+    /* --- Calm mode [kpadopt5] ---
+ * `html[data-kp-calm]` (js/calm.js) turns movement and effects off even when the system does not ask for less. CSS cannot
+ * force a media query, so the page answers its own flag here, in the one place: the stylesheet declares its animations
+ * under `prefers-reduced-motion: no-preference` with the finished look as the base, so "no animation" is exactly the
+ * look a reader with the system setting sees. `!important` is what reaches into kp.register and kp.signature from this
+ * earlier layer (as the progress bar's reduced-motion rule does). Scope, on the root as `data-kp-calm-scope`: `motion`
+ * stops the transitions only; `effects` (the default) also stops every animation, so glow, flicker and glitch hold their
+ * still look; `all` also holds loading still. Loading is the exception that Kenny asked for (2026-10-05: loading is always
+ * animated; 2026-10-17: it keeps moving softly): a spinner or skeleton breathes as one slow pulse of its opacity, and the
+ * pieces inside it stand still. Knob: `--kp-calm-pulse` (2400ms). */
+    :root[data-kp-calm],
+    :root[data-kp-calm] body {
+        scroll-behavior: auto !important;
+    }
+
+    :root[data-kp-calm] *,
+    :root[data-kp-calm] *::before,
+    :root[data-kp-calm] *::after {
+        transition: none !important;
+    }
+
+    :root[data-kp-calm]:not([data-kp-calm-scope='motion']) *,
+    :root[data-kp-calm]:not([data-kp-calm-scope='motion']) *::before,
+    :root[data-kp-calm]:not([data-kp-calm-scope='motion']) *::after {
+        animation: none !important;
+    }
+
+    :root[data-kp-calm]:not([data-kp-calm-scope='motion'], [data-kp-calm-scope='all'], [data-kp-calm-loading='still'])
+        :is(.kp-spinner, .kp-skeleton) {
+        animation: kp-calm-pulse var(--kp-calm-pulse, 2400ms) ease-in-out infinite !important;
+    }
+
+    @keyframes kp-calm-pulse {
+        50% {
+            opacity: 0.45;
+        }
+    }
+
+    /* --- The lede [kpadopt5] ---
+ * The short muted paragraph under a section or card title that says what this part does, and `.kp-field__why`, the
+ * reason line under a field. Seen from a screen reader as the heading's description (js/lede.js). Knobs [KT6]:
+ * `--kp-lede-measure` (70ch; `data-kp-lede-measure` narrow 48ch, full), `--kp-lede-size` (0.9375rem), `data-kp-lede-collapsible`
+ * folds a long text after its first sentences. */
+    .kp-lede {
+        max-inline-size: var(--kp-lede-measure, 70ch);
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-lede-size, 0.9375rem);
+        line-height: var(--kp-line-height, 1.5);
+        text-wrap: pretty;
+    }
+
+    .kp-lede[data-kp-lede-measure='narrow'] {
+        --kp-lede-measure: 48ch;
+    }
+
+    .kp-lede[data-kp-lede-measure='full'] {
+        --kp-lede-measure: none;
+    }
+
+    .kp-lede[data-kp-lede-tone='plain'] {
+        color: var(--foreground);
+    }
+
+    .kp-lede__link {
+        white-space: nowrap;
+    }
+
+    .kp-lede__toggle {
+        display: block;
+        justify-self: start;
+        inline-size: fit-content;
+        margin-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-field__why {
+        font-size: var(--kp-field-help-size, 0.8rem);
+        line-height: var(--kp-line-height, 1.5);
+        color: var(--muted-foreground);
+    }
+
+    .kp-field__why[data-kp-blocking] {
+        color: var(--destructive);
+    }
+
+    /* --- The problem alert [kpadopt5] ---
+ * What is wrong, why, and what to do now, plus the fix. The parts are typography inside the theme's own alert plate:
+ * `.kp-alert__what` (the line the eye reads first), `__why`, `__remedy` (with `__remedy-label`, "What now", and a
+ * command in `__command` with its Copy), `__actions` (the fix, beside the text; under it on a narrow container). A
+ * container of several, `.kp-problems` (js/problems.js), takes no room when it holds none, lays them in one column
+ * worst first and, as `list` or from five folded, holds them in one alert (`__summary`, `__list`, `__item`). On a
+ * container, `data-kp-problem-layout="inline"` runs the three parts into one paragraph. A problem in the container wears
+ * the attention band's soft tint (`--kp-problem-tint`, 8 %) with the tone of its severity. Knobs [KT6]:
+ * `--kp-problem-gap` (--kp-space-sm), `--kp-problem-tint`, `--kp-problem-icon` (1.75rem). */
+    .kp-problems {
+        container: kp-problems / inline-size;
+        display: grid;
+        gap: var(--kp-problem-gap, var(--kp-space-sm, 0.5rem));
+    }
+
+    .kp-problems:not(:has(> *)) {
+        display: none;
+    }
+
+    .kp-alert__body {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-alert__what,
+    .kp-alert__why,
+    .kp-alert__remedy,
+    .kp-alert__summary {
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-alert__what,
+    .kp-alert__summary {
+        font-weight: 600;
+    }
+
+    .kp-alert__remedy-label {
+        margin-inline-end: var(--kp-space-xs, 0.25rem);
+        font-weight: 600;
+    }
+
+    .kp-alert__actions {
+        display: flex;
+        flex: none;
+        flex-wrap: wrap;
+        align-items: center;
+        align-self: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-alert__command {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        margin-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-alert__code {
+        padding: 0.25rem var(--kp-space-sm, 0.5rem);
+        border-radius: var(--radius, 0.5rem);
+        background: color-mix(in oklab, currentColor 10%, transparent);
+        font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-problem {
+        align-items: flex-start;
+    }
+
+    .kp-problem > .kp-alert__icon {
+        display: grid;
+        place-items: center;
+        inline-size: var(--kp-problem-icon, 1.75rem);
+        block-size: var(--kp-problem-icon, 1.75rem);
+        border-radius: 50%;
+        background: var(--kp-problem-tone, currentColor);
+        color: var(--kp-problem-on-tone, var(--background));
+        font-weight: 700;
+    }
+
+    .kp-problem > .kp-alert__body {
+        flex: 1 1 0;
+    }
+
+    .kp-problem > .kp-alert__actions {
+        align-self: center;
+    }
+
+    .kp-problems > .kp-problem {
+        border-color: color-mix(in oklab, var(--kp-problem-tone) 45%, var(--border));
+        background: color-mix(in oklab, var(--kp-problem-tone) var(--kp-problem-tint, 8%), var(--card));
+        color: var(--foreground);
+    }
+
+    .kp-problem[data-kp-severity='critical'] {
+        --kp-problem-tone: var(--destructive);
+        --kp-problem-on-tone: var(--destructive-foreground);
+    }
+
+    .kp-problem[data-kp-severity='warning'] {
+        --kp-problem-tone: var(--warning-foreground);
+        --kp-problem-on-tone: var(--warning);
+    }
+
+    .kp-problem[data-kp-severity='info'] {
+        --kp-problem-tone: var(--info-foreground);
+        --kp-problem-on-tone: var(--info);
+    }
+
+    .kp-problems[data-kp-problem-layout='inline'] .kp-alert__body {
+        display: block;
+    }
+
+    .kp-problems[data-kp-problem-layout='inline'] :is(.kp-alert__what, .kp-alert__why, .kp-alert__remedy) {
+        display: inline;
+        margin-inline-end: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-alert__list {
+        display: grid;
+        gap: 0;
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-alert__item {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        padding-block: var(--kp-space-sm, 0.5rem);
+        box-shadow: inset 0 1px 0 color-mix(in oklab, currentColor 18%, transparent);
+    }
+
+    .kp-alert__item[hidden] {
+        display: none;
+    }
+
+    .kp-alert__item > :is(.kp-alert__what, .kp-alert__why, .kp-alert__remedy) {
+        grid-column: 1;
+    }
+
+    .kp-alert__item > .kp-alert__actions {
+        grid-column: 2;
+        grid-row: 1 / span 3;
+    }
+
+    .kp-problems__more {
+        justify-self: start;
+        margin-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    @container kp-problems (max-width: 34rem) {
+        .kp-problem {
+            flex-wrap: wrap;
+        }
+
+        .kp-problem > .kp-alert__actions {
+            flex: 1 0 100%;
+        }
+
+        .kp-problem > .kp-alert__actions > * {
+            flex: 1 1 auto;
+        }
+
+        .kp-alert__item {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-alert__item > .kp-alert__actions {
+            grid-column: 1;
+            grid-row: auto;
+        }
+    }
+
+    /* --- The shortcut engine's parts [kpadopt5] ---
+ * The pending chord ("g …") near the bottom edge while the second key is awaited (js/shortcuts.js), the sheet's
+ * dimmed row for a key that is not available now (with its reason), and the sheet's empty state at the sheet's own
+ * footprint. Knobs [KT6]: `--kp-shortcuts-state-min` (14rem). */
+    .kp-shortcuts-pending {
+        position: fixed;
+        inset-block-end: calc(var(--kp-space-lg, 1rem) + var(--kp-tabbar-rise, 0px));
+        inset-inline: 0;
+        z-index: var(--kp-z-popover, 20);
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        inline-size: fit-content;
+        max-inline-size: calc(100% - 2 * var(--kp-space-lg, 1rem));
+        margin-inline: auto;
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-shortcuts-pending[hidden] {
+        display: none;
+    }
+
+    .kp-shortcuts__row--off .kp-palette__keys {
+        opacity: 0.55;
+    }
+
+    .kp-shortcuts__reason {
+        display: block;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-shortcuts__empty {
+        display: grid;
+        align-content: center;
+        justify-items: center;
+        min-block-size: var(--kp-shortcuts-state-min, 14rem);
+        margin: 0.75rem 0 0;
+    }
+
+    .kp-shortcuts__empty .kp-empty__title {
+        font-size: var(--kp-text-lg, 1.125rem);
+    }
+
+    .kp-shortcuts__empty .kp-empty__body {
+        max-inline-size: 32ch;
+        margin: 0;
+    }
+
+    /* --- A disabled control says why [kpadopt5] ---
+ * The wrapper js/reason.js puts round a control that carries `data-kp-disabled-reason`: it takes the pointer a disabled
+ * button does not, and its tooltip shows only while the control is off. */
+    .kp-reason {
+        display: inline-flex;
+    }
+
+    .kp-reason:not([data-kp-reason-off]) > .kp-tooltip {
+        display: none !important;
+    }
+
+    .kp-reason[data-kp-reason-off] {
+        cursor: not-allowed;
+    }
+
+    /* --- The flash button [kpadopt5] ---
+ * A button that shows busy, then its result for a moment, without its width moving (js/flash.js). The faces share one
+ * grid cell (rest, busy) plus an unseen copy of every word the button may say, so the widest holds the width; the
+ * result is a tone plate laid over the whole button, so it reads on any theme's button. A refusal's sentence stands in
+ * `.kp-flash__line` under the button until the next press. Knobs [KT6]: `--kp-flash-line-min` (1.5rem, the room a
+ * line keeps so nothing under it moves). */
+    .kp-flash {
+        position: relative;
+    }
+
+    .kp-flash__stack {
+        display: inline-grid;
+        justify-items: center;
+        align-items: center;
+        max-inline-size: 100%;
+    }
+
+    .kp-flash__stack > * {
+        grid-area: 1 / 1;
+    }
+
+    .kp-flash__face {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        text-align: center;
+        visibility: hidden;
+    }
+
+    .kp-flash__face--busy {
+        --kp-spinner-size: 1em;
+        white-space: nowrap;
+    }
+
+    .kp-flash[data-kp-flash-state='rest'] .kp-flash__face--rest,
+    .kp-flash[data-kp-flash-state='busy'] .kp-flash__face--busy {
+        visibility: visible;
+    }
+
+    .kp-flash__ghost {
+        block-size: 0;
+        overflow: hidden;
+        visibility: hidden;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    .kp-flash__face--result {
+        position: absolute;
+        inset: 0;
+        grid-area: auto;
+        padding-inline: inherit;
+        border-radius: inherit;
+        white-space: nowrap;
+    }
+
+    .kp-flash[data-kp-flash-state='success'] .kp-flash__face--result {
+        visibility: visible;
+        background: var(--success);
+        color: var(--success-foreground);
+    }
+
+    .kp-flash[data-kp-flash-state='refused'] .kp-flash__face--result {
+        visibility: visible;
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    .kp-flash[data-kp-width='grow'] .kp-flash__stack > :is(.kp-flash__face--rest, .kp-flash__face--busy, .kp-flash__ghost) {
+        display: none;
+    }
+
+    .kp-flash[data-kp-width='grow'] .kp-flash__face--result {
+        position: static;
+        grid-area: 1 / 1;
+        white-space: normal;
+    }
+
+    .kp-flash[aria-busy='true'] {
+        cursor: progress;
+    }
+
+    .kp-flash__line {
+        min-block-size: var(--kp-flash-line-min, 1.5rem);
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        color: var(--foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-flash__line[data-kp-tone='destructive'] {
+        color: var(--destructive);
+    }
+}
+
 /* The tour's dim is the target's box-shadow, and a register that gives the part a shadow of its own (a card's rim) wins over
  * kp.components, so on such a step the page was not dimmed at all and the dim flashed off and on between steps (Kenny,
  * 2026-10-13: "an effect that flashes over the screen when going from the second window ... into the last"). Restated in the
