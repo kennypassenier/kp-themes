@@ -288,7 +288,7 @@ control.addEventListener(<span class="kp-code__string">'kp-refresh'</span>, (eve
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
-                            <tr><td><code>data-kp-look</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-look</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-refresh</code></td><td>selector, read</td></tr>
                             <tr><td><code>data-kp-refresh-choices</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-refresh-hover</code></td><td>read</td></tr>
@@ -337,7 +337,7 @@ control.addEventListener(<span class="kp-code__string">'kp-refresh'</span>, (eve
                             <tr><td><code>data-kp-refresh-choices</code></td><td>The seconds offered, `0,15,30,60,300` by default (0 is paused). “Other…” takes any whole number of seconds.</td></tr>
                             <tr><td><code>data-kp-refresh-mode</code></td><td>`event` (default: the app fetches), `page` (reload the page) or `region` (fetch the same URL and swap only the region).</td></tr>
                             <tr><td><code>data-kp-refresh-region</code></td><td>The selector of the element swapped in `region` mode; focus and scroll stay.</td></tr>
-                            <tr><td><code>data-kp-look</code></td><td>`menu` (default) or `segmented`.</td></tr>
+                            <tr><td><code>data-kp-look</code></td><td>`segmented` (default) or `menu`.</td></tr>
                             <tr><td><code>data-kp-remember</code></td><td>A name: the choice is kept per page and device.</td></tr>
                             <tr><td><code>data-kp-stale-after</code></td><td>Seconds after which the freshness line turns stale; three times the interval by default.</td></tr>
                             <tr><td><code>data-kp-refresh-hover</code></td><td>`pause`: no refresh while the pointer is over a table being read.</td></tr>

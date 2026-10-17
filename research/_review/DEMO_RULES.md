@@ -48,6 +48,10 @@ checked by looking, in Firefox, in the review dialog.
 - A pressed state Kenny sets stays across options, aspects, themes and visits; an action never resets it (Replay included). [fix-112, fix-115 2026-10-06 "state moet onthouden worden"] by hand: press a state, flip, replay, change theme.
 - The network graph changes in no theme. [2026-10-07 02:54 "dat is overal goed"] by hand: do not touch it.
 
+- The same function sits in the same position in every row and every state: actions such as "Mark unread" line up in one fixed column (a grid), never left-aligned by the flow of the text before them. [2026-10-17 22:09 notices "I told you before … Same functionality needs to be in the same position every time"; web-grid rule 2026-10] by hand: put each section into its states and compare the rows.
+- A new component that opens a menu, list or popover uses the package's existing surface for it (`.kp-menu`, the popover, the combobox list); it never paints its own. Those surfaces already render in every theme and are measured by `measure-plate.mjs` and gates/check-raised-plate.mjs. [2026-10-17 22:09 sentence menu "bijna helemaal zwart"; 22:23 "Volg gewoon wat er al bestaat"; correction states-1017] by hand: open it beside an existing menu.
+- A variant the demo offers that could be a setting is a component option with a default, switchable at runtime (an attribute change re-renders); the demo shows that switch working. Ask Kenny only which option is the default. [2026-10-17 22:09 problem-alert, connection, conversation-thread] by hand: flip the attribute in the console.
+
 ## 3. States
 
 - Failed, empty and loading states fill the component's full normal footprint, with a normal-size action (Retry). [2026-10-16 23:07 "de hele grootte van de component gebruiken"] by hand: measure each state's height in Firefox against the loaded height.

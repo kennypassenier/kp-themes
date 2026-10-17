@@ -305,6 +305,8 @@ setTransfer(row, { done: <span class="kp-code__string">1200000000</span>, total:
                             <tr><td><code>data-kp-stalled</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-transfer</code></td><td>selector</td></tr>
                             <tr><td><code>data-kp-transfer-name</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-transfer-settle</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-transfer-unknown</code></td><td>read, written</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
@@ -348,6 +350,8 @@ setTransfer(row, { done: <span class="kp-code__string">1200000000</span>, total:
                             <tr><td><code>data-kp-bytes-base</code></td><td>`1000` (default) or `1024`.</td></tr>
                             <tr><td><code>data-kp-show</code></td><td>The parts of the reading: `done,total,rate,eta,percent`, all by default.</td></tr>
                             <tr><td><code>data-kp-linger</code></td><td>Seconds a finished transfer stays; 30, 0 keeps it.</td></tr>
+                            <tr><td><code>data-kp-transfer-unknown</code></td><td>Written on the row while the total is unknown: the bar is one full band that breathes in place instead of a busy sweep that restarts.</td></tr>
+                            <tr><td><code>data-kp-transfer-settle</code></td><td>Written for a moment when the size turns out: the bar settles from where the breathing was into the finished bar.</td></tr>
                             <tr><td><code>data-kp-announce</code></td><td>`state` (default) says 25, 50, 75 and 100 percent; `off`.</td></tr>
                             <tr><td><code>data-kp-fold-at</code></td><td>On the group: the width (46rem) below which the name stands on its own line and the numbers under the bar.</td></tr>
                             <tr><td><code>states</code></td><td>Running, estimating, stalled (warning plate), done (“4.1 GB in 3 min 12 s”), failed (the app’s reason and Retry) and total unknown (an indeterminate bar).</td></tr>

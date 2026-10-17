@@ -18,7 +18,8 @@
 //   data-kp-follow-threshold  px from the end that still count as following (default 24)
 //   data-kp-pill-placement    `bottom` | `top`; default the end the rows arrive at
 //   data-kp-pill-unit         "line,lines": the app's word for a row, singular and plural
-//   data-kp-since-left        a divider "New since 14:32" before the first row that came while the tab was away
+//   data-kp-since-left        on by default: a divider "New since 14:32" before the first row that came while the tab was away;
+//                             `off` leaves it out (read each time, so it can be switched at runtime)
 //   data-kp-follow-key        the key that jumps back and follows again (default End, Home for `head`)
 //   data-kp-follow-space      Space pauses and resumes following, for a log
 //
@@ -99,7 +100,7 @@ function attachOne(el, options) {
     const unitRaw = (options.unit ?? el.getAttribute('data-kp-pill-unit') ?? '').split(/[,/]/).map((w) => w.trim());
     const unitOne = unitRaw[0] || strings.newpillUnitOne;
     const unitMany = unitRaw[1] || (unitRaw[0] ? `${unitRaw[0]}s` : strings.newpillUnitMany);
-    const sinceLeft = () => options.sinceLeft ?? el.hasAttribute('data-kp-since-left');
+    const sinceLeft = () => options.sinceLeft ?? !['off', 'false'].includes(el.getAttribute('data-kp-since-left') ?? '');
     const keyName = options.key ?? el.getAttribute('data-kp-follow-key') ?? (head ? 'Home' : 'End');
     const space = options.space ?? el.hasAttribute('data-kp-follow-space');
 

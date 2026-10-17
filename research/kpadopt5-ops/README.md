@@ -17,3 +17,10 @@ per part, each with an Expected block, a look-at line and the controls that pres
 Kenny's answers of 2026-10-17 are binding where they differ from the spec: auto refresh opens at 30 s and takes any value; a question card
 stays with its outcome; the notification centre is a panel with the newest plus the Inbox page; a folded list and detail shows one pane at
 a time with a Back button.
+
+Round 2 (2026-10-17): only connection, transfer and notices are back. The connection banner stands at the foot by default
+(`data-kp-placement="top"` puts it under the navigation bar; both shown); a transfer of unknown size breathes in place and settles
+(the busy bar restarted because `build()` moved its nodes on every report); Mark read / Mark unread is the first slot of the
+actions grid in every notice. The round-1 page is in `_previous/`.
+
+Page round id: `ops-553b88cf-7ad0-4d60-b4b1-19d4090d8b91`, received: `ops-c17983a9-c644-4e17-b04b-bf6ed4735b60`.

@@ -223,7 +223,8 @@
 
 .k5-log > li {
     display: grid;
-    grid-template-columns: 5.5ch 6ch minmax(0, 1fr);
+    /* Fixed columns that fit their longest word in the monospace face: 14:32:08, ERROR. */
+    grid-template-columns: 8ch 5ch minmax(0, 1fr);
     gap: var(--kp-space-sm, 0.5rem);
     padding: 0.125rem var(--kp-space-sm, 0.5rem);
 }

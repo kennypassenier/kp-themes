@@ -20782,6 +20782,25 @@
         text-overflow: clip;
     }
 
+    /* The list a sentence's select opens is the platform's own, and it paints the select's background: the field is
+     * transparent (an underline), so the list came up almost black in formal [kpadopt5-r2]. It wears the popover's surface
+     * and ink, the same tokens the package's other opened lists use (`select.kp-field__input` below, the combobox). */
+    .kp-sentence__field > select:open,
+    .kp-sentence__field > select option,
+    .kp-sentence__field > select optgroup {
+        background-color: var(--popover, var(--background));
+        color: var(--popover-foreground, var(--foreground));
+    }
+
+    /* Its drawn list is as wide as its longest option, never narrower than the field: "every week" stays on one line. */
+    .kp-sentence__field [data-kp-select-list] {
+        min-inline-size: max-content;
+    }
+
+    .kp-sentence__field [data-kp-select-list] > [role='option'] {
+        white-space: nowrap;
+    }
+
     .kp-sentence__field:has(> select)::after {
         content: var(--kp-glyph-caret, '▾');
         position: absolute;
@@ -21106,6 +21125,13 @@
 
     .kp-slider__bubble[data-kp-thumb='1'] {
         inset-inline-start: calc(var(--kp-slider-thumb) / 2 + (100% - var(--kp-slider-thumb)) * var(--kp-slider-at-1, 1));
+    }
+
+    /* Where the number is shown is an option (`data-kp-slider-value`, stamped as `data-kp-slider-show`): the bubble only for
+     * `bubble` and `both`, the box only for `field` and `both`. The default is the box; the bubble is off [kpadopt5-r2]. */
+    .kp-slider:not([data-kp-slider-show='bubble'], [data-kp-slider-show='both']) .kp-slider__bubble,
+    .kp-slider:is([data-kp-slider-show='bubble'], [data-kp-slider-show='none']) .kp-slider__fields {
+        display: none;
     }
 
     .kp-slider[data-kp-dragging] .kp-slider__bubble,
@@ -21835,6 +21861,10 @@
     .kp-problems {
         container: kp-problems / inline-size;
         display: grid;
+        /* An inline-size container has no intrinsic width: in a start-aligned grid cell or a flex item it collapsed to a
+         * few pixels (round 1 of kpadopt5-basics). It always takes the width of the place it stands in. */
+        inline-size: 100%;
+        min-inline-size: 0;
         gap: var(--kp-problem-gap, var(--kp-space-sm, 0.5rem));
     }
 
@@ -22060,6 +22090,20 @@
  * button does not, and its tooltip shows only while the control is off. */
     .kp-reason {
         display: inline-flex;
+    }
+
+    /* A control that fills its line (a slider, the weekday picker) is an inline-size container with no intrinsic width: in a
+     * shrink-wrapped anchor it collapsed to 0, and its reason broke one letter per line [kpadopt5-r2]. The anchor then takes
+     * the line, and the control the anchor's width. */
+    .kp-reason:has(> :is(.kp-slider, .kp-weekdays, .kp-sentence)) {
+        display: flex;
+        inline-size: 100%;
+        min-inline-size: 0;
+    }
+
+    .kp-reason > :is(.kp-slider, .kp-sentence) {
+        inline-size: 100%;
+        min-inline-size: 0;
     }
 
     .kp-reason:not([data-kp-reason-off]) > .kp-tooltip {
@@ -22754,8 +22798,8 @@
      * what / why / what now lines and the exact count of waiting changes sit in one
      * block; Retry now stays at the end. The plate keeps one height in every state
      * (--kp-connection-min), so a state change moves nothing under it. On a phone it is
-     * one line plus Retry now. `data-kp-placement="bottom"` sticks it to the window's
-     * foot. Knobs [KT6]: --kp-connection-min (6.25rem wide, 6rem on a phone). */
+     * one line plus Retry now. The foot of the window is the default;
+     * `data-kp-placement="top"` puts it in the flow under the navigation bar. Knobs [KT6]: --kp-connection-min (6.25rem wide, 6rem on a phone). */
     .kp-connection {
         container: kp-connection / inline-size;
         display: block;
@@ -22766,8 +22810,11 @@
         display: none;
     }
 
-    .kp-connection[data-kp-placement='bottom'] {
-        position: sticky;
+    /* The foot is the default: fixed to the bottom edge of the window (of the nearest frame that contains fixed boxes), over
+     * the last lines until it goes. `top` puts it in the flow under the navigation bar. */
+    .kp-connection:not([data-kp-placement='top']) {
+        position: fixed;
+        inset-inline: 0;
         inset-block-end: 0;
         z-index: var(--kp-z-sticky, 10);
     }
@@ -22929,6 +22976,51 @@
 
     .kp-progress-group--transfer[data-kp-narrow] .kp-transfer > .kp-progress__value {
         text-align: start;
+    }
+
+    /* A transfer of unknown size is a full band that breathes in place (an alternating opacity, so nothing restarts) and
+     * settles into the finished bar when the size is known, instead of a busy sweep that loops from the start and then
+     * jumps to full [kpadopt5-r2]. A register that draws its own busy bar repeats these two rules for its theme. */
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-transfer[data-kp-transfer-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            inset-inline: 0;
+            inline-size: auto;
+            transform: none;
+            animation:
+                kp-transfer-enter 700ms ease-out,
+                kp-transfer-breathe 2600ms ease-in-out infinite alternate;
+        }
+
+        .kp-transfer[data-kp-transfer-settle] .kp-progressbar__fill {
+            animation: kp-transfer-settle 480ms ease-out;
+        }
+    }
+
+    @keyframes kp-transfer-enter {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    @keyframes kp-transfer-breathe {
+        from {
+            opacity: 0.4;
+        }
+        to {
+            opacity: 0.85;
+        }
+    }
+
+    @keyframes kp-transfer-settle {
+        from {
+            opacity: var(--kp-settle-from, 0.85);
+        }
+        to {
+            opacity: 1;
+        }
     }
 
     /* kpadopt5-ops:transfer:end */
@@ -23328,12 +23420,27 @@
         font-size: var(--kp-text-sm, 0.8125rem);
     }
 
+    /* Two fixed slots: Mark read / Mark unread is always the first, at the same place in every row; the fix, when the
+     * notice has one, is the second. Never placed by the flow of what comes before it [kpadopt5-r2]. Knob
+     * --kp-notices-read-col (7.5rem, wide enough for "Mark unread"). */
     .kp-notices__actions {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: var(--kp-notices-read-col, 7.5rem) minmax(0, max-content);
+        justify-content: start;
+        align-items: center;
         gap: var(--kp-space-sm, 0.5rem);
         grid-column: 2;
         margin-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-notices__actions > .kp-notices__mark-read {
+        grid-column: 1;
+        justify-self: start;
+        white-space: nowrap;
+    }
+
+    .kp-notices__actions > .kp-notices__fix {
+        grid-column: 2;
     }
 
     .kp-notices__foot {
@@ -23846,7 +23953,6 @@
             min-block-size: 2.5rem;
         }
     }
-
 }
 
 @layer kp.components {
@@ -25713,6 +25819,20 @@
 
     .kp-jsonfield:not([data-kp-json-gutter]) .kp-jsonfield__gutter {
         display: none;
+    }
+
+    /* The numbers are laid over the gutter, not in it: a long text has more numbers than the box shows, and numbers that
+     * take part in the layout made the gutter (and so the whole frame) as tall as all of them. The gutter is exactly as tall
+     * as the text box and clips; the numbers move with the text's scroll [kpadopt5-r2]. */
+    .kp-jsonfield__gutter {
+        position: relative;
+    }
+
+    .kp-jsonfield__numbers {
+        position: absolute;
+        inset-block-start: calc(var(--kp-space-sm, 0.5rem) * 0.75);
+        inset-inline: 0 var(--kp-space-sm, 0.5rem);
+        will-change: transform;
     }
 
     .kp-jsonfield__number {
@@ -91575,6 +91695,31 @@
         [data-theme='formal'] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
             display: block;
             animation: kp-sig-formal-bar-head var(--kp-sig-fm-loop) linear infinite;
+        }
+    }
+
+    /* A transfer of unknown size [kpadopt5-r2; Kenny, 2026-10-17 22:09: "the second bar keeps starting from the beginning
+       before suddenly filling completely. Make it less hectic"]: the ruled band stands across the whole track and breathes
+       in place, the second rule waits for the end, and the finished bar settles from it without a jump. */
+    [data-theme='formal'] .kp-transfer[data-kp-transfer-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::after {
+        animation: none;
+        opacity: 0;
+    }
+
+    [data-theme='formal'] .kp-transfer[data-kp-transfer-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+        animation: none;
+        display: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='formal'] .kp-transfer[data-kp-transfer-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            animation:
+                kp-transfer-enter 700ms ease-out,
+                kp-transfer-breathe 2600ms ease-in-out infinite alternate;
+        }
+
+        [data-theme='formal'] .kp-transfer[data-kp-transfer-settle] .kp-progressbar__fill {
+            animation: kp-transfer-settle 480ms ease-out;
         }
     }
 

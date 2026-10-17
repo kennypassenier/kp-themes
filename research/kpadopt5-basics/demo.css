@@ -230,3 +230,17 @@
     justify-self: stretch;
     inline-size: 100%;
 }
+
+/* The options of the problem alert: the layout, the fold threshold and the two actions stand in one wrapping row. */
+.kb-actions--options {
+    align-items: end;
+}
+
+.kb-fold-from {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.kb-fold-from .kp-field__input {
+    inline-size: 6rem;
+}
