@@ -77,7 +77,7 @@
 // what is featured (`data-kp-featured`) or was run last (`data-kp-recent="5"`) is all that shows before anything is
 // typed (a palette with none of those still shows every command), at most `data-kp-max-shown` (40) rows show and the
 // status line says how many matched. A query nothing answers shows the package's empty plate with a hint that names the
-// verb's subjects (`data-kp-verb`, `data-kp-subject-name`); `data-kp-nomatch="status"` keeps the old status line alone.
+// verb's subjects (`data-kp-verb`, `data-kp-subject-name`) when the palette sets `data-kp-nomatch="plate"`; the default stays the approved status line alone.
 // `handle.setState('loading' | 'error')` shows the busy card over the list, or the failed plate with Retry beside the
 // commands marked `data-kp-static`. `data-kp-match="substring"` (or `prefix`, `subsequence`) brings the older matchers
 // back for one palette. Other options: `data-kp-fold-diacritics`, `data-kp-split-hyphen`, `data-kp-typo="1"`,
@@ -513,7 +513,7 @@ function createIntentFilter(dialog, list, status) {
 
         // An empty or a failed list is a plate in the list's footprint, never a line in a corner.
         if (failed) showPlate('error', s.paletteFailed, stateOptions.message ?? s.paletteFailedText, false);
-        else if (shownCount === 0 && want.length > 0 && dialog.dataset.kpNomatch !== 'status') {
+        else if (shownCount === 0 && want.length > 0 && dialog.dataset.kpNomatch === 'plate') {
             const verbs = [...new Set(options.map((o) => o.dataset.kpVerb).filter((v) => v))];
             const verb = verbs.find((v) => want.length > 1 && intentWords(v ?? '', mode)[0]?.startsWith(want[0]));
             const subjects = verb
