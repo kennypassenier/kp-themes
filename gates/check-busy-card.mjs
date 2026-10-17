@@ -66,6 +66,7 @@ export const NOT_DATA = {
     'js/tick.js': 'a number counting to its value, no loading state of its own',
     'js/barcell.js': 'a cell of a data table, which lays the card over its rows (`dataTable().busy({ overlay: true })`)',
     'js/forms.js': "a submit button's busy state",
+    'js/snooze.js': "the picker's button shows the theme's spinner while the page saves the reminder (setSnoozeBusy); no data area",
     'js/menu-button.js': "a menu's loading items, inside the menu's own plate",
     'js/segmented.js': "a segment's busy mark",
     'js/tabbar.js': "a tab's busy mark",

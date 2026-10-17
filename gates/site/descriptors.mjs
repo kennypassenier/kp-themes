@@ -3642,6 +3642,37 @@ setGanttState(timeline, 'loading');
         ],
     },
     {
+        id: 'snooze',
+        title: 'Snooze picker',
+        group: 'Forms',
+        classes: ['kp-snooze'],
+        exports: [],
+        intro: 'A “remind me later” picker: a button with a menu (or a row of chips) of quick choices, each over the exact moment it means, and a date and time of your own. Choices that have passed or lie too far away are left out.',
+        whenToUse: 'Where a reminder, a notification or a to-do can be put off. For choosing a date only, use the date picker.',
+        examples: [
+            {
+                title: 'The mix',
+                why: 'The markup is the empty box; the script builds the button, the menu and the panel.',
+                markup: `
+<div class="kp-snooze" data-kp-snooze data-kp-snooze-choices="1h 4h tonight tomorrow monday pick"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-snooze-choices', what: 'The choices, space separated: `15m`, `1h`, `4h`, `tonight`, `tomorrow`, `monday`, `next-week`, `pick`.' },
+            { name: 'data-kp-snooze-morning', what: 'What tomorrow, Monday and next week mean; 09:00.' },
+            { name: 'data-kp-snooze-evening', what: 'What tonight means; 18:00.' },
+            { name: 'data-kp-snooze-max', what: 'The longest a reminder may be put off; 7d.' },
+            { name: 'data-kp-look', what: '`menu` (default) or `chips`.' },
+            { name: 'data-kp-snoozed-until', what: 'An ISO moment: shows “Snoozed until …” with End snooze.' },
+            { name: 'data-kp-remember', what: 'A name: the last custom moment is kept across visits.' },
+        ],
+        accessibility: [
+            'Built in — the menu is the package’s menu (arrow keys, Home, End, Esc); the status line is read when it changes; the panel takes the focus and gives it back and names what is wrong in a field.',
+            'Yours — store the moment the event carries, and call `setSnoozedUntil` back; name the picker after what it puts off.',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

@@ -40,7 +40,7 @@
                     approved.
                 </p>
                 <p>
-                    Judge in the review dialog (&ldquo;Review in a dialog&rdquo; at the top): 2 topics, one step each in formal. Every section says
+                    Judge in the review dialog (&ldquo;Review in a dialog&rdquo; at the top): 3 topics, one step each in formal. Every section says
                     under <b>Expected</b> what you should see and what each control does. Everything with a <code>kp-</code> class and every script
                     under <code>js/</code> is the package; the sample data, the frames marked &ldquo;phone width&rdquo; (390 px boxes standing in for
                     a phone), the fixed clock (Saturday 17/10/2026, so a reminder for &ldquo;tomorrow&rdquo; always means 18/10/2026), the event
@@ -50,6 +50,7 @@
                     <ol>
                         <li><a href="#topic-weekdays">Weekday picker</a> <span class="kt-toc__count">2 sections</span></li>
                         <li><a href="#topic-runs">Next times of a schedule</a> <span class="kt-toc__count">2 sections</span></li>
+                        <li><a href="#topic-snooze">Snooze picker</a> <span class="kt-toc__count">2 sections</span></li>
                     </ol>
                 </nav>
             </header>
@@ -382,6 +383,163 @@
                                 data-kp-runs-relative="false"
                                 data-kp-runs-values="2026-10-18T03:00:00+02:00,2026-10-19T03:00:00+02:00,2026-10-20T03:00:00+02:00"
                             ></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- ================================================================ topic: Snooze picker -->
+            <h2 class="kt-topic" id="topic-snooze">Snooze picker</h2>
+            <section
+                class="kt-sec"
+                id="snooze"
+                data-review-item="snooze"
+                data-review-topic="snooze"
+                data-review-topic-title="Snooze picker"
+                data-review-title="Snooze picker: the mix of lengths and moments"
+                aria-labelledby="h-snooze"
+            >
+                <div class="kt-sec__head">
+                    <h2 id="h-snooze">Snooze picker: the mix of lengths and moments</h2>
+                    <p>
+                        <code>&lt;div class="kp-snooze" data-kp-snooze&gt;</code> (js/snooze.js): put a reminder off with a few quick choices, each
+                        with the exact moment it means. The demo clock stands at Saturday 17/10/2026 14:05.
+                    </p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Menu look</b> (the default): the button <b>Remind me later</b>. Open it (click, or Enter on it): six choices, each over
+                            its moment: <b>In 1 hour</b> (Sat 17/10/2026 15:05), <b>In 4 hours</b> (Sat 17/10/2026 18:05),
+                            <b>This evening 18:00</b> (· in 3 h 55 min), <b>Tomorrow 09:00</b> (Sun 18/10/2026 09:00 · in 18 h 55 min),
+                            <b>Monday 09:00</b> (Mon 19/10/2026 09:00 · in 1 day) and <b>Pick a date and time…</b>.
+                        </li>
+                        <li>
+                            Pick one: the button becomes <b>Snooze again</b>, the line under it says <b>Snoozed until …</b>, <b>End snooze</b> appears
+                            beside it and the grey box shows the <code>kp-snooze</code> event with the moment. End snooze goes back to
+                            <b>Not snoozed</b>.
+                        </li>
+                        <li>
+                            <b>Chips look</b>: the same choices as a row of chips, each with its moment under the name; pressing one does the same.
+                        </li>
+                        <li>
+                            <b>The opened menu</b> is shown open in its own frame so you can judge its plate; the choices are one list with arrow
+                            keys, Home and End, and Esc closes it.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The menu is formal&rsquo;s own raised plate with the choice in semibold over its moment in muted ink; the chips are
+                        formal&rsquo;s pills made two lines high (a hairline, the primary navy only on the hover edge).
+                    </p>
+                </div>
+                <div class="kt-pair">
+                    <div class="kt-case">
+                        <p class="kt-label">Menu look (default)</p>
+                        <div class="kp-snooze" data-kp-snooze data-kp-now="2026-10-17T14:05:00+02:00" id="kt-snooze-menu"></div>
+                        <pre class="kt-log" id="kt-snooze-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">Chips look</p>
+                        <div class="kp-snooze" data-kp-snooze data-kp-look="chips" data-kp-now="2026-10-17T14:05:00+02:00" id="kt-snooze-chips"></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">The menu, opened</p>
+                        <div class="kt-frame kt-frame--menu">
+                            <div class="kp-snooze" data-kp-snooze data-kp-now="2026-10-17T14:05:00+02:00" id="kt-snooze-open"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section
+                class="kt-sec"
+                id="snooze-states"
+                data-review-item="snooze-states"
+                data-review-topic="snooze"
+                data-review-title="Snooze picker: states, limits and phone width"
+                aria-labelledby="h-snooze-states"
+            >
+                <div class="kt-sec__head">
+                    <h2 id="h-snooze-states">Snooze picker: states, limits and phone width</h2>
+                    <p>
+                        A choice that has passed or lies too far away is left out; the date and time panel; the saving state; the picker in a 390 px
+                        box.
+                    </p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Press <b>Idle</b>, <b>Pick panel</b>, <b>Saving</b> and <b>Snoozed</b> in the box above the pickers: the first picker
+                            follows. <b>Pick panel</b>: a popover under the button with <b>Date</b> (the package&rsquo;s date picker, dd/mm/yyyy) and
+                            <b>Time</b>, filled with tomorrow 09:00, Cancel and <b>Snooze</b>. A past date or a wrong time is refused with the reason
+                            in red under the fields and the panel stays; a valid moment closes it and snoozes.
+                        </li>
+                        <li>
+                            <b>Saving</b>: the button shows the spinner in place of its words (same width), says no to a press and the choices are
+                            off; <b>Snoozed</b>: the line <b>Snoozed until Mon 19/10/2026 09:00 · in 1 day</b> and End snooze.
+                        </li>
+                        <li>
+                            <b>It is 19:40</b>: <b>This evening</b> is not in the list (not greyed, gone); <b>In 1 hour</b> reads Sat 17/10/2026
+                            20:40. <b>At most one day away</b>: Monday is gone, Tomorrow stays.
+                        </li>
+                        <li>In the 390 px box the button and End snooze take the whole line, the chips stand one under the other; nothing is cut.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The panel is formal&rsquo;s popover plate with its hairline; the saving spinner is formal&rsquo;s own, in the button&rsquo;s
+                        ink.
+                    </p>
+                </div>
+                <div data-review-controls>
+                    <div role="group" aria-label="State of the first picker" class="kt-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-kt-snooze-state="idle">Idle</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kt-snooze-state="panel">Pick panel</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kt-snooze-state="saving">Saving</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kt-snooze-state="snoozed">Snoozed</button>
+                    </div>
+                </div>
+                <div class="kt-pair">
+                    <div class="kt-case">
+                        <p class="kt-label">The picker the buttons drive</p>
+                        <div class="kp-snooze" data-kp-snooze data-kp-now="2026-10-17T14:05:00+02:00" id="kt-snooze-live"></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">It is 19:40: this evening has passed</p>
+                        <div class="kp-snooze" data-kp-snooze data-kp-now="2026-10-17T19:40:00+02:00" id="kt-snooze-late"></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">At most one day away, chips</p>
+                        <div
+                            class="kp-snooze"
+                            data-kp-snooze
+                            data-kp-look="chips"
+                            data-kp-snooze-max="1d"
+                            data-kp-snooze-choices="1h 4h tonight tomorrow monday pick"
+                            data-kp-now="2026-10-17T14:05:00+02:00"
+                        ></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">Snoozed from the start</p>
+                        <div
+                            class="kp-snooze"
+                            data-kp-snooze
+                            data-kp-snoozed-until="2026-10-19T09:00:00+02:00"
+                            data-kp-now="2026-10-17T14:05:00+02:00"
+                        ></div>
+                    </div>
+                    <div class="kt-case">
+                        <p class="kt-label">Phone width, menu and chips</p>
+                        <div class="kt-frame kt-frame--phone kt-stack">
+                            <div
+                                class="kp-snooze"
+                                data-kp-snooze
+                                data-kp-snoozed-until="2026-10-19T09:00:00+02:00"
+                                data-kp-now="2026-10-17T14:05:00+02:00"
+                            ></div>
+                            <div class="kp-snooze" data-kp-snooze data-kp-look="chips" data-kp-now="2026-10-17T14:05:00+02:00"></div>
                         </div>
                     </div>
                 </div>

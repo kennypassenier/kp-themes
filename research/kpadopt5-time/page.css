@@ -151,3 +151,8 @@
     grid-template-columns: minmax(0, 1fr);
     gap: var(--kp-space-md, 1rem);
 }
+
+/* A frame tall enough for an opened menu to stand in it. */
+.kt-frame--menu {
+    min-block-size: 24rem;
+}

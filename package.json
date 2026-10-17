@@ -168,6 +168,10 @@
             "types": "./js/range.d.ts",
             "default": "./js/range.js"
         },
+        "./js/snooze": {
+            "types": "./js/snooze.d.ts",
+            "default": "./js/snooze.js"
+        },
         "./js/runs": {
             "types": "./js/runs.d.ts",
             "default": "./js/runs.js"

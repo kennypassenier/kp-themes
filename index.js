@@ -169,6 +169,19 @@ export {
 export { TIMER_DISC, TIMER_DISC_LEFT, attachTimerDiscs, discShare, timerDiscOf } from './js/timer-disc.js';
 export { RANGE, RANGE_EVENT, RANGE_PRESETS, attachRanges, parseTime, presetMs, rangeFaults, rangeMoment, rangeOf, setRange } from './js/range.js';
 export {
+    SNOOZE,
+    SNOOZE_CHOICES,
+    SNOOZE_END_EVENT,
+    SNOOZE_EVENT,
+    attachSnoozes,
+    dayAt,
+    openSnoozePanel,
+    setSnoozeBusy,
+    setSnoozedUntil,
+    snooze,
+    snoozeChoices,
+} from './js/snooze.js';
+export {
     RUNS,
     RUNS_RETRY_EVENT,
     RUNS_STATES,

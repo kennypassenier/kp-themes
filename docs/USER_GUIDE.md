@@ -2187,6 +2187,22 @@ with its weekday in rule 52, in Europe/Brussels unless `data-kp-time-zone` says 
 `setRunsState(el, 'loading')` lays the busy card over placeholder rows and `'error'` shows the alert with Try again, which fires
 `kp-runs-retry`; every state keeps the height of `count` rows. A fixed clock, `data-kp-now="2026-10-17T14:05:00+02:00"`, is
 for a demo or a test. The words are `runs…` in the dictionary. Knobs: `--kp-runs-row` (2.75rem), `--kp-runs-pad`, `--kp-runs-gap`.
+### Remind me later
+
+Put a reminder off with a few quick choices, each over the exact moment it means:
+
+```html
+<div class="kp-snooze" data-kp-snooze data-kp-snooze-choices="1h 4h tonight tomorrow monday pick"></div>
+```
+
+`attachSnoozes(root)` (`js/snooze.js`, attached by `js/auto.js`) builds a button that opens the package's rich menu, or with
+`data-kp-look="chips"` a row of chips. The default choices are the mix Kenny chose: in 1 hour, in 4 hours, this evening
+(`data-kp-snooze-evening`, 18:00), tomorrow (`data-kp-snooze-morning`, 09:00), Monday and a date and time of your own; any
+length in m, h, d or w and `next-week` work too. Each shows the exact moment, "Sun 18/10/2026 09:00 · in 18 h 55 min"
+(Europe/Brussels unless `data-kp-time-zone`). A choice that has passed is left out, as is one past `data-kp-snooze-max` (7d).
+A choice fires `kp-snooze` with `{ until, choice }` (an ISO moment); the page stores it and calls
+`setSnoozedUntil(el, iso)` to show "Snoozed until …" with End snooze (`kp-snooze-end`), and `setSnoozeBusy(el, true)` while it
+saves. `snoozeChoices({ now, … })` is the same list as a pure function, for a server or a test. The words are `snooze…`.
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

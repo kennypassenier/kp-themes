@@ -16803,6 +16803,167 @@
         }
     }
 
+    /* --- Snooze picker: "remind me later" with the exact moment of every choice [kpadopt5-time] ---
+ * `.kp-snooze[data-kp-snooze]` (js/snooze.js). A button that opens the package's rich menu (each choice over the exact
+ * moment it means) or, with `data-kp-look="chips"`, one row of two-line chips; a line under it says what is snoozed, with
+ * End snooze beside the button while one is. "Pick a date and time…" opens a panel on the popover plate with the package's
+ * date picker and a time. A busy picker shows the theme's spinner in the button, whose words keep their room.
+ * Knobs [KT6]: --kp-snooze-gap (--kp-space-sm), --kp-snooze-panel-width (22rem), --kp-snooze-time-width (5.5rem),
+ * --kp-snooze-chip-min (12rem). */
+    .kp-snooze {
+        container: kp-snooze / inline-size;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-snooze__bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-snooze-gap, var(--kp-space-sm, 0.5rem));
+        min-inline-size: 0;
+    }
+
+    .kp-snooze__trigger {
+        position: relative;
+        white-space: nowrap;
+    }
+
+    .kp-snooze__trigger[data-kp-busy] > :not(.kp-button__busy) {
+        visibility: hidden;
+    }
+
+    .kp-snooze__trigger[aria-disabled='true'] {
+        cursor: progress;
+    }
+
+    .kp-snooze__status {
+        min-block-size: 1lh;
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-snooze__status[data-kp-snoozed='true'] {
+        color: var(--foreground);
+    }
+
+    .kp-snooze__end[hidden] {
+        display: none;
+    }
+
+    /* The chip look: each chip is the choice over its moment, one grid of equal cells. */
+    .kp-snooze .kp-snooze__chips {
+        display: grid;
+        grid-auto-flow: row;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--kp-snooze-chip-min, 12rem)), 1fr));
+        grid-auto-columns: auto;
+        flex: 1 1 100%;
+        inline-size: 100%;
+    }
+
+    .kp-snooze .kp-snooze__chips > .kp-snooze__chip {
+        display: grid;
+        align-content: center;
+        justify-content: start;
+        justify-items: start;
+        gap: 0.125rem;
+        min-block-size: 3rem;
+        padding-block: var(--kp-space-xs, 0.25rem);
+        border-radius: var(--radius, 0.5rem);
+        text-align: start;
+        white-space: normal;
+    }
+
+    .kp-snooze__chip-label {
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-snooze__chip-when {
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        opacity: 0.85;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-snooze .kp-snooze__chips > .kp-snooze__chip:disabled {
+        cursor: progress;
+    }
+
+    /* A menu of moments: the choice over its exact time, one line each. */
+    .kp-snooze__list .kp-menu__hint {
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-popover.kp-snooze__panel {
+        position: fixed;
+        position-area: none;
+        box-sizing: border-box;
+        inline-size: min(var(--kp-snooze-panel-width, 22rem), calc(100vw - 1rem));
+        margin: 0;
+        padding: var(--kp-space-md, 1rem);
+        overflow: visible;
+    }
+
+    .kp-snooze__panel[hidden] {
+        display: none;
+    }
+
+    .kp-snooze__panel-title {
+        margin: 0 0 var(--kp-space-sm, 0.5rem);
+        font-weight: 600;
+    }
+
+    .kp-snooze__inputs {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) var(--kp-snooze-time-width, 5.5rem);
+        gap: var(--kp-space-sm, 0.5rem);
+        align-items: start;
+    }
+
+    .kp-snooze__date {
+        min-inline-size: 0;
+    }
+
+    .kp-snooze__time {
+        inline-size: 100%;
+        box-sizing: border-box;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-snooze__panel .kp-field__input[aria-invalid='true'] {
+        border-color: var(--destructive);
+        box-shadow: inset 0 0 0 1px var(--destructive);
+    }
+
+    .kp-snooze__error {
+        min-block-size: 1lh;
+        margin: var(--kp-space-xs, 0.25rem) 0 var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-snooze__actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    @container kp-snooze (max-width: 24rem) {
+        .kp-snooze__bar > .kp-menu-button,
+        .kp-snooze__bar > .kp-menu-button > .kp-snooze__trigger {
+            flex: 1 1 100%;
+            inline-size: 100%;
+        }
+
+        .kp-snooze__end {
+            flex: 1 1 100%;
+        }
+    }
+
     /* --- Compare slider: two versions, a divider between them [kpadopt4-ideas] ---
  * `.kp-compare[data-kp-compare]` (js/compare.js). The before and after panes lie on top of each other in one grid
  * cell; the before pane shows on the start side of the divider and the after pane on the end side, each cut by

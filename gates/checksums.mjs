@@ -132,6 +132,7 @@ export const FILES = [
     'js/range.js',
     'js/weekdays.js',
     'js/runs.js',
+    'js/snooze.js',
     'js/compare.js',
     'js/loading-pieces.js',
     'js/busy-card.js',

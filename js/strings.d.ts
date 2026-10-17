@@ -1592,6 +1592,102 @@ export type Strings = {
      */
     runsNext: (moment: string) => string;
     /**
+     * The snooze picker's button while nothing is snoozed (js/snooze.js) [kpadopt5-time]
+     */
+    snoozeTrigger: string;
+    /**
+     * The same button while a snooze is in force [kpadopt5-time]
+     */
+    snoozeChange: string;
+    /**
+     * The chip row's name for a screen reader [kpadopt5-time]
+     */
+    snoozeChoicesLabel: string;
+    /**
+     * A length as a choice: "In 4 hours" [kpadopt5-time]
+     */
+    snoozeIn: (key: string) => string;
+    /**
+     * "This evening 18:00" [kpadopt5-time]
+     */
+    snoozeTonight: (time: string) => string;
+    /**
+     * "Tomorrow 09:00" [kpadopt5-time]
+     */
+    snoozeTomorrow: (time: string) => string;
+    /**
+     * "Monday 09:00" [kpadopt5-time]
+     */
+    snoozeMonday: (time: string) => string;
+    /**
+     * "Next week 09:00" [kpadopt5-time]
+     */
+    snoozeNextWeek: (time: string) => string;
+    /**
+     * The last custom moment, offered at the top [kpadopt5-time]
+     */
+    snoozeLast: string;
+    /**
+     * The choice that opens the date and time panel [kpadopt5-time]
+     */
+    snoozePick: string;
+    /**
+     * What stands under that choice [kpadopt5-time]
+     */
+    snoozePickHint: string;
+    /**
+     * The panel's title [kpadopt5-time]
+     */
+    snoozePickTitle: string;
+    /**
+     * The panel's date field name [kpadopt5-time]
+     */
+    snoozeDateLabel: string;
+    /**
+     * The panel's time field name [kpadopt5-time]
+     */
+    snoozeTimeLabel: string;
+    /**
+     * The panel's confirm button [kpadopt5-time]
+     */
+    snoozeApply: string;
+    /**
+     * The panel's cancel button [kpadopt5-time]
+     */
+    snoozeCancel: string;
+    /**
+     * The line while snoozed: "Snoozed until Mon 20/10/2026 09:00 · in 2 days" [kpadopt5-time]
+     */
+    snoozeUntil: (moment: string) => string;
+    /**
+     * The line while nothing is snoozed [kpadopt5-time]
+     */
+    snoozeNone: string;
+    /**
+     * The button that ends a snooze [kpadopt5-time]
+     */
+    snoozeEnd: string;
+    /**
+     * Why the choices are off while the page saves [kpadopt5-time]
+     */
+    snoozeSaving: string;
+    /**
+     * A date that is not a whole dd/mm/yyyy [kpadopt5-time]
+     */
+    snoozeErrorDate: string;
+    /**
+     * A time that is not a time of day [kpadopt5-time]
+     */
+    snoozeErrorTime: string;
+    /**
+     * A moment that has passed [kpadopt5-time]
+     */
+    snoozeErrorPast: string;
+    /**
+     * A moment past the longest a reminder may be put off [kpadopt5-time]
+     */
+    snoozeErrorMax: (days: number) => string;
+    /**
      * The compare slider's label on the before side (js/compare.js) [kpadopt4-ideas]
      */
     compareBefore: string;
@@ -2382,6 +2478,30 @@ export type Strings = {
  * @property {string} runsRetry  The failed list's button [kpadopt5-time]
  * @property {string} runsLoading  What the busy card says while the times are worked out [kpadopt5-time]
  * @property {(moment: string) => string} runsNext  What the status region says when the first run changes [kpadopt5-time]
+ * @property {string} snoozeTrigger  The snooze picker's button while nothing is snoozed (js/snooze.js) [kpadopt5-time]
+ * @property {string} snoozeChange  The same button while a snooze is in force [kpadopt5-time]
+ * @property {string} snoozeChoicesLabel  The chip row's name for a screen reader [kpadopt5-time]
+ * @property {(key: string) => string} snoozeIn  A length as a choice: "In 4 hours" [kpadopt5-time]
+ * @property {(time: string) => string} snoozeTonight  "This evening 18:00" [kpadopt5-time]
+ * @property {(time: string) => string} snoozeTomorrow  "Tomorrow 09:00" [kpadopt5-time]
+ * @property {(time: string) => string} snoozeMonday  "Monday 09:00" [kpadopt5-time]
+ * @property {(time: string) => string} snoozeNextWeek  "Next week 09:00" [kpadopt5-time]
+ * @property {string} snoozeLast  The last custom moment, offered at the top [kpadopt5-time]
+ * @property {string} snoozePick  The choice that opens the date and time panel [kpadopt5-time]
+ * @property {string} snoozePickHint  What stands under that choice [kpadopt5-time]
+ * @property {string} snoozePickTitle  The panel's title [kpadopt5-time]
+ * @property {string} snoozeDateLabel  The panel's date field name [kpadopt5-time]
+ * @property {string} snoozeTimeLabel  The panel's time field name [kpadopt5-time]
+ * @property {string} snoozeApply  The panel's confirm button [kpadopt5-time]
+ * @property {string} snoozeCancel  The panel's cancel button [kpadopt5-time]
+ * @property {(moment: string) => string} snoozeUntil  The line while snoozed: "Snoozed until Mon 20/10/2026 09:00 · in 2 days" [kpadopt5-time]
+ * @property {string} snoozeNone  The line while nothing is snoozed [kpadopt5-time]
+ * @property {string} snoozeEnd  The button that ends a snooze [kpadopt5-time]
+ * @property {string} snoozeSaving  Why the choices are off while the page saves [kpadopt5-time]
+ * @property {string} snoozeErrorDate  A date that is not a whole dd/mm/yyyy [kpadopt5-time]
+ * @property {string} snoozeErrorTime  A time that is not a time of day [kpadopt5-time]
+ * @property {string} snoozeErrorPast  A moment that has passed [kpadopt5-time]
+ * @property {(days: number) => string} snoozeErrorMax  A moment past the longest a reminder may be put off [kpadopt5-time]
  * @property {string} compareBefore  The compare slider's label on the before side (js/compare.js) [kpadopt4-ideas]
  * @property {string} compareAfter  Its label on the after side [kpadopt4-ideas]
  * @property {(before: string, after: string) => string} compareSlider  The divider's name for a screen reader [kpadopt4-ideas]

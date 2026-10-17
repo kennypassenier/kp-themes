@@ -82,3 +82,21 @@ await ready;
                     b.setAttribute('aria-pressed', String(b.getAttribute('data-kt-runs-state') === 'loading'));
         });
 }
+
+// ── snooze ──
+{
+    const { openMenu } = await import('../../js/menu-button.js');
+    const { openSnoozePanel, setSnoozeBusy, setSnoozedUntil } = await import('../../js/snooze.js');
+    readout('#kt-snooze-menu', 'kp-snooze', 'kt-snooze-log');
+    readout('#kt-snooze-menu', 'kp-snooze-end', 'kt-snooze-log', () => 'snooze ended');
+    const opened = document.querySelector('#kt-snooze-open .kp-menu-button');
+    if (opened instanceof HTMLElement) openMenu(opened, { focus: 'none' });
+    const live = document.getElementById('kt-snooze-live');
+    const apply = (/** @type {string} */ state) => {
+        if (!live) return;
+        setSnoozeBusy(live, state === 'saving');
+        setSnoozedUntil(live, state === 'snoozed' ? '2026-10-19T09:00:00+02:00' : null);
+        openSnoozePanel(live, state === 'panel');
+    };
+    stateButtons('data-kt-snooze-state', apply);
+}
