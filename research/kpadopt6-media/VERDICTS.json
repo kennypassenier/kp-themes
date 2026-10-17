@@ -1,4 +1,81 @@
 {
     "demo": "kpadopt6-media",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "media-a9419787-12f5-466c-bf73-9178144b3687",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-17 23:33: 11 of 11 judged in formal, 11 approved, 0 not approved, 0 open.",
+            "approved": [
+                {
+                    "item": "uses-lines",
+                    "theme": "formal"
+                },
+                {
+                    "item": "uses-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "gallery-grid",
+                    "theme": "formal"
+                },
+                {
+                    "item": "gallery-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "docpreview-open",
+                    "theme": "formal"
+                },
+                {
+                    "item": "docpreview-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "autosize-grow",
+                    "theme": "formal"
+                },
+                {
+                    "item": "autosize-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "anchors-headings",
+                    "theme": "formal"
+                },
+                {
+                    "item": "anchors-rows",
+                    "theme": "formal"
+                },
+                {
+                    "item": "print-checklist",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [],
+            "choices": [
+                {
+                    "item": "uses-lines",
+                    "theme": "formal",
+                    "picked": "How the lines run = Curves (the default)"
+                },
+                {
+                    "item": "gallery-grid",
+                    "theme": "formal",
+                    "picked": "The shape of a tile = Square crops (the default)"
+                },
+                {
+                    "item": "anchors-headings",
+                    "theme": "formal",
+                    "picked": "Where the # stands on a heading = After the heading (the default)"
+                },
+                {
+                    "item": "print-checklist",
+                    "theme": "formal",
+                    "picked": "How a ticked item prints = A filled box with a tick, the text kept"
+                }
+            ],
+            "generalNote": "General (23:33): 'Ik wil niet kiezen tussen A en B als beide nuttig zijn, dan moet enkel bepaald worden wat het default gedrag is van de component.' Every useful variant becomes an option; a demo asks only for the default."
+        }
+    ]
 }
