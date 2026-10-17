@@ -172,6 +172,34 @@
             "types": "./js/unsaved.d.ts",
             "default": "./js/unsaved.js"
         },
+        "./js/autosize": {
+            "types": "./js/autosize.d.ts",
+            "default": "./js/autosize.js"
+        },
+        "./js/anchors": {
+            "types": "./js/anchors.d.ts",
+            "default": "./js/anchors.js"
+        },
+        "./js/print": {
+            "types": "./js/print.d.ts",
+            "default": "./js/print.js"
+        },
+        "./js/viewer": {
+            "types": "./js/viewer.d.ts",
+            "default": "./js/viewer.js"
+        },
+        "./js/docpreview": {
+            "types": "./js/docpreview.d.ts",
+            "default": "./js/docpreview.js"
+        },
+        "./js/gallery": {
+            "types": "./js/gallery.d.ts",
+            "default": "./js/gallery.js"
+        },
+        "./js/uses-map": {
+            "types": "./js/uses-map.d.ts",
+            "default": "./js/uses-map.js"
+        },
         "./js/slider": {
             "types": "./js/slider.d.ts",
             "default": "./js/slider.js"

@@ -184,6 +184,66 @@ export {
     unsavedSaved,
 } from './js/unsaved.js';
 export {
+    AUTOSIZE,
+    AUTOSIZE_EVENT,
+    AUTOSIZE_MAX_LINES,
+    AUTOSIZE_MIN_LINES,
+    AUTOSIZE_STATES,
+    attachAutosize,
+    autosize,
+    cssAutosizeSupported,
+    fitTextarea,
+    lineHeightOf,
+    refreshAutosize,
+    setAutosizeState,
+} from './js/autosize.js';
+export {
+    ANCHOR,
+    ANCHORS,
+    ANCHOR_COPIED_MS,
+    ANCHOR_COPY_EVENT,
+    ANCHOR_HIT_MS,
+    ANCHOR_MISSING_EVENT,
+    ANCHOR_REVEAL_EVENT,
+    ANCHOR_WAIT_MS,
+    anchorSlug,
+    attachAnchors,
+    refreshAnchors,
+    uniqueAnchorId,
+} from './js/anchors.js';
+export { PRINT_ACTION, PRINT_EVENT, PRINT_SHEETS, attachPrint, preparePrint } from './js/print.js';
+export { VIEWER, VIEWER_CLOSE_EVENT, VIEWER_STATES, openViewer } from './js/viewer.js';
+export {
+    DOC_GLYPH,
+    DOC_KINDS,
+    PREVIEW,
+    PREVIEW_TIMEOUT_MS,
+    attachDocGlyphs,
+    attachDocPreviews,
+    docGlyph,
+    docKindOf,
+    openDocPreview,
+    plainFileName,
+    previewTypeOf,
+} from './js/docpreview.js';
+export {
+    GALLERY,
+    GALLERY_ADD_EVENT,
+    GALLERY_CHROME_MS,
+    GALLERY_CLOSE_EVENT,
+    GALLERY_OPEN_EVENT,
+    GALLERY_RETRY_EVENT,
+    GALLERY_STATES,
+    attachGalleries,
+    galleryItems,
+    galleryLast,
+    openGalleryFromHash,
+    openGalleryItem,
+    setGallery,
+    setGalleryUploading,
+} from './js/gallery.js';
+export { USES_COLLAPSE_BELOW, USES_MAP, USES_PIN_EVENT, USES_RETRY_EVENT, setUsesPin, usesPath, usesRelation } from './js/uses-map.js';
+export {
     SLIDER,
     SLIDER_CHANGE_EVENT,
     SLIDER_INPUT_EVENT,

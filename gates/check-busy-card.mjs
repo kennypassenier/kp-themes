@@ -50,6 +50,9 @@ export const CARD = [
     'js/notices.js',
     'js/runs.js',
     'js/dated-options.js',
+    'js/viewer.js',
+    'js/gallery.js',
+    'js/autosize.js',
 ];
 
 /** Approved before the rule, each with its own central loading picture. @type {Record<string, string>} */
@@ -59,6 +62,9 @@ export const OWN = {
     'js/graph.js': "the graph's loading note over the plot, at its final height",
     'js/request-inspector.js': "the request list is a card in four states: its loading state is the card's own busy card (js/card-state.js setCardState) over the whole stage [kpadopt5]",
     'js/kpi.js': "a KPI tile's own skeleton figure and meter: one figure, not a data area",
+    'js/anchors.js': "a link mark on a heading or a row: it only skips skeleton rows (a row's mark is drawn when the row is real); no data area of its own [kpadopt6-media]",
+    'js/print.js': "the words a printed sheet gets when its list is still loading; the list's own busy card is js/checklist.js's [kpadopt6-media]",
+    'js/uses-map.js': "the lines view of the matrix: its loading state lays the busy card through js/heat.js (setMatrix, syncCard) over the whole map [kpadopt6-media]",
 };
 
 /** Modules whose loading is not a data area's. @type {Record<string, string>} */

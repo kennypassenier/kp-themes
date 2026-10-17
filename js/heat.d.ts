@@ -137,16 +137,14 @@ export type MatrixSpec = {
      * the words in the corner ("from ↓ to →")
      */
     corner?: string;
-    rows?: readonly {
-        key: string;
-        label: string;
-        mark?: string;
-    }[];
-    columns?: readonly {
-        key: string;
-        label: string;
-        mark?: string;
-    }[];
+    /**
+     * the sources, in the lines view with their node content (`sub`, `glyph`, `href`, `ghost`, `dashed`)
+     */
+    rows?: readonly (import('./uses-map.js').UsesNode)[];
+    /**
+     * the things that use them
+     */
+    columns?: readonly (import('./uses-map.js').UsesNode)[];
     /**
      * null: unknown; the same key on both axes with nothing given: itself
      */
@@ -166,6 +164,22 @@ export type MatrixSpec = {
      */
     lit?: readonly string[];
     label?: string;
+    /**
+     * `lines`: the two columns joined by lines (js/uses-map.js); default `grid`
+     */
+    view?: 'grid' | 'lines';
+    /**
+     * lines view: the words after the number of uses ("2 applications")
+     */
+    countLabel?: (count: number) => string;
+    /**
+     * lines view: the sources column's name for a screen reader
+     */
+    sourcesLabel?: string;
+    /**
+     * lines view: the users column's name
+     */
+    usersLabel?: string;
 };
 /**
  * Write a heat grid: the column axis, an optional summary row and the rows,

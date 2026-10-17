@@ -2285,6 +2285,20 @@ before a link leaves the page (`kp-unsaved-leave`, cancelable, then the package'
 (never `[type=password], [data-kp-secret]`, or what `data-kp-keep-exclude` names) and says so in a toast. `data-kp-placement` is `header+sticky` (default), `header` or
 `sticky-bottom`; for a page that scrolls inside a box use `data-kp-dock="container"` and `data-kp-scroll-root="#box"`. The words are `unsaved…`.
 Knobs: `--kp-unsaved-dock-width`, `--kp-unsaved-dock-offset`, `--kp-unsaved-save-min`.
+### Pictures, documents, links and text [kpadopt6-media]
+
+A growing text box, link anchors, a gallery, a document preview, a map of what is used by what and lists that print well. Each is an opt-in attribute or a script call; nothing that exists changes.
+
+```html
+<textarea class="kp-field__input kp-field__input--multiline" rows="3" data-kp-autosize data-kp-counter="chars" maxlength="4000"></textarea>
+<main data-kp-anchors="both">…</main>
+<div class="kp-gallery" data-kp-gallery aria-label="Photos"></div>
+<button class="kp-button" data-kp-preview="files/cv.pdf" data-kp-preview-page="2">Preview</button>
+<div class="kp-matrix" data-kp-matrix data-kp-view="lines" aria-label="What uses what"></div>
+<div class="kp-checklist" data-kp-checklist data-kp-print-title="Packing list"></div>
+```
+
+`data-kp-autosize` makes the field as tall as its text between its `rows` and 20 lines (`data-kp-autosize-max`), then it scrolls inside; `data-kp-counter` and `maxlength` give an exact count, `setAutosizeState(el, 'loading' | 'error', sentence)` the other states. `data-kp-anchors` puts a `#` beside headings of levels 2 and 3 and beside rows that carry `data-kp-anchor="<their own id>"`: it shows on hover or keyboard focus (always on a phone), a press copies the link and says "Copied", and opening a link marks the place for two seconds. `setGallery(el, { items })` draws the grid; a press opens the lightbox (arrows stop at the end, `data-kp-lightbox-loop="on"` wraps), and `openViewer()` is the shell it and the preview share. `data-kp-preview` opens a file in the viewer with Open in a new tab and Download always in the foot; `.kp-docglyph[data-kp-doc-kind]` is the page icon. `setMatrix(el, { view: 'lines', rows, columns, cell })` draws the relation as two columns joined by lines, under 640 px as cards with chips. Ctrl+P on a page with a checklist prints black on white with drawn boxes (`data-kp-print-done` show, hide or strike); `js/print.js` adds the date and the sentence for a list that has no rows. The words are `autosize…`, `anchor…`, `gallery…`, `viewer…`, `preview…`, `uses…` and `print…`.
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

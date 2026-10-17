@@ -243,6 +243,17 @@ export const NEEDS = [
     { name: 'notices', when: '[data-kp-notices]', load: () => import('./notices.js'), attach: (m, root) => [m.attachNotices(root)] },
     // The time and sentence parts [kpadopt5-time]: the weekday picker, the next-runs list, the snooze picker, the dated option picker, the sentence form, the slider and the unsaved-changes bar.
     { name: 'unsaved', when: '[data-kp-unsaved]', load: () => import('./unsaved.js'), attach: (m, root) => [m.attachUnsaved(root)] },
+    // The media wave [kpadopt6-media]: the growing text box, the link anchors, the print words, the document preview, the gallery.
+    { name: 'autosize', when: 'textarea[data-kp-autosize]', load: () => import('./autosize.js'), attach: (m, root) => [m.attachAutosize(root)] },
+    { name: 'anchors', when: '[data-kp-anchors]', load: () => import('./anchors.js'), attach: (m, root) => [m.attachAnchors(root)] },
+    {
+        name: 'print',
+        when: '[data-kp-print-action], [data-kp-checklist], [data-kp-print-sheet]',
+        load: () => import('./print.js'),
+        attach: (m, root) => [m.attachPrint(root)],
+    },
+    { name: 'docpreview', when: '[data-kp-preview], .kp-docglyph', load: () => import('./docpreview.js'), attach: (m, root) => [m.attachDocPreviews(root)] },
+    { name: 'gallery', when: '[data-kp-gallery]', load: () => import('./gallery.js'), attach: (m, root) => [m.attachGalleries(root)] },
     { name: 'slider', when: '[data-kp-slider]', load: () => import('./slider.js'), attach: (m, root) => [m.attachSliders(root)] },
     { name: 'sentence', when: '[data-kp-sentence]', load: () => import('./sentence.js'), attach: (m, root) => [m.attachSentences(root)] },
     {
