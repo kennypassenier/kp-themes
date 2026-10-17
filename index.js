@@ -184,6 +184,23 @@ export {
     unsavedSaved,
 } from './js/unsaved.js';
 export {
+    USUAL,
+    USUAL_ADD_EVENT,
+    USUAL_FOLD_ABOVE,
+    USUAL_NOT_TODAY_EVENT,
+    USUAL_PICK_EVENT,
+    USUAL_RETRY_EVENT,
+    USUAL_STATES,
+    attachUsualPickers,
+    nearNames,
+    normaliseName,
+    setUsual,
+    setUsualState,
+    similarity,
+    usualNotToday,
+    usualPicker,
+} from './js/usual-picker.js';
+export {
     CALM_TONES,
     CALM_TONES_ATTRIBUTE,
     calmTone,

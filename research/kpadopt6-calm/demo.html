@@ -49,6 +49,7 @@
                 </p>
                 <nav class="k6-toc" aria-label="Topics on this page">
                     <ol>
+                        <li><a href="#topic-usual">Picker with the usual on top</a> <span class="k6-toc__count">2 sections</span></li>
                         <li><a href="#topic-focus">Questions, one per screen</a> <span class="k6-toc__count">2 sections</span></li>
                         <li><a href="#topic-today">Today card</a> <span class="k6-toc__count">2 sections</span></li>
                         <li><a href="#topic-quote">Quote card</a> <span class="k6-toc__count">2 sections</span></li>
@@ -57,6 +58,380 @@
                     </ol>
                 </nav>
             </header>
+
+            <!-- ================================================================ topic: Picker with the usual on top -->
+            <h2 class="k6-topic" id="topic-usual">Picker with the usual on top</h2>
+            <section
+                class="k6-sec"
+                id="usual"
+                data-review-item="usual"
+                data-review-components="combobox usual"
+                data-review-topic="usual"
+                data-review-topic-title="Picker with the usual on top"
+                data-review-title="Picker with the usual on top: symptoms and a meal"
+                data-review-choices='[{"id": "usual-typing", "label": "While you type, the usual choices", "default": "first", "options": [{"value": "first", "label": "Still lead the results (recommended)", "hint": "Type a letter: the usual choices that match stay on top, so the quick path survives typing. Press First in the buttons above."}, {"value": "hide", "label": "Step aside", "hint": "While you type, the band goes and every match stands in one alphabetical list. Press Step aside."}]}, {"id": "usual-near", "label": "A name that is nearly one you have", "default": "ask", "options": [{"value": "ask", "label": "Ask: Did you mean ...? (recommended)", "hint": "Type hoofdpjn and press Enter: the list shows Did you mean Hoofdpijn? and Add as new; nothing is added until you choose. Press Ask."}, {"value": "select", "label": "Take the closest at once", "hint": "Enter selects the closest name without asking. Fewer taps, a wrong guess is not noticed. Press Take closest."}]}, {"id": "usual-fold", "label": "The full list", "default": "fold", "options": [{"value": "fold", "label": "Behind Show all 38 (recommended)", "hint": "The band and one row with the exact number keep a phone screen short. Press Fold."}, {"value": "open", "label": "Always open", "hint": "Every item under the band, a long scroll. Press Open."}]}]'
+                aria-labelledby="h-usual"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-usual">Picker with the usual on top: symptoms and a meal</h2>
+                    <p>
+                        The combobox (<code>data-kp-combobox</code>) with <code>data-kp-usual</code>: the choices you use most stand first, the rest
+                        alphabetical below, and a name typed with a slip is not added a second time. Nothing re-sorts per tap: the band is given by
+                        the app and changes slowly.
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Symptoms</b> (38 items): click into the field. The list opens with <b>Nothing to log</b> (italic, always first, never
+                            usual), a small <b>Usual</b> heading over five choices (Headache, Fatigue, Nausea, Neck pain, Anxiety), then
+                            <b>All</b> over nothing yet and one row <b>Show all 38</b> (the exact number). The status line says <b>5 usual, 33
+                            more</b>. Press <b>Show all 38</b>: the rest appears alphabetical and the row becomes <b>Show fewer</b>. Each row is at
+                            least 48 px and long words wrap.
+                        </li>
+                        <li>
+                            <b>Pick</b> Headache and Fatigue: they become tags with a small <b>Not today</b> button each; press it on Fatigue: the tag
+                            turns dashed and the button filled (not the same as unticked). The grey box shows <code>kp-usual-pick</code> with where the
+                            choice came from (usual, all, pinned or typed).
+                        </li>
+                        <li>
+                            <b>Type</b> <code>hoofdpjn</code>-style slips with a real one: type <b>Headach</b> then Enter: identical after case and
+                            spaces means it selects <b>Headache</b>, it never makes a second one (type <b>headache</b> in small letters). Type
+                            <b>Neksteun</b> (new) and press Enter: it is added at once, a toast says <b>Added &lsquo;Neksteun&rsquo;</b> with Undo. Type
+                            <b>Fatigu</b>, which is close to a name you have: <b>Did you mean Fatigue?</b> stands first, then <b>Add &lsquo;Fatigu&rsquo;
+                            as new</b>, which always works.
+                        </li>
+                        <li>
+                            <b>Alt U</b> with the field empty jumps to the first usual choice (a bare <b>u</b> would eat the first letter of a name);
+                            it is on the <b>?</b> sheet. <b>Meal</b> (single): the band is ranked by how often each was used (the counts are in the
+                            markup), no folding, because the list is short. <b>Buttons above</b> change the options while you look.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The list is formal&rsquo;s own combobox plate; the group labels are its muted small text and nothing else is added. Look at the
+                        band against the rest, the margin inside each row, and the tags with Not today.
+                    </p>
+                </div>
+                <div data-review-controls>
+                    <div role="group" aria-label="While typing" class="k6-actions">
+                        <b>While typing:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="usual-while-typing" data-value="first">First</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-opt="usual-while-typing" data-value="hide">Step aside</button>
+                    </div>
+                    <div role="group" aria-label="Near names" class="k6-actions">
+                        <b>Near name:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="near" data-value="ask">Ask</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-opt="near" data-value="select">Take closest</button>
+                    </div>
+                    <div role="group" aria-label="The full list" class="k6-actions">
+                        <b>Full list:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-opt="all" data-value="fold">Fold</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-opt="all" data-value="open">Open</button>
+                    </div>
+                </div>
+                <div class="k6-pair k6-pair--tall">
+                    <div class="k6-case k6-case--room">
+                        <p class="k6-label">Symptoms: many, with the usual on top</p>
+                        <div class="kp-combobox" data-kp-combobox id="k6-usual-a" data-kp-usual='["headache","fatigue","nausea","neck","anxiety","brainfog"]' data-kp-multiple data-kp-add="inline" data-kp-not-today data-kp-pinned='[{"value":"none","label":"Nothing to log"}]' data-kp-hint="Last time you wrote: tired and a stiff neck">
+                                <label class="kp-field__label" for="k6-usual-a-input">Symptoms today</label>
+                                <div data-kp-tag-list hidden></div>
+                                <input class="kp-combobox__input kp-field__input" id="k6-usual-a-input" type="text" role="combobox" aria-expanded="false" aria-controls="k6-usual-a-list" autocomplete="off" />
+                                <ul class="kp-combobox__list" id="k6-usual-a-list" role="listbox" hidden>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="fatigue">Fatigue</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="nausea">Nausea</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="dizziness">Dizziness</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="neck">Neck pain</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="back">Back pain</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="stomach">Stomach ache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="cramps">Cramps</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="anxiety">Anxiety</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="restless">Restless legs</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="palpitations">Palpitations</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="brainfog">Brain fog</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="cough">Cough</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="sore">Sore throat</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="congestion">Congestion</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="chills">Chills</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="sweats">Night sweats</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="rash">Rash</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="itch">Itching</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="joint">Joint pain</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="muscle">Muscle ache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="numb">Numbness</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="tingling">Tingling</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="vision">Blurred vision</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="light">Light sensitivity</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="noise">Noise sensitivity</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="appetite">Low appetite</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="thirst">Thirst</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="heartburn">Heartburn</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="bloating">Bloating</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="constipation">Constipation</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="diarrhoea">Diarrhoea</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="insomnia">Insomnia</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="earache">Earache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="toothache">Toothache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="hay">Hay fever</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="wheeze">Wheezing</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="swelling">Swollen ankles</li>
+                                </ul>
+                                <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                            </div>
+                        <pre class="k6-log" id="k6-usual-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="k6-case k6-case--room">
+                        <p class="k6-label">Meal: one, ranked by how often</p>
+                        <div class="kp-combobox" data-kp-combobox id="k6-usual-b" data-kp-usual='[{"value":"oats","uses":14},{"value":"soup","uses":9},{"value":"pasta","uses":9},{"value":"salad","uses":3}]' data-kp-usual-source="counts" data-kp-usual-max="4" data-kp-add="inline">
+                                <label class="kp-field__label" for="k6-usual-b-input">Last meal</label>
+                                <div data-kp-tag-list hidden></div>
+                                <input class="kp-combobox__input kp-field__input" id="k6-usual-b-input" type="text" role="combobox" aria-expanded="false" aria-controls="k6-usual-b-list" autocomplete="off" />
+                                <ul class="kp-combobox__list" id="k6-usual-b-list" role="listbox" hidden>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="oats">Oatmeal</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="eggs">Eggs on toast</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="soup">Vegetable soup</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="pasta">Pasta with tomato</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="rice">Rice and curry</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="salad">Chicken salad</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="stew">Stoofvlees with fries</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="fish">Baked fish</li>
+                                </ul>
+                                <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                            </div>
+                    </div>
+                </div>
+            </section>
+            <section
+                class="k6-sec"
+                id="usual-states"
+                data-review-item="usual-states"
+                data-review-components="combobox usual"
+                data-review-topic="usual"
+                data-review-title="Picker with the usual on top: states, opened, disabled and phone width"
+                aria-labelledby="h-usual-states"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-usual-states">Picker with the usual on top: states, opened, disabled and phone width</h2>
+                    <p>A list that is being read, a list with nothing in it, one that could not be read, one that is off with its reason, the list shown opened, and the picker in a 390 px box.</p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Loading</b>, <b>Empty</b>, <b>Could not read</b> and <b>Ready</b> (buttons above the first picker): the picker
+                            keeps its place and a panel the height of an open list stands under the input. <b>Loading</b>: the theme&rsquo;s loading
+                            card, moving, the input waiting. <b>Empty</b>: one plate, centred, <b>Nothing here yet</b> over <b>Type a name to add the
+                            first one</b> and a normal-size <b>Add</b>. <b>Could not read</b>: the red-edged plate <b>Could not read the list</b> with a
+                            normal-size <b>Retry</b>; the last good list stays pickable.
+                        </li>
+                        <li>
+                            <b>Off with a reason</b> (second picker): the input is dimmed and <b>Pick symptoms after the sync</b> is its reason (hover or
+                            focus it). <b>Shown opened</b> (third picker): the list is open on the page so you can judge it without clicking:
+                            the band, a long label that wraps, and an item that cannot be picked, dimmed with <b>Needs a doctor&rsquo;s note</b> written
+                            under its label.
+                        </li>
+                        <li>
+                            <b>No match</b>: type <b>zzzz</b> in the first picker: one plate in the list, <b>No match</b> large and centred with
+                            <b>Pick a close name, or add it as new</b> and the <b>Add &lsquo;zzzz&rsquo; as new</b> row. <b>Phone width</b> (390 px box): the
+                            list opens full width under the input with the band first, rows 48 px, <b>Show all 38</b> a full-width row.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The plates are formal&rsquo;s empty plate and destructive alert; the loading card is the one that rules the busy table.</p>
+                </div>
+                <div data-review-controls>
+                    <div role="group" aria-label="State of the first picker" class="k6-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-usual-state="ready">Ready</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-state="loading">Loading</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-state="empty">Empty</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-usual-state="error">Could not read</button>
+                    </div>
+                </div>
+                <div class="k6-pair k6-pair--tall">
+                    <div class="k6-case k6-case--room">
+                        <p class="k6-label">Driven by the buttons above</p>
+                        <div class="kp-combobox" data-kp-combobox id="k6-usual-s" data-kp-usual='["headache","fatigue","nausea","neck","anxiety","brainfog"]' data-kp-add="inline">
+                                <label class="kp-field__label" for="k6-usual-s-input">Symptoms</label>
+                                <div data-kp-tag-list hidden></div>
+                                <input class="kp-combobox__input kp-field__input" id="k6-usual-s-input" type="text" role="combobox" aria-expanded="false" aria-controls="k6-usual-s-list" autocomplete="off" />
+                                <ul class="kp-combobox__list" id="k6-usual-s-list" role="listbox" hidden>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="fatigue">Fatigue</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="nausea">Nausea</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="dizziness">Dizziness</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="neck">Neck pain</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="back">Back pain</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="stomach">Stomach ache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="cramps">Cramps</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="anxiety">Anxiety</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="restless">Restless legs</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="palpitations">Palpitations</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="brainfog">Brain fog</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="cough">Cough</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="sore">Sore throat</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="congestion">Congestion</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="chills">Chills</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="sweats">Night sweats</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="rash">Rash</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="itch">Itching</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="joint">Joint pain</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="muscle">Muscle ache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="numb">Numbness</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="tingling">Tingling</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="vision">Blurred vision</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="light">Light sensitivity</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="noise">Noise sensitivity</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="appetite">Low appetite</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="thirst">Thirst</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="heartburn">Heartburn</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="bloating">Bloating</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="constipation">Constipation</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="diarrhoea">Diarrhoea</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="insomnia">Insomnia</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="earache">Earache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="toothache">Toothache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="hay">Hay fever</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="wheeze">Wheezing</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="swelling">Swollen ankles</li>
+                                </ul>
+                                <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                            </div>
+                    </div>
+                    <div class="k6-case k6-case--room">
+                        <p class="k6-label">Off, with its reason</p>
+                        <div class="kp-combobox" data-kp-combobox id="k6-usual-d" data-kp-usual='["headache","fatigue","nausea","neck","anxiety","brainfog"]'>
+                                <label class="kp-field__label" for="k6-usual-d-input">Symptoms</label>
+                                <div data-kp-tag-list hidden></div>
+                                <input class="kp-combobox__input kp-field__input" id="k6-usual-d-input" type="text" role="combobox" aria-expanded="false" aria-controls="k6-usual-d-list" autocomplete="off" disabled data-kp-disabled-reason="Pick symptoms after the sync"/>
+                                <ul class="kp-combobox__list" id="k6-usual-d-list" role="listbox" hidden>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="fatigue">Fatigue</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="nausea">Nausea</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="dizziness">Dizziness</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="neck">Neck pain</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="back">Back pain</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="stomach">Stomach ache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="cramps">Cramps</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="anxiety">Anxiety</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="restless">Restless legs</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="palpitations">Palpitations</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="brainfog">Brain fog</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="cough">Cough</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="sore">Sore throat</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="congestion">Congestion</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="chills">Chills</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="sweats">Night sweats</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="rash">Rash</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="itch">Itching</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="joint">Joint pain</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="muscle">Muscle ache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="numb">Numbness</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="tingling">Tingling</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="vision">Blurred vision</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="light">Light sensitivity</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="noise">Noise sensitivity</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="appetite">Low appetite</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="thirst">Thirst</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="heartburn">Heartburn</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="bloating">Bloating</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="constipation">Constipation</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="diarrhoea">Diarrhoea</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="insomnia">Insomnia</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="earache">Earache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="toothache">Toothache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="hay">Hay fever</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="wheeze">Wheezing</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="swelling">Swollen ankles</li>
+                                </ul>
+                                <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                            </div>
+                    </div>
+                    <div class="k6-case k6-case--room">
+                        <p class="k6-label">Shown opened: a long label and an item that cannot be picked</p>
+                        <div class="kp-combobox" data-kp-combobox id="k6-usual-o" data-kp-usual='["headache","long"]' data-kp-close-on-blur="false" data-kp-all="open">
+                                <label class="kp-field__label" for="k6-usual-o-input">Symptoms</label>
+                                <div data-kp-tag-list hidden></div>
+                                <input class="kp-combobox__input kp-field__input" id="k6-usual-o-input" type="text" role="combobox" aria-expanded="false" aria-controls="k6-usual-o-list" autocomplete="off" />
+                                <ul class="kp-combobox__list" id="k6-usual-o-list" role="listbox" hidden>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="long">A pressure behind both eyes that comes on after reading for an hour and does not go away with rest</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="fatigue">Fatigue</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="dizzy" data-kp-reason="Needs a doctor&rsquo;s note">Dizziness</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="note">Fainting</li>
+                                </ul>
+                                <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                            </div>
+                    </div>
+                    <div class="k6-case k6-case--room">
+                        <p class="k6-label">The plain combobox beside it, opened, to compare the plate</p>
+                        <div class="kp-combobox" data-kp-combobox id="k6-usual-c" data-kp-close-on-blur="false">
+                            <label class="kp-field__label" for="k6-usual-c-input">Symptoms</label>
+                            <input class="kp-combobox__input kp-field__input" id="k6-usual-c-input" type="text" role="combobox" aria-expanded="false" aria-controls="k6-usual-c-list" autocomplete="off" />
+                            <ul class="kp-combobox__list" id="k6-usual-c-list" role="listbox" hidden>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="fatigue">Fatigue</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="nausea">Nausea</li>
+                            </ul>
+                            <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                        </div>
+                    </div>
+                    <div class="k6-case k6-case--room">
+                        <p class="k6-label">Phone width (390 px)</p>
+                        <div class="k6-frame k6-frame--phone k6-frame--menu">
+                            <div class="kp-combobox" data-kp-combobox id="k6-usual-p" data-kp-usual='["headache","fatigue","nausea","neck","anxiety","brainfog"]' data-kp-add="inline" data-kp-pinned='[{"value":"none","label":"Nothing to log"}]'>
+                                <label class="kp-field__label" for="k6-usual-p-input">Symptoms</label>
+                                <div data-kp-tag-list hidden></div>
+                                <input class="kp-combobox__input kp-field__input" id="k6-usual-p-input" type="text" role="combobox" aria-expanded="false" aria-controls="k6-usual-p-list" autocomplete="off" />
+                                <ul class="kp-combobox__list" id="k6-usual-p-list" role="listbox" hidden>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="fatigue">Fatigue</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="nausea">Nausea</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="dizziness">Dizziness</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="neck">Neck pain</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="back">Back pain</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="stomach">Stomach ache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="cramps">Cramps</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="anxiety">Anxiety</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="restless">Restless legs</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="palpitations">Palpitations</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="brainfog">Brain fog</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="cough">Cough</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="sore">Sore throat</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="congestion">Congestion</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="chills">Chills</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="sweats">Night sweats</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="rash">Rash</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="itch">Itching</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="joint">Joint pain</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="muscle">Muscle ache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="numb">Numbness</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="tingling">Tingling</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="vision">Blurred vision</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="light">Light sensitivity</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="noise">Noise sensitivity</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="appetite">Low appetite</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="thirst">Thirst</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="heartburn">Heartburn</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="bloating">Bloating</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="constipation">Constipation</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="diarrhoea">Diarrhoea</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="insomnia">Insomnia</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="earache">Earache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="toothache">Toothache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="hay">Hay fever</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="wheeze">Wheezing</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="swelling">Swollen ankles</li>
+                                </ul>
+                                <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             <!-- ================================================================ topic: Questions, one per screen -->
             <h2 class="k6-topic" id="topic-focus">Questions, one per screen</h2>
@@ -460,6 +835,9 @@
                             When the six seconds pass, the grey box under the first card says the page was told (<code>kp-quote-hide</code>).
                         </li>
                         <li>
+                            <b>Buttons above</b> change the first card and the long one while you look (date, ago or both; fold at four lines, three or never; the Hide button on or off): each card redraws at once.
+                        </li>
+                        <li>
                             <b>Long entry</b>: the second card shows four lines and ends in an ellipsis, with <b>Show all</b> under it; press it and
                             the whole entry shows (<b>Show less</b> folds it again). The card keeps its caption under the words either way.
                         </li>
@@ -476,6 +854,25 @@
                         touching the card&rsquo;s edge, and at the buttons under the caption.
                     </p>
                 </div>
+                <div data-review-controls>
+                    <div role="group" aria-label="How the date reads" class="k6-actions">
+                        <b>Date:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-quote-opt="date-style" data-value="date">Date</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-quote-opt="date-style" data-value="relative">Ago</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-quote-opt="date-style" data-value="both">Both</button>
+                    </div>
+                    <div role="group" aria-label="Fold" class="k6-actions">
+                        <b>Fold at:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-quote-opt="lines" data-value="4">4 lines</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-quote-opt="lines" data-value="3">3 lines</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-quote-opt="lines" data-value="all">Never</button>
+                    </div>
+                    <div role="group" aria-label="Hide button" class="k6-actions">
+                        <b>Hide button:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-quote-opt="hide" data-value="on">On</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-quote-opt="hide" data-value="off">Off</button>
+                    </div>
+                </div>
                 <div class="k6-pair">
                     <div class="k6-case">
                         <p class="k6-label">A quote, why it is here, and Hide with Undo</p>
@@ -486,7 +883,7 @@
                     </div>
                     <div class="k6-case">
                         <p class="k6-label">A long entry folds behind Show all</p>
-                        <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-09-29T21:05:00+02:00" data-kp-quote-lang="nl" data-kp-quote-why="A year ago today" data-kp-quote-hide="off">
+                        <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-09-29T21:05:00+02:00" data-kp-quote-lang="nl" data-kp-quote-why="A year ago today" data-kp-quote-hide="off" id="k6-quote-long">
                             <blockquote>Vandaag was een zware dag. Ik werd wakker met die zware kop en heb eerst niets gedaan, gewoon in bed gelegen en naar het plafond gekeken. Rond de middag heb ik toch een boterham gegeten en een korte wandeling gemaakt langs het kanaal. Daarna voelde het iets lichter. Ik heb niemand gesproken behalve de buurvrouw, en dat was genoeg. Morgen opnieuw proberen, zonder iets te willen bewijzen.</blockquote>
                         </figure>
                     </div>
@@ -636,7 +1033,7 @@
                             backups.
                         </li>
                         <li>
-                            <b>Heat grid</b> (three habits over fourteen days) and <b>uptime strip</b> (thirty days of a plant being watered):
+                            <b>Heat grid</b> (three habits over a week) and <b>uptime strip</b> (thirty days of a plant being watered):
                             logged is the accent, quiet is the pale plate, the strip&rsquo;s old <b>down</b> reads <b>nothing logged</b> in its tooltip, and its summary counts the good days only (<b>N of 28 days logged</b>: no share down, no incidents).
                             A cell asked to be <code>bad</code> is drawn quiet (the console says so once).
                         </li>
@@ -676,7 +1073,7 @@
                 </div>
                 <div class="k6-pair">
                     <div class="k6-case">
-                        <p class="k6-label">Heat grid, calm: three habits, fourteen days</p>
+                        <p class="k6-label">Heat grid, calm: three habits, one week</p>
                         <div class="kp-heat" data-kp-heat data-kp-tones="calm" id="k6-heat" aria-label="Habits"></div>
                     </div>
                     <div class="k6-case">
@@ -783,7 +1180,7 @@
                             (&ldquo;Rated 4.5 of 5 by 12 people&rdquo;).
                         </li>
                         <li>
-                            <b>Half stars</b> (an option, not the default): the same row answers to a press on the left or right half of a star;
+                            <b>Buttons above</b> change the Lasagne row while you look: seven stars, half steps, a read-only row, and a tap that only picks; the row redraws at once and keeps its value. <b>Half stars</b> (an option, not the default): the same row answers to a press on the left or right half of a star;
                             the keys step by one half. <b>Save rating</b> case: a tap only picks, the two buttons appear, and the page keeps the old
                             value until Save.
                         </li>
@@ -795,6 +1192,28 @@
                         the empty ones at the three sizes (small 16 px, medium 28 px, large 36 px), at the focus ring on a star, and at the touch area
                         around each star (44 px).
                     </p>
+                </div>
+                <div data-review-controls>
+                    <div role="group" aria-label="Scale of the Lasagne row" class="k6-actions">
+                        <b>Stars:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-rating-opt="max" data-value="5">5</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-rating-opt="max" data-value="7">7</button>
+                    </div>
+                    <div role="group" aria-label="Step of the Lasagne row" class="k6-actions">
+                        <b>Step:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-rating-opt="step" data-value="1">Whole</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-rating-opt="step" data-value="0.5">Half</button>
+                    </div>
+                    <div role="group" aria-label="Mode of the Lasagne row" class="k6-actions">
+                        <b>Mode:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-rating-opt="mode" data-value="input">Give</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-rating-opt="mode" data-value="display">Show</button>
+                    </div>
+                    <div role="group" aria-label="Commit of the Lasagne row" class="k6-actions">
+                        <b>A tap:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-rating-opt="commit" data-value="immediate">Saves</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-rating-opt="commit" data-value="confirm">Picks</button>
+                    </div>
                 </div>
                 <div class="k6-pair">
                     <div class="k6-case">

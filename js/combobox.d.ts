@@ -28,6 +28,16 @@ export type ComboboxHandle = {
      * re-read the options after the consumer changed them
      */
     refresh: () => void;
+    /**
+     * let a layer on top of the combobox (js/usual-picker.js) decide which options show, what the status says and what a choice does [kpadopt6]
+     */
+    extend: (hook: ComboboxHook | null) => void;
+};
+export type ComboboxHook = {
+    shown?: (option: HTMLElement, query: string, matched: boolean) => boolean;
+    after?: (query: string, visible: number) => void;
+    status?: (query: string, visible: number) => string | null;
+    choose?: (option: HTMLElement) => boolean;
 };
 /** The handle for an attached combobox. @param {Element} element */
 export declare function combobox(element: Element): ComboboxHandle | null;

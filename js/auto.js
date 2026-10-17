@@ -244,6 +244,7 @@ export const NEEDS = [
     // The time and sentence parts [kpadopt5-time]: the weekday picker, the next-runs list, the snooze picker, the dated option picker, the sentence form, the slider and the unsaved-changes bar.
     { name: 'rating', when: '[data-kp-rating]', load: () => import('./rating.js'), attach: (m, root) => [m.attachRatings(root)] },
     { name: 'quote', when: '[data-kp-quote], [data-kp-quote-list]', load: () => import('./quote.js'), attach: (m, root) => [m.attachQuotes(root)] },
+    { name: 'usual-picker', when: '[data-kp-usual]', load: () => import('./usual-picker.js'), attach: (m, root) => [m.attachUsualPickers(root)] },
     { name: 'unsaved', when: '[data-kp-unsaved]', load: () => import('./unsaved.js'), attach: (m, root) => [m.attachUnsaved(root)] },
     { name: 'slider', when: '[data-kp-slider]', load: () => import('./slider.js'), attach: (m, root) => [m.attachSliders(root)] },
     { name: 'sentence', when: '[data-kp-sentence]', load: () => import('./sentence.js'), attach: (m, root) => [m.attachSentences(root)] },

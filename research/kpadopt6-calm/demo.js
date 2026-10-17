@@ -5,10 +5,12 @@
 // Everything drawn is drawn by the package's own functions and attributes.
 import { setRatingState } from '../../js/rating.js';
 import { setQuoteState } from '../../js/quote.js';
-import { setStatus, settleToday, setTodayState } from '../../js/statusrow.js';
+import { setStatus, setTodayState } from '../../js/statusrow.js';
 import { setCalendarDays, setCalendarState, setCalendarLegend, setCalendarCaption } from '../../js/calendar.js';
 import { setHeat } from '../../js/heat.js';
 import { setFocusSteps, setFocusStepsState } from '../../js/focus-steps.js';
+import { setUsualState } from '../../js/usual-picker.js';
+import { combobox } from '../../js/combobox.js';
 import { setUptime } from '../../js/uptime.js';
 
 /** @param {string} selector @param {ParentNode} [root] */
@@ -35,6 +37,58 @@ function onButtons(attr, run) {
 const log = (box, text) => {
     if (box) box.textContent = text;
 };
+
+// ---- 1 · picker with the usual on top -------------------------------------------------------------
+{
+    const a = document.getElementById('k6-usual-a');
+    const write = (/** @type {string} */ text) => {
+        const box = document.getElementById('k6-usual-log');
+        if (!box) return;
+        box.textContent = `${box.textContent ? `${box.textContent}\n` : ''}${text}`.split('\n').slice(-5).join('\n');
+    };
+    for (const kind of ['pick', 'add', 'not-today']) {
+        a?.addEventListener(`kp-usual-${kind}`, (event) => write(`kp-usual-${kind} ${JSON.stringify(/** @type {CustomEvent} */ (event).detail)}`));
+    }
+    onButtons('data-k6-usual-opt', (name, button) => {
+        const value = button.dataset.value ?? '';
+        // The options are real attributes: changing one redraws the picker.
+        for (const id of ['k6-usual-a', 'k6-usual-s', 'k6-usual-p']) document.getElementById(id)?.setAttribute(`data-kp-${name}`, value);
+    });
+    const driven = document.getElementById('k6-usual-s');
+    driven?.addEventListener('kp-usual-retry', () => {
+        setUsualState(driven, 'loading');
+        void sleep(1000).then(() => setUsualState(driven, 'ready'));
+    });
+    onButtons('data-k6-usual-state', (value) => {
+        if (!driven) return;
+        if (value === 'empty') {
+            driven.dataset.k6Saved = driven.querySelector('[role="listbox"]')?.innerHTML ?? '';
+            driven.querySelector('[role="listbox"]')?.replaceChildren();
+        } else if (driven.dataset.k6Saved) {
+            const list = driven.querySelector('[role="listbox"]');
+            if (list) list.innerHTML = driven.dataset.k6Saved;
+            delete driven.dataset.k6Saved;
+        }
+        setUsualState(driven, /** @type {'ready' | 'loading' | 'empty' | 'error'} */ (value === 'empty' ? 'ready' : value));
+        // After a change of the options the picker reads them again.
+        driven.setAttribute('data-kp-add', 'inline');
+    });
+    // The opened list is shown open on the page: opened once its case is on screen, so it is placed where there is room.
+    for (const openedId of ['k6-usual-o', 'k6-usual-c']) {
+        const opened = document.getElementById(openedId);
+        if (!opened || !('IntersectionObserver' in window)) continue;
+        new IntersectionObserver((entries) => {
+            for (const entry of entries) {
+                const handle = combobox(opened);
+                if (!handle) continue;
+                if (entry.isIntersecting) {
+                    handle.close();
+                    handle.open();
+                } else handle.close();
+            }
+        }, { threshold: 0.9 }).observe(opened.closest('.k6-case') ?? opened);
+    }
+}
 
 // ---- 2 · questions, one per screen ----------------------------------------------------------------
 {
@@ -113,6 +167,21 @@ const log = (box, text) => {
     ]);
 }
 
+// ---- 4 · quote options ----------------------------------------------------------------------------
+{
+    onButtons('data-k6-quote-opt', (name, button) => {
+        const value = button.dataset.value ?? '';
+        for (const id of ['k6-quote-a', 'k6-quote-long']) {
+            const card = document.getElementById(id);
+            if (!card) continue;
+            if (name === 'hide') {
+                if (value === 'off') card.setAttribute('data-kp-quote-hide', 'off');
+                else card.removeAttribute('data-kp-quote-hide');
+            } else card.setAttribute(`data-kp-quote-${name}`, value);
+        }
+    });
+}
+
 // ---- 3 · today card ------------------------------------------------------------------------------
 {
     const listOf = (/** @type {string} */ id) => /** @type {HTMLElement} */ (document.querySelector(`#${id} .kp-statuslist`));
@@ -126,12 +195,8 @@ const log = (box, text) => {
         });
     }
     onButtons('data-k6-today-since', (value) => {
-        for (const id of ['k6-today-a', 'k6-today-b']) {
-            const list = listOf(id);
-            if (value === 'date') list.removeAttribute('data-kp-today-since');
-            else list.setAttribute('data-kp-today-since', value);
-            for (const row of list.querySelectorAll('.kp-statusrow[data-state="paused"]')) setStatus(list, row.getAttribute('data-kp-status-id') ?? '', { state: 'paused' });
-        }
+        // A real option: the attribute changes and the lists draw it again.
+        for (const id of ['k6-today-a', 'k6-today-b']) listOf(id).setAttribute('data-kp-today-since', value);
     });
     document.querySelector('[data-k6-today-pause]')?.addEventListener('click', (event) => {
         const button = /** @type {HTMLElement} */ (event.currentTarget);
@@ -140,7 +205,6 @@ const log = (box, text) => {
         for (const id of ['k6-today-a', 'k6-today-b']) {
             const list = listOf(id);
             list.toggleAttribute('data-kp-today-pause', on);
-            for (const row of list.querySelectorAll('.kp-statusrow:not(.kp-statusrow--fold)')) setStatus(list, row.getAttribute('data-kp-status-id') ?? '', {});
         }
     });
     document.querySelector('[data-k6-today-failed]')?.addEventListener('click', () => {
@@ -149,7 +213,6 @@ const log = (box, text) => {
     onButtons('data-k6-today-fold', (value) => {
         const list = listOf('k6-today-b');
         list.setAttribute('data-kp-today-paused', value);
-        settleToday(list);
     });
     const driven = /** @type {HTMLElement} */ (document.getElementById('k6-today-s'));
     driven.addEventListener('kp-card-retry', () => {
@@ -223,10 +286,10 @@ const log = (box, text) => {
     calmSet[0]?.addEventListener('kp-calendar-pick', (event) => {
         log(document.getElementById('k6-cal-log'), `kp-calendar-pick { date: '${/** @type {CustomEvent} */ (event).detail.date}' }`);
     });
-    // The heat grid: three habits over the last fourteen days.
+    // The heat grid: three habits over a week.
     const heat = document.getElementById('k6-heat');
     if (heat) {
-        const days = Array.from({ length: 14 }, (_, i) => ({ key: iso(i + 3), label: String(i + 3), minor: i % 2 === 1 }));
+        const days = Array.from({ length: 7 }, (_, i) => ({ key: iso(i + 10), label: String(i + 10) }));
         /** @param {string} pattern */
         const cells = (pattern) =>
             [...pattern].map((c, i) =>
@@ -234,18 +297,18 @@ const log = (box, text) => {
                     ? { tone: /** @type {const} */ ('logged'), label: 'logged' }
                     : c === 'p'
                       ? { tone: /** @type {const} */ ('paused'), label: 'paused' }
-                      : i === 9
+                      : i === 3
                         ? { tone: /** @type {any} */ ('bad'), label: 'missed' }
                         : { tone: /** @type {const} */ ('quiet'), label: 'nothing logged' },
             );
         setHeat(heat, {
             columns: days,
             rows: [
-                { key: 'walk', label: 'Walk', cells: cells('ppppx..xx.x.xx') },
-                { key: 'stretch', label: 'Stretch', cells: cells('x.x.x.x..xx..x') },
-                { key: 'journal', label: 'Journal', cells: cells('xxx.xxx.x.xx.x') },
+                { key: 'walk', label: 'Walk', cells: cells('xx.x..x') },
+                { key: 'stretch', label: 'Stretch', cells: cells('x.x.x.p') },
+                { key: 'journal', label: 'Journal', cells: cells('xx.xxx.') },
             ],
-            every: 2,
+            every: 1,
         });
     }
     // The uptime strip: thirty days of a plant being watered; `down` is a day nothing was logged.
@@ -266,18 +329,10 @@ const log = (box, text) => {
         }
     });
     onButtons('data-k6-calm-legend', (value) => {
+        // `data-kp-legend` is a real option: changing it draws the legend or takes it away.
         for (const el of [calmSet[0], calmSet[1], calmSet[2]]) {
-            if (!el) continue;
-            setCalendarLegend(
-                el,
-                value === 'hide'
-                    ? []
-                    : [
-                          { tone: 'logged', label: 'Logged' },
-                          { tone: 'quiet', label: 'Nothing logged' },
-                          { tone: 'paused', label: 'Paused' },
-                      ],
-            );
+            if (value === 'hide') el?.setAttribute('data-kp-legend', 'hide');
+            else el?.removeAttribute('data-kp-legend');
         }
     });
     const driven = calmSet[1];
@@ -291,6 +346,14 @@ const log = (box, text) => {
 }
 
 // ---- 6 · star rating -----------------------------------------------------------------------------
+{
+    onButtons('data-k6-rating-opt', (name, button) => {
+        const first = document.getElementById('k6-rate-a');
+        const value = button.dataset.value ?? '';
+        // The options are real attributes: changing one draws the row again.
+        first?.setAttribute(`data-kp-rating-${name}`, value);
+    });
+}
 {
     const first = document.getElementById('k6-rate-a');
     first?.addEventListener('kp-rating-change', (event) => {

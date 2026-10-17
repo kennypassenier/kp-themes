@@ -2379,6 +2379,26 @@ A step with `answer` is a question; a step without stays a reading step, so one 
 `data-kp-resume` (`auto`, `ask`, `off`) with `data-kp-remember="checkin"` and `data-kp-resume-until` (`midnight`, `hours:N`, `never`). The screen is not kept on and Read aloud is off in answer mode. `kp-focus-steps-before-answer` is cancelable.
 `setFocusStepsState(el, 'save-error')` keeps the answers and says "Could not save your answers" with Try again (`kp-focus-steps-save-retry`). Keys while the focus is in the view: ArrowUp and ArrowDown, Enter, `s` (same as yesterday), `u` (usual), `n` (Not today).
 The words are `focus…`. Knobs: `--kp-focus-answer-min`, `--kp-focus-answer-gap`.
+### A picker with the usual on top
+
+The combobox with the choices a person uses most standing first, the rest alphabetical below, and a guard against a near-duplicate name:
+
+```html
+<div class="kp-combobox" data-kp-combobox data-kp-usual='["headache","fatigue"]' data-kp-add="inline" data-kp-multiple>
+    <input class="kp-combobox__input" type="text" role="combobox" aria-expanded="false" aria-controls="sym-list" aria-label="Symptom" />
+    <ul class="kp-combobox__list" id="sym-list" role="listbox" hidden>
+        <li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
+    </ul>
+    <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+</div>
+```
+
+`attachUsualPickers(root)` (`js/usual-picker.js`, attached by `js/auto.js`) stands on the combobox and attaches it itself (a box with `data-kp-usual` is skipped by `attachComboboxes` until it is ready). The band is `data-kp-usual` (a comma list, a JSON array, or `{ value, uses }` with
+`data-kp-usual-source="counts"`), `data-kp-usual-max` 1 to 7 (5); it is given by the app and changes slowly, never per tap (`setUsual(el, values)`). `data-kp-pinned` JSON puts "Nothing to log" and "Not sure" first, never usual. More than 12 items fold behind "Show all 38" (the exact number;
+`data-kp-all="open"` never folds; `data-kp-remember` keeps it). `data-kp-usual-while-typing` is `first` (the usual choices that match still lead) or `hide`. `data-kp-multiple` is the combobox's tag mode; `data-kp-preselect="usual"` pre-ticks the band; `data-kp-not-today` gives a ticked item a one-tap
+"Not today", distinct from unset (`usualNotToday(el)`). `data-kp-add="inline"` adds a typed name at the point of use with Undo; `kp-usual-add` is cancelable (the app keeps the vocabulary). A name identical after case, accents and spacing selects the existing item; a near one (`data-kp-near` `ask`,
+`select` or `off`, `data-kp-near-threshold` 0.8, `data-kp-near-max` 3) offers "Did you mean Hoofdpijn?" and always "Add 'hoofdpjn' as new". `data-kp-state="loading" | "empty" | "error"` (`setUsualState`) draws the busy card, a plate with Add, or a plate with Retry (`kp-usual-retry`) in the place of the list.
+Every attribute redraws the picker when changed. Alt U jumps to the first usual choice (a bare `u` would take the first letter of a name; it is on the `?` sheet; no digit keys). `kp-usual-pick` carries `{ value, from }`. The words are `usual…`. Knobs: `--kp-usual-option-min`, `--kp-usual-panel-min`.
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

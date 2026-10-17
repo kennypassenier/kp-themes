@@ -3763,6 +3763,110 @@ export type Strings = {
      * The words under the loading card of the questions [kpadopt6]
      */
     focusAnswerLoading: string;
+    /**
+     * The label over the usual band of a picker (js/usual-picker.js) [kpadopt6]
+     */
+    usualLabel: string;
+    /**
+     * The label over the full list under the band [kpadopt6]
+     */
+    usualAll: string;
+    /**
+     * The status line of a picker with a band: "5 usual, 33 more" [kpadopt6]
+     */
+    usualStatus: (usual: number, more: number) => string;
+    /**
+     * The row that unfolds the full list: "Show all 38", the exact number [kpadopt6]
+     */
+    usualShowAll: (n: number) => string;
+    /**
+     * The same row once the list is open [kpadopt6]
+     */
+    usualShowFewer: string;
+    /**
+     * The row that adds what was typed: "Add 'hoofdpjn' as new" [kpadopt6]
+     */
+    usualAdd: (label: string) => string;
+    /**
+     * A close name offered for what was typed: "Did you mean Hoofdpijn?" [kpadopt6]
+     */
+    usualDidYouMean: (name: string) => string;
+    /**
+     * The plate over a search that matches nothing [kpadopt6]
+     */
+    usualNoMatchTitle: string;
+    /**
+     * Its sentence when a name can be added [kpadopt6]
+     */
+    usualNoMatchText: string;
+    /**
+     * Its sentence when nothing can be added [kpadopt6]
+     */
+    usualNoMatchTextFixed: string;
+    /**
+     * What is said when typed text named an item already in the list: "Hoofdpijn was already in the list, selected" [kpadopt6]
+     */
+    usualSelectedExisting: (label: string) => string;
+    /**
+     * What is said after an add: "Hoofdpijn added" [kpadopt6]
+     */
+    usualAdded: (label: string) => string;
+    /**
+     * The undo toast's line after an add: "Added 'Neksteun'" [kpadopt6]
+     */
+    usualAddedToast: (label: string) => string;
+    /**
+     * The plate of a picker with no items at all [kpadopt6]
+     */
+    usualEmptyTitle: string;
+    /**
+     * Its sentence when a name can be added [kpadopt6]
+     */
+    usualEmptyText: string;
+    /**
+     * Its sentence when nobody can add here [kpadopt6]
+     */
+    usualEmptyTextFixed: string;
+    /**
+     * Its button [kpadopt6]
+     */
+    usualAddButton: string;
+    /**
+     * The plate of a list that could not be read [kpadopt6]
+     */
+    usualFailedTitle: string;
+    /**
+     * Its sentence [kpadopt6]
+     */
+    usualFailedText: string;
+    /**
+     * Its button [kpadopt6]
+     */
+    usualRetry: string;
+    /**
+     * The words under the loading card of a picker [kpadopt6]
+     */
+    usualLoading: string;
+    /**
+     * The small button on a ticked item that says it is not for today [kpadopt6]
+     */
+    usualNotToday: string;
+    /**
+     * That button's accessible name: "Hoofdpijn: not today" [kpadopt6]
+     */
+    usualNotTodayName: (label: string) => string;
+    /**
+     * What is said when it is set: "Hoofdpijn: not today" [kpadopt6]
+     */
+    usualNotTodayAnnounce: (label: string) => string;
+    /**
+     * The word a not-today item carries beside its name [kpadopt6]
+     */
+    usualNotTodayMark: string;
+    /**
+     * The `?` sheet's words for Alt U: "Jump to the usual choices" [kpadopt6]
+     */
+    usualJump: string;
 };
 /**
  * @typedef {object} Strings
@@ -4800,6 +4904,32 @@ export type Strings = {
  * @property {string} focusSaveFailedText  Its sentence: nothing is lost [kpadopt6]
  * @property {string} focusSaveRetry  Its button: "Try again" [kpadopt6]
  * @property {string} focusAnswerLoading  The words under the loading card of the questions [kpadopt6]
+ * @property {string} usualLabel  The label over the usual band of a picker (js/usual-picker.js) [kpadopt6]
+ * @property {string} usualAll  The label over the full list under the band [kpadopt6]
+ * @property {(usual: number, more: number) => string} usualStatus  The status line of a picker with a band: "5 usual, 33 more" [kpadopt6]
+ * @property {(n: number) => string} usualShowAll  The row that unfolds the full list: "Show all 38", the exact number [kpadopt6]
+ * @property {string} usualShowFewer  The same row once the list is open [kpadopt6]
+ * @property {(label: string) => string} usualAdd  The row that adds what was typed: "Add 'hoofdpjn' as new" [kpadopt6]
+ * @property {(name: string) => string} usualDidYouMean  A close name offered for what was typed: "Did you mean Hoofdpijn?" [kpadopt6]
+ * @property {string} usualNoMatchTitle  The plate over a search that matches nothing [kpadopt6]
+ * @property {string} usualNoMatchText  Its sentence when a name can be added [kpadopt6]
+ * @property {string} usualNoMatchTextFixed  Its sentence when nothing can be added [kpadopt6]
+ * @property {(label: string) => string} usualSelectedExisting  What is said when typed text named an item already in the list: "Hoofdpijn was already in the list, selected" [kpadopt6]
+ * @property {(label: string) => string} usualAdded  What is said after an add: "Hoofdpijn added" [kpadopt6]
+ * @property {(label: string) => string} usualAddedToast  The undo toast's line after an add: "Added 'Neksteun'" [kpadopt6]
+ * @property {string} usualEmptyTitle  The plate of a picker with no items at all [kpadopt6]
+ * @property {string} usualEmptyText  Its sentence when a name can be added [kpadopt6]
+ * @property {string} usualEmptyTextFixed  Its sentence when nobody can add here [kpadopt6]
+ * @property {string} usualAddButton  Its button [kpadopt6]
+ * @property {string} usualFailedTitle  The plate of a list that could not be read [kpadopt6]
+ * @property {string} usualFailedText  Its sentence [kpadopt6]
+ * @property {string} usualRetry  Its button [kpadopt6]
+ * @property {string} usualLoading  The words under the loading card of a picker [kpadopt6]
+ * @property {string} usualNotToday  The small button on a ticked item that says it is not for today [kpadopt6]
+ * @property {(label: string) => string} usualNotTodayName  That button's accessible name: "Hoofdpijn: not today" [kpadopt6]
+ * @property {(label: string) => string} usualNotTodayAnnounce  What is said when it is set: "Hoofdpijn: not today" [kpadopt6]
+ * @property {string} usualNotTodayMark  The word a not-today item carries beside its name [kpadopt6]
+ * @property {string} usualJump  The `?` sheet's words for Alt U: "Jump to the usual choices" [kpadopt6]
  */
 /**
  * The defaults. English, by Kenny's decision of 2026-09-04 — the package

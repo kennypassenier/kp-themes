@@ -3910,6 +3910,53 @@ setGanttState(timeline, 'loading');
         ],
     },
     {
+        id: 'usual-picker',
+        title: 'Picker with the usual on top',
+        group: 'Forms',
+        classes: ['kp-usual'],
+        exports: [],
+        aliases: ['hint', 'order', 'pinned', 'all', 'multiple', 'preselect', 'not-today', 'add', 'near', 'group', 'more', 'band', 'rest', 'panel', 'synth', 'kind'],
+        intro: 'The combobox with the choices a person uses most standing first in a band, the rest alphabetical beneath, and a guard against a near-duplicate when a new name is typed. The band is given by the application and changes slowly; it is never re-sorted per tap. “Show all 38” keeps a phone screen short with the exact number on the control; typing a name identical to an existing one selects it, a near one offers “Did you mean Hoofdpijn?” and always “Add ‘hoofdpjn’ as new”, with Undo. js/usual-picker.js (`attachUsualPickers`, `usualPicker`, `setUsual`, `setUsualState`, `usualNotToday`, `nearNames`, `similarity`) stands on the combobox, which it attaches itself.',
+        whenToUse: 'A choice from a long list where the same few are picked again and again (symptoms, meals, strategies). For a short fixed list use radio buttons or the segmented control; for a list with no habit use the plain combobox.',
+        examples: [
+            {
+                title: 'Symptoms with the usual on top',
+                why: 'The band is `data-kp-usual`; `data-kp-add="inline"` lets a new name be added at the point of use; `data-kp-multiple` makes it a tag input.',
+                markup: `
+<div class="kp-combobox" data-kp-combobox data-kp-usual='["headache","fatigue"]' data-kp-add="inline" data-kp-pinned='[{"value":"none","label":"Nothing to log"}]'>
+<input class="kp-combobox__input" type="text" role="combobox" aria-expanded="false" aria-controls="doc-usual-list" aria-label="Symptom" />
+<ul class="kp-combobox__list" id="doc-usual-list" role="listbox" hidden>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="fatigue">Fatigue</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="nausea">Nausea</li>
+</ul>
+<p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-usual and data-kp-usual-source', what: 'The band: a comma list, a JSON array, or `{ value, uses }` with the source `counts` (ranked by uses, ties alphabetical; `given` is the default).' },
+            { name: 'data-kp-usual-max, data-kp-usual-label and data-kp-usual-while-typing', what: 'The band holds 1 to 7 (5); its heading (“Usual”); `first` (matching usual items still lead while typing, the default) or `hide`.' },
+            { name: 'data-kp-order', what: '`alphabetical` (the default) or `given` for the list under the band.' },
+            { name: 'data-kp-pinned', what: 'JSON `[{ "value", "label" }]`: “Nothing to log” and “Not sure” stand first and are never usual.' },
+            { name: 'data-kp-all', what: '`open` or `fold` (the default for more than 12 items): the band and “Show all 38”.' },
+            { name: 'data-kp-multiple and data-kp-preselect', what: 'Tag mode; `usual` pre-ticks the band (`none` is the default: a stock picker never answers for a person).' },
+            { name: 'data-kp-not-today', what: 'Present gives a ticked item a one-tap “Not today”, distinct from unset (`usualNotToday(el)`).' },
+            { name: 'data-kp-add, data-kp-near, data-kp-near-threshold and data-kp-near-max', what: '`inline` adds at the point of use (`off`); `ask`, `select` or `off` for the near-match guard; similarity from 0.5 to 1 (0.8); up to 5 names (3).' },
+            { name: 'data-kp-reason', what: 'On an option: it cannot be picked, and the sentence is written under its label (and is its description for a screen reader).' },
+            { name: 'data-kp-hint, data-kp-remember and data-kp-undo-ms', what: 'The app’s line under the input once something is chosen; the folded list is remembered per picker; the Undo window after an add (6000).' },
+            { name: 'data-kp-state', what: '`loading` (the busy card in the place of the list), `empty` (a plate, with Add where adding is on) or `error` (a plate with Retry, `kp-usual-retry`).' },
+            { name: 'kp-usual-pick, kp-usual-add and kp-usual-not-today', what: '`{ value, from: usual | all | pinned | typed }`; cancelable `{ label, nearTo }` (the app keeps the vocabulary and may refuse); `{ value, on }`.' },
+            { name: 'marks the module writes', what: '`data-kp-usual-ready`, `data-kp-band`, `data-kp-rest`, `data-kp-group` (a heading), `data-kp-more`, `data-kp-near-value`, `data-kp-panel`, `data-kp-synth` (a row the module added), `data-kp-usual-add-button` and `data-kp-usual-retry`.' },
+        ],
+        accessibility: [
+            'Built in — the combobox’s listbox with virtual focus; the status line says “5 usual, 33 more” and, after an add, “Hoofdpijn added”; options are 48 px and their words wrap.',
+            'Built in — Alt U jumps to the first usual choice while the field is empty (a bare `u` would take the first letter of a name); it is on the `?` sheet. No digit key is bound.',
+            'Yours — keep the vocabulary: answer `kp-usual-add` (cancel it to refuse) and merge duplicates in your own data.',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

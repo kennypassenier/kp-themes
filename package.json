@@ -180,6 +180,10 @@
             "types": "./js/calm-tones.d.ts",
             "default": "./js/calm-tones.js"
         },
+        "./js/usual-picker": {
+            "types": "./js/usual-picker.d.ts",
+            "default": "./js/usual-picker.js"
+        },
         "./js/unsaved": {
             "types": "./js/unsaved.d.ts",
             "default": "./js/unsaved.js"

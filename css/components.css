@@ -23252,6 +23252,7 @@
     .kp-rating--display .kp-rating__caption {
         min-block-size: 0;
         color: var(--foreground);
+        white-space: nowrap;
     }
 
     .kp-rating__actions {
@@ -23398,8 +23399,10 @@
         min-block-size: var(--kp-quote-min, 9rem);
     }
 
-    .kp-quote__sep {
+    .kp-quote__by:not(:last-child)::after {
+        content: ',';
         margin-inline-end: 0.35em;
+        font-weight: 400;
     }
 
     .kp-quote .kp-card__data {
@@ -23680,6 +23683,15 @@
         opacity: 0.35;
     }
 
+    /* Under the plate the days are blank plates: their numbers would run under its words. */
+    .kp-calendar__grid[data-kp-dim] :is(.kp-calendar__num, .kp-calendar__count, .kp-calendar__pad) {
+        visibility: hidden;
+    }
+
+    .kp-quote[data-kp-state='loading'] .kp-card__data {
+        visibility: hidden;
+    }
+
     /* A calm calendar that could not be read says so on its plate; the red dot of the state line would be a second, smaller alarm. */
     .kp-calendar[data-kp-tones='calm'] .kp-calendar__state::before {
         display: none;
@@ -23881,5 +23893,140 @@
 
     .kp-focus-steps__step[data-kp-focus-steps-kind] > .kp-stateplate {
         min-block-size: 100%;
+    }
+
+    /* --- A picker with the usual on top [kpadopt6] -------------------------------------
+ * `.kp-combobox[data-kp-usual]` (js/usual-picker.js): the combobox's own plate and options, with a band of the usual choices
+ * first under a group label, the rest under "All", a row that unfolds the full list ("Show all 38"), the guard's rows and
+ * plate, and a state panel for loading, empty and failed at the size of an open list. Options are 48 px high and their words
+ * wrap, never cut; nothing is hardcoded per theme (the group label is the combobox's own muted small text). Knobs [KT6]:
+ * --kp-usual-option-min (3rem), --kp-usual-panel-min (18rem). */
+    .kp-usual .kp-combobox__option {
+        min-block-size: var(--kp-usual-option-min, 3rem);
+        display: flex;
+        align-items: center;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-usual__group {
+        padding: var(--kp-space-sm, 0.5rem) 0.625rem var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        letter-spacing: 0.02em;
+    }
+
+    .kp-usual__group[hidden] {
+        display: none;
+    }
+
+    .kp-usual__pinned {
+        font-style: italic;
+    }
+
+    .kp-usual .kp-combobox__option[data-kp-reason] {
+        flex-wrap: wrap;
+        opacity: 0.75;
+    }
+
+    .kp-usual__reason {
+        flex-basis: 100%;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-usual .kp-usual__more {
+        justify-content: center;
+        border-block-start: 1px dashed var(--border-strong);
+        font-weight: 600;
+    }
+
+    .kp-usual .kp-usual__add {
+        border-block-start: 1px solid var(--border);
+        font-weight: 600;
+    }
+
+    .kp-usual__plate {
+        display: grid;
+        justify-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        padding: var(--kp-space-md, 0.75rem) var(--kp-space-sm, 0.5rem);
+        text-align: center;
+    }
+
+    .kp-usual__plate-title {
+        font-size: var(--kp-text-lg, 1.125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-usual__plate-text {
+        color: var(--muted-foreground);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-usual .kp-usual__empty {
+        display: none;
+    }
+
+    .kp-usual .kp-reason {
+        display: block;
+    }
+
+    .kp-usual__hint {
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-usual__hint[hidden],
+    .kp-usual__state[hidden] {
+        display: none;
+    }
+
+    .kp-usual {
+        position: relative;
+    }
+
+    .kp-usual__state {
+        position: absolute;
+        inset-inline: 0;
+        z-index: 2;
+        display: grid;
+        background: var(--card);
+        min-block-size: var(--kp-usual-panel-min, 18rem);
+        margin-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-usual__state > .kp-stateplate {
+        block-size: 100%;
+        box-sizing: border-box;
+    }
+
+    /* "Not today" on a ticked item: a small button inside the tag, and a dashed plate, so it is never the same as unset. */
+    .kp-usual__nt {
+        padding: 0 0.375rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-radius-pill, 999px);
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        font-size: var(--kp-text-xs, 0.75rem);
+        cursor: pointer;
+    }
+
+    .kp-usual__nt[aria-pressed='true'] {
+        background: var(--foreground);
+        color: var(--background);
+    }
+
+    .kp-tag[data-kp-not-today] {
+        border-style: dashed;
+        background: transparent;
+    }
+
+    .kp-usual__nt:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
     }
 }

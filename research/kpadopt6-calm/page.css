@@ -219,3 +219,21 @@
 .k6-frame--phone .k6-focus {
     --kp-focus-steps-height: 52rem;
 }
+
+/* Pickers open a list under themselves: the frames that hold them are tall enough for it. */
+.k6-pair--tall {
+    min-block-size: 32rem;
+}
+
+/* A case whose picker puts a panel over what follows keeps that room for it. */
+.k6-case--room {
+    min-block-size: 24rem;
+    align-content: start;
+}
+
+@media (max-width: 30rem) {
+    .k6-row {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: var(--kp-space-xs, 0.25rem);
+    }
+}

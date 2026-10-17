@@ -1072,6 +1072,32 @@
  * @property {string} focusSaveFailedText  Its sentence: nothing is lost [kpadopt6]
  * @property {string} focusSaveRetry  Its button: "Try again" [kpadopt6]
  * @property {string} focusAnswerLoading  The words under the loading card of the questions [kpadopt6]
+ * @property {string} usualLabel  The label over the usual band of a picker (js/usual-picker.js) [kpadopt6]
+ * @property {string} usualAll  The label over the full list under the band [kpadopt6]
+ * @property {(usual: number, more: number) => string} usualStatus  The status line of a picker with a band: "5 usual, 33 more" [kpadopt6]
+ * @property {(n: number) => string} usualShowAll  The row that unfolds the full list: "Show all 38", the exact number [kpadopt6]
+ * @property {string} usualShowFewer  The same row once the list is open [kpadopt6]
+ * @property {(label: string) => string} usualAdd  The row that adds what was typed: "Add 'hoofdpjn' as new" [kpadopt6]
+ * @property {(name: string) => string} usualDidYouMean  A close name offered for what was typed: "Did you mean Hoofdpijn?" [kpadopt6]
+ * @property {string} usualNoMatchTitle  The plate over a search that matches nothing [kpadopt6]
+ * @property {string} usualNoMatchText  Its sentence when a name can be added [kpadopt6]
+ * @property {string} usualNoMatchTextFixed  Its sentence when nothing can be added [kpadopt6]
+ * @property {(label: string) => string} usualSelectedExisting  What is said when typed text named an item already in the list: "Hoofdpijn was already in the list, selected" [kpadopt6]
+ * @property {(label: string) => string} usualAdded  What is said after an add: "Hoofdpijn added" [kpadopt6]
+ * @property {(label: string) => string} usualAddedToast  The undo toast's line after an add: "Added 'Neksteun'" [kpadopt6]
+ * @property {string} usualEmptyTitle  The plate of a picker with no items at all [kpadopt6]
+ * @property {string} usualEmptyText  Its sentence when a name can be added [kpadopt6]
+ * @property {string} usualEmptyTextFixed  Its sentence when nobody can add here [kpadopt6]
+ * @property {string} usualAddButton  Its button [kpadopt6]
+ * @property {string} usualFailedTitle  The plate of a list that could not be read [kpadopt6]
+ * @property {string} usualFailedText  Its sentence [kpadopt6]
+ * @property {string} usualRetry  Its button [kpadopt6]
+ * @property {string} usualLoading  The words under the loading card of a picker [kpadopt6]
+ * @property {string} usualNotToday  The small button on a ticked item that says it is not for today [kpadopt6]
+ * @property {(label: string) => string} usualNotTodayName  That button's accessible name: "Hoofdpijn: not today" [kpadopt6]
+ * @property {(label: string) => string} usualNotTodayAnnounce  What is said when it is set: "Hoofdpijn: not today" [kpadopt6]
+ * @property {string} usualNotTodayMark  The word a not-today item carries beside its name [kpadopt6]
+ * @property {string} usualJump  The `?` sheet's words for Alt U: "Jump to the usual choices" [kpadopt6]
  */
 
 /**
@@ -2344,6 +2370,33 @@ export const DEFAULT_STRINGS = Object.freeze({
     focusSaveFailedText: 'Your answers are kept here, nothing is lost.',
     focusSaveRetry: 'Try again',
     focusAnswerLoading: 'Reading the questions',
+    // A picker with the usual on top (js/usual-picker.js) [kpadopt6].
+    usualLabel: 'Usual',
+    usualAll: 'All',
+    usualStatus: (usual, more) => `${usual} usual, ${more} more`,
+    usualShowAll: (n) => `Show all ${n}`,
+    usualShowFewer: 'Show fewer',
+    usualAdd: (label) => `Add '${label}' as new`,
+    usualDidYouMean: (name) => `Did you mean ${name}?`,
+    usualNoMatchTitle: 'No match',
+    usualNoMatchText: 'Pick a close name, or add it as new',
+    usualNoMatchTextFixed: 'Nothing in the list looks like that',
+    usualSelectedExisting: (label) => `${label} was already in the list, selected`,
+    usualAdded: (label) => `${label} added`,
+    usualAddedToast: (label) => `Added '${label}'`,
+    usualEmptyTitle: 'Nothing here yet',
+    usualEmptyText: 'Type a name to add the first one',
+    usualEmptyTextFixed: 'Whoever keeps this list adds the first one',
+    usualAddButton: 'Add',
+    usualFailedTitle: 'Could not read the list',
+    usualFailedText: 'The list could not be reached just now.',
+    usualRetry: 'Retry',
+    usualLoading: 'Reading the list',
+    usualNotToday: 'Not today',
+    usualNotTodayName: (label) => `${label}: not today`,
+    usualNotTodayAnnounce: (label) => `${label}: not today`,
+    usualNotTodayMark: 'not today',
+    usualJump: 'Jump to the usual choices',
 });
 
 // STRINGS_NL was removed in 4.0.0 [D3]. Kenny decided that on
