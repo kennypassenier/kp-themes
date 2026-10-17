@@ -1,0 +1,43 @@
+/* @kp-soft/themes — css/_print.css
+   Concatenated into css/themes.css after the authored rules.
+
+   This block sits OUTSIDE @layer kp.base on purpose, and the purpose is
+   measured. AR17 put the authored rules in a cascade layer but left the
+   theme token blocks unlayered, and unlayered CSS beats layered CSS
+   whatever the specificity. So a layered `--background: white` lost to
+   every theme's own `--background`, and printing a dark theme came out
+   dark: measured on 2026-09-06 as hsl(258, 40%, 6%) where white was
+   expected, in both browsers, on every one of the 24 themes. It was
+   introduced by the layer wrap in R0 and found twice independently while
+   building R3 and R4.
+
+   Unlayered, it wins by source order, which is what TH36 always meant.
+   Nothing else in this file may be layered either, for the same reason. */
+
+/* Print [TH36]. Paper has no theme: ink is black, the ground is white,
+   and the decorative layers cost toner without carrying meaning. */
+@media print {
+    :root {
+        color-scheme: light;
+        --background: hsl(0, 0%, 100%);
+        --foreground: hsl(0, 0%, 0%);
+    }
+
+    /* The texture layer is body::after. The first version of this rule
+ * hid body::before, which carries nothing, so the texture printed
+ * for two versions while the guide promised otherwise [KT6]. */
+    body::after {
+        display: none;
+    }
+
+    a {
+        color: inherit;
+    }
+
+    /* A printed page cannot be clicked, so the address has to be on it. */
+    a[href^='http']::after {
+        content: ' (' attr(href) ')';
+        font-size: 0.85em;
+        word-break: break-all;
+    }
+}

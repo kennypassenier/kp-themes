@@ -1,0 +1,54 @@
+{
+    "demo": "kpadopt5-people",
+    "rounds": [
+        {
+            "round": "1",
+            "page": "people-18670859-e679-4566-8bad-e8fd47298900",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-17 22:09: 4 of 4 judged in formal, 3 approved, 1 not approved. The page asked formal only.",
+            "approved": [
+                {
+                    "item": "avatar",
+                    "theme": "formal"
+                },
+                {
+                    "item": "passkey-list",
+                    "theme": "formal"
+                },
+                {
+                    "item": "chart-annotations",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "conversation-thread",
+                    "theme": "formal",
+                    "note": "Looks good, but some things are options that the component can give. Like the options for Long messages and Order. I choose Yours on a wash of the primary colour"
+                }
+            ],
+            "choices": [
+                {
+                    "item": "avatar",
+                    "theme": "formal",
+                    "picked": "How the photo is framed = Edge in the name's colour"
+                },
+                {
+                    "item": "passkey-list",
+                    "theme": "formal",
+                    "picked": "How the refusal of the only way in reads = Remove stays, held off, with the reason"
+                },
+                {
+                    "item": "conversation-thread",
+                    "theme": "formal",
+                    "picked": "How the two sides are told apart = Yours on a wash of the primary colour"
+                },
+                {
+                    "item": "chart-annotations",
+                    "theme": "formal",
+                    "picked": "How a window (a band of time) is drawn = A wash across the plot"
+                }
+            ]
+        }
+    ]
+}

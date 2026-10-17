@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>kpadopt5, people: avatar, sign-in methods, conversation, chart markers</title>
+        <title>kpadopt5, people, round 2: the conversation</title>
         <link rel="stylesheet" href="../../css/fonts.css" />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
@@ -32,217 +32,13 @@
 
         <main id="main" class="cat-main kp5-page">
             <header class="kp5-intro">
-                <h1>The fifth adoption round, people: four components</h1>
+                <h1>People, round 2: the conversation</h1>
                 <p class="cat-intro">
-                    Four pieces every app of Kenny&rsquo;s draws for itself, built in the package first and shown in formal only: an avatar with
-                    a photo, the list of ways to sign in, a conversation in bubbles, and markers and a median line on a chart. After formal is
-                    approved the other themes follow.
-                </p>
-                <p>
-                    Every section says under <b>Expected</b> what you should see and what each control does. The people in the examples are made
-                    up, and so are their photos (small drawings, not real faces); every message, time and number is sample content.
+                    Formal only. Only the conversation is back. Your note is built in: long messages and order are documented options of the component
+                    (attributes you can change at any time, the thread redraws by itself), and &ldquo;yours on a wash of the primary colour&rdquo; is
+                    the default look. The people and messages are made up.
                 </p>
             </header>
-
-            <!-- ================================================================ topic: Avatar -->
-            <h2 class="kp5-topic" id="topic-avatar">Avatar</h2>
-            <section
-                class="kp5-sec"
-                data-review-item="avatar"
-                data-review-topic="avatar"
-                data-review-topic-title="Avatar"
-                data-review-title="Avatar with a photo"
-                data-review-components="idmark idmark-group idmark-name"
-                data-review-choices='[{ "id": "avatar-frame", "label": "How the photo is framed", "default": "edge", "options": [
-                    { "value": "edge", "label": "Edge in the name&#39;s colour", "hint": "Recommended. The photo fills the plate and the plate keeps its one-pixel edge in the name&#39;s colour, exactly as today&#39;s letter marks have it, so a person with a photo and one without sit in a list as equals. The quietest of the three." },
-                    { "value": "ring", "label": "Ring held off the photo", "hint": "No edge on the plate; a two-pixel ring in the name&#39;s colour, kept off the photo by a gap in the card colour. The colour stays loud beside a photo; a group of them looks busier." },
-                    { "value": "inset", "label": "Photo set into the plate", "hint": "The photo sits two pixels inside a full plate in the name&#39;s colour, like a picture in a mount. The strongest identity; the photo loses two pixels on every side." }] }]'
-                aria-label="Avatar with a photo"
-            >
-                <div class="kp5-sec__head">
-                    <h2>Avatar with a photo</h2>
-                    <p>
-                        The identity mark (<code>.kp-idmark</code>, the plate made from a name) with a photo on it. A person without a photo looks
-                        exactly like today&rsquo;s marks, so one component serves both; a photo that does not load leaves the letters.
-                    </p>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">
-                        Formal&rsquo;s plate is a quiet square with soft corners; round ones are circles. Look at the letters under the photo while it
-                        arrives, at the photo fading in, at the status dot (its shape differs as well as its colour), and at the &ldquo;+4&rdquo;
-                        that opens the names left out.
-                    </p>
-                </div>
-                <div class="kp5-expect">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>
-                            <b>The table</b>: five rows of looks, four sizes each (sm 24 px, md 32, lg 44, xl 56). Row one has a photo, row two has
-                            none and shows the letters, row three has a photo address that does not exist and so shows the letters with no error
-                            mark, row four is a mark still waiting for its name (the pulsing plate), row five has no name (dashed &ldquo;?&rdquo;).
-                            Every size is a fixed square before the photo is there: nothing moves when it arrives.
-                        </li>
-                        <li>
-                            <b>Replay the photos</b>: the photos are taken away and brought back; the letters show first, then the photo fades in.
-                        </li>
-                        <li>
-                            <b>Status</b>: online is a full green dot, away a ring, busy a dot with a bar; the word is in the mark&rsquo;s label
-                            (&ldquo;Ada Lovelace, online&rdquo;, shown beside it), never colour alone.
-                        </li>
-                        <li>
-                            <b>A group</b>: marks overlap with a paper edge; the rest is an exact number (&ldquo;+4&rdquo;; the second group shows
-                            &ldquo;+116&rdquo;, never &ldquo;9+&rdquo;) and is a button. Press it: a list of the hidden names opens under the group
-                            (it is shown open in the first card, and closes with Escape or a click elsewhere).
-                        </li>
-                        <li><b>Beside a name</b>: the photo mark sits before the name with a gap; a long name wraps and never runs under it.</li>
-                        <li>
-                            <b>The choice</b> of frame (tick it in the dialog): the same marks with the plate&rsquo;s edge, a ring, or the photo set
-                            in a mount. All three are shown by the buttons below as well.
-                        </li>
-                    </ul>
-                </div>
-                <div class="kp5-controls" data-review-controls>
-                    <div role="group" aria-label="Photos">
-                        <b>Photos:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-replay>Replay the photos</button>
-                    </div>
-                    <div role="group" aria-label="Frame">
-                        <b>Frame:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-frame="edge" aria-pressed="true">Edge</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-frame="ring" aria-pressed="false">Ring</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-frame="inset" aria-pressed="false">In a mount</button>
-                    </div>
-                </div>
-                <div class="kp5-block">
-                    <h3>Every look at every size</h3>
-                    <p class="kp5-caption">The photos are small drawings made for this page, not real faces.</p>
-                    <div class="kp5-card"><div class="kp5-marks" data-kp5-mark-table></div></div>
-                </div>
-                <div class="kp5-block">
-                    <h3>Status, shapes and the other looks</h3>
-                    <div class="kp5-card kp5-stack">
-                        <div class="kp5-row" data-kp5-status-row></div>
-                        <div class="kp5-row" data-kp5-looks-row></div>
-                    </div>
-                </div>
-                <div class="kp5-block">
-                    <h3>A group with an exact count, and the list behind it</h3>
-                    <div class="kp5-pair">
-                        <div class="kp5-card kp5-stack kp5-group-room">
-                            <p class="kp5-caption">Eight people, four shown: &ldquo;+4&rdquo; is a button, shown pressed.</p>
-                            <div data-kp5-group="eight"></div>
-                        </div>
-                        <div class="kp5-card kp5-stack kp5-group-room">
-                            <p class="kp5-caption">A hundred and twenty people: the exact &ldquo;+116&rdquo;; press it and the list of names scrolls.</p>
-                            <div data-kp5-group="many"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="kp5-block">
-                    <h3>Beside a name, and at 390 px</h3>
-                    <div class="kp5-pair kp5-pair--phone">
-                        <div class="kp5-card kp5-stack" data-kp5-names></div>
-                        <div class="kp5-phone">
-                            <p class="kp5-caption">390 px wide</p>
-                            <div class="kp5-card kp5-stack" data-kp5-names data-kp5-phone></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ================================================================ topic: Ways to sign in -->
-            <h2 class="kp5-topic" id="topic-passkey-list">Ways to sign in</h2>
-            <section
-                class="kp5-sec"
-                data-review-item="passkey-list"
-                data-review-topic="passkey-list"
-                data-review-topic-title="Ways to sign in"
-                data-review-title="List of ways to sign in"
-                data-review-components="passkeys"
-                data-review-choices='[{ "id": "passkey-refuse-look", "label": "How the refusal of the only way in reads", "default": "button", "options": [
-                    { "value": "button", "label": "Remove stays, held off, with the reason", "hint": "Recommended. The Remove button stays in its column but is held off (dimmed, and it says why when pointed at or focused); the reason and what to do first stand under the name. Everything keeps its place." },
-                    { "value": "note", "label": "A short note takes its place", "hint": "The Remove button is gone on the only way in; a dashed note, &ldquo;Your only way in&rdquo;, stands in its place, and the same reason stands under the name. Nothing there to press, so nothing to wonder about." }] }]'
-                aria-label="List of ways to sign in"
-            >
-                <div class="kp5-sec__head">
-                    <h2>List of ways to sign in</h2>
-                    <p>
-                        One row per way in (a passkey, a magic link, a password, a token) with when it was added and last used, Rename and Remove.
-                        Removing the only way in is refused, and the row says why and what to do first.
-                    </p>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">
-                        Rows are plain cards on one grid: the four icons, the names, the badge column and the two buttons begin in the same column
-                        from row to row. Look at the &ldquo;This device&rdquo; badge, the amber &ldquo;Unused for 120 days&rdquo; badge, the held-off
-                        Remove with its reason, and at the empty and failed states that take the list&rsquo;s whole footprint.
-                    </p>
-                </div>
-                <div class="kp5-expect">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>
-                            <b>Ready</b>: five rows, the one in use on top with a &ldquo;This device&rdquo; badge, then by last use. Each row says
-                            the kind, when it was added (dd/mm/yyyy) and when it was last used in words (&ldquo;Last used 2 days ago&rdquo;; the exact
-                            moment is in the tooltip). The old tablet carries &ldquo;Unused for 120 days&rdquo;; the recovery token says &ldquo;Never
-                            used&rdquo;. Rename and Remove stand in the same two columns on every row.
-                        </li>
-                        <li>
-                            <b>Rename</b>: the name becomes a field with Save and Cancel; Enter saves, Escape cancels, and the focus returns to
-                            Rename. An empty name is refused with a line under it.
-                        </li>
-                        <li>
-                            <b>Remove</b> asks first. The way in use needs its exact name typed; the others a plain Yes. The list loses the row at
-                            once when it is done. Removing the <em>recovery token</em> is refused by the (pretend) server a second after you
-                            confirm: the row stays and says &ldquo;Not removed: &hellip;&rdquo; in red.
-                        </li>
-                        <li>
-                            <b>Only one way</b>: Remove is held off on that row and the reason stands under its name. With &ldquo;Ask a typed name&rdquo;
-                            it can be removed behind a typed name and a warning that you will be locked out; with &ldquo;Allow&rdquo; it is as any other.
-                        </li>
-                        <li>
-                            <b>Loading</b> shows rows of the final geometry under the data table&rsquo;s busy card. <b>Empty</b> and <b>Failed</b>
-                            fill the same height, the sentence at heading size in the middle with a normal-size Register or Retry.
-                            <b>Not secure</b> puts an amber warning above the list saying what to do.
-                        </li>
-                        <li><b>390 px</b>: each row is a card and its two buttons are the full width under it.</li>
-                    </ul>
-                </div>
-                <div class="kp5-controls" data-review-controls>
-                    <div role="group" aria-label="State">
-                        <b>State:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-pk-state="ready" aria-pressed="false">Ready</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-pk-state="loading" aria-pressed="false">Loading</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-pk-state="empty" aria-pressed="false">Empty</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-pk-state="error" aria-pressed="false">Failed</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-pk-state="one" aria-pressed="false">Only one way</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-pk-state="insecure" aria-pressed="false">Not secure</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-pk-state="long" aria-pressed="false">Long names</button>
-                    </div>
-                    <div role="group" aria-label="The only way in">
-                        <b>The only way in:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-pk-last="refuse" aria-pressed="true">Refuse</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-pk-last="confirm" aria-pressed="false">Ask a typed name</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-pk-last="off" aria-pressed="false">Allow</button>
-                    </div>
-                    <div role="group" aria-label="Confirming a removal">
-                        <b>Confirming a removal:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-pk-confirm="dialog" aria-pressed="true">Yes or no</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-pk-confirm="type-name" aria-pressed="false">Always type the name</button>
-                    </div>
-                </div>
-                <div class="kp5-block">
-                    <h3>The list, at the desk width and at 390 px</h3>
-                    <div class="kp5-pair">
-                        <div class="kp5-card"><div data-kp5-passkeys="desk"></div></div>
-                        <div class="kp5-phone">
-                            <p class="kp5-caption">390 px wide</p>
-                            <div class="kp5-card"><div data-kp5-passkeys="phone"></div></div>
-                        </div>
-                    </div>
-                    <p class="kp5-readout" data-kp5-pk-log aria-live="polite"></p>
-                </div>
-            </section>
 
             <!-- ================================================================ topic: Conversation -->
             <h2 class="kp5-topic" id="topic-conversation-thread">Conversation</h2>
@@ -253,18 +49,14 @@
                 data-review-topic-title="Conversation"
                 data-review-title="Conversation in bubbles"
                 data-review-components="thread"
-                data-review-choices='[{ "id": "thread-bubble", "label": "How the two sides are told apart", "default": "tinted", "options": [
-                    { "value": "tinted", "label": "Yours on a wash of the primary colour", "hint": "Recommended. Their bubbles are card plates, yours carry a light wash of the primary colour and a primary edge. The sides read at a glance, also on a phone, and the text stays dark on light." },
-                    { "value": "plain", "label": "Both on the card plate", "hint": "As JobTracker draws it today: both sides are the same plate with a hairline, yours sits on the end side of the row and that is all. The calmest; at 390 px the sides are told apart by position only." },
-                    { "value": "filled", "label": "Yours in the primary colour", "hint": "Your bubbles are solid primary with the primary&#39;s own text. The loudest and the clearest; a long conversation becomes a lot of colour." }] }]'
                 aria-label="Conversation in bubbles"
             >
                 <div class="kp5-sec__head">
                     <h2>Conversation in bubbles</h2>
                     <p>
                         Messages as bubbles: theirs on the start side, yours on the end side, status changes as centred lines, a day divider between
-                        days, attachments as tags. Only the newest message is shown whole; older long ones fold to three lines with &ldquo;Show
-                        all N lines&rdquo; (configurable).
+                        days, attachments as tags. Only the newest message is shown whole; older long ones fold to three lines with &ldquo;Show all N
+                        lines&rdquo; (configurable).
                     </p>
                 </div>
                 <div data-review-look>
@@ -275,36 +67,23 @@
                     </p>
                 </div>
                 <div class="kp5-expect">
-                    <p><b>Expected:</b></p>
+                    <p>
+                        <b>Expected:</b> changed since round 1: every setting below is a documented option of the component with a default (shown
+                        pressed) and switches live by changing an attribute; the look is a fifth option whose default is yours on a wash of the
+                        primary colour.
+                    </p>
                     <ul>
                         <li>
-                            <b>Ready</b>: seven messages over three days, oldest first, scrolled to the newest. Two messages from the recruiter
-                            within five minutes share one header and one mark. A status change is a centred line. Times are dd/mm/yyyy HH:mm in
-                            each bubble&rsquo;s label and HH:mm in its header.
+                            <b>Long messages</b> (<code>data-kp-thread-fold</code>: newest, a number, full) and
+                            <b>Order</b> (<code>data-kp-thread-order</code>: oldest, newest) redraw the conversation when pressed; so do
+                            <b>Look</b> (<code>data-kp-thread-bubble</code>: tinted, plain, filled), <b>Marks</b> and <b>Days</b>. The line under the
+                            box names the attribute that was just set.
                         </li>
                         <li>
-                            <b>Folding</b> (the default is the first button): only the newest message is whole; the older long mail stops after
-                            three lines with &ldquo;Show all 30 lines&rdquo; and shows the rest when pressed. &ldquo;After 12 lines&rdquo; folds every
-                            message longer than 12 lines; &ldquo;Everything whole&rdquo; folds nothing.
+                            On load: seven messages over three days, oldest first, only the newest whole, your bubbles on a light wash of the primary
+                            colour with a primary edge. <b>Send a reply</b> and <b>Send one that fails</b> still work; the states Loading, Empty and
+                            Failed fill the same box.
                         </li>
-                        <li>
-                            <b>Order</b> newest first puts the newest at the top; <b>Marks</b> choose the sender&rsquo;s mark on their side only,
-                            on both, or none; <b>Days</b> hides the dividers.
-                        </li>
-                        <li>
-                            <b>Send a reply</b> adds a bubble that is faded and says &ldquo;Sending&hellip;&rdquo;, then becomes a normal one.
-                            <b>Send one that fails</b> ends as &ldquo;Not sent: &hellip;&rdquo; with a Retry that sends it. Scrolled up, a
-                            &ldquo;Jump to newest&rdquo; button appears over the foot of the box.
-                        </li>
-                        <li>
-                            Long words and the long address wrap anywhere. Each bubble has a Copy text button, and a button for the page&rsquo;s own
-                            action (Rename).
-                        </li>
-                        <li>
-                            <b>Loading</b> shows one waiting bubble on each side under the busy card; <b>Empty</b> and <b>Failed</b> fill the same box,
-                            the sentence at heading size in the middle with a normal-size button.
-                        </li>
-                        <li><b>390 px</b>: bubbles take 85 % of the width.</li>
                     </ul>
                 </div>
                 <div class="kp5-controls" data-review-controls>
@@ -317,9 +96,21 @@
                     </div>
                     <div role="group" aria-label="Long messages">
                         <b>Long messages:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-th-fold="newest" aria-pressed="true">Only the newest whole</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kp5-th-fold="newest" aria-pressed="true">
+                            Only the newest whole
+                        </button>
                         <button type="button" class="kp-button kp-button--sm" data-kp5-th-fold="12" aria-pressed="false">Fold after 12 lines</button>
                         <button type="button" class="kp-button kp-button--sm" data-kp5-th-fold="full" aria-pressed="false">Everything whole</button>
+                    </div>
+                    <div role="group" aria-label="Look">
+                        <b>Look:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kp5-th-bubble="tinted" aria-pressed="true">Yours on a wash</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kp5-th-bubble="plain" aria-pressed="false">
+                            Both on the card
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-kp5-th-bubble="filled" aria-pressed="false">
+                            Yours in the primary
+                        </button>
                     </div>
                     <div role="group" aria-label="Order">
                         <b>Order:</b>
@@ -358,130 +149,9 @@
 
             <!-- ================================================================ topic: Chart markers -->
             <h2 class="kp5-topic" id="topic-chart-annotations">Chart markers</h2>
-            <section
-                class="kp5-sec"
-                data-review-item="chart-annotations"
-                data-review-topic="chart-annotations"
-                data-review-topic-title="Chart markers"
-                data-review-title="Chart markers and median line"
-                data-review-components="chart"
-                data-review-choices='[{ "id": "chart-band-look", "label": "How a window (a band of time) is drawn", "default": "tint", "options": [
-                    { "value": "tint", "label": "A wash across the plot", "hint": "Recommended. The window is a light wash in its tone across the whole plot with a solid edge where it begins and ends. Easy to see; the readings stay readable through it." },
-                    { "value": "hatch", "label": "Diagonal lines across the plot", "hint": "The same area, drawn as diagonal lines in the tone instead of a wash. Readable without the colour, so also for someone who sees the tones alike; busier behind a line." },
-                    { "value": "bracket", "label": "A bracket along the top", "hint": "Nothing across the readings: a bar between two short ticks along the top of the plot. The plot stays clean; the window is easier to miss at a glance." }] }]'
-                aria-label="Chart markers and median line"
-            >
-                <div class="kp5-sec__head">
-                    <h2>Chart markers and median line</h2>
-                    <p>
-                        Events on a chart as dots above the plot and, for a window of time (a maintenance window), as a band. A key names the kinds
-                        and switches them. A dashed median line, the points of long runs ringed, and &ldquo;too few days to say anything&rdquo; as a
-                        state of its own.
-                    </p>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">
-                        Formal&rsquo;s chart colours: the first source in navy, info events in blue, updates amber, failures red. Look at the key
-                        above the plot, at the band against the readings, at the median&rsquo;s label at the end of its line, and at the faint points
-                        under the sentence of the third chart.
-                    </p>
-                </div>
-                <div class="kp5-expect">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>
-                            <b>First chart</b> (three days of pressure): a key above the plot with a switch per kind (operation, update, failure,
-                            maintenance window) and its exact count; press one and its markers leave the plot and the switch is struck dashed;
-                            press again and they return. The maintenance window is a band; point at it for its start and end in words. Two events
-                            earlier than the window show as &ldquo;&#9666; 2&rdquo; at the left edge of the markers, one later as &ldquo;1
-                            &#9656;&rdquo; at the right.
-                        </li>
-                        <li>
-                            <b>Median</b>: a dashed line in the source&rsquo;s colour with &ldquo;median 3.4 bar&rdquo; at its end; the key says
-                            it too. The screen reader&rsquo;s label of the plot carries the value.
-                        </li>
-                        <li>
-                            <b>Second chart</b> (28 days of a mood score): the median and, with <b>Runs</b> on, a ring on every point of a run of
-                            six or more on one side of the median (the key explains the ring). With Runs off the rings leave.
-                        </li>
-                        <li>
-                            <b>Third chart</b> (3 readings, 7 needed): the three points faint, and in the middle of the plot&rsquo;s full height
-                            &ldquo;3 of 7 days needed before a trend means something&rdquo; at heading size. Press &ldquo;Enough readings&rdquo; and
-                            the chart draws itself.
-                        </li>
-                        <li>
-                            <b>Loading</b> and <b>Failed</b> keep the chart&rsquo;s height (the existing states). <b>390 px</b>: the median&rsquo;s
-                            words leave the plot and are in the tooltip and the key.
-                        </li>
-                    </ul>
-                </div>
-                <div class="kp5-controls" data-review-controls>
-                    <div role="group" aria-label="State">
-                        <b>State:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-ch-state="ready" aria-pressed="true">Ready</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-ch-state="loading" aria-pressed="false">Loading</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-ch-state="error" aria-pressed="false">Failed</button>
-                    </div>
-                    <div role="group" aria-label="Median">
-                        <b>Median:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-ch-median="on" aria-pressed="true">On</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-ch-median="off" aria-pressed="false">Off</button>
-                    </div>
-                    <div role="group" aria-label="Runs">
-                        <b>Runs:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-ch-runs="mark" aria-pressed="true">Marked</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-ch-runs="off" aria-pressed="false">Off</button>
-                    </div>
-                    <div role="group" aria-label="Window look">
-                        <b>Window look:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-ch-band="tint" aria-pressed="true">Wash</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-ch-band="hatch" aria-pressed="false">Lines</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-ch-band="bracket" aria-pressed="false">Bracket</button>
-                    </div>
-                    <div role="group" aria-label="Third chart">
-                        <b>Third chart:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-ch-few="few" aria-pressed="true">3 readings</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kp5-ch-few="enough" aria-pressed="false">Enough readings</button>
-                    </div>
-                </div>
-                <div class="kp5-block">
-                    <h3>Events, a window and the median</h3>
-                    <div class="kp5-pair kp5-pair--phone">
-                        <div class="kp5-card kp5-chart-frame">
-                            <figure class="kp-chart" data-kp-chart data-kp5-chart="events" data-kp-chart-median data-kp-chart-band="tint" aria-label="Pump house 1 pressure">
-                                <figcaption class="kp-chart__title">Pump house 1 pressure, bar</figcaption>
-                            </figure>
-                        </div>
-                        <div class="kp5-phone">
-                            <p class="kp5-caption">390 px wide</p>
-                            <div class="kp5-card kp5-chart-frame">
-                                <figure class="kp-chart" data-kp-chart data-kp5-chart="events" data-kp-chart-median data-kp-chart-band="tint" aria-label="Pump house 1 pressure">
-                                    <figcaption class="kp-chart__title">Pump house 1 pressure, bar</figcaption>
-                                </figure>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="kp5-block">
-                    <h3>A run chart: the median and the runs</h3>
-                    <div class="kp5-card kp5-chart-frame">
-                        <figure class="kp-chart" data-kp-chart data-kp5-chart="runs" data-kp-chart-median data-kp-chart-runs="mark" data-kp-chart-median-label="median" aria-label="Mood each day">
-                            <figcaption class="kp-chart__title">Mood each day, 1 (low) to 5 (high)</figcaption>
-                        </figure>
-                    </div>
-                </div>
-                <div class="kp5-block">
-                    <h3>Too early to say anything</h3>
-                    <div class="kp5-card kp5-chart-frame">
-                        <figure class="kp-chart" data-kp-chart data-kp5-chart="few" data-kp-chart-median data-kp-chart-min-points="7" data-kp-chart-min-unit="days" aria-label="Sleep each night">
-                            <figcaption class="kp-chart__title">Sleep each night, hours</figcaption>
-                        </figure>
-                    </div>
-                </div>
-            </section>
         </main>
         <script type="application/json" data-review-round>
-            { "round": "people-18670859-e679-4566-8bad-e8fd47298900", "received": [] }
+            { "round": "people-a203e400-3d47-4628-bd20-da306b111179", "received": ["people-18670859-e679-4566-8bad-e8fd47298900"] }
         </script>
         <script type="module" src="./people.js"></script>
         <script type="module" src="../../js/auto.js"></script>
