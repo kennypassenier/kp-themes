@@ -58,6 +58,7 @@ export const OWN = {
     'js/chart.js': "the plot's loading plate (`.kp-chart__state` as a skeleton block) over the whole plot",
     'js/graph.js': "the graph's loading note over the plot, at its final height",
     'js/request-inspector.js': "the request list is a card in four states: its loading state is the card's own busy card (js/card-state.js setCardState) over the whole stage [kpadopt5]",
+    'js/quote.js': "the quote card is a `.kp-card` in four states: its loading state is the card's own busy card (js/card-state.js setCardState) over a quote-shaped stage [kpadopt6]",
     'js/kpi.js': "a KPI tile's own skeleton figure and meter: one figure, not a data area",
 };
 

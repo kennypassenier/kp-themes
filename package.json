@@ -172,6 +172,10 @@
             "types": "./js/rating.d.ts",
             "default": "./js/rating.js"
         },
+        "./js/quote": {
+            "types": "./js/quote.d.ts",
+            "default": "./js/quote.js"
+        },
         "./js/unsaved": {
             "types": "./js/unsaved.d.ts",
             "default": "./js/unsaved.js"

@@ -158,6 +158,12 @@ export const REQUIRED = [
         why: 'A rating you can set measures its own width and lets its five stars fill a phone-wide box; the query reaches only its own parts [kpadopt6].',
     },
     {
+        container: 'kp-quote',
+        class: 'kp-quote',
+        self: true,
+        why: 'The card measures its own width and sets Hide as a normal-size button at the end in a phone-wide box; the query reaches only its own parts [kpadopt6].',
+    },
+    {
         container: 'kp-code',
         class: 'kp-code',
         self: true,

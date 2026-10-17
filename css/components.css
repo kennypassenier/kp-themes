@@ -23367,4 +23367,153 @@
             min-inline-size: 0;
         }
     }
+
+    /* --- The quote card [kpadopt6] --------------------------------------------
+ * `figure.kp-quote[data-kp-quote]` (js/quote.js): your own earlier words in a `.kp-card` with four data states
+ * (js/card-state.js). A rule along the start edge and the theme's quote mark; the words in the body face, folded at
+ * `--kp-quote-lines` (4) behind Show all with the whole text still in the page, who wrote it and when under them, and Hide
+ * under that. It measures its own width: in a phone-wide box the words are at least 1 rem and Hide is a normal-size
+ * button at the end. Knobs [KT6]: --kp-quote-rule (the edge's width, 3px), --kp-quote-mark-size (2.25rem),
+ * --kp-quote-min (the loading card's room, 9rem), --kp-quote-lines, --kp-quote-size (the words'), --kp-glyph-quote
+ * (the mark itself: a theme's own, never hardcoded in a component). */
+    .kp-quote {
+        container: kp-quote / inline-size;
+        box-sizing: border-box;
+        inline-size: 100%;
+        min-inline-size: 0;
+        margin: 0;
+        border-inline-start: var(--kp-quote-rule, 3px) solid var(--primary);
+    }
+
+    .kp-quote[hidden] {
+        display: none;
+    }
+
+    .kp-quote > .kp-card__stage {
+        --kp-card-stage-min: 0px;
+        margin-block-start: 0;
+    }
+
+    .kp-quote[data-kp-state='loading'] > .kp-card__stage {
+        min-block-size: var(--kp-quote-min, 9rem);
+    }
+
+    .kp-quote__sep {
+        margin-inline-end: 0.35em;
+    }
+
+    .kp-quote .kp-card__data {
+        display: grid;
+        align-content: start;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-quote__why {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-quote__text {
+        position: relative;
+        margin: 0;
+        padding-block: 0;
+        padding-inline-start: calc(var(--kp-quote-mark-size, 2.25rem) * 0.9);
+        border: 0;
+        font-size: var(--kp-quote-size, 1.0625rem);
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-quote__text::before {
+        content: '“';
+        content: var(--kp-glyph-quote, '“') / '';
+        position: absolute;
+        inset-block-start: -0.15em;
+        inset-inline-start: 0;
+        color: var(--primary);
+        font-size: var(--kp-quote-mark-size, 2.25rem);
+        line-height: 1;
+        opacity: 0.55;
+    }
+
+    .kp-quote__text[data-kp-folded] {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: var(--kp-quote-lines, 4);
+        line-clamp: var(--kp-quote-lines, 4);
+        overflow: hidden;
+    }
+
+    .kp-quote--lg {
+        --kp-quote-size: 1.5rem;
+        --kp-quote-mark-size: 3rem;
+    }
+
+    .kp-quote__more {
+        justify-self: start;
+        margin-inline-start: calc(var(--kp-quote-mark-size, 2.25rem) * 0.9);
+    }
+
+    .kp-quote__more[hidden] {
+        display: none;
+    }
+
+    .kp-quote__caption {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        column-gap: 0;
+        row-gap: var(--kp-space-xs, 0.25rem);
+        padding-inline-start: calc(var(--kp-quote-mark-size, 2.25rem) * 0.9);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-quote__by {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-quote__source {
+        margin-inline-start: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-quote__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        padding-inline-start: calc(var(--kp-quote-mark-size, 2.25rem) * 0.9);
+    }
+
+    @container kp-quote (max-width: 25rem) {
+        .kp-quote__text {
+            font-size: max(1rem, var(--kp-quote-size, 1.0625rem));
+        }
+
+        .kp-quote__actions {
+            justify-content: flex-end;
+            padding-inline-start: 0;
+        }
+
+        .kp-quote__actions .kp-button {
+            min-block-size: 2.75rem;
+        }
+    }
+
+    /* A list of quotes: the first few, and Show all with the exact number. */
+    .kp-quote-list {
+        display: grid;
+        gap: var(--kp-space-md, 1rem);
+        min-inline-size: 0;
+    }
+
+    .kp-quote-list__more {
+        justify-self: start;
+    }
+
+    .kp-quote-list__more[hidden] {
+        display: none;
+    }
 }

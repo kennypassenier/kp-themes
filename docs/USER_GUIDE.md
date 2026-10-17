@@ -2304,6 +2304,22 @@ previous value back and says so under the row for `data-kp-flash-error-ms` (3000
 shown under the row. `setRatingState(el, 'loading' | 'error' | 'ready')`: loading keeps the stars as dashed outlines, error puts one plate of the same size over them
 (`kp-rating-retry`). A table cell: `ratingCell(td, 4, { count: 12 })` draws the display row and writes `data-kp-sort-value` for the data table. The words are `rating…`.
 Knobs: `--kp-rating-star`, `--kp-rating-hit`, `--kp-rating-ink`, `--kp-rating-empty`, `--kp-rating-stroke`, `--kp-rating-gap`.
+### A quote card
+
+Your own earlier words, word for word, with who wrote them and when:
+
+```html
+<figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-14T19:40:00+02:00" data-kp-quote-lang="nl" data-kp-quote-why="What helped last time">
+    <blockquote>Wandelen na het eten hielp, mijn hoofd werd rustiger.</blockquote>
+</figure>
+```
+
+`attachQuotes(root)` (`js/quote.js`, attached by `js/auto.js`) builds a `.kp-card` around it (`figure` > `blockquote` > `figcaption` with a `time` whose title is the exact `dd/mm/yyyy HH:mm`).
+It only shows: choosing which words to show, and never a negative one on a rough day, is the application's job. `data-kp-quote-date-style` is `date` ("Wednesday 14/10/2026", default), `relative` or `both`;
+`data-kp-quote-lines` (4, or `all`) folds a long entry behind Show all with the whole text still in the page; `data-kp-quote-source` adds "Open that day"; `data-kp-quote-copy` shows Copy;
+`data-kp-quote-size="lg"` is a hero place; `data-kp-quote-lang` makes a screen reader pronounce the words right. "Do not show this again" hides the card at once and offers Undo for `data-kp-undo-ms` (6000);
+when the window passes `kp-quote-hide` fires with `{ text, wait }` (call `wait(promise)` for a save: a refusal puts the card back and the toast says why). Keys while the focus is in the card: `h` hides, Mod C copies. `setQuoteState(el, 'loading' | 'empty' | 'error' | 'ready')`
+uses the card's four states (`kp-quote-retry`). A `data-kp-quote-list` holds several quotes: the first `data-kp-quote-max` (3) and "Show all 7". The words are `quote…`. Knobs: `--kp-quote-rule`, `--kp-quote-mark-size`, `--kp-quote-min`, `--kp-glyph-quote`.
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

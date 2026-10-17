@@ -3853,6 +3853,48 @@ setGanttState(timeline, 'loading');
         ],
     },
     {
+        id: 'quote',
+        title: 'Quote card',
+        group: 'Content',
+        classes: ['kp-quote', 'kp-quote-list'],
+        exports: [],
+        intro: 'A card that shows your own earlier words, word for word, with who wrote them and when (“Wandelen na het eten hielp”, you, Tuesday 14/10/2026). A figure with a blockquote and a caption whose time element carries the exact moment; a long entry folds behind Show all with the whole text still in the page; Hide is one press and can be undone. It shows; choosing which words to show, and never a negative one on a rough day, is the application’s job. js/quote.js (`attachQuotes`, `setQuote`, `setQuoteState`, `quote`, `quoteWhen`) draws it; the states are the card’s (js/card-state.js).',
+        whenToUse: 'To quote a person’s own notes back to them (a weekly summary, an appointment preparation). For a message from someone else in a conversation use the thread; for a plain note use the card.',
+        examples: [
+            {
+                title: 'A quote, and why it is here',
+                why: 'The words are the blockquote; the date, who and why are attributes. `data-kp-quote-lang` makes a screen reader pronounce Dutch inside an English page.',
+                markup: `
+<figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-14T19:40:00+02:00" data-kp-quote-lang="nl" data-kp-quote-why="What helped last time">
+<blockquote>Wandelen na het eten hielp, mijn hoofd werd rustiger.</blockquote>
+</figure>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-quote-by', what: 'Who wrote it (“You”).' },
+            { name: 'data-kp-quote-date and data-kp-quote-date-style', what: 'An ISO moment; `date` (“Tuesday 14/10/2026”, the default), `relative` (“3 days ago”) or `both`. The time element’s title is the exact `dd/mm/yyyy HH:mm`.' },
+            { name: 'data-kp-quote-now', what: 'An ISO moment that “now” is for the relative words, for a page with its own clock.' },
+            { name: 'data-kp-quote-lines', what: 'How many lines before it folds (4), or `all`.' },
+            { name: 'data-kp-quote-why', what: 'A small line saying why the words are here.' },
+            { name: 'data-kp-quote-source', what: 'A link, “Open that day”, and the blockquote’s `cite`.' },
+            { name: 'data-kp-quote-hide', what: '`off` leaves out “Do not show this again” (present by default; the Undo window is `data-kp-undo-ms`, 6000).' },
+            { name: 'data-kp-quote-copy', what: 'Present shows Copy (off by default).' },
+            { name: 'data-kp-quote-size', what: '`lg` for a hero place.' },
+            { name: 'data-kp-quote-lang', what: 'The language of the words.' },
+            { name: 'data-kp-quote-max', what: 'On `data-kp-quote-list`: how many quotes before “Show all 7” (1 to 5, 3).' },
+            { name: 'data-kp-quote-text', what: 'The words, instead of a blockquote.' },
+            { name: 'data-kp-folded', what: 'Written on a folded blockquote.' },
+            { name: 'data-kp-quote-list-attached and data-kp-quote-list-hidden', what: 'Written on a list and on the quotes a list folds away.' },
+            { name: 'data-kp-quote-gone', what: 'Marks a quote a page took out of a list.' },
+        ],
+        accessibility: [
+            'Built in — `figure`, `blockquote` (with `lang` and `cite`) and `figcaption` with a `time`; the key `h` hides the quote that has the focus and Mod C copies it when copy is on, both on the `?` sheet.',
+            'Built in — a hide is said politely and offers Undo; the failed and empty states are the card’s, with a normal-size Retry.',
+            'Yours — write `data-kp-quote-lang` whenever the words are in another language than the page, and answer `kp-quote-hide` by storing the hide.',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

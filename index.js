@@ -184,6 +184,21 @@ export {
     unsavedSaved,
 } from './js/unsaved.js';
 export {
+    QUOTE,
+    QUOTE_FOLD_EVENT,
+    QUOTE_HIDE_EVENT,
+    QUOTE_LINES,
+    QUOTE_LIST,
+    QUOTE_LIST_MAX,
+    QUOTE_RETRY_EVENT,
+    QUOTE_STATES,
+    attachQuotes,
+    quote,
+    quoteWhen,
+    setQuote,
+    setQuoteState,
+} from './js/quote.js';
+export {
     RATING,
     RATING_EVENT,
     RATING_RETRY_EVENT,

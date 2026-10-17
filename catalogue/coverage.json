@@ -68,6 +68,8 @@
         "kp-transfer",
         "kp-type-confirm",
         "kp-unsaved",
+        "kp-quote-list",
+        "kp-quote",
         "kp-rating",
         "kp-uptime",
         "kp-week",

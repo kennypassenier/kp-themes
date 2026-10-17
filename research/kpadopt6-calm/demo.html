@@ -49,10 +49,186 @@
                 </p>
                 <nav class="k6-toc" aria-label="Topics on this page">
                     <ol>
+                        <li><a href="#topic-quote">Quote card</a> <span class="k6-toc__count">2 sections</span></li>
                         <li><a href="#topic-rating">Star rating</a> <span class="k6-toc__count">2 sections</span></li>
                     </ol>
                 </nav>
             </header>
+
+            <!-- ================================================================ topic: Quote card -->
+            <h2 class="k6-topic" id="topic-quote">Quote card</h2>
+            <section
+                class="k6-sec"
+                id="quote"
+                data-review-item="quote"
+                data-review-components="quote quote-list"
+                data-review-topic="quote"
+                data-review-topic-title="Quote card"
+                data-review-title="Quote card: your own words, back to you"
+                data-review-choices='[{"id": "quote-date", "label": "How the date reads", "default": "date", "options": [{"value": "date", "label": "The date: Wednesday 14/10/2026 (recommended)", "hint": "Exact, and it does not make a note from last month feel old. This is the first and second card below."}, {"value": "relative", "label": "How long ago: 3 days ago", "hint": "Reads like a counter that grows; the exact moment is still in the tooltip. This is the card marked as relative below."}, {"value": "both", "label": "Both: Wednesday 14/10/2026 (3 days ago)", "hint": "Most to read on one line; the card marked as both below."}]}, {"id": "quote-fold", "label": "How long a quote shows before it folds", "default": "4", "options": [{"value": "4", "label": "Four lines (recommended)", "hint": "A diary entry shows its first four lines and a Show all button; the whole text stays in the page. The long card below."}, {"value": "3", "label": "Three lines", "hint": "A shorter card, so a list of quotes is easier to take in at a glance, with more folding."}, {"value": "all", "label": "Never fold", "hint": "Every quote shows whole, however long; a wall of text for a long entry."}]}]'
+                aria-labelledby="h-quote"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-quote">Quote card: your own words, back to you</h2>
+                    <p>
+                        <code>&lt;figure class="kp-quote" data-kp-quote&gt;</code> (js/quote.js): a card that shows what you wrote earlier, word for
+                        word, with who wrote it and when. It only shows; what to show, and never a negative sentence on a rough day, is decided by the
+                        app that owns the notes.
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>First card</b>: a navy rule along the start edge, a large quote mark, the sentence <b>Wandelen na het eten hielp</b>
+                            (Dutch, marked <code>lang="nl"</code>), the small line <b>What helped last time</b> over it, <b>You, Wednesday
+                            14/10/2026</b> under it, and a <b>Do not show this again</b> button. Hover the date: the tooltip is the exact moment,
+                            <b>14/10/2026 19:40</b>.
+                        </li>
+                        <li>
+                            <b>Hide</b>: press <b>Do not show this again</b> (or press <b>h</b> while the focus is in the card): the card goes at once,
+                            a toast says <b>Hidden</b> with <b>Undo</b> and a ring that counts down 6 seconds; Undo brings it back where it was.
+                            When the six seconds pass, the grey box under the first card says the page was told (<code>kp-quote-hide</code>).
+                        </li>
+                        <li>
+                            <b>Long entry</b>: the second card shows four lines and ends in an ellipsis, with <b>Show all</b> under it; press it and
+                            the whole entry shows (<b>Show less</b> folds it again). The card keeps its caption under the words either way.
+                        </li>
+                        <li>
+                            <b>Several quotes</b> (the list): three quotes and <b>Show all 7</b> (the exact number), then all seven and <b>Show
+                            fewer</b>. <b>Hero</b>: the same card at a large size with a link, <b>Open that day</b>, and a Copy button.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s card is paper with a hairline; the rule along the start edge is the navy that draws every rule in formal, and
+                        the quote mark is a quiet navy at half strength. Look at the margin between the mark and the words, at the words never
+                        touching the card&rsquo;s edge, and at the buttons under the caption.
+                    </p>
+                </div>
+                <div class="k6-pair">
+                    <div class="k6-case">
+                        <p class="k6-label">A quote, why it is here, and Hide with Undo</p>
+                        <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-14T19:40:00+02:00" data-kp-quote-lang="nl" data-kp-quote-why="What helped last time" id="k6-quote-a">
+                            <blockquote>Wandelen na het eten hielp, mijn hoofd werd rustiger.</blockquote>
+                        </figure>
+                        <pre class="k6-log" id="k6-quote-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">A long entry folds behind Show all</p>
+                        <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-09-29T21:05:00+02:00" data-kp-quote-lang="nl" data-kp-quote-why="A year ago today" data-kp-quote-hide="off">
+                            <blockquote>Vandaag was een zware dag. Ik werd wakker met die zware kop en heb eerst niets gedaan, gewoon in bed gelegen en naar het plafond gekeken. Rond de middag heb ik toch een boterham gegeten en een korte wandeling gemaakt langs het kanaal. Daarna voelde het iets lichter. Ik heb niemand gesproken behalve de buurvrouw, en dat was genoeg. Morgen opnieuw proberen, zonder iets te willen bewijzen.</blockquote>
+                        </figure>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">As how long ago (a choice), and both</p>
+                        <div class="k6-stack">
+                            <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-14T19:40:00+02:00" data-kp-quote-date-style="relative" data-kp-quote-now="2026-10-17T12:00:00+02:00" data-kp-quote-hide="off" data-kp-quote-lang="nl">
+                                <blockquote>Eerst koffie, dan pas nadenken.</blockquote>
+                            </figure>
+                            <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-14T19:40:00+02:00" data-kp-quote-date-style="both" data-kp-quote-now="2026-10-17T12:00:00+02:00" data-kp-quote-hide="off" data-kp-quote-lang="nl">
+                                <blockquote>Eerst koffie, dan pas nadenken.</blockquote>
+                            </figure>
+                        </div>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">Hero size, a link to the day, Copy</p>
+                        <figure class="kp-quote" data-kp-quote data-kp-quote-size="lg" data-kp-quote-copy data-kp-quote-date="2026-10-12T08:15:00+02:00" data-kp-quote-source="#k6-quote-day" data-kp-quote-lang="nl" data-kp-quote-hide="off">
+                            <blockquote>Kleine stappen tellen ook.</blockquote>
+                        </figure>
+                        <p class="k6-caption" id="k6-quote-day">(The link goes to this line: the day&rsquo;s own page does not exist in the demo.)</p>
+                    </div>
+                </div>
+                <div class="k6-case">
+                    <p class="k6-label">Several quotes: three, and Show all 7</p>
+                    <div class="kp-quote-list" data-kp-quote-list id="k6-quote-list">
+                        <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-14T19:40:00+02:00" data-kp-quote-lang="nl" data-kp-quote-hide="off"><blockquote>Wandelen na het eten hielp.</blockquote></figure>
+                        <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-11T20:10:00+02:00" data-kp-quote-lang="nl" data-kp-quote-hide="off"><blockquote>Vroeg naar bed, de ochtend was beter.</blockquote></figure>
+                        <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-09T18:30:00+02:00" data-kp-quote-lang="nl" data-kp-quote-hide="off"><blockquote>Even buiten zitten met thee.</blockquote></figure>
+                        <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-06T09:00:00+02:00" data-kp-quote-lang="nl" data-kp-quote-hide="off"><blockquote>Eerst de brief schrijven, daarna pas de rest.</blockquote></figure>
+                        <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-03T17:45:00+02:00" data-kp-quote-lang="nl" data-kp-quote-hide="off"><blockquote>Muziek opgezet tijdens het koken.</blockquote></figure>
+                        <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-09-30T12:20:00+02:00" data-kp-quote-lang="nl" data-kp-quote-hide="off"><blockquote>De wandeling met Sam deed deugd.</blockquote></figure>
+                        <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-09-27T19:00:00+02:00" data-kp-quote-lang="nl" data-kp-quote-hide="off"><blockquote>Niets gepland, en dat was goed.</blockquote></figure>
+                    </div>
+                </div>
+            </section>
+            <section
+                class="k6-sec"
+                id="quote-states"
+                data-review-item="quote-states"
+                data-review-components="quote quote-list"
+                data-review-topic="quote"
+                data-review-title="Quote card: states, an unbroken word and phone width"
+                aria-labelledby="h-quote-states"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-quote-states">Quote card: states, an unbroken word and phone width</h2>
+                    <p>A card that is being read, one with nothing to show, one that could not be read, a word that will not break, and the card in a 390 px box.</p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Loading</b>, <b>Empty</b>, <b>Could not read</b> and <b>Ready</b> (buttons above the first card): the card keeps its
+                            place and its height in all four. <b>Loading</b>: the theme&rsquo;s loading card, moving, centred over the card.
+                            <b>Empty</b>: centred, at heading size, <b>Nothing from earlier yet</b> over <b>Words you write come back here</b> (no
+                            promise, no prompt to write). <b>Could not read</b>: the red-edged plate with <b>Could not read your notes</b> and a
+                            normal-size <b>Retry</b>; Retry shows the loading card for a second and the quote comes back.
+                        </li>
+                        <li>
+                            <b>An unbroken word</b> (the second card): a string with no spaces wraps inside the card instead of running out of it.
+                            <b>Hide is held</b> while the page saves it is not needed: the card is gone at once and returns if the save fails (press
+                            <b>Next hide is refused</b> then Hide on the first card: the toast says why, and the card is back).
+                        </li>
+                        <li>
+                            <b>Phone width</b> (390 px box): the card fills the box, the words are at least 1 rem, and <b>Do not show this again</b>
+                            is a normal-size button at the end of the card.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The loading card and the plates are formal&rsquo;s own (the card that ruled the busy table; the destructive alert). Look at
+                        the card keeping its height between the four states, and at the empty words standing in the middle.
+                    </p>
+                </div>
+                <div data-review-controls>
+                    <div role="group" aria-label="State of the first card" class="k6-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-quote-state="ready">Ready</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-quote-state="loading">Loading</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-quote-state="empty">Empty</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-quote-state="error">Could not read</button>
+                    </div>
+                    <div role="group" aria-label="What the next hide does" class="k6-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-quote-hide="ok">Next hide is saved</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-quote-hide="refused">Next hide is refused</button>
+                    </div>
+                </div>
+                <div class="k6-pair">
+                    <div class="k6-case">
+                        <p class="k6-label">Driven by the buttons above</p>
+                        <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-14T19:40:00+02:00" data-kp-quote-lang="nl" data-kp-quote-why="What helped last time" id="k6-quote-state">
+                            <blockquote>Wandelen na het eten hielp, mijn hoofd werd rustiger.</blockquote>
+                        </figure>
+                        <pre class="k6-log" id="k6-quote-state-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">A word that will not break</p>
+                        <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-01T10:00:00+02:00" data-kp-quote-hide="off">
+                            <blockquote>Vandaag-schreef-ik-het-woord-onbegrijpelijkonverstaanbaarwaardeloosvolkomenonmogelijkaaneen-en-het-bleef-doorlopen.</blockquote>
+                        </figure>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">Phone width (390 px)</p>
+                        <div class="k6-frame k6-frame--phone">
+                            <figure class="kp-quote" data-kp-quote data-kp-quote-date="2026-10-14T19:40:00+02:00" data-kp-quote-lang="nl" data-kp-quote-why="What helped last time">
+                                <blockquote>Wandelen na het eten hielp, mijn hoofd werd rustiger.</blockquote>
+                            </figure>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
             <!-- ================================================================ topic: Star rating -->
             <h2 class="k6-topic" id="topic-rating">Star rating</h2>

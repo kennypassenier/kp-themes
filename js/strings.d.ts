@@ -3435,6 +3435,102 @@ export type Strings = {
      * What a screen reader hears on a row that cannot be changed by this person [kpadopt6]
      */
     ratingReadonly: string;
+    /**
+     * Who wrote a quote when the card does not say: "You" (js/quote.js) [kpadopt6]
+     */
+    quoteBy: string;
+    /**
+     * The line under a quote: "You, Tuesday 14/10/2026" [kpadopt6]
+     */
+    quoteCaption: (by: string, when: string) => string;
+    /**
+     * A date with its weekday: "Tuesday 14/10/2026" [kpadopt6]
+     */
+    quoteDay: (weekday: string, date: string) => string;
+    /**
+     * How long ago, in words: "3 days ago", "today" [kpadopt6]
+     */
+    quoteRelative: (days: number) => string;
+    /**
+     * The date and how long ago together: "Tuesday 14/10/2026 (3 days ago)" [kpadopt6]
+     */
+    quoteBoth: (date: string, relative: string) => string;
+    /**
+     * The button that stops a quote from coming back [kpadopt6]
+     */
+    quoteHide: string;
+    /**
+     * The undo toast's line after a hide: "Hidden" [kpadopt6]
+     */
+    quoteHideDone: string;
+    /**
+     * What a hide that is being saved says on its button [kpadopt6]
+     */
+    quoteHiding: string;
+    /**
+     * The button that copies the words [kpadopt6]
+     */
+    quoteCopy: string;
+    /**
+     * The same button for a moment after the copy [kpadopt6]
+     */
+    quoteCopied: string;
+    /**
+     * What is said when the clipboard refused [kpadopt6]
+     */
+    quoteCopyFailed: string;
+    /**
+     * The button that unfolds a long quote [kpadopt6]
+     */
+    quoteShowAll: string;
+    /**
+     * The same button once it is open [kpadopt6]
+     */
+    quoteShowLess: string;
+    /**
+     * A list's button that shows every quote: "Show all 7" [kpadopt6]
+     */
+    quoteShowAllN: (n: number) => string;
+    /**
+     * The same button once the list is open [kpadopt6]
+     */
+    quoteShowFewer: string;
+    /**
+     * The link to the day the words were written [kpadopt6]
+     */
+    quoteOpen: string;
+    /**
+     * The words under the loading card [kpadopt6]
+     */
+    quoteLoading: string;
+    /**
+     * The empty card's title [kpadopt6]
+     */
+    quoteEmptyTitle: string;
+    /**
+     * The empty card's sentence [kpadopt6]
+     */
+    quoteEmptyText: string;
+    /**
+     * The failed card's title [kpadopt6]
+     */
+    quoteFailedTitle: string;
+    /**
+     * The failed card's sentence [kpadopt6]
+     */
+    quoteFailedText: string;
+    /**
+     * The failed card's button [kpadopt6]
+     */
+    quoteRetry: string;
+    /**
+     * A list of quotes' name for a screen reader [kpadopt6]
+     */
+    quoteListName: string;
+    /**
+     * What is said when a quote is hidden [kpadopt6]
+     */
+    quoteAnnounceHidden: string;
 };
 /**
  * @typedef {object} Strings
@@ -4390,6 +4486,30 @@ export type Strings = {
  * @property {string} ratingCancel  The button that drops a pending rating [kpadopt6]
  * @property {(value: number, max: number) => string} ratingPending  The line over those two buttons: "4 of 5, not saved yet" [kpadopt6]
  * @property {string} ratingReadonly  What a screen reader hears on a row that cannot be changed by this person [kpadopt6]
+ * @property {string} quoteBy  Who wrote a quote when the card does not say: "You" (js/quote.js) [kpadopt6]
+ * @property {(by: string, when: string) => string} quoteCaption  The line under a quote: "You, Tuesday 14/10/2026" [kpadopt6]
+ * @property {(weekday: string, date: string) => string} quoteDay  A date with its weekday: "Tuesday 14/10/2026" [kpadopt6]
+ * @property {(days: number) => string} quoteRelative  How long ago, in words: "3 days ago", "today" [kpadopt6]
+ * @property {(date: string, relative: string) => string} quoteBoth  The date and how long ago together: "Tuesday 14/10/2026 (3 days ago)" [kpadopt6]
+ * @property {string} quoteHide  The button that stops a quote from coming back [kpadopt6]
+ * @property {string} quoteHideDone  The undo toast's line after a hide: "Hidden" [kpadopt6]
+ * @property {string} quoteHiding  What a hide that is being saved says on its button [kpadopt6]
+ * @property {string} quoteCopy  The button that copies the words [kpadopt6]
+ * @property {string} quoteCopied  The same button for a moment after the copy [kpadopt6]
+ * @property {string} quoteCopyFailed  What is said when the clipboard refused [kpadopt6]
+ * @property {string} quoteShowAll  The button that unfolds a long quote [kpadopt6]
+ * @property {string} quoteShowLess  The same button once it is open [kpadopt6]
+ * @property {(n: number) => string} quoteShowAllN  A list's button that shows every quote: "Show all 7" [kpadopt6]
+ * @property {string} quoteShowFewer  The same button once the list is open [kpadopt6]
+ * @property {string} quoteOpen  The link to the day the words were written [kpadopt6]
+ * @property {string} quoteLoading  The words under the loading card [kpadopt6]
+ * @property {string} quoteEmptyTitle  The empty card's title [kpadopt6]
+ * @property {string} quoteEmptyText  The empty card's sentence [kpadopt6]
+ * @property {string} quoteFailedTitle  The failed card's title [kpadopt6]
+ * @property {string} quoteFailedText  The failed card's sentence [kpadopt6]
+ * @property {string} quoteRetry  The failed card's button [kpadopt6]
+ * @property {string} quoteListName  A list of quotes' name for a screen reader [kpadopt6]
+ * @property {string} quoteAnnounceHidden  What is said when a quote is hidden [kpadopt6]
  */
 /**
  * The defaults. English, by Kenny's decision of 2026-09-04 — the package

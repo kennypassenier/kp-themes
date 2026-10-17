@@ -48,6 +48,7 @@ export { COUNTDOWN, COUNTDOWN_END_EVENT, COUNTDOWN_EVENT, COUNTDOWN_STEP, attach
 export { TIMER_DISC, TIMER_DISC_LEFT, attachTimerDiscs, discShare, timerDiscOf } from './js/timer-disc.js';
 export { RANGE, RANGE_EVENT, RANGE_PRESETS, attachRanges, parseTime, presetMs, rangeFaults, rangeMoment, rangeOf, setRange } from './js/range.js';
 export { UNSAVED, UNSAVED_CHANGE_EVENT, UNSAVED_DISCARD_EVENT, UNSAVED_LEAVE_EVENT, UNSAVED_REVERT_EVENT, UNSAVED_SAVE_EVENT, UNSAVED_UNDO_EVENT, attachUnsaved, discardUnsaved, markUnsavedClean, setUnsavedSaving, unsaved, unsavedSaved, } from './js/unsaved.js';
+export { QUOTE, QUOTE_FOLD_EVENT, QUOTE_HIDE_EVENT, QUOTE_LINES, QUOTE_LIST, QUOTE_LIST_MAX, QUOTE_RETRY_EVENT, QUOTE_STATES, attachQuotes, quote, quoteWhen, setQuote, setQuoteState, } from './js/quote.js';
 export { RATING, RATING_EVENT, RATING_RETRY_EVENT, RATING_STATES, attachRatings, rating, ratingCell, setRating, setRatingState, snapRating, } from './js/rating.js';
 export { SLIDER, SLIDER_CHANGE_EVENT, SLIDER_INPUT_EVENT, SLIDER_STATES, attachSliders, parseSliderText, setSliderState, setSliderValues, slider, sliderPercent, sliderValues, snapSlider, } from './js/slider.js';
 export { SENTENCE, SENTENCE_EVENT, attachSentences, sentence, sentenceSummary, setSentenceFieldState, setSentenceInvalid, setSentenceWhy, } from './js/sentence.js';

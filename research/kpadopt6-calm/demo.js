@@ -4,6 +4,7 @@
 //   3. the buttons that drive a state or an option.
 // Everything drawn is drawn by the package's own functions and attributes.
 import { setRatingState } from '../../js/rating.js';
+import { setQuoteState } from '../../js/quote.js';
 
 /** @param {string} selector @param {ParentNode} [root] */
 const all = (selector, root = document) => /** @type {HTMLElement[]} */ ([...root.querySelectorAll(selector)]);
@@ -29,6 +30,35 @@ function onButtons(attr, run) {
 const log = (box, text) => {
     if (box) box.textContent = text;
 };
+
+// ---- 4 · quote card ------------------------------------------------------------------------------
+{
+    const first = document.getElementById('k6-quote-a');
+    first?.addEventListener('kp-quote-hide', (event) => {
+        log(document.getElementById('k6-quote-log'), 'kp-quote-hide: the page was told, after the Undo window');
+        void event;
+    });
+    const driven = document.getElementById('k6-quote-state');
+    let refuse = false;
+    driven?.addEventListener('kp-quote-hide', (event) => {
+        const { wait } = /** @type {CustomEvent} */ (event).detail;
+        log(document.getElementById('k6-quote-state-log'), refuse ? 'kp-quote-hide: the save is refused' : 'kp-quote-hide: saved');
+        wait(sleep(600).then(() => (refuse ? Promise.reject(new Error('The note could not be hidden')) : undefined)));
+    });
+    driven?.addEventListener('kp-quote-retry', () => {
+        log(document.getElementById('k6-quote-state-log'), 'kp-quote-retry');
+        if (driven) {
+            setQuoteState(driven, 'loading');
+            void sleep(1000).then(() => setQuoteState(driven, 'ready'));
+        }
+    });
+    onButtons('data-k6-quote-state', (value) => {
+        if (driven) setQuoteState(driven, /** @type {'ready' | 'loading' | 'empty' | 'error'} */ (value));
+    });
+    onButtons('data-k6-quote-hide', (value) => {
+        refuse = value === 'refused';
+    });
+}
 
 // ---- 6 · star rating -----------------------------------------------------------------------------
 {

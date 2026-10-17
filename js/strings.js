@@ -990,6 +990,30 @@
  * @property {string} ratingCancel  The button that drops a pending rating [kpadopt6]
  * @property {(value: number, max: number) => string} ratingPending  The line over those two buttons: "4 of 5, not saved yet" [kpadopt6]
  * @property {string} ratingReadonly  What a screen reader hears on a row that cannot be changed by this person [kpadopt6]
+ * @property {string} quoteBy  Who wrote a quote when the card does not say: "You" (js/quote.js) [kpadopt6]
+ * @property {(by: string, when: string) => string} quoteCaption  The line under a quote: "You, Tuesday 14/10/2026" [kpadopt6]
+ * @property {(weekday: string, date: string) => string} quoteDay  A date with its weekday: "Tuesday 14/10/2026" [kpadopt6]
+ * @property {(days: number) => string} quoteRelative  How long ago, in words: "3 days ago", "today" [kpadopt6]
+ * @property {(date: string, relative: string) => string} quoteBoth  The date and how long ago together: "Tuesday 14/10/2026 (3 days ago)" [kpadopt6]
+ * @property {string} quoteHide  The button that stops a quote from coming back [kpadopt6]
+ * @property {string} quoteHideDone  The undo toast's line after a hide: "Hidden" [kpadopt6]
+ * @property {string} quoteHiding  What a hide that is being saved says on its button [kpadopt6]
+ * @property {string} quoteCopy  The button that copies the words [kpadopt6]
+ * @property {string} quoteCopied  The same button for a moment after the copy [kpadopt6]
+ * @property {string} quoteCopyFailed  What is said when the clipboard refused [kpadopt6]
+ * @property {string} quoteShowAll  The button that unfolds a long quote [kpadopt6]
+ * @property {string} quoteShowLess  The same button once it is open [kpadopt6]
+ * @property {(n: number) => string} quoteShowAllN  A list's button that shows every quote: "Show all 7" [kpadopt6]
+ * @property {string} quoteShowFewer  The same button once the list is open [kpadopt6]
+ * @property {string} quoteOpen  The link to the day the words were written [kpadopt6]
+ * @property {string} quoteLoading  The words under the loading card [kpadopt6]
+ * @property {string} quoteEmptyTitle  The empty card's title [kpadopt6]
+ * @property {string} quoteEmptyText  The empty card's sentence [kpadopt6]
+ * @property {string} quoteFailedTitle  The failed card's title [kpadopt6]
+ * @property {string} quoteFailedText  The failed card's sentence [kpadopt6]
+ * @property {string} quoteRetry  The failed card's button [kpadopt6]
+ * @property {string} quoteListName  A list of quotes' name for a screen reader [kpadopt6]
+ * @property {string} quoteAnnounceHidden  What is said when a quote is hidden [kpadopt6]
  */
 
 /**
@@ -2158,6 +2182,42 @@ export const DEFAULT_STRINGS = Object.freeze({
     ratingCancel: 'Cancel',
     ratingPending: (value, max) => `${value} of ${max}, not saved yet`,
     ratingReadonly: 'You can look at this rating but not change it',
+    // The quote card (js/quote.js) [kpadopt6].
+    quoteBy: 'You',
+    quoteCaption: (by, when) => (when === '' ? by : `${by}, ${when}`),
+    quoteDay: (weekday, date) => `${weekday} ${date}`,
+    quoteRelative: (days) =>
+        days <= 0
+            ? 'today'
+            : days === 1
+              ? 'yesterday'
+              : days < 14
+                ? `${days} days ago`
+                : days < 60
+                  ? `${Math.floor(days / 7)} weeks ago`
+                  : days < 730
+                    ? `${Math.floor(days / 30)} months ago`
+                    : `${Math.floor(days / 365)} years ago`,
+    quoteBoth: (date, relative) => `${date} (${relative})`,
+    quoteHide: 'Do not show this again',
+    quoteHideDone: 'Hidden',
+    quoteHiding: 'Saving',
+    quoteCopy: 'Copy',
+    quoteCopied: 'Copied',
+    quoteCopyFailed: 'Could not copy',
+    quoteShowAll: 'Show all',
+    quoteShowLess: 'Show less',
+    quoteShowAllN: (n) => `Show all ${n}`,
+    quoteShowFewer: 'Show fewer',
+    quoteOpen: 'Open that day',
+    quoteLoading: 'Reading your notes',
+    quoteEmptyTitle: 'Nothing from earlier yet',
+    quoteEmptyText: 'Words you write come back here',
+    quoteFailedTitle: 'Could not read your notes',
+    quoteFailedText: 'The notes could not be reached just now.',
+    quoteRetry: 'Retry',
+    quoteListName: 'Earlier words',
+    quoteAnnounceHidden: 'Quote hidden',
 });
 
 // STRINGS_NL was removed in 4.0.0 [D3]. Kenny decided that on
