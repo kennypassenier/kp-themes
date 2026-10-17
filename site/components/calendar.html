@@ -95,10 +95,14 @@
                             <li><a class="sc-nav__link" href="../../site/components/sentence.html">Sentence form</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/slider.html">Slider</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/unsaved.html">Unsaved changes bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/rating.html">Star rating</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/usual-picker.html">Picker with the usual on top</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/time.html">Time field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/disabled-reason.html">Disabled reason</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/autosize.html">Growing text box</a></li>
                         </ul>
                     </div>
                     <div class="sc-nav__group">
@@ -134,6 +138,11 @@
                             <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/uptime.html">Uptime strip</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/runs.html">Next times</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/deplist.html">Dependency list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/entity-card.html">Entity card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/claim.html">Who brings it</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/availability.html">Who can come</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/console.html">Console</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toolbar.html">List toolbar</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/facets.html">Facet list</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/checklist.html">Checklist</a></li>
@@ -146,6 +155,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/request-inspector.html">Request inspector</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/passkeys.html">Ways to sign in</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/selection.html">Selection bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/uses-map.html">Uses map</a></li>
                         </ul>
                     </div>
                     <div class="sc-nav__group">
@@ -165,6 +175,9 @@
                             <li><a class="sc-nav__link" href="../../site/components/type-confirm.html">Typed confirmation</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/timer-disc.html">Visual timer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/countdown.html">Countdown</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/version-delta.html">Version jump chip</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/ack-gate.html">Acknowledge gate</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/path-trace.html">Path of a connection</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/status-row.html">Status rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/timer.html">Kitchen timers</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/steplist.html">Step list</a></li>
@@ -205,10 +218,16 @@
                         <ul class="sc-nav__list">
                             <li><a class="sc-nav__link" href="../../site/components/command.html">Command block</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/compare.html">Compare slider</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/quote.html">Quote card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/qr.html">QR code</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/keys.html">Key line and key cap</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/media.html">Media</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/lede.html">Lede</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/thread.html">Conversation</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/viewer.html">Viewer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/document-preview.html">Document preview</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/gallery.html">Gallery</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/print.html">Printing a list</a></li>
                         </ul>
                     </div>
                     <div class="sc-nav__group">
@@ -221,6 +240,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/page-shell.html">Page shell</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/visually-hidden.html">Visually hidden</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/master-detail.html">Master and detail panes</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/anchors.html">Link anchors</a></li>
                         </ul>
                     </div>
                 </div>
@@ -290,6 +310,14 @@
     for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setCalendarState(month, state, state === 'loading' ? 'Reading the backups: 4 of 9 services read.' : '');
     });
 &lt;/<span class="kp-code__keyword">script</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Calm tones: a quiet day is not a failed day</figcaption>
+                        <p class="kp-text-muted">`data-kp-tones=&quot;calm&quot;` swaps ok, warn and bad for logged (the theme’s accent), quiet (nothing logged: no border, no count, never “missed”) and paused (hatched, from `data-kp-paused-range`). The heat grid and the uptime strip take the same attribute (js/calm-tones.js).</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<section class="kp-calendar" data-kp-calendar data-kp-tones="calm" data-kp-calendar-month="2026-10" data-kp-paused-range="2026-10-03/2026-10-06" aria-label="Movement"></section>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-calendar&quot;</span> <span class="kp-code__keyword">data-kp-calendar</span> <span class="kp-code__keyword">data-kp-tones</span><span class="kp-code__string">=&quot;calm&quot;</span> <span class="kp-code__keyword">data-kp-calendar-month</span><span class="kp-code__string">=&quot;2026-10&quot;</span> <span class="kp-code__keyword">data-kp-paused-range</span><span class="kp-code__string">=&quot;2026-10-03/2026-10-06&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Movement&quot;</span>&gt;&lt;/<span class="kp-code__keyword">section</span>&gt;</code></pre>
                     </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
@@ -377,20 +405,38 @@
                             <tr><td><code>data-kp-calendar-prev</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-calendar-selected</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-calendar-today</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-calm-map</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-date</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-date-format</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-date-input</code></td><td>written, selector</td></tr>
                             <tr><td><code>data-kp-date-open</code></td><td>written, selector</td></tr>
                             <tr><td><code>data-kp-date-panel</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-date-value</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-dim</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-heading-level</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-key</code></td><td>read, written, selector</td></tr>
+                            <tr><td><code>data-kp-legend</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-locale</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-logged-fill</code></td><td>prose</td></tr>
                             <tr><td><code>data-kp-pad</code></td><td>written</td></tr>
-                            <tr><td><code>data-kp-state</code></td><td>selector, written, read</td></tr>
-                            <tr><td><code>data-kp-time-zone</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-paused</code></td><td>written, read</td></tr>
+                            <tr><td><code>data-kp-paused-range</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-plate</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-quiet</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-quiet-words</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-state</code></td><td>read, written, selector</td></tr>
+                            <tr><td><code>data-kp-time-zone</code></td><td>prose, read</td></tr>
                             <tr><td><code>data-kp-today</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-today-fold-after</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-today-mark</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-today-now</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-today-order</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-today-pause</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-today-paused</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-today-resume</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-today-since</code></td><td>read</td></tr>
                             <tr><td><code>data-kp-tone</code></td><td>written, selector</td></tr>
+                            <tr><td><code>data-kp-tones</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-week-starts-on</code></td><td>written, read</td></tr>
                     </tbody></table></div>
                 </section>
@@ -407,6 +453,7 @@
                     <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
                             <tr><td><code>kp-calendar-pick</code></td><td>Fired on the calendar, bubbling, when a day is picked: `detail` `{ date: 'YYYY-MM-DD', source: 'pointer' | 'keyboard' }`.</td></tr>
                             <tr><td><code>kp-calendar-month</code></td><td>Fired on the calendar, bubbling, when a person moves it to another month: `detail` `{ year, month }` (month 1-12).</td></tr>
+                            <tr><td><code>kp-calendar-retry</code></td><td>Fired on a calm calendar, bubbling, when Retry is pressed on its failed plate.</td></tr>
                             <tr><td><code>kp-date-change</code></td><td>Fired when a date is chosen, typed or set. A contract value [TH26]: `{ iso, date, source }`.</td></tr>
                             <tr><td><code>kp-date-open</code></td><td>Fired when the panel opens or closes: `{ open }`.</td></tr>
                             <tr><td><code>kp-date-month</code></td><td>Fired when the visible month changes: `{ year, month }` (month 0-11).</td></tr>
@@ -415,6 +462,7 @@
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
                     <h2 class="kp-fw-semibold">Knobs</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Knobs"><table class="kp-table"><thead><tr><th>Custom property</th><th>Default</th></tr></thead><tbody>
+                            <tr><td><code>--kp-button-height-sm</code></td><td><code>max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem)))</code></td></tr>
                             <tr><td><code>--kp-calendar-aside</code></td><td><code>16rem</code></td></tr>
                             <tr><td><code>--kp-calendar-busy-spinner</code></td><td><code>2.5rem</code></td></tr>
                             <tr><td><code>--kp-calendar-cell-font</code></td><td><code>clamp(0.85rem, 1.4vw, 1.15rem)</code></td></tr>
@@ -423,14 +471,26 @@
                             <tr><td><code>--kp-calendar-nav-fit</code></td><td><code>20.5rem</code></td></tr>
                             <tr><td><code>--kp-calendar-spinner</code></td><td><code>0.75rem</code></td></tr>
                             <tr><td><code>--kp-calendar-title-size</code></td><td><code>1.125rem</code></td></tr>
+                            <tr><td><code>--kp-control-height</code></td><td><code>2.25rem</code></td></tr>
+                            <tr><td><code>--kp-glyph-alert</code></td><td><code>'!'</code></td></tr>
+                            <tr><td><code>--kp-glyph-check</code></td><td><code>'✓'</code></td></tr>
+                            <tr><td><code>--kp-glyph-clock</code></td><td><code>'◷'</code></td></tr>
+                            <tr><td><code>--kp-highlight</code></td><td><code>hsl(from var(--foreground) h s l / 0.08)</code></td></tr>
                             <tr><td><code>--kp-line-height</code></td><td><code>1.5</code></td></tr>
+                            <tr><td><code>--kp-logged-fill</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-logged-ink</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-quiet-fill</code></td><td><code></code></td></tr>
+                            <tr><td><code>--kp-quiet-ink</code></td><td><code></code></td></tr>
                             <tr><td><code>--kp-radius-sm</code></td><td><code>calc(var(--radius, 0.5rem) / 2)</code></td></tr>
+                            <tr><td><code>--kp-sentence-edge</code></td><td><code>var(--primary)</code></td></tr>
+                            <tr><td><code>--kp-sentence-edge-width</code></td><td><code>2px</code></td></tr>
                             <tr><td><code>--kp-space-lg</code></td><td><code>1.5rem</code></td></tr>
                             <tr><td><code>--kp-space-md</code></td><td><code>1rem</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
                             <tr><td><code>--kp-space-xs</code></td><td><code>0.25rem</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
                             <tr><td><code>--kp-text-xs</code></td><td><code>0.75rem</code></td></tr>
+                            <tr><td><code>--kp-time-width</code></td><td><code>8.5rem</code></td></tr>
                             <tr><td><code>--kp-week-at</code></td><td><code>0</code></td></tr>
                             <tr><td><code>--kp-week-axis</code></td><td><code>3.25rem</code></td></tr>
                             <tr><td><code>--kp-week-day-label</code></td><td><code>5.5rem</code></td></tr>
@@ -478,6 +538,14 @@
                             <tr><td><code>.kp-calendar--busy-whole / --busy-days</code></td><td>How a loading month shows: one card with the theme’s spinner and the state’s words over the whole grid, or the theme’s spinner in every loading day. Without either, the loading days pulse.</td></tr>
                             <tr><td><code>pastel: the caterpillar</code></td><td>In pastel a loading day gets a pom-pom rim and two legs and rises in turn, with a head beside the last loading day of its week; the card over the whole month is a plate with its own pass, a head on its corner and stepping legs, stuck on as the landing and taken off as that backwards.</td></tr>
                             <tr><td><code>--kp-calendar-busy-words</code></td><td>In a register: `hold` keeps the card’s words on the card while it leaves, so the card that goes is the one that came (pastel); js/calendar.js writes `data-kp-busy-words-held` on the card until it has gone. Unset, the words clear at once.</td></tr>
+                            <tr><td><code>data-kp-tones</code></td><td>`calm` on a calendar, heat grid or uptime strip (`standard` is the default): `logged`, `quiet` and `paused` instead of ok, warn and bad.</td></tr>
+                            <tr><td><code>data-kp-quiet-words</code></td><td>`none` leaves the words of a quiet day out of its name (`label`, “nothing logged”, is the default); a quiet cell never prints a count.</td></tr>
+                            <tr><td><code>data-kp-logged-fill</code></td><td>`success` asks for the success plate instead of the theme’s accent.</td></tr>
+                            <tr><td><code>data-kp-calm-map</code></td><td>`none` passes ok, warn and bad through; by default ok is logged and the rest quiet, with one console warning per foreign tone.</td></tr>
+                            <tr><td><code>data-kp-paused-range</code></td><td>`2026-10-03/2026-10-14` (an end is optional): quiet days inside it are drawn as paused.</td></tr>
+                            <tr><td><code>data-kp-legend</code></td><td>`hide` leaves out the calm legend (Logged, Nothing logged, Paused).</td></tr>
+                            <tr><td><code>kp-calendar-retry and setCalendarCaption</code></td><td>A calm month with nothing logged keeps its six quiet rows under a centred plate; a month that could not be read is dimmed under one with Retry, which fires `kp-calendar-retry`. `setCalendarCaption(el, text)` writes the page’s own sentence under the grid.</td></tr>
+                            <tr><td><code>marks the module writes</code></td><td>`data-kp-plate` (which plate stands over the grid) and `data-kp-dim` (a failed month’s grid).</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

@@ -4795,6 +4795,7 @@ export type Strings = {
      * The button that folds it again (js/qr.js) [kpadopt6]
      */
     qrShowLess: string;
+    /**
      * The star row's name for a screen reader: "Rating for Lasagne" (js/rating.js) [kpadopt6]
      */
     ratingGroupName: (item: string) => string;

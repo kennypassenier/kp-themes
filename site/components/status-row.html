@@ -95,10 +95,14 @@
                             <li><a class="sc-nav__link" href="../../site/components/sentence.html">Sentence form</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/slider.html">Slider</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/unsaved.html">Unsaved changes bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/rating.html">Star rating</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/usual-picker.html">Picker with the usual on top</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/time.html">Time field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/quantity.html">Quantity</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/formrows.html">Form rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/json-field.html">JSON field</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/disabled-reason.html">Disabled reason</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/autosize.html">Growing text box</a></li>
                         </ul>
                     </div>
                     <div class="sc-nav__group">
@@ -134,6 +138,11 @@
                             <li><a class="sc-nav__link" href="../../site/components/pipeline.html">Pipeline</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/uptime.html">Uptime strip</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/runs.html">Next times</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/deplist.html">Dependency list</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/entity-card.html">Entity card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/claim.html">Who brings it</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/availability.html">Who can come</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/console.html">Console</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/toolbar.html">List toolbar</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/facets.html">Facet list</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/checklist.html">Checklist</a></li>
@@ -146,6 +155,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/request-inspector.html">Request inspector</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/passkeys.html">Ways to sign in</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/selection.html">Selection bar</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/uses-map.html">Uses map</a></li>
                         </ul>
                     </div>
                     <div class="sc-nav__group">
@@ -165,6 +175,9 @@
                             <li><a class="sc-nav__link" href="../../site/components/type-confirm.html">Typed confirmation</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/timer-disc.html">Visual timer</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/countdown.html">Countdown</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/version-delta.html">Version jump chip</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/ack-gate.html">Acknowledge gate</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/path-trace.html">Path of a connection</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/status-row.html" aria-current="page">Status rows</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/timer.html">Kitchen timers</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/steplist.html">Step list</a></li>
@@ -205,10 +218,16 @@
                         <ul class="sc-nav__list">
                             <li><a class="sc-nav__link" href="../../site/components/command.html">Command block</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/compare.html">Compare slider</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/quote.html">Quote card</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/qr.html">QR code</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/keys.html">Key line and key cap</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/media.html">Media</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/lede.html">Lede</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/thread.html">Conversation</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/viewer.html">Viewer</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/document-preview.html">Document preview</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/gallery.html">Gallery</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/print.html">Printing a list</a></li>
                         </ul>
                     </div>
                     <div class="sc-nav__group">
@@ -221,6 +240,7 @@
                             <li><a class="sc-nav__link" href="../../site/components/page-shell.html">Page shell</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/visually-hidden.html">Visually hidden</a></li>
                             <li><a class="sc-nav__link" href="../../site/components/master-detail.html">Master and detail panes</a></li>
+                            <li><a class="sc-nav__link" href="../../site/components/anchors.html">Link anchors</a></li>
                         </ul>
                     </div>
                 </div>
@@ -306,16 +326,51 @@ list.addEventListener(<span class="kp-code__string">'kp-status-retry'</span>, (e
     setTimeout(() =&gt; setStatus(list, id, { state: <span class="kp-code__string">'ok'</span>, detail: <span class="kp-code__string">'read'</span> }), <span class="kp-code__string">2000</span>);
 });</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A calm list: open, done, paused, not known</figcaption>
+                        <p class="kp-text-muted">`data-kp-status-vocab=&quot;calm&quot;` swaps the four states for ones with no red: a paused row says since when and offers Resume (one press, with Undo); a row nothing is known about is `unknown`, never done. Put it in a `.kp-card` for the loading, empty and failed states (`setTodayState`).</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<ul class="kp-statuslist kp-statuslist--rows" aria-label="Today" data-kp-status-vocab="calm" data-kp-today-now="2026-10-17T12:00:00+02:00">
+    <li class="kp-statusrow" data-state="open" data-kp-status-id="meds"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Morning pills</span><span class="kp-statusrow__detail"></span></span></li>
+    <li class="kp-statusrow" data-state="done" data-kp-status-id="water"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Water the plants</span><span class="kp-statusrow__detail"></span></span></li>
+    <li class="kp-statusrow" data-state="paused" data-kp-since="2026-10-03" data-kp-status-id="move"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Movement</span><span class="kp-statusrow__detail"></span></span></li>
+    <li class="kp-statusrow" data-state="unknown" data-kp-status-id="soil"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Zamioculcas soil</span><span class="kp-statusrow__detail">No sensor reading</span></span></li>
+</ul>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statuslist kp-statuslist--rows&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Today&quot;</span> <span class="kp-code__keyword">data-kp-status-vocab</span><span class="kp-code__string">=&quot;calm&quot;</span> <span class="kp-code__keyword">data-kp-today-now</span><span class="kp-code__string">=&quot;2026-10-17T12:00:00+02:00&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow&quot;</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;open&quot;</span> <span class="kp-code__keyword">data-kp-status-id</span><span class="kp-code__string">=&quot;meds&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow__label&quot;</span>&gt;Morning pills&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow__detail&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow&quot;</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;done&quot;</span> <span class="kp-code__keyword">data-kp-status-id</span><span class="kp-code__string">=&quot;water&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow__label&quot;</span>&gt;Water the plants&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow__detail&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow&quot;</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;paused&quot;</span> <span class="kp-code__keyword">data-kp-since</span><span class="kp-code__string">=&quot;2026-10-03&quot;</span> <span class="kp-code__keyword">data-kp-status-id</span><span class="kp-code__string">=&quot;move&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow__label&quot;</span>&gt;Movement&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow__detail&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow&quot;</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;unknown&quot;</span> <span class="kp-code__keyword">data-kp-status-id</span><span class="kp-code__string">=&quot;soil&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow__label&quot;</span>&gt;Zamioculcas soil&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-statusrow__detail&quot;</span>&gt;No sensor reading&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+&lt;/<span class="kp-code__keyword">ul</span>&gt;</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
                     <p class="kp-prose">Server-rendered markup with the behaviour attached by <code>js/auto.js</code>, the one module that does anything on import. The snippets above are that markup, printed from the same string the example renders.</p>
                     <p class="kp-prose">These are the framework-free channel's props. A <em>selector</em> is how a module finds an element, a <em>read</em> is a value you set on it, and a <em>written</em> one is state the module puts back for the stylesheet and for you to read.</p>
                     <div class="kp-table-wrap" data-kp-region-label="Attributes"><table class="kp-table"><thead><tr><th>Attribute</th><th>What it does</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-detail-auto</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-folded</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-resume</code></td><td>prose</td></tr>
+                            <tr><td><code>data-kp-resume-reason</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-since</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-status</code></td><td>written</td></tr>
                             <tr><td><code>data-kp-status-id</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-status-pause-button</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-status-resume-button</code></td><td>selector, written</td></tr>
                             <tr><td><code>data-kp-status-retry</code></td><td>read, written</td></tr>
                             <tr><td><code>data-kp-status-retry-button</code></td><td>selector, written</td></tr>
+                            <tr><td><code>data-kp-status-vocab</code></td><td>read, written</td></tr>
+                            <tr><td><code>data-kp-today</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-today-fold-after</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-today-mark</code></td><td>written</td></tr>
+                            <tr><td><code>data-kp-today-now</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-today-order</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-today-pause</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-today-paused</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-today-resume</code></td><td>read</td></tr>
+                            <tr><td><code>data-kp-today-since</code></td><td>read</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="react" id="react">
@@ -331,6 +386,9 @@ list.addEventListener(<span class="kp-code__string">'kp-status-retry'</span>, (e
                     <div class="kp-table-wrap" data-kp-region-label="Events"><table class="kp-table"><thead><tr><th>Event</th><th>What it means</th></tr></thead><tbody>
                             <tr><td><code>kp-status-change</code></td><td>Fired on the list, bubbling, when a row changed state after attach: `{ item, id, state, previous }`.</td></tr>
                             <tr><td><code>kp-status-retry</code></td><td>Fired on the list, bubbling, when a Retry is pressed: `{ item, id }`.</td></tr>
+                            <tr><td><code>kp-status-resume</code></td><td>Fired on the list, bubbling, when Resume is pressed on a paused calm row (cancelable): `{ item, id }`.</td></tr>
+                            <tr><td><code>kp-status-pause</code></td><td>Fired on the list, bubbling, when Pause is pressed on an open calm row (cancelable): `{ item, id }`.</td></tr>
+                            <tr><td><code>kp-status-undo</code></td><td>Fired on the list, bubbling, when Undo takes a resume or a pause back: `{ item, id, action }`.</td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="knobs" id="knobs">
@@ -340,6 +398,9 @@ list.addEventListener(<span class="kp-code__string">'kp-status-retry'</span>, (e
                             <tr><td><code>--kp-glyph-done</code></td><td><code>var(--kp-glyph-check, '✓')</code></td></tr>
                             <tr><td><code>--kp-glyph-empty</code></td><td><code>'–'</code></td></tr>
                             <tr><td><code>--kp-glyph-failed</code></td><td><code>'✕'</code></td></tr>
+                            <tr><td><code>--kp-glyph-open</code></td><td><code>'▾'</code></td></tr>
+                            <tr><td><code>--kp-glyph-paused</code></td><td><code>'||'</code></td></tr>
+                            <tr><td><code>--kp-glyph-unknown</code></td><td><code>'?'</code></td></tr>
                             <tr><td><code>--kp-glyph-warn</code></td><td><code>'!'</code></td></tr>
                             <tr><td><code>--kp-radius-pill</code></td><td><code>999px</code></td></tr>
                             <tr><td><code>--kp-space-sm</code></td><td><code>0.5rem</code></td></tr>
@@ -358,6 +419,7 @@ list.addEventListener(<span class="kp-code__string">'kp-status-retry'</span>, (e
                             <tr><td><code>--kp-statusrow-state-edge</code></td><td><code>var(--kp-statusrow-edge, var(--border))</code></td></tr>
                             <tr><td><code>--kp-steplist-mark-radius</code></td><td><code>var(--kp-radius-pill, 999px)</code></td></tr>
                             <tr><td><code>--kp-text-sm</code></td><td><code>0.8125rem</code></td></tr>
+                            <tr><td><code>--kp-today-row-min</code></td><td><code>3.5rem</code></td></tr>
                     </tbody></table></div>
                 </section>
                 <section class="kp-section" data-sc-section="a11y" id="a11y">
@@ -377,6 +439,18 @@ list.addEventListener(<span class="kp-code__string">'kp-status-retry'</span>, (e
                             <tr><td><code>.kp-statuslist--rows</code></td><td>One column instead of a grid of columns of at least 16rem.</td></tr>
                             <tr><td><code>buildStatusList / setStatus / attachStatusLists</code></td><td>Build the list from rows `{ id, label, state, detail }`, change one row, and attach the spoken parts and the Retry. `kp-status-retry` is `{ item, id }`, `kp-status-change` is `{ item, id, state, previous }`.</td></tr>
                             <tr><td><code>statusOk / statusLoading / statusFailed / statusEmpty / statusRetry</code></td><td>The state words and the Retry label, in the dictionary; `statusRetryLabel` names a Retry after its row, and `statusAnnounce` and `statusAnnounceMany` are the announcements (more than three changes in one tick become one summary).</td></tr>
+                            <tr><td><code>data-kp-status-vocab</code></td><td>`calm` (open, done, paused, unknown; `standard` is the default). A row asked for `failed`, `warn` or anything else is drawn as unknown and the console says so.</td></tr>
+                            <tr><td><code>data-kp-since</code></td><td>On a paused calm row: `YYYY-MM-DD`; the row says “Paused since 03/10/2026”.</td></tr>
+                            <tr><td><code>data-kp-today-since</code></td><td>`date` (the default), `relative` (“Paused for 2 weeks”) or `both`.</td></tr>
+                            <tr><td><code>data-kp-today-resume</code></td><td>`off` leaves out Resume (present by default); `data-kp-resume-reason` on a row disables it and says why.</td></tr>
+                            <tr><td><code>data-kp-today-pause</code></td><td>Present shows Pause on open rows.</td></tr>
+                            <tr><td><code>data-kp-today-order</code></td><td>`open-first` orders the rows once, at attach (`given` is the default); nothing moves afterwards.</td></tr>
+                            <tr><td><code>data-kp-today-paused and data-kp-today-fold-after</code></td><td>`fold` gathers rows paused longer than this many days (30) into one line that opens them; `show` is the default.</td></tr>
+                            <tr><td><code>data-kp-today-mark</code></td><td>`none` takes the glyphs away (`glyph` is the default).</td></tr>
+                            <tr><td><code>data-kp-today-now</code></td><td>An ISO moment that “today” is for, for a page with its own clock.</td></tr>
+                            <tr><td><code>data-kp-undo-ms</code></td><td>How long Undo is offered after Resume or Pause (6000, 0 for none).</td></tr>
+                            <tr><td><code>kp-status-resume, kp-status-pause, kp-status-undo</code></td><td>Resume and Pause are cancelable and carry `{ item, id }`; Undo puts the row back as it was and carries `{ item, id, action }`. `settleToday(list)` orders and folds again; `setTodayState(card, state)` is the card’s loading, empty and failed.</td></tr>
+                            <tr><td><code>marks the module writes</code></td><td>`data-kp-detail-auto` (the since line is the module’s), `data-kp-folded` (a row gathered behind the fold line).</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>
