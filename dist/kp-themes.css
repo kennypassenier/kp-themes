@@ -55498,6 +55498,24 @@
     }
 }
 
+/* ── kpadopt5/6 fit: a segmented track that is wider than a phone [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* In this theme's wide mono capitals the track outgrows 390 px and scrolled, its last label clipped at the edge of
+       the track. Under 34rem the segments share the track and a long label wraps between words instead. */
+    @media (max-width: 34rem) {
+        [data-theme='titanium'] .kp-segmented:not(.kp-segmented--chips) {
+            --kp-seg-item-pad-inline: 0.5rem;
+            grid-auto-columns: minmax(0, 1fr);
+            letter-spacing: 0.04em;
+        }
+        [data-theme='titanium'] .kp-segmented:not(.kp-segmented--chips) > .kp-segmented__item {
+            white-space: normal;
+            overflow-wrap: normal;
+            line-height: 1.25;
+        }
+    }
+}
+
 /* The redaction plate's alpha, registered so it can be transitioned: an
    unregistered custom property flips at the end of its transition instead
    of passing through values, and the plate's background reads it through
@@ -84756,6 +84774,24 @@
     }
     [data-theme='nostromo'] .kp-dialog__actions > .kp-button {
         white-space: nowrap;
+    }
+}
+
+/* ── kpadopt5/6 fit: a segmented track that is wider than a phone [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* In this theme's wide mono capitals the track outgrows 390 px and scrolled, its last label clipped at the edge of
+       the track. Under 34rem the segments share the track and a long label wraps between words instead. */
+    @media (max-width: 34rem) {
+        [data-theme='nostromo'] .kp-segmented:not(.kp-segmented--chips) {
+            --kp-seg-item-pad-inline: 0.5rem;
+            grid-auto-columns: minmax(0, 1fr);
+            letter-spacing: 0.04em;
+        }
+        [data-theme='nostromo'] .kp-segmented:not(.kp-segmented--chips) > .kp-segmented__item {
+            white-space: normal;
+            overflow-wrap: normal;
+            line-height: 1.25;
+        }
     }
 }
 
