@@ -2657,6 +2657,13 @@
    Unlayered, it wins by source order, which is what TH36 always meant.
    Nothing else in this file may be layered either, for the same reason. */
 
+/* The words that exist only for paper are off the screen (before the print block, so its rules win by order). */
+.kp-print-stamp,
+.kp-print-state,
+.kp-print-title {
+    display: none;
+}
+
 /* Print [TH36]. Paper has no theme: ink is black, the ground is white,
    and the decorative layers cost toner without carrying meaning. */
 @media print {
@@ -2683,4 +2690,234 @@
         font-size: 0.85em;
         word-break: break-all;
     }
+
+    /* --- Lists that print well [kpadopt6-media; print-checklist] --------------
+       Paper has no controls and no colour: the sheet is black on white, a tone is
+       a word or a border and never a fill, and a checkbox is a box a pen can tick.
+       Everything here is only @media print, so the screen never changes. The same
+       rules, with this at-rule turned into `@media all`, are what the demo's print
+       preview shows. Kenny, 2026-10-17: a ticked item prints with a filled box and
+       its text kept. Knobs: --kp-print-box (1.1em, never under 4 mm). */
+    :root {
+        print-color-adjust: economy;
+        -webkit-print-color-adjust: economy;
+    }
+
+    /* Hidden on paper: navigation, toolbars, toasts, tooltips, menus, the selection bar, floating buttons, buttons, the
+       shortcut sheet; and whatever the page marks. `data-kp-print="include"` keeps one of them. */
+    :is(
+        .kp-sidenav,
+        .kp-nav-bar,
+        .kp-nav,
+        .kp-toasts,
+        .kp-tooltip,
+        .kp-popover,
+        .kp-menu,
+        .kp-selection-bar,
+        .kp-shortcuts,
+        .kp-skip-link,
+        .kp-list-toolbar,
+        .kp-button,
+        .kp-icon-button,
+        [data-kp-print='exclude']
+    ):not([data-kp-print='include']) {
+        display: none !important;
+    }
+
+    .kp-checklist,
+    .kp-checklist * {
+        animation: none !important;
+        transition: none !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+        filter: none !important;
+        color: #000 !important;
+        background-image: none !important;
+    }
+
+    .kp-checklist {
+        border: 0;
+        background: #fff;
+    }
+
+    /* The bar (Check all, Clear checked, the count), the live region and the busy card carry nothing a sheet needs. */
+    .kp-checklist__bar,
+    .kp-checklist__live,
+    .kp-checklist .kp-datatable__busy-card {
+        display: none !important;
+    }
+
+    .kp-checklist__body {
+        min-block-size: 0 !important;
+        padding: 0;
+        border: 0;
+        background: none;
+    }
+
+    .kp-checklist[data-kp-print-groups='columns'] .kp-checklist__body {
+        column-count: 2;
+        column-gap: 10mm;
+    }
+
+    .kp-checklist__group {
+        break-inside: auto;
+        margin: 0 0 4mm;
+        padding: 0;
+        border: 0;
+        background: none;
+    }
+
+    /* A group's heading stays with its first two items and carries a rule. */
+    .kp-checklist__head {
+        break-after: avoid;
+        margin: 0 0 1.5mm;
+        padding: 0 0 1mm;
+        border: 0;
+        border-bottom: 1pt solid #000;
+        background: none;
+        font-weight: 700;
+    }
+
+    .kp-checklist__item {
+        break-inside: avoid;
+        border: 0;
+        background: none;
+    }
+
+    .kp-checklist__item:nth-child(-n + 2) {
+        break-before: avoid;
+    }
+
+    .kp-checklist__row {
+        min-block-size: 0;
+        padding-block: 1.2mm;
+        background: none !important;
+    }
+
+    .kp-checklist[data-kp-print-notes-lines] .kp-checklist__row {
+        padding-block: 2.2mm;
+        border-bottom: 0.5pt dotted #000;
+    }
+
+    /* A ticked item keeps its text; it is not struck through unless the list asks. */
+    .kp-checklist__item[data-kp-checklist-checked] .kp-checklist__label {
+        text-decoration: none;
+        opacity: 1;
+    }
+
+    .kp-checklist[data-kp-print-done='strike'] .kp-checklist__item[data-kp-checklist-checked] .kp-checklist__label {
+        text-decoration: line-through;
+    }
+
+    .kp-checklist[data-kp-print-done='hide'] .kp-checklist__item[data-kp-checklist-checked],
+    .kp-checklist[data-kp-print-done='hide'] .kp-checklist__group[data-kp-checklist-done] {
+        display: none !important;
+    }
+
+    .kp-checklist[data-kp-print-notes='hide'] .kp-checklist__detail {
+        display: none !important;
+    }
+
+    .kp-checklist__detail {
+        opacity: 1;
+    }
+
+    /* The real checkbox is replaced by a drawn box: browsers do not print a page's custom check art reliably. */
+    .kp-checklist .kp-checklist__check.kp-field__check {
+        appearance: none;
+        -webkit-appearance: none;
+        display: inline-grid;
+        flex: none;
+        place-content: center;
+        box-sizing: border-box;
+        inline-size: max(var(--kp-print-box, 1.1em), 4mm);
+        block-size: max(var(--kp-print-box, 1.1em), 4mm);
+        margin: 0;
+        padding: 0;
+        border: 1.5pt solid #000 !important;
+        border-radius: 0;
+        outline: none;
+        background: #fff !important;
+        transform: none;
+    }
+
+    .kp-checklist[data-kp-print-box='round'] .kp-checklist__check.kp-field__check {
+        border-radius: 50%;
+    }
+
+    .kp-checklist .kp-checklist__check.kp-field__check::before,
+    .kp-checklist .kp-checklist__check.kp-field__check::after {
+        content: none;
+    }
+
+    .kp-checklist .kp-checklist__check.kp-field__check:checked::before {
+        content: '\2713';
+        position: static;
+        inset: auto;
+        inline-size: auto;
+        block-size: auto;
+        margin: 0;
+        border: 0;
+        border-radius: 0;
+        background: none !important;
+        clip-path: none;
+        mask: none;
+        transform: none;
+        font-size: 1em;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+    }
+
+    /* In a list, a link shows its words and no address; elsewhere the address still follows the link. */
+    .kp-checklist:not([data-kp-print-links='url']) a[href]::after {
+        content: none;
+    }
+
+    /* The words a sheet needs when the list has no rows: why, and the title and the date. */
+    .kp-print-state,
+    .kp-print-title {
+        display: block;
+        margin: 0 0 3mm;
+        font-weight: 700;
+    }
+
+    .kp-print-state {
+        padding: 6mm 0;
+        font-size: 1.25em;
+    }
+
+    .kp-print-title {
+        font-size: 1.5em;
+    }
+
+    .kp-checklist__empty {
+        display: block;
+        padding: 6mm 0;
+        border: 0;
+        background: none;
+        font-size: 1.25em;
+        font-weight: 700;
+    }
+
+    .kp-checklist__empty[hidden] {
+        display: none !important;
+    }
+
+    .kp-print-stamp {
+        display: block;
+        position: fixed;
+        inset-block-end: 0;
+        inset-inline: 0;
+        margin: 0;
+        padding-block-start: 1.5mm;
+        border-top: 0.5pt solid #000;
+        font-size: 0.8em;
+    }
+}
+
+/* The sheet itself: A4, a 15 mm margin. The printer dialog still overrides it. */
+@page {
+    size: A4;
+    margin: 15mm;
 }
