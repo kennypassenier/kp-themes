@@ -512,6 +512,7 @@ const REVIEW_OPTIONS = /** @type {Record<string, string>} */ ({
     press: '#k6-av|data-kp-availability-press|',
     best: '#k6-av|data-kp-availability-best|',
     summary: '#k6-av|data-kp-availability-summary|',
+    unit: '#k6-av|data-kp-availability-unit-switch|',
     order: '#k6-console|data-kp-console-order|',
     status: '#k6-console|data-kp-console-status|',
     cancel: '#k6-console|data-kp-console-cancel|',
@@ -521,7 +522,7 @@ document.addEventListener('review:choice', (event) => {
     const prefix = REVIEW_OPTIONS[id];
     if (!prefix) return;
     // The console's Cancel is on when the attribute is absent ("" on the Offered button) and off with "-".
-    const written = id === 'cancel' ? (value === 'on' ? '' : '-') : value;
+    const written = id === 'cancel' ? (value === 'on' ? '' : '-') : id === 'unit' ? (value === 'switch' ? 'on' : 'off') : value;
     const button = [...$$('[data-k6-attr]')].find((b) => b.getAttribute('data-k6-attr') === `${prefix}${written}`);
     button?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
 });
