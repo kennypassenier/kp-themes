@@ -2066,6 +2066,203 @@
         stroke: var(--foreground);
     }
 
+    /* --- Annotations [kpadopt5-people] ----------------------------------- */
+
+    /* A band: an event with an end (a maintenance window), tinted in its tone across the plot with a solid edge
+     * where it begins and ends, so it is told from a dashed event line. */
+    .kp-chart__band {
+        --kp-chart-tone: var(--info-foreground);
+    }
+
+    .kp-chart__band-fill {
+        fill: var(--kp-chart-tone);
+        fill-opacity: var(--kp-chart-band-opacity, 0.14);
+        stroke: none;
+    }
+
+    /* `hatch`: diagonal lines in the tone instead of a wash, readable without the colour. */
+    .kp-chart__band-fill[fill^='url'] {
+        fill-opacity: 1;
+    }
+
+    .kp-chart__hatch {
+        stroke: var(--kp-chart-tone, var(--info-foreground));
+        stroke-width: 1.5;
+        opacity: 0.55;
+    }
+
+    pattern[data-kp-tone='warning'] {
+        --kp-chart-tone: var(--warning-foreground);
+    }
+
+    pattern[data-kp-tone='critical'] {
+        --kp-chart-tone: var(--destructive);
+    }
+
+    pattern[data-kp-tone='info'] {
+        --kp-chart-tone: var(--info-foreground);
+    }
+
+    /* `bracket`: a bar along the top between two short ticks. */
+    .kp-chart__band-bar {
+        stroke: var(--kp-chart-tone);
+        stroke-width: 3;
+        stroke-linecap: round;
+    }
+
+    .kp-chart__band-edge {
+        stroke: var(--kp-chart-tone);
+        stroke-width: 1.5;
+        opacity: 0.85;
+    }
+
+    /* The median of a source: its own colour, long dashes, and its value written on the plot. */
+    .kp-chart__median {
+        fill: none;
+        stroke: var(--kp-chart-series);
+        stroke-width: 1.5;
+        stroke-dasharray: 10 4;
+    }
+
+    .kp-chart__median-label {
+        fill: var(--foreground);
+        font-size: var(--kp-chart-tick-size, 11px);
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        paint-order: stroke;
+        stroke: var(--card);
+        stroke-width: 3px;
+        stroke-linejoin: round;
+    }
+
+    /* A point of a run of six or more on one side of the median: ringed. */
+    .kp-chart__run {
+        fill: var(--card);
+        stroke: var(--kp-chart-series);
+        stroke-width: 2;
+    }
+
+    /* Events past the window's edge: an arrow and their count. */
+    .kp-chart__edge-text {
+        fill: var(--muted-foreground);
+        font-size: var(--kp-chart-tick-size, 11px);
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+    }
+
+    /* Too early for a trend: the readings so far stay, faint, under one sentence in the middle of the plot. */
+    .kp-chart__plot > svg[data-kp-faint] {
+        opacity: 0.5;
+    }
+
+    .kp-chart__few {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        padding: var(--kp-space-md, 0.75rem);
+        border-radius: calc(var(--radius, 0.5rem) * 0.5);
+        background: color-mix(in oklab, var(--card) 50%, transparent);
+        pointer-events: none;
+    }
+
+    .kp-chart__few-plate {
+        box-sizing: border-box;
+        max-inline-size: min(36ch, 100%);
+        margin: 0;
+        padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1rem);
+        color: var(--foreground);
+        font-size: calc(var(--kp-text-md, 1rem) * 1.25);
+        font-weight: 600;
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+    }
+
+    /* The key above the plot: one switch per kind of event, and a note for the median and the runs. */
+    .kp-chart__annkey {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-chart__annkey[hidden] {
+        display: none;
+    }
+
+    .kp-chart__annkey[data-kp-wait] {
+        visibility: hidden;
+    }
+
+    .kp-chart__annkey-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+        padding: 0.125rem 0.5rem;
+        border: 1px solid var(--border);
+        border-radius: var(--kp-radius-pill, 999px);
+        background: none;
+        color: var(--foreground);
+        font: inherit;
+        cursor: pointer;
+    }
+
+    .kp-chart__annkey-item:focus-visible {
+        outline: 2px solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    .kp-chart__annkey-item[data-kp-off] {
+        color: var(--muted-foreground);
+        border-style: dashed;
+    }
+
+    .kp-chart__annkey-item[data-kp-off] .kp-chart__dot {
+        opacity: 0.35;
+    }
+
+    .kp-chart__annkey-count {
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+    }
+
+    .kp-chart__annkey-note {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.375rem;
+    }
+
+    .kp-chart__annkey-line {
+        inline-size: 1.25rem;
+        border-block-start: 2px dashed var(--chart-1);
+    }
+
+    .kp-chart__annkey-ring {
+        inline-size: 0.625rem;
+        block-size: 0.625rem;
+        box-sizing: border-box;
+        border: 2px solid var(--chart-1);
+        border-radius: 50%;
+        background: var(--card);
+    }
+
+    .kp-chart__tip-median {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    /* On a phone the median's words leave the plot (the tooltip carries them). */
+    @container kp-chart (max-width: 26rem) {
+        .kp-chart__median-label {
+            display: none;
+        }
+    }
+
     .kp-chart__crosshair {
         stroke: var(--foreground);
         opacity: 0.35;

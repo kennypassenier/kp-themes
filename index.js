@@ -387,6 +387,8 @@ export {
     TREND_CHART,
     attachCharts,
     attachTrendCharts,
+    chartMedian,
+    chartRuns,
     chartSelect,
     chartWords,
     chartZoom,

@@ -134,6 +134,12 @@ export const REQUIRED = [
         why: 'The block measures its own width and puts its tools under its title when narrow; the query reaches only its head [kpadopt4-data].',
     },
     {
+        container: 'kp-chart',
+        class: 'kp-chart',
+        self: true,
+        why: 'The chart measures its own width and takes the median’s words off the plot on a phone (the tooltip carries them); the query reaches only its own parts [kpadopt5-people].',
+    },
+    {
         container: 'kp-passkeys',
         class: 'kp-passkeys',
         self: true,

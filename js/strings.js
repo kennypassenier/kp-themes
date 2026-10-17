@@ -147,6 +147,17 @@
  * @property {(why: string) => string} threadNotSent  The line on a message that was not sent, "Not sent: why"
  * @property {string} threadNotSentFallback  The reason when none was given
  * @property {string} threadJump  The Jump to newest button
+ * @property {string} chartMedian  The words in front of a median's value, "median" (js/chart.js) [kpadopt5-people]
+ * @property {(have: number, need: number, unit: string) => string} chartFew  The sentence over a chart with too few readings, "3 of 7 days needed before a trend means something"
+ * @property {string} chartFewUnit  What the readings are called in it when the page names none
+ * @property {string} chartAnnotationKey  The key above a chart's plot, for a screen reader
+ * @property {(tone: string) => string} chartKindTone  The key's word for an event that has a tone and no kind
+ * @property {string} chartRunsKey  The key's note on a ringed run
+ * @property {(label: string, from: string, until: string) => string} chartMarkBand  The tooltip of a band, "Maintenance, from … to …"
+ * @property {(from: string, until: string) => string} chartBandWhen  The time of a band in the tooltip, "14:00 to 15:30"
+ * @property {(count: number) => string} chartEdgeBefore  The arrow for events before the window, "2 events before this window"
+ * @property {(count: number) => string} chartEdgeAfter  The arrow for events after the window
+ * @property {(kind: string) => string} chartKindOn  A key item's tooltip, "Show or hide update events"
  * @property {string} stackbarRest  The legend row of a share bar's free rest (js/stackbar.js)
  * @property {string} stackbarOther  The legend row the parts too small to draw are merged into
  * @property {(label: string, value: string, percent: string) => string} stackbarPart  One part, as a screen reader and the hover card read it
@@ -707,6 +718,7 @@ export const DEFAULT_STRINGS = Object.freeze({
     facetShowingAll: 'Showing everything',
     // Data pieces [kpadopt4-data]: the identity mark, the share bar, the bullet list and the code block.
     idmarkUnknown: '?',
+    // People [kpadopt5-people]: the avatar, the sign-in methods list, the conversation and the chart's markers.
     idmarkOnline: 'online',
     idmarkAway: 'away',
     idmarkBusy: 'busy',
@@ -773,6 +785,17 @@ export const DEFAULT_STRINGS = Object.freeze({
     threadNotSent: (why) => `Not sent: ${why}`,
     threadNotSentFallback: 'no connection.',
     threadJump: 'Jump to newest',
+    chartMedian: 'median',
+    chartFew: (have, need, unit) => `${have} of ${need} ${unit} needed before a trend means something`,
+    chartFewUnit: 'readings',
+    chartAnnotationKey: 'Chart markers',
+    chartKindTone: (tone) => ({ info: 'Event', warning: 'Warning', critical: 'Failure' })[tone] ?? tone,
+    chartRunsKey: 'a run of six or more points on one side of the median',
+    chartMarkBand: (label, from, until) => `${label}, from ${from} to ${until}`,
+    chartBandWhen: (from, until) => `${from} to ${until}`,
+    chartEdgeBefore: (count) => `${count} ${count === 1 ? 'event' : 'events'} before this window`,
+    chartEdgeAfter: (count) => `${count} ${count === 1 ? 'event' : 'events'} after this window`,
+    chartKindOn: (kind) => `Show or hide: ${kind}`,
     stackbarRest: 'Free',
     stackbarOther: 'Other',
     stackbarPart: (label, value, percent) => `${label}: ${value} (${percent})`,
