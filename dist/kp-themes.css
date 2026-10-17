@@ -44140,6 +44140,17 @@
 }
 /* ── end t56 ── */
 
+/* ── t56: the foot of a code cell ── */
+@layer kp.signature {
+    /* The "Show all N lines" button of a code cell in a narrow cell is shrunk below its own text by the 0.16em track: the
+       track tightens and the padding halves, so the words stand clear of both sides of the button. */
+    [data-theme='synthwave'] .kp-code--cell .kp-code__foot .kp-button {
+        letter-spacing: 0.06em;
+        padding-inline: 0.5rem;
+    }
+}
+/* ── end t56 ── */
+
 /* A share, 0 to 1 (a progress bar's, a meter's), is walked to its value on
    two registered copies, one on each mirror of the motion, so that a rise is
    the picture's fall and a fall is that fall turned around; registered so
