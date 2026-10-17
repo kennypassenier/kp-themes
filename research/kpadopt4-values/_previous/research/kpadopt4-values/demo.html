@@ -1,10 +1,5 @@
 <!doctype html>
-<html
-    lang="en"
-    data-theme="formal"
-    data-review="kpadopt4-values"
-    data-review-themes="dark,cyberpunk,synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium"
->
+<html lang="en" data-theme="formal" data-review="kpadopt4-values" data-review-themes="forest">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -57,8 +52,7 @@
             <h2 class="kd-topic" id="topic-values">Values and figures</h2>
             <section
                 class="dd-sec"
-                data-review-item="mark"
-                data-review-themes="synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium"
+                data-kpadopt4-item="mark"
                 data-review-topic="values"
                 data-review-topic-title="Values and figures"
                 data-review-title="Identity mark"
@@ -312,8 +306,7 @@
             </section>
             <section
                 class="dd-sec"
-                data-review-item="stackbar"
-                data-review-themes="synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium"
+                data-kpadopt4-item="stackbar"
                 data-review-topic="values"
                 data-review-title="Share bar"
                 data-review-components="stackbar"
@@ -447,8 +440,7 @@
             </section>
             <section
                 class="dd-sec"
-                data-review-item="bullets"
-                data-review-themes="synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium"
+                data-kpadopt4-item="bullets"
                 data-review-topic="values"
                 data-review-title="Bullet rows"
                 data-review-components="bullets"
@@ -571,10 +563,14 @@
             <section
                 class="dd-sec"
                 data-review-item="tick"
-                data-review-themes="synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium"
+                data-review-themes="forest"
                 data-review-topic="values"
                 data-review-title="A live number that ticks"
                 aria-label="Live number"
+                data-review-choices='[{ "id": "forest-tick", "label": "How forest shows a counting number", "once": true, "options": [
+                    { "value": "grove", "label": "Planted trees", "hint": "Recommended. A row of whole trees, the progress bar&#39;s trees, is planted in the free line after the figure while it counts and withers when it lands." },
+                    { "value": "tag", "label": "Kraft tag", "hint": "A kraft hang tag with the leaf corner, wood grain and a dashed stitched edge unrolls behind the figure and rolls away when it lands." },
+                    { "value": "trail", "label": "Clay trail", "hint": "A dashed clay trail is laid dash by dash under the figure with the clay blaze walking at its head, then it fades." }]}]'
             >
                 <div class="dd-sec__head">
                     <h2>A live number that ticks to its new value</h2>
@@ -603,8 +599,9 @@
                         swells and nothing flashes. Press the page's button that changes the number and watch the figure rock and settle.
                     </p>
                     <p data-for="forest">
-                        A live number that counts has a growth ring drawn round it once, clockwise from the top on the growth curve, which then fades;
-                        the number itself never moves or swells. Change the number from the page and watch the ring.
+                        A live number that counts shows it without anything round it: a row of planted trees grows in the free line after the figure
+                        on the growth curve, the progress bar's trees, and withers when the number lands (the kraft tag and the clay trail are the
+                        other two to tick). The figure itself never moves or swells. Tick one, then change the number from the page.
                     </p>
                     <p data-for="blueprint">
                         A live number that counts is read again: a short ruler is set under it with an amber pointer that slides from the old reading
@@ -659,7 +656,7 @@
                         <button type="button" class="kp-button kp-button--sm" data-dd-tick="euro:1234.5">+€ 1.234,50</button>
                     </div>
                 </div>
-                <div class="dd-block">
+                <div class="dd-block" data-dd-tick-forest>
                     <div class="kp-kpis" role="group" aria-label="Live numbers">
                         <div class="kp-kpi">
                             <span class="kp-kpi__label">Open items</span><span class="kp-kpi__value" data-kp-tick data-dd-tick-value="open">12</span
@@ -682,8 +679,7 @@
             <section
                 class="ki-sec"
                 id="uptime"
-                data-review-item="uptime"
-                data-review-themes="synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium"
+                data-kpadopt4-item="uptime"
                 data-review-topic="values"
                 data-review-components="uptime"
                 data-review-title="Uptime strip: 90 days and 48 hours"
@@ -793,8 +789,7 @@
             <section
                 class="ki-sec"
                 id="uptime-states"
-                data-review-item="uptime-states"
-                data-review-themes="synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium"
+                data-kpadopt4-item="uptime-states"
                 data-review-topic="values"
                 data-review-components="uptime"
                 data-review-title="Uptime strip: loading, empty, error, a long name"
@@ -897,8 +892,7 @@
             <section
                 class="ki-sec"
                 id="uptime-phone"
-                data-review-item="uptime-phone"
-                data-review-themes="synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium"
+                data-kpadopt4-item="uptime-phone"
                 data-review-topic="values"
                 data-review-components="uptime"
                 data-review-title="Uptime strip at phone width"
@@ -5428,10 +5422,18 @@ The NAS sleeps after 02:00; the copy wakes it first.</textarea>
                                 <b>Spin</b> in the middle, and under the wheel “Press Spin to let the wheel choose.”
                             </li>
                             <li>
-                                Press <b>Spin</b> (or Tab to it and press Space): the line says “Turning…”, the wheel turns four times and slows
-                                evenly to a stop with no bounce, about 3.6 s. The chosen segment is filled deeper, the others step back, and under the
-                                wheel “The wheel chose” and the full name in Fraunces over formal’s double rule. The button now says <b>Again</b>; the
-                                next spin never lands on the same dish.
+                                Press <b>Spin</b> (or Tab to it and press Space): the line says “Turning…”, the wheel turns three to six whole turns
+                                (a different number each spin, the log says how many) and slows evenly to a stop with no bounce, about 3.6 s for the
+                                mean travel and a little longer or shorter for a longer or shorter one. The chosen segment is filled deeper, the
+                                others step back, and under the wheel “The wheel chose” and the full name in Fraunces over formal’s double rule. The
+                                button now says <b>Again</b>; the next spin never lands on the same dish.
+                            </li>
+                            <li>
+                                The Spin button in the middle does not move when the pointer is on it, nor when it has focus (it stays on the disc’s
+                                centre; only its colours answer). <b>How the chances are divided</b> resizes the segments: “All equal” makes them the
+                                same size, “Soup ×12” makes soup most of the disc, and the odds follow the size (the log shows the weight of each
+                                draw). <b>How far a spin turns</b> sets the least and most whole turns; each spin draws a number between them, and the
+                                wheel always lands on the dish drawn by the weights.
                             </li>
                             <li>
                                 The filter chips change the dishes: the segments grow and shrink to their new size in formal’s time; the wheel and the
@@ -5522,6 +5524,42 @@ The NAS sleeps after 02:00; the copy wakes it first.</textarea>
                                     <span class="kp-segmented__label">Nothing fits</span>
                                 </button>
                             </div>
+                            <p class="kc-label">How the chances are divided (a segment is as large as its odds)</p>
+                            <div
+                                class="kp-segmented kp-segmented--chips"
+                                id="kc-wheel-weights"
+                                data-kp-segmented="single"
+                                role="radiogroup"
+                                aria-label="How the chances are divided"
+                            >
+                                <button type="button" class="kp-segmented__item" data-value="recency" role="radio" aria-checked="true">
+                                    <span class="kp-segmented__label">By last eaten</span>
+                                </button>
+                                <button type="button" class="kp-segmented__item" data-value="equal" role="radio" aria-checked="false">
+                                    <span class="kp-segmented__label">All equal</span>
+                                </button>
+                                <button type="button" class="kp-segmented__item" data-value="soup" role="radio" aria-checked="false">
+                                    <span class="kp-segmented__label">Soup ×12</span>
+                                </button>
+                            </div>
+                            <p class="kc-label">How far a spin turns (whole turns, drawn per spin)</p>
+                            <div
+                                class="kp-segmented kp-segmented--chips"
+                                id="kc-wheel-turns"
+                                data-kp-segmented="single"
+                                role="radiogroup"
+                                aria-label="How far a spin turns"
+                            >
+                                <button type="button" class="kp-segmented__item" data-value="3-6" role="radio" aria-checked="true">
+                                    <span class="kp-segmented__label">3 to 6 turns</span>
+                                </button>
+                                <button type="button" class="kp-segmented__item" data-value="1-2" role="radio" aria-checked="false">
+                                    <span class="kp-segmented__label">1 to 2 turns</span>
+                                </button>
+                                <button type="button" class="kp-segmented__item" data-value="8-10" role="radio" aria-checked="false">
+                                    <span class="kp-segmented__label">8 to 10 turns</span>
+                                </button>
+                            </div>
                             <div class="kp-wheel" id="kc-wheel" data-kp-wheel aria-label="Tonight’s dinner"></div>
                             <div class="kc-actions">
                                 <button type="button" class="kp-button kp-button--sm" id="kc-wheel-load">Load again</button>
@@ -5558,9 +5596,10 @@ The NAS sleeps after 02:00; the copy wakes it first.</textarea>
                         <ul>
                             <li>
                                 The large frame opens at <b>Step 3 of 6</b> (as if you came back where you stopped): the count, formal’s progress bar
-                                at a half, the step in large type, “For this step” with the amounts in one column and the names beside them, a
-                                <b>Start a timer · 10 min</b> button and a warning note. At the foot, <b>Back</b> and <b>Next</b>, each half the width
-                                and 4 rem high.
+                                at a half, the step in large type, “For this step” in a box with room on every side (nothing touches its edge), the
+                                amounts in one column starting on the same line (“450 ml water” stands under “300 g rinsed rice”) and the names beside
+                                them, a <b>Start a timer · 10 min</b> button and a warning note. At the foot, <b>Back</b> and <b>Next</b>, each half
+                                the width and 4 rem high.
                             </li>
                             <li>
                                 The head says <b>Screen stays on</b> with a filled dot when the browser kept the screen on, else <b>Screen may dim</b>
@@ -5578,7 +5617,9 @@ The NAS sleeps after 02:00; the copy wakes it first.</textarea>
                             </li>
                             <li>
                                 <b>Load again</b> shows formal’s busy card over the step (2.5 s, the spinner turning) with both buttons dimmed;
-                                <b>Fail</b> shows a red alert in the step’s place; <b>Empty</b> the dashed empty line. The 390 px frame is the phone.
+                                <b>Fail</b> and <b>Empty</b> fill the whole step area (the same size as a step) and say their sentence large, in the
+                                middle of it: a red alert for Fail, the theme’s empty plate for Empty. The 390 px frame is the phone, its needs box
+                                has the same room.
                             </li>
                             <li>The log shows each <code>kp-focus-steps-change</code>, done, and the screen line’s state.</li>
                         </ul>
@@ -5696,12 +5737,13 @@ The NAS sleeps after 02:00; the copy wakes it first.</textarea>
                             <li>
                                 Three cards of one height: <b>Rice</b> running, <b>Preheat the oven</b> paused (its time grey, its word “Paused”), and
                                 a timer with a long name, cut with an ellipsis (the full name is its tooltip). The time is large, in Fraunces, in
-                                figures of one width; the bar under it is formal’s own progress bar, filling as time passes. Nothing in a card moves
-                                while it ticks.
+                                figures of one width, and stands against the right edge of the card; the bar under it is formal’s own progress bar,
+                                filling as time passes. Nothing in a card moves while it ticks.
                             </li>
                             <li>
-                                <b>Pause</b> and <b>Resume</b> swap in the same button, which keeps its size. <b>+1 min</b> adds a minute.
-                                <b>✕</b> takes the card away the theme’s way; the focus goes to the next card.
+                                <b>Pause</b> and <b>Resume</b> swap in the same button, which keeps its width (it is as wide as the widest word) and
+                                never breaks a word over two lines; the same for <b>+1 min</b>. <b>+1 min</b> adds a minute. <b>✕</b> takes the card
+                                away the theme’s way; the focus goes to the next card.
                             </li>
                             <li>
                                 In the recipe line, press <b>10 minutes</b>: a new card “Simmer the sauce” arrives the theme’s way. Press it again: no
@@ -6049,13 +6091,18 @@ The NAS sleeps after 02:00; the copy wakes it first.</textarea>
                             </li>
                             <li>
                                 <b>Clear checked</b> takes the ticked rows away; the bar’s line becomes “3 cleared” with an <b>Undo</b> button in the
-                                same place (6 s), which puts them back where they were. <b>Check all</b> ticks everything and dims while all is done.
+                                same place (6 s), which puts them back where they were. <b>Check all</b> ticks everything and dims while all is done;
+                                <b>Uncheck all</b> takes every tick off and dims while nothing is ticked (the focus moves to the other one when the
+                                one you pressed dims).
                             </li>
                             <li>
                                 The buttons below the list: <b>Load again</b> shows formal’s busy card in the middle of the list (2.5 s, the spinner
                                 turning) and then the list; <b>Fail</b> shows a red-edged sentence where the rows were; <b>Empty</b> the dashed empty
-                                line. The second list keeps ticked rows in place (<code>data-kp-checklist-sink="false"</code>). The 360 px frame wraps
-                                the long name onto a second line, with room around it.
+                                line; both fill the list’s whole height and say it large in the middle. The list is never shorter than twelve rows
+                                here (<code>--kp-checklist-min-rows</code>), so loading, ready, empty and failed stand in about the same height and
+                                the page below does not jump. The second list keeps ticked rows in place
+                                (<code>data-kp-checklist-sink="false"</code>). The 360 px frame wraps the long name onto a second line, with room
+                                around it.
                             </li>
                             <li>Reduced motion: rows move at once, without the glide. The log shows every event.</li>
                         </ul>
@@ -6987,7 +7034,7 @@ pct config 109</code></pre>
             </div>
         </main>
         <script type="application/json" data-review-round>
-            { "round": "2026-10-17-r3-values", "received": ["2026-10-17-r3"] }
+            { "round": "2026-10-17-r3-values-3", "received": ["2026-10-17-r3", "2026-10-17-r3-values"] }
         </script>
         <script type="module" src="../kpadopt4/rows.js"></script>
         <script type="module" src="../kpadopt4/flows.js"></script>

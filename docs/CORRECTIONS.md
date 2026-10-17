@@ -6912,7 +6912,7 @@ view position) earns its place.
 
 ## text-edge-1017 · Text against its plate's edge reached Kenny again (2026-10-17)
 
-Waiting on Kenny's answer to the correction form.
+Kenny, 2026-10-17 16:28: approved ("Klopt").
 
 **1 · What went wrong.** In the cooking part, dark, "For this step" and "450 ml water" stood against the edge of the
 needs box, after Kenny had set the rule that text never touches an edge (Kenny, 2026-10-17 15:37: "ik had toch gezegd

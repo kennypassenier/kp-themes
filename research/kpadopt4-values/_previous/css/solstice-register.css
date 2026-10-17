@@ -4311,7 +4311,6 @@
         border-color: var(--border-strong);
         background: linear-gradient(to top, hsl(from var(--accent) h s l / 0.12), transparent 60%);
         font-family: var(--theme-font-display, inherit);
-        font-size: 1.0625rem;
     }
     [data-theme='solstice'] .kp-checklist__empty[data-kp-checklist-failed] {
         border-style: solid;

@@ -195,7 +195,10 @@ function buildCard(id) {
     const glyph = el('kp-timer__remove-glyph', 'span');
     glyph.setAttribute('aria-hidden', 'true');
     remove.append(glyph);
-    actions.append(toggle, more, remove);
+    // Holds the first button's column as wide as the widest of its words, in the button's own face, in every state.
+    const sizer = el('kp-button kp-timer__sizer', 'span');
+    sizer.setAttribute('aria-hidden', 'true');
+    actions.append(sizer, toggle, more, remove);
     card.append(head, time, bar, actions);
     card.setAttribute('aria-labelledby', name.id);
     return card;
@@ -225,6 +228,9 @@ function paint(timer) {
     if (toggle.textContent !== label) toggle.textContent = label;
     toggle.classList.toggle('kp-button--primary', timer.state === 'done');
     toggle.setAttribute('data-kp-words', [strings.timerPause, strings.timerResume, strings.timerStopRing].join('\n'));
+    const sizer = /** @type {HTMLElement} */ (card.querySelector('.kp-timer__sizer'));
+    const widest = [strings.timerPause, strings.timerResume, strings.timerStopRing].join('\n');
+    if (sizer.textContent !== widest) sizer.textContent = widest;
     const more = /** @type {HTMLButtonElement} */ (card.querySelector('.kp-timer__more'));
     more.textContent = strings.timerAddMinute(60);
     more.setAttribute('aria-label', strings.timerAddMinuteTo(timer.name));

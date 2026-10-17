@@ -534,6 +534,7 @@
  * @property {(done: number, total: number) => string} checklistCount  A checklist group's count beside its heading, "4 of 9" (js/checklist.js) [kpadopt4]
  * @property {(done: number, total: number) => string} checklistSummary  The whole list's count in its bar, "4 of 9 done" [kpadopt4]
  * @property {string} checklistCheckAll  The bar's button that ticks every item [kpadopt4]
+ * @property {string} checklistUncheckAll  The bar's button that takes the tick off every item [cook-1017]
  * @property {string} checklistClear  The bar's button that takes the ticked items away [kpadopt4]
  * @property {string} checklistUndo  The button that brings them back [kpadopt4]
  * @property {(n: number) => string} checklistCleared  The bar's line after a clear, "3 cleared" [kpadopt4]
@@ -1246,6 +1247,7 @@ export const DEFAULT_STRINGS = Object.freeze({
     checklistCount: (done, total) => `${done} of ${total}`,
     checklistSummary: (done, total) => `${done} of ${total} done`,
     checklistCheckAll: 'Check all',
+    checklistUncheckAll: 'Uncheck all',
     checklistClear: 'Clear checked',
     checklistUndo: 'Undo',
     checklistCleared: (n) => `${n} cleared`,

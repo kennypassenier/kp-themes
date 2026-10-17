@@ -77,6 +77,19 @@
                     "note": "geen fan van de cirkel rond de waarde, zoek een meer \"forest\" optie"
                 }
             ]
+        },
+        {
+            "round": "3",
+            "page": "2026-10-17-r3-values-3",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-17 16:28: all three forest options for tick (planted trees, kraft tag, clay trail) not approved; his review answer did not reach the thread, he said so in a message (\"Ik had die toch alle drie afgekeurd?\").",
+            "notApproved": [
+                {
+                    "item": "tick",
+                    "theme": "forest",
+                    "note": "alle drie de opties afgekeurd (geplante bomen, kraftlabel, kleispoor); eerder: geen cirkel rond de waarde, zoek een meer forest optie"
+                }
+            ]
         }
     ]
 }

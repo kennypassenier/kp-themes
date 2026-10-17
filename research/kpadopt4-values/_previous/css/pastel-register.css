@@ -5417,17 +5417,6 @@
     [data-theme='pastel'] .kp-wheel__stage {
         filter: drop-shadow(calc(5px * var(--kp-sig-pa-dir)) 5px 0 var(--kp-sig-pa-pass-c));
     }
-    /* The hub stays centred: pastel's button lifts and presses with `translate`, which the hub also uses to sit on the
-       disc's centre, so each state keeps the centring and adds its own lift. */
-    [data-theme='pastel'] .kp-wheel__spin.kp-button {
-        translate: -50% -50%;
-    }
-    [data-theme='pastel'] .kp-wheel__spin.kp-button:hover:not([aria-disabled='true']) {
-        translate: -50% calc(-50% - 2px);
-    }
-    [data-theme='pastel'] .kp-wheel__spin.kp-button:active:not([aria-disabled='true']) {
-        translate: -50% calc(-50% + 3px);
-    }
     [data-theme='pastel'] .kp-wheel__segment {
         stroke-width: 2.4;
     }

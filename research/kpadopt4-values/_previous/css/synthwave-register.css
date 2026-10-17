@@ -5664,6 +5664,12 @@
         letter-spacing: 0.1em;
         text-transform: uppercase;
     }
+    /* The card's three buttons take the small button's padding, so Pause, +1 min and the close fit one line in the card. */
+    [data-theme='synthwave'] .kp-timer__toggle,
+    [data-theme='synthwave'] .kp-timer__sizer,
+    [data-theme='synthwave'] .kp-timer__more {
+        padding-inline: 1rem;
+    }
     [data-theme='synthwave'] .kp-timer__time {
         font-family: var(--theme-font-display);
         font-weight: 400;
