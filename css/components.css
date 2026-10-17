@@ -18900,6 +18900,10 @@
     .kp-problems {
         container: kp-problems / inline-size;
         display: grid;
+        /* An inline-size container has no intrinsic width: in a start-aligned grid cell or a flex item it collapsed to a
+         * few pixels (round 1 of kpadopt5-basics). It always takes the width of the place it stands in. */
+        inline-size: 100%;
+        min-inline-size: 0;
         gap: var(--kp-problem-gap, var(--kp-space-sm, 0.5rem));
     }
 
