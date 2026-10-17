@@ -3711,6 +3711,714 @@ export type Strings = {
      * Choices that could not be read, when the page gives no message [kpadopt4]
      */
     wheelFailed: string;
+    /**
+     * The word before the last name in a list of people who bring an item (js/claim.js) [kpadopt6]
+     */
+    claimAnd: string;
+    /**
+     * Why every claim button is off when the page gives no reason (js/claim.js) [kpadopt6]
+     */
+    claimDisabled: string;
+    /**
+     * Why the buttons are off while nobody is signed in (js/claim.js) [kpadopt6]
+     */
+    claimNoViewer: string;
+    /**
+     * Why the button is off on an item that has its people (js/claim.js) [kpadopt6]
+     */
+    claimFullReason: (max: number) => string;
+    /**
+     * The button's face on an item you do not bring (js/claim.js) [kpadopt6]
+     */
+    claimTake: string;
+    /**
+     * The button's face on an item you bring (a press lets go) (js/claim.js) [kpadopt6]
+     */
+    claimHeld: string;
+    /**
+     * The words of the gap, an item nobody brings (js/claim.js) [kpadopt6]
+     */
+    claimNobody: string;
+    /**
+     * The group of people on a row, as a screen reader hears it (js/claim.js) [kpadopt6]
+     */
+    claimBy: (names: string) => string;
+    /**
+     * The same for the gap (js/claim.js) [kpadopt6]
+     */
+    claimNobodyLabel: string;
+    /**
+     * The button's name on an item you bring (js/claim.js) [kpadopt6]
+     */
+    claimHeldLabel: (label: string) => string;
+    /**
+     * The button's name on an item you do not bring (js/claim.js) [kpadopt6]
+     */
+    claimTakeLabel: (label: string) => string;
+    /**
+     * The assign mode's menu button (js/claim.js) [kpadopt6]
+     */
+    claimAssign: string;
+    /**
+     * Its name for a screen reader (js/claim.js) [kpadopt6]
+     */
+    claimAssignOf: (label: string) => string;
+    /**
+     * The assign menu's heading (js/claim.js) [kpadopt6]
+     */
+    claimAssignHeading: string;
+    /**
+     * The hint of a person who is on the item (js/claim.js) [kpadopt6]
+     */
+    claimAssigned: string;
+    /**
+     * The hint of a person who is not (js/claim.js) [kpadopt6]
+     */
+    claimNotAssigned: string;
+    /**
+     * A group's count of items somebody brings (js/claim.js) [kpadopt6]
+     */
+    claimGroupCount: (done: number, total: number) => string;
+    /**
+     * The bar's line when every item has somebody (js/claim.js) [kpadopt6]
+     */
+    claimAllTaken: string;
+    /**
+     * The bar's line with the exact number of items nobody brings (js/claim.js) [kpadopt6]
+     */
+    claimGapsCount: (n: number) => string;
+    /**
+     * The filter chips' name (js/claim.js) [kpadopt6]
+     */
+    claimFilterLabel: string;
+    /**
+     * The chip that shows every item (js/claim.js) [kpadopt6]
+     */
+    claimFilterAll: string;
+    /**
+     * The chip that shows only the items nobody brings (js/claim.js) [kpadopt6]
+     */
+    claimFilterGaps: string;
+    /**
+     * The chip that shows only the items you bring (js/claim.js) [kpadopt6]
+     */
+    claimFilterMine: string;
+    /**
+     * The bar's button that takes all items nobody brings (js/claim.js) [kpadopt6]
+     */
+    claimTakeAll: string;
+    /**
+     * The bar's button that copies the items nobody brings (js/claim.js) [kpadopt6]
+     */
+    claimCopyGaps: string;
+    /**
+     * Why those two buttons are off (js/claim.js) [kpadopt6]
+     */
+    claimNothingOpen: string;
+    /**
+     * The filter plate when no item is left without somebody (js/claim.js) [kpadopt6]
+     */
+    claimNoneOpenTitle: string;
+    /**
+     * Its sentence (js/claim.js) [kpadopt6]
+     */
+    claimNoneOpenText: string;
+    /**
+     * The filter plate for Mine when it is empty (js/claim.js) [kpadopt6]
+     */
+    claimNoneMineTitle: string;
+    /**
+     * Its sentence (js/claim.js) [kpadopt6]
+     */
+    claimNoneMineText: string;
+    /**
+     * The plates' button (js/claim.js) [kpadopt6]
+     */
+    claimShowAll: string;
+    /**
+     * The Retry of a list that could not be read (js/claim.js) [kpadopt6]
+     */
+    claimRetry: string;
+    /**
+     * The line when the server refused a change and gave no reason (js/claim.js) [kpadopt6]
+     */
+    claimNotSaved: string;
+    /**
+     * The line when somebody was faster (js/claim.js) [kpadopt6]
+     */
+    claimLost: (name: string, label: string) => string;
+    /**
+     * What is said after a change (js/claim.js) [kpadopt6]
+     */
+    claimAnnounce: (label: string, names: string) => string;
+    /**
+     * What is said after the last person let go (js/claim.js) [kpadopt6]
+     */
+    claimAnnounceNobody: (label: string) => string;
+    /**
+     * The toast after you let go (js/claim.js) [kpadopt6]
+     */
+    claimReleased: (label: string) => string;
+    /**
+     * The toast after a person was taken off (js/claim.js) [kpadopt6]
+     */
+    claimUnassigned: (name: string, label: string) => string;
+    /**
+     * The toast and the line after Take every open item (js/claim.js) [kpadopt6]
+     */
+    claimTookAll: (n: number) => string;
+    /**
+     * The text Copy the open list writes (js/claim.js) [kpadopt6]
+     */
+    claimCopyLine: (names: string) => string;
+    /**
+     * What is said after the copy (js/claim.js) [kpadopt6]
+     */
+    claimCopied: (n: number) => string;
+    /**
+     * What is said when the clipboard refuses (js/claim.js) [kpadopt6]
+     */
+    claimCopyFailed: string;
+    /**
+     * The shortcut sheet's line for c (js/claim.js) [kpadopt6]
+     */
+    claimKeyTake: string;
+    /**
+     * The sheet's heading for the claim keys (js/claim.js) [kpadopt6]
+     */
+    claimKeyGroup: string;
+    /**
+     * Why c does nothing now (js/claim.js) [kpadopt6]
+     */
+    claimKeyReason: string;
+    /**
+     * The sheet's line for Shift C (js/claim.js) [kpadopt6]
+     */
+    claimKeyGaps: string;
+    /**
+     * A proposed period's length under its dates (js/availability.js) [kpadopt6]
+     */
+    availabilityDaysLong: (n: number) => string;
+    /**
+     * The answer yes, in a cell's name, the legend and the list (js/availability.js) [kpadopt6]
+     */
+    availabilityYes: string;
+    /**
+     * The answer maybe (js/availability.js) [kpadopt6]
+     */
+    availabilityMaybe: string;
+    /**
+     * The answer no (js/availability.js) [kpadopt6]
+     */
+    availabilityNo: string;
+    /**
+     * A cell nobody filled (js/availability.js) [kpadopt6]
+     */
+    availabilityNone: string;
+    /**
+     * The line over a grid nobody has answered (js/availability.js) [kpadopt6]
+     */
+    availabilityNobodyAnswered: string;
+    /**
+     * One column's exact count (js/availability.js) [kpadopt6]
+     */
+    availabilityCount: (yes: number, total: number) => string;
+    /**
+     * The line over the grid (js/availability.js) [kpadopt6]
+     */
+    availabilityAnswered: (n: number, total: number) => string;
+    /**
+     * The best column in words (js/availability.js) [kpadopt6]
+     */
+    availabilityBestLine: (labels: string, count: string) => string;
+    /**
+     * The button on the best column (js/availability.js) [kpadopt6]
+     */
+    availabilityChoose: string;
+    /**
+     * The organiser's switch between periods and days (js/availability.js) [kpadopt6]
+     */
+    availabilityUnitLabel: string;
+    /**
+     * Its first choice (js/availability.js) [kpadopt6]
+     */
+    availabilityByPeriod: string;
+    /**
+     * Its second choice (js/availability.js) [kpadopt6]
+     */
+    availabilityByDay: string;
+    /**
+     * The failed plate's heading (js/availability.js) [kpadopt6]
+     */
+    availabilityFailedTitle: string;
+    /**
+     * Its sentence (js/availability.js) [kpadopt6]
+     */
+    availabilityFailedText: string;
+    /**
+     * The empty plate's heading (js/availability.js) [kpadopt6]
+     */
+    availabilityEmptyTitle: string;
+    /**
+     * Its sentence (js/availability.js) [kpadopt6]
+     */
+    availabilityEmptyText: string;
+    /**
+     * The failed plate's button (js/availability.js) [kpadopt6]
+     */
+    availabilityRetry: string;
+    /**
+     * The grid's name when the page gives none (js/availability.js) [kpadopt6]
+     */
+    availabilityGroup: string;
+    /**
+     * The summary row's name (js/availability.js) [kpadopt6]
+     */
+    availabilitySummaryLabel: string;
+    /**
+     * Your own row's name (js/availability.js) [kpadopt6]
+     */
+    availabilityYou: (name: string) => string;
+    /**
+     * The legend's word for the best column (js/availability.js) [kpadopt6]
+     */
+    availabilityBestWord: string;
+    /**
+     * A cell's name for a screen reader (js/availability.js) [kpadopt6]
+     */
+    availabilityCell: (name: string, column: string, answer: string) => string;
+    /**
+     * The line when a change was refused (js/availability.js) [kpadopt6]
+     */
+    availabilityNotSaved: (label: string) => string;
+    /**
+     * Said when a column becomes complete (js/availability.js) [kpadopt6]
+     */
+    availabilityEveryone: (label: string) => string;
+    /**
+     * Said after a stroke (js/availability.js) [kpadopt6]
+     */
+    availabilityYourAnswers: (yes: number, maybe: number, no: number) => string;
+    /**
+     * The toast after a stroke (js/availability.js) [kpadopt6]
+     */
+    availabilityStroke: (n: number) => string;
+    /**
+     * Said after one cell changed (js/availability.js) [kpadopt6]
+     */
+    availabilityCellSaid: (name: string, label: string, word: string) => string;
+    /**
+     * The menu entry that empties a cell (js/availability.js) [kpadopt6]
+     */
+    availabilityClear: string;
+    /**
+     * The shortcut sheet's line for y (js/availability.js) [kpadopt6]
+     */
+    availabilityKeyYes: string;
+    /**
+     * The line for m (js/availability.js) [kpadopt6]
+     */
+    availabilityKeyMaybe: string;
+    /**
+     * The line for n (js/availability.js) [kpadopt6]
+     */
+    availabilityKeyNo: string;
+    /**
+     * The line for Backspace (js/availability.js) [kpadopt6]
+     */
+    availabilityKeyClear: string;
+    /**
+     * The sheet's heading (js/availability.js) [kpadopt6]
+     */
+    availabilityKeyGroup: string;
+    /**
+     * Why those keys do nothing now (js/availability.js) [kpadopt6]
+     */
+    availabilityKeyReason: string;
+    /**
+     * Why every cell is inert when the page gives no reason (js/availability.js) [kpadopt6]
+     */
+    availabilityDisabled: string;
+    /**
+     * The code's accessible name (js/qr.js) [kpadopt6]
+     */
+    qrLabel: string;
+    /**
+     * Said once, politely, when the code is drawn (js/qr.js) [kpadopt6]
+     */
+    qrReady: string;
+    /**
+     * The failed plate's heading (js/qr.js) [kpadopt6]
+     */
+    qrTooLongTitle: string;
+    /**
+     * Its sentence (js/qr.js) [kpadopt6]
+     */
+    qrTooLongText: string;
+    /**
+     * The empty plate's heading (js/qr.js) [kpadopt6]
+     */
+    qrEmptyTitle: string;
+    /**
+     * Its sentence (js/qr.js) [kpadopt6]
+     */
+    qrEmptyText: string;
+    /**
+     * The plate of a link whose time ran out (js/qr.js) [kpadopt6]
+     */
+    qrExpired: string;
+    /**
+     * Its sentence (js/qr.js) [kpadopt6]
+     */
+    qrExpiredText: string;
+    /**
+     * The cover of a code that waits to be shown (js/qr.js) [kpadopt6]
+     */
+    qrHidden: string;
+    /**
+     * The cover's button (js/qr.js) [kpadopt6]
+     */
+    qrShow: string;
+    /**
+     * The button that covers a shown code again (js/qr.js) [kpadopt6]
+     */
+    qrHide: string;
+    /**
+     * The words under the busy card while the link is made (js/qr.js) [kpadopt6]
+     */
+    qrLoading: string;
+    /**
+     * The Copy button (js/qr.js) [kpadopt6]
+     */
+    qrCopy: string;
+    /**
+     * Its result word (js/qr.js) [kpadopt6]
+     */
+    qrCopied: string;
+    /**
+     * Its refusal word (js/qr.js) [kpadopt6]
+     */
+    qrCopyFailed: string;
+    /**
+     * Why Copy is off without a link (js/qr.js) [kpadopt6]
+     */
+    qrNoLink: string;
+    /**
+     * Why Copy is off while the code is not ready (js/qr.js) [kpadopt6]
+     */
+    qrCopyOff: string;
+    /**
+     * The download button for a picture (js/qr.js) [kpadopt6]
+     */
+    qrDownloadPng: string;
+    /**
+     * The download button for a vector file (js/qr.js) [kpadopt6]
+     */
+    qrDownloadSvg: string;
+    /**
+     * The warning under a long link (js/qr.js) [kpadopt6]
+     */
+    qrDense: (bytes: number) => string;
+    /**
+     * The failed plate's button (js/qr.js) [kpadopt6]
+     */
+    qrRetry: string;
+    /**
+     * The shortcut sheet's line for Shift C (js/qr.js) [kpadopt6]
+     */
+    qrKey: string;
+    /**
+     * The sheet's heading (js/qr.js) [kpadopt6]
+     */
+    qrKeyGroup: string;
+    /**
+     * Why the key does nothing now (js/qr.js) [kpadopt6]
+     */
+    qrKeyReason: string;
+    /**
+     * The button that opens the list of times, and the sheet's title when the field has no name (js/timefield.js) [kpadopt6]
+     */
+    timeChoose: string;
+    /**
+     * The line under an empty required field (js/timefield.js) [kpadopt6]
+     */
+    timeRequired: string;
+    /**
+     * The line under a text that is not a time (js/timefield.js) [kpadopt6]
+     */
+    timeInvalid: string;
+    /**
+     * The line under a time outside the window (js/timefield.js) [kpadopt6]
+     */
+    timeOutside: (min: string, max: string) => string;
+    /**
+     * The polite line after a 12 hour time was pasted (js/timefield.js) [kpadopt6]
+     */
+    timeConverted: (value: string) => string;
+    /**
+     * What is said after the value changed (js/timefield.js) [kpadopt6]
+     */
+    timeSaid: (value: string) => string;
+    /**
+     * The name of the group of preset chips (js/timefield.js) [kpadopt6]
+     */
+    timePresets: string;
+    /**
+     * The compact plate when presets failed (js/timefield.js) [kpadopt6]
+     */
+    timePresetsFailed: string;
+    /**
+     * Its button (js/timefield.js) [kpadopt6]
+     */
+    timeRetry: string;
+    /**
+     * The list's name for a screen reader (js/timefield.js) [kpadopt6]
+     */
+    timeList: string;
+    /**
+     * The list's entry that clears the field (js/timefield.js) [kpadopt6]
+     */
+    timeNone: string;
+    /**
+     * The note on the list's entry for the current time (js/timefield.js) [kpadopt6]
+     */
+    timeNow: string;
+    /**
+     * The mark on a time close to a busy moment (js/timefield.js) [kpadopt6]
+     */
+    timeNear: (busy: string) => string;
+    /**
+     * The quiet line that says whose clock the time is (js/timefield.js) [kpadopt6]
+     */
+    timeZoneNote: (zone: string) => string;
+    /**
+     * Said when stepping up went past midnight (js/timefield.js) [kpadopt6]
+     */
+    timeWrappedNext: (value: string) => string;
+    /**
+     * Said when stepping down went past midnight (js/timefield.js) [kpadopt6]
+     */
+    timeWrappedPrevious: (value: string) => string;
+    /**
+     * The pill's word for a block, singular and plural (js/console.js) [kpadopt6]
+     */
+    consoleUnit: string;
+    /**
+     * The body's name for a screen reader (js/console.js) [kpadopt6]
+     */
+    consoleOutputLabel: string;
+    /**
+     * The prompt's name when the console has none (js/console.js) [kpadopt6]
+     */
+    consoleCommand: string;
+    /**
+     * The failed plate's heading and the reason the prompt is off then (js/console.js) [kpadopt6]
+     */
+    consoleHostFailed: string;
+    /**
+     * The failed plate's sentence (js/console.js) [kpadopt6]
+     */
+    consoleHostFailedText: string;
+    /**
+     * Why the prompt is off when the page gives no reason (js/console.js) [kpadopt6]
+     */
+    consoleOff: string;
+    /**
+     * Why the prompt is off while the context list loads (js/console.js) [kpadopt6]
+     */
+    consoleContextLoadingWhy: string;
+    /**
+     * The Run button (js/console.js) [kpadopt6]
+     */
+    consoleRun: string;
+    /**
+     * The Run button after a line the app wants confirmed (js/console.js) [kpadopt6]
+     */
+    consoleRunAnyway: string;
+    /**
+     * The line under the prompt when the page gives none (js/console.js) [kpadopt6]
+     */
+    consoleHint: string;
+    /**
+     * The context select's label when the page gives none (js/console.js) [kpadopt6]
+     */
+    consoleContext: string;
+    /**
+     * The select while its options load (js/console.js) [kpadopt6]
+     */
+    consoleContextLoading: string;
+    /**
+     * A block before the app answered (js/console.js) [kpadopt6]
+     */
+    consoleSending: string;
+    /**
+     * A queued block (js/console.js) [kpadopt6]
+     */
+    consoleQueued: string;
+    /**
+     * A running block with its timer off (js/console.js) [kpadopt6]
+     */
+    consoleRunning: string;
+    /**
+     * A running block's status with its elapsed time (js/console.js) [kpadopt6]
+     */
+    consoleRunningFor: (time: string) => string;
+    /**
+     * A finished block's exit code (js/console.js) [kpadopt6]
+     */
+    consoleExit: (code: number) => string;
+    /**
+     * The word beside exit 0 (js/console.js) [kpadopt6]
+     */
+    consoleDone: string;
+    /**
+     * The word beside a non-zero exit (js/console.js) [kpadopt6]
+     */
+    consoleFailed: string;
+    /**
+     * A block the app refused (js/console.js) [kpadopt6]
+     */
+    consoleRefused: string;
+    /**
+     * A block that was stopped (js/console.js) [kpadopt6]
+     */
+    consoleCancelled: string;
+    /**
+     * A block whose connection dropped (js/console.js) [kpadopt6]
+     */
+    consoleLost: string;
+    /**
+     * The block's button that copies its command (js/console.js) [kpadopt6]
+     */
+    consoleCopyCommand: string;
+    /**
+     * The block's button that copies its output (js/console.js) [kpadopt6]
+     */
+    consoleCopyOutput: string;
+    /**
+     * The block's button that runs its command again (js/console.js) [kpadopt6]
+     */
+    consoleAgain: string;
+    /**
+     * The lost block's button that runs it again to see (js/console.js) [kpadopt6]
+     */
+    consoleRecheck: string;
+    /**
+     * The running block's button that stops it (js/console.js) [kpadopt6]
+     */
+    consoleCancel: string;
+    /**
+     * The block's button that folds it (js/console.js) [kpadopt6]
+     */
+    consoleCollapse: string;
+    /**
+     * The block's button that opens it again (js/console.js) [kpadopt6]
+     */
+    consoleExpand: string;
+    /**
+     * A copy button's result word (js/console.js) [kpadopt6]
+     */
+    consoleCopied: string;
+    /**
+     * A copy button's refusal word (js/console.js) [kpadopt6]
+     */
+    consoleNotCopied: string;
+    /**
+     * A lost block's what (js/console.js) [kpadopt6]
+     */
+    consoleLostWhat: string;
+    /**
+     * A lost block's what now (js/console.js) [kpadopt6]
+     */
+    consoleLostNow: string;
+    /**
+     * A refusal's what when the app gave none (js/console.js) [kpadopt6]
+     */
+    consoleRefusedWhat: string;
+    /**
+     * A finished block with nothing written (js/console.js) [kpadopt6]
+     */
+    consoleNoOutput: string;
+    /**
+     * The output block's title (js/console.js) [kpadopt6]
+     */
+    consoleOutput: string;
+    /**
+     * A running block that has written nothing yet (js/console.js) [kpadopt6]
+     */
+    consoleWaitingOutput: string;
+    /**
+     * The failed plate's button (js/console.js) [kpadopt6]
+     */
+    consoleRetry: string;
+    /**
+     * The words under the busy card while the console loads (js/console.js) [kpadopt6]
+     */
+    consoleLoading: string;
+    /**
+     * The line that stands for blocks folded away (js/console.js) [kpadopt6]
+     */
+    consoleEarlier: (n: number) => string;
+    /**
+     * The empty plate's heading (js/console.js) [kpadopt6]
+     */
+    consoleEmptyTitle: string;
+    /**
+     * Its sentence (js/console.js) [kpadopt6]
+     */
+    consoleEmptyText: string;
+    /**
+     * Said when the last command succeeded (js/console.js) [kpadopt6]
+     */
+    consoleFinishedOk: (code: number) => string;
+    /**
+     * Said when the last command failed (js/console.js) [kpadopt6]
+     */
+    consoleFinishedFailed: (code: number) => string;
+    /**
+     * Said when the last command was refused (js/console.js) [kpadopt6]
+     */
+    consoleFinishedRefused: string;
+    /**
+     * Said when a line needs a second press (js/console.js) [kpadopt6]
+     */
+    consoleConfirmSaid: (command: string) => string;
+    /**
+     * The toast and the line after Clear (js/console.js) [kpadopt6]
+     */
+    consoleCleared: string;
+    /**
+     * The completion list's name (js/console.js) [kpadopt6]
+     */
+    consoleCompletions: string;
+    /**
+     * Said after Tab found several (js/console.js) [kpadopt6]
+     */
+    consoleMatches: (n: number) => string;
+    /**
+     * The shortcut sheet's line for Ctrl L (js/console.js) [kpadopt6]
+     */
+    consoleKeyClear: string;
+    /**
+     * The sheet's heading (js/console.js) [kpadopt6]
+     */
+    consoleKeyGroup: string;
+    /**
+     * The sheet's line for the focus key (js/console.js) [kpadopt6]
+     */
+    consoleKeyFocus: string;
+    /**
+     * Why the focus key does nothing now (js/console.js) [kpadopt6]
+     */
+    consoleKeyFocusReason: string;
+    /**
+     * The button that unfolds a long link under the code (js/qr.js) [kpadopt6]
+     */
+    qrShowAllChars: (n: number) => string;
+    /**
+     * The button that folds it again (js/qr.js) [kpadopt6]
+     */
+    qrShowLess: string;
 };
 /**
  * @typedef {object} Strings
@@ -4735,6 +5443,183 @@ export type Strings = {
  * @property {string} wheelEmpty  A wheel with no choices, when the page gives no sentence [kpadopt4]
  * @property {string} wheelLoading  The words under its spinner while the choices load [kpadopt4]
  * @property {string} wheelFailed  Choices that could not be read, when the page gives no message [kpadopt4]
+ * @property {string} claimAnd  The word before the last name in a list of people who bring an item (js/claim.js) [kpadopt6]
+ * @property {string} claimDisabled  Why every claim button is off when the page gives no reason (js/claim.js) [kpadopt6]
+ * @property {string} claimNoViewer  Why the buttons are off while nobody is signed in (js/claim.js) [kpadopt6]
+ * @property {(max: number) => string} claimFullReason  Why the button is off on an item that has its people (js/claim.js) [kpadopt6]
+ * @property {string} claimTake  The button's face on an item you do not bring (js/claim.js) [kpadopt6]
+ * @property {string} claimHeld  The button's face on an item you bring (a press lets go) (js/claim.js) [kpadopt6]
+ * @property {string} claimNobody  The words of the gap, an item nobody brings (js/claim.js) [kpadopt6]
+ * @property {(names: string) => string} claimBy  The group of people on a row, as a screen reader hears it (js/claim.js) [kpadopt6]
+ * @property {string} claimNobodyLabel  The same for the gap (js/claim.js) [kpadopt6]
+ * @property {(label: string) => string} claimHeldLabel  The button's name on an item you bring (js/claim.js) [kpadopt6]
+ * @property {(label: string) => string} claimTakeLabel  The button's name on an item you do not bring (js/claim.js) [kpadopt6]
+ * @property {string} claimAssign  The assign mode's menu button (js/claim.js) [kpadopt6]
+ * @property {(label: string) => string} claimAssignOf  Its name for a screen reader (js/claim.js) [kpadopt6]
+ * @property {string} claimAssignHeading  The assign menu's heading (js/claim.js) [kpadopt6]
+ * @property {string} claimAssigned  The hint of a person who is on the item (js/claim.js) [kpadopt6]
+ * @property {string} claimNotAssigned  The hint of a person who is not (js/claim.js) [kpadopt6]
+ * @property {(done: number, total: number) => string} claimGroupCount  A group's count of items somebody brings (js/claim.js) [kpadopt6]
+ * @property {string} claimAllTaken  The bar's line when every item has somebody (js/claim.js) [kpadopt6]
+ * @property {(n: number) => string} claimGapsCount  The bar's line with the exact number of items nobody brings (js/claim.js) [kpadopt6]
+ * @property {string} claimFilterLabel  The filter chips' name (js/claim.js) [kpadopt6]
+ * @property {string} claimFilterAll  The chip that shows every item (js/claim.js) [kpadopt6]
+ * @property {string} claimFilterGaps  The chip that shows only the items nobody brings (js/claim.js) [kpadopt6]
+ * @property {string} claimFilterMine  The chip that shows only the items you bring (js/claim.js) [kpadopt6]
+ * @property {string} claimTakeAll  The bar's button that takes all items nobody brings (js/claim.js) [kpadopt6]
+ * @property {string} claimCopyGaps  The bar's button that copies the items nobody brings (js/claim.js) [kpadopt6]
+ * @property {string} claimNothingOpen  Why those two buttons are off (js/claim.js) [kpadopt6]
+ * @property {string} claimNoneOpenTitle  The filter plate when no item is left without somebody (js/claim.js) [kpadopt6]
+ * @property {string} claimNoneOpenText  Its sentence (js/claim.js) [kpadopt6]
+ * @property {string} claimNoneMineTitle  The filter plate for Mine when it is empty (js/claim.js) [kpadopt6]
+ * @property {string} claimNoneMineText  Its sentence (js/claim.js) [kpadopt6]
+ * @property {string} claimShowAll  The plates' button (js/claim.js) [kpadopt6]
+ * @property {string} claimRetry  The Retry of a list that could not be read (js/claim.js) [kpadopt6]
+ * @property {string} claimNotSaved  The line when the server refused a change and gave no reason (js/claim.js) [kpadopt6]
+ * @property {(name: string, label: string) => string} claimLost  The line when somebody was faster (js/claim.js) [kpadopt6]
+ * @property {(label: string, names: string) => string} claimAnnounce  What is said after a change (js/claim.js) [kpadopt6]
+ * @property {(label: string) => string} claimAnnounceNobody  What is said after the last person let go (js/claim.js) [kpadopt6]
+ * @property {(label: string) => string} claimReleased  The toast after you let go (js/claim.js) [kpadopt6]
+ * @property {(name: string, label: string) => string} claimUnassigned  The toast after a person was taken off (js/claim.js) [kpadopt6]
+ * @property {(n: number) => string} claimTookAll  The toast and the line after Take every open item (js/claim.js) [kpadopt6]
+ * @property {(names: string) => string} claimCopyLine  The text Copy the open list writes (js/claim.js) [kpadopt6]
+ * @property {(n: number) => string} claimCopied  What is said after the copy (js/claim.js) [kpadopt6]
+ * @property {string} claimCopyFailed  What is said when the clipboard refuses (js/claim.js) [kpadopt6]
+ * @property {string} claimKeyTake  The shortcut sheet's line for c (js/claim.js) [kpadopt6]
+ * @property {string} claimKeyGroup  The sheet's heading for the claim keys (js/claim.js) [kpadopt6]
+ * @property {string} claimKeyReason  Why c does nothing now (js/claim.js) [kpadopt6]
+ * @property {string} claimKeyGaps  The sheet's line for Shift C (js/claim.js) [kpadopt6]
+ * @property {(n: number) => string} availabilityDaysLong  A proposed period's length under its dates (js/availability.js) [kpadopt6]
+ * @property {string} availabilityYes  The answer yes, in a cell's name, the legend and the list (js/availability.js) [kpadopt6]
+ * @property {string} availabilityMaybe  The answer maybe (js/availability.js) [kpadopt6]
+ * @property {string} availabilityNo  The answer no (js/availability.js) [kpadopt6]
+ * @property {string} availabilityNone  A cell nobody filled (js/availability.js) [kpadopt6]
+ * @property {string} availabilityNobodyAnswered  The line over a grid nobody has answered (js/availability.js) [kpadopt6]
+ * @property {(yes: number, total: number) => string} availabilityCount  One column's exact count (js/availability.js) [kpadopt6]
+ * @property {(n: number, total: number) => string} availabilityAnswered  The line over the grid (js/availability.js) [kpadopt6]
+ * @property {(labels: string, count: string) => string} availabilityBestLine  The best column in words (js/availability.js) [kpadopt6]
+ * @property {string} availabilityChoose  The button on the best column (js/availability.js) [kpadopt6]
+ * @property {string} availabilityUnitLabel  The organiser's switch between periods and days (js/availability.js) [kpadopt6]
+ * @property {string} availabilityByPeriod  Its first choice (js/availability.js) [kpadopt6]
+ * @property {string} availabilityByDay  Its second choice (js/availability.js) [kpadopt6]
+ * @property {string} availabilityFailedTitle  The failed plate's heading (js/availability.js) [kpadopt6]
+ * @property {string} availabilityFailedText  Its sentence (js/availability.js) [kpadopt6]
+ * @property {string} availabilityEmptyTitle  The empty plate's heading (js/availability.js) [kpadopt6]
+ * @property {string} availabilityEmptyText  Its sentence (js/availability.js) [kpadopt6]
+ * @property {string} availabilityRetry  The failed plate's button (js/availability.js) [kpadopt6]
+ * @property {string} availabilityGroup  The grid's name when the page gives none (js/availability.js) [kpadopt6]
+ * @property {string} availabilitySummaryLabel  The summary row's name (js/availability.js) [kpadopt6]
+ * @property {(name: string) => string} availabilityYou  Your own row's name (js/availability.js) [kpadopt6]
+ * @property {string} availabilityBestWord  The legend's word for the best column (js/availability.js) [kpadopt6]
+ * @property {(name: string, column: string, answer: string) => string} availabilityCell  A cell's name for a screen reader (js/availability.js) [kpadopt6]
+ * @property {(label: string) => string} availabilityNotSaved  The line when a change was refused (js/availability.js) [kpadopt6]
+ * @property {(label: string) => string} availabilityEveryone  Said when a column becomes complete (js/availability.js) [kpadopt6]
+ * @property {(yes: number, maybe: number, no: number) => string} availabilityYourAnswers  Said after a stroke (js/availability.js) [kpadopt6]
+ * @property {(n: number) => string} availabilityStroke  The toast after a stroke (js/availability.js) [kpadopt6]
+ * @property {(name: string, label: string, word: string) => string} availabilityCellSaid  Said after one cell changed (js/availability.js) [kpadopt6]
+ * @property {string} availabilityClear  The menu entry that empties a cell (js/availability.js) [kpadopt6]
+ * @property {string} availabilityKeyYes  The shortcut sheet's line for y (js/availability.js) [kpadopt6]
+ * @property {string} availabilityKeyMaybe  The line for m (js/availability.js) [kpadopt6]
+ * @property {string} availabilityKeyNo  The line for n (js/availability.js) [kpadopt6]
+ * @property {string} availabilityKeyClear  The line for Backspace (js/availability.js) [kpadopt6]
+ * @property {string} availabilityKeyGroup  The sheet's heading (js/availability.js) [kpadopt6]
+ * @property {string} availabilityKeyReason  Why those keys do nothing now (js/availability.js) [kpadopt6]
+ * @property {string} availabilityDisabled  Why every cell is inert when the page gives no reason (js/availability.js) [kpadopt6]
+ * @property {string} qrLabel  The code's accessible name (js/qr.js) [kpadopt6]
+ * @property {string} qrReady  Said once, politely, when the code is drawn (js/qr.js) [kpadopt6]
+ * @property {string} qrTooLongTitle  The failed plate's heading (js/qr.js) [kpadopt6]
+ * @property {string} qrTooLongText  Its sentence (js/qr.js) [kpadopt6]
+ * @property {string} qrEmptyTitle  The empty plate's heading (js/qr.js) [kpadopt6]
+ * @property {string} qrEmptyText  Its sentence (js/qr.js) [kpadopt6]
+ * @property {string} qrExpired  The plate of a link whose time ran out (js/qr.js) [kpadopt6]
+ * @property {string} qrExpiredText  Its sentence (js/qr.js) [kpadopt6]
+ * @property {string} qrHidden  The cover of a code that waits to be shown (js/qr.js) [kpadopt6]
+ * @property {string} qrShow  The cover's button (js/qr.js) [kpadopt6]
+ * @property {string} qrHide  The button that covers a shown code again (js/qr.js) [kpadopt6]
+ * @property {string} qrLoading  The words under the busy card while the link is made (js/qr.js) [kpadopt6]
+ * @property {string} qrCopy  The Copy button (js/qr.js) [kpadopt6]
+ * @property {string} qrCopied  Its result word (js/qr.js) [kpadopt6]
+ * @property {string} qrCopyFailed  Its refusal word (js/qr.js) [kpadopt6]
+ * @property {string} qrNoLink  Why Copy is off without a link (js/qr.js) [kpadopt6]
+ * @property {string} qrCopyOff  Why Copy is off while the code is not ready (js/qr.js) [kpadopt6]
+ * @property {string} qrDownloadPng  The download button for a picture (js/qr.js) [kpadopt6]
+ * @property {string} qrDownloadSvg  The download button for a vector file (js/qr.js) [kpadopt6]
+ * @property {(bytes: number) => string} qrDense  The warning under a long link (js/qr.js) [kpadopt6]
+ * @property {string} qrRetry  The failed plate's button (js/qr.js) [kpadopt6]
+ * @property {string} qrKey  The shortcut sheet's line for Shift C (js/qr.js) [kpadopt6]
+ * @property {string} qrKeyGroup  The sheet's heading (js/qr.js) [kpadopt6]
+ * @property {string} qrKeyReason  Why the key does nothing now (js/qr.js) [kpadopt6]
+ * @property {string} timeChoose  The button that opens the list of times, and the sheet's title when the field has no name (js/timefield.js) [kpadopt6]
+ * @property {string} timeRequired  The line under an empty required field (js/timefield.js) [kpadopt6]
+ * @property {string} timeInvalid  The line under a text that is not a time (js/timefield.js) [kpadopt6]
+ * @property {(min: string, max: string) => string} timeOutside  The line under a time outside the window (js/timefield.js) [kpadopt6]
+ * @property {(value: string) => string} timeConverted  The polite line after a 12 hour time was pasted (js/timefield.js) [kpadopt6]
+ * @property {(value: string) => string} timeSaid  What is said after the value changed (js/timefield.js) [kpadopt6]
+ * @property {string} timePresets  The name of the group of preset chips (js/timefield.js) [kpadopt6]
+ * @property {string} timePresetsFailed  The compact plate when presets failed (js/timefield.js) [kpadopt6]
+ * @property {string} timeRetry  Its button (js/timefield.js) [kpadopt6]
+ * @property {string} timeList  The list's name for a screen reader (js/timefield.js) [kpadopt6]
+ * @property {string} timeNone  The list's entry that clears the field (js/timefield.js) [kpadopt6]
+ * @property {string} timeNow  The note on the list's entry for the current time (js/timefield.js) [kpadopt6]
+ * @property {(busy: string) => string} timeNear  The mark on a time close to a busy moment (js/timefield.js) [kpadopt6]
+ * @property {(zone: string) => string} timeZoneNote  The quiet line that says whose clock the time is (js/timefield.js) [kpadopt6]
+ * @property {(value: string) => string} timeWrappedNext  Said when stepping up went past midnight (js/timefield.js) [kpadopt6]
+ * @property {(value: string) => string} timeWrappedPrevious  Said when stepping down went past midnight (js/timefield.js) [kpadopt6]
+ * @property {string} consoleUnit  The pill's word for a block, singular and plural (js/console.js) [kpadopt6]
+ * @property {string} consoleOutputLabel  The body's name for a screen reader (js/console.js) [kpadopt6]
+ * @property {string} consoleCommand  The prompt's name when the console has none (js/console.js) [kpadopt6]
+ * @property {string} consoleHostFailed  The failed plate's heading and the reason the prompt is off then (js/console.js) [kpadopt6]
+ * @property {string} consoleHostFailedText  The failed plate's sentence (js/console.js) [kpadopt6]
+ * @property {string} consoleOff  Why the prompt is off when the page gives no reason (js/console.js) [kpadopt6]
+ * @property {string} consoleContextLoadingWhy  Why the prompt is off while the context list loads (js/console.js) [kpadopt6]
+ * @property {string} consoleRun  The Run button (js/console.js) [kpadopt6]
+ * @property {string} consoleRunAnyway  The Run button after a line the app wants confirmed (js/console.js) [kpadopt6]
+ * @property {string} consoleHint  The line under the prompt when the page gives none (js/console.js) [kpadopt6]
+ * @property {string} consoleContext  The context select's label when the page gives none (js/console.js) [kpadopt6]
+ * @property {string} consoleContextLoading  The select while its options load (js/console.js) [kpadopt6]
+ * @property {string} consoleSending  A block before the app answered (js/console.js) [kpadopt6]
+ * @property {string} consoleQueued  A queued block (js/console.js) [kpadopt6]
+ * @property {string} consoleRunning  A running block with its timer off (js/console.js) [kpadopt6]
+ * @property {(time: string) => string} consoleRunningFor  A running block's status with its elapsed time (js/console.js) [kpadopt6]
+ * @property {(code: number) => string} consoleExit  A finished block's exit code (js/console.js) [kpadopt6]
+ * @property {string} consoleDone  The word beside exit 0 (js/console.js) [kpadopt6]
+ * @property {string} consoleFailed  The word beside a non-zero exit (js/console.js) [kpadopt6]
+ * @property {string} consoleRefused  A block the app refused (js/console.js) [kpadopt6]
+ * @property {string} consoleCancelled  A block that was stopped (js/console.js) [kpadopt6]
+ * @property {string} consoleLost  A block whose connection dropped (js/console.js) [kpadopt6]
+ * @property {string} consoleCopyCommand  The block's button that copies its command (js/console.js) [kpadopt6]
+ * @property {string} consoleCopyOutput  The block's button that copies its output (js/console.js) [kpadopt6]
+ * @property {string} consoleAgain  The block's button that runs its command again (js/console.js) [kpadopt6]
+ * @property {string} consoleRecheck  The lost block's button that runs it again to see (js/console.js) [kpadopt6]
+ * @property {string} consoleCancel  The running block's button that stops it (js/console.js) [kpadopt6]
+ * @property {string} consoleCollapse  The block's button that folds it (js/console.js) [kpadopt6]
+ * @property {string} consoleExpand  The block's button that opens it again (js/console.js) [kpadopt6]
+ * @property {string} consoleCopied  A copy button's result word (js/console.js) [kpadopt6]
+ * @property {string} consoleNotCopied  A copy button's refusal word (js/console.js) [kpadopt6]
+ * @property {string} consoleLostWhat  A lost block's what (js/console.js) [kpadopt6]
+ * @property {string} consoleLostNow  A lost block's what now (js/console.js) [kpadopt6]
+ * @property {string} consoleRefusedWhat  A refusal's what when the app gave none (js/console.js) [kpadopt6]
+ * @property {string} consoleNoOutput  A finished block with nothing written (js/console.js) [kpadopt6]
+ * @property {string} consoleOutput  The output block's title (js/console.js) [kpadopt6]
+ * @property {string} consoleWaitingOutput  A running block that has written nothing yet (js/console.js) [kpadopt6]
+ * @property {string} consoleRetry  The failed plate's button (js/console.js) [kpadopt6]
+ * @property {string} consoleLoading  The words under the busy card while the console loads (js/console.js) [kpadopt6]
+ * @property {(n: number) => string} consoleEarlier  The line that stands for blocks folded away (js/console.js) [kpadopt6]
+ * @property {string} consoleEmptyTitle  The empty plate's heading (js/console.js) [kpadopt6]
+ * @property {string} consoleEmptyText  Its sentence (js/console.js) [kpadopt6]
+ * @property {(code: number) => string} consoleFinishedOk  Said when the last command succeeded (js/console.js) [kpadopt6]
+ * @property {(code: number) => string} consoleFinishedFailed  Said when the last command failed (js/console.js) [kpadopt6]
+ * @property {string} consoleFinishedRefused  Said when the last command was refused (js/console.js) [kpadopt6]
+ * @property {(command: string) => string} consoleConfirmSaid  Said when a line needs a second press (js/console.js) [kpadopt6]
+ * @property {string} consoleCleared  The toast and the line after Clear (js/console.js) [kpadopt6]
+ * @property {string} consoleCompletions  The completion list's name (js/console.js) [kpadopt6]
+ * @property {(n: number) => string} consoleMatches  Said after Tab found several (js/console.js) [kpadopt6]
+ * @property {string} consoleKeyClear  The shortcut sheet's line for Ctrl L (js/console.js) [kpadopt6]
+ * @property {string} consoleKeyGroup  The sheet's heading (js/console.js) [kpadopt6]
+ * @property {string} consoleKeyFocus  The sheet's line for the focus key (js/console.js) [kpadopt6]
+ * @property {string} consoleKeyFocusReason  Why the focus key does nothing now (js/console.js) [kpadopt6]
+ * @property {(n: number) => string} qrShowAllChars  The button that unfolds a long link under the code (js/qr.js) [kpadopt6]
+ * @property {string} qrShowLess  The button that folds it again (js/qr.js) [kpadopt6]
  */
 /**
  * The defaults. English, by Kenny's decision of 2026-09-04 — the package

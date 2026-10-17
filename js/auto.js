@@ -284,6 +284,11 @@ export const NEEDS = [
         load: () => import('./motion.js'),
         attach: (m, root) => [m.attachMotion(root)],
     },
+    { name: 'claim', when: '[data-kp-checklist-claim]', load: () => import('./claim.js'), attach: (m, root) => [m.attachClaims(root)] },
+    { name: 'availability', when: '[data-kp-availability]', load: () => import('./availability.js'), attach: (m, root) => [m.attachAvailability(root)] },
+    { name: 'qr', when: '[data-kp-qr]', load: () => import('./qr.js'), attach: (m, root) => [m.attachQr(root)] },
+    { name: 'timefield', when: '[data-kp-time]', load: () => import('./timefield.js'), attach: (m, root) => [m.attachTimes(root)] },
+    { name: 'console', when: '[data-kp-console]', load: () => import('./console.js'), attach: (m, root) => [m.attachConsoles(root)] },
 ];
 
 /** Set on <html> once the boot's `attachAll()` has attached everything the page needed: the names fetched, space-separated. */

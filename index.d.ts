@@ -208,3 +208,36 @@ export type ThreadMessage = import('./js/thread.js').ThreadMessage;
 export type ThreadSpec = import('./js/thread.js').ThreadSpec;
 /** @typedef {import('./js/thread.js').ThreadMessage} ThreadMessage */
 /** @typedef {import('./js/thread.js').ThreadSpec} ThreadSpec */
+export { CLAIM, CLAIM_EVENT, CLAIM_FILTERS, CLAIM_FILTER_EVENT, CLAIM_REFUSED_MS, CLAIM_RETRY_EVENT, CLAIM_UNDO_MS, attachClaims, claimFilter, claimPeople, setClaim, setClaimFilter, setClaimPeople, setClaimViewer, } from './js/claim.js';
+export type ClaimInfo = import('./js/claim.js').ClaimInfo;
+export type ClaimPerson = import('./js/claim.js').ClaimPerson;
+export type ClaimDetail = import('./js/claim.js').ClaimDetail;
+/** @typedef {import('./js/claim.js').ClaimInfo} ClaimInfo */
+/** @typedef {import('./js/claim.js').ClaimPerson} ClaimPerson */
+/** @typedef {import('./js/claim.js').ClaimDetail} ClaimDetail */
+export { AVAILABILITY, AVAILABILITY_ANSWERS, AVAILABILITY_CHOOSE_EVENT, AVAILABILITY_EVENT, AVAILABILITY_REFUSED_MS, AVAILABILITY_RETRY_EVENT, AVAILABILITY_UNDO_MS, AVAILABILITY_UNIT_EVENT, attachAvailability, availabilityAnswers, availabilityBest, availabilityDays, availabilityRange, setAvailability, setAvailabilityAnswer, } from './js/availability.js';
+export type AvailabilitySpec = import('./js/availability.js').AvailabilitySpec;
+export type AvailabilityPerson = import('./js/availability.js').AvailabilityPerson;
+export type AvailabilityColumn = import('./js/availability.js').AvailabilityColumn;
+export type AvailabilityAnswers = import('./js/availability.js').AvailabilityAnswers;
+export type AvailabilityAnswer = import('./js/availability.js').AvailabilityAnswer;
+/** @typedef {import('./js/availability.js').AvailabilitySpec} AvailabilitySpec */
+/** @typedef {import('./js/availability.js').AvailabilityPerson} AvailabilityPerson */
+/** @typedef {import('./js/availability.js').AvailabilityColumn} AvailabilityColumn */
+/** @typedef {import('./js/availability.js').AvailabilityAnswers} AvailabilityAnswers */
+/** @typedef {import('./js/availability.js').AvailabilityAnswer} AvailabilityAnswer */
+export { QR, QR_COPY_EVENT, QR_EXPIRED_EVENT, QR_FOLD, QR_LEVELS, QR_PLATE, QR_RETRY_EVENT, QR_REVEAL_EVENT, attachQr, qrContrast, qrMatrix, qrSvg, setQr, } from './js/qr.js';
+export type QrSpec = import('./js/qr.js').QrSpec;
+/** @typedef {import('./js/qr.js').QrSpec} QrSpec */
+export { TIME, TIME_EVENT, TIME_RETRY_EVENT, TIME_STEPS, attachTimes, parseTimeOfDay, setTime, setTimePresets, stepTime, timeInWindow, timeMinutes, timeText, timeValid, timeValue, } from './js/timefield.js';
+export type TimePreset = import('./js/timefield.js').TimePreset;
+/** @typedef {import('./js/timefield.js').TimePreset} TimePreset */
+export { CONSOLE, CONSOLE_BLOCK_EVENT, CONSOLE_HISTORY, CONSOLE_MAX_BYTES, CONSOLE_RETRY_EVENT, CONSOLE_RUN_EVENT, CONSOLE_STATES, attachConsoles, clearConsole, consoleBlocks, runConsoleCommand, setConsole, setConsoleComplete, setConsoleContext, setConsoleRun, } from './js/console.js';
+export type ConsoleBlock = import('./js/console.js').ConsoleBlock;
+export type ConsoleChange = import('./js/console.js').ConsoleChange;
+export type ConsoleJob = import('./js/console.js').ConsoleJob;
+export type ConsoleRun = import('./js/console.js').ConsoleRun;
+/** @typedef {import('./js/console.js').ConsoleBlock} ConsoleBlock */
+/** @typedef {import('./js/console.js').ConsoleChange} ConsoleChange */
+/** @typedef {import('./js/console.js').ConsoleJob} ConsoleJob */
+/** @typedef {import('./js/console.js').ConsoleRun} ConsoleRun */

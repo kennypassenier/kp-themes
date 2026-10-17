@@ -224,6 +224,30 @@ export const REQUIRED = [
         why: 'The weekday picker measures its own width and shrinks its chips on a phone; the query reaches only its own parts [kpadopt5-time].',
     },
     {
+        container: 'kp-checklist',
+        class: 'kp-checklist',
+        self: true,
+        why: 'The checklist measures its own width and lays the claim cell under the label when narrow; the query reaches only its own rows [kpadopt6-social].',
+    },
+    {
+        container: 'kp-availability',
+        class: 'kp-availability',
+        self: true,
+        why: 'The grid measures its own width and offers a list per column on a phone; the query reaches only its own parts [kpadopt6-social].',
+    },
+    {
+        container: 'kp-qr',
+        class: 'kp-qr',
+        self: true,
+        why: 'The code measures its own width and puts the link and Copy first on a narrow screen when asked; the query reaches only its own parts [kpadopt6-social].',
+    },
+    {
+        container: 'kp-console',
+        class: 'kp-console',
+        self: true,
+        why: 'The console measures its own width and stacks the select, prompt and Run on a phone; the query reaches only its own parts [kpadopt6-social].',
+    },
+    {
         container: 'kp-range',
         class: 'kp-range',
         self: true,

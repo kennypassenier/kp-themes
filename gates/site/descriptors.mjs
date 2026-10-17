@@ -3807,6 +3807,198 @@ setGanttState(timeline, 'loading');
         ],
     },
     {
+        id: 'claim',
+        title: 'Who brings it',
+        group: 'Data',
+        classes: ['kp-claim'],
+        exports: [],
+        intro: 'A claim on every row of a checklist: who brings the item (their mark and name, several people allowed) or, when nobody does, a loud gap, with one button that takes the item or lets go.',
+        whenToUse: 'A packing list, a chore list or a potluck where each item needs a person. For a list that is only ticked off use the plain checklist.',
+        examples: [
+            {
+                title: 'A packing list',
+                why: 'The page says who is looking and answers each press; the module draws the rows from the items, each with its claim.',
+                markup: `
+<div class="kp-checklist" data-kp-checklist data-kp-checklist-claim data-kp-claim-viewer="kenny" data-kp-claim-viewer-name="Kenny" aria-label="Packing list"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-claim-mode', what: '`claim` (default, a button on each row) or `assign` (a person menu).' },
+            { name: 'data-kp-claim-gap', what: '`loud` (default) or `quiet`.' },
+            { name: 'data-kp-claim-gap-sort', what: '`keep` (default) or `top`.' },
+            { name: 'data-kp-claim-person', what: '`both` (default), `name` or `idmark`.' },
+            { name: 'data-kp-claim-max', what: 'How many people may bring one item (0, no cap).' },
+            { name: 'data-kp-claim-count', what: '`both` (default), `bar`, `group` or `none`.' },
+            { name: 'data-kp-claim-take-all', what: 'Adds Take every open item, behind Undo.' },
+            { name: 'data-kp-claim-face', what: 'Which face the button shows: `take`, `held` or `busy` (set by the module).' },
+        ],
+        accessibility: [
+            'Built in — the gap is a glyph and words, never colour alone; the people are a named group; the button is pressed when you bring it; a change and a refusal are announced politely.',
+            'Yours — answer `kp-claim-change` with `detail.settle(promise)`, and say who is looking with `setClaimViewer`.',
+        ],
+    },
+    {
+        id: 'availability',
+        title: 'Who can come',
+        group: 'Data',
+        classes: ['kp-availability'],
+        exports: [],
+        intro: 'People in the rows, days or proposed periods in the columns: each person answers can, maybe or cannot for their own row, the summary row counts who can, and the best column is ringed. The package’s heat grid, made editable.',
+        whenToUse: 'Finding a date that suits a group: a trip, a meeting, a shared dinner. For a read-only grid of states use the heat grid.',
+        examples: [
+            {
+                title: 'Who can come to a trip',
+                why: 'The page gives the people, the columns and the answers; the module draws the grid, answers presses and says what changed.',
+                markup: `
+<div class="kp-availability" data-kp-availability data-kp-availability-choose aria-label="Who can come"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-heat-edit', what: '`own` (default), `all` or `off`: whose cells a press changes.' },
+            { name: 'data-kp-availability-answers', what: '`3` (can, maybe, cannot; default) or `2`.' },
+            { name: 'data-kp-availability-press', what: '`cycle` (default) or `menu`.' },
+            { name: 'data-kp-availability-paint', what: 'Drag across your row to give the same answer; `false` turns it off.' },
+            { name: 'data-kp-availability-best', what: '`most` (default), `everyone` or `none`.' },
+            { name: 'data-kp-availability-best-rule', what: '`yes-count` (default) or `no-nobody`.' },
+            { name: 'data-kp-availability-quorum', what: 'How many must answer a column before it can be best.' },
+            { name: 'data-kp-availability-window', what: 'In day mode, the best stretch of this many days is marked.' },
+            { name: 'data-kp-availability-sort', what: '`mine-first` (default), `given` or `answered-first`.' },
+            { name: 'data-kp-availability-summary', what: '`both` (default), `count` or `bar`.' },
+            { name: 'data-kp-availability-choose', what: 'Shows Choose these dates on the best column.' },
+            { name: 'data-kp-availability-locked', what: 'Column keys nobody can change any more.' },
+            { name: 'data-kp-availability-narrow', what: '`scroll` (default) or `by-column`, a list per column on a phone.' },
+            { name: 'data-kp-availability-undo-ms', what: 'Undo after a stroke (6000).' },
+            { name: 'data-kp-availability-density', what: '`comfortable` (default) or `compact` cells.' },
+        ],
+        accessibility: [
+            'Built in — every answer is a glyph and a word as well as a tone; each cell is named by person, column and answer; changes and a refusal are announced politely; y, m, n and Backspace set an answer on your own row.',
+            'Yours — answer `kp-availability-change` with `detail.settle(promise)` and say which person is yours (`mine: true`).',
+        ],
+    },
+    {
+        id: 'qr',
+        title: 'QR code',
+        group: 'Content',
+        classes: ['kp-qr'],
+        exports: [],
+        intro: 'A link shown as a QR code a phone can scan, with the link as text under it and a Copy button. The code is drawn on the page; the link never goes to a service. The plate stays light in every theme, because dark modules on a light ground are read by every camera.',
+        whenToUse: 'An invitation, a pairing link or a Wi-Fi string handed from one screen to another. For a link that only needs copying use the copyable value.',
+        examples: [
+            {
+                title: 'An invitation link',
+                why: 'The value is the text to encode; the module draws the code, the caption and Copy.',
+                markup: `
+<div class="kp-qr" data-kp-qr data-kp-qr-value="https://example.com/invite/7Hq2-nT9a"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-qr-ecc', what: 'Error correction `L`, `M` (default), `Q` or `H`.' },
+            { name: 'data-kp-qr-size', what: 'A CSS length (12rem); `lg` is 16rem.' },
+            { name: 'data-kp-qr-quiet', what: 'The quiet zone in modules (4).' },
+            { name: 'data-kp-qr-look', what: '`plate` (default) or `theme`, which falls back to the plate below a 7 to 1 contrast.' },
+            { name: 'data-kp-qr-modules', what: '`square` (default) or `round`; the corner marks stay square.' },
+            { name: 'data-kp-qr-render', what: '`svg` (default) or `canvas`.' },
+            { name: 'data-kp-qr-caption', what: '`link` (default), `none`, or words to show instead.' },
+            { name: 'data-kp-qr-copy', what: '`false` hides Copy.' },
+            { name: 'data-kp-qr-download', what: '`false` (default), `png` or `svg`.' },
+            { name: 'data-kp-qr-reveal', what: '`shown` (default) or `click`, hidden behind Show QR code.' },
+            { name: 'data-kp-qr-expires', what: 'An ISO moment after which the code is withdrawn.' },
+            { name: 'data-kp-qr-max', what: 'Bytes above which a warning shows (512).' },
+            { name: 'data-kp-qr-narrow', what: '`code` (default) or `link`: the link and Copy first on a narrow screen.' },
+            { name: 'data-kp-qr-retry', what: 'A code that could not be made offers Retry.' },
+        ],
+        accessibility: [
+            'Built in — the code is an image named by `data-kp-qr-label` and described by the link, focusable so a screen reader can read the link; Shift+C copies; the result of Copy is announced.',
+            'Yours — a link is never the only way: the caption always shows it as text.',
+        ],
+    },
+    {
+        id: 'time',
+        title: 'Time field',
+        group: 'Forms',
+        classes: ['kp-time'],
+        exports: [],
+        intro: 'A field for a time of day in 24 hours: typed (0230, 2:30, 2h30), stepped with the arrow keys or picked from the package’s own list of times, with presets and a mark on times near a busy moment. It posts HH:MM and never shows AM or PM.',
+        whenToUse: 'A schedule, a reminder or a log entry that needs a time of day. For a date use the date picker; for a duration use the countdown’s field.',
+        examples: [
+            {
+                title: 'A backup time',
+                why: 'The label points at the input the module builds (`data-kp-time-id`); the hidden input posts the value under `data-kp-name`.',
+                markup: `
+<div class="kp-field">
+    <label class="kp-field__label" for="backup-at">Backup time</label>
+    <div class="kp-time" data-kp-time data-kp-time-id="backup-at" data-kp-name="at" data-kp-value="03:00"></div>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-time-step', what: 'Minutes for the keys and the list: 1, 5 (default), 10, 15, 30 or 60.' },
+            { name: 'data-kp-time-min', what: 'The start of a window; later than the max, it wraps midnight.' },
+            { name: 'data-kp-time-max', what: 'The end of the window.' },
+            { name: 'data-kp-time-seconds', what: 'HH:MM:SS.' },
+            { name: 'data-kp-time-popup', what: '`list` (default) or `none`.' },
+            { name: 'data-kp-time-presets', what: '`Night=03:00,Morning=08:00`: chips above the list.' },
+            { name: 'data-kp-time-now', what: 'Adds a Now entry.' },
+            { name: 'data-kp-time-zone', what: 'An IANA name: a quiet line says whose clock it is.' },
+            { name: 'data-kp-time-look', what: '`field` (default) or `inline` (the underline form inside a sentence).' },
+            { name: 'data-kp-time-clear', what: 'Adds an explicit no time.' },
+            { name: 'data-kp-time-required', what: 'Empty is invalid, with a line.' },
+            { name: 'data-kp-time-near', what: 'Busy moments: list entries within `data-kp-time-near-width` minutes (60) are marked.' },
+            { name: 'data-kp-time-id', what: 'The id of the input, for a label.' },
+            { name: 'data-kp-time-touched', what: 'Set by the module once the field was left (so a required field only complains then).' },
+        ],
+        accessibility: [
+            'Built in — a combobox with a listbox, the active entry named by `aria-activedescendant`; an invalid text is `aria-invalid` with an alert line; every change and a 12 hour conversion are announced politely.',
+            'Yours — name the field (`data-kp-label` or a label for its id), and word the near-a-busy-moment sentence with the problem alert.',
+        ],
+    },
+    {
+        id: 'console',
+        title: 'Console',
+        group: 'Data',
+        classes: ['kp-console'],
+        exports: [],
+        intro: 'A prompt and, per command, a block that shows whether it still runs, worked or failed: the command, its exit code, its output folded and copyable, and a refusal in what and what to do now. The app runs the commands; the package draws the shell of the interaction and remembers your earlier lines for as long as the tab is open.',
+        whenToUse: 'An admin page that runs a command on a host or a container and shows what came back. For a stream of log lines use the log; for one captured request use the request inspector.',
+        examples: [
+            {
+                title: 'A host console',
+                why: 'The page gives `run(command, context)`; the module does everything around it.',
+                markup: `
+<div class="kp-console" data-kp-console data-kp-console-prompt="#" aria-label="Host console"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-console-prompt', what: 'The prompt glyph (#).' },
+            { name: 'data-kp-console-context', what: '`select`: a select before the prompt whose value goes to `run`.' },
+            { name: 'data-kp-console-history', what: 'How many lines Up recalls (50).' },
+            { name: 'data-kp-console-remember', what: '`session` (default, only while the tab is open), `device` or `off`.' },
+            { name: 'data-kp-console-dedupe', what: '`false` keeps a line typed twice in a row twice.' },
+            { name: 'data-kp-console-order', what: '`newest-last` (default) or `newest-first`.' },
+            { name: 'data-kp-console-follow', what: '`stick` (default) or `off`.' },
+            { name: 'data-kp-console-max-blocks', what: 'Blocks kept (200); older ones fold.' },
+            { name: 'data-kp-console-max-lines', what: 'Lines of output shown before the fold (12).' },
+            { name: 'data-kp-console-max-bytes', what: 'Bytes of output kept per block (262144).' },
+            { name: 'data-kp-console-status', what: '`exit-code` (default) or `word`.' },
+            { name: 'data-kp-console-timer', what: '`false` hides the elapsed time of a running block.' },
+            { name: 'data-kp-console-cancel', what: 'A running block offers Cancel when the job can.' },
+            { name: 'data-kp-console-tab', what: '`none` (default) or `complete`.' },
+            { name: 'data-kp-console-focus-key', what: 'The key that jumps to the prompt (:).' },
+            { name: 'data-kp-console-confirm', what: 'Words or a /regular expression/: a matching line needs a second press.' },
+            { name: 'data-kp-console-hint', what: 'The line under the prompt, its height reserved.' },
+            { name: 'data-kp-console-mode', what: '`full` (default) or `bar`: only the prompt; blocks go out as `kp-console-block`.' },
+        ],
+        accessibility: [
+            'Built in — the output is a log region, a running block is busy, only the last command’s result is announced (never its output), a refusal is an alert, the prompt says why it is off.',
+            'Yours — everything about what a command may do, and masking secrets in the output.',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

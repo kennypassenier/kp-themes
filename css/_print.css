@@ -277,4 +277,10 @@
 @page {
     size: A4;
     margin: 15mm;
+
+    /* A printed invitation keeps the QR code and its link and drops the buttons [kpadopt6]. */
+    .kp-qr__actions,
+    .kp-qr__warn {
+        display: none;
+    }
 }

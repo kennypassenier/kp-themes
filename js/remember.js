@@ -86,7 +86,7 @@ export const REMEMBER_PREFIX = 'kp-remember';
 /**
  * The kinds of state this package remembers.
  *
- * @typedef {'sidenav' | 'disclosure' | 'tree' | 'split' | 'datatable' | 'tour' | 'refresh' | 'notices'} Remembered
+ * @typedef {'sidenav' | 'disclosure' | 'tree' | 'split' | 'datatable' | 'tour' | 'refresh' | 'notices' | 'claim' | 'availability' | 'time' | 'console'} Remembered
  */
 
 /**
@@ -390,6 +390,11 @@ const PAINTERS = {
     // The refresh chooser and the notification centre read their own memory [kpadopt5-ops].
     refresh: () => {},
     notices: () => {},
+    // The claim chips, the availability grid, the time field and the console read their own memory [kpadopt6].
+    claim: () => {},
+    availability: () => {},
+    time: () => {},
+    console: () => {},
 };
 
 /**
