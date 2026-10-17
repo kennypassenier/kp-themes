@@ -182,3 +182,36 @@
     block-size: 40rem;
     padding: 0;
 }
+
+/* A mock page: an app bar, a slot, a body. */
+.ko-mockpage {
+    display: grid;
+    align-content: start;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+    overflow: hidden;
+}
+
+.ko-mockbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-md, 0.75rem);
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-block-end: 1px solid var(--border);
+    background: var(--card);
+}
+
+.ko-mockbar span {
+    color: var(--muted-foreground);
+}
+
+.ko-mockbody {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    padding: var(--kp-space-md, 0.75rem);
+}
+
+.ko-mockbody p {
+    margin: 0;
+}

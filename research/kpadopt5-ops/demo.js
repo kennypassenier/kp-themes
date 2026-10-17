@@ -7,6 +7,7 @@ import { setCardState } from '../../js/card-state.js';
 import { setMenu } from '../../js/menu-button.js';
 import { masterDetail, setPaneState } from '../../js/master-detail.js';
 import { setRefreshInterval } from '../../js/auto-refresh.js';
+import { connectionOf, setConnection } from '../../js/connection.js';
 
 /** @param {string} name @param {string} text */
 const log = (name, text) => {
@@ -362,3 +363,52 @@ function initRefresh() {
 }
 
 initRefresh();
+
+// ---------------------------------------------------------------- connection
+function initConnection() {
+    const banners = /** @type {HTMLElement[]} */ ([...document.querySelectorAll('[data-ko-conn-banner]')]);
+    if (!banners.length) return;
+    let pending = 2;
+    const readout = document.querySelector('[data-ko-conn-readout]');
+    const all = (/** @type {'online' | 'offline' | 'reconnecting' | 'back' | 'refused'} */ state, /** @type {object} */ detail = {}) => {
+        for (const b of banners) setConnection(b, state, { pending, ...detail });
+    };
+    for (const b of banners) {
+        b.addEventListener('kp-connection-state', (e) => {
+            if (readout) readout.textContent = `State: ${/** @type {CustomEvent} */ (e).detail.state}.`;
+        });
+        b.addEventListener('kp-connection-retry', (e) => {
+            if (readout)
+                readout.textContent = `Retry ${/** @type {CustomEvent} */ (e).detail.attempt} (${/** @type {CustomEvent} */ (e).detail.auto ? 'automatic' : 'pressed'}); the app answers.`;
+        });
+    }
+    for (const button of document.querySelectorAll('[data-ko-conn]'))
+        button.addEventListener('click', () => {
+            switch (/** @type {HTMLElement} */ (button).dataset.koConn) {
+                case 'offline':
+                    all('offline');
+                    break;
+                case 'pending':
+                    pending += 1;
+                    all(connectionOf(banners[0])?.state() ?? 'online', {});
+                    for (const b of banners) b.setAttribute('data-kp-pending', String(pending));
+                    if (connectionOf(banners[0])?.state() === 'offline') all('offline');
+                    break;
+                case 'still':
+                    all('offline');
+                    break;
+                case 'blip':
+                    all('offline');
+                    window.setTimeout(() => all('online'), 1000);
+                    break;
+                case 'refused':
+                    all('refused', { why: 'The server did not accept the change to pump house 7. It was kept; nothing was lost.' });
+                    break;
+                case 'online':
+                    all('online');
+                    break;
+            }
+        });
+}
+
+initConnection();

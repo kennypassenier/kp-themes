@@ -276,6 +276,58 @@ export type Strings = {
      */
     codeCopiedAnnouncement: (title: string) => string;
     /**
+     * The banner's first line when the connection is gone (js/connection.js) [kpadopt5-connection]
+     */
+    connOffline: string;
+    /**
+     * What is true meanwhile and what happens next [kpadopt5-connection]
+     */
+    connOfflineWhy: string;
+    /**
+     * The first line while a try is under way [kpadopt5-connection]
+     */
+    connReconnecting: string;
+    /**
+     * Its second line on the first try [kpadopt5-connection]
+     */
+    connReconnectingWhy: string;
+    /**
+     * Its second line from the second try, "Attempt 2" [kpadopt5-connection]
+     */
+    connAttempt: (n: number) => string;
+    /**
+     * The time to the next automatic try, "next try in 8 s" [kpadopt5-connection]
+     */
+    connNextTry: (duration: string) => string;
+    /**
+     * The exact count of changes waiting, "3 changes waiting" [kpadopt5-connection]
+     */
+    connPending: (n: number) => string;
+    /**
+     * The first line when the connection is back [kpadopt5-connection]
+     */
+    connBack: string;
+    /**
+     * Its second line with nothing waiting [kpadopt5-connection]
+     */
+    connBackWhy: string;
+    /**
+     * Its second line with changes waiting, "Sending 3 changes" [kpadopt5-connection]
+     */
+    connBackSending: (n: number) => string;
+    /**
+     * The first line when the server refuses while the browser is online [kpadopt5-connection]
+     */
+    connRefused: string;
+    /**
+     * Its second line when the app gives none [kpadopt5-connection]
+     */
+    connRefusedWhy: string;
+    /**
+     * The Retry now button [kpadopt5-connection]
+     */
+    connRetry: string;
+    /**
      * A refresh choice, "Every 30 s" (js/auto-refresh.js) [kpadopt5-auto-refresh]
      */
     refreshEvery: (duration: string) => string;
@@ -1934,6 +1986,19 @@ export type Strings = {
  * @property {string} codeLoading  What the busy card over a block says
  * @property {string} codeError  A block that could not be read, when the page gives no sentence
  * @property {(title: string) => string} codeCopiedAnnouncement  Announced after a copy, naming the block
+ * @property {string} connOffline  The banner's first line when the connection is gone (js/connection.js) [kpadopt5-connection]
+ * @property {string} connOfflineWhy  What is true meanwhile and what happens next [kpadopt5-connection]
+ * @property {string} connReconnecting  The first line while a try is under way [kpadopt5-connection]
+ * @property {string} connReconnectingWhy  Its second line on the first try [kpadopt5-connection]
+ * @property {(n: number) => string} connAttempt  Its second line from the second try, "Attempt 2" [kpadopt5-connection]
+ * @property {(duration: string) => string} connNextTry  The time to the next automatic try, "next try in 8 s" [kpadopt5-connection]
+ * @property {(n: number) => string} connPending  The exact count of changes waiting, "3 changes waiting" [kpadopt5-connection]
+ * @property {string} connBack  The first line when the connection is back [kpadopt5-connection]
+ * @property {string} connBackWhy  Its second line with nothing waiting [kpadopt5-connection]
+ * @property {(n: number) => string} connBackSending  Its second line with changes waiting, "Sending 3 changes" [kpadopt5-connection]
+ * @property {string} connRefused  The first line when the server refuses while the browser is online [kpadopt5-connection]
+ * @property {string} connRefusedWhy  Its second line when the app gives none [kpadopt5-connection]
+ * @property {string} connRetry  The Retry now button [kpadopt5-connection]
  * @property {(duration: string) => string} refreshEvery  A refresh choice, "Every 30 s" (js/auto-refresh.js) [kpadopt5-auto-refresh]
  * @property {string} refreshPaused  The choice that stops the refreshing [kpadopt5-auto-refresh]
  * @property {string} refreshOther  The entry that lets a person type any number of seconds [kpadopt5-auto-refresh]

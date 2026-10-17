@@ -469,6 +469,106 @@
                     <p class="ko-readout" data-ko-refresh-readout aria-live="polite">Data read 0 times.</p>
                 </div>
             </section>
+            <!-- ================================================================ connection-banner -->
+            <section
+                class="ko-sec"
+                id="connection"
+                data-review-item="connection"
+                data-review-topic="ops-connection-banner"
+                data-review-topic-title="The offline and reconnecting banner"
+                data-review-title="The offline and reconnecting banner"
+                data-review-choices='[{ "id": "connection-placement", "label": "Where the banner stands", "once": true, "default": "top", "options": [
+                    { "value": "top", "label": "Under the navigation bar", "hint": "In the page, pushing the content down; it scrolls away with it (the default)." },
+                    { "value": "bottom", "label": "At the foot of the window", "hint": "Sticks to the bottom edge while you scroll, so it is always in view; it covers the last lines until it goes." }] }]'
+                aria-labelledby="h-connection"
+            >
+                <div class="ko-sec__head">
+                    <h2 id="h-connection">The offline and reconnecting banner</h2>
+                    <p>
+                        <code>.kp-connection</code> with <code>js/connection.js</code>: a band that says the connection is gone, how many changes
+                        wait, that it is reconnecting, and that it is back. It is not “the data is old”.
+                    </p>
+                </div>
+                <div class="ko-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Two mock pages (one at full width, one at 390 px), each an app bar, the banner slot and some content. Online, the slot
+                            takes no room at all: the content sits directly under the app bar.
+                        </li>
+                        <li>
+                            <b>Lose the connection</b>: after a grace of 1.5 s (a drop shorter than that shows nothing) the band is ruled in under the
+                            app bar and pushes the content down: a warning, <b>You are offline</b>, “Changes are kept here and sent when the
+                            connection is back.”, the exact count “2 changes waiting” and “next try in 3 s” counting down, and <b>Retry now</b>. At
+                            zero (or on Retry now) it says <b>Reconnecting…</b> with a spinner and “Attempt 2”; the app then answers (the
+                            <b>Still offline</b> button is that answer) and the next wait is longer (3, 10, 30, 60 s). The band keeps one height in
+                            every state; on the phone it is one line plus Retry now.
+                        </li>
+                        <li>
+                            <b>Add a waiting change</b> raises the count by one (“3 changes waiting”, “1 change waiting” in the singular, never a
+                            capped number). <b>A one-second drop</b> shows nothing at all. <b>Server refuses</b> is the red plate: you are online, but
+                            the server did not accept the request, with the app’s own sentence.
+                        </li>
+                        <li>
+                            <b>Come back</b>: a green <b>Connected again</b> (“Sending 2 changes.”) stays 3 s and then leaves the way it came, ruled
+                            off; the content slides back up. A screen reader hears each change once, politely, and going offline at once.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The theme's own alert band: a red-ink entry for offline and refused (paper ground, a rule along the start edge), a ruled-in
+                        arrival and a ruled-off leave, the spinner formal's double ring.
+                    </p>
+                </div>
+                <div class="ko-controls" data-review-controls>
+                    <div role="group" aria-label="Connection demo">
+                        <b>Simulate:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-conn="offline">Lose the connection</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-conn="pending">Add a waiting change</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-conn="still">Still offline</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-conn="blip">A one-second drop</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-conn="refused">Server refuses</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ko-conn="online">Come back</button>
+                    </div>
+                </div>
+                <div class="ko-stack">
+                    <div>
+                        <p class="ko-label">Full width</p>
+                        <div class="ko-mockpage">
+                            <div class="ko-mockbar"><b>Pump houses</b><span>Readings · Visits · Alarms</span></div>
+                            <div
+                                data-kp-connection
+                                data-kp-connection-source="app"
+                                data-kp-connection-grace="1500"
+                                data-kp-pending="2"
+                                data-ko-conn-banner
+                            ></div>
+                            <div class="ko-mockbody">
+                                <p>Fifteen pump houses on the northern network. Pump house 7 sent its last reading at 06:00.</p>
+                                <p>Everything on this page stays readable while the connection is gone.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="ko-label">Phone width (390 px)</p>
+                        <div class="ko-frame ko-frame--phone">
+                            <div class="ko-mockpage">
+                                <div class="ko-mockbar"><b>Pump houses</b></div>
+                                <div
+                                    data-kp-connection
+                                    data-kp-connection-source="app"
+                                    data-kp-connection-grace="1500"
+                                    data-kp-pending="2"
+                                    data-ko-conn-banner
+                                ></div>
+                                <div class="ko-mockbody"><p>Fifteen pump houses on the northern network.</p></div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="ko-readout" data-ko-conn-readout aria-live="polite">Online.</p>
+                </div>
+            </section>
         </main>
         <script type="application/json" data-review-round>
             { "round": "ops-c17983a9-c644-4e17-b04b-bf6ed4735b60", "received": [] }
