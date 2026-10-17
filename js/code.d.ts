@@ -43,6 +43,18 @@ export type CodeSpec = {
      */
     message?: string;
     loadingWords?: string;
+    /**
+     * a table cell: wrapped, three lines, a muted line for empty and binary [kpadopt5]
+     */
+    cell?: boolean;
+    /**
+     * where the rest of a folded cell opens (default inline) [kpadopt5]
+     */
+    open?: 'inline' | 'dialog';
+    /**
+     * a link under a binary cell's line [kpadopt5]
+     */
+    downloadUrl?: string;
 };
 export type CodeMemory = {
     spec: CodeSpec;
@@ -59,6 +71,7 @@ export type CodeMemory = {
     pending: CodeSpec | null;
     head: HTMLElement | null;
     revert: number;
+    cell: boolean;
 };
 /**
  * The JSON of `text` laid out with two-space indents, or null when it does
@@ -70,9 +83,9 @@ export declare function prettyJson(text: string): string | null;
  * Draw (or redraw) a code block. The reader's Wrap, layout and fold are kept
  * across calls unless the spec names them again.
  * @param {HTMLElement} el the root, a `.kp-code`
- * @param {CodeSpec} spec
+ * @param {CodeSpec} given
  */
-export declare function setCode(el: HTMLElement, spec: CodeSpec): void;
+export declare function setCode(el: HTMLElement, given: CodeSpec): void;
 /**
  * Fill every `[data-kp-code]` under `root` from its markup: the text of its
  * `code` (or `pre`), and `data-kp-code-title`, `-language`, `-size`,
