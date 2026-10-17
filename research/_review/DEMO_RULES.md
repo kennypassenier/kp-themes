@@ -48,6 +48,9 @@ checked by looking, in Firefox, in the review dialog.
 - A pressed state Kenny sets stays across options, aspects, themes and visits; an action never resets it (Replay included). [fix-112, fix-115 2026-10-06 "state moet onthouden worden"] by hand: press a state, flip, replay, change theme.
 - The network graph changes in no theme. [2026-10-07 02:54 "dat is overal goed"] by hand: do not touch it.
 
+- The same function sits in the same position in every row and every state: actions such as "Mark unread" line up in one fixed column (a grid), never left-aligned by the flow of the text before them. [2026-10-17 22:09 notices "I told you before … Same functionality needs to be in the same position every time"; web-grid rule 2026-10] script: research/_review/measure-states.mjs (column check) and by hand.
+- A variant the demo offers that could be a setting is a component option with a default, switchable at runtime (an attribute change re-renders); the demo shows that switch working. Ask Kenny only which option is the default. [2026-10-17 22:09 problem-alert, connection, conversation-thread] by hand: flip the attribute in the console.
+
 ## 3. States
 
 - Failed, empty and loading states fill the component's full normal footprint, with a normal-size action (Retry). [2026-10-16 23:07 "de hele grootte van de component gebruiken"] by hand: measure each state's height in Firefox against the loaded height.
@@ -115,6 +118,7 @@ checked by looking, in Firefox, in the review dialog.
 ## 8. Before a round goes on the Agenda
 
 - `node research/_review/measure-gaps.mjs <port> <page> <themes> 1280,390` prints clear in every theme the round asks; also click each section into its states and measure those by hand. [2026-10-17 text-edge-1017] script: research/_review/measure-gaps.mjs
+- `node research/_review/measure-states.mjs <port> <page> <themes> 1280,390` prints clear: every section put into every state its controls offer and every menu or popover it has opened, and the text-gap measure run in each; nothing overlaps, touches an edge or breaks one letter per line. Start the server from this worktree and confirm its cwd. [2026-10-17 22:09 sentence menu unreadable, slider reason one letter per line, log columns over each other; correction states-1017] script: research/_review/measure-states.mjs
 - `node research/_review/check-kit.mjs <port> <page>` prints clear on every page. [2026-10-17 lost-answer-1017] script: research/_review/check-kit.mjs
 - `npm run gates` is green, including the re-review check against VERDICTS.json. [rereview-1016] gate: gates/check-rereview.mjs
 - Every raised surface in the section is opened in the review dialog and measured (`measure-plate.mjs`). [2026-10-16 "het geopende menu heeft geen achtergrond"] script: research/_review/measure-plate.mjs
