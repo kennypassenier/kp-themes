@@ -6015,12 +6015,14 @@ The NAS sleeps after 02:00; the copy wakes it first.</textarea>
                         </li>
                         <li>
                             <b>Clear checked</b> takes the ticked rows away; the bar’s line becomes “3 cleared” with an <b>Undo</b> button in the same
-                            place (6 s), which puts them back where they were. <b>Check all</b> ticks everything and dims while all is done.
+                            place (6 s), which puts them back where they were. <b>Check all</b> ticks everything and dims while all is done; <b>Uncheck all</b> takes every tick off and dims while nothing is ticked (the focus moves to the other one when the one you pressed dims).
                         </li>
                         <li>
                             The buttons below the list: <b>Load again</b> shows formal’s busy card in the middle of the list (2.5 s, the spinner
                             turning) and then the list; <b>Fail</b> shows a red-edged sentence where the rows were; <b>Empty</b> the dashed empty
-                            line. The second list keeps ticked rows in place (<code>data-kp-checklist-sink="false"</code>). The 360 px frame wraps the
+                            line; both fill the list’s whole height and say it large in the middle. The list is never shorter than twelve rows here
+                            (<code>--kp-checklist-min-rows</code>), so loading, ready, empty and failed stand in about the same height and the page
+                            below does not jump. The second list keeps ticked rows in place (<code>data-kp-checklist-sink="false"</code>). The 360 px frame wraps the
                             long name onto a second line, with room around it.
                         </li>
                         <li>Reduced motion: rows move at once, without the glide. The log shows every event.</li>

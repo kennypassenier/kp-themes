@@ -10,7 +10,7 @@
 //   list.addEventListener('kp-checklist-change', (e) => save(e.detail.items));
 //
 // Parts, made by the module: a bar (`__bar`) with the count of what is done
-// and Check all and Clear checked; a body (`__body`) of groups (`__group`,
+// and Check all, Uncheck all and Clear checked; a body (`__body`) of groups (`__group`,
 // with a heading `__head` holding `__title` and `__count`, "4 of 9") and
 // rows (`__item` > `label.__row` > a real checkbox `__check`, `__label`,
 // `__detail`); an empty line (`__empty`) and a status region (`__live`).
@@ -37,7 +37,7 @@
 // `data-kp-checklist-empty` (or the dictionary's sentence).
 //
 // Events (bubbling, on the list):
-//   kp-checklist-change   { id, checked, items }   a tick, Check all (id null)
+//   kp-checklist-change   { id, checked, items }   a tick, Check all or Uncheck all (id null)
 //   kp-checklist-clear    { removed, items }       Clear checked
 //   kp-checklist-undo     { restored, items }      Undo after a clear
 //
@@ -111,9 +111,11 @@ function part(list, name) {
         const actions = el('kp-checklist__actions');
         const all = /** @type {HTMLButtonElement} */ (el('kp-button kp-button--ghost kp-button--sm kp-checklist__all', 'button'));
         all.type = 'button';
+        const none = /** @type {HTMLButtonElement} */ (el('kp-button kp-button--ghost kp-button--sm kp-checklist__none', 'button'));
+        none.type = 'button';
         const clear = /** @type {HTMLButtonElement} */ (el('kp-button kp-button--ghost kp-button--sm kp-checklist__clear', 'button'));
         clear.type = 'button';
-        actions.append(all, clear);
+        actions.append(all, none, clear);
         node.append(status, actions);
         list.prepend(node);
     } else if (name === 'body') {
@@ -274,6 +276,9 @@ function render(list) {
     const all = /** @type {HTMLButtonElement} */ (bar.querySelector('.kp-checklist__all'));
     all.textContent = strings.checklistCheckAll;
     all.disabled = total === 0 || done === total || list.hasAttribute('aria-busy');
+    const none = /** @type {HTMLButtonElement} */ (bar.querySelector('.kp-checklist__none'));
+    none.textContent = strings.checklistUncheckAll;
+    none.disabled = done === 0 || list.hasAttribute('aria-busy');
     const clear = /** @type {HTMLButtonElement} */ (bar.querySelector('.kp-checklist__clear'));
     clear.textContent = strings.checklistClear;
     clear.disabled = done === 0 || list.hasAttribute('aria-busy');
@@ -385,7 +390,7 @@ function endUndo(list) {
     render(list);
     if (hadFocus)
         /** @type {HTMLElement | null} */ (
-            part(list, 'bar').querySelector('.kp-checklist__clear:not(:disabled), .kp-checklist__all:not(:disabled)')
+            part(list, 'bar').querySelector('.kp-checklist__clear:not(:disabled), .kp-checklist__none:not(:disabled), .kp-checklist__all:not(:disabled)')
         )?.focus();
 }
 
@@ -452,8 +457,19 @@ export function attachChecklists(root = document) {
             if (target.closest('.kp-checklist__all')) {
                 for (const item of items) item.checked = true;
                 void glide(list, render(list));
+                // The pressed button is dimmed now (everything is ticked): the focus goes to its opposite, not to the page's top.
+                if (document.activeElement === document.body || target.closest('.kp-checklist__all')?.matches(':disabled'))
+                    /** @type {HTMLElement | null} */ (part(list, 'bar').querySelector('.kp-checklist__none:not(:disabled)'))?.focus();
                 say(list, strings.checklistSummary(items.length, items.length));
                 emit(list, CHECKLIST_EVENT, { id: null, checked: true });
+            } else if (target.closest('.kp-checklist__none')) {
+                if (!items.some((item) => item.checked)) return;
+                for (const item of items) item.checked = false;
+                void glide(list, render(list));
+                if (document.activeElement === document.body || target.closest('.kp-checklist__none')?.matches(':disabled'))
+                    /** @type {HTMLElement | null} */ (part(list, 'bar').querySelector('.kp-checklist__all:not(:disabled)'))?.focus();
+                say(list, strings.checklistSummary(0, items.length));
+                emit(list, CHECKLIST_EVENT, { id: null, checked: false });
             } else if (target.closest('.kp-checklist__clear')) {
                 const removed = items.filter((i) => i.checked);
                 if (!removed.length) return;

@@ -62,7 +62,7 @@ section.addEventListener(CHECKLIST_EVENT, (event) => {
     const { id, checked, items } = /** @type {CustomEvent} */ (event).detail;
     say(
         log,
-        `kp-checklist-change · ${id ?? 'Check all'} → ${checked ? 'ticked' : 'open'} · ${items.filter((/** @type {any} */ i) => i.checked).length} of ${items.length} ticked`,
+        `kp-checklist-change · ${id ?? (checked ? 'Check all' : 'Uncheck all')} → ${checked ? 'ticked' : 'open'} · ${items.filter((/** @type {any} */ i) => i.checked).length} of ${items.length} ticked`,
     );
 });
 section.addEventListener(CHECKLIST_CLEAR_EVENT, (event) => {
