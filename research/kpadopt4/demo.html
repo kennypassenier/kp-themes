@@ -590,9 +590,9 @@
                 data-review-title="A live number that ticks"
                 aria-label="Live number"
                 data-review-choices='[{ "id": "forest-tick", "label": "How forest shows a counting number", "once": true, "options": [
-                    { "value": "grove", "label": "Planted trees", "hint": "Recommended. A row of whole trees, the progress bar&#39;s trees, is planted in the free line after the figure while it counts and withers when it lands." },
-                    { "value": "tag", "label": "Kraft tag", "hint": "A kraft hang tag with the leaf corner, wood grain and a dashed stitched edge unrolls behind the figure and rolls away when it lands." },
-                    { "value": "trail", "label": "Clay trail", "hint": "A dashed clay trail is laid dash by dash under the figure with the clay blaze walking at its head, then it fades." }]}]'
+                    { "value": "sprout", "label": "Sprouting digits", "hint": "Recommended. The digits grow up out of the soil line: moss climbs through them from the baseline on the growth curve and cools into the ink as the count lands." },
+                    { "value": "brand", "label": "Branded digits", "hint": "The digits are branded into the wood: stamped hot in clay with a burnt edge, then cooled into the ink. Nothing is drawn round them." },
+                    { "value": "dapple", "label": "Dappled light", "hint": "A gamble. Light falls through the canopy: moss and lime shadows drift across the digits at three speeds and thin out as the count lands." }]}]'
             >
                 <div class="dd-sec__head">
                     <h2>A live number that ticks to its new value</h2>
@@ -621,9 +621,10 @@
                         swells and nothing flashes. Press the page's button that changes the number and watch the figure rock and settle.
                     </p>
                     <p data-for="forest">
-                        A live number that counts shows it without anything round it: a row of planted trees grows in the free line after the figure
-                        on the growth curve, the progress bar's trees, and withers when the number lands (the kraft tag and the clay trail are the
-                        other two to tick). The figure itself never moves or swells. Tick one, then change the number from the page.
+                        A live number that counts changes in its digits and nothing is drawn round it: moss climbs up through the digits from the soil
+                        line on the growth curve and cools into the ink as the number lands (the branded digits and the dappled light are the other
+                        two to tick). The figure never moves or swells and every digit reads at every moment. Tick one, then change the number from
+                        the page.
                     </p>
                     <p data-for="blueprint">
                         A live number that counts is read again: a short ruler is set under it with an amber pointer that slides from the old reading
@@ -665,6 +666,11 @@
                         <li>
                             <b>Press twice fast</b>: the second change starts from wherever the first had got to, never from the old number. With
                             reduced motion the new number is written at once.
+                        </li>
+                        <li>
+                            <b>Forest, the three ways to tick</b>: the digits themselves change, never the space round them. Sprouting digits: moss
+                            rises through the digits from the baseline and cools into ink. Branded digits: clay with a burnt edge cools into ink.
+                            Dappled light: green shadows drift over the digits and fade.
                         </li>
                     </ul>
                 </div>
@@ -5367,9 +5373,9 @@ The NAS sleeps after 02:00; the copy wakes it first.</textarea>
                         <li>
                             Press <b>Spin</b> (or Tab to it and press Space): the line says “Turning…”, the wheel turns three to six whole turns (a
                             different number each spin, the log says how many) and slows evenly to a stop with no bounce, about 3.6 s for the mean
-                            travel and a little longer or shorter for a longer or shorter one. The chosen segment is filled deeper, the others step back, and under the wheel “The
-                            wheel chose” and the full name in Fraunces over formal’s double rule. The button now says <b>Again</b>; the next spin
-                            never lands on the same dish.
+                            travel and a little longer or shorter for a longer or shorter one. The chosen segment is filled deeper, the others step
+                            back, and under the wheel “The wheel chose” and the full name in Fraunces over formal’s double rule. The button now says
+                            <b>Again</b>; the next spin never lands on the same dish.
                         </li>
                         <li>
                             The Spin button in the middle does not move when the pointer is on it, nor when it has focus (it stays on the disc’s
@@ -5538,7 +5544,8 @@ The NAS sleeps after 02:00; the copy wakes it first.</textarea>
                     <ul>
                         <li>
                             The large frame opens at <b>Step 3 of 6</b> (as if you came back where you stopped): the count, formal’s progress bar at a
-                            half, the step in large type, “For this step” in a box with room on every side (nothing touches its edge), the amounts in one column starting on the same line (“450 ml water” stands under “300 g rinsed rice”) and the names beside them, a
+                            half, the step in large type, “For this step” in a box with room on every side (nothing touches its edge), the amounts in
+                            one column starting on the same line (“450 ml water” stands under “300 g rinsed rice”) and the names beside them, a
                             <b>Start a timer · 10 min</b> button and a warning note. At the foot, <b>Back</b> and <b>Next</b>, each half the width and
                             4 rem high.
                         </li>
@@ -5557,7 +5564,9 @@ The NAS sleeps after 02:00; the copy wakes it first.</textarea>
                         </li>
                         <li>
                             <b>Load again</b> shows formal’s busy card over the step (2.5 s, the spinner turning) with both buttons dimmed;
-                            <b>Fail</b> and <b>Empty</b> fill the whole step area (the same size as a step) and say their sentence large, in the middle of it: a red alert for Fail, the theme’s empty plate for Empty. The 390 px frame is the phone, its needs box has the same room.
+                            <b>Fail</b> and <b>Empty</b> fill the whole step area (the same size as a step) and say their sentence large, in the
+                            middle of it: a red alert for Fail, the theme’s empty plate for Empty. The 390 px frame is the phone, its needs box has
+                            the same room.
                         </li>
                         <li>The log shows each <code>kp-focus-steps-change</code>, done, and the screen line’s state.</li>
                     </ul>
@@ -5674,11 +5683,13 @@ The NAS sleeps after 02:00; the copy wakes it first.</textarea>
                         <li>
                             Three cards of one height: <b>Rice</b> running, <b>Preheat the oven</b> paused (its time grey, its word “Paused”), and a
                             timer with a long name, cut with an ellipsis (the full name is its tooltip). The time is large, in Fraunces, in figures of
-                            one width, and stands against the right edge of the card; the bar under it is formal’s own progress bar, filling as time passes. Nothing in a card moves while it ticks.
+                            one width, and stands against the right edge of the card; the bar under it is formal’s own progress bar, filling as time
+                            passes. Nothing in a card moves while it ticks.
                         </li>
                         <li>
-                            <b>Pause</b> and <b>Resume</b> swap in the same button, which keeps its width (it is as wide as the widest word) and never breaks a word over two lines; the same for <b>+1 min</b>. <b>+1 min</b> adds a minute. <b>✕</b> takes
-                            the card away the theme’s way; the focus goes to the next card.
+                            <b>Pause</b> and <b>Resume</b> swap in the same button, which keeps its width (it is as wide as the widest word) and never
+                            breaks a word over two lines; the same for <b>+1 min</b>. <b>+1 min</b> adds a minute. <b>✕</b> takes the card away the
+                            theme’s way; the focus goes to the next card.
                         </li>
                         <li>
                             In the recipe line, press <b>10 minutes</b>: a new card “Simmer the sauce” arrives the theme’s way. Press it again: no
@@ -6015,15 +6026,17 @@ The NAS sleeps after 02:00; the copy wakes it first.</textarea>
                         </li>
                         <li>
                             <b>Clear checked</b> takes the ticked rows away; the bar’s line becomes “3 cleared” with an <b>Undo</b> button in the same
-                            place (6 s), which puts them back where they were. <b>Check all</b> ticks everything and dims while all is done; <b>Uncheck all</b> takes every tick off and dims while nothing is ticked (the focus moves to the other one when the one you pressed dims).
+                            place (6 s), which puts them back where they were. <b>Check all</b> ticks everything and dims while all is done;
+                            <b>Uncheck all</b> takes every tick off and dims while nothing is ticked (the focus moves to the other one when the one
+                            you pressed dims).
                         </li>
                         <li>
                             The buttons below the list: <b>Load again</b> shows formal’s busy card in the middle of the list (2.5 s, the spinner
                             turning) and then the list; <b>Fail</b> shows a red-edged sentence where the rows were; <b>Empty</b> the dashed empty
                             line; both fill the list’s whole height and say it large in the middle. The list is never shorter than twelve rows here
                             (<code>--kp-checklist-min-rows</code>), so loading, ready, empty and failed stand in about the same height and the page
-                            below does not jump. The second list keeps ticked rows in place (<code>data-kp-checklist-sink="false"</code>). The 360 px frame wraps the
-                            long name onto a second line, with room around it.
+                            below does not jump. The second list keeps ticked rows in place (<code>data-kp-checklist-sink="false"</code>). The 360 px
+                            frame wraps the long name onto a second line, with room around it.
                         </li>
                         <li>Reduced motion: rows move at once, without the glide. The log shows every event.</li>
                     </ul>
