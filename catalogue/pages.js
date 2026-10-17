@@ -93,6 +93,12 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
+            // Kenny, 2026-10-17 (kpadopt6, social): who brings it, who can come, a QR code, a time field and a console, formal only until Kenny approves them.
+            {
+                href: 'research/kpadopt6-social/demo.html',
+                label: 'Social parts: who brings it, who can come, QR code, time field, console',
+                about: 'Five parts for people who plan and talk together, in formal only: a packing list that shows who brings each item, a grid of who can come on which day, a QR code for a link, a field for a time of day and a console with a prompt. One topic per part.',
+            },
             // Kenny, 2026-10-17 (kpadopt5, rows): ticking rows with the keyboard, the selection bar, the toast with Undo, the pill for new lines, the payload cell, the JSON box and the request inspector, formal first, one topic per part.
             {
                 href: 'research/kpadopt5-rows/demo.html',

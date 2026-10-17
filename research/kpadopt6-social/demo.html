@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="kpadopt6-social" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kpadopt6, social: who brings it, who can come, the QR code, the time field and the console</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="../kpadopt4/page.css" />
+        <link rel="stylesheet" href="social.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main kd-page">
+            <header class="kd-intro">
+                <h1>The sixth adoption round, social: five parts for people who plan and talk together</h1>
+                <p class="cat-intro">
+                    Formal only, as every new part starts. One topic per part, five in all: who brings what on a packing list, who can come on which day,
+                    a QR code for a link, a field for a time of day and a console with a prompt. Every section says under <b>Expected</b> what you
+                    should see and what each control does, and offers the few real choices as boxes to tick in the review dialog.
+                </p>
+                <p>
+                    Everything here is the package running on its own stylesheets. Only the data is made up: the trip, the people, the dates, the links
+                    and the commands are samples, and a pretend server answers after a short wait.
+                </p>
+            </header>
+
+            <!-- ================================================================ claim-row -->
+            <h2 class="kd-topic" id="topic-claim-row">Who brings it</h2>
+            <section
+                class="k6-sec"
+                id="claim-row"
+                data-review-item="claim-row"
+                data-review-topic="claim-row"
+                data-review-topic-title="Who brings it"
+                data-review-components="claim"
+                data-review-title="Who brings it: a claim on every row of a packing list"
+                aria-labelledby="h-claim-row"
+                data-review-choices='[
+  { "id": "gap", "label": "How loud is an item nobody brings?", "options": [
+    { "value": "loud", "label": "Loud: red edge, tint and the words Nobody yet (recommended)", "hint": "Found at a glance in a long list. The glyph and the words carry it, so colour is never the only sign." },
+    { "value": "quiet", "label": "Quiet: only the words Nobody yet in muted ink", "hint": "A calm list. Gaps are found with the Nobody yet chip or by reading." } ] },
+  { "id": "person", "label": "How is a person shown on a row?", "options": [
+    { "value": "both", "label": "Mark and name (recommended)", "hint": "The name is the fact, the coloured mark helps the eye find the same person again." },
+    { "value": "name", "label": "Name only", "hint": "The plainest row. No colour to learn." },
+    { "value": "idmark", "label": "Mark only", "hint": "Shortest, for a crowded phone row. The name is in the mark's tooltip and read out to a screen reader." } ] },
+  { "id": "sort", "label": "Do items nobody brings go to the top of their group?", "options": [
+    { "value": "keep", "label": "No: the list keeps its own order (recommended)", "hint": "The list does not move while people claim. Gaps are found by their red edge or the chip." },
+    { "value": "top", "label": "Yes: gaps first inside each group", "hint": "Useful for a list of sixty. Rows jump to the next group of claimed ones after somebody takes one." } ] }
+]'
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-claim-row">Who brings it</h2>
+                    <p>
+                        A packing list where each item shows who brings it, and an item nobody brings is loud. Several people may bring one item
+                        (a pot for the stove, two people for the tent). It is the package's checklist with
+                        <code>data-kp-checklist-claim</code> added; the page says who is looking and answers each press.
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Each row ends in a column of its own: the people who bring it (their coloured mark and name) and one button.
+                            Rows nobody brings have a red edge, a <b>!</b> and the words <b>Nobody yet</b>; the bar says how many.
+                        </li>
+                        <li>
+                            Press <b>I'll bring it</b> on Gas stove: the button shows the spinner for a moment (the row does not move), then your
+                            name joins and the button says <b>I'm bringing it</b>. Press it again to let go: a toast offers Undo for 6 seconds.
+                        </li>
+                        <li>
+                            Press <b>I'll bring it</b> on Tent: the pretend server answers that Tom took it first. The row gets a red outline for
+                            3 seconds, says so in words and goes back to what Tom's claim makes of it. Nothing you typed or ticked is lost.
+                        </li>
+                        <li>
+                            The chips <b>All, Nobody yet, Mine</b> carry exact counts. <b>Nobody yet</b> shows only the rows nobody brings; when none
+                            is left the list says <b>Everything is taken</b> and offers all items back. The key <b>c</b> on a focused row takes or
+                            lets go; <b>Shift C</b> toggles the gaps (press <b>?</b> for the list).
+                        </li>
+                        <li>
+                            Not signed in, the buttons are off and say why on hover or focus. The state buttons below show loading (the busy card
+                            over the list), empty and failed (with Retry), each at the list's full height. At 390 px the claim cell moves under the
+                            label and the button fills the line, 44 px high.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal's plain white card and navy ink: the gap is the only red on the page, a 3 px edge and a faint tint, so a missing person
+                        reads before any name does. The held button is the navy outline with a check; names are set in the body face, the marks in
+                        the palette the package already uses for people.
+                    </p>
+                </div>
+                <div class="k6-controls" data-review-controls>
+                    <div role="group" aria-label="List state">
+                        <b>List state:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-claim-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-claim-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-claim-state="empty" aria-pressed="false">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-claim-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Who is looking">
+                        <b>Who is looking:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-claim-viewer="kenny" aria-pressed="true">Kenny</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-claim-viewer="" aria-pressed="false">Nobody signed in</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-claim-viewer="locked" aria-pressed="false">Trip is closed</button>
+                    </div>
+                    <div role="group" aria-label="Push an update">
+                        <b>Another person acts:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-claim-push="">Anna takes the first free item</button>
+                    </div>
+                </div>
+                <p class="k6-readout" role="status" data-k6-claim-readout>Nothing pressed yet.</p>
+                <div class="k6-pair">
+                    <div class="k6-stack">
+                        <p class="k6-label">The packing list, full width (inside a flex row too)</p>
+                        <div class="k6-flexrow">
+                            <div
+                                class="kp-checklist"
+                                data-kp-checklist
+                                data-kp-checklist-claim
+                                data-kp-claim-viewer="kenny"
+                                data-kp-claim-viewer-name="Kenny"
+                                data-kp-claim-take-all
+                                data-kp-claim-copy
+                                data-kp-checklist-empty="Nothing on the packing list yet."
+                                id="k6-claim"
+                                aria-label="Packing list for the Ardennes weekend"
+                            ></div>
+                        </div>
+                    </div>
+                    <div class="k6-stack">
+                        <p class="k6-label">390 px</p>
+                        <div class="k6-frame k6-frame--phone">
+                            <div
+                                class="kp-checklist"
+                                data-kp-checklist
+                                data-kp-checklist-claim
+                                data-kp-claim-viewer="kenny"
+                                data-kp-claim-viewer-name="Kenny"
+                                data-kp-claim-keys="false"
+                                data-kp-claim-person="idmark"
+                                style="--kp-checklist-min-rows: 6"
+                                id="k6-claim-phone"
+                                aria-label="Packing list, phone"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="k6-label">The same list with each choice, side by side</p>
+                <div class="k6-trio">
+                    <div class="k6-stack">
+                        <p class="k6-note"><b>Quiet gap, names only</b></p>
+                        <div
+                            class="kp-checklist"
+                            data-kp-checklist
+                            data-kp-checklist-claim
+                            data-kp-claim-gap="quiet"
+                            data-kp-claim-person="name"
+                            data-kp-claim-keys="false"
+                            data-kp-claim-viewer="kenny"
+                            data-kp-claim-viewer-name="Kenny"
+                            style="--kp-checklist-min-rows: 5"
+                            id="k6-claim-quiet"
+                            aria-label="Packing list, quiet"
+                        ></div>
+                    </div>
+                    <div class="k6-stack">
+                        <p class="k6-note"><b>Gaps first in each group</b></p>
+                        <div
+                            class="kp-checklist"
+                            data-kp-checklist
+                            data-kp-checklist-claim
+                            data-kp-claim-gap-sort="top"
+                            data-kp-claim-keys="false"
+                            data-kp-claim-viewer="kenny"
+                            data-kp-claim-viewer-name="Kenny"
+                            style="--kp-checklist-min-rows: 5"
+                            id="k6-claim-top"
+                            aria-label="Packing list, gaps first"
+                        ></div>
+                    </div>
+                    <div class="k6-stack">
+                        <p class="k6-note"><b>Assign mode: one person hands out the jobs</b></p>
+                        <div
+                            class="kp-checklist"
+                            data-kp-checklist
+                            data-kp-checklist-claim
+                            data-kp-claim-mode="assign"
+                            data-kp-claim-keys="false"
+                            data-kp-claim-viewer="kenny"
+                            data-kp-claim-viewer-name="Kenny"
+                            style="--kp-checklist-min-rows: 5"
+                            id="k6-claim-assign"
+                            aria-label="Chores, assigned"
+                        ></div>
+                    </div>
+                </div>
+            </section>
+<!-- @@sections -->
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "social-4b115748-8633-477e-a6b4-b9529667e8a2", "received": [] }
+        </script>
+        <script type="module" src="social.js"></script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

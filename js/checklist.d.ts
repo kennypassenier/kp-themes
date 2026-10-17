@@ -6,6 +6,8 @@ export declare const CHECKLIST_EVENT = "kp-checklist-change";
 export declare const CHECKLIST_CLEAR_EVENT = "kp-checklist-clear";
 /** Fired on Undo: `{ restored, items }`. */
 export declare const CHECKLIST_UNDO_EVENT = "kp-checklist-undo";
+/** Fired on the list (not bubbling) after every draw, so a part that adds to the rows can draw its cells [kpadopt6]. */
+export declare const CHECKLIST_RENDER_EVENT = "kp-checklist-render";
 /** How long Undo is offered after a clear, unless the list says otherwise [ms]. */
 export declare const CHECKLIST_UNDO_MS = 6000;
 export type ChecklistItem = {
@@ -20,6 +22,10 @@ export type ChecklistItem = {
      */
     group?: string;
     checked?: boolean;
+    /**
+     * who brings it (js/claim.js, `data-kp-checklist-claim`) [kpadopt6]
+     */
+    claim?: import('./claim.js').ClaimInfo;
 };
 export type Undo = {
     removed: ChecklistItem[];

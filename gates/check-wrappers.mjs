@@ -224,6 +224,12 @@ export const REQUIRED = [
         why: 'The weekday picker measures its own width and shrinks its chips on a phone; the query reaches only its own parts [kpadopt5-time].',
     },
     {
+        container: 'kp-checklist',
+        class: 'kp-checklist',
+        self: true,
+        why: 'The checklist measures its own width and lays the claim cell under the label when narrow; the query reaches only its own rows [kpadopt6-social].',
+    },
+    {
         container: 'kp-range',
         class: 'kp-range',
         self: true,

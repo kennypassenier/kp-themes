@@ -448,6 +448,10 @@
             "types": "./js/tables.d.ts",
             "default": "./js/tables.js"
         },
+        "./js/claim": {
+            "types": "./js/claim.d.ts",
+            "default": "./js/claim.js"
+        },
         "./js/strings": {
             "types": "./js/strings.d.ts",
             "default": "./js/strings.js"

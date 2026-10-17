@@ -201,3 +201,10 @@ export type ThreadMessage = import('./js/thread.js').ThreadMessage;
 export type ThreadSpec = import('./js/thread.js').ThreadSpec;
 /** @typedef {import('./js/thread.js').ThreadMessage} ThreadMessage */
 /** @typedef {import('./js/thread.js').ThreadSpec} ThreadSpec */
+export { CLAIM, CLAIM_EVENT, CLAIM_FILTERS, CLAIM_FILTER_EVENT, CLAIM_REFUSED_MS, CLAIM_RETRY_EVENT, CLAIM_UNDO_MS, attachClaims, claimFilter, claimPeople, setClaim, setClaimFilter, setClaimPeople, setClaimViewer, } from './js/claim.js';
+export type ClaimInfo = import('./js/claim.js').ClaimInfo;
+export type ClaimPerson = import('./js/claim.js').ClaimPerson;
+export type ClaimDetail = import('./js/claim.js').ClaimDetail;
+/** @typedef {import('./js/claim.js').ClaimInfo} ClaimInfo */
+/** @typedef {import('./js/claim.js').ClaimPerson} ClaimPerson */
+/** @typedef {import('./js/claim.js').ClaimDetail} ClaimDetail */

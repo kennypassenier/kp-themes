@@ -3807,6 +3807,38 @@ setGanttState(timeline, 'loading');
         ],
     },
     {
+        id: 'claim',
+        title: 'Who brings it',
+        group: 'Data',
+        classes: ['kp-claim'],
+        exports: [],
+        intro: 'A claim on every row of a checklist: who brings the item (their mark and name, several people allowed) or, when nobody does, a loud gap, with one button that takes the item or lets go.',
+        whenToUse: 'A packing list, a chore list or a potluck where each item needs a person. For a list that is only ticked off use the plain checklist.',
+        examples: [
+            {
+                title: 'A packing list',
+                why: 'The page says who is looking and answers each press; the module draws the rows from the items, each with its claim.',
+                markup: `
+<div class="kp-checklist" data-kp-checklist data-kp-checklist-claim data-kp-claim-viewer="kenny" data-kp-claim-viewer-name="Kenny" aria-label="Packing list"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-claim-mode', what: '`claim` (default, a button on each row) or `assign` (a person menu).' },
+            { name: 'data-kp-claim-gap', what: '`loud` (default) or `quiet`.' },
+            { name: 'data-kp-claim-gap-sort', what: '`keep` (default) or `top`.' },
+            { name: 'data-kp-claim-person', what: '`both` (default), `name` or `idmark`.' },
+            { name: 'data-kp-claim-max', what: 'How many people may bring one item (0, no cap).' },
+            { name: 'data-kp-claim-count', what: '`both` (default), `bar`, `group` or `none`.' },
+            { name: 'data-kp-claim-take-all', what: 'Adds Take every open item, behind Undo.' },
+            { name: 'data-kp-claim-face', what: 'Which face the button shows: `take`, `held` or `busy` (set by the module).' },
+        ],
+        accessibility: [
+            'Built in — the gap is a glyph and words, never colour alone; the people are a named group; the button is pressed when you bring it; a change and a refusal are announced politely.',
+            'Yours — answer `kp-claim-change` with `detail.settle(promise)`, and say who is looking with `setClaimViewer`.',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',
@@ -4059,7 +4091,7 @@ list.addEventListener('kp-status-retry', (event) => {
         group: 'Data',
         classes: ['kp-facets', 'kp-facet'],
         exports: [],
-        intro: 'Checkbox rows that narrow a list by one property, each with how many items it would show and an “only” button that selects just that row. `data-kp-facets` on the group; `data-kp-facets-all="Everything"` adds a row that turns every row on and shows a mixed state while only some are. js/facets.js (`setFacetItems`, `setFacetCounts`, `setFacetValues`, `getFacetValues`, `attachFacets`) keeps the rows in step and fires `kp-facet-change`. `setFacetItems` changes rows in place, so a row that arrives later never takes the keyboard focus away.',
+        intro: 'Checkbox rows that narrow a list by one property, each with how many items it would show and an “only” button that selects just that row. `data-kp-claim-facets` on the group; `data-kp-claim-facets-all="Everything"` adds a row that turns every row on and shows a mixed state while only some are. js/facets.js (`setFacetItems`, `setFacetCounts`, `setFacetValues`, `getFacetValues`, `attachFacets`) keeps the rows in step and fires `kp-facet-change`. `setFacetItems` changes rows in place, so a row that arrives later never takes the keyboard focus away.',
         whenToUse: 'For the side of a log, a list or a board where a few values of one property are turned on and off, and the common move is “only this one”. For one value out of a few use a segmented control; for a long list with search use the combobox.',
         examples: [
             {
@@ -4068,7 +4100,7 @@ list.addEventListener('kp-status-retry', (event) => {
                 markup: `
 <div class="kp-facets" role="group" aria-label="Source">
 <ul class="kp-facets__list">
-<li class="kp-facet" data-kp-facet-all><label class="kp-facet__option"><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span class="kp-facet__name">Everything</span><span class="kp-facet__count">351</span></label></li>
+<li class="kp-facet" data-kp-claim-facet-all><label class="kp-facet__option"><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span class="kp-facet__name">Everything</span><span class="kp-facet__count">351</span></label></li>
 <li class="kp-facet" data-value="HOST"><label class="kp-facet__option"><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span class="kp-facet__name">Host</span><span class="kp-facet__count">214</span></label><button type="button" class="kp-button kp-button--ghost kp-button--sm kp-facet__only" aria-label="Show only Host">only</button></li>
 <li class="kp-facet" data-value="jellyfin"><label class="kp-facet__option"><input type="checkbox" class="kp-field__check kp-facet__check" checked /><span class="kp-facet__name">jellyfin</span><span class="kp-facet__count">96</span></label><button type="button" class="kp-button kp-button--ghost kp-button--sm kp-facet__only" aria-label="Show only jellyfin">only</button></li>
 </ul>
@@ -4079,7 +4111,7 @@ list.addEventListener('kp-status-retry', (event) => {
                 title: 'Made from items, with a colour and an identity pattern, and counts that arrive',
                 why: '`setFacetItems` reconciles the rows by value, in place. A row’s `swatch` is a colour and its `pattern` a seed (a name): a 5 by 5 pattern, the same for the same name wherever it is drawn (`identityCells(seed)`), is laid over the square, so two sources are told apart by more than a hue. `aria-busy="true"` shows the counts as quiet bars until `setFacetCounts` writes them. `kp-facet-change` carries `{ group, values, source, value }`; the line under the list prints it.',
                 markup: `
-<div class="kp-facets" id="doc-facets-live" data-kp-facets data-kp-facets-all="Everything" role="group" aria-label="Source" aria-busy="true">
+<div class="kp-facets" id="doc-facets-live" data-kp-claim-facets data-kp-claim-facets-all="Everything" role="group" aria-label="Source" aria-busy="true">
 <ul class="kp-facets__list"></ul>
 <p class="kp-facets__empty" hidden>No sources yet.</p>
 </div>
@@ -4112,14 +4144,14 @@ group.addEventListener('kp-facet-change', (event) => {
             },
         ],
         variants: [
-            { name: 'data-kp-facets-all', what: 'The Everything row; its checkbox is mixed while only some rows are on, and pressing it turns every row on.' },
+            { name: 'data-kp-claim-facets-all', what: 'The Everything row; its checkbox is mixed while only some rows are on, and pressing it turns every row on.' },
             { name: 'aria-busy="true"', what: 'On the group: the counts show as quiet bars that keep their place until `setFacetCounts` writes them.' },
             { name: '.kp-facets--row', what: 'The rows side by side as bordered pills, scrolling sideways, for a phone.' },
             { name: '.kp-facet__swatch', what: 'An optional small square before the name; its colour is a custom property you set on it.' },
-            { name: 'FacetItem.pattern / data-kp-facet-pattern', what: 'A seed (a name) for an identity pattern over the swatch: `identityCells(seed)` makes a 5 by 5 grid mirrored about its middle column, the same for the same name everywhere; `.kp-facet__pattern` is the drawing. An empty seed takes it away. The pattern’s size and ink are in the knobs.' },
+            { name: 'FacetItem.pattern / data-kp-claim-facet-pattern', what: 'A seed (a name) for an identity pattern over the swatch: `identityCells(seed)` makes a 5 by 5 grid mirrored about its middle column, the same for the same name everywhere; `.kp-facet__pattern` is the drawing. An empty seed takes it away. The pattern’s size and ink are in the knobs.' },
             { name: 'setFacetItems / setFacetCounts / setFacetValues / getFacetValues', what: 'Reconcile the rows by value in place, write the counts, set the values that are on without an event, and read them. `kp-facet-change` fires for a person’s choice only: `source` is `toggle`, `only` or `all`.' },
             { name: 'facetOnly / facetAll / facetShowingOnly / facetShowingAll', what: 'The words (“only”, “Everything”, “Showing only Host”, “Showing everything”), in the dictionary; the “only” label and its aria name are `facetOnly` and `facetOnlyLabel`.' },
-            { name: 'data-kp-facet-all and only', what: 'The “only” button is shown when the pointer is on the row or focus is in it, and always on a device that cannot hover.' },
+            { name: 'data-kp-claim-facet-all and only', what: 'The “only” button is shown when the pointer is on the row or focus is in it, and always on a device that cannot hover.' },
         ],
         accessibility: [
             'Built in — each checkbox is named by its row’s name and described by its count; “only” says which row it is for; it sits beside the label, never inside it.',

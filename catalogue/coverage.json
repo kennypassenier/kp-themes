@@ -34,6 +34,7 @@
         "kp-kv",
         "kp-matrix",
         "kp-passkeys",
+        "kp-claim",
         "kp-notices",
         "kp-ops",
         "kp-pane",
