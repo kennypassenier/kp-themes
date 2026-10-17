@@ -1047,6 +1047,30 @@
  * @property {string} availabilityKeyGroup  The sheet's heading (js/availability.js) [kpadopt6]
  * @property {string} availabilityKeyReason  Why those keys do nothing now (js/availability.js) [kpadopt6]
  * @property {string} availabilityDisabled  Why every cell is inert when the page gives no reason (js/availability.js) [kpadopt6]
+ * @property {string} qrLabel  The code's accessible name (js/qr.js) [kpadopt6]
+ * @property {string} qrReady  Said once, politely, when the code is drawn (js/qr.js) [kpadopt6]
+ * @property {string} qrTooLongTitle  The failed plate's heading (js/qr.js) [kpadopt6]
+ * @property {string} qrTooLongText  Its sentence (js/qr.js) [kpadopt6]
+ * @property {string} qrEmptyTitle  The empty plate's heading (js/qr.js) [kpadopt6]
+ * @property {string} qrEmptyText  Its sentence (js/qr.js) [kpadopt6]
+ * @property {string} qrExpired  The plate of a link whose time ran out (js/qr.js) [kpadopt6]
+ * @property {string} qrExpiredText  Its sentence (js/qr.js) [kpadopt6]
+ * @property {string} qrHidden  The cover of a code that waits to be shown (js/qr.js) [kpadopt6]
+ * @property {string} qrShow  The cover's button (js/qr.js) [kpadopt6]
+ * @property {string} qrHide  The button that covers a shown code again (js/qr.js) [kpadopt6]
+ * @property {string} qrLoading  The words under the busy card while the link is made (js/qr.js) [kpadopt6]
+ * @property {string} qrCopy  The Copy button (js/qr.js) [kpadopt6]
+ * @property {string} qrCopied  Its result word (js/qr.js) [kpadopt6]
+ * @property {string} qrCopyFailed  Its refusal word (js/qr.js) [kpadopt6]
+ * @property {string} qrNoLink  Why Copy is off without a link (js/qr.js) [kpadopt6]
+ * @property {string} qrCopyOff  Why Copy is off while the code is not ready (js/qr.js) [kpadopt6]
+ * @property {string} qrDownloadPng  The download button for a picture (js/qr.js) [kpadopt6]
+ * @property {string} qrDownloadSvg  The download button for a vector file (js/qr.js) [kpadopt6]
+ * @property {(bytes: number) => string} qrDense  The warning under a long link (js/qr.js) [kpadopt6]
+ * @property {string} qrRetry  The failed plate's button (js/qr.js) [kpadopt6]
+ * @property {string} qrKey  The shortcut sheet's line for Shift C (js/qr.js) [kpadopt6]
+ * @property {string} qrKeyGroup  The sheet's heading (js/qr.js) [kpadopt6]
+ * @property {string} qrKeyReason  Why the key does nothing now (js/qr.js) [kpadopt6]
  */
 
 /**
@@ -2273,6 +2297,31 @@ export const DEFAULT_STRINGS = Object.freeze({
     availabilityKeyGroup: 'In the availability grid',
     availabilityKeyReason: 'Move to a cell of your own row first.',
     availabilityDisabled: 'The dates are chosen.',
+    // Qr (js/qr.js) [kpadopt6].
+    qrLabel: 'QR code for this link',
+    qrReady: 'QR code ready for this link',
+    qrTooLongTitle: 'This link is too long for a QR code',
+    qrTooLongText: 'Copy the link below instead.',
+    qrEmptyTitle: 'No link yet',
+    qrEmptyText: 'Once the link exists, its QR code shows here.',
+    qrExpired: 'Expired',
+    qrExpiredText: 'This link no longer works.',
+    qrHidden: 'QR code hidden',
+    qrShow: 'Show QR code',
+    qrHide: 'Hide QR code',
+    qrLoading: 'Making the link…',
+    qrCopy: 'Copy link',
+    qrCopied: 'Copied',
+    qrCopyFailed: 'Not copied',
+    qrNoLink: 'There is no link to copy yet.',
+    qrCopyOff: 'This link cannot be copied now.',
+    qrDownloadPng: 'Download PNG',
+    qrDownloadSvg: 'Download SVG',
+    qrDense: (bytes) => `This link is ${bytes} bytes long. The code gets dense and is harder to scan.`,
+    qrRetry: 'Try again',
+    qrKey: 'Copy the link of the focused QR code',
+    qrKeyGroup: 'QR code',
+    qrKeyReason: 'Put the focus on a QR code that has a link first.',
 });
 
 // STRINGS_NL was removed in 4.0.0 [D3]. Kenny decided that on

@@ -275,6 +275,7 @@ export const NEEDS = [
     },
     { name: 'claim', when: '[data-kp-checklist-claim]', load: () => import('./claim.js'), attach: (m, root) => [m.attachClaims(root)] },
     { name: 'availability', when: '[data-kp-availability]', load: () => import('./availability.js'), attach: (m, root) => [m.attachAvailability(root)] },
+    { name: 'qr', when: '[data-kp-qr]', load: () => import('./qr.js'), attach: (m, root) => [m.attachQr(root)] },
 ];
 
 /** Set on <html> once the boot's `attachAll()` has attached everything the page needed: the names fetched, space-separated. */

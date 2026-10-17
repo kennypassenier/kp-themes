@@ -729,3 +729,19 @@ export {
 /** @typedef {import('./js/availability.js').AvailabilityColumn} AvailabilityColumn */
 /** @typedef {import('./js/availability.js').AvailabilityAnswers} AvailabilityAnswers */
 /** @typedef {import('./js/availability.js').AvailabilityAnswer} AvailabilityAnswer */
+// A link as a QR code [kpadopt6].
+export {
+    QR,
+    QR_COPY_EVENT,
+    QR_EXPIRED_EVENT,
+    QR_LEVELS,
+    QR_PLATE,
+    QR_RETRY_EVENT,
+    QR_REVEAL_EVENT,
+    attachQr,
+    qrContrast,
+    qrMatrix,
+    qrSvg,
+    setQr,
+} from './js/qr.js';
+/** @typedef {import('./js/qr.js').QrSpec} QrSpec */

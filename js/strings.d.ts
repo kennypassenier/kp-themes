@@ -3663,6 +3663,102 @@ export type Strings = {
      * Why every cell is inert when the page gives no reason (js/availability.js) [kpadopt6]
      */
     availabilityDisabled: string;
+    /**
+     * The code's accessible name (js/qr.js) [kpadopt6]
+     */
+    qrLabel: string;
+    /**
+     * Said once, politely, when the code is drawn (js/qr.js) [kpadopt6]
+     */
+    qrReady: string;
+    /**
+     * The failed plate's heading (js/qr.js) [kpadopt6]
+     */
+    qrTooLongTitle: string;
+    /**
+     * Its sentence (js/qr.js) [kpadopt6]
+     */
+    qrTooLongText: string;
+    /**
+     * The empty plate's heading (js/qr.js) [kpadopt6]
+     */
+    qrEmptyTitle: string;
+    /**
+     * Its sentence (js/qr.js) [kpadopt6]
+     */
+    qrEmptyText: string;
+    /**
+     * The plate of a link whose time ran out (js/qr.js) [kpadopt6]
+     */
+    qrExpired: string;
+    /**
+     * Its sentence (js/qr.js) [kpadopt6]
+     */
+    qrExpiredText: string;
+    /**
+     * The cover of a code that waits to be shown (js/qr.js) [kpadopt6]
+     */
+    qrHidden: string;
+    /**
+     * The cover's button (js/qr.js) [kpadopt6]
+     */
+    qrShow: string;
+    /**
+     * The button that covers a shown code again (js/qr.js) [kpadopt6]
+     */
+    qrHide: string;
+    /**
+     * The words under the busy card while the link is made (js/qr.js) [kpadopt6]
+     */
+    qrLoading: string;
+    /**
+     * The Copy button (js/qr.js) [kpadopt6]
+     */
+    qrCopy: string;
+    /**
+     * Its result word (js/qr.js) [kpadopt6]
+     */
+    qrCopied: string;
+    /**
+     * Its refusal word (js/qr.js) [kpadopt6]
+     */
+    qrCopyFailed: string;
+    /**
+     * Why Copy is off without a link (js/qr.js) [kpadopt6]
+     */
+    qrNoLink: string;
+    /**
+     * Why Copy is off while the code is not ready (js/qr.js) [kpadopt6]
+     */
+    qrCopyOff: string;
+    /**
+     * The download button for a picture (js/qr.js) [kpadopt6]
+     */
+    qrDownloadPng: string;
+    /**
+     * The download button for a vector file (js/qr.js) [kpadopt6]
+     */
+    qrDownloadSvg: string;
+    /**
+     * The warning under a long link (js/qr.js) [kpadopt6]
+     */
+    qrDense: (bytes: number) => string;
+    /**
+     * The failed plate's button (js/qr.js) [kpadopt6]
+     */
+    qrRetry: string;
+    /**
+     * The shortcut sheet's line for Shift C (js/qr.js) [kpadopt6]
+     */
+    qrKey: string;
+    /**
+     * The sheet's heading (js/qr.js) [kpadopt6]
+     */
+    qrKeyGroup: string;
+    /**
+     * Why the key does nothing now (js/qr.js) [kpadopt6]
+     */
+    qrKeyReason: string;
 };
 /**
  * @typedef {object} Strings
@@ -4675,6 +4771,30 @@ export type Strings = {
  * @property {string} availabilityKeyGroup  The sheet's heading (js/availability.js) [kpadopt6]
  * @property {string} availabilityKeyReason  Why those keys do nothing now (js/availability.js) [kpadopt6]
  * @property {string} availabilityDisabled  Why every cell is inert when the page gives no reason (js/availability.js) [kpadopt6]
+ * @property {string} qrLabel  The code's accessible name (js/qr.js) [kpadopt6]
+ * @property {string} qrReady  Said once, politely, when the code is drawn (js/qr.js) [kpadopt6]
+ * @property {string} qrTooLongTitle  The failed plate's heading (js/qr.js) [kpadopt6]
+ * @property {string} qrTooLongText  Its sentence (js/qr.js) [kpadopt6]
+ * @property {string} qrEmptyTitle  The empty plate's heading (js/qr.js) [kpadopt6]
+ * @property {string} qrEmptyText  Its sentence (js/qr.js) [kpadopt6]
+ * @property {string} qrExpired  The plate of a link whose time ran out (js/qr.js) [kpadopt6]
+ * @property {string} qrExpiredText  Its sentence (js/qr.js) [kpadopt6]
+ * @property {string} qrHidden  The cover of a code that waits to be shown (js/qr.js) [kpadopt6]
+ * @property {string} qrShow  The cover's button (js/qr.js) [kpadopt6]
+ * @property {string} qrHide  The button that covers a shown code again (js/qr.js) [kpadopt6]
+ * @property {string} qrLoading  The words under the busy card while the link is made (js/qr.js) [kpadopt6]
+ * @property {string} qrCopy  The Copy button (js/qr.js) [kpadopt6]
+ * @property {string} qrCopied  Its result word (js/qr.js) [kpadopt6]
+ * @property {string} qrCopyFailed  Its refusal word (js/qr.js) [kpadopt6]
+ * @property {string} qrNoLink  Why Copy is off without a link (js/qr.js) [kpadopt6]
+ * @property {string} qrCopyOff  Why Copy is off while the code is not ready (js/qr.js) [kpadopt6]
+ * @property {string} qrDownloadPng  The download button for a picture (js/qr.js) [kpadopt6]
+ * @property {string} qrDownloadSvg  The download button for a vector file (js/qr.js) [kpadopt6]
+ * @property {(bytes: number) => string} qrDense  The warning under a long link (js/qr.js) [kpadopt6]
+ * @property {string} qrRetry  The failed plate's button (js/qr.js) [kpadopt6]
+ * @property {string} qrKey  The shortcut sheet's line for Shift C (js/qr.js) [kpadopt6]
+ * @property {string} qrKeyGroup  The sheet's heading (js/qr.js) [kpadopt6]
+ * @property {string} qrKeyReason  Why the key does nothing now (js/qr.js) [kpadopt6]
  */
 /**
  * The defaults. English, by Kenny's decision of 2026-09-04 — the package

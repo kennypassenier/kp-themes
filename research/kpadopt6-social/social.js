@@ -2,6 +2,7 @@
 // module; this file only fills the components, answers the demo's buttons and plays the parts a server would play.
 import { getChecklistItems, setChecklistItems, setChecklistState } from '../../js/checklist.js';
 import { setClaim, setClaimPeople, setClaimViewer } from '../../js/claim.js';
+import { setQr } from '../../js/qr.js';
 import { availabilityAnswers, availabilityDays, availabilityRange, setAvailability, setAvailabilityAnswer } from '../../js/availability.js';
 
 /** @param {string} sel @param {ParentNode} [root] @returns {HTMLElement | null} */
@@ -269,4 +270,47 @@ onReady(() => {
         }
         if (avReadout) avReadout.textContent = 'Lies answered the empty cells (a push update, no event).';
     });
+});
+
+// ---------------------------------------------------------------- qr-code (a link as a code)
+
+const LINK = 'https://kp-soft.dev/invite/7Hq2-nT9a';
+const qrMain = $('#k6-qr');
+const qrReadout = $('[data-k6-qr-readout]');
+for (const code of $$('[data-kp-qr]')) {
+    code.addEventListener('kp-qr-copy', () => {
+        if (qrReadout) qrReadout.textContent = 'Copied the link.';
+    });
+}
+qrMain?.addEventListener('kp-qr-retry', () => {
+    setQr(qrMain, { state: 'loading' });
+    setTimeout(() => {
+        setQr(qrMain, { value: LINK, state: 'ready' });
+        const b = $('[data-k6-qr-state="ready"]');
+        if (b) pick(b);
+    }, 1200);
+});
+onReady(() => {
+    for (const button of $$('[data-k6-qr-state]')) {
+        button.addEventListener('click', () => {
+            pick(button);
+            const state = button.getAttribute('data-k6-qr-state') ?? 'ready';
+            for (const code of [qrMain, $('#k6-qr-phone')]) {
+                if (!code) continue;
+                code.removeAttribute('data-kp-qr-expires');
+                code.removeAttribute('data-kp-qr-reveal');
+                if (state === 'loading') setQr(code, { state: 'loading' });
+                else if (state === 'empty') setQr(code, { value: '', state: 'empty' });
+                else if (state === 'long') setQr(code, { value: `https://kp-soft.dev/export?data=${'abcdefghij'.repeat(260)}`, state: 'ready' });
+                else if (state === 'dense') setQr(code, { value: `https://kp-soft.dev/export?data=${'abcdefghij'.repeat(54)}`, state: 'ready' });
+                else if (state === 'expired') {
+                    code.setAttribute('data-kp-qr-expires', '2026-10-01T00:00:00+02:00');
+                    setQr(code, { value: LINK, state: 'ready' });
+                } else if (state === 'hidden') {
+                    code.setAttribute('data-kp-qr-reveal', 'click');
+                    setQr(code, { value: LINK, state: 'ready' });
+                } else setQr(code, { value: LINK, state: 'ready' });
+            }
+        });
+    }
 });

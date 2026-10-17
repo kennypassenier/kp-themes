@@ -360,6 +360,117 @@
                     </div>
                 </div>
             </section>
+
+            <!-- ================================================================ qr-code -->
+            <h2 class="kd-topic" id="topic-qr-code">QR code</h2>
+            <section
+                class="k6-sec"
+                id="qr-code"
+                data-review-item="qr-code"
+                data-review-topic="qr-code"
+                data-review-topic-title="QR code"
+                data-review-components="qr"
+                data-review-title="A link as a QR code a phone can scan"
+                aria-labelledby="h-qr-code"
+                data-review-choices='[
+  { "id": "look", "label": "What colour is the code?", "options": [
+    { "value": "plate", "label": "Dark modules on a light plate, always (recommended)", "hint": "Every camera reads it. The plate stays light in dark themes too: the one place the package does not follow the theme." },
+    { "value": "theme", "label": "The theme's ink on the theme's surface, when it reads at least 7 to 1", "hint": "Matches the page, but some scanners fail on it; below 7 to 1 it falls back to the plate by itself." } ] },
+  { "id": "modules", "label": "What shape are the dots?", "options": [
+    { "value": "square", "label": "Square (recommended)", "hint": "The standard look, the crispest at any size." },
+    { "value": "round", "label": "Round dots, square corner marks", "hint": "Softer. The three corner patterns stay square so it still scans." } ] },
+  { "id": "size", "label": "How big is the code by default?", "options": [
+    { "value": "12", "label": "12 rem, about 192 px (recommended)", "hint": "Scans from 40 cm on a laptop and leaves room for the link beside other content." },
+    { "value": "16", "label": "16 rem, about 256 px", "hint": "For a projector or a printed card; takes the room of a small card." } ] },
+  { "id": "download", "label": "Does the code offer a download?", "options": [
+    { "value": "off", "label": "No: Copy link only (recommended)", "hint": "Nothing to save for an invitation that is sent as a link." },
+    { "value": "png", "label": "Yes: Download PNG", "hint": "A picture at four times the shown size, for a printed invitation. SVG is the other kind (data-kp-qr-download)." } ] }
+]'
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-qr-code">QR code</h2>
+                    <p>
+                        A link shown as a QR code that a phone can scan, with the link as text and a Copy button under it. The code is drawn on the page
+                        itself: the link never goes to a service.
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            A square white plate with dark modules and a wide white margin all round (the quiet zone), the link as text under it that wraps
+                            at any character, and <b>Copy link</b>. Point a phone camera at the first one: it opens
+                            <code>https://kp-soft.dev/invite/7Hq2-nT9a</code>.
+                        </li>
+                        <li>
+                            <b>Copy link</b> shows <b>Copied</b> for a moment in the same width; with the focus on the code, <b>Shift+C</b> does the same.
+                            The state buttons show making the link (the busy card in the square), no link yet, a link too long for the format (the
+                            text stays copyable), an expired link (the code is gone, the link struck) and a hidden code with <b>Show QR code</b>.
+                        </li>
+                        <li>
+                            Every state has the same square and the same caption height, so nothing jumps. A link over 512 bytes still draws, with a line
+                            that says it gets dense.
+                        </li>
+                        <li>At 390 px the code is the full width up to 16 rem, centred, and Copy fills the line, 44 px high. The last frame puts the link and Copy first.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal frames the white plate with its own hairline border and radius and nothing else: no shadow, no tint, so the quiet zone is
+                        exactly the white a scanner needs.
+                    </p>
+                </div>
+                <div class="k6-controls" data-review-controls>
+                    <div role="group" aria-label="Code state">
+                        <b>Code state:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-qr-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-qr-state="loading" aria-pressed="false">Making the link</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-qr-state="empty" aria-pressed="false">No link yet</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-qr-state="long" aria-pressed="false">Link too long</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-qr-state="dense" aria-pressed="false">Long link (dense)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-qr-state="expired" aria-pressed="false">Expired</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-qr-state="hidden" aria-pressed="false">Hidden until shown</button>
+                    </div>
+                </div>
+                <p class="k6-readout" role="status" data-k6-qr-readout>Nothing copied yet.</p>
+                <div class="k6-pair">
+                    <div class="k6-stack">
+                        <p class="k6-label">The invitation link (inside a flex row too)</p>
+                        <div class="k6-flexrow">
+                            <div class="kp-qr" data-kp-qr data-kp-qr-value="https://kp-soft.dev/invite/7Hq2-nT9a" data-kp-qr-retry id="k6-qr"></div>
+                        </div>
+                    </div>
+                    <div class="k6-stack">
+                        <p class="k6-label">390 px</p>
+                        <div class="k6-frame k6-frame--phone">
+                            <div class="kp-qr" data-kp-qr data-kp-qr-value="https://kp-soft.dev/invite/7Hq2-nT9a" id="k6-qr-phone"></div>
+                        </div>
+                        <p class="k6-label">390 px, link and Copy first</p>
+                        <div class="k6-frame k6-frame--phone">
+                            <div class="kp-qr" data-kp-qr data-kp-qr-narrow="link" data-kp-qr-value="https://kp-soft.dev/invite/7Hq2-nT9a" id="k6-qr-link"></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="k6-label">Each choice, side by side</p>
+                <div class="k6-trio">
+                    <div class="k6-stack">
+                        <p class="k6-note"><b>The theme's own ink (falls back when it reads under 7 to 1)</b></p>
+                        <div class="kp-qr" data-kp-qr data-kp-qr-look="theme" data-kp-qr-value="https://kp-soft.dev/invite/7Hq2-nT9a"></div>
+                    </div>
+                    <div class="k6-stack">
+                        <p class="k6-note"><b>Round dots</b></p>
+                        <div class="kp-qr" data-kp-qr data-kp-qr-modules="round" data-kp-qr-value="https://kp-soft.dev/invite/7Hq2-nT9a"></div>
+                    </div>
+                    <div class="k6-stack">
+                        <p class="k6-note"><b>16 rem, quality H, with downloads</b></p>
+                        <div class="kp-qr" data-kp-qr data-kp-qr-size="lg" data-kp-qr-ecc="H" data-kp-qr-download="png" data-kp-qr-value="https://kp-soft.dev/invite/7Hq2-nT9a"></div>
+                    </div>
+                    <div class="k6-stack">
+                        <p class="k6-note"><b>A secret link behind a button</b></p>
+                        <div class="kp-qr" data-kp-qr data-kp-qr-reveal="click" data-kp-qr-value="https://kp-soft.dev/pair/Z4k9-secret-8d2L"></div>
+                    </div>
+                </div>
+            </section>
 <!-- @@sections -->
         </main>
         <script type="application/json" data-review-round>

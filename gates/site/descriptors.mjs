@@ -3878,6 +3878,44 @@ setGanttState(timeline, 'loading');
         ],
     },
     {
+        id: 'qr',
+        title: 'QR code',
+        group: 'Content',
+        classes: ['kp-qr'],
+        exports: [],
+        intro: 'A link shown as a QR code a phone can scan, with the link as text under it and a Copy button. The code is drawn on the page; the link never goes to a service. The plate stays light in every theme, because dark modules on a light ground are read by every camera.',
+        whenToUse: 'An invitation, a pairing link or a Wi-Fi string handed from one screen to another. For a link that only needs copying use the copyable value.',
+        examples: [
+            {
+                title: 'An invitation link',
+                why: 'The value is the text to encode; the module draws the code, the caption and Copy.',
+                markup: `
+<div class="kp-qr" data-kp-qr data-kp-qr-value="https://example.com/invite/7Hq2-nT9a"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-qr-ecc', what: 'Error correction `L`, `M` (default), `Q` or `H`.' },
+            { name: 'data-kp-qr-size', what: 'A CSS length (12rem); `lg` is 16rem.' },
+            { name: 'data-kp-qr-quiet', what: 'The quiet zone in modules (4).' },
+            { name: 'data-kp-qr-look', what: '`plate` (default) or `theme`, which falls back to the plate below a 7 to 1 contrast.' },
+            { name: 'data-kp-qr-modules', what: '`square` (default) or `round`; the corner marks stay square.' },
+            { name: 'data-kp-qr-render', what: '`svg` (default) or `canvas`.' },
+            { name: 'data-kp-qr-caption', what: '`link` (default), `none`, or words to show instead.' },
+            { name: 'data-kp-qr-copy', what: '`false` hides Copy.' },
+            { name: 'data-kp-qr-download', what: '`false` (default), `png` or `svg`.' },
+            { name: 'data-kp-qr-reveal', what: '`shown` (default) or `click`, hidden behind Show QR code.' },
+            { name: 'data-kp-qr-expires', what: 'An ISO moment after which the code is withdrawn.' },
+            { name: 'data-kp-qr-max', what: 'Bytes above which a warning shows (512).' },
+            { name: 'data-kp-qr-narrow', what: '`code` (default) or `link`: the link and Copy first on a narrow screen.' },
+            { name: 'data-kp-qr-retry', what: 'A code that could not be made offers Retry.' },
+        ],
+        accessibility: [
+            'Built in — the code is an image named by `data-kp-qr-label` and described by the link, focusable so a screen reader can read the link; Shift+C copies; the result of Copy is announced.',
+            'Yours — a link is never the only way: the caption always shows it as text.',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

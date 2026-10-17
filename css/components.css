@@ -23620,3 +23620,123 @@
         background: hsl(from var(--primary) h s l / 0.12);
     }
 }
+
+@layer kp.components {
+    /* --- A link as a QR code [kpadopt6] -----------------------------------
+ *
+ * The plate stays light in every theme and in dark mode: dark modules on light ground are read by every camera,
+ * inverted ones by only some, and the quiet zone (4 modules, part of the picture) must stay white. Only the plate's frame
+ * and radius come from the theme. The link stands under it as text that wraps at any character; Copy follows. Every
+ * state (making it, empty, too long, expired, hidden) stands in the same square. */
+    .kp-qr {
+        --kp-qr-size: 12rem;
+        container: kp-qr / inline-size;
+        display: grid;
+        justify-items: start;
+        gap: var(--kp-space-sm, 0.5rem);
+        inline-size: 100%;
+        max-inline-size: max(var(--kp-qr-size), 26rem);
+        min-inline-size: 0;
+    }
+
+    .kp-qr__plate {
+        position: relative;
+        box-sizing: border-box;
+        inline-size: min(100%, var(--kp-qr-size));
+        aspect-ratio: 1;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+    }
+
+    .kp-qr[data-kp-state='ready'] > .kp-qr__plate:has(> .kp-qr__svg) {
+        background: #fff;
+    }
+
+    .kp-qr__svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+    }
+
+    .kp-qr__plate:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--primary));
+        outline-offset: 2px;
+    }
+
+    .kp-qr__plate > .kp-stateplate {
+        block-size: 100%;
+        box-sizing: border-box;
+        padding: var(--kp-space-sm, 0.5rem);
+        border: 0;
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    .kp-qr__plate .kp-stateplate__title {
+        font-size: var(--kp-text-lg, 1.125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-qr__expired {
+        background-image: repeating-linear-gradient(135deg, transparent 0 0.75rem, hsl(from var(--destructive) h s l / 0.1) 0.75rem 1.5rem);
+    }
+
+    .kp-qr__caption {
+        inline-size: 100%;
+        min-block-size: 2lh;
+        margin: 0;
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        line-height: 1.45;
+        overflow-wrap: anywhere;
+        word-break: break-all;
+        /* A very long link scrolls inside its own box (and takes the focus then) instead of pushing the page. */
+        max-block-size: 8lh;
+        overflow-y: auto;
+    }
+
+    .kp-qr__caption[data-kp-qr-struck] {
+        color: var(--muted-foreground);
+        text-decoration: line-through;
+    }
+
+    .kp-qr__caption[hidden] {
+        display: none;
+    }
+
+    .kp-qr__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        min-block-size: var(--kp-button-height, 2.25rem);
+    }
+
+    .kp-qr__warn {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    @container kp-qr (max-width: 23rem) {
+        .kp-qr {
+            --kp-qr-size: min(100%, 16rem);
+        }
+
+        .kp-qr__plate {
+            justify-self: center;
+        }
+
+        .kp-qr__copy {
+            flex: 1 1 100%;
+            min-block-size: 2.75rem;
+        }
+
+        .kp-qr[data-kp-qr-narrow='link'] > .kp-qr__plate {
+            order: 3;
+        }
+
+        .kp-qr[data-kp-qr-narrow='link'] > .kp-qr__actions {
+            order: 2;
+        }
+    }
+}

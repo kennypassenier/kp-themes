@@ -236,6 +236,12 @@ export const REQUIRED = [
         why: 'The grid measures its own width and offers a list per column on a phone; the query reaches only its own parts [kpadopt6-social].',
     },
     {
+        container: 'kp-qr',
+        class: 'kp-qr',
+        self: true,
+        why: 'The code measures its own width and puts the link and Copy first on a narrow screen when asked; the query reaches only its own parts [kpadopt6-social].',
+    },
+    {
         container: 'kp-range',
         class: 'kp-range',
         self: true,

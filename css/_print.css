@@ -40,4 +40,10 @@
         font-size: 0.85em;
         word-break: break-all;
     }
+
+    /* A printed invitation keeps the QR code and its link and drops the buttons [kpadopt6]. */
+    .kp-qr__actions,
+    .kp-qr__warn {
+        display: none;
+    }
 }
