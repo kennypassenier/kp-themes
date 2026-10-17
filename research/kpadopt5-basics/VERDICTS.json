@@ -1,1 +1,37 @@
-{ "demo": "kpadopt5-basics", "rounds": [] }
+{
+    "demo": "kpadopt5-basics",
+    "rounds": [
+        {
+            "round": "1",
+            "page": "basics-1635b737-505e-4184-885b-c2b897b98b2e",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-17 22:09: 5 of 5 judged in formal, 4 approved, 1 not approved. The page asked formal only.",
+            "approved": [
+                {
+                    "item": "calm-mode",
+                    "theme": "formal"
+                },
+                {
+                    "item": "shortcut-engine",
+                    "theme": "formal"
+                },
+                {
+                    "item": "explain-lede",
+                    "theme": "formal"
+                },
+                {
+                    "item": "result-flash-button",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "problem-alert",
+                    "theme": "formal",
+                    "note": "one per problem is default, the others are options that can be configured dynamically (so also the five can be changed)"
+                }
+            ],
+            "choices": []
+        }
+    ]
+}

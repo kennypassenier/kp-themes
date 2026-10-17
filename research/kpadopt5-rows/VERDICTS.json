@@ -1,1 +1,77 @@
-{ "demo": "kpadopt5-rows", "rounds": [] }
+{
+    "demo": "kpadopt5-rows",
+    "rounds": [
+        {
+            "round": "1",
+            "page": "rows-dfb064e2-85b0-4f84-8cb7-706a0b868f2f",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-17 22:09: 7 of 7 judged in formal, 5 approved, 2 not approved. The page asked formal only.",
+            "approved": [
+                {
+                    "item": "row-keyboard-select",
+                    "theme": "formal"
+                },
+                {
+                    "item": "selection-bar",
+                    "theme": "formal"
+                },
+                {
+                    "item": "undo-toast",
+                    "theme": "formal"
+                },
+                {
+                    "item": "payload-cell",
+                    "theme": "formal"
+                },
+                {
+                    "item": "request-inspector",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "new-items-pill",
+                    "theme": "formal",
+                    "note": "time and \"info\" or \"error\" columns are on top of each other, obscuring what is written, yes I want a divider"
+                },
+                {
+                    "item": "json-textarea",
+                    "theme": "formal",
+                    "note": "+Als ik long kies dan zie ik een beperkte kader waar ik moet scrolen, maar daarnaast bij de indicatie van wleke lijn het is, zie ik toch 42 lijnen en als ik naar beneden scroll dan verplaatst die hele balk. Die beide elementen moeten even groot zijn."
+                }
+            ],
+            "choices": [
+                {
+                    "item": "row-keyboard-select",
+                    "theme": "formal",
+                    "picked": "Do the arrow keys walk the rows too? = Yes: the arrows walk like j and k; Does Ctrl+A tick every row shown? = Yes, inside the table"
+                },
+                {
+                    "item": "selection-bar",
+                    "theme": "formal",
+                    "picked": "Where does the bar stand by default? = Stuck to the top of the list (recommended); What does the bar say about the ticked rows? = The names, with +N more (recommended)"
+                },
+                {
+                    "item": "undo-toast",
+                    "theme": "formal",
+                    "picked": "How does the toast show the time left? = A ring that drains, with the seconds in it (recommended)"
+                },
+                {
+                    "item": "payload-cell",
+                    "theme": "formal",
+                    "picked": "Where does the rest of a long payload open? = In the cell, in place (recommended)"
+                },
+                {
+                    "item": "json-textarea",
+                    "theme": "formal",
+                    "picked": "When does the box check the JSON? = While you type, after a short pause (recommended); How does the text get laid out? = Format and Minify buttons (recommended)"
+                },
+                {
+                    "item": "request-inspector",
+                    "theme": "formal",
+                    "picked": "Which requests are open when the list is drawn? = None: all folded"
+                }
+            ]
+        }
+    ]
+}
