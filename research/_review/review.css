@@ -688,6 +688,18 @@
     margin-block-start: 2rem;
 }
 
+.rv-tools[hidden],
+.rv-tools [hidden] {
+    display: none !important;
+}
+
+.rv-tools__motion {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 .rv-tools__speed {
     display: inline-flex;
     gap: 0.25rem;

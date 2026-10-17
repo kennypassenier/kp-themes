@@ -10,7 +10,16 @@
 //   the section. The slow speed runs every animation of the section (and of the previous version) at a quarter of
 //   its rate through the Web Animations API, so it needs nothing from the demo.
 //
-// The tools sit in a bar above the section in the dialog's stage and leave with it (teardown).
+// The tools sit in a bar above the section in the dialog's stage and leave with it (teardown). The bar shows only
+// what is relevant (Kenny, 2026-10-18 00:28: "de balk met previous version, playopen and close is hier niet relevant
+// dus moet niet getoond worden, enkel wanneer het relevant is"):
+//
+// - "Previous version" appears only when a `_previous` snapshot holds this section.
+// - "Play open and close" and the speed appear only when the section has something that opens and closes: the demo
+//   says so with `data-review-motion` on the section (any value but "none" forces it on, "none" forces it off), else
+//   the section is searched for the package's own openers (OPENERS, also inside its windows) and shown once one is
+//   visible. The search repeats while the section changes, since a demo may build its parts late.
+// - With neither, the whole bar is `hidden` and takes no space.
 
 /** The package's openers, most specific first. */
 const OPENERS = [
@@ -124,20 +133,34 @@ function openParts(/** @type {Element} */ root) {
 export function mountBlockTools({ section, item, theme, themeLabel, title }) {
     const bar = document.createElement('div');
     bar.className = 'rv-tools';
+    bar.hidden = true;
     bar.setAttribute('role', 'group');
     bar.setAttribute('aria-label', `Tools for ${title}`);
     bar.innerHTML = `
-        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-rv-previous disabled>Previous version (V)</button>
-        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-rv-loop>▶ Play open and close (L)</button>
-        <span class="rv-tools__speed" role="group" aria-label="Speed of the motion">
-            <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-rv-rate="1">1×</button>
-            <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-rv-rate="0.25">¼×</button>
+        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-rv-previous hidden>Previous version (V)</button>
+        <span class="rv-tools__motion" data-rv-motion hidden>
+            <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-rv-loop>▶ Play open and close (L)</button>
+            <span class="rv-tools__speed" role="group" aria-label="Speed of the motion">
+                <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-rv-rate="1">1×</button>
+                <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-rv-rate="0.25">¼×</button>
+            </span>
         </span>
         <span class="rv-meta rv-tools__note" role="status" aria-live="polite" data-rv-tools-note></span>`;
     const $ = (/** @type {string} */ s) => /** @type {HTMLElement} */ (bar.querySelector(s));
     const previousButton = /** @type {HTMLButtonElement} */ ($('[data-rv-previous]'));
     const loopButton = /** @type {HTMLButtonElement} */ ($('[data-rv-loop]'));
     const note = $('[data-rv-tools-note]');
+    const motionBox = $('[data-rv-motion]');
+    let hasPrevious = false;
+    /** Show the bar, and each part of it, only while it applies. */
+    const refresh = () => {
+        if (!alive) return;
+        const mark = section.getAttribute('data-review-motion');
+        const motion = looping || (mark === null ? openerIn(shown()) !== null : mark !== 'none');
+        previousButton.hidden = !hasPrevious;
+        motionBox.hidden = !motion;
+        bar.hidden = !hasPrevious && !motion;
+    };
     let alive = true;
     let rate = 1;
     let looping = false;
@@ -271,7 +294,7 @@ export function mountBlockTools({ section, item, theme, themeLabel, title }) {
 
     /* ------------------------------------------ previous version */
     async function togglePrevious() {
-        if (previousButton.disabled) return;
+        if (previousButton.hidden) return;
         const wasLooping = looping;
         if (looping) toggleLoop();
         if (earlier) {
@@ -312,19 +335,28 @@ export function mountBlockTools({ section, item, theme, themeLabel, title }) {
     previousOf().then(async (info) => {
         if (!alive) return;
         if (!info) {
-            previousButton.title = 'This demo keeps no earlier version: it is in its first round, or the round was published without a snapshot.';
             return;
         }
         // A section new in this round has no earlier picture.
         try {
             const html = await (await fetch(info.base, { cache: 'no-cache' })).text();
             const had = new DOMParser().parseFromString(html, 'text/html').querySelector(`[data-review-item="${CSS.escape(item)}"]`);
-            previousButton.disabled = !had;
-            previousButton.title = had ? '' : 'New in this round: there is no earlier version of this section.';
+            hasPrevious = !!had;
         } catch {
-            previousButton.title = 'The earlier version could not be read.';
+            /* unreadable: no earlier version is offered */
         }
+        refresh();
     });
+    // The parts a demo builds late, or opens and closes, change what is relevant: look again while the section changes.
+    const watch = new MutationObserver(() => requestAnimationFrame(refresh));
+    watch.observe(section, {
+        subtree: true,
+        childList: true,
+        attributes: true,
+        attributeFilter: ['hidden', 'style', 'class', 'open', 'aria-expanded'],
+    });
+    const recheck = setInterval(refresh, 1500);
+    refresh();
 
     bar.addEventListener('click', (event) => {
         const target = /** @type {HTMLElement} */ (event.target);
@@ -339,6 +371,8 @@ export function mountBlockTools({ section, item, theme, themeLabel, title }) {
         teardown() {
             alive = false;
             looping = false;
+            watch.disconnect();
+            clearInterval(recheck);
             cancelAnimationFrame(rateTimer);
             for (const a of animationsIn(section)) if (a.playbackRate !== 1) a.playbackRate = 1;
             earlier?.remove();
@@ -346,8 +380,8 @@ export function mountBlockTools({ section, item, theme, themeLabel, title }) {
             bar.remove();
         },
         key(code) {
-            if (code === 'KeyV') void togglePrevious();
-            else if (code === 'KeyL') toggleLoop();
+            if (code === 'KeyV' && !previousButton.hidden) void togglePrevious();
+            else if (code === 'KeyL' && !motionBox.hidden) toggleLoop();
             else return false;
             return true;
         },

@@ -177,14 +177,14 @@ It writes `research/<topic>/_previous/`: the demo's own folder, every stylesheet
 imports, as they stood then, plus `previous.json` (`round`, `commit`). The review kit and the catalogue shell are left
 out of the copy, so it never reads or writes verdicts; the fonts come from the live `fonts/`. Commit the folder with the
 new round. One snapshot per demo (about 4.5 MB): the next round's run replaces it, and archiving the demo removes it.
-Without a snapshot the button stays disabled and says why; a section new in this round says it has no earlier version.
+Without a snapshot, or for a section new in this round, the button is not shown (Kenny, 2026-10-18 00:28: the bar shows only what is relevant).
 
 ## Play open and close, slowly
 
-Every section in the dialog also has **Play open and close (L)** and a speed, **1×** or **¼×**. The kit presses the
+A section that opens and closes something also has **Play open and close (L)** and a speed, **1×** or **¼×**. The kit presses the
 section's own opener, lets the opening play out, closes it the way the demo closes it (the same toggle, the dialog's
 own close request, the popover's hide, or the focus leaving a combobox), waits, and repeats until L is pressed again.
-The opener is the one the demo marks `data-review-replay`, else the first of the package's openers in the section
+The bar shows these only for such a section, and is absent (`hidden`, no space) when neither this nor a previous version applies: the demo marks the section `data-review-motion` (value `none` switches it off), else the section is searched for an opener and the tools appear once one is visible. The opener is the one the demo marks `data-review-replay`, else the first of the package's openers in the section
 (also inside a same-origin window in it): a side navigation toggle, the palette, a dialog or popover button, a
 combobox, a menu button. ¼× runs every animation of the section, and of the previous version when it is shown, at a
 quarter of its rate (Web Animations `playbackRate`), so a demo needs no speed control of its own.
@@ -265,7 +265,7 @@ for every demo, whatever the page says:
 - **The journal.** Every verdict, note and tick set in the dialog (a "Not approved" box, a choice ticked, Approve, a
   note after a pause of 600 ms in the typing, at once when the note loses the focus, the step changes or the page is
   left) is appended to `kp-demo-review:<demo id>:journal` in localStorage as `{ at, demo, round, pair, verdict, note,
-  choice }`. No code path removes an entry: not a new round, not "Clear all verdicts", not an answer dropped as
+choice }`. No code path removes an entry: not a new round, not "Clear all verdicts", not an answer dropped as
   received (whose whole text is added to the journal first). The verdicts and the answer may be cleared; the journal
   keeps everything (`progress.js`, `journal`).
 - **No silent drop.** An answer of the page's own round is never dropped as received, whatever `received` lists. An

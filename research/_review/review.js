@@ -2023,7 +2023,7 @@ function rowFor(pair, only = null, name = '') {
             text.append(name);
             const tag = document.createElement('span');
             tag.className = 'rv-choice__tag';
-            
+
             text.append(tag);
             const hint = option.hints?.[pair.theme] || option.hint;
             if (hint) {
@@ -2096,7 +2096,11 @@ function rowFor(pair, only = null, name = '') {
             save();
             record(pair, { verdict: box.checked ? 'rejected' : 'approved', note: note.value.trim() });
             render();
-        } else record(pair, { verdict: null, note: `${only}: ${box.checked ? 'none of these' : 'picked'}${note.value.trim() ? ` · ${note.value.trim()}` : ''}` });
+        } else
+            record(pair, {
+                verdict: null,
+                note: `${only}: ${box.checked ? 'none of these' : 'picked'}${note.value.trim() ? ` · ${note.value.trim()}` : ''}`,
+            });
         updateApprove();
     });
     note.addEventListener('input', () => {
@@ -2142,7 +2146,9 @@ function checkIntegrity() {
     if (!dialog.open || !step) return [];
     /** @type {string[]} */
     const problems = [];
-    const top = /** @type {HTMLElement[]} */ ([...stage.querySelectorAll('[data-rv-pair]')]).filter((el) => !el.parentElement?.closest('[data-rv-pair]'));
+    const top = /** @type {HTMLElement[]} */ ([...stage.querySelectorAll('[data-rv-pair]')]).filter(
+        (el) => !el.parentElement?.closest('[data-rv-pair]'),
+    );
     const rows = /** @type {HTMLElement[]} */ ([...list.querySelectorAll('.rv-row')]);
     const keys = new Set(shownPairs.map((pair) => pair.key));
     for (const pair of shownPairs) {
@@ -2160,11 +2166,13 @@ function checkIntegrity() {
             if (fixedFor(pair, choice)) continue;
             const set = own[0].querySelector(`fieldset[data-rv-choice="${CSS.escape(choice.id)}"]`);
             const ticks = set ? set.querySelectorAll('input[type="radio"]').length : 0;
-            if (ticks !== choice.options.length) problems.push(`the row of “${pair.title}” shows ${ticks} of the ${choice.options.length} ticks of “${choice.label}”`);
+            if (ticks !== choice.options.length)
+                problems.push(`the row of “${pair.title}” shows ${ticks} of the ${choice.options.length} ticks of “${choice.label}”`);
         }
     }
     for (const row of rows)
-        if (!keys.has(row.dataset.rvKey || '')) problems.push(`the row “${row.querySelector('[data-rv-jump]')?.textContent || '?'}” belongs to no section shown`);
+        if (!keys.has(row.dataset.rvKey || ''))
+            problems.push(`the row “${row.querySelector('[data-rv-jump]')?.textContent || '?'}” belongs to no section shown`);
     for (const el of top) if (!keys.has(el.dataset.rvPair || '')) problems.push(`a section on the left (${el.dataset.rvPair}) has no row`);
     integrityBox.hidden = !problems.length;
     integrityBox.textContent = problems.length
@@ -2345,10 +2353,14 @@ function approveStep() {
     // een afkeuring een text heeft ook afschaffen … je moet zelf weten dat je
     // veel beter moet doen"); a note stays welcome.
     const unpicked = shownPairs.filter(
-        (pair) => !rowOf(pair).querySelector('[data-rv-reject]').checked && (pair.item?.choices || []).some((c) => !fixedFor(pair, c) && !choiceOf(pair, c)),
+        (pair) =>
+            !rowOf(pair).querySelector('[data-rv-reject]').checked &&
+            (pair.item?.choices || []).some((c) => !fixedFor(pair, c) && !choiceOf(pair, c)),
     );
     if (unpicked.length) {
-        const names = unpicked.flatMap((pair) => pair.item.choices.filter((c) => !fixedFor(pair, c) && !choiceOf(pair, c)).map((c) => `${pair.title}: ${c.label}`));
+        const names = unpicked.flatMap((pair) =>
+            pair.item.choices.filter((c) => !fixedFor(pair, c) && !choiceOf(pair, c)).map((c) => `${pair.title}: ${c.label}`),
+        );
         refused.textContent = `Pick before approving: ${names.join('; ')}.`;
         refused.hidden = false;
         return;
@@ -2396,7 +2408,11 @@ function answerAspect(step) {
     }
     state[pair.key] = entry;
     const choiceLabel = choice?.options[flipAt]?.label || value;
-    record(pair, { verdict: null, note: none ? note : '', choice: { id: step.aspect, value: none ? 'none of these' : value, label: none ? 'None of these' : choiceLabel } });
+    record(pair, {
+        verdict: null,
+        note: none ? note : '',
+        choice: { id: step.aspect, value: none ? 'none of these' : value, label: none ? 'None of these' : choiceLabel },
+    });
     const themeSteps = steps.filter((s) => s.aspect && s.pairs[0] === pair);
     if (themeSteps.every((s) => aspectDone(pair, s.aspect))) {
         const redo = themeSteps.filter((s) => entry.redo[s.aspect]);
@@ -2463,9 +2479,11 @@ document.addEventListener(
         // V and L act on the section most in view: its previous version, its open and close on a loop.
         if ((event.code === 'KeyV' || event.code === 'KeyL') && tools.length) {
             const view = stage.closest('.rv-dialog__view')?.getBoundingClientRect();
-            const ordered = [...tools].sort((a, b) => (a.bar.compareDocumentPosition(b.bar) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
+            const ordered = tools
+                .filter((tool) => !tool.bar.hidden)
+                .sort((a, b) => (a.bar.compareDocumentPosition(b.bar) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
             const inView = ordered.find((tool) => tool.bar.getBoundingClientRect().bottom > (view?.top ?? 0) + 8) ?? ordered[0];
-            if (inView.key(event.code)) {
+            if (inView?.key(event.code)) {
                 event.preventDefault();
                 event.stopPropagation();
                 return;
