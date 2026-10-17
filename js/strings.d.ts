@@ -4035,6 +4035,14 @@ export type Strings = {
      * Why the focus key does nothing now (js/console.js) [kpadopt6]
      */
     consoleKeyFocusReason: string;
+    /**
+     * The button that unfolds a long link under the code (js/qr.js) [kpadopt6]
+     */
+    qrShowAllChars: (n: number) => string;
+    /**
+     * The button that folds it again (js/qr.js) [kpadopt6]
+     */
+    qrShowLess: string;
 };
 /**
  * @typedef {object} Strings
@@ -5140,6 +5148,8 @@ export type Strings = {
  * @property {string} consoleKeyGroup  The sheet's heading (js/console.js) [kpadopt6]
  * @property {string} consoleKeyFocus  The sheet's line for the focus key (js/console.js) [kpadopt6]
  * @property {string} consoleKeyFocusReason  Why the focus key does nothing now (js/console.js) [kpadopt6]
+ * @property {(n: number) => string} qrShowAllChars  The button that unfolds a long link under the code (js/qr.js) [kpadopt6]
+ * @property {string} qrShowLess  The button that folds it again (js/qr.js) [kpadopt6]
  */
 /**
  * The defaults. English, by Kenny's decision of 2026-09-04 — the package

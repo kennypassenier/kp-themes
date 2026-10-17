@@ -8,6 +8,8 @@ export declare const QR_REVEAL_EVENT = "kp-qr-reveal";
 export declare const QR_EXPIRED_EVENT = "kp-qr-expired";
 /** Fired by the Retry of a code that could not be made. */
 export declare const QR_RETRY_EVENT = "kp-qr-retry";
+/** The characters of a link shown before it is folded behind "Show all". */
+export declare const QR_FOLD = 160;
 /** The error correction levels, lowest first. */
 export declare const QR_LEVELS: readonly string[];
 /** The plate's colours: dark modules on a light plate, whatever the theme (see the header). */
@@ -24,6 +26,7 @@ export type QrSpec = {
     message?: string;
 };
 export type QrState = {
+    open: boolean;
     spec: QrSpec;
     mode: string;
     timer: number;

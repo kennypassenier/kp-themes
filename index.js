@@ -734,6 +734,7 @@ export {
     QR,
     QR_COPY_EVENT,
     QR_EXPIRED_EVENT,
+    QR_FOLD,
     QR_LEVELS,
     QR_PLATE,
     QR_RETRY_EVENT,

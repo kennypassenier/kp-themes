@@ -389,7 +389,7 @@ function drawPopup(root) {
         }
         popup.append(bar);
     }
-    const list = el('kp-time__list');
+    const list = el('kp-time__list', 'ul');
     list.setAttribute('role', 'listbox');
     list.setAttribute('aria-label', s.timeList);
     list.id = `${popup.id}-list`;
@@ -398,7 +398,7 @@ function drawPopup(root) {
     let best = -1;
     let bestDelta = Infinity;
     items.forEach((item, index) => {
-        const o = /** @type {HTMLElement} */ (el('kp-time__option', 'div'));
+        const o = /** @type {HTMLElement} */ (el('kp-combobox__option kp-time__option', 'li'));
         o.id = `${popup.id}-o${index}`;
         o.setAttribute('role', 'option');
         o.setAttribute('data-kp-time-pick', item.value);
@@ -440,7 +440,10 @@ function drawPopup(root) {
 function markActive(root, scroll = true) {
     const st = /** @type {TimeState} */ (STATE.get(root));
     const options = /** @type {HTMLElement[]} */ ([...st.popup.querySelectorAll('.kp-time__option')]);
-    options.forEach((o, i) => o.toggleAttribute('data-kp-active', i === st.active));
+    options.forEach((o, i) => {
+        o.toggleAttribute('data-kp-active', i === st.active);
+        o.classList.toggle('is-active', i === st.active);
+    });
     const at = options[st.active];
     if (at) {
         st.input.setAttribute('aria-activedescendant', at.id);
@@ -586,8 +589,16 @@ export function attachTimes(root = document) {
         write(el_, parsed ? parsed.value : '', { silent: true });
         sync(el_);
         const stopReasons = attachDisabledReasons(el_);
-        const observer = new MutationObserver(() => sync(el_));
-        observer.observe(el_, { attributes: true, attributeFilter: ['disabled', 'data-kp-disabled', 'data-kp-disabled-reason', 'data-kp-state', 'data-kp-time-look', 'data-kp-time-zone', 'data-kp-time-popup', 'data-kp-time-required'] });
+        const observer = new MutationObserver(() => {
+            sync(el_);
+            // Every option is live: presets and the list's entries follow their attributes.
+            if (Array.isArray(st.presets) || st.presets.length === 0) st.presets = presetsFromAttribute(el_);
+            if (st.open) drawPopup(el_);
+        });
+        observer.observe(el_, {
+            attributes: true,
+            attributeFilter: ['disabled', 'data-kp-disabled', 'data-kp-disabled-reason', 'data-kp-state', ...['look', 'zone', 'popup', 'required', 'step', 'min', 'max', 'presets', 'now', 'clear', 'near', 'near-width', 'seconds'].map((n) => `data-kp-time-${n}`)],
+        });
         const onInput = () => {
             // Digits typed fast: 0230 becomes 02:30 as the third digit arrives.
             const v = st.input.value;

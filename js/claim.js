@@ -322,6 +322,8 @@ function fillRow(list, row, item) {
             control.replaceChildren(button);
         }
         const mine = among(st.viewer, by);
+        const takeFace = button.querySelector('.kp-claim__face--take');
+        if (takeFace && takeFace.textContent !== attr(list, 'self-label', s.claimTake)) takeFace.textContent = attr(list, 'self-label', s.claimTake);
         button.setAttribute('data-kp-claim-face', busy ? 'busy' : mine ? 'held' : 'take');
         button.setAttribute('aria-pressed', String(mine));
         button.setAttribute('aria-label', mine ? s.claimHeldLabel(item.label) : s.claimTakeLabel(item.label));
@@ -343,7 +345,7 @@ function fillRow(list, row, item) {
             menu.setAttribute('role', 'menu');
             wrapper.append(open, menu);
             control.replaceChildren(wrapper);
-            attachMenuButtons(wrapper);
+            attachMenuButtons(control);
         }
         wrapper.setAttribute('data-kp-key', item.id);
         const open = /** @type {HTMLButtonElement} */ (wrapper.querySelector(':scope > button'));
@@ -766,6 +768,20 @@ export function attachClaims(root = document) {
         };
         list.addEventListener('keydown', onKey);
         list.addEventListener(CHECKLIST_RENDER_EVENT, onRender);
+        // Every option is live: change the attribute and the rows are drawn again (a page that switches a look at run time).
+        let lastSort = attr(list, 'gap-sort', 'keep');
+        const watcher = new MutationObserver(() => {
+            const sort = attr(list, 'gap-sort', 'keep');
+            if (sort !== lastSort) {
+                lastSort = sort;
+                // Back to the list's own order: the checklist draws it again, the claim part follows.
+                setChecklistItems(list, getChecklistItems(list));
+            } else decorate(list);
+        });
+        watcher.observe(list, {
+            attributes: true,
+            attributeFilter: ['mode', 'gap', 'gap-sort', 'person', 'count', 'self-label', 'max', 'disabled', 'disabled-reason', 'take-all', 'copy', 'filter-chips'].map((n) => `data-kp-claim-${n}`),
+        });
         list.addEventListener('click', onClick);
         list.addEventListener(MENU_SELECT_EVENT, onMenu);
         /** @type {(() => void) | undefined} */
@@ -798,6 +814,7 @@ export function attachClaims(root = document) {
         }
         st.off = [
             () => list.removeEventListener(CHECKLIST_RENDER_EVENT, onRender),
+            () => watcher.disconnect(),
             () => list.removeEventListener('keydown', onKey),
             () => list.removeEventListener('click', onClick),
             () => list.removeEventListener(MENU_SELECT_EVENT, onMenu),

@@ -54,6 +54,8 @@ export const QR_REVEAL_EVENT = 'kp-qr-reveal';
 export const QR_EXPIRED_EVENT = 'kp-qr-expired';
 /** Fired by the Retry of a code that could not be made. */
 export const QR_RETRY_EVENT = 'kp-qr-retry';
+/** The characters of a link shown before it is folded behind "Show all". */
+export const QR_FOLD = 160;
 /** The error correction levels, lowest first. */
 export const QR_LEVELS = Object.freeze(['L', 'M', 'Q', 'H']);
 /** The plate's colours: dark modules on a light plate, whatever the theme (see the header). */
@@ -66,7 +68,7 @@ export const QR_PLATE = Object.freeze({ ground: '#ffffff', ink: '#000000' });
  * @property {string} [message]  the failed plate's sentence
  */
 
-/** @typedef {{ spec: QrSpec, mode: string, timer: number, shown: boolean, said: string, off: (() => void)[], card: import('./busy-card.js').BusyCard | null, expired: boolean }} QrState */
+/** @typedef {{ open: boolean, spec: QrSpec, mode: string, timer: number, shown: boolean, said: string, off: (() => void)[], card: import('./busy-card.js').BusyCard | null, expired: boolean }} QrState */
 /** @type {WeakMap<Element, QrState>} */
 const STATE = new WeakMap();
 let serial = 0;
@@ -199,7 +201,7 @@ function drawCanvas(root, m) {
 function stateOf(root) {
     let st = STATE.get(root);
     if (!st) {
-        st = { spec: {}, mode: attr(root, 'reveal', 'shown'), timer: 0, shown: attr(root, 'reveal', 'shown') !== 'click', said: '', off: [], card: null, expired: false };
+        st = { open: false, spec: {}, mode: attr(root, 'reveal', 'shown'), timer: 0, shown: attr(root, 'reveal', 'shown') !== 'click', said: '', off: [], card: null, expired: false };
         STATE.set(root, st);
     }
     return st;
@@ -330,14 +332,13 @@ function render(root) {
     // The caption: the link as text, wrapping at any character; it keeps its height in every state.
     const mode = attr(root, 'caption', 'link');
     caption.hidden = mode === 'none';
-    caption.textContent = mode === 'link' ? value : mode === 'none' ? '' : mode;
+    const full = mode === 'link' ? value : mode === 'none' ? '' : mode;
+    // A very long link is folded (never cut for good): the first 160 characters and "Show all N characters"; Copy copies the whole.
+    const folded = full.length > QR_FOLD && !st.open;
+    caption.textContent = folded ? full.slice(0, QR_FOLD) : full;
     caption.toggleAttribute('data-kp-qr-struck', state === 'expired');
     caption.toggleAttribute('data-kp-qr-empty', caption.textContent === '');
     if (state === 'loading') caption.textContent = '';
-    requestAnimationFrame(() => {
-        if (caption.scrollHeight > caption.clientHeight + 1) caption.setAttribute('tabindex', '0');
-        else caption.removeAttribute('tabindex');
-    });
 
     // The actions.
     actions.replaceChildren();
@@ -350,6 +351,13 @@ function render(root) {
         copy.disabled = !live || value === '';
         if (copy.disabled) copy.setAttribute('data-kp-disabled-reason', value === '' ? s.qrNoLink : s.qrCopyOff);
         actions.append(copy);
+    }
+    if (full.length > QR_FOLD && state !== 'loading') {
+        const more = /** @type {HTMLButtonElement} */ (el('kp-button kp-button--ghost kp-qr__more', 'button'));
+        more.type = 'button';
+        more.setAttribute('aria-expanded', String(st.open));
+        more.textContent = st.open ? s.qrShowLess : s.qrShowAllChars(full.length);
+        actions.append(more);
     }
     const dl = attr(root, 'download', 'false');
     if ((dl === 'png' || dl === 'svg') && state === 'ready' && matrix && !('error' in matrix) && !hidden) {
@@ -475,6 +483,11 @@ export function attachQr(root = document) {
             const t = event.target instanceof Element ? event.target : null;
             if (!t) return;
             if (t.closest('.kp-qr__copy')) return void copyLink(el_);
+            if (t.closest('.kp-qr__more')) {
+                st.open = !st.open;
+                render(el_);
+                return;
+            }
             const dl = t.closest('[data-kp-qr-download-as]');
             if (dl) return void download(el_, dl.getAttribute('data-kp-qr-download-as') === 'png' ? 'png' : 'svg');
             if (t.closest('[data-kp-qr-show]')) {
@@ -495,6 +508,16 @@ export function attachQr(root = document) {
             if (t.closest('[data-kp-qr-retry-action]')) el_.dispatchEvent(new CustomEvent(QR_RETRY_EVENT, { bubbles: true }));
         };
         el_.addEventListener('click', onClick);
+        // Every option is live: change the attribute and the code is drawn again.
+        let queued = 0;
+        const watcher = new MutationObserver(() => {
+            window.cancelAnimationFrame(queued);
+            queued = window.requestAnimationFrame(() => render(el_));
+        });
+        watcher.observe(el_, {
+            attributes: true,
+            attributeFilter: ['value', 'ecc', 'size', 'quiet', 'look', 'modules', 'render', 'caption', 'copy', 'download', 'reveal', 'expires', 'label', 'max', 'narrow'].map((n) => `data-kp-qr-${n}`),
+        });
         const stopKeys = registerShortcuts(
             el_,
             [
@@ -509,7 +532,7 @@ export function attachQr(root = document) {
             ],
             { layoutGuard: 'off' },
         );
-        st.off = [() => el_.removeEventListener('click', onClick), stopKeys, () => window.clearTimeout(st.timer)];
+        st.off = [() => el_.removeEventListener('click', onClick), () => watcher.disconnect(), stopKeys, () => window.clearTimeout(st.timer)];
         undo.push(() => {
             for (const stop of st.off) stop();
             st.off = [];

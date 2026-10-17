@@ -102,6 +102,7 @@
                             over the list), empty and failed (with Retry), each at the list's full height. At 390 px the claim cell moves under the
                             label and the button fills the line, 44 px high.
                         </li>
+                        <li>The groups marked <b>(live option)</b> change one setting of the main component while it runs and it redraws at once, nothing reloads: every choice you are asked about is a real option with a default.</li>
                     </ul>
                 </div>
                 <div data-review-look>
@@ -128,6 +129,27 @@
                     <div role="group" aria-label="Push an update">
                         <b>Another person acts:</b>
                         <button type="button" class="kp-button kp-button--sm" data-k6-claim-push="">Anna takes the first free item</button>
+                    </div>
+                    <div role="group" aria-label="Gap (live option)">
+                        <b>Gap (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-claim|data-kp-claim-gap|loud" aria-pressed="true">Loud</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-claim|data-kp-claim-gap|quiet" aria-pressed="false">Quiet</button>
+                    </div>
+                    <div role="group" aria-label="People shown (live option)">
+                        <b>People shown (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-claim|data-kp-claim-person|both" aria-pressed="true">Mark and name</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-claim|data-kp-claim-person|name" aria-pressed="false">Name only</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-claim|data-kp-claim-person|idmark" aria-pressed="false">Mark only</button>
+                    </div>
+                    <div role="group" aria-label="Gaps first (live option)">
+                        <b>Gaps first (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-claim|data-kp-claim-gap-sort|keep" aria-pressed="true">Keep order</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-claim|data-kp-claim-gap-sort|top" aria-pressed="false">Gaps first</button>
+                    </div>
+                    <div role="group" aria-label="Mode (live option)">
+                        <b>Mode (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-claim|data-kp-claim-mode|claim" aria-pressed="true">A button on each row</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-claim|data-kp-claim-mode|assign" aria-pressed="false">A person menu</button>
                     </div>
                 </div>
                 <p class="k6-readout" role="status" data-k6-claim-readout>Nothing pressed yet.</p>
@@ -277,6 +299,7 @@
                             at the grid's full height, the failed one with Retry; <b>Dates chosen</b> makes every cell inert and says why. At 390 px the name
                             column stays and the columns scroll; the second phone frame shows the list per column.
                         </li>
+                        <li>The groups marked <b>(live option)</b> change one setting of the main component while it runs and it redraws at once, nothing reloads: every choice you are asked about is a real option with a default.</li>
                     </ul>
                 </div>
                 <div data-review-look>
@@ -303,6 +326,27 @@
                     <div role="group" aria-label="Another person answers">
                         <b>Another person acts:</b>
                         <button type="button" class="kp-button kp-button--sm" data-k6-av-push="">Lies answers the empty cells (a push update)</button>
+                    </div>
+                    <div role="group" aria-label="Press (live option)">
+                        <b>Press (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-press|cycle" aria-pressed="true">Cycle</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-press|menu" aria-pressed="false">Menu</button>
+                    </div>
+                    <div role="group" aria-label="Best column (live option)">
+                        <b>Best column (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-best|most" aria-pressed="true">Most can</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-best|everyone" aria-pressed="false">Only everybody</button>
+                    </div>
+                    <div role="group" aria-label="Summary (live option)">
+                        <b>Summary (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-summary|both" aria-pressed="true">Number and fill</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-summary|count" aria-pressed="false">Number</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-summary|bar" aria-pressed="false">Fill</button>
+                    </div>
+                    <div role="group" aria-label="Answers (live option)">
+                        <b>Answers (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-answers|3" aria-pressed="true">Can, maybe, cannot</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-av|data-kp-availability-answers|2" aria-pressed="false">Can, cannot</button>
                     </div>
                 </div>
                 <p class="k6-readout" role="status" data-k6-av-readout>Nothing pressed yet.</p>
@@ -412,6 +456,7 @@
                             that says it gets dense.
                         </li>
                         <li>At 390 px the code is the full width up to 16 rem, centred, and Copy fills the line, 44 px high. The last frame puts the link and Copy first.</li>
+                        <li>The groups marked <b>(live option)</b> change one setting of the main component while it runs and it redraws at once, nothing reloads: every choice you are asked about is a real option with a default.</li>
                     </ul>
                 </div>
                 <div data-review-look>
@@ -430,6 +475,27 @@
                         <button type="button" class="kp-button kp-button--sm" data-k6-qr-state="dense" aria-pressed="false">Long link (dense)</button>
                         <button type="button" class="kp-button kp-button--sm" data-k6-qr-state="expired" aria-pressed="false">Expired</button>
                         <button type="button" class="kp-button kp-button--sm" data-k6-qr-state="hidden" aria-pressed="false">Hidden until shown</button>
+                    </div>
+                    <div role="group" aria-label="Colour (live option)">
+                        <b>Colour (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-qr|data-kp-qr-look|plate" aria-pressed="true">Plate</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-qr|data-kp-qr-look|theme" aria-pressed="false">Theme ink</button>
+                    </div>
+                    <div role="group" aria-label="Dots (live option)">
+                        <b>Dots (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-qr|data-kp-qr-modules|square" aria-pressed="true">Square</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-qr|data-kp-qr-modules|round" aria-pressed="false">Round</button>
+                    </div>
+                    <div role="group" aria-label="Size (live option)">
+                        <b>Size (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-qr|data-kp-qr-size|12rem" aria-pressed="true">12 rem</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-qr|data-kp-qr-size|lg" aria-pressed="false">16 rem</button>
+                    </div>
+                    <div role="group" aria-label="Download (live option)">
+                        <b>Download (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-qr|data-kp-qr-download|false" aria-pressed="true">Off</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-qr|data-kp-qr-download|png" aria-pressed="false">PNG</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-qr|data-kp-qr-download|svg" aria-pressed="false">SVG</button>
                     </div>
                 </div>
                 <p class="k6-readout" role="status" data-k6-qr-readout>Nothing copied yet.</p>
@@ -522,6 +588,7 @@
                             skeleton at its final width; the one whose presets failed shows a compact plate with Retry in the list.
                         </li>
                         <li>At 390 px the field fills the line, 44 px high, and the list is a sheet at the foot of the screen with a title and rows 44 px high.</li>
+                        <li>The groups marked <b>(live option)</b> change one setting of the main component while it runs and it redraws at once, nothing reloads: every choice you are asked about is a real option with a default.</li>
                     </ul>
                 </div>
                 <div data-review-look>
@@ -545,6 +612,22 @@
                         <button type="button" class="kp-button kp-button--sm" data-k6-time-presets="loading" aria-pressed="false">Presets loading</button>
                         <button type="button" class="kp-button kp-button--sm" data-k6-time-presets="error" aria-pressed="false">Presets failed</button>
                         <button type="button" class="kp-button kp-button--sm" data-k6-time-open="" aria-pressed="false">Show it open</button>
+                    </div>
+                    <div role="group" aria-label="Step (live option)">
+                        <b>Step (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-time|data-kp-time-step|5" aria-pressed="true">5 min</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-time|data-kp-time-step|15" aria-pressed="false">15 min</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-time|data-kp-time-step|1" aria-pressed="false">1 min</button>
+                    </div>
+                    <div role="group" aria-label="List (live option)">
+                        <b>List (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-time|data-kp-time-popup|list" aria-pressed="true">List</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-time|data-kp-time-popup|none" aria-pressed="false">None</button>
+                    </div>
+                    <div role="group" aria-label="Look (live option)">
+                        <b>Look (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-time|data-kp-time-look|field" aria-pressed="true">Box</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-time|data-kp-time-look|inline" aria-pressed="false">Underline</button>
                     </div>
                 </div>
                 <p class="k6-readout" role="status" data-k6-time-readout>Nothing changed yet.</p>
@@ -671,6 +754,7 @@
                             command, the failed one has Retry. At 390 px the select goes above the prompt, Run takes its own full line and the bar stays
                             at the foot.
                         </li>
+                        <li>The groups marked <b>(live option)</b> change one setting of the main component while it runs and it redraws at once, nothing reloads: every choice you are asked about is a real option with a default.</li>
                     </ul>
                 </div>
                 <div data-review-look>
@@ -699,6 +783,26 @@
                         <button type="button" class="kp-button kp-button--sm" data-k6-con-run="mount /dev/sdb1">Refused</button>
                         <button type="button" class="kp-button kp-button--sm" data-k6-con-run="flaky-job">Connection drops</button>
                         <button type="button" class="kp-button kp-button--sm" data-k6-con-run="dump-logs">Over the limit</button>
+                    </div>
+                    <div role="group" aria-label="Order (live option)">
+                        <b>Order (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-console|data-kp-console-order|newest-last" aria-pressed="true">Newest last</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-console|data-kp-console-order|newest-first" aria-pressed="false">Newest first</button>
+                    </div>
+                    <div role="group" aria-label="Result (live option)">
+                        <b>Result (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-console|data-kp-console-status|exit-code" aria-pressed="true">Exit code</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-console|data-kp-console-status|word" aria-pressed="false">Word</button>
+                    </div>
+                    <div role="group" aria-label="Cancel (live option)">
+                        <b>Cancel (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-console|data-kp-console-cancel|" aria-pressed="true">Offered</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-console|data-kp-console-cancel|-" aria-pressed="false">Not offered</button>
+                    </div>
+                    <div role="group" aria-label="Timer (live option)">
+                        <b>Timer (live option):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-console|data-kp-console-timer|true" aria-pressed="true">Shown</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-attr="#k6-console|data-kp-console-timer|false" aria-pressed="false">Hidden</button>
                     </div>
                 </div>
                 <p class="k6-readout" role="status" data-k6-con-readout>Nothing run yet.</p>

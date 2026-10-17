@@ -1140,6 +1140,8 @@
  * @property {string} consoleKeyGroup  The sheet's heading (js/console.js) [kpadopt6]
  * @property {string} consoleKeyFocus  The sheet's line for the focus key (js/console.js) [kpadopt6]
  * @property {string} consoleKeyFocusReason  Why the focus key does nothing now (js/console.js) [kpadopt6]
+ * @property {(n: number) => string} qrShowAllChars  The button that unfolds a long link under the code (js/qr.js) [kpadopt6]
+ * @property {string} qrShowLess  The button that folds it again (js/qr.js) [kpadopt6]
  */
 
 /**
@@ -2462,6 +2464,9 @@ export const DEFAULT_STRINGS = Object.freeze({
     consoleKeyGroup: 'In the console',
     consoleKeyFocus: 'Go to the console prompt',
     consoleKeyFocusReason: 'The prompt is off now.',
+    // Qr (js/qr.js) [kpadopt6].
+    qrShowAllChars: (n) => `Show all ${n} characters`,
+    qrShowLess: 'Show less',
 });
 
 // STRINGS_NL was removed in 4.0.0 [D3]. Kenny decided that on

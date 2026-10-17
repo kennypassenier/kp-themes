@@ -424,10 +424,6 @@ function blockNode(root, b, node) {
     ];
     for (const [key, text, on] of wanted) {
         let b_ = /** @type {HTMLButtonElement | null} */ (tools.querySelector(`[data-kp-console-tool="${key}"]`));
-        if (!on) {
-            b_?.remove();
-            continue;
-        }
         if (!b_) {
             b_ = /** @type {HTMLButtonElement} */ (el('kp-button kp-button--ghost kp-button--sm kp-console__tool', 'button'));
             b_.type = 'button';
@@ -436,6 +432,13 @@ function blockNode(root, b, node) {
             tools.append(b_);
         }
         if (b_.textContent !== text) b_.textContent = text;
+        // The same tool stands in the same place in every block and every state: one that does not apply is kept, unseen and
+        // out of reach, so nothing slides along when a block changes state.
+        b_.toggleAttribute('data-kp-console-off', !on);
+        b_.disabled = !on;
+        b_.tabIndex = on ? 0 : -1;
+        if (on) b_.removeAttribute('aria-hidden');
+        else b_.setAttribute('aria-hidden', 'true');
         if (key === 'collapse') b_.setAttribute('aria-expanded', String(!b.collapsed));
     }
     // A refusal in what / why / what now.
@@ -473,8 +476,8 @@ function blockNode(root, b, node) {
                 out.textContent = '';
             }
             const shown = b.output;
-            if (out.getAttribute('data-kp-console-drawn') !== `${shown.length}:${b.truncated}`) {
-                out.setAttribute('data-kp-console-drawn', `${shown.length}:${b.truncated}`);
+            if (out.getAttribute('data-kp-console-drawn') !== `${shown.length}:${b.truncated}:${maxLines}`) {
+                out.setAttribute('data-kp-console-drawn', `${shown.length}:${b.truncated}:${maxLines}`);
                 setCode(out, {
                     text: shown,
                     title: s.consoleOutput,
@@ -903,8 +906,34 @@ export function attachConsoles(root = document, options = {}) {
         input.addEventListener('keydown', onKey);
         el_.addEventListener('click', onClick);
         select.addEventListener('change', onContext);
-        const observer = new MutationObserver(() => drawBar(el_));
-        observer.observe(el_, { attributes: true, attributeFilter: ['disabled', 'data-kp-disabled', 'data-kp-disabled-reason', 'data-kp-state', 'data-kp-console-hint', 'data-kp-console-prompt'] });
+        let order = attr(el_, 'order', 'newest-last');
+        let stopPillNow = stopPill;
+        const observer = new MutationObserver(() => {
+            // Every option is live: change the attribute and the console is drawn again.
+            const now = attr(el_, 'order', 'newest-last');
+            if (now !== order) {
+                order = now;
+                const stage = /** @type {HTMLElement} */ (el_.querySelector(':scope > .kp-console__stage'));
+                const barEl = /** @type {HTMLElement} */ (el_.querySelector(':scope > .kp-console__bar'));
+                if (stage && barEl) {
+                    if (now === 'newest-first') el_.prepend(barEl);
+                    else el_.append(barEl);
+                }
+                stopPillNow();
+                body.setAttribute('data-kp-follow', now === 'newest-first' ? 'head' : 'tail');
+                stopPillNow = attachNewPills(body.parentElement ?? el_);
+            }
+            drawBar(el_);
+            drawBody(el_);
+            for (const b of st.blocks) {
+                const node = el_.querySelector(`.kp-console__block[data-id="${CSS.escape(b.id)}"]`);
+                if (node instanceof HTMLElement) blockNode(el_, b, node);
+            }
+        });
+        observer.observe(el_, {
+            attributes: true,
+            attributeFilter: ['disabled', 'data-kp-disabled', 'data-kp-disabled-reason', ...['hint', 'prompt', 'order', 'status', 'timer', 'cancel', 'max-lines', 'max-blocks', 'context', 'confirm'].map((n) => `data-kp-console-${n}`)],
+        });
         // The keys, through the engine: the clear key, and the one that jumps to the prompt from anywhere.
         const s = getStrings();
         /** @type {import('./shortcuts.js').Shortcut[]} */
@@ -922,7 +951,7 @@ export function attachConsoles(root = document, options = {}) {
             () => select.removeEventListener('change', onContext),
             () => observer.disconnect(),
             stopKeys,
-            stopPill,
+            () => stopPillNow(),
             stopReasons,
             () => window.clearInterval(st.tick),
         ];

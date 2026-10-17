@@ -763,11 +763,15 @@ function openMenu(root, cell) {
     const s = getStrings();
     const person = cell.getAttribute('data-row-key') ?? '';
     const column = cell.getAttribute('data-col-key') ?? '';
+    // The package's own menu: the popover surface holding a `.kp-menu` of `.kp-menu__item`s, as the catalogue draws it.
     const menu = el('kp-popover kp-availability__menu');
-    menu.setAttribute('role', 'menu');
-    menu.setAttribute('aria-label', s.availabilityCell(st.spec.people?.find((p) => p.id === person)?.name ?? person, st.set.columns.find((c) => c.key === column)?.label ?? column, ''));
+    const list = el('kp-menu', 'ul');
+    list.setAttribute('role', 'menu');
+    list.setAttribute('aria-label', s.availabilityCell(st.spec.people?.find((p) => p.id === person)?.name ?? person, st.set.columns.find((c) => c.key === column)?.label ?? column, ''));
     const now = st.set.answers[person]?.[column];
     for (const answer of [...allowed(root), null]) {
+        const li = el('', 'li');
+        li.setAttribute('role', 'none');
         const b = /** @type {HTMLButtonElement} */ (el('kp-menu__item kp-availability__menu-item', 'button'));
         b.type = 'button';
         b.setAttribute('role', 'menuitemradio');
@@ -777,8 +781,10 @@ function openMenu(root, cell) {
             closeMenu(root);
             void request(root, person, [column], answer);
         });
-        menu.append(b);
+        li.append(b);
+        list.append(li);
     }
+    menu.append(list);
     root.append(menu);
     const r = cell.getBoundingClientRect();
     const rr = root.getBoundingClientRect();
@@ -957,6 +963,12 @@ export function attachAvailability(root = document) {
             );
         }
         const stopHeat = attachHeats(el_);
+        // Every option is live: change the attribute and the grid is drawn again.
+        const watcher = new MutationObserver(() => render(el_));
+        watcher.observe(el_, {
+            attributes: true,
+            attributeFilter: ['data-kp-heat-edit', 'data-kp-disabled-reason', ...['answers', 'press', 'best', 'best-rule', 'window', 'quorum', 'sort', 'summary', 'locked', 'narrow', 'density', 'disabled', 'choose'].map((n) => `data-kp-availability-${n}`)],
+        });
         st.off = [
             () => el_.removeEventListener('click', onClick, true),
             () => el_.removeEventListener('pointerdown', onDown),
@@ -965,6 +977,7 @@ export function attachAvailability(root = document) {
             () => el_.removeEventListener('scroll', onScroll, true),
             () => stopKeys?.(),
             stopHeat,
+            () => watcher.disconnect(),
             stopReasons,
         ];
         undo.push(() => {

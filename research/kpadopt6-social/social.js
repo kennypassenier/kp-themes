@@ -488,3 +488,16 @@ onReady(() => {
         });
     }
 });
+
+// ---------------------------------------------------------------- live options: a button writes one attribute on its target
+
+for (const button of $$('[data-k6-attr]')) {
+    button.addEventListener('click', () => {
+        const [selector, name, value] = (button.getAttribute('data-k6-attr') ?? '').split('|');
+        pick(button);
+        for (const target of $$(selector)) {
+            if (value === '-') target.removeAttribute(name);
+            else target.setAttribute(name, value);
+        }
+    });
+}
