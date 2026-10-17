@@ -1,0 +1,229 @@
+/* research/kpadopt6-ops: the page's own frame. Everything with a kp- class is the package; these k6- rules only lay the
+   sections out, frame the widths and draw the readouts. */
+
+.k6-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.k6-intro,
+.k6-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.k6-intro :is(h1, p),
+.k6-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.k6-intro p,
+.k6-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.k6-toc ol {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-lg, 1.5rem);
+    margin: 0;
+    padding-inline-start: 1.5rem;
+}
+
+.k6-toc li {
+    padding-inline-start: var(--kp-space-xs, 0.25rem);
+}
+
+.k6-toc__count {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    white-space: nowrap;
+}
+
+/* A topic opens with its own heading, ruled off from the topic above it. */
+.k6-topic {
+    margin: var(--kp-space-lg, 1.5rem) 0 0;
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 2px solid var(--border);
+    scroll-margin-block-start: var(--kp-space-xl, 2rem);
+}
+
+.k6-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+/* The "Expected:" block: what to see and what each control does. */
+.k6-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.k6-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.k6-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.k6-label {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 600;
+}
+
+.k6-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* Two or three columns side by side where there is room, one under the other on a phone. */
+.k6-pair {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.k6-pair > * {
+    min-inline-size: 0;
+}
+
+/* One labelled example: its caption over the component. */
+.k6-case {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 0;
+}
+
+/* A frame of a fixed width: what the component does at that width, whatever the page's. */
+.k6-frame {
+    box-sizing: border-box;
+    max-inline-size: 100%;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px dashed var(--border-strong, var(--border));
+    border-radius: var(--radius, 0.5rem);
+}
+
+.k6-frame--phone {
+    inline-size: min(390px, 100%);
+}
+
+/* The last event a section's component fired, as the page received it. */
+.k6-log {
+    box-sizing: border-box;
+    min-block-size: calc(2lh + 2 * var(--kp-space-sm, 0.5rem));
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-radius: var(--kp-radius-sm, 0.25rem);
+    background: var(--muted);
+    color: var(--muted-foreground);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--kp-text-xs, 0.75rem);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.k6-stack {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+}
+
+/* A frame tall enough for an opened menu to stand in it. */
+.k6-frame--menu {
+    min-block-size: 24rem;
+}
+
+.k6-form {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.k6-frame--narrow {
+    inline-size: min(26rem, 100%);
+}
+
+/* A page in a box that scrolls: the bar docks at the box's foot (data-kp-dock="container"). */
+.k6-scrollframe {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+}
+
+.k6-scroll {
+    box-sizing: border-box;
+    display: grid;
+    align-content: start;
+    gap: var(--kp-space-lg, 1.5rem);
+    block-size: 30rem;
+    padding: var(--kp-space-md, 1rem);
+    overflow: auto;
+}
+
+/* A page that shows its states needs no scrolling: it is as tall as its rows. */
+.k6-scroll--flat {
+    block-size: auto;
+    overflow: visible;
+}
+
+/* The buttons that put a section into a state (they stand in the review dialog's controls). */
+.k6-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.k6-controls > [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.k6-controls > [role='group'] > b {
+    min-inline-size: 7rem;
+}
+
+/* A row of the component's own pieces, wrapping. */
+.k6-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.k6-readout {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.k6-sub {
+    margin: var(--kp-space-sm, 0.5rem) 0 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}

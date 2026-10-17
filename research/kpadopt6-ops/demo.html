@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en-GB" data-theme="formal" data-review="kpadopt6-ops" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Operations parts for a dashboard, round six: seven more · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k6-page">
+            <header class="k6-intro">
+                <h1>Operations parts, round six: seven more</h1>
+                <p class="cat-intro">
+                    Seven parts the admin dashboard draws by hand today, built in the package: a button that stays pressed, a command palette that
+                    finds words in any order, the chip for a version jump, the tick that must be set before an update may start, the list of what
+                    depends on what, the path one connection takes, and the fixed card for one stack. This page asks formal only; the other themes
+                    follow once formal is approved.
+                </p>
+                <p>
+                    Judge in the review dialog (&ldquo;Review in a dialog&rdquo; at the top): one topic per part, one step each in formal. Every
+                    section says under <b>Expected</b> what you should see and what each control does. Everything with a <code>kp-</code> class and
+                    every script under <code>js/</code> is the package; the sample data, the frames marked &ldquo;phone width&rdquo; (390 px boxes
+                    standing in for a phone), the event readouts and the buttons that drive a state are this page&rsquo;s. Nothing moves until you
+                    press a button.
+                </p>
+                <nav class="k6-toc" aria-label="Topics on this page">
+                    <ol>
+                        <li><a href="#topic-toggle">Toggle button</a> <span class="k6-toc__count">2 sections</span></li>
+                    </ol>
+                </nav>
+            </header>
+
+            <!-- toc: toggle | Toggle button | 2 sections -->
+            <!-- ================================================================ topic: toggle button -->
+            <h2 class="k6-topic" id="topic-toggle">Toggle button</h2>
+            <section
+                class="k6-sec"
+                id="toggle"
+                data-review-item="toggle"
+                data-review-components="toggles toggle"
+                data-review-topic="toggle"
+                data-review-topic-title="Toggle button"
+                data-review-title="Toggle button: one, filters and a one-of switch"
+                data-review-choices='[{ "id": "toggle-pressed-mark", "label": "Whether a pressed toggle also shows a tick", "once": true, "default": "none", "options": [
+                    { "value": "none", "label": "Inverted face only", "hint": "Recommended. A pressed toggle turns its face round (dark with light words) and formal keeps its double rule drawn under the words. Quietest; the state is a shape and a weight, not only a colour." },
+                    { "value": "check", "label": "Inverted face and a tick", "hint": "The same, and a tick stands before the words while it is on. The room for the tick is kept when it is off, so pressing never moves a word. Louder; the state cannot be missed." }] }]'
+                aria-labelledby="h-toggle"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-toggle">Toggle button: one, filters and a one-of switch</h2>
+                    <p>
+                        <code>&lt;button class="kp-button" data-kp-toggle&gt;</code> (js/toggle.js): a button that stays pressed until it is pressed
+                        again. The words never change; the state is <code>aria-pressed</code>. Press things; nothing here is stored.
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>One toggle:</b> <b>Only errors</b> is a plain button. Press it: the face turns dark, the words stay the same, and the
+                            line <b>Showing errors only</b> appears under the words (the row is there all the time, so the button keeps its height).
+                            Press again: back to plain. The pin beside it is the icon look, a square.
+                        </li>
+                        <li>
+                            <b>Filters:</b> four pills <b>All 138</b>, <b>Error 12</b>, <b>Warning 31</b>, <b>Info 95</b>. <b>All</b> starts on. Press
+                            <b>Error</b>: All goes off and Error goes on; press <b>Warning</b> as well: both are on and the list below says what is
+                            shown. Press <b>All</b> (or <b>Clear filters (2)</b> at the end of the row): everything else goes off and All is on again.
+                            The Clear button keeps its place when nothing is pressed (it is only invisible), so the row never moves. The key
+                            <b>W</b> presses Warning when the focus is not in a field.
+                        </li>
+                        <li>
+                            <b>A one-of switch:</b> <b>Day</b>, <b>Week</b>, <b>Month</b>; exactly one is on, pressing the one that is on does
+                            nothing, and the arrow keys walk along the three (Tab enters the group once). <b>Single or none</b> lets the on one be
+                            pressed off.
+                        </li>
+                        <li>
+                            Every press says one polite line below the row (read by a screen reader, shown here in the grey box). The count is the
+                            real number, never &ldquo;9+&rdquo;; the next section feeds a count past 99 and a count that is still being counted.
+                        </li>
+                        <li><b>The choice</b> (tick it in the dialog): whether a pressed toggle also shows a tick. The buttons below flip it too.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        A pressed toggle is formal&rsquo;s ink with the paper-coloured words and the double rule drawn inside, as a held press looks
+                        in formal; the pills are formal&rsquo;s own, with its soft corners. Look at the words next to the numbers (a gap of at least a
+                        few pixels), at the tick appearing without moving a word, and at the Clear button leaving no hole in the row.
+                    </p>
+                </div>
+                <div class="k6-controls" data-review-controls>
+                    <div role="group" aria-label="The tick">
+                        <b>Tick:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-mark="none" aria-pressed="true">Off</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-mark="check" aria-pressed="false">On</button>
+                    </div>
+                </div>
+                <div class="k6-pair">
+                    <div class="k6-case">
+                        <p class="k6-label">One toggle, with a hint, and an icon one</p>
+                        <div class="k6-row" data-k6-toggle-single>
+                            <button class="kp-button" type="button" data-kp-toggle aria-pressed="false" data-kp-pressed-hint="Showing errors only">
+                                Only errors
+                            </button>
+                            <button
+                                class="kp-button"
+                                type="button"
+                                data-kp-toggle
+                                data-kp-look="icon"
+                                aria-pressed="false"
+                                aria-label="Pin this panel"
+                            >
+                                &#128204;
+                            </button>
+                        </div>
+                        <pre class="k6-log" id="k6-toggle-single-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">Filters with exact counts, an All chip and Clear</p>
+                        <div
+                            class="kp-toggles"
+                            role="group"
+                            aria-label="Level"
+                            id="k6-toggle-filters"
+                            data-kp-toggle-group="level"
+                            data-kp-toggle-clear
+                        >
+                            <button
+                                class="kp-button"
+                                type="button"
+                                data-kp-toggle
+                                data-kp-toggle-all
+                                data-kp-look="chip"
+                                aria-pressed="true"
+                                data-kp-toggle-value="all"
+                                data-kp-count="138"
+                            >
+                                All
+                            </button>
+                            <button
+                                class="kp-button"
+                                type="button"
+                                data-kp-toggle
+                                data-kp-look="chip"
+                                data-kp-toggle-value="error"
+                                data-kp-count="12"
+                            >
+                                Error
+                            </button>
+                            <button
+                                class="kp-button"
+                                type="button"
+                                data-kp-toggle
+                                data-kp-look="chip"
+                                data-kp-toggle-value="warning"
+                                data-kp-toggle-key="w"
+                                data-kp-count="31"
+                            >
+                                Warning
+                            </button>
+                            <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-toggle-value="info" data-kp-count="95">
+                                Info
+                            </button>
+                        </div>
+                        <p class="k6-readout" id="k6-toggle-filters-shown" aria-live="polite">Showing 138 lines.</p>
+                        <pre class="k6-log" id="k6-toggle-filters-log"></pre>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">A one-of switch, and one that can be off</p>
+                        <div
+                            class="kp-toggles"
+                            role="group"
+                            aria-label="Range"
+                            id="k6-toggle-single"
+                            data-kp-toggle-group="range"
+                            data-kp-toggle-mode="single"
+                        >
+                            <button class="kp-button" type="button" data-kp-toggle aria-pressed="false">Day</button>
+                            <button class="kp-button" type="button" data-kp-toggle aria-pressed="true">Week</button>
+                            <button class="kp-button" type="button" data-kp-toggle aria-pressed="false">Month</button>
+                        </div>
+                        <div
+                            class="kp-toggles"
+                            role="group"
+                            aria-label="Sort"
+                            id="k6-toggle-either"
+                            data-kp-toggle-group="sort"
+                            data-kp-toggle-mode="single-or-none"
+                        >
+                            <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" aria-pressed="false">Newest first</button>
+                            <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" aria-pressed="false">Oldest first</button>
+                        </div>
+                        <pre class="k6-log" id="k6-toggle-single-log2" aria-live="polite"></pre>
+                    </div>
+                </div>
+            </section>
+            <section
+                class="k6-sec"
+                id="toggle-states"
+                data-review-item="toggle-states"
+                data-review-components="toggles toggle"
+                data-review-topic="toggle"
+                data-review-title="Toggle button: every state, a long label and phone width"
+                aria-labelledby="h-toggle-states"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-toggle-states">Toggle button: every state, a long label and phone width</h2>
+                    <p>
+                        The same toggle while the app is slow, refuses, is still counting, or cannot be pressed; and the filters at the width of a
+                        phone. Use the buttons to put each one in its state.
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>The app answers slowly:</b> <b>Pin to top</b> is pressed, the theme&rsquo;s spinner takes the place of the words for
+                            about a second (the words keep their room and the button keeps its size), then it stays on. With
+                            <b>The app will refuse</b> on, the same press goes busy, then the state goes back and the word <b>Refused</b> stands on
+                            the button for 3 s on a red plate; the line below says why.
+                        </li>
+                        <li>
+                            <b>Still counting:</b> <b>Error</b> shows a small pulsing block where the number goes (never 0).
+                            <b>The count arrives</b> writes 12; <b>A count past 99</b> writes 1534 and the room for the next digit is held, with the
+                            real number shown.
+                        </li>
+                        <li>
+                            <b>Mixed:</b> <b>All services</b> is a dashed pill on a half wash with a dash before the words (some of them are on);
+                            press it and it becomes plainly on. <b>Cannot be pressed:</b> <b>Follow</b> is dimmed; hover or focus it and the reason
+                            shows (&ldquo;Nothing is running&rdquo;).
+                        </li>
+                        <li>
+                            <b>A long label</b> wraps inside a narrow box and the button grows taller; it is never cut and never breaks inside a word.
+                            At <b>phone width</b> the pills wrap to the next row and every button is 44 px tall.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The spinner is formal&rsquo;s ruled ring; the refusal is a red plate with white words; the mixed pill keeps formal&rsquo;s
+                        double rule as a dashed one. Check that no word sits against the edge of its button and that nothing changes size when a state
+                        is switched.
+                    </p>
+                </div>
+                <div class="k6-controls" data-review-controls>
+                    <div role="group" aria-label="Async answer">
+                        <b>The app:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-refuse aria-pressed="false">The app will refuse</button>
+                    </div>
+                    <div role="group" aria-label="Count">
+                        <b>Count:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-count="loading">Still counting</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-count="12">The count arrives</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-count="1534">A count past 99</button>
+                    </div>
+                </div>
+                <div class="k6-pair">
+                    <div class="k6-case">
+                        <p class="k6-label">The app takes a second</p>
+                        <div class="k6-row">
+                            <button class="kp-button" type="button" id="k6-toggle-async" data-kp-toggle data-kp-toggle-async aria-pressed="false">
+                                Pin to top
+                            </button>
+                        </div>
+                        <pre class="k6-log" id="k6-toggle-async-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">A count that is still being counted</p>
+                        <div class="k6-row">
+                            <button
+                                class="kp-button"
+                                type="button"
+                                id="k6-toggle-count"
+                                data-kp-toggle
+                                data-kp-look="chip"
+                                data-kp-count="loading"
+                                aria-pressed="false"
+                            >
+                                Error
+                            </button>
+                        </div>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">Some on, and one that cannot be pressed</p>
+                        <div class="k6-row">
+                            <button
+                                class="kp-button"
+                                type="button"
+                                data-kp-toggle
+                                data-kp-look="chip"
+                                aria-pressed="mixed"
+                                data-kp-pressed-mark="check"
+                            >
+                                All services
+                            </button>
+                            <button
+                                class="kp-button"
+                                type="button"
+                                data-kp-toggle
+                                disabled
+                                aria-pressed="false"
+                                data-kp-disabled-reason="Nothing is running"
+                            >
+                                Follow
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="k6-pair">
+                    <div class="k6-case">
+                        <p class="k6-label">A long label in a narrow box</p>
+                        <div class="k6-frame k6-frame--narrow">
+                            <button class="kp-button" type="button" data-kp-toggle aria-pressed="false" data-kp-count="3">
+                                Show only the containers that restarted since the last backup
+                            </button>
+                        </div>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">Phone width</p>
+                        <div class="k6-frame k6-frame--phone">
+                            <div
+                                class="kp-toggles"
+                                role="group"
+                                aria-label="Level, on a phone"
+                                data-kp-toggle-group="level-phone"
+                                data-kp-toggle-clear
+                            >
+                                <button
+                                    class="kp-button"
+                                    type="button"
+                                    data-kp-toggle
+                                    data-kp-toggle-all
+                                    data-kp-look="chip"
+                                    aria-pressed="true"
+                                    data-kp-count="138"
+                                >
+                                    All
+                                </button>
+                                <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="12">Error</button>
+                                <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="31">Warning</button>
+                                <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="95">Info</button>
+                                <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="1534">Debug</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "ops-7ffed8d2-ee39-4201-801a-d337a3ceb71f", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

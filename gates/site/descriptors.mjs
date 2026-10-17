@@ -3775,6 +3775,49 @@ setGanttState(timeline, 'loading');
         ],
     },
     {
+        id: 'toggle',
+        title: 'Toggle button',
+        group: 'Buttons',
+        classes: ['kp-toggle', 'kp-toggles'],
+        exports: [],
+        intro: 'A button that stays pressed until it is pressed again: “Only errors”, “Pin”, “Follow”. It keeps its words, shows the state by shape and weight as well as colour, can carry an exact count and a short hint, and a group of them can behave as filters, as a one-of switch or as an “All” chip.',
+        whenToUse: 'A filter, a pin, a follow or a show/hide that is on or off. For a setting that is saved with a form, use the switch; for one choice from a few that are always shown together, use the segmented control.',
+        examples: [
+            {
+                title: 'One toggle',
+                why: 'The platform attribute `aria-pressed` is the state; the label never changes.',
+                markup: `
+<button class="kp-button" type="button" data-kp-toggle aria-pressed="false" data-kp-pressed-hint="Showing errors only">Only errors</button>
+`,
+            },
+            {
+                title: 'Filter chips with exact counts and an All chip',
+                why: 'The All chip is on while nothing else is, and pressing it clears the rest; Clear filters keeps its place.',
+                markup: `
+<div class="kp-toggles" role="group" aria-label="Level" data-kp-toggle-group="level" data-kp-toggle-clear>
+    <button class="kp-button" type="button" data-kp-toggle data-kp-toggle-all data-kp-look="chip" aria-pressed="true" data-kp-count="138">All</button>
+    <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="12">Error</button>
+    <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="31">Warning</button>
+    <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="95">Info</button>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-look', what: '`button` (default), `chip` (a pill) or `icon` (a square).' },
+            { name: 'aria-pressed', what: '`false` (default), `true` or `mixed` (a dashed edge on a half wash).' },
+            { name: 'data-kp-toggle-mode', what: 'On the group: `multi` (default), `single` (one is always on, arrow keys walk) or `single-or-none`.' },
+            { name: 'data-kp-count', what: 'An exact number beside the label, or `loading` for a skeleton; the room for the next digit is held.' },
+            { name: 'data-kp-pressed-mark', what: '`check` draws a tick while it is on, its room kept while it is off.' },
+            { name: 'data-kp-toggle-async', what: 'The app answers `kp-toggle` with `detail.wait(promise)`: busy, rolled back and the word “Refused” if it fails.' },
+            { name: 'data-kp-toggle-key', what: 'A key that presses it, listed in the shortcut sheet; never a bare digit.' },
+        ],
+        accessibility: [
+            'Built in — `aria-pressed` is the one source of the state, `mixed` is announced as partly pressed, a group says one polite line per change (“Only errors on, 12 shown”), the hit area is 44 px on a phone, the label never changes with the state.',
+            'Yours — name the group (`aria-label` on the container), and answer `kp-toggle` with a promise when the change takes time; the toggle is its own undo, so no undo is offered.',
+        ],
+    },
+    {
         id: 'unsaved',
         title: 'Unsaved changes bar',
         group: 'Forms',

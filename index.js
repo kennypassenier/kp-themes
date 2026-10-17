@@ -183,6 +183,7 @@ export {
     unsaved,
     unsavedSaved,
 } from './js/unsaved.js';
+export { TOGGLE, TOGGLE_CHANGED_EVENT, TOGGLE_EVENT, TOGGLE_LOOKS, TOGGLE_MODES, TOGGLE_REFUSED_MS, attachToggles, toggle, toggleGroup, toggleKey, togglePressedKeys } from './js/toggle.js';
 export {
     SLIDER,
     SLIDER_CHANGE_EVENT,

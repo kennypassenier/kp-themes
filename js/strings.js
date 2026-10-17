@@ -38,6 +38,14 @@
 
 /**
  * @typedef {object} Strings
+ * @property {string} toggleCounting  The count's name while it is still being counted (js/toggle.js) [kpadopt6-ops]
+ * @property {(label: string, count: number | null) => string} toggleOn  The line said once a toggle is switched on, "Only errors on, 12 shown" [kpadopt6-ops]
+ * @property {(label: string, count: number | null) => string} toggleOff  The line said once it is switched off [kpadopt6-ops]
+ * @property {(label: string, n: number) => string} toggleCount  The line said when the count beside a toggle changed (data-kp-announce="all") [kpadopt6-ops]
+ * @property {(n: number) => string} toggleClear  The button that switches a group's toggles off, "Clear filters (2)" [kpadopt6-ops]
+ * @property {string} toggleRefused  The word on a toggle whose change the app refused [kpadopt6-ops]
+ * @property {(label: string) => string} toggleKeyWhat  What a toggle's key does in the shortcut sheet [kpadopt6-ops]
+ * @property {string} toggleKeyGroup  The group a toggle's key is listed under in the shortcut sheet [kpadopt6-ops]
  * @property {string} alertSuccess
  * @property {string} alertWarning
  * @property {string} alertInfo
@@ -975,6 +983,15 @@
  * @type {Strings}
  */
 export const DEFAULT_STRINGS = Object.freeze({
+    // The toggle button (js/toggle.js) [kpadopt6-ops].
+    toggleCounting: 'counting',
+    toggleOn: (label, count) => (count === null ? `${label} on` : `${label} on, ${count} shown`),
+    toggleOff: (label, count) => (count === null ? `${label} off` : `${label} off, ${count} shown`),
+    toggleCount: (label, n) => `${label}: ${n}`,
+    toggleClear: (n) => `Clear filters (${n})`,
+    toggleRefused: 'Refused',
+    toggleKeyWhat: (label) => `Turn ${label} on or off`,
+    toggleKeyGroup: 'Filters',
     alertSuccess: 'Success',
     alertWarning: 'Warning',
     alertInfo: 'Info',

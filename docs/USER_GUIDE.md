@@ -2285,6 +2285,29 @@ before a link leaves the page (`kp-unsaved-leave`, cancelable, then the package'
 (never `[type=password], [data-kp-secret]`, or what `data-kp-keep-exclude` names) and says so in a toast. `data-kp-placement` is `header+sticky` (default), `header` or
 `sticky-bottom`; for a page that scrolls inside a box use `data-kp-dock="container"` and `data-kp-scroll-root="#box"`. The words are `unsaved…`.
 Knobs: `--kp-unsaved-dock-width`, `--kp-unsaved-dock-offset`, `--kp-unsaved-save-min`.
+### Toggle button
+
+A button that stays pressed until it is pressed again, for a filter, a pin or a follow. The state is `aria-pressed`; the words never change:
+
+```html
+<button class="kp-button" type="button" data-kp-toggle aria-pressed="false">Only errors</button>
+
+<div class="kp-toggles" role="group" aria-label="Level" data-kp-toggle-group="level" data-kp-toggle-clear>
+    <button class="kp-button" type="button" data-kp-toggle data-kp-toggle-all data-kp-look="chip" aria-pressed="true" data-kp-count="138">All</button>
+    <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="12">Error</button>
+</div>
+```
+
+`attachToggles(root)` (`js/toggle.js`, attached by `js/auto.js`) flips `aria-pressed`, keeps a group coherent and fires the cancelable `kp-toggle`
+(`{ button, pressed, previous, group, pressedKeys, wait }`) before anything changes, then `kp-toggle-changed`. `data-kp-toggle-mode` on the group is
+`multi` (default), `single` (one is always on, the arrow keys walk) or `single-or-none`; `data-kp-toggle-all` marks the All chip, on while nothing else is;
+`data-kp-toggle-clear` adds "Clear filters (N)", which keeps its place when idle. `data-kp-count` is the exact number beside the words (`loading` is a
+skeleton, never 0), `data-kp-pressed-hint` a line under them while on, `data-kp-pressed-mark="check"` a tick whose room is kept, `data-kp-look` `button`,
+`chip` or `icon`. `data-kp-toggle-key` presses it from the keyboard through the shortcut sheet (never a bare digit). When the change takes time call
+`detail.wait(promise)` from `kp-toggle`: the theme's spinner covers the words, and a rejection puts the state back and shows "Refused" on the button for 3 s.
+`toggle(el).set(true|false|'mixed')`, `.setCount(n)` and `.setHint(text)` drive it from script. Every press is announced once, politely. The words are `toggle…`.
+Knobs: `--kp-toggle-on`, `--kp-toggle-on-ink`, `--kp-toggle-count-size`, `--kp-toggle-hit`.
+
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

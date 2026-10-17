@@ -1,4 +1,36 @@
 export type Strings = {
+    /**
+     * The count's name while it is still being counted (js/toggle.js) [kpadopt6-ops]
+     */
+    toggleCounting: string;
+    /**
+     * The line said once a toggle is switched on, "Only errors on, 12 shown" [kpadopt6-ops]
+     */
+    toggleOn: (label: string, count: number | null) => string;
+    /**
+     * The line said once it is switched off [kpadopt6-ops]
+     */
+    toggleOff: (label: string, count: number | null) => string;
+    /**
+     * The line said when the count beside a toggle changed (data-kp-announce="all") [kpadopt6-ops]
+     */
+    toggleCount: (label: string, n: number) => string;
+    /**
+     * The button that switches a group's toggles off, "Clear filters (2)" [kpadopt6-ops]
+     */
+    toggleClear: (n: number) => string;
+    /**
+     * The word on a toggle whose change the app refused [kpadopt6-ops]
+     */
+    toggleRefused: string;
+    /**
+     * What a toggle's key does in the shortcut sheet [kpadopt6-ops]
+     */
+    toggleKeyWhat: (label: string) => string;
+    /**
+     * The group a toggle's key is listed under in the shortcut sheet [kpadopt6-ops]
+     */
+    toggleKeyGroup: string;
     alertSuccess: string;
     alertWarning: string;
     alertInfo: string;
@@ -3338,6 +3370,14 @@ export type Strings = {
 };
 /**
  * @typedef {object} Strings
+ * @property {string} toggleCounting  The count's name while it is still being counted (js/toggle.js) [kpadopt6-ops]
+ * @property {(label: string, count: number | null) => string} toggleOn  The line said once a toggle is switched on, "Only errors on, 12 shown" [kpadopt6-ops]
+ * @property {(label: string, count: number | null) => string} toggleOff  The line said once it is switched off [kpadopt6-ops]
+ * @property {(label: string, n: number) => string} toggleCount  The line said when the count beside a toggle changed (data-kp-announce="all") [kpadopt6-ops]
+ * @property {(n: number) => string} toggleClear  The button that switches a group's toggles off, "Clear filters (2)" [kpadopt6-ops]
+ * @property {string} toggleRefused  The word on a toggle whose change the app refused [kpadopt6-ops]
+ * @property {(label: string) => string} toggleKeyWhat  What a toggle's key does in the shortcut sheet [kpadopt6-ops]
+ * @property {string} toggleKeyGroup  The group a toggle's key is listed under in the shortcut sheet [kpadopt6-ops]
  * @property {string} alertSuccess
  * @property {string} alertWarning
  * @property {string} alertInfo

@@ -242,6 +242,7 @@ export const NEEDS = [
     // The notification centre [kpadopt5-ops].
     { name: 'notices', when: '[data-kp-notices]', load: () => import('./notices.js'), attach: (m, root) => [m.attachNotices(root)] },
     // The time and sentence parts [kpadopt5-time]: the weekday picker, the next-runs list, the snooze picker, the dated option picker, the sentence form, the slider and the unsaved-changes bar.
+    { name: 'toggle', when: '[data-kp-toggle]', load: () => import('./toggle.js'), attach: (m, root) => [m.attachToggles(root)] },
     { name: 'unsaved', when: '[data-kp-unsaved]', load: () => import('./unsaved.js'), attach: (m, root) => [m.attachUnsaved(root)] },
     { name: 'slider', when: '[data-kp-slider]', load: () => import('./slider.js'), attach: (m, root) => [m.attachSliders(root)] },
     { name: 'sentence', when: '[data-kp-sentence]', load: () => import('./sentence.js'), attach: (m, root) => [m.attachSentences(root)] },

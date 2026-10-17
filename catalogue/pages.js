@@ -131,6 +131,12 @@ export const PAGES = [
                 label: 'People: avatar with a photo, ways to sign in, a conversation, chart markers',
                 about: 'An avatar with a photo, the list of ways to sign in (passkeys, magic links, passwords, tokens), a conversation in bubbles, and markers, windows and a median line on a chart, in formal.',
             },
+            // Kenny, 2026-10-17 (kpadopt6, wave ops): seven more parts the admin dashboard draws by hand (a toggle button, the palette that finds words in any order, a version-jump chip, an acknowledge tick, a dependency list, the path of one connection, the fixed card of one stack), one demo, formal only until Kenny approves it.
+            {
+                href: 'research/kpadopt6-ops/demo.html',
+                label: 'More parts for a dashboard (toggle button, word-order search, version jump, acknowledge tick, dependency list, path of a connection, stack card)',
+                about: 'Seven more parts the admin dashboard draws by hand, in formal only: a button that stays pressed, the command palette that finds words in any order, a chip that shows a version jump, the tick that must be set before an update may start, the list of what depends on what, the path one connection takes, and the fixed card for one stack. One topic per part.',
+            },
             // Kenny, 2026-10-17 (kpadopt5, wave ops): seven operations components a dashboard drew itself, built in the package first as ONE demo, formal only until Kenny approves it.
             {
                 href: 'research/kpadopt5-ops/demo.html',
