@@ -87,7 +87,8 @@ Not approved:
 ```
 
 Verdicts and notes live in the browser's localStorage under
-`kp-demo-review:<demo id>`, until "Clear all verdicts".
+`kp-demo-review:<demo id>`, until "Clear all verdicts"; every one of them is also in the demo's journal, which nothing
+clears (see "Every verdict is kept until Kenny pastes it").
 
 ## Topic steps
 
@@ -243,12 +244,52 @@ the same ids in the new page round's script: `{ "round": "r4", "received": ["r3"
 page round id with every answer; on the demo page and on the Agenda it deletes an answer (or carried words) of a received
 round. An answer stored without a round id belongs to the round before the current one, so it is dropped as soon as
 `received` is non-empty. An answer of a round not listed stays and is still counted as not copied. The gate below refuses a
-page whose `received` differs from the `page` ids in `VERDICTS.json`.
+page whose `received` differs from the `page` ids in `VERDICTS.json`. An answer of the page's own round is never dropped,
+even when that round is listed as received, and every drop is said on the Agenda and kept in the journal (see "Every
+verdict is kept until Kenny pastes it").
 
 `gates/check-rereview.mjs` (in `npm run gates`) refuses a demo with a `VERDICTS.json` whose page still offers a pair whose
 latest verdict is approved, and names the pairs. The only way past is a `reopened` entry with a written `reason` (the
 component changed after the approval). A demo whose every pair is approved is Decided instead: `decided.json`, the README's
 "**Decided (" line and a place under "Archived research" in `catalogue/pages.js`; it is not offered again.
+
+## Every verdict is kept until Kenny pastes it
+
+Kenny, 2026-10-17: "ik moet altijd honderd procent absoluut zeker zijn dat mijn beoordelingen vastgelegd worden, wat ik
+ook doe op die site, tot het moment dat ik effectief mijn beoordelingen hier paste" (correction lost-answer-1017: an
+answer dropped as received the moment it was given, and a note filed under the wrong section). The kit guarantees it
+for every demo, whatever the page says:
+
+- **The journal.** Every verdict, note and tick set in the dialog (a "Not approved" box, a choice ticked, Approve, a
+  note after a pause of 600 ms in the typing, at once when the note loses the focus, the step changes or the page is
+  left) is appended to `kp-demo-review:<demo id>:journal` in localStorage as `{ at, demo, round, pair, verdict, note,
+  choice }`. No code path removes an entry: not a new round, not "Clear all verdicts", not an answer dropped as
+  received (whose whole text is added to the journal first). The verdicts and the answer may be cleared; the journal
+  keeps everything (`progress.js`, `journal`).
+- **No silent drop.** An answer of the page's own round is never dropped as received, whatever `received` lists. An
+  answer dropped as received is noted in `kp-demo-review:received-log`, and the Agenda's band says "received by Claude:
+  <demo> <round>" until Kenny presses Seen.
+- **Saved verdicts.** The Agenda's fold "Saved verdicts" shows every journal entry per demo, newest first, and one
+  button per demo copies the full answer rebuilt from the journal for the round picked (`progress.js`,
+  `rebuildAnswer`), so what Kenny judged can always be pasted again.
+- **The step's integrity.** On every step, and whenever its rows or sections change, the dialog checks that every
+  section shown has exactly one row, with its "Not approved" box, its note and its choice ticks, and that every row
+  belongs to a section shown. Anything off shows a banner naming it and Approve refuses. Approve files each verdict
+  and note by the row's own pair (`data-rv-key`), never by its place in the list, and every row's box stands under its
+  section's name, in one column (a box beside a short name and under a long one read as the next row's).
+
+`check-kit.mjs` measures all of it in Firefox and must print `clear` on every page before a round goes on the Agenda:
+
+```sh
+python3 -m http.server 8743 --bind 127.0.0.1   # from the repository root
+node research/_review/check-kit.mjs 8743 research/<topic>/demo.html
+```
+
+It walks every step of the dialog (rows against shown sections, each row's box, note and choice ticks, the boxes in
+one column, the integrity banner), sets "Not approved" with a note on the first and the last row of the first step and
+reloads (both must still be there), then republishes the page in the browser only with a new round id that lists the
+current one as received and checks that the journal still holds both notes and that the Agenda says the answer was
+received. One line per fault, exit code 1 on any. About a minute for a twelve-step page.
 
 ## An update after a verdict
 
