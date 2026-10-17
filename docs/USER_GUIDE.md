@@ -2285,6 +2285,25 @@ before a link leaves the page (`kp-unsaved-leave`, cancelable, then the package'
 (never `[type=password], [data-kp-secret]`, or what `data-kp-keep-exclude` names) and says so in a toast. `data-kp-placement` is `header+sticky` (default), `header` or
 `sticky-bottom`; for a page that scrolls inside a box use `data-kp-dock="container"` and `data-kp-scroll-root="#box"`. The words are `unsaved…`.
 Knobs: `--kp-unsaved-dock-width`, `--kp-unsaved-dock-offset`, `--kp-unsaved-save-min`.
+### A star rating
+
+Five whole stars to give something a score, and the same row read only to show one:
+
+```html
+<div class="kp-rating" data-kp-rating data-kp-rating-for="Lasagne" data-kp-rating-labels="Not for me|Okay|Good|Great|Make again"></div>
+<div class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-for="Lasagne" data-kp-rating-value="4.5" data-kp-rating-count="12"></div>
+```
+
+`attachRatings(root)` (`js/rating.js`, attached by `js/auto.js`) draws the stars. The input is a radio group named "Rating for Lasagne" with one tab stop: the arrows
+move and choose, Home and End go to the ends, Backspace or Delete (or the chosen star pressed again, or the small Clear on a mouse) removes the rating; no digit keys
+(they need Shift on AZERTY). `0` is "not rated", which an empty row says in words (`data-kp-rating-unrated-text`, "Not rated yet"), never as a zero score. `data-kp-rating-max` is 3 to 10 (5),
+`data-kp-rating-step="0.5"` turns the row into one slider that steps by a half, `data-kp-rating-size` is `sm`, `md` or `lg`, `data-kp-rating-labels` gives one word per level for the caption.
+`kp-rating-change` carries `{ value, previous, source, wait }` and is cancelable; `event.detail.wait(promise)` hands over a save: the row is busy, and a rejection puts the
+previous value back and says so under the row for `data-kp-flash-error-ms` (3000). A change offers Undo for `data-kp-undo-ms` (6000, 0 for none).
+`data-kp-rating-commit="confirm"` holds a tap until Save rating. `data-kp-readonly` is a viewer; `data-kp-disabled` with `data-kp-disabled-reason` is a lock, and the sentence is
+shown under the row. `setRatingState(el, 'loading' | 'error' | 'ready')`: loading keeps the stars as dashed outlines, error puts one plate of the same size over them
+(`kp-rating-retry`). A table cell: `ratingCell(td, 4, { count: 12 })` draws the display row and writes `data-kp-sort-value` for the data table. The words are `rating…`.
+Knobs: `--kp-rating-star`, `--kp-rating-hit`, `--kp-rating-ink`, `--kp-rating-empty`, `--kp-rating-stroke`, `--kp-rating-gap`.
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

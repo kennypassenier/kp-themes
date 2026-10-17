@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en-GB" data-theme="formal" data-review="kpadopt6-calm" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Calm screens: a picker with the usual on top, one question per screen, a quiet today card, quotes, calm days and stars · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k6-page">
+            <header class="k6-intro">
+                <h1>Calm screens: six parts for a day that is allowed to be quiet</h1>
+                <p class="cat-intro">
+                    Six parts for a daily check-in and a today screen, built in the package: a picker with the choices you use most on top, one
+                    question per screen, a quiet card for what is open, done or paused, a card that quotes your own earlier words, a calendar that
+                    shows a day with nothing logged as quiet instead of failed, and a star rating. Four extend a component that already exists (the
+                    combobox, the one-step view, the status list, the calendar with its heat grid and uptime strip) with options that are off until
+                    asked for; two are new. This page asks formal only; the other themes follow once formal is approved.
+                </p>
+                <p>
+                    Judge in the review dialog (&ldquo;Review in a dialog&rdquo; at the top): 6 topics, one step each in formal. Every section says
+                    under <b>Expected</b> what you should see and what each control does. Everything with a <code>kp-</code> class and every script
+                    under <code>js/</code> is the package; the sample content (symptoms, check-in questions, the day&rsquo;s tasks, the diary
+                    sentences, recipes), the fixed clock (Saturday 17/10/2026), the frames marked &ldquo;phone width&rdquo; (390 px boxes standing
+                    in for a phone), the event readouts and the buttons that drive a state are this page&rsquo;s. Nothing here is saved anywhere.
+                </p>
+                <nav class="k6-toc" aria-label="Topics on this page">
+                    <ol>
+                        <li><a href="#topic-rating">Star rating</a> <span class="k6-toc__count">2 sections</span></li>
+                    </ol>
+                </nav>
+            </header>
+
+            <!-- ================================================================ topic: Star rating -->
+            <h2 class="k6-topic" id="topic-rating">Star rating</h2>
+            <section
+                class="k6-sec"
+                id="rating"
+                data-review-item="rating"
+                data-review-components="rating"
+                data-review-topic="rating"
+                data-review-topic-title="Star rating"
+                data-review-title="Star rating: give one, show one"
+                data-review-choices='[{"id": "rating-commit", "label": "What a tap on a star does", "default": "immediate", "options": [{"value": "immediate", "label": "Saves at once (recommended)", "hint": "One tap is the whole job; a slip is covered by the Undo toast that follows. This is the first row of the first case below."}, {"value": "confirm", "label": "Picks, and Save rating saves", "hint": "A tap only sets the stars; two buttons, Save rating and Cancel, appear under them. Safer against a slip, one more tap for every rating. This is the confirm case below."}]}, {"id": "rating-preview", "label": "The star under the pointer", "default": "present", "options": [{"value": "present", "label": "Lights up before you press (recommended)", "hint": "On a mouse the stars up to the one under the pointer show lighter, so you see the score before you give it. Nothing happens on a phone, which has no pointer."}, {"value": "off", "label": "Nothing until you press", "hint": "The stars stay as they are until the press. Calmer, and no surprise when the mouse crosses the row on its way somewhere else."}]}]'
+                aria-labelledby="h-rating"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-rating">Star rating: give one, show one</h2>
+                    <p>
+                        <code>&lt;div class="kp-rating" data-kp-rating&gt;</code> (js/rating.js): five whole stars to give something a score, and the
+                        same row read only to show one. An empty row says it is empty; it never looks like a zero.
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Lasagne</b> (first case) starts with five outlined stars and the words <b>Tap a star</b> under them. Press the fourth
+                            star: four are filled in the accent colour (navy in formal, never red or green), the words say <b>Great</b>, a small
+                            <b>Clear</b> button appears under the row (on a mouse only), a toast says <b>Lasagne: 4 stars</b> with <b>Undo</b>, and
+                            the grey box under the case shows the event. Press the fourth star again: the rating goes (<b>rating removed</b>).
+                            Nothing under the row moves when the words change.
+                        </li>
+                        <li>
+                            <b>Keys</b>: Tab reaches the row once (one tab stop); the arrows move and choose, <b>Home</b> and <b>End</b> go to the
+                            first and last star, <b>Backspace</b> or <b>Delete</b> removes the rating. No digit keys (they need Shift on your
+                            keyboard). With a mouse, the stars up to the one under the pointer show lighter before you press (the second row of the
+                            first case has this switched off, to compare).
+                        </li>
+                        <li>
+                            <b>Show one</b>: a read-only row of small stars with the number beside it (<b>4.5 (12)</b>, the count exact), and the row
+                            of nobody&rsquo;s rating reads <b>Not rated yet</b> with outlined stars. A screen reader gets one name for the row
+                            (&ldquo;Rated 4.5 of 5 by 12 people&rdquo;).
+                        </li>
+                        <li>
+                            <b>Half stars</b> (an option, not the default): the same row answers to a press on the left or right half of a star;
+                            the keys step by one half. <b>Save rating</b> case: a tap only picks, the two buttons appear, and the page keeps the old
+                            value until Save.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s stars are drawn with a thin rounded outline, filled solid in the primary navy. Look at the filled stars against
+                        the empty ones at the three sizes (small 16 px, medium 28 px, large 36 px), at the focus ring on a star, and at the touch area
+                        around each star (44 px).
+                    </p>
+                </div>
+                <div class="k6-pair">
+                    <div class="k6-case">
+                        <p class="k6-label">Give a rating: saves at once, preview on a mouse</p>
+                        <div class="k6-stack">
+                            <div class="kp-rating" data-kp-rating data-kp-rating-for="Lasagne" data-kp-rating-labels="Not for me|Okay|Good|Great|Make again" id="k6-rate-a"></div>
+                            <div class="kp-rating" data-kp-rating data-kp-rating-for="Pasta e fagioli" data-kp-rating-value="3" data-kp-rating-labels="Not for me|Okay|Good|Great|Make again" data-kp-rating-preview="off"></div>
+                        </div>
+                        <pre class="k6-log" id="k6-rate-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">Show a rating: read only</p>
+                        <div class="k6-stack">
+                            <div class="k6-row"><span class="k6-rowlabel">Chili con carne</span><div class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-for="Chili con carne" data-kp-rating-value="4.5" data-kp-rating-count="12"></div></div>
+                            <div class="k6-row"><span class="k6-rowlabel">Soupe de poisson</span><div class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-for="Soupe de poisson" data-kp-rating-value="3"></div></div>
+                            <div class="k6-row"><span class="k6-rowlabel">Stoofvlees</span><div class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-for="Stoofvlees"></div></div>
+                            <div class="k6-row"><span class="k6-rowlabel">Medium, 4 of 5</span><div class="kp-rating kp-rating--md" data-kp-rating data-kp-rating-mode="display" data-kp-rating-size="md" data-kp-rating-for="Waterzooi" data-kp-rating-value="4"></div></div>
+                            <div class="k6-row"><span class="k6-rowlabel">Large, 5 of 5</span><div class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-size="lg" data-kp-rating-for="Carbonnade" data-kp-rating-value="5"></div></div>
+                        </div>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">Half stars (option): the keys step by a half</p>
+                        <div class="kp-rating" data-kp-rating data-kp-rating-step="0.5" data-kp-rating-for="Tiramisu" data-kp-rating-value="3.5" id="k6-rate-half"></div>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">Save rating (option): a tap picks, a button saves</p>
+                        <div class="kp-rating" data-kp-rating data-kp-rating-commit="confirm" data-kp-rating-for="Risotto" data-kp-rating-value="2"></div>
+                    </div>
+                </div>
+            </section>
+            <section
+                class="k6-sec"
+                id="rating-states"
+                data-review-item="rating-states"
+                data-review-components="rating"
+                data-review-topic="rating"
+                data-review-title="Star rating: states, a table and phone width"
+                aria-labelledby="h-rating-states"
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-rating-states">Star rating: states, a table and phone width</h2>
+                    <p>A rating that is being read, one that could not be read, a save that is refused, one that is locked, and the stars in a table and on a phone.</p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Loading</b> (button above the first case): the five stars keep their size as dashed outlines that slowly breathe,
+                            nothing moves around them. <b>Could not read</b>: the stars and the words are replaced, at the same height, by one
+                            red-edged plate with <b>Could not read the rating</b> centred and a normal-size <b>Retry</b>; Retry fires
+                            <code>kp-rating-retry</code> (the grey box). <b>Save is refused</b>: press a star; the row is busy for a moment, then
+                            the previous stars come back and <b>Could not save the rating for Lasagne</b> stands under the row for three seconds.
+                        </li>
+                        <li>
+                            <b>Locked</b>: stars dimmed, the sentence <b>Locked while the recipe is being edited</b> in muted ink under them (not a
+                            tooltip). <b>Read only</b>: drawn as an input, you can Tab to it, a press does nothing.
+                        </li>
+                        <li>
+                            <b>Words that are long</b> wrap under the row, never cut. In the <b>table</b>, each recipe has a read-only row of small
+                            stars; click <b>Rating</b> in the header: the table sorts by the number, so the best recipe comes to the top; an unrated
+                            recipe sorts last.
+                        </li>
+                        <li>
+                            <b>Phone width</b> (390 px box): the five stars are 56 px wide each and fill the row evenly, the words under the row,
+                            no Clear button (a phone has no pointer; press the chosen star again to remove).
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The waiting stars are formal&rsquo;s outline drawn dashed; the plate that replaces the stars is formal&rsquo;s destructive
+                        alert, not a small line.
+                    </p>
+                </div>
+                <div data-review-controls>
+                    <div role="group" aria-label="State of the first case" class="k6-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-rating-state="ready">Ready</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-rating-state="loading">Loading</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-rating-state="error">Could not read</button>
+                    </div>
+                    <div role="group" aria-label="What the next save does" class="k6-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-k6-rating-save="ok">Next save works</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-k6-rating-save="refused">Next save is refused</button>
+                    </div>
+                </div>
+                <div class="k6-pair">
+                    <div class="k6-case">
+                        <p class="k6-label">Driven by the buttons above</p>
+                        <div class="kp-rating" data-kp-rating data-kp-rating-for="Lasagne" data-kp-rating-value="4" data-kp-rating-labels="Not for me|Okay|Good|Great|Make again" id="k6-rate-state"></div>
+                        <pre class="k6-log" id="k6-rate-state-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">Locked, and read only</p>
+                        <div class="k6-stack">
+                            <div class="kp-rating" data-kp-rating data-kp-rating-for="Moussaka" data-kp-rating-value="3" data-kp-disabled data-kp-disabled-reason="Locked while the recipe is being edited"></div>
+                            <div class="kp-rating" data-kp-rating data-kp-rating-for="Ratatouille" data-kp-rating-value="5" data-kp-readonly></div>
+                        </div>
+                    </div>
+                    <div class="k6-case">
+                        <p class="k6-label">Words that are long</p>
+                        <div class="kp-rating" data-kp-rating data-kp-rating-for="Slow-cooked lamb shoulder with anchovies and rosemary" data-kp-rating-value="3" data-kp-rating-labels="Please do not make this again, ever|It was fine but needed more salt and a lot more time|Good enough to cook for friends on a Sunday|Great, I would ask for the recipe|The best thing I have cooked this year"></div>
+                    </div>
+                </div>
+                <div class="k6-case">
+                    <p class="k6-label">In a table: the rating cell sorts by its number</p>
+                    <div class="kp-datatable" data-kp-datatable data-kp-page-sizes="none">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="k6-sr-caption kp-sr-only">Recipes with their rating. Click Rating to sort by the number of stars.</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" data-kp-sort="text">Recipe</th>
+                                        <th scope="col" data-kp-sort="number">Rating</th>
+                                        <th scope="col" data-kp-sort="number" class="kp-text-end">Cooked</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td data-label="Recipe">Lasagne</td><td data-label="Rating" data-kp-sort-value="4"><span class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-for="Lasagne" data-kp-rating-value="4"></span></td><td data-label="Cooked" class="kp-text-end kp-numeric">12</td></tr>
+                                    <tr><td data-label="Recipe">Stoofvlees</td><td data-label="Rating" data-kp-sort-value="0"><span class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-for="Stoofvlees" data-kp-rating-value="0"></span></td><td data-label="Cooked" class="kp-text-end kp-numeric">2</td></tr>
+                                    <tr><td data-label="Recipe">Chili con carne</td><td data-label="Rating" data-kp-sort-value="5"><span class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-for="Chili con carne" data-kp-rating-value="5"></span></td><td data-label="Cooked" class="kp-text-end kp-numeric">9</td></tr>
+                                    <tr><td data-label="Recipe">Soupe de poisson</td><td data-label="Rating" data-kp-sort-value="3"><span class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-for="Soupe de poisson" data-kp-rating-value="3"></span></td><td data-label="Cooked" class="kp-text-end kp-numeric">4</td></tr>
+                                    <tr><td data-label="Recipe">Waterzooi</td><td data-label="Rating" data-kp-sort-value="2"><span class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-for="Waterzooi" data-kp-rating-value="2"></span></td><td data-label="Cooked" class="kp-text-end kp-numeric">1</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="k6-case">
+                    <p class="k6-label">Phone width (390 px)</p>
+                    <div class="k6-frame k6-frame--phone">
+                        <div class="kp-rating" data-kp-rating data-kp-rating-for="Lasagne" data-kp-rating-value="4" data-kp-rating-labels="Not for me|Okay|Good|Great|Make again"></div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "calm-d9f4d43f-f09f-4feb-aa4f-e447f8164594", "received": [] }
+        </script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

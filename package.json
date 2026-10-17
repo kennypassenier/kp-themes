@@ -168,6 +168,10 @@
             "types": "./js/range.d.ts",
             "default": "./js/range.js"
         },
+        "./js/rating": {
+            "types": "./js/rating.d.ts",
+            "default": "./js/rating.js"
+        },
         "./js/unsaved": {
             "types": "./js/unsaved.d.ts",
             "default": "./js/unsaved.js"

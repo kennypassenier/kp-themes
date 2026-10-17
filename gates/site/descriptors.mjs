@@ -3807,6 +3807,52 @@ setGanttState(timeline, 'loading');
         ],
     },
     {
+        id: 'rating',
+        title: 'Star rating',
+        group: 'Forms',
+        classes: ['kp-rating'],
+        exports: [],
+        aliases: ['star', 'whole', 'popped', 'previewing', 'readonly'],
+        intro: 'A row of stars to give something a score, and the same row read only to show one. The input is a radio group (one tab stop, the arrows move and choose, Home and End, Backspace clears); the display is one image with a full text name (“Rated 4 of 5”). Whole stars, five of them, by default; the lit stars are the theme’s accent, never red or green. js/rating.js (`attachRatings`, `rating`, `setRating`, `setRatingState`, `ratingCell`, `snapRating`) draws the stars and fires `kp-rating-change`, which the page can refuse or answer with a save.',
+        whenToUse: 'For a score a person gives (a recipe after cooking) or one that is shown (a list sorted by it). For a yes or no use a switch; for a choice between words use the segmented control.',
+        examples: [
+            {
+                title: 'Give a rating, and show one',
+                why: 'The module draws the stars from the attributes. `data-kp-rating-for` names the item in the sentences; the words per level are optional.',
+                markup: `
+<div class="kp-rating" data-kp-rating data-kp-rating-for="Lasagne" data-kp-rating-value="4" data-kp-rating-labels="Not for me|Okay|Good|Great|Make again"></div>
+<div class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-for="Lasagne" data-kp-rating-value="4.5" data-kp-rating-count="12"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-rating-max', what: 'The scale, 3 to 10 (5).' },
+            { name: 'data-kp-rating-step', what: '`1` (whole stars, the default) or `0.5` (the row becomes one slider).' },
+            { name: 'data-kp-rating-mode', what: '`input` (the default) or `display`.' },
+            { name: 'data-kp-rating-value', what: 'The value, 0 to the scale; 0 is not rated.' },
+            { name: 'data-kp-rating-clear', what: '`off` stops the chosen star, Backspace and Delete from removing the rating (the default removes).' },
+            { name: 'data-kp-rating-labels', what: 'One word per level, `Not for me|Okay|Good` or a JSON list; the caption shows the word.' },
+            { name: 'data-kp-rating-size', what: '`sm`, `md` or `lg` (input `md`, display `sm`).' },
+            { name: 'data-kp-rating-commit', what: '`immediate` (the default) or `confirm`, which holds the pick until Save rating.' },
+            { name: 'data-kp-rating-preview', what: '`off` turns off the star shown under the pointer.' },
+            { name: 'data-kp-rating-unrated-text', what: 'The words of an empty row (“Not rated yet”).' },
+            { name: 'data-kp-rating-count', what: 'Display only: how many ratings the number averages, “4.5 (12)”.' },
+            { name: 'data-kp-rating-name', what: 'A hidden input of this name, so the value posts in a plain form.' },
+            { name: 'data-kp-rating-for', what: 'The item’s name in “Rating for Lasagne”.' },
+            { name: 'data-kp-readonly', what: 'Drawn as an input, not changeable, no reason needed.' },
+            { name: 'data-kp-disabled and data-kp-disabled-reason', what: 'A temporary lock, and the sentence under the row.' },
+            { name: 'data-kp-undo-ms and data-kp-flash-error-ms', what: 'The Undo window after a change (6000, 0 for none) and how long a refused save is told (3000).' },
+            { name: 'data-kp-state', what: '`loading` (dashed stars that breathe) or `error` (“Could not read the rating” and Retry, `kp-rating-retry`).' },
+            { name: 'ratingCell(cell, value)', what: 'A display row in a data table cell, and the number the table sorts by on the cell.' },
+            { name: 'marks the module writes', what: '`data-kp-star` (a star’s number), `data-kp-whole`, `data-kp-popped` and `data-kp-previewing` (the star just chosen and the one under the pointer), `data-kp-rating-busy` (a save is on its way).' },
+        ],
+        accessibility: [
+            'Built in — the input is a radio group named “Rating for Lasagne”; each star is “4 of 5” (with a word, “4 of 5, Good”); the display is one image, “Rated 4 of 5”, or “Not rated yet”.',
+            'Built in — a change is said politely (“Lasagne: 4 of 5”) and offers Undo; a refused save puts the previous value back and says so under the row.',
+            'Yours — name the item with `data-kp-rating-for`, and answer `kp-rating-change` (call `event.detail.wait(promise)` for a save).',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

@@ -3335,6 +3335,106 @@ export type Strings = {
      * Choices that could not be read, when the page gives no message [kpadopt4]
      */
     wheelFailed: string;
+    /**
+     * The star row's name for a screen reader: "Rating for Lasagne" (js/rating.js) [kpadopt6]
+     */
+    ratingGroupName: (item: string) => string;
+    /**
+     * The same when the row names no item [kpadopt6]
+     */
+    ratingGroupNameBare: string;
+    /**
+     * One star's name: "4 of 5" [kpadopt6]
+     */
+    ratingStarName: (n: number, max: number) => string;
+    /**
+     * The same with its word: "4 of 5, Good" [kpadopt6]
+     */
+    ratingStarNameLabel: (n: number, max: number, label: string) => string;
+    /**
+     * A display row's name: "Rated 4 of 5" [kpadopt6]
+     */
+    ratingRated: (value: number, max: number) => string;
+    /**
+     * The same with how many people rated: "Rated 4.5 of 5 by 12 people" [kpadopt6]
+     */
+    ratingRatedCount: (value: number, max: number, count: number) => string;
+    /**
+     * The line, and the name, of a row nobody has rated: "Not rated yet" [kpadopt6]
+     */
+    ratingUnrated: string;
+    /**
+     * The caption of an input row with no rating: "Tap a star" [kpadopt6]
+     */
+    ratingTap: string;
+    /**
+     * The small button that removes the rating [kpadopt6]
+     */
+    ratingClear: string;
+    /**
+     * That button's accessible name: "Clear the rating for Lasagne" [kpadopt6]
+     */
+    ratingClearName: (item: string) => string;
+    /**
+     * The caption of a rated row without words per level: "4 of 5" [kpadopt6]
+     */
+    ratingOutOf: (value: number, max: number) => string;
+    /**
+     * An aggregated score: "4.5 (12)" [kpadopt6]
+     */
+    ratingAverage: (value: number, count: number) => string;
+    /**
+     * What is said when the rating changes: "Lasagne: 4 of 5" [kpadopt6]
+     */
+    ratingAnnounce: (item: string, value: number, max: number) => string;
+    /**
+     * What is said when the rating is removed: "Lasagne: rating removed" [kpadopt6]
+     */
+    ratingAnnounceCleared: (item: string) => string;
+    /**
+     * The undo toast's line: "Lasagne: 4 stars" [kpadopt6]
+     */
+    ratingToast: (item: string, value: number) => string;
+    /**
+     * The undo toast's line after Clear [kpadopt6]
+     */
+    ratingToastCleared: (item: string) => string;
+    /**
+     * The row's name while the saved value is read [kpadopt6]
+     */
+    ratingLoading: string;
+    /**
+     * The words that replace the stars when the value could not be read [kpadopt6]
+     */
+    ratingFailedRead: string;
+    /**
+     * Its button [kpadopt6]
+     */
+    ratingRetry: string;
+    /**
+     * The line under the row when a save was refused: "Could not save the rating for Lasagne" [kpadopt6]
+     */
+    ratingSaveFailed: (item: string) => string;
+    /**
+     * The row's description while a save is on its way [kpadopt6]
+     */
+    ratingSaving: string;
+    /**
+     * The button that saves a pending rating (commit confirm) [kpadopt6]
+     */
+    ratingConfirm: string;
+    /**
+     * The button that drops a pending rating [kpadopt6]
+     */
+    ratingCancel: string;
+    /**
+     * The line over those two buttons: "4 of 5, not saved yet" [kpadopt6]
+     */
+    ratingPending: (value: number, max: number) => string;
+    /**
+     * What a screen reader hears on a row that cannot be changed by this person [kpadopt6]
+     */
+    ratingReadonly: string;
 };
 /**
  * @typedef {object} Strings
@@ -4265,6 +4365,31 @@ export type Strings = {
  * @property {string} wheelEmpty  A wheel with no choices, when the page gives no sentence [kpadopt4]
  * @property {string} wheelLoading  The words under its spinner while the choices load [kpadopt4]
  * @property {string} wheelFailed  Choices that could not be read, when the page gives no message [kpadopt4]
+ * @property {(item: string) => string} ratingGroupName  The star row's name for a screen reader: "Rating for Lasagne" (js/rating.js) [kpadopt6]
+ * @property {string} ratingGroupNameBare  The same when the row names no item [kpadopt6]
+ * @property {(n: number, max: number) => string} ratingStarName  One star's name: "4 of 5" [kpadopt6]
+ * @property {(n: number, max: number, label: string) => string} ratingStarNameLabel  The same with its word: "4 of 5, Good" [kpadopt6]
+ * @property {(value: number, max: number) => string} ratingRated  A display row's name: "Rated 4 of 5" [kpadopt6]
+ * @property {(value: number, max: number, count: number) => string} ratingRatedCount  The same with how many people rated: "Rated 4.5 of 5 by 12 people" [kpadopt6]
+ * @property {string} ratingUnrated  The line, and the name, of a row nobody has rated: "Not rated yet" [kpadopt6]
+ * @property {string} ratingTap  The caption of an input row with no rating: "Tap a star" [kpadopt6]
+ * @property {string} ratingClear  The small button that removes the rating [kpadopt6]
+ * @property {(item: string) => string} ratingClearName  That button's accessible name: "Clear the rating for Lasagne" [kpadopt6]
+ * @property {(value: number, max: number) => string} ratingOutOf  The caption of a rated row without words per level: "4 of 5" [kpadopt6]
+ * @property {(value: number, count: number) => string} ratingAverage  An aggregated score: "4.5 (12)" [kpadopt6]
+ * @property {(item: string, value: number, max: number) => string} ratingAnnounce  What is said when the rating changes: "Lasagne: 4 of 5" [kpadopt6]
+ * @property {(item: string) => string} ratingAnnounceCleared  What is said when the rating is removed: "Lasagne: rating removed" [kpadopt6]
+ * @property {(item: string, value: number) => string} ratingToast  The undo toast's line: "Lasagne: 4 stars" [kpadopt6]
+ * @property {(item: string) => string} ratingToastCleared  The undo toast's line after Clear [kpadopt6]
+ * @property {string} ratingLoading  The row's name while the saved value is read [kpadopt6]
+ * @property {string} ratingFailedRead  The words that replace the stars when the value could not be read [kpadopt6]
+ * @property {string} ratingRetry  Its button [kpadopt6]
+ * @property {(item: string) => string} ratingSaveFailed  The line under the row when a save was refused: "Could not save the rating for Lasagne" [kpadopt6]
+ * @property {string} ratingSaving  The row's description while a save is on its way [kpadopt6]
+ * @property {string} ratingConfirm  The button that saves a pending rating (commit confirm) [kpadopt6]
+ * @property {string} ratingCancel  The button that drops a pending rating [kpadopt6]
+ * @property {(value: number, max: number) => string} ratingPending  The line over those two buttons: "4 of 5, not saved yet" [kpadopt6]
+ * @property {string} ratingReadonly  What a screen reader hears on a row that cannot be changed by this person [kpadopt6]
  */
 /**
  * The defaults. English, by Kenny's decision of 2026-09-04 — the package

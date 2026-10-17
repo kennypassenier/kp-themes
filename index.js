@@ -184,6 +184,18 @@ export {
     unsavedSaved,
 } from './js/unsaved.js';
 export {
+    RATING,
+    RATING_EVENT,
+    RATING_RETRY_EVENT,
+    RATING_STATES,
+    attachRatings,
+    rating,
+    ratingCell,
+    setRating,
+    setRatingState,
+    snapRating,
+} from './js/rating.js';
+export {
     SLIDER,
     SLIDER_CHANGE_EVENT,
     SLIDER_INPUT_EVENT,

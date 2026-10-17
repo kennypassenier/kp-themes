@@ -23066,4 +23066,305 @@
     [data-kp-tick] {
         font-variant-numeric: tabular-nums;
     }
+
+    /* --- The star rating [kpadopt6] -------------------------------------------
+ * `.kp-rating[data-kp-rating]` (js/rating.js): a row of stars that is a radio group, and the same row read only. One accent
+ * colour, never red or green; an unrated row is outlined and says so in words. Whole stars (Kenny, 2026-10-17: five whole
+ * stars), 44 px to touch in an input, 56 px each and filling the width on a phone (the input measures its own width, so a
+ * phone-wide box answers like a phone). Knobs [KT6]: --kp-rating-star (the glyph, 1.75rem), --kp-rating-hit (the touch
+ * square, 2.75rem), --kp-rating-ink (the lit star, the accent), --kp-rating-empty (the outline), --kp-rating-stroke (its
+ * width, 1.5), --kp-rating-gap (between stars). The words keep their line, so a value arriving moves nothing. */
+    .kp-rating {
+        --kp-rating-ink: var(--primary);
+        --kp-rating-empty: var(--muted-foreground);
+        min-inline-size: 0;
+        max-inline-size: 100%;
+    }
+
+    .kp-rating--input {
+        container: kp-rating / inline-size;
+        display: block;
+        inline-size: 100%;
+    }
+
+    .kp-rating--display {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .kp-rating__body {
+        display: grid;
+        justify-items: start;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        max-inline-size: 100%;
+    }
+
+    /* The input is as wide as its row of stars (and no narrower than its longest word): words wrap under the row. */
+    .kp-rating--input .kp-rating__body {
+        inline-size: min-content;
+    }
+
+    .kp-rating--display .kp-rating__body {
+        grid-auto-flow: column;
+        align-items: center;
+        column-gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-rating--sm {
+        --kp-rating-star: 1rem;
+        --kp-rating-hit: 2rem;
+    }
+
+    .kp-rating--lg {
+        --kp-rating-star: 2.25rem;
+        --kp-rating-hit: 3.5rem;
+    }
+
+    /* The words and Clear share one line, kept in every state, so a rating arriving or going moves nothing under it. */
+    .kp-rating__foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        inline-size: 100%;
+        min-inline-size: 0;
+    }
+
+    .kp-rating--input .kp-rating__foot {
+        min-block-size: 2rem;
+    }
+
+    .kp-rating--display .kp-rating__foot {
+        inline-size: auto;
+    }
+
+    .kp-rating__clear[data-kp-off] {
+        visibility: hidden;
+    }
+
+    .kp-rating__row {
+        display: flex;
+        gap: var(--kp-rating-gap, 0);
+    }
+
+    .kp-rating__row[hidden],
+    .kp-rating__foot[hidden],
+    .kp-rating__failure[hidden],
+    .kp-rating__flash[hidden],
+    .kp-rating__reason[hidden],
+    .kp-rating__actions[hidden],
+    .kp-rating__actions > [hidden] {
+        display: none;
+    }
+
+    .kp-rating__row:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+
+    .kp-rating__star {
+        display: grid;
+        place-items: center;
+        flex: none;
+        inline-size: var(--kp-rating-hit, 2.75rem);
+        block-size: var(--kp-rating-hit, 2.75rem);
+        color: var(--kp-rating-ink);
+        cursor: pointer;
+    }
+
+    .kp-rating--display .kp-rating__star {
+        inline-size: var(--kp-rating-star, 1.25rem);
+        block-size: var(--kp-rating-star, 1.25rem);
+        cursor: default;
+    }
+
+    .kp-rating--display.kp-rating--md {
+        --kp-rating-star: 1.25rem;
+    }
+
+    .kp-rating__star:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: -2px;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+    }
+
+    .kp-rating__star[aria-disabled='true'] {
+        cursor: default;
+    }
+
+    .kp-rating__glyph {
+        position: relative;
+        display: grid;
+        inline-size: var(--kp-rating-star, 1.75rem);
+        block-size: var(--kp-rating-star, 1.75rem);
+        pointer-events: none;
+    }
+
+    .kp-rating__glyph > svg {
+        grid-area: 1 / 1;
+        inline-size: 100%;
+        block-size: 100%;
+        overflow: visible;
+    }
+
+    .kp-rating__empty path {
+        fill: none;
+        stroke: var(--kp-rating-empty);
+        stroke-width: var(--kp-rating-stroke, 1.5);
+        stroke-linejoin: round;
+    }
+
+    .kp-rating__full path {
+        fill: currentColor;
+        stroke: currentColor;
+        stroke-width: var(--kp-rating-stroke, 1.5);
+        stroke-linejoin: round;
+    }
+
+    /* The lit share of the star: the fill is cut from its end edge, so a half star is the start half. */
+    .kp-rating__full {
+        clip-path: inset(0 calc((1 - var(--kp-rating-fill, 0)) * 100%) 0 0);
+    }
+
+    .kp-rating__star[data-kp-lit] .kp-rating__empty path {
+        stroke: var(--kp-rating-ink);
+    }
+
+    /* A star about to be set under the pointer is lighter than a set one. */
+    .kp-rating[data-kp-previewing] .kp-rating__full {
+        opacity: 0.55;
+    }
+
+    .kp-rating__row:dir(rtl) .kp-rating__full {
+        clip-path: inset(0 0 0 calc((1 - var(--kp-rating-fill, 0)) * 100%));
+    }
+
+    .kp-rating__caption {
+        min-block-size: 1lh;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-rating--display .kp-rating__caption {
+        min-block-size: 0;
+        color: var(--foreground);
+    }
+
+    .kp-rating__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    /* Clear is for a pointer; a touch screen has the star pressed again, and a keyboard Backspace. */
+    @media (hover: none), (pointer: coarse) {
+        .kp-rating__clear {
+            display: none;
+        }
+    }
+
+    .kp-rating__reason,
+    .kp-rating__flash {
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-rating__reason {
+        color: var(--muted-foreground);
+    }
+
+    .kp-rating__flash {
+        color: var(--destructive);
+        font-weight: 600;
+    }
+
+    .kp-rating[data-kp-disabled] .kp-rating__star {
+        opacity: 0.55;
+    }
+
+    .kp-rating[data-kp-rating-busy] .kp-rating__row {
+        cursor: progress;
+    }
+
+    /* Loading: the stars stay at full size as dashed outlines that breathe, so nothing moves when the value arrives. */
+    .kp-rating[data-kp-state='loading'] .kp-rating__empty path {
+        stroke-dasharray: 2.5 2.5;
+    }
+
+    .kp-rating[data-kp-state='loading'] .kp-rating__full {
+        display: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-rating[data-kp-state='loading'] .kp-rating__glyph {
+            animation: kp-pulse 1600ms ease-in-out infinite;
+        }
+
+        .kp-rating__star[data-kp-popped] .kp-rating__glyph {
+            animation: kp-rating-pop 220ms var(--fx-ease, ease-out);
+        }
+
+        @keyframes kp-rating-pop {
+            0% {
+                transform: scale(1);
+            }
+
+            45% {
+                transform: scale(1.22);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+    }
+
+    /* Failed to read: the stars' place is one plate of the same size, the words centred and a normal-size Retry. */
+    .kp-rating[data-kp-state='error'] .kp-rating__body {
+        position: relative;
+    }
+
+    .kp-rating[data-kp-state='error'] :is(.kp-rating__row, .kp-rating__foot) {
+        visibility: hidden;
+    }
+
+    .kp-rating__failure {
+        position: absolute;
+        inset: 0;
+        flex-wrap: wrap;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        text-align: center;
+    }
+
+    .kp-rating__failure-text {
+        overflow-wrap: anywhere;
+    }
+
+    /* A phone-wide box: five 56 px stars fill the width evenly, the words under them, nothing needs hover. */
+    @container kp-rating (max-width: 25rem) {
+        .kp-rating--input .kp-rating__body {
+            inline-size: 100%;
+        }
+
+        .kp-rating--input .kp-rating__row {
+            inline-size: 100%;
+            max-inline-size: calc(var(--kp-rating-max, 5) * 3.5rem);
+        }
+
+        .kp-rating--input .kp-rating__star {
+            flex: 1 1 0;
+            inline-size: auto;
+            block-size: 3.5rem;
+            min-inline-size: 0;
+        }
+    }
 }
