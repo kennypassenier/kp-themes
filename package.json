@@ -452,6 +452,10 @@
             "types": "./js/claim.d.ts",
             "default": "./js/claim.js"
         },
+        "./js/availability": {
+            "types": "./js/availability.d.ts",
+            "default": "./js/availability.js"
+        },
         "./js/strings": {
             "types": "./js/strings.d.ts",
             "default": "./js/strings.js"

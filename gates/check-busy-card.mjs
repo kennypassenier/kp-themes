@@ -63,6 +63,7 @@ export const OWN = {
 
 /** Modules whose loading is not a data area's. @type {Record<string, string>} */
 export const NOT_DATA = {
+    'js/availability.js': "loading is js/heat.js's own busy card over the grid's cells, with the names beside it; this module only hands heat the state",
     'js/claim.js': "the loading state is the checklist's own busy card over its body; the claim cell adds no loading area of its own",
     'js/action-tiles.js': "a tile is a button: its spinner stands in the tile's own mark",
     'js/statusrow.js': 'each row carries its own spinner while that one item is read; the list stays usable',

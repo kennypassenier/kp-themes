@@ -3839,6 +3839,45 @@ setGanttState(timeline, 'loading');
         ],
     },
     {
+        id: 'availability',
+        title: 'Who can come',
+        group: 'Data',
+        classes: ['kp-availability'],
+        exports: [],
+        intro: 'People in the rows, days or proposed periods in the columns: each person answers can, maybe or cannot for their own row, the summary row counts who can, and the best column is ringed. The package’s heat grid, made editable.',
+        whenToUse: 'Finding a date that suits a group: a trip, a meeting, a shared dinner. For a read-only grid of states use the heat grid.',
+        examples: [
+            {
+                title: 'Who can come to a trip',
+                why: 'The page gives the people, the columns and the answers; the module draws the grid, answers presses and says what changed.',
+                markup: `
+<div class="kp-availability" data-kp-availability data-kp-availability-choose aria-label="Who can come"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-heat-edit', what: '`own` (default), `all` or `off`: whose cells a press changes.' },
+            { name: 'data-kp-availability-answers', what: '`3` (can, maybe, cannot; default) or `2`.' },
+            { name: 'data-kp-availability-press', what: '`cycle` (default) or `menu`.' },
+            { name: 'data-kp-availability-paint', what: 'Drag across your row to give the same answer; `false` turns it off.' },
+            { name: 'data-kp-availability-best', what: '`most` (default), `everyone` or `none`.' },
+            { name: 'data-kp-availability-best-rule', what: '`yes-count` (default) or `no-nobody`.' },
+            { name: 'data-kp-availability-quorum', what: 'How many must answer a column before it can be best.' },
+            { name: 'data-kp-availability-window', what: 'In day mode, the best stretch of this many days is marked.' },
+            { name: 'data-kp-availability-sort', what: '`mine-first` (default), `given` or `answered-first`.' },
+            { name: 'data-kp-availability-summary', what: '`both` (default), `count` or `bar`.' },
+            { name: 'data-kp-availability-choose', what: 'Shows Choose these dates on the best column.' },
+            { name: 'data-kp-availability-locked', what: 'Column keys nobody can change any more.' },
+            { name: 'data-kp-availability-narrow', what: '`scroll` (default) or `by-column`, a list per column on a phone.' },
+            { name: 'data-kp-availability-undo-ms', what: 'Undo after a stroke (6000).' },
+            { name: 'data-kp-availability-density', what: '`comfortable` (default) or `compact` cells.' },
+        ],
+        accessibility: [
+            'Built in — every answer is a glyph and a word as well as a tone; each cell is named by person, column and answer; changes and a refusal are announced politely; y, m, n and Backspace set an answer on your own row.',
+            'Yours — answer `kp-availability-change` with `detail.settle(promise)` and say which person is yours (`mine: true`).',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',

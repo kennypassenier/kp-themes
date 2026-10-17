@@ -706,3 +706,26 @@ export {
 /** @typedef {import('./js/claim.js').ClaimInfo} ClaimInfo */
 /** @typedef {import('./js/claim.js').ClaimPerson} ClaimPerson */
 /** @typedef {import('./js/claim.js').ClaimDetail} ClaimDetail */
+// Who can come: availability of people over days or periods [kpadopt6].
+export {
+    AVAILABILITY,
+    AVAILABILITY_ANSWERS,
+    AVAILABILITY_CHOOSE_EVENT,
+    AVAILABILITY_EVENT,
+    AVAILABILITY_REFUSED_MS,
+    AVAILABILITY_RETRY_EVENT,
+    AVAILABILITY_UNDO_MS,
+    AVAILABILITY_UNIT_EVENT,
+    attachAvailability,
+    availabilityAnswers,
+    availabilityBest,
+    availabilityDays,
+    availabilityRange,
+    setAvailability,
+    setAvailabilityAnswer,
+} from './js/availability.js';
+/** @typedef {import('./js/availability.js').AvailabilitySpec} AvailabilitySpec */
+/** @typedef {import('./js/availability.js').AvailabilityPerson} AvailabilityPerson */
+/** @typedef {import('./js/availability.js').AvailabilityColumn} AvailabilityColumn */
+/** @typedef {import('./js/availability.js').AvailabilityAnswers} AvailabilityAnswers */
+/** @typedef {import('./js/availability.js').AvailabilityAnswer} AvailabilityAnswer */

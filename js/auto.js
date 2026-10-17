@@ -274,6 +274,7 @@ export const NEEDS = [
         attach: (m, root) => [m.attachMotion(root)],
     },
     { name: 'claim', when: '[data-kp-checklist-claim]', load: () => import('./claim.js'), attach: (m, root) => [m.attachClaims(root)] },
+    { name: 'availability', when: '[data-kp-availability]', load: () => import('./availability.js'), attach: (m, root) => [m.attachAvailability(root)] },
 ];
 
 /** Set on <html> once the boot's `attachAll()` has attached everything the page needed: the names fetched, space-separated. */

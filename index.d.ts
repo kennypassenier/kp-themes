@@ -208,3 +208,14 @@ export type ClaimDetail = import('./js/claim.js').ClaimDetail;
 /** @typedef {import('./js/claim.js').ClaimInfo} ClaimInfo */
 /** @typedef {import('./js/claim.js').ClaimPerson} ClaimPerson */
 /** @typedef {import('./js/claim.js').ClaimDetail} ClaimDetail */
+export { AVAILABILITY, AVAILABILITY_ANSWERS, AVAILABILITY_CHOOSE_EVENT, AVAILABILITY_EVENT, AVAILABILITY_REFUSED_MS, AVAILABILITY_RETRY_EVENT, AVAILABILITY_UNDO_MS, AVAILABILITY_UNIT_EVENT, attachAvailability, availabilityAnswers, availabilityBest, availabilityDays, availabilityRange, setAvailability, setAvailabilityAnswer, } from './js/availability.js';
+export type AvailabilitySpec = import('./js/availability.js').AvailabilitySpec;
+export type AvailabilityPerson = import('./js/availability.js').AvailabilityPerson;
+export type AvailabilityColumn = import('./js/availability.js').AvailabilityColumn;
+export type AvailabilityAnswers = import('./js/availability.js').AvailabilityAnswers;
+export type AvailabilityAnswer = import('./js/availability.js').AvailabilityAnswer;
+/** @typedef {import('./js/availability.js').AvailabilitySpec} AvailabilitySpec */
+/** @typedef {import('./js/availability.js').AvailabilityPerson} AvailabilityPerson */
+/** @typedef {import('./js/availability.js').AvailabilityColumn} AvailabilityColumn */
+/** @typedef {import('./js/availability.js').AvailabilityAnswers} AvailabilityAnswers */
+/** @typedef {import('./js/availability.js').AvailabilityAnswer} AvailabilityAnswer */

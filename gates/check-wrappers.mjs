@@ -230,6 +230,12 @@ export const REQUIRED = [
         why: 'The checklist measures its own width and lays the claim cell under the label when narrow; the query reaches only its own rows [kpadopt6-social].',
     },
     {
+        container: 'kp-availability',
+        class: 'kp-availability',
+        self: true,
+        why: 'The grid measures its own width and offers a list per column on a phone; the query reaches only its own parts [kpadopt6-social].',
+    },
+    {
         container: 'kp-range',
         class: 'kp-range',
         self: true,

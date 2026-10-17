@@ -3519,6 +3519,150 @@ export type Strings = {
      * The sheet's line for Shift C (js/claim.js) [kpadopt6]
      */
     claimKeyGaps: string;
+    /**
+     * A proposed period's length under its dates (js/availability.js) [kpadopt6]
+     */
+    availabilityDaysLong: (n: number) => string;
+    /**
+     * The answer yes, in a cell's name, the legend and the list (js/availability.js) [kpadopt6]
+     */
+    availabilityYes: string;
+    /**
+     * The answer maybe (js/availability.js) [kpadopt6]
+     */
+    availabilityMaybe: string;
+    /**
+     * The answer no (js/availability.js) [kpadopt6]
+     */
+    availabilityNo: string;
+    /**
+     * A cell nobody filled (js/availability.js) [kpadopt6]
+     */
+    availabilityNone: string;
+    /**
+     * The line over a grid nobody has answered (js/availability.js) [kpadopt6]
+     */
+    availabilityNobodyAnswered: string;
+    /**
+     * One column's exact count (js/availability.js) [kpadopt6]
+     */
+    availabilityCount: (yes: number, total: number) => string;
+    /**
+     * The line over the grid (js/availability.js) [kpadopt6]
+     */
+    availabilityAnswered: (n: number, total: number) => string;
+    /**
+     * The best column in words (js/availability.js) [kpadopt6]
+     */
+    availabilityBestLine: (labels: string, count: string) => string;
+    /**
+     * The button on the best column (js/availability.js) [kpadopt6]
+     */
+    availabilityChoose: string;
+    /**
+     * The organiser's switch between periods and days (js/availability.js) [kpadopt6]
+     */
+    availabilityUnitLabel: string;
+    /**
+     * Its first choice (js/availability.js) [kpadopt6]
+     */
+    availabilityByPeriod: string;
+    /**
+     * Its second choice (js/availability.js) [kpadopt6]
+     */
+    availabilityByDay: string;
+    /**
+     * The failed plate's heading (js/availability.js) [kpadopt6]
+     */
+    availabilityFailedTitle: string;
+    /**
+     * Its sentence (js/availability.js) [kpadopt6]
+     */
+    availabilityFailedText: string;
+    /**
+     * The empty plate's heading (js/availability.js) [kpadopt6]
+     */
+    availabilityEmptyTitle: string;
+    /**
+     * Its sentence (js/availability.js) [kpadopt6]
+     */
+    availabilityEmptyText: string;
+    /**
+     * The failed plate's button (js/availability.js) [kpadopt6]
+     */
+    availabilityRetry: string;
+    /**
+     * The grid's name when the page gives none (js/availability.js) [kpadopt6]
+     */
+    availabilityGroup: string;
+    /**
+     * The summary row's name (js/availability.js) [kpadopt6]
+     */
+    availabilitySummaryLabel: string;
+    /**
+     * Your own row's name (js/availability.js) [kpadopt6]
+     */
+    availabilityYou: (name: string) => string;
+    /**
+     * The legend's word for the best column (js/availability.js) [kpadopt6]
+     */
+    availabilityBestWord: string;
+    /**
+     * A cell's name for a screen reader (js/availability.js) [kpadopt6]
+     */
+    availabilityCell: (name: string, column: string, answer: string) => string;
+    /**
+     * The line when a change was refused (js/availability.js) [kpadopt6]
+     */
+    availabilityNotSaved: (label: string) => string;
+    /**
+     * Said when a column becomes complete (js/availability.js) [kpadopt6]
+     */
+    availabilityEveryone: (label: string) => string;
+    /**
+     * Said after a stroke (js/availability.js) [kpadopt6]
+     */
+    availabilityYourAnswers: (yes: number, maybe: number, no: number) => string;
+    /**
+     * The toast after a stroke (js/availability.js) [kpadopt6]
+     */
+    availabilityStroke: (n: number) => string;
+    /**
+     * Said after one cell changed (js/availability.js) [kpadopt6]
+     */
+    availabilityCellSaid: (name: string, label: string, word: string) => string;
+    /**
+     * The menu entry that empties a cell (js/availability.js) [kpadopt6]
+     */
+    availabilityClear: string;
+    /**
+     * The shortcut sheet's line for y (js/availability.js) [kpadopt6]
+     */
+    availabilityKeyYes: string;
+    /**
+     * The line for m (js/availability.js) [kpadopt6]
+     */
+    availabilityKeyMaybe: string;
+    /**
+     * The line for n (js/availability.js) [kpadopt6]
+     */
+    availabilityKeyNo: string;
+    /**
+     * The line for Backspace (js/availability.js) [kpadopt6]
+     */
+    availabilityKeyClear: string;
+    /**
+     * The sheet's heading (js/availability.js) [kpadopt6]
+     */
+    availabilityKeyGroup: string;
+    /**
+     * Why those keys do nothing now (js/availability.js) [kpadopt6]
+     */
+    availabilityKeyReason: string;
+    /**
+     * Why every cell is inert when the page gives no reason (js/availability.js) [kpadopt6]
+     */
+    availabilityDisabled: string;
 };
 /**
  * @typedef {object} Strings
@@ -4495,6 +4639,42 @@ export type Strings = {
  * @property {string} claimKeyGroup  The sheet's heading for the claim keys (js/claim.js) [kpadopt6]
  * @property {string} claimKeyReason  Why c does nothing now (js/claim.js) [kpadopt6]
  * @property {string} claimKeyGaps  The sheet's line for Shift C (js/claim.js) [kpadopt6]
+ * @property {(n: number) => string} availabilityDaysLong  A proposed period's length under its dates (js/availability.js) [kpadopt6]
+ * @property {string} availabilityYes  The answer yes, in a cell's name, the legend and the list (js/availability.js) [kpadopt6]
+ * @property {string} availabilityMaybe  The answer maybe (js/availability.js) [kpadopt6]
+ * @property {string} availabilityNo  The answer no (js/availability.js) [kpadopt6]
+ * @property {string} availabilityNone  A cell nobody filled (js/availability.js) [kpadopt6]
+ * @property {string} availabilityNobodyAnswered  The line over a grid nobody has answered (js/availability.js) [kpadopt6]
+ * @property {(yes: number, total: number) => string} availabilityCount  One column's exact count (js/availability.js) [kpadopt6]
+ * @property {(n: number, total: number) => string} availabilityAnswered  The line over the grid (js/availability.js) [kpadopt6]
+ * @property {(labels: string, count: string) => string} availabilityBestLine  The best column in words (js/availability.js) [kpadopt6]
+ * @property {string} availabilityChoose  The button on the best column (js/availability.js) [kpadopt6]
+ * @property {string} availabilityUnitLabel  The organiser's switch between periods and days (js/availability.js) [kpadopt6]
+ * @property {string} availabilityByPeriod  Its first choice (js/availability.js) [kpadopt6]
+ * @property {string} availabilityByDay  Its second choice (js/availability.js) [kpadopt6]
+ * @property {string} availabilityFailedTitle  The failed plate's heading (js/availability.js) [kpadopt6]
+ * @property {string} availabilityFailedText  Its sentence (js/availability.js) [kpadopt6]
+ * @property {string} availabilityEmptyTitle  The empty plate's heading (js/availability.js) [kpadopt6]
+ * @property {string} availabilityEmptyText  Its sentence (js/availability.js) [kpadopt6]
+ * @property {string} availabilityRetry  The failed plate's button (js/availability.js) [kpadopt6]
+ * @property {string} availabilityGroup  The grid's name when the page gives none (js/availability.js) [kpadopt6]
+ * @property {string} availabilitySummaryLabel  The summary row's name (js/availability.js) [kpadopt6]
+ * @property {(name: string) => string} availabilityYou  Your own row's name (js/availability.js) [kpadopt6]
+ * @property {string} availabilityBestWord  The legend's word for the best column (js/availability.js) [kpadopt6]
+ * @property {(name: string, column: string, answer: string) => string} availabilityCell  A cell's name for a screen reader (js/availability.js) [kpadopt6]
+ * @property {(label: string) => string} availabilityNotSaved  The line when a change was refused (js/availability.js) [kpadopt6]
+ * @property {(label: string) => string} availabilityEveryone  Said when a column becomes complete (js/availability.js) [kpadopt6]
+ * @property {(yes: number, maybe: number, no: number) => string} availabilityYourAnswers  Said after a stroke (js/availability.js) [kpadopt6]
+ * @property {(n: number) => string} availabilityStroke  The toast after a stroke (js/availability.js) [kpadopt6]
+ * @property {(name: string, label: string, word: string) => string} availabilityCellSaid  Said after one cell changed (js/availability.js) [kpadopt6]
+ * @property {string} availabilityClear  The menu entry that empties a cell (js/availability.js) [kpadopt6]
+ * @property {string} availabilityKeyYes  The shortcut sheet's line for y (js/availability.js) [kpadopt6]
+ * @property {string} availabilityKeyMaybe  The line for m (js/availability.js) [kpadopt6]
+ * @property {string} availabilityKeyNo  The line for n (js/availability.js) [kpadopt6]
+ * @property {string} availabilityKeyClear  The line for Backspace (js/availability.js) [kpadopt6]
+ * @property {string} availabilityKeyGroup  The sheet's heading (js/availability.js) [kpadopt6]
+ * @property {string} availabilityKeyReason  Why those keys do nothing now (js/availability.js) [kpadopt6]
+ * @property {string} availabilityDisabled  Why every cell is inert when the page gives no reason (js/availability.js) [kpadopt6]
  */
 /**
  * The defaults. English, by Kenny's decision of 2026-09-04 — the package

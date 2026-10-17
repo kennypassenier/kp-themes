@@ -217,6 +217,149 @@
                     </div>
                 </div>
             </section>
+
+            <!-- ================================================================ availability-grid -->
+            <h2 class="kd-topic" id="topic-availability-grid">Who can come</h2>
+            <section
+                class="k6-sec"
+                id="availability-grid"
+                data-review-item="availability-grid"
+                data-review-topic="availability-grid"
+                data-review-topic-title="Who can come"
+                data-review-components="availability"
+                data-review-title="Who can come: people over days or periods"
+                aria-labelledby="h-availability-grid"
+                data-review-choices='[
+  { "id": "press", "label": "What does a press on your own cell do?", "options": [
+    { "value": "cycle", "label": "Cycle: empty, can, maybe, cannot, empty (recommended)", "hint": "One tap per cell, also on a phone. Space and Enter do the same, y m n set an answer straight away." },
+    { "value": "menu", "label": "Open the answers in a small menu", "hint": "Two taps per cell, but you never pass an answer you did not want on the way." } ] },
+  { "id": "best", "label": "Which column is marked as the best?", "options": [
+    { "value": "most", "label": "The one with most who can, once everybody answered (recommended)", "hint": "Ties go to the column with the fewest who cannot. Several columns can share the mark." },
+    { "value": "everyone", "label": "Only a column where everybody can", "hint": "Stricter: a column with one person who cannot is never marked, even when it is the closest." } ] },
+  { "id": "summary", "label": "What does the summary row show?", "options": [
+    { "value": "both", "label": "The number and a fill from the bottom (recommended)", "hint": "The number is the fact, the fill is the scan aid." },
+    { "value": "count", "label": "The number only", "hint": "Plainest; no fill to compare." },
+    { "value": "bar", "label": "The fill only", "hint": "Quickest to scan, but the exact number is only in the hover card." } ] },
+  { "id": "unit", "label": "Does the organiser choose per trip between periods and days?", "options": [
+    { "value": "switch", "label": "Yes: a switch per trip, periods or days (Kenny, 2026-10-17)", "hint": "Periods are the dates somebody proposed; days let people paint a weekend in one stroke." },
+    { "value": "period", "label": "Periods only", "hint": "No switch; every trip is asked per proposed period." } ] }
+]'
+            >
+                <div class="k6-sec__head">
+                    <h2 id="h-availability-grid">Who can come</h2>
+                    <p>
+                        People in the rows, days or proposed periods in the columns. Each person sets their own row; the column everybody can is ringed
+                        and starred. It is the package's heat grid, made editable. An organiser can switch a trip between periods and days.
+                    </p>
+                </div>
+                <div class="k6-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Your own row (Kenny, on top, with a blue edge round its cells) answers a press: <b>empty, can, maybe, cannot</b>, each a glyph
+                            (check, tilde, cross) and a tone. The other rows do not react. The summary row fills from the bottom with the number who can;
+                            under the grid the legend explains the three glyphs and the ring.
+                        </li>
+                        <li>
+                            Press a cell: only that cell shows the spinner for a moment, then the answer. Press <b>Make the server refuse</b> first and the
+                            cell goes back, shows a <b>!</b> on red for 3 seconds and a line says which cell was not saved.
+                        </li>
+                        <li>
+                            <b>Drag across your own row</b> (mouse): every cell you cross gets the same answer, and one Undo (6 seconds) takes the whole stroke back.
+                            With a cell focused, <b>y</b> <b>m</b> <b>n</b> set can, maybe and cannot, <b>Backspace</b> clears; in someone else's row they do nothing.
+                        </li>
+                        <li>
+                            <b>Choose these dates</b> appears once the best column is known. The switch <b>Periods / Days</b> swaps the columns (the answers
+                            are kept per set). A column header press picks the column; a summary cell's hover card names who can, maybe and cannot.
+                        </li>
+                        <li>
+                            Loading keeps the grid's shape with the busy card over it and the names beside it; <b>No dates yet</b> and <b>Failed</b> are plates
+                            at the grid's full height, the failed one with Retry; <b>Dates chosen</b> makes every cell inert and says why. At 390 px the name
+                            column stays and the columns scroll; the second phone frame shows the list per column.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal's plain ground: the tones are the package's own quiet green, amber and red, the best column a 2 px navy ring, and your row's
+                        cells carry a thin navy edge so it is the one that looks pressable.
+                    </p>
+                </div>
+                <div class="k6-controls" data-review-controls>
+                    <div role="group" aria-label="Grid state">
+                        <b>Grid state:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-av-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-av-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-av-state="empty" aria-pressed="false">No dates yet</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-av-state="nobody" aria-pressed="false">Nobody answered</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-av-state="error" aria-pressed="false">Failed</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-av-state="chosen" aria-pressed="false">Dates chosen</button>
+                    </div>
+                    <div role="group" aria-label="The server">
+                        <b>The server:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-av-server="saves" aria-pressed="true">Saves</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-av-server="refuses" aria-pressed="false">Make the server refuse</button>
+                    </div>
+                    <div role="group" aria-label="Another person answers">
+                        <b>Another person acts:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k6-av-push="">Lies answers the empty cells (a push update)</button>
+                    </div>
+                </div>
+                <p class="k6-readout" role="status" data-k6-av-readout>Nothing pressed yet.</p>
+                <div class="k6-pair">
+                    <div class="k6-stack">
+                        <p class="k6-label">The trip, full width (inside a flex row too)</p>
+                        <div class="k6-flexrow">
+                            <div
+                                class="kp-availability"
+                                data-kp-availability
+                                data-kp-availability-choose
+                                data-kp-availability-narrow="by-column"
+                                data-kp-remember="av-main"
+                                id="k6-av"
+                                aria-label="Who can come to the Ardennes weekend"
+                            ></div>
+                        </div>
+                    </div>
+                    <div class="k6-stack">
+                        <p class="k6-label">390 px, scrolling sideways</p>
+                        <div class="k6-frame k6-frame--phone">
+                            <div class="kp-availability" data-kp-availability id="k6-av-phone" aria-label="Who can come, phone"></div>
+                        </div>
+                        <p class="k6-label">390 px, a list per column</p>
+                        <div class="k6-frame k6-frame--phone">
+                            <div
+                                class="kp-availability"
+                                data-kp-availability
+                                data-kp-availability-narrow="by-column"
+                                data-kp-availability-keys="false"
+                                id="k6-av-list"
+                                aria-label="Who can come, list"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="k6-label">Each choice, side by side</p>
+                <div class="k6-trio">
+                    <div class="k6-stack">
+                        <p class="k6-note"><b>A press opens the answers</b></p>
+                        <div class="kp-availability" data-kp-availability data-kp-availability-press="menu" data-kp-availability-keys="false" id="k6-av-menu" aria-label="Who can come, menu"></div>
+                    </div>
+                    <div class="k6-stack">
+                        <p class="k6-note"><b>Best only where everybody can; number only; can or cannot</b></p>
+                        <div
+                            class="kp-availability"
+                            data-kp-availability
+                            data-kp-availability-best="everyone"
+                            data-kp-availability-summary="count"
+                            data-kp-availability-answers="2"
+                            data-kp-availability-keys="false"
+                            id="k6-av-strict"
+                            aria-label="Who can come, strict"
+                        ></div>
+                    </div>
+                </div>
+            </section>
 <!-- @@sections -->
         </main>
         <script type="application/json" data-review-round>

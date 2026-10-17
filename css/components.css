@@ -23307,3 +23307,316 @@
         }
     }
 }
+
+@layer kp.components {
+    /* --- Who can come: people over days or periods [kpadopt6] -------------
+ *
+ * The heat grid made editable. The cells are a fingertip (2.75rem) square and carry a glyph (a check, a tilde, a
+ * cross) as well as the tone, so colour is never the only sign; the person's own row is the one that answers a press,
+ * the others stand still. The name column and the axis stay while the grid scrolls sideways; the summary row's cells
+ * fill from the bottom with the number who can; the best column is ringed and starred. Loading, empty and failed all
+ * keep the body's height (`--kp-availability-body-min`). */
+    .kp-availability {
+        --kp-availability-cell: 2.75rem;
+        --kp-availability-label: 9rem;
+        --kp-availability-body-min: 17rem;
+        container: kp-availability / inline-size;
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        inline-size: 100%;
+        min-inline-size: 0;
+        position: relative;
+    }
+
+    .kp-availability[data-kp-availability-density='compact'] {
+        --kp-availability-cell: 2rem;
+    }
+
+    .kp-availability__head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        min-block-size: var(--kp-button-height-sm, 1.75rem);
+    }
+
+    .kp-availability__line {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-availability__bestline {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-availability__body {
+        position: relative;
+        min-block-size: var(--kp-availability-body-min);
+        min-inline-size: 0;
+    }
+
+    .kp-availability__plate {
+        min-block-size: var(--kp-availability-body-min);
+        box-sizing: border-box;
+    }
+
+    .kp-availability__grid.kp-heat {
+        --kp-heat-cell-height: var(--kp-availability-cell);
+        --kp-heat-summary-height: var(--kp-availability-cell);
+        --kp-heat-cell-gap: 3px;
+        --kp-heat-gap-y: 4px;
+        grid-template-columns: var(--kp-availability-label) minmax(calc(var(--kp-heat-cols, 4) * (var(--kp-availability-cell) + 3px)), 1fr);
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        padding-block-end: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-availability__grid .kp-heat__cells {
+        grid-template-columns: repeat(var(--kp-heat-cols, 4), minmax(var(--kp-availability-cell), 1fr));
+    }
+
+    .kp-availability__grid .kp-heat__label {
+        position: sticky;
+        inset-inline-start: 0;
+        z-index: 1;
+        padding-inline-end: var(--kp-space-sm, 0.5rem);
+        background: var(--background);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-availability__grid .kp-heat__label-text {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+    }
+
+    .kp-availability__grid .kp-heat__axis {
+        min-block-size: 0;
+    }
+
+    .kp-availability__grid .kp-heat__col {
+        flex-direction: column;
+        align-items: center;
+        gap: 1px;
+        padding-inline: 2px;
+        color: var(--foreground);
+        text-align: center;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-availability__col-label {
+        font-weight: 600;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-availability__col-sub {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-availability__grid .kp-heat__col[data-kp-availability-star] .kp-availability__col-label::before {
+        content: var(--kp-glyph-best, '★') '\00a0';
+    }
+
+    .kp-availability__grid .kp-heat__col[data-kp-availability-closed] .kp-availability__col-label::after {
+        content: '\00a0' var(--kp-glyph-lock, '•');
+        color: var(--muted-foreground);
+    }
+
+    .kp-availability__grid .kp-heat__cell {
+        display: grid;
+        place-items: center;
+        color: var(--card);
+        font-size: var(--kp-text-md, 1rem);
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .kp-availability__face {
+        display: grid;
+        place-items: center;
+        pointer-events: none;
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-availability__grid .kp-heat__cell[data-kp-tone='muted']:not([data-kp-share]) {
+        --kp-heat-fill: var(--muted);
+        border: 1px dashed var(--border-strong);
+    }
+
+    .kp-availability__grid .kp-heat__cell[data-kp-availability-editable] {
+        cursor: pointer;
+    }
+
+    .kp-availability__grid .kp-heat__cell[data-kp-inert] {
+        cursor: default;
+    }
+
+    .kp-availability__grid .kp-heat__row[data-kp-availability-mine] .kp-heat__cell[data-kp-availability-editable] {
+        box-shadow: 0 0 0 1.5px var(--primary);
+    }
+
+    .kp-availability__grid .kp-heat__cell[data-kp-availability-painting] {
+        outline: 2px solid var(--primary);
+        outline-offset: 1px;
+    }
+
+    .kp-availability__grid .kp-heat__cell[data-kp-availability-saving] {
+        --kp-heat-fill: var(--muted);
+        cursor: progress;
+    }
+
+    .kp-availability__face > .kp-spinner {
+        --kp-spinner-size: 1.125rem;
+    }
+
+    .kp-availability__grid .kp-heat__cell[data-kp-availability-refused] {
+        --kp-heat-fill: var(--destructive);
+        outline: 2px solid var(--destructive);
+        outline-offset: 1px;
+    }
+
+    .kp-availability__grid .kp-heat__cell[data-kp-availability-star] {
+        outline: 2px solid var(--primary);
+        outline-offset: 1px;
+    }
+
+    .kp-availability__grid .kp-heat__row--summary .kp-heat__cell {
+        color: var(--foreground);
+    }
+
+    .kp-availability__grid:not([data-kp-availability-fill]) .kp-heat__cell[data-kp-share]::before {
+        display: none;
+    }
+
+    .kp-availability__grid .kp-heat__cell[data-kp-share][data-kp-tone='ok'],
+    .kp-availability__grid .kp-heat__cell[data-kp-share][data-kp-tone='warn'],
+    .kp-availability__grid .kp-heat__cell[data-kp-share][data-kp-tone='bad'] {
+        color: var(--foreground);
+    }
+
+    .kp-availability__legend-glyph {
+        inline-size: 1ch;
+        font-weight: 700;
+    }
+
+    .kp-availability__best-swatch {
+        display: inline-block;
+        inline-size: 0.75rem;
+        block-size: 0.75rem;
+        border: 2px solid var(--primary);
+        border-radius: 2px;
+    }
+
+    .kp-availability__foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        min-block-size: var(--kp-button-height, 2.25rem);
+    }
+
+    .kp-availability__why {
+        margin: 0;
+        color: var(--destructive);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-availability__menu {
+        position: absolute;
+        z-index: 5;
+        display: grid;
+        min-inline-size: 9rem;
+        padding: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-availability__menu-item[aria-checked='true'] {
+        font-weight: 700;
+    }
+
+    .kp-availability__columns {
+        display: none;
+    }
+
+    @container kp-availability (max-width: 34rem) {
+        .kp-availability {
+            --kp-availability-label: 6rem;
+        }
+
+        .kp-availability[data-kp-availability-narrow='by-column'] .kp-availability__grid {
+            display: none;
+        }
+
+        .kp-availability[data-kp-availability-narrow='by-column'] .kp-availability__columns {
+            display: grid;
+            gap: var(--kp-space-md, 0.75rem);
+        }
+
+        .kp-availability__foot .kp-availability__choose {
+            inline-size: 100%;
+            min-block-size: 2.75rem;
+        }
+    }
+
+    .kp-availability__column {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        padding: var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+    }
+
+    .kp-availability__column-head {
+        margin: 0;
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    .kp-availability__column-sum {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-availability__column-list {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-availability__column-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-block-size: 2.75rem;
+    }
+
+    .kp-availability__column-answers {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-availability__pick {
+        min-block-size: 2.75rem;
+    }
+
+    .kp-availability__pick[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: hsl(from var(--primary) h s l / 0.12);
+    }
+}

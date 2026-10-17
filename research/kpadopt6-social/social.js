@@ -2,6 +2,7 @@
 // module; this file only fills the components, answers the demo's buttons and plays the parts a server would play.
 import { getChecklistItems, setChecklistItems, setChecklistState } from '../../js/checklist.js';
 import { setClaim, setClaimPeople, setClaimViewer } from '../../js/claim.js';
+import { availabilityAnswers, availabilityDays, availabilityRange, setAvailability, setAvailabilityAnswer } from '../../js/availability.js';
 
 /** @param {string} sel @param {ParentNode} [root] @returns {HTMLElement | null} */
 const $ = (sel, root = document) => /** @type {HTMLElement | null} */ (root.querySelector(sel));
@@ -148,5 +149,124 @@ onReady(() => {
             if (first) setClaim(list, first.id, { by: [ANNA] });
         }
         if (readout) readout.textContent = 'Anna took the first free item (a push update, no event).';
+    });
+});
+
+// ---------------------------------------------------------------- availability-grid (who can come)
+
+const AV_PEOPLE = [
+    { id: 'kenny', name: 'Kenny', mine: true },
+    { id: 'tom', name: 'Tom' },
+    { id: 'anna', name: 'Anna' },
+    { id: 'bo', name: 'Bo Vandenbroucke-Lemmens' },
+    { id: 'lies', name: 'Lies' },
+];
+const RANGES = [
+    availabilityRange('2026-11-06', '2026-11-08'),
+    availabilityRange('2026-11-13', '2026-11-15'),
+    availabilityRange('2026-11-20', '2026-11-22'),
+    availabilityRange('2026-11-27', '2026-12-01'),
+];
+const DAYS = availabilityDays('2026-11-06', 9);
+
+/** @returns {import('../../js/availability.js').AvailabilitySpec} */
+const avSpec = (/** @type {{ state?: any, nobody?: boolean, people?: any, unit?: 'day'|'range', switchable?: boolean }} */ opts = {}) => {
+    const r = RANGES.map((c) => c.key);
+    const days = DAYS.map((c) => c.key);
+    const ranges = opts.nobody
+        ? {}
+        : {
+              kenny: { [r[0]]: 'yes', [r[1]]: 'maybe' },
+              tom: { [r[0]]: 'no', [r[1]]: 'yes', [r[2]]: 'yes', [r[3]]: 'maybe' },
+              anna: { [r[0]]: 'yes', [r[1]]: 'yes', [r[2]]: 'no', [r[3]]: 'yes' },
+              bo: { [r[1]]: 'yes', [r[2]]: 'yes' },
+              lies: { [r[0]]: 'maybe', [r[1]]: 'yes' },
+          };
+    const dayAnswers = opts.nobody
+        ? {}
+        : {
+              kenny: { [days[0]]: 'yes', [days[1]]: 'yes', [days[2]]: 'yes', [days[7]]: 'maybe' },
+              tom: { [days[0]]: 'no', [days[1]]: 'yes', [days[2]]: 'yes', [days[7]]: 'yes', [days[8]]: 'yes' },
+              anna: { [days[0]]: 'yes', [days[1]]: 'yes', [days[2]]: 'yes', [days[7]]: 'yes' },
+              bo: { [days[1]]: 'yes', [days[2]]: 'yes', [days[7]]: 'maybe' },
+              lies: { [days[1]]: 'yes', [days[2]]: 'maybe', [days[7]]: 'yes' },
+          };
+    return {
+        unit: opts.unit ?? 'range',
+        people: opts.people ?? AV_PEOPLE,
+        canSwitchUnit: opts.switchable ?? false,
+        sets: { range: { columns: RANGES, answers: ranges }, day: { columns: DAYS, answers: dayAnswers } },
+        state: opts.state ?? 'ready',
+    };
+};
+
+const avs = {
+    main: $('#k6-av'),
+    phone: $('#k6-av-phone'),
+    list: $('#k6-av-list'),
+    menu: $('#k6-av-menu'),
+    strict: $('#k6-av-strict'),
+};
+const avReadout = $('[data-k6-av-readout]');
+let avRefuse = false;
+let avChosen = false;
+for (const el of Object.values(avs)) {
+    el?.addEventListener('kp-availability-change', (event) => {
+        const d = /** @type {CustomEvent} */ (event).detail;
+        if (d.restored) return;
+        if (avReadout) avReadout.textContent = `${d.person} set ${d.keys.length} cell${d.keys.length === 1 ? '' : 's'} to ${d.answer ?? 'empty'}`;
+        d.settle(wait(650).then(() => (avRefuse ? { refused: true } : true)));
+    });
+    el?.addEventListener('kp-availability-choose', (event) => {
+        if (avReadout) avReadout.textContent = `Choose: ${/** @type {CustomEvent} */ (event).detail.keys.join(', ')}`;
+    });
+    el?.addEventListener('kp-availability-retry', () => {
+        if (!el) return;
+        setAvailability(el, avSpec({ state: 'loading', switchable: el === avs.main }));
+        setTimeout(() => {
+            setAvailability(el, avSpec({ switchable: el === avs.main }));
+            const b = $('[data-k6-av-state="ready"]');
+            if (b) pick(b);
+        }, 1200);
+    });
+}
+
+onReady(() => {
+    if (avs.main) setAvailability(avs.main, avSpec({ switchable: true }));
+    if (avs.phone) setAvailability(avs.phone, avSpec());
+    if (avs.list) setAvailability(avs.list, avSpec());
+    if (avs.menu) setAvailability(avs.menu, avSpec({ unit: 'range' }));
+    if (avs.strict) setAvailability(avs.strict, avSpec());
+    for (const button of $$('[data-k6-av-state]')) {
+        button.addEventListener('click', () => {
+            pick(button);
+            const state = button.getAttribute('data-k6-av-state') ?? 'ready';
+            avChosen = state === 'chosen';
+            for (const el of [avs.main, avs.phone, avs.list]) {
+                if (!el) continue;
+                el.toggleAttribute('data-kp-availability-disabled', avChosen);
+                if (avChosen) el.setAttribute('data-kp-disabled-reason', 'The dates are chosen.');
+                else el.removeAttribute('data-kp-disabled-reason');
+                const sw = el === avs.main;
+                if (state === 'loading') setAvailability(el, avSpec({ state: 'loading', switchable: sw }));
+                else if (state === 'empty') setAvailability(el, { ...avSpec({ switchable: sw }), sets: { range: { columns: [], answers: {} }, day: { columns: [], answers: {} } }, emptyAction: 'Propose a date' });
+                else if (state === 'error') setAvailability(el, avSpec({ state: 'error', switchable: sw }));
+                else if (state === 'nobody') setAvailability(el, avSpec({ nobody: true, switchable: sw }));
+                else setAvailability(el, avSpec({ switchable: sw }));
+            }
+        });
+    }
+    for (const button of $$('[data-k6-av-server]')) {
+        button.addEventListener('click', () => {
+            pick(button);
+            avRefuse = button.getAttribute('data-k6-av-server') === 'refuses';
+        });
+    }
+    $('[data-k6-av-push]')?.addEventListener('click', () => {
+        for (const el of [avs.main, avs.phone, avs.list]) {
+            if (!el) continue;
+            for (const c of RANGES) if (!availabilityAnswers(el).lies?.[c.key]) setAvailabilityAnswer(el, 'lies', c.key, 'yes');
+        }
+        if (avReadout) avReadout.textContent = 'Lies answered the empty cells (a push update, no event).';
     });
 });

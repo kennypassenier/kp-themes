@@ -175,6 +175,7 @@ export const FILES = [
     'js/facets.js',
     'js/idmark.js',
     'js/passkeys.js',
+    'js/availability.js',
     'js/claim.js',
     'js/thread.js',
     'js/stackbar.js',
