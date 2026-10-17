@@ -64,3 +64,5 @@ Measure before you claim: a byte count comes from `wc -c`, a class name
 from grep. Finish with the absolute paths and a five-line summary.
 
 Never run `pkill`, `killall` or `kill` on a process you did not start yourself, by its own PID: other agents and Kenny's own review server (`npm run catalogue`) run the same fixture server on this machine, and a pattern kill stops all of them (2026-09-13, it did).
+
+Before you hand a round back, run `node research/_review/measure-gaps.mjs <port> research/<topic>/demo.html <every theme the round asks> 1280,390` and fix every line it prints; also click each section into the states behind its buttons and measure those by hand the same way (the script reads the first state only). Text never touches a neighbour or its plate's side edge (Kenny, 2026-10-17).

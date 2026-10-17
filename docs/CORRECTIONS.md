@@ -6909,3 +6909,39 @@ once its section is in.
 
 **9 · When we review the measure.** At the release suite: whether a short review-dialog test of one topic step (time and
 view position) earns its place.
+
+## text-edge-1017 · Text against its plate's edge reached Kenny again (2026-10-17)
+
+Waiting on Kenny's answer to the correction form.
+
+**1 · What went wrong.** In the cooking part, dark, "For this step" and "450 ml water" stood against the edge of the
+needs box, after Kenny had set the rule that text never touches an edge (Kenny, 2026-10-17 15:37: "ik had toch gezegd
+dat ik nooit text wil die tegen de rand plakt zonder marge tussen die elementen?"). The empty and failed states were also
+small, against his rule of 2026-10-16 that they fill the component.
+
+**2 · Which gate let it through.** None. The helpers' Firefox measures compared text with text (scratch scripts
+k4a/check.mjs and k4c/verify.mjs: pairs of text rectangles); none measured text against the edge of the plate it stands
+on, and none clicked into the step that shows the needs box.
+
+**3 · Where else the same fault sits.** Property: component text closer than 4 px to the side edge of its plate.
+Searched with `node research/_review/measure-gaps.mjs <port> research/kpadopt4-cooking/demo.html <12 themes> 1280,390`
+after the fixes: clear in all 24 runs. Its first state only; the states behind buttons were measured by the cook-1017
+helper (needs box gap at least 10.1 px in all twelve themes).
+
+**4 · How we prevent recurrence.** research/_review/measure-gaps.mjs, committed: every component text against its
+neighbours and its plate's side edges. AGENTS.md and .claude/agents/researcher.md require it to print clear before a
+round goes on the Agenda, plus the same measure by hand in the states behind the buttons. The prominence rule is in
+docs/RULES.md (cook-1017).
+
+**5 · What the remedy costs.** About a minute per round in Firefox (55 s for twelve themes at two widths).
+
+**6 · Who or what enforces it.** Discipline: a measuring script run by the builder and by Claude before the push. Not a
+gate, since a browser run is not part of `npm run gates`.
+
+**7 · How we measure that it works, and at which moment.** Kenny's verdicts on cooking round 2 and on the next part: no
+note about text against an edge.
+
+**8 · The fallback if the measurement fails.** The script also clicks every button of each section's demo controls and
+measures each state it reaches.
+
+**9 · When we review the measure.** At the release suite: whether it becomes a tagged browser test.

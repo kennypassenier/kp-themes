@@ -38,7 +38,7 @@ gedeelte tijdelijk weg, tot ik het terugwil"): `playwright.config.mjs` runs
 Firefox only; `KP_TEST_CHROMIUM=1` brings the Chromium project back. Turn it
 on again only when Kenny asks.
 
-A re-review round shows only the pairs Kenny has not approved; approved sections and themes leave the demo, enforced by gates/check-rereview.mjs (Kenny, 2026-10-13 and 2026-10-16). A review asks at most 100 pairs: a bigger one is split into one demo per group of components, judged one by one from the Agenda (Kenny, 2026-10-17), enforced by the same gate.
+A re-review round shows only the pairs Kenny has not approved; approved sections and themes leave the demo, enforced by gates/check-rereview.mjs (Kenny, 2026-10-13 and 2026-10-16). A review asks at most 100 pairs: a bigger one is split into one demo per group of components, judged one by one from the Agenda (Kenny, 2026-10-17), enforced by the same gate. Before a round goes on the Agenda, `node research/_review/measure-gaps.mjs <port> <page> <themes> 1280,390` must print clear: no component text closer than 4 px to a neighbour or to the side edge of its plate, in every theme the round asks (Kenny, 2026-10-17, correction text-edge-1017).
 
 **Rules:** the project rules and the corrections they came from are in
 [docs/RULES.md](docs/RULES.md); the ones that are code run in
