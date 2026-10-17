@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Added: avatar, ways to sign in, conversation, chart markers** [kpadopt5-people; Kenny, 2026-10-17, survey items 28 to 30 and 27]. `kp-idmark` takes a photo (`data-kp-idmark-src`, with `-status`, `-alt`, `-loading`, `-frame`; letters stay when it fails; `setIdmarkGroup` with a "+N" button that lists the names left out). New `.kp-passkeys` (js/passkeys.js): rows per way in with Rename and Remove, the only way in refused by default, typed-name confirmation for the one in use, the server's refusal on the row. New `.kp-thread` (js/thread.js): bubbles, day dividers, system lines, attachments, grouping, folding (only the newest whole by default, configurable), sending and failed messages, Jump to newest. `kp-chart` gains event kinds with a key, bands, edge counts, a median line, run rings and a "too few readings" state. Formal-only demo research/kpadopt5-people.
 - **Removed: four themes, `terminal`, `phantom`, `light` and `grotesk`** [breaking; Kenny, 2026-10-16
   23:38 to 23:40: "we gaan het terminal thema bij deze ook verwijderen uit ons pakket", "En phantom ook", "en light ook",
   "en grotesk ook"]. Twelve themes remain: formal, dark, cyberpunk, synthwave, pastel, forest, blueprint, solstice,
