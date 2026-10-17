@@ -99,7 +99,8 @@ const readStep = () =>
             try {
                 choices = JSON.parse(/** @type {HTMLElement} */ (section).dataset.reviewChoices || '[]');
             } catch {
-                choices = [];
+                // A choice set that is not valid JSON would silently show no choices (defaults-1017).
+                return { '__invalid-json': -1 };
             }
             const fixed = (/** @type {any} */ c) => (typeof c.fixed === 'object' && c.fixed ? Boolean(c.fixed[theme]) : Boolean(c.fixed));
             return Object.fromEntries(choices.filter((c) => !fixed(c)).map((c) => [c.id, c.options.length]));
@@ -129,9 +130,14 @@ async function checkStep() {
         if (!row) continue;
         if (!row.box) fault(`${where}: the row of ${section.key} has no "Not approved" box`);
         if (!row.note) fault(`${where}: the row of ${section.key} has no note`);
-        for (const [choice, options] of Object.entries(section.asked))
+        for (const [choice, options] of Object.entries(section.asked)) {
+            if (choice === '__invalid-json') {
+                fault(`${where}: the data-review-choices of ${section.key} is not valid JSON, so the dialog shows no choices`);
+                continue;
+            }
             if (row.choices[choice] !== options)
                 fault(`${where}: the row of ${section.key} shows ${row.choices[choice] ?? 0} of the ${options} ticks of choice ${choice}`);
+        }
     }
     for (const row of step.rows)
         if (!step.shown.some((section) => section.id === row.id)) fault(`${where}: row "${row.title}" belongs to no shown section`);

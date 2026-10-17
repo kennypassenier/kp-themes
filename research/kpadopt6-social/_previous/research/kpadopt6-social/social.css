@@ -1,0 +1,181 @@
+/* research/kpadopt6-social: the page's own frame. Everything with a kp- class is the package; these k6- rules only lay the
+   sections out, frame the widths and draw the readouts. */
+
+.k6-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.k6-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.k6-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.k6-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.k6-sec {
+    container: k6-sec / inline-size;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.k6-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.k6-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.k6-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.k6-label {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 600;
+}
+
+.k6-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.k6-controls [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+}
+
+.k6-controls [role='group'] > b {
+    min-inline-size: 9rem;
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.k6-readout {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-variant-numeric: tabular-nums;
+}
+
+.k6-stack {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.k6-pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) min(390px, 100%);
+    gap: var(--kp-space-xl, 2rem);
+    align-items: start;
+}
+
+.k6-pair > * {
+    min-inline-size: 0;
+}
+
+@container k6-sec (max-width: 64rem) {
+    .k6-pair {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.k6-frame {
+    box-sizing: border-box;
+    min-inline-size: 0;
+    padding: var(--kp-space-sm, 0.5rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.k6-frame--phone {
+    inline-size: 390px;
+    max-inline-size: 100%;
+}
+
+/* A list that scrolls inside its frame, so a sticky bar has something to stick to. */
+.k6-scroll {
+    max-block-size: 22rem;
+    overflow: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+}
+
+/* A parked sentence under a control group. */
+.k6-note {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* Sample lists in a row of equal cards. */
+.k6-trio {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.k6-trio > * {
+    min-inline-size: 0;
+}
+
+/* The flex parent every component is also tried in (a container-type element needs an inline size to survive a flex row). */
+.k6-flexrow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.k6-flexrow > * {
+    flex: 1 1 18rem;
+    min-inline-size: 0;
+}
+
+/* The page's own list the bar-only console hands its blocks to. */
+.k6-barlist {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.k6-barlist > li {
+    padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    overflow-wrap: anywhere;
+}

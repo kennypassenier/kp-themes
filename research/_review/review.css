@@ -416,6 +416,24 @@
     color: var(--muted-foreground);
 }
 
+/* A default set (defaults-1017): the default is set, the rest are switches. */
+.rv-choice__intro {
+    margin: 0;
+    font-size: 0.875em;
+    color: var(--muted-foreground);
+}
+
+.rv-choice__tag {
+    display: block;
+    font-size: 0.75em;
+    font-weight: 600;
+    color: var(--muted-foreground);
+}
+
+.rv-choice__option:has(input:checked) .rv-choice__tag {
+    color: var(--foreground);
+}
+
 /* One aspect per page (aspect mode): what is set aside stays out of view. */
 [data-review-off] {
     display: none !important;
@@ -818,4 +836,18 @@
     .rv-lane__head > .rv-tools > * {
         flex: 0 0 auto;
     }
+}
+
+.rv-choice__row {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.rv-choice__remove {
+    display: flex;
+    gap: var(--kp-space-xs, 0.25rem);
+    align-items: center;
+    padding-inline-start: 1.6em;
+    font-size: 0.8125em;
+    color: var(--muted-foreground);
 }

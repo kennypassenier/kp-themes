@@ -11,10 +11,14 @@
 //     <div data-review-look><p data-for="formal">what to look at in formal</p>…</div>
 //   <script type="module" src="../_review/review.js"></script>
 //
-// A section that asks the reviewer to pick between options lists them, so
-// they are ticked in the dialog rather than typed into a note (Kenny,
-// 2026-10-04: "als ik een keuze moet maken tussen bepaalde opties, zet die
-// opties dan ook in de beoordeling zodat ik het kan aanvinken welke ik wil"):
+// A section with useful variants lists them as a DEFAULT SET (Kenny, 2026-10-17
+// 23:33: "Ik wil niet kiezen tussen A en B als beide nuttig zijn, dan moet enkel
+// bepaald worden wat het default gedrag is van de component." [defaults-1017]):
+// the group's `default` (else its first option) is already set and nothing is
+// ticked; every other option is a real component option he may press to see it
+// live, which is then recorded as "default changed to X". A set is never open
+// and never blocks approving; untouched sets are not in the answer ("Defaults
+// kept."):
 //
 //   <section data-review-item="leave" data-review-choices='[
 //     { "id": "exit", "label": "Exit for this theme", "options": [{ "value": "1", "label": "Exit 1" }, …] },
@@ -28,9 +32,9 @@
 // `"fixed"`: true, or { "<theme>": true }; there its `default` is the answer
 // and the choice is not shown at all, nor repeated in the answer (Kenny,
 // 2026-10-06: what he did not name to change is settled and must not be a
-// choice again). Approving
-// needs every choice answered; ticking one fires `review:choice` on the
-// section ({ id, value }), so the demo can show what was picked.
+// choice again). Pressing an option fires `review:choice` on the section
+// ({ id, value }), so the demo shows it live; the default's own value is fired
+// on every show too.
 //
 // and, optionally, catalogue blocks to judge in the same sitting, as a last
 // step, each shown in its own theme through block.html:
@@ -859,12 +863,25 @@ document.addEventListener(JOURNAL_FAILED_EVENT, () => {
 document.addEventListener('visibilitychange', () => document.visibilityState === 'hidden' && flushNotes());
 /** Where a choice's answer is kept: on the pair, or once for the demo. */
 const onceKey = (item, choice) => `once|${item.id}|${choice.id}`;
-/** A choice group's `default` (a value, or { theme: value }) counts as the answer until the reviewer picks otherwise. */
-const defaultOf = (pair, choice) => (typeof choice.default === 'object' && choice.default ? choice.default[pair.theme] : choice.default) || '';
+/**
+ * A choice set only asks for the DEFAULT of the component (Kenny, 2026-10-17 23:33: "Ik wil niet kiezen tussen A en B als
+ * beide nuttig zijn, dan moet enkel bepaald worden wat het default gedrag is van de component." [defaults-1017]). Its
+ * `default` (a value, or { theme: value }; without one the first option) is already set; the other options are real
+ * component options he may switch to and look at. The set is never open and never blocks approving.
+ */
+const defaultOf = (pair, choice) =>
+    (typeof choice.default === 'object' && choice.default ? choice.default[pair.theme] : choice.default) || choice.options[0]?.value || '';
 const choiceOf = (pair, choice) =>
     (choice.once ? state[onceKey(pair.item, choice)]?.value : state[pair.key]?.choices?.[choice.id]) || defaultOf(pair, choice);
 /** A settled choice: answered by its `default`, not shown, not repeated in the answer. */
 const fixedFor = (pair, choice) => (typeof choice.fixed === 'object' && choice.fixed ? Boolean(choice.fixed[pair.theme]) : Boolean(choice.fixed));
+/** The option values Kenny marked "Remove" in a set, for this pair (nothing is ever required: the default is Keep). */
+const removedOf = (pair, choice) => state[pair.key]?.removed?.[choice.id] || [];
+/** Whether the reviewer switched a per-theme set away from its default. */
+const changedFrom = (pair, choice) => {
+    const value = state[pair.key]?.choices?.[choice.id];
+    return Boolean(value) && value !== defaultOf(pair, choice);
+};
 const optionLabel = (choice, value) => choice.options.find((o) => o.value === value)?.label || value;
 const isOpen = (pair) => !verdictOf(pair);
 /** An aspect step is answered once its option is picked, or "None of these" is noted. */
@@ -954,16 +971,21 @@ function answer() {
     if (notes.length) lines.push('', 'Approved, with a note:', ...notes.map((p) => `- ${p.label}: ${noteOf(p)}`));
     const picked = pairs.flatMap((p) =>
         (p.item?.choices || [])
-            .filter((c) => !c.once && !fixedFor(p, c) && choiceOf(p, c))
-            .map((c) => `- ${p.label}: ${c.label} = ${optionLabel(c, choiceOf(p, c))}`),
+            .filter((c) => !c.once && !fixedFor(p, c) && changedFrom(p, c))
+            .map((c) => `- ${p.label}: ${c.label}: default changed to ${optionLabel(c, choiceOf(p, c))}`),
     );
-    if (picked.length) lines.push('', 'Picked per theme:', ...picked);
+    if (picked.length) lines.push('', 'Default changed per theme:', ...picked);
     const once = items.flatMap((item) =>
         item.choices
-            .filter((c) => c.once && state[onceKey(item, c)]?.value)
-            .map((c) => `- ${item.id}: ${c.label} = ${optionLabel(c, state[onceKey(item, c)].value)}`),
+            .filter((c) => c.once && state[onceKey(item, c)]?.value && state[onceKey(item, c)].value !== defaultOf({ theme: '' }, c))
+            .map((c) => `- ${item.id}: ${c.label}: default changed to ${optionLabel(c, state[onceKey(item, c)].value)}`),
     );
-    if (once.length) lines.push('', 'Picked once, for every theme:', ...once);
+    if (once.length) lines.push('', 'Default changed, for every theme:', ...once);
+    const removed = pairs.flatMap((p) =>
+        (p.item?.choices || []).flatMap((c) => removedOf(p, c).map((v) => `- ${p.label}: ${c.label}: remove option ${optionLabel(c, v)}`)),
+    );
+    if (removed.length) lines.push('', 'Options to remove:', ...removed);
+    if (!picked.length && !once.length && !removed.length && items.some((item) => item.choices.length)) lines.push('', 'Defaults kept.');
     const openSteps = steps.filter(stepOpen);
     if (openSteps.length) lines.push('', `Still open: ${[...new Set(openSteps.map((s) => s.theme || s.title))].join(', ')}`);
     // An answer not yet copied whose words a reopening wiped goes first, until the answer is copied.
@@ -1961,11 +1983,16 @@ function rowFor(pair, only = null, name = '') {
     for (const choice of only ? [] : pair.item?.choices || []) {
         if (fixedFor(pair, choice)) continue;
         const set = document.createElement('fieldset');
-        set.className = 'rv-choice';
+        set.className = 'rv-choice rv-choice--default';
         set.dataset.rvChoice = choice.id;
         const legend = document.createElement('legend');
         legend.textContent = choice.once ? `${choice.label} (once, for every theme)` : choice.label;
         set.append(legend);
+        // Only the default is asked: it is already set, the others are switches to look at (defaults-1017).
+        const intro = document.createElement('p');
+        intro.className = 'rv-choice__intro';
+        intro.textContent = 'The default is set, nothing to tick. Press another option to see it live; it then becomes the default.';
+        set.append(intro);
         for (const option of choice.options) {
             const label = document.createElement('label');
             label.className = 'rv-choice__option';
@@ -1974,13 +2001,14 @@ function rowFor(pair, only = null, name = '') {
             input.name = `${id}-${choice.id}`;
             input.value = option.value;
             input.checked = choiceOf(pair, choice) === option.value;
+            const isDefault = defaultOf(pair, choice) === option.value;
             input.addEventListener('change', () => {
                 if (choice.once) state[onceKey(pair.item, choice)] = { value: option.value };
                 else state[pair.key] = { ...state[pair.key], choices: { ...state[pair.key]?.choices, [choice.id]: option.value } };
                 save();
                 record(pair, {
                     key: choice.once ? onceKey(pair.item, choice) : pair.key,
-                    choice: { id: choice.id, value: option.value, label: option.label },
+                    choice: { id: choice.id, value: option.value, label: option.label, changed: !isDefault },
                 });
                 render();
                 pair.item.section.dispatchEvent(new CustomEvent('review:choice', { bubbles: true, detail: { id: choice.id, value: option.value } }));
@@ -1993,6 +2021,10 @@ function rowFor(pair, only = null, name = '') {
             const name = document.createElement('b');
             name.textContent = option.label;
             text.append(name);
+            const tag = document.createElement('span');
+            tag.className = 'rv-choice__tag';
+            
+            text.append(tag);
             const hint = option.hints?.[pair.theme] || option.hint;
             if (hint) {
                 const small = document.createElement('span');
@@ -2001,7 +2033,40 @@ function rowFor(pair, only = null, name = '') {
                 text.append(small);
             }
             label.append(input, text);
-            set.append(label);
+            // Besides the default, every other option may be kept as an option or removed (Kenny, 2026-10-17 23:36:
+            // "ik wil de optie om dingen als optie aan te houden, maar ook om ze te verwijderen"). Keep needs no click.
+            const row = document.createElement('div');
+            row.className = 'rv-choice__row';
+            const drop = document.createElement('label');
+            drop.className = 'rv-choice__remove';
+            const dropBox = document.createElement('input');
+            dropBox.type = 'checkbox';
+            dropBox.setAttribute('data-rv-remove', `${choice.id}:${option.value}`);
+            dropBox.checked = removedOf(pair, choice).includes(option.value);
+            const dropText = document.createElement('span');
+            dropText.textContent = 'Remove this option (otherwise kept)';
+            drop.append(dropBox, dropText);
+            const syncRemove = () => {
+                const current = choiceOf(pair, choice) === option.value;
+                dropBox.disabled = current;
+                drop.hidden = current;
+                tag.textContent = current ? 'The default' : 'Also available, switch to see it';
+            };
+            syncRemove();
+            set.addEventListener('change', syncRemove);
+            dropBox.addEventListener('change', () => {
+                const left = removedOf(pair, choice).filter((v) => v !== option.value);
+                const now = dropBox.checked ? [...left, option.value] : left;
+                state[pair.key] = { ...state[pair.key], removed: { ...state[pair.key]?.removed, [choice.id]: now } };
+                save();
+                record(pair, {
+                    key: pair.key,
+                    choice: { id: choice.id, value: option.value, label: option.label, removed: dropBox.checked },
+                });
+                render();
+            });
+            row.append(label, drop);
+            set.append(row);
         }
         choiceBox.append(set);
     }

@@ -93,12 +93,6 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
-            // Kenny, 2026-10-17 (kpadopt6, wave media): six new parts for pictures, documents, links and text, formal only until Kenny approves them.
-            {
-                href: 'research/kpadopt6-media/demo.html',
-                label: 'Pictures, documents, links and text: six new parts (what uses what, picture gallery, document preview, growing text box, link anchors, printing a list)',
-                about: 'Six parts the apps draw by hand today, built in the package and shown in formal only: a map of what is used by what, a gallery of pictures that open large, a document preview with its small page icon, a text box that grows with its text, link anchors on headings and rows, and lists that print well.',
-            },
             // Kenny, 2026-10-17 (kpadopt6, social): who brings it, who can come, a QR code, a time field and a console, formal only until Kenny approves them.
             {
                 href: 'research/kpadopt6-social/demo.html',
@@ -171,6 +165,12 @@ export const PAGES = [
         // Decided demos stay reachable from the Agenda's Done list, not from the side navigation (Kenny, 2026-10-13).
         nav: false,
         pages: [
+            // Decided 2026-10-17 23:33: Kenny approved all eleven kpadopt6 media pairs (research/kpadopt6-media/decided.json).
+            {
+                href: 'research/kpadopt6-media/demo.html',
+                label: 'Pictures, documents, links and text: six new parts (what uses what, picture gallery, document preview, growing text box, link anchors, printing a list)',
+                about: 'Six parts the apps draw by hand today, built in the package and shown in formal only: a map of what is used by what, a gallery of pictures that open large, a document preview with its small page icon, a text box that grows with its text, link anchors on headings and rows, and lists that print well.',
+            },
             // Decided 2026-10-17 18:30: Kenny approved the kpadopt4 cooking part; every kpadopt4 part is decided.
             {
                 href: 'research/kpadopt4-cooking/demo.html',

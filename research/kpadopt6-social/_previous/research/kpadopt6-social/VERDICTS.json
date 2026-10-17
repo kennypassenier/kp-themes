@@ -1,0 +1,45 @@
+{
+    "demo": "kpadopt6-social",
+    "rounds": [
+        {
+            "round": "1",
+            "page": "social-4b115748-8633-477e-a6b4-b9529667e8a2",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-17 23:33: 5 of 5 judged in formal, 3 approved, 2 not approved, 0 open.",
+            "approved": [
+                {
+                    "item": "claim-row",
+                    "theme": "formal"
+                },
+                {
+                    "item": "qr-code",
+                    "theme": "formal"
+                },
+                {
+                    "item": "time-field",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "availability-grid",
+                    "theme": "formal",
+                    "note": "Which column is marked as the best? default most, but the other should be an option, alle opties hier moeten optioneel zijn"
+                },
+                {
+                    "item": "interactive-console",
+                    "theme": "formal",
+                    "note": "de lijn naast Host (root) waar ik commandos ingeef en de Run knop zijn niet verticaal aligned met Host (root) dus het ziet er knullig uit"
+                }
+            ],
+            "choices": [
+                {
+                    "item": "availability-grid",
+                    "theme": "formal",
+                    "picked": "What does a press on your own cell do? = Cycle: empty, can, maybe, cannot, empty; Which column is marked as the best? = The one with most who can, once everybody answered; What does the summary row show? = The number and a fill from the bottom; Does the organiser choose per trip between periods and days? = Yes: a switch per trip, periods or days"
+                }
+            ],
+            "generalNote": "General (23:33): 'Ik wil niet kiezen tussen A en B als beide nuttig zijn, dan moet enkel bepaald worden wat het default gedrag is van de component.' Every useful variant becomes an option; a demo asks only for the default."
+        }
+    ]
+}

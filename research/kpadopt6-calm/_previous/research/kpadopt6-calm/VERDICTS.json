@@ -1,0 +1,52 @@
+{
+    "demo": "kpadopt6-calm",
+    "rounds": [
+        {
+            "round": "1",
+            "page": "calm-d9f4d43f-f09f-4feb-aa4f-e447f8164594",
+            "allJudged": false,
+            "comment": "Kenny, 2026-10-17 23:33: 2 of 12 judged in formal, 1 approved, 1 not approved, 10 open.",
+            "approved": [
+                {
+                    "item": "usual-states",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "usual",
+                    "theme": "formal",
+                    "note": "it's approved, but again, the options here should be optional"
+                }
+            ],
+            "choices": [
+                {
+                    "item": "usual",
+                    "theme": "formal",
+                    "picked": "While you type, the usual choices = Still lead the results; A name that is nearly one you have = Ask: Did you mean ...?; The full list = Behind Show all 38"
+                },
+                {
+                    "item": "focus",
+                    "theme": "formal",
+                    "picked": "How progress shows = Question 3 of 6 and the bar; What a tap on an answer does = Moves on by itself after a moment"
+                },
+                {
+                    "item": "today",
+                    "theme": "formal",
+                    "picked": "How a pause is told = The date: Paused since 03/10/2026; Where the open rows stand = Where the page put them"
+                },
+                {
+                    "item": "quote",
+                    "theme": "formal",
+                    "picked": "How the date reads = The date: Wednesday 14/10/2026; How long a quote shows before it folds = Four lines"
+                },
+                {
+                    "item": "rating",
+                    "theme": "formal",
+                    "picked": "What a tap on a star does = Saves at once; The star under the pointer = Lights up before you press"
+                }
+            ],
+            "generalNote": "General (23:33): 'Ik wil niet kiezen tussen A en B als beide nuttig zijn, dan moet enkel bepaald worden wat het default gedrag is van de component.' Every useful variant becomes an option; a demo asks only for the default."
+        }
+    ]
+}

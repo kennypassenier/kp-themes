@@ -465,7 +465,7 @@ export const journalKey = (demo) => `${storeKey(demo)}:journal`;
  * @property {string} pair    `<theme>|<item>`, `catalogue|<block>|<theme>|<engine>`, or `once|<item>|<choice>`
  * @property {'approved' | 'rejected' | null} verdict  null for a tick or a note alone
  * @property {string} note
- * @property {{ id: string, value: string, label?: string } | null} choice  a choice ticked, with the option's label
+ * @property {{ id: string, value: string, label?: string, changed?: boolean, removed?: boolean } | null} choice  a choice ticked, with the option's label
  * @property {string} [label]  the pair as the answer names it (`<item> · <theme>`)
  */
 
@@ -545,7 +545,14 @@ export function rebuildAnswer(demo, round) {
         const now = pairs.get(e.pair) ?? { verdict: null, note: '', label: e.label || labelOfKey(e.pair), choices: new Map() };
         if (e.verdict) now.verdict = e.verdict;
         if (e.verdict || e.note || !e.choice) now.note = e.note;
-        if (e.choice) now.choices.set(e.choice.id, e.choice.label || e.choice.value);
+        // A choice set only asks for the default: pressing back to the default clears the change (defaults-1017).
+        if (e.choice && typeof e.choice.removed === 'boolean') {
+            // "Remove this option" is kept per option; unticking it clears the line (defaults-1017).
+            const key = `remove:${e.choice.id}:${e.choice.value}`;
+            if (e.choice.removed) now.choices.set(key, `remove option ${e.choice.label || e.choice.value}`);
+            else now.choices.delete(key);
+        } else if (e.choice && e.choice.changed === false) now.choices.delete(e.choice.id);
+        else if (e.choice) now.choices.set(e.choice.id, e.choice.changed ? `default changed to ${e.choice.label || e.choice.value}` : e.choice.label || e.choice.value);
         pairs.set(e.pair, now);
     }
     const all = [...pairs.entries()];
@@ -562,9 +569,9 @@ export function rebuildAnswer(demo, round) {
     if (noted.length) lines.push('', 'Approved, with a note:', ...noted.map(([, p]) => `- ${p.label}: ${p.note}`));
     const open = all.filter(([key, p]) => !key.startsWith('once|') && !p.verdict && p.note);
     if (open.length) lines.push('', 'A note without a verdict yet:', ...open.map(([, p]) => `- ${p.label}: ${p.note}`));
-    const picked = all.filter(([key]) => !key.startsWith('once|')).flatMap(([, p]) => [...p.choices].map(([id, value]) => `- ${p.label}: ${id} = ${value}`));
+    const picked = all.filter(([key]) => !key.startsWith('once|')).flatMap(([, p]) => [...p.choices].map(([id, value]) => `- ${p.label}: ${id}${/^(default changed|remove option)/.test(value) ? ': ' : ' = '}${value}`));
     if (picked.length) lines.push('', 'Picked per theme:', ...picked);
-    const once = all.filter(([key]) => key.startsWith('once|')).flatMap(([key, p]) => [...p.choices].map(([id, value]) => `- ${key.split('|')[1]}: ${id} = ${value}`));
+    const once = all.filter(([key]) => key.startsWith('once|')).flatMap(([key, p]) => [...p.choices].map(([id, value]) => `- ${key.split('|')[1]}: ${id}${/^(default changed|remove option)/.test(value) ? ': ' : ' = '}${value}`));
     if (once.length) lines.push('', 'Picked once, for every theme:', ...once);
     return lines.join('\n');
 }
