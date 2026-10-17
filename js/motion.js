@@ -36,6 +36,7 @@
 // appear later (a framework's render) are picked up as they arrive.
 
 import { afterPaint, settling } from './as-of.js';
+import { isCalm } from './calm.js';
 
 /** Any box a consumer wants eased, beside the components below. */
 export const SIZE_ATTRIBUTE = 'data-kp-size-motion';
@@ -128,7 +129,7 @@ reducedQuery?.addEventListener('change', (event) => {
 });
 
 /** @returns {boolean} */
-const reduced = () => reducedNow;
+const reduced = () => reducedNow || isCalm();
 
 /**
  * The theme's motion, read from its dialog entrance: a dialog drawn for an

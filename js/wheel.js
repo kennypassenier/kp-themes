@@ -58,6 +58,7 @@
 
 import { getStrings } from './strings.js';
 import { openBusyCard } from './busy-card.js';
+import { motionAllowed } from './calm.js';
 
 export const WHEEL = '[data-kp-wheel]';
 export const WHEEL_SPIN_EVENT = 'kp-wheel-spin';
@@ -308,7 +309,7 @@ function paint(root) {
 }
 
 /** @returns {boolean} */
-const reduced = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+const reduced = () => !motionAllowed();
 
 /**
  * Let the drawn weights glide to the items' weights in the theme's size time.

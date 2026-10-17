@@ -25,6 +25,8 @@
 // live region speaks only the number it lands on; `kp-tick` fires when it
 // lands, with the value in `detail`.
 
+import { motionAllowed } from './calm.js';
+
 /** An element whose number ticks when its text changes. */
 export const TICK = '[data-kp-tick]';
 /** How long a tick takes, in ms. */
@@ -92,7 +94,7 @@ const localeOf = (el) => /** @type {HTMLElement | null} */ (el.closest('[lang]')
 
 /** @param {Element} el */
 function reduced(el) {
-    return el.ownerDocument.defaultView?.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+    return !motionAllowed(el);
 }
 
 /**
