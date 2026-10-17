@@ -196,6 +196,30 @@
             "types": "./js/reason.d.ts",
             "default": "./js/reason.js"
         },
+        "./js/notices": {
+            "types": "./js/notices.d.ts",
+            "default": "./js/notices.js"
+        },
+        "./js/question-card": {
+            "types": "./js/question-card.d.ts",
+            "default": "./js/question-card.js"
+        },
+        "./js/transfer": {
+            "types": "./js/transfer.d.ts",
+            "default": "./js/transfer.js"
+        },
+        "./js/connection": {
+            "types": "./js/connection.d.ts",
+            "default": "./js/connection.js"
+        },
+        "./js/auto-refresh": {
+            "types": "./js/auto-refresh.d.ts",
+            "default": "./js/auto-refresh.js"
+        },
+        "./js/master-detail": {
+            "types": "./js/master-detail.d.ts",
+            "default": "./js/master-detail.js"
+        },
         "./js/loading-pieces": {
             "types": "./js/loading-pieces.d.ts",
             "default": "./js/loading-pieces.js"

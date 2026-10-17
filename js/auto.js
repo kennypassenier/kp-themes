@@ -224,6 +224,23 @@ export const NEEDS = [
     { name: 'problems', when: '[data-kp-problems]', load: () => import('./problems.js'), attach: (m, root) => [m.attachProblems(root)] },
     { name: 'flash', when: '[data-kp-flash-button], [data-kp-post]', load: () => import('./flash.js'), attach: (m, root) => [m.attachFlashButtons(root)] },
     { name: 'reason', when: '[data-kp-disabled-reason]', load: () => import('./reason.js'), attach: (m, root) => [m.attachDisabledReasons(root)] },
+    // A list and its detail that folds on a phone [kpadopt5-ops].
+    {
+        name: 'master-detail',
+        when: '[data-kp-master-detail]',
+        load: () => import('./master-detail.js'),
+        attach: (m, root) => [m.attachMasterDetails(root)],
+    },
+    // The automatic refresh chooser [kpadopt5-ops].
+    { name: 'auto-refresh', when: '[data-kp-refresh]', load: () => import('./auto-refresh.js'), attach: (m, root) => [m.attachRefresh(root)] },
+    // The offline and reconnecting banner [kpadopt5-ops].
+    { name: 'connection', when: '[data-kp-connection]', load: () => import('./connection.js'), attach: (m, root) => [m.attachConnection(root)] },
+    // A transfer with its speed and the time left [kpadopt5-ops].
+    { name: 'transfer', when: '[data-kp-transfer]', load: () => import('./transfer.js'), attach: (m, root) => [m.attachTransfers(root)] },
+    // The question card's region [kpadopt5-ops]; the cards are made with askQuestion().
+    { name: 'question-card', when: '[data-kp-questions]', load: () => import('./question-card.js'), attach: (m, root) => [m.attachQuestions(root)] },
+    // The notification centre [kpadopt5-ops].
+    { name: 'notices', when: '[data-kp-notices]', load: () => import('./notices.js'), attach: (m, root) => [m.attachNotices(root)] },
     { name: 'graph', when: '[data-kp-graph]', load: () => import('./graph.js'), attach: (m, root) => [m.attachGraphs(root)] },
     {
         // A theme's loading picture made of pieces (`--kp-loading-pieces`,

@@ -979,6 +979,325 @@ export type Strings = {
      * A request's accessible name [kpadopt5]
      */
     reqSummary: (method: string, path: string, status: string) => string;
+     * The counter button's word (js/notices.js) [kpadopt5-notices]
+     */
+    noticesInbox: string;
+    /**
+     * The panel's heading [kpadopt5-notices]
+     */
+    noticesTitle: string;
+    /**
+     * The Inbox page's heading [kpadopt5-notices]
+     */
+    noticesPageTitle: string;
+    /**
+     * The accessible name of the list of notices [kpadopt5-notices]
+     */
+    noticesList: string;
+    /**
+     * The counter's label, "5 unread" [kpadopt5-notices]
+     */
+    noticesUnread: (n: number) => string;
+    /**
+     * The counter's label with nothing unread [kpadopt5-notices]
+     */
+    noticesNoneUnread: string;
+    /**
+     * The counter's label when the notices could not be read [kpadopt5-notices]
+     */
+    noticesCounterError: (why: string) => string;
+    /**
+     * The counter button's accessible name, "Inbox: 5 unread. Quiet until 09:00" [kpadopt5-notices]
+     */
+    noticesCounterName: (inbox: string, label: string, quiet: string) => string;
+    /**
+     * What the busy card over the list says, and the counter's label while it loads [kpadopt5-notices]
+     */
+    noticesLoading: string;
+    /**
+     * The quiet line, "Quiet until 09:00" [kpadopt5-notices]
+     */
+    noticesQuiet: (time: string) => string;
+    /**
+     * The button that ends the quiet time [kpadopt5-notices]
+     */
+    noticesEndQuiet: string;
+    /**
+     * The verb of a notice's age line, "since 2 min ago" [kpadopt5-notices]
+     */
+    noticesSinceVerb: string;
+    /**
+     * The per-row button that marks a notice read [kpadopt5-notices]
+     */
+    noticesMarkRead: string;
+    /**
+     * The per-row button that marks it unread again [kpadopt5-notices]
+     */
+    noticesMarkUnread: string;
+    /**
+     * The button that marks every notice read [kpadopt5-notices]
+     */
+    noticesReadAll: string;
+    /**
+     * The footer link, "All 37 in the Inbox", with the exact count [kpadopt5-notices]
+     */
+    noticesAllInInbox: (n: number) => string;
+    /**
+     * The empty plate's title [kpadopt5-notices]
+     */
+    noticesEmpty: string;
+    /**
+     * Its sentence [kpadopt5-notices]
+     */
+    noticesEmptyText: string;
+    /**
+     * The failed plate's title [kpadopt5-notices]
+     */
+    noticesErrorTitle: string;
+    /**
+     * Its sentence when the page gives no reason [kpadopt5-notices]
+     */
+    noticesErrorText: string;
+    /**
+     * The failed plate's Retry button [kpadopt5-notices]
+     */
+    noticesRetry: string;
+    /**
+     * The title of the per-source switches [kpadopt5-notices]
+     */
+    noticesSources: string;
+    /**
+     * A muted source's state word [kpadopt5-notices]
+     */
+    noticesMuted: string;
+    /**
+     * A source that is on [kpadopt5-notices]
+     */
+    noticesNotMuted: string;
+    /**
+     * Announced when one new notice arrived [kpadopt5-notices]
+     */
+    noticesNew: (title: string) => string;
+    /**
+     * Announced when several arrived, naming the worst [kpadopt5-notices]
+     */
+    noticesNewMany: (n: number, title: string) => string;
+    /**
+     * The default first answer (js/question-card.js) [kpadopt5-question-card]
+     */
+    questionAllow: string;
+    /**
+     * The default second answer [kpadopt5-question-card]
+     */
+    questionStop: string;
+    /**
+     * The accessible name of the region that holds the open questions [kpadopt5-question-card]
+     */
+    questionsLabel: string;
+    /**
+     * How long a question still waits, "Waits 1 min 12 s more" [kpadopt5-question-card]
+     */
+    questionLeft: (duration: string) => string;
+    /**
+     * The time line when the time ran out [kpadopt5-question-card]
+     */
+    questionTimeUp: string;
+    /**
+     * What happens at zero, "If nobody answers: Stop." [kpadopt5-question-card]
+     */
+    questionDefault: (label: string) => string;
+    /**
+     * Announced once when the time gets short [kpadopt5-question-card]
+     */
+    questionUrgent: (duration: string) => string;
+    /**
+     * The outcome of a question nobody answered, when there is no default answer [kpadopt5-question-card]
+     */
+    questionNobody: string;
+    /**
+     * The outcome when the default answer applied [kpadopt5-question-card]
+     */
+    questionNobodyDefault: (label: string) => string;
+    /**
+     * The outcome of an answer that has no sentence of its own [kpadopt5-question-card]
+     */
+    questionAnswered: (label: string) => string;
+    /**
+     * The note when the app could not send the answer, "Not sent: why. Nothing changed; answer again." [kpadopt5-question-card]
+     */
+    questionRefused: (why: string) => string;
+    /**
+     * The button that takes a finished card away [kpadopt5-question-card]
+     */
+    questionDismiss: string;
+    /**
+     * The tab title's prefix while questions wait, "(1) waiting" [kpadopt5-question-card]
+     */
+    questionWaiting: (count: number) => string;
+    /**
+     * The accessible name of a transfer's bar when it has no file name (js/transfer.js) [kpadopt5-transfer]
+     */
+    transferBar: string;
+    /**
+     * The reading of a transfer with a known size, "1.2 GB of 4.1 GB" [kpadopt5-transfer]
+     */
+    transferOf: (done: string, total: string) => string;
+    /**
+     * The reading of a transfer of unknown size, "1.2 GB so far" [kpadopt5-transfer]
+     */
+    transferSoFar: (done: string) => string;
+    /**
+     * The time left while the speed is not steady yet [kpadopt5-transfer]
+     */
+    transferEstimating: string;
+    /**
+     * The time left, "about 3 min left" [kpadopt5-transfer]
+     */
+    transferLeft: (duration: string) => string;
+    /**
+     * A transfer that moved no byte for a while, "stalled for 12 s" [kpadopt5-transfer]
+     */
+    transferStalled: (duration: string) => string;
+    /**
+     * A finished transfer's average speed, "avg 21 MB/s" [kpadopt5-transfer]
+     */
+    transferAverage: (rate: string) => string;
+    /**
+     * A finished transfer's duration, "in 3 min 12 s" [kpadopt5-transfer]
+     */
+    transferTook: (duration: string) => string;
+    /**
+     * The first words of a failed transfer's note [kpadopt5-transfer]
+     */
+    transferFailed: string;
+    /**
+     * The Retry button of a failed transfer [kpadopt5-transfer]
+     */
+    transferRetry: string;
+    /**
+     * What a screen reader hears at 25, 50, 75 and 100 % [kpadopt5-transfer]
+     */
+    transferAnnounce: (name: string, percent: number) => string;
+    /**
+     * The banner's first line when the connection is gone (js/connection.js) [kpadopt5-connection]
+     */
+    connOffline: string;
+    /**
+     * What is true meanwhile and what happens next [kpadopt5-connection]
+     */
+    connOfflineWhy: string;
+    /**
+     * The first line while a try is under way [kpadopt5-connection]
+     */
+    connReconnecting: string;
+    /**
+     * Its second line on the first try [kpadopt5-connection]
+     */
+    connReconnectingWhy: string;
+    /**
+     * Its second line from the second try, "Attempt 2" [kpadopt5-connection]
+     */
+    connAttempt: (n: number) => string;
+    /**
+     * The time to the next automatic try, "next try in 8 s" [kpadopt5-connection]
+     */
+    connNextTry: (duration: string) => string;
+    /**
+     * The exact count of changes waiting, "3 changes waiting" [kpadopt5-connection]
+     */
+    connPending: (n: number) => string;
+    /**
+     * The first line when the connection is back [kpadopt5-connection]
+     */
+    connBack: string;
+    /**
+     * Its second line with nothing waiting [kpadopt5-connection]
+     */
+    connBackWhy: string;
+    /**
+     * Its second line with changes waiting, "Sending 3 changes" [kpadopt5-connection]
+     */
+    connBackSending: (n: number) => string;
+    /**
+     * The first line when the server refuses while the browser is online [kpadopt5-connection]
+     */
+    connRefused: string;
+    /**
+     * Its second line when the app gives none [kpadopt5-connection]
+     */
+    connRefusedWhy: string;
+    /**
+     * The Retry now button [kpadopt5-connection]
+     */
+    connRetry: string;
+    /**
+     * A refresh choice, "Every 30 s" (js/auto-refresh.js) [kpadopt5-auto-refresh]
+     */
+    refreshEvery: (duration: string) => string;
+    /**
+     * The choice that stops the refreshing [kpadopt5-auto-refresh]
+     */
+    refreshPaused: string;
+    /**
+     * The entry that lets a person type any number of seconds [kpadopt5-auto-refresh]
+     */
+    refreshOther: string;
+    /**
+     * The accessible name of the refresh chooser [kpadopt5-auto-refresh]
+     */
+    refreshLabel: string;
+    /**
+     * The button that refreshes at once [kpadopt5-auto-refresh]
+     */
+    refreshNow: string;
+    /**
+     * The freshness line's words while the app reads [kpadopt5-auto-refresh]
+     */
+    refreshUpdating: string;
+    /**
+     * The note after a failed refresh, "Last refresh failed, retrying in 30 s" [kpadopt5-auto-refresh]
+     */
+    refreshFailed: (next: string) => string;
+    /**
+     * The button that retries a failed refresh at once [kpadopt5-auto-refresh]
+     */
+    refreshRetryNow: string;
+    /**
+     * The label of the field for any number of seconds [kpadopt5-auto-refresh]
+     */
+    refreshCustomLabel: string;
+    /**
+     * The button that sets that number [kpadopt5-auto-refresh]
+     */
+    refreshApply: string;
+    /**
+     * What a number that is not a whole number of seconds says [kpadopt5-auto-refresh]
+     */
+    refreshInvalid: string;
+    /**
+     * The detail pane's plate while nothing is picked (js/master-detail.js) [kpadopt5-master-detail]
+     */
+    paneEmpty: string;
+    /**
+     * The Back button at the top of a folded detail pane [kpadopt5-master-detail]
+     */
+    paneBack: string;
+    /**
+     * What the busy card over the detail pane says [kpadopt5-master-detail]
+     */
+    paneLoading: string;
+    /**
+     * The errored detail's first line, when the page gives none [kpadopt5-master-detail]
+     */
+    paneErrorTitle: string;
+    /**
+     * Its sentence, when the page gives none [kpadopt5-master-detail]
+     */
+    paneErrorText: string;
+    /**
+     * The Retry button of an errored detail [kpadopt5-master-detail]
+     */
+    paneRetry: string;
     busy: string;
     close: string;
     /**
@@ -2834,6 +3153,86 @@ export type Strings = {
  * @property {(shown: number, total: number) => string} reqCount  The line above the list, "20 of 31 requests" [kpadopt5]
  * @property {string} reqNoMatch  The list when the filter shows nothing [kpadopt5]
  * @property {(method: string, path: string, status: string) => string} reqSummary  A request's accessible name [kpadopt5]
+ * @property {string} noticesInbox  The counter button's word (js/notices.js) [kpadopt5-notices]
+ * @property {string} noticesTitle  The panel's heading [kpadopt5-notices]
+ * @property {string} noticesPageTitle  The Inbox page's heading [kpadopt5-notices]
+ * @property {string} noticesList  The accessible name of the list of notices [kpadopt5-notices]
+ * @property {(n: number) => string} noticesUnread  The counter's label, "5 unread" [kpadopt5-notices]
+ * @property {string} noticesNoneUnread  The counter's label with nothing unread [kpadopt5-notices]
+ * @property {(why: string) => string} noticesCounterError  The counter's label when the notices could not be read [kpadopt5-notices]
+ * @property {(inbox: string, label: string, quiet: string) => string} noticesCounterName  The counter button's accessible name, "Inbox: 5 unread. Quiet until 09:00" [kpadopt5-notices]
+ * @property {string} noticesLoading  What the busy card over the list says, and the counter's label while it loads [kpadopt5-notices]
+ * @property {(time: string) => string} noticesQuiet  The quiet line, "Quiet until 09:00" [kpadopt5-notices]
+ * @property {string} noticesEndQuiet  The button that ends the quiet time [kpadopt5-notices]
+ * @property {string} noticesSinceVerb  The verb of a notice's age line, "since 2 min ago" [kpadopt5-notices]
+ * @property {string} noticesMarkRead  The per-row button that marks a notice read [kpadopt5-notices]
+ * @property {string} noticesMarkUnread  The per-row button that marks it unread again [kpadopt5-notices]
+ * @property {string} noticesReadAll  The button that marks every notice read [kpadopt5-notices]
+ * @property {(n: number) => string} noticesAllInInbox  The footer link, "All 37 in the Inbox", with the exact count [kpadopt5-notices]
+ * @property {string} noticesEmpty  The empty plate's title [kpadopt5-notices]
+ * @property {string} noticesEmptyText  Its sentence [kpadopt5-notices]
+ * @property {string} noticesErrorTitle  The failed plate's title [kpadopt5-notices]
+ * @property {string} noticesErrorText  Its sentence when the page gives no reason [kpadopt5-notices]
+ * @property {string} noticesRetry  The failed plate's Retry button [kpadopt5-notices]
+ * @property {string} noticesSources  The title of the per-source switches [kpadopt5-notices]
+ * @property {string} noticesMuted  A muted source's state word [kpadopt5-notices]
+ * @property {string} noticesNotMuted  A source that is on [kpadopt5-notices]
+ * @property {(title: string) => string} noticesNew  Announced when one new notice arrived [kpadopt5-notices]
+ * @property {(n: number, title: string) => string} noticesNewMany  Announced when several arrived, naming the worst [kpadopt5-notices]
+ * @property {string} questionAllow  The default first answer (js/question-card.js) [kpadopt5-question-card]
+ * @property {string} questionStop  The default second answer [kpadopt5-question-card]
+ * @property {string} questionsLabel  The accessible name of the region that holds the open questions [kpadopt5-question-card]
+ * @property {(duration: string) => string} questionLeft  How long a question still waits, "Waits 1 min 12 s more" [kpadopt5-question-card]
+ * @property {string} questionTimeUp  The time line when the time ran out [kpadopt5-question-card]
+ * @property {(label: string) => string} questionDefault  What happens at zero, "If nobody answers: Stop." [kpadopt5-question-card]
+ * @property {(duration: string) => string} questionUrgent  Announced once when the time gets short [kpadopt5-question-card]
+ * @property {string} questionNobody  The outcome of a question nobody answered, when there is no default answer [kpadopt5-question-card]
+ * @property {(label: string) => string} questionNobodyDefault  The outcome when the default answer applied [kpadopt5-question-card]
+ * @property {(label: string) => string} questionAnswered  The outcome of an answer that has no sentence of its own [kpadopt5-question-card]
+ * @property {(why: string) => string} questionRefused  The note when the app could not send the answer, "Not sent: why. Nothing changed; answer again." [kpadopt5-question-card]
+ * @property {string} questionDismiss  The button that takes a finished card away [kpadopt5-question-card]
+ * @property {(count: number) => string} questionWaiting  The tab title's prefix while questions wait, "(1) waiting" [kpadopt5-question-card]
+ * @property {string} transferBar  The accessible name of a transfer's bar when it has no file name (js/transfer.js) [kpadopt5-transfer]
+ * @property {(done: string, total: string) => string} transferOf  The reading of a transfer with a known size, "1.2 GB of 4.1 GB" [kpadopt5-transfer]
+ * @property {(done: string) => string} transferSoFar  The reading of a transfer of unknown size, "1.2 GB so far" [kpadopt5-transfer]
+ * @property {string} transferEstimating  The time left while the speed is not steady yet [kpadopt5-transfer]
+ * @property {(duration: string) => string} transferLeft  The time left, "about 3 min left" [kpadopt5-transfer]
+ * @property {(duration: string) => string} transferStalled  A transfer that moved no byte for a while, "stalled for 12 s" [kpadopt5-transfer]
+ * @property {(rate: string) => string} transferAverage  A finished transfer's average speed, "avg 21 MB/s" [kpadopt5-transfer]
+ * @property {(duration: string) => string} transferTook  A finished transfer's duration, "in 3 min 12 s" [kpadopt5-transfer]
+ * @property {string} transferFailed  The first words of a failed transfer's note [kpadopt5-transfer]
+ * @property {string} transferRetry  The Retry button of a failed transfer [kpadopt5-transfer]
+ * @property {(name: string, percent: number) => string} transferAnnounce  What a screen reader hears at 25, 50, 75 and 100 % [kpadopt5-transfer]
+ * @property {string} connOffline  The banner's first line when the connection is gone (js/connection.js) [kpadopt5-connection]
+ * @property {string} connOfflineWhy  What is true meanwhile and what happens next [kpadopt5-connection]
+ * @property {string} connReconnecting  The first line while a try is under way [kpadopt5-connection]
+ * @property {string} connReconnectingWhy  Its second line on the first try [kpadopt5-connection]
+ * @property {(n: number) => string} connAttempt  Its second line from the second try, "Attempt 2" [kpadopt5-connection]
+ * @property {(duration: string) => string} connNextTry  The time to the next automatic try, "next try in 8 s" [kpadopt5-connection]
+ * @property {(n: number) => string} connPending  The exact count of changes waiting, "3 changes waiting" [kpadopt5-connection]
+ * @property {string} connBack  The first line when the connection is back [kpadopt5-connection]
+ * @property {string} connBackWhy  Its second line with nothing waiting [kpadopt5-connection]
+ * @property {(n: number) => string} connBackSending  Its second line with changes waiting, "Sending 3 changes" [kpadopt5-connection]
+ * @property {string} connRefused  The first line when the server refuses while the browser is online [kpadopt5-connection]
+ * @property {string} connRefusedWhy  Its second line when the app gives none [kpadopt5-connection]
+ * @property {string} connRetry  The Retry now button [kpadopt5-connection]
+ * @property {(duration: string) => string} refreshEvery  A refresh choice, "Every 30 s" (js/auto-refresh.js) [kpadopt5-auto-refresh]
+ * @property {string} refreshPaused  The choice that stops the refreshing [kpadopt5-auto-refresh]
+ * @property {string} refreshOther  The entry that lets a person type any number of seconds [kpadopt5-auto-refresh]
+ * @property {string} refreshLabel  The accessible name of the refresh chooser [kpadopt5-auto-refresh]
+ * @property {string} refreshNow  The button that refreshes at once [kpadopt5-auto-refresh]
+ * @property {string} refreshUpdating  The freshness line's words while the app reads [kpadopt5-auto-refresh]
+ * @property {(next: string) => string} refreshFailed  The note after a failed refresh, "Last refresh failed, retrying in 30 s" [kpadopt5-auto-refresh]
+ * @property {string} refreshRetryNow  The button that retries a failed refresh at once [kpadopt5-auto-refresh]
+ * @property {string} refreshCustomLabel  The label of the field for any number of seconds [kpadopt5-auto-refresh]
+ * @property {string} refreshApply  The button that sets that number [kpadopt5-auto-refresh]
+ * @property {string} refreshInvalid  What a number that is not a whole number of seconds says [kpadopt5-auto-refresh]
+ * @property {string} paneEmpty  The detail pane's plate while nothing is picked (js/master-detail.js) [kpadopt5-master-detail]
+ * @property {string} paneBack  The Back button at the top of a folded detail pane [kpadopt5-master-detail]
+ * @property {string} paneLoading  What the busy card over the detail pane says [kpadopt5-master-detail]
+ * @property {string} paneErrorTitle  The errored detail's first line, when the page gives none [kpadopt5-master-detail]
+ * @property {string} paneErrorText  Its sentence, when the page gives none [kpadopt5-master-detail]
+ * @property {string} paneRetry  The Retry button of an errored detail [kpadopt5-master-detail]
  * @property {string} busy
  * @property {string} close
  * @property {string} menu          The accessible name of a collapsed navigation's toggle

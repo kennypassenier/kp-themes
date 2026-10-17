@@ -125,6 +125,12 @@ export const PAGES = [
                 label: 'People: avatar with a photo, ways to sign in, a conversation, chart markers',
                 about: 'An avatar with a photo, the list of ways to sign in (passkeys, magic links, passwords, tokens), a conversation in bubbles, and markers, windows and a median line on a chart, in formal.',
             },
+            // Kenny, 2026-10-17 (kpadopt5, wave ops): seven operations components a dashboard drew itself, built in the package first as ONE demo, formal only until Kenny approves it.
+            {
+                href: 'research/kpadopt5-ops/demo.html',
+                label: 'Operations parts for a dashboard (page frame, list and detail, auto refresh, connection banner, transfers, questions, notifications)',
+                about: 'Seven parts a dashboard needs, in formal only: the page frame, a list with its detail that folds on a phone, the automatic refresh chooser, the offline banner, a transfer with speed and time left, a question that waits for an answer and the notification centre. One topic per part.',
+            },
         ],
     },
     {
