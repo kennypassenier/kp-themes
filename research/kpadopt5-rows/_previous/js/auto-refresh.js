@@ -15,7 +15,7 @@
 //   data-kp-refresh-mode     event (default: the app fetches) | page (reload the page) | region (fetch the same URL
 //                            and swap only `data-kp-refresh-region`, keeping focus and scroll)
 //   data-kp-refresh-region   selector of the element to swap in `region` mode
-//   data-kp-look             menu (default) | segmented
+//   data-kp-look             segmented (default, Kenny 2026-10-17: "Segments") | menu
 //   data-kp-remember         name: the choice per page per device (js/remember.js, component `refresh`)
 //   data-kp-stale-after      seconds; the freshness line turns stale after it (default 3 x the interval)
 //   data-kp-refresh-hover    "pause": no refresh while the pointer is over a `.kp-table-wrap` being read
@@ -127,7 +127,7 @@ function wire(el, clock) {
     const memory = memoryFor(el, 'refresh');
     const choices = () => numbers(el.getAttribute('data-kp-refresh-choices'), REFRESH_CHOICES);
     const mode = () => el.getAttribute('data-kp-refresh-mode') ?? 'event';
-    const look = () => (el.getAttribute('data-kp-look') === 'segmented' ? 'segmented' : 'menu');
+    const look = () => (el.getAttribute('data-kp-look') === 'menu' ? 'menu' : 'segmented');
     const startValue = Number(el.getAttribute('data-kp-refresh') ?? REFRESH_DEFAULT);
     let interval = Number.isFinite(startValue) && startValue >= 0 ? Math.round(startValue) : REFRESH_DEFAULT;
     const remembered = memory?.read('value', null);

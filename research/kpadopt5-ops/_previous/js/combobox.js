@@ -85,6 +85,18 @@ export const MATCHERS = {
  * @property {() => void} close
  * @property {(text: string) => void} query type on the consumer's behalf
  * @property {() => void} refresh re-read the options after the consumer changed them
+ * @property {(hook: ComboboxHook | null) => void} extend let a layer on top of the combobox (js/usual-picker.js) decide which options show, what the status says and what a choice does [kpadopt6]
+ */
+
+/**
+ * What a layer on top of the combobox may decide [kpadopt6]. `shown` has the last word on one option (its default is what
+ * the matcher said), `after` runs once the options are filtered, `status` replaces the status line, `choose` returns true to
+ * swallow a choice (a row that is not a value).
+ * @typedef {object} ComboboxHook
+ * @property {(option: HTMLElement, query: string, matched: boolean) => boolean} [shown]
+ * @property {(query: string, visible: number) => void} [after]
+ * @property {(query: string, visible: number) => string | null} [status]
+ * @property {(option: HTMLElement) => boolean} [choose]
  */
 
 /** @type {WeakMap<Element, ComboboxHandle>} */
@@ -132,6 +144,8 @@ export function attachComboboxes(
     for (const element of root.querySelectorAll(COMBOBOX)) {
         const box = /** @type {HTMLElement} */ (element);
         if (box.dataset.kpComboboxAttached !== undefined) continue;
+        // A picker with the usual on top is made ready by js/usual-picker.js, which attaches it itself [kpadopt6].
+        if (box.hasAttribute('data-kp-usual') && box.dataset.kpUsualReady === undefined) continue;
         const input = /** @type {HTMLInputElement | null} */ (box.querySelector(INPUT));
         const list = /** @type {HTMLElement | null} */ (box.querySelector(LIST));
         if (input === null || list === null) continue;
@@ -204,6 +218,9 @@ export function attachComboboxes(
         const open = () => setOpen(true);
         const close = () => setOpen(false);
 
+        /** @type {ComboboxHook | null} */
+        let hook = null;
+
         /** Show only the options whose text matches, and say how many are left. */
         const filter = () => {
             const query = input.value.trim().toLowerCase();
@@ -212,12 +229,16 @@ export function attachComboboxes(
                 const option = /** @type {HTMLElement} */ (element);
                 const text = (option.textContent ?? '').toLowerCase();
                 const taken = isTags && !duplicates && chosen.includes(option.dataset.value ?? text);
-                const shown = !taken && (query === '' || matcher(text, query));
+                const matched = !taken && (query === '' || matcher(text, query));
+                const shown = hook?.shown && !taken ? hook.shown(option, query, matched) : matched;
                 option.hidden = !shown;
                 if (shown) visible += 1;
             }
+            hook?.after?.(query, visible);
+            // The rows a layer added are options too: count what is shown now.
+            if (hook?.after) visible = [...list.querySelectorAll(OPTION_SELECTOR)].filter((o) => !(/** @type {HTMLElement} */ (o).hidden)).length;
             listbox.refresh();
-            if (status !== null) status.textContent = RESULTS_TEXT(visible);
+            if (status !== null) status.textContent = hook?.status?.(query, visible) ?? RESULTS_TEXT(visible);
             if (empty !== null) {
                 empty.hidden = !showsEmpty || visible > 0;
                 if (empty !== serverEmpty) empty.textContent = getStrings().noResults;
@@ -284,6 +305,7 @@ export function attachComboboxes(
 
         /** @param {HTMLElement} option */
         const take = (option) => {
+            if (hook?.choose?.(option)) return;
             // Two different things, and conflating them is a real bug the
             // contract suite caught between the channels: the LABEL is
             // what a person reads in the field, the VALUE is what the
@@ -456,6 +478,10 @@ export function attachComboboxes(
                 onInput();
             },
             refresh: () => void filter(),
+            extend: (next) => {
+                hook = next;
+                filter();
+            },
         };
         handles.set(box, handle);
         created.push(handle);

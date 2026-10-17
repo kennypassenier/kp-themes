@@ -47,6 +47,77 @@
                 }
             ],
             "generalNote": "General (23:33): 'Ik wil niet kiezen tussen A en B als beide nuttig zijn, dan moet enkel bepaald worden wat het default gedrag is van de component.' Every useful variant becomes an option; a demo asks only for the default."
+        },
+        {
+            "round": "2",
+            "page": "calm-c39372f2-91de-4620-b0fc-060c328526cc",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 00:28: 11 of 11 judged in formal, 11 approved, 0 not approved.",
+            "approved": [
+                {
+                    "item": "usual",
+                    "theme": "formal"
+                },
+                {
+                    "item": "focus",
+                    "theme": "formal"
+                },
+                {
+                    "item": "focus-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "today",
+                    "theme": "formal"
+                },
+                {
+                    "item": "today-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "quote",
+                    "theme": "formal"
+                },
+                {
+                    "item": "quote-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "calm-tones",
+                    "theme": "formal"
+                },
+                {
+                    "item": "calm-tones-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "rating",
+                    "theme": "formal"
+                },
+                {
+                    "item": "rating-states",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [],
+            "choices": [
+                {
+                    "item": "today",
+                    "theme": "formal",
+                    "picked": "How a pause is told: default changed to Both: Paused since 03/10/2026 (2 weeks)"
+                },
+                {
+                    "item": "quote",
+                    "theme": "formal",
+                    "picked": "How the date reads: default changed to Both: Wednesday 14/10/2026 (3 days ago)"
+                },
+                {
+                    "item": "focus",
+                    "theme": "formal",
+                    "picked": "How progress shows: remove option Dots"
+                }
+            ],
+            "generalNote": "General (00:28): the review bar with Previous version, Play open and Play close is shown only where it is relevant; Kenny judges each demo as soon as it is ready, Claude does not wait for all of them."
         }
     ]
 }

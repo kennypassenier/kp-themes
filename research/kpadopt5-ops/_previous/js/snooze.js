@@ -18,7 +18,7 @@
 //   data-kp-snooze-morning  HH:MM that "tomorrow", "monday" and "next-week" mean          09:00
 //   data-kp-snooze-evening  HH:MM that "tonight" means                                    18:00
 //   data-kp-snooze-max      the longest a reminder may be put off                          7d
-//   data-kp-look            menu (a button with a menu) | chips (one row of choices)      menu
+//   data-kp-look            chips (one row of choices, the default, Kenny 2026-10-17) | menu (a button with a menu)      chips
 //   data-kp-time-zone       an IANA zone                                                   Europe/Brussels
 //   data-kp-snoozed-until   an ISO moment: shows "Snoozed until …" with End snooze         none
 //   data-kp-now             an ISO moment: a fixed clock for a demo or a test              the real clock
@@ -210,7 +210,7 @@ export function attachSnoozes(root = document, { now: nowOption } = {}) {
         const morning = el.dataset.kpSnoozeMorning;
         const evening = el.dataset.kpSnoozeEvening;
         const max = el.dataset.kpSnoozeMax ?? '7d';
-        const chips = el.dataset.kpLook === 'chips';
+        const chips = el.dataset.kpLook !== 'menu';
         const fixed = Date.parse(el.dataset.kpNow ?? '');
         const now = nowOption ?? (Number.isFinite(fixed) ? () => fixed : () => Date.now());
         const memory = el.dataset.kpRemember ? `kp-remember:snooze:${el.dataset.kpRemember}` : '';

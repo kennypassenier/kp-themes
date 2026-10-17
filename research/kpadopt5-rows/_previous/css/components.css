@@ -17847,6 +17847,25 @@
         text-overflow: clip;
     }
 
+    /* The list a sentence's select opens is the platform's own, and it paints the select's background: the field is
+     * transparent (an underline), so the list came up almost black in formal [kpadopt5-r2]. It wears the popover's surface
+     * and ink, the same tokens the package's other opened lists use (`select.kp-field__input` below, the combobox). */
+    .kp-sentence__field > select:open,
+    .kp-sentence__field > select option,
+    .kp-sentence__field > select optgroup {
+        background-color: var(--popover, var(--background));
+        color: var(--popover-foreground, var(--foreground));
+    }
+
+    /* Its drawn list is as wide as its longest option, never narrower than the field: "every week" stays on one line. */
+    .kp-sentence__field [data-kp-select-list] {
+        min-inline-size: max-content;
+    }
+
+    .kp-sentence__field [data-kp-select-list] > [role='option'] {
+        white-space: nowrap;
+    }
+
     .kp-sentence__field:has(> select)::after {
         content: var(--kp-glyph-caret, '▾');
         position: absolute;
@@ -18171,6 +18190,13 @@
 
     .kp-slider__bubble[data-kp-thumb='1'] {
         inset-inline-start: calc(var(--kp-slider-thumb) / 2 + (100% - var(--kp-slider-thumb)) * var(--kp-slider-at-1, 1));
+    }
+
+    /* Where the number is shown is an option (`data-kp-slider-value`, stamped as `data-kp-slider-show`): the bubble only for
+     * `bubble` and `both`, the box only for `field` and `both`. The default is the box; the bubble is off [kpadopt5-r2]. */
+    .kp-slider:not([data-kp-slider-show='bubble'], [data-kp-slider-show='both']) .kp-slider__bubble,
+    .kp-slider:is([data-kp-slider-show='bubble'], [data-kp-slider-show='none']) .kp-slider__fields {
+        display: none;
     }
 
     .kp-slider[data-kp-dragging] .kp-slider__bubble,
@@ -18900,6 +18926,10 @@
     .kp-problems {
         container: kp-problems / inline-size;
         display: grid;
+        /* An inline-size container has no intrinsic width: in a start-aligned grid cell or a flex item it collapsed to a
+         * few pixels (round 1 of kpadopt5-basics). It always takes the width of the place it stands in. */
+        inline-size: 100%;
+        min-inline-size: 0;
         gap: var(--kp-problem-gap, var(--kp-space-sm, 0.5rem));
     }
 
@@ -19125,6 +19155,20 @@
  * button does not, and its tooltip shows only while the control is off. */
     .kp-reason {
         display: inline-flex;
+    }
+
+    /* A control that fills its line (a slider, the weekday picker) is an inline-size container with no intrinsic width: in a
+     * shrink-wrapped anchor it collapsed to 0, and its reason broke one letter per line [kpadopt5-r2]. The anchor then takes
+     * the line, and the control the anchor's width. */
+    .kp-reason:has(> :is(.kp-slider, .kp-weekdays, .kp-sentence)) {
+        display: flex;
+        inline-size: 100%;
+        min-inline-size: 0;
+    }
+
+    .kp-reason > :is(.kp-slider, .kp-sentence) {
+        inline-size: 100%;
+        min-inline-size: 0;
     }
 
     .kp-reason:not([data-kp-reason-off]) > .kp-tooltip {
@@ -19819,8 +19863,8 @@
      * what / why / what now lines and the exact count of waiting changes sit in one
      * block; Retry now stays at the end. The plate keeps one height in every state
      * (--kp-connection-min), so a state change moves nothing under it. On a phone it is
-     * one line plus Retry now. `data-kp-placement="bottom"` sticks it to the window's
-     * foot. Knobs [KT6]: --kp-connection-min (6.25rem wide, 6rem on a phone). */
+     * one line plus Retry now. The foot of the window is the default;
+     * `data-kp-placement="top"` puts it in the flow under the navigation bar. Knobs [KT6]: --kp-connection-min (6.25rem wide, 6rem on a phone). */
     .kp-connection {
         container: kp-connection / inline-size;
         display: block;
@@ -19831,8 +19875,11 @@
         display: none;
     }
 
-    .kp-connection[data-kp-placement='bottom'] {
-        position: sticky;
+    /* The foot is the default: fixed to the bottom edge of the window (of the nearest frame that contains fixed boxes), over
+     * the last lines until it goes. `top` puts it in the flow under the navigation bar. */
+    .kp-connection:not([data-kp-placement='top']) {
+        position: fixed;
+        inset-inline: 0;
         inset-block-end: 0;
         z-index: var(--kp-z-sticky, 10);
     }
@@ -19994,6 +20041,51 @@
 
     .kp-progress-group--transfer[data-kp-narrow] .kp-transfer > .kp-progress__value {
         text-align: start;
+    }
+
+    /* A transfer of unknown size is a full band that breathes in place (an alternating opacity, so nothing restarts) and
+     * settles into the finished bar when the size is known, instead of a busy sweep that loops from the start and then
+     * jumps to full [kpadopt5-r2]. A register that draws its own busy bar repeats these two rules for its theme. */
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-transfer[data-kp-transfer-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+            inset-inline: 0;
+            inline-size: auto;
+            transform: none;
+            animation:
+                kp-transfer-enter 700ms ease-out,
+                kp-transfer-breathe 2600ms ease-in-out infinite alternate;
+        }
+
+        .kp-transfer[data-kp-transfer-settle] .kp-progressbar__fill {
+            animation: kp-transfer-settle 480ms ease-out;
+        }
+    }
+
+    @keyframes kp-transfer-enter {
+        from {
+            clip-path: inset(0 100% 0 0);
+        }
+        to {
+            clip-path: inset(0 0 0 0);
+        }
+    }
+
+    @keyframes kp-transfer-breathe {
+        from {
+            opacity: 0.4;
+        }
+        to {
+            opacity: 0.85;
+        }
+    }
+
+    @keyframes kp-transfer-settle {
+        from {
+            opacity: var(--kp-settle-from, 0.85);
+        }
+        to {
+            opacity: 1;
+        }
     }
 
     /* kpadopt5-ops:transfer:end */
@@ -20393,12 +20485,27 @@
         font-size: var(--kp-text-sm, 0.8125rem);
     }
 
+    /* Two fixed slots: Mark read / Mark unread is always the first, at the same place in every row; the fix, when the
+     * notice has one, is the second. Never placed by the flow of what comes before it [kpadopt5-r2]. Knob
+     * --kp-notices-read-col (7.5rem, wide enough for "Mark unread"). */
     .kp-notices__actions {
-        display: flex;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: var(--kp-notices-read-col, 7.5rem) minmax(0, max-content);
+        justify-content: start;
+        align-items: center;
         gap: var(--kp-space-sm, 0.5rem);
         grid-column: 2;
         margin-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-notices__actions > .kp-notices__mark-read {
+        grid-column: 1;
+        justify-self: start;
+        white-space: nowrap;
+    }
+
+    .kp-notices__actions > .kp-notices__fix {
+        grid-column: 2;
     }
 
     .kp-notices__foot {
@@ -20911,7 +21018,6 @@
             min-block-size: 2.5rem;
         }
     }
-
 }
 
 @layer kp.components {
@@ -22780,6 +22886,20 @@
         display: none;
     }
 
+    /* The numbers are laid over the gutter, not in it: a long text has more numbers than the box shows, and numbers that
+     * take part in the layout made the gutter (and so the whole frame) as tall as all of them. The gutter is exactly as tall
+     * as the text box and clips; the numbers move with the text's scroll [kpadopt5-r2]. */
+    .kp-jsonfield__gutter {
+        position: relative;
+    }
+
+    .kp-jsonfield__numbers {
+        position: absolute;
+        inset-block-start: calc(var(--kp-space-sm, 0.5rem) * 0.75);
+        inset-inline: 0 var(--kp-space-sm, 0.5rem);
+        will-change: transform;
+    }
+
     .kp-jsonfield__number {
         display: block;
         line-height: var(--kp-line-height, 1.5);
@@ -23065,5 +23185,4407 @@
 
     [data-kp-tick] {
         font-variant-numeric: tabular-nums;
+    }
+
+    /* --- The star rating [kpadopt6] -------------------------------------------
+ * `.kp-rating[data-kp-rating]` (js/rating.js): a row of stars that is a radio group, and the same row read only. One accent
+ * colour, never red or green; an unrated row is outlined and says so in words. Whole stars (Kenny, 2026-10-17: five whole
+ * stars), 44 px to touch in an input, 56 px each and filling the width on a phone (the input measures its own width, so a
+ * phone-wide box answers like a phone). Knobs [KT6]: --kp-rating-star (the glyph, 1.75rem), --kp-rating-hit (the touch
+ * square, 2.75rem), --kp-rating-ink (the lit star, the accent), --kp-rating-empty (the outline), --kp-rating-stroke (its
+ * width, 1.5), --kp-rating-gap (between stars). The words keep their line, so a value arriving moves nothing. */
+    .kp-rating {
+        --kp-rating-ink: var(--primary);
+        --kp-rating-empty: var(--muted-foreground);
+        min-inline-size: 0;
+        max-inline-size: 100%;
+    }
+
+    .kp-rating--input {
+        container: kp-rating / inline-size;
+        display: block;
+        inline-size: 100%;
+    }
+
+    .kp-rating--display {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .kp-rating__body {
+        display: grid;
+        justify-items: start;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        max-inline-size: 100%;
+    }
+
+    /* The input is as wide as its row of stars (and no narrower than its longest word): words wrap under the row. */
+    .kp-rating--input .kp-rating__body {
+        inline-size: min-content;
+    }
+
+    .kp-rating--display .kp-rating__body {
+        grid-auto-flow: column;
+        align-items: center;
+        column-gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-rating--sm {
+        --kp-rating-star: 1rem;
+        --kp-rating-hit: 2rem;
+    }
+
+    .kp-rating--lg {
+        --kp-rating-star: 2.25rem;
+        --kp-rating-hit: 3.5rem;
+    }
+
+    /* The words and Clear share one line, kept in every state, so a rating arriving or going moves nothing under it. */
+    .kp-rating__foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        inline-size: 100%;
+        min-inline-size: 0;
+    }
+
+    .kp-rating--input .kp-rating__foot {
+        min-block-size: 2rem;
+    }
+
+    .kp-rating--display .kp-rating__foot {
+        inline-size: auto;
+    }
+
+    .kp-rating__clear[data-kp-off] {
+        visibility: hidden;
+    }
+
+    .kp-rating__row {
+        display: flex;
+        gap: var(--kp-rating-gap, 0);
+    }
+
+    .kp-rating__row[hidden],
+    .kp-rating__foot[hidden],
+    .kp-rating__failure[hidden],
+    .kp-rating__flash[hidden],
+    .kp-rating__reason[hidden],
+    .kp-rating__actions[hidden],
+    .kp-rating__actions > [hidden] {
+        display: none;
+    }
+
+    .kp-rating__row:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+
+    .kp-rating__star {
+        display: grid;
+        place-items: center;
+        flex: none;
+        inline-size: var(--kp-rating-hit, 2.75rem);
+        block-size: var(--kp-rating-hit, 2.75rem);
+        color: var(--kp-rating-ink);
+        cursor: pointer;
+    }
+
+    .kp-rating--display .kp-rating__star {
+        inline-size: var(--kp-rating-star, 1.25rem);
+        block-size: var(--kp-rating-star, 1.25rem);
+        cursor: default;
+    }
+
+    .kp-rating--display.kp-rating--md {
+        --kp-rating-star: 1.25rem;
+    }
+
+    .kp-rating__star:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: -2px;
+        border-radius: var(--kp-radius-sm, calc(var(--radius, 0.5rem) / 2));
+    }
+
+    .kp-rating__star[aria-disabled='true'] {
+        cursor: default;
+    }
+
+    .kp-rating__glyph {
+        position: relative;
+        display: grid;
+        inline-size: var(--kp-rating-star, 1.75rem);
+        block-size: var(--kp-rating-star, 1.75rem);
+        pointer-events: none;
+    }
+
+    .kp-rating__glyph > svg {
+        grid-area: 1 / 1;
+        inline-size: 100%;
+        block-size: 100%;
+        overflow: visible;
+    }
+
+    .kp-rating__empty path {
+        fill: none;
+        stroke: var(--kp-rating-empty);
+        stroke-width: var(--kp-rating-stroke, 1.5);
+        stroke-linejoin: round;
+    }
+
+    .kp-rating__full path {
+        fill: currentColor;
+        stroke: currentColor;
+        stroke-width: var(--kp-rating-stroke, 1.5);
+        stroke-linejoin: round;
+    }
+
+    /* The lit share of the star: the fill is cut from its end edge, so a half star is the start half. */
+    .kp-rating__full {
+        clip-path: inset(0 calc((1 - var(--kp-rating-fill, 0)) * 100%) 0 0);
+    }
+
+    .kp-rating__star[data-kp-lit] .kp-rating__empty path {
+        stroke: var(--kp-rating-ink);
+    }
+
+    /* A star about to be set under the pointer is lighter than a set one. */
+    .kp-rating[data-kp-previewing] .kp-rating__full {
+        opacity: 0.55;
+    }
+
+    .kp-rating__row:dir(rtl) .kp-rating__full {
+        clip-path: inset(0 0 0 calc((1 - var(--kp-rating-fill, 0)) * 100%));
+    }
+
+    .kp-rating__caption {
+        min-block-size: 1lh;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-rating--display .kp-rating__caption {
+        min-block-size: 0;
+        color: var(--foreground);
+        white-space: nowrap;
+    }
+
+    .kp-rating__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    /* Clear is for a pointer; a touch screen has the star pressed again, and a keyboard Backspace. */
+    @media (hover: none), (pointer: coarse) {
+        .kp-rating__clear {
+            display: none;
+        }
+    }
+
+    .kp-rating__reason,
+    .kp-rating__flash {
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-rating__reason {
+        color: var(--muted-foreground);
+    }
+
+    .kp-rating__flash {
+        color: var(--destructive);
+        font-weight: 600;
+    }
+
+    .kp-rating[data-kp-disabled] .kp-rating__star {
+        opacity: 0.55;
+    }
+
+    .kp-rating[data-kp-rating-busy] .kp-rating__row {
+        cursor: progress;
+    }
+
+    /* Loading: the stars stay at full size as dashed outlines that breathe, so nothing moves when the value arrives. */
+    .kp-rating[data-kp-state='loading'] .kp-rating__empty path {
+        stroke-dasharray: 2.5 2.5;
+    }
+
+    .kp-rating[data-kp-state='loading'] .kp-rating__full {
+        display: none;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-rating[data-kp-state='loading'] .kp-rating__glyph {
+            animation: kp-pulse 1600ms ease-in-out infinite;
+        }
+
+        .kp-rating__star[data-kp-popped] .kp-rating__glyph {
+            animation: kp-rating-pop 220ms var(--fx-ease, ease-out);
+        }
+
+        @keyframes kp-rating-pop {
+            0% {
+                transform: scale(1);
+            }
+
+            45% {
+                transform: scale(1.22);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+    }
+
+    /* Failed to read: the stars' place is one plate of the same size, the words centred and a normal-size Retry. */
+    .kp-rating[data-kp-state='error'] .kp-rating__body {
+        position: relative;
+    }
+
+    .kp-rating[data-kp-state='error'] :is(.kp-rating__row, .kp-rating__foot) {
+        visibility: hidden;
+    }
+
+    .kp-rating__failure {
+        position: absolute;
+        inset: 0;
+        flex-wrap: wrap;
+        align-items: center;
+        align-content: center;
+        justify-content: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        text-align: center;
+    }
+
+    .kp-rating__failure-text {
+        overflow-wrap: anywhere;
+    }
+
+    /* A phone-wide box: five 56 px stars fill the width evenly, the words under them, nothing needs hover. */
+    @container kp-rating (max-width: 25rem) {
+        .kp-rating--input .kp-rating__body {
+            inline-size: 100%;
+        }
+
+        .kp-rating--input .kp-rating__row {
+            inline-size: 100%;
+            max-inline-size: calc(var(--kp-rating-max, 5) * 3.5rem);
+        }
+
+        .kp-rating--input .kp-rating__star {
+            flex: 1 1 0;
+            inline-size: auto;
+            block-size: 3.5rem;
+            min-inline-size: 0;
+        }
+    }
+
+    /* --- The quote card [kpadopt6] --------------------------------------------
+ * `figure.kp-quote[data-kp-quote]` (js/quote.js): your own earlier words in a `.kp-card` with four data states
+ * (js/card-state.js). A rule along the start edge and the theme's quote mark; the words in the body face, folded at
+ * `--kp-quote-lines` (4) behind Show all with the whole text still in the page, who wrote it and when under them, and Hide
+ * under that. It measures its own width: in a phone-wide box the words are at least 1 rem and Hide is a normal-size
+ * button at the end. Knobs [KT6]: --kp-quote-rule (the edge's width, 3px), --kp-quote-mark-size (2.25rem),
+ * --kp-quote-min (the loading card's room, 9rem), --kp-quote-lines, --kp-quote-size (the words'), --kp-glyph-quote
+ * (the mark itself: a theme's own, never hardcoded in a component). */
+    .kp-quote {
+        container: kp-quote / inline-size;
+        box-sizing: border-box;
+        inline-size: 100%;
+        min-inline-size: 0;
+        margin: 0;
+        border-inline-start: var(--kp-quote-rule, 3px) solid var(--primary);
+    }
+
+    .kp-quote[hidden] {
+        display: none;
+    }
+
+    .kp-quote > .kp-card__stage {
+        --kp-card-stage-min: 0px;
+        margin-block-start: 0;
+    }
+
+    .kp-quote[data-kp-state='loading'] > .kp-card__stage {
+        min-block-size: var(--kp-quote-min, 9rem);
+    }
+
+    .kp-quote__by:not(:last-child)::after {
+        content: ',';
+        margin-inline-end: 0.35em;
+        font-weight: 400;
+    }
+
+    .kp-quote .kp-card__data {
+        display: grid;
+        align-content: start;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-quote__why {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-quote__text {
+        position: relative;
+        margin: 0;
+        padding-block: 0;
+        padding-inline-start: calc(var(--kp-quote-mark-size, 2.25rem) * 0.9);
+        border: 0;
+        font-size: var(--kp-quote-size, 1.0625rem);
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-quote__text::before {
+        content: '“';
+        content: var(--kp-glyph-quote, '“') / '';
+        position: absolute;
+        inset-block-start: -0.15em;
+        inset-inline-start: 0;
+        color: var(--primary);
+        font-size: var(--kp-quote-mark-size, 2.25rem);
+        line-height: 1;
+        opacity: 0.55;
+    }
+
+    .kp-quote__text[data-kp-folded] {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: var(--kp-quote-lines, 4);
+        line-clamp: var(--kp-quote-lines, 4);
+        overflow: hidden;
+    }
+
+    .kp-quote--lg {
+        --kp-quote-size: 1.5rem;
+        --kp-quote-mark-size: 3rem;
+    }
+
+    .kp-quote__more {
+        justify-self: start;
+        margin-inline-start: calc(var(--kp-quote-mark-size, 2.25rem) * 0.9);
+    }
+
+    .kp-quote__more[hidden] {
+        display: none;
+    }
+
+    .kp-quote__caption {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        column-gap: 0;
+        row-gap: var(--kp-space-xs, 0.25rem);
+        padding-inline-start: calc(var(--kp-quote-mark-size, 2.25rem) * 0.9);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-quote__by {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-quote__source {
+        margin-inline-start: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-quote__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        padding-inline-start: calc(var(--kp-quote-mark-size, 2.25rem) * 0.9);
+    }
+
+    @container kp-quote (max-width: 25rem) {
+        .kp-quote__text {
+            font-size: max(1rem, var(--kp-quote-size, 1.0625rem));
+        }
+
+        .kp-quote__actions {
+            justify-content: flex-end;
+            padding-inline-start: 0;
+        }
+
+        .kp-quote__actions .kp-button {
+            min-block-size: 2.75rem;
+        }
+    }
+
+    /* A list of quotes: the first few, and Show all with the exact number. */
+    .kp-quote-list {
+        display: grid;
+        gap: var(--kp-space-md, 1rem);
+        min-inline-size: 0;
+    }
+
+    .kp-quote-list__more {
+        justify-self: start;
+    }
+
+    .kp-quote-list__more[hidden] {
+        display: none;
+    }
+
+    /* --- The calm vocabulary of the status list, and the today card [kpadopt6] ---
+ * `data-kp-status-vocab="calm"` on `.kp-statuslist` (js/statusrow.js): a row is `open` (neutral ink, a ring and a dot), `done`
+ * (the info pair with a check: never success green, never a flourish), `paused` (a dashed edge, a pause glyph, "Paused since
+ * 03/10/2026" and Resume) or `unknown` (dashed, a question mark: a thing that reports "ok" with no data is never done).
+ * No red, no pulse, no tally. Every state has its own glyph, so a tone is never the only carrier; `data-kp-today-mark="none"`
+ * takes the glyphs away. Knobs [KT6]: --kp-today-row-min (3.5rem, 56 px: one thumb), --kp-glyph-open, --kp-glyph-done,
+ * --kp-glyph-paused, --kp-glyph-unknown. */
+    .kp-statuslist[data-kp-status-vocab='calm'] .kp-statusrow {
+        align-items: center;
+        min-block-size: var(--kp-today-row-min, 3.5rem);
+    }
+
+    .kp-statuslist[data-kp-status-vocab='calm'] .kp-statusrow__mark {
+        margin-block-start: 0;
+    }
+
+    .kp-statuslist[data-kp-status-vocab='calm'] .kp-statusrow:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+
+    .kp-statusrow[data-state='open'] .kp-statusrow__mark {
+        border-color: var(--border-strong);
+        color: var(--muted-foreground);
+    }
+
+    .kp-statusrow[data-state='open'] .kp-statusrow__mark::after {
+        content: var(--kp-glyph-open, '·');
+    }
+
+    .kp-statusrow[data-state='done'] .kp-statusrow__mark {
+        border-color: var(--info-foreground);
+        background: var(--info);
+        color: var(--info-foreground);
+    }
+
+    .kp-statusrow[data-state='done'] .kp-statusrow__mark::after {
+        content: var(--kp-glyph-done, var(--kp-glyph-check, '✓'));
+    }
+
+    .kp-statusrow:is([data-state='paused'], [data-state='unknown']) {
+        border-style: dashed;
+        color: var(--muted-foreground);
+    }
+
+    .kp-statusrow:is([data-state='paused'], [data-state='unknown']) .kp-statusrow__mark {
+        border-style: dashed;
+        color: var(--muted-foreground);
+    }
+
+    .kp-statusrow[data-state='paused'] .kp-statusrow__mark::after {
+        content: var(--kp-glyph-paused, '||');
+        letter-spacing: -0.12em;
+    }
+
+    .kp-statusrow[data-state='unknown'] .kp-statusrow__mark::after {
+        content: var(--kp-glyph-unknown, '?');
+    }
+
+    .kp-statuslist[data-kp-today-mark='none'] .kp-statusrow__mark::after {
+        content: none;
+    }
+
+    .kp-statuslist[data-kp-status-vocab='calm'] .kp-statusrow__action {
+        display: flex;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-statusrow--fold {
+        grid-template-columns: minmax(0, 1fr);
+        padding: 0;
+        border-style: dashed;
+    }
+
+    .kp-statusrow__fold {
+        justify-content: flex-start;
+        inline-size: 100%;
+        min-block-size: var(--kp-today-row-min, 3.5rem);
+        text-align: start;
+        white-space: normal;
+    }
+
+    /* --- Calm tones for the calendar, the heat grid and the uptime strip [kpadopt6] -----
+ * `data-kp-tones="calm"` (js/calm-tones.js): `logged` is the theme's accent (`--primary`, "this is mine"; `data-kp-logged-fill=
+ * "success"` on the component asks for the success plate), `quiet` is the muted plate lowered a step toward the page with no
+ * border, no glyph and no count, `paused` is hatched like `before`. Never a red, never the word "missed". The quiet fill is
+ * one shared rule, so every theme answers it the same way: a register that dresses `[data-kp-tone='muted']` dresses these
+ * through the same selector list. Knobs [KT6]: --kp-quiet-fill, --kp-quiet-ink, --kp-logged-fill, --kp-logged-ink. */
+    :is(.kp-calendar, .kp-heat, .kp-uptime) {
+        --kp-logged-fill: var(--primary);
+        --kp-logged-ink: var(--primary-foreground);
+        --kp-quiet-fill: color-mix(in oklab, var(--muted) 55%, var(--card));
+        --kp-quiet-ink: var(--muted-foreground);
+    }
+
+    :is(.kp-calendar, .kp-heat, .kp-uptime)[data-kp-logged-fill='success'] {
+        --kp-logged-fill: var(--success);
+        --kp-logged-ink: var(--success-foreground);
+    }
+
+    .kp-calendar__day[data-kp-tone='logged'],
+    .kp-calendar__swatch[data-kp-tone='logged'] {
+        background: var(--kp-logged-fill);
+        color: var(--kp-logged-ink);
+    }
+
+    .kp-calendar__day[data-kp-tone='quiet'],
+    .kp-calendar__swatch[data-kp-tone='quiet'] {
+        background: var(--kp-quiet-fill);
+        color: var(--kp-quiet-ink);
+    }
+
+    .kp-calendar__day[data-kp-tone='paused'],
+    .kp-calendar__swatch[data-kp-tone='paused'] {
+        background-image: repeating-linear-gradient(135deg, var(--muted) 0 3px, transparent 3px 6px);
+        color: var(--muted-foreground);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='logged'] {
+        --kp-heat-fill: var(--kp-logged-fill);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='quiet'] {
+        --kp-heat-fill: var(--kp-quiet-fill);
+    }
+
+    :is(.kp-heat__cell, .kp-heat__swatch)[data-kp-tone='paused'] {
+        --kp-heat-fill: transparent;
+        --kp-heat-pattern: repeating-linear-gradient(135deg, var(--muted) 0 3px, transparent 3px 6px);
+    }
+
+    :is(.kp-uptime__cell, .kp-uptime__swatch)[data-kp-tone='logged'] {
+        --kp-uptime-fill: var(--kp-logged-fill);
+    }
+
+    :is(.kp-uptime__cell, .kp-uptime__swatch)[data-kp-tone='quiet'] {
+        --kp-uptime-fill: var(--kp-quiet-fill);
+    }
+
+    /* A calm calendar's plate stands over its grid, centred, at the heading size; a failed month is dimmed under it. */
+    .kp-calendar > .kp-calendar__grid {
+        grid-row: 3;
+        grid-column: 1;
+    }
+
+    .kp-calendar__plate {
+        grid-row: 3;
+        grid-column: 1;
+        z-index: 1;
+        display: grid;
+        min-block-size: 0;
+        margin: var(--kp-space-lg, 1.5rem) var(--kp-space-md, 1rem);
+    }
+
+    .kp-calendar__plate > .kp-stateplate {
+        block-size: 100%;
+        box-sizing: border-box;
+    }
+
+    .kp-calendar__grid[data-kp-dim] {
+        opacity: 0.35;
+    }
+
+    /* Under the plate the days are blank plates: their numbers would run under its words. */
+    .kp-calendar__grid[data-kp-dim] :is(.kp-calendar__num, .kp-calendar__count, .kp-calendar__pad) {
+        visibility: hidden;
+    }
+
+    .kp-quote[data-kp-state='loading'] .kp-card__data {
+        visibility: hidden;
+    }
+
+    /* A calm calendar that could not be read says so on its plate; the red dot of the state line would be a second, smaller alarm. */
+    .kp-calendar[data-kp-tones='calm'] .kp-calendar__state::before {
+        display: none;
+    }
+
+    .kp-calendar__caption {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-calendar__caption[hidden] {
+        display: none;
+    }
+
+    /* --- Answering one question per screen [kpadopt6] --------------------------------
+ * Answer mode of `.kp-focus-steps` (js/focus-steps.js): the question large, big answer buttons under it (56 px and more:
+ * `data-kp-choice-height="md"` is 44 px), "Same as yesterday: Matig", "Same as usual: Good" and Not today, with Back and Next at
+ * the foot. A chosen answer carries a mark and the primary plate, never colour alone. In a phone-wide box the answers are one
+ * stacked column, full width. Knobs [KT6]: --kp-focus-answer-min (3.5rem), --kp-focus-answer-gap (0.75rem). */
+    .kp-focus-steps__answer {
+        container: kp-focus-answer / inline-size;
+        display: grid;
+        gap: var(--kp-focus-answer-gap, var(--kp-space-md, 0.75rem));
+        min-inline-size: 0;
+    }
+
+    .kp-focus-steps__hint {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-focus-steps__choices {
+        display: grid;
+        gap: var(--kp-focus-answer-gap, var(--kp-space-sm, 0.5rem));
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kp-focus-steps__choices[data-kp-layout='row'] {
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 8rem), 1fr));
+    }
+
+    @container kp-focus-answer (max-width: 26rem) {
+        .kp-focus-steps__choices[data-kp-layout='row'] {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+
+    .kp-focus-steps__choice.kp-button {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        align-items: center;
+        justify-content: stretch;
+        column-gap: var(--kp-space-sm, 0.5rem);
+        inline-size: 100%;
+        min-block-size: var(--kp-focus-answer-min, 3.5rem);
+        font-size: var(--kp-focus-steps-button-text, 1.125rem);
+        text-align: start;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-focus-steps[data-kp-choice-height='md'] .kp-focus-steps__choice.kp-button {
+        min-block-size: 2.75rem;
+    }
+
+    .kp-focus-steps__mark {
+        display: grid;
+        place-items: center;
+        box-sizing: border-box;
+        inline-size: 1.5rem;
+        block-size: 1.5rem;
+        border: 2px solid currentColor;
+        border-radius: var(--kp-radius-pill, 999px);
+        font-size: 0.875rem;
+        line-height: 1;
+    }
+
+    .kp-focus-steps__choice[aria-pressed='true'] .kp-focus-steps__mark::before {
+        content: var(--kp-glyph-check, '✓');
+    }
+
+    .kp-focus-steps__choice[aria-pressed='true'].kp-button {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        border-color: var(--primary);
+    }
+
+    .kp-focus-steps__choice[aria-disabled='true'] {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .kp-focus-steps__reason {
+        grid-column: 2;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 400;
+    }
+
+    .kp-focus-steps__sames {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-focus-steps__same.kp-button,
+    .kp-focus-steps__skip.kp-button {
+        white-space: normal;
+        text-align: start;
+    }
+
+    .kp-focus-steps__skip.kp-button {
+        justify-self: start;
+    }
+
+    .kp-focus-steps__wake[hidden] {
+        display: none;
+    }
+
+    .kp-focus-steps__skip[aria-pressed='true'] {
+        text-decoration: underline;
+    }
+
+    .kp-focus-steps__input {
+        inline-size: 100%;
+        box-sizing: border-box;
+        min-block-size: 8rem;
+        font-size: var(--kp-focus-steps-button-text, 1.125rem);
+        resize: vertical;
+    }
+
+    .kp-focus-steps__dots {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+        grid-column: 1 / -1;
+    }
+
+    .kp-focus-steps__dot {
+        box-sizing: border-box;
+        inline-size: 0.625rem;
+        block-size: 0.625rem;
+        border: 2px solid var(--border-strong);
+        border-radius: 50%;
+    }
+
+    .kp-focus-steps__dot[data-kp-done] {
+        background: var(--primary);
+        border-color: var(--primary);
+    }
+
+    .kp-focus-steps__dot[data-kp-current] {
+        border-color: var(--primary);
+        background: var(--card);
+        box-shadow: 0 0 0 2px var(--primary);
+    }
+
+    .kp-focus-steps__bar[hidden],
+    .kp-focus-steps__count[hidden],
+    .kp-focus-steps__prev[hidden] {
+        display: none;
+    }
+
+    .kp-focus-steps__resume {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+    }
+
+    .kp-focus-steps__resume-text {
+        flex: 1 1 12rem;
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-focus-steps__summary {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin: 0;
+    }
+
+    .kp-focus-steps__summary-q {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-focus-steps__summary-a {
+        margin: 0 0 var(--kp-space-sm, 0.5rem);
+        font-size: 1.125rem;
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-focus-steps__step[data-kp-focus-steps-kind] > .kp-stateplate {
+        min-block-size: 100%;
+    }
+
+    /* --- A picker with the usual on top [kpadopt6] -------------------------------------
+ * `.kp-combobox[data-kp-usual]` (js/usual-picker.js): the combobox's own plate and options, with a band of the usual choices
+ * first under a group label, the rest under "All", a row that unfolds the full list ("Show all 38"), the guard's rows and
+ * plate, and a state panel for loading, empty and failed at the size of an open list. Options are 48 px high and their words
+ * wrap, never cut; nothing is hardcoded per theme (the group label is the combobox's own muted small text). Knobs [KT6]:
+ * --kp-usual-option-min (3rem), --kp-usual-panel-min (18rem). */
+    .kp-usual .kp-combobox__option {
+        min-block-size: var(--kp-usual-option-min, 3rem);
+        display: flex;
+        align-items: center;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-usual__group {
+        padding: var(--kp-space-sm, 0.5rem) 0.625rem var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        letter-spacing: 0.02em;
+    }
+
+    .kp-usual__group[hidden] {
+        display: none;
+    }
+
+    .kp-usual__pinned {
+        font-style: italic;
+    }
+
+    .kp-usual .kp-combobox__option[data-kp-reason] {
+        flex-wrap: wrap;
+        opacity: 0.75;
+    }
+
+    .kp-usual__reason {
+        flex-basis: 100%;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-usual .kp-usual__more {
+        justify-content: center;
+        border-block-start: 1px dashed var(--border-strong);
+        font-weight: 600;
+    }
+
+    .kp-usual .kp-usual__add {
+        border-block-start: 1px solid var(--border);
+        font-weight: 600;
+    }
+
+    .kp-usual__plate {
+        display: grid;
+        justify-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        padding: var(--kp-space-md, 0.75rem) var(--kp-space-sm, 0.5rem);
+        text-align: center;
+    }
+
+    .kp-usual__plate-title {
+        font-size: var(--kp-text-lg, 1.125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-usual__plate-text {
+        color: var(--muted-foreground);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-usual .kp-usual__empty {
+        display: none;
+    }
+
+    .kp-usual .kp-reason {
+        display: block;
+    }
+
+    .kp-usual__hint {
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-usual__hint[hidden],
+    .kp-usual__state[hidden] {
+        display: none;
+    }
+
+    .kp-usual {
+        position: relative;
+    }
+
+    .kp-usual__state {
+        position: absolute;
+        inset-inline: 0;
+        z-index: 2;
+        display: grid;
+        background: var(--card);
+        min-block-size: var(--kp-usual-panel-min, 18rem);
+        margin-block-start: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-usual__state > .kp-stateplate {
+        block-size: 100%;
+        box-sizing: border-box;
+    }
+
+    /* "Not today" on a ticked item: a small button inside the tag, and a dashed plate, so it is never the same as unset. */
+    .kp-usual__nt {
+        padding: 0 0.375rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-radius-pill, 999px);
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        font-size: var(--kp-text-xs, 0.75rem);
+        cursor: pointer;
+    }
+
+    .kp-usual__nt[aria-pressed='true'] {
+        background: var(--foreground);
+        color: var(--background);
+    }
+
+    .kp-tag[data-kp-not-today] {
+        border-style: dashed;
+        background: transparent;
+    }
+
+    .kp-usual__nt:focus-visible {
+        outline: 2px solid var(--ring);
+        outline-offset: 2px;
+    }
+}
+
+@layer kp.components {
+    /* kpadopt6-media:autosize:start */
+    /* --- A text box that grows with its text [kpadopt6-media] ------------------
+     * js/autosize.js. An opt-in on the existing multiline field (`data-kp-autosize`): the field is exactly as tall as its
+     * text, between `rows` lines and `data-kp-autosize-max` (20), then it scrolls inside. Never animated: an animated height
+     * is a layout shift. Where the browser sizes a field to its content itself (`field-sizing`) it does, and the package
+     * only says the least and the most. Knobs [KT6]: --kp-autosize-min and --kp-autosize-max (set by the script, in px). */
+    .kp-autosize {
+        resize: vertical;
+    }
+
+    .kp-field__input--multiline.kp-autosize {
+        min-height: 0;
+        overflow-y: hidden;
+    }
+
+    .kp-autosize[data-kp-resize='none'] {
+        resize: none;
+    }
+
+    .kp-autosize[data-kp-autosize-engine-used='css'] {
+        field-sizing: content;
+        min-block-size: var(--kp-autosize-min, 0);
+        max-block-size: var(--kp-autosize-max, none);
+        overflow-y: auto;
+    }
+
+    .kp-autosize__frame {
+        position: relative;
+        display: block;
+    }
+
+    /* The counter: tabular numerals, a line of its own at the end, the same height whatever it says; the warning tone is a plate
+       of the warning pair, never a bare status colour. */
+    .kp-autosize__counter {
+        box-sizing: border-box;
+        inline-size: fit-content;
+        min-block-size: 1.5lh;
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        margin-inline-start: auto;
+        padding: 0 var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        line-height: 1.5;
+        text-align: end;
+    }
+
+    .kp-autosize__counter[data-kp-tone='warning'] {
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+    /* kpadopt6-media:autosize:end */
+}
+
+@layer kp.components {
+    /* kpadopt6-media:anchors:start */
+    /* --- Link anchors on headings and rows [kpadopt6-media] ---------------------
+     * js/anchors.js. A small `#` that copies a link to its heading or row and says "Copied" on itself. It always takes its
+     * room (so a wrapped heading does not move when it shows), and shows when the pointer is over the heading or row or the
+     * keyboard is on it; on a touch screen it is always there, and a real 44 px target. `data-kp-anchor-show` on the
+     * container: hover (default), always, touch. Knobs [KT6]: --kp-anchor-offset (what a sticky bar covers; the header's own
+     * --kp-header-height by default), --kp-anchor-hit (the colour a landed-on place is marked with, the info plate). */
+    .kp-anchor {
+        position: relative;
+        display: inline-grid;
+        place-items: center;
+        box-sizing: border-box;
+        min-inline-size: 1.5em;
+        margin: 0;
+        margin-inline-start: 0.4em;
+        padding: 0 0.25em;
+        border: 0;
+        border-radius: var(--kp-radius-sm, 0.25rem);
+        background: none;
+        color: var(--link, var(--primary));
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: 0.75em;
+        font-weight: 600;
+        line-height: 1.6;
+        vertical-align: baseline;
+        cursor: pointer;
+        opacity: 0;
+    }
+
+    .kp-anchor__hash,
+    .kp-anchor__done {
+        grid-area: 1 / 1;
+        white-space: nowrap;
+    }
+
+    .kp-anchor__done {
+        visibility: hidden;
+        font-family: var(--font-body, inherit);
+    }
+
+    .kp-anchor[data-kp-anchor-state] .kp-anchor__hash {
+        visibility: hidden;
+    }
+
+    .kp-anchor[data-kp-anchor-state] .kp-anchor__done {
+        visibility: visible;
+    }
+
+    .kp-anchor__hash::before,
+    .kp-anchor__done::before {
+        content: attr(data-kp-text);
+    }
+
+    [data-kp-anchored='row'] > .kp-anchor,
+    [data-kp-anchored='row'] .kp-anchor {
+        margin-inline: 0 var(--kp-space-sm, 0.5rem);
+    }
+
+    /* hover (default): over the heading or row, or the keyboard on it. */
+    .kp-anchors:not([data-kp-anchor-show='touch']) [data-kp-anchored]:hover .kp-anchor,
+    .kp-anchors:not([data-kp-anchor-show='touch']) [data-kp-anchored]:focus-within .kp-anchor,
+    .kp-anchor:focus-visible,
+    .kp-anchor[data-kp-anchor-state],
+    .kp-anchors[data-kp-anchor-show='always'] .kp-anchor {
+        opacity: 1;
+    }
+
+    /* A touch screen has no hover: the mark is always there, in `hover` and `touch` modes alike. */
+    @media (hover: none) {
+        .kp-anchors .kp-anchor {
+            opacity: 1;
+        }
+    }
+
+    /* A fingertip: the mark's hit area grows to 44 px without growing the heading's line. */
+    @media (pointer: coarse) {
+        .kp-anchor::before {
+            content: '';
+            position: absolute;
+            inset-block-start: 50%;
+            inset-inline-start: 50%;
+            inline-size: max(100%, 2.75rem);
+            block-size: max(100%, 2.75rem);
+            transform: translate(-50%, -50%);
+        }
+    }
+
+    [data-kp-anchored] {
+        scroll-margin-block-start: calc(var(--kp-anchor-offset, var(--kp-header-height, 0px)) + var(--kp-space-md, 0.75rem));
+    }
+
+    /* The place a link landed on, for two seconds: an outline and a wash of the info colour. */
+    [data-kp-anchor-hit] {
+        outline: 2px solid var(--kp-anchor-hit, var(--info));
+        outline-offset: 2px;
+        background: color-mix(in srgb, var(--kp-anchor-hit, var(--info)) 16%, transparent);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-kp-anchored] {
+            transition:
+                background-color var(--fx-duration, 200ms) var(--fx-ease, ease-out),
+                outline-color var(--fx-duration, 200ms) var(--fx-ease, ease-out);
+        }
+    }
+
+    .kp-anchors__notice {
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-md, 0.75rem);
+        margin-block-end: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-anchors__notice-text {
+        overflow-wrap: anywhere;
+    }
+    /* kpadopt6-media:anchors:end */
+}
+
+@layer kp.components {
+    /* kpadopt6-media:docglyph:start */
+    /* --- The page that means "a document" [kpadopt6-media] ----------------------
+     * `.kp-docglyph` with `data-kp-doc-kind` (pdf, doc, sheet, image, text, unknown), `data-kp-size` (sm, md, lg),
+     * `data-kp-state="missing"` and `data-kp-doc-lines` (3 to 7; js/docpreview.js writes --kp-doc-lines). Drawn in the theme's
+     * plate and border tokens, no colour per brand: a hairline page, a folded corner, a few text lines and the kind's letters.
+     * Knobs [KT6]: --kp-doc-width, --kp-doc-height, --kp-doc-fold, --kp-doc-step. */
+    .kp-docglyph {
+        --kp-doc-width: 1.75rem;
+        --kp-doc-height: 2.25rem;
+        --kp-doc-fold: 0.5rem;
+        --kp-doc-step: 0.25rem;
+        position: relative;
+        display: inline-block;
+        flex: none;
+        box-sizing: border-box;
+        inline-size: var(--kp-doc-width);
+        block-size: var(--kp-doc-height);
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+        background:
+            linear-gradient(to bottom left, transparent 50%, var(--border-strong) 50%) top right / var(--kp-doc-fold) var(--kp-doc-fold) no-repeat,
+            var(--card);
+        clip-path: polygon(0 0, calc(100% - var(--kp-doc-fold)) 0, 100% var(--kp-doc-fold), 100% 100%, 0 100%);
+        vertical-align: middle;
+    }
+
+    .kp-docglyph::before {
+        content: '';
+        position: absolute;
+        inset-inline: 22%;
+        inset-block-start: calc(var(--kp-doc-fold) + 0.2rem);
+        block-size: calc(var(--kp-doc-lines, 4) * var(--kp-doc-step));
+        background: repeating-linear-gradient(to bottom, var(--muted-foreground) 0 1px, transparent 1px var(--kp-doc-step));
+        opacity: 0.55;
+    }
+
+    .kp-docglyph::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0.15rem;
+        color: var(--muted-foreground);
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: 0.5rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        line-height: 1;
+        text-align: center;
+    }
+
+    .kp-docglyph[data-kp-doc-kind='pdf']::after {
+        content: 'PDF';
+    }
+
+    .kp-docglyph[data-kp-doc-kind='doc']::after {
+        content: 'DOC';
+    }
+
+    .kp-docglyph[data-kp-doc-kind='sheet']::after {
+        content: 'XLS';
+    }
+
+    .kp-docglyph[data-kp-doc-kind='image']::after {
+        content: 'IMG';
+    }
+
+    .kp-docglyph[data-kp-doc-kind='text']::after {
+        content: 'TXT';
+    }
+
+    .kp-docglyph[data-kp-size='sm'] {
+        --kp-doc-width: 1.25rem;
+        --kp-doc-height: 1.625rem;
+        --kp-doc-fold: 0.375rem;
+        --kp-doc-step: 0.1875rem;
+    }
+
+    .kp-docglyph[data-kp-size='sm']::after {
+        display: none;
+    }
+
+    .kp-docglyph[data-kp-size='lg'] {
+        --kp-doc-width: 3.5rem;
+        --kp-doc-height: 4.5rem;
+        --kp-doc-fold: 1rem;
+        --kp-doc-step: 0.4375rem;
+    }
+
+    .kp-docglyph[data-kp-size='lg']::after {
+        inset-block-end: 0.35rem;
+        font-size: 0.75rem;
+    }
+
+    .kp-docglyph[data-kp-state='missing'] {
+        border-style: dashed;
+        opacity: 0.4;
+    }
+
+    .kp-docglyph[data-kp-state='missing']::before,
+    .kp-docglyph[data-kp-state='missing']::after {
+        display: none;
+    }
+    /* kpadopt6-media:docglyph:end */
+}
+
+@layer kp.components {
+    /* kpadopt6-media:viewer:start */
+    /* --- The viewer shell: one thing opened large [kpadopt6-media] --------------
+     * js/viewer.js. A modal `.kp-dialog.kp-viewer`: a head (title, how it is shown, facts, an exact position, close), a stage
+     * and a foot with the way out. Wide is about 70 % of the window and 90 % high; full is the whole window; a phone always
+     * gets the whole screen and its foot buttons share the width. The stage keeps its final size from the first frame: a
+     * loading file is the theme's busy card over the whole stage, a file that fails or cannot be shown is a plate that fills it.
+     * Knobs [KT6]: --kp-viewer-width (70vw, at most 64rem), --kp-viewer-height (90dvh). */
+    .kp-viewer {
+        display: none;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        box-sizing: border-box;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .kp-viewer[open] {
+        display: grid;
+    }
+
+    .kp-viewer[data-kp-viewer-size='wide'] {
+        inline-size: min(var(--kp-viewer-width, 70vw), 64rem);
+        max-inline-size: calc(100vw - 2rem);
+        block-size: var(--kp-viewer-height, 90dvh);
+        max-block-size: calc(100dvh - 1rem);
+    }
+
+    .kp-viewer[data-kp-viewer-size='full'] {
+        inline-size: 100vw;
+        max-inline-size: 100vw;
+        block-size: 100dvh;
+        max-block-size: 100dvh;
+        border-width: 0;
+        border-radius: 0;
+    }
+
+    @media (max-width: 40em) {
+        .kp-viewer[data-kp-viewer-size] {
+            inline-size: 100vw;
+            max-inline-size: 100vw;
+            block-size: 100dvh;
+            max-block-size: 100dvh;
+            border-width: 0;
+            border-radius: 0;
+        }
+    }
+
+    .kp-viewer__head {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        align-items: start;
+        gap: var(--kp-space-md, 0.75rem);
+        padding: var(--kp-space-lg, 1rem) var(--kp-space-xl, 1.5rem) var(--kp-space-md, 0.75rem) var(--kp-space-xl, 1.5rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-viewer__titles {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-viewer__title {
+        margin: 0;
+        font-size: var(--kp-dialog-title-size, 1.25rem);
+        line-height: var(--kp-heading-line-height, 1.2);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-viewer__desc,
+    .kp-viewer__facts {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-viewer__desc[hidden],
+    .kp-viewer__facts[hidden],
+    .kp-viewer__position[hidden],
+    .kp-viewer__foot[hidden],
+    .kp-viewer__plate[hidden] {
+        display: none;
+    }
+
+    .kp-viewer__position {
+        margin: 0;
+        padding-block-start: 0.35rem;
+        min-inline-size: 7ch;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+        white-space: nowrap;
+    }
+
+    .kp-viewer__stage {
+        position: relative;
+        display: grid;
+        min-block-size: 0;
+        min-inline-size: 0;
+        overflow: hidden;
+    }
+
+    .kp-viewer__content {
+        display: grid;
+        min-block-size: 0;
+        min-inline-size: 0;
+    }
+
+    .kp-viewer__stage[data-kp-state='loading'] > .kp-viewer__content,
+    .kp-viewer__stage[data-kp-state='error'] > .kp-viewer__content,
+    .kp-viewer__stage[data-kp-state='unsupported'] > .kp-viewer__content {
+        visibility: hidden;
+    }
+
+    .kp-viewer__plate {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        padding: var(--kp-space-lg, 1rem);
+    }
+
+    .kp-viewer__plate > .kp-stateplate {
+        block-size: 100%;
+    }
+
+    .kp-viewer__close {
+        font-size: 1.5rem;
+        line-height: 1;
+    }
+
+    .kp-viewer__plate-actions .kp-button {
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    .kp-viewer__plate-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        margin-block-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-viewer__foot {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-md, 0.75rem) var(--kp-space-xl, 1.5rem);
+        border-block-start: 1px solid var(--border);
+    }
+
+    .kp-viewer__action {
+        text-align: center;
+        text-decoration: none;
+        white-space: normal;
+        overflow-wrap: normal;
+    }
+
+    @media (max-width: 40em) {
+        .kp-viewer__head {
+            padding-inline: var(--kp-space-lg, 1rem);
+        }
+
+        .kp-viewer__foot {
+            padding-inline: var(--kp-space-lg, 1rem);
+        }
+
+        .kp-viewer__foot > * {
+            flex: 1 1 0;
+            min-inline-size: 0;
+        }
+
+        .kp-viewer__foot > * > .kp-viewer__action {
+            inline-size: 100%;
+        }
+    }
+
+    .kp-docpreview__frame {
+        inline-size: 100%;
+        block-size: 100%;
+        border: 0;
+        background: Canvas;
+        color-scheme: light;
+    }
+
+    .kp-docpreview__image {
+        justify-self: center;
+        align-self: center;
+        max-inline-size: 100%;
+        max-block-size: 100%;
+        object-fit: contain;
+    }
+    /* kpadopt6-media:viewer:end */
+}
+
+@layer kp.components {
+    /* kpadopt6-media:gallery:start */
+    /* --- A grid of pictures that open large [kpadopt6-media] --------------------
+     * js/gallery.js. Tiles of at least 9rem (two columns at 390 px), each a square crop or its own ratio, a caption on hover
+     * (always on touch), the pictures never tinted. A gallery keeps the room of three rows whatever it holds, so loading,
+     * empty, failed and ready have one footprint. The lightbox is the viewer shell at full size; the controls fade after 3 s
+     * of no movement (never when calm). Knobs [KT6]: --kp-gallery-tile (9rem), --kp-gallery-gap, --kp-gallery-columns (set by
+     * data-kp-grid-columns). */
+    .kp-gallery {
+        --kp-gallery-tile: 9rem;
+        --kp-gallery-gap: var(--kp-space-md, 0.75rem);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: var(--kp-gallery-gap);
+        min-block-size: calc(3 * var(--kp-gallery-tile) + 2 * var(--kp-gallery-gap));
+    }
+
+    .kp-gallery__bar {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .kp-gallery__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(var(--kp-gallery-tile), 1fr));
+        gap: var(--kp-gallery-gap);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-gallery[data-kp-grid-fixed] .kp-gallery__grid {
+        grid-template-columns: repeat(var(--kp-gallery-columns), minmax(0, 1fr));
+    }
+
+    .kp-gallery__grid[data-kp-tile-shape='ratio'] {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .kp-gallery__grid[data-kp-tile-shape='ratio'] > .kp-gallery__cell {
+        flex: calc(var(--kp-gallery-ratio-num, 1) * 100) 1 calc(var(--kp-gallery-tile) * var(--kp-gallery-ratio-num, 1));
+    }
+
+    .kp-gallery__cell {
+        min-inline-size: 0;
+    }
+
+    .kp-gallery__tile {
+        position: relative;
+        box-sizing: border-box;
+        inline-size: 100%;
+        aspect-ratio: var(--kp-gallery-ratio, 1);
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--muted);
+    }
+
+    .kp-gallery__grid[data-kp-tile-shape='square'] .kp-gallery__tile {
+        aspect-ratio: 1;
+    }
+
+    .kp-gallery__tile:hover {
+        border-color: var(--primary);
+    }
+
+    .kp-gallery__open {
+        position: absolute;
+        inset: 0;
+        display: block;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: inherit;
+        background: none;
+        cursor: zoom-in;
+    }
+
+    .kp-gallery__open:focus-visible {
+        outline-offset: -3px;
+    }
+
+    .kp-gallery__thumb {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        object-fit: cover;
+    }
+
+    .kp-gallery__caption {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+        box-sizing: border-box;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        background: var(--popover);
+        color: var(--popover-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+        text-align: start;
+        opacity: 0;
+    }
+
+    .kp-gallery__open:hover .kp-gallery__caption,
+    .kp-gallery__open:focus-visible .kp-gallery__caption,
+    .kp-gallery[data-kp-caption='always'] .kp-gallery__caption {
+        opacity: 1;
+    }
+
+    @media (hover: none) {
+        .kp-gallery:not([data-kp-caption='none']) .kp-gallery__caption {
+            opacity: 1;
+        }
+    }
+
+    .kp-gallery__play {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 50%;
+        inline-size: 2.5rem;
+        block-size: 2.5rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 50%;
+        background: var(--popover);
+        transform: translate(-50%, -50%);
+    }
+
+    .kp-gallery__play::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 50%;
+        border-block: 0.4rem solid transparent;
+        border-inline-start: 0.7rem solid var(--popover-foreground);
+        transform: translate(-30%, -50%);
+    }
+
+    .kp-gallery__add {
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        box-sizing: border-box;
+        inline-size: 100%;
+        aspect-ratio: 1;
+        margin: 0;
+        padding: var(--kp-space-sm, 0.5rem);
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: none;
+        color: var(--foreground);
+        font: inherit;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .kp-gallery__add:hover:not(:disabled) {
+        border-color: var(--primary);
+    }
+
+    .kp-gallery__add:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+    }
+
+    .kp-gallery__add-mark {
+        font-size: 1.75rem;
+        line-height: 1;
+    }
+
+    .kp-gallery__fail {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-sm, 0.5rem);
+        background: var(--muted);
+        color: var(--foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
+    }
+
+    .kp-gallery__fail-mark {
+        display: grid;
+        place-items: center;
+        inline-size: 1.5rem;
+        block-size: 1.5rem;
+        border-radius: 50%;
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-weight: 700;
+    }
+
+    .kp-gallery__fail-text {
+        overflow-wrap: anywhere;
+    }
+
+    /* A waiting tile has the final tile's shape, not the skeleton's one rem. */
+    .kp-gallery__tile.kp-skeleton {
+        block-size: auto;
+        border-color: transparent;
+    }
+
+    .kp-gallery__tile[data-kp-state='error'] {
+        border-color: var(--destructive);
+    }
+
+    .kp-gallery__state {
+        display: grid;
+        flex: 1 1 auto;
+    }
+
+    .kp-gallery__state > .kp-stateplate {
+        block-size: 100%;
+    }
+
+    .kp-gallery__file[hidden] {
+        display: none;
+    }
+
+    /* The lightbox */
+    .kp-gallery__lightbox .kp-viewer__content {
+        display: grid;
+    }
+
+    .kp-gallery__figure {
+        display: grid;
+        grid-template-rows: minmax(0, 1fr) minmax(0, auto);
+        min-block-size: 0;
+        min-inline-size: 0;
+    }
+
+    .kp-gallery__picture {
+        display: grid;
+        place-items: center;
+        min-block-size: 0;
+        min-inline-size: 0;
+        overflow: auto;
+        overscroll-behavior: contain;
+        touch-action: pan-y pinch-zoom;
+    }
+
+    .kp-gallery__image,
+    .kp-gallery__video {
+        max-inline-size: 100%;
+        max-block-size: 100%;
+        object-fit: contain;
+    }
+
+    .kp-gallery__image {
+        cursor: zoom-in;
+    }
+
+    .kp-gallery__figure[data-kp-zoom='full'] .kp-gallery__image {
+        max-inline-size: none;
+        max-block-size: none;
+        cursor: zoom-out;
+    }
+
+    .kp-gallery__figure[data-kp-zoom='full'] .kp-gallery__picture {
+        place-items: start;
+    }
+
+    .kp-gallery__info {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        max-block-size: 40vh;
+        padding: var(--kp-space-md, 0.75rem) var(--kp-space-xl, 1.5rem);
+        overflow: auto;
+        border-block-start: 1px solid var(--border);
+    }
+
+    .kp-gallery__info[hidden] {
+        display: none;
+    }
+
+    .kp-gallery__text,
+    .kp-gallery__meta {
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-gallery__meta {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-gallery__zone {
+        position: absolute;
+        inset-block: 0;
+        z-index: 2;
+        display: grid;
+        align-items: center;
+        padding-inline: var(--kp-space-md, 0.75rem);
+        pointer-events: none;
+    }
+
+    .kp-gallery__zone--previous {
+        inset-inline-start: 0;
+    }
+
+    .kp-gallery__zone--next {
+        inset-inline-end: 0;
+    }
+
+    .kp-gallery__zone > * {
+        pointer-events: auto;
+    }
+
+    .kp-gallery__nav {
+        inline-size: 3rem;
+        block-size: 3rem;
+        border-radius: 50%;
+        background: var(--popover);
+        color: var(--popover-foreground);
+        font-size: 1.75rem;
+        line-height: 1;
+    }
+
+    .kp-gallery__nav:disabled {
+        opacity: 0.35;
+    }
+
+    @media (max-width: 40em) {
+        /* A fingertip's width at each edge; the arrow stays a quiet mark. */
+        .kp-gallery__zone {
+            inline-size: 18%;
+            padding-inline: 0;
+        }
+
+        .kp-gallery__zone > *,
+        .kp-gallery__zone > * > .kp-gallery__nav {
+            inline-size: 100%;
+            block-size: 100%;
+        }
+
+        .kp-gallery__nav {
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            opacity: 0.55;
+        }
+    }
+
+    .kp-gallery__lightbox[data-kp-chrome-idle] :is(.kp-viewer__head, .kp-viewer__foot, .kp-gallery__zone) {
+        opacity: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-gallery__lightbox :is(.kp-viewer__head, .kp-viewer__foot, .kp-gallery__zone) {
+            transition: opacity var(--fx-duration, 250ms) var(--fx-ease, ease-out);
+        }
+    }
+    /* kpadopt6-media:gallery:end */
+}
+
+@layer kp.components {
+    /* kpadopt6-media:uses:start */
+    /* --- "Used by": two columns joined by lines [kpadopt6-media] ---------------
+     * js/uses-map.js, the lines view of `kp-matrix` (`data-kp-view="lines"`). Sources on one side, the things that use them
+     * on the other; the lines are an SVG under the cards. A node lights its lines and dims the rest on hover or focus, a press
+     * pins it. Under `data-kp-lines-collapse-below` (640 px) the lines go and each source is a card listing its users.
+     * Knobs [KT6]: --kp-uses-gap (the room the lines cross, 16 %), --kp-uses-row-gap, --kp-uses-min (the map's least height,
+     * 18rem), --kp-uses-line (the line's width). */
+    .kp-matrix--lines {
+        overflow: visible;
+        min-block-size: var(--kp-uses-min, 18rem);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-uses {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(3rem, var(--kp-uses-gap, 16%)) minmax(0, 1fr);
+        grid-template-areas: 'sources . users';
+        align-items: start;
+    }
+
+    .kp-uses[hidden],
+    .kp-uses__list[hidden] {
+        display: none;
+    }
+
+    .kp-uses[data-kp-lines-side='sources-right'] {
+        grid-template-areas: 'users . sources';
+    }
+
+    .kp-uses__col {
+        display: grid;
+        gap: var(--kp-uses-row-gap, var(--kp-space-md, 0.75rem));
+        align-content: start;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-matrix--lines[data-kp-density='compact'] .kp-uses__col {
+        --kp-uses-row-gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-uses__col--sources {
+        grid-area: sources;
+    }
+
+    .kp-uses__col--users {
+        grid-area: users;
+    }
+
+    .kp-uses__lines {
+        position: absolute;
+        inset: 0;
+        inline-size: 100%;
+        block-size: 100%;
+        overflow: visible;
+        pointer-events: none;
+    }
+
+    .kp-uses__line {
+        fill: none;
+        stroke: var(--border-strong);
+        stroke-width: var(--kp-uses-line, 1.5);
+    }
+
+    .kp-uses__line[data-kp-dashed] {
+        stroke-dasharray: 5 4;
+    }
+
+    .kp-matrix--lines[data-kp-lit] .kp-uses__line {
+        opacity: 0.2;
+    }
+
+    .kp-matrix--lines[data-kp-lit] .kp-uses__line[data-kp-hot] {
+        opacity: 1;
+        stroke: var(--primary);
+        stroke-width: calc(var(--kp-uses-line, 1.5) * 1.5);
+    }
+
+    .kp-uses__node {
+        position: relative;
+        z-index: 1;
+        display: flex;
+    }
+
+    .kp-matrix--lines[data-kp-lit] .kp-uses__node:not([data-kp-hot]) {
+        opacity: 0.45;
+    }
+
+    .kp-uses__card {
+        display: flex;
+        flex: 1 1 auto;
+        align-items: flex-start;
+        gap: var(--kp-space-md, 0.75rem);
+        box-sizing: border-box;
+        min-inline-size: 0;
+        min-block-size: 3.5rem;
+        margin: 0;
+        padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        font: inherit;
+        text-align: start;
+        cursor: pointer;
+    }
+
+    .kp-matrix--lines[data-kp-density='compact'] .kp-uses__card {
+        min-block-size: 2.5rem;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-uses__card:hover {
+        border-color: var(--border-strong);
+    }
+
+    .kp-uses__card[aria-pressed='true'] {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 1px var(--primary);
+    }
+
+    .kp-uses__card.kp-skeleton {
+        block-size: 4.25rem;
+        border-color: transparent;
+    }
+
+    .kp-uses__node:has(> .kp-uses__open) .kp-uses__card {
+        padding-inline-end: 2.75rem;
+    }
+
+    .kp-uses__text {
+        display: grid;
+        gap: 2px;
+        min-inline-size: 0;
+    }
+
+    .kp-uses__label {
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-uses__sub,
+    .kp-uses__count {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-uses__count {
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-uses__open {
+        position: absolute;
+        inset-block-start: var(--kp-space-sm, 0.5rem);
+        inset-inline-end: var(--kp-space-sm, 0.5rem);
+        display: grid;
+        place-items: center;
+        inline-size: 1.75rem;
+        block-size: 1.75rem;
+        border-radius: var(--kp-radius-sm, 0.25rem);
+        color: var(--link, var(--primary));
+        text-decoration: none;
+        opacity: 0.6;
+    }
+
+    .kp-uses__node:hover .kp-uses__open,
+    .kp-uses__node:focus-within .kp-uses__open {
+        opacity: 1;
+    }
+
+    .kp-uses__node[data-kp-ghost] .kp-uses__card,
+    .kp-uses__group[data-kp-ghost] {
+        border-style: dashed;
+        background: transparent;
+        opacity: 0.75;
+    }
+
+    .kp-uses__node[data-kp-tone='bad'] .kp-uses__card {
+        border-inline-start: 3px solid var(--destructive);
+    }
+
+    .kp-uses__node[data-kp-tone='warn'] .kp-uses__card {
+        border-inline-start: 3px solid var(--warning);
+    }
+
+    .kp-uses__node[data-kp-tone='ok'] .kp-uses__card {
+        border-inline-start: 3px solid var(--success);
+    }
+
+    .kp-uses__state {
+        display: grid;
+        min-block-size: var(--kp-uses-min, 18rem);
+    }
+
+    .kp-uses__state > .kp-stateplate {
+        block-size: 100%;
+    }
+
+    /* The phone's list: every source a card, its users as chips (links when they have one). */
+    .kp-uses__list {
+        display: grid;
+        gap: var(--kp-space-md, 0.75rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-uses__group {
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    .kp-uses__group-head {
+        display: grid;
+        gap: 2px;
+        margin: 0;
+    }
+
+    .kp-uses__chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-uses__chip {
+        display: inline-flex;
+        align-items: center;
+        min-block-size: 2.25rem;
+        padding: 0 var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border-strong);
+        border-radius: 999px;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-uses__chip-link {
+        display: inline-flex;
+        align-items: center;
+        min-block-size: 2.25rem;
+        margin-inline: calc(-1 * var(--kp-space-md, 0.75rem));
+        padding-inline: var(--kp-space-md, 0.75rem);
+        color: var(--link, var(--primary));
+        text-decoration: none;
+    }
+    /* kpadopt6-media:uses:end */
+}
+
+@layer kp.components {
+    /* --- Who brings it: a claim on every row of a checklist [kpadopt6] -----
+ *
+ * The checklist row keeps its box, label and detail; one cell more stands at its end in a column of its own, so the
+ * names line up from row to row (`--kp-claim-col`). The cell holds the people who bring the item (their mark and
+ * name) or, when nobody does, the gap: a glyph and the words "Nobody yet", on the destructive edge when it is loud.
+ * One button follows; its three faces (take, held, working) share one grid cell so it never changes width. Narrow
+ * (the list's own width under 34rem) the cell goes under the label and the button takes the line. */
+    .kp-checklist[data-kp-checklist-claim] {
+        --kp-claim-col: minmax(13rem, 21rem);
+        container: kp-checklist / inline-size;
+        inline-size: 100%;
+    }
+
+    .kp-checklist[data-kp-checklist-claim] .kp-checklist__item {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) var(--kp-claim-col);
+        align-items: center;
+        column-gap: var(--kp-space-md, 0.75rem);
+        position: relative;
+    }
+
+    .kp-checklist__item[hidden],
+    .kp-checklist__group[hidden] {
+        display: none;
+    }
+
+    .kp-claim__group-count {
+        flex: none;
+        margin-inline-start: auto;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 400;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-claim__group-count:not([hidden]) + .kp-checklist__count {
+        margin-inline-start: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-claim {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        min-inline-size: 0;
+        min-block-size: var(--kp-checklist-row, 2.75rem);
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-claim__people,
+    .kp-claim__why {
+        grid-area: 1 / 1;
+        min-inline-size: 0;
+    }
+
+    .kp-claim__people {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-claim__person {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-claim__name {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-claim__gap {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+    }
+
+    .kp-claim__glyph {
+        display: inline-grid;
+        place-content: center;
+        flex: none;
+        inline-size: 1.125rem;
+        block-size: 1.125rem;
+        border: 1.5px solid currentColor;
+        border-radius: 50%;
+        font-size: 0.75rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .kp-claim__glyph::before {
+        content: var(--kp-glyph-alert, '!');
+    }
+
+    /* Loud: the destructive edge on the row, the glyph and words in the destructive tone; never colour alone. */
+    .kp-checklist__item[data-kp-claim-loud] {
+        box-shadow: inset 3px 0 0 var(--destructive);
+        background: hsl(from var(--destructive) h s l / 0.07);
+    }
+
+    .kp-checklist__item[data-kp-claim-loud] .kp-claim__gap {
+        color: var(--destructive);
+        font-weight: 600;
+    }
+
+    .kp-claim__button {
+        display: inline-grid;
+        min-inline-size: 0;
+        white-space: nowrap;
+    }
+
+    .kp-claim__face {
+        grid-area: 1 / 1;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-claim__button[data-kp-claim-face='take'] > .kp-claim__face:not(.kp-claim__face--take),
+    .kp-claim__button[data-kp-claim-face='held'] > .kp-claim__face:not(.kp-claim__face--held),
+    .kp-claim__button[data-kp-claim-face='busy'] > .kp-claim__face:not(.kp-claim__face--busy) {
+        visibility: hidden;
+    }
+
+    .kp-claim__face--held::before {
+        content: var(--kp-glyph-check, '✓');
+    }
+
+    .kp-claim__face--busy > .kp-spinner {
+        --kp-spinner-size: 1em;
+    }
+
+    .kp-claim__button[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: hsl(from var(--primary) h s l / 0.12);
+    }
+
+    .kp-claim__button[aria-busy='true'] {
+        cursor: progress;
+    }
+
+    /* A refusal: the row's edge in the destructive tone and the reason where the people stood, for 3000 ms. */
+    .kp-checklist__item[data-kp-claim-refused] {
+        outline: 2px solid var(--destructive);
+        outline-offset: -2px;
+    }
+
+    .kp-checklist__item[data-kp-claim-refused] .kp-claim__people {
+        visibility: hidden;
+    }
+
+    .kp-claim__why {
+        display: flex;
+        align-items: center;
+        color: var(--destructive);
+        font-weight: 600;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    /* The bar: the count of items nobody brings and the filter chips, between the status and the actions. */
+    .kp-claim__bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        min-inline-size: 0;
+    }
+
+    .kp-claim__summary {
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        color: var(--muted-foreground);
+        min-inline-size: 9rem;
+    }
+
+    .kp-claim__summary[data-kp-claim-gap] {
+        color: var(--destructive);
+        font-weight: 600;
+    }
+
+    .kp-claim__summary[data-kp-claim-gap]::before {
+        content: var(--kp-glyph-alert, '!') '\00a0';
+    }
+
+    .kp-claim__chips {
+        flex-wrap: wrap;
+    }
+
+    .kp-claim__none {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        background: var(--background);
+    }
+
+    .kp-claim__retry {
+        margin-block-start: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-checklist__empty:has(.kp-claim__retry) {
+        align-content: center;
+    }
+
+    @container kp-checklist (max-width: 34rem) {
+        .kp-checklist[data-kp-checklist-claim] .kp-checklist__item {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-claim {
+            grid-template-columns: minmax(0, 1fr);
+            padding-block-start: 0;
+        }
+
+        .kp-claim__control {
+            display: grid;
+        }
+
+        .kp-claim__button {
+            min-block-size: 2.75rem;
+        }
+
+        .kp-claim__people,
+        .kp-claim__why {
+            grid-area: auto;
+        }
+
+        .kp-checklist__item[data-kp-claim-refused] .kp-claim__people {
+            display: none;
+        }
+    }
+}
+
+@layer kp.components {
+    /* --- Who can come: people over days or periods [kpadopt6] -------------
+ *
+ * The heat grid made editable. The cells are a fingertip (2.75rem) square and carry a glyph (a check, a tilde, a
+ * cross) as well as the tone, so colour is never the only sign; the person's own row is the one that answers a press,
+ * the others stand still. The name column and the axis stay while the grid scrolls sideways; the summary row's cells
+ * fill from the bottom with the number who can; the best column is ringed and starred. Loading, empty and failed all
+ * keep the body's height (`--kp-availability-body-min`). */
+    .kp-availability {
+        --kp-availability-cell: 2.75rem;
+        --kp-availability-label: 9rem;
+        --kp-availability-body-min: 17rem;
+        container: kp-availability / inline-size;
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        inline-size: 100%;
+        min-inline-size: 0;
+        position: relative;
+    }
+
+    .kp-availability[data-kp-availability-density='compact'] {
+        --kp-availability-cell: 2rem;
+    }
+
+    .kp-availability__head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        min-block-size: var(--kp-button-height-sm, 1.75rem);
+    }
+
+    .kp-availability__line {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-availability__bestline {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-availability__body {
+        position: relative;
+        min-block-size: var(--kp-availability-body-min);
+        min-inline-size: 0;
+    }
+
+    .kp-availability__plate {
+        min-block-size: var(--kp-availability-body-min);
+        box-sizing: border-box;
+    }
+
+    .kp-availability__grid.kp-heat {
+        --kp-heat-cell-height: var(--kp-availability-cell);
+        --kp-heat-summary-height: var(--kp-availability-cell);
+        --kp-heat-cell-gap: 3px;
+        --kp-heat-gap-y: 4px;
+        grid-template-columns: var(--kp-availability-label) minmax(calc(var(--kp-heat-cols, 4) * (var(--kp-availability-cell) + 3px)), 1fr);
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        padding-block-end: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-availability__grid .kp-heat__cells {
+        grid-template-columns: repeat(var(--kp-heat-cols, 4), minmax(var(--kp-availability-cell), 1fr));
+    }
+
+    .kp-availability__grid .kp-heat__label {
+        padding-inline-start: var(--kp-space-sm, 0.5rem);
+        position: sticky;
+        inset-inline-start: 0;
+        z-index: 1;
+        padding-inline-end: var(--kp-space-sm, 0.5rem);
+        background: var(--background);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-availability__grid .kp-heat__label-text {
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+    }
+
+    .kp-availability__grid .kp-heat__axis {
+        min-block-size: 0;
+    }
+
+    .kp-availability__grid .kp-heat__col {
+        flex-direction: column;
+        align-items: center;
+        gap: 1px;
+        padding-inline: 2px;
+        color: var(--foreground);
+        text-align: center;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-availability__col-label {
+        font-weight: 600;
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-availability__col-sub {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-availability__grid .kp-heat__col[data-kp-availability-star] .kp-availability__col-label::before {
+        content: var(--kp-glyph-best, '★') '\00a0';
+    }
+
+    .kp-availability__grid .kp-heat__col[data-kp-availability-closed] .kp-availability__col-label::after {
+        content: '\00a0' var(--kp-glyph-lock, '•');
+        color: var(--muted-foreground);
+    }
+
+    .kp-availability__grid .kp-heat__cell {
+        display: grid;
+        place-items: center;
+        color: var(--card);
+        font-size: var(--kp-text-md, 1rem);
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .kp-availability__face {
+        display: grid;
+        place-items: center;
+        pointer-events: none;
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-availability__grid .kp-heat__cell[data-kp-tone='muted']:not([data-kp-share]) {
+        --kp-heat-fill: var(--muted);
+        border: 1px dashed var(--border-strong);
+    }
+
+    .kp-availability__grid .kp-heat__cell[data-kp-availability-editable] {
+        cursor: pointer;
+    }
+
+    .kp-availability__grid .kp-heat__cell[data-kp-inert] {
+        cursor: default;
+    }
+
+    .kp-availability__grid .kp-heat__row[data-kp-availability-mine] .kp-heat__cell[data-kp-availability-editable] {
+        box-shadow: 0 0 0 1.5px var(--primary);
+    }
+
+    .kp-availability__grid .kp-heat__cell[data-kp-availability-painting] {
+        outline: 2px solid var(--primary);
+        outline-offset: 1px;
+    }
+
+    .kp-availability__grid .kp-heat__cell[data-kp-availability-saving] {
+        --kp-heat-fill: var(--muted);
+        cursor: progress;
+    }
+
+    .kp-availability__face > .kp-spinner {
+        --kp-spinner-size: 1.125rem;
+    }
+
+    .kp-availability__grid .kp-heat__cell[data-kp-availability-refused] {
+        --kp-heat-fill: var(--destructive);
+        outline: 2px solid var(--destructive);
+        outline-offset: 1px;
+    }
+
+    .kp-availability__grid .kp-heat__cell[data-kp-availability-star] {
+        outline: 2px solid var(--primary);
+        outline-offset: 1px;
+    }
+
+    .kp-availability__grid .kp-heat__row--summary .kp-heat__cell {
+        color: var(--foreground);
+    }
+
+    .kp-availability__grid:not([data-kp-availability-fill]) .kp-heat__cell[data-kp-share]::before {
+        display: none;
+    }
+
+    .kp-availability__grid .kp-heat__cell[data-kp-share][data-kp-tone='ok'],
+    .kp-availability__grid .kp-heat__cell[data-kp-share][data-kp-tone='warn'],
+    .kp-availability__grid .kp-heat__cell[data-kp-share][data-kp-tone='bad'] {
+        color: var(--foreground);
+    }
+
+    .kp-availability__legend-glyph {
+        inline-size: 1ch;
+        font-weight: 700;
+    }
+
+    .kp-availability__best-swatch {
+        display: inline-block;
+        inline-size: 0.75rem;
+        block-size: 0.75rem;
+        border: 2px solid var(--primary);
+        border-radius: 2px;
+    }
+
+    .kp-availability__foot {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        min-block-size: var(--kp-button-height, 2.25rem);
+    }
+
+    .kp-availability__why {
+        margin: 0;
+        color: var(--destructive);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-availability__menu {
+        position: absolute;
+        z-index: 5;
+        min-inline-size: 9rem;
+        position-area: none;
+    }
+
+    .kp-availability__menu-item[aria-checked='true'] {
+        font-weight: 700;
+    }
+
+    .kp-availability__columns {
+        display: none;
+    }
+
+    @container kp-availability (max-width: 34rem) {
+        .kp-availability {
+            --kp-availability-label: 6rem;
+        }
+
+        .kp-availability[data-kp-availability-narrow='by-column'] .kp-availability__grid {
+            display: none;
+        }
+
+        .kp-availability[data-kp-availability-narrow='by-column'] .kp-availability__columns {
+            display: grid;
+            gap: var(--kp-space-md, 0.75rem);
+        }
+
+        .kp-availability__foot .kp-availability__choose {
+            inline-size: 100%;
+            min-block-size: 2.75rem;
+        }
+    }
+
+    .kp-availability__column {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        padding: var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+    }
+
+    .kp-availability__column-head {
+        margin: 0;
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    .kp-availability__column-sum {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-availability__column-list {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-availability__column-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-block-size: 2.75rem;
+    }
+
+    .kp-availability__column-answers {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-availability__pick {
+        min-block-size: 2.75rem;
+    }
+
+    .kp-availability__pick[aria-pressed='true'] {
+        border-color: var(--primary);
+        background: hsl(from var(--primary) h s l / 0.12);
+    }
+}
+
+@layer kp.components {
+    /* --- A link as a QR code [kpadopt6] -----------------------------------
+ *
+ * The plate stays light in every theme and in dark mode: dark modules on light ground are read by every camera,
+ * inverted ones by only some, and the quiet zone (4 modules, part of the picture) must stay white. Only the plate's frame
+ * and radius come from the theme. The link stands under it as text that wraps at any character; Copy follows. Every
+ * state (making it, empty, too long, expired, hidden) stands in the same square. */
+    .kp-qr {
+        --kp-qr-size: 12rem;
+        container: kp-qr / inline-size;
+        display: grid;
+        justify-items: start;
+        gap: var(--kp-space-sm, 0.5rem);
+        inline-size: 100%;
+        max-inline-size: max(var(--kp-qr-size), 26rem);
+        min-inline-size: 0;
+    }
+
+    .kp-qr__plate {
+        position: relative;
+        box-sizing: border-box;
+        inline-size: min(100%, var(--kp-qr-size));
+        aspect-ratio: 1;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+    }
+
+    .kp-qr[data-kp-state='ready'] > .kp-qr__plate:has(> .kp-qr__svg) {
+        background: #fff;
+    }
+
+    .kp-qr__svg {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+    }
+
+    .kp-qr__plate:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--primary));
+        outline-offset: 2px;
+    }
+
+    .kp-qr__plate > .kp-stateplate {
+        block-size: 100%;
+        box-sizing: border-box;
+        padding: var(--kp-space-sm, 0.5rem);
+        border: 0;
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    .kp-qr__plate .kp-stateplate__title {
+        font-size: var(--kp-text-lg, 1.125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-qr__expired {
+        background-image: repeating-linear-gradient(135deg, transparent 0 0.75rem, hsl(from var(--destructive) h s l / 0.1) 0.75rem 1.5rem);
+    }
+
+    .kp-qr__caption {
+        inline-size: 100%;
+        min-block-size: 2lh;
+        margin: 0;
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        line-height: 1.45;
+        overflow-wrap: anywhere;
+        word-break: break-all;
+    }
+
+    .kp-qr__caption[data-kp-qr-struck] {
+        color: var(--muted-foreground);
+        text-decoration: line-through;
+    }
+
+    .kp-qr__caption[hidden] {
+        display: none;
+    }
+
+    .kp-qr__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        min-block-size: var(--kp-button-height, 2.25rem);
+    }
+
+    .kp-qr__warn {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    @container kp-qr (max-width: 23rem) {
+        .kp-qr {
+            --kp-qr-size: min(100%, 16rem);
+        }
+
+        .kp-qr__plate {
+            justify-self: center;
+        }
+
+        .kp-qr__copy {
+            flex: 1 1 100%;
+            min-block-size: 2.75rem;
+        }
+
+        .kp-qr[data-kp-qr-narrow='link'] > .kp-qr__plate {
+            order: 3;
+        }
+
+        .kp-qr[data-kp-qr-narrow='link'] > .kp-qr__actions {
+            order: 2;
+        }
+    }
+}
+
+@layer kp.components {
+    /* --- A field for a time of day [kpadopt6] -----------------------------
+ *
+ * One 24 hour box with a button that opens the package's own list of times (a sheet at the foot of a phone). It is a
+ * `kp-field__input` family member; inside a sentence (`.kp-time--inline`) it keeps the underline look of the sentence's
+ * fields. Waiting, it shows its own skeleton at its final width, so nothing re-flows. The list is raised into the top
+ * layer on the theme's popover plate. */
+    .kp-time {
+        position: relative;
+        display: inline-block;
+        vertical-align: baseline;
+        max-inline-size: 100%;
+        min-inline-size: 0;
+    }
+
+    .kp-time__control {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        max-inline-size: 100%;
+    }
+
+    .kp-time__input.kp-field__input {
+        inline-size: var(--kp-time-width, 8.5rem);
+        padding-inline-end: 2.5rem;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.02em;
+    }
+
+    .kp-time__toggle {
+        position: absolute;
+        inset-block: 1px;
+        inset-inline-end: 1px;
+        display: grid;
+        place-items: center;
+        inline-size: 2.25rem;
+        padding: 0;
+        border: 0;
+        border-radius: calc(var(--radius, 0.5rem) - 1px);
+        background: transparent;
+        color: var(--muted-foreground);
+        cursor: pointer;
+    }
+
+    .kp-time__toggle:hover:not(:disabled) {
+        color: var(--foreground);
+    }
+
+    .kp-time__toggle:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: -2px;
+    }
+
+    .kp-time__toggle[hidden] {
+        display: none;
+    }
+
+    .kp-time__glyph::before {
+        content: var(--kp-glyph-clock, '◷');
+        font-size: 1.125rem;
+    }
+
+    .kp-time__why {
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        color: var(--destructive);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-time__why[data-kp-time-note] {
+        color: var(--muted-foreground);
+        font-weight: 400;
+    }
+
+    .kp-time__why[hidden],
+    .kp-time__zone[hidden],
+    .kp-time__popup[hidden] {
+        display: none;
+    }
+
+    .kp-time__zone {
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-time__input[aria-invalid='true'] {
+        border-color: var(--destructive);
+    }
+
+    .kp-time__input:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+    .kp-time__skeleton {
+        display: none;
+        position: absolute;
+        inset-block-start: 0;
+        inset-inline-start: 0;
+        inline-size: var(--kp-time-width, 8.5rem);
+        block-size: var(--kp-control-height, 2.25rem);
+        border-radius: var(--radius, 0.5rem);
+    }
+
+    .kp-time[data-kp-state='loading'] > .kp-time__skeleton {
+        display: block;
+    }
+
+    .kp-time[data-kp-state='loading'] > .kp-time__control {
+        visibility: hidden;
+    }
+
+    /* The list. */
+    .kp-time__popup {
+        position: fixed;
+        box-sizing: border-box;
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        inline-size: 13rem;
+        margin: 0;
+        padding: var(--kp-space-xs, 0.25rem);
+        overflow: hidden;
+    }
+
+    .kp-time__sheet-title {
+        display: none;
+        margin: 0;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        font-weight: 600;
+    }
+
+    .kp-time__presets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+        padding: var(--kp-space-xs, 0.25rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-time__preset {
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-time__preset-skeleton {
+        display: inline-block;
+        inline-size: 5rem;
+        block-size: var(--kp-button-height-sm, 1.75rem);
+        border-radius: var(--radius, 0.5rem);
+    }
+
+    .kp-time__presets-error {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-sm, 0.5rem);
+        inline-size: 100%;
+        box-sizing: border-box;
+        min-block-size: 3.5rem;
+    }
+
+    .kp-time__list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        max-block-size: 14rem;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+
+    .kp-time__option {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        min-block-size: 2.25rem;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-time__option-note {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-time__option[aria-selected='true'] {
+        font-weight: 700;
+    }
+
+    .kp-time__option[aria-selected='true'] .kp-time__option-time::before {
+        content: var(--kp-glyph-check, '✓') '\00a0';
+    }
+
+    .kp-time__option[data-kp-time-near-mark] .kp-time__option-note::before {
+        content: var(--kp-glyph-alert, '!') '\00a0';
+        color: var(--warning-foreground, currentColor);
+    }
+
+    @media (hover: hover) {
+        .kp-time__option:hover {
+            background: var(--kp-highlight, hsl(from var(--foreground) h s l / 0.08));
+        }
+    }
+
+    /* In a sentence: the underline look of the sentence's own fields. */
+    .kp-time--inline {
+        margin-inline: 0.125em;
+        line-height: 1.5;
+    }
+
+    .kp-time--inline .kp-time__input.kp-field__input {
+        inline-size: 5.5ch;
+        min-block-size: 0;
+        block-size: auto;
+        padding: 0 0.25em;
+        border: 0;
+        border-block-end: var(--kp-sentence-edge-width, 2px) solid var(--kp-sentence-edge, var(--primary));
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+        font-weight: 600;
+        line-height: inherit;
+    }
+
+    .kp-time--inline .kp-time__input[aria-invalid='true'] {
+        border-block-end-color: var(--destructive);
+    }
+
+    .kp-time--inline .kp-time__toggle {
+        display: none;
+    }
+
+    .kp-time--inline .kp-time__skeleton {
+        inline-size: 5.5ch;
+        block-size: 1.5em;
+    }
+
+    .kp-time--inline .kp-time__why,
+    .kp-time--inline .kp-time__zone {
+        display: block;
+    }
+
+    /* A phone: the field fills a form's line, and the list is a sheet at the foot of the screen, rows 44 px high. */
+    @media (max-width: 40rem) {
+        .kp-time:not(.kp-time--inline) {
+            display: block;
+            inline-size: 100%;
+        }
+
+        .kp-time:not(.kp-time--inline) .kp-time__control,
+        .kp-time:not(.kp-time--inline) .kp-time__input.kp-field__input {
+            inline-size: 100%;
+        }
+
+        .kp-time__input.kp-field__input {
+            min-block-size: 2.75rem;
+        }
+
+        .kp-time__popup {
+            inline-size: auto;
+            max-block-size: 70vh;
+            padding-block-end: max(var(--kp-space-sm, 0.5rem), env(safe-area-inset-bottom));
+            border-end-start-radius: 0;
+            border-end-end-radius: 0;
+        }
+
+        .kp-time__sheet-title {
+            display: block;
+        }
+
+        .kp-time__list {
+            max-block-size: 45vh;
+        }
+
+        .kp-time__option {
+            min-block-size: 2.75rem;
+            align-items: center;
+        }
+    }
+}
+
+@layer kp.components {
+    /* --- An interactive console [kpadopt6] --------------------------------
+ *
+ * A body of blocks, one per command (the command in the mono face, its status with a glyph and a word, its output in
+ * the package's code block, a refusal in the alert's what / why / what now), and under it the prompt bar: an optional
+ * select, the prompt glyph, the line and Run. The body never shrinks below `--kp-console-min` (about twelve lines), so
+ * empty, loading, failed and full all stand in one height. On a phone the select goes above the prompt, Run takes its
+ * own line and the bar sticks to the foot of the screen with the safe-area inset. */
+    .kp-console {
+        --kp-console-min: 18rem;
+        container: kp-console / inline-size;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        inline-size: 100%;
+        min-inline-size: 0;
+        overflow: clip;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    .kp-console__stage {
+        position: relative;
+        min-inline-size: 0;
+    }
+
+    .kp-console__body {
+        position: relative;
+        display: grid;
+        align-content: start;
+        gap: var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        min-block-size: var(--kp-console-min);
+        block-size: var(--kp-console-height, 26rem);
+        padding: var(--kp-space-sm, 0.5rem);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        background: var(--muted);
+    }
+
+    .kp-console__body:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: -2px;
+    }
+
+    .kp-console__plate {
+        box-sizing: border-box;
+        min-block-size: calc(var(--kp-console-height, 26rem) - 2 * var(--kp-space-sm, 0.5rem));
+    }
+
+    .kp-console__block {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        padding: var(--kp-space-sm, 0.5rem);
+        border: 1px solid var(--border);
+        border-radius: calc(var(--radius, 0.5rem) / 1.5);
+        background: var(--card);
+    }
+
+    .kp-console__block-head {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: start;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-console__command {
+        grid-column: 1;
+        display: flex;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        overflow-wrap: anywhere;
+        white-space: pre-wrap;
+        background: none;
+        padding: 0;
+    }
+
+    .kp-console__command-prompt {
+        flex: none;
+        color: var(--muted-foreground);
+        user-select: none;
+    }
+
+    .kp-console__status {
+        grid-column: 2;
+        grid-row: 1;
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        font-family: var(--font-mono, ui-monospace, monospace);
+        white-space: nowrap;
+    }
+
+    .kp-console__glyph {
+        display: inline-grid;
+        place-items: center;
+        inline-size: 1.125rem;
+        block-size: 1.125rem;
+    }
+
+    .kp-console__glyph > .kp-spinner {
+        --kp-spinner-size: 0.875rem;
+    }
+
+    .kp-console__status[data-kp-status='ok'] {
+        color: var(--success-foreground, var(--foreground));
+    }
+
+    .kp-console__status[data-kp-status='ok'] .kp-console__glyph::before {
+        content: var(--kp-glyph-check, '✓');
+    }
+
+    .kp-console__status[data-kp-status='fail'] {
+        color: var(--destructive);
+    }
+
+    .kp-console__status[data-kp-status='fail'] .kp-console__glyph::before {
+        content: '×';
+        font-weight: 700;
+    }
+
+    .kp-console__status[data-kp-status='stop'] {
+        color: var(--muted-foreground);
+    }
+
+    .kp-console__status[data-kp-status='stop'] .kp-console__glyph::before {
+        content: '■';
+        font-size: 0.7rem;
+    }
+
+    .kp-console__status[data-kp-status='lost'] {
+        color: var(--warning-foreground, var(--foreground));
+    }
+
+    .kp-console__status[data-kp-status='lost'] .kp-console__glyph::before {
+        content: var(--kp-glyph-alert, '?');
+        font-weight: 700;
+    }
+
+    /* Six fixed places: each tool has its own column in every block and state, so one that does not apply leaves a gap
+       instead of letting the others slide along. */
+    .kp-console__tools {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: repeat(6, max-content);
+        justify-content: start;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-console__tool[data-kp-console-off] {
+        visibility: hidden;
+    }
+
+    .kp-console__tool[data-kp-console-tool='copy-command'] { grid-column: 1; }
+    .kp-console__tool[data-kp-console-tool='copy-output'] { grid-column: 2; }
+    .kp-console__tool[data-kp-console-tool='again'] { grid-column: 3; }
+    .kp-console__tool[data-kp-console-tool='recheck'] { grid-column: 4; }
+    .kp-console__tool[data-kp-console-tool='cancel'] { grid-column: 5; }
+    .kp-console__tool[data-kp-console-tool='collapse'] { grid-column: 6; }
+
+    .kp-console__problem {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin: 0;
+    }
+
+    .kp-console__problem[hidden],
+    .kp-console__output[hidden] {
+        display: none;
+    }
+
+    .kp-console__nooutput {
+        margin: 0;
+        padding: var(--kp-space-xs, 0.25rem) 0;
+        color: var(--muted-foreground);
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-console__block[data-kp-collapsed] .kp-console__tools {
+        margin-block-end: 0;
+    }
+
+    .kp-console__earlier {
+        display: grid;
+        justify-items: start;
+    }
+
+    .kp-console__bar {
+        padding: var(--kp-space-sm, 0.5rem);
+        padding-block-end: max(var(--kp-space-sm, 0.5rem), env(safe-area-inset-bottom));
+        border-block-start: 1px solid var(--border);
+        background: var(--card);
+    }
+
+    /* One grid for the bar: the context's label on its own row, then the context select and the line (prompt, input, Run) on ONE row,
+       centred on the same line and the same height, so nothing sits half a label higher or lower than its neighbour [kpadopt6-r2]. */
+    .kp-console__form {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-rows: auto auto;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-console__context-wrap {
+        display: contents;
+    }
+
+    .kp-console__context-wrap[hidden] {
+        display: none;
+    }
+
+    .kp-console__context-label {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .kp-console__context {
+        grid-column: 1;
+        grid-row: 2;
+        align-self: center;
+    }
+
+    .kp-console__context-wrap:not([hidden]) ~ .kp-console__line,
+    .kp-console__line {
+        grid-column: 2;
+        grid-row: 2;
+    }
+
+    .kp-console__context-wrap[hidden] ~ .kp-console__line {
+        grid-column: 1 / -1;
+        grid-row: 1;
+    }
+
+    .kp-console__context-label {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-console__context {
+        min-inline-size: 10rem;
+    }
+
+    .kp-console__line {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-console__prompt {
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-weight: 700;
+        color: var(--primary);
+        user-select: none;
+    }
+
+    .kp-console__input.kp-field__input {
+        font-family: var(--font-mono, ui-monospace, monospace);
+    }
+
+    .kp-console__run {
+        min-inline-size: 7.5rem;
+    }
+
+    .kp-console__input.kp-field__input,
+    .kp-console__context,
+    .kp-console__run {
+        min-block-size: 2.25rem;
+        box-sizing: border-box;
+    }
+
+    .kp-console__prompt {
+        line-height: 1;
+        align-self: center;
+    }
+
+    .kp-console__hint {
+        grid-column: 1 / -1;
+        margin: 0;
+        min-block-size: 1.25lh;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-console__hint[data-kp-console-why] {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-console__complete {
+        grid-column: 1 / -1;
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-console__complete[hidden] {
+        display: none;
+    }
+
+    @container kp-console (max-width: 34rem) {
+        .kp-console {
+            --kp-console-height: min(26rem, 55svh);
+        }
+
+        .kp-console__form {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-console__form {
+            grid-template-rows: none;
+        }
+
+        .kp-console__context-wrap:not([hidden]) ~ .kp-console__line,
+        .kp-console__line {
+            grid-column: 1;
+            grid-row: auto;
+            grid-template-columns: auto minmax(0, 1fr);
+        }
+
+        .kp-console__context-wrap[hidden] ~ .kp-console__line {
+            grid-row: auto;
+        }
+
+        .kp-console__context {
+            grid-column: 1;
+            grid-row: auto;
+        }
+
+        .kp-console__context-label {
+            grid-row: auto;
+        }
+
+        .kp-console__run {
+            grid-column: 1 / -1;
+            min-block-size: 2.75rem;
+        }
+
+        .kp-console__input.kp-field__input,
+        .kp-console__context {
+            min-block-size: 2.75rem;
+        }
+
+        .kp-console__block-head {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-console__status {
+            grid-column: 1;
+            grid-row: 2;
+        }
+
+        .kp-console__tools {
+            grid-row: 3;
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .kp-console__tool[data-kp-console-tool='copy-command'] { grid-column: 1; grid-row: 1; }
+        .kp-console__tool[data-kp-console-tool='copy-output'] { grid-column: 2; grid-row: 1; }
+        .kp-console__tool[data-kp-console-tool='again'] { grid-column: 3; grid-row: 1; }
+        .kp-console__tool[data-kp-console-tool='recheck'] { grid-column: 1; grid-row: 2; }
+        .kp-console__tool[data-kp-console-tool='cancel'] { grid-column: 2; grid-row: 2; }
+        .kp-console__tool[data-kp-console-tool='collapse'] { grid-column: 3; grid-row: 2; }
+    }
+}
+
+@layer kp.components {
+    /* --- Toggle button: a button that stays pressed until it is pressed again [kpadopt6-ops] ---
+ * `.kp-button[data-kp-toggle][aria-pressed]` (js/toggle.js). One rule family for the filter chip, the pin, the follow
+ * button and the segmented switch that twenty places drew by hand. Pressed is a shape and a weight as well as a colour:
+ * the face is inverted (`--kp-toggle-on` on `--kp-toggle-on-ink`), `mixed` is a dashed edge on a half wash, and the
+ * optional check (`data-kp-pressed-mark="check"`) keeps its room whether or not it is drawn. The label never changes;
+ * the count keeps the room of its next digit; a hint row under the label is always there, so nothing moves when the
+ * state does. Looks: `data-kp-look` `button` (default), `chip` (a pill) and `icon` (a square). Busy lays the theme's
+ * spinner over the words, which keep their room; a refusal lays its word over them for a moment.
+ * Knobs [KT6]: --kp-toggle-on, --kp-toggle-on-ink, --kp-toggle-mixed (the half wash), --kp-toggle-gap,
+ * --kp-toggle-count-size (--kp-text-xs), --kp-toggle-hit (the least height on a phone, 2.75rem). */
+    .kp-button[data-kp-toggle] {
+        flex-wrap: nowrap;
+        column-gap: var(--kp-toggle-gap, 0.4em);
+        row-gap: 0;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    /* The hint row is the only reason the face wraps: it takes the line under the words. */
+    .kp-button[data-kp-toggle]:has(> .kp-toggle__hint) {
+        flex-wrap: wrap;
+    }
+
+    .kp-button[data-kp-toggle][aria-pressed='true'] {
+        background: var(--kp-toggle-on, var(--foreground));
+        border-color: var(--kp-toggle-on, var(--foreground));
+        color: var(--kp-toggle-on-ink, var(--background));
+    }
+
+    .kp-button[data-kp-toggle][aria-pressed='true']:hover:not(:disabled, [aria-disabled='true']) {
+        background: color-mix(in oklab, var(--kp-toggle-on, var(--foreground)) 86%, var(--kp-toggle-on-ink, var(--background)));
+    }
+
+    .kp-button[data-kp-toggle][aria-pressed='true']:active:not(:disabled, [aria-disabled='true']) {
+        background: color-mix(in oklab, var(--kp-toggle-on, var(--foreground)) 72%, var(--kp-toggle-on-ink, var(--background)));
+    }
+
+    .kp-button[data-kp-toggle][aria-pressed='mixed'] {
+        border-style: dashed;
+        border-color: var(--kp-toggle-on, var(--foreground));
+        background: var(--kp-toggle-mixed, color-mix(in oklab, var(--kp-toggle-on, var(--foreground)) 14%, var(--card)));
+        color: var(--foreground);
+    }
+
+    .kp-button[data-kp-toggle]:is(:disabled, [aria-disabled='true']) {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        cursor: not-allowed;
+    }
+
+    .kp-button[data-kp-toggle][aria-busy='true'] {
+        opacity: 1;
+        cursor: progress;
+    }
+
+    /* The chip: a pill that wraps in a row, as the segmented chips are drawn. */
+    .kp-button[data-kp-toggle][data-kp-look='chip'] {
+        min-block-size: var(--kp-chip-height, max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem))));
+        padding-inline: var(--kp-chip-pad-inline, var(--kp-space-md, 0.75rem));
+        border-radius: var(--kp-chip-radius, var(--kp-radius-pill, 999px));
+        background: var(--kp-chip-ground, var(--card));
+        color: var(--kp-chip-ink, var(--foreground));
+        border-color: var(--kp-chip-edge, var(--border-strong));
+        box-shadow: none;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-button[data-kp-toggle][data-kp-look='chip'][aria-pressed='true'] {
+        background: var(--kp-toggle-on, var(--foreground));
+        border-color: var(--kp-toggle-on, var(--foreground));
+        color: var(--kp-toggle-on-ink, var(--background));
+    }
+
+    @media (hover: hover) {
+        .kp-button[data-kp-toggle][data-kp-look='chip']:not([aria-pressed='true'], [aria-pressed='mixed'], :disabled, [aria-disabled='true']):hover {
+            border-color: var(--ring);
+            background: var(--kp-chip-hover, var(--card));
+        }
+    }
+
+    .kp-button[data-kp-toggle][data-kp-look='chip'][aria-pressed='mixed'] {
+        background: var(--kp-toggle-mixed, color-mix(in oklab, var(--kp-toggle-on, var(--foreground)) 14%, var(--card)));
+        color: var(--foreground);
+    }
+
+    /* The icon: a square the height of a control, the glyph in the middle. */
+    .kp-button[data-kp-toggle][data-kp-look='icon'] {
+        inline-size: var(--kp-control-height, 2.25rem);
+        padding-inline: 0;
+    }
+
+    .kp-toggle__label {
+        display: inline-flex;
+        flex: 0 1 auto;
+        align-items: center;
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+        text-align: center;
+    }
+
+    /* The count: the exact number, the room of the next digit held, the figures tabular. */
+    .kp-toggle__count {
+        display: inline-block;
+        min-inline-size: calc(var(--kp-toggle-digits, 2) * 1ch);
+        font-size: var(--kp-toggle-count-size, var(--kp-text-xs, 0.75rem));
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        text-align: end;
+    }
+
+    .kp-toggle__count[hidden] {
+        display: none;
+    }
+
+    .kp-toggle__bone {
+        display: block;
+        inline-size: 2ch;
+        block-size: 0.75em;
+    }
+
+    /* The check: its room is kept in both states, so pressing moves no word. */
+    .kp-button[data-kp-toggle][data-kp-look='icon'] .kp-toggle__mark {
+        display: none;
+    }
+
+    .kp-toggle__mark {
+        display: inline-grid;
+        place-items: center;
+        inline-size: 1em;
+        flex: none;
+    }
+
+    .kp-button[data-kp-toggle][aria-pressed='true'] .kp-toggle__mark::before {
+        content: var(--kp-glyph-check, '✓');
+    }
+
+    .kp-button[data-kp-toggle][aria-pressed='mixed'] .kp-toggle__mark::before {
+        content: '–';
+    }
+
+    /* The hint row: always there, empty while the toggle is off. */
+    .kp-toggle__hint {
+        flex: 1 0 100%;
+        min-block-size: 1lh;
+        font-size: var(--kp-text-xs, 0.75rem);
+        line-height: 1.3;
+        text-align: center;
+    }
+
+    .kp-button[data-kp-toggle]:has(> .kp-toggle__hint) {
+        padding-block: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-button[data-kp-toggle][data-kp-busy] > :not(.kp-button__busy),
+    .kp-button[data-kp-toggle][data-kp-refused] > :not(.kp-toggle__refused) {
+        visibility: hidden;
+    }
+
+    .kp-toggle__refused {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-items: center;
+        padding-inline: var(--kp-space-sm, 0.5rem);
+        border-radius: inherit;
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-weight: 600;
+        text-align: center;
+    }
+
+    /* A group: the toggles in a row that wraps, the Clear button last and in its place whether or not it is needed. */
+    .kp-toggles {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-chip-gap, var(--kp-space-sm, 0.375rem));
+    }
+
+    .kp-toggle__clear {
+        min-block-size: var(--kp-chip-height, max(1.75rem, calc(var(--kp-control-height, 2.25rem) - var(--kp-space-sm, 0.5rem))));
+        margin-inline-start: auto;
+        padding-inline: var(--kp-chip-pad-inline, var(--kp-space-md, 0.75rem));
+        font-size: var(--kp-text-sm, 0.8125rem);
+        white-space: nowrap;
+    }
+
+    .kp-toggle__clear[data-kp-idle] {
+        visibility: hidden;
+    }
+
+    @media (pointer: coarse), (max-width: 30rem) {
+        .kp-button[data-kp-toggle],
+        .kp-button[data-kp-toggle][data-kp-look],
+        .kp-toggles > .kp-toggle__clear {
+            min-block-size: var(--kp-toggle-hit, 2.75rem);
+        }
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-button[data-kp-toggle] {
+            transition:
+                background-color var(--fx-duration, 150ms) var(--fx-ease, ease),
+                border-color var(--fx-duration, 150ms) var(--fx-ease, ease),
+                color var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+    }
+}
+
+@layer kp.components {
+    /* --- Palette that finds words in any order [kpadopt6-ops] ---
+ * `data-kp-match="intent"` (js/palette.js, js/intent.js) is the default matcher of every palette. The matched words
+ * are marked (`.kp-palette__mark`, a wash and a heavier weight, never colour alone), a query nothing answers is the
+ * package's empty plate in the list's footprint (`.kp-palette__nomatch`, as high as the list was, 11rem at least), and a
+ * palette whose commands could not be read shows the failed plate above the commands marked `data-kp-static`.
+ * `data-kp-mark-look="wash"` keeps the wash in a theme that rules its marks instead.
+ * Knobs [KT6]: --kp-palette-mark (the wash behind a matched word), --kp-palette-plate-height (set by the script). */
+    .kp-palette__mark {
+        padding: 0;
+        border-radius: var(--kp-radius-sm, 0.25rem);
+        background: var(--kp-palette-mark, hsl(from var(--foreground) h s l / 0.14));
+        color: inherit;
+        font-weight: 700;
+    }
+
+    /* While the commands arrive the busy card lies over the list (js/busy-card.js). */
+    .kp-palette__list:has(> .kp-datatable__busy-card) {
+        position: relative;
+    }
+
+    /* Under the busy card the rows wait unseen: the list keeps its height and the card is the only thing to read. */
+    .kp-palette__list[aria-busy='true'] > :not(.kp-datatable__busy-card) {
+        visibility: hidden;
+    }
+
+    /* The command's own words, wrapped by the script so a mark inside them is not a new item of the row. */
+    .kp-palette__label {
+        min-inline-size: 0;
+    }
+
+    .kp-palette__nomatch {
+        display: grid;
+        min-block-size: max(var(--kp-palette-plate-height, 0px), 11rem);
+        padding: 0.25rem;
+    }
+
+    .kp-palette__nomatch[hidden] {
+        display: none;
+    }
+
+    .kp-palette__nomatch > .kp-stateplate {
+        block-size: 100%;
+    }
+
+    .kp-palette__nomatch[data-kp-above] {
+        min-block-size: 11rem;
+    }
+}
+
+@layer kp.components {
+    /* --- Version jump chip: "10.11 → 12.1" [kpadopt6-ops] ---
+ * `.kp-badge.kp-badge--version` (js/version-delta.js). The old version is struck and lighter, the new one strong and, when it
+ * has release notes, a link; a jump that needs care adds the word "major" with a "!" in a ring, so the risk is never colour
+ * alone, and takes the warning tone (a version that went back, the destructive one). A quiet chip stays plain on purpose.
+ * Long versions break after a dot, a hyphen or an underscore and the chip grows to hold them; on a phone it wraps under its
+ * name as one unit. Knobs [KT6]: --kp-version-gap (0.4em), --kp-version-from (how much lighter the old version is, 70%). */
+    .kp-badge--version {
+        flex-wrap: wrap;
+        align-items: baseline;
+        column-gap: var(--kp-version-gap, 0.4em);
+        row-gap: 0;
+        font-variant-numeric: tabular-nums;
+        /* A version breaks only where it was given a place to (after a dot, a hyphen, an underscore or a colon), never in a number. */
+        overflow-wrap: normal;
+    }
+
+    .kp-badge--version[data-kp-size='md'] {
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    .kp-version__from {
+        color: color-mix(in oklab, currentColor var(--kp-version-from, 70%), transparent);
+        font-weight: 400;
+        text-decoration: line-through;
+    }
+
+    .kp-version__from[data-kp-raw] {
+        text-decoration: none;
+    }
+
+    .kp-version__arrow {
+        flex: none;
+    }
+
+    .kp-version__to {
+        font-weight: 700;
+        color: inherit;
+    }
+
+    a.kp-version__to {
+        text-decoration: underline;
+        text-underline-offset: 0.15em;
+    }
+
+    .kp-version__level {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3em;
+        font-weight: 700;
+    }
+
+    .kp-version__bang {
+        display: inline-grid;
+        place-items: center;
+        inline-size: 1.25em;
+        block-size: 1.25em;
+        border: 1.5px solid currentColor;
+        border-radius: 50%;
+        font-size: 0.85em;
+        line-height: 1;
+    }
+
+    .kp-badge--version[data-kp-state='error'],
+    .kp-badge--version[data-kp-level='none'][data-kp-state='empty'] {
+        border: 1px dashed var(--border-strong);
+        background: none;
+        color: var(--muted-foreground);
+    }
+
+    .kp-version__bone {
+        display: block;
+        inline-size: 6rem;
+        block-size: 1em;
+    }
+}
+
+@layer kp.components {
+    /* --- Acknowledge gate: a tick before a button may be pressed [kpadopt6-ops] ---
+ * `.kp-alert.kp-ack[data-kp-ack]` (js/ack-gate.js). The warning alert's words, then the side: the release-notes link and
+ * the tick with its sentence, the whole label one hit area. Wide: the side stands at the end of the alert; under 30rem of
+ * its own width it goes under the words and the label is 44 px tall. While the notes are looked up the words are held in
+ * place and two skeleton lines lie over them, so the alert keeps its height (`--kp-ack-keep`, written by the script); a
+ * failed lookup says so in a line and, with `data-kp-ack-retry`, offers Retry. Knobs [KT6]: --kp-ack-gap, --kp-ack-side
+ * (the side's width, 18rem). */
+    .kp-ack {
+        position: relative;
+        container: kp-ack / inline-size;
+        display: block;
+        inline-size: 100%;
+        min-inline-size: 0;
+        box-sizing: border-box;
+    }
+
+    .kp-ack__frame {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, var(--kp-ack-side, 18rem));
+        align-items: center;
+        gap: var(--kp-ack-gap, var(--kp-space-md, 0.75rem));
+        min-inline-size: 0;
+    }
+
+    /* The control a gate holds back is dimmed and says why (js/reason.js); it still answers a press. */
+    [data-kp-ack-held][aria-disabled='true'] {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        cursor: not-allowed;
+    }
+
+    .kp-ack[hidden] {
+        display: none;
+    }
+
+    .kp-ack[data-kp-state='loading'],
+    .kp-ack[data-kp-state='error'] {
+        min-block-size: var(--kp-ack-keep, 0px);
+    }
+
+    .kp-ack__frame > :not(.kp-ack__side, .kp-ack__problem) {
+        grid-column: 1;
+        min-inline-size: 0;
+    }
+
+    .kp-ack__side {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        justify-items: start;
+    }
+
+    .kp-ack__link {
+        display: inline-flex;
+        align-items: center;
+        min-block-size: var(--kp-control-height, 2.25rem);
+        color: inherit;
+        text-decoration: underline;
+        text-underline-offset: 0.15em;
+    }
+
+    .kp-ack__tick {
+        display: flex;
+        align-items: flex-start;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-block-size: 2.25rem;
+        padding-block: var(--kp-space-xs, 0.25rem);
+        cursor: pointer;
+        overflow-wrap: break-word;
+    }
+
+    .kp-ack__tick:has(:disabled) {
+        cursor: not-allowed;
+    }
+
+    .kp-ack__tick > input {
+        flex: none;
+        margin-block-start: 0.2em;
+    }
+
+    .kp-ack__label {
+        min-inline-size: 0;
+    }
+
+    .kp-ack[data-kp-state='loading'] > .kp-ack__frame {
+        visibility: hidden;
+    }
+
+    .kp-ack__wait {
+        position: absolute;
+        inset: var(--kp-space-md, 0.75rem);
+        display: grid;
+        align-content: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-ack__wait[hidden],
+    .kp-ack__problem[hidden],
+    .kp-ack__retry[hidden] {
+        display: none;
+    }
+
+    .kp-ack__bone {
+        display: block;
+        block-size: 1rem;
+        inline-size: 70%;
+    }
+
+    .kp-ack__bone + .kp-ack__bone {
+        inline-size: 45%;
+    }
+
+    .kp-ack__problem {
+        min-block-size: var(--kp-control-height, 2.25rem);
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        font-weight: 600;
+    }
+
+    @container kp-ack (max-width: 30rem) {
+        .kp-ack__frame {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-ack__side {
+            grid-column: 1;
+            grid-row: auto;
+            inline-size: 100%;
+        }
+
+        .kp-ack__tick {
+            inline-size: 100%;
+            min-block-size: 2.75rem;
+            align-items: center;
+        }
+    }
+}
+
+@layer kp.components {
+    /* --- Dependency list: rows "A → B", numbered in the order things must go [kpadopt6-ops] ---
+ * `.kp-deplist[data-kp-deplist]` (js/deplist.js). Every row is one subgrid of the list: the number, the thing that needs
+ * (an identity mark and its name), the arrow, the thing needed, its state; the same columns in every row, so nothing sits
+ * under a neighbour's shorter name. A name wraps, never cut. Under 30rem of the list's own width each row stacks: the number
+ * at the start, the name over "→ the needed thing". Loading lays the busy card over three placeholder rows, empty and failed
+ * are the package's plates, each as high as the list was with its rows (at least `--kp-deplist-min-rows`, 3).
+ * Knobs [KT6]: --kp-deplist-row (the row's height, 2.5rem), --kp-deplist-min-rows (3), --kp-deplist-gap (--kp-space-md). */
+    .kp-deplist {
+        container: kp-deplist / inline-size;
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        inline-size: 100%;
+        min-inline-size: 0;
+    }
+
+    .kp-deplist__heading {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .kp-deplist__body {
+        position: relative;
+        min-block-size: calc(var(--kp-deplist-min-rows, 3) * var(--kp-deplist-row, 2.5rem));
+        min-inline-size: 0;
+    }
+
+    .kp-deplist__body > .kp-stateplate {
+        block-size: 100%;
+        min-block-size: calc(var(--kp-deplist-min-rows, 3) * var(--kp-deplist-row, 2.5rem));
+    }
+
+    .kp-deplist__list {
+        display: grid;
+        grid-template-columns: auto auto auto auto minmax(0, 1fr);
+        column-gap: var(--kp-deplist-gap, var(--kp-space-md, 0.75rem));
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-deplist__list[data-kp-cols='plain'] {
+        grid-template-columns: auto auto auto minmax(0, 1fr);
+    }
+
+    .kp-deplist__list[hidden] {
+        display: none;
+    }
+
+    .kp-deplist__row,
+    .kp-deplist__group {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: subgrid;
+        align-items: center;
+        min-block-size: var(--kp-deplist-row, 2.5rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-deplist__row[hidden] {
+        display: none;
+    }
+
+    .kp-deplist__group {
+        font-weight: 600;
+        color: var(--muted-foreground);
+    }
+
+    .kp-deplist__no {
+        min-inline-size: 1.5rem;
+        color: var(--muted-foreground);
+        font-variant-numeric: tabular-nums;
+        font-weight: 600;
+        text-align: end;
+    }
+
+    .kp-deplist__name {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.375rem);
+        min-inline-size: 0;
+        color: inherit;
+        overflow-wrap: anywhere;
+        text-decoration: none;
+    }
+
+    a.kp-deplist__name:hover .kp-deplist__text {
+        text-decoration: underline;
+    }
+
+    .kp-deplist__name .kp-idmark {
+        flex: none;
+    }
+
+    .kp-deplist__arrow {
+        color: var(--muted-foreground);
+    }
+
+    .kp-deplist__state {
+        justify-self: start;
+    }
+
+    .kp-deplist__row--cycle {
+        display: block;
+        grid-template-columns: none;
+        padding-block: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-deplist__cycle {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        font-weight: 600;
+    }
+
+    .kp-deplist__foot {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-deplist__foot:empty {
+        display: none;
+    }
+
+    .kp-deplist__bone {
+        grid-column: 1 / -1;
+        display: block;
+        inline-size: 60%;
+        block-size: 1rem;
+    }
+
+    @container kp-deplist (max-width: 30rem) {
+        .kp-deplist__list,
+        .kp-deplist__list[data-kp-cols='plain'] {
+            grid-template-columns: auto minmax(0, 1fr);
+        }
+
+        .kp-deplist__list[data-kp-cols='plain'] {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-deplist__row {
+            grid-template-columns: subgrid;
+            row-gap: 0;
+            padding-block: var(--kp-space-xs, 0.25rem);
+        }
+
+        .kp-deplist__arrow {
+            display: none;
+        }
+
+        .kp-deplist__row > .kp-deplist__no {
+            grid-row: span 3;
+            align-self: start;
+        }
+
+        .kp-deplist__row > .kp-deplist__name--to::before {
+            content: var(--kp-deplist-arrow, '→');
+            color: var(--muted-foreground);
+        }
+
+        .kp-deplist__row > .kp-deplist__state {
+            grid-column: 2;
+        }
+    }
+}
+
+@layer kp.components {
+    /* --- Path of a connection: hops, each allowed or refused, stopping at the first refusal [kpadopt6-ops] ---
+ * `.kp-trace[data-kp-trace]` with `.kp-steplist.kp-steplist--trace` (js/path-trace.js). A summary line over the hops ("Blocked
+ * at rule IoT to media"), then the hops side by side, each one the step list's own item: its check or cross, the verdict word
+ * under the mark, the thing reached, a line of words and the deciding rule as a chip; a hop after a refusal is dimmed and says
+ * "not reached". Under 30rem of the trace's own width (or `data-kp-trace-layout="column"`) the hops stand in a column, as a
+ * step list does. `data-kp-trace-verdict` `mark` or `word` shows one of the two (both by default; never colour alone).
+ * Empty, failed and running are the package's plates and busy card, each as high as the trace was.
+ * Knobs [KT6]: --kp-trace-gap (the space between hops, 1.5rem), --kp-trace-min (the least width of a hop, 9rem). */
+    .kp-trace {
+        container: kp-trace / inline-size;
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        inline-size: 100%;
+        min-inline-size: 0;
+    }
+
+    .kp-trace__summary {
+        margin: 0;
+        font-weight: 600;
+        min-block-size: 1lh;
+    }
+
+    .kp-trace__summary[hidden] {
+        display: none;
+    }
+
+    .kp-trace__stage {
+        position: relative;
+        min-inline-size: 0;
+    }
+
+    .kp-trace__stage > .kp-stateplate {
+        block-size: 100%;
+        min-block-size: 10rem;
+    }
+
+    .kp-trace__foot {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-trace__foot:empty {
+        display: none;
+    }
+
+    .kp-trace[data-kp-trace-verdict='word'] .kp-steplist--trace .kp-steplist__mark {
+        display: none;
+    }
+
+    .kp-trace[data-kp-trace-verdict='mark'] .kp-steplist--trace .kp-steplist__time {
+        display: none;
+    }
+
+    .kp-steplist--trace .kp-steplist__time {
+        min-inline-size: 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        text-align: start;
+        text-transform: capitalize;
+    }
+
+    .kp-steplist--trace .kp-steplist__body {
+        gap: var(--kp-space-xs, 0.25rem);
+        justify-items: start;
+    }
+
+    .kp-trace__rule {
+        border: 1px solid var(--border-strong);
+        font: inherit;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        cursor: pointer;
+    }
+
+    .kp-trace__rule:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: 2px;
+    }
+
+    /* Without the mark the words are the verdict: the item's columns are the words and the verdict word. */
+    .kp-trace[data-kp-trace-verdict='word'] .kp-steplist--trace > .kp-steplist__item {
+        grid-template-columns: minmax(0, 1fr) auto;
+    }
+
+    .kp-trace[data-kp-density='compact'] .kp-steplist--trace .kp-steplist__note {
+        display: none;
+    }
+
+    /* The row: hops side by side with an arrow between them. */
+    .kp-trace[data-kp-trace-layout='row'] .kp-steplist--trace {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(var(--kp-trace-min, 9rem), 1fr);
+        gap: var(--kp-trace-gap, 1.5rem);
+    }
+
+    .kp-trace[data-kp-trace-layout='row'] .kp-steplist--trace > .kp-steplist__item {
+        position: relative;
+        grid-template-columns: auto minmax(0, 1fr);
+        grid-template-areas: 'mark time' 'body body';
+        grid-template-rows: 2rem auto;
+        align-items: start;
+    }
+
+    .kp-trace[data-kp-trace-layout='row'] .kp-steplist--trace > .kp-steplist__item > .kp-steplist__mark {
+        grid-area: mark;
+    }
+
+    .kp-trace[data-kp-trace-layout='row'] .kp-steplist--trace > .kp-steplist__item > .kp-steplist__time {
+        grid-area: time;
+        align-self: center;
+    }
+
+    .kp-trace[data-kp-trace-layout='row'] .kp-steplist--trace > .kp-steplist__item > .kp-steplist__body {
+        grid-area: body;
+    }
+
+    .kp-trace[data-kp-trace-layout='row'] .kp-steplist--trace > .kp-steplist__item + .kp-steplist__item::before {
+        content: '→';
+        position: absolute;
+        inset-block-start: 1.1rem;
+        inset-inline-start: calc(-1 * var(--kp-trace-gap, 1.5rem) / 2 - 0.5ch);
+        color: var(--muted-foreground);
+    }
+
+    .kp-trace[data-kp-trace-verdict='word'][data-kp-trace-layout='row'] .kp-steplist--trace > .kp-steplist__item {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-areas: 'time' 'body';
+    }
+
+    @container kp-trace (min-width: 40rem) {
+        .kp-trace:not([data-kp-trace-layout]) .kp-steplist--trace,
+        .kp-trace[data-kp-trace-layout='auto'] .kp-steplist--trace {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: minmax(var(--kp-trace-min, 9rem), 1fr);
+            gap: var(--kp-trace-gap, 1.5rem);
+        }
+
+        :is(.kp-trace:not([data-kp-trace-layout]), .kp-trace[data-kp-trace-layout='auto']) .kp-steplist--trace > .kp-steplist__item {
+            position: relative;
+            grid-template-columns: auto minmax(0, 1fr);
+            grid-template-areas: 'mark time' 'body body';
+            grid-template-rows: 2rem auto;
+            align-items: start;
+        }
+
+        :is(.kp-trace:not([data-kp-trace-layout]), .kp-trace[data-kp-trace-layout='auto'])
+            .kp-steplist--trace
+            > .kp-steplist__item
+            > .kp-steplist__mark {
+            grid-area: mark;
+        }
+
+        :is(.kp-trace:not([data-kp-trace-layout]), .kp-trace[data-kp-trace-layout='auto'])
+            .kp-steplist--trace
+            > .kp-steplist__item
+            > .kp-steplist__time {
+            grid-area: time;
+            align-self: center;
+        }
+
+        :is(.kp-trace:not([data-kp-trace-layout]), .kp-trace[data-kp-trace-layout='auto'])
+            .kp-steplist--trace
+            > .kp-steplist__item
+            > .kp-steplist__body {
+            grid-area: body;
+        }
+
+        :is(.kp-trace:not([data-kp-trace-layout]), .kp-trace[data-kp-trace-layout='auto'])
+            .kp-steplist--trace
+            > .kp-steplist__item
+            + .kp-steplist__item::before {
+            content: '→';
+            position: absolute;
+            inset-block-start: 1.1rem;
+            inset-inline-start: calc(-1 * var(--kp-trace-gap, 1.5rem) / 2 - 0.5ch);
+            color: var(--muted-foreground);
+        }
+
+        .kp-trace[data-kp-trace-verdict='word']:not([data-kp-trace-layout='column']) .kp-steplist--trace > .kp-steplist__item {
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-areas: 'time' 'body';
+        }
+    }
+}
+
+@layer kp.components {
+    /* --- Entity card: one fixed card per thing, the same height in every state [kpadopt6-ops] ---
+ * `.kp-card.kp-card--entity[data-kp-entity]` in `.kp-entity-grid[data-kp-entity-grid]` (js/entity-card.js). Every card is
+ * the same five rows, kept whether a row holds anything or not (identity, figures, flags, meters, actions), and every card of
+ * the grid is as high as the tallest, so a card with no flag, a loading card and a failed card all stand level. The actions
+ * stand in fixed columns (the first action is always in the first column, whatever the words before it). The name is the
+ * card's one link, its click target stretched over the whole card; the tick, the actions and the menus stand above it.
+ * Under 30rem of the grid's own width the inline actions fold into "More". Selected is `is-ticked`, the cursor `is-cursor`.
+ * Knobs [KT6]: --kp-entity-min (the least card width, 22rem), --kp-entity-row (the row's height, 1.5rem), --kp-entity-gap. */
+    .kp-entity-grid {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--kp-entity-min, 22rem)), 1fr));
+        grid-auto-rows: 1fr;
+        gap: var(--kp-entity-gap, var(--kp-space-md, 0.75rem));
+        min-block-size: 8rem;
+        min-inline-size: 0;
+    }
+
+    .kp-entity-grid > .kp-stateplate {
+        grid-column: 1 / -1;
+        min-block-size: 16rem;
+    }
+
+    .kp-card--entity {
+        position: relative;
+        display: grid;
+        grid-template-rows: minmax(1.75rem, auto) var(--kp-entity-row, 1.5rem) var(--kp-entity-row, 1.5rem) calc(var(--kp-entity-meters, 2) * var(--kp-entity-row, 1.5rem)) 2.25rem;
+        gap: var(--kp-space-xs, 0.375rem);
+        align-content: start;
+        padding: var(--kp-space-md, 0.75rem);
+        min-inline-size: 0;
+    }
+
+    .kp-card--entity > [class^='kp-entity__'] {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-entity-grid[data-kp-density='compact'] > .kp-card--entity,
+    .kp-card--entity[data-kp-density='compact'] {
+        grid-template-rows: minmax(1.75rem, auto) var(--kp-entity-row, 1.5rem) calc(var(--kp-entity-meters, 2) * var(--kp-entity-row, 1.5rem)) 2.25rem;
+    }
+
+    .kp-entity-grid[data-kp-density='compact'] > .kp-card--entity > .kp-entity__figures,
+    .kp-card--entity[data-kp-density='compact'] > .kp-entity__figures {
+        display: none;
+    }
+
+    .kp-card--entity.is-ticked {
+        border-color: var(--primary);
+        box-shadow: inset 0 0 0 1px var(--primary);
+    }
+
+    .kp-card--entity.is-cursor {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: 2px;
+    }
+
+    .kp-entity__id .kp-idmark {
+        flex: none;
+    }
+
+    .kp-entity__name {
+        flex: 1 1 auto;
+        min-inline-size: 0;
+        color: inherit;
+        font-weight: 600;
+        overflow-wrap: anywhere;
+        text-decoration: none;
+    }
+
+    a.kp-entity__name::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+    }
+
+    a.kp-entity__name:hover {
+        text-decoration: underline;
+    }
+
+    .kp-entity__vmid {
+        color: var(--muted-foreground);
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-entity__vmid:empty {
+        display: none;
+    }
+
+    .kp-entity__state {
+        flex: none;
+    }
+
+    .kp-entity__figures {
+        flex-wrap: nowrap;
+        gap: var(--kp-space-md, 0.75rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-entity__value {
+        color: var(--foreground);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-entity__none {
+        color: var(--muted-foreground);
+    }
+
+    .kp-entity__flags {
+        flex-wrap: nowrap;
+    }
+
+    .kp-entity__flag {
+        flex: none;
+    }
+
+    .kp-entity__meters {
+        display: grid !important;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        grid-auto-rows: var(--kp-entity-row, 1.5rem);
+        column-gap: var(--kp-space-sm, 0.5rem);
+        align-items: center;
+    }
+
+    .kp-entity__meter {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: subgrid;
+        align-items: center;
+        font-size: var(--kp-text-xs, 0.75rem);
+        color: var(--muted-foreground);
+    }
+
+    .kp-entity__meter-value {
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+        white-space: nowrap;
+    }
+
+    .kp-entity__actions {
+        display: grid !important;
+        grid-template-columns: repeat(var(--kp-entity-cols, 4), minmax(0, 1fr));
+        gap: var(--kp-space-sm, 0.5rem);
+        align-items: center;
+    }
+
+    .kp-entity__actions > :is(.kp-button, .kp-menu-button, .kp-reason),
+    .kp-entity__tick,
+    .kp-entity__more-flags {
+        position: relative;
+        z-index: 1;
+    }
+
+    .kp-entity__actions .kp-button,
+    .kp-entity__actions .kp-menu-button {
+        inline-size: 100%;
+    }
+
+    .kp-entity__actions > .kp-entity__action:only-child {
+        grid-column: 1 / -1;
+    }
+
+    .kp-entity__bone {
+        display: block;
+        inline-size: 70%;
+        block-size: 1rem;
+    }
+
+    .kp-card--ghost {
+        pointer-events: none;
     }
 }

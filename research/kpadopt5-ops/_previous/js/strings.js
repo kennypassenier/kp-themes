@@ -38,6 +38,100 @@
 
 /**
  * @typedef {object} Strings
+ * @property {string} toggleCounting  The count's name while it is still being counted (js/toggle.js) [kpadopt6-ops]
+ * @property {(label: string, count: number | null) => string} toggleOn  The line said once a toggle is switched on, "Only errors on, 12 shown" [kpadopt6-ops]
+ * @property {(label: string, count: number | null) => string} toggleOff  The line said once it is switched off [kpadopt6-ops]
+ * @property {(label: string, n: number) => string} toggleCount  The line said when the count beside a toggle changed (data-kp-announce="all") [kpadopt6-ops]
+ * @property {(n: number) => string} toggleClear  The button that switches a group's toggles off, "Clear filters (2)" [kpadopt6-ops]
+ * @property {string} toggleRefused  The word on a toggle whose change the app refused [kpadopt6-ops]
+ * @property {(label: string) => string} toggleKeyWhat  What a toggle's key does in the shortcut sheet [kpadopt6-ops]
+ * @property {string} toggleKeyGroup  The group a toggle's key is listed under in the shortcut sheet [kpadopt6-ops]
+ * @property {string} intentNoMatch  What a palette says under "Nothing matches" when it knows nothing better [kpadopt6-ops]
+ * @property {(name: string, verb: string, subjects: string[], noun: string) => string} intentNoSubject  A palette's line when the first word is a verb it knows but the rest names nothing it can act on [kpadopt6-ops]
+ * @property {string} paletteNothing  The title of a palette's empty plate when no command answers [kpadopt6-ops]
+ * @property {(shown: number, total: number) => string} paletteCapped  A palette's status line when more commands match than are shown [kpadopt6-ops]
+ * @property {string} paletteLoading  The words under the spinner while a palette's commands are still arriving [kpadopt6-ops]
+ * @property {string} paletteFailed  The title of a palette's plate when its commands could not be read [kpadopt6-ops]
+ * @property {string} paletteFailedText  Its sentence when the page gives no reason [kpadopt6-ops]
+ * @property {string} paletteRetry  Its action [kpadopt6-ops]
+ * @property {string} versionMajor  The word on a chip whose first number rose, and in a count: "major" (js/version-delta.js) [kpadopt6-ops]
+ * @property {string} versionMinor  The word for a second-number jump [kpadopt6-ops]
+ * @property {string} versionPatch  The word for a jump in a later number [kpadopt6-ops]
+ * @property {string} versionOther  The word for a change that has no numbers in it, such as a new digest [kpadopt6-ops]
+ * @property {string} versionDowngrade  The word on a chip whose number fell [kpadopt6-ops]
+ * @property {string} versionSame  The words when the two versions are the same [kpadopt6-ops]
+ * @property {string} versionUnknown  The level of a chip whose versions cannot be compared [kpadopt6-ops]
+ * @property {string} versionNoUpdates  The count's words when nothing is to be updated [kpadopt6-ops]
+ * @property {string} versionLoading  A chip's name while the version is still being looked up [kpadopt6-ops]
+ * @property {string} versionFailed  The words on a chip whose lookup failed [kpadopt6-ops]
+ * @property {string} versionNone  The words where no version is tracked at all [kpadopt6-ops]
+ * @property {string} versionNotes  A release-notes link's extra words for a screen reader [kpadopt6-ops]
+ * @property {(from: string, to: string, level: string) => string} versionSpoken  What a screen reader hears for a jump, "from 10.11 to 12.1, major update" [kpadopt6-ops]
+ * @property {(version: string) => string} versionSpokenSame  What it hears when nothing changes [kpadopt6-ops]
+ * @property {(to: string) => string} versionSpokenTo  What it hears for a moving tag that only says where it goes [kpadopt6-ops]
+ * @property {(from: string, to: string) => string} versionSpokenDown  What it hears for a version that went back [kpadopt6-ops]
+ * @property {(from: string, to: string) => string} versionSpokenChanged  What a screen reader hears for a change that has no size, "changed from latest to nightly" [kpadopt6-ops]
+ * @property {string} ackLink  The release-notes link's words on an acknowledge gate [kpadopt6-ops]
+ * @property {string} ackLabel  The tick's words when the page names none [kpadopt6-ops]
+ * @property {string} ackRetry  The Retry button of a gate whose notes could not be found [kpadopt6-ops]
+ * @property {string} ackLooking  Why the tick is off while the notes are looked up [kpadopt6-ops]
+ * @property {string} ackLocked  Why the tick is locked while the job runs [kpadopt6-ops]
+ * @property {string} ackOpenFirst  Why the tick is off until the notes were opened [kpadopt6-ops]
+ * @property {(label: string) => string} ackReason  Why the guarded button is off, with the tick's own words [kpadopt6-ops]
+ * @property {(remaining: number, total: number) => string} ackReasonMany  Why it is off when several gates guard it, "2 of 3 release notes still to read" [kpadopt6-ops]
+ * @property {string} ackEnabled  Said once when the last gate is ticked and the button comes on [kpadopt6-ops]
+ * @property {(remaining: number) => string} ackDisabled  Said once when a tick is taken away [kpadopt6-ops]
+ * @property {string} ackNoLink  A gate's line when no release notes link was found [kpadopt6-ops]
+ * @property {(n: number) => string} deplistCount  The list's default heading, the exact count (js/deplist.js) [kpadopt6-ops]
+ * @property {string} deplistReading  The heading while the rows are still being read [kpadopt6-ops]
+ * @property {(from: string, to: string) => string} deplistNeeds  A row as a screen reader hears it, "paperless needs postgres" [kpadopt6-ops]
+ * @property {(from: string, to: string) => string} deplistReaches  The same for a list that says what reaches what [kpadopt6-ops]
+ * @property {string} deplistNeedsWord  The word between the names of a cycle, "paperless needs redis needs paperless" [kpadopt6-ops]
+ * @property {(n: number) => string} deplistMore  The button that unfolds the rest, with the exact number of rows [kpadopt6-ops]
+ * @property {string} deplistFewer  The button that folds it again [kpadopt6-ops]
+ * @property {string} deplistEmpty  The empty plate's title when the page gives no sentence [kpadopt6-ops]
+ * @property {string} deplistFailed  The failed plate's title [kpadopt6-ops]
+ * @property {string} deplistFailedText  Its sentence when the page gives no reason [kpadopt6-ops]
+ * @property {string} deplistRetry  Its action [kpadopt6-ops]
+ * @property {string} deplistLoading  The words under the busy card's spinner [kpadopt6-ops]
+ * @property {string} deplistRunning  The word for a needed thing that is running [kpadopt6-ops]
+ * @property {string} deplistStopped  The word for a needed thing that is stopped [kpadopt6-ops]
+ * @property {string} deplistUnknown  The word for a needed thing whose state is not known [kpadopt6-ops]
+ * @property {string} deplistCopy  The button that copies the rows as text [kpadopt6-ops]
+ * @property {string} deplistCopied  Its answer once the rows are on the clipboard [kpadopt6-ops]
+ * @property {string} traceLabel  The hop list's accessible name [kpadopt6-ops]
+ * @property {string} traceAllowed  The summary line when every hop lets the connection through [kpadopt6-ops]
+ * @property {(hop: string, rule: string) => string} traceBlocked  The summary line when a hop refuses it, with the deciding rule when there is one [kpadopt6-ops]
+ * @property {string} traceNotAll  The summary line when a hop could not be measured [kpadopt6-ops]
+ * @property {string} traceAllowedWord  A hop's verdict word, allowed [kpadopt6-ops]
+ * @property {string} traceRefusedWord  A hop's verdict word, refused [kpadopt6-ops]
+ * @property {string} traceNotReached  The word for a hop after a refusal, which the connection never reaches [kpadopt6-ops]
+ * @property {string} traceNotMeasured  The word for a hop whose verdict is not known [kpadopt6-ops]
+ * @property {(rule: string) => string} traceRule  The deciding rule's chip, "Rule IoT to media" [kpadopt6-ops]
+ * @property {string} traceRunning  The words under the busy card's spinner while the path is checked [kpadopt6-ops]
+ * @property {string} traceEmpty  The empty plate's title before a question was asked [kpadopt6-ops]
+ * @property {string} traceEmptyText  Its sentence [kpadopt6-ops]
+ * @property {string} traceFailed  The failed plate's title [kpadopt6-ops]
+ * @property {string} traceFailedText  Its sentence when the page gives no reason [kpadopt6-ops]
+ * @property {string} traceRetry  Its action [kpadopt6-ops]
+ * @property {string} traceCopy  The button that copies the trace as text [kpadopt6-ops]
+ * @property {string} traceCopied  Its answer once the text is on the clipboard [kpadopt6-ops]
+ * @property {string} traceSwap  The button that swaps source and target [kpadopt6-ops]
+ * @property {string} traceKeySwap  What the swap key does in the shortcut sheet [kpadopt6-ops]
+ * @property {string} traceKeyGroup  The group the swap key is listed under [kpadopt6-ops]
+ * @property {(name: string) => string} entitySelect  A card's tick, named for a screen reader, "Select media" [kpadopt6-ops]
+ * @property {string} entityFailed  The state word of a card that could not be read [kpadopt6-ops]
+ * @property {string} entityNotMeasured  What a card says where it has nothing measured [kpadopt6-ops]
+ * @property {(n: number) => string} entityMoreFlags  The "+2" button's accessible name [kpadopt6-ops]
+ * @property {string} entityFlagsLabel  The name of the menu the "+2" opens [kpadopt6-ops]
+ * @property {string} entityRetry  A failed card's or grid's Retry [kpadopt6-ops]
+ * @property {string} entityMore  The button that opens the rest of a card's actions [kpadopt6-ops]
+ * @property {string} entityMoreLabel  The name of that menu [kpadopt6-ops]
+ * @property {string} entityLoading  The words under the busy card's spinner while the cards are read [kpadopt6-ops]
+ * @property {string} entityGridFailed  The failed plate's title for a grid of cards [kpadopt6-ops]
+ * @property {string} entityGridFailedText  Its sentence when the page gives no reason [kpadopt6-ops]
+ * @property {string} entityGridEmpty  The empty plate's title for a grid with no cards [kpadopt6-ops]
+ * @property {string} entityNew  The empty plate's action [kpadopt6-ops]
  * @property {string} alertSuccess
  * @property {string} alertWarning
  * @property {string} alertInfo
@@ -809,6 +903,100 @@
  * @property {(label: string) => string} sliderValue  The value box's name: "Temperature, value" [kpadopt5-time]
  * @property {(min: string, max: string, unit: string) => string} sliderInvalid  The line under a slider for a typed value that is not a number in range [kpadopt5-time]
  * @property {(gap: string, unit: string) => string} sliderGap  The line for a typed value that would bring the two thumbs too close [kpadopt5-time]
+ * @property {(n: number, text: string) => string} autosizeChars  The counter of a growing text box: "1 204 characters" (js/autosize.js) [kpadopt6-media]
+ * @property {(n: number, text: string) => string} autosizeLines  Its line count: "12 lines" [kpadopt6-media]
+ * @property {(chars: number, charsText: string, lines: number, linesText: string) => string} autosizeBoth  Both counts in one line [kpadopt6-media]
+ * @property {(text: string, maxText: string) => string} autosizeOf  A count against the limit: "1 204 of 4 000 characters" [kpadopt6-media]
+ * @property {(maxText: string) => string} autosizeFull  Said politely when the limit is reached [kpadopt6-media]
+ * @property {(charsText: string, maxText: string) => string} autosizeNear  Said politely when 90 % of the limit is used [kpadopt6-media]
+ * @property {string} autosizeSubmit  The sheet's words for Ctrl+Enter submitting the form [kpadopt6-media]
+ * @property {string} autosizeGroup  The sheet's heading for that key [kpadopt6-media]
+ * @property {string} autosizeLoading  The busy card's words while a box waits for its text [kpadopt6-media]
+ * @property {string} autosizeFailed  The line under a box whose text could not be saved, when the page gives none [kpadopt6-media]
+ * @property {(name: string) => string} anchorCopyLink  The accessible name of a link mark: "Copy link to Dead letter 4f2a" (js/anchors.js) [kpadopt6-media]
+ * @property {string} anchorCopied  The word on the mark after a copy [kpadopt6-media]
+ * @property {string} anchorFailed  The word on the mark when the clipboard refused [kpadopt6-media]
+ * @property {(name: string) => string} anchorCopiedAnnounce  Said politely after a copy [kpadopt6-media]
+ * @property {string} anchorFailedAnnounce  Said politely when the clipboard refused [kpadopt6-media]
+ * @property {string} anchorMissing  The notice for an address that points at nothing here any more [kpadopt6-media]
+ * @property {string} anchorShowAll  The notice's button that clears the address [kpadopt6-media]
+ * @property {string} anchorKeyCopy  The sheet's words for y then l on a row [kpadopt6-media]
+ * @property {string} anchorKeyGroup  The sheet's heading for the anchor keys [kpadopt6-media]
+ * @property {string} printLoading  What a list that is still loading prints instead of a blank sheet (js/print.js) [kpadopt6-media]
+ * @property {(moment: string) => string} printStamp  The foot of a printed sheet: "Printed 17/10/2026 14:05" [kpadopt6-media]
+ * @property {string} viewerOpenNew  The viewer's "Open in a new tab" button (js/viewer.js) [kpadopt6-media]
+ * @property {string} viewerDownload  The viewer's Download button [kpadopt6-media]
+ * @property {string} viewerPrint  The viewer's Print button [kpadopt6-media]
+ * @property {string} viewerCopyLink  The viewer's Copy link button [kpadopt6-media]
+ * @property {string} viewerNoFile  The reason a viewer button is off when there is no file [kpadopt6-media]
+ * @property {string} viewerLoading  The busy card's words while a file opens [kpadopt6-media]
+ * @property {string} viewerFailedTitle  The failed stage's heading [kpadopt6-media]
+ * @property {string} viewerFailedText  The failed stage's sentence when the server gave none [kpadopt6-media]
+ * @property {string} viewerUnsupportedTitle  The heading of the stage that cannot show this kind of file here [kpadopt6-media]
+ * @property {string} viewerUnsupportedText  Its sentence [kpadopt6-media]
+ * @property {string} viewerRetry  The failed stage's Retry [kpadopt6-media]
+ * @property {(index: number, total: number) => string} viewerPosition  The exact position in a set: "4 of 37" [kpadopt6-media]
+ * @property {string} previewKeyGroup  The sheet's heading for the preview keys (js/docpreview.js) [kpadopt6-media]
+ * @property {string} previewKeyOpen  The sheet's words for o [kpadopt6-media]
+ * @property {string} previewKeyDownload  The sheet's words for d [kpadopt6-media]
+ * @property {string} previewKeyPrint  The sheet's words for p [kpadopt6-media]
+ * @property {string} previewKeyPrevious  The sheet's words for Left in a group of documents [kpadopt6-media]
+ * @property {string} previewKeyNext  The sheet's words for Right in a group of documents [kpadopt6-media]
+ * @property {string} previewTimeout  The sentence when a file takes too long to open [kpadopt6-media]
+ * @property {string} previewGone  The sentence when the server says the file is gone [kpadopt6-media]
+ * @property {(status: number) => string} previewServer  The sentence when the server answered with an error [kpadopt6-media]
+ * @property {string} previewNoPdf  The sentence when this browser cannot show a PDF here [kpadopt6-media]
+ * @property {string} previewShownByBrowser  The line under a PDF's title: how it is shown [kpadopt6-media]
+ * @property {string} previewImage  The sentence when a picture would not load [kpadopt6-media]
+ * @property {string} previewNoFile  The reason an opener is off when there is no file yet [kpadopt6-media]
+ * @property {string} docKindImage  The facts word of a picture file [kpadopt6-media]
+ * @property {string} docKindText  The facts word of a text file [kpadopt6-media]
+ * @property {string} docMissing  The name of a document glyph whose file is missing [kpadopt6-media]
+ * @property {(kind: string) => string} docKindName  The name of a document glyph: "PDF document" [kpadopt6-media]
+ * @property {string} galleryContinue  The button that opens the picture last looked at (js/gallery.js) [kpadopt6-media]
+ * @property {string} galleryFailed  The failed gallery's heading [kpadopt6-media]
+ * @property {string} galleryFailedText  Its sentence [kpadopt6-media]
+ * @property {string} galleryEmpty  The empty gallery's heading [kpadopt6-media]
+ * @property {string} galleryEmptyText  Its sentence [kpadopt6-media]
+ * @property {string} galleryEmptyAdd  Its sentence when pictures can be added [kpadopt6-media]
+ * @property {string} galleryRetry  The Retry of a failed gallery or picture [kpadopt6-media]
+ * @property {string} galleryAdd  The add tile's words [kpadopt6-media]
+ * @property {string} galleryLoading  The busy card's words while the gallery loads [kpadopt6-media]
+ * @property {string} galleryPicture  What a picture without a name is called [kpadopt6-media]
+ * @property {(name: string) => string} galleryOpenPicture  The name of a tile that opens a picture [kpadopt6-media]
+ * @property {(name: string) => string} galleryOpenVideo  The name of a tile that opens a video [kpadopt6-media]
+ * @property {string} galleryPictureFailed  The heading of a picture that would not load [kpadopt6-media]
+ * @property {string} galleryPictureFailedText  Its sentence in the lightbox [kpadopt6-media]
+ * @property {(name: string) => string} galleryRetryPicture  The accessible name of a picture's Retry [kpadopt6-media]
+ * @property {string} galleryPrevious  The lightbox's previous button [kpadopt6-media]
+ * @property {string} galleryNext  The lightbox's next button [kpadopt6-media]
+ * @property {string} galleryFirst  The reason previous is off at the first picture [kpadopt6-media]
+ * @property {string} galleryLast  The reason next is off at the last picture [kpadopt6-media]
+ * @property {string} galleryKeyGroup  The sheet's heading for the lightbox keys [kpadopt6-media]
+ * @property {string} galleryKeyPrevious  The sheet's words for Left [kpadopt6-media]
+ * @property {string} galleryKeyNext  The sheet's words for Right [kpadopt6-media]
+ * @property {string} galleryKeyFirst  The sheet's words for Home [kpadopt6-media]
+ * @property {string} galleryKeyLast  The sheet's words for End [kpadopt6-media]
+ * @property {string} galleryKeyZoom  The sheet's words for z [kpadopt6-media]
+ * @property {string} galleryKeyZoomIn  The sheet's words for + [kpadopt6-media]
+ * @property {string} galleryKeyZoomOut  The sheet's words for - [kpadopt6-media]
+ * @property {string} galleryKeyFull  The sheet's words for f [kpadopt6-media]
+ * @property {string} usesLabel  A uses map's name when the page gives none (js/uses-map.js) [kpadopt6-media]
+ * @property {string} usesSources  The sources column's name [kpadopt6-media]
+ * @property {string} usesUsers  The users column's name [kpadopt6-media]
+ * @property {string} usesFailed  The failed map's heading [kpadopt6-media]
+ * @property {string} usesFailedText  Its sentence [kpadopt6-media]
+ * @property {string} usesEmpty  The empty map's heading [kpadopt6-media]
+ * @property {string} usesEmptyText  Its sentence [kpadopt6-media]
+ * @property {string} usesRetry  The failed map's Retry [kpadopt6-media]
+ * @property {string} usesLoading  The busy card's words while the map loads [kpadopt6-media]
+ * @property {string} usesNotUsed  What a source nothing uses says [kpadopt6-media]
+ * @property {(n: number) => string} usesCount  The exact number of uses on a source: "Used by 2" [kpadopt6-media]
+ * @property {(label: string) => string} usesOpen  The name of a node's link [kpadopt6-media]
+ * @property {(label: string, n: number, names: string) => string} usesNodeSource  A source in words: "CV Developer NL, used by 2: Deloitte, Takto" [kpadopt6-media]
+ * @property {(label: string) => string} usesNodeUnused  A source nothing uses, in words [kpadopt6-media]
+ * @property {(label: string, names: string) => string} usesNodeUser  A user in words: "Deloitte, uses: CV Developer NL" [kpadopt6-media]
+ * @property {(label: string) => string} usesNodeNothing  A user that uses nothing, in words [kpadopt6-media]
  * @property {string} unsavedGroup  The unsaved-changes bar's name for a screen reader (js/unsaved.js) [kpadopt5-time]
  * @property {string} unsavedNone  The line while nothing is changed [kpadopt5-time]
  * @property {(n: number) => string} unsavedCount  The chip: "2 changes" [kpadopt5-time]
@@ -965,6 +1153,316 @@
  * @property {string} wheelEmpty  A wheel with no choices, when the page gives no sentence [kpadopt4]
  * @property {string} wheelLoading  The words under its spinner while the choices load [kpadopt4]
  * @property {string} wheelFailed  Choices that could not be read, when the page gives no message [kpadopt4]
+ * @property {string} claimAnd  The word before the last name in a list of people who bring an item (js/claim.js) [kpadopt6]
+ * @property {string} claimDisabled  Why every claim button is off when the page gives no reason (js/claim.js) [kpadopt6]
+ * @property {string} claimNoViewer  Why the buttons are off while nobody is signed in (js/claim.js) [kpadopt6]
+ * @property {(max: number) => string} claimFullReason  Why the button is off on an item that has its people (js/claim.js) [kpadopt6]
+ * @property {string} claimTake  The button's face on an item you do not bring (js/claim.js) [kpadopt6]
+ * @property {string} claimHeld  The button's face on an item you bring (a press lets go) (js/claim.js) [kpadopt6]
+ * @property {string} claimNobody  The words of the gap, an item nobody brings (js/claim.js) [kpadopt6]
+ * @property {(names: string) => string} claimBy  The group of people on a row, as a screen reader hears it (js/claim.js) [kpadopt6]
+ * @property {string} claimNobodyLabel  The same for the gap (js/claim.js) [kpadopt6]
+ * @property {(label: string) => string} claimHeldLabel  The button's name on an item you bring (js/claim.js) [kpadopt6]
+ * @property {(label: string) => string} claimTakeLabel  The button's name on an item you do not bring (js/claim.js) [kpadopt6]
+ * @property {string} claimAssign  The assign mode's menu button (js/claim.js) [kpadopt6]
+ * @property {(label: string) => string} claimAssignOf  Its name for a screen reader (js/claim.js) [kpadopt6]
+ * @property {string} claimAssignHeading  The assign menu's heading (js/claim.js) [kpadopt6]
+ * @property {string} claimAssigned  The hint of a person who is on the item (js/claim.js) [kpadopt6]
+ * @property {string} claimNotAssigned  The hint of a person who is not (js/claim.js) [kpadopt6]
+ * @property {(done: number, total: number) => string} claimGroupCount  A group's count of items somebody brings (js/claim.js) [kpadopt6]
+ * @property {string} claimAllTaken  The bar's line when every item has somebody (js/claim.js) [kpadopt6]
+ * @property {(n: number) => string} claimGapsCount  The bar's line with the exact number of items nobody brings (js/claim.js) [kpadopt6]
+ * @property {string} claimFilterLabel  The filter chips' name (js/claim.js) [kpadopt6]
+ * @property {string} claimFilterAll  The chip that shows every item (js/claim.js) [kpadopt6]
+ * @property {string} claimFilterGaps  The chip that shows only the items nobody brings (js/claim.js) [kpadopt6]
+ * @property {string} claimFilterMine  The chip that shows only the items you bring (js/claim.js) [kpadopt6]
+ * @property {string} claimTakeAll  The bar's button that takes all items nobody brings (js/claim.js) [kpadopt6]
+ * @property {string} claimCopyGaps  The bar's button that copies the items nobody brings (js/claim.js) [kpadopt6]
+ * @property {string} claimNothingOpen  Why those two buttons are off (js/claim.js) [kpadopt6]
+ * @property {string} claimNoneOpenTitle  The filter plate when no item is left without somebody (js/claim.js) [kpadopt6]
+ * @property {string} claimNoneOpenText  Its sentence (js/claim.js) [kpadopt6]
+ * @property {string} claimNoneMineTitle  The filter plate for Mine when it is empty (js/claim.js) [kpadopt6]
+ * @property {string} claimNoneMineText  Its sentence (js/claim.js) [kpadopt6]
+ * @property {string} claimShowAll  The plates' button (js/claim.js) [kpadopt6]
+ * @property {string} claimRetry  The Retry of a list that could not be read (js/claim.js) [kpadopt6]
+ * @property {string} claimNotSaved  The line when the server refused a change and gave no reason (js/claim.js) [kpadopt6]
+ * @property {(name: string, label: string) => string} claimLost  The line when somebody was faster (js/claim.js) [kpadopt6]
+ * @property {(label: string, names: string) => string} claimAnnounce  What is said after a change (js/claim.js) [kpadopt6]
+ * @property {(label: string) => string} claimAnnounceNobody  What is said after the last person let go (js/claim.js) [kpadopt6]
+ * @property {(label: string) => string} claimReleased  The toast after you let go (js/claim.js) [kpadopt6]
+ * @property {(name: string, label: string) => string} claimUnassigned  The toast after a person was taken off (js/claim.js) [kpadopt6]
+ * @property {(n: number) => string} claimTookAll  The toast and the line after Take every open item (js/claim.js) [kpadopt6]
+ * @property {(names: string) => string} claimCopyLine  The text Copy the open list writes (js/claim.js) [kpadopt6]
+ * @property {(n: number) => string} claimCopied  What is said after the copy (js/claim.js) [kpadopt6]
+ * @property {string} claimCopyFailed  What is said when the clipboard refuses (js/claim.js) [kpadopt6]
+ * @property {string} claimKeyTake  The shortcut sheet's line for c (js/claim.js) [kpadopt6]
+ * @property {string} claimKeyGroup  The sheet's heading for the claim keys (js/claim.js) [kpadopt6]
+ * @property {string} claimKeyReason  Why c does nothing now (js/claim.js) [kpadopt6]
+ * @property {string} claimKeyGaps  The sheet's line for Shift C (js/claim.js) [kpadopt6]
+ * @property {(n: number) => string} availabilityDaysLong  A proposed period's length under its dates (js/availability.js) [kpadopt6]
+ * @property {string} availabilityYes  The answer yes, in a cell's name, the legend and the list (js/availability.js) [kpadopt6]
+ * @property {string} availabilityMaybe  The answer maybe (js/availability.js) [kpadopt6]
+ * @property {string} availabilityNo  The answer no (js/availability.js) [kpadopt6]
+ * @property {string} availabilityNone  A cell nobody filled (js/availability.js) [kpadopt6]
+ * @property {string} availabilityNobodyAnswered  The line over a grid nobody has answered (js/availability.js) [kpadopt6]
+ * @property {(yes: number, total: number) => string} availabilityCount  One column's exact count (js/availability.js) [kpadopt6]
+ * @property {(n: number, total: number) => string} availabilityAnswered  The line over the grid (js/availability.js) [kpadopt6]
+ * @property {(labels: string, count: string) => string} availabilityBestLine  The best column in words (js/availability.js) [kpadopt6]
+ * @property {string} availabilityChoose  The button on the best column (js/availability.js) [kpadopt6]
+ * @property {string} availabilityUnitLabel  The organiser's switch between periods and days (js/availability.js) [kpadopt6]
+ * @property {string} availabilityByPeriod  Its first choice (js/availability.js) [kpadopt6]
+ * @property {string} availabilityByDay  Its second choice (js/availability.js) [kpadopt6]
+ * @property {string} availabilityFailedTitle  The failed plate's heading (js/availability.js) [kpadopt6]
+ * @property {string} availabilityFailedText  Its sentence (js/availability.js) [kpadopt6]
+ * @property {string} availabilityEmptyTitle  The empty plate's heading (js/availability.js) [kpadopt6]
+ * @property {string} availabilityEmptyText  Its sentence (js/availability.js) [kpadopt6]
+ * @property {string} availabilityRetry  The failed plate's button (js/availability.js) [kpadopt6]
+ * @property {string} availabilityGroup  The grid's name when the page gives none (js/availability.js) [kpadopt6]
+ * @property {string} availabilitySummaryLabel  The summary row's name (js/availability.js) [kpadopt6]
+ * @property {(name: string) => string} availabilityYou  Your own row's name (js/availability.js) [kpadopt6]
+ * @property {string} availabilityBestWord  The legend's word for the best column (js/availability.js) [kpadopt6]
+ * @property {(name: string, column: string, answer: string) => string} availabilityCell  A cell's name for a screen reader (js/availability.js) [kpadopt6]
+ * @property {(label: string) => string} availabilityNotSaved  The line when a change was refused (js/availability.js) [kpadopt6]
+ * @property {(label: string) => string} availabilityEveryone  Said when a column becomes complete (js/availability.js) [kpadopt6]
+ * @property {(yes: number, maybe: number, no: number) => string} availabilityYourAnswers  Said after a stroke (js/availability.js) [kpadopt6]
+ * @property {(n: number) => string} availabilityStroke  The toast after a stroke (js/availability.js) [kpadopt6]
+ * @property {(name: string, label: string, word: string) => string} availabilityCellSaid  Said after one cell changed (js/availability.js) [kpadopt6]
+ * @property {string} availabilityClear  The menu entry that empties a cell (js/availability.js) [kpadopt6]
+ * @property {string} availabilityKeyYes  The shortcut sheet's line for y (js/availability.js) [kpadopt6]
+ * @property {string} availabilityKeyMaybe  The line for m (js/availability.js) [kpadopt6]
+ * @property {string} availabilityKeyNo  The line for n (js/availability.js) [kpadopt6]
+ * @property {string} availabilityKeyClear  The line for Backspace (js/availability.js) [kpadopt6]
+ * @property {string} availabilityKeyGroup  The sheet's heading (js/availability.js) [kpadopt6]
+ * @property {string} availabilityKeyReason  Why those keys do nothing now (js/availability.js) [kpadopt6]
+ * @property {string} availabilityDisabled  Why every cell is inert when the page gives no reason (js/availability.js) [kpadopt6]
+ * @property {string} qrLabel  The code's accessible name (js/qr.js) [kpadopt6]
+ * @property {string} qrReady  Said once, politely, when the code is drawn (js/qr.js) [kpadopt6]
+ * @property {string} qrTooLongTitle  The failed plate's heading (js/qr.js) [kpadopt6]
+ * @property {string} qrTooLongText  Its sentence (js/qr.js) [kpadopt6]
+ * @property {string} qrEmptyTitle  The empty plate's heading (js/qr.js) [kpadopt6]
+ * @property {string} qrEmptyText  Its sentence (js/qr.js) [kpadopt6]
+ * @property {string} qrExpired  The plate of a link whose time ran out (js/qr.js) [kpadopt6]
+ * @property {string} qrExpiredText  Its sentence (js/qr.js) [kpadopt6]
+ * @property {string} qrHidden  The cover of a code that waits to be shown (js/qr.js) [kpadopt6]
+ * @property {string} qrShow  The cover's button (js/qr.js) [kpadopt6]
+ * @property {string} qrHide  The button that covers a shown code again (js/qr.js) [kpadopt6]
+ * @property {string} qrLoading  The words under the busy card while the link is made (js/qr.js) [kpadopt6]
+ * @property {string} qrCopy  The Copy button (js/qr.js) [kpadopt6]
+ * @property {string} qrCopied  Its result word (js/qr.js) [kpadopt6]
+ * @property {string} qrCopyFailed  Its refusal word (js/qr.js) [kpadopt6]
+ * @property {string} qrNoLink  Why Copy is off without a link (js/qr.js) [kpadopt6]
+ * @property {string} qrCopyOff  Why Copy is off while the code is not ready (js/qr.js) [kpadopt6]
+ * @property {string} qrDownloadPng  The download button for a picture (js/qr.js) [kpadopt6]
+ * @property {string} qrDownloadSvg  The download button for a vector file (js/qr.js) [kpadopt6]
+ * @property {(bytes: number) => string} qrDense  The warning under a long link (js/qr.js) [kpadopt6]
+ * @property {string} qrRetry  The failed plate's button (js/qr.js) [kpadopt6]
+ * @property {string} qrKey  The shortcut sheet's line for Shift C (js/qr.js) [kpadopt6]
+ * @property {string} qrKeyGroup  The sheet's heading (js/qr.js) [kpadopt6]
+ * @property {string} qrKeyReason  Why the key does nothing now (js/qr.js) [kpadopt6]
+ * @property {string} timeChoose  The button that opens the list of times, and the sheet's title when the field has no name (js/timefield.js) [kpadopt6]
+ * @property {string} timeRequired  The line under an empty required field (js/timefield.js) [kpadopt6]
+ * @property {string} timeInvalid  The line under a text that is not a time (js/timefield.js) [kpadopt6]
+ * @property {(min: string, max: string) => string} timeOutside  The line under a time outside the window (js/timefield.js) [kpadopt6]
+ * @property {(value: string) => string} timeConverted  The polite line after a 12 hour time was pasted (js/timefield.js) [kpadopt6]
+ * @property {(value: string) => string} timeSaid  What is said after the value changed (js/timefield.js) [kpadopt6]
+ * @property {string} timePresets  The name of the group of preset chips (js/timefield.js) [kpadopt6]
+ * @property {string} timePresetsFailed  The compact plate when presets failed (js/timefield.js) [kpadopt6]
+ * @property {string} timeRetry  Its button (js/timefield.js) [kpadopt6]
+ * @property {string} timeList  The list's name for a screen reader (js/timefield.js) [kpadopt6]
+ * @property {string} timeNone  The list's entry that clears the field (js/timefield.js) [kpadopt6]
+ * @property {string} timeNow  The note on the list's entry for the current time (js/timefield.js) [kpadopt6]
+ * @property {(busy: string) => string} timeNear  The mark on a time close to a busy moment (js/timefield.js) [kpadopt6]
+ * @property {(zone: string) => string} timeZoneNote  The quiet line that says whose clock the time is (js/timefield.js) [kpadopt6]
+ * @property {(value: string) => string} timeWrappedNext  Said when stepping up went past midnight (js/timefield.js) [kpadopt6]
+ * @property {(value: string) => string} timeWrappedPrevious  Said when stepping down went past midnight (js/timefield.js) [kpadopt6]
+ * @property {string} consoleUnit  The pill's word for a block, singular and plural (js/console.js) [kpadopt6]
+ * @property {string} consoleOutputLabel  The body's name for a screen reader (js/console.js) [kpadopt6]
+ * @property {string} consoleCommand  The prompt's name when the console has none (js/console.js) [kpadopt6]
+ * @property {string} consoleHostFailed  The failed plate's heading and the reason the prompt is off then (js/console.js) [kpadopt6]
+ * @property {string} consoleHostFailedText  The failed plate's sentence (js/console.js) [kpadopt6]
+ * @property {string} consoleOff  Why the prompt is off when the page gives no reason (js/console.js) [kpadopt6]
+ * @property {string} consoleContextLoadingWhy  Why the prompt is off while the context list loads (js/console.js) [kpadopt6]
+ * @property {string} consoleRun  The Run button (js/console.js) [kpadopt6]
+ * @property {string} consoleRunAnyway  The Run button after a line the app wants confirmed (js/console.js) [kpadopt6]
+ * @property {string} consoleHint  The line under the prompt when the page gives none (js/console.js) [kpadopt6]
+ * @property {string} consoleContext  The context select's label when the page gives none (js/console.js) [kpadopt6]
+ * @property {string} consoleContextLoading  The select while its options load (js/console.js) [kpadopt6]
+ * @property {string} consoleSending  A block before the app answered (js/console.js) [kpadopt6]
+ * @property {string} consoleQueued  A queued block (js/console.js) [kpadopt6]
+ * @property {string} consoleRunning  A running block with its timer off (js/console.js) [kpadopt6]
+ * @property {(time: string) => string} consoleRunningFor  A running block's status with its elapsed time (js/console.js) [kpadopt6]
+ * @property {(code: number) => string} consoleExit  A finished block's exit code (js/console.js) [kpadopt6]
+ * @property {string} consoleDone  The word beside exit 0 (js/console.js) [kpadopt6]
+ * @property {string} consoleFailed  The word beside a non-zero exit (js/console.js) [kpadopt6]
+ * @property {string} consoleRefused  A block the app refused (js/console.js) [kpadopt6]
+ * @property {string} consoleCancelled  A block that was stopped (js/console.js) [kpadopt6]
+ * @property {string} consoleLost  A block whose connection dropped (js/console.js) [kpadopt6]
+ * @property {string} consoleCopyCommand  The block's button that copies its command (js/console.js) [kpadopt6]
+ * @property {string} consoleCopyOutput  The block's button that copies its output (js/console.js) [kpadopt6]
+ * @property {string} consoleAgain  The block's button that runs its command again (js/console.js) [kpadopt6]
+ * @property {string} consoleRecheck  The lost block's button that runs it again to see (js/console.js) [kpadopt6]
+ * @property {string} consoleCancel  The running block's button that stops it (js/console.js) [kpadopt6]
+ * @property {string} consoleCollapse  The block's button that folds it (js/console.js) [kpadopt6]
+ * @property {string} consoleExpand  The block's button that opens it again (js/console.js) [kpadopt6]
+ * @property {string} consoleCopied  A copy button's result word (js/console.js) [kpadopt6]
+ * @property {string} consoleNotCopied  A copy button's refusal word (js/console.js) [kpadopt6]
+ * @property {string} consoleLostWhat  A lost block's what (js/console.js) [kpadopt6]
+ * @property {string} consoleLostNow  A lost block's what now (js/console.js) [kpadopt6]
+ * @property {string} consoleRefusedWhat  A refusal's what when the app gave none (js/console.js) [kpadopt6]
+ * @property {string} consoleNoOutput  A finished block with nothing written (js/console.js) [kpadopt6]
+ * @property {string} consoleOutput  The output block's title (js/console.js) [kpadopt6]
+ * @property {string} consoleWaitingOutput  A running block that has written nothing yet (js/console.js) [kpadopt6]
+ * @property {string} consoleRetry  The failed plate's button (js/console.js) [kpadopt6]
+ * @property {string} consoleLoading  The words under the busy card while the console loads (js/console.js) [kpadopt6]
+ * @property {(n: number) => string} consoleEarlier  The line that stands for blocks folded away (js/console.js) [kpadopt6]
+ * @property {string} consoleEmptyTitle  The empty plate's heading (js/console.js) [kpadopt6]
+ * @property {string} consoleEmptyText  Its sentence (js/console.js) [kpadopt6]
+ * @property {(code: number) => string} consoleFinishedOk  Said when the last command succeeded (js/console.js) [kpadopt6]
+ * @property {(code: number) => string} consoleFinishedFailed  Said when the last command failed (js/console.js) [kpadopt6]
+ * @property {string} consoleFinishedRefused  Said when the last command was refused (js/console.js) [kpadopt6]
+ * @property {(command: string) => string} consoleConfirmSaid  Said when a line needs a second press (js/console.js) [kpadopt6]
+ * @property {string} consoleCleared  The toast and the line after Clear (js/console.js) [kpadopt6]
+ * @property {string} consoleCompletions  The completion list's name (js/console.js) [kpadopt6]
+ * @property {(n: number) => string} consoleMatches  Said after Tab found several (js/console.js) [kpadopt6]
+ * @property {string} consoleKeyClear  The shortcut sheet's line for Ctrl L (js/console.js) [kpadopt6]
+ * @property {string} consoleKeyGroup  The sheet's heading (js/console.js) [kpadopt6]
+ * @property {string} consoleKeyFocus  The sheet's line for the focus key (js/console.js) [kpadopt6]
+ * @property {string} consoleKeyFocusReason  Why the focus key does nothing now (js/console.js) [kpadopt6]
+ * @property {(n: number) => string} qrShowAllChars  The button that unfolds a long link under the code (js/qr.js) [kpadopt6]
+ * @property {string} qrShowLess  The button that folds it again (js/qr.js) [kpadopt6]
+ * @property {(item: string) => string} ratingGroupName  The star row's name for a screen reader: "Rating for Lasagne" (js/rating.js) [kpadopt6]
+ * @property {string} ratingGroupNameBare  The same when the row names no item [kpadopt6]
+ * @property {(n: number, max: number) => string} ratingStarName  One star's name: "4 of 5" [kpadopt6]
+ * @property {(n: number, max: number, label: string) => string} ratingStarNameLabel  The same with its word: "4 of 5, Good" [kpadopt6]
+ * @property {(value: number, max: number) => string} ratingRated  A display row's name: "Rated 4 of 5" [kpadopt6]
+ * @property {(value: number, max: number, count: number) => string} ratingRatedCount  The same with how many people rated: "Rated 4.5 of 5 by 12 people" [kpadopt6]
+ * @property {string} ratingUnrated  The line, and the name, of a row nobody has rated: "Not rated yet" [kpadopt6]
+ * @property {string} ratingTap  The caption of an input row with no rating: "Tap a star" [kpadopt6]
+ * @property {string} ratingClear  The small button that removes the rating [kpadopt6]
+ * @property {(item: string) => string} ratingClearName  That button's accessible name: "Clear the rating for Lasagne" [kpadopt6]
+ * @property {(value: number, max: number) => string} ratingOutOf  The caption of a rated row without words per level: "4 of 5" [kpadopt6]
+ * @property {(value: number, count: number) => string} ratingAverage  An aggregated score: "4.5 (12)" [kpadopt6]
+ * @property {(item: string, value: number, max: number) => string} ratingAnnounce  What is said when the rating changes: "Lasagne: 4 of 5" [kpadopt6]
+ * @property {(item: string) => string} ratingAnnounceCleared  What is said when the rating is removed: "Lasagne: rating removed" [kpadopt6]
+ * @property {(item: string, value: number) => string} ratingToast  The undo toast's line: "Lasagne: 4 stars" [kpadopt6]
+ * @property {(item: string) => string} ratingToastCleared  The undo toast's line after Clear [kpadopt6]
+ * @property {string} ratingLoading  The row's name while the saved value is read [kpadopt6]
+ * @property {string} ratingFailedRead  The words that replace the stars when the value could not be read [kpadopt6]
+ * @property {string} ratingRetry  Its button [kpadopt6]
+ * @property {(item: string) => string} ratingSaveFailed  The line under the row when a save was refused: "Could not save the rating for Lasagne" [kpadopt6]
+ * @property {string} ratingSaving  The row's description while a save is on its way [kpadopt6]
+ * @property {string} ratingConfirm  The button that saves a pending rating (commit confirm) [kpadopt6]
+ * @property {string} ratingCancel  The button that drops a pending rating [kpadopt6]
+ * @property {(value: number, max: number) => string} ratingPending  The line over those two buttons: "4 of 5, not saved yet" [kpadopt6]
+ * @property {string} ratingReadonly  What a screen reader hears on a row that cannot be changed by this person [kpadopt6]
+ * @property {string} quoteBy  Who wrote a quote when the card does not say: "You" (js/quote.js) [kpadopt6]
+ * @property {(by: string, when: string) => string} quoteCaption  The line under a quote: "You, Tuesday 14/10/2026" [kpadopt6]
+ * @property {(weekday: string, date: string) => string} quoteDay  A date with its weekday: "Tuesday 14/10/2026" [kpadopt6]
+ * @property {(days: number) => string} quoteRelative  How long ago, in words: "3 days ago", "today" [kpadopt6]
+ * @property {(date: string, relative: string) => string} quoteBoth  The date and how long ago together: "Tuesday 14/10/2026 (3 days ago)" [kpadopt6]
+ * @property {string} quoteHide  The button that stops a quote from coming back [kpadopt6]
+ * @property {string} quoteHideDone  The undo toast's line after a hide: "Hidden" [kpadopt6]
+ * @property {string} quoteHiding  What a hide that is being saved says on its button [kpadopt6]
+ * @property {string} quoteCopy  The button that copies the words [kpadopt6]
+ * @property {string} quoteCopied  The same button for a moment after the copy [kpadopt6]
+ * @property {string} quoteCopyFailed  What is said when the clipboard refused [kpadopt6]
+ * @property {string} quoteShowAll  The button that unfolds a long quote [kpadopt6]
+ * @property {string} quoteShowLess  The same button once it is open [kpadopt6]
+ * @property {(n: number) => string} quoteShowAllN  A list's button that shows every quote: "Show all 7" [kpadopt6]
+ * @property {string} quoteShowFewer  The same button once the list is open [kpadopt6]
+ * @property {string} quoteOpen  The link to the day the words were written [kpadopt6]
+ * @property {string} quoteLoading  The words under the loading card [kpadopt6]
+ * @property {string} quoteEmptyTitle  The empty card's title [kpadopt6]
+ * @property {string} quoteEmptyText  The empty card's sentence [kpadopt6]
+ * @property {string} quoteFailedTitle  The failed card's title [kpadopt6]
+ * @property {string} quoteFailedText  The failed card's sentence [kpadopt6]
+ * @property {string} quoteRetry  The failed card's button [kpadopt6]
+ * @property {string} quoteListName  A list of quotes' name for a screen reader [kpadopt6]
+ * @property {string} quoteAnnounceHidden  What is said when a quote is hidden [kpadopt6]
+ * @property {string} statusOpen  A row in the calm vocabulary that is still open (js/statusrow.js, `data-kp-status-vocab="calm"`) [kpadopt6]
+ * @property {string} statusDone  A calm row that is done [kpadopt6]
+ * @property {string} statusPaused  A calm row that is paused [kpadopt6]
+ * @property {string} statusUnknown  A calm row nothing is known about: never shown as done [kpadopt6]
+ * @property {(date: string) => string} statusSinceDate  A paused row's line: "Paused since 03/10/2026" [kpadopt6]
+ * @property {(duration: string) => string} statusSinceFor  The same as a length: "Paused for 3 weeks" [kpadopt6]
+ * @property {(date: string, duration: string) => string} statusSinceBoth  The same with both: "Paused since 03/10/2026 (2 weeks)" [kpadopt6]
+ * @property {(days: number) => string} statusDuration  A length of days in words: "5 days", "3 weeks", "4 months" [kpadopt6]
+ * @property {string} statusResume  The button that takes a paused row up again [kpadopt6]
+ * @property {(label: string) => string} statusResumeLabel  That button's accessible name: "Resume Beweging" [kpadopt6]
+ * @property {string} statusPause  The optional button that pauses a row [kpadopt6]
+ * @property {(label: string) => string} statusPauseLabel  That button's accessible name [kpadopt6]
+ * @property {(label: string) => string} statusResumed  What is said and toasted after a resume: "Beweging resumed" [kpadopt6]
+ * @property {(label: string) => string} statusPausedNow  What is said and toasted after a pause: "Beweging paused" [kpadopt6]
+ * @property {(n: number, days: number) => string} statusFoldLine  The line that gathers long-paused rows: "3 paused for more than 30 days" [kpadopt6]
+ * @property {string} statusTodayEmptyTitle  The empty today card's title [kpadopt6]
+ * @property {string} statusTodayEmptyText  Its second sentence: nothing is waiting [kpadopt6]
+ * @property {string} statusTodayFailedTitle  The failed today card's title [kpadopt6]
+ * @property {string} statusTodayFailedText  Its sentence: the fault is the system's [kpadopt6]
+ * @property {string} statusTodayLoading  The words under the loading card [kpadopt6]
+ * @property {string} statusTodayRetry  The failed card's button [kpadopt6]
+ * @property {string} calmLogged  A day with something logged, in words: "logged" (js/calm-tones.js, `data-kp-tones="calm"`) [kpadopt6]
+ * @property {string} calmQuiet  A day with nothing logged, in words: "nothing logged", never "missed" [kpadopt6]
+ * @property {string} calmPaused  A day inside a pause: "paused" [kpadopt6]
+ * @property {string} calmLegendLogged  The legend's word for a logged day [kpadopt6]
+ * @property {string} calmLegendQuiet  The legend's word for a quiet day [kpadopt6]
+ * @property {string} calmLegendPaused  The legend's word for a paused day [kpadopt6]
+ * @property {string} calmEmptyTitle  The plate over a month with nothing logged: "Nothing logged this month" [kpadopt6]
+ * @property {string} calmEmptyText  Its second sentence [kpadopt6]
+ * @property {string} calmFailedTitle  The plate over a calendar that could not be read [kpadopt6]
+ * @property {string} calmFailedText  Its sentence: the fault is the system's [kpadopt6]
+ * @property {string} calmRetry  Its button [kpadopt6]
+ * @property {string} calmTrendCaption  The words of the optional caption slot under the grid: trends over the days that were logged [kpadopt6]
+ * @property {(logged: number, total: number) => string} calmSummary  A calm uptime strip's summary: "21 of 30 days logged", with no incident count and no share down [kpadopt6]
+ * @property {(n: number, total: number) => string} focusQuestionCount  The count over a question: "Question 3 of 7" (js/focus-steps.js, answer mode) [kpadopt6]
+ * @property {(label: string, n: number, total: number) => string} focusAnswered  What a screen reader hears after an answer: "Answered Matig. Question 4 of 7" [kpadopt6]
+ * @property {(label: string) => string} focusSameYesterday  The button that repeats yesterday's answer: "Same as yesterday: Matig" [kpadopt6]
+ * @property {(label: string) => string} focusSameUsual  The button that takes the usual answer: "Same as usual: Goed" [kpadopt6]
+ * @property {string} focusSkip  The button that passes a question: "Not today" [kpadopt6]
+ * @property {string} focusSkipped  What a skipped question reads as in the summary [kpadopt6]
+ * @property {string} focusReview  The next button on the last question when a summary follows [kpadopt6]
+ * @property {string} focusSummaryTitle  The summary screen's name [kpadopt6]
+ * @property {string} focusMultiHint  The line under a question that takes several answers [kpadopt6]
+ * @property {string} focusTextLabel  The name of the box of a written answer [kpadopt6]
+ * @property {string} focusPickedMark  The word a chosen answer carries for a screen reader besides the mark [kpadopt6]
+ * @property {string} focusResumeAsk  The question when a check-in was left half way: "Continue where you stopped?" [kpadopt6]
+ * @property {string} focusResumeContinue  Its yes [kpadopt6]
+ * @property {string} focusResumeRestart  Its start over [kpadopt6]
+ * @property {(n: number) => string} focusResumed  What is said when answers are put back: "Back at question 4" [kpadopt6]
+ * @property {string} focusAnswerEmptyTitle  The plate of a day with no questions [kpadopt6]
+ * @property {string} focusAnswerEmptyText  Its sentence: nothing is waiting [kpadopt6]
+ * @property {string} focusAnswerFailedTitle  The plate of questions that could not be read [kpadopt6]
+ * @property {string} focusAnswerFailedText  Its sentence [kpadopt6]
+ * @property {string} focusRetry  Its button [kpadopt6]
+ * @property {string} focusSaveFailedTitle  The plate when the finished answers could not be saved [kpadopt6]
+ * @property {string} focusSaveFailedText  Its sentence: nothing is lost [kpadopt6]
+ * @property {string} focusSaveRetry  Its button: "Try again" [kpadopt6]
+ * @property {string} focusAnswerLoading  The words under the loading card of the questions [kpadopt6]
+ * @property {string} usualLabel  The label over the usual band of a picker (js/usual-picker.js) [kpadopt6]
+ * @property {string} usualAll  The label over the full list under the band [kpadopt6]
+ * @property {(usual: number, more: number) => string} usualStatus  The status line of a picker with a band: "5 usual, 33 more" [kpadopt6]
+ * @property {(n: number) => string} usualShowAll  The row that unfolds the full list: "Show all 38", the exact number [kpadopt6]
+ * @property {string} usualShowFewer  The same row once the list is open [kpadopt6]
+ * @property {(label: string) => string} usualAdd  The row that adds what was typed: "Add 'hoofdpjn' as new" [kpadopt6]
+ * @property {(name: string) => string} usualDidYouMean  A close name offered for what was typed: "Did you mean Hoofdpijn?" [kpadopt6]
+ * @property {string} usualNoMatchTitle  The plate over a search that matches nothing [kpadopt6]
+ * @property {string} usualNoMatchText  Its sentence when a name can be added [kpadopt6]
+ * @property {string} usualNoMatchTextFixed  Its sentence when nothing can be added [kpadopt6]
+ * @property {(label: string) => string} usualSelectedExisting  What is said when typed text named an item already in the list: "Hoofdpijn was already in the list, selected" [kpadopt6]
+ * @property {(label: string) => string} usualAdded  What is said after an add: "Hoofdpijn added" [kpadopt6]
+ * @property {(label: string) => string} usualAddedToast  The undo toast's line after an add: "Added 'Neksteun'" [kpadopt6]
+ * @property {string} usualEmptyTitle  The plate of a picker with no items at all [kpadopt6]
+ * @property {string} usualEmptyText  Its sentence when a name can be added [kpadopt6]
+ * @property {string} usualEmptyTextFixed  Its sentence when nobody can add here [kpadopt6]
+ * @property {string} usualAddButton  Its button [kpadopt6]
+ * @property {string} usualFailedTitle  The plate of a list that could not be read [kpadopt6]
+ * @property {string} usualFailedText  Its sentence [kpadopt6]
+ * @property {string} usualRetry  Its button [kpadopt6]
+ * @property {string} usualLoading  The words under the loading card of a picker [kpadopt6]
+ * @property {string} usualNotToday  The small button on a ticked item that says it is not for today [kpadopt6]
+ * @property {(label: string) => string} usualNotTodayName  That button's accessible name: "Hoofdpijn: not today" [kpadopt6]
+ * @property {(label: string) => string} usualNotTodayAnnounce  What is said when it is set: "Hoofdpijn: not today" [kpadopt6]
+ * @property {string} usualNotTodayMark  The word a not-today item carries beside its name [kpadopt6]
+ * @property {string} usualJump  The `?` sheet's words for Alt U: "Jump to the usual choices" [kpadopt6]
  */
 
 /**
@@ -975,6 +1473,107 @@
  * @type {Strings}
  */
 export const DEFAULT_STRINGS = Object.freeze({
+    // The toggle button (js/toggle.js) [kpadopt6-ops].
+    toggleCounting: 'counting',
+    toggleOn: (label, count) => (count === null ? `${label} on` : `${label} on, ${count} shown`),
+    toggleOff: (label, count) => (count === null ? `${label} off` : `${label} off, ${count} shown`),
+    toggleCount: (label, n) => `${label}: ${n}`,
+    toggleClear: (n) => `Clear filters (${n})`,
+    toggleRefused: 'Refused',
+    toggleKeyWhat: (label) => `Turn ${label} on or off`,
+    toggleKeyGroup: 'Filters',
+    // The palette that finds words in any order (js/intent.js, js/palette.js) [kpadopt6-ops].
+    intentNoMatch: 'Try other words, or fewer of them.',
+    intentNoSubject: (name, verb, subjects, noun) => `There is no ${noun === '' ? 'match' : noun} called "${name}". ${verb} works on: ${subjects.join(', ')}.`,
+    paletteNothing: 'Nothing matches',
+    paletteCapped: (shown, total) => `${shown} of ${total} shown, type more words`,
+    paletteLoading: 'Loading the commands…',
+    paletteFailed: 'The commands could not be read',
+    paletteFailedText: 'The places below still work.',
+    paletteRetry: 'Retry',
+    // The version jump chip (js/version-delta.js) [kpadopt6-ops].
+    versionMajor: 'major',
+    versionMinor: 'minor',
+    versionPatch: 'patch',
+    versionOther: 'changed',
+    versionDowngrade: 'older',
+    versionSame: 'up to date',
+    versionUnknown: 'unknown',
+    versionNoUpdates: 'nothing to update',
+    versionLoading: 'checking the version',
+    versionFailed: 'could not check',
+    versionNone: 'not tracked',
+    versionNotes: 'release notes, opens in a new tab',
+    versionSpoken: (from, to, level) => `from ${from} to ${to}, ${level} update`,
+    versionSpokenSame: (version) => `${version}, up to date`,
+    versionSpokenTo: (to) => `going to ${to}`,
+    versionSpokenDown: (from, to) => `from ${from} back to ${to}, an older version`,
+    versionSpokenChanged: (from, to) => `changed from ${from} to ${to}`,
+    // The acknowledge gate (js/ack-gate.js) [kpadopt6-ops].
+    ackLink: 'Read the release notes',
+    ackLabel: 'I read the release notes',
+    ackRetry: 'Retry',
+    ackLooking: 'Looking up the release notes',
+    ackLocked: 'The update is running',
+    ackOpenFirst: 'Open the release notes first',
+    ackReason: (label) => `Tick "${label}" first`,
+    ackReasonMany: (remaining, total) => `${remaining} of ${total} release notes still to read`,
+    ackEnabled: 'Update enabled',
+    ackDisabled: (remaining) => `Update disabled: ${remaining} release ${remaining === 1 ? 'note' : 'notes'} still to read`,
+    ackNoLink: 'No release notes link found',
+    // The dependency list (js/deplist.js) [kpadopt6-ops].
+    deplistCount: (n) => `${n} ${n === 1 ? 'dependency' : 'dependencies'}`,
+    deplistReading: 'Reading what depends on what',
+    deplistNeeds: (from, to) => `${from} needs ${to}`,
+    deplistReaches: (from, to) => `${from} reaches ${to}`,
+    deplistNeedsWord: 'needs',
+    deplistMore: (n) => `Show all ${n}`,
+    deplistFewer: 'Show fewer',
+    deplistEmpty: 'Nothing depends on these',
+    deplistFailed: 'The dependencies could not be read',
+    deplistFailedText: 'Try again in a moment.',
+    deplistRetry: 'Retry',
+    deplistLoading: 'Reading the dependencies…',
+    deplistRunning: 'running',
+    deplistStopped: 'stopped',
+    deplistUnknown: 'unknown',
+    deplistCopy: 'Copy as text',
+    deplistCopied: 'Copied',
+    // The path of a connection (js/path-trace.js) [kpadopt6-ops].
+    traceLabel: 'The path of the connection',
+    traceAllowed: 'Allowed',
+    traceBlocked: (hop, rule) => (rule === '' ? `Blocked at ${hop}` : `Blocked at rule "${rule}"`),
+    traceNotAll: 'Not every step could be measured',
+    traceAllowedWord: 'allowed',
+    traceRefusedWord: 'refused',
+    traceNotReached: 'not reached',
+    traceNotMeasured: 'not measured',
+    traceRule: (rule) => `Rule ${rule}`,
+    traceRunning: 'Checking the path…',
+    traceEmpty: 'Pick a source and a target',
+    traceEmptyText: 'The path they take shows here.',
+    traceFailed: 'The path could not be checked',
+    traceFailedText: 'Try again in a moment.',
+    traceRetry: 'Retry',
+    traceCopy: 'Copy as text',
+    traceCopied: 'Copied',
+    traceSwap: 'Swap direction',
+    traceKeySwap: 'Swap source and target',
+    traceKeyGroup: 'Path',
+    // The entity card (js/entity-card.js) [kpadopt6-ops].
+    entitySelect: (name) => `Select ${name}`,
+    entityFailed: 'failed',
+    entityNotMeasured: 'not measured',
+    entityMoreFlags: (n) => `${n} more ${n === 1 ? 'flag' : 'flags'}`,
+    entityFlagsLabel: 'More flags',
+    entityRetry: 'Retry',
+    entityMore: 'More',
+    entityMoreLabel: 'More actions',
+    entityLoading: 'Reading the stacks…',
+    entityGridFailed: 'The stacks could not be read',
+    entityGridFailedText: 'Try again in a moment.',
+    entityGridEmpty: 'No stacks yet',
+    entityNew: 'New stack',
     alertSuccess: 'Success',
     alertWarning: 'Warning',
     alertInfo: 'Info',
@@ -1915,6 +2514,103 @@ export const DEFAULT_STRINGS = Object.freeze({
     sliderValue: (label) => `${label}, value`,
     sliderInvalid: (min, max, unit) => `Type a number from ${min} to ${max}${unit ? ` ${unit}` : ''}.`,
     sliderGap: (gap, unit) => `The two values must be at least ${gap}${unit ? ` ${unit}` : ''} apart.`,
+    // Media: the growing box, anchors, printing, the viewer, the document preview, the gallery and the uses map [kpadopt6-media].
+    // kpadopt6-media:start
+    autosizeChars: (n, text) => `${text} ${n === 1 ? 'character' : 'characters'}`,
+    autosizeLines: (n, text) => `${text} ${n === 1 ? 'line' : 'lines'}`,
+    autosizeBoth: (chars, charsText, lines, linesText) => `${charsText} ${chars === 1 ? 'character' : 'characters'}, ${linesText} ${lines === 1 ? 'line' : 'lines'}`,
+    autosizeOf: (text, maxText) => `${text} of ${maxText} characters`,
+    autosizeFull: (maxText) => `Limit of ${maxText} characters reached.`,
+    autosizeNear: (charsText, maxText) => `${charsText} of ${maxText} characters used.`,
+    autosizeSubmit: 'Send the form from this box',
+    autosizeGroup: 'In a text box',
+    autosizeLoading: 'Loading the text…',
+    autosizeFailed: 'This text could not be saved. It is still here.',
+    anchorCopyLink: (name) => `Copy link to ${name}`,
+    anchorCopied: 'Copied',
+    anchorFailed: 'Not copied',
+    anchorCopiedAnnounce: (name) => `Link to ${name} copied`,
+    anchorFailedAnnounce: 'The link could not be copied',
+    anchorMissing: 'That item is no longer here.',
+    anchorShowAll: 'Show the whole list',
+    anchorKeyCopy: 'Copy link to this row',
+    anchorKeyGroup: 'On a row',
+    printLoading: 'The list was still loading when this sheet was printed.',
+    printStamp: (moment) => `Printed ${moment}`,
+    viewerOpenNew: 'Open in a new tab',
+    viewerDownload: 'Download',
+    viewerPrint: 'Print',
+    viewerCopyLink: 'Copy link',
+    viewerNoFile: 'No file yet',
+    viewerLoading: 'Opening…',
+    viewerFailedTitle: 'Could not open this file',
+    viewerFailedText: 'Nothing was changed. You can still open it in a new tab or download it.',
+    viewerUnsupportedTitle: 'This browser cannot show it here',
+    viewerUnsupportedText: 'Open it in a new tab or download it instead.',
+    viewerRetry: 'Retry',
+    viewerPosition: (index, total) => `${index} of ${total}`,
+    previewKeyGroup: 'In a document preview',
+    previewKeyOpen: 'Open the file in a new tab',
+    previewKeyDownload: 'Download the file',
+    previewKeyPrint: 'Print the file',
+    previewKeyPrevious: 'Previous document',
+    previewKeyNext: 'Next document',
+    previewTimeout: 'The file took too long to open.',
+    previewGone: 'The server says this file is gone.',
+    previewServer: (status) => `The server could not give the file (error ${status}).`,
+    previewNoPdf: "This browser cannot show PDFs here. Open the file in a new tab or download it.",
+    previewShownByBrowser: "Shown by your browser's PDF viewer",
+    previewImage: 'The picture could not be loaded.',
+    previewNoFile: 'No file yet',
+    docKindImage: 'Picture',
+    docKindText: 'Text',
+    docMissing: 'No file yet',
+    docKindName: (kind) => ({ pdf: 'PDF document', doc: 'Word document', sheet: 'Spreadsheet', image: 'Picture', text: 'Text file' })[kind] ?? 'Document',
+    galleryContinue: 'Continue where you were',
+    galleryFailed: 'The pictures could not be loaded',
+    galleryFailedText: 'Nothing was changed. Try again in a moment.',
+    galleryEmpty: 'No pictures yet',
+    galleryEmptyText: 'Pictures added here will show up as small tiles.',
+    galleryEmptyAdd: 'Add the first ones and they will show up as small tiles.',
+    galleryRetry: 'Retry',
+    galleryAdd: 'Add pictures',
+    galleryLoading: 'Loading the pictures…',
+    galleryPicture: 'Picture',
+    galleryOpenPicture: (name) => `Open picture: ${name}`,
+    galleryOpenVideo: (name) => `Play video: ${name}`,
+    galleryPictureFailed: 'Could not load this picture',
+    galleryPictureFailedText: 'The other pictures still work: use the arrows.',
+    galleryRetryPicture: (name) => `Retry loading ${name}`,
+    galleryPrevious: 'Previous picture',
+    galleryNext: 'Next picture',
+    galleryFirst: 'This is the first picture',
+    galleryLast: 'This is the last picture',
+    galleryKeyGroup: 'In the picture viewer',
+    galleryKeyPrevious: 'Previous picture',
+    galleryKeyNext: 'Next picture',
+    galleryKeyFirst: 'First picture',
+    galleryKeyLast: 'Last picture',
+    galleryKeyZoom: 'Zoom to 100 % and back',
+    galleryKeyZoomIn: 'Zoom in',
+    galleryKeyZoomOut: 'Zoom out',
+    galleryKeyFull: 'Full screen',
+    usesLabel: 'What uses what',
+    usesSources: 'Sources',
+    usesUsers: 'Used by',
+    usesFailed: 'The map could not be loaded',
+    usesFailedText: 'Nothing was changed. Try again in a moment.',
+    usesEmpty: 'Nothing to show yet',
+    usesEmptyText: 'When there is something that others use, it shows here with a line to each user.',
+    usesRetry: 'Retry',
+    usesLoading: 'Reading…',
+    usesNotUsed: 'Not used',
+    usesCount: (n) => `Used by ${n}`,
+    usesOpen: (label) => `Open ${label}`,
+    usesNodeSource: (label, n, names) => `${label}, used by ${n}: ${names}`,
+    usesNodeUnused: (label) => `${label}, not used`,
+    usesNodeUser: (label, names) => `${label}, uses: ${names}`,
+    usesNodeNothing: (label) => `${label}, uses nothing here`,
+    // kpadopt6-media:end
     // The unsaved-changes bar (js/unsaved.js) [kpadopt5-time].
     unsavedGroup: 'Unsaved changes',
     unsavedNone: 'No changes',
@@ -2107,6 +2803,346 @@ export const DEFAULT_STRINGS = Object.freeze({
     wheelEmpty: 'Nothing fits these filters.',
     wheelLoading: 'Loading the choices…',
     wheelFailed: 'The choices could not be read.',
+    // Claim (js/claim.js) [kpadopt6].
+    claimAnd: 'and',
+    claimDisabled: 'You cannot change who brings what here.',
+    claimNoViewer: 'Sign in to take an item.',
+    claimFullReason: (max) => `${max} ${max === 1 ? 'person already brings' : 'people already bring'} this.`,
+    claimTake: "I'll bring it",
+    claimHeld: "I'm bringing it",
+    claimNobody: 'Nobody yet',
+    claimBy: (names) => `Brought by ${names}`,
+    claimNobodyLabel: 'Nobody brings this yet',
+    claimHeldLabel: (label) => `${label}: you bring it. Press to let go`,
+    claimTakeLabel: (label) => `${label}: bring it`,
+    claimAssign: 'Who brings it',
+    claimAssignOf: (label) => `Choose who brings ${label}`,
+    claimAssignHeading: 'People',
+    claimAssigned: 'Brings it. Press to take off',
+    claimNotAssigned: 'Not on this item. Press to add',
+    claimGroupCount: (done, total) => `${done} of ${total} taken`,
+    claimAllTaken: 'Everything is taken',
+    claimGapsCount: (n) => `${n} still ${n === 1 ? 'has' : 'have'} nobody`,
+    claimFilterLabel: 'Show',
+    claimFilterAll: 'All',
+    claimFilterGaps: 'Nobody yet',
+    claimFilterMine: 'Mine',
+    claimTakeAll: 'Take every open item',
+    claimCopyGaps: 'Copy the open list',
+    claimNothingOpen: 'Every item already has somebody.',
+    claimNoneOpenTitle: 'Everything is taken',
+    claimNoneOpenText: 'Every item has someone who brings it.',
+    claimNoneMineTitle: 'You have not taken anything yet',
+    claimNoneMineText: 'Press I will bring it on an item and it shows here.',
+    claimShowAll: 'Show all items',
+    claimRetry: 'Retry',
+    claimNotSaved: 'Not saved: somebody changed this item first.',
+    claimLost: (name, label) => `${name} took ${label} just before you`,
+    claimAnnounce: (label, names) => `${label}: ${names} bring${/ and |, /.test(names) ? '' : 's'} it`,
+    claimAnnounceNobody: (label) => `${label}: nobody brings it`,
+    claimReleased: (label) => `You no longer bring ${label}`,
+    claimUnassigned: (name, label) => `${name} no longer brings ${label}`,
+    claimTookAll: (n) => `You took ${n} ${n === 1 ? 'item' : 'items'}`,
+    claimCopyLine: (names) => `Still nobody: ${names}`,
+    claimCopied: (n) => `Copied ${n} ${n === 1 ? 'item' : 'items'}`,
+    claimCopyFailed: 'Could not copy. Select the list and copy it yourself.',
+    claimKeyTake: 'Take or let go of the focused item',
+    claimKeyGroup: 'Who brings it',
+    claimKeyReason: 'Put the focus on an item first, and sign in.',
+    claimKeyGaps: 'Show only the items nobody brings',
+    // Availability (js/availability.js) [kpadopt6].
+    availabilityDaysLong: (n) => `${n} ${n === 1 ? 'day' : 'days'}`,
+    availabilityYes: 'Can',
+    availabilityMaybe: 'Maybe',
+    availabilityNo: 'Cannot',
+    availabilityNone: 'No answer',
+    availabilityNobodyAnswered: 'Nobody answered yet',
+    availabilityCount: (yes, total) => `${yes} of ${total} can`,
+    availabilityAnswered: (n, total) => `${n} of ${total} answered`,
+    availabilityBestLine: (labels, count) => `Best: ${labels}, ${count}`,
+    availabilityChoose: 'Choose these dates',
+    availabilityUnitLabel: 'Columns are',
+    availabilityByPeriod: 'Periods',
+    availabilityByDay: 'Days',
+    availabilityFailedTitle: 'Could not read who can come',
+    availabilityFailedText: 'The answers could not be loaded.',
+    availabilityEmptyTitle: 'No dates proposed yet',
+    availabilityEmptyText: 'Once dates are proposed, everybody can say which ones suit them.',
+    availabilityRetry: 'Retry',
+    availabilityGroup: 'Who can come',
+    availabilitySummaryLabel: 'Who can',
+    availabilityYou: (name) => `${name} (you)`,
+    availabilityBestWord: 'Best choice',
+    availabilityCell: (name, column, answer) => `${name}, ${column}${answer ? `: ${answer}` : ''}`,
+    availabilityNotSaved: (label) => `Not saved: ${label}`,
+    availabilityEveryone: (label) => `${label}: everyone can`,
+    availabilityYourAnswers: (yes, maybe, no) => `Your answers: ${yes} can, ${maybe} maybe, ${no} cannot`,
+    availabilityStroke: (n) => `${n} cells set`,
+    availabilityCellSaid: (name, label, word) => `${name}, ${label}: ${word}`,
+    availabilityClear: 'Clear',
+    availabilityKeyYes: 'Can come, on the focused cell of your row',
+    availabilityKeyMaybe: 'Maybe',
+    availabilityKeyNo: 'Cannot come',
+    availabilityKeyClear: 'Clear the answer',
+    availabilityKeyGroup: 'In the availability grid',
+    availabilityKeyReason: 'Move to a cell of your own row first.',
+    availabilityDisabled: 'The dates are chosen.',
+    // Qr (js/qr.js) [kpadopt6].
+    qrLabel: 'QR code for this link',
+    qrReady: 'QR code ready for this link',
+    qrTooLongTitle: 'This link is too long for a QR code',
+    qrTooLongText: 'Copy the link below instead.',
+    qrEmptyTitle: 'No link yet',
+    qrEmptyText: 'Once the link exists, its QR code shows here.',
+    qrExpired: 'Expired',
+    qrExpiredText: 'This link no longer works.',
+    qrHidden: 'QR code hidden',
+    qrShow: 'Show QR code',
+    qrHide: 'Hide QR code',
+    qrLoading: 'Making the link…',
+    qrCopy: 'Copy link',
+    qrCopied: 'Copied',
+    qrCopyFailed: 'Not copied',
+    qrNoLink: 'There is no link to copy yet.',
+    qrCopyOff: 'This link cannot be copied now.',
+    qrDownloadPng: 'Download PNG',
+    qrDownloadSvg: 'Download SVG',
+    qrDense: (bytes) => `This link is ${bytes} bytes long. The code gets dense and is harder to scan.`,
+    qrRetry: 'Try again',
+    qrKey: 'Copy the link of the focused QR code',
+    qrKeyGroup: 'QR code',
+    qrKeyReason: 'Put the focus on a QR code that has a link first.',
+    // Timefield (js/timefield.js) [kpadopt6].
+    timeChoose: 'Choose a time',
+    timeRequired: 'Choose a time.',
+    timeInvalid: 'Use a time like 03:00',
+    timeOutside: (min, max) => `Choose a time from ${min} to ${max}.`,
+    timeConverted: (value) => `Read as ${value}. Times here use 24 hours.`,
+    timeSaid: (value) => value,
+    timePresets: 'Common times',
+    timePresetsFailed: 'The common times could not be loaded.',
+    timeRetry: 'Retry',
+    timeList: 'Times',
+    timeNone: 'No time',
+    timeNow: 'Now',
+    timeNear: (busy) => `near ${busy}`,
+    timeZoneNote: (zone) => `Clock of the host, ${zone}`,
+    timeWrappedNext: (value) => `${value}, the next day`,
+    timeWrappedPrevious: (value) => `${value}, the day before`,
+    // Console (js/console.js) [kpadopt6].
+    consoleUnit: 'command,commands',
+    consoleOutputLabel: 'Commands and their output',
+    consoleCommand: 'Command',
+    consoleHostFailed: 'Could not reach the host',
+    consoleHostFailedText: 'Nothing can be run until the host answers again.',
+    consoleOff: 'Running commands is off here.',
+    consoleContextLoadingWhy: 'Waiting for the list to choose from.',
+    consoleRun: 'Run',
+    consoleRunAnyway: 'Run it anyway?',
+    consoleHint: 'Up and Down walk your earlier lines.',
+    consoleContext: 'Run in',
+    consoleContextLoading: 'Reading the list…',
+    consoleSending: 'Sending…',
+    consoleQueued: 'Waiting its turn',
+    consoleRunning: 'Running',
+    consoleRunningFor: (time) => `Running for ${time}`,
+    consoleExit: (code) => `exit ${code}`,
+    consoleDone: 'Done',
+    consoleFailed: 'Failed',
+    consoleRefused: 'Refused',
+    consoleCancelled: 'Cancelled',
+    consoleLost: 'Not sure it finished',
+    consoleCopyCommand: 'Copy command',
+    consoleCopyOutput: 'Copy output',
+    consoleAgain: 'Run again',
+    consoleRecheck: 'Check again',
+    consoleCancel: 'Cancel',
+    consoleCollapse: 'Collapse',
+    consoleExpand: 'Expand',
+    consoleCopied: 'Copied',
+    consoleNotCopied: 'Not copied',
+    consoleLostWhat: 'The connection dropped while this was running.',
+    consoleLostNow: 'It may have finished. Check again to find out.',
+    consoleRefusedWhat: 'The command was refused.',
+    consoleNoOutput: '(no output)',
+    consoleOutput: 'Output',
+    consoleWaitingOutput: 'Waiting for output…',
+    consoleRetry: 'Retry',
+    consoleLoading: 'Reading the host…',
+    consoleEarlier: (n) => `Show ${n} earlier ${n === 1 ? 'command' : 'commands'}`,
+    consoleEmptyTitle: 'Run a command below',
+    consoleEmptyText: 'What it prints shows up here, one block per command.',
+    consoleFinishedOk: (code) => `Command finished, exit ${code}`,
+    consoleFinishedFailed: (code) => `Command failed, exit ${code}`,
+    consoleFinishedRefused: 'Command refused',
+    consoleConfirmSaid: (command) => `${command}: press Run again to confirm`,
+    consoleCleared: 'Screen cleared',
+    consoleCompletions: 'Completions',
+    consoleMatches: (n) => `${n} matches`,
+    consoleKeyClear: 'Clear the screen',
+    consoleKeyGroup: 'In the console',
+    consoleKeyFocus: 'Go to the console prompt',
+    consoleKeyFocusReason: 'The prompt is off now.',
+    // Qr (js/qr.js) [kpadopt6].
+    qrShowAllChars: (n) => `Show all ${n} characters`,
+    qrShowLess: 'Show less',
+    // The star rating (js/rating.js) [kpadopt6].
+    ratingGroupName: (item) => `Rating for ${item}`,
+    ratingGroupNameBare: 'Rating',
+    ratingStarName: (n, max) => `${n} of ${max}`,
+    ratingStarNameLabel: (n, max, label) => `${n} of ${max}, ${label}`,
+    ratingRated: (value, max) => `Rated ${value} of ${max}`,
+    ratingRatedCount: (value, max, count) => `Rated ${value} of ${max} by ${count} ${count === 1 ? 'person' : 'people'}`,
+    ratingUnrated: 'Not rated yet',
+    ratingTap: 'Tap a star',
+    ratingClear: 'Clear',
+    ratingClearName: (item) => `Clear the rating for ${item}`,
+    ratingOutOf: (value, max) => `${value} of ${max}`,
+    ratingAverage: (value, count) => `${value} (${count})`,
+    ratingAnnounce: (item, value, max) => `${item}: ${value} of ${max}`,
+    ratingAnnounceCleared: (item) => `${item}: rating removed`,
+    ratingToast: (item, value) => `${item}: ${value} ${value === 1 ? 'star' : 'stars'}`,
+    ratingToastCleared: (item) => `${item}: rating removed`,
+    ratingLoading: 'Reading the rating',
+    ratingFailedRead: 'Could not read the rating',
+    ratingRetry: 'Retry',
+    ratingSaveFailed: (item) => `Could not save the rating for ${item}`,
+    ratingSaving: 'Saving the rating',
+    ratingConfirm: 'Save rating',
+    ratingCancel: 'Cancel',
+    ratingPending: (value, max) => `${value} of ${max}, not saved yet`,
+    ratingReadonly: 'You can look at this rating but not change it',
+    // The quote card (js/quote.js) [kpadopt6].
+    quoteBy: 'You',
+    quoteCaption: (by, when) => (when === '' ? by : `${by}, ${when}`),
+    quoteDay: (weekday, date) => `${weekday} ${date}`,
+    quoteRelative: (days) =>
+        days <= 0
+            ? 'today'
+            : days === 1
+              ? 'yesterday'
+              : days < 14
+                ? `${days} days ago`
+                : days < 60
+                  ? `${Math.floor(days / 7)} weeks ago`
+                  : days < 730
+                    ? `${Math.floor(days / 30)} months ago`
+                    : `${Math.floor(days / 365)} years ago`,
+    quoteBoth: (date, relative) => `${date} (${relative})`,
+    quoteHide: 'Do not show this again',
+    quoteHideDone: 'Hidden',
+    quoteHiding: 'Saving',
+    quoteCopy: 'Copy',
+    quoteCopied: 'Copied',
+    quoteCopyFailed: 'Could not copy',
+    quoteShowAll: 'Show all',
+    quoteShowLess: 'Show less',
+    quoteShowAllN: (n) => `Show all ${n}`,
+    quoteShowFewer: 'Show fewer',
+    quoteOpen: 'Open that day',
+    quoteLoading: 'Reading your notes',
+    quoteEmptyTitle: 'Nothing from earlier yet',
+    quoteEmptyText: 'Words you write come back here',
+    quoteFailedTitle: 'Could not read your notes',
+    quoteFailedText: 'The notes could not be reached just now.',
+    quoteRetry: 'Retry',
+    quoteListName: 'Earlier words',
+    quoteAnnounceHidden: 'Quote hidden',
+    // The calm status vocabulary and the today card (js/statusrow.js) [kpadopt6].
+    statusOpen: 'Open',
+    statusDone: 'Done',
+    statusPaused: 'Paused',
+    statusUnknown: 'Not known',
+    statusSinceDate: (date) => `Paused since ${date}`,
+    statusSinceFor: (duration) => `Paused for ${duration}`,
+    statusSinceBoth: (date, duration) => `Paused since ${date} (${duration})`,
+    statusDuration: (days) =>
+        days < 14
+            ? `${days} ${days === 1 ? 'day' : 'days'}`
+            : days < 60
+              ? `${Math.floor(days / 7)} weeks`
+              : days < 730
+                ? `${Math.floor(days / 30)} months`
+                : `${Math.floor(days / 365)} years`,
+    statusResume: 'Resume',
+    statusResumeLabel: (label) => `Resume ${label}`,
+    statusPause: 'Pause',
+    statusPauseLabel: (label) => `Pause ${label}`,
+    statusResumed: (label) => `${label} resumed`,
+    statusPausedNow: (label) => `${label} paused`,
+    statusFoldLine: (n, days) => `${n} paused for more than ${days} days`,
+    statusTodayEmptyTitle: 'Nothing planned today',
+    statusTodayEmptyText: 'That is fine, nothing is waiting',
+    statusTodayFailedTitle: 'Could not read today',
+    statusTodayFailedText: 'The list could not be reached just now.',
+    statusTodayLoading: 'Reading today',
+    statusTodayRetry: 'Retry',
+    // Calm tones for a calendar, a heat grid and an uptime strip (js/calm-tones.js) [kpadopt6].
+    calmLogged: 'logged',
+    calmQuiet: 'nothing logged',
+    calmPaused: 'paused',
+    calmLegendLogged: 'Logged',
+    calmLegendQuiet: 'Nothing logged',
+    calmLegendPaused: 'Paused',
+    calmEmptyTitle: 'Nothing logged this month',
+    calmEmptyText: 'That is fine, it starts whenever you do',
+    calmFailedTitle: 'Could not read this month',
+    calmFailedText: 'The days could not be reached just now.',
+    calmRetry: 'Retry',
+    calmTrendCaption: 'Trends count the days that were logged',
+    calmSummary: (logged, total) => `${logged} of ${total} days logged`,
+    // Answering one question per screen (js/focus-steps.js, answer mode) [kpadopt6].
+    focusQuestionCount: (n, total) => `Question ${n} of ${total}`,
+    focusAnswered: (label, n, total) => `Answered ${label}. Question ${n} of ${total}`,
+    focusSameYesterday: (label) => `Same as yesterday: ${label}`,
+    focusSameUsual: (label) => `Same as usual: ${label}`,
+    focusSkip: 'Not today',
+    focusSkipped: 'Not today',
+    focusReview: 'Review',
+    focusSummaryTitle: 'Your answers',
+    focusMultiHint: 'Pick as many as fit, then press Next',
+    focusTextLabel: 'Your answer',
+    focusPickedMark: 'chosen',
+    focusResumeAsk: 'Continue where you stopped?',
+    focusResumeContinue: 'Continue',
+    focusResumeRestart: 'Start over',
+    focusResumed: (n) => `Back at question ${n}`,
+    focusAnswerEmptyTitle: 'No questions today',
+    focusAnswerEmptyText: 'That is fine, nothing is waiting',
+    focusAnswerFailedTitle: 'Could not read the questions',
+    focusAnswerFailedText: 'The questions could not be reached just now.',
+    focusRetry: 'Retry',
+    focusSaveFailedTitle: 'Could not save your answers',
+    focusSaveFailedText: 'Your answers are kept here, nothing is lost.',
+    focusSaveRetry: 'Try again',
+    focusAnswerLoading: 'Reading the questions',
+    // A picker with the usual on top (js/usual-picker.js) [kpadopt6].
+    usualLabel: 'Usual',
+    usualAll: 'All',
+    usualStatus: (usual, more) => `${usual} usual, ${more} more`,
+    usualShowAll: (n) => `Show all ${n}`,
+    usualShowFewer: 'Show fewer',
+    usualAdd: (label) => `Add '${label}' as new`,
+    usualDidYouMean: (name) => `Did you mean ${name}?`,
+    usualNoMatchTitle: 'No match',
+    usualNoMatchText: 'Pick a close name, or add it as new',
+    usualNoMatchTextFixed: 'Nothing in the list looks like that',
+    usualSelectedExisting: (label) => `${label} was already in the list, selected`,
+    usualAdded: (label) => `${label} added`,
+    usualAddedToast: (label) => `Added '${label}'`,
+    usualEmptyTitle: 'Nothing here yet',
+    usualEmptyText: 'Type a name to add the first one',
+    usualEmptyTextFixed: 'Whoever keeps this list adds the first one',
+    usualAddButton: 'Add',
+    usualFailedTitle: 'Could not read the list',
+    usualFailedText: 'The list could not be reached just now.',
+    usualRetry: 'Retry',
+    usualLoading: 'Reading the list',
+    usualNotToday: 'Not today',
+    usualNotTodayName: (label) => `${label}: not today`,
+    usualNotTodayAnnounce: (label) => `${label}: not today`,
+    usualNotTodayMark: 'not today',
+    usualJump: 'Jump to the usual choices',
 });
 
 // STRINGS_NL was removed in 4.0.0 [D3]. Kenny decided that on

@@ -23,7 +23,7 @@
 //   default-answer   the value that happens at zero, said on the card ("If nobody answers: stops")
 //   urgent-at        seconds (default 30): from here the card is stronger and its time bold, announced once
 //   expired          keep (default; Kenny, 2026-10-17: "Kaart blijft met de uitkomst") | remove: what the card does at zero
-//   measure          bar (default) | ring | text: how the time left is drawn (`countdown` in the JS options; not
+//   measure          ring (default, Kenny 2026-10-17) | bar | text: how the time left is drawn (`countdown` in the JS options; not
 //                    `data-kp-countdown`, which is the digit timer's)
 //
 // States (`data-kp-state`): waiting; urgent; sending (the buttons busy); answered ("Allowed. The operation goes on.");
@@ -133,7 +133,7 @@ export function askQuestion(container, spec, { now = () => Date.now(), frozen = 
         { value: 'allow', label: s().questionAllow },
         { value: 'stop', label: s().questionStop, tone: /** @type {const} */ ('destructive') },
     ];
-    const countdown = spec.countdown ?? 'bar';
+    const countdown = spec.countdown ?? 'ring';
     const expiredMode = spec.expired ?? 'keep';
     const make = (/** @type {string} */ tag, /** @type {string} */ className, /** @type {string} */ text = '') => {
         const node = doc.createElement(tag);

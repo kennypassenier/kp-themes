@@ -1,5 +1,7 @@
 # research/kpadopt6-social: the sixth adoption round, social
 
+**Decided (2026-10-18 00:28):** Kenny approved every part in formal and changed some defaults, applied in the package and in this page. Recorded in `VERDICTS.json`; the part is not offered again.
+
 Formal only (Kenny's rule: a new demo starts in formal, then asks to extend). Five parts, one review topic each: who brings what on a checklist
 (`js/claim.js`, over `kp-checklist`), who can come on which day (`js/availability.js`, over `kp-heat`), the QR code (`js/qr.js`), the time of day
 field (`js/timefield.js`) and the console with a prompt (`js/console.js`). A choice set in the review dialog only sets the default; the other options are real options to switch to

@@ -381,3 +381,44 @@ const log = (box, text) => {
         refuse = value === 'refused';
     });
 }
+
+// ---- the review dialog's default sets ---------------------------------------------------------------
+// A choice set only asks for the default (defaults-1017); every option in it is a real option of the component, so
+// pressing one in the dialog presses the demo's own button for it, or writes the component's attribute.
+{
+    /** choice id → the selector of the demo's button for a value. */
+    /** @type {Record<string, (v: string) => string>} */
+    const buttonFor = {
+        'usual-typing': (v) => `[data-k6-usual-opt="usual-while-typing"][data-value="${v}"]`,
+        'usual-near': (v) => `[data-k6-usual-opt="near"][data-value="${v}"]`,
+        'usual-fold': (v) => `[data-k6-usual-opt="all"][data-value="${v}"]`,
+        'focus-progress': (v) => `[data-k6-focus-opt="progress"][data-value="${v}"]`,
+        'focus-advance': (v) => `[data-k6-focus-opt="advance"][data-value="${v}"]`,
+        'today-since': (v) => `[data-k6-today-since="${v}"]`,
+        'quote-date': (v) => `[data-k6-quote-opt="date-style"][data-value="${v}"]`,
+        'quote-fold': (v) => `[data-k6-quote-opt="lines"][data-value="${v}"]`,
+        'calm-fill': (v) => `[data-k6-calm-fill="${v}"]`,
+        'calm-legend': (v) => `[data-k6-calm-legend="${v}"]`,
+        'rating-commit': (v) => `[data-k6-rating-opt="commit"][data-value="${v}"]`,
+    };
+    /** Options with no button of their own: the component's attribute is written on the cards that show it. */
+    /** @type {Record<string, { ids: string[], inner: string, name: string, plain: string }>} */
+    const attributeFor = {
+        'today-order': { ids: ['k6-today-a', 'k6-today-b'], inner: '.kp-statuslist', name: 'data-kp-today-order', plain: 'given' },
+        'rating-preview': { ids: ['k6-rate-a'], inner: '', name: 'data-kp-rating-preview', plain: 'present' },
+    };
+    document.addEventListener('review:choice', (event) => {
+        const { id, value } = /** @type {CustomEvent} */ (event).detail;
+        const selector = buttonFor[id]?.(String(value));
+        if (selector) return void document.querySelector(selector)?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        const attribute = attributeFor[id];
+        if (!attribute) return;
+        for (const cardId of attribute.ids) {
+            const card = document.getElementById(cardId);
+            const target = attribute.inner ? card?.querySelector(attribute.inner) : card;
+            if (!target) continue;
+            if (value === attribute.plain) target.removeAttribute(attribute.name);
+            else target.setAttribute(attribute.name, String(value));
+        }
+    });
+}

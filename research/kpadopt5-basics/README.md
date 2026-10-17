@@ -1,5 +1,7 @@
 # research/kpadopt5-basics: the fifth adoption round, the basics
 
+**Decided (2026-10-18 00:28):** Kenny approved every pair in formal. Recorded in `VERDICTS.json`; the part is not offered again.
+
 Formal only (`data-review-themes="formal"`), one page, five review topics: calm mode (`js/calm.js`), the shortcut engine
 (`js/shortcuts.js`), the lede (`js/lede.js`), the problem alert (`js/problems.js`) and the flash button (`js/flash.js`), with
 the shared `js/reason.js` (a disabled control says why). Kenny's answers of 2026-10-17 are built in: calm stops movement and

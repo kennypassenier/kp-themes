@@ -93,29 +93,11 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
-            // Kenny, 2026-10-17 (kpadopt6, social): who brings it, who can come, a QR code, a time field and a console, formal only until Kenny approves them.
-            {
-                href: 'research/kpadopt6-social/demo.html',
-                label: 'Social parts: who brings it, who can come, QR code, time field, console',
-                about: 'Five parts for people who plan and talk together, in formal only: a packing list that shows who brings each item, a grid of who can come on which day, a QR code for a link, a field for a time of day and a console with a prompt. One topic per part.',
-            },
-            // Kenny, 2026-10-17 (kpadopt6, wave calm): six parts for a daily check-in and a quiet today screen, formal only until Kenny approves them.
-            {
-                href: 'research/kpadopt6-calm/demo.html',
-                label: 'Calm screens: a picker with the usual on top, one question per screen, a quiet today card, quotes, calm days, star rating',
-                about: 'Six parts for a daily check-in and a today screen, in formal only: a choice list with the choices you use most on top, questions answered one per screen, a card that shows what is open, done or paused without any red, a card that quotes your own earlier words, a calendar that shows a day with nothing logged as quiet, and a star rating. One topic per part, with the real choices to tick.',
-            },
             // Kenny, 2026-10-17 (kpadopt5, rows): ticking rows with the keyboard, the selection bar, the toast with Undo, the pill for new lines, the payload cell, the JSON box and the request inspector, formal first, one topic per part.
             {
                 href: 'research/kpadopt5-rows/demo.html',
                 label: 'The fifth adoption round, rows: ticking rows, selection bar, undo toast, new-lines pill, payload cell, JSON box, request inspector',
                 about: 'Seven new parts for lists that are worked through, in formal only, one review topic per part, with the real choices to tick.',
-            },
-            // Kenny, 2026-10-17 (kpadopt5, wave time): seven new parts for schedules, reminders and forms, formal only until Kenny approves them.
-            {
-                href: 'research/kpadopt5-time/demo.html',
-                label: 'Time and sentence: seven new parts (weekday picker, next runs, snooze, dated options, sentence form, slider, unsaved changes)',
-                about: 'Seven parts that schedules, reminders and settings forms draw by hand today, built in the package and shown in formal only: a weekday picker, a list of the next times a schedule runs, a snooze picker, a picker for options with a date and an age, a form that reads as a sentence, a slider with a typed value, and a bar for unsaved changes.',
             },
             // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
             // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
@@ -131,18 +113,6 @@ export const PAGES = [
             // Kenny, 2026-10-12: "Cyberpunk lijkt af, zie dat dezelfde fouten nu niet terugkomen in andere thema's": every other theme mended so a close is its open backwards with the theme's own effect; only what changed, each block in the themes where it did (research/all-themes).
             // Kenny, 2026-10-16 (kp-adopt-rest, round 2): eight things the admin dashboard still draws itself (action tiles, status rows, the facet list, the coverage heat grid, the reachability matrix, bars in table cells with data-kp-sort-value, the week agenda, the run timeline), built in the package first as ONE demo, formal only until Kenny approves it.
             // Kenny, 2026-10-16 (kp-adopt-rest, round 3): six things the dashboard still drew itself, each an opt-in option of an approved component (nav separator, choice-filter value, timeline day buttons and series legend, the week's next-N phone list, facet identity patterns, the heat grid's jump to the latest), formal only.
-            // Kenny, 2026-10-17: the fifth adoption round, the basics (calm mode, shortcuts, the lede, the problem alert, the flash button), formal only.
-            {
-                href: 'research/kpadopt5-basics/demo.html',
-                label: 'The fifth adoption round, the basics: calm mode, shortcuts, explaining lines, problem alerts and a button that shows its result',
-                about: 'Five small parts every page needs, in formal: a switch that stops movement, keys that know their own list, the line under a heading, a problem that says what, why and what now, and a button that shows its result without changing width.',
-            },
-            // Kenny, 2026-10-17 (kpadopt5, people): four things every app still draws itself, built in the package first as ONE demo, formal only until Kenny approves it.
-            {
-                href: 'research/kpadopt5-people/demo.html',
-                label: 'People: avatar with a photo, ways to sign in, a conversation, chart markers',
-                about: 'An avatar with a photo, the list of ways to sign in (passkeys, magic links, passwords, tokens), a conversation in bubbles, and markers, windows and a median line on a chart, in formal.',
-            },
             // Kenny, 2026-10-17 (kpadopt6, wave ops): seven more parts the admin dashboard draws by hand (a toggle button, the palette that finds words in any order, a version-jump chip, an acknowledge tick, a dependency list, the path of one connection, the fixed card of one stack), one demo, formal only until Kenny approves it.
             {
                 href: 'research/kpadopt6-ops/demo.html',
@@ -165,6 +135,36 @@ export const PAGES = [
         // Decided demos stay reachable from the Agenda's Done list, not from the side navigation (Kenny, 2026-10-13).
         nav: false,
         pages: [
+            // Decided 2026-10-18 00:28: Kenny approved every kpadopt5 basics pair in formal (research/kpadopt5-basics/decided.json).
+            {
+                href: 'research/kpadopt5-basics/demo.html',
+                label: 'The fifth adoption round, the basics: calm mode, shortcuts, explaining lines, problem alerts and a button that shows its result',
+                about: 'Five small parts every page needs, in formal: a switch that stops movement, keys that know their own list, the line under a heading, a problem that says what, why and what now, and a button that shows its result without changing width.',
+            },
+            // Decided 2026-10-18 00:28: Kenny approved every kpadopt5 people pair in formal (research/kpadopt5-people/decided.json).
+            {
+                href: 'research/kpadopt5-people/demo.html',
+                label: 'People: avatar with a photo, ways to sign in, a conversation, chart markers',
+                about: 'An avatar with a photo, the list of ways to sign in (passkeys, magic links, passwords, tokens), a conversation in bubbles, and markers, windows and a median line on a chart, in formal.',
+            },
+            // Decided 2026-10-18 00:28: Kenny approved every kpadopt5 time pair in formal (research/kpadopt5-time/decided.json).
+            {
+                href: 'research/kpadopt5-time/demo.html',
+                label: 'Time and sentence: seven new parts (weekday picker, next runs, snooze, dated options, sentence form, slider, unsaved changes)',
+                about: 'Seven parts that schedules, reminders and settings forms draw by hand today, built in the package and shown in formal only: a weekday picker, a list of the next times a schedule runs, a snooze picker, a picker for options with a date and an age, a form that reads as a sentence, a slider with a typed value, and a bar for unsaved changes.',
+            },
+            // Decided 2026-10-18 00:28: Kenny approved the kpadopt6 calm parts and changed some defaults (research/kpadopt6-calm/decided.json).
+            {
+                href: 'research/kpadopt6-calm/demo.html',
+                label: 'Calm screens: a picker with the usual on top, one question per screen, a quiet today card, quotes, calm days, star rating',
+                about: 'Six parts for a daily check-in and a today screen, in formal only: a choice list with the choices you use most on top, questions answered one per screen, a card that shows what is open, done or paused without any red, a card that quotes your own earlier words, a calendar that shows a day with nothing logged as quiet, and a star rating. One topic per part, with the real choices to tick.',
+            },
+            // Decided 2026-10-18 00:28: Kenny approved the kpadopt6 social parts and changed some defaults (research/kpadopt6-social/decided.json).
+            {
+                href: 'research/kpadopt6-social/demo.html',
+                label: 'Social parts: who brings it, who can come, QR code, time field, console',
+                about: 'Five parts for people who plan and talk together, in formal only: a packing list that shows who brings each item, a grid of who can come on which day, a QR code for a link, a field for a time of day and a console with a prompt. One topic per part.',
+            },
             // Decided 2026-10-17 23:33: Kenny approved all eleven kpadopt6 media pairs (research/kpadopt6-media/decided.json).
             {
                 href: 'research/kpadopt6-media/demo.html',

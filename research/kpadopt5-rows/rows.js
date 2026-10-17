@@ -180,9 +180,10 @@ const SAMPLES = {
 function wireJson() {
     const area = /** @type {HTMLTextAreaElement | null} */ ($('#k5-json-a'));
     const free = /** @type {HTMLTextAreaElement | null} */ ($('#k5-json-b'));
+    const phone = /** @type {HTMLTextAreaElement | null} */ ($('#k5-json-p'));
     const form = $('[data-k5-json-form]');
     const sent = $('[data-k5-sent]');
-    if (!area || !free || !form || !sent) return;
+    if (!area || !free || !phone || !form || !sent) return;
     const send = /** @type {HTMLButtonElement} */ ($('[data-k5-send]'));
     const set = (/** @type {HTMLTextAreaElement} */ el, /** @type {string} */ text) => {
         el.value = text;
@@ -208,16 +209,18 @@ function wireJson() {
             pick(/** @type {HTMLElement} */ (sample));
             set(area, SAMPLES[/** @type {keyof typeof SAMPLES} */ (sample.getAttribute('data-k5-sample') ?? 'empty')]);
             set(free, sample.getAttribute('data-k5-sample') === 'text' ? 'plain text is fine here' : SAMPLES.valid);
+            // The 390 px box takes the same sample, so Long can be scrolled there too.
+            set(phone, SAMPLES[/** @type {keyof typeof SAMPLES} */ (sample.getAttribute('data-k5-sample') ?? 'empty')]);
         }
         const check = target?.closest('[data-k5-check]');
         if (check) {
             pick(/** @type {HTMLElement} */ (check));
-            for (const t of [area, free]) t.setAttribute('data-kp-json-check', check.getAttribute('data-k5-check') ?? 'input');
+            for (const t of [area, free, phone]) t.setAttribute('data-kp-json-check', check.getAttribute('data-k5-check') ?? 'input');
         }
         const format = target?.closest('[data-k5-format]');
         if (format) {
             pick(/** @type {HTMLElement} */ (format));
-            for (const t of [area, free]) t.setAttribute('data-kp-json-format', format.getAttribute('data-k5-format') ?? 'button');
+            for (const t of [area, free, phone]) t.setAttribute('data-kp-json-format', format.getAttribute('data-k5-format') ?? 'button');
         }
         const field = target?.closest('[data-k5-field]');
         if (field) {

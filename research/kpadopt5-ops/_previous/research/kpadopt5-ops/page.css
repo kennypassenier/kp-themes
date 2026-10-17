@@ -217,3 +217,16 @@
     align-items: center;
     justify-content: space-between;
 }
+
+/* A mock page that holds a banner fixed to its foot: the page is the frame the banner is fixed to, and has the height to show it. */
+.ko-mockpage--page {
+    position: relative;
+    contain: layout;
+    min-block-size: 15rem;
+    align-content: stretch;
+    grid-template-rows: auto 1fr;
+}
+
+.ko-mockpage--page:has([data-kp-placement='top']) {
+    grid-template-rows: auto auto 1fr;
+}

@@ -61,6 +61,17 @@ import { attachHoverCards, HOVERCARD_ATTRIBUTE } from './hovercard.js';
 import { openBusyCard } from './busy-card.js';
 import { arriveShown, playClose, stopClose } from './motion.js';
 import { raiseOverlay, placeBlockSide } from './top-layer.js';
+import { calmWord, isCalmTones } from './calm-tones.js';
+
+/**
+ * A period's tone in the strip's vocabulary: with `data-kp-tones="calm"` (js/calm-tones.js) `up` and `degraded` are logged,
+ * `down` is quiet (the tooltip says "nothing logged", never "down") and `none` stays none [kpadopt6]. Pure.
+ * @param {Element} el @param {string} state
+ */
+const toneFor = (el, state) => (isCalmTones(el) ? (state === 'down' ? 'quiet' : state === 'none' ? 'none' : 'logged') : state);
+
+/** The words of a tone. @param {Element} el @param {string} tone */
+const wordFor = (el, tone) => (isCalmTones(el) ? calmWord(tone) : null) ?? getStrings().uptimeStateWord(/** @type {any} */ (tone));
 
 /** A strip. */
 export const UPTIME = '[data-kp-uptime]';
@@ -266,6 +277,13 @@ function draw(el, spec) {
         summary.dataset.kpTone = 'empty';
         said = s.uptimeEmpty;
         summary.textContent = said;
+    } else if (isCalmTones(el)) {
+        // A calm strip counts the days that were logged, never the ones that were not: no share down, no incidents.
+        const logged = figures.counts.up + figures.counts.degraded;
+        said = s.calmSummary(logged, figures.measured);
+        const count = make(el, 'b', 'kp-uptime__percent');
+        count.textContent = said;
+        summary.append(count);
     } else {
         const percent = make(el, 'b', 'kp-uptime__percent');
         percent.textContent = s.uptimePercent(uptimePercent(figures.share));
@@ -296,7 +314,7 @@ function draw(el, spec) {
         if (loading) {
             cell.setAttribute('aria-hidden', 'true');
         } else {
-            const tone = period && UPTIME_STATES.includes(period.state) ? period.state : 'none';
+            const tone = toneFor(el, period && UPTIME_STATES.includes(period.state) ? period.state : 'none');
             if (link) cell.setAttribute('href', /** @type {string} */ (period?.href));
             else /** @type {HTMLButtonElement} */ (cell).type = 'button';
             if (info && period) {
@@ -309,7 +327,7 @@ function draw(el, spec) {
                 cell.dataset.kpKey = period.key;
                 const share = typeof period.uptime === 'number' ? s.uptimePercent(uptimePercent(period.uptime)) : null;
                 const n = typeof period.incidents === 'number' ? period.incidents : null;
-                const words = s.uptimeCell(period.label, s.uptimeStateWord(tone), share, n);
+                const words = s.uptimeCell(period.label, wordFor(el, tone), share, n);
                 cell.setAttribute('aria-label', words);
                 cell.setAttribute('data-kp-hovercard', period.tip ?? words);
             } else {
@@ -498,7 +516,7 @@ export function attachUptimes(root = document) {
         /** @param {HTMLElement} box @param {UptimePeriod} period */
         const fill = (box, period) => {
             const s = getStrings();
-            const tone = UPTIME_STATES.includes(period.state) ? period.state : 'none';
+            const tone = toneFor(el, UPTIME_STATES.includes(period.state) ? period.state : 'none');
             const title = make(el, 'p', 'kp-uptime__info-title');
             title.id = `${box.id}-title`;
             title.textContent = period.label;
@@ -507,7 +525,7 @@ export function attachUptimes(root = document) {
             swatch.dataset.kpTone = tone;
             swatch.setAttribute('aria-hidden', 'true');
             const word = make(el, 'span');
-            word.textContent = s.uptimeStateWord(tone);
+            word.textContent = wordFor(el, tone);
             state.append(swatch, word);
             const parts = [title, state];
             const percent = typeof period.uptime === 'number' && Number.isFinite(period.uptime) ? uptimePercent(period.uptime) : null;

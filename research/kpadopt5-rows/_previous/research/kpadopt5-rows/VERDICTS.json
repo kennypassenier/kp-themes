@@ -72,6 +72,27 @@
                     "picked": "Which requests are open when the list is drawn? = None: all folded"
                 }
             ]
+        },
+        {
+            "round": "2",
+            "page": "rows-b7aeeae6-3b7f-4f9f-a823-d4447a1816e7",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 00:28: 2 of 2 judged in formal, 1 approved, 1 not approved.",
+            "approved": [
+                {
+                    "item": "new-items-pill",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "json-textarea",
+                    "theme": "formal",
+                    "note": "on long, it should still be scrollable"
+                }
+            ],
+            "choices": [],
+            "generalNote": "General (00:28): the review bar with Previous version, Play open and Play close is shown only where it is relevant; Kenny judges each demo as soon as it is ready, Claude does not wait for all of them."
         }
     ]
 }

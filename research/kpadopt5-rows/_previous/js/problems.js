@@ -16,8 +16,12 @@
 //
 //   `each`  (default) one alert per problem, the worst first, each with its own fix
 //   `list`  one alert holding every problem as a list, the tone of the worst
-//   `fold`  one alert per problem up to four; from five (`data-kp-problems-fold-from`) one alert with the four worst
-//           open and "Show the other N" for the rest
+//   `fold`  one alert per problem below the threshold; from it (`data-kp-problems-fold-from`, default 5, at least 2) one
+//           alert with the worst open and "Show the other N" for the rest
+//
+// Both are options with a default and switch at runtime (Kenny, 2026-10-17 22:09: "one per problem is default, the others
+// are options that can be configured dynamically, so also the five can be changed"): change `data-kp-problems-mode` or
+// `data-kp-problems-fold-from` on the container and it re-renders at once from the problems it was last given.
 //
 // A remedy that is a command (`command`) is set in code with a Copy button. A problem is dismissible only when its item
 // says so; a real problem should not be closable until it is fixed. Nothing runs on import.
@@ -232,16 +236,45 @@ function paintAlert(existing, p, doc, remedyLabel, container) {
  * @param {ProblemsOptions} [options]
  */
 export function setProblems(container, items, options = {}) {
+    watch(/** @type {HTMLElement} */ (container), items, options);
+    paint(container, items, options);
+}
+
+/** The problems and options each container was last given, and the observer that re-renders it on an attribute change. */
+const LAST = new WeakMap();
+/** @param {HTMLElement} host @param {Problem[]} items @param {ProblemsOptions} options */
+function watch(host, items, options) {
+    const known = LAST.get(host);
+    const { mode: _mode, foldFrom: _fold, ...rest } = options;
+    if (known) {
+        known.items = items;
+        known.options = rest;
+        return;
+    }
+    const state = { items, options: rest, rendered: '' };
+    LAST.set(host, state);
+    new MutationObserver(() => {
+        const wanted = `${host.getAttribute('data-kp-problems-mode')}|${host.getAttribute('data-kp-problems-fold-from')}`;
+        if (wanted !== state.rendered) paint(host, state.items, state.options);
+    }).observe(host, { attributes: true, attributeFilter: ['data-kp-problems-mode', 'data-kp-problems-fold-from'] });
+}
+
+/** @param {Element} container @param {Problem[]} items @param {ProblemsOptions} options */
+function paint(container, items, options) {
     const doc = container.ownerDocument;
     const host = /** @type {HTMLElement} */ (container);
     const s = getStrings();
     const modeAttr = host.getAttribute('data-kp-problems-mode');
     const mode =
         options.mode ?? (PROBLEM_MODES.includes(/** @type {any} */ (modeAttr)) ? /** @type {'each' | 'list' | 'fold'} */ (modeAttr) : 'each');
-    const foldFrom = options.foldFrom ?? (Number.parseInt(host.getAttribute('data-kp-problems-fold-from') ?? '', 10) || 5);
+    const foldFrom = Math.max(2, options.foldFrom ?? (Number.parseInt(host.getAttribute('data-kp-problems-fold-from') ?? '', 10) || 5));
     const remedyLabel = options.remedyLabel ?? host.getAttribute('data-kp-remedy-label') ?? s.problemRemedy;
     const list = ranked(items);
-    host.setAttribute('data-kp-problems-mode', mode);
+    if (host.getAttribute('data-kp-problems-mode') !== mode) host.setAttribute('data-kp-problems-mode', mode);
+    if (mode === 'fold' && options.foldFrom !== undefined && host.getAttribute('data-kp-problems-fold-from') !== String(foldFrom))
+        host.setAttribute('data-kp-problems-fold-from', String(foldFrom));
+    const state = LAST.get(host);
+    if (state) state.rendered = `${host.getAttribute('data-kp-problems-mode')}|${host.getAttribute('data-kp-problems-fold-from')}`;
     host.setAttribute('data-kp-problems-count', String(list.length));
 
     const asOne = mode === 'list' || (mode === 'fold' && list.length >= foldFrom);

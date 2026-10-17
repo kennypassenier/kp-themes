@@ -8,6 +8,7 @@
 // 1. Every step of the dialog: one row per shown section, every row belongs to a shown section, every row has its
 //    "Not approved" box and its note, and its choice ticks when the section asks a choice; the kit's own integrity
 //    banner stays hidden.
+//    The tools bar (previous version, play open and close) is absent, taking no space, when nothing in it applies.
 // 2. A "Not approved" with a note on the first and the last row of the first step, the page reloaded: both still there.
 // 3. The page republished with a new round id that lists the old one as received (the page is intercepted, nothing
 //    on disk changes): the journal still holds both notes, and the Agenda says the answer was received.
@@ -106,7 +107,20 @@ const readStep = () =>
             return Object.fromEntries(choices.filter((c) => !fixed(c)).map((c) => [c.id, c.options.length]));
         };
         const banner = /** @type {HTMLElement | null} */ (dialog.querySelector('[data-rv-integrity]'));
+        // The tools bar (block-tools.js) shows only what applies: a bar with nothing in it is absent and takes no space
+        // (Kenny, 2026-10-18 00:28).
+        const bars = [...dialog.querySelectorAll('.rv-tools')].map((bar) => {
+            const box = bar.getBoundingClientRect();
+            const shownButtons = [...bar.querySelectorAll('[data-rv-previous], [data-rv-loop]')].filter((b) => b.getClientRects().length > 0);
+            return {
+                hidden: /** @type {HTMLElement} */ (bar).hidden,
+                height: Math.round(box.height),
+                parts: shownButtons.length,
+                label: bar.getAttribute('aria-label') || '',
+            };
+        });
         return {
+            bars,
             title: dialog.querySelector('[data-rv-title]')?.textContent || '',
             position: dialog.querySelector('[data-rv-position]')?.textContent || '',
             shown: shown.map((key) => ({ key, id: keyOf(key), asked: asked(key) })),
@@ -151,6 +165,10 @@ async function checkStep() {
             `${where}: the "Not approved" boxes do not stand in one column (x ${Math.min(...xs)} to ${Math.max(...xs)} px), so a box can read as another row's`,
         );
     for (const row of step.rows) if (row.box && !row.underName) fault(`${where}: the "Not approved" box of "${row.title}" is not under its name`);
+    for (const bar of step.bars) {
+        if (bar.hidden && bar.height > 0) fault(`${where}: the hidden tools bar "${bar.label}" still takes ${bar.height} px`);
+        if (!bar.hidden && bar.parts === 0) fault(`${where}: the tools bar "${bar.label}" is shown with nothing in it`);
+    }
     if (step.banner) fault(`${where}: the dialog's integrity banner says: ${step.banner}`);
     return step;
 }

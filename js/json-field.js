@@ -34,7 +34,6 @@
 
 import { getStrings } from './strings.js';
 import { showError, clearError } from './forms.js';
-import { fitTextarea } from './autosize.js';
 
 /** The fields this module looks after. */
 export const JSON_FIELD = 'textarea[data-kp-json]';
@@ -221,29 +220,35 @@ function attachOne(area, options) {
         return Number.isFinite(n) ? n : 20;
     };
 
+    /**
+     * The height of each line: one line height, or with wrapping what the line wraps to, measured in the box's own mirror.
+     * @param {string[]} lines
+     * @returns {number[]}
+     */
+    const lineHeights = (lines) => {
+        const lh = lineHeight();
+        if (!wrap) return lines.map(() => lh);
+        const cs = view?.getComputedStyle(area);
+        mirror.style.width = `${area.clientWidth}px`;
+        mirror.style.font = cs?.font ?? '';
+        mirror.style.letterSpacing = cs?.letterSpacing ?? '';
+        mirror.style.tabSize = cs?.tabSize ?? '';
+        mirror.style.paddingInline = cs?.paddingInline ?? '';
+        mirror.replaceChildren(
+            ...lines.map((line) => {
+                const row = doc.createElement('div');
+                row.textContent = line === '' ? ' ' : line;
+                return row;
+            }),
+        );
+        return [...mirror.children].map((row) => row.getBoundingClientRect().height || lh);
+    };
+
     /** Rows of the gutter: one number per line; with wrapping, as tall as the line wraps. */
     const drawGutter = () => {
         if (!gutterWanted()) return;
         const lines = area.value.split('\n');
-        const lh = lineHeight();
-        /** @type {number[]} */
-        let heights = lines.map(() => lh);
-        if (wrap) {
-            const cs = view?.getComputedStyle(area);
-            mirror.style.width = `${area.clientWidth}px`;
-            mirror.style.font = cs?.font ?? '';
-            mirror.style.letterSpacing = cs?.letterSpacing ?? '';
-            mirror.style.tabSize = cs?.tabSize ?? '';
-            mirror.style.paddingInline = cs?.paddingInline ?? '';
-            mirror.replaceChildren(
-                ...lines.map((line) => {
-                    const row = doc.createElement('div');
-                    row.textContent = line === '' ? ' ' : line;
-                    return row;
-                }),
-            );
-            heights = [...mirror.children].map((row) => row.getBoundingClientRect().height || lh);
-        }
+        const heights = lineHeights(lines);
         const nodes = lines.map((_, i) => {
             const n = doc.createElement('span');
             n.className = 'kp-jsonfield__number';
@@ -257,9 +262,25 @@ function attachOne(area, options) {
         numbers.style.transform = `translateY(${-area.scrollTop}px)`;
     };
 
-    // One implementation of the growing box, shared with js/autosize.js [kpadopt6-media].
+    // The box grows with its text up to JSON_MAX_ROWS lines, then scrolls inside itself (wheel, keys and scrollbar). Its height
+    // comes from the lines it holds and the mirror, never from a measuring twin in the page's body: a twin there is hidden by
+    // a host that shows only part of the page (the review dialog), measures 0 and left the box at its least height with
+    // `overflow: hidden`, so Long could not be scrolled [kpadopt5-r3].
     const grow = () => {
-        fitTextarea(area, { minRows, maxRows: JSON_MAX_ROWS });
+        const cs = view?.getComputedStyle(area);
+        if (!cs) return;
+        const lh = lineHeight();
+        const px = (/** @type {string} */ v) => Number.parseFloat(v) || 0;
+        const chrome = px(cs.paddingTop) + px(cs.paddingBottom) + px(cs.borderTopWidth) + px(cs.borderBottomWidth);
+        const text = lineHeights(area.value.split('\n')).reduce((sum, h) => sum + h, 0);
+        // A horizontal scrollbar takes room from the lines: count it, or the last line sits under it.
+        const bar = Math.max(0, area.offsetHeight - area.clientHeight - px(cs.borderTopWidth) - px(cs.borderBottomWidth));
+        const content = text + chrome + bar;
+        const least = minRows * lh + chrome;
+        const most = Math.max(JSON_MAX_ROWS, minRows) * lh + chrome;
+        const height = Math.ceil(Math.min(most, Math.max(least, content)));
+        area.style.blockSize = `${height}px`;
+        area.style.overflowY = content > height + 1 ? 'auto' : 'hidden';
     };
 
     /** @param {'empty' | 'valid' | 'invalid' | 'text'} next @param {string} message @param {{ line?: number | null, column?: number | null, keys?: number | null }} [where] */
@@ -370,6 +391,14 @@ function attachOne(area, options) {
         view?.clearTimeout(debounce);
         check();
         if (getFormat() === 'on-blur' && state === 'valid') format();
+    };
+    // The wheel over the line numbers scrolls the text, as it does over the box [kpadopt5-r3].
+    /** @param {WheelEvent} event */
+    const onGutterWheel = (event) => {
+        const before = area.scrollTop;
+        area.scrollTop +=
+            event.deltaMode === 1 ? event.deltaY * lineHeight() : event.deltaMode === 2 ? event.deltaY * area.clientHeight : event.deltaY;
+        if (area.scrollTop !== before) event.preventDefault();
     };
     const onScroll = () => {
         numbers.style.transform = `translateY(${-area.scrollTop}px)`;
@@ -486,6 +515,7 @@ function attachOne(area, options) {
     area.addEventListener('input', onInput);
     area.addEventListener('blur', onBlur);
     area.addEventListener('scroll', onScroll, { passive: true });
+    gutter.addEventListener('wheel', onGutterWheel, { passive: false });
     area.addEventListener('keydown', onKey);
     area.addEventListener('pointerdown', () => (escaped = false));
     tools.addEventListener('click', onTool);
@@ -500,6 +530,7 @@ function attachOne(area, options) {
         area.removeEventListener('input', onInput);
         area.removeEventListener('blur', onBlur);
         area.removeEventListener('scroll', onScroll);
+        gutter.removeEventListener('wheel', onGutterWheel);
         area.removeEventListener('keydown', onKey);
         area.form?.removeEventListener('reset', reset);
         attrs?.disconnect();

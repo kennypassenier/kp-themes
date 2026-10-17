@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>kpadopt5, rows: ticking rows, the selection bar, undo, live lists, payloads and requests</title>
+        <title>kpadopt5, rows, round 2: the new-lines pill and the JSON box</title>
         <link rel="stylesheet" href="../../css/fonts.css" />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
@@ -33,428 +33,12 @@
 
         <main id="main" class="cat-main kd-page">
             <header class="kd-intro">
-                <h1>The fifth adoption round, rows: seven new parts for lists that are worked through</h1>
+                <h1>Rows, round 2: the new-lines pill and the JSON box</h1>
                 <p class="cat-intro">
-                    Formal only, as every new part starts. One topic per part, seven in all: ticking rows with the keyboard, the selection bar, the
-                    toast with Undo, the pill for new lines, the payload cell, the JSON box and the request inspector. Every section says under
-                    <b>Expected</b> what you should see and what each control does, and offers the few real choices as boxes to tick in the review
-                    dialog.
-                </p>
-                <p>
-                    Everything here is the package running on its own stylesheets. Only the data is made up: the orders, stacks, schedules, log lines
-                    and requests are samples.
+                    Formal only. Only the two sections you did not approve are back. Under <b>Expected</b> each says in one line what changed since
+                    round 1. The log lines and the JSON are samples.
                 </p>
             </header>
-
-            <!-- ================================================================ row-keyboard-select -->
-            <h2 class="kd-topic" id="topic-row-keyboard-select">Ticking rows with the keyboard</h2>
-            <section
-                class="k5-sec"
-                id="row-keyboard-select"
-                data-review-item="row-keyboard-select"
-                data-review-topic="row-keyboard-select"
-                data-review-topic-title="Ticking rows with the keyboard"
-                data-review-components="datatable"
-                data-review-title="Ticking rows with the keyboard and Shift-click"
-                aria-labelledby="h-row-keyboard-select"
-                data-review-choices='[
-  { "id": "arrows", "label": "Do the arrow keys walk the rows too?", "options": [
-    { "value": "off", "label": "No: j and k only (recommended)", "hint": "The arrow keys keep scrolling the page. Nobody who only reads the table loses a habit." },
-    { "value": "on", "label": "Yes: the arrows walk like j and k", "hint": "Up and Down move the cursor row. The page no longer scrolls with them while a row has the focus." } ] },
-  { "id": "select-all-key", "label": "Does Ctrl+A tick every row shown?", "options": [
-    { "value": "off", "label": "No: leave Ctrl+A to the browser (recommended)", "hint": "Ctrl+A selects the page text, as everywhere." },
-    { "value": "on", "label": "Yes, inside the table", "hint": "Ctrl+A ticks every row the table shows (not the ones a search hides); Ctrl+Shift+A unticks them." } ] }
-]'
-            >
-                <div class="k5-sec__head">
-                    <h2 id="h-row-keyboard-select">Ticking rows with the keyboard and Shift-click</h2>
-                    <p>
-                        A table (or a list) of rows with a tick box is worked without the mouse: <b>j</b> and <b>k</b> walk a cursor, <b>x</b> ticks
-                        the row, <b>Shift+x</b> ticks everything up to the cursor, <b>Esc</b> unticks all. Shift-click on a box ticks a range. It is
-                        on for every data table that has a select column (<code>data-kp-select-keys</code> turns it on elsewhere,
-                        <code>="false"</code> off).
-                    </p>
-                </div>
-                <div class="k5-expected">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>
-                            Click the first row's words, press <b>j</b> a few times: a ring (not a fill) walks down the rows and the line under the
-                            table says which row it is on. <b>x</b> ticks the row and the ring stays; a ticked row has the selected tint, the cursor
-                            row the ring, so the two read apart.
-                        </li>
-                        <li>
-                            Tick the first row, then <b>Shift-click</b> the fifth box: rows two to four follow. The locked row (order 1008, its box
-                            disabled) is walked over and the readout says <b>1 skipped: cannot be selected</b>. A plain click on a box still toggles
-                            one row, no Shift needed.
-                        </li>
-                        <li>
-                            <b>Search "Ghent"</b>: the rows that do not match are hidden, and a Shift range or <b>Ctrl+A</b> never ticks them. The
-                            cursor and the ticks stay on their rows (by key) when the table is sorted or searched.
-                        </li>
-                        <li>
-                            <b>Esc</b> unticks everything and says so; <b>Enter</b> on the row writes "Opened: …" in the readout. Nothing moves in the
-                            page when the keys are used.
-                        </li>
-                        <li>
-                            The 390 px column is the same list as cards: no keys there; <b>press and hold a card</b> (a long press on a phone) starts
-                            selection mode, then a tap ticks the next one.
-                        </li>
-                    </ul>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">
-                        The cursor is a 2 px navy ring just inside the row (the rule the clerk draws round an entry), the ticked row the paper's
-                        selected tint; the keys line under the table sets its key caps in the package's own style. Nothing fades or slides: a key
-                        moves the ring at once.
-                    </p>
-                </div>
-                <div class="k5-controls" data-review-controls>
-                    <div role="group" aria-label="Search the table">
-                        <b>Search the table:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-search="" aria-pressed="true">Show every row</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-search="Ghent" aria-pressed="false">Only Ghent</button>
-                    </div>
-                    <div role="group" aria-label="Arrow keys">
-                        <b>Arrow keys:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-arrows="off" aria-pressed="true">Off</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-arrows="on" aria-pressed="false">On</button>
-                    </div>
-                    <div role="group" aria-label="Ctrl+A">
-                        <b>Ctrl+A ticks all shown:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-allkey="off" aria-pressed="true">Off</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-allkey="on" aria-pressed="false">On</button>
-                    </div>
-                </div>
-                <p class="k5-readout" role="status" data-k5-rows-readout>Nothing ticked yet.</p>
-                <div class="k5-pair">
-                    <div class="k5-stack">
-                        <p class="k5-label">The orders table, full width</p>
-                        <div class="kp-datatable" data-kp-datatable data-kp-cards id="k5-orders">
-                            <div class="kp-datatable__bar">
-                                <input
-                                    class="kp-datatable__search"
-                                    type="search"
-                                    data-kp-datatable-search
-                                    aria-label="Search orders"
-                                    placeholder="Search orders"
-                                />
-                            </div>
-                            <div class="kp-table-wrap">
-                                <table class="kp-table">
-                                    <caption class="kp-sr-only">
-                                        Orders
-                                    </caption>
-                                    <thead>
-                                        <tr>
-                                            <th scope="col" class="k5-col-select">
-                                                <input
-                                                    class="kp-field__check"
-                                                    type="checkbox"
-                                                    data-kp-select-all
-                                                    aria-label="Select all shown orders"
-                                                />
-                                            </th>
-                                            <th scope="col" data-kp-sort="text">Order</th>
-                                            <th scope="col" data-kp-sort="text">Customer</th>
-                                            <th scope="col" data-kp-sort="text">City</th>
-                                            <th scope="col" data-kp-sort="text">Status</th>
-                                            <th scope="col" data-kp-sort="number" class="kp-text-end">Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody data-k5-orders></tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <div data-kp-select-hint="k5-orders"></div>
-                    </div>
-                    <div class="k5-stack">
-                        <p class="k5-label">390 px, the same orders as cards</p>
-                        <div class="k5-frame k5-frame--phone">
-                            <ul class="k5-cards" aria-label="Orders on a phone" data-kp-select-keys id="k5-orders-phone" data-k5-orders-phone></ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ================================================================ selection-bar -->
-            <h2 class="kd-topic" id="topic-selection-bar">The selection bar</h2>
-            <section
-                class="k5-sec"
-                id="selection-bar"
-                data-review-item="selection-bar"
-                data-review-topic="selection-bar"
-                data-review-topic-title="The selection bar"
-                data-review-components="selection"
-                data-review-title="The selection bar over a table or a list"
-                aria-labelledby="h-selection-bar"
-                data-review-choices='[
-  { "id": "placement", "label": "Where does the bar stand by default?", "options": [
-    { "value": "sticky-top", "label": "Stuck to the top of the list (recommended)", "hint": "Between the toolbar and the rows and sticky: scroll a long list and the actions stay in reach. The homelab Overview does this." },
-    { "value": "inline", "label": "In the flow, above the list", "hint": "It scrolls away with the page; nothing floats over the rows." },
-    { "value": "floating-bottom", "label": "Floating at the foot of the window", "hint": "A raised bar over the content at the bottom, like a phone app; it covers the last rows." } ] },
-  { "id": "names", "label": "What does the bar say about the ticked rows?", "options": [
-    { "value": "names", "label": "The names, with +N more (recommended)", "hint": "Wrapping names, \"+4 more\" with the exact number, and a press on it lists them all. You see what you are about to act on." },
-    { "value": "count", "label": "Only the count", "hint": "\"3 selected\" and nothing else; the bar is one short line." } ] }
-]'
-            >
-                <div class="k5-sec__head">
-                    <h2 id="h-selection-bar">The selection bar over a table or a list</h2>
-                    <p>
-                        A bar that is there as soon as rows are ticked: how many, which, the page's actions for them, and a way to untick all. It
-                        serves the table and the card list of the same rows (<code>data-kp-selection-for</code>), shows what you see, and offers the
-                        rest ("Select all 312 that match").
-                    </p>
-                </div>
-                <div class="k5-expected">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>
-                            Nothing ticked: the bar's place is kept empty (the list under it does not jump) and no panel shows. Tick two stacks: the
-                            panel is ruled open from its start edge in about 0.4 s, with <b>2 selected</b>, the names, the actions and
-                            <b>Untick all</b>. Untick them: it is ruled shut the same way back.
-                        </li>
-                        <li>
-                            Tick six or more: the names wrap and the rest is an exact <b>+N more</b>, never an ellipsis; press it to list them all.
-                            The count keeps the room of the next digit.
-                        </li>
-                        <li>
-                            <b>Update</b> is off when a pinned stack is ticked, and the line says why ("2 of 3 can be updated"). The 3 pinned ones are
-                            marked in the table.
-                        </li>
-                        <li>
-                            <b>Back up</b>: the count gives way to a spinner and "Backing up 3…", the buttons stop answering, then it ends. With "Next
-                            action: some refused" it ends with <b>2 done, 1 refused: disk full</b> and a rule plus the reason on the refused row.
-                            <b>Delete</b> hides the rows and offers Undo (the toast bed below).
-                        </li>
-                        <li>
-                            Tick every row shown: <b>Select all 312 that match</b> is offered; taking it says
-                            <b>All 312 that match are selected</b> with a button to go back to the 8 shown. <b>Esc</b> or <b>Untick all</b> clears.
-                        </li>
-                        <li>The 390 px column: the count and an <b>Actions</b> button; the names fold into the count, the actions open under it.</li>
-                    </ul>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">
-                        The panel is an opaque paper plate in a strong hairline with a 3 px navy rule on its start edge (the same rule the toast and
-                        the alert carry); it is ruled open and shut from that edge in a straight line, 0.4 s, nothing fades. The refused row carries a
-                        red-ink rule on its start edge and the reason in words.
-                    </p>
-                </div>
-                <div class="k5-controls" data-review-controls>
-                    <div role="group" aria-label="Where the bar stands">
-                        <b>Place:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-placement="sticky-top" aria-pressed="true">
-                            Stuck to the top
-                        </button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-placement="inline" aria-pressed="false">In the flow</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-placement="floating-bottom" aria-pressed="false">
-                            Floating at the foot
-                        </button>
-                    </div>
-                    <div role="group" aria-label="What the bar says">
-                        <b>The bar says:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-names="names" aria-pressed="true">The names</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-names="count" aria-pressed="false">Only the count</button>
-                    </div>
-                    <div role="group" aria-label="The offer for the rest">
-                        <b>The rest (312 match):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-matching="312" aria-pressed="true">Offered</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-matching="0" aria-pressed="false">Not offered</button>
-                    </div>
-                    <div role="group" aria-label="Next action">
-                        <b>Next action:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-outcome="ok" aria-pressed="true">Works for all</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-outcome="refuse" aria-pressed="false">Some refused</button>
-                    </div>
-                    <div role="group" aria-label="Rows">
-                        <b>The rows:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-stacks-reset>Put every stack back</button>
-                    </div>
-                </div>
-                <div class="k5-pair">
-                    <div class="k5-stack">
-                        <p class="k5-label">The stacks table with its bar, full width (scroll the list inside the frame)</p>
-                        <div class="k5-scroll" data-k5-scroll>
-                            <div
-                                class="kp-selection"
-                                data-kp-selection
-                                data-kp-selection-for="k5-stacks"
-                                data-kp-placement="sticky-top"
-                                data-kp-select-matching="312"
-                                data-kp-undo-ms="6000"
-                                id="k5-bar"
-                                aria-label="Selected stacks"
-                            >
-                                <div class="kp-selection__actions">
-                                    <button type="button" class="kp-button" data-kp-selection-action="backup">Back up</button>
-                                    <button type="button" class="kp-button" data-kp-selection-action="update">Update</button>
-                                    <button type="button" class="kp-button kp-button--destructive" data-kp-selection-action="delete">Delete</button>
-                                </div>
-                            </div>
-                            <div class="kp-datatable" data-kp-datatable id="k5-stacks">
-                                <div class="kp-table-wrap">
-                                    <table class="kp-table">
-                                        <caption class="kp-sr-only">
-                                            Stacks
-                                        </caption>
-                                        <thead>
-                                            <tr>
-                                                <th scope="col" class="k5-col-select">
-                                                    <input
-                                                        class="kp-field__check"
-                                                        type="checkbox"
-                                                        data-kp-select-all
-                                                        aria-label="Select all stacks"
-                                                    />
-                                                </th>
-                                                <th scope="col">Stack</th>
-                                                <th scope="col">Host</th>
-                                                <th scope="col">Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody data-k5-stacks></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="k5-toastbed" data-k5-bed="selection" aria-label="Toasts of this section">
-                            <p class="k5-toastbed__empty">A toast with Undo shows here after Delete.</p>
-                        </div>
-                    </div>
-                    <div class="k5-stack">
-                        <p class="k5-label">390 px, a card list with its own bar</p>
-                        <div class="k5-frame k5-frame--phone">
-                            <div
-                                class="kp-selection"
-                                data-kp-selection
-                                data-kp-selection-for="k5-stacks-cards"
-                                data-kp-placement="inline"
-                                id="k5-bar-phone"
-                                aria-label="Selected stacks on a phone"
-                            >
-                                <div class="kp-selection__actions">
-                                    <button type="button" class="kp-button" data-kp-selection-action="backup">Back up</button>
-                                    <button type="button" class="kp-button kp-button--destructive" data-kp-selection-action="delete">Delete</button>
-                                </div>
-                            </div>
-                            <ul class="k5-cards" aria-label="Stacks as cards" id="k5-stacks-cards" data-k5-stacks-cards></ul>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ================================================================ undo-toast -->
-            <h2 class="kd-topic" id="topic-undo-toast">The toast with Undo and a clock</h2>
-            <section
-                class="k5-sec"
-                id="undo-toast"
-                data-review-item="undo-toast"
-                data-review-topic="undo-toast"
-                data-review-topic-title="The toast with Undo and a clock"
-                data-review-components="undo"
-                data-review-title="The toast with Undo and a visible clock"
-                aria-labelledby="h-undo-toast"
-                data-review-choices='[
-  { "id": "clock", "label": "How does the toast show the time left?", "options": [
-    { "value": "ring", "label": "A ring that drains, with the seconds in it (recommended)", "hint": "Round, small, readable at a glance; the seconds are in the middle. Steps once a second under reduced motion." },
-    { "value": "bar", "label": "A rule along the foot of the toast that is taken back", "hint": "The clerk&#39;s rule, ruled out from the end to the start in a straight line. Wider than the ring, nothing in the middle to read." },
-    { "value": "text", "label": "The seconds in words: \"5 s\"", "hint": "No drawing at all; a number that counts down beside the words." },
-    { "value": "none", "label": "No clock", "hint": "The toast only says Undo is there. The time is not visible (it still ends after the window)." } ] }
-]'
-            >
-                <div class="k5-sec__head">
-                    <h2 id="h-undo-toast">The toast with Undo and a visible clock</h2>
-                    <p>
-                        After an action, say what happened and offer Undo for a few seconds, instead of asking "are you sure?" before. The clock shows
-                        how long is left. In the default mode nothing reaches the server until the window closes. The toast travels with you across
-                        in-app pages, and commits on a full page load.
-                    </p>
-                </div>
-                <div class="k5-expected">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>
-                            Press <b>Delete</b> on a schedule: the row goes at once and a toast says "Nightly backup deleted" with the clock and
-                            <b>Undo</b>. After the window it is committed: the log line "Server: deleted …" appears and the toast goes. Press
-                            <b>Undo</b>, or <b>Ctrl+Z</b> while the toast is up: the row comes back and the toast says <b>Restored</b> for 1.5 s.
-                        </li>
-                        <li>
-                            Hold the pointer on the toast, or focus it with Tab: the clock stops where it is and goes on from there when you let go
-                            (the ring and the seconds stop together). <b>Esc</b> on the toast accepts the action now.
-                        </li>
-                        <li>
-                            Press Delete on four schedules quickly: at most three toasts stand, the oldest is committed when a newer one pushes it
-                            out.
-                        </li>
-                        <li>
-                            With "Server: refuses" the commit fails: the toast turns into <b>Not done: …</b> with a Dismiss button and the row is
-                            back.
-                        </li>
-                        <li><b>Compare the four clocks</b> plays one toast per clock side by side, all starting together.</li>
-                        <li>The 390 px column: the toast takes the whole width and Undo is a normal-size button.</li>
-                    </ul>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">
-                        The ring is a hairline circle with a navy arc that is taken back at an even pace (linear, the way a rule is ruled), the
-                        seconds in tabular figures inside it; the bar clock is a 3 px navy rule along the foot. The toast is the package's own plate,
-                        opaque, with its start rule. Nothing bounces, nothing fades: the toast is ruled in and out.
-                    </p>
-                </div>
-                <div class="k5-controls" data-review-controls>
-                    <div role="group" aria-label="Clock">
-                        <b>Clock:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-clock="ring" aria-pressed="true">Ring</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-clock="bar" aria-pressed="false">Rule</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-clock="text" aria-pressed="false">Seconds in words</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-clock="none" aria-pressed="false">None</button>
-                    </div>
-                    <div role="group" aria-label="Window">
-                        <b>Undo is offered for:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-ms="3000" aria-pressed="false">3 s</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-ms="6000" aria-pressed="true">6 s</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-ms="10000" aria-pressed="false">10 s</button>
-                    </div>
-                    <div role="group" aria-label="Mode">
-                        <b>Mode:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-mode="defer" aria-pressed="true">
-                            Held back until the end
-                        </button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-mode="revert" aria-pressed="false">
-                            Done at once, Undo reverses
-                        </button>
-                    </div>
-                    <div role="group" aria-label="Server">
-                        <b>Server:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-server="ok" aria-pressed="true">Accepts</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-server="refuse" aria-pressed="false">Refuses</button>
-                    </div>
-                    <div role="group" aria-label="Compare">
-                        <b>Compare:</b>
-                        <button type="button" class="kp-button kp-button--sm kp-button--primary" data-k5-compare>Compare the four clocks</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-schedules-reset>Put every schedule back</button>
-                    </div>
-                </div>
-                <div class="k5-pair">
-                    <div class="k5-stack">
-                        <p class="k5-label">Schedules (Delete shows the toast in the bed under the list)</p>
-                        <ul class="k5-cards" aria-label="Schedules" data-k5-schedules></ul>
-                        <p class="k5-readout" role="status" data-k5-server-log>The server has not been called yet.</p>
-                        <div class="k5-toastbed" data-k5-bed="undo" aria-label="Toasts of this section">
-                            <p class="k5-toastbed__empty">Toasts show here.</p>
-                        </div>
-                    </div>
-                    <div class="k5-stack">
-                        <p class="k5-label">390 px, the toast on a phone</p>
-                        <div class="k5-frame k5-frame--phone">
-                            <div class="k5-toastbed" data-k5-bed="undo-phone" aria-label="Toast on a phone">
-                                <p class="k5-toastbed__empty">Press "Compare" to see it here.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             <!-- ================================================================ new-items-pill -->
             <h2 class="kd-topic" id="topic-new-items-pill">The "N new lines" pill</h2>
@@ -467,11 +51,6 @@
                 data-review-components="newpill"
                 data-review-title="The pill for new lines on a live list"
                 aria-labelledby="h-new-items-pill"
-                data-review-choices='[
-  { "id": "since-left", "label": "When you come back to the tab, mark where the new lines start?", "options": [
-    { "value": "on", "label": "Yes: a divider \"New since 14:32\" (recommended)", "hint": "A ruled line with the time you left, in front of the first line that came while the tab was hidden." },
-    { "value": "off", "label": "No divider", "hint": "The lines are simply there; only the pill counts what you have not scrolled to." } ] }
-]'
             >
                 <div class="k5-sec__head">
                     <h2 id="h-new-items-pill">The pill for new lines on a live list</h2>
@@ -482,25 +61,16 @@
                     </p>
                 </div>
                 <div class="k5-expected">
-                    <p><b>Expected:</b></p>
+                    <p>
+                        <b>Expected:</b> changed since round 1: in the log rows the time, the level (INFO or ERROR) and the line each have their own
+                        column and never touch or cover each other, at the desk width and at 390 px; the &ldquo;New since&rdquo; divider is on by
+                        default (<code>data-kp-since-left</code>, <code>off</code> turns it off).
+                    </p>
                     <ul>
                         <li>
-                            At the end of the log, <b>Add 5 lines</b>: the log stays at its end and no pill shows. Scroll up a little (more than 24 px
-                            from the end) and add 5 again: the pill is ruled in at the bottom, <b>5 new lines · back to the tail</b>; add one more:
-                            <b>6 new lines</b>, the number exact, the pill's width kept.
-                        </li>
-                        <li>
-                            Press the pill, or <b>End</b> in the log: the log jumps to the end, the pill is taken out. Scrolling back down to the end
-                            by hand does the same. <b>Space</b> in the log (or the Pause button) stops following; lines are counted until you resume.
-                        </li>
-                        <li>
-                            <b>Only errors</b> hides the other lines: new lines that the filter hides are not counted. <b>Add 120 lines</b> with the
-                            log scrolled up: the pill reads <b>120 new lines</b>, never "99+".
-                        </li>
-                        <li><b>Clear the log</b>: the log says it is empty, centred, and no pill shows.</li>
-                        <li>
-                            The second list is newest-first with a pill at the top ("3 new messages · back to the top"). The 390 px column keeps the
-                            pill at the foot, centred.
+                            <b>Add 5 lines</b> and read the rows: 14:32:08, INFO or ERROR, the line. Scroll up, add lines, press the pill; switch the
+                            tab away and back (or press the <b>Divider on return</b> buttons to compare): the ruled line &ldquo;New since
+                            &hellip;&rdquo; stands before the first line that came while you were away. Everything else is as in round 1.
                         </li>
                     </ul>
                 </div>
@@ -547,7 +117,6 @@
                                 aria-label="Log"
                                 data-kp-follow="tail"
                                 data-kp-follow-space
-                                data-kp-since-left
                                 data-kp-pill-unit="line,lines"
                             ></ol>
                         </div>
@@ -583,119 +152,6 @@
                 </div>
             </section>
 
-            <!-- ================================================================ payload-cell -->
-            <h2 class="kd-topic" id="topic-payload-cell">The payload cell</h2>
-            <section
-                class="k5-sec"
-                id="payload-cell"
-                data-review-item="payload-cell"
-                data-review-topic="payload-cell"
-                data-review-topic-title="The payload cell"
-                data-review-components="code"
-                data-review-title="The payload cell in a table"
-                aria-labelledby="h-payload-cell"
-                data-review-choices='[
-  { "id": "open", "label": "Where does the rest of a long payload open?", "options": [
-    { "value": "inline", "label": "In the cell, in place (recommended)", "hint": "Show all 40 lines unfolds the cell; the row grows, the other columns keep their width." },
-    { "value": "dialog", "label": "In a dialog", "hint": "A button opens the whole payload in a dialog with line numbers; the row never grows. Better for bodies of hundreds of lines." } ] }
-]'
-            >
-                <div class="k5-sec__head">
-                    <h2 id="h-payload-cell">The payload cell in a table</h2>
-                    <p>
-                        A table cell that folds long content to three lines, says "binary, 2.1 kB" for binary data, shows a foot line when only the
-                        start was kept, and can lay JSON out. It is the code block as a cell (<code>.kp-code--cell</code>): the words wrap, so a row
-                        never scrolls sideways.
-                    </p>
-                </div>
-                <div class="k5-expected">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>
-                            Seven rows, one payload each: plain text; a short JSON object (keys in the key colour, <b>Pretty</b> and <b>Raw</b> in a
-                            slim line under it); a JSON body of 38 lines folded to three with a fade and <b>Show all 38 lines</b>; binary data as one
-                            muted line <b>binary, 2.1 kB</b> with <b>Download</b>; a body of which only <b>the first 1 kB of 4 kB</b> was kept (foot
-                            line); an <b>empty payload</b> line; and a last row that you set with the control.
-                        </li>
-                        <li>
-                            <b>Show all 38 lines</b> opens it (in place, or in a dialog with "Where it opens" set to a dialog);
-                            <b>Show less</b> closes. The other columns do not move in either case. <b>Copy</b> copies the whole payload, folded or
-                            not.
-                        </li>
-                        <li>
-                            The last row: <b>Loading</b> shows a skeleton line, <b>Binary</b>, <b>Empty</b> and <b>Failed</b> one line each, in the
-                            height of a cell; nothing under it shifts.
-                        </li>
-                        <li>The 390 px column: the table turns into cards and the payload takes the card's whole width.</li>
-                    </ul>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">
-                        The cell is the code block on the package's muted ground in the mono face; JSON keys in the primary navy, punctuation quiet; a
-                        hairline above the tools. The fold is the package's own fade; nothing moves except the height of the row.
-                    </p>
-                </div>
-                <div class="k5-controls" data-review-controls>
-                    <div role="group" aria-label="Where it opens">
-                        <b>Where it opens:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-open="inline" aria-pressed="true">In place</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-open="dialog" aria-pressed="false">In a dialog</button>
-                    </div>
-                    <div role="group" aria-label="The last row">
-                        <b>The last row:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-last="ready" aria-pressed="true">Ready</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-last="loading" aria-pressed="false">Loading</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-last="binary" aria-pressed="false">Binary</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-last="empty" aria-pressed="false">Empty</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-last="error" aria-pressed="false">Failed</button>
-                    </div>
-                </div>
-                <div class="k5-pair">
-                    <div class="k5-stack">
-                        <p class="k5-label">Messages of a topic, full width</p>
-                        <div class="kp-datatable" data-kp-datatable data-kp-cards>
-                            <div class="kp-table-wrap">
-                                <table class="kp-table">
-                                    <caption class="kp-sr-only">
-                                        Messages
-                                    </caption>
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Received</th>
-                                            <th scope="col">Topic</th>
-                                            <th scope="col" class="k5-col-payload">Payload</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody data-k5-payloads></tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="k5-stack">
-                        <p class="k5-label">390 px, as cards</p>
-                        <div class="k5-frame k5-frame--phone">
-                            <div class="kp-datatable" data-kp-datatable data-kp-cards>
-                                <div class="kp-table-wrap">
-                                    <table class="kp-table">
-                                        <caption class="kp-sr-only">
-                                            Messages on a phone
-                                        </caption>
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Received</th>
-                                                <th scope="col">Topic</th>
-                                                <th scope="col">Payload</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody data-k5-payloads-phone></tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
             <!-- ================================================================ json-textarea -->
             <h2 class="kd-topic" id="topic-json-textarea">The JSON box</h2>
             <section
@@ -707,15 +163,6 @@
                 data-review-components="jsonfield"
                 data-review-title="The JSON box that checks what you type"
                 aria-labelledby="h-json-textarea"
-                data-review-choices='[
-  { "id": "check", "label": "When does the box check the JSON?", "options": [
-    { "value": "input", "label": "While you type, after a short pause (recommended)", "hint": "You see the error appear 0.3 s after you stop; no flicker on every key." },
-    { "value": "blur", "label": "When you leave the field", "hint": "Nothing is said while you type; the line appears when the focus moves on." } ] },
-  { "id": "format", "label": "How does the text get laid out?", "options": [
-    { "value": "button", "label": "Format and Minify buttons (recommended)", "hint": "Formatting never rewrites what you are typing; you press Format, or Ctrl+Shift+F." },
-    { "value": "on-blur", "label": "Laid out when you leave the field", "hint": "Valid JSON is indented as soon as you move on. The text changes under you without a press." },
-    { "value": "off", "label": "No formatting at all", "hint": "The box only checks. No buttons, no key." } ] }
-]'
             >
                 <div class="k5-sec__head">
                     <h2 id="h-json-textarea">The JSON box that checks what you type</h2>
@@ -726,28 +173,17 @@
                     </p>
                 </div>
                 <div class="k5-expected">
-                    <p><b>Expected:</b></p>
+                    <p>
+                        <b>Expected:</b> changed since round 1: the line-number gutter is exactly as tall as the text box, clips what the box does not
+                        show, and moves together with the text when you scroll; it never lists more lines than the box shows and the frame does not
+                        grow with the number of lines.
+                    </p>
                     <ul>
                         <li>
-                            Press <b>Valid</b>: the box fills with a small object and the line under it says <b>Valid JSON · 3 keys</b> in the quiet
-                            ink. <b>Broken (line 3)</b>: the box gets the destructive edge, the line says <b>Line 3, column 3: …</b> with the reason,
-                            and line number 3 in the gutter is marked (bold, tinted). <b>Empty</b> says "Empty".
+                            Press <b>Long</b> (an object with 8 entries, about 40 lines): the box grows to 20 lines and then scrolls inside itself.
+                            Scroll it: the numbers scroll with the text, line 1 beside the first line shown, and the gutter and the box keep the same
+                            height. Press <b>Broken (line 3)</b>: line 3 is marked in the gutter. Everything else is as in round 1.
                         </li>
-                        <li>
-                            <b>Send</b> with broken JSON does not send: the focus goes to the box and the form says so. With valid JSON it writes
-                            "Sent N bytes" below. The second box, which allows plain text, sends text that is not JSON and says "Plain text, not
-                            JSON".
-                        </li>
-                        <li>
-                            <b>Format</b> lays the text out (2 spaces); <b>Minify</b> puts it on one line; <b>Wrap</b> wraps long lines and the line
-                            numbers follow the wrapped lines; <b>Copy</b> says Copied in the same width. The box grows with its text to 20 lines, then
-                            scrolls.
-                        </li>
-                        <li>
-                            In the box, <b>Tab</b> inserts an indent and <b>Shift+Tab</b> takes one off; <b>Esc, then Tab</b> leaves the box, so the
-                            keyboard is never trapped (the line under the box says so). The "Long" sample shows the gutter and the growth.
-                        </li>
-                        <li>Sending and disabled: the tools stand still. At 390 px the gutter is hidden and the tools sit at the start edge.</li>
                     </ul>
                 </div>
                 <div data-review-look>
@@ -833,124 +269,9 @@
                     </div>
                 </div>
             </section>
-
-            <!-- ================================================================ request-inspector -->
-            <h2 class="kd-topic" id="topic-request-inspector">The request inspector</h2>
-            <section
-                class="k5-sec"
-                id="request-inspector"
-                data-review-item="request-inspector"
-                data-review-topic="request-inspector"
-                data-review-topic-title="The request inspector"
-                data-review-components="card"
-                data-review-title="The request inspector"
-                aria-labelledby="h-request-inspector"
-                data-review-choices='[
-  { "id": "open", "label": "Which requests are open when the list is drawn?", "options": [
-    { "value": "failed", "label": "The failed ones: 4xx and 5xx (recommended)", "hint": "What needs reading is open; the rest is one line each." },
-    { "value": "first", "label": "Only the newest", "hint": "The latest request is open whatever its status." },
-    { "value": "none", "label": "None: all folded", "hint": "A plain list of one-line summaries; you open what you want." } ] }
-]'
-            >
-                <div class="k5-sec__head">
-                    <h2 id="h-request-inspector">The request inspector</h2>
-                    <p>
-                        A foldable block per captured HTTP request: method, path, status (in its tone and in words), when; opened, the headers as key
-                        and value (secrets masked), the body as code, "showing the first N of M", and Copy as curl, as JSON or the body. In a copy the
-                        secrets are masked; a separate button copies the curl with the real values.
-                    </p>
-                </div>
-                <div class="k5-expected">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>
-                            Seven requests, newest first, each a row of the same columns: the method, the status as a badge with its word (<b
-                                >200 Success</b
-                            >, <b>404 Client error</b>, <b>502 Server error</b>), the path (breaking after slashes), when (dd/mm/yyyy HH:MM, the exact
-                            ISO as its title). The two failed ones are open; one is marked <b>test</b>.
-                        </li>
-                        <li>
-                            The <b>authorization</b> header shows ******** with <b>Show</b> beside it; Show reveals it on screen, Hide masks it again.
-                            The filter counts are exact; <b>4xx</b> shows only the 404 and the other 4xx.
-                        </li>
-                        <li>
-                            <b>Copy as curl</b> copies the command with the secret masked; <b>Copy curl with secrets</b> (a separate button, only
-                            where a secret exists) copies the real value. <b>Copied</b> shows in the width of the longer word. The body's own Copy
-                            copies the whole body.
-                        </li>
-                        <li>
-                            A binary body shows the one muted line; a truncated one says "showing the first 1 kB of 4 kB"; a request without a body
-                            says "No body".
-                        </li>
-                        <li>
-                            <b>Loading</b> lays the busy card over a list as tall as three rows; <b>Empty</b> is centred, large, with
-                            <b>Send a test</b>; <b>Failed</b> has a normal-size Retry. All three fill the list's height. <b>31 requests</b> shows 20
-                            and <b>Show 11 older</b>.
-                        </li>
-                        <li>The 390 px column: the summary takes two lines (method and status, then the path).</li>
-                    </ul>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">
-                        The list is ledger lines between hairlines; the statuses are the package's badges (green, blue, amber, red ink), each with its
-                        word. Open and close are the accordion's own, straight and exact. The busy card, the empty plate and the failure are the
-                        package's card states.
-                    </p>
-                </div>
-                <div class="k5-controls" data-review-controls>
-                    <div role="group" aria-label="What the list shows">
-                        <b>The list:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-req="seven" aria-pressed="true">7 requests</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-req="many" aria-pressed="false">31 requests</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-req="loading" aria-pressed="false">Loading</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-req="empty" aria-pressed="false">Empty</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-req="error" aria-pressed="false">Failed</button>
-                    </div>
-                    <div role="group" aria-label="Open">
-                        <b>Open when drawn:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-reqopen="failed" aria-pressed="true">The failed ones</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-reqopen="first" aria-pressed="false">The newest</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-reqopen="none" aria-pressed="false">None</button>
-                    </div>
-                    <div role="group" aria-label="Secrets in a copy">
-                        <b>Secrets in a copy:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-secrets="masked" aria-pressed="true">
-                            Masked, with a separate button
-                        </button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-secrets="masked-only" aria-pressed="false">
-                            Masked, no way to copy them
-                        </button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-secrets="real" aria-pressed="false">Real</button>
-                    </div>
-                </div>
-                <p class="k5-readout" role="status" data-k5-req-readout>Nothing copied yet.</p>
-                <div class="k5-pair">
-                    <div class="k5-stack">
-                        <div
-                            class="kp-card kp-inspector"
-                            data-kp-requests
-                            data-kp-requests-open="failed"
-                            id="k5-requests"
-                            data-kp-state="loading"
-                        ></div>
-                    </div>
-                    <div class="k5-stack">
-                        <p class="k5-label">390 px</p>
-                        <div class="k5-frame k5-frame--phone">
-                            <div
-                                class="kp-card kp-inspector"
-                                data-kp-requests
-                                data-kp-requests-open="failed"
-                                id="k5-requests-phone"
-                                data-kp-state="loading"
-                            ></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
         </main>
         <script type="application/json" data-review-round>
-            { "round": "rows-dfb064e2-85b0-4f84-8cb7-706a0b868f2f", "received": [] }
+            { "round": "rows-b7aeeae6-3b7f-4f9f-a823-d4447a1816e7", "received": ["rows-dfb064e2-85b0-4f84-8cb7-706a0b868f2f"] }
         </script>
         <script type="module" src="rows.js"></script>
         <script type="module" src="../../js/auto.js"></script>

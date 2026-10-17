@@ -242,7 +242,27 @@ export const NEEDS = [
     // The notification centre [kpadopt5-ops].
     { name: 'notices', when: '[data-kp-notices]', load: () => import('./notices.js'), attach: (m, root) => [m.attachNotices(root)] },
     // The time and sentence parts [kpadopt5-time]: the weekday picker, the next-runs list, the snooze picker, the dated option picker, the sentence form, the slider and the unsaved-changes bar.
+    { name: 'rating', when: '[data-kp-rating]', load: () => import('./rating.js'), attach: (m, root) => [m.attachRatings(root)] },
+    { name: 'quote', when: '[data-kp-quote], [data-kp-quote-list]', load: () => import('./quote.js'), attach: (m, root) => [m.attachQuotes(root)] },
+    { name: 'usual-picker', when: '[data-kp-usual]', load: () => import('./usual-picker.js'), attach: (m, root) => [m.attachUsualPickers(root)] },
+    { name: 'toggle', when: '[data-kp-toggle]', load: () => import('./toggle.js'), attach: (m, root) => [m.attachToggles(root)] },
+    { name: 'version-delta', when: '[data-kp-version-to], [data-kp-version-from], .kp-badge--version[data-kp-state]', load: () => import('./version-delta.js'), attach: (m, root) => [m.attachVersionDeltas(root)] },
+    { name: 'ack-gate', when: '[data-kp-ack]', load: () => import('./ack-gate.js'), attach: (m, root) => [m.attachAckGates(root)] },
+    { name: 'deplist', when: '[data-kp-deplist]', load: () => import('./deplist.js'), attach: (m, root) => [m.attachDeplists(root)] },
+    { name: 'path-trace', when: '[data-kp-trace]', load: () => import('./path-trace.js'), attach: (m, root) => [m.attachTraces(root)] },
+    { name: 'entity-card', when: '[data-kp-entity-grid]', load: () => import('./entity-card.js'), attach: (m, root) => [m.attachEntityCards(root)] },
     { name: 'unsaved', when: '[data-kp-unsaved]', load: () => import('./unsaved.js'), attach: (m, root) => [m.attachUnsaved(root)] },
+    // The media wave [kpadopt6-media]: the growing text box, the link anchors, the print words, the document preview, the gallery.
+    { name: 'autosize', when: 'textarea[data-kp-autosize]', load: () => import('./autosize.js'), attach: (m, root) => [m.attachAutosize(root)] },
+    { name: 'anchors', when: '[data-kp-anchors]', load: () => import('./anchors.js'), attach: (m, root) => [m.attachAnchors(root)] },
+    {
+        name: 'print',
+        when: '[data-kp-print-action], [data-kp-checklist], [data-kp-print-sheet]',
+        load: () => import('./print.js'),
+        attach: (m, root) => [m.attachPrint(root)],
+    },
+    { name: 'docpreview', when: '[data-kp-preview], .kp-docglyph', load: () => import('./docpreview.js'), attach: (m, root) => [m.attachDocPreviews(root)] },
+    { name: 'gallery', when: '[data-kp-gallery]', load: () => import('./gallery.js'), attach: (m, root) => [m.attachGalleries(root)] },
     { name: 'slider', when: '[data-kp-slider]', load: () => import('./slider.js'), attach: (m, root) => [m.attachSliders(root)] },
     { name: 'sentence', when: '[data-kp-sentence]', load: () => import('./sentence.js'), attach: (m, root) => [m.attachSentences(root)] },
     {
@@ -273,6 +293,11 @@ export const NEEDS = [
         load: () => import('./motion.js'),
         attach: (m, root) => [m.attachMotion(root)],
     },
+    { name: 'claim', when: '[data-kp-checklist-claim]', load: () => import('./claim.js'), attach: (m, root) => [m.attachClaims(root)] },
+    { name: 'availability', when: '[data-kp-availability]', load: () => import('./availability.js'), attach: (m, root) => [m.attachAvailability(root)] },
+    { name: 'qr', when: '[data-kp-qr]', load: () => import('./qr.js'), attach: (m, root) => [m.attachQr(root)] },
+    { name: 'timefield', when: '[data-kp-time]', load: () => import('./timefield.js'), attach: (m, root) => [m.attachTimes(root)] },
+    { name: 'console', when: '[data-kp-console]', load: () => import('./console.js'), attach: (m, root) => [m.attachConsoles(root)] },
 ];
 
 /** Set on <html> once the boot's `attachAll()` has attached everything the page needed: the names fetched, space-separated. */

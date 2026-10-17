@@ -33,124 +33,12 @@
 
         <main id="main" class="cat-main kd-page">
             <header class="kd-intro">
-                <h1>Rows, round 2: the new-lines pill and the JSON box</h1>
+                <h1>Rows, round 3: the JSON box</h1>
                 <p class="cat-intro">
-                    Formal only. Only the two sections you did not approve are back. Under <b>Expected</b> each says in one line what changed since
-                    round 1. The log lines and the JSON are samples.
+                    Formal only. Only the section you did not approve is back: the JSON box. Under <b>Expected</b> it says what changed since round 2.
+                    The JSON is a sample.
                 </p>
             </header>
-
-            <!-- ================================================================ new-items-pill -->
-            <h2 class="kd-topic" id="topic-new-items-pill">The "N new lines" pill</h2>
-            <section
-                class="k5-sec"
-                id="new-items-pill"
-                data-review-item="new-items-pill"
-                data-review-topic="new-items-pill"
-                data-review-topic-title="The N new lines pill"
-                data-review-components="newpill"
-                data-review-title="The pill for new lines on a live list"
-                aria-labelledby="h-new-items-pill"
-            >
-                <div class="k5-sec__head">
-                    <h2 id="h-new-items-pill">The pill for new lines on a live list</h2>
-                    <p>
-                        A log or a feed follows its newest line while you are at that end. Scroll away and the lines that arrive out of sight are
-                        counted in a pill: "12 new lines · back to the tail". One press jumps there. Scrolling back to the end follows again by
-                        itself.
-                    </p>
-                </div>
-                <div class="k5-expected">
-                    <p>
-                        <b>Expected:</b> changed since round 1: in the log rows the time, the level (INFO or ERROR) and the line each have their own
-                        column and never touch or cover each other, at the desk width and at 390 px; the &ldquo;New since&rdquo; divider is on by
-                        default (<code>data-kp-since-left</code>, <code>off</code> turns it off).
-                    </p>
-                    <ul>
-                        <li>
-                            <b>Add 5 lines</b> and read the rows: 14:32:08, INFO or ERROR, the line. Scroll up, add lines, press the pill; switch the
-                            tab away and back (or press the <b>Divider on return</b> buttons to compare): the ruled line &ldquo;New since
-                            &hellip;&rdquo; stands before the first line that came while you were away. Everything else is as in round 1.
-                        </li>
-                    </ul>
-                </div>
-                <div data-review-look>
-                    <p data-for="formal">
-                        The pill is an opaque paper plate in a navy hairline, its words in the package's sans with the count in tabular figures; it is
-                        ruled in from its start edge in 0.4 s in a straight line and taken out the same way backwards. The divider is a navy hairline
-                        either side of the time.
-                    </p>
-                </div>
-                <div class="k5-controls" data-review-controls>
-                    <div role="group" aria-label="Feed the log">
-                        <b>Feed the log:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-add="1">Add 1 line</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-add="5">Add 5 lines</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-add="120">Add 120 lines</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-run aria-pressed="false">Run for 10 s</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-clear>Clear the log</button>
-                    </div>
-                    <div role="group" aria-label="Filter">
-                        <b>Show:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-level="all" aria-pressed="true">Every line</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-level="error" aria-pressed="false">Only errors</button>
-                    </div>
-                    <div role="group" aria-label="Following">
-                        <b>Following:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-kp-follow-toggle="k5-log" aria-pressed="false">Pause</button>
-                    </div>
-                    <div role="group" aria-label="Divider">
-                        <b>Divider on return:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-since="on" aria-pressed="true">On</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-since="off" aria-pressed="false">Off</button>
-                    </div>
-                </div>
-                <p class="k5-readout" role="status" data-k5-follow-readout>Following the latest line.</p>
-                <div class="k5-pair">
-                    <div class="k5-stack">
-                        <p class="k5-label">The log, newest at the foot</p>
-                        <div data-kp-newpill-host>
-                            <ol
-                                class="k5-log"
-                                id="k5-log"
-                                tabindex="0"
-                                aria-label="Log"
-                                data-kp-follow="tail"
-                                data-kp-follow-space
-                                data-kp-pill-unit="line,lines"
-                            ></ol>
-                        </div>
-                        <p class="k5-label">A list with the newest on top</p>
-                        <div data-kp-newpill-host>
-                            <ul
-                                class="k5-messages k5-list-frame"
-                                id="k5-messages"
-                                tabindex="0"
-                                aria-label="Messages"
-                                data-kp-follow="head"
-                                data-kp-pill-unit="message,messages"
-                            ></ul>
-                        </div>
-                        <p class="k5-readout"><button type="button" class="kp-button kp-button--sm" data-k5-message>Add a message</button></p>
-                    </div>
-                    <div class="k5-stack">
-                        <p class="k5-label">390 px</p>
-                        <div class="k5-frame k5-frame--phone">
-                            <div data-kp-newpill-host>
-                                <ol
-                                    class="k5-log"
-                                    id="k5-log-phone"
-                                    tabindex="0"
-                                    aria-label="Log on a phone"
-                                    data-kp-follow="tail"
-                                    data-kp-pill-unit="line,lines"
-                                ></ol>
-                            </div>
-                            <p class="k5-readout"><button type="button" class="kp-button kp-button--sm" data-k5-add-phone>Add 5 lines</button></p>
-                        </div>
-                    </div>
-                </div>
-            </section>
 
             <!-- ================================================================ json-textarea -->
             <h2 class="kd-topic" id="topic-json-textarea">The JSON box</h2>
@@ -174,15 +62,17 @@
                 </div>
                 <div class="k5-expected">
                     <p>
-                        <b>Expected:</b> changed since round 1: the line-number gutter is exactly as tall as the text box, clips what the box does not
-                        show, and moves together with the text when you scroll; it never lists more lines than the box shows and the frame does not
-                        grow with the number of lines.
+                        <b>Expected:</b> changed since round 2: a long text scrolls again. In round 2 the box stayed six lines high with its scrolling
+                        switched off as soon as it sat inside the review dialog, so Long could not be scrolled at all. Now the box grows to 20 lines
+                        and then scrolls inside itself with the mouse wheel, the keyboard and its scrollbar, and the wheel also works over the line
+                        numbers. The numbers move with the text and the gutter stays exactly as tall as the box.
                     </p>
                     <ul>
                         <li>
-                            Press <b>Long</b> (an object with 8 entries, about 40 lines): the box grows to 20 lines and then scrolls inside itself.
-                            Scroll it: the numbers scroll with the text, line 1 beside the first line shown, and the gutter and the box keep the same
-                            height. Press <b>Broken (line 3)</b>: line 3 is marked in the gutter. Everything else is as in round 1.
+                            Press <b>Long</b> (an object with 8 entries, 42 lines): the wide box and the 390 px box both take it. Scroll to the last
+                            line with the wheel, with <b>Ctrl+End</b> or <b>Page Down</b>, and with the scrollbar: line 42 stands beside the last
+                            line. The 390 px box is narrow, so it has no line numbers there. Press <b>Broken (line 3)</b>: line 3 is marked in the
+                            gutter. Everything else is as in round 2.
                         </li>
                     </ul>
                 </div>
@@ -271,7 +161,10 @@
             </section>
         </main>
         <script type="application/json" data-review-round>
-            { "round": "rows-b7aeeae6-3b7f-4f9f-a823-d4447a1816e7", "received": ["rows-dfb064e2-85b0-4f84-8cb7-706a0b868f2f"] }
+            {
+                "round": "rows-8e808b98-7c3f-4fba-adea-9781e6b60e63",
+                "received": ["rows-dfb064e2-85b0-4f84-8cb7-706a0b868f2f", "rows-b7aeeae6-3b7f-4f9f-a823-d4447a1816e7"]
+            }
         </script>
         <script type="module" src="rows.js"></script>
         <script type="module" src="../../js/auto.js"></script>

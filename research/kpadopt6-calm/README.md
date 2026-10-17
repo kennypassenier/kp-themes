@@ -1,5 +1,7 @@
 # research/kpadopt6-calm: the sixth adoption round, calm screens
 
+**Decided (2026-10-18 00:28):** Kenny approved every part in formal and changed some defaults, applied in the package and in this page. Recorded in `VERDICTS.json`; the part is not offered again.
+
 Six parts for a daily check-in and a quiet today screen, built in the package and shown in formal only until Kenny has judged them (Kenny, 2026-10-17, form keuzes-nieuwe-onderdelen):
 
 - **Picker with the usual on top** (extends `kp-combobox` with `data-kp-usual`, `js/usual-picker.js`): a band of the usual choices, pinned "Nothing to log", "Show all 38", tags with "Not today", inline add with Undo and the near-match guard. Choices: what the band does while typing, what a near name does, whether the full list folds.

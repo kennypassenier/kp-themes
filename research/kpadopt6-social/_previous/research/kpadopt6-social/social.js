@@ -179,11 +179,12 @@ const avSpec = (/** @type {{ state?: any, nobody?: boolean, people?: any, unit?:
     const ranges = opts.nobody
         ? {}
         : {
-              kenny: { [r[0]]: 'yes', [r[1]]: 'maybe' },
-              tom: { [r[0]]: 'no', [r[1]]: 'yes', [r[2]]: 'yes', [r[3]]: 'maybe' },
-              anna: { [r[0]]: 'yes', [r[1]]: 'yes', [r[2]]: 'no', [r[3]]: 'yes' },
-              bo: { [r[1]]: 'yes', [r[2]]: 'yes' },
-              lies: { [r[0]]: 'maybe', [r[1]]: 'yes' },
+              // Built so every switch shows: most -> r0, everyone -> r1, fewest-no rule -> r1, quorum 3 -> r2, quorum 1 -> r3.
+              kenny: { [r[0]]: 'yes', [r[1]]: 'maybe', [r[2]]: 'yes' },
+              tom: { [r[0]]: 'yes', [r[1]]: 'maybe', [r[2]]: 'yes' },
+              anna: { [r[0]]: 'no', [r[1]]: 'yes', [r[2]]: 'no' },
+              bo: { [r[0]]: 'no', [r[1]]: 'maybe', [r[3]]: 'yes' },
+              lies: { [r[0]]: 'maybe', [r[1]]: 'maybe', [r[3]]: 'yes' },
           };
     const dayAnswers = opts.nobody
         ? {}
@@ -501,3 +502,27 @@ for (const button of $$('[data-k6-attr]')) {
         }
     });
 }
+
+// ---------------------------------------------------------------- the review dialog's default sets
+// A choice set only asks for the default (defaults-1017); every other option is a real option of the component, so
+// pressing one in the dialog presses the demo's own button that writes that option's attribute.
+
+/** choice id → the attribute selector prefix of the demo's button for its values. */
+const REVIEW_OPTIONS = /** @type {Record<string, string>} */ ({
+    press: '#k6-av|data-kp-availability-press|',
+    best: '#k6-av|data-kp-availability-best|',
+    summary: '#k6-av|data-kp-availability-summary|',
+    unit: '#k6-av|data-kp-availability-unit-switch|',
+    order: '#k6-console|data-kp-console-order|',
+    status: '#k6-console|data-kp-console-status|',
+    cancel: '#k6-console|data-kp-console-cancel|',
+});
+document.addEventListener('review:choice', (event) => {
+    const { id, value } = /** @type {CustomEvent} */ (event).detail;
+    const prefix = REVIEW_OPTIONS[id];
+    if (!prefix) return;
+    // The console's Cancel is on when the attribute is absent ("" on the Offered button) and off with "-".
+    const written = id === 'cancel' ? (value === 'on' ? '' : '-') : id === 'unit' ? (value === 'switch' ? 'on' : 'off') : value;
+    const button = [...$$('[data-k6-attr]')].find((b) => b.getAttribute('data-k6-attr') === `${prefix}${written}`);
+    button?.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+});

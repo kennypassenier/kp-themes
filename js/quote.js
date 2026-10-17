@@ -13,7 +13,7 @@
 // Options, each a markup attribute and a field of attachQuotes(root, options) (KT6); the default is what writing nothing gives:
 //   data-kp-quote-by          who wrote it                                you (the dictionary's "You")
 //   data-kp-quote-date        an ISO moment                               none: the line is left out
-//   data-kp-quote-date-style  date | relative | both                      date ("Tuesday 14/10/2026")
+//   data-kp-quote-date-style  date | relative | both                      both ("Wednesday 14/10/2026 (3 days ago)")
 //   data-kp-quote-lines       a number, or all                            4: a longer entry folds behind Show all, the whole text stays in the page
 //   data-kp-quote-now         an ISO moment that "now" is for the relative words   the clock (a page with its own clock, a demo)
 //   data-kp-quote-why         "A year ago today", "What helped last time" none
@@ -103,7 +103,7 @@ function daysBetween(from, to) {
  * @param {number} [now]
  * @param {string} [locale]
  */
-export function quoteWhen(ms, style = 'date', now = Date.now(), locale = 'en-GB') {
+export function quoteWhen(ms, style = 'both', now = Date.now(), locale = 'en-GB') {
     const s = getStrings();
     const weekday = new Intl.DateTimeFormat(locale, { weekday: 'long', timeZone: 'Europe/Brussels' }).format(ms);
     const date = s.quoteDay(weekday, agoMoment(ms).slice(0, 10));
@@ -172,7 +172,7 @@ function render(m) {
         const when = make(
             'time',
             'kp-quote__when',
-            quoteWhen(ms, style === 'relative' || style === 'both' ? style : 'date', Number.isFinite(nowRaw) ? nowRaw : Date.now()),
+            quoteWhen(ms, style === 'relative' || style === 'date' ? style : 'both', Number.isFinite(nowRaw) ? nowRaw : Date.now()),
         );
         when.setAttribute('datetime', new Date(ms).toISOString());
         when.title = agoMoment(ms);

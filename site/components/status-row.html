@@ -441,7 +441,7 @@ list.addEventListener(<span class="kp-code__string">'kp-status-retry'</span>, (e
                             <tr><td><code>statusOk / statusLoading / statusFailed / statusEmpty / statusRetry</code></td><td>The state words and the Retry label, in the dictionary; `statusRetryLabel` names a Retry after its row, and `statusAnnounce` and `statusAnnounceMany` are the announcements (more than three changes in one tick become one summary).</td></tr>
                             <tr><td><code>data-kp-status-vocab</code></td><td>`calm` (open, done, paused, unknown; `standard` is the default). A row asked for `failed`, `warn` or anything else is drawn as unknown and the console says so.</td></tr>
                             <tr><td><code>data-kp-since</code></td><td>On a paused calm row: `YYYY-MM-DD`; the row says “Paused since 03/10/2026”.</td></tr>
-                            <tr><td><code>data-kp-today-since</code></td><td>`date` (the default), `relative` (“Paused for 2 weeks”) or `both`.</td></tr>
+                            <tr><td><code>data-kp-today-since</code></td><td>`both` (the default: “Paused since 03/10/2026 (2 weeks)”), `date` or `relative` (“Paused for 2 weeks”).</td></tr>
                             <tr><td><code>data-kp-today-resume</code></td><td>`off` leaves out Resume (present by default); `data-kp-resume-reason` on a row disables it and says why.</td></tr>
                             <tr><td><code>data-kp-today-pause</code></td><td>Present shows Pause on open rows.</td></tr>
                             <tr><td><code>data-kp-today-order</code></td><td>`open-first` orders the rows once, at attach (`given` is the default); nothing moves afterwards.</td></tr>
