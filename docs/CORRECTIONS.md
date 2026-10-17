@@ -6948,7 +6948,10 @@ measures each state it reaches.
 
 ## lost-answer-1017 · Kenny's verdict on forest's three tick options never arrived (2026-10-17)
 
-Waiting on Kenny's answer to the correction form.
+Kenny, 2026-10-17 17:20: approved ("Klopt"), as the wider form verdicts-safe: also the Not-approved box that stood beside a
+neighbouring section (his timers note landed on the checklist), and colliding round ids. Measures: the kit's
+append-only journal, Saved verdicts on the Agenda, the step integrity check, research/_review/check-kit.mjs before every
+round, part round ids `<topic>-<uuid>` (Kenny: "een ID mag nooit colliden"), and the gate below.
 
 **1 · What went wrong.** The values part's page round for the three forest tick options (published 2026-10-17 03:58,
 d3830a80) kept the id `2026-10-17-r3-values`, the id of the round whose answer was already recorded and listed as
