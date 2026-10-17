@@ -40,6 +40,8 @@ on again only when Kenny asks.
 
 A re-review round shows only the pairs Kenny has not approved; approved sections and themes leave the demo, enforced by gates/check-rereview.mjs (Kenny, 2026-10-13 and 2026-10-16). A review asks at most 100 pairs: a bigger one is split into one demo per group of components, judged one by one from the Agenda (Kenny, 2026-10-17), enforced by the same gate. Before a round goes on the Agenda, `node research/_review/measure-gaps.mjs <port> <page> <themes> 1280,390` must print clear: no component text closer than 4 px to a neighbour or to the side edge of its plate, in every theme the round asks (Kenny, 2026-10-17, correction text-edge-1017). Beside it, `node research/_review/check-kit.mjs <port> <page>` must print clear on every page before a round goes on the Agenda: every step has one row per shown section with its controls, a note survives a reload, and a new round keeps every verdict in the journal (Kenny, 2026-10-17, correction lost-answer-1017).
 
+Everything Kenny expects from a demo and its rounds is one list, [research/_review/DEMO_RULES.md](research/_review/DEMO_RULES.md): every brief for a demo or a round links it, and Claude walks its chapter "Before a round goes on the Agenda" before every push of a round.
+
 **Rules:** the project rules and the corrections they came from are in
 [docs/RULES.md](docs/RULES.md); the ones that are code run in
 `npm run gates`. Two that shape every turn: a released theme never
