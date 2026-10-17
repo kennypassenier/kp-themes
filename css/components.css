@@ -17108,6 +17108,8 @@
         display: grid;
         grid-template-columns: minmax(0, 1fr);
         gap: var(--kp-weekdays-gap, var(--kp-space-sm, 0.5rem));
+        /* Wrapped by a flex reason anchor (disabled picker) an inline-size container has no intrinsic width and collapses to 0. */
+        inline-size: 100%;
         min-inline-size: 0;
         max-inline-size: var(--kp-weekdays-max, 32rem);
     }
