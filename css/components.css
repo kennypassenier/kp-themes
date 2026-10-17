@@ -20047,7 +20047,7 @@
      * settles into the finished bar when the size is known, instead of a busy sweep that loops from the start and then
      * jumps to full [kpadopt5-r2]. A register that draws its own busy bar repeats these two rules for its theme. */
     @media (prefers-reduced-motion: no-preference) {
-        .kp-transfer[data-kp-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        .kp-transfer[data-kp-transfer-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
             inset-inline: 0;
             inline-size: auto;
             transform: none;
@@ -20056,7 +20056,7 @@
                 kp-transfer-breathe 2600ms ease-in-out infinite alternate;
         }
 
-        .kp-transfer[data-kp-settle] .kp-progressbar__fill {
+        .kp-transfer[data-kp-transfer-settle] .kp-progressbar__fill {
             animation: kp-transfer-settle 480ms ease-out;
         }
     }

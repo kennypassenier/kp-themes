@@ -18,7 +18,7 @@
 //   data-kp-secret-headers      header names masked on screen and in a copy (default authorization, cookie, set-cookie, x-api-key, proxy-authorization)
 //   data-kp-secrets-in-copy     `masked` (default: the copy carries ******** and a separate button, "Copy curl with secrets", carries the real values) |
 //                               `masked-only` (no such button) | `real` (every copy carries them)
-//   data-kp-requests-open       `failed` (default: the 4xx and 5xx are open) | `first` | `none`
+//   data-kp-requests-open       `none` (default, Kenny 2026-10-17: all folded) | `failed` (the 4xx and 5xx are open) | `first`
 //   data-kp-requests-max        how many show before "Show N older" (default 20), newest first
 //   data-kp-copy-as             `curl,json,body` (default all three)
 //   data-kp-requests-test       `false` leaves the Send test button out of the empty list
@@ -168,7 +168,7 @@ function readOptions(el) {
     return {
         secretHeaders: list(el.getAttribute('data-kp-secret-headers')) ?? SECRET_HEADERS,
         secretsInCopy: secrets === 'real' || secrets === 'masked-only' ? secrets : 'masked',
-        open: open === 'first' || open === 'none' ? open : 'failed',
+        open: open === 'first' || open === 'failed' ? open : 'none',
         max: Number(el.getAttribute('data-kp-requests-max')) || REQUESTS_MAX,
         copyAs: /** @type {('curl' | 'json' | 'body')[]} */ (
             copyAs ? copyAs.filter((c) => ['curl', 'json', 'body'].includes(c)) : ['curl', 'json', 'body']

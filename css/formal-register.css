@@ -1670,24 +1670,24 @@
     /* A transfer of unknown size [kpadopt5-r2; Kenny, 2026-10-17 22:09: "the second bar keeps starting from the beginning
        before suddenly filling completely. Make it less hectic"]: the ruled band stands across the whole track and breathes
        in place, the second rule waits for the end, and the finished bar settles from it without a jump. */
-    [data-theme='formal'] .kp-transfer[data-kp-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::after {
+    [data-theme='formal'] .kp-transfer[data-kp-transfer-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__track::after {
         animation: none;
         opacity: 0;
     }
 
-    [data-theme='formal'] .kp-transfer[data-kp-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
+    [data-theme='formal'] .kp-transfer[data-kp-transfer-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__head {
         animation: none;
         display: none;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='formal'] .kp-transfer[data-kp-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
+        [data-theme='formal'] .kp-transfer[data-kp-transfer-unknown] .kp-progressbar[data-kp-indeterminate] .kp-progressbar__fill {
             animation:
                 kp-transfer-enter 700ms ease-out,
                 kp-transfer-breathe 2600ms ease-in-out infinite alternate;
         }
 
-        [data-theme='formal'] .kp-transfer[data-kp-settle] .kp-progressbar__fill {
+        [data-theme='formal'] .kp-transfer[data-kp-transfer-settle] .kp-progressbar__fill {
             animation: kp-transfer-settle 480ms ease-out;
         }
     }

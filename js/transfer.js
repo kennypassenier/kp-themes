@@ -183,18 +183,18 @@ function paint(row, st, p) {
     const percent = known ? Math.min(100, Math.floor((done / /** @type {number} */ (total)) * 100)) : null;
 
     // The bar: ARIA is the source. A transfer of unknown size does not loop a busy bar from the start (round 1 of
-    // kpadopt5-ops: it kept restarting, then jumped to full): `data-kp-unknown` makes the bar one full band that breathes
+    // kpadopt5-ops: it kept restarting, then jumped to full): `data-kp-transfer-unknown` makes the bar one full band that breathes
     // slowly and, when the size turns out, settles into the finished bar without a jump.
-    if (known && row.hasAttribute('data-kp-unknown')) {
+    if (known && row.hasAttribute('data-kp-transfer-unknown')) {
         // The size turned out: settle from where the breathing was (opacity) into the bar, instead of jumping to full.
         const fill = p.bar.querySelector('.kp-progressbar__fill');
         if (fill) {
             row.style.setProperty('--kp-settle-from', getComputedStyle(fill).opacity);
-            row.setAttribute('data-kp-settle', '');
-            fill.addEventListener('animationend', () => row.removeAttribute('data-kp-settle'), { once: true });
+            row.setAttribute('data-kp-transfer-settle', '');
+            fill.addEventListener('animationend', () => row.removeAttribute('data-kp-transfer-settle'), { once: true });
         }
     }
-    row.toggleAttribute('data-kp-unknown', !known);
+    row.toggleAttribute('data-kp-transfer-unknown', !known);
     if (known) setProgress(p.bar, percent ?? 0);
     else setIndeterminate(p.bar, true);
 
