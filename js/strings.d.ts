@@ -275,6 +275,402 @@ export type Strings = {
      * Announced after a copy, naming the block
      */
     codeCopiedAnnouncement: (title: string) => string;
+    /**
+     * Said after a tick, a range or a clear: how many rows are selected (js/row-select.js) [kpadopt5]
+     */
+    rowSelectCount: (n: number) => string;
+    /**
+     * Said after a range that passed rows that cannot be selected [kpadopt5]
+     */
+    rowSelectSkipped: (n: number) => string;
+    /**
+     * Said after Ctrl+A: every row the table shows is ticked [kpadopt5]
+     */
+    rowSelectAllShown: (n: number) => string;
+    /**
+     * Said when the cursor moves to a row, "INC-4471, row 3 of 12" [kpadopt5]
+     */
+    rowSelectCursor: (label: string, at: number, of: number) => string;
+    /**
+     * Said when a long press starts selection mode on a phone [kpadopt5]
+     */
+    rowSelectMode: string;
+    /**
+     * Said when selection mode ends [kpadopt5]
+     */
+    rowSelectModeEnd: string;
+    /**
+     * The hint line under a selectable table: j and k [kpadopt5]
+     */
+    rowKeysMove: string;
+    /**
+     * The hint line: x [kpadopt5]
+     */
+    rowKeysTick: string;
+    /**
+     * The hint line: Shift and x [kpadopt5]
+     */
+    rowKeysRange: string;
+    /**
+     * The hint line: Esc [kpadopt5]
+     */
+    rowKeysClear: string;
+    /**
+     * The hint line: Enter [kpadopt5]
+     */
+    rowKeysOpen: string;
+    /**
+     * The hint line: Ctrl and A, when the table offers it [kpadopt5]
+     */
+    rowKeysAll: string;
+    /**
+     * The accessible name of a selection bar (js/selection-bar.js) [kpadopt5]
+     */
+    selectionLabel: string;
+    /**
+     * The bar's count, "3 selected" [kpadopt5]
+     */
+    selectionCount: (n: number) => string;
+    /**
+     * The bar's button that ticks nothing: it says what it does [kpadopt5]
+     */
+    selectionClear: string;
+    /**
+     * Its tooltip, naming the key [kpadopt5]
+     */
+    selectionClearTitle: string;
+    /**
+     * The names line when not every name fits, "+4 more" with the exact number [kpadopt5]
+     */
+    selectionMore: (n: number) => string;
+    /**
+     * The same button once the whole list is open [kpadopt5]
+     */
+    selectionFewer: string;
+    /**
+     * The phone's button that opens the bar's actions [kpadopt5]
+     */
+    selectionActions: string;
+    /**
+     * The offer beyond what is shown, "Select all 312 that match" [kpadopt5]
+     */
+    selectionMatching: (total: number) => string;
+    /**
+     * The bar's line once every match is selected [kpadopt5]
+     */
+    selectionMatchingOn: (total: number) => string;
+    /**
+     * The button that takes the offer back, "Select only the 40 shown" [kpadopt5]
+     */
+    selectionOnlyShown: (n: number) => string;
+    /**
+     * Said when a bar action starts, "Backing up 3…" is the page's own words; this is the fallback [kpadopt5]
+     */
+    selectionBusy: (words: string) => string;
+    /**
+     * The bar's line after an action some rows refused, "2 done, 1 refused" [kpadopt5]
+     */
+    selectionResult: (done: number, refused: number) => string;
+    /**
+     * Said when selected rows are gone after a refresh [kpadopt5]
+     */
+    selectionDropped: (n: number) => string;
+    /**
+     * The reason an action is off for some rows, "2 of 3 can be updated" with the page's verb after it [kpadopt5]
+     */
+    selectionCan: (can: number, total: number) => string;
+    /**
+     * Said when the selection is cleared [kpadopt5]
+     */
+    selectionCleared: string;
+    /**
+     * The Undo button of an undo toast (js/undo-toast.js) [kpadopt5]
+     */
+    undoToastUndo: string;
+    /**
+     * Its tooltip, naming the key [kpadopt5]
+     */
+    undoToastKeyTitle: (key: string) => string;
+    /**
+     * Said once when the toast opens, "Deleted. Undo available for 6 seconds" [kpadopt5]
+     */
+    undoToastAnnounce: (text: string, seconds: number) => string;
+    /**
+     * The text clock, "5 s" [kpadopt5]
+     */
+    undoToastClock: (seconds: number) => string;
+    /**
+     * The toast's line after an undo [kpadopt5]
+     */
+    undoToastRestored: string;
+    /**
+     * The toast's line while the commit is on its way [kpadopt5]
+     */
+    undoToastSaving: string;
+    /**
+     * The toast's line when the commit failed, "Not done: why" [kpadopt5]
+     */
+    undoToastFailed: (why: string) => string;
+    /**
+     * The accessible name of the toast's close button [kpadopt5]
+     */
+    undoToastDismiss: string;
+    /**
+     * The word for one new row on a live list (js/newpill.js) [kpadopt5]
+     */
+    newpillUnitOne: string;
+    /**
+     * The word for several [kpadopt5]
+     */
+    newpillUnitMany: string;
+    /**
+     * The pill, "12 new lines" [kpadopt5]
+     */
+    newpillNew: (n: number, unit: string) => string;
+    /**
+     * The pill's second half on a list that grows at the end [kpadopt5]
+     */
+    newpillBackTail: string;
+    /**
+     * The pill's second half on a list that grows at the top [kpadopt5]
+     */
+    newpillBackHead: string;
+    /**
+     * Said at most every ten seconds while the list is read elsewhere [kpadopt5]
+     */
+    newpillAnnounce: (n: number, unit: string) => string;
+    /**
+     * The toolbar button that stops following [kpadopt5]
+     */
+    newpillPause: string;
+    /**
+     * The toolbar button that follows again, shown while paused [kpadopt5]
+     */
+    newpillResume: string;
+    /**
+     * The divider at the first unseen row, "New since 14:32" [kpadopt5]
+     */
+    newpillSince: (time: string) => string;
+    /**
+     * Said when following is paused [kpadopt5]
+     */
+    newpillPausedNote: string;
+    /**
+     * Said when following resumes [kpadopt5]
+     */
+    newpillFollowing: string;
+    /**
+     * A payload cell with nothing in it (js/code.js, cell) [kpadopt5]
+     */
+    payloadEmpty: string;
+    /**
+     * A payload cell that holds binary data, "binary, 2.1 kB" [kpadopt5]
+     */
+    payloadBinary: (size: string) => string;
+    /**
+     * The button that opens a long payload in a dialog [kpadopt5]
+     */
+    payloadOpen: string;
+    /**
+     * The link that downloads a binary payload when the page gives a URL [kpadopt5]
+     */
+    payloadDownload: string;
+    /**
+     * The cell's fold button, "Show all 40 lines" [kpadopt5]
+     */
+    payloadShowAll: (lines: number) => string;
+    /**
+     * The cell's copy button: it copies the whole value, folded or not [kpadopt5]
+     */
+    payloadCopyFull: string;
+    /**
+     * The quiet line under a valid object, "Valid JSON · 3 keys" [kpadopt5]
+     */
+    jsonValidKeys: (n: number) => string;
+    /**
+     * The same for a list [kpadopt5]
+     */
+    jsonValidItems: (n: number) => string;
+    /**
+     * The same for a bare value [kpadopt5]
+     */
+    jsonValidValue: string;
+    /**
+     * The error line, "Line 3, column 12: expected ','" [kpadopt5]
+     */
+    jsonInvalid: (line: number, column: number, why: string) => string;
+    /**
+     * The error line when the place is not known [kpadopt5]
+     */
+    jsonInvalidPlain: (why: string) => string;
+    /**
+     * The line under text that is not JSON where plain text is allowed [kpadopt5]
+     */
+    jsonPlainText: string;
+    /**
+     * The line under an empty field [kpadopt5]
+     */
+    jsonEmpty: string;
+    /**
+     * The Format button [kpadopt5]
+     */
+    jsonFormat: string;
+    /**
+     * The Minify button [kpadopt5]
+     */
+    jsonMinify: string;
+    /**
+     * The Wrap toggle [kpadopt5]
+     */
+    jsonWrap: string;
+    /**
+     * The Copy button [kpadopt5]
+     */
+    jsonCopy: string;
+    /**
+     * The help line under the field: how to leave it with the keyboard [kpadopt5]
+     */
+    jsonTabHint: string;
+    /**
+     * The accessible name of the line numbers [kpadopt5]
+     */
+    jsonGutter: string;
+    /**
+     * The validity message that stops a form with broken JSON [kpadopt5]
+     */
+    jsonBlocked: string;
+    /**
+     * The error line when the page's shape check refuses valid JSON [kpadopt5]
+     */
+    jsonSchemaFailed: (why: string) => string;
+    /**
+     * Said after Format [kpadopt5]
+     */
+    jsonFormatted: string;
+    /**
+     * The accessible name of the request list (js/request-inspector.js) [kpadopt5]
+     */
+    reqLabel: string;
+    /**
+     * The empty list's heading [kpadopt5]
+     */
+    reqEmptyTitle: string;
+    /**
+     * Its sentence [kpadopt5]
+     */
+    reqEmptyText: string;
+    /**
+     * Its button [kpadopt5]
+     */
+    reqSendTest: string;
+    /**
+     * The failed list's heading [kpadopt5]
+     */
+    reqFailedTitle: string;
+    /**
+     * The busy card's words [kpadopt5]
+     */
+    reqLoading: string;
+    /**
+     * The headers block's heading [kpadopt5]
+     */
+    reqHeaders: string;
+    /**
+     * The body block's title [kpadopt5]
+     */
+    reqBody: string;
+    /**
+     * A request without a body [kpadopt5]
+     */
+    reqNoBody: string;
+    /**
+     * A request without headers [kpadopt5]
+     */
+    reqNoHeaders: string;
+    /**
+     * Copy as curl [kpadopt5]
+     */
+    reqCopyCurl: string;
+    /**
+     * Copy as JSON [kpadopt5]
+     */
+    reqCopyJson: string;
+    /**
+     * Copy the body [kpadopt5]
+     */
+    reqCopyBody: string;
+    /**
+     * The separate button that copies the curl with the real secrets [kpadopt5]
+     */
+    reqCopyCurlSecrets: string;
+    /**
+     * Said after a copy, "curl copied, secrets masked" is built from this and the next [kpadopt5]
+     */
+    reqCopyDone: (what: string) => string;
+    /**
+     * Added to a copy that masked the secrets [kpadopt5]
+     */
+    reqMaskedNote: string;
+    /**
+     * The button that shows one masked header on screen [kpadopt5]
+     */
+    reqSecretShow: string;
+    /**
+     * The same, once shown [kpadopt5]
+     */
+    reqSecretHide: string;
+    /**
+     * What a screen reader hears for a masked value [kpadopt5]
+     */
+    reqSecretMasked: string;
+    /**
+     * The button under the list, "Show 12 older" [kpadopt5]
+     */
+    reqShowOlder: (n: number) => string;
+    /**
+     * The accessible name of the status filter [kpadopt5]
+     */
+    reqFilterLabel: string;
+    /**
+     * The filter's first choice [kpadopt5]
+     */
+    reqFilterAll: string;
+    /**
+     * The word beside a 2xx status [kpadopt5]
+     */
+    reqToneSuccess: string;
+    /**
+     * The word beside a 3xx status [kpadopt5]
+     */
+    reqToneInfo: string;
+    /**
+     * The word beside a 4xx status [kpadopt5]
+     */
+    reqToneWarning: string;
+    /**
+     * The word beside a 5xx status [kpadopt5]
+     */
+    reqToneError: string;
+    /**
+     * The word beside a request without a status [kpadopt5]
+     */
+    reqToneNone: string;
+    /**
+     * The badge of a request the page sent itself [kpadopt5]
+     */
+    reqSourceTest: string;
+    /**
+     * The line above the list, "20 of 31 requests" [kpadopt5]
+     */
+    reqCount: (shown: number, total: number) => string;
+    /**
+     * The list when the filter shows nothing [kpadopt5]
+     */
+    reqNoMatch: string;
+    /**
+     * A request's accessible name [kpadopt5]
+     */
+    reqSummary: (method: string, path: string, status: string) => string;
     busy: string;
     close: string;
     /**
@@ -1954,6 +2350,105 @@ export type Strings = {
  * @property {string} codeLoading  What the busy card over a block says
  * @property {string} codeError  A block that could not be read, when the page gives no sentence
  * @property {(title: string) => string} codeCopiedAnnouncement  Announced after a copy, naming the block
+ * @property {(n: number) => string} rowSelectCount  Said after a tick, a range or a clear: how many rows are selected (js/row-select.js) [kpadopt5]
+ * @property {(n: number) => string} rowSelectSkipped  Said after a range that passed rows that cannot be selected [kpadopt5]
+ * @property {(n: number) => string} rowSelectAllShown  Said after Ctrl+A: every row the table shows is ticked [kpadopt5]
+ * @property {(label: string, at: number, of: number) => string} rowSelectCursor  Said when the cursor moves to a row, "INC-4471, row 3 of 12" [kpadopt5]
+ * @property {string} rowSelectMode  Said when a long press starts selection mode on a phone [kpadopt5]
+ * @property {string} rowSelectModeEnd  Said when selection mode ends [kpadopt5]
+ * @property {string} rowKeysMove  The hint line under a selectable table: j and k [kpadopt5]
+ * @property {string} rowKeysTick  The hint line: x [kpadopt5]
+ * @property {string} rowKeysRange  The hint line: Shift and x [kpadopt5]
+ * @property {string} rowKeysClear  The hint line: Esc [kpadopt5]
+ * @property {string} rowKeysOpen  The hint line: Enter [kpadopt5]
+ * @property {string} rowKeysAll  The hint line: Ctrl and A, when the table offers it [kpadopt5]
+ * @property {string} selectionLabel  The accessible name of a selection bar (js/selection-bar.js) [kpadopt5]
+ * @property {(n: number) => string} selectionCount  The bar's count, "3 selected" [kpadopt5]
+ * @property {string} selectionClear  The bar's button that ticks nothing: it says what it does [kpadopt5]
+ * @property {string} selectionClearTitle  Its tooltip, naming the key [kpadopt5]
+ * @property {(n: number) => string} selectionMore  The names line when not every name fits, "+4 more" with the exact number [kpadopt5]
+ * @property {string} selectionFewer  The same button once the whole list is open [kpadopt5]
+ * @property {string} selectionActions  The phone's button that opens the bar's actions [kpadopt5]
+ * @property {(total: number) => string} selectionMatching  The offer beyond what is shown, "Select all 312 that match" [kpadopt5]
+ * @property {(total: number) => string} selectionMatchingOn  The bar's line once every match is selected [kpadopt5]
+ * @property {(n: number) => string} selectionOnlyShown  The button that takes the offer back, "Select only the 40 shown" [kpadopt5]
+ * @property {(words: string) => string} selectionBusy  Said when a bar action starts, "Backing up 3…" is the page's own words; this is the fallback [kpadopt5]
+ * @property {(done: number, refused: number) => string} selectionResult  The bar's line after an action some rows refused, "2 done, 1 refused" [kpadopt5]
+ * @property {(n: number) => string} selectionDropped  Said when selected rows are gone after a refresh [kpadopt5]
+ * @property {(can: number, total: number) => string} selectionCan  The reason an action is off for some rows, "2 of 3 can be updated" with the page's verb after it [kpadopt5]
+ * @property {string} selectionCleared  Said when the selection is cleared [kpadopt5]
+ * @property {string} undoToastUndo  The Undo button of an undo toast (js/undo-toast.js) [kpadopt5]
+ * @property {(key: string) => string} undoToastKeyTitle  Its tooltip, naming the key [kpadopt5]
+ * @property {(text: string, seconds: number) => string} undoToastAnnounce  Said once when the toast opens, "Deleted. Undo available for 6 seconds" [kpadopt5]
+ * @property {(seconds: number) => string} undoToastClock  The text clock, "5 s" [kpadopt5]
+ * @property {string} undoToastRestored  The toast's line after an undo [kpadopt5]
+ * @property {string} undoToastSaving  The toast's line while the commit is on its way [kpadopt5]
+ * @property {(why: string) => string} undoToastFailed  The toast's line when the commit failed, "Not done: why" [kpadopt5]
+ * @property {string} undoToastDismiss  The accessible name of the toast's close button [kpadopt5]
+ * @property {string} newpillUnitOne  The word for one new row on a live list (js/newpill.js) [kpadopt5]
+ * @property {string} newpillUnitMany  The word for several [kpadopt5]
+ * @property {(n: number, unit: string) => string} newpillNew  The pill, "12 new lines" [kpadopt5]
+ * @property {string} newpillBackTail  The pill's second half on a list that grows at the end [kpadopt5]
+ * @property {string} newpillBackHead  The pill's second half on a list that grows at the top [kpadopt5]
+ * @property {(n: number, unit: string) => string} newpillAnnounce  Said at most every ten seconds while the list is read elsewhere [kpadopt5]
+ * @property {string} newpillPause  The toolbar button that stops following [kpadopt5]
+ * @property {string} newpillResume  The toolbar button that follows again, shown while paused [kpadopt5]
+ * @property {(time: string) => string} newpillSince  The divider at the first unseen row, "New since 14:32" [kpadopt5]
+ * @property {string} newpillPausedNote  Said when following is paused [kpadopt5]
+ * @property {string} newpillFollowing  Said when following resumes [kpadopt5]
+ * @property {string} payloadEmpty  A payload cell with nothing in it (js/code.js, cell) [kpadopt5]
+ * @property {(size: string) => string} payloadBinary  A payload cell that holds binary data, "binary, 2.1 kB" [kpadopt5]
+ * @property {string} payloadOpen  The button that opens a long payload in a dialog [kpadopt5]
+ * @property {string} payloadDownload  The link that downloads a binary payload when the page gives a URL [kpadopt5]
+ * @property {(lines: number) => string} payloadShowAll  The cell's fold button, "Show all 40 lines" [kpadopt5]
+ * @property {string} payloadCopyFull  The cell's copy button: it copies the whole value, folded or not [kpadopt5]
+ * @property {(n: number) => string} jsonValidKeys  The quiet line under a valid object, "Valid JSON · 3 keys" [kpadopt5]
+ * @property {(n: number) => string} jsonValidItems  The same for a list [kpadopt5]
+ * @property {string} jsonValidValue  The same for a bare value [kpadopt5]
+ * @property {(line: number, column: number, why: string) => string} jsonInvalid  The error line, "Line 3, column 12: expected ','" [kpadopt5]
+ * @property {(why: string) => string} jsonInvalidPlain  The error line when the place is not known [kpadopt5]
+ * @property {string} jsonPlainText  The line under text that is not JSON where plain text is allowed [kpadopt5]
+ * @property {string} jsonEmpty  The line under an empty field [kpadopt5]
+ * @property {string} jsonFormat  The Format button [kpadopt5]
+ * @property {string} jsonMinify  The Minify button [kpadopt5]
+ * @property {string} jsonWrap  The Wrap toggle [kpadopt5]
+ * @property {string} jsonCopy  The Copy button [kpadopt5]
+ * @property {string} jsonTabHint  The help line under the field: how to leave it with the keyboard [kpadopt5]
+ * @property {string} jsonGutter  The accessible name of the line numbers [kpadopt5]
+ * @property {string} jsonBlocked  The validity message that stops a form with broken JSON [kpadopt5]
+ * @property {(why: string) => string} jsonSchemaFailed  The error line when the page's shape check refuses valid JSON [kpadopt5]
+ * @property {string} jsonFormatted  Said after Format [kpadopt5]
+ * @property {string} reqLabel  The accessible name of the request list (js/request-inspector.js) [kpadopt5]
+ * @property {string} reqEmptyTitle  The empty list's heading [kpadopt5]
+ * @property {string} reqEmptyText  Its sentence [kpadopt5]
+ * @property {string} reqSendTest  Its button [kpadopt5]
+ * @property {string} reqFailedTitle  The failed list's heading [kpadopt5]
+ * @property {string} reqLoading  The busy card's words [kpadopt5]
+ * @property {string} reqHeaders  The headers block's heading [kpadopt5]
+ * @property {string} reqBody  The body block's title [kpadopt5]
+ * @property {string} reqNoBody  A request without a body [kpadopt5]
+ * @property {string} reqNoHeaders  A request without headers [kpadopt5]
+ * @property {string} reqCopyCurl  Copy as curl [kpadopt5]
+ * @property {string} reqCopyJson  Copy as JSON [kpadopt5]
+ * @property {string} reqCopyBody  Copy the body [kpadopt5]
+ * @property {string} reqCopyCurlSecrets  The separate button that copies the curl with the real secrets [kpadopt5]
+ * @property {(what: string) => string} reqCopyDone  Said after a copy, "curl copied, secrets masked" is built from this and the next [kpadopt5]
+ * @property {string} reqMaskedNote  Added to a copy that masked the secrets [kpadopt5]
+ * @property {string} reqSecretShow  The button that shows one masked header on screen [kpadopt5]
+ * @property {string} reqSecretHide  The same, once shown [kpadopt5]
+ * @property {string} reqSecretMasked  What a screen reader hears for a masked value [kpadopt5]
+ * @property {(n: number) => string} reqShowOlder  The button under the list, "Show 12 older" [kpadopt5]
+ * @property {string} reqFilterLabel  The accessible name of the status filter [kpadopt5]
+ * @property {string} reqFilterAll  The filter's first choice [kpadopt5]
+ * @property {string} reqToneSuccess  The word beside a 2xx status [kpadopt5]
+ * @property {string} reqToneInfo  The word beside a 3xx status [kpadopt5]
+ * @property {string} reqToneWarning  The word beside a 4xx status [kpadopt5]
+ * @property {string} reqToneError  The word beside a 5xx status [kpadopt5]
+ * @property {string} reqToneNone  The word beside a request without a status [kpadopt5]
+ * @property {string} reqSourceTest  The badge of a request the page sent itself [kpadopt5]
+ * @property {(shown: number, total: number) => string} reqCount  The line above the list, "20 of 31 requests" [kpadopt5]
+ * @property {string} reqNoMatch  The list when the filter shows nothing [kpadopt5]
+ * @property {(method: string, path: string, status: string) => string} reqSummary  A request's accessible name [kpadopt5]
  * @property {string} busy
  * @property {string} close
  * @property {string} menu          The accessible name of a collapsed navigation's toggle

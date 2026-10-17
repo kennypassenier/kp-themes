@@ -25,6 +25,17 @@
 // States: `loading` (the body keeps its height under the data table's busy
 // card, js/busy-card.js; the tools wait, disabled), `empty`, `binary` (`size`)
 // and `error` (`message`), each a sentence in the body's place at its height.
+// The same block as a table cell [kpadopt5], `.kp-code--cell`: no title, the
+// words wrap (a row never scrolls sideways), three lines show and "Show all 40
+// lines" opens the rest in place (`data-kp-code-open="inline"`, default) or in a
+// dialog (`"dialog"`); `data-kp-code-language="auto"` makes it JSON only when
+// the text parses; `data-kp-binary-size` (bytes) and `data-kp-download` give the
+// one muted line "binary, 2.1 kB" with its link; `data-kp-truncated="1024/4096"`
+// (bytes shown / bytes in all) gives the foot line; `data-kp-copy="false"` takes
+// Copy away, otherwise it copies the whole value, folded or not. Empty is the
+// muted line "empty payload"; loading is a skeleton line, since the table
+// around it lays the busy card.
+//
 // Events on the root: `kp-code-copy` `{ text }`, `kp-code-copy-failed`,
 // `kp-code-wrap` `{ wrap }`, `kp-code-layout` `{ layout }`, `kp-code-fold`
 // `{ folded }`.
@@ -32,6 +43,7 @@
 import { getStrings } from './strings.js';
 import { openBusyCard } from './busy-card.js';
 import { attachSegmented } from './segmented.js';
+import { formatBytes } from './locale.js';
 
 /** A code block js/auto.js fills from its markup. */
 export const CODE = '[data-kp-code]';
@@ -53,6 +65,9 @@ export const CODE_COPIED_MS = 1500;
  * @property {'ready' | 'loading' | 'empty' | 'binary' | 'error'} [state]
  * @property {string} [message]    the sentence of a failed or empty block
  * @property {string} [loadingWords]
+ * @property {boolean} [cell]        a table cell: wrapped, three lines, a muted line for empty and binary [kpadopt5]
+ * @property {'inline' | 'dialog'} [open]  where the rest of a folded cell opens (default inline) [kpadopt5]
+ * @property {string} [downloadUrl]  a link under a binary cell's line [kpadopt5]
  */
 
 /**
@@ -68,6 +83,7 @@ export const CODE_COPIED_MS = 1500;
  * @property {CodeSpec | null} pending
  * @property {HTMLElement | null} head
  * @property {number} revert
+ * @property {boolean} cell
  */
 
 /** @type {WeakMap<HTMLElement, CodeMemory>} */
@@ -113,9 +129,8 @@ function jsonLine(doc, line) {
         if (match[1] !== undefined && match[2] !== undefined) {
             const key = make(doc, 'kp-code__key');
             key.textContent = match[1];
-            const colon = make(doc, 'kp-code__punct');
-            colon.textContent = match[2];
-            out.push(key, colon);
+            // The colon is plain text of the line: next to the key's own element it would sit 0 px from it.
+            out.push(key, doc.createTextNode(match[2]));
         } else if (match[1] !== undefined) out.push(doc.createTextNode(match[1]));
         else {
             const punct = make(doc, 'kp-code__punct');
@@ -132,17 +147,33 @@ function jsonLine(doc, line) {
 const isJson = (language) => (language ?? '').trim().toLowerCase() === 'json';
 
 /**
+ * `auto` (and no language in a cell) is JSON only when the text is an object or a list that parses.
+ * @param {CodeSpec} spec
+ * @returns {CodeSpec}
+ */
+function withLanguage(spec) {
+    const asked = (spec.language ?? '').trim().toLowerCase();
+    if (asked !== 'auto' && !(asked === '' && spec.cell)) return spec;
+    const text = (spec.text ?? '').trim();
+    let json = false;
+    if (text.startsWith('{') || text.startsWith('[')) json = prettyJson(text) !== null;
+    return { ...spec, language: json ? 'JSON' : '' };
+}
+
+/**
  * Draw (or redraw) a code block. The reader's Wrap, layout and fold are kept
  * across calls unless the spec names them again.
  * @param {HTMLElement} el the root, a `.kp-code`
- * @param {CodeSpec} spec
+ * @param {CodeSpec} given
  */
-export function setCode(el, spec) {
+export function setCode(el, given) {
+    const cell = Boolean(given.cell) || el.classList.contains('kp-code--cell');
+    const spec = withLanguage({ ...given, cell, maxLines: given.maxLines ?? (cell ? 3 : undefined) });
     const known = MEMORY.get(el);
     /** @type {CodeMemory} */
     const memory = known ?? {
         spec,
-        wrap: Boolean(spec.wrap),
+        wrap: Boolean(spec.wrap ?? cell),
         layout: spec.layout ?? 'pretty',
         folded: true,
         shown: '',
@@ -152,6 +183,7 @@ export function setCode(el, spec) {
         pending: null,
         head: null,
         revert: 0,
+        cell,
     };
     if (known) {
         if (spec.wrap !== undefined) memory.wrap = spec.wrap;
@@ -160,6 +192,7 @@ export function setCode(el, spec) {
     memory.spec = spec;
     MEMORY.set(el, memory);
     el.classList.add('kp-code');
+    el.classList.toggle('kp-code--cell', cell);
     el.setAttribute('data-kp-code', '');
     const state = spec.state ?? 'ready';
     if (state === 'loading') {
@@ -242,19 +275,22 @@ function drawHead(el, memory) {
         wanted.push(group);
     }
     let wrap = /** @type {HTMLButtonElement | null} */ (tools.querySelector('[data-kp-code-tool="wrap"]'));
-    if (!wrap) {
+    if (memory.cell) wrap = null;
+    else if (!wrap) {
         wrap = /** @type {HTMLButtonElement} */ (make(doc, 'kp-button', 'button'));
         wrap.type = 'button';
         wrap.dataset.kpCodeTool = 'wrap';
     }
-    wrap.textContent = strings.codeWrap;
-    wrap.setAttribute('aria-pressed', String(memory.wrap));
-    wrap.disabled = !ready;
-    wanted.push(wrap);
+    if (wrap) {
+        wrap.textContent = strings.codeWrap;
+        wrap.setAttribute('aria-pressed', String(memory.wrap));
+        wrap.disabled = !ready;
+        wanted.push(wrap);
+    }
     if (spec.copy !== false) {
         let copy = /** @type {HTMLButtonElement | null} */ (tools.querySelector('[data-kp-code-tool="copy"]'));
         if (!copy) {
-            copy = /** @type {HTMLButtonElement} */ (make(doc, 'kp-button', 'button'));
+            copy = /** @type {HTMLButtonElement} */ (make(doc, memory.cell ? 'kp-button kp-button--sm kp-button--ghost' : 'kp-button', 'button'));
             copy.type = 'button';
             copy.dataset.kpCodeTool = 'copy';
             const word = make(doc, 'kp-code__word');
@@ -280,6 +316,17 @@ function drawLoading(el, memory) {
     const doc = el.ownerDocument;
     el.setAttribute('aria-busy', 'true');
     el.setAttribute('data-kp-state', 'loading');
+    if (memory.cell) {
+        // A cell waits as a skeleton line: the table around it lays the busy card.
+        for (const node of [...el.children]) if (node !== memory.head) node.remove();
+        el.removeAttribute('data-kp-code-folded');
+        const line = make(doc, 'kp-code__skeleton');
+        const bar = make(doc, 'kp-skeleton');
+        bar.setAttribute('aria-hidden', 'true');
+        line.append(bar);
+        el.append(line);
+        return;
+    }
     const was = el.querySelector(':scope > :is(.kp-code__body, .kp-code__note)')?.getBoundingClientRect().height ?? 0;
     let body = /** @type {HTMLElement | null} */ (el.querySelector(':scope > .kp-code__body'));
     for (const node of [...el.children]) if (node !== memory.head && node !== body && node !== memory.card?.layer) node.remove();
@@ -306,6 +353,18 @@ function drawLoading(el, memory) {
     memory.drawn = true;
 }
 
+/**
+ * The lines past the fold are out of sight, so they are out of the layout of what can be seen: `data-kp-code-beyond`
+ * hides them while the block is folded.
+ * @param {HTMLElement} el @param {CodeMemory} memory
+ */
+function markBeyond(el, memory) {
+    const max = memory.spec.maxLines ?? 0;
+    el.querySelectorAll('.kp-code__line').forEach((line, i) =>
+        line.toggleAttribute('data-kp-code-beyond', memory.cell && max > 0 && memory.folded && i >= max),
+    );
+}
+
 /** @param {HTMLElement} el @param {CodeMemory} memory */
 function drawBody(el, memory) {
     const doc = el.ownerDocument;
@@ -323,11 +382,20 @@ function drawBody(el, memory) {
         const kind = state === 'ready' ? 'empty' : state;
         el.setAttribute('data-kp-state', kind);
         el.removeAttribute('data-kp-code-folded');
-        const note = make(doc, 'kp-code__note', 'p');
+        const note = make(doc, memory.cell ? 'kp-code__note kp-code__note--line' : 'kp-code__note', 'p');
         note.setAttribute('role', 'status');
-        if (was > 0) note.style.minBlockSize = `${was}px`;
-        note.textContent =
-            spec.message ?? (kind === 'binary' ? strings.codeBinary(spec.size ?? '') : kind === 'error' ? strings.codeError : strings.codeEmpty);
+        if (was > 0 && !memory.cell) note.style.minBlockSize = `${was}px`;
+        note.textContent = memory.cell
+            ? (spec.message ??
+              (kind === 'binary' ? strings.payloadBinary(spec.size ?? '') : kind === 'error' ? strings.codeError : strings.payloadEmpty))
+            : (spec.message ?? (kind === 'binary' ? strings.codeBinary(spec.size ?? '') : kind === 'error' ? strings.codeError : strings.codeEmpty));
+        if (memory.cell && kind === 'binary' && spec.downloadUrl) {
+            const link = /** @type {HTMLAnchorElement} */ (make(doc, 'kp-button kp-button--sm kp-button--ghost', 'a'));
+            link.href = spec.downloadUrl;
+            link.setAttribute('download', '');
+            link.textContent = strings.payloadDownload;
+            note.append(' ', link);
+        }
         el.append(note);
         memory.shown = '';
         return;
@@ -363,6 +431,7 @@ function drawBody(el, memory) {
     el.toggleAttribute('data-kp-code-folded', foldable && memory.folded);
     if (foldable) el.style.setProperty('--kp-code-max-lines', String(max));
     el.append(body);
+    markBeyond(el, memory);
 
     const foot = make(doc, 'kp-code__foot', 'div');
     if (spec.truncated) {
@@ -377,14 +446,43 @@ function drawBody(el, memory) {
         more.setAttribute('aria-controls', body.id);
         more.setAttribute('aria-expanded', String(!memory.folded));
         const word = make(doc, 'kp-code__word');
-        word.setAttribute('data-kp-code-words', [strings.codeShowAll(lines.length), strings.codeShowLess].join('\n'));
-        word.textContent = memory.folded ? strings.codeShowAll(lines.length) : strings.codeShowLess;
+        const showAll = memory.cell ? strings.payloadShowAll(lines.length) : strings.codeShowAll(lines.length);
+        const dialogue = memory.cell && spec.open === 'dialog';
+        if (dialogue) more.dataset.kpCodeOpen = 'dialog';
+        word.setAttribute('data-kp-code-words', [showAll, strings.codeShowLess].join('\n'));
+        word.textContent = memory.folded || dialogue ? (dialogue ? strings.payloadOpen : showAll) : strings.codeShowLess;
+        if (dialogue) word.setAttribute('data-kp-code-words', strings.payloadOpen);
         more.append(word);
         if (!spec.truncated) foot.append(make(doc, ''));
         foot.append(more);
     }
     foot.hidden = !spec.truncated && !foldable;
     el.append(foot);
+}
+
+/**
+ * The whole payload in a dialog, for a cell that holds a very long body.
+ * @param {HTMLElement} el @param {CodeMemory} memory
+ */
+function openInDialog(el, memory) {
+    const doc = el.ownerDocument;
+    const strings = getStrings();
+    const dialog = /** @type {HTMLDialogElement} */ (make(doc, 'kp-dialog kp-code__dialog', 'dialog'));
+    dialog.setAttribute('aria-label', memory.spec.title ?? memory.spec.language ?? strings.codeLabel);
+    const close = make(doc, 'kp-icon-button kp-dialog__close', 'button');
+    close.setAttribute('type', 'button');
+    close.setAttribute('aria-label', strings.close);
+    close.textContent = '×';
+    close.addEventListener('click', () => dialog.close());
+    const body = make(doc, 'kp-dialog__body', 'div');
+    const full = make(doc, 'kp-code', 'figure');
+    body.append(full);
+    dialog.append(close, body);
+    dialog.addEventListener('close', () => dialog.remove());
+    doc.body.append(dialog);
+    setCode(full, { ...memory.spec, cell: false, maxLines: 0, lines: true, wrap: true, open: undefined });
+    dialog.showModal();
+    el.dispatchEvent(new CustomEvent('kp-code-open', { bubbles: true, detail: { dialog } }));
 }
 
 /** The head's buttons, wired once per block. @param {HTMLElement} el @param {CodeMemory} memory */
@@ -408,11 +506,16 @@ function wire(el, memory) {
             button.setAttribute('aria-pressed', String(memory.wrap));
             el.toggleAttribute('data-kp-code-wrap', memory.wrap);
             el.dispatchEvent(new CustomEvent('kp-code-wrap', { bubbles: true, detail: { wrap: memory.wrap } }));
+        } else if (tool === 'fold' && button.dataset.kpCodeOpen === 'dialog') {
+            openInDialog(el, memory);
         } else if (tool === 'fold') {
             memory.folded = !memory.folded;
             el.toggleAttribute('data-kp-code-folded', memory.folded);
             button.setAttribute('aria-expanded', String(!memory.folded));
-            /** @type {HTMLElement} */ (button.firstElementChild).textContent = memory.folded ? strings.codeShowAll(memory.lines) : strings.codeShowLess;
+            markBeyond(el, memory);
+            /** @type {HTMLElement} */ (button.firstElementChild).textContent = memory.folded
+                ? strings.codeShowAll(memory.lines)
+                : strings.codeShowLess;
             el.dispatchEvent(new CustomEvent('kp-code-fold', { bubbles: true, detail: { folded: memory.folded } }));
         } else if (tool === 'copy') {
             const word = /** @type {HTMLElement} */ (button.firstElementChild);
@@ -431,11 +534,12 @@ function wire(el, memory) {
                 if (status) status.textContent = strings.copyBlockedAnnouncement;
                 el.dispatchEvent(new CustomEvent('kp-code-copy-failed', { bubbles: true, detail: { error } }));
             }
-            memory.revert = view?.setTimeout(() => {
-                word.textContent = getStrings().copy;
-                button.removeAttribute('data-kp-code-copied');
-                if (status) status.textContent = '';
-            }, CODE_COPIED_MS) ?? 0;
+            memory.revert =
+                view?.setTimeout(() => {
+                    word.textContent = getStrings().copy;
+                    button.removeAttribute('data-kp-code-copied');
+                    if (status) status.textContent = '';
+                }, CODE_COPIED_MS) ?? 0;
         }
     });
 }
@@ -453,18 +557,31 @@ export function attachCodes(root = document) {
         if (MEMORY.has(el)) continue;
         const source = el.querySelector('code') ?? el.querySelector('pre');
         const read = (/** @type {string} */ name) => el.getAttribute(`data-kp-code-${name}`) ?? undefined;
+        const cell = el.classList.contains('kp-code--cell');
         const state = /** @type {CodeSpec['state']} */ (read('state'));
         const layout = read('layout');
+        // Bytes as the page counted them: the size and the foot line are written in the locale's words.
+        const binaryBytes = Number(el.getAttribute('data-kp-binary-size'));
+        const cut = (el.getAttribute('data-kp-truncated') ?? '').split('/').map((n) => Number(n));
+        const open = read('open');
         setCode(el, {
             text: source?.textContent ?? '',
             title: read('title'),
             language: read('language'),
-            size: read('size'),
+            size: Number.isFinite(binaryBytes) && el.hasAttribute('data-kp-binary-size') ? formatBytes(binaryBytes) : read('size'),
             lines: el.hasAttribute('data-kp-code-lines'),
-            wrap: el.hasAttribute('data-kp-code-wrap'),
-            maxLines: Number(read('max') ?? 0) || 0,
+            wrap: el.hasAttribute('data-kp-code-wrap') ? true : cell ? undefined : false,
+            maxLines: read('max') !== undefined ? Number(read('max')) || 0 : cell ? 3 : 0,
             layout: layout === 'raw' ? 'raw' : layout === 'pretty' ? 'pretty' : undefined,
-            state,
+            state: state ?? (el.hasAttribute('data-kp-binary-size') ? 'binary' : undefined),
+            cell,
+            open: open === 'dialog' ? 'dialog' : undefined,
+            downloadUrl: el.getAttribute('data-kp-download') ?? undefined,
+            copy: el.getAttribute('data-kp-copy') === 'false' ? false : undefined,
+            truncated:
+                cut.length === 2 && cut.every((n) => Number.isFinite(n) && n > 0)
+                    ? { shown: formatBytes(cut[0]), total: formatBytes(cut[1]) }
+                    : undefined,
         });
     }
     return () => {};

@@ -46,5 +46,10 @@
     "problems": "a basics component [kpadopt5], built from the package's parts and judged in formal only first (research/kpadopt5-basics); each register answers it once it is judged in that theme",
     "reason": "a basics component [kpadopt5], built from the package's parts and judged in formal only first (research/kpadopt5-basics); each register answers it once it is judged in that theme",
     "shortcuts-pending": "a basics component [kpadopt5], built from the package's parts and judged in formal only first (research/kpadopt5-basics); each register answers it once it is judged in that theme",
-    "lede": "a basics component [kpadopt5], built from the package's parts and judged in formal only first (research/kpadopt5-basics); each register answers it once it is judged in that theme"
+    "lede": "a basics component [kpadopt5], built from the package's parts and judged in formal only first (research/kpadopt5-basics); each register answers it once it is judged in that theme",
+    "selection": "a component of the rows group [kpadopt5], built from the package's parts and judged in formal only first (research/kpadopt5-rows); each register answers it once it is judged in that theme",
+    "undo": "a component of the rows group [kpadopt5], built from the package's parts and judged in formal only first (research/kpadopt5-rows); each register answers it once it is judged in that theme",
+    "newpill": "a component of the rows group [kpadopt5], built from the package's parts and judged in formal only first (research/kpadopt5-rows); each register answers it once it is judged in that theme",
+    "jsonfield": "a component of the rows group [kpadopt5], built from the package's parts and judged in formal only first (research/kpadopt5-rows); each register answers it once it is judged in that theme",
+    "inspector": "a component of the rows group [kpadopt5], built from the package's parts and judged in formal only first (research/kpadopt5-rows); each register answers it once it is judged in that theme"
 }

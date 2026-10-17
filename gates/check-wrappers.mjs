@@ -140,6 +140,24 @@ export const REQUIRED = [
         why: 'The block measures its own width and puts its tools under its title when narrow; the query reaches only its head [kpadopt4-data].',
     },
     {
+        container: 'kp-selection',
+        class: 'kp-selection',
+        self: true,
+        why: 'The bar measures its own width and folds its names and its actions behind the Actions button when narrow; the query reaches only its own parts [kpadopt5].',
+    },
+    {
+        container: 'kp-jsonfield',
+        class: 'kp-jsonfield',
+        self: true,
+        why: 'The field measures its own width and hides its line numbers when narrow; the query reaches only its own parts [kpadopt5].',
+    },
+    {
+        container: 'kp-inspector',
+        class: 'kp-inspector',
+        self: true,
+        why: 'The card measures its own width and gives a request path a line of its own when narrow; the query reaches only its own parts [kpadopt5].',
+    },
+    {
         container: 'kp-range',
         class: 'kp-range',
         self: true,

@@ -165,6 +165,17 @@ export const NEEDS = [
     { name: 'stackbar', when: '[data-kp-stackbar]', load: () => import('./stackbar.js'), attach: (m, root) => [m.attachStackbars(root)] },
     { name: 'bullets', when: '[data-kp-bullets]', load: () => import('./bullets.js'), attach: (m, root) => [m.attachBullets(root)] },
     { name: 'code', when: '[data-kp-code]', load: () => import('./code.js'), attach: (m, root) => [m.attachCodes(root)] },
+    // The rows group [kpadopt5]: ticking rows with the keyboard, the selection bar, the "N new lines" pill, the JSON box and the request inspector.
+    {
+        name: 'row-select',
+        when: '[data-kp-select-keys], [data-kp-datatable]:has([data-kp-select-row])',
+        load: () => import('./row-select.js'),
+        attach: (m, root) => [m.attachRowSelect(root)],
+    },
+    { name: 'selection-bar', when: '[data-kp-selection]', load: () => import('./selection-bar.js'), attach: (m, root) => [m.attachSelectionBars(root)] },
+    { name: 'newpill', when: '[data-kp-follow]', load: () => import('./newpill.js'), attach: (m, root) => [m.attachNewPills(root)] },
+    { name: 'json-field', when: 'textarea[data-kp-json]', load: () => import('./json-field.js'), attach: (m, root) => [m.attachJsonFields(root)] },
+    { name: 'request-inspector', when: '[data-kp-requests]', load: () => import('./request-inspector.js'), attach: (m, root) => [m.attachRequestInspectors(root)] },
     { name: 'tick', when: '[data-kp-tick]', load: () => import('./tick.js'), attach: (m, root) => [m.attachTicks(root)] },
     { name: 'wheel', when: '[data-kp-wheel]', load: () => import('./wheel.js'), attach: (m, root) => [m.attachWheels(root)] },
     { name: 'focus-steps', when: '[data-kp-focus-steps]', load: () => import('./focus-steps.js'), attach: (m, root) => [m.attachFocusSteps(root)] },

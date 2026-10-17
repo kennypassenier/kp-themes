@@ -348,6 +348,42 @@ export {
     setChecklistState,
 } from './js/checklist.js';
 /** @typedef {import('./js/checklist.js').ChecklistItem} ChecklistItem */
+// The rows group [kpadopt5]: ticking with the keyboard, the selection bar, the undo toast, the new-lines pill, the JSON box, the request inspector.
+export { CURSOR_CLASS, LONG_PRESS_MS, ROW_SELECT, ROW_SELECT_AUTO, ROW_SELECT_EVENT, attachRowSelect, rowSelect, rowSelectKeys } from './js/row-select.js';
+export {
+    SELECTION,
+    SELECTION_ACTION_EVENT,
+    SELECTION_CLEAR_EVENT,
+    SELECTION_EVENT,
+    SELECTION_MATCHING_EVENT,
+    SELECTION_NAMES,
+    attachSelectionBars,
+    getSelection,
+    setSelection,
+    setSelectionBusy,
+    setSelectionResult,
+    setSelectionRules,
+} from './js/selection-bar.js';
+/** @typedef {import('./js/selection-bar.js').SelectionItem} SelectionItem */
+export { UNDO_MAX, UNDO_RESTORED_MS, UNDO_TOAST, UNDO_TOAST_EVENT, undoToast } from './js/undo-toast.js';
+export { FOLLOW, FOLLOW_EVENT, FOLLOW_THRESHOLD, NEWPILL_JUMP_EVENT, attachNewPills, newPill } from './js/newpill.js';
+export { JSON_CHECK_MS, JSON_FIELD, JSON_STATE_EVENT, JSON_VALIDATE_EVENT, attachJsonFields, explainJson, jsonField } from './js/json-field.js';
+export {
+    MASK,
+    REQUESTS,
+    REQUESTS_COPY_EVENT,
+    REQUESTS_MAX,
+    REQUESTS_RETRY_EVENT,
+    REQUESTS_TEST_EVENT,
+    SECRET_HEADERS,
+    attachRequestInspectors,
+    setRequests,
+    setRequestsState,
+    toCurl,
+    toJson,
+    toneOf,
+} from './js/request-inspector.js';
+/** @typedef {import('./js/request-inspector.js').CapturedRequest} CapturedRequest */
 // A quantity with minus and plus [kpadopt4].
 export {
     QUANTITY,
