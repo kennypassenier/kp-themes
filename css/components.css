@@ -17097,6 +17097,1505 @@
         }
     }
 
+    /* --- Weekday picker: seven chips, or the days of a month [kpadopt5-time] ---
+ * `.kp-weekdays[data-kp-weekdays]` (js/weekdays.js). The package's chip group in `multi` mode, one chip per day, seven
+ * equal columns so the week reads as a week at any width (a month is the same seven columns, five rows); under the chips the
+ * quick picks (Weekdays, Weekend, Every day), one line in words ("Mon and Thu") and, below the least a schedule needs, the
+ * reason. The line and the reason keep their room, so a pick moves nothing under them.
+ * Knobs [KT6]: --kp-weekdays-gap (--kp-space-sm), --kp-weekdays-max (32rem), --kp-weekdays-chip-height (2.5rem). */
+    .kp-weekdays {
+        container: kp-weekdays / inline-size;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-weekdays-gap, var(--kp-space-sm, 0.5rem));
+        min-inline-size: 0;
+        max-inline-size: var(--kp-weekdays-max, 32rem);
+    }
+
+    .kp-weekdays .kp-weekdays__chips {
+        --kp-chip-pad-inline: var(--kp-space-xs, 0.25rem);
+        display: grid;
+        grid-auto-flow: row;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        grid-auto-columns: auto;
+        gap: var(--kp-weekdays-chip-gap, var(--kp-space-xs, 0.25rem));
+        inline-size: 100%;
+    }
+
+    .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+        justify-content: center;
+        min-block-size: var(--kp-weekdays-chip-height, 2.5rem);
+        padding-inline: var(--kp-space-xs, 0.25rem);
+    }
+
+    /* A day's name is never cut: the label shows whole and the chip's own padding gives way first. */
+    .kp-weekdays .kp-segmented__label {
+        max-inline-size: none;
+        overflow: visible;
+        text-overflow: clip;
+    }
+
+    @container kp-weekdays (max-width: 22rem) {
+        .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+            padding-inline: 0;
+            font-size: var(--kp-text-xs, 0.75rem);
+        }
+    }
+
+    .kp-weekdays .kp-weekdays__chips--month > .kp-segmented__item {
+        min-block-size: var(--kp-weekdays-month-chip-height, 2.25rem);
+    }
+
+    .kp-weekdays__presets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-weekdays__presets[hidden] {
+        display: none;
+    }
+
+    .kp-weekdays__summary {
+        min-block-size: 1lh;
+        margin: 0;
+        color: var(--foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-weekdays__why,
+    .kp-weekdays__reason {
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-weekdays__reason {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    /* One wrong answer, one mark: an outline round the whole group, as a fieldset's [gap-11]. */
+    .kp-weekdays[data-kp-invalid] .kp-weekdays__chips {
+        outline: var(--focus-ring-width, 2px) solid var(--destructive);
+        outline-offset: var(--kp-weekdays-invalid-offset, 0.375rem);
+    }
+
+    .kp-weekdays[data-kp-disabled] .kp-weekdays__presets {
+        pointer-events: none;
+    }
+
+    /* --- Next times: what a repetition really does [kpadopt5-time] ---
+ * `.kp-runs[data-kp-runs]` (js/runs.js). A heading and a plate of rows, one run to a row: the time with its weekday in
+ * rule 52, how far away it is, and a warning mark where the clock is turned before the run or the app names a conflict. The
+ * three columns are one grid for every row, so a long weekday or a short distance moves nothing. The plate keeps the height of
+ * `--kp-runs-count` rows in every state: empty and failed are the package's empty plate and alert, centred over it at heading
+ * size with a normal Try again; loading is the busy card over placeholder rows. Narrower than 26rem of its own a row is two
+ * lines (the time, then the distance and the mark).
+ * Knobs [KT6]: --kp-runs-row (2.75rem, 3.75rem on a phone), --kp-runs-pad, --kp-runs-gap (--kp-space-sm). */
+    .kp-runs {
+        container: kp-runs / inline-size;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-runs-gap, var(--kp-space-sm, 0.5rem));
+        min-inline-size: 0;
+        --kp-runs-row: 2.75rem;
+    }
+
+    .kp-runs__title {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .kp-runs__stage {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        min-block-size: calc(var(--kp-runs-count, 3) * var(--kp-runs-row) + 2px);
+    }
+
+    .kp-runs__stage > * {
+        grid-area: 1 / 1;
+        min-inline-size: 0;
+    }
+
+    .kp-runs__list {
+        box-sizing: border-box;
+        display: grid;
+        grid-template-columns: max-content max-content minmax(0, 1fr);
+        align-content: start;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground, var(--foreground));
+    }
+
+    .kp-runs[data-kp-state='empty'] .kp-runs__list,
+    .kp-runs[data-kp-state='error'] .kp-runs__list {
+        visibility: hidden;
+    }
+
+    .kp-runs__row {
+        display: grid;
+        grid-template-columns: subgrid;
+        grid-column: 1 / -1;
+        align-items: center;
+        column-gap: var(--kp-space-lg, 1.5rem);
+        min-block-size: var(--kp-runs-row);
+        padding: var(--kp-runs-pad, var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem));
+        box-sizing: border-box;
+    }
+
+    .kp-runs__row + .kp-runs__row {
+        border-block-start: 1px solid var(--border);
+    }
+
+    .kp-runs__when {
+        grid-column: 1;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    .kp-runs__row[data-kp-runs-next] .kp-runs__when {
+        font-weight: 600;
+    }
+
+    .kp-runs__rel {
+        grid-column: 2;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-runs__flag {
+        grid-column: 3;
+        justify-self: start;
+        max-inline-size: 100%;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-runs__row--wait {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kp-runs__bar {
+        inline-size: min(16rem, 60%);
+    }
+
+    /* Empty and failed: one note, the stage's whole footprint, centred, at heading size. */
+    .kp-runs__state {
+        display: grid;
+        align-items: stretch;
+    }
+
+    .kp-runs__state[hidden] {
+        display: none;
+    }
+
+    .kp-runs__empty,
+    .kp-runs__failure {
+        box-sizing: border-box;
+        block-size: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-md, 1rem);
+        text-align: center;
+    }
+
+    .kp-runs__failure > .kp-alert__body {
+        flex: none;
+        display: grid;
+        justify-items: center;
+        gap: calc(var(--kp-space-xs, 0.25rem) / 2);
+        max-inline-size: 100%;
+    }
+
+    .kp-runs__empty-title,
+    .kp-runs__failure-title {
+        margin: 0;
+        font-size: var(--kp-text-lg, 1.125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-runs__failure-text {
+        overflow-wrap: anywhere;
+    }
+
+    .kp-runs__more {
+        justify-self: start;
+    }
+
+    @container kp-runs (max-width: 26rem) {
+        .kp-runs {
+            --kp-runs-row: 3.75rem;
+        }
+
+        .kp-runs__list {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-runs__row {
+            display: flex;
+            flex-wrap: wrap;
+            align-content: center;
+            align-items: center;
+            gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        }
+
+        .kp-runs__when {
+            flex: 1 0 100%;
+        }
+    }
+
+    /* --- Snooze picker: "remind me later" with the exact moment of every choice [kpadopt5-time] ---
+ * `.kp-snooze[data-kp-snooze]` (js/snooze.js). A button that opens the package's rich menu (each choice over the exact
+ * moment it means) or, with `data-kp-look="chips"`, one row of two-line chips; a line under it says what is snoozed, with
+ * End snooze beside the button while one is. "Pick a date and time…" opens a panel on the popover plate with the package's
+ * date picker and a time. A busy picker shows the theme's spinner in the button, whose words keep their room.
+ * Knobs [KT6]: --kp-snooze-gap (--kp-space-sm), --kp-snooze-panel-width (22rem), --kp-snooze-time-width (5.5rem),
+ * --kp-snooze-chip-min (12rem). */
+    .kp-snooze {
+        container: kp-snooze / inline-size;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-snooze__bar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-snooze-gap, var(--kp-space-sm, 0.5rem));
+        min-inline-size: 0;
+    }
+
+    .kp-snooze__trigger {
+        position: relative;
+        min-inline-size: var(--kp-snooze-trigger-min, 9.75rem);
+        white-space: nowrap;
+    }
+
+    .kp-snooze__trigger[data-kp-busy] > :not(.kp-button__busy) {
+        visibility: hidden;
+    }
+
+    .kp-snooze__trigger[aria-disabled='true'] {
+        cursor: progress;
+    }
+
+    .kp-snooze__status {
+        min-block-size: 1lh;
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-snooze__status[data-kp-snoozed='true'] {
+        color: var(--foreground);
+    }
+
+    .kp-snooze__end[hidden] {
+        display: none;
+    }
+
+    /* The chip look: each chip is the choice over its moment, one grid of equal cells. */
+    .kp-snooze .kp-snooze__chips {
+        display: grid;
+        grid-auto-flow: row;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, var(--kp-snooze-chip-min, 12rem)), 1fr));
+        grid-auto-columns: auto;
+        flex: 1 1 100%;
+        inline-size: 100%;
+    }
+
+    .kp-snooze .kp-snooze__chips > .kp-snooze__chip {
+        display: grid;
+        align-content: center;
+        justify-content: start;
+        justify-items: start;
+        gap: 0.125rem;
+        min-block-size: 3rem;
+        padding-block: var(--kp-space-xs, 0.25rem);
+        border-radius: var(--radius, 0.5rem);
+        text-align: start;
+        white-space: normal;
+    }
+
+    .kp-snooze__chip-label {
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-snooze__chip-when {
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        opacity: 0.85;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-snooze .kp-snooze__chips > .kp-snooze__chip:disabled {
+        cursor: progress;
+    }
+
+    /* A menu of moments: the choice over its exact time, one line each. */
+    .kp-snooze__list .kp-menu__hint {
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-popover.kp-snooze__panel {
+        position: fixed;
+        position-area: none;
+        box-sizing: border-box;
+        inline-size: min(var(--kp-snooze-panel-width, 22rem), calc(100vw - 1rem));
+        margin: 0;
+        padding: var(--kp-space-md, 1rem);
+        overflow: visible;
+    }
+
+    .kp-snooze__panel[hidden] {
+        display: none;
+    }
+
+    .kp-snooze__panel-title {
+        margin: 0 0 var(--kp-space-sm, 0.5rem);
+        font-weight: 600;
+    }
+
+    .kp-snooze__inputs {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) var(--kp-snooze-time-width, 5.5rem);
+        gap: var(--kp-space-sm, 0.5rem);
+        align-items: start;
+    }
+
+    .kp-snooze__date {
+        min-inline-size: 0;
+    }
+
+    .kp-snooze__time {
+        inline-size: 100%;
+        box-sizing: border-box;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-snooze__panel .kp-field__input[aria-invalid='true'] {
+        border-color: var(--destructive);
+        box-shadow: inset 0 0 0 1px var(--destructive);
+    }
+
+    .kp-snooze__error {
+        min-block-size: 1lh;
+        margin: var(--kp-space-xs, 0.25rem) 0 var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-snooze__actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    @container kp-snooze (max-width: 24rem) {
+        .kp-snooze__bar > .kp-menu-button,
+        .kp-snooze__bar > .kp-menu-button > .kp-snooze__trigger {
+            flex: 1 1 100%;
+            inline-size: 100%;
+        }
+
+        .kp-snooze__end {
+            flex: 1 1 100%;
+        }
+    }
+
+    /* --- Dated option picker: a choice where every option has a date and an age [kpadopt5-time] ---
+ * `.kp-dated[data-kp-dated]` (js/dated-options.js). Up to seven options are radio rows of the package's fieldset
+ * (`data-kp-layout="dated"`): the radio, the option's name (or its date) with a "Latest" badge on the newest, how long ago
+ * under it, and the meta (a size, a kind) in one column at the end, as wide as the widest, so the values line up from row
+ * to row. Longer lists are the package's combobox whose list shows the same two lines. Below 26rem of its own the meta
+ * drops under the name. Every state keeps the height of `--kp-dated-rows` rows: loading is the busy card over placeholder
+ * bars, empty is the page's reason in the empty plate, centred at heading size, failed is the alert with a normal Try again.
+ * Knobs [KT6]: --kp-dated-row (3.5rem), --kp-dated-gap (--kp-space-xs), the tile knobs of a choice as tiles
+ * (--kp-field-tile-pad, -radius, -ground, -ground-checked, -edge-checked). */
+    .kp-dated {
+        container: kp-dated / inline-size;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        min-inline-size: 0;
+        --kp-dated-row: 3.5rem;
+    }
+
+    .kp-dated__stage {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        min-block-size: max(
+            calc(var(--kp-dated-rows, 4) * var(--kp-dated-row) + (var(--kp-dated-rows, 4) - 1) * var(--kp-dated-gap, var(--kp-space-xs, 0.25rem))),
+            var(--kp-dated-keep, 0px)
+        );
+    }
+
+    .kp-dated__stage > * {
+        grid-area: 1 / 1;
+        min-inline-size: 0;
+    }
+
+    .kp-dated__body {
+        align-self: start;
+    }
+
+    .kp-dated[data-kp-picker-kind='combobox'] .kp-dated__stage {
+        min-block-size: calc(var(--kp-dated-rows, 2) * var(--kp-dated-row));
+    }
+
+    .kp-dated[data-kp-state='empty'] .kp-dated__body,
+    .kp-dated[data-kp-state='error'] .kp-dated__body {
+        visibility: hidden;
+    }
+
+    .kp-dated__group {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) max-content;
+        gap: var(--kp-dated-gap, var(--kp-space-xs, 0.25rem));
+        align-content: start;
+    }
+
+    .kp-dated[data-kp-meta-column-off] .kp-dated__group {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .kp-dated__option {
+        box-sizing: border-box;
+        display: grid;
+        grid-template-columns: subgrid;
+        grid-column: 1 / -1;
+        grid-template-rows: auto auto;
+        align-items: start;
+        column-gap: var(--kp-space-sm, 0.5rem);
+        row-gap: 0.125rem;
+        min-block-size: var(--kp-dated-row);
+        padding: var(--kp-field-tile-pad, 0.625rem 0.875rem);
+        border: 1px solid var(--border);
+        border-radius: var(--kp-field-tile-radius, var(--radius, 0.5rem));
+        background: var(--kp-field-tile-ground, var(--card));
+        color: var(--card-foreground, var(--foreground));
+        cursor: pointer;
+    }
+
+    .kp-dated__option > .kp-field__check {
+        grid-column: 1;
+        grid-row: 1 / span 2;
+        align-self: center;
+    }
+
+    .kp-dated__option > .kp-field__option-title,
+    .kp-dated__option > .kp-field__option-hint {
+        grid-column: 2;
+    }
+
+    .kp-dated__option > .kp-field__option-title {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-dated__option > .kp-dated__meta {
+        grid-column: 3;
+        grid-row: 1 / span 2;
+        align-self: center;
+    }
+
+    .kp-dated__hint {
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-dated__meta {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+        white-space: nowrap;
+    }
+
+    .kp-dated__latest {
+        flex: none;
+    }
+
+    @media (hover: hover) {
+        .kp-dated__option:hover:not(:has(> .kp-field__check:disabled)) {
+            border-color: var(--ring);
+        }
+    }
+
+    .kp-dated__option:has(> .kp-field__check:checked) {
+        border-color: var(--kp-field-tile-edge-checked, var(--primary));
+        background: var(--kp-field-tile-ground-checked, color-mix(in oklab, var(--primary) 6%, var(--card)));
+        box-shadow: inset 0 0 0 1px var(--kp-field-tile-edge-checked, var(--primary));
+    }
+
+    .kp-dated__option:has(> .kp-field__check:focus-visible) {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast);
+        outline-offset: var(--kp-focus-ring-inner-width, 2px);
+    }
+
+    .kp-dated__option:has(> .kp-field__check:disabled) {
+        border-style: dashed;
+        background: var(--muted);
+        color: var(--muted-foreground);
+        cursor: not-allowed;
+    }
+
+    /* The list of a long picker: the same two lines, the meta at the end. */
+    .kp-dated__item {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        column-gap: var(--kp-space-md, 0.75rem);
+        row-gap: 0.125rem;
+    }
+
+    .kp-dated__item-name {
+        grid-column: 1;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-dated__item-hint {
+        grid-column: 1;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-dated__item > .kp-dated__meta {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        align-self: center;
+    }
+
+    .kp-dated__wait {
+        display: grid;
+        gap: var(--kp-dated-gap, var(--kp-space-xs, 0.25rem));
+        align-content: start;
+    }
+
+    .kp-dated__bar {
+        block-size: var(--kp-dated-row);
+        border-radius: var(--kp-field-tile-radius, var(--radius, 0.5rem));
+    }
+
+    .kp-dated__state {
+        display: grid;
+        align-items: stretch;
+    }
+
+    .kp-dated__state[hidden] {
+        display: none;
+    }
+
+    .kp-dated__empty,
+    .kp-dated__failure {
+        box-sizing: border-box;
+        block-size: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-md, 1rem);
+        text-align: center;
+    }
+
+    .kp-dated__empty-title,
+    .kp-dated__failure-title {
+        margin: 0;
+        font-size: var(--kp-text-lg, 1.125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-dated__failure > .kp-alert__body {
+        flex: none;
+        display: grid;
+        justify-items: center;
+        gap: calc(var(--kp-space-xs, 0.25rem) / 2);
+        max-inline-size: 100%;
+    }
+
+    .kp-dated__failure-text {
+        overflow-wrap: anywhere;
+    }
+
+    .kp-dated__actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    @container kp-dated (max-width: 26rem) {
+        .kp-dated__group {
+            grid-template-columns: auto minmax(0, 1fr);
+        }
+
+        .kp-dated__option > .kp-dated__meta {
+            grid-column: 2;
+            grid-row: 3;
+            text-align: start;
+        }
+
+        .kp-dated__option > .kp-field__check {
+            grid-row: 1 / span 3;
+        }
+
+        .kp-dated__option {
+            grid-template-rows: auto auto auto;
+        }
+    }
+
+    /* --- Sentence form: a form that reads as a sentence [kpadopt5-time] ---
+ * `.kp-sentence[data-kp-sentence]` (js/sentence.js). Words and fields run on as one paragraph, 1.125rem on a 2.4 line, the
+ * fields between the words: each `.kp-sentence__field` wraps one of the package's inputs (an input, a select, a combobox,
+ * the weekday picker) and draws it inline, by default an underline in the primary colour (`data-kp-look="boxed"` a small box).
+ * The sentence wraps like text; a field wider than most of the line goes on a line of its own, the full width
+ * (`data-kp-own-line`, written by the script). Invalid is a destructive underline and the line under the sentence; disabled
+ * is dashed and dimmed; a field that waits shows its own skeleton at the width it had.
+ * Knobs [KT6]: --kp-sentence-size (1.125rem), --kp-sentence-line (2.4), --kp-sentence-edge (the primary), --kp-sentence-edge-width (2px),
+ * --kp-sentence-gap. */
+    .kp-sentence {
+        --kp-sentence-size: 1.125rem;
+        --kp-sentence-line: 2.4;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-sentence-gap, var(--kp-space-sm, 0.5rem));
+        min-inline-size: 0;
+        margin: 0;
+        padding: 0;
+        border: 0;
+    }
+
+    .kp-sentence[data-kp-sentence-size='md'] {
+        --kp-sentence-size: 1rem;
+        --kp-sentence-line: 2.2;
+    }
+
+    .kp-sentence__text {
+        margin: 0;
+        font-size: var(--kp-sentence-size);
+        line-height: var(--kp-sentence-line);
+        overflow-wrap: break-word;
+    }
+
+    .kp-sentence__when[hidden] {
+        display: none;
+    }
+
+    .kp-sentence__field {
+        position: relative;
+        display: inline-block;
+        vertical-align: baseline;
+        max-inline-size: 100%;
+        margin-inline: 0.125em;
+        line-height: 1.5;
+    }
+
+    .kp-sentence__field .kp-combobox {
+        display: inline-block;
+        vertical-align: baseline;
+        max-inline-size: 100%;
+    }
+
+    .kp-sentence__field > :is(input:where(:not([type='checkbox'], [type='radio'])), select, textarea),
+    .kp-sentence__field .kp-combobox__input {
+        box-sizing: border-box;
+        display: inline-block;
+        inline-size: auto;
+        max-inline-size: 100%;
+        min-block-size: 0;
+        block-size: auto;
+        margin: 0;
+        padding: 0 0.25em;
+        border: 0;
+        border-block-end: var(--kp-sentence-edge-width, 2px) solid var(--kp-sentence-edge, var(--primary));
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+        color: var(--foreground);
+        font: inherit;
+        font-weight: 600;
+        line-height: inherit;
+        appearance: none;
+    }
+
+    .kp-sentence__field > select {
+        padding-inline-end: 1.25em;
+        text-overflow: clip;
+    }
+
+    .kp-sentence__field:has(> select)::after {
+        content: var(--kp-glyph-caret, '▾');
+        position: absolute;
+        inset-block-end: 0.15em;
+        inset-inline-end: 0.3em;
+        color: var(--muted-foreground);
+        font-size: 0.8em;
+        pointer-events: none;
+    }
+
+    @media (hover: hover) {
+        .kp-sentence__field > :is(input, select, textarea):hover:not(:disabled, :focus-visible),
+        .kp-sentence__field .kp-combobox__input:hover:not(:disabled, :focus-visible) {
+            background: hsl(from var(--primary) h s l / 0.06);
+        }
+    }
+
+    .kp-sentence__field > :is(input, select, textarea):focus-visible,
+    .kp-sentence__field .kp-combobox__input:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: 2px;
+        background: hsl(from var(--primary) h s l / 0.06);
+    }
+
+    .kp-sentence[data-kp-look='boxed'] .kp-sentence__field > :is(input:where(:not([type='checkbox'], [type='radio'])), select, textarea),
+    .kp-sentence[data-kp-look='boxed'] .kp-sentence__field .kp-combobox__input {
+        padding: 0 0.5em;
+        border: 1px solid var(--input);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--background);
+    }
+
+    .kp-sentence[data-kp-look='boxed'] .kp-sentence__field > select {
+        padding-inline-end: 1.5em;
+    }
+
+    .kp-sentence__field > [aria-invalid='true'],
+    .kp-sentence__field .kp-combobox__input[aria-invalid='true'] {
+        border-color: var(--destructive);
+    }
+
+    .kp-sentence__field > :disabled {
+        border-block-end-style: dashed;
+        color: var(--muted-foreground);
+        cursor: not-allowed;
+    }
+
+    .kp-sentence__field[data-kp-state='loading'] > :not(.kp-sentence__skeleton) {
+        visibility: hidden;
+    }
+
+    .kp-sentence__field[data-kp-state='loading']::after {
+        content: none;
+    }
+
+    .kp-sentence__skeleton {
+        position: absolute;
+        inset: 0;
+        display: block;
+    }
+
+    .kp-sentence__bar {
+        --kp-skeleton-block: 100%;
+        block-size: 100%;
+        min-block-size: 0;
+    }
+
+    /* A field too wide to share the line: a line of its own, the full width. */
+    .kp-sentence__field[data-kp-own-line] {
+        display: block;
+        inline-size: 100%;
+        margin-inline: 0;
+        margin-block: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-sentence__field[data-kp-own-line] > :is(input:where(:not([type='checkbox'], [type='radio'])), select, textarea),
+    .kp-sentence__field[data-kp-own-line] .kp-combobox__input {
+        inline-size: 100%;
+    }
+
+    .kp-sentence__field[data-kp-own-line] .kp-combobox {
+        display: block;
+    }
+
+    .kp-sentence__field > .kp-weekdays {
+        font-size: var(--kp-text-md, 1rem);
+        line-height: 1.5;
+    }
+
+    .kp-sentence__why {
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-sentence__why[hidden] {
+        display: none;
+    }
+
+    .kp-sentence__reason {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-sentence[disabled] .kp-sentence__text {
+        color: var(--muted-foreground);
+    }
+
+    /* --- Slider: one value, or two thumbs, with the value in a box beside it [kpadopt5-time] ---
+ * `.kp-slider[data-kp-slider]` (js/slider.js). The native `<input type="range">` carries the keyboard, the screen reader
+ * and the touch; the package draws the rail, the fill, the thumb and the value box. The thumb is drawn 1.375rem across inside
+ * a 2.75rem box that is the touch target (44 px), and the rail runs from one thumb centre to the other, so the fill is
+ * exact at both ends. A range is two inputs laid over one rail, that never cross. Below 26rem of its own the value box
+ * goes under the track. Ticks and a bubble over the thumb while it is dragged are options; a waiting slider shows the
+ * package's skeleton over its track and box at their final size.
+ * Knobs [KT6]: --kp-slider-thumb (2.75rem, the target), --kp-slider-rail (0.375rem), --kp-slider-fill, --kp-slider-thumb-fill,
+ * --kp-slider-thumb-edge, --kp-slider-length (10rem, vertical), --kp-slider-gap. */
+    .kp-slider {
+        container: kp-slider / inline-size;
+        --kp-slider-thumb: 2.75rem;
+        --kp-slider-rail: 0.375rem;
+        --kp-slider-from: 0;
+        --kp-slider-to: 0.5;
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-slider__body {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: start;
+        column-gap: var(--kp-slider-gap, var(--kp-space-md, 0.75rem));
+        min-inline-size: 0;
+    }
+
+    .kp-slider[data-kp-slider-show='none'] .kp-slider__body,
+    .kp-slider[data-kp-slider-show='bubble'] .kp-slider__body {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .kp-slider__track {
+        position: relative;
+        min-inline-size: 0;
+        block-size: var(--kp-slider-thumb);
+    }
+
+    .kp-slider[data-kp-slider-show='bubble'] .kp-slider__track,
+    .kp-slider[data-kp-slider-show='both'] .kp-slider__track {
+        margin-block-start: 1.875rem;
+    }
+
+    .kp-slider__track[data-kp-ticks] {
+        margin-block-end: 1.5rem;
+    }
+
+    .kp-slider__rail {
+        position: absolute;
+        inset-inline: calc(var(--kp-slider-thumb) / 2);
+        inset-block-start: 50%;
+        block-size: var(--kp-slider-rail);
+        translate: 0 -50%;
+        box-sizing: border-box;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-radius-pill, 999px);
+        background: var(--muted);
+        overflow: hidden;
+    }
+
+    .kp-slider__fill {
+        position: absolute;
+        inset-block: 0;
+        inset-inline-start: calc(var(--kp-slider-from) * 100%);
+        inline-size: calc((var(--kp-slider-to) - var(--kp-slider-from)) * 100%);
+        background: var(--kp-slider-fill, var(--primary));
+    }
+
+    .kp-slider__input {
+        --kp-slider-thumb-art: radial-gradient(
+            circle at 50% 50%,
+            var(--kp-slider-thumb-fill, var(--background)) 0 0.5rem,
+            var(--kp-slider-thumb-edge, var(--primary)) 0.5rem 0.6875rem,
+            transparent 0.75rem
+        );
+        position: absolute;
+        inset: 0;
+        box-sizing: border-box;
+        inline-size: 100%;
+        block-size: 100%;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        appearance: none;
+        cursor: pointer;
+        outline: none;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .kp-slider[data-kp-slider-kind='range'] .kp-slider__input {
+        pointer-events: none;
+    }
+
+    .kp-slider__input::-webkit-slider-runnable-track {
+        background: transparent;
+        border: 0;
+    }
+
+    .kp-slider__input::-moz-range-track {
+        background: transparent;
+        border: 0;
+    }
+
+    .kp-slider__input::-webkit-slider-thumb {
+        box-sizing: border-box;
+        inline-size: var(--kp-slider-thumb);
+        block-size: var(--kp-slider-thumb);
+        border: 0;
+        border-radius: 0;
+        background: var(--kp-slider-thumb-art);
+        appearance: none;
+        pointer-events: auto;
+        cursor: grab;
+    }
+
+    .kp-slider__input::-moz-range-thumb {
+        box-sizing: border-box;
+        inline-size: var(--kp-slider-thumb);
+        block-size: var(--kp-slider-thumb);
+        border: 0;
+        border-radius: 0;
+        background: var(--kp-slider-thumb-art);
+        pointer-events: auto;
+        cursor: grab;
+    }
+
+    .kp-slider__input:focus-visible {
+        --kp-slider-thumb-art:
+            radial-gradient(
+                circle at 50% 50%,
+                transparent 0 0.8125rem,
+                var(--focus-ring-contrast, var(--focus-ring)) 0.8125rem 1rem,
+                transparent 1.0625rem
+            ),
+            radial-gradient(
+                circle at 50% 50%,
+                var(--kp-slider-thumb-fill, var(--background)) 0 0.5rem,
+                var(--kp-slider-thumb-edge, var(--primary)) 0.5rem 0.6875rem,
+                transparent 0.75rem
+            );
+    }
+
+    .kp-slider__input:active::-webkit-slider-thumb {
+        cursor: grabbing;
+    }
+
+    .kp-slider__input:active::-moz-range-thumb {
+        cursor: grabbing;
+    }
+
+    .kp-slider__input:disabled {
+        --kp-slider-thumb-art: radial-gradient(circle at 50% 50%, var(--muted) 0 0.5rem, var(--border-strong) 0.5rem 0.6875rem, transparent 0.75rem);
+        cursor: not-allowed;
+    }
+
+    .kp-slider[data-kp-disabled] .kp-slider__fill,
+    .kp-slider__input:disabled ~ .kp-slider__rail .kp-slider__fill {
+        background: var(--border-strong);
+    }
+
+    /* The marks along the track, with their words under them. */
+    .kp-slider__ticks {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-start: calc(50% + var(--kp-slider-rail) / 2 + 0.375rem);
+        pointer-events: none;
+    }
+
+    .kp-slider__tick {
+        position: absolute;
+        inset-inline-start: calc(var(--kp-slider-thumb) / 2 + (100% - var(--kp-slider-thumb)) * var(--kp-slider-at));
+        translate: -50% 0;
+        display: grid;
+        justify-items: center;
+        gap: 0.125rem;
+    }
+
+    .kp-slider__tick::before {
+        content: '';
+        inline-size: 1px;
+        block-size: 0.375rem;
+        background: var(--border-strong);
+    }
+
+    .kp-slider__tick-label {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+    }
+
+    /* The bubble over a thumb, while it is dragged or has the focus. */
+    .kp-slider__bubble {
+        position: absolute;
+        inset-block-end: calc(100% - 0.375rem);
+        inset-inline-start: calc(var(--kp-slider-thumb) / 2 + (100% - var(--kp-slider-thumb)) * var(--kp-slider-at-0, 0));
+        translate: -50% 0;
+        box-sizing: border-box;
+        padding: 0.125rem 0.5rem;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--popover, var(--card));
+        color: var(--popover-foreground, var(--foreground));
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        pointer-events: none;
+        visibility: hidden;
+    }
+
+    .kp-slider__bubble[data-kp-thumb='1'] {
+        inset-inline-start: calc(var(--kp-slider-thumb) / 2 + (100% - var(--kp-slider-thumb)) * var(--kp-slider-at-1, 1));
+    }
+
+    .kp-slider[data-kp-dragging] .kp-slider__bubble,
+    .kp-slider:has(.kp-slider__input:focus-visible) .kp-slider__bubble {
+        visibility: visible;
+    }
+
+    /* The value box: a small field with the number, the unit after it; the width is the longest value's, so it never moves. */
+    .kp-slider__fields {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        block-size: var(--kp-slider-thumb);
+    }
+
+    .kp-slider__field-wrap {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-slider__field {
+        box-sizing: content-box;
+        inline-size: calc(var(--kp-slider-field-ch, 4) * 1ch);
+        text-align: end;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-slider__field[readonly] {
+        text-align: center;
+    }
+
+    .kp-slider__field[aria-invalid='true'] {
+        border-color: var(--destructive);
+        box-shadow: inset 0 0 0 1px var(--destructive);
+    }
+
+    .kp-slider__unit,
+    .kp-slider__dash {
+        color: var(--muted-foreground);
+        white-space: nowrap;
+    }
+
+    .kp-slider__why {
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-slider__why[hidden] {
+        display: none;
+    }
+
+    .kp-slider__reason {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-slider__skeleton {
+        position: absolute;
+        inset: 0;
+        display: block;
+    }
+
+    .kp-slider__skeleton[hidden] {
+        display: none;
+    }
+
+    .kp-slider__bar {
+        --kp-skeleton-block: 100%;
+        block-size: 100%;
+        min-block-size: 0;
+    }
+
+    /* A vertical slider: the track stands up, the box goes under it. */
+    .kp-slider[data-kp-vertical] {
+        justify-items: start;
+    }
+
+    .kp-slider[data-kp-vertical] .kp-slider__body {
+        grid-template-columns: auto;
+        justify-items: start;
+        row-gap: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-slider[data-kp-vertical] .kp-slider__track {
+        inline-size: var(--kp-slider-thumb);
+        block-size: var(--kp-slider-length, 10rem);
+        margin: 0;
+    }
+
+    .kp-slider[data-kp-vertical] .kp-slider__input {
+        writing-mode: vertical-lr;
+        direction: rtl;
+    }
+
+    .kp-slider[data-kp-vertical] .kp-slider__rail {
+        inset-inline: auto;
+        inset-block: calc(var(--kp-slider-thumb) / 2);
+        inset-inline-start: 50%;
+        inline-size: var(--kp-slider-rail);
+        block-size: auto;
+        translate: -50% 0;
+    }
+
+    .kp-slider[data-kp-vertical] .kp-slider__fill {
+        inset-block: auto;
+        inset-inline: 0;
+        inset-block-end: calc(var(--kp-slider-from) * 100%);
+        block-size: calc((var(--kp-slider-to) - var(--kp-slider-from)) * 100%);
+        inline-size: auto;
+    }
+
+    @container kp-slider (max-width: 26rem) {
+        .kp-slider__body {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .kp-slider__fields {
+            block-size: auto;
+            justify-content: flex-end;
+        }
+    }
+
+    /* --- Unsaved-changes bar: "2 changes", Save and Discard, in the header and at the foot of the screen [kpadopt5-time] ---
+ * `.kp-unsaved[data-kp-unsaved]` (js/unsaved.js). In the page header's actions: a chip with the count that opens the list of
+ * `key old → new` (each with its own Revert), Discard and Save with its count; while nothing is changed the same place says
+ * "No changes" with Save and Discard off, each carrying the reason, so the header never changes size. When the header has been
+ * scrolled out of view and something is changed, the same bar stands at the foot of the screen on the theme's raised plate
+ * (`data-kp-docked`, fixed to the window, or absolute in the nearest positioned ancestor with `data-kp-dock="container"`),
+ * and its place in the header keeps its size. Where there is less than 30rem for it Discard goes behind a More menu
+ * (`data-kp-compact`). Saving shows the theme's spinner in Save; refused changes are an alert above the bar.
+ * Knobs [KT6]: --kp-unsaved-gap (--kp-space-sm), --kp-unsaved-dock-width (40rem), --kp-unsaved-panel-width (26rem),
+ * --kp-unsaved-dock-offset (--kp-space-md, the bar's distance from the screen's foot), --kp-unsaved-count-min (7rem) and
+ * --kp-unsaved-save-min (9rem), the least widths of the chip and of Save, so the header does not shift as the count grows. */
+    .kp-unsaved {
+        position: relative;
+        display: inline-grid;
+        align-items: center;
+        min-inline-size: var(--kp-unsaved-w, 0);
+        min-block-size: max(var(--kp-unsaved-h, 0px), var(--kp-control-height, 2.25rem));
+        max-inline-size: 100%;
+    }
+
+    .kp-unsaved[data-kp-docked='container'] {
+        position: static;
+    }
+
+    .kp-unsaved__bar {
+        grid-area: 1 / 1;
+        justify-self: end;
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        gap: var(--kp-unsaved-gap, var(--kp-space-sm, 0.5rem));
+        min-inline-size: 0;
+        max-inline-size: 100%;
+    }
+
+    .kp-unsaved__none {
+        min-inline-size: var(--kp-unsaved-count-min, 7rem);
+        text-align: end;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        white-space: nowrap;
+    }
+
+    .kp-unsaved__none[hidden],
+    .kp-unsaved__count[hidden],
+    .kp-unsaved__problem[hidden],
+    .kp-unsaved__panel[hidden] {
+        display: none;
+    }
+
+    .kp-unsaved__count {
+        box-sizing: border-box;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-block-size: 2rem;
+        min-inline-size: var(--kp-unsaved-count-min, 7rem);
+        padding-inline: var(--kp-space-md, 0.75rem);
+        border: 1px solid transparent;
+        text-align: center;
+        font: inherit;
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-weight: 600;
+        white-space: nowrap;
+        cursor: pointer;
+    }
+
+    .kp-unsaved__count:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: 2px;
+    }
+
+    .kp-unsaved__actions {
+        display: flex;
+        align-items: center;
+        gap: var(--kp-unsaved-gap, var(--kp-space-sm, 0.5rem));
+    }
+
+    .kp-unsaved__discard,
+    .kp-unsaved__save,
+    .kp-unsaved__more-button {
+        position: relative;
+        white-space: nowrap;
+    }
+
+    .kp-unsaved__bar :is(button, [role='button'])[aria-disabled='true'] {
+        opacity: var(--kp-field-disabled-opacity, 0.55);
+        cursor: not-allowed;
+    }
+
+    .kp-unsaved__save {
+        min-inline-size: var(--kp-unsaved-save-min, 9rem);
+    }
+
+    .kp-unsaved__save[data-kp-busy] > :not(.kp-button__busy) {
+        visibility: hidden;
+    }
+
+    .kp-unsaved__save[aria-busy='true'] {
+        opacity: 1;
+        cursor: progress;
+    }
+
+    .kp-unsaved__more {
+        display: none;
+    }
+
+    .kp-unsaved__bar[data-kp-compact] .kp-unsaved__discard {
+        display: none;
+    }
+
+    /* Compact: the count over the buttons, Save taking what More leaves; nothing reaches past the header. */
+    .kp-unsaved:has(> .kp-unsaved__bar[data-kp-compact]) {
+        display: grid;
+        inline-size: 100%;
+    }
+
+    .kp-unsaved__bar[data-kp-compact] {
+        flex-wrap: wrap;
+        justify-self: stretch;
+        justify-content: flex-start;
+    }
+
+    .kp-unsaved__bar[data-kp-compact] > :is(.kp-unsaved__none, .kp-unsaved__count) {
+        flex: 1 1 100%;
+        min-inline-size: 0;
+        text-align: start;
+    }
+
+    .kp-unsaved__bar[data-kp-compact] > .kp-unsaved__count {
+        flex: 0 0 auto;
+    }
+
+    .kp-unsaved__bar[data-kp-compact] > .kp-unsaved__actions {
+        flex: 1 1 100%;
+    }
+
+    .kp-unsaved__bar[data-kp-compact] .kp-unsaved__save {
+        flex: 1 1 auto;
+        min-inline-size: 0;
+    }
+
+    .kp-unsaved__bar[data-kp-compact] .kp-unsaved__more {
+        display: inline-flex;
+    }
+
+    .kp-unsaved__bar[data-kp-compact] .kp-unsaved__more > .kp-menu {
+        inset-inline-end: 0;
+    }
+
+    /* At the foot of the screen: the theme's raised plate, centred. */
+    .kp-unsaved[data-kp-docked] > .kp-unsaved__bar {
+        position: fixed;
+        z-index: var(--kp-z-sticky, 40);
+        inset-inline: 0;
+        inset-block-end: max(var(--kp-unsaved-dock-offset, var(--kp-space-md, 1rem)), env(safe-area-inset-bottom, 0px));
+        box-sizing: border-box;
+        inline-size: min(var(--kp-unsaved-dock-width, 40rem), calc(100vw - 1rem));
+        margin-inline: auto;
+        justify-content: space-between;
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--popover, var(--card));
+        color: var(--popover-foreground, var(--foreground));
+        box-shadow: 0 0.5rem 1.5rem hsl(from var(--foreground) h s l / 0.18);
+    }
+
+    .kp-unsaved[data-kp-docked='container'] > .kp-unsaved__bar {
+        position: absolute;
+    }
+
+    /* What was refused: an alert under the bar in the header, over it at the foot. */
+    .kp-unsaved__problem {
+        position: absolute;
+        z-index: calc(var(--kp-z-sticky, 40) + 1);
+        inset-block-start: calc(100% + var(--kp-space-sm, 0.5rem));
+        inset-inline-end: 0;
+        inline-size: min(26rem, calc(100vw - 1rem));
+    }
+
+    .kp-unsaved[data-kp-docked] > .kp-unsaved__problem {
+        position: fixed;
+        inset-block: auto calc(var(--kp-unsaved-dock-offset, var(--kp-space-md, 1rem)) + 4.5rem);
+        inset-inline: 0;
+        inline-size: min(var(--kp-unsaved-dock-width, 40rem), calc(100vw - 1rem));
+        margin-inline: auto;
+    }
+
+    .kp-unsaved[data-kp-docked='container'] > .kp-unsaved__problem {
+        position: absolute;
+    }
+
+    .kp-unsaved__alert {
+        align-items: flex-start;
+    }
+
+    .kp-unsaved__alert-title {
+        display: block;
+    }
+
+    .kp-unsaved__alert-list {
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        padding-inline-start: 1.25rem;
+        overflow-wrap: anywhere;
+    }
+
+    /* The list of changes, on the popover plate. */
+    .kp-popover.kp-unsaved__panel {
+        position: fixed;
+        position-area: none;
+        box-sizing: border-box;
+        inline-size: min(var(--kp-unsaved-panel-width, 26rem), calc(100vw - 1rem));
+        margin: 0;
+        padding: var(--kp-space-md, 0.75rem);
+        overflow: visible;
+    }
+
+    .kp-unsaved__panel-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-sm, 0.5rem);
+        margin-block-end: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-unsaved__panel-title {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .kp-unsaved__entries {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        max-block-size: 18rem;
+        margin: 0;
+        padding: 0;
+        overflow-y: auto;
+        list-style: none;
+    }
+
+    .kp-unsaved__entry {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        column-gap: var(--kp-space-sm, 0.5rem);
+        row-gap: 0.125rem;
+        padding: var(--kp-space-xs, 0.25rem) 0;
+        border-block-start: 1px solid var(--border);
+    }
+
+    .kp-unsaved__entry:first-child {
+        border-block-start: 0;
+    }
+
+    .kp-unsaved__jump {
+        grid-column: 1;
+        justify-self: start;
+        padding: 0;
+        border: 0;
+        background: none;
+        color: var(--foreground);
+        font: inherit;
+        font-weight: 600;
+        text-align: start;
+        text-decoration: underline dotted;
+        text-underline-offset: 0.2em;
+        overflow-wrap: anywhere;
+        cursor: pointer;
+    }
+
+    .kp-unsaved__jump:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: 2px;
+    }
+
+    .kp-unsaved__diff {
+        grid-column: 1;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0 var(--kp-space-xs, 0.25rem);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-unsaved__was {
+        color: var(--muted-foreground);
+    }
+
+    .kp-unsaved__arrow {
+        color: var(--muted-foreground);
+    }
+
+    .kp-unsaved__now {
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .kp-unsaved__revert {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+    }
+
     /* --- Compare slider: two versions, a divider between them [kpadopt4-ideas] ---
  * `.kp-compare[data-kp-compare]` (js/compare.js). The before and after panes lie on top of each other in one grid
  * cell; the before pane shows on the start side of the divider and the after pane on the end side, each cut by

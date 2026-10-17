@@ -737,6 +737,114 @@
  * @property {string} rangeErrorOrder  A window whose end does not come after its start [kpadopt4-ideas]
  * @property {string} rangeErrorFuture  A window that ends in the future [kpadopt4-ideas]
  * @property {(days: number) => string} rangeErrorSpan  A window longer than the picker allows [kpadopt4-ideas]
+ * @property {string} weekdaysGroup  The weekday picker's name when the page gives none (js/weekdays.js) [kpadopt5-time]
+ * @property {string[]} weekdaysShort  The short day names, Monday first: "Mon" [kpadopt5-time]
+ * @property {string[]} weekdaysNarrow  The one-letter day names, Monday first: "M" [kpadopt5-time]
+ * @property {string[]} weekdaysLong  The full day names, Monday first, a chip's hint and name [kpadopt5-time]
+ * @property {string} weekdaysLast  The month picker's chip for the last day [kpadopt5-time]
+ * @property {string} weekdaysLastDay  The last day of the month in words [kpadopt5-time]
+ * @property {string} weekdaysAnd  The word that joins the last two days of a list: "Mon and Thu" [kpadopt5-time]
+ * @property {string} weekdaysPresets  The quick picks' group name for a screen reader [kpadopt5-time]
+ * @property {string} weekdaysPresetWeekdays  The quick pick for Monday to Friday [kpadopt5-time]
+ * @property {string} weekdaysPresetWeekend  The quick pick for Saturday and Sunday [kpadopt5-time]
+ * @property {string} weekdaysPresetEvery  The quick pick for all seven days [kpadopt5-time]
+ * @property {string} weekdaysNone  The line while no day is picked [kpadopt5-time]
+ * @property {string} weekdaysEvery  The line for all seven days [kpadopt5-time]
+ * @property {string} weekdaysWeekdays  The line for Monday to Friday [kpadopt5-time]
+ * @property {string} weekdaysWeekend  The line for Saturday and Sunday [kpadopt5-time]
+ * @property {(n: number) => string} weekdaysOrdinal  A day of the month in words: "1st", "22nd" [kpadopt5-time]
+ * @property {(list: string) => string} weekdaysOnThe  The days of a month in a sentence: "On the 1st and 15th" [kpadopt5-time]
+ * @property {(n: number) => string} weekdaysMin  What a picker below its least says: "Pick at least one day" [kpadopt5-time]
+ * @property {string} runsTitle  The heading over a next-times list (js/runs.js) [kpadopt5-time]
+ * @property {string} runsNow  A run that is due now, where "in 2 days" would stand [kpadopt5-time]
+ * @property {(distance: string) => string} runsIn  How far away a run is: "in 2 days" [kpadopt5-time]
+ * @property {(hours: number) => string} runsClockChange  The mark on a run after the clock was turned, positive hours forward: "Clock goes back 1 h" [kpadopt5-time]
+ * @property {(n: number) => string} runsMore  The button that shows the times past the count: "Show 10 more" [kpadopt5-time]
+ * @property {string} runsFewer  The same button once they are shown [kpadopt5-time]
+ * @property {string} runsEmpty  An empty list's sentence when the page gives none [kpadopt5-time]
+ * @property {string} runsFailed  A failed list's first line [kpadopt5-time]
+ * @property {string} runsRetry  The failed list's button [kpadopt5-time]
+ * @property {string} runsLoading  What the busy card says while the times are worked out [kpadopt5-time]
+ * @property {(moment: string) => string} runsNext  What the status region says when the first run changes [kpadopt5-time]
+ * @property {string} snoozeTrigger  The snooze picker's button while nothing is snoozed (js/snooze.js) [kpadopt5-time]
+ * @property {string} snoozeChange  The same button while a snooze is in force [kpadopt5-time]
+ * @property {string} snoozeChoicesLabel  The chip row's name for a screen reader [kpadopt5-time]
+ * @property {(key: string) => string} snoozeIn  A length as a choice: "In 4 hours" [kpadopt5-time]
+ * @property {(time: string) => string} snoozeTonight  "This evening 18:00" [kpadopt5-time]
+ * @property {(time: string) => string} snoozeTomorrow  "Tomorrow 09:00" [kpadopt5-time]
+ * @property {(time: string) => string} snoozeMonday  "Monday 09:00" [kpadopt5-time]
+ * @property {(time: string) => string} snoozeNextWeek  "Next week 09:00" [kpadopt5-time]
+ * @property {string} snoozeLast  The last custom moment, offered at the top [kpadopt5-time]
+ * @property {string} snoozePick  The choice that opens the date and time panel [kpadopt5-time]
+ * @property {string} snoozePickHint  What stands under that choice [kpadopt5-time]
+ * @property {string} snoozePickTitle  The panel's title [kpadopt5-time]
+ * @property {string} snoozeDateLabel  The panel's date field name [kpadopt5-time]
+ * @property {string} snoozeTimeLabel  The panel's time field name [kpadopt5-time]
+ * @property {string} snoozeApply  The panel's confirm button [kpadopt5-time]
+ * @property {string} snoozeCancel  The panel's cancel button [kpadopt5-time]
+ * @property {(moment: string) => string} snoozeUntil  The line while snoozed: "Snoozed until Mon 20/10/2026 09:00 · in 2 days" [kpadopt5-time]
+ * @property {string} snoozeNone  The line while nothing is snoozed [kpadopt5-time]
+ * @property {string} snoozeEnd  The button that ends a snooze [kpadopt5-time]
+ * @property {string} snoozeSaving  Why the choices are off while the page saves [kpadopt5-time]
+ * @property {string} snoozeErrorDate  A date that is not a whole dd/mm/yyyy [kpadopt5-time]
+ * @property {string} snoozeErrorTime  A time that is not a time of day [kpadopt5-time]
+ * @property {string} snoozeErrorPast  A moment that has passed [kpadopt5-time]
+ * @property {(days: number) => string} snoozeErrorMax  A moment past the longest a reminder may be put off [kpadopt5-time]
+ * @property {string} datedGroup  A dated option picker's name when the page gives none (js/dated-options.js) [kpadopt5-time]
+ * @property {string} datedLatest  The badge on the newest option [kpadopt5-time]
+ * @property {string} datedJustNow  An option made under a minute ago [kpadopt5-time]
+ * @property {(distance: string) => string} datedAgo  How long ago an option was made: "3 days ago" [kpadopt5-time]
+ * @property {string} datedSearch  The search field's placeholder, for a long list [kpadopt5-time]
+ * @property {(name: string) => string} datedChosen  What the status region says when an option is chosen [kpadopt5-time]
+ * @property {string} datedEmpty  An empty picker's sentence when the page gives none [kpadopt5-time]
+ * @property {string} datedFailed  A failed picker's first line [kpadopt5-time]
+ * @property {string} datedRetry  The failed picker's button [kpadopt5-time]
+ * @property {string} datedLoading  What the busy card says while the options load [kpadopt5-time]
+ * @property {(label: string) => string} sentenceEmpty  What a sentence's summary says for a field with nothing in it: "(At)" (js/sentence.js) [kpadopt5-time]
+ * @property {(field: string, why: string) => string} sentenceWhy  The line under a sentence that names the field that is wrong: "At: Type a time of day." [kpadopt5-time]
+ * @property {string} sentenceField  The name of a control that has none and no words before it [kpadopt5-time]
+ * @property {string} sliderGroup  A slider's name when the page gives none (js/slider.js) [kpadopt5-time]
+ * @property {(label: string) => string} sliderMin  The lower thumb's and box's name: "Temperature, minimum" [kpadopt5-time]
+ * @property {(label: string) => string} sliderMax  The upper thumb's and box's name: "Temperature, maximum" [kpadopt5-time]
+ * @property {(label: string) => string} sliderValue  The value box's name: "Temperature, value" [kpadopt5-time]
+ * @property {(min: string, max: string, unit: string) => string} sliderInvalid  The line under a slider for a typed value that is not a number in range [kpadopt5-time]
+ * @property {(gap: string, unit: string) => string} sliderGap  The line for a typed value that would bring the two thumbs too close [kpadopt5-time]
+ * @property {string} unsavedGroup  The unsaved-changes bar's name for a screen reader (js/unsaved.js) [kpadopt5-time]
+ * @property {string} unsavedNone  The line while nothing is changed [kpadopt5-time]
+ * @property {(n: number) => string} unsavedCount  The chip: "2 changes" [kpadopt5-time]
+ * @property {(n: number) => string} unsavedSave  The Save button with its count: "Save 2 changes" [kpadopt5-time]
+ * @property {string} unsavedSaveNone  The Save button while nothing is changed [kpadopt5-time]
+ * @property {string} unsavedDiscard  The Discard button [kpadopt5-time]
+ * @property {string} unsavedMore  The menu that holds Discard on a narrow bar [kpadopt5-time]
+ * @property {string} unsavedDiscardChanges  Its Discard entry [kpadopt5-time]
+ * @property {string} unsavedDiscardHint  What it does [kpadopt5-time]
+ * @property {string} unsavedShowChanges  Its entry that opens the list [kpadopt5-time]
+ * @property {string} unsavedShowHint  What it does [kpadopt5-time]
+ * @property {string} unsavedNothingToSave  Why Save and Discard are off while nothing is changed [kpadopt5-time]
+ * @property {string} unsavedSavingNow  Why they are off while saving [kpadopt5-time]
+ * @property {string} unsavedListTitle  The list of changes' name [kpadopt5-time]
+ * @property {string} unsavedGoFirst  The button that takes you to the first changed row [kpadopt5-time]
+ * @property {(key: string) => string} unsavedGoTo  A change's name as a link to its row [kpadopt5-time]
+ * @property {string} unsavedRevert  A change's own revert button [kpadopt5-time]
+ * @property {(key: string) => string} unsavedRevertOne  That button's accessible name [kpadopt5-time]
+ * @property {string} unsavedUnnamed  A change whose row has no name [kpadopt5-time]
+ * @property {string} unsavedSecret  A secret's value in the list [kpadopt5-time]
+ * @property {string} unsavedOn  A switch that is on, in the list [kpadopt5-time]
+ * @property {string} unsavedOff  A switch that is off, in the list [kpadopt5-time]
+ * @property {string} unsavedEmpty  An empty value, in the list [kpadopt5-time]
+ * @property {(n: number) => string} unsavedDropped  What the toast says after Discard: "Dropped 2 changes" [kpadopt5-time]
+ * @property {string} unsavedUndo  Its Undo button [kpadopt5-time]
+ * @property {(n: number) => string} unsavedRestoredUndo  What is said after Undo [kpadopt5-time]
+ * @property {(n: number) => string} unsavedRestored  The toast when kept changes come back after a reload [kpadopt5-time]
+ * @property {(n: number) => string} unsavedSavedAll  What is said when every change was saved [kpadopt5-time]
+ * @property {(saved: number, refused: number) => string} unsavedPartly  The alert's first line when some were refused: "1 saved, 1 refused" [kpadopt5-time]
+ * @property {(n: number) => string} unsavedRefused  The alert's first line when none was saved [kpadopt5-time]
+ * @property {(key: string, why: string) => string} unsavedWhy  One refused change and its reason [kpadopt5-time]
+ * @property {string} unsavedDismiss  The alert's close [kpadopt5-time]
+ * @property {string} unsavedLeaveTitle  The question on following a link with unsaved changes [kpadopt5-time]
+ * @property {(n: number) => string} unsavedLeaveText  Its sentence [kpadopt5-time]
+ * @property {string} unsavedLeaveAccept  Its leave button [kpadopt5-time]
+ * @property {string} unsavedLeaveStay  Its stay button [kpadopt5-time]
  * @property {string} compareBefore  The compare slider's label on the before side (js/compare.js) [kpadopt4-ideas]
  * @property {string} compareAfter  Its label on the after side [kpadopt4-ideas]
  * @property {(before: string, after: string) => string} compareSlider  The divider's name for a screen reader [kpadopt4-ideas]
@@ -1719,6 +1827,131 @@ export const DEFAULT_STRINGS = Object.freeze({
     rangeErrorOrder: 'The end must come after the start.',
     rangeErrorFuture: 'The end lies in the future.',
     rangeErrorSpan: (days) => `A range spans at most ${days} days.`,
+    // The weekday picker (js/weekdays.js) [kpadopt5-time].
+    weekdaysGroup: 'Days',
+    weekdaysShort: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    weekdaysNarrow: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
+    weekdaysLong: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    weekdaysLast: 'Last',
+    weekdaysLastDay: 'last day',
+    weekdaysAnd: 'and',
+    weekdaysPresets: 'Quick picks',
+    weekdaysPresetWeekdays: 'Weekdays',
+    weekdaysPresetWeekend: 'Weekend',
+    weekdaysPresetEvery: 'Every day',
+    weekdaysNone: 'No day picked',
+    weekdaysEvery: 'Every day',
+    weekdaysWeekdays: 'Every weekday',
+    weekdaysWeekend: 'Every weekend',
+    weekdaysOrdinal: (n) => {
+        const rest = n % 100;
+        const suffix = rest >= 11 && rest <= 13 ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' }[n % 10] ?? 'th');
+        return `${n}${suffix}`;
+    },
+    weekdaysOnThe: (list) => `On the ${list}`,
+    weekdaysMin: (n) => (n === 1 ? 'Pick at least one day.' : `Pick at least ${n} days.`),
+    // The next-times list (js/runs.js) [kpadopt5-time].
+    runsTitle: 'Next times',
+    runsNow: 'now',
+    runsIn: (distance) => `in ${distance}`,
+    runsClockChange: (hours) => `Clock goes ${hours > 0 ? 'forward' : 'back'} ${Math.abs(hours)} h`,
+    runsMore: (n) => `Show ${n} more`,
+    runsFewer: 'Show fewer',
+    runsEmpty: 'No time to show yet.',
+    runsFailed: 'Could not work out the next times',
+    runsRetry: 'Try again',
+    runsLoading: 'Working out the next times…',
+    runsNext: (moment) => `Next run: ${moment}`,
+    // The snooze picker (js/snooze.js) [kpadopt5-time].
+    snoozeTrigger: 'Remind me later',
+    snoozeChange: 'Snooze again',
+    snoozeChoicesLabel: 'Remind me',
+    snoozeIn: (key) => {
+        const m = /^(\d+)\s*([mhdw])$/.exec(key.trim().toLowerCase());
+        if (!m) return key;
+        const n = Number(m[1]);
+        const unit = /** @type {Record<string, string>} */ ({ m: 'minute', h: 'hour', d: 'day', w: 'week' })[m[2]];
+        return `In ${n} ${unit}${n === 1 ? '' : 's'}`;
+    },
+    snoozeTonight: (time) => `This evening ${time}`,
+    snoozeTomorrow: (time) => `Tomorrow ${time}`,
+    snoozeMonday: (time) => `Monday ${time}`,
+    snoozeNextWeek: (time) => `Next week ${time}`,
+    snoozeLast: 'Your last pick',
+    snoozePick: 'Pick a date and time…',
+    snoozePickHint: 'Any moment in the next days',
+    snoozePickTitle: 'Remind me on',
+    snoozeDateLabel: 'Date (dd/mm/yyyy)',
+    snoozeTimeLabel: 'Time (HH:MM, 24 hours)',
+    snoozeApply: 'Snooze',
+    snoozeCancel: 'Cancel',
+    snoozeUntil: (moment) => `Snoozed until ${moment}`,
+    snoozeNone: 'Not snoozed',
+    snoozeEnd: 'End snooze',
+    snoozeSaving: 'Saving the reminder',
+    snoozeErrorDate: 'Type a whole date, dd/mm/yyyy.',
+    snoozeErrorTime: 'Type a time of day, 00:00 to 23:59.',
+    snoozeErrorPast: 'Pick a moment in the future.',
+    snoozeErrorMax: (days) => `A reminder can be at most ${days} days away.`,
+    // The dated option picker (js/dated-options.js) [kpadopt5-time].
+    datedGroup: 'Options',
+    datedLatest: 'Latest',
+    datedJustNow: 'just now',
+    datedAgo: (distance) => `${distance} ago`,
+    datedSearch: 'Search by date or name',
+    datedChosen: (name) => `${name} chosen`,
+    datedEmpty: 'Nothing to choose yet.',
+    datedFailed: 'Could not load the options',
+    datedRetry: 'Try again',
+    datedLoading: 'Loading the options…',
+    // The sentence form (js/sentence.js) [kpadopt5-time].
+    sentenceEmpty: (label) => `(${label || '…'})`,
+    sentenceWhy: (field, why) => `${field}: ${why}`,
+    sentenceField: 'Field',
+    // The slider (js/slider.js) [kpadopt5-time].
+    sliderGroup: 'Value',
+    sliderMin: (label) => `${label}, minimum`,
+    sliderMax: (label) => `${label}, maximum`,
+    sliderValue: (label) => `${label}, value`,
+    sliderInvalid: (min, max, unit) => `Type a number from ${min} to ${max}${unit ? ` ${unit}` : ''}.`,
+    sliderGap: (gap, unit) => `The two values must be at least ${gap}${unit ? ` ${unit}` : ''} apart.`,
+    // The unsaved-changes bar (js/unsaved.js) [kpadopt5-time].
+    unsavedGroup: 'Unsaved changes',
+    unsavedNone: 'No changes',
+    unsavedCount: (n) => `${n} ${n === 1 ? 'change' : 'changes'}`,
+    unsavedSave: (n) => `Save ${n} ${n === 1 ? 'change' : 'changes'}`,
+    unsavedSaveNone: 'Save',
+    unsavedDiscard: 'Discard',
+    unsavedMore: 'More',
+    unsavedDiscardChanges: 'Discard changes',
+    unsavedDiscardHint: 'Put every value back; you can undo it',
+    unsavedShowChanges: 'Show the changes',
+    unsavedShowHint: 'What was, and what it is now',
+    unsavedNothingToSave: 'Nothing has changed yet.',
+    unsavedSavingNow: 'Saving the changes.',
+    unsavedListTitle: 'Unsaved changes',
+    unsavedGoFirst: 'Go to the first',
+    unsavedGoTo: (key) => `Go to ${key}`,
+    unsavedRevert: 'Revert',
+    unsavedRevertOne: (key) => `Revert ${key}`,
+    unsavedUnnamed: 'Unnamed setting',
+    unsavedSecret: '••••••',
+    unsavedOn: 'on',
+    unsavedOff: 'off',
+    unsavedEmpty: '(empty)',
+    unsavedDropped: (n) => `Dropped ${n} ${n === 1 ? 'change' : 'changes'}`,
+    unsavedUndo: 'Undo',
+    unsavedRestoredUndo: (n) => `${n} ${n === 1 ? 'change' : 'changes'} back`,
+    unsavedRestored: (n) => `${n} ${n === 1 ? 'change' : 'changes'} kept from before you left`,
+    unsavedSavedAll: (n) => `Saved ${n} ${n === 1 ? 'change' : 'changes'}`,
+    unsavedPartly: (saved, refused) => `${saved} saved, ${refused} refused`,
+    unsavedRefused: (n) => (n === 1 ? 'Could not save 1 change' : `Could not save ${n} changes`),
+    unsavedWhy: (key, why) => `${key}: ${why}`,
+    unsavedDismiss: 'Dismiss',
+    unsavedLeaveTitle: 'Leave without saving?',
+    unsavedLeaveText: (n) => `${n} ${n === 1 ? 'change is' : 'changes are'} not saved yet and will be lost if you leave.`,
+    unsavedLeaveAccept: 'Leave',
+    unsavedLeaveStay: 'Stay',
     // The compare slider [kpadopt4-ideas].
     compareBefore: 'Before',
     compareAfter: 'After',

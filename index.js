@@ -168,6 +168,98 @@ export {
 } from './js/countdown.js';
 export { TIMER_DISC, TIMER_DISC_LEFT, attachTimerDiscs, discShare, timerDiscOf } from './js/timer-disc.js';
 export { RANGE, RANGE_EVENT, RANGE_PRESETS, attachRanges, parseTime, presetMs, rangeFaults, rangeMoment, rangeOf, setRange } from './js/range.js';
+export {
+    UNSAVED,
+    UNSAVED_CHANGE_EVENT,
+    UNSAVED_DISCARD_EVENT,
+    UNSAVED_LEAVE_EVENT,
+    UNSAVED_REVERT_EVENT,
+    UNSAVED_SAVE_EVENT,
+    UNSAVED_UNDO_EVENT,
+    attachUnsaved,
+    discardUnsaved,
+    markUnsavedClean,
+    setUnsavedSaving,
+    unsaved,
+    unsavedSaved,
+} from './js/unsaved.js';
+export {
+    SLIDER,
+    SLIDER_CHANGE_EVENT,
+    SLIDER_INPUT_EVENT,
+    SLIDER_STATES,
+    attachSliders,
+    parseSliderText,
+    setSliderState,
+    setSliderValues,
+    slider,
+    sliderPercent,
+    sliderValues,
+    snapSlider,
+} from './js/slider.js';
+export {
+    SENTENCE,
+    SENTENCE_EVENT,
+    attachSentences,
+    sentence,
+    sentenceSummary,
+    setSentenceFieldState,
+    setSentenceInvalid,
+    setSentenceWhy,
+} from './js/sentence.js';
+export {
+    DATED,
+    DATED_EVENT,
+    DATED_RETRY_EVENT,
+    DATED_STATES,
+    attachDatedOptions,
+    datedAge,
+    datedOptions,
+    datedValue,
+    orderDated,
+    setDatedOptions,
+    setDatedState,
+} from './js/dated-options.js';
+export {
+    SNOOZE,
+    SNOOZE_CHOICES,
+    SNOOZE_END_EVENT,
+    SNOOZE_EVENT,
+    attachSnoozes,
+    dayAt,
+    openSnoozePanel,
+    setSnoozeBusy,
+    setSnoozedUntil,
+    snooze,
+    snoozeChoices,
+} from './js/snooze.js';
+export {
+    RUNS,
+    RUNS_RETRY_EVENT,
+    RUNS_STATES,
+    attachRuns,
+    clockShift,
+    runMoment,
+    runs,
+    runsRelative,
+    setRuns,
+    setRunsState,
+    zoneOffset,
+} from './js/runs.js';
+export {
+    WEEKDAYS,
+    WEEKDAYS_EVENT,
+    WEEKDAY_PRESETS,
+    attachWeekdays,
+    dayNames,
+    dayNumber,
+    joinWords,
+    monthSummary,
+    setWeekdays,
+    weekdaySummary,
+    weekdays,
+    weekdaysOf,
+} from './js/weekdays.js';
 export { COMPARE, COMPARE_EVENT, attachCompares, compareKey, setCompare } from './js/compare.js';
 export { NOTICES, NOTICES_END_QUIET_EVENT, NOTICES_INBOX_EVENT, NOTICES_READ_ALL_EVENT, NOTICES_RETRY_EVENT, NOTICES_SOURCE_EVENT, NOTICE_FIX_EVENT, NOTICE_READ_EVENT, NOTICE_SEVERITIES, attachNotices, noticesOf, setNotices } from './js/notices.js';
 export { QUESTIONS, QUESTION_ANSWER_EVENT, QUESTION_DISMISS_EVENT, QUESTION_EXPIRE_EVENT, QUESTION_URGENT_AT, askQuestion, attachQuestions, questionOf } from './js/question-card.js';

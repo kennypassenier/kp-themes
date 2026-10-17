@@ -44,6 +44,14 @@ const STATUS = '[data-kp-combobox-status]';
 const TAGS = '[data-kp-tag-list]';
 const EMPTY = '[data-kp-combobox-empty]';
 
+/**
+ * What an option reads as once chosen: its `data-kp-label` when it has one (an option drawn in two lines, a name and
+ * its detail, is chosen by its name alone), else its text [kpadopt5-time].
+ * @param {HTMLElement | null | undefined} option
+ * @param {string} [fallback]
+ */
+const labelOf = (option, fallback = '') => option?.dataset.kpLabel ?? (option?.textContent ?? fallback).trim();
+
 /** Announced when the list changes; the words come from the dictionary [KT5]. */
 const RESULTS_TEXT = /** @param {number} n */ (n) => {
     const s = getStrings();
@@ -281,7 +289,7 @@ export function attachComboboxes(
             // what a person reads in the field, the VALUE is what the
             // consumer gets in the event. `data-value` is optional, so an
             // option without one uses its own text for both.
-            const label = (option.textContent ?? '').trim();
+            const label = labelOf(option);
             const value = option.dataset.value ?? label;
             if (isTags) {
                 addTag(value, label);
@@ -430,14 +438,14 @@ export function attachComboboxes(
                         if (!duplicates && chosen.includes(value)) continue;
                         chosen.push(value);
                         const option = optionFor(value);
-                        tagList?.append(tagElement(value, (option?.textContent ?? value).trim()));
+                        tagList?.append(tagElement(value, labelOf(option, value)));
                     }
                     filter();
                     announce(values[values.length - 1] ?? '', '', 'set');
                 } else {
                     const value = values[0] ?? '';
                     const option = optionFor(value);
-                    input.value = (option?.textContent ?? value).trim();
+                    input.value = labelOf(option, value);
                     announce(value, input.value, 'set');
                 }
             },

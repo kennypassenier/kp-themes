@@ -17,6 +17,7 @@
         "kp-compare",
         "kp-connection",
         "kp-countdown",
+        "kp-dated",
         "kp-facet",
         "kp-facets",
         "kp-flash",
@@ -47,6 +48,12 @@
         "kp-secret",
         "kp-segmented",
         "kp-shortcuts-pending",
+        "kp-runs",
+        "kp-secret",
+        "kp-segmented",
+        "kp-sentence",
+        "kp-slider",
+        "kp-snooze",
         "kp-stackbar",
         "kp-stateplate",
         "kp-statuslist",
@@ -60,8 +67,10 @@
         "kp-toolbar",
         "kp-transfer",
         "kp-type-confirm",
+        "kp-unsaved",
         "kp-uptime",
         "kp-week",
+        "kp-weekdays",
         "kp-wheel"
     ]
 }

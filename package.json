@@ -168,6 +168,34 @@
             "types": "./js/range.d.ts",
             "default": "./js/range.js"
         },
+        "./js/unsaved": {
+            "types": "./js/unsaved.d.ts",
+            "default": "./js/unsaved.js"
+        },
+        "./js/slider": {
+            "types": "./js/slider.d.ts",
+            "default": "./js/slider.js"
+        },
+        "./js/sentence": {
+            "types": "./js/sentence.d.ts",
+            "default": "./js/sentence.js"
+        },
+        "./js/dated-options": {
+            "types": "./js/dated-options.d.ts",
+            "default": "./js/dated-options.js"
+        },
+        "./js/snooze": {
+            "types": "./js/snooze.d.ts",
+            "default": "./js/snooze.js"
+        },
+        "./js/runs": {
+            "types": "./js/runs.d.ts",
+            "default": "./js/runs.js"
+        },
+        "./js/weekdays": {
+            "types": "./js/weekdays.d.ts",
+            "default": "./js/weekdays.js"
+        },
         "./js/compare": {
             "types": "./js/compare.d.ts",
             "default": "./js/compare.js"

@@ -2154,6 +2154,137 @@ first frame; while an image loads the theme's skeleton covers the box, and an im
 `compareBefore`, `compareAfter`, `compareSlider`, `compareValue` and `compareFailed`. Knobs: `--kp-compare-ratio`,
 `--kp-compare-line` (2px), `--kp-compare-handle` (2.25rem), `--kp-compare-ink` (--primary).
 
+### Days of the week and of the month
+
+The days a schedule runs on, as chips with a line in words under them:
+
+```html
+<div class="kp-weekdays" data-kp-weekdays data-kp-value="1,4" aria-label="Run on"></div>
+```
+
+`attachWeekdays(root)` (`js/weekdays.js`, attached by `js/auto.js`) builds the package's chip group in `multi` mode: seven chips of
+one width, the week starting where the locale's week starts (Monday for nl-BE and en-GB; `data-kp-week-starts-on` says it
+outright), the quick picks Weekdays, Weekend and Every day, and a line in words ("Mon and Thu", "Every weekday"). All seven
+days is a real choice, so the group never falls back to "All". `data-kp-days="month"` draws 1 to 31 and Last; `data-kp-min`
+(1) is the fewest days a schedule needs, and below it the group says so under the chips and in `aria-describedby`. A value is
+a list of numbers (0 is Sunday) or names. `kp-weekdays-change` carries `{ values, summary, valid }`; `setWeekdays(el, values)`
+sets the days without the event, `weekdaysOf(el)` reads them. The words are `weekdays…` in the dictionary. Knobs:
+`--kp-weekdays-gap`, `--kp-weekdays-max` (32rem), `--kp-weekdays-chip-height` (2.5rem).
+### The next times of a schedule
+
+Under a repetition, the times it will really run:
+
+```html
+<div class="kp-runs" data-kp-runs data-kp-runs-count="3"></div>
+```
+
+The page works out the times (it owns the rule); `setRuns(el, times, { reason })` draws them (`js/runs.js`, attached by `js/auto.js`).
+A time is a number of ms, an ISO string or a Date, or `{ at, conflict }` with a sentence the page words. Each row shows the time
+with its weekday in rule 52, in Europe/Brussels unless `data-kp-time-zone` says otherwise, how far away it is ("in 12 h 55 min",
+"in 2 days"; `data-kp-runs-relative="false"` leaves it out) and an amber mark where the clock is turned before the run
+("Clock goes back 1 h") or a conflict is named (`data-kp-runs-warn="false"` leaves the marks out). `data-kp-runs-more="10"` adds
+"Show 10 more" for times past the count. No times is the empty state with `reason` ("Pick a time") centred at heading size;
+`setRunsState(el, 'loading')` lays the busy card over placeholder rows and `'error'` shows the alert with Try again, which fires
+`kp-runs-retry`; every state keeps the height of `count` rows. A fixed clock, `data-kp-now="2026-10-17T14:05:00+02:00"`, is
+for a demo or a test. The words are `runs…` in the dictionary. Knobs: `--kp-runs-row` (2.75rem), `--kp-runs-pad`, `--kp-runs-gap`.
+### Remind me later
+
+Put a reminder off with a few quick choices, each over the exact moment it means:
+
+```html
+<div class="kp-snooze" data-kp-snooze data-kp-snooze-choices="1h 4h tonight tomorrow monday pick"></div>
+```
+
+`attachSnoozes(root)` (`js/snooze.js`, attached by `js/auto.js`) builds a button that opens the package's rich menu, or with
+`data-kp-look="chips"` a row of chips. The default choices are the mix Kenny chose: in 1 hour, in 4 hours, this evening
+(`data-kp-snooze-evening`, 18:00), tomorrow (`data-kp-snooze-morning`, 09:00), Monday and a date and time of your own; any
+length in m, h, d or w and `next-week` work too. Each shows the exact moment, "Sun 18/10/2026 09:00 · in 18 h 55 min"
+(Europe/Brussels unless `data-kp-time-zone`). A choice that has passed is left out, as is one past `data-kp-snooze-max` (7d).
+A choice fires `kp-snooze` with `{ until, choice }` (an ISO moment); the page stores it and calls
+`setSnoozedUntil(el, iso)` to show "Snoozed until …" with End snooze (`kp-snooze-end`), and `setSnoozeBusy(el, true)` while it
+saves. `snoozeChoices({ now, … })` is the same list as a pure function, for a server or a test. The words are `snooze…`.
+### Options with a date and an age
+
+A choice of snapshots, backups or versions, where every option carries its moment:
+
+```html
+<div class="kp-dated" data-kp-dated aria-label="Snapshot to restore"></div>
+```
+
+The page hands over the options, `setDatedOptions(el, [{ value, when, meta, label?, disabled? }])` (`js/dated-options.js`, attached by
+`js/auto.js`). `when` (ISO, ms or a Date) is the moment: the component writes "3 days ago" and the date in rule 52 (Europe/Brussels);
+`meta` is a short text the page has formatted (`formatBytes`); `label` names the option (the date stands in without it); `disabled`
+is the sentence that says why it cannot be chosen. Up to `data-kp-picker-inline-max` (7) options draw as radio rows of one group,
+the meta in one column; beyond that a search field and a list of the same two lines (`data-kp-picker="radio"` or `"combobox"`
+forces one). The newest is ordered first, labelled Latest (`data-kp-latest="none"`) and chosen (`data-kp-preselect="false"`);
+`data-kp-order` is `newest`, `oldest` or `given`. Typing letters on the rows chooses the option whose name starts with them.
+`kp-dated-change` carries `{ value, option }`; `datedValue(el)` reads the choice and the radios carry `data-kp-name` for a form.
+States: `setDatedState(el, 'loading')` lays the busy card over placeholder rows, `'empty'` shows the page's `reason` and `action`
+centred, `'error'` the alert whose Try again fires `kp-dated-retry`; each keeps the height the picker had (`data-kp-rows` says how many
+rows the first load keeps). The words are `dated…`. Knobs: `--kp-dated-row` (3.5rem), `--kp-dated-gap`.
+### A form that reads as a sentence
+
+"Run [backup] on [nextcloud] every [week] at [03:00]": the fields stand inside the words.
+
+```html
+<fieldset class="kp-sentence" data-kp-sentence>
+    <p class="kp-sentence__text">
+        Run <span class="kp-sentence__field"><select name="job" aria-label="What to run">…</select></span>
+        at <span class="kp-sentence__field"><input name="at" size="5" value="03:00" aria-label="At (HH:MM)" /></span>.
+    </p>
+</fieldset>
+```
+
+`attachSentences(root)` (`js/sentence.js`, attached by `js/auto.js`) keeps every field's own behaviour and draws it inline: an
+underline in the primary colour in semibold (`data-kp-look="boxed"` draws a small box; `data-kp-sentence-size="md"` makes the
+text 1rem). The sentence wraps like text; a field whose natural width is more than 70 % of the line (`data-kp-own-line-ratio`)
+takes a line of its own, the full width (`data-kp-narrow="stack"` does it for every field below 30rem, `flow` never;
+`data-kp-block` on a field always). `data-kp-show-when="how=once"` on a phrase shows it only then (a comma lists values) and
+takes its controls out of reach. Give every control an `aria-label` (the words round it are not its label): a status region says
+the whole sentence ("Run backup on nextcloud every week at 03:00.") after a change, `sentenceSummary(el)` reads the same text, and
+`kp-sentence-change` carries it. Enter in the last field submits the form. `setSentenceInvalid(el, 'at', why)` underlines a control
+in red and writes the line under the sentence that names it; `setSentenceFieldState(field, 'loading')` shows the field's own
+skeleton at the width it had; `disabled` on the fieldset with `data-kp-disabled-reason` says why it is off. The words are
+`sentence…`. Knobs: `--kp-sentence-size`, `--kp-sentence-line`, `--kp-sentence-edge`.
+### A slider
+
+One value, or a range with two thumbs, with the number in a box you can type in:
+
+```html
+<div class="kp-slider" data-kp-slider data-kp-min="10" data-kp-max="30" data-kp-step="0.5" data-kp-value="21" data-kp-unit="°C" aria-label="Temperature"></div>
+```
+
+`attachSliders(root)` (`js/slider.js`, attached by `js/auto.js`) builds the track around the native `input[type=range]` (or around the one or
+two you wrote yourself), which keeps the keyboard, the screen reader and the touch: the arrows step, Shift with an arrow steps ten
+times as far, Page Up and Page Down a tenth of the range, Home and End the ends; `aria-valuetext` says "21 °C". `data-kp-slider="range"`
+is two thumbs (`data-kp-value="20,60"`) that never come closer than `data-kp-min-gap`. The box beside the track shows the number
+(`data-kp-slider-value`: `field`, `bubble`, `both` or `none`); a typed value is read on Enter or when the box loses the focus, snapped
+to the step, and refused with a line under the slider if it is not a number in range, while the thumb keeps its last good value. `data-kp-format` is `number`, `percent`,
+`bytes` or `duration` (the value is seconds; the box is then a readout). `data-kp-ticks="auto"` or `"0,25,50:Half,100"` marks the track,
+`data-kp-default` is what a double-click on a thumb goes back to, `data-kp-commit="input"` makes `kp-slider-change` fire on every move instead of
+on release. `kp-slider-input` and `kp-slider-change` carry `{ values, value, thumb, text }`; `setSliderValues(el, [..])` sets without an event;
+`setSliderState(el, 'loading')` shows the skeleton. The words are `slider…`. Knobs: `--kp-slider-thumb` (2.75rem), `--kp-slider-rail`, `--kp-slider-fill`.
+### Unsaved changes
+
+A bar that says "2 changes", offers Save and Discard, and warns on leaving, in the page header and, once the header is scrolled away, at the foot of the screen:
+
+```html
+<div class="kp-page-header__actions">
+    <div class="kp-unsaved" data-kp-unsaved data-kp-unsaved-for="#settings" data-kp-name="settings"></div>
+</div>
+```
+
+`attachUnsaved(root)` (`js/unsaved.js`, attached by `js/auto.js`) watches the form (or the area `data-kp-unsaved-for` names) and counts the rows marked
+`data-kp-changed` (`.kp-formrow`, `.kp-kv__row`, or any `[data-kp-row]`); it marks them itself as the form is edited, against the values
+the markup carries (`value`, `checked`, `selected` as written; `data-kp-track="app"` leaves the marking to the page). Call `markUnsavedClean(el)` after your own
+script has loaded values into the form. The chip opens the list `key old → new` with a Revert for each change; a password or a `[data-kp-secret]` shows `••••••`.
+Save fires the cancelable `kp-unsaved-save` with `{ changes }` and puts the spinner in the button; answer with
+`unsavedSaved(el, { refused: { 'http.port': 'The port is already used.' } })`: what went through stops counting, what was refused stays marked and the bar says why.
+Discard puts every value back and offers Undo for `data-kp-undo-ms` (6000, 0 for none). Ctrl or Cmd+S saves. `data-kp-warn-leave` (`both`) asks before the tab closes and
+before a link leaves the page (`kp-unsaved-leave`, cancelable, then the package's confirmation). `data-kp-keep="session"` keeps the changes through a reload
+(never `[type=password], [data-kp-secret]`, or what `data-kp-keep-exclude` names) and says so in a toast. `data-kp-placement` is `header+sticky` (default), `header` or
+`sticky-bottom`; for a page that scrolls inside a box use `data-kp-dock="container"` and `data-kp-scroll-root="#box"`. The words are `unsaved…`.
+Knobs: `--kp-unsaved-dock-width`, `--kp-unsaved-dock-offset`, `--kp-unsaved-save-min`.
 <!-- kpadopt4-ideas: next component -->
 
 ## Tables that fit [TH95, TH96]

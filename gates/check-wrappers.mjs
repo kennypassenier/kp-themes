@@ -194,6 +194,36 @@ export const REQUIRED = [
         why: 'The conversation measures its own width and lets a bubble take 85 % of it when narrow; the query reaches only its own bubbles [kpadopt5-people].',
     },
     {
+        container: 'kp-slider',
+        class: 'kp-slider',
+        self: true,
+        why: 'The slider measures its own width and puts the value box under the track on a phone; the query reaches only its own parts [kpadopt5-time].',
+    },
+    {
+        container: 'kp-dated',
+        class: 'kp-dated',
+        self: true,
+        why: 'The dated option picker measures its own width and drops the meta column under the name on a phone; the query reaches only its own parts [kpadopt5-time].',
+    },
+    {
+        container: 'kp-snooze',
+        class: 'kp-snooze',
+        self: true,
+        why: 'The snooze picker measures its own width and stretches its button and End snooze over the line on a phone; the query reaches only its own parts [kpadopt5-time].',
+    },
+    {
+        container: 'kp-runs',
+        class: 'kp-runs',
+        self: true,
+        why: 'The next-times list measures its own width and turns each row into two lines on a phone; the query reaches only its own parts [kpadopt5-time].',
+    },
+    {
+        container: 'kp-weekdays',
+        class: 'kp-weekdays',
+        self: true,
+        why: 'The weekday picker measures its own width and shrinks its chips on a phone; the query reaches only its own parts [kpadopt5-time].',
+    },
+    {
         container: 'kp-range',
         class: 'kp-range',
         self: true,

@@ -3580,6 +3580,226 @@ setGanttState(timeline, 'loading');
         ],
     },
     {
+        id: 'weekdays',
+        title: 'Weekday picker',
+        group: 'Forms',
+        classes: ['kp-weekdays'],
+        exports: [],
+        intro: 'The days a schedule runs on: seven chips (or the days of a month) with the quick picks Weekdays, Weekend and Every day and a line in words under them, “Mon and Thu”. Built on the chip group in multi mode; all seven days is a real choice.',
+        whenToUse: 'A schedule or a repeat that runs on chosen days. For one date use the date picker; for one of a few options use the segmented control.',
+        examples: [
+            {
+                title: 'Mondays and Thursdays',
+                why: 'The markup is the empty box; the script builds the chips, the quick picks and the line.',
+                markup: `
+<div class="kp-weekdays" data-kp-weekdays data-kp-value="1,4" aria-label="Run on"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-days', what: '`week` (default) or `month`: the days 1 to 31 and Last.' },
+            { name: 'data-kp-week-starts-on', what: 'The first day, 0 (Sunday) to 6; the locale’s by default.' },
+            { name: 'data-kp-day-names', what: '`short` (Mon) or `narrow` (M).' },
+            { name: 'data-kp-min', what: 'The fewest days that make a schedule; 1 by default, 0 allows none.' },
+            { name: 'data-kp-presets', what: 'The quick picks, `weekdays,weekend,every`, or `false` for none.' },
+            { name: 'data-kp-value', what: 'The days at first, `1,4` or `mon,thu`.' },
+            { name: 'data-kp-disabled', what: 'The whole picker is off; `data-kp-disabled-reason` says why, under the chips.' },
+        ],
+        accessibility: [
+            'Built in — the chips are one tab stop with arrow keys; each is a toggle button with its full day name; the line in words is read when it changes.',
+            'Yours — name the picker (`aria-label`) after what it chooses, and keep your own copy of the days: the picker holds no data of yours.',
+        ],
+    },
+    {
+        id: 'runs',
+        title: 'Next times',
+        group: 'Data',
+        classes: ['kp-runs'],
+        exports: [],
+        intro: 'The next times a schedule will run, one to a row: the time with its weekday (dd/mm/yyyy HH:MM, Europe/Brussels), how far away it is, and a mark where the clock is turned before a run or the page names a conflict. The page computes the times; the package draws them, in the same height in every state.',
+        whenToUse: 'Under a schedule or repeat, so the person sees what the setting really does. For a run history use the run timeline.',
+        examples: [
+            {
+                title: 'Three nights',
+                why: 'The markup is the empty box; the page hands over the times.',
+                markup: `
+<div class="kp-runs" data-kp-runs data-kp-runs-count="3" data-kp-runs-values="2026-10-18T03:00:00+02:00,2026-10-19T03:00:00+02:00,2026-10-20T03:00:00+02:00"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-runs-count', what: 'How many rows; 3 by default.' },
+            { name: 'data-kp-runs-relative', what: '`false` leaves the “in 2 days” out.' },
+            { name: 'data-kp-runs-warn', what: '`false` leaves the clock-change and conflict marks out.' },
+            { name: 'data-kp-runs-more', what: 'N: a “Show N more” for times past the count.' },
+            { name: 'data-kp-time-zone', what: 'The zone the times are written in; Europe/Brussels by default.' },
+            { name: 'data-kp-now', what: 'A fixed clock (ISO) for a demo or a test.' },
+            { name: 'data-kp-state', what: '`loading` at first; the script writes `ready`, `empty`, `loading` and `error`.' },
+        ],
+        accessibility: [
+            'Built in — each time is a `<time>` with its datetime; a status region says the first run when it changes; the failed state is an alert.',
+            'Yours — word the reason of an empty list (“Pick at least one weekday”) and the conflicts, and name the list after the schedule.',
+        ],
+    },
+    {
+        id: 'snooze',
+        title: 'Snooze picker',
+        group: 'Forms',
+        classes: ['kp-snooze'],
+        exports: [],
+        intro: 'A “remind me later” picker: a button with a menu (or a row of chips) of quick choices, each over the exact moment it means, and a date and time of your own. Choices that have passed or lie too far away are left out.',
+        whenToUse: 'Where a reminder, a notification or a to-do can be put off. For choosing a date only, use the date picker.',
+        examples: [
+            {
+                title: 'The mix',
+                why: 'The markup is the empty box; the script builds the button, the menu and the panel.',
+                markup: `
+<div class="kp-snooze" data-kp-snooze data-kp-snooze-choices="1h 4h tonight tomorrow monday pick"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-snooze-choices', what: 'The choices, space separated: `15m`, `1h`, `4h`, `tonight`, `tomorrow`, `monday`, `next-week`, `pick`.' },
+            { name: 'data-kp-snooze-morning', what: 'What tomorrow, Monday and next week mean; 09:00.' },
+            { name: 'data-kp-snooze-evening', what: 'What tonight means; 18:00.' },
+            { name: 'data-kp-snooze-max', what: 'The longest a reminder may be put off; 7d.' },
+            { name: 'data-kp-look', what: '`menu` (default) or `chips`.' },
+            { name: 'data-kp-snoozed-until', what: 'An ISO moment: shows “Snoozed until …” with End snooze.' },
+            { name: 'data-kp-remember', what: 'A name: the last custom moment is kept across visits.' },
+        ],
+        accessibility: [
+            'Built in — the menu is the package’s menu (arrow keys, Home, End, Esc); the status line is read when it changes; the panel takes the focus and gives it back and names what is wrong in a field.',
+            'Yours — store the moment the event carries, and call `setSnoozedUntil` back; name the picker after what it puts off.',
+        ],
+    },
+    {
+        id: 'dated-options',
+        title: 'Dated option picker',
+        group: 'Forms',
+        classes: ['kp-dated'],
+        exports: [],
+        intro: 'A choice where every option has a date and an age: radio rows with the name (or the date), how long ago, a “Latest” badge on the newest and a size or kind in one column at the end; a searchable list of the same two lines for a long list.',
+        whenToUse: 'Picking a snapshot, a backup or a version. For options without a moment use the radio group; for one date use the date picker.',
+        examples: [
+            {
+                title: 'Snapshots',
+                why: 'The markup is the empty box; the page hands over the options with `setDatedOptions`.',
+                markup: `
+<div class="kp-dated" data-kp-dated aria-label="Snapshot to restore"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-picker', what: '`radio`, `combobox` or `auto` (default): rows up to the inline maximum, a search above it.' },
+            { name: 'data-kp-picker-inline-max', what: 'The longest list drawn as rows; 7.' },
+            { name: 'data-kp-latest', what: '`first` (default) labels the newest; `none`.' },
+            { name: 'data-kp-order', what: '`newest` (default), `oldest` or `given`.' },
+            { name: 'data-kp-meta-column', what: '`false` writes the meta under the name instead of in a column.' },
+            { name: 'data-kp-rows', what: 'The rows a first load or a state keeps the height of.' },
+        ],
+        accessibility: [
+            'Built in — the rows are one radio group with arrow keys and type-ahead; the long list is the package’s combobox; the choice is announced; a disabled option says why in its own text.',
+            'Yours — name the picker after what it restores (`aria-label`), and format the meta (`formatBytes`).',
+        ],
+    },
+    {
+        id: 'sentence',
+        title: 'Sentence form',
+        group: 'Forms',
+        classes: ['kp-sentence'],
+        exports: [],
+        intro: 'A form that reads as a sentence: the fields (an input, a select, a combobox, the weekday picker) stand inside the words, an underline in the primary colour, so you read what will happen as you fill it in. The sentence wraps like text and a field too wide for the line takes a line of its own.',
+        whenToUse: 'A short rule or schedule that is best read as one sentence (“Run backup on nextcloud every Monday at 03:00”). For an ordinary list of fields use the field rows.',
+        examples: [
+            {
+                title: 'A schedule',
+                why: 'Each control carries its own `aria-label`; the words round it are not its label.',
+                markup: `
+<fieldset class="kp-sentence" data-kp-sentence>
+    <p class="kp-sentence__text">
+        Run <span class="kp-sentence__field"><select name="job" aria-label="What to run"><option>backup</option><option>cleanup</option></select></span>
+        at <span class="kp-sentence__field"><input name="at" size="5" value="03:00" aria-label="At (HH:MM)" /></span>.
+    </p>
+</fieldset>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-look', what: '`underline` (default) or `boxed`.' },
+            { name: 'data-kp-sentence-size', what: '`lg` (default, 1.125rem on a 2.4 line) or `md`.' },
+            { name: 'data-kp-narrow', what: '`wrap` (default), `stack` or `flow`: what a narrow screen does.' },
+            { name: 'data-kp-own-line-ratio', what: 'How much of the line a field may take before it goes on a line of its own; 0.7.' },
+            { name: 'data-kp-show-when', what: 'On a phrase: `field=value`; the phrase shows only then.' },
+            { name: 'data-kp-block', what: 'On a field: always a line of its own.' },
+        ],
+        accessibility: [
+            'Built in — a status region says the whole sentence after a change; a hidden phrase is inert and its controls are disabled; an invalid control is marked and described by the line that names it.',
+            'Yours — an `aria-label` on every control (“At”, “How often”): the sentence words are not labels.',
+        ],
+    },
+    {
+        id: 'slider',
+        title: 'Slider',
+        group: 'Forms',
+        classes: ['kp-slider'],
+        exports: [],
+        intro: 'One value, or a range with two thumbs, on the native range input drawn by the package, with the number in a small box beside it that you can type in. Marks, a bubble over the thumb, a unit, a size or duration format and a vertical form are options.',
+        whenToUse: 'A number in a range where the exact value matters less than the feel: a temperature, a volume, a price range. For an exact figure only, use a number field.',
+        examples: [
+            {
+                title: 'Temperature',
+                why: 'The markup is the empty box; the script builds the track, the thumb and the box from the attributes.',
+                markup: `
+<div class="kp-slider" data-kp-slider data-kp-min="10" data-kp-max="30" data-kp-step="0.5" data-kp-value="21" data-kp-unit="°C" aria-label="Temperature"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-slider', what: '`single` (default) or `range`: two thumbs that never cross.' },
+            { name: 'data-kp-slider-value', what: '`field` (default), `bubble`, `both` or `none`: how the number is shown.' },
+            { name: 'data-kp-format', what: '`number` (default), `percent`, `bytes` or `duration`.' },
+            { name: 'data-kp-ticks', what: '`auto` or a list, `0,25,50:Half,100`.' },
+            { name: 'data-kp-commit', what: '`change` (default, on release) or `input`.' },
+            { name: 'data-kp-orientation', what: '`horizontal` (default) or `vertical`.' },
+            { name: 'data-kp-state', what: '`loading` shows the skeleton over track and box.' },
+        ],
+        accessibility: [
+            'Built in — the native range input: arrows, Shift+arrows, Page Up and Down, Home and End, `aria-valuetext` with the unit; the box is a labelled field; a refused value is described by the line under the slider.',
+            'Yours — name the slider (`aria-label`) after what it sets, and do the work on `kp-slider-change`, not on every `kp-slider-input`.',
+        ],
+    },
+    {
+        id: 'unsaved',
+        title: 'Unsaved changes bar',
+        group: 'Forms',
+        classes: ['kp-unsaved'],
+        exports: [],
+        intro: 'A bar that counts the rows you changed (“2 changes”), lists what was and what is, offers Save and Discard with Undo, and warns when you leave. It stands in the page header and, once the header is scrolled out of view, at the foot of the screen.',
+        whenToUse: 'A settings or edit page whose changes are written together. For a single field that saves itself, use the field’s own state.',
+        examples: [
+            {
+                title: 'In a page header',
+                why: 'The bar watches the form and marks the changed rows; the page answers Save.',
+                markup: `
+<div class="kp-unsaved" data-kp-unsaved data-kp-unsaved-for="#settings" data-kp-name="settings"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-placement', what: '`header+sticky` (default), `header` or `sticky-bottom`.' },
+            { name: 'data-kp-dock', what: '`viewport` (default) or `container`, with `data-kp-scroll-root`.' },
+            { name: 'data-kp-track', what: '`auto` (default) marks the rows as they are edited; `app` leaves it to the page.' },
+            { name: 'data-kp-warn-leave', what: '`both` (default), `browser`, `app` or `off`.' },
+            { name: 'data-kp-keep', what: '`session` (default) keeps the changes through a reload; `off`.' },
+            { name: 'data-kp-undo-ms', what: 'How long Undo is offered after Discard; 6000, 0 for none.' },
+            { name: 'data-kp-save-label', what: 'The Save words, `{n}` for the count.' },
+        ],
+        accessibility: [
+            'Built in — the count is announced politely, Save and Discard say why they are off, the list is a dialog with Esc, a refused save is an alert, Ctrl or Cmd+S saves.',
+            'Yours — answer `kp-unsaved-save` with `unsavedSaved`, and name the rows (`.kp-formrow__label`): the list uses them.',
+        ],
+    },
+    {
         id: 'toolbar',
         title: 'List toolbar',
         group: 'Data',
