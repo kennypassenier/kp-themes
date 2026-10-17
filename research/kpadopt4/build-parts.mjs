@@ -67,7 +67,7 @@ for (const [i, part] of parts.entries()) {
     let body = part.body;
     if (!decided)
         for (const [item, left] of open) {
-            if (left.length === 11 && left.join(',') === THEMES) continue;
+            if (left.join(',') === pageThemes.join(',')) continue;
             const tag = new RegExp(`(<section\\b(?:(?!>)[\\s\\S])*?data-review-item="${item}")`);
             body = left.length
                 ? body.replace(tag, `$1 data-review-themes="${left.join(',')}"`)

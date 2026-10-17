@@ -38,26 +38,38 @@
                     "note": "als er check all is moet er ook uncheck all zijn. Fail en empty zijn hier al veel beter, want pakken meer plaats in, maar de lijst zelf is nog wat te klein verticaal, er moeten een minimum aantal items zogezegd zijn zodat als hij geladen is, er minder plaats \"verspringt\" veticaal"
                 }
             ]
+        },
+        {
+            "round": "2",
+            "page": "2026-10-17-r3-cooking-2",
+            "allJudged": false,
+            "comment": "Kenny, 2026-10-17 16:34: formal judged (4 of 68): wheel and cook approved; the dialog showed no row for checklist, which Kenny says is approved; the one note, filed under checklist by the dialog, asks for timer sounds and a spoken message, so it is recorded on timers. The eleven other themes stay open.",
+            "approved": [
+                {
+                    "item": "wheel",
+                    "theme": "formal"
+                },
+                {
+                    "item": "cook",
+                    "theme": "formal"
+                },
+                {
+                    "item": "checklist",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "timers",
+                    "theme": "formal",
+                    "note": "Maybe add a couple of other sound option, like a harsher, more traditional sound, and the option to speak which timer is done like: \"The rice has been cooked, remove it from the heat\""
+                }
+            ]
         }
     ],
     "reopened": [
         {
-            "item": "wheel",
-            "theme": "formal",
-            "reason": "Kenny's notes on dark (2026-10-17 15:37) were component faults: the fix changed the component in every theme, formal included (cook-1017)"
-        },
-        {
-            "item": "cook",
-            "theme": "formal",
-            "reason": "Kenny's notes on dark (2026-10-17 15:37) were component faults: the fix changed the component in every theme, formal included (cook-1017)"
-        },
-        {
             "item": "timers",
-            "theme": "formal",
-            "reason": "Kenny's notes on dark (2026-10-17 15:37) were component faults: the fix changed the component in every theme, formal included (cook-1017)"
-        },
-        {
-            "item": "checklist",
             "theme": "formal",
             "reason": "Kenny's notes on dark (2026-10-17 15:37) were component faults: the fix changed the component in every theme, formal included (cook-1017)"
         }
