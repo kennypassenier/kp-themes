@@ -7021,4 +7021,255 @@ setTransfer(row, { done: 1200000000, total: 4100000000, at: now });
             'Yours — ask `motionAllowed(el)` instead of the media query in your own scripts, so calm mode reaches them too.',
         ],
     },
+    {
+        id: 'autosize',
+        title: 'Growing text box',
+        group: 'Forms',
+        classes: ['kp-autosize'],
+        aliases: ['resize'],
+        exports: [],
+        intro: 'A multiline field that is as tall as its text, from its least rows up to a cap, then scrolls inside. An opt-in attribute on the existing field: nothing that already exists changes. It measures on input, paste, a script writing the value, a change of width and a font arriving, and it never animates its height.',
+        whenToUse: 'A message, a note or a pasted mail, where the whole text should be seen and the Save button should stay in reach. For code or JSON, the JSON box uses the same growth.',
+        examples: [
+            {
+                title: 'A message box',
+                why: 'The attribute is all it takes; rows is the least height and 20 lines is the most.',
+                markup: `
+<div class="kp-field">
+<label class="kp-field__label" for="msg">Message</label>
+<textarea class="kp-field__input kp-field__input--multiline" id="msg" rows="3" maxlength="4000" data-kp-autosize data-kp-counter="chars"></textarea>
+</div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-autosize', what: 'Present: on. `off`: off. Existing fields never change by themselves.' },
+            { name: 'data-kp-autosize-max', what: 'The most lines (20 by default) or `none`; beyond it the box scrolls inside.' },
+            { name: 'data-kp-autosize-engine', what: '`auto` (default: the browser\'s own `field-sizing` where it has it), `css` or `js`.' },
+            { name: 'data-kp-autosize-shrink', what: '`on` (default) gives the height back when text is deleted; `off` keeps the tallest.' },
+            { name: 'data-kp-resize', what: '`vertical` (default) or `none`: the drag handle.' },
+            { name: 'data-kp-counter', what: '`off` (default), `chars`, `lines` or `both`: an exact count under the box; with `maxlength` it reads "1,204 of 4,000".' },
+            { name: 'data-kp-submit-key', what: '`mod-enter`: Ctrl or Command with Enter sends the form, and the shortcut sheet lists it.' },
+            { name: 'data-kp-remember', what: 'A name: an unsent draft is kept on this device and cleared when the form is sent.' },
+            { name: 'data-kp-state', what: '`loading` lays the busy card over the box and makes it read-only; `error` keeps the text and writes the sentence in the error line.' },
+        ],
+        accessibility: [
+            'Built in — the field stays a native textarea; the counter is announced politely only at 90 % and 100 % of the limit; a disabled box says why through `data-kp-disabled-reason`.',
+            'Yours — label the box and give the failed state a sentence that says what to do.',
+        ],
+    },
+    {
+        id: 'anchors',
+        title: 'Link anchors',
+        group: 'Structure',
+        classes: ['kp-anchors', 'kp-anchor'],
+        aliases: ['anchored'],
+        exports: [],
+        intro: 'A small # beside a heading or a row. A press copies a link to exactly that place and the mark says "Copied"; opening such a link scrolls to the place and marks it for two seconds. A link to something that is gone says so in a notice instead of doing nothing.',
+        whenToUse: 'Long pages and lists where one item must be pointed at in a chat: a guide with sections, a list of failed messages.',
+        examples: [
+            {
+                title: 'Headings and a row',
+                why: 'The container asks for the marks; a row says its own id so the link survives a re-sort.',
+                markup: `
+<main data-kp-anchors="both">
+<h2>Restore a backup</h2>
+<table class="kp-table"><tbody><tr data-kp-anchor="dead-4f2a" data-kp-anchor-label="Dead letter 4f2a"><th scope="row">4f2a</th><td>Consumer timed out</td></tr></tbody></table>
+</main>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-anchors', what: '`headings`, `rows`, `both` or `off` (default): opt-in per page.' },
+            { name: 'data-kp-anchor', what: 'On one element: its id, or empty to make one. An id the page already has is never overwritten.' },
+            { name: 'data-kp-anchor-label', what: 'What the target is called in the mark\'s accessible name ("Copy link to Dead letter 4f2a").' },
+            { name: 'data-kp-anchor-levels', what: 'Which headings get a mark: `2,3` by default.' },
+            { name: 'data-kp-anchor-show', what: '`hover` (default: over the heading or row, or the keyboard on it; always on a touch screen), `always` or `touch`.' },
+            { name: 'data-kp-anchor-position', what: '`after` (headings) or `before` (rows).' },
+            { name: 'data-kp-anchor-copy', what: '`url` (default) or `hash`.' },
+            { name: 'data-kp-anchor-target', what: '`highlight` (default) or `none`: mark the place a link lands on.' },
+            { name: 'data-kp-anchor-offset', what: 'A CSS length a sticky bar covers; the page header\'s own height by default.' },
+            { name: 'data-kp-anchor-open', what: '`on` (default) opens a folded `details` first and asks the page to reveal a row on another page; `off`.' },
+            { name: 'data-kp-flash-ms', what: 'How long "Copied" stays on the mark (1500).' },
+        ],
+        accessibility: [
+            'Built in — the mark is a button with the target in its name, a tab stop after the row\'s own controls, always visible to keyboard focus; the copy is announced politely; with the shortcut engine `y` then `l` on a focused row copies its link.',
+            'Yours — give rows the id of the data, never their place in the list.',
+        ],
+    },
+    {
+        id: 'viewer',
+        title: 'Viewer',
+        group: 'Content',
+        classes: ['kp-viewer'],
+        exports: [],
+        intro: 'One thing opened large in a modal dialog: a title, how it is shown, its facts, an exact position, a stage and a foot with the way out. The gallery lightbox and the document preview are both this shell. A loading stage is the theme\'s busy card over the whole stage; a file that fails or cannot be shown is a plate that fills it.',
+        whenToUse: 'You rarely write it yourself: call `openViewer()` when a picture, a file or a long text should be looked at without leaving the page.',
+        examples: [
+            {
+                title: 'Open a viewer',
+                why: 'A script call; the foot always keeps Open in a new tab and Download, so there is a way out.',
+                markup: `
+<button class="kp-button" data-kp-preview="files/report.pdf">Preview the report</button>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-viewer', what: 'Marks the dialog the shell builds.' },
+            { name: 'data-kp-viewer-size', what: '`wide` (about 70 % of the window, 90 % high) or `full`; a phone always gets the whole screen.' },
+            { name: 'data-kp-viewer-action', what: 'Marks a foot button: `open`, `download`, `print`, `copy-link`.' },
+        ],
+        accessibility: [
+            'Built in — a native modal dialog (focus trapped, Escape closes, focus returns to the opener), the title is its name, the position is announced politely.',
+            'Yours — pass a real title; the facts line is for the kind, size and date.',
+        ],
+    },
+    {
+        id: 'document-preview',
+        title: 'Document preview',
+        group: 'Content',
+        classes: ['kp-docpreview', 'kp-docglyph'],
+        aliases: ['preview', 'doc', 'size'],
+        exports: [],
+        intro: 'A PDF, a picture or a text shown in the viewer without downloading it, and the small page with a folded corner that means "a document". The browser\'s own PDF viewer shows a PDF; where it cannot, a plate offers Open in a new tab and Download.',
+        whenToUse: 'A dossier\'s files, a CV, an invoice: anything a person should be able to look at before deciding to keep it.',
+        examples: [
+            {
+                title: 'A file with its icon',
+                why: 'The opener names its file; the icon is markup only.',
+                markup: `
+<span class="kp-docglyph" data-kp-doc-kind="pdf" data-kp-size="md"></span>
+<button class="kp-button" data-kp-preview="files/cv.pdf" data-kp-preview-title="CV" data-kp-preview-page="2">Preview</button>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-preview', what: 'The file\'s address; empty: the opener is off with the reason "No file yet".' },
+            { name: 'data-kp-preview-type', what: '`auto` (default: by extension, then Content-Type), `pdf`, `image` or `text`.' },
+            { name: 'data-kp-preview-engine', what: '`native` (default) or `none`: no frame, only the plate with Open and Download.' },
+            { name: 'data-kp-preview-size', what: '`wide` (default) or `full`.' },
+            { name: 'data-kp-preview-actions', what: 'Foot buttons: `open download` by default, also `print` and `copy-link`.' },
+            { name: 'data-kp-preview-title', what: 'The dialog\'s title; the file\'s plain name by default.' },
+            { name: 'data-kp-preview-page', what: 'Open a PDF on this page (1).' },
+            { name: 'data-kp-preview-sandbox', what: '`strict` (default for text: scripts removed) or `off`.' },
+            { name: 'data-kp-preview-group', what: 'A name: openers that share it step previous and next in the same shell, with an exact "2 of 5".' },
+            { name: 'data-kp-preview-name', what: 'The file name a download is saved as.' },
+            { name: 'data-kp-doc-kind', what: 'On the icon: `pdf`, `doc`, `sheet`, `image`, `text` or `unknown`.' },
+            { name: 'data-kp-doc-lines', what: 'On the icon: 3 to 7 text lines (4; 7 for the large one).' },
+            { name: 'data-kp-state', what: 'On the icon: `missing` draws a faint, dashed empty page.' },
+        ],
+        accessibility: [
+            'Built in — the viewer is a native modal dialog; the icon is named ("PDF document"); keys o, d and p (and the arrows in a group) are listed in the shortcut sheet.',
+            'Yours — pass the file\'s real name as the title.',
+        ],
+    },
+    {
+        id: 'gallery',
+        title: 'Gallery',
+        group: 'Content',
+        classes: ['kp-gallery'],
+        aliases: ['lightbox', 'caption', 'lazy', 'hash', 'chrome', 'zoom'],
+        exports: [],
+        intro: 'A grid of pictures that open large. The lightbox steps with the arrows and the keys, zooms to full size, plays a clip, and stops at the last picture (looping is an option). A picture that fails to load becomes a state tile with Retry, never a broken icon.',
+        whenToUse: 'Photos of a trip, a product, a recipe. For two versions of one picture, the compare slider.',
+        examples: [
+            {
+                title: 'A gallery',
+                why: 'The markup is the empty box; a script gives it its pictures.',
+                markup: `
+<div class="kp-gallery" data-kp-gallery aria-label="Photos"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-grid-columns', what: '`auto` (default: tiles of at least 9rem, two columns on a phone) or 2 to 8.' },
+            { name: 'data-kp-tile-shape', what: '`square` (default) or `ratio`: each picture keeps its own shape.' },
+            { name: 'data-kp-caption', what: '`hover` (default; always on touch), `always` or `none`.' },
+            { name: 'data-kp-lightbox-loop', what: '`off` (default: the end is the end) or `on`.' },
+            { name: 'data-kp-lightbox-preload', what: 'Originals fetched beside the open one: 0, 1 (default) or 2.' },
+            { name: 'data-kp-lightbox-zoom', what: '`on` (default) or `off`.' },
+            { name: 'data-kp-lightbox-chrome', what: '`fade` (default: after 3 s without movement, never when calm) or `always`.' },
+            { name: 'data-kp-lightbox-info', what: '`caption` (default), `details` (adds size) or `off`.' },
+            { name: 'data-kp-lightbox-actions', what: 'More foot buttons: `open`, `download`, `copy-link`.' },
+            { name: 'data-kp-lightbox-hash', what: '`on` (default): the address carries the open picture and the back button closes it first; `off`.' },
+            { name: 'data-kp-hash-prefix', what: 'The word before the id in the address (`photo`).' },
+            { name: 'data-kp-lazy', what: '`on` (default) or `off`: lazy pictures with a box reserved from their size.' },
+            { name: 'data-kp-state', what: '`loading` (busy card over the grid), `empty`, `error` or `ready`.' },
+            { name: 'data-kp-remember', what: 'A name: the last opened picture is kept, with "Continue where you were".' },
+        ],
+        accessibility: [
+            'Built in — every tile is a button named after its picture; the lightbox is a native modal dialog with an exact, announced position; keys are listed in the shortcut sheet and need no AltGr.',
+            'Yours — give every picture an `alt` that says what is in it.',
+        ],
+    },
+    {
+        id: 'uses-map',
+        title: 'Uses map',
+        group: 'Data',
+        classes: ['kp-uses'],
+        aliases: ['lines', 'collapsed', 'dashed', 'density', 'unavailable'],
+        exports: [],
+        intro: 'The second view of the matrix: sources in one column, the things that use them in the other, a line for each use. A card lights its lines and dims the rest on hover or focus and pins on a press. Under 640 px the lines give way to a list of cards with their users as chips.',
+        whenToUse: 'One glance at what depends on what: which CV an application uses, which secret feeds which stack. For a full cross-check of every pair, keep the grid view.',
+        examples: [
+            {
+                title: 'The lines view',
+                why: 'The same box as the matrix; a script gives it its rows, columns and cell function.',
+                markup: `
+<div class="kp-matrix" data-kp-matrix data-kp-view="lines" aria-label="What uses what"></div>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-view', what: '`grid` (default, unchanged) or `lines`.' },
+            { name: 'data-kp-lines-side', what: '`sources-left` (default) or `sources-right`.' },
+            { name: 'data-kp-lines-shape', what: '`curve` (default), `elbow` or `straight`.' },
+            { name: 'data-kp-lines-light', what: '`both` (default: hover or focus lights, a press pins), `hover`, `pick` or `off`.' },
+            { name: 'data-kp-lines-count', what: '`on` (default) shows the exact number of uses on each source, `off`.' },
+            { name: 'data-kp-lines-empty-sources', what: '`show` (default: "Not used") or `hide`.' },
+            { name: 'data-kp-lines-collapse-below', what: 'The width in px under which the lines give way to the list (640).' },
+        ],
+        accessibility: [
+            'Built in — the lines are hidden from assistive technology; every card says the relation in words ("CV Developer NL, used by 3: Deloitte, Takto"); one tab stop with arrow keys, Home and End, Space pins, Enter opens the link, Escape lets go.',
+            'Yours — give every node a label; give a node nobody can open a `disabledReason`.',
+        ],
+    },
+    {
+        id: 'print',
+        title: 'Printing a list',
+        group: 'Content',
+        classes: [],
+        aliases: ['print'],
+        exports: [],
+        intro: 'Ctrl+P on a page with a checklist gives a clean black-and-white sheet: drawn square boxes a pen can tick, no buttons, menus, colour or decoration, groups that stay with their first items, and the date of printing at the foot. Every theme prints the same: paper has no theme.',
+        whenToUse: 'A packing list, a shopping list, a checklist that someone will carry about on paper.',
+        examples: [
+            {
+                title: 'A list and a Print button',
+                why: 'The rules are only for paper; a button is optional because Ctrl+P already works.',
+                markup: `
+<div class="kp-checklist" data-kp-checklist data-kp-print-title="Packing list" aria-label="Packing list"></div>
+<button class="kp-button" data-kp-print-action>Print this list</button>
+`,
+            },
+        ],
+        variants: [
+            { name: 'data-kp-print', what: '`include` or `exclude`: a part the sheet keeps or drops. Navigation, menus, buttons and toasts are dropped by default.' },
+            { name: 'data-kp-print-done', what: '`show` (default: a filled box with a tick, the text kept), `hide` or `strike`.' },
+            { name: 'data-kp-print-box', what: '`square` (default) or `round`.' },
+            { name: 'data-kp-print-groups', what: '`keep` (default) or `columns`: two columns for a long list.' },
+            { name: 'data-kp-print-title', what: 'A title, or `auto`: the page\'s first heading.' },
+            { name: 'data-kp-print-date', what: '`on` (default) or `off`: "Printed dd/mm/yyyy HH:MM" at the foot.' },
+            { name: 'data-kp-print-notes', what: '`show` (default) or `hide`: the detail line of an item.' },
+            { name: 'data-kp-print-notes-lines', what: 'Present: a dotted line under each item for handwritten notes.' },
+            { name: 'data-kp-print-links', what: '`none` (default inside a checklist) or `url`: the address after a link.' },
+            { name: 'data-kp-print-action', what: 'On a button: pressing it prints the page.' },
+            { name: 'data-kp-print-sheet', what: 'Marks a list that is not a checklist but should get the sheet\'s title, state sentence and date.' },
+            { name: 'kp-print-prepare', what: 'Fired on the document just before the sheet is built: `{ sheets }`.' },
+        ],
+        accessibility: [
+            'Built in — a list that is still loading or failed prints its sentence, never a blank sheet; folded groups open for the paper and close again afterwards.',
+            'Yours — give the list a name and, where the page has no heading, a title.',
+        ],
+    },
 ];

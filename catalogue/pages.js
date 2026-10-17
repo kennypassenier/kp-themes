@@ -93,6 +93,12 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
+            // Kenny, 2026-10-17 (kpadopt6, wave media): six new parts for pictures, documents, links and text, formal only until Kenny approves them.
+            {
+                href: 'research/kpadopt6-media/demo.html',
+                label: 'Pictures, documents, links and text: six new parts (what uses what, picture gallery, document preview, growing text box, link anchors, printing a list)',
+                about: 'Six parts the apps draw by hand today, built in the package and shown in formal only: a map of what is used by what, a gallery of pictures that open large, a document preview with its small page icon, a text box that grows with its text, link anchors on headings and rows, and lists that print well.',
+            },
             // Kenny, 2026-10-17 (kpadopt5, rows): ticking rows with the keyboard, the selection bar, the toast with Undo, the pill for new lines, the payload cell, the JSON box and the request inspector, formal first, one topic per part.
             {
                 href: 'research/kpadopt5-rows/demo.html',

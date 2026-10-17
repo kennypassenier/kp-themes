@@ -2788,6 +2788,382 @@ export type Strings = {
      */
     sliderGap: (gap: string, unit: string) => string;
     /**
+     * The counter of a growing text box: "1 204 characters" (js/autosize.js) [kpadopt6-media]
+     */
+    autosizeChars: (n: number, text: string) => string;
+    /**
+     * Its line count: "12 lines" [kpadopt6-media]
+     */
+    autosizeLines: (n: number, text: string) => string;
+    /**
+     * Both counts in one line [kpadopt6-media]
+     */
+    autosizeBoth: (chars: number, charsText: string, lines: number, linesText: string) => string;
+    /**
+     * A count against the limit: "1 204 of 4 000 characters" [kpadopt6-media]
+     */
+    autosizeOf: (text: string, maxText: string) => string;
+    /**
+     * Said politely when the limit is reached [kpadopt6-media]
+     */
+    autosizeFull: (maxText: string) => string;
+    /**
+     * Said politely when 90 % of the limit is used [kpadopt6-media]
+     */
+    autosizeNear: (charsText: string, maxText: string) => string;
+    /**
+     * The sheet's words for Ctrl+Enter submitting the form [kpadopt6-media]
+     */
+    autosizeSubmit: string;
+    /**
+     * The sheet's heading for that key [kpadopt6-media]
+     */
+    autosizeGroup: string;
+    /**
+     * The busy card's words while a box waits for its text [kpadopt6-media]
+     */
+    autosizeLoading: string;
+    /**
+     * The line under a box whose text could not be saved, when the page gives none [kpadopt6-media]
+     */
+    autosizeFailed: string;
+    /**
+     * The accessible name of a link mark: "Copy link to Dead letter 4f2a" (js/anchors.js) [kpadopt6-media]
+     */
+    anchorCopyLink: (name: string) => string;
+    /**
+     * The word on the mark after a copy [kpadopt6-media]
+     */
+    anchorCopied: string;
+    /**
+     * The word on the mark when the clipboard refused [kpadopt6-media]
+     */
+    anchorFailed: string;
+    /**
+     * Said politely after a copy [kpadopt6-media]
+     */
+    anchorCopiedAnnounce: (name: string) => string;
+    /**
+     * Said politely when the clipboard refused [kpadopt6-media]
+     */
+    anchorFailedAnnounce: string;
+    /**
+     * The notice for an address that points at nothing here any more [kpadopt6-media]
+     */
+    anchorMissing: string;
+    /**
+     * The notice's button that clears the address [kpadopt6-media]
+     */
+    anchorShowAll: string;
+    /**
+     * The sheet's words for y then l on a row [kpadopt6-media]
+     */
+    anchorKeyCopy: string;
+    /**
+     * The sheet's heading for the anchor keys [kpadopt6-media]
+     */
+    anchorKeyGroup: string;
+    /**
+     * What a list that is still loading prints instead of a blank sheet (js/print.js) [kpadopt6-media]
+     */
+    printLoading: string;
+    /**
+     * The foot of a printed sheet: "Printed 17/10/2026 14:05" [kpadopt6-media]
+     */
+    printStamp: (moment: string) => string;
+    /**
+     * The viewer's "Open in a new tab" button (js/viewer.js) [kpadopt6-media]
+     */
+    viewerOpenNew: string;
+    /**
+     * The viewer's Download button [kpadopt6-media]
+     */
+    viewerDownload: string;
+    /**
+     * The viewer's Print button [kpadopt6-media]
+     */
+    viewerPrint: string;
+    /**
+     * The viewer's Copy link button [kpadopt6-media]
+     */
+    viewerCopyLink: string;
+    /**
+     * The reason a viewer button is off when there is no file [kpadopt6-media]
+     */
+    viewerNoFile: string;
+    /**
+     * The busy card's words while a file opens [kpadopt6-media]
+     */
+    viewerLoading: string;
+    /**
+     * The failed stage's heading [kpadopt6-media]
+     */
+    viewerFailedTitle: string;
+    /**
+     * The failed stage's sentence when the server gave none [kpadopt6-media]
+     */
+    viewerFailedText: string;
+    /**
+     * The heading of the stage that cannot show this kind of file here [kpadopt6-media]
+     */
+    viewerUnsupportedTitle: string;
+    /**
+     * Its sentence [kpadopt6-media]
+     */
+    viewerUnsupportedText: string;
+    /**
+     * The failed stage's Retry [kpadopt6-media]
+     */
+    viewerRetry: string;
+    /**
+     * The exact position in a set: "4 of 37" [kpadopt6-media]
+     */
+    viewerPosition: (index: number, total: number) => string;
+    /**
+     * The sheet's heading for the preview keys (js/docpreview.js) [kpadopt6-media]
+     */
+    previewKeyGroup: string;
+    /**
+     * The sheet's words for o [kpadopt6-media]
+     */
+    previewKeyOpen: string;
+    /**
+     * The sheet's words for d [kpadopt6-media]
+     */
+    previewKeyDownload: string;
+    /**
+     * The sheet's words for p [kpadopt6-media]
+     */
+    previewKeyPrint: string;
+    /**
+     * The sheet's words for Left in a group of documents [kpadopt6-media]
+     */
+    previewKeyPrevious: string;
+    /**
+     * The sheet's words for Right in a group of documents [kpadopt6-media]
+     */
+    previewKeyNext: string;
+    /**
+     * The sentence when a file takes too long to open [kpadopt6-media]
+     */
+    previewTimeout: string;
+    /**
+     * The sentence when the server says the file is gone [kpadopt6-media]
+     */
+    previewGone: string;
+    /**
+     * The sentence when the server answered with an error [kpadopt6-media]
+     */
+    previewServer: (status: number) => string;
+    /**
+     * The sentence when this browser cannot show a PDF here [kpadopt6-media]
+     */
+    previewNoPdf: string;
+    /**
+     * The line under a PDF's title: how it is shown [kpadopt6-media]
+     */
+    previewShownByBrowser: string;
+    /**
+     * The sentence when a picture would not load [kpadopt6-media]
+     */
+    previewImage: string;
+    /**
+     * The reason an opener is off when there is no file yet [kpadopt6-media]
+     */
+    previewNoFile: string;
+    /**
+     * The facts word of a picture file [kpadopt6-media]
+     */
+    docKindImage: string;
+    /**
+     * The facts word of a text file [kpadopt6-media]
+     */
+    docKindText: string;
+    /**
+     * The name of a document glyph whose file is missing [kpadopt6-media]
+     */
+    docMissing: string;
+    /**
+     * The name of a document glyph: "PDF document" [kpadopt6-media]
+     */
+    docKindName: (kind: string) => string;
+    /**
+     * The button that opens the picture last looked at (js/gallery.js) [kpadopt6-media]
+     */
+    galleryContinue: string;
+    /**
+     * The failed gallery's heading [kpadopt6-media]
+     */
+    galleryFailed: string;
+    /**
+     * Its sentence [kpadopt6-media]
+     */
+    galleryFailedText: string;
+    /**
+     * The empty gallery's heading [kpadopt6-media]
+     */
+    galleryEmpty: string;
+    /**
+     * Its sentence [kpadopt6-media]
+     */
+    galleryEmptyText: string;
+    /**
+     * Its sentence when pictures can be added [kpadopt6-media]
+     */
+    galleryEmptyAdd: string;
+    /**
+     * The Retry of a failed gallery or picture [kpadopt6-media]
+     */
+    galleryRetry: string;
+    /**
+     * The add tile's words [kpadopt6-media]
+     */
+    galleryAdd: string;
+    /**
+     * The busy card's words while the gallery loads [kpadopt6-media]
+     */
+    galleryLoading: string;
+    /**
+     * What a picture without a name is called [kpadopt6-media]
+     */
+    galleryPicture: string;
+    /**
+     * The name of a tile that opens a picture [kpadopt6-media]
+     */
+    galleryOpenPicture: (name: string) => string;
+    /**
+     * The name of a tile that opens a video [kpadopt6-media]
+     */
+    galleryOpenVideo: (name: string) => string;
+    /**
+     * The heading of a picture that would not load [kpadopt6-media]
+     */
+    galleryPictureFailed: string;
+    /**
+     * Its sentence in the lightbox [kpadopt6-media]
+     */
+    galleryPictureFailedText: string;
+    /**
+     * The accessible name of a picture's Retry [kpadopt6-media]
+     */
+    galleryRetryPicture: (name: string) => string;
+    /**
+     * The lightbox's previous button [kpadopt6-media]
+     */
+    galleryPrevious: string;
+    /**
+     * The lightbox's next button [kpadopt6-media]
+     */
+    galleryNext: string;
+    /**
+     * The reason previous is off at the first picture [kpadopt6-media]
+     */
+    galleryFirst: string;
+    /**
+     * The reason next is off at the last picture [kpadopt6-media]
+     */
+    galleryLast: string;
+    /**
+     * The sheet's heading for the lightbox keys [kpadopt6-media]
+     */
+    galleryKeyGroup: string;
+    /**
+     * The sheet's words for Left [kpadopt6-media]
+     */
+    galleryKeyPrevious: string;
+    /**
+     * The sheet's words for Right [kpadopt6-media]
+     */
+    galleryKeyNext: string;
+    /**
+     * The sheet's words for Home [kpadopt6-media]
+     */
+    galleryKeyFirst: string;
+    /**
+     * The sheet's words for End [kpadopt6-media]
+     */
+    galleryKeyLast: string;
+    /**
+     * The sheet's words for z [kpadopt6-media]
+     */
+    galleryKeyZoom: string;
+    /**
+     * The sheet's words for + [kpadopt6-media]
+     */
+    galleryKeyZoomIn: string;
+    /**
+     * The sheet's words for - [kpadopt6-media]
+     */
+    galleryKeyZoomOut: string;
+    /**
+     * The sheet's words for f [kpadopt6-media]
+     */
+    galleryKeyFull: string;
+    /**
+     * A uses map's name when the page gives none (js/uses-map.js) [kpadopt6-media]
+     */
+    usesLabel: string;
+    /**
+     * The sources column's name [kpadopt6-media]
+     */
+    usesSources: string;
+    /**
+     * The users column's name [kpadopt6-media]
+     */
+    usesUsers: string;
+    /**
+     * The failed map's heading [kpadopt6-media]
+     */
+    usesFailed: string;
+    /**
+     * Its sentence [kpadopt6-media]
+     */
+    usesFailedText: string;
+    /**
+     * The empty map's heading [kpadopt6-media]
+     */
+    usesEmpty: string;
+    /**
+     * Its sentence [kpadopt6-media]
+     */
+    usesEmptyText: string;
+    /**
+     * The failed map's Retry [kpadopt6-media]
+     */
+    usesRetry: string;
+    /**
+     * The busy card's words while the map loads [kpadopt6-media]
+     */
+    usesLoading: string;
+    /**
+     * What a source nothing uses says [kpadopt6-media]
+     */
+    usesNotUsed: string;
+    /**
+     * The exact number of uses on a source: "Used by 2" [kpadopt6-media]
+     */
+    usesCount: (n: number) => string;
+    /**
+     * The name of a node's link [kpadopt6-media]
+     */
+    usesOpen: (label: string) => string;
+    /**
+     * A source in words: "CV Developer NL, used by 2: Deloitte, Takto" [kpadopt6-media]
+     */
+    usesNodeSource: (label: string, n: number, names: string) => string;
+    /**
+     * A source nothing uses, in words [kpadopt6-media]
+     */
+    usesNodeUnused: (label: string) => string;
+    /**
+     * A user in words: "Deloitte, uses: CV Developer NL" [kpadopt6-media]
+     */
+    usesNodeUser: (label: string, names: string) => string;
+    /**
+     * A user that uses nothing, in words [kpadopt6-media]
+     */
+    usesNodeNothing: (label: string) => string;
+    /**
      * The unsaved-changes bar's name for a screen reader (js/unsaved.js) [kpadopt5-time]
      */
     unsavedGroup: string;
@@ -4109,6 +4485,100 @@ export type Strings = {
  * @property {(label: string) => string} sliderValue  The value box's name: "Temperature, value" [kpadopt5-time]
  * @property {(min: string, max: string, unit: string) => string} sliderInvalid  The line under a slider for a typed value that is not a number in range [kpadopt5-time]
  * @property {(gap: string, unit: string) => string} sliderGap  The line for a typed value that would bring the two thumbs too close [kpadopt5-time]
+ * @property {(n: number, text: string) => string} autosizeChars  The counter of a growing text box: "1 204 characters" (js/autosize.js) [kpadopt6-media]
+ * @property {(n: number, text: string) => string} autosizeLines  Its line count: "12 lines" [kpadopt6-media]
+ * @property {(chars: number, charsText: string, lines: number, linesText: string) => string} autosizeBoth  Both counts in one line [kpadopt6-media]
+ * @property {(text: string, maxText: string) => string} autosizeOf  A count against the limit: "1 204 of 4 000 characters" [kpadopt6-media]
+ * @property {(maxText: string) => string} autosizeFull  Said politely when the limit is reached [kpadopt6-media]
+ * @property {(charsText: string, maxText: string) => string} autosizeNear  Said politely when 90 % of the limit is used [kpadopt6-media]
+ * @property {string} autosizeSubmit  The sheet's words for Ctrl+Enter submitting the form [kpadopt6-media]
+ * @property {string} autosizeGroup  The sheet's heading for that key [kpadopt6-media]
+ * @property {string} autosizeLoading  The busy card's words while a box waits for its text [kpadopt6-media]
+ * @property {string} autosizeFailed  The line under a box whose text could not be saved, when the page gives none [kpadopt6-media]
+ * @property {(name: string) => string} anchorCopyLink  The accessible name of a link mark: "Copy link to Dead letter 4f2a" (js/anchors.js) [kpadopt6-media]
+ * @property {string} anchorCopied  The word on the mark after a copy [kpadopt6-media]
+ * @property {string} anchorFailed  The word on the mark when the clipboard refused [kpadopt6-media]
+ * @property {(name: string) => string} anchorCopiedAnnounce  Said politely after a copy [kpadopt6-media]
+ * @property {string} anchorFailedAnnounce  Said politely when the clipboard refused [kpadopt6-media]
+ * @property {string} anchorMissing  The notice for an address that points at nothing here any more [kpadopt6-media]
+ * @property {string} anchorShowAll  The notice's button that clears the address [kpadopt6-media]
+ * @property {string} anchorKeyCopy  The sheet's words for y then l on a row [kpadopt6-media]
+ * @property {string} anchorKeyGroup  The sheet's heading for the anchor keys [kpadopt6-media]
+ * @property {string} printLoading  What a list that is still loading prints instead of a blank sheet (js/print.js) [kpadopt6-media]
+ * @property {(moment: string) => string} printStamp  The foot of a printed sheet: "Printed 17/10/2026 14:05" [kpadopt6-media]
+ * @property {string} viewerOpenNew  The viewer's "Open in a new tab" button (js/viewer.js) [kpadopt6-media]
+ * @property {string} viewerDownload  The viewer's Download button [kpadopt6-media]
+ * @property {string} viewerPrint  The viewer's Print button [kpadopt6-media]
+ * @property {string} viewerCopyLink  The viewer's Copy link button [kpadopt6-media]
+ * @property {string} viewerNoFile  The reason a viewer button is off when there is no file [kpadopt6-media]
+ * @property {string} viewerLoading  The busy card's words while a file opens [kpadopt6-media]
+ * @property {string} viewerFailedTitle  The failed stage's heading [kpadopt6-media]
+ * @property {string} viewerFailedText  The failed stage's sentence when the server gave none [kpadopt6-media]
+ * @property {string} viewerUnsupportedTitle  The heading of the stage that cannot show this kind of file here [kpadopt6-media]
+ * @property {string} viewerUnsupportedText  Its sentence [kpadopt6-media]
+ * @property {string} viewerRetry  The failed stage's Retry [kpadopt6-media]
+ * @property {(index: number, total: number) => string} viewerPosition  The exact position in a set: "4 of 37" [kpadopt6-media]
+ * @property {string} previewKeyGroup  The sheet's heading for the preview keys (js/docpreview.js) [kpadopt6-media]
+ * @property {string} previewKeyOpen  The sheet's words for o [kpadopt6-media]
+ * @property {string} previewKeyDownload  The sheet's words for d [kpadopt6-media]
+ * @property {string} previewKeyPrint  The sheet's words for p [kpadopt6-media]
+ * @property {string} previewKeyPrevious  The sheet's words for Left in a group of documents [kpadopt6-media]
+ * @property {string} previewKeyNext  The sheet's words for Right in a group of documents [kpadopt6-media]
+ * @property {string} previewTimeout  The sentence when a file takes too long to open [kpadopt6-media]
+ * @property {string} previewGone  The sentence when the server says the file is gone [kpadopt6-media]
+ * @property {(status: number) => string} previewServer  The sentence when the server answered with an error [kpadopt6-media]
+ * @property {string} previewNoPdf  The sentence when this browser cannot show a PDF here [kpadopt6-media]
+ * @property {string} previewShownByBrowser  The line under a PDF's title: how it is shown [kpadopt6-media]
+ * @property {string} previewImage  The sentence when a picture would not load [kpadopt6-media]
+ * @property {string} previewNoFile  The reason an opener is off when there is no file yet [kpadopt6-media]
+ * @property {string} docKindImage  The facts word of a picture file [kpadopt6-media]
+ * @property {string} docKindText  The facts word of a text file [kpadopt6-media]
+ * @property {string} docMissing  The name of a document glyph whose file is missing [kpadopt6-media]
+ * @property {(kind: string) => string} docKindName  The name of a document glyph: "PDF document" [kpadopt6-media]
+ * @property {string} galleryContinue  The button that opens the picture last looked at (js/gallery.js) [kpadopt6-media]
+ * @property {string} galleryFailed  The failed gallery's heading [kpadopt6-media]
+ * @property {string} galleryFailedText  Its sentence [kpadopt6-media]
+ * @property {string} galleryEmpty  The empty gallery's heading [kpadopt6-media]
+ * @property {string} galleryEmptyText  Its sentence [kpadopt6-media]
+ * @property {string} galleryEmptyAdd  Its sentence when pictures can be added [kpadopt6-media]
+ * @property {string} galleryRetry  The Retry of a failed gallery or picture [kpadopt6-media]
+ * @property {string} galleryAdd  The add tile's words [kpadopt6-media]
+ * @property {string} galleryLoading  The busy card's words while the gallery loads [kpadopt6-media]
+ * @property {string} galleryPicture  What a picture without a name is called [kpadopt6-media]
+ * @property {(name: string) => string} galleryOpenPicture  The name of a tile that opens a picture [kpadopt6-media]
+ * @property {(name: string) => string} galleryOpenVideo  The name of a tile that opens a video [kpadopt6-media]
+ * @property {string} galleryPictureFailed  The heading of a picture that would not load [kpadopt6-media]
+ * @property {string} galleryPictureFailedText  Its sentence in the lightbox [kpadopt6-media]
+ * @property {(name: string) => string} galleryRetryPicture  The accessible name of a picture's Retry [kpadopt6-media]
+ * @property {string} galleryPrevious  The lightbox's previous button [kpadopt6-media]
+ * @property {string} galleryNext  The lightbox's next button [kpadopt6-media]
+ * @property {string} galleryFirst  The reason previous is off at the first picture [kpadopt6-media]
+ * @property {string} galleryLast  The reason next is off at the last picture [kpadopt6-media]
+ * @property {string} galleryKeyGroup  The sheet's heading for the lightbox keys [kpadopt6-media]
+ * @property {string} galleryKeyPrevious  The sheet's words for Left [kpadopt6-media]
+ * @property {string} galleryKeyNext  The sheet's words for Right [kpadopt6-media]
+ * @property {string} galleryKeyFirst  The sheet's words for Home [kpadopt6-media]
+ * @property {string} galleryKeyLast  The sheet's words for End [kpadopt6-media]
+ * @property {string} galleryKeyZoom  The sheet's words for z [kpadopt6-media]
+ * @property {string} galleryKeyZoomIn  The sheet's words for + [kpadopt6-media]
+ * @property {string} galleryKeyZoomOut  The sheet's words for - [kpadopt6-media]
+ * @property {string} galleryKeyFull  The sheet's words for f [kpadopt6-media]
+ * @property {string} usesLabel  A uses map's name when the page gives none (js/uses-map.js) [kpadopt6-media]
+ * @property {string} usesSources  The sources column's name [kpadopt6-media]
+ * @property {string} usesUsers  The users column's name [kpadopt6-media]
+ * @property {string} usesFailed  The failed map's heading [kpadopt6-media]
+ * @property {string} usesFailedText  Its sentence [kpadopt6-media]
+ * @property {string} usesEmpty  The empty map's heading [kpadopt6-media]
+ * @property {string} usesEmptyText  Its sentence [kpadopt6-media]
+ * @property {string} usesRetry  The failed map's Retry [kpadopt6-media]
+ * @property {string} usesLoading  The busy card's words while the map loads [kpadopt6-media]
+ * @property {string} usesNotUsed  What a source nothing uses says [kpadopt6-media]
+ * @property {(n: number) => string} usesCount  The exact number of uses on a source: "Used by 2" [kpadopt6-media]
+ * @property {(label: string) => string} usesOpen  The name of a node's link [kpadopt6-media]
+ * @property {(label: string, n: number, names: string) => string} usesNodeSource  A source in words: "CV Developer NL, used by 2: Deloitte, Takto" [kpadopt6-media]
+ * @property {(label: string) => string} usesNodeUnused  A source nothing uses, in words [kpadopt6-media]
+ * @property {(label: string, names: string) => string} usesNodeUser  A user in words: "Deloitte, uses: CV Developer NL" [kpadopt6-media]
+ * @property {(label: string) => string} usesNodeNothing  A user that uses nothing, in words [kpadopt6-media]
  * @property {string} unsavedGroup  The unsaved-changes bar's name for a screen reader (js/unsaved.js) [kpadopt5-time]
  * @property {string} unsavedNone  The line while nothing is changed [kpadopt5-time]
  * @property {(n: number) => string} unsavedCount  The chip: "2 changes" [kpadopt5-time]

@@ -23067,3 +23067,1101 @@
         font-variant-numeric: tabular-nums;
     }
 }
+
+@layer kp.components {
+    /* kpadopt6-media:autosize:start */
+    /* --- A text box that grows with its text [kpadopt6-media] ------------------
+     * js/autosize.js. An opt-in on the existing multiline field (`data-kp-autosize`): the field is exactly as tall as its
+     * text, between `rows` lines and `data-kp-autosize-max` (20), then it scrolls inside. Never animated: an animated height
+     * is a layout shift. Where the browser sizes a field to its content itself (`field-sizing`) it does, and the package
+     * only says the least and the most. Knobs [KT6]: --kp-autosize-min and --kp-autosize-max (set by the script, in px). */
+    .kp-autosize {
+        resize: vertical;
+    }
+
+    .kp-field__input--multiline.kp-autosize {
+        min-height: 0;
+        overflow-y: hidden;
+    }
+
+    .kp-autosize[data-kp-resize='none'] {
+        resize: none;
+    }
+
+    .kp-autosize[data-kp-autosize-engine-used='css'] {
+        field-sizing: content;
+        min-block-size: var(--kp-autosize-min, 0);
+        max-block-size: var(--kp-autosize-max, none);
+        overflow-y: auto;
+    }
+
+    .kp-autosize__frame {
+        position: relative;
+        display: block;
+    }
+
+    /* The counter: tabular numerals, a line of its own at the end, the same height whatever it says; the warning tone is a plate
+       of the warning pair, never a bare status colour. */
+    .kp-autosize__counter {
+        box-sizing: border-box;
+        inline-size: fit-content;
+        min-block-size: 1.5lh;
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        margin-inline-start: auto;
+        padding: 0 var(--kp-space-sm, 0.5rem);
+        border-radius: var(--kp-radius-sm, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        line-height: 1.5;
+        text-align: end;
+    }
+
+    .kp-autosize__counter[data-kp-tone='warning'] {
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+    /* kpadopt6-media:autosize:end */
+}
+
+@layer kp.components {
+    /* kpadopt6-media:anchors:start */
+    /* --- Link anchors on headings and rows [kpadopt6-media] ---------------------
+     * js/anchors.js. A small `#` that copies a link to its heading or row and says "Copied" on itself. It always takes its
+     * room (so a wrapped heading does not move when it shows), and shows when the pointer is over the heading or row or the
+     * keyboard is on it; on a touch screen it is always there, and a real 44 px target. `data-kp-anchor-show` on the
+     * container: hover (default), always, touch. Knobs [KT6]: --kp-anchor-offset (what a sticky bar covers; the header's own
+     * --kp-header-height by default), --kp-anchor-hit (the colour a landed-on place is marked with, the info plate). */
+    .kp-anchor {
+        position: relative;
+        display: inline-grid;
+        place-items: center;
+        box-sizing: border-box;
+        min-inline-size: 1.5em;
+        margin: 0;
+        margin-inline-start: 0.4em;
+        padding: 0 0.25em;
+        border: 0;
+        border-radius: var(--kp-radius-sm, 0.25rem);
+        background: none;
+        color: var(--link, var(--primary));
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: 0.75em;
+        font-weight: 600;
+        line-height: 1.6;
+        vertical-align: baseline;
+        cursor: pointer;
+        opacity: 0;
+    }
+
+    .kp-anchor__hash,
+    .kp-anchor__done {
+        grid-area: 1 / 1;
+        white-space: nowrap;
+    }
+
+    .kp-anchor__done {
+        visibility: hidden;
+        font-family: var(--font-body, inherit);
+    }
+
+    .kp-anchor[data-kp-anchor-state] .kp-anchor__hash {
+        visibility: hidden;
+    }
+
+    .kp-anchor[data-kp-anchor-state] .kp-anchor__done {
+        visibility: visible;
+    }
+
+    .kp-anchor__hash::before,
+    .kp-anchor__done::before {
+        content: attr(data-kp-text);
+    }
+
+    [data-kp-anchored='row'] > .kp-anchor,
+    [data-kp-anchored='row'] .kp-anchor {
+        margin-inline: 0 var(--kp-space-sm, 0.5rem);
+    }
+
+    /* hover (default): over the heading or row, or the keyboard on it. */
+    .kp-anchors:not([data-kp-anchor-show='touch']) [data-kp-anchored]:hover .kp-anchor,
+    .kp-anchors:not([data-kp-anchor-show='touch']) [data-kp-anchored]:focus-within .kp-anchor,
+    .kp-anchor:focus-visible,
+    .kp-anchor[data-kp-anchor-state],
+    .kp-anchors[data-kp-anchor-show='always'] .kp-anchor {
+        opacity: 1;
+    }
+
+    /* A touch screen has no hover: the mark is always there, in `hover` and `touch` modes alike. */
+    @media (hover: none) {
+        .kp-anchors .kp-anchor {
+            opacity: 1;
+        }
+    }
+
+    /* A fingertip: the mark's hit area grows to 44 px without growing the heading's line. */
+    @media (pointer: coarse) {
+        .kp-anchor::before {
+            content: '';
+            position: absolute;
+            inset-block-start: 50%;
+            inset-inline-start: 50%;
+            inline-size: max(100%, 2.75rem);
+            block-size: max(100%, 2.75rem);
+            transform: translate(-50%, -50%);
+        }
+    }
+
+    [data-kp-anchored] {
+        scroll-margin-block-start: calc(var(--kp-anchor-offset, var(--kp-header-height, 0px)) + var(--kp-space-md, 0.75rem));
+    }
+
+    /* The place a link landed on, for two seconds: an outline and a wash of the info colour. */
+    [data-kp-anchor-hit] {
+        outline: 2px solid var(--kp-anchor-hit, var(--info));
+        outline-offset: 2px;
+        background: color-mix(in srgb, var(--kp-anchor-hit, var(--info)) 16%, transparent);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-kp-anchored] {
+            transition:
+                background-color var(--fx-duration, 200ms) var(--fx-ease, ease-out),
+                outline-color var(--fx-duration, 200ms) var(--fx-ease, ease-out);
+        }
+    }
+
+    .kp-anchors__notice {
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-md, 0.75rem);
+        margin-block-end: var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-anchors__notice-text {
+        overflow-wrap: anywhere;
+    }
+    /* kpadopt6-media:anchors:end */
+}
+
+@layer kp.components {
+    /* kpadopt6-media:docglyph:start */
+    /* --- The page that means "a document" [kpadopt6-media] ----------------------
+     * `.kp-docglyph` with `data-kp-doc-kind` (pdf, doc, sheet, image, text, unknown), `data-kp-size` (sm, md, lg),
+     * `data-kp-state="missing"` and `data-kp-doc-lines` (3 to 7; js/docpreview.js writes --kp-doc-lines). Drawn in the theme's
+     * plate and border tokens, no colour per brand: a hairline page, a folded corner, a few text lines and the kind's letters.
+     * Knobs [KT6]: --kp-doc-width, --kp-doc-height, --kp-doc-fold, --kp-doc-step. */
+    .kp-docglyph {
+        --kp-doc-width: 1.75rem;
+        --kp-doc-height: 2.25rem;
+        --kp-doc-fold: 0.5rem;
+        --kp-doc-step: 0.25rem;
+        position: relative;
+        display: inline-block;
+        flex: none;
+        box-sizing: border-box;
+        inline-size: var(--kp-doc-width);
+        block-size: var(--kp-doc-height);
+        border: 1px solid var(--border-strong);
+        border-radius: 2px;
+        background:
+            linear-gradient(to bottom left, transparent 50%, var(--border-strong) 50%) top right / var(--kp-doc-fold) var(--kp-doc-fold) no-repeat,
+            var(--card);
+        clip-path: polygon(0 0, calc(100% - var(--kp-doc-fold)) 0, 100% var(--kp-doc-fold), 100% 100%, 0 100%);
+        vertical-align: middle;
+    }
+
+    .kp-docglyph::before {
+        content: '';
+        position: absolute;
+        inset-inline: 22%;
+        inset-block-start: calc(var(--kp-doc-fold) + 0.2rem);
+        block-size: calc(var(--kp-doc-lines, 4) * var(--kp-doc-step));
+        background: repeating-linear-gradient(to bottom, var(--muted-foreground) 0 1px, transparent 1px var(--kp-doc-step));
+        opacity: 0.55;
+    }
+
+    .kp-docglyph::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0.15rem;
+        color: var(--muted-foreground);
+        font-family: var(--font-mono, ui-monospace, monospace);
+        font-size: 0.5rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        line-height: 1;
+        text-align: center;
+    }
+
+    .kp-docglyph[data-kp-doc-kind='pdf']::after {
+        content: 'PDF';
+    }
+
+    .kp-docglyph[data-kp-doc-kind='doc']::after {
+        content: 'DOC';
+    }
+
+    .kp-docglyph[data-kp-doc-kind='sheet']::after {
+        content: 'XLS';
+    }
+
+    .kp-docglyph[data-kp-doc-kind='image']::after {
+        content: 'IMG';
+    }
+
+    .kp-docglyph[data-kp-doc-kind='text']::after {
+        content: 'TXT';
+    }
+
+    .kp-docglyph[data-kp-size='sm'] {
+        --kp-doc-width: 1.25rem;
+        --kp-doc-height: 1.625rem;
+        --kp-doc-fold: 0.375rem;
+        --kp-doc-step: 0.1875rem;
+    }
+
+    .kp-docglyph[data-kp-size='sm']::after {
+        display: none;
+    }
+
+    .kp-docglyph[data-kp-size='lg'] {
+        --kp-doc-width: 3.5rem;
+        --kp-doc-height: 4.5rem;
+        --kp-doc-fold: 1rem;
+        --kp-doc-step: 0.4375rem;
+    }
+
+    .kp-docglyph[data-kp-size='lg']::after {
+        inset-block-end: 0.35rem;
+        font-size: 0.75rem;
+    }
+
+    .kp-docglyph[data-kp-state='missing'] {
+        border-style: dashed;
+        opacity: 0.4;
+    }
+
+    .kp-docglyph[data-kp-state='missing']::before,
+    .kp-docglyph[data-kp-state='missing']::after {
+        display: none;
+    }
+    /* kpadopt6-media:docglyph:end */
+}
+
+@layer kp.components {
+    /* kpadopt6-media:viewer:start */
+    /* --- The viewer shell: one thing opened large [kpadopt6-media] --------------
+     * js/viewer.js. A modal `.kp-dialog.kp-viewer`: a head (title, how it is shown, facts, an exact position, close), a stage
+     * and a foot with the way out. Wide is about 70 % of the window and 90 % high; full is the whole window; a phone always
+     * gets the whole screen and its foot buttons share the width. The stage keeps its final size from the first frame: a
+     * loading file is the theme's busy card over the whole stage, a file that fails or cannot be shown is a plate that fills it.
+     * Knobs [KT6]: --kp-viewer-width (70vw, at most 64rem), --kp-viewer-height (90dvh). */
+    .kp-viewer {
+        display: none;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        box-sizing: border-box;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .kp-viewer[open] {
+        display: grid;
+    }
+
+    .kp-viewer[data-kp-viewer-size='wide'] {
+        inline-size: min(var(--kp-viewer-width, 70vw), 64rem);
+        max-inline-size: calc(100vw - 2rem);
+        block-size: var(--kp-viewer-height, 90dvh);
+        max-block-size: calc(100dvh - 1rem);
+    }
+
+    .kp-viewer[data-kp-viewer-size='full'] {
+        inline-size: 100vw;
+        max-inline-size: 100vw;
+        block-size: 100dvh;
+        max-block-size: 100dvh;
+        border-width: 0;
+        border-radius: 0;
+    }
+
+    @media (max-width: 40em) {
+        .kp-viewer[data-kp-viewer-size] {
+            inline-size: 100vw;
+            max-inline-size: 100vw;
+            block-size: 100dvh;
+            max-block-size: 100dvh;
+            border-width: 0;
+            border-radius: 0;
+        }
+    }
+
+    .kp-viewer__head {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        align-items: start;
+        gap: var(--kp-space-md, 0.75rem);
+        padding: var(--kp-space-lg, 1rem) var(--kp-space-xl, 1.5rem) var(--kp-space-md, 0.75rem) var(--kp-space-xl, 1.5rem);
+        border-block-end: 1px solid var(--border);
+    }
+
+    .kp-viewer__titles {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-inline-size: 0;
+    }
+
+    .kp-viewer__title {
+        margin: 0;
+        font-size: var(--kp-dialog-title-size, 1.25rem);
+        line-height: var(--kp-heading-line-height, 1.2);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-viewer__desc,
+    .kp-viewer__facts {
+        margin: 0;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-viewer__desc[hidden],
+    .kp-viewer__facts[hidden],
+    .kp-viewer__position[hidden],
+    .kp-viewer__foot[hidden],
+    .kp-viewer__plate[hidden] {
+        display: none;
+    }
+
+    .kp-viewer__position {
+        margin: 0;
+        padding-block-start: 0.35rem;
+        min-inline-size: 7ch;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        text-align: end;
+        white-space: nowrap;
+    }
+
+    .kp-viewer__stage {
+        position: relative;
+        display: grid;
+        min-block-size: 0;
+        min-inline-size: 0;
+        overflow: hidden;
+    }
+
+    .kp-viewer__content {
+        display: grid;
+        min-block-size: 0;
+        min-inline-size: 0;
+    }
+
+    .kp-viewer__stage[data-kp-state='loading'] > .kp-viewer__content,
+    .kp-viewer__stage[data-kp-state='error'] > .kp-viewer__content,
+    .kp-viewer__stage[data-kp-state='unsupported'] > .kp-viewer__content {
+        visibility: hidden;
+    }
+
+    .kp-viewer__plate {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        padding: var(--kp-space-lg, 1rem);
+    }
+
+    .kp-viewer__plate > .kp-stateplate {
+        block-size: 100%;
+    }
+
+    .kp-viewer__close {
+        font-size: 1.5rem;
+        line-height: 1;
+    }
+
+    .kp-viewer__plate-actions .kp-button {
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    .kp-viewer__plate-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        margin-block-start: var(--kp-space-sm, 0.5rem);
+    }
+
+    .kp-viewer__foot {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-md, 0.75rem) var(--kp-space-xl, 1.5rem);
+        border-block-start: 1px solid var(--border);
+    }
+
+    .kp-viewer__action {
+        text-align: center;
+        text-decoration: none;
+        white-space: normal;
+        overflow-wrap: normal;
+    }
+
+    @media (max-width: 40em) {
+        .kp-viewer__head {
+            padding-inline: var(--kp-space-lg, 1rem);
+        }
+
+        .kp-viewer__foot {
+            padding-inline: var(--kp-space-lg, 1rem);
+        }
+
+        .kp-viewer__foot > * {
+            flex: 1 1 0;
+            min-inline-size: 0;
+        }
+
+        .kp-viewer__foot > * > .kp-viewer__action {
+            inline-size: 100%;
+        }
+    }
+
+    .kp-docpreview__frame {
+        inline-size: 100%;
+        block-size: 100%;
+        border: 0;
+        background: Canvas;
+        color-scheme: light;
+    }
+
+    .kp-docpreview__image {
+        justify-self: center;
+        align-self: center;
+        max-inline-size: 100%;
+        max-block-size: 100%;
+        object-fit: contain;
+    }
+    /* kpadopt6-media:viewer:end */
+}
+
+@layer kp.components {
+    /* kpadopt6-media:gallery:start */
+    /* --- A grid of pictures that open large [kpadopt6-media] --------------------
+     * js/gallery.js. Tiles of at least 9rem (two columns at 390 px), each a square crop or its own ratio, a caption on hover
+     * (always on touch), the pictures never tinted. A gallery keeps the room of three rows whatever it holds, so loading,
+     * empty, failed and ready have one footprint. The lightbox is the viewer shell at full size; the controls fade after 3 s
+     * of no movement (never when calm). Knobs [KT6]: --kp-gallery-tile (9rem), --kp-gallery-gap, --kp-gallery-columns (set by
+     * data-kp-grid-columns). */
+    .kp-gallery {
+        --kp-gallery-tile: 9rem;
+        --kp-gallery-gap: var(--kp-space-md, 0.75rem);
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: var(--kp-gallery-gap);
+        min-block-size: calc(3 * var(--kp-gallery-tile) + 2 * var(--kp-gallery-gap));
+    }
+
+    .kp-gallery__bar {
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .kp-gallery__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(var(--kp-gallery-tile), 1fr));
+        gap: var(--kp-gallery-gap);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-gallery[data-kp-grid-fixed] .kp-gallery__grid {
+        grid-template-columns: repeat(var(--kp-gallery-columns), minmax(0, 1fr));
+    }
+
+    .kp-gallery__grid[data-kp-tile-shape='ratio'] {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .kp-gallery__grid[data-kp-tile-shape='ratio'] > .kp-gallery__cell {
+        flex: calc(var(--kp-gallery-ratio-num, 1) * 100) 1 calc(var(--kp-gallery-tile) * var(--kp-gallery-ratio-num, 1));
+    }
+
+    .kp-gallery__cell {
+        min-inline-size: 0;
+    }
+
+    .kp-gallery__tile {
+        position: relative;
+        box-sizing: border-box;
+        inline-size: 100%;
+        aspect-ratio: var(--kp-gallery-ratio, 1);
+        overflow: hidden;
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--muted);
+    }
+
+    .kp-gallery__grid[data-kp-tile-shape='square'] .kp-gallery__tile {
+        aspect-ratio: 1;
+    }
+
+    .kp-gallery__tile:hover {
+        border-color: var(--primary);
+    }
+
+    .kp-gallery__open {
+        position: absolute;
+        inset: 0;
+        display: block;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: inherit;
+        background: none;
+        cursor: zoom-in;
+    }
+
+    .kp-gallery__open:focus-visible {
+        outline-offset: -3px;
+    }
+
+    .kp-gallery__thumb {
+        display: block;
+        inline-size: 100%;
+        block-size: 100%;
+        object-fit: cover;
+    }
+
+    .kp-gallery__caption {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+        box-sizing: border-box;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        background: var(--popover);
+        color: var(--popover-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        line-height: 1.35;
+        overflow-wrap: anywhere;
+        text-align: start;
+        opacity: 0;
+    }
+
+    .kp-gallery__open:hover .kp-gallery__caption,
+    .kp-gallery__open:focus-visible .kp-gallery__caption,
+    .kp-gallery[data-kp-caption='always'] .kp-gallery__caption {
+        opacity: 1;
+    }
+
+    @media (hover: none) {
+        .kp-gallery:not([data-kp-caption='none']) .kp-gallery__caption {
+            opacity: 1;
+        }
+    }
+
+    .kp-gallery__play {
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 50%;
+        inline-size: 2.5rem;
+        block-size: 2.5rem;
+        border: 1px solid var(--border-strong);
+        border-radius: 50%;
+        background: var(--popover);
+        transform: translate(-50%, -50%);
+    }
+
+    .kp-gallery__play::before {
+        content: '';
+        position: absolute;
+        inset-block-start: 50%;
+        inset-inline-start: 50%;
+        border-block: 0.4rem solid transparent;
+        border-inline-start: 0.7rem solid var(--popover-foreground);
+        transform: translate(-30%, -50%);
+    }
+
+    .kp-gallery__add {
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        box-sizing: border-box;
+        inline-size: 100%;
+        aspect-ratio: 1;
+        margin: 0;
+        padding: var(--kp-space-sm, 0.5rem);
+        border: 1px dashed var(--border-strong);
+        border-radius: var(--radius, 0.5rem);
+        background: none;
+        color: var(--foreground);
+        font: inherit;
+        text-align: center;
+        cursor: pointer;
+    }
+
+    .kp-gallery__add:hover:not(:disabled) {
+        border-color: var(--primary);
+    }
+
+    .kp-gallery__add:disabled {
+        opacity: 0.55;
+        cursor: not-allowed;
+    }
+
+    .kp-gallery__add-mark {
+        font-size: 1.75rem;
+        line-height: 1;
+    }
+
+    .kp-gallery__fail {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-sm, 0.5rem);
+        background: var(--muted);
+        color: var(--foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        text-align: center;
+    }
+
+    .kp-gallery__fail-mark {
+        display: grid;
+        place-items: center;
+        inline-size: 1.5rem;
+        block-size: 1.5rem;
+        border-radius: 50%;
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+        font-weight: 700;
+    }
+
+    .kp-gallery__fail-text {
+        overflow-wrap: anywhere;
+    }
+
+    /* A waiting tile has the final tile's shape, not the skeleton's one rem. */
+    .kp-gallery__tile.kp-skeleton {
+        block-size: auto;
+        border-color: transparent;
+    }
+
+    .kp-gallery__tile[data-kp-state='error'] {
+        border-color: var(--destructive);
+    }
+
+    .kp-gallery__state {
+        display: grid;
+        flex: 1 1 auto;
+    }
+
+    .kp-gallery__state > .kp-stateplate {
+        block-size: 100%;
+    }
+
+    .kp-gallery__file[hidden] {
+        display: none;
+    }
+
+    /* The lightbox */
+    .kp-gallery__lightbox .kp-viewer__content {
+        display: grid;
+    }
+
+    .kp-gallery__figure {
+        display: grid;
+        grid-template-rows: minmax(0, 1fr) minmax(0, auto);
+        min-block-size: 0;
+        min-inline-size: 0;
+    }
+
+    .kp-gallery__picture {
+        display: grid;
+        place-items: center;
+        min-block-size: 0;
+        min-inline-size: 0;
+        overflow: auto;
+        overscroll-behavior: contain;
+        touch-action: pan-y pinch-zoom;
+    }
+
+    .kp-gallery__image,
+    .kp-gallery__video {
+        max-inline-size: 100%;
+        max-block-size: 100%;
+        object-fit: contain;
+    }
+
+    .kp-gallery__image {
+        cursor: zoom-in;
+    }
+
+    .kp-gallery__figure[data-kp-zoom='full'] .kp-gallery__image {
+        max-inline-size: none;
+        max-block-size: none;
+        cursor: zoom-out;
+    }
+
+    .kp-gallery__figure[data-kp-zoom='full'] .kp-gallery__picture {
+        place-items: start;
+    }
+
+    .kp-gallery__info {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        max-block-size: 40vh;
+        padding: var(--kp-space-md, 0.75rem) var(--kp-space-xl, 1.5rem);
+        overflow: auto;
+        border-block-start: 1px solid var(--border);
+    }
+
+    .kp-gallery__info[hidden] {
+        display: none;
+    }
+
+    .kp-gallery__text,
+    .kp-gallery__meta {
+        margin: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-gallery__meta {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-gallery__zone {
+        position: absolute;
+        inset-block: 0;
+        z-index: 2;
+        display: grid;
+        align-items: center;
+        padding-inline: var(--kp-space-md, 0.75rem);
+        pointer-events: none;
+    }
+
+    .kp-gallery__zone--previous {
+        inset-inline-start: 0;
+    }
+
+    .kp-gallery__zone--next {
+        inset-inline-end: 0;
+    }
+
+    .kp-gallery__zone > * {
+        pointer-events: auto;
+    }
+
+    .kp-gallery__nav {
+        inline-size: 3rem;
+        block-size: 3rem;
+        border-radius: 50%;
+        background: var(--popover);
+        color: var(--popover-foreground);
+        font-size: 1.75rem;
+        line-height: 1;
+    }
+
+    .kp-gallery__nav:disabled {
+        opacity: 0.35;
+    }
+
+    @media (max-width: 40em) {
+        /* A fingertip's width at each edge; the arrow stays a quiet mark. */
+        .kp-gallery__zone {
+            inline-size: 18%;
+            padding-inline: 0;
+        }
+
+        .kp-gallery__zone > *,
+        .kp-gallery__zone > * > .kp-gallery__nav {
+            inline-size: 100%;
+            block-size: 100%;
+        }
+
+        .kp-gallery__nav {
+            border: 0;
+            border-radius: 0;
+            background: transparent;
+            opacity: 0.55;
+        }
+    }
+
+    .kp-gallery__lightbox[data-kp-chrome-idle] :is(.kp-viewer__head, .kp-viewer__foot, .kp-gallery__zone) {
+        opacity: 0;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-gallery__lightbox :is(.kp-viewer__head, .kp-viewer__foot, .kp-gallery__zone) {
+            transition: opacity var(--fx-duration, 250ms) var(--fx-ease, ease-out);
+        }
+    }
+    /* kpadopt6-media:gallery:end */
+}
+
+@layer kp.components {
+    /* kpadopt6-media:uses:start */
+    /* --- "Used by": two columns joined by lines [kpadopt6-media] ---------------
+     * js/uses-map.js, the lines view of `kp-matrix` (`data-kp-view="lines"`). Sources on one side, the things that use them
+     * on the other; the lines are an SVG under the cards. A node lights its lines and dims the rest on hover or focus, a press
+     * pins it. Under `data-kp-lines-collapse-below` (640 px) the lines go and each source is a card listing its users.
+     * Knobs [KT6]: --kp-uses-gap (the room the lines cross, 16 %), --kp-uses-row-gap, --kp-uses-min (the map's least height,
+     * 18rem), --kp-uses-line (the line's width). */
+    .kp-matrix--lines {
+        overflow: visible;
+        min-block-size: var(--kp-uses-min, 18rem);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-uses {
+        position: relative;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(3rem, var(--kp-uses-gap, 16%)) minmax(0, 1fr);
+        grid-template-areas: 'sources . users';
+        align-items: start;
+    }
+
+    .kp-uses[hidden],
+    .kp-uses__list[hidden] {
+        display: none;
+    }
+
+    .kp-uses[data-kp-lines-side='sources-right'] {
+        grid-template-areas: 'users . sources';
+    }
+
+    .kp-uses__col {
+        display: grid;
+        gap: var(--kp-uses-row-gap, var(--kp-space-md, 0.75rem));
+        align-content: start;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-matrix--lines[data-kp-density='compact'] .kp-uses__col {
+        --kp-uses-row-gap: var(--kp-space-xs, 0.25rem);
+    }
+
+    .kp-uses__col--sources {
+        grid-area: sources;
+    }
+
+    .kp-uses__col--users {
+        grid-area: users;
+    }
+
+    .kp-uses__lines {
+        position: absolute;
+        inset: 0;
+        inline-size: 100%;
+        block-size: 100%;
+        overflow: visible;
+        pointer-events: none;
+    }
+
+    .kp-uses__line {
+        fill: none;
+        stroke: var(--border-strong);
+        stroke-width: var(--kp-uses-line, 1.5);
+    }
+
+    .kp-uses__line[data-kp-dashed] {
+        stroke-dasharray: 5 4;
+    }
+
+    .kp-matrix--lines[data-kp-lit] .kp-uses__line {
+        opacity: 0.2;
+    }
+
+    .kp-matrix--lines[data-kp-lit] .kp-uses__line[data-kp-hot] {
+        opacity: 1;
+        stroke: var(--primary);
+        stroke-width: calc(var(--kp-uses-line, 1.5) * 1.5);
+    }
+
+    .kp-uses__node {
+        position: relative;
+        z-index: 1;
+        display: flex;
+    }
+
+    .kp-matrix--lines[data-kp-lit] .kp-uses__node:not([data-kp-hot]) {
+        opacity: 0.45;
+    }
+
+    .kp-uses__card {
+        display: flex;
+        flex: 1 1 auto;
+        align-items: flex-start;
+        gap: var(--kp-space-md, 0.75rem);
+        box-sizing: border-box;
+        min-inline-size: 0;
+        min-block-size: 3.5rem;
+        margin: 0;
+        padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+        font: inherit;
+        text-align: start;
+        cursor: pointer;
+    }
+
+    .kp-matrix--lines[data-kp-density='compact'] .kp-uses__card {
+        min-block-size: 2.5rem;
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-uses__card:hover {
+        border-color: var(--border-strong);
+    }
+
+    .kp-uses__card[aria-pressed='true'] {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 1px var(--primary);
+    }
+
+    .kp-uses__card.kp-skeleton {
+        block-size: 4.25rem;
+        border-color: transparent;
+    }
+
+    .kp-uses__node:has(> .kp-uses__open) .kp-uses__card {
+        padding-inline-end: 2.75rem;
+    }
+
+    .kp-uses__text {
+        display: grid;
+        gap: 2px;
+        min-inline-size: 0;
+    }
+
+    .kp-uses__label {
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-uses__sub,
+    .kp-uses__count {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-xs, 0.75rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-uses__count {
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-uses__open {
+        position: absolute;
+        inset-block-start: var(--kp-space-sm, 0.5rem);
+        inset-inline-end: var(--kp-space-sm, 0.5rem);
+        display: grid;
+        place-items: center;
+        inline-size: 1.75rem;
+        block-size: 1.75rem;
+        border-radius: var(--kp-radius-sm, 0.25rem);
+        color: var(--link, var(--primary));
+        text-decoration: none;
+        opacity: 0.6;
+    }
+
+    .kp-uses__node:hover .kp-uses__open,
+    .kp-uses__node:focus-within .kp-uses__open {
+        opacity: 1;
+    }
+
+    .kp-uses__node[data-kp-ghost] .kp-uses__card,
+    .kp-uses__group[data-kp-ghost] {
+        border-style: dashed;
+        background: transparent;
+        opacity: 0.75;
+    }
+
+    .kp-uses__node[data-kp-tone='bad'] .kp-uses__card {
+        border-inline-start: 3px solid var(--destructive);
+    }
+
+    .kp-uses__node[data-kp-tone='warn'] .kp-uses__card {
+        border-inline-start: 3px solid var(--warning);
+    }
+
+    .kp-uses__node[data-kp-tone='ok'] .kp-uses__card {
+        border-inline-start: 3px solid var(--success);
+    }
+
+    .kp-uses__state {
+        display: grid;
+        min-block-size: var(--kp-uses-min, 18rem);
+    }
+
+    .kp-uses__state > .kp-stateplate {
+        block-size: 100%;
+    }
+
+    /* The phone's list: every source a card, its users as chips (links when they have one). */
+    .kp-uses__list {
+        display: grid;
+        gap: var(--kp-space-md, 0.75rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-uses__group {
+        display: grid;
+        gap: var(--kp-space-sm, 0.5rem);
+        padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1rem);
+        border: 1px solid var(--border);
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+        color: var(--card-foreground);
+    }
+
+    .kp-uses__group-head {
+        display: grid;
+        gap: 2px;
+        margin: 0;
+    }
+
+    .kp-uses__chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-uses__chip {
+        display: inline-flex;
+        align-items: center;
+        min-block-size: 2.25rem;
+        padding: 0 var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border-strong);
+        border-radius: 999px;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-uses__chip-link {
+        display: inline-flex;
+        align-items: center;
+        min-block-size: 2.25rem;
+        margin-inline: calc(-1 * var(--kp-space-md, 0.75rem));
+        padding-inline: var(--kp-space-md, 0.75rem);
+        color: var(--link, var(--primary));
+        text-decoration: none;
+    }
+    /* kpadopt6-media:uses:end */
+}

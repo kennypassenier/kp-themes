@@ -71,6 +71,14 @@
         "kp-uptime",
         "kp-week",
         "kp-weekdays",
-        "kp-wheel"
+        "kp-wheel",
+        "kp-anchor",
+        "kp-anchors",
+        "kp-autosize",
+        "kp-docglyph",
+        "kp-docpreview",
+        "kp-gallery",
+        "kp-uses",
+        "kp-viewer"
     ]
 }
