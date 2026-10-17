@@ -23,7 +23,7 @@ the selectors and their order are identical, which is what
 | `css/dark-register.css` | 216.9 kB | 109.2 kB | 50% |
 | `css/deco-register.css` | 244.6 kB | 142.8 kB | 42% |
 | `css/fonts.css` | 16.6 kB | 12.0 kB | 27% |
-| `css/forest-register.css` | 228.5 kB | 120.8 kB | 47% |
+| `css/forest-register.css` | 233.5 kB | 123.1 kB | 47% |
 | `css/formal-register.css` | 179.7 kB | 92.8 kB | 48% |
 | `css/layout.css` | 13.0 kB | 2.5 kB | 81% |
 | `css/nostromo-register.css` | 233.9 kB | 130.9 kB | 44% |
@@ -33,11 +33,11 @@ the selectors and their order are identical, which is what
 | `css/themes.css` | 124.9 kB | 78.9 kB | 37% |
 | `css/titanium-register.css` | 206.5 kB | 113.7 kB | 45% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 3514.7 kB | 1892.8 kB | 46% |
+| `dist/kp-themes.css` | 3519.7 kB | 1895.1 kB | 46% |
 | `dist/kp-themes.js` | 1319.1 kB | 735.1 kB | 44% |
 
-The loose stylesheets together weigh **3567.8 kB** authored and
-**1924.6 kB** minified, 46% less. A page loading one theme's
+The loose stylesheets together weigh **3572.8 kB** authored and
+**1926.9 kB** minified, 46% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
 The wire is smaller again: gzip takes the minified bundle to roughly a
