@@ -139,3 +139,14 @@
 #kc-wheel-filter {
     margin-block-end: var(--kp-space-md, 0.75rem);
 }
+
+/* The sample list is twelve rows tall with its headings: the list keeps that height while it loads, when it is empty and
+   when it failed, so the page below it does not move (--kp-checklist-min-rows). */
+#kc-list {
+    --kp-checklist-min-rows: 12;
+}
+
+#kc-wheel-weights,
+#kc-wheel-turns {
+    margin-block-end: var(--kp-space-sm, 0.5rem);
+}

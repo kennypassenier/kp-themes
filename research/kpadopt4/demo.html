@@ -5365,10 +5365,18 @@ The NAS sleeps after 02:00; the copy wakes it first.</textarea>
                             middle, and under the wheel “Press Spin to let the wheel choose.”
                         </li>
                         <li>
-                            Press <b>Spin</b> (or Tab to it and press Space): the line says “Turning…”, the wheel turns four times and slows evenly to
-                            a stop with no bounce, about 3.6 s. The chosen segment is filled deeper, the others step back, and under the wheel “The
+                            Press <b>Spin</b> (or Tab to it and press Space): the line says “Turning…”, the wheel turns three to six whole turns (a
+                            different number each spin, the log says how many) and slows evenly to a stop with no bounce, about 3.6 s for the mean
+                            travel and a little longer or shorter for a longer or shorter one. The chosen segment is filled deeper, the others step back, and under the wheel “The
                             wheel chose” and the full name in Fraunces over formal’s double rule. The button now says <b>Again</b>; the next spin
                             never lands on the same dish.
+                        </li>
+                        <li>
+                            The Spin button in the middle does not move when the pointer is on it, nor when it has focus (it stays on the disc’s
+                            centre; only its colours answer). <b>How the chances are divided</b> resizes the segments: “All equal” makes them the same
+                            size, “Soup ×12” makes soup most of the disc, and the odds follow the size (the log shows the weight of each draw).
+                            <b>How far a spin turns</b> sets the least and most whole turns; each spin draws a number between them, and the wheel
+                            always lands on the dish drawn by the weights.
                         </li>
                         <li>
                             The filter chips change the dishes: the segments grow and shrink to their new size in formal’s time; the wheel and the
@@ -5456,6 +5464,42 @@ The NAS sleeps after 02:00; the copy wakes it first.</textarea>
                             </button>
                             <button type="button" class="kp-segmented__item" data-value="none" role="radio" aria-checked="false">
                                 <span class="kp-segmented__label">Nothing fits</span>
+                            </button>
+                        </div>
+                        <p class="kc-label">How the chances are divided (a segment is as large as its odds)</p>
+                        <div
+                            class="kp-segmented kp-segmented--chips"
+                            id="kc-wheel-weights"
+                            data-kp-segmented="single"
+                            role="radiogroup"
+                            aria-label="How the chances are divided"
+                        >
+                            <button type="button" class="kp-segmented__item" data-value="recency" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">By last eaten</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="equal" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">All equal</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="soup" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Soup ×12</span>
+                            </button>
+                        </div>
+                        <p class="kc-label">How far a spin turns (whole turns, drawn per spin)</p>
+                        <div
+                            class="kp-segmented kp-segmented--chips"
+                            id="kc-wheel-turns"
+                            data-kp-segmented="single"
+                            role="radiogroup"
+                            aria-label="How far a spin turns"
+                        >
+                            <button type="button" class="kp-segmented__item" data-value="3-6" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">3 to 6 turns</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="1-2" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">1 to 2 turns</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="8-10" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">8 to 10 turns</span>
                             </button>
                         </div>
                         <div class="kp-wheel" id="kc-wheel" data-kp-wheel aria-label="Tonight’s dinner"></div>

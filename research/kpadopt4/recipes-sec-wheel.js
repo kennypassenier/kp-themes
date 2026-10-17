@@ -14,7 +14,15 @@ const DISHES = [
     { id: 'risotto', label: 'Mushroom risotto', weight: 2.5, veg: true },
     { id: 'wraps', label: 'Falafel wraps', weight: 1, veg: true },
 ];
-const as = (/** @type {typeof DISHES} */ list) => list.map(({ id, label, weight }) => ({ id, label, weight }));
+/** How the chances are divided: by how long ago a dish was eaten, evenly, or leaning hard on one dish. */
+const WEIGHTINGS = {
+    recency: (/** @type {typeof DISHES[number]} */ d) => d.weight,
+    equal: () => 1,
+    soup: (/** @type {typeof DISHES[number]} */ d) => (d.id === 'soup' ? 12 : 1),
+};
+let weighting = 'recency';
+let filter = 'all';
+const as = (/** @type {typeof DISHES} */ list) => list.map((d) => ({ id: d.id, label: d.label, weight: WEIGHTINGS[weighting](d) }));
 
 const wheel = byId('kc-wheel');
 const phone = byId('kc-wheel-phone');
@@ -31,9 +39,21 @@ const FILTERS = {
     none: () => [],
 };
 byId('kc-wheel-filter').addEventListener(SEGMENTED_EVENT, (event) => {
-    const value = /** @type {CustomEvent} */ (event).detail.value;
+    filter = /** @type {CustomEvent} */ (event).detail.value;
     setWheelState(wheel, 'ready');
-    setWheelItems(wheel, as(FILTERS[value]()));
+    setWheelItems(wheel, as(FILTERS[filter]()));
+});
+byId('kc-wheel-weights').addEventListener(SEGMENTED_EVENT, (event) => {
+    weighting = /** @type {CustomEvent} */ (event).detail.value;
+    setWheelState(wheel, 'ready');
+    setWheelItems(wheel, as(FILTERS[filter]()));
+});
+byId('kc-wheel-turns').addEventListener(SEGMENTED_EVENT, (event) => {
+    const [least, most] = /** @type {CustomEvent} */ (event).detail.value.split('-');
+    for (const w of [wheel, phone]) {
+        w.setAttribute('data-kp-wheel-turns-min', least);
+        w.setAttribute('data-kp-wheel-turns-max', most);
+    }
 });
 byId('kc-wheel-load').addEventListener('click', () => {
     setWheelState(wheel, 'loading');
@@ -43,9 +63,10 @@ byId('kc-wheel-fail').addEventListener('click', () => setWheelState(wheel, 'erro
 
 const log = byId('kc-wheel-log');
 const section = byId('wheel');
-section.addEventListener(WHEEL_SPIN_EVENT, (event) =>
-    say(log, `kp-wheel-spin · drawn first: ${/** @type {CustomEvent} */ (event).detail.item.label}`),
-);
+section.addEventListener(WHEEL_SPIN_EVENT, (event) => {
+    const { item, turns } = /** @type {CustomEvent} */ (event).detail;
+    say(log, `kp-wheel-spin · drawn first: ${item.label} (weight ${item.weight}) · will travel ${turns.toFixed(2)} turns`);
+});
 section.addEventListener(WHEEL_RESULT_EVENT, (event) => {
     const { item, source } = /** @type {CustomEvent} */ (event).detail;
     say(log, `kp-wheel-result · ${item.label} (${source})`);

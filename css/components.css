@@ -15483,17 +15483,27 @@
         top: 50%;
         left: 50%;
         box-sizing: border-box;
-        inline-size: var(--kp-wheel-hub, 30%);
-        min-inline-size: 4.5rem;
-        aspect-ratio: 1;
+        /* Centred by its insets and auto margins, never by a `translate`: the button's own hover and press lift
+           (`.kp-button:hover { translate: 0 -lift }`, and every register's) would replace the centring and throw the
+           hub half its size off the disc's middle [cook-1017; Kenny: "bij hover glitched de spin knop"]. */
+        inset: 0;
+        margin: auto;
+        inline-size: max(var(--kp-wheel-hub, 30%), 4.5rem);
+        block-size: max(var(--kp-wheel-hub, 30%), 4.5rem);
         padding: 0;
-        translate: -50% -50%;
         /* Round in every theme: a register's button corner (kp.register) would square the hub off and lay its corners
            over the labels. The register keeps every other part of its button. */
         border-radius: 50% !important;
         box-shadow: 0 0 0 var(--kp-wheel-hub-ring, 4px) var(--card);
         font-size: var(--kp-text-md, 1rem);
         font-weight: 700;
+    }
+
+    /* The hub does not move in any theme: not on hover, not on focus, not pressed (a register's lift or press `translate`
+       would take it off the disc's middle). Its colours, ring and shadow answer instead. Important, as the registers are
+       a later layer. */
+    .kp-wheel__spin.kp-button {
+        translate: none !important;
     }
 
     .kp-wheel__spin[aria-disabled='true'] {

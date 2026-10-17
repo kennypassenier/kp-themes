@@ -20,8 +20,20 @@
 //     wheel then turns to it: the motion is honest, never decides.
 //   - Spin again never lands on the same choice twice in a row while there
 //     is another (`data-kp-wheel-repeat="true"` allows it).
-//   - It turns `data-kp-wheel-turns` (4) whole turns plus the way to the
-//     outcome in `data-kp-wheel-duration` ms (3600), slowing on
+//   - Segments are as large as their odds: a segment's angle is its weight's
+//     share of the total (a weight of 4 beside 1 and 1 is two thirds of the
+//     disc, and two thirds likely). The weights are the whole of "how we
+//     divide the chances"; setWheelItems() again with new weights glides the
+//     segments to their new size.
+//   - It turns a number of whole turns plus the way to the outcome, and the
+//     number varies per spin: a whole number drawn between
+//     `data-kp-wheel-turns-min` (3) and `data-kp-wheel-turns-max` (6) alike,
+//     so no two spins feel the same. `data-kp-wheel-turns="4"` fixes it (min
+//     and max both 4). The time follows the travel: `data-kp-wheel-duration`
+//     ms (3600) is the time of the mean travel, a longer travel takes
+//     proportionally longer (never under 60% nor over 140% of it), so the
+//     speed stays alike. The turns only vary the travel: the outcome is drawn
+//     by the weights first, and the landing is always on it. It slows on
 //     `--kp-wheel-ease` (a long, even settle; a theme may answer its own). For
 //     a reader who asked for less motion it takes the short way in
 //     `data-kp-wheel-reduced-ms` (600; 0 places it at once), with no whole turn.
@@ -39,7 +51,7 @@
 // outcome goes.
 //
 // Events (bubbling, on the root):
-//   kp-wheel-spin    { item, index }               the outcome is drawn and the wheel starts
+//   kp-wheel-spin    { item, index, turns }        the outcome is drawn and the wheel starts (turns: whole turns it will make)
 //   kp-wheel-result  { item, index, source }       'spin' | 'only'
 //
 // Every word it adds is in js/strings.js. Nothing runs on import.
@@ -79,6 +91,9 @@ const SVG = 'http://www.w3.org/2000/svg';
 const R = 96;
 const LABEL_IN = 34;
 const LABEL_OUT = 84;
+/** Whole turns a spin makes, drawn between these (data-kp-wheel-turns-min / -max). */
+const DEFAULT_TURNS_MIN = 3;
+const DEFAULT_TURNS_MAX = 6;
 
 /** @param {WheelItem} item */
 const weightOf = (item) => Math.max(0.05, Number.isFinite(item.weight) ? Number(item.weight) : 1);
@@ -435,18 +450,30 @@ export async function spinWheel(root, { random = Math.random } = {}) {
     // Somewhere inside the segment, never on its edge.
     const land = a0 + (a1 - a0) * (0.5 + (random() - 0.5) * 0.6);
     const short = reduced();
-    const turns = short ? 0 : Math.max(0, Math.round(Number(root.getAttribute('data-kp-wheel-turns') ?? 4)));
-    const duration = short
+    const attr = (/** @type {string} */ name) => {
+        const raw = root.getAttribute(name);
+        const value = raw === null || raw.trim() === '' ? NaN : Number(raw);
+        return Number.isFinite(value) ? Math.max(0, Math.round(value)) : null;
+    };
+    const fixed = attr('data-kp-wheel-turns');
+    const least = attr('data-kp-wheel-turns-min') ?? fixed ?? DEFAULT_TURNS_MIN;
+    const most = Math.max(least, attr('data-kp-wheel-turns-max') ?? fixed ?? DEFAULT_TURNS_MAX);
+    // Drawn last, from the same source: the weights decided the outcome above, the turns only lengthen the way to it.
+    const turns = short ? 0 : least + Math.min(most - least, Math.floor(random() * (most - least + 1)));
+    const base = short
         ? Math.max(0, Number(root.getAttribute('data-kp-wheel-reduced-ms') ?? 600))
         : Math.max(0, Number(root.getAttribute('data-kp-wheel-duration') ?? 3600));
     const from = state.angle;
     const rest = (((-land - from) % 360) + 360) % 360;
     const to = from + turns * 360 + rest;
+    // The time follows the travel, around the mean travel (the middle turns and half a turn of rest).
+    const mean = ((least + most) / 2 + 0.5) * 360;
+    const duration = short ? base : base * Math.min(1.4, Math.max(0.6, (to - from) / mean));
     state.spinning = true;
     root.setAttribute('data-kp-wheel-spinning', '');
     part(root, 'result').setAttribute('aria-busy', 'true');
     paint(root);
-    root.dispatchEvent(new CustomEvent(WHEEL_SPIN_EVENT, { bubbles: true, detail: { item: { ...item }, index } }));
+    root.dispatchEvent(new CustomEvent(WHEEL_SPIN_EVENT, { bubbles: true, detail: { item: { ...item }, index, turns: (to - from) / 360 } }));
     const disc = part(root, 'disc');
     if (duration > 0 && to !== from) {
         const ease = getComputedStyle(root).getPropertyValue('--kp-wheel-ease').trim() || 'cubic-bezier(0.12, 0.6, 0.1, 1)';
