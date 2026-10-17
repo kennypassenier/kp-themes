@@ -17,6 +17,7 @@
 // draws them.
 import { THEMES } from '../js/theme-registry.js';
 import { JUDGEMENT_EVENT, loadJudgements } from './judgements.js';
+import { openBusyCard } from '../js/busy-card.js';
 import { gatherBlocks, isOpen } from './open-pairs.js';
 import {
     ANSWER_EVENT,
@@ -238,36 +239,41 @@ function openBlockDialog() {
 /** @type {Map<string, HTMLLIElement>} */
 const rows = new Map();
 
-/** The items still being read: they have no row and no number yet, only a placeholder in a row's shape. */
+/** The items still being read: they have no row and no number yet; the busy card covers their place. */
 const readingIds = new Set();
 
-/** @type {Map<string, HTMLLIElement>} */
-const placeholders = new Map();
-
 /**
- * A row's shape without its words, for an item still being read (Kenny, 2026-10-14: a row that appeared with its
- * title and button and was gone four seconds later read as a demo that vanished). It names nothing and offers
- * nothing; it stands where a row may come, and goes when the item is known.
+ * The busy card over the list while it is read (DEMO_RULES "Motion and loading": a data list shows the theme's busy
+ * card, never irregular skeletons). The area keeps a minimum height (agenda.css), the rows already known show as
+ * they arrive and the card stays centred over the part still to come, until reading ends.
+ * @type {import('../js/busy-card.js').BusyCard | null}
  */
-function placeholderFor(/** @type {string} */ id) {
-    let row = placeholders.get(id);
-    if (row) return row;
-    row = document.createElement('li');
-    row.className = 'agenda-row agenda-row--reading';
-    row.setAttribute('aria-hidden', 'true');
-    row.innerHTML = `
-        <span class="kp-skeleton kp-skeleton--circle agenda-row__number"></span>
-        <div class="agenda-row__what">
-            <span class="kp-skeleton agenda-skeleton agenda-skeleton--kind"></span>
-            <span class="kp-skeleton agenda-skeleton agenda-skeleton--title"></span>
-            <span class="kp-skeleton agenda-skeleton"></span>
-            <span class="kp-skeleton agenda-skeleton agenda-skeleton--short"></span>
-        </div>
-        <p class="agenda-row__count"><span class="kp-skeleton agenda-skeleton agenda-skeleton--badge"></span></p>
-        <div class="agenda-row__go"><span class="kp-skeleton agenda-skeleton agenda-skeleton--button"></span></div>`;
-    placeholders.set(id, row);
-    return row;
+let busy = null;
+
+/** Lay, move or lift the card for the list's current reading state. */
+function syncBusyCard(/** @type {boolean} */ reading) {
+    const host = /** @type {HTMLElement} */ (ui.waiting.parentElement);
+    if (!reading) {
+        void busy?.close();
+        busy = null;
+        return;
+    }
+    if (!busy) {
+        busy = openBusyCard(host, {
+            words: 'Reading the research demos…',
+            className: 'agenda__busy',
+            arrive: !firstRender,
+            area: () => {
+                const box = host.getBoundingClientRect();
+                const last = ui.waiting.lastElementChild;
+                const top = last ? last.getBoundingClientRect().bottom : box.top;
+                return [{ top: Math.min(top, box.bottom), left: box.left, right: box.right, bottom: box.bottom }];
+            },
+        });
+    } else busy.place();
 }
+
+let firstRender = true;
 
 /** One row's element, made once and repainted in place, so focus and scroll survive a refresh. */
 function rowFor(/** @type {string} */ id) {
@@ -395,23 +401,24 @@ function render() {
     const views = [...demos.map(demoView), blocksView()];
     const open = views.filter((view) => view.state !== 'done');
     const finished = views.filter((view) => view.state === 'done');
-    // Only what is known to wait gets a row and a number; what is still being read holds a place in a row's shape.
+    // Only what is known to wait gets a row and a number; what is still being read is covered by the busy card.
     const known = open.filter((view) => view.state === 'waiting');
-    const pending = open.filter((view) => view.state === 'reading');
     readingIds.clear();
-    for (const view of pending) readingIds.add(view.id);
+    for (const view of open) if (view.state === 'reading') readingIds.add(view.id);
     /** @type {Map<string, number>} */
     const numbers = new Map(known.map((view, i) => [view.id, i + 1]));
 
-    ui.waiting.replaceChildren(...known.map((view, i) => paintRow(view, i + 1, numbers)), ...pending.map((view) => placeholderFor(view.id)));
-    if (!open.length) {
+    ui.waiting.replaceChildren(...known.map((view, i) => paintRow(view, i + 1, numbers)));
+    const reading = views.some((view) => view.state === 'reading');
+    if (!open.length && !reading) {
         const none = document.createElement('li');
         none.className = 'cat-changed-done agenda__none';
         none.textContent = 'Nothing waits for your verdict: every demo and every catalogue block is judged in every theme.';
         ui.waiting.append(none);
     }
-    const reading = views.some((view) => view.state === 'reading');
     ui.waiting.setAttribute('aria-busy', String(reading));
+    syncBusyCard(reading);
+    firstRender = false;
 
     const doneRows = [
         ...finished.map((view) => paintRow(view, null, numbers)),

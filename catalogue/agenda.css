@@ -162,6 +162,12 @@
         margin-block-start: 0;
     }
 
+    /* The list's area: a minimum height of a few rows, so reading to read jumps little, and the host the busy card is laid over. */
+    .agenda__area {
+        position: relative;
+        min-block-size: 22rem;
+    }
+
     /* The rows: four shared columns. */
     .agenda__list {
         display: grid;
@@ -283,39 +289,6 @@
 
     .agenda-row__go {
         display: grid;
-    }
-
-    /* An item still being read: a row's shape, no words, no number, no button. */
-    .agenda-row--reading .agenda-row__number {
-        border: 0;
-    }
-
-    .agenda-skeleton {
-        --kp-skeleton-height: 0.875rem;
-        inline-size: 100%;
-    }
-
-    .agenda-skeleton--kind {
-        inline-size: 9rem;
-        --kp-skeleton-height: 0.75rem;
-    }
-
-    .agenda-skeleton--title {
-        inline-size: 55%;
-        --kp-skeleton-height: 1.25rem;
-    }
-
-    .agenda-skeleton--short {
-        inline-size: 70%;
-    }
-
-    .agenda-skeleton--badge {
-        inline-size: 7rem;
-        --kp-skeleton-height: 1.5rem;
-    }
-
-    .agenda-skeleton--button {
-        --kp-skeleton-height: 2.5rem;
     }
 
     .agenda-row__button {
