@@ -38271,6 +38271,16 @@
 }
 /* ── end t56 ── */
 
+/* ── t56: the quote card keeps its room ── */
+@layer kp.signature {
+    /* The loading card reserves room for its busy panel (--kp-quote-min), the loaded card did not: loading grew the card by
+       a third. The loaded card keeps the same room, so empty, failed, loading and loaded are one footprint. */
+    [data-theme='cyberpunk'] .kp-quote > .kp-card__stage {
+        min-block-size: var(--kp-quote-min, 9rem);
+    }
+}
+/* ── end t56 ── */
+
 @layer kp.register {
     /* @kp-soft/themes — css/synthwave-register.css
    The synthwave register, 5.0.0 [S48, LIFT_PLAN row 1]: the horizon
@@ -44439,6 +44449,22 @@
         white-space: nowrap;
         overflow-wrap: normal;
         word-break: keep-all;
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the quote card keeps its room ── */
+@layer kp.signature {
+    /* The loading card reserves room for its busy panel (--kp-quote-min), the loaded card did not: loading grew the card by
+       a third. The loaded card keeps the same room, so empty, failed, loading and loaded are one footprint. */
+    [data-theme='synthwave'] .kp-quote > .kp-card__stage {
+        min-block-size: var(--kp-quote-min, 9rem);
+    }
+    /* The sun plate and the failure's wrapped words need a little more on a phone. */
+    @container kp-quote (max-width: 25rem) {
+        [data-theme='synthwave'] .kp-quote > .kp-card__stage {
+            min-block-size: max(var(--kp-quote-min, 9rem), 10.5rem);
+        }
     }
 }
 /* ── end t56 ── */
@@ -90612,6 +90638,16 @@
         max-inline-size: 10rem;
         white-space: normal;
         overflow-wrap: break-word;
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the quote card keeps its room ── */
+@layer kp.signature {
+    /* The loading card reserves room for its busy panel (--kp-quote-min), the loaded card did not: loading grew the card by
+       a third. The loaded card keeps the same room, so empty, failed, loading and loaded are one footprint. */
+    [data-theme='dark'] .kp-quote > .kp-card__stage {
+        min-block-size: var(--kp-quote-min, 9rem);
     }
 }
 /* ── end t56 ── */
