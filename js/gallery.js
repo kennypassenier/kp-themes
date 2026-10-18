@@ -26,7 +26,7 @@
 // Keys while the lightbox is open (the shortcut engine, listed in the `?` sheet; none needs AltGr): Left and Right, Home and End,
 // `z` zoom, `+` and `-`, `f` full screen. Escape closes. Phone: the lightbox is the whole screen, previous and next are wide edge zones
 // and a swipe, a swipe down closes. The position is an exact count ("4 of 37") announced politely. Actions per picture come from
-// `setGallery(el, { actions: (item) => [{ label, tone, run, confirm }] })`. States: loading (the busy card over the grid), empty and
+// `setGallery(el, { actions: (item) => [{ label, tone, run, confirm }] })`. States: loading (the busy card over the whole gallery), empty and
 // failed (the package's plates over the whole footprint), a picture that fails (its tile and the stage become a plate with Retry).
 // Events: `kp-gallery-open` `{ id, item }`, `kp-gallery-close`, `kp-gallery-retry` (the failed list), `kp-gallery-add` `{ files }`,
 // `kp-gallery-picture-failed` `{ id }`. Nothing runs on import.
@@ -262,8 +262,9 @@ export function setGallery(el, spec) {
 
 /** @param {HTMLElement} el @param {Memory} memory @param {boolean} loading @param {HTMLElement} [grid] */
 function syncCard(el, memory, loading, grid) {
+    // The card covers the whole gallery, not the strip of skeleton lines the grid is while it loads [t56-statefix-1018, S10].
     if (loading && grid) {
-        if (!memory.card) memory.card = openBusyCard(el, { words: getStrings().galleryLoading, area: () => [grid], className: 'kp-gallery__busy', arrive: false });
+        if (!memory.card) memory.card = openBusyCard(el, { words: getStrings().galleryLoading, area: () => [el], className: 'kp-gallery__busy', arrive: false });
         else if (memory.card.layer.parentElement !== el) el.append(memory.card.layer);
         memory.card.place();
         return;

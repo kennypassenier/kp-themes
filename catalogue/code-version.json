@@ -47,7 +47,7 @@
         },
         "js/forms.js": { "digest": "bf5feede224ff141", "when": "[data-kp-form], [data-kp-submit], .kp-switch" },
         "js/freshness.js": { "digest": "9d733e1e8379a795", "when": "[data-kp-ago]" },
-        "js/gallery.js": { "digest": "d84e09f466c2ecc4", "when": "[data-kp-gallery]" },
+        "js/gallery.js": { "digest": "d9feaa46fa4d2c60", "when": "[data-kp-gallery]" },
         "js/gantt.js": { "digest": "bea814e99deb935e", "when": "[data-kp-gantt]" },
         "js/graph.js": { "digest": "167d4490ee8fac83", "when": "[data-kp-graph]" },
         "js/gridlayout.js": { "digest": "13ceeb82c7b8c760", "when": "[data-kp-grid]" },

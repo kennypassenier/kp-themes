@@ -48461,7 +48461,7 @@ function setGallery(el14, spec) {
 }
 function syncCard3(el14, memory, loading, grid2) {
   if (loading && grid2) {
-    if (!memory.card) memory.card = openBusyCard(el14, { words: getStrings().galleryLoading, area: () => [grid2], className: "kp-gallery__busy", arrive: false });
+    if (!memory.card) memory.card = openBusyCard(el14, { words: getStrings().galleryLoading, area: () => [el14], className: "kp-gallery__busy", arrive: false });
     else if (memory.card.layer.parentElement !== el14) el14.append(memory.card.layer);
     memory.card.place();
     return;
