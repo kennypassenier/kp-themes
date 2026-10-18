@@ -1,4 +1,424 @@
 {
     "demo": "kpadopt56-fields",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "fields-e964c16d-becc-4743-9938-5fb1103a0d6f",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 19:08: 99 of 99 judged, 87 approved, 12 not approved.",
+            "approved": [
+                {
+                    "item": "slider",
+                    "theme": "dark"
+                },
+                {
+                    "item": "slider",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "slider",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "slider",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "slider",
+                    "theme": "forest"
+                },
+                {
+                    "item": "slider",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "slider",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "slider",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "slider",
+                    "theme": "deco"
+                },
+                {
+                    "item": "slider",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "slider",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "slider-states",
+                    "theme": "dark"
+                },
+                {
+                    "item": "slider-states",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "slider-states",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "slider-states",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "slider-states",
+                    "theme": "forest"
+                },
+                {
+                    "item": "slider-states",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "slider-states",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "slider-states",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "slider-states",
+                    "theme": "deco"
+                },
+                {
+                    "item": "slider-states",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "slider-states",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "time-field-options",
+                    "theme": "dark"
+                },
+                {
+                    "item": "time-field-options",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "time-field-options",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "time-field-options",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "time-field-options",
+                    "theme": "forest"
+                },
+                {
+                    "item": "time-field-options",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "time-field-options",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "time-field-options",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "time-field-options",
+                    "theme": "deco"
+                },
+                {
+                    "item": "time-field-options",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "time-field-options",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "autosize-grow",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "autosize-grow",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "autosize-grow",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "autosize-grow",
+                    "theme": "forest"
+                },
+                {
+                    "item": "autosize-grow",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "autosize-grow",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "autosize-grow",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "autosize-grow",
+                    "theme": "deco"
+                },
+                {
+                    "item": "autosize-grow",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "autosize-grow",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "autosize-states",
+                    "theme": "dark"
+                },
+                {
+                    "item": "autosize-states",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "autosize-states",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "autosize-states",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "autosize-states",
+                    "theme": "forest"
+                },
+                {
+                    "item": "autosize-states",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "autosize-states",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "autosize-states",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "autosize-states",
+                    "theme": "deco"
+                },
+                {
+                    "item": "autosize-states",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "autosize-states",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "json-textarea",
+                    "theme": "dark"
+                },
+                {
+                    "item": "json-textarea",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "json-textarea",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "json-textarea",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "json-textarea",
+                    "theme": "forest"
+                },
+                {
+                    "item": "json-textarea",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "json-textarea",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "json-textarea",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "json-textarea",
+                    "theme": "deco"
+                },
+                {
+                    "item": "json-textarea",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "json-textarea",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "rating",
+                    "theme": "dark"
+                },
+                {
+                    "item": "rating",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "rating",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "rating",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "rating",
+                    "theme": "forest"
+                },
+                {
+                    "item": "rating",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "rating",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "rating",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "rating",
+                    "theme": "deco"
+                },
+                {
+                    "item": "rating",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "rating",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "rating-states",
+                    "theme": "dark"
+                },
+                {
+                    "item": "rating-states",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "rating-states",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "rating-states",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "rating-states",
+                    "theme": "forest"
+                },
+                {
+                    "item": "rating-states",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "rating-states",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "rating-states",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "rating-states",
+                    "theme": "deco"
+                },
+                {
+                    "item": "rating-states",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "rating-states",
+                    "theme": "titanium"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "time-field",
+                    "theme": "dark",
+                    "note": "bij present loading, presets failed  opent altijd de menu zelf ook?"
+                },
+                {
+                    "item": "time-field",
+                    "theme": "cyberpunk",
+                    "note": "bij present loading, presets failed  opent altijd de menu zelf ook?"
+                },
+                {
+                    "item": "time-field",
+                    "theme": "synthwave",
+                    "note": "bij present loading, presets failed  opent altijd de menu zelf ook?"
+                },
+                {
+                    "item": "time-field",
+                    "theme": "pastel",
+                    "note": "bij present loading, presets failed  opent altijd de menu zelf ook?"
+                },
+                {
+                    "item": "time-field",
+                    "theme": "forest",
+                    "note": "bij present loading, presets failed  opent altijd de menu zelf ook?"
+                },
+                {
+                    "item": "time-field",
+                    "theme": "blueprint",
+                    "note": "bij present loading, presets failed  opent altijd de menu zelf ook?"
+                },
+                {
+                    "item": "time-field",
+                    "theme": "solstice",
+                    "note": "bij present loading, presets failed  opent altijd de menu zelf ook?"
+                },
+                {
+                    "item": "time-field",
+                    "theme": "brutalism",
+                    "note": "bij present loading, presets failed  opent altijd de menu zelf ook?"
+                },
+                {
+                    "item": "time-field",
+                    "theme": "deco",
+                    "note": "bij present loading, presets failed  opent altijd de menu zelf ook?"
+                },
+                {
+                    "item": "time-field",
+                    "theme": "nostromo",
+                    "note": "bij present loading, presets failed  opent altijd de menu zelf ook?"
+                },
+                {
+                    "item": "time-field",
+                    "theme": "titanium",
+                    "note": "bij present loading, presets failed  opent altijd de menu zelf ook?"
+                },
+                {
+                    "item": "autosize-grow",
+                    "theme": "dark",
+                    "note": "bij present loading, presets failed  opent altijd de menu zelf ook?"
+                }
+            ],
+            "choices": []
+        }
+    ]
 }

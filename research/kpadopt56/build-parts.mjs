@@ -353,6 +353,19 @@ function lookBlock(id, themes) {
  * @type {Record<string, string>}
  */
 const CHANGED = {
+    'fields/time-field':
+        'You saw the list open by itself when you pressed <b>Presets loading</b> or <b>Presets failed</b>. That was the demo, not ' +
+        'the field: after giving the list its state, the demo pressed the field&rsquo;s clock button (and a second press closed it ' +
+        'again). Now the buttons under <b>The list</b> only change what the list holds and open nothing. To see the state at once, a ' +
+        'fourth field stands under the sentence, <b>The list, shown open</b>: its list stays open on the page and follows the ' +
+        'button you press. The first field shows the same when you open it yourself, or with <b>Show it open</b>.',
+    'fields/autosize-grow':
+        'Your note here was the same words as on the time field (a list that opens by itself), and this box has no list or ' +
+        'menu, so it may have been meant for the time field. Looked at in dark anyway, side by side with cyberpunk and formal: ' +
+        'the box grows from 3 lines to 20 and stops there (494 px, a scroll bar inside), 5 lines is 5 lines and Clear gives ' +
+        'the height back, the same as in the other themes. One real fault was found and fixed: the demo&rsquo;s script ' +
+        'stopped with an error once the states section had left the page (it filled a read-only box that only stands ' +
+        'there); the box itself was not affected. If something else in dark is wrong here, a word in the note is enough.',
     'toggles/toggle':
         'You saw <b>Only errors</b> centred while it was off, but pressed, with <b>Showing errors only</b> under it, the pair sat ' +
         'low in the button. The room that centres the words while the button is off stayed over them when the hint appeared. Now a ' +

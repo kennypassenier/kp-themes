@@ -179,3 +179,15 @@
     border-radius: var(--radius, 0.5rem);
     overflow-wrap: anywhere;
 }
+
+/* The time field whose list is shown open: the room under it is the list's, given on a window wide enough for the list
+   to hang under its field (a phone gets none: there the list is a sheet over the screen and never stays open by itself). */
+.ks-time-opened {
+    max-inline-size: 18rem;
+}
+
+/* 24rem: the tallest list (presets failed: the plate with Retry over 14rem of times) with its gap, so it hangs under its
+   field and never flips above it. */
+.ks-time-opened[data-ks-shown] {
+    padding-block-end: 24rem;
+}

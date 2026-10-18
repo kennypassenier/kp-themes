@@ -344,10 +344,13 @@ if (document.getElementById('km-auto-mail')) {
             }, 2600);
         } else setAutosizeState(live, 'error', 'This reply could not be saved. Your text is still here.');
     });
-    const ro = /** @type {HTMLTextAreaElement} */ (document.getElementById('km-auto-ro'));
-    ro.value = lines(30);
-    const phoneBox = /** @type {HTMLTextAreaElement} */ (document.getElementById('km-auto-phone'));
-    document.getElementById('km-auto-phone-fill')?.addEventListener('click', () => put(phoneBox, lines(40)));
+    // The read-only and the phone box stand in the states section, which a page (or a frame of the review dialog) may
+    // leave out: the growing box's own section must not stop on their absence (DEMO_RULES ch. 2, a section is wired by
+    // its own elements).
+    const ro = /** @type {HTMLTextAreaElement | null} */ (document.getElementById('km-auto-ro'));
+    if (ro) ro.value = lines(30);
+    const phoneBox = /** @type {HTMLTextAreaElement | null} */ (document.getElementById('km-auto-phone'));
+    if (phoneBox) document.getElementById('km-auto-phone-fill')?.addEventListener('click', () => put(phoneBox, lines(40)));
 }
 
 // ── link anchors ────────────────────────────────────────────────────────────────────────────────────────────────
