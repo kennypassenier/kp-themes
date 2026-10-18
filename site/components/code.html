@@ -265,6 +265,48 @@
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code&quot;</span> <span class="kp-code__keyword">data-kp-code</span> <span class="kp-code__keyword">data-kp-code-title</span><span class="kp-code__string">=&quot;Payload&quot;</span> <span class="kp-code__keyword">data-kp-code-language</span><span class="kp-code__string">=&quot;JSON&quot;</span> <span class="kp-code__keyword">data-kp-code-lines</span>&gt;&lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">code</span>&gt;{&quot;topic&quot;:&quot;backup.done&quot;,&quot;ok&quot;:true,&quot;volumes&quot;:[&quot;media&quot;,&quot;photos&quot;]}&lt;/<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">pre</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A payload in a table row</figcaption>
+                        <p class="kp-text-muted">`.kp-code--cell` is the same block as a table cell: no title, the words wrap so a row never scrolls sideways, three lines show and “Show all N lines” opens the rest in place (`data-kp-code-open=&quot;dialog&quot;` opens a dialog instead). `data-kp-code-language=&quot;auto&quot;` makes it JSON only when the text parses. A binary payload is one muted line with its size and a download link; `data-kp-truncated=&quot;1024/4096&quot;` says only the start was sent.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-table-wrap">
+    <table class="kp-table">
+        <caption class="kp-sr-only">Dead letters</caption>
+        <thead><tr><th scope="col">Topic</th><th scope="col">Payload</th></tr></thead>
+        <tbody>
+            <tr><td>backup.done</td><td><figure class="kp-code kp-code--cell" data-kp-code data-kp-code-language="auto"><pre class="kp-code__body"><code>{
+                                "topic": "backup.done",
+                                "ok": true,
+                                "volumes": ["media", "photos"],
+                                "bytes": 4100000000,
+                                "took": "3 min 12 s"
+                                }</code></pre></figure></td></tr>
+            <tr><td>upload.cover</td><td><figure class="kp-code kp-code--cell" data-kp-code data-kp-binary-size="2150" data-kp-download="cover.png"></figure></td></tr>
+            <tr><td>export.big</td><td><figure class="kp-code kp-code--cell" data-kp-code data-kp-code-language="auto" data-kp-truncated="1024/4096" data-kp-copy="false"><pre class="kp-code__body"><code>{"rows":[1,2,3,4,5,6,7,8,9,10,11,12</code></pre></figure></td></tr>
+            <tr><td>ping</td><td><figure class="kp-code kp-code--cell" data-kp-code></figure></td></tr>
+        </tbody>
+    </table>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">caption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;Dead letters&lt;/<span class="kp-code__keyword">caption</span>&gt;
+        &lt;<span class="kp-code__keyword">thead</span>&gt;&lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Topic&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Payload&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;&lt;/<span class="kp-code__keyword">thead</span>&gt;
+        &lt;<span class="kp-code__keyword">tbody</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;backup.done&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code kp-code--cell&quot;</span> <span class="kp-code__keyword">data-kp-code</span> <span class="kp-code__keyword">data-kp-code-language</span><span class="kp-code__string">=&quot;auto&quot;</span>&gt;&lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">code</span>&gt;{
+                                &quot;topic&quot;: &quot;backup.done&quot;,
+                                &quot;ok&quot;: true,
+                                &quot;volumes&quot;: [&quot;media&quot;, &quot;photos&quot;],
+                                &quot;bytes&quot;: 4100000000,
+                                &quot;took&quot;: &quot;3 min 12 s&quot;
+                                }&lt;/<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">pre</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;upload.cover&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code kp-code--cell&quot;</span> <span class="kp-code__keyword">data-kp-code</span> <span class="kp-code__keyword">data-kp-binary-size</span><span class="kp-code__string">=&quot;2150&quot;</span> <span class="kp-code__keyword">data-kp-download</span><span class="kp-code__string">=&quot;cover.png&quot;</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;export.big&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code kp-code--cell&quot;</span> <span class="kp-code__keyword">data-kp-code</span> <span class="kp-code__keyword">data-kp-code-language</span><span class="kp-code__string">=&quot;auto&quot;</span> <span class="kp-code__keyword">data-kp-truncated</span><span class="kp-code__string">=&quot;1024/4096&quot;</span> <span class="kp-code__keyword">data-kp-copy</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;&lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">code</span>&gt;{&quot;rows&quot;:[1,2,3,4,5,6,7,8,9,10,11,12&lt;/<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">pre</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;ping&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code kp-code--cell&quot;</span> <span class="kp-code__keyword">data-kp-code</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;/<span class="kp-code__keyword">tbody</span>&gt;
+    &lt;/<span class="kp-code__keyword">table</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -327,6 +369,10 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>.kp-code--cell</code></td><td>The block as a table cell: no title, wrapped words, three lines shown. Copy copies the whole value, folded or not; `data-kp-copy=&quot;false&quot;` takes it away. An empty payload is the muted line “empty payload”; a loading one is a skeleton line, because the table around it lays the busy card.</td></tr>
+                            <tr><td><code>data-kp-code-open</code></td><td>`inline` (default: “Show all 40 lines” opens the rest in the cell) or `dialog`.</td></tr>
+                            <tr><td><code>data-kp-binary-size / data-kp-download</code></td><td>The size in bytes of a payload that is not text, and the link to fetch it: the cell shows “binary, 2.1 kB” and the link, never the bytes.</td></tr>
+                            <tr><td><code>data-kp-truncated</code></td><td>`shown/total` in bytes, “1024/4096”: the foot line says only the start was sent.</td></tr>
                             <tr><td><code>data-kp-code-wrap / -max / -layout</code></td><td>Wrapped from the start; folded past N lines; Raw instead of Pretty.</td></tr>
                             <tr><td><code>state</code></td><td>`loading`, `empty`, `binary` (with `size`) and `error`.</td></tr>
                             <tr><td><code>truncated</code></td><td>`{ shown, total }`: the foot says only the start was sent.</td></tr>

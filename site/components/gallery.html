@@ -265,6 +265,55 @@
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-gallery&quot;</span> <span class="kp-code__keyword">data-kp-gallery</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Photos&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Holding its height in a state</figcaption>
+                        <p class="kp-text-muted">Loaded, the component is as high as its rows. Loading, empty or failed it keeps that height as a minimum, so the page under it does not jump twice; the first load has nothing remembered and is left alone. A very tall list holds a screen, not its full length (the cap is set on the host or any ancestor; it is 12 rem here to show it). Press the states.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack kp-gap-md" id="doc-fp-gallery">
+    <div class="kp-row kp-gap-sm" role="group" aria-label="State">
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="ready">Ready</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="loading">Loading</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="empty">Empty</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="error">Failed</button>
+    </div>
+    <div class="kp-gallery" data-kp-gallery id="doc-fp-gallery-host" aria-label="Photos" style="--kp-footprint-max: 14rem"></div>
+</div>
+                            <script type="module">
+import { attachGalleries, setGallery } from '../../js/gallery.js';
+const root = document.getElementById('doc-fp-gallery');
+const host = document.getElementById('doc-fp-gallery-host');
+attachGalleries(root);
+const picture = (hue) => 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><rect width="300" height="300" fill="hsl(' + hue + ' 40% 60%)"/></svg>');
+const items = [20, 80, 140, 200, 260, 320].map((hue, i) => ({ id: 'p' + i, src: picture(hue), thumb: picture(hue), alt: 'Colour ' + (i + 1), caption: 'Colour ' + (i + 1) }));
+const draw = (state) => setGallery(host, state === 'ready' ? { items, label: 'Photos' } : { items: [], state, message: state === 'empty' ? 'No pictures yet.' : 'The pictures could not be loaded.', label: 'Photos' });
+for (const button of root.querySelectorAll('[data-doc-state]')) {
+    button.addEventListener('click', () => draw(button.dataset.docState));
+}
+draw('ready');
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack kp-gap-md&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-fp-gallery&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-gap-sm&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;State&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;ready&quot;</span>&gt;Ready&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;loading&quot;</span>&gt;Loading&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;empty&quot;</span>&gt;Empty&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;error&quot;</span>&gt;Failed&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-gallery&quot;</span> <span class="kp-code__keyword">data-kp-gallery</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-fp-gallery-host&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Photos&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-footprint-max: 14rem&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachGalleries, setGallery } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/gallery'</span>;
+<span class="kp-code__keyword">const</span> root = document.getElementById(<span class="kp-code__string">'doc-fp-gallery'</span>);
+<span class="kp-code__keyword">const</span> host = document.getElementById(<span class="kp-code__string">'doc-fp-gallery-host'</span>);
+attachGalleries(root);
+<span class="kp-code__keyword">const</span> picture = (hue) =&gt; <span class="kp-code__string">'data:image/svg+xml,'</span> + encodeURIComponent(<span class="kp-code__string">'&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;300&quot; height=&quot;300&quot;&gt;&lt;rect width=&quot;300&quot; height=&quot;300&quot; fill=&quot;hsl('</span> + hue + <span class="kp-code__string">' 40% 60%)&quot;/&gt;&lt;/svg&gt;'</span>);
+<span class="kp-code__keyword">const</span> items = [<span class="kp-code__string">20</span>, <span class="kp-code__string">80</span>, <span class="kp-code__string">140</span>, <span class="kp-code__string">200</span>, <span class="kp-code__string">260</span>, <span class="kp-code__string">320</span>].map((hue, i) =&gt; ({ id: <span class="kp-code__string">'p'</span> + i, src: picture(hue), thumb: picture(hue), alt: <span class="kp-code__string">'Colour '</span> + (i + <span class="kp-code__string">1</span>), caption: <span class="kp-code__string">'Colour '</span> + (i + <span class="kp-code__string">1</span>) }));
+<span class="kp-code__keyword">const</span> draw = (state) =&gt; setGallery(host, state === <span class="kp-code__string">'ready'</span> ? { items, label: <span class="kp-code__string">'Photos'</span> } : { items: [], state, message: state === <span class="kp-code__string">'empty'</span> ? <span class="kp-code__string">'No pictures yet.'</span> : <span class="kp-code__string">'The pictures could not be loaded.'</span>, label: <span class="kp-code__string">'Photos'</span> });
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> button <span class="kp-code__keyword">of</span> root.querySelectorAll(<span class="kp-code__string">'[data-doc-state]'</span>)) {
+    button.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; draw(button.dataset.docState));
+}
+draw(<span class="kp-code__string">'ready'</span>);</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>

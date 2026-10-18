@@ -285,6 +285,77 @@
     &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;c&quot;</span>&gt;&lt;<span class="kp-code__keyword">label</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">data-kp-select-row</span>&gt; Order 1043&lt;/<span class="kp-code__keyword">label</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
 &lt;/<span class="kp-code__keyword">ul</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A result, a rule and a busy bar</figcaption>
+                        <p class="kp-text-muted">`setSelectionRules(bar, rules)` turns an action off, with the reason, for a selection it does not fit (tick order 1043 and Delete gives its reason). A press on a marked button fires `kp-selection-action` with `{ action, keys, items, matching, undoMs }`; the page calls `setSelectionBusy(bar, words)` while it works and `setSelectionResult(bar, { done, refused })` when some rows refused: the bar says “1 done, 1 refused: why” and each refused row carries its reason as a `.kp-selection__refusal` line. The keys line under the list is written by `data-kp-select-hint` (on the element that holds it, naming the list). Tick two rows, one of them order 1043, and press Requeue.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div id="doc-sel-live">
+    <div class="kp-selection" data-kp-selection id="doc-sel-bar" data-kp-selection-for="doc-sel-list" data-kp-placement="inline">
+        <div class="kp-selection__actions">
+            <button class="kp-button" type="button" data-kp-selection-action="requeue">Requeue</button>
+            <button class="kp-button kp-button--destructive" type="button" data-kp-selection-action="delete">Delete</button>
+        </div>
+    </div>
+    <ul id="doc-sel-list" data-kp-select-keys>
+        <li data-kp-row-key="a"><label><input type="checkbox" data-kp-select-row> Order 1041</label></li>
+        <li data-kp-row-key="b"><label><input type="checkbox" data-kp-select-row> Order 1042</label></li>
+        <li data-kp-row-key="c"><label><input type="checkbox" data-kp-select-row> Order 1043 (shipped)</label></li>
+    </ul>
+    <p data-kp-select-hint="doc-sel-list"></p>
+</div>
+                            <script type="module">
+import { attachSelectionBars, setSelectionBusy, setSelectionResult, setSelectionRules } from '../../js/selection-bar.js';
+
+const live = document.getElementById('doc-sel-live');
+attachSelectionBars(live);
+const bar = document.getElementById('doc-sel-bar');
+setSelectionRules(bar, {
+    delete: (items) => (items.some((item) => item.key === 'c') ? 'Order 1043 is shipped and cannot be deleted' : null),
+});
+bar.addEventListener('kp-selection-action', (event) => {
+    if (event.detail.action !== 'requeue') return;
+    setSelectionBusy(bar, 'Requeuing ' + event.detail.keys.length + '…');
+    setTimeout(() => {
+        setSelectionBusy(bar, null);
+        const refused = event.detail.keys.filter((key) => key === 'c').map((key) => ({ key, reason: 'Already shipped' }));
+        setSelectionResult(bar, { done: event.detail.keys.length - refused.length, refused });
+    }, 800);
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-sel-live&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-selection&quot;</span> <span class="kp-code__keyword">data-kp-selection</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-sel-bar&quot;</span> <span class="kp-code__keyword">data-kp-selection-for</span><span class="kp-code__string">=&quot;doc-sel-list&quot;</span> <span class="kp-code__keyword">data-kp-placement</span><span class="kp-code__string">=&quot;inline&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-selection__actions&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-selection-action</span><span class="kp-code__string">=&quot;requeue&quot;</span>&gt;Requeue&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-selection-action</span><span class="kp-code__string">=&quot;delete&quot;</span>&gt;Delete&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-sel-list&quot;</span> <span class="kp-code__keyword">data-kp-select-keys</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;a&quot;</span>&gt;&lt;<span class="kp-code__keyword">label</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">data-kp-select-row</span>&gt; Order 1041&lt;/<span class="kp-code__keyword">label</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;b&quot;</span>&gt;&lt;<span class="kp-code__keyword">label</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">data-kp-select-row</span>&gt; Order 1042&lt;/<span class="kp-code__keyword">label</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;c&quot;</span>&gt;&lt;<span class="kp-code__keyword">label</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">data-kp-select-row</span>&gt; Order 1043 (shipped)&lt;/<span class="kp-code__keyword">label</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">data-kp-select-hint</span><span class="kp-code__string">=&quot;doc-sel-list&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachSelectionBars, setSelectionBusy, setSelectionResult, setSelectionRules } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/selection-bar'</span>;
+
+<span class="kp-code__keyword">const</span> live = document.getElementById(<span class="kp-code__string">'doc-sel-live'</span>);
+attachSelectionBars(live);
+<span class="kp-code__keyword">const</span> bar = document.getElementById(<span class="kp-code__string">'doc-sel-bar'</span>);
+setSelectionRules(bar, {
+    <span class="kp-code__keyword">delete</span>: (items) =&gt; (items.some((item) =&gt; item.key === <span class="kp-code__string">'c'</span>) ? <span class="kp-code__string">'Order 1043 is shipped and cannot be deleted'</span> : <span class="kp-code__keyword">null</span>),
+});
+bar.addEventListener(<span class="kp-code__string">'kp-selection-action'</span>, (event) =&gt; {
+    <span class="kp-code__keyword">if</span> (event.detail.action !== <span class="kp-code__string">'requeue'</span>) <span class="kp-code__keyword">return</span>;
+    setSelectionBusy(bar, <span class="kp-code__string">'Requeuing '</span> + event.detail.keys.length + <span class="kp-code__string">'…'</span>);
+    setTimeout(() =&gt; {
+        setSelectionBusy(bar, <span class="kp-code__keyword">null</span>);
+        <span class="kp-code__keyword">const</span> refused = event.detail.keys.filter((key) =&gt; key === <span class="kp-code__string">'c'</span>).map((key) =&gt; ({ key, reason: <span class="kp-code__string">'Already shipped'</span> }));
+        setSelectionResult(bar, { done: event.detail.keys.length - refused.length, refused });
+    }, <span class="kp-code__string">800</span>);
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -359,6 +430,15 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>row keys</code></td><td>The keys of the rows are `rowSelect(el)` (the handle of an element that has them: `keys()`, `clear()`) and `rowSelectKeys(el)` (the keys of the ticked rows, handle or not); `attachRowSelect(root, options)` gives every `[data-kp-select-keys]` and every data table with a select column the keys and returns a detach. The same options are its second argument (`range`, `arrows`, `allKey`, `scroll`). Enter on a row fires `kp-row-open`; `data-kp-select-keys=&quot;false&quot;` turns the keys off for one element.</td></tr>
+                            <tr><td><code>kp-rows-select</code></td><td>Fired on the element after the keys changed the ticks: `{ keys, count, source, skipped }`. Boxes that are disabled are walked over by a range and counted in “2 skipped: cannot be selected”.</td></tr>
+                            <tr><td><code>.is-cursor</code></td><td>The row the cursor stands on: a ring, not a fill, so a ticked row and the cursor row read apart. It survives a refresh by the row’s key.</td></tr>
+                            <tr><td><code>data-kp-selecting</code></td><td>On a phone a long press on a row (half a second) starts selection mode: every tap on a row then ticks it, until the last tick goes.</td></tr>
+                            <tr><td><code>.kp-selection__panel / __count / __names / __more</code></td><td>The parts the script adds: the panel that holds the rest, the exact count in the width of the next digit, the names (wrapping, never cut with an ellipsis) and the exact “+4 more”.</td></tr>
+                            <tr><td><code>.kp-selection__offer / __result / __refusal</code></td><td>The offer “Select all 312 that match”, the line after an action that some rows refused (`setSelectionResult`), and the reason written under each refused row (the row carries `data-kp-refused`).</td></tr>
+                            <tr><td><code>.kp-selection__toggle / __clear</code></td><td>The Actions button that holds the page’s buttons on a narrow bar, and the button that unticks everything (Esc does the same).</td></tr>
+                            <tr><td><code>setSelection / getSelection</code></td><td>`setSelection(bar, items, { matching })` feeds the bar by hand for a list with no boxes (a board, a selection held by the server), after which the bar ignores the boxes; `getSelection(bar)` answers `{ keys, items, count, matching }`.</td></tr>
+                            <tr><td><code>setSelectionBusy / setSelectionResult / setSelectionRules</code></td><td>While an action runs the buttons stop answering and the count gives way to the words; a result names how many were done and how many refused, and why; a rule is a function by the action’s id that answers the reason or nothing.</td></tr>
                             <tr><td><code>data-kp-selection-for</code></td><td>The ids of the tables or lists it serves, space separated; the nearest by default.</td></tr>
                             <tr><td><code>data-kp-placement</code></td><td>`sticky-top` (default), `inline` or `floating-bottom`.</td></tr>
                             <tr><td><code>data-kp-selection-names</code></td><td>`names` (default) or `count`.</td></tr>

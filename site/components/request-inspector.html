@@ -284,6 +284,98 @@ setRequests(box, [
     { at: <span class="kp-code__string">'2026-10-17T20:21:40+02:00'</span>, method: <span class="kp-code__string">'POST'</span>, path: <span class="kp-code__string">'/hooks/restore'</span>, status: <span class="kp-code__string">500</span>, headers: { <span class="kp-code__string">'content-type'</span>: <span class="kp-code__string">'application/json'</span> }, body: <span class="kp-code__string">'{&quot;error&quot;:&quot;volume busy&quot;}'</span>, bodyBytes: <span class="kp-code__string">23</span>, source: <span class="kp-code__string">'client'</span> },
 ]);</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Loading, empty and failed</figcaption>
+                        <p class="kp-text-muted">`setRequestsState(el, state, { message })` puts the list in one of the card’s four states. Loading lays the busy card over at least three rows, an empty list says so with Send test (`kp-requests-test`), a failed one has the destructive plate with Retry (`kp-requests-retry`).</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack kp-gap-md">
+    <div class="kp-card kp-inspector" data-kp-requests id="doc-req-loading"></div>
+    <div class="kp-card kp-inspector" data-kp-requests id="doc-req-empty"></div>
+    <div class="kp-card kp-inspector" data-kp-requests id="doc-req-failed"></div>
+</div>
+                            <script type="module">
+import { attachRequestInspectors, setRequestsState } from '../../js/request-inspector.js';
+
+attachRequestInspectors(document.getElementById('doc-req-loading').parentElement);
+setRequestsState(document.getElementById('doc-req-loading'), 'loading');
+setRequestsState(document.getElementById('doc-req-empty'), 'empty');
+setRequestsState(document.getElementById('doc-req-failed'), 'error', { message: 'The service did not answer.' });
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack kp-gap-md&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card kp-inspector&quot;</span> <span class="kp-code__keyword">data-kp-requests</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-req-loading&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card kp-inspector&quot;</span> <span class="kp-code__keyword">data-kp-requests</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-req-empty&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card kp-inspector&quot;</span> <span class="kp-code__keyword">data-kp-requests</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-req-failed&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachRequestInspectors, setRequestsState } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/request-inspector'</span>;
+
+attachRequestInspectors(document.getElementById(<span class="kp-code__string">'doc-req-loading'</span>).parentElement);
+setRequestsState(document.getElementById(<span class="kp-code__string">'doc-req-loading'</span>), <span class="kp-code__string">'loading'</span>);
+setRequestsState(document.getElementById(<span class="kp-code__string">'doc-req-empty'</span>), <span class="kp-code__string">'empty'</span>);
+setRequestsState(document.getElementById(<span class="kp-code__string">'doc-req-failed'</span>), <span class="kp-code__string">'error'</span>, { message: <span class="kp-code__string">'The service did not answer.'</span> });</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Holding its height in a state</figcaption>
+                        <p class="kp-text-muted">Loaded, the component is as high as its rows. Loading, empty or failed it keeps that height as a minimum, so the page under it does not jump twice; the first load has nothing remembered and is left alone. A very tall list holds a screen, not its full length (the cap is set on the host or any ancestor; it is 12 rem here to show it). Press the states.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack kp-gap-md" id="doc-fp-requests">
+    <div class="kp-row kp-gap-sm" role="group" aria-label="State">
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="ready">Ready</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="loading">Loading</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="empty">Empty</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="error">Failed</button>
+    </div>
+    <div class="kp-card kp-inspector" data-kp-requests id="doc-fp-requests-host" style="--kp-footprint-max: 14rem"></div>
+</div>
+                            <script type="module">
+import { attachRequestInspectors, setRequests, setRequestsState } from '../../js/request-inspector.js';
+const root = document.getElementById('doc-fp-requests');
+const host = document.getElementById('doc-fp-requests-host');
+attachRequestInspectors(root);
+const requests = [
+    { at: '2026-10-17T20:18:03+02:00', method: 'POST', path: '/hooks/backup', status: 202, headers: { 'content-type': 'application/json' }, body: '{"ok":true}', bodyBytes: 11, source: 'client' },
+    { at: '2026-10-17T20:21:40+02:00', method: 'POST', path: '/hooks/restore', status: 500, headers: { 'content-type': 'application/json' }, body: '{"error":"volume busy"}', bodyBytes: 23, source: 'client' },
+    { at: '2026-10-17T20:25:12+02:00', method: 'GET', path: '/health', status: 200, headers: {}, body: 'ok', bodyBytes: 2, source: 'client' },
+];
+const draw = (state) => {
+    if (state === 'ready') { setRequests(host, requests); setRequestsState(host, 'ready'); }
+    else { if (state === 'empty') setRequests(host, []); setRequestsState(host, state, { message: 'The service did not answer.' }); }
+};
+for (const button of root.querySelectorAll('[data-doc-state]')) {
+    button.addEventListener('click', () => draw(button.dataset.docState));
+}
+draw('ready');
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack kp-gap-md&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-fp-requests&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-gap-sm&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;State&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;ready&quot;</span>&gt;Ready&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;loading&quot;</span>&gt;Loading&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;empty&quot;</span>&gt;Empty&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;error&quot;</span>&gt;Failed&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card kp-inspector&quot;</span> <span class="kp-code__keyword">data-kp-requests</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-fp-requests-host&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-footprint-max: 14rem&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachRequestInspectors, setRequests, setRequestsState } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/request-inspector'</span>;
+<span class="kp-code__keyword">const</span> root = document.getElementById(<span class="kp-code__string">'doc-fp-requests'</span>);
+<span class="kp-code__keyword">const</span> host = document.getElementById(<span class="kp-code__string">'doc-fp-requests-host'</span>);
+attachRequestInspectors(root);
+<span class="kp-code__keyword">const</span> requests = [
+    { at: <span class="kp-code__string">'2026-10-17T20:18:03+02:00'</span>, method: <span class="kp-code__string">'POST'</span>, path: <span class="kp-code__string">'/hooks/backup'</span>, status: <span class="kp-code__string">202</span>, headers: { <span class="kp-code__string">'content-type'</span>: <span class="kp-code__string">'application/json'</span> }, body: <span class="kp-code__string">'{&quot;ok&quot;:true}'</span>, bodyBytes: <span class="kp-code__string">11</span>, source: <span class="kp-code__string">'client'</span> },
+    { at: <span class="kp-code__string">'2026-10-17T20:21:40+02:00'</span>, method: <span class="kp-code__string">'POST'</span>, path: <span class="kp-code__string">'/hooks/restore'</span>, status: <span class="kp-code__string">500</span>, headers: { <span class="kp-code__string">'content-type'</span>: <span class="kp-code__string">'application/json'</span> }, body: <span class="kp-code__string">'{&quot;error&quot;:&quot;volume busy&quot;}'</span>, bodyBytes: <span class="kp-code__string">23</span>, source: <span class="kp-code__string">'client'</span> },
+    { at: <span class="kp-code__string">'2026-10-17T20:25:12+02:00'</span>, method: <span class="kp-code__string">'GET'</span>, path: <span class="kp-code__string">'/health'</span>, status: <span class="kp-code__string">200</span>, headers: {}, body: <span class="kp-code__string">'ok'</span>, bodyBytes: <span class="kp-code__string">2</span>, source: <span class="kp-code__string">'client'</span> },
+];
+<span class="kp-code__keyword">const</span> draw = (state) =&gt; {
+    <span class="kp-code__keyword">if</span> (state === <span class="kp-code__string">'ready'</span>) { setRequests(host, requests); setRequestsState(host, <span class="kp-code__string">'ready'</span>); }
+    <span class="kp-code__keyword">else</span> { <span class="kp-code__keyword">if</span> (state === <span class="kp-code__string">'empty'</span>) setRequests(host, []); setRequestsState(host, state, { message: <span class="kp-code__string">'The service did not answer.'</span> }); }
+};
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> button <span class="kp-code__keyword">of</span> root.querySelectorAll(<span class="kp-code__string">'[data-doc-state]'</span>)) {
+    button.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; draw(button.dataset.docState));
+}
+draw(<span class="kp-code__string">'ready'</span>);</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -346,6 +438,9 @@ setRequests(box, [
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>toCurl / toJson</code></td><td>`toCurl(request, { mask, secretHeaders, origin })` and `toJson(request, { mask, secretHeaders })` (js/request-inspector.js) are what the copy buttons use: a request as a curl command or as JSON, the secret headers drawn as ******** unless `mask` is false. A page that sends a request on can call them too.</td></tr>
+                            <tr><td><code>.kp-inspector__…</code></td><td>The parts of a request: `__row` (the fold), `__method`, `__status`, `__path`, `__source`, `__time`, then opened `__body`, `__heading`, `__headers`, `__secret` (a masked value), `__actions`; and around the list `__bar` with `__filter` and `__count`, `__list`, `__older` (“Show N older”) and `__nomatch`.</td></tr>
+                            <tr><td><code>the bar</code></td><td>The filter bar and its segments scroll inside the card when they are wider than it; the page never scrolls sideways.</td></tr>
                             <tr><td><code>data-kp-secret-headers</code></td><td>Header names masked on screen and in a copy; authorization, cookie, set-cookie, x-api-key and proxy-authorization by default.</td></tr>
                             <tr><td><code>data-kp-secrets-in-copy</code></td><td>`masked` (default: a copy carries ******** and a separate “Copy curl with secrets” button carries the real values), `masked-only` or `real`.</td></tr>
                             <tr><td><code>data-kp-requests-open</code></td><td>`none` (default: every request folded), `failed` (the 4xx and 5xx are open) or `first`.</td></tr>

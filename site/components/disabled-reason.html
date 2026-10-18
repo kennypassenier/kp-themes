@@ -265,6 +265,20 @@
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">disabled</span> <span class="kp-code__keyword">data-kp-disabled-reason</span><span class="kp-code__string">=&quot;Nothing is selected yet&quot;</span>&gt;Delete&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A slider and a weekday picker that are off</figcaption>
+                        <p class="kp-text-muted">A control that fills its line (the slider, the weekday picker, a sentence) is not shrink-wrapped by its reason anchor: the anchor takes the line and the control takes the anchor’s width, so the sentence never breaks one letter to a line. These two carry `data-kp-disabled` with the reason; hover the slider for the tooltip, and read the weekday picker’s own line under its chips.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack kp-gap-md">
+    <div class="kp-slider" data-kp-slider data-kp-min="0" data-kp-max="100" data-kp-value="40" data-kp-unit="%" data-kp-disabled data-kp-disabled-reason="Retention is set by the backup policy" aria-label="Retention"></div>
+    <div class="kp-weekdays" data-kp-weekdays data-kp-value="1,4" data-kp-disabled data-kp-disabled-reason="The schedule is paused" aria-label="Run on"></div>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack kp-gap-md&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-slider&quot;</span> <span class="kp-code__keyword">data-kp-slider</span> <span class="kp-code__keyword">data-kp-min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">data-kp-max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;40&quot;</span> <span class="kp-code__keyword">data-kp-unit</span><span class="kp-code__string">=&quot;%&quot;</span> <span class="kp-code__keyword">data-kp-disabled</span> <span class="kp-code__keyword">data-kp-disabled-reason</span><span class="kp-code__string">=&quot;Retention is set by the backup policy&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Retention&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-weekdays&quot;</span> <span class="kp-code__keyword">data-kp-weekdays</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;1,4&quot;</span> <span class="kp-code__keyword">data-kp-disabled</span> <span class="kp-code__keyword">data-kp-disabled-reason</span><span class="kp-code__string">=&quot;The schedule is paused&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Run on&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -301,6 +315,8 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>attachDisabledReasons(root)</code></td><td>Wires every control under `root` that carries `data-kp-disabled-reason` (js/reason.js, found by js/auto.js; `DISABLED_REASON` is the selector). Nothing runs on import; the call returns a detach that unwraps the controls again and gives back their own `aria-describedby`.</td></tr>
+                            <tr><td><code>.kp-reason</code></td><td>The anchor the script wraps round the control: it takes the pointer a disabled button does not, and carries `data-kp-reason-off` while the reason shows. A disabled slider, weekday picker or sentence in it makes the anchor take the whole line.</td></tr>
                             <tr><td><code>follows the attribute</code></td><td>Change or remove the sentence and the tooltip changes or goes; a control that comes back to life loses it.</td></tr>
                             <tr><td><code>aria-disabled</code></td><td>A control disabled with `aria-disabled=&quot;true&quot;` carries a reason the same way.</td></tr>
                     </tbody></table></div>

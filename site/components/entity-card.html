@@ -284,6 +284,96 @@ setEntityGrid(document.getElementById(<span class="kp-code__string">'doc-entitie
       actions: [{ id: <span class="kp-code__string">'restart'</span>, label: <span class="kp-code__string">'Restart'</span> }, { id: <span class="kp-code__string">'logs'</span>, label: <span class="kp-code__string">'Logs'</span> }] },
 ]);</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A narrow grid, a card with no action, and the states</figcaption>
+                        <p class="kp-text-muted">The actions come only from the data: the second card has none, so it has no actions row (`data-kp-entity-actions=&quot;none&quot;`, written by the script). The first has three, and the grid is narrow: a button that does not fit the card goes into “More” for the whole grid, and `data-kp-entity-fit` (written on the grid) counts how many fit now; it comes back when the grid widens. `setEntityGridState` puts the whole grid in `loading`, `empty` or `error`; a single card takes a `status` of its own.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack kp-gap-md" id="doc-entities-more">
+    <div style="inline-size: 21rem; max-inline-size: 100%">
+        <div class="kp-entity-grid" data-kp-entity-grid data-kp-entity-min="18rem" data-kp-entity-inline="3" id="doc-entities-narrow" role="list"></div>
+    </div>
+    <div class="kp-entity-grid" data-kp-entity-grid id="doc-entities-failed" role="list"></div>
+</div>
+                            <script type="module">
+import { attachEntityCards, setEntityGrid, setEntityGridState } from '../../js/entity-card.js';
+
+attachEntityCards(document.getElementById('doc-entities-more'));
+setEntityGrid(document.getElementById('doc-entities-narrow'), [
+    { key: 'media', name: 'media', vmid: '106', state: { label: 'running', tone: 'success' },
+      figures: [{ value: '3/5', label: 'apps up' }],
+      meters: [{ label: 'CPU', value: 0.34 }, { label: 'RAM', value: 0.71 }],
+      actions: [{ id: 'restart', label: 'Restart' }, { id: 'logs', label: 'Logs' }, { id: 'remove', label: 'Remove', danger: true }] },
+    { key: 'lab', name: 'lab', vmid: '112', state: { label: 'stopped' }, figures: [{ value: '0/2', label: 'apps up' }], meters: [{ label: 'CPU', value: null }, { label: 'RAM', value: null }] },
+]);
+setEntityGridState(document.getElementById('doc-entities-failed'), 'error', { message: 'The host did not answer.' });
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack kp-gap-md&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-entities-more&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;inline-size: 21rem; max-inline-size: 100%&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-entity-grid&quot;</span> <span class="kp-code__keyword">data-kp-entity-grid</span> <span class="kp-code__keyword">data-kp-entity-min</span><span class="kp-code__string">=&quot;18rem&quot;</span> <span class="kp-code__keyword">data-kp-entity-inline</span><span class="kp-code__string">=&quot;3&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-entities-narrow&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;list&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-entity-grid&quot;</span> <span class="kp-code__keyword">data-kp-entity-grid</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-entities-failed&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;list&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachEntityCards, setEntityGrid, setEntityGridState } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/entity-card'</span>;
+
+attachEntityCards(document.getElementById(<span class="kp-code__string">'doc-entities-more'</span>));
+setEntityGrid(document.getElementById(<span class="kp-code__string">'doc-entities-narrow'</span>), [
+    { key: <span class="kp-code__string">'media'</span>, name: <span class="kp-code__string">'media'</span>, vmid: <span class="kp-code__string">'106'</span>, state: { label: <span class="kp-code__string">'running'</span>, tone: <span class="kp-code__string">'success'</span> },
+      figures: [{ value: <span class="kp-code__string">'3/5'</span>, label: <span class="kp-code__string">'apps up'</span> }],
+      meters: [{ label: <span class="kp-code__string">'CPU'</span>, value: <span class="kp-code__string">0.34</span> }, { label: <span class="kp-code__string">'RAM'</span>, value: <span class="kp-code__string">0.71</span> }],
+      actions: [{ id: <span class="kp-code__string">'restart'</span>, label: <span class="kp-code__string">'Restart'</span> }, { id: <span class="kp-code__string">'logs'</span>, label: <span class="kp-code__string">'Logs'</span> }, { id: <span class="kp-code__string">'remove'</span>, label: <span class="kp-code__string">'Remove'</span>, danger: <span class="kp-code__keyword">true</span> }] },
+    { key: <span class="kp-code__string">'lab'</span>, name: <span class="kp-code__string">'lab'</span>, vmid: <span class="kp-code__string">'112'</span>, state: { label: <span class="kp-code__string">'stopped'</span> }, figures: [{ value: <span class="kp-code__string">'0/2'</span>, label: <span class="kp-code__string">'apps up'</span> }], meters: [{ label: <span class="kp-code__string">'CPU'</span>, value: <span class="kp-code__keyword">null</span> }, { label: <span class="kp-code__string">'RAM'</span>, value: <span class="kp-code__keyword">null</span> }] },
+]);
+setEntityGridState(document.getElementById(<span class="kp-code__string">'doc-entities-failed'</span>), <span class="kp-code__string">'error'</span>, { message: <span class="kp-code__string">'The host did not answer.'</span> });</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Holding its height in a state</figcaption>
+                        <p class="kp-text-muted">Loaded, the component is as high as its rows. Loading, empty or failed it keeps that height as a minimum, so the page under it does not jump twice; the first load has nothing remembered and is left alone. A very tall list holds a screen, not its full length (the cap is set on the host or any ancestor; it is 12 rem here to show it). Press the states.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack kp-gap-md" id="doc-fp-entity">
+    <div class="kp-row kp-gap-sm" role="group" aria-label="State">
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="ready">Ready</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="loading">Loading</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="empty">Empty</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="error">Failed</button>
+    </div>
+    <div class="kp-entity-grid" data-kp-entity-grid id="doc-fp-entity-host" role="list" style="--kp-footprint-max: 14rem"></div>
+</div>
+                            <script type="module">
+import { attachEntityCards, setEntityGrid, setEntityGridState } from '../../js/entity-card.js';
+const root = document.getElementById('doc-fp-entity');
+const host = document.getElementById('doc-fp-entity-host');
+attachEntityCards(root);
+const stacks = ['media', 'home', 'network'].map((name, i) => ({ key: name, name, vmid: String(106 + i), state: { label: 'running', tone: 'success' }, figures: [{ value: '3/5', label: 'apps up' }], meters: [{ label: 'CPU', value: 0.3 }, { label: 'RAM', value: 0.6 }], actions: [{ id: 'logs', label: 'Logs' }] }));
+const draw = (state) => (state === 'ready' ? setEntityGrid(host, stacks) : setEntityGridState(host, state, { message: 'The host did not answer.' }));
+for (const button of root.querySelectorAll('[data-doc-state]')) {
+    button.addEventListener('click', () => draw(button.dataset.docState));
+}
+draw('ready');
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack kp-gap-md&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-fp-entity&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-gap-sm&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;State&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;ready&quot;</span>&gt;Ready&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;loading&quot;</span>&gt;Loading&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;empty&quot;</span>&gt;Empty&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;error&quot;</span>&gt;Failed&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-entity-grid&quot;</span> <span class="kp-code__keyword">data-kp-entity-grid</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-fp-entity-host&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;list&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-footprint-max: 14rem&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachEntityCards, setEntityGrid, setEntityGridState } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/entity-card'</span>;
+<span class="kp-code__keyword">const</span> root = document.getElementById(<span class="kp-code__string">'doc-fp-entity'</span>);
+<span class="kp-code__keyword">const</span> host = document.getElementById(<span class="kp-code__string">'doc-fp-entity-host'</span>);
+attachEntityCards(root);
+<span class="kp-code__keyword">const</span> stacks = [<span class="kp-code__string">'media'</span>, <span class="kp-code__string">'home'</span>, <span class="kp-code__string">'network'</span>].map((name, i) =&gt; ({ key: name, name, vmid: String(<span class="kp-code__string">106</span> + i), state: { label: <span class="kp-code__string">'running'</span>, tone: <span class="kp-code__string">'success'</span> }, figures: [{ value: <span class="kp-code__string">'3/5'</span>, label: <span class="kp-code__string">'apps up'</span> }], meters: [{ label: <span class="kp-code__string">'CPU'</span>, value: <span class="kp-code__string">0.3</span> }, { label: <span class="kp-code__string">'RAM'</span>, value: <span class="kp-code__string">0.6</span> }], actions: [{ id: <span class="kp-code__string">'logs'</span>, label: <span class="kp-code__string">'Logs'</span> }] }));
+<span class="kp-code__keyword">const</span> draw = (state) =&gt; (state === <span class="kp-code__string">'ready'</span> ? setEntityGrid(host, stacks) : setEntityGridState(host, state, { message: <span class="kp-code__string">'The host did not answer.'</span> }));
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> button <span class="kp-code__keyword">of</span> root.querySelectorAll(<span class="kp-code__string">'[data-doc-state]'</span>)) {
+    button.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; draw(button.dataset.docState));
+}
+draw(<span class="kp-code__string">'ready'</span>);</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -353,6 +443,13 @@ setEntityGrid(document.getElementById(<span class="kp-code__string">'doc-entitie
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>the script</code></td><td>`attachEntityCards(root)` wires every grid and returns a detach; `setEntityGrid(grid, list)` fills it (a refill with the same key changes the words in place); `setEntity(card, data)` draws one card; `setEntityGridState(grid, state, { count, message, title, actionLabel })` puts the grid in a state. `ENTITY_GRID` and `ENTITY_CARD` are the selectors. The card’s data is `{ key, name, vmid, state, figures, flags, meters, actions, status, error }`, and an action may be `danger` or carry a `disabled` reason.</td></tr>
+                            <tr><td><code>events</code></td><td>`kp-entity-action` `{ key, id }`, `kp-entity-flag` `{ key, flag }`, `kp-entity-tick` `{ key, ticked }`, `kp-entity-retry` `{ key }` from a card, and `kp-entity-new` and `kp-entity-grid-retry` from the grid (the `ENTITY_…_EVENT` constants).</td></tr>
+                            <tr><td><code>data-kp-entity-key / -link / -mark / -min / -narrow</code></td><td>The card’s stable key; the template of the name’s link (`{key}`, the whole card is its click target); the mark (`idmark` default, `icon` or `none`); on the grid, the least width of a card (22rem); `data-kp-entity-narrow`, which the script writes on the grid while it is narrower than 30rem: every action then goes into “More”.</td></tr>
+                            <tr><td><code>data-kp-entity-actions / data-kp-entity-fit</code></td><td>Written by the script: `none` on a card with no action (it has no actions row), and on the grid the count of action buttons that fit now. A button that does not fit the card’s width goes into “More” for every card of the grid, in one place, and comes back as the grid widens.</td></tr>
+                            <tr><td><code>.is-ticked / .is-cursor</code></td><td>A ticked card and the card the keys j, k and x stand on (a ring); both are rows of a selection.</td></tr>
+                            <tr><td><code>.kp-card--entity</code></td><td>The card: the same five rows in every state, so every card is as high as the next. `.kp-card--ghost` is the placeholder card of a loading grid.</td></tr>
+                            <tr><td><code>.kp-entity__id / __figures / __flags / __meters / __actions</code></td><td>The five rows. The identity row holds `__tick`, `__name` (the link), `__vmid` and `__state`; the figures row `__figure` (`__value`, `__none`); the flags row `__flag` and `__more-flags`, the menu button whose `__plus` is the exact “+2”; the meters row `__meter` (`__meter-label`, `__meter-value`); the actions row `__action` and `__more`, the “More” menu button. `__bone` is a loading row, `__retry` the Retry of a failed card and `__busy` the card laid over a loading grid.</td></tr>
                             <tr><td><code>data-kp-entity-meters</code></td><td>How many meter rows a card holds, 0 to 3; two by default.</td></tr>
                             <tr><td><code>data-kp-entity-flags-max</code></td><td>How many flags show; the rest are an exact “+2” that opens the package’s own menu. Three by default.</td></tr>
                             <tr><td><code>data-kp-entity-inline</code></td><td>The most actions that stand as buttons; the rest go in “More”. The buttons come only from the data: a card with no action has no row for them, and every card has as many columns as the grid’s busiest card. Under 30rem every action folds into “More”.</td></tr>

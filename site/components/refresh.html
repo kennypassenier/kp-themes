@@ -282,6 +282,31 @@ control.addEventListener(<span class="kp-code__string">'kp-refresh'</span>, (eve
     fetch(<span class="kp-code__string">'/api/overview'</span>).then(() =&gt; event.detail.done(<span class="kp-code__keyword">true</span>), () =&gt; event.detail.done(<span class="kp-code__keyword">false</span>));
 });</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">The menu look, and a refresh that fails</figcaption>
+                        <p class="kp-text-muted">`data-kp-look=&quot;menu&quot;` swaps the segments for the package’s menu button; “Other…” in it takes any whole number of seconds. Here every tick fails: the data stays, the control says when it retries (backing off: the interval, twice, four times, then that) and offers Retry now. The refresh waits while a dialog is open, a field has the focus or the tab is hidden, and R refreshes at once.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-refresh" id="doc-refresh-menu" data-kp-refresh="15" data-kp-look="menu" data-kp-refresh-choices="0,15,60" data-kp-refresh-hover="pause"></div>
+                            <script type="module">
+import { attachRefresh, setRefreshInterval } from '../../js/auto-refresh.js';
+
+const control = document.getElementById('doc-refresh-menu');
+attachRefresh(control.parentElement);
+control.addEventListener('kp-refresh', (event) => event.detail.done(false));
+control.addEventListener('kp-refresh-interval', (event) => console.info('interval', event.detail.seconds, event.detail.by));
+setRefreshInterval(control, 15);
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-refresh&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-refresh-menu&quot;</span> <span class="kp-code__keyword">data-kp-refresh</span><span class="kp-code__string">=&quot;15&quot;</span> <span class="kp-code__keyword">data-kp-look</span><span class="kp-code__string">=&quot;menu&quot;</span> <span class="kp-code__keyword">data-kp-refresh-choices</span><span class="kp-code__string">=&quot;0,15,60&quot;</span> <span class="kp-code__keyword">data-kp-refresh-hover</span><span class="kp-code__string">=&quot;pause&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachRefresh, setRefreshInterval } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/auto-refresh'</span>;
+
+<span class="kp-code__keyword">const</span> control = document.getElementById(<span class="kp-code__string">'doc-refresh-menu'</span>);
+attachRefresh(control.parentElement);
+control.addEventListener(<span class="kp-code__string">'kp-refresh'</span>, (event) =&gt; event.detail.done(<span class="kp-code__keyword">false</span>));
+control.addEventListener(<span class="kp-code__string">'kp-refresh-interval'</span>, (event) =&gt; console.info(<span class="kp-code__string">'interval'</span>, event.detail.seconds, event.detail.by));
+setRefreshInterval(control, <span class="kp-code__string">15</span>);</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -333,6 +358,12 @@ control.addEventListener(<span class="kp-code__string">'kp-refresh'</span>, (eve
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>the script</code></td><td>`attachRefresh(root, { now })` wires every `[data-kp-refresh]` and returns a detach; `refreshOf(el)` answers the handle; `refreshDone(el, ok)` is `detail.done(ok)` by element; `setRefreshInterval(el, seconds)` changes the interval from the page (`by: 'script'` on the event). `REFRESH` is the selector, `REFRESH_DEFAULT` (30) and `REFRESH_CHOICES` the defaults behind the attributes; the events are `REFRESH_EVENT` and `REFRESH_INTERVAL_EVENT`.</td></tr>
+                            <tr><td><code>kp-refresh detail</code></td><td>`{ reason, interval, done(ok) }` with `reason` one of `timer`, `now` (the button or R), `retry` and `return` (the tab came back with a refresh due).</td></tr>
+                            <tr><td><code>.kp-refresh__bar / __chooser / __menu / __segments</code></td><td>The first row: the chooser (the menu button of the `menu` look or the segmented control of the `segmented` look, which scrolls inside the card when it is wider than it) and, after it, the freshness line and Refresh now.</td></tr>
+                            <tr><td><code>.kp-refresh__line / __ago / __busy / __now / __count</code></td><td>The freshness line “updated 12 s ago”, which gives way to “updating…” in the same width, the button that refreshes at once and the thin rule that runs down to the next refresh.</td></tr>
+                            <tr><td><code>.kp-refresh__custom / __input / __apply / __problem</code></td><td>The “Other…” form: a number of seconds, Apply and the line that refuses what is not a whole number.</td></tr>
+                            <tr><td><code>.kp-refresh__failure / __note / __retry</code></td><td>The warning after a failed refresh: “Last refresh failed, retrying in 30 s” and Retry now.</td></tr>
                             <tr><td><code>data-kp-refresh</code></td><td>The seconds the page opens with; 30 by default, 0 opens paused.</td></tr>
                             <tr><td><code>data-kp-refresh-choices</code></td><td>The seconds offered, `0,15,30,60,300` by default (0 is paused). “Other…” takes any whole number of seconds.</td></tr>
                             <tr><td><code>data-kp-refresh-mode</code></td><td>`event` (default: the app fetches), `page` (reload the page) or `region` (fetch the same URL and swap only the region).</td></tr>

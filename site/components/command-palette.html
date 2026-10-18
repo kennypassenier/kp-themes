@@ -339,6 +339,45 @@
     &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__status&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
 &lt;/<span class="kp-code__keyword">dialog</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Words in any order, marked</figcaption>
+                        <p class="kp-text-muted">The query “upd jelly” is typed for you: every typed word has to start a word of the command, in whatever order, so “Update jellyfin” answers and “Update immich” and “Open the firewall” do not; the matched words are marked (`.kp-palette__mark`, a wash and a heavier weight, never colour alone; `data-kp-mark-look=&quot;wash&quot;` keeps the wash in a theme that rules its marks instead) and the best answer comes first. “Upgrade” is a hidden synonym (`data-kp-words`) that counts weaker than the label. `data-kp-typo=&quot;1&quot;` also finds a word one letter off.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<dialog class="kp-palette" data-kp-palette data-kp-hotkey="none" data-kp-typo="1" id="doc-intent" aria-label="Commands" open>
+    <input class="kp-palette__input" type="text" role="combobox" aria-label="Commands" aria-expanded="true" aria-controls="doc-intent-list" autocomplete="off" placeholder="Type a command…" />
+    <ul class="kp-palette__list" id="doc-intent-list" role="listbox" aria-label="Commands">
+        <li class="kp-palette__option" role="option" data-kp-option data-value="open-fw">Open the firewall</li>
+        <li class="kp-palette__option" role="option" data-kp-option data-value="update-immich">Update immich</li>
+        <li class="kp-palette__option" role="option" data-kp-option data-value="update-jellyfin" data-kp-words="upgrade">Update jellyfin</li>
+        <li class="kp-palette__option" role="option" data-kp-option data-value="restart-jellyfin">Restart jellyfin</li>
+    </ul>
+    <p class="kp-palette__status" role="status" aria-live="polite"></p>
+</dialog>
+                            <script type="module">
+const input = document.querySelector('#doc-intent input');
+setTimeout(() => {
+    input.value = 'upd jelly';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+}, 300);
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">dialog</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette&quot;</span> <span class="kp-code__keyword">data-kp-palette</span> <span class="kp-code__keyword">data-kp-hotkey</span><span class="kp-code__string">=&quot;none&quot;</span> <span class="kp-code__keyword">data-kp-typo</span><span class="kp-code__string">=&quot;1&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-intent&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Commands&quot;</span> <span class="kp-code__keyword">open</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__input&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;combobox&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Commands&quot;</span> <span class="kp-code__keyword">aria-expanded</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">aria-controls</span><span class="kp-code__string">=&quot;doc-intent-list&quot;</span> <span class="kp-code__keyword">autocomplete</span><span class="kp-code__string">=&quot;off&quot;</span> <span class="kp-code__keyword">placeholder</span><span class="kp-code__string">=&quot;Type a command…&quot;</span> /&gt;
+    &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__list&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-intent-list&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;listbox&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Commands&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;open-fw&quot;</span>&gt;Open the firewall&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;update-immich&quot;</span>&gt;Update immich&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;update-jellyfin&quot;</span> <span class="kp-code__keyword">data-kp-words</span><span class="kp-code__string">=&quot;upgrade&quot;</span>&gt;Update jellyfin&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__option&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;option&quot;</span> <span class="kp-code__keyword">data-kp-option</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;restart-jellyfin&quot;</span>&gt;Restart jellyfin&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-palette__status&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">dialog</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">const</span> input = document.querySelector(<span class="kp-code__string">'#doc-intent input'</span>);
+setTimeout(() =&gt; {
+    input.value = <span class="kp-code__string">'upd jelly'</span>;
+    input.dispatchEvent(<span class="kp-code__keyword">new</span> Event(<span class="kp-code__string">'input'</span>, { bubbles: <span class="kp-code__keyword">true</span> }));
+}, <span class="kp-code__string">300</span>);</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>
@@ -750,6 +789,10 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>matching options</code></td><td>On the palette: `data-kp-fold-diacritics` (“cafe” finds “Café”, on by default), `data-kp-split-hyphen` (“kp” finds “kp-soft”, on by default), `data-kp-typo=&quot;1&quot;` (one letter off, never for a word under four letters), `data-kp-highlight=&quot;off&quot;` (no marks), `data-kp-mark-look=&quot;wash&quot;` (keep the wash in a theme that rules its marks instead) and `data-kp-group-order=&quot;Inbox, Do, Go to&quot;` (the order of the groups).</td></tr>
+                            <tr><td><code>.kp-palette__mark / __label / __nomatch</code></td><td>A matched word, the label the script wraps so the words can be marked (`__label` is generated, so a command’s own markup stays as written), and the plate of a query nothing answers (`data-kp-nomatch=&quot;plate&quot;`), which names what a known verb works on.</td></tr>
+                            <tr><td><code>palette(el).setState</code></td><td>`setState('loading' | 'error' | 'ready', { message })` shows the busy card over the list, or the failed plate with Retry (`kp-palette-retry`) beside the commands marked `data-kp-static`, which stay.</td></tr>
+                            <tr><td><code>js/intent.js</code></td><td>The matcher on its own, pure and without a DOM: `matchIntent(text, query, options)`, `intentScore`, `intentRanges` (the character ranges to mark), `intentTokens` and `intentWords` (what a word is), `queryWords`, `startsWord(have, want, { typo })`, `rankCommands(commands, query, { context, maxShown, groupOrder, recent })` and `noMatchText(query, { verbs, subjects, noun, hint })`; `INTENT_MAX_SHOWN` (40) is the default behind `data-kp-max-shown`. A page that draws its own list ranks it with `rankCommands`.</td></tr>
                             <tr><td><code>.kp-palette</code></td><td>The dialog: near the top rather than in the middle, so a list that grows downwards does not push its own input off centre.</td></tr>
                             <tr><td><code>.kp-palette__input</code></td><td>The filter, at full width, with the list under it.</td></tr>
                             <tr><td><code>.kp-palette__group / __group-label</code></td><td>Commands under a small heading. A group whose commands are all filtered out hides itself.</td></tr>

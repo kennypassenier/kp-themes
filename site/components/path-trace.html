@@ -280,6 +280,51 @@ setTrace(document.getElementById(<span class="kp-code__string">'doc-trace'</span
     { title: <span class="kp-code__string">'Jellyfin'</span>, note: <span class="kp-code__string">'media network'</span>, verdict: <span class="kp-code__string">'allowed'</span> },
 ]);</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Every hop on its own, and the states</figcaption>
+                        <p class="kp-text-muted">`data-kp-trace-stop=&quot;all&quot;` shows each hop’s own verdict, for a “what if”: nothing is dimmed after a refusal. `data-kp-trace-swap` adds a Swap button (and the key S) that fires `kp-trace-swap`, for a form that swaps source and target; the rule can stand inline in the note (`data-kp-trace-rule=&quot;inline&quot;`) and the whole trace can be copied as text. A hop with no verdict is “not measured”. `trace(el).setState(state, { message })` shows the trace running (the busy card over placeholder hops), empty or failed (Retry); the last two traces below are running and failed.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack kp-gap-md" id="doc-trace-more">
+    <div class="kp-trace" data-kp-trace id="doc-trace-all" data-kp-trace-stop="all" data-kp-trace-rule="inline" data-kp-trace-swap data-kp-trace-copy data-kp-density="compact"></div>
+    <div class="kp-trace" data-kp-trace id="doc-trace-running"></div>
+    <div class="kp-trace" data-kp-trace id="doc-trace-failed"></div>
+</div>
+                            <script type="module">
+import { attachTraces, setTrace, trace, traceSummary, traceText } from '../../js/path-trace.js';
+
+attachTraces(document.getElementById('doc-trace-more'));
+const hops = [
+    { title: 'tv', note: 'IoT network', verdict: 'allowed' },
+    { title: 'Firewall', note: 'tcp 8096', verdict: 'refused', rule: 'IoT to media' },
+    { title: 'Jellyfin', note: 'media network', verdict: 'allowed' },
+    { title: 'Disk', note: 'not measured' },
+];
+setTrace(document.getElementById('doc-trace-all'), hops);
+trace(document.getElementById('doc-trace-running')).setState('running');
+trace(document.getElementById('doc-trace-failed')).setState('error', { message: 'The firewall did not answer.' });
+document.getElementById('doc-trace-all').addEventListener('kp-trace-swap', () => console.info(traceSummary(hops, 'all'), traceText(hops, 'all')));
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack kp-gap-md&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-trace-more&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-trace&quot;</span> <span class="kp-code__keyword">data-kp-trace</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-trace-all&quot;</span> <span class="kp-code__keyword">data-kp-trace-stop</span><span class="kp-code__string">=&quot;all&quot;</span> <span class="kp-code__keyword">data-kp-trace-rule</span><span class="kp-code__string">=&quot;inline&quot;</span> <span class="kp-code__keyword">data-kp-trace-swap</span> <span class="kp-code__keyword">data-kp-trace-copy</span> <span class="kp-code__keyword">data-kp-density</span><span class="kp-code__string">=&quot;compact&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-trace&quot;</span> <span class="kp-code__keyword">data-kp-trace</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-trace-running&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-trace&quot;</span> <span class="kp-code__keyword">data-kp-trace</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-trace-failed&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachTraces, setTrace, trace, traceSummary, traceText } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/path-trace'</span>;
+
+attachTraces(document.getElementById(<span class="kp-code__string">'doc-trace-more'</span>));
+<span class="kp-code__keyword">const</span> hops = [
+    { title: <span class="kp-code__string">'tv'</span>, note: <span class="kp-code__string">'IoT network'</span>, verdict: <span class="kp-code__string">'allowed'</span> },
+    { title: <span class="kp-code__string">'Firewall'</span>, note: <span class="kp-code__string">'tcp 8096'</span>, verdict: <span class="kp-code__string">'refused'</span>, rule: <span class="kp-code__string">'IoT to media'</span> },
+    { title: <span class="kp-code__string">'Jellyfin'</span>, note: <span class="kp-code__string">'media network'</span>, verdict: <span class="kp-code__string">'allowed'</span> },
+    { title: <span class="kp-code__string">'Disk'</span>, note: <span class="kp-code__string">'not measured'</span> },
+];
+setTrace(document.getElementById(<span class="kp-code__string">'doc-trace-all'</span>), hops);
+trace(document.getElementById(<span class="kp-code__string">'doc-trace-running'</span>)).setState(<span class="kp-code__string">'running'</span>);
+trace(document.getElementById(<span class="kp-code__string">'doc-trace-failed'</span>)).setState(<span class="kp-code__string">'error'</span>, { message: <span class="kp-code__string">'The firewall did not answer.'</span> });
+document.getElementById(<span class="kp-code__string">'doc-trace-all'</span>).addEventListener(<span class="kp-code__string">'kp-trace-swap'</span>, () =&gt; console.info(traceSummary(hops, <span class="kp-code__string">'all'</span>), traceText(hops, <span class="kp-code__string">'all'</span>)));</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -332,6 +377,11 @@ setTrace(document.getElementById(<span class="kp-code__string">'doc-trace'</span
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>the script</code></td><td>`attachTraces(root)` wires every `[data-kp-trace]` and returns a detach; `setTrace(el, hops)` hands over the hops (`{ title, note, verdict, rule }`); `trace(el)` answers the handle; `traceStates(hops, stop)`, `traceSummary(hops, stop)` and `traceText(hops, stop)` are the verdicts, the summary line and the copy text on their own. `TRACE` is the selector.</td></tr>
+                            <tr><td><code>events</code></td><td>`kp-trace-rule` `{ rule, hop }` when the rule chip is pressed, `kp-trace-swap` for the Swap button and the key S, `kp-trace-retry` for Retry in a failed trace (`TRACE_RULE_EVENT`, `TRACE_SWAP_EVENT`, `TRACE_RETRY_EVENT`).</td></tr>
+                            <tr><td><code>.kp-steplist--trace</code></td><td>The step list’s modifier the trace is drawn with (`.kp-steplist.kp-steplist--trace`, js/steplist.js): an allowed hop is `done` with the check, a refused one `failed` with the cross, the hops after the first refusal `skipped` (“Not reached”) and a hop with no verdict `pending` (“Not measured”).</td></tr>
+                            <tr><td><code>.kp-trace__summary / __stage / __foot</code></td><td>The summary line over the hops (“Blocked at rule IoT to media”, a polite status), the hops and the foot with the copy and swap buttons.</td></tr>
+                            <tr><td><code>.kp-trace__rule / __copy / __swap / __busy</code></td><td>The deciding rule as a keyboard-reachable chip (a `.kp-badge`), the Copy and Swap buttons and the busy card of a running trace.</td></tr>
                             <tr><td><code>data-kp-trace-layout</code></td><td>`auto` (default: a row, a column under 30rem of its own width), `row` or `column`.</td></tr>
                             <tr><td><code>data-kp-trace-stop</code></td><td>`first-refusal` (default) or `all`, each hop’s own verdict for a “what if”.</td></tr>
                             <tr><td><code>data-kp-trace-verdict</code></td><td>`both` (default), `mark` or `word`; never colour alone.</td></tr>

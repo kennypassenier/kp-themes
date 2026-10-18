@@ -292,6 +292,98 @@ setNotices(centre, {
     sources: [{ key: <span class="kp-code__string">'storage'</span>, label: <span class="kp-code__string">'Storage'</span> }, { key: <span class="kp-code__string">'certs'</span>, label: <span class="kp-code__string">'Certificates'</span> }],
 });</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">The Inbox page, and the states</figcaption>
+                        <p class="kp-text-muted">`data-kp-notices-look=&quot;page&quot;` has no counter and no panel: the list stands in the page, with a switch per source, the same notices and the same Fix buttons. The list is sorted by time here (`data-kp-order=&quot;time&quot;`), and the second source is muted. `setNotices` also takes `state` (`loading`, `empty`, `error`, or `quiet` with `quietUntil`: the counter muted with a moon, “Quiet until 09:00” and End quiet).</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-notices" id="doc-notices-page" data-kp-notices data-kp-notices-look="page" data-kp-order="time"></div>
+                            <script type="module">
+import { attachNotices, setNotices } from '../../js/notices.js';
+
+const page = document.getElementById('doc-notices-page');
+attachNotices(page.parentElement);
+setNotices(page, {
+    state: 'ready',
+    items: [
+        { key: 'disk', severity: 'critical', title: 'Pool media is 93% full', since: '2026-10-17T18:02:00+02:00', consequence: 'Backups will stop at 100%.', remedy: 'Remove old snapshots.', fix: { label: 'Open snapshots' } },
+        { key: 'cert', severity: 'warning', title: 'Certificate expires in 6 days', since: '2026-10-16T09:30:00+02:00', consequence: 'Clients will refuse the connection.', remedy: 'Renew it.', fix: { label: 'Renew' } },
+        { key: 'fw', severity: 'info', title: 'Firmware 4.2 is available', since: '2026-10-15T08:00:00+02:00', consequence: 'Nothing stops; the drift fix is not applied.', remedy: 'Plan the update.' },
+    ],
+    sources: [{ key: 'storage', label: 'Storage' }, { key: 'certs', label: 'Certificates', muted: true }],
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-notices&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-notices-page&quot;</span> <span class="kp-code__keyword">data-kp-notices</span> <span class="kp-code__keyword">data-kp-notices-look</span><span class="kp-code__string">=&quot;page&quot;</span> <span class="kp-code__keyword">data-kp-order</span><span class="kp-code__string">=&quot;time&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachNotices, setNotices } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/notices'</span>;
+
+<span class="kp-code__keyword">const</span> page = document.getElementById(<span class="kp-code__string">'doc-notices-page'</span>);
+attachNotices(page.parentElement);
+setNotices(page, {
+    state: <span class="kp-code__string">'ready'</span>,
+    items: [
+        { key: <span class="kp-code__string">'disk'</span>, severity: <span class="kp-code__string">'critical'</span>, title: <span class="kp-code__string">'Pool media is 93% full'</span>, since: <span class="kp-code__string">'2026-10-17T18:02:00+02:00'</span>, consequence: <span class="kp-code__string">'Backups will stop at 100%.'</span>, remedy: <span class="kp-code__string">'Remove old snapshots.'</span>, fix: { label: <span class="kp-code__string">'Open snapshots'</span> } },
+        { key: <span class="kp-code__string">'cert'</span>, severity: <span class="kp-code__string">'warning'</span>, title: <span class="kp-code__string">'Certificate expires in 6 days'</span>, since: <span class="kp-code__string">'2026-10-16T09:30:00+02:00'</span>, consequence: <span class="kp-code__string">'Clients will refuse the connection.'</span>, remedy: <span class="kp-code__string">'Renew it.'</span>, fix: { label: <span class="kp-code__string">'Renew'</span> } },
+        { key: <span class="kp-code__string">'fw'</span>, severity: <span class="kp-code__string">'info'</span>, title: <span class="kp-code__string">'Firmware 4.2 is available'</span>, since: <span class="kp-code__string">'2026-10-15T08:00:00+02:00'</span>, consequence: <span class="kp-code__string">'Nothing stops; the drift fix is not applied.'</span>, remedy: <span class="kp-code__string">'Plan the update.'</span> },
+    ],
+    sources: [{ key: <span class="kp-code__string">'storage'</span>, label: <span class="kp-code__string">'Storage'</span> }, { key: <span class="kp-code__string">'certs'</span>, label: <span class="kp-code__string">'Certificates'</span>, muted: <span class="kp-code__keyword">true</span> }],
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Holding its height in a state</figcaption>
+                        <p class="kp-text-muted">Loaded, the component is as high as its rows. Loading, empty or failed it keeps that height as a minimum, so the page under it does not jump twice; the first load has nothing remembered and is left alone. A very tall list holds a screen, not its full length (the cap is set on the host or any ancestor; it is 12 rem here to show it). Press the states.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack kp-gap-md" id="doc-fp-notices">
+    <div class="kp-row kp-gap-sm" role="group" aria-label="State">
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="ready">Ready</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="loading">Loading</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="empty">Empty</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="error">Failed</button>
+    </div>
+    <div class="kp-notices" data-kp-notices data-kp-notices-look="page" id="doc-fp-notices-host" style="--kp-footprint-max: 14rem"></div>
+</div>
+                            <script type="module">
+import { attachNotices, setNotices } from '../../js/notices.js';
+const root = document.getElementById('doc-fp-notices');
+const host = document.getElementById('doc-fp-notices-host');
+attachNotices(root);
+const items = [
+    { key: 'disk', severity: 'critical', title: 'Pool media is 93% full', since: '2026-10-17T18:02:00+02:00', consequence: 'Backups will stop at 100%.', remedy: 'Remove old snapshots.', fix: { label: 'Open snapshots' } },
+    { key: 'cert', severity: 'warning', title: 'Certificate expires in 6 days', since: '2026-10-16T09:30:00+02:00', consequence: 'Clients will refuse the connection.', remedy: 'Renew it.', fix: { label: 'Renew' } },
+    { key: 'fw', severity: 'info', title: 'Firmware 4.2 is available', since: '2026-10-15T08:00:00+02:00', consequence: 'Nothing stops.', remedy: 'Plan the update.' },
+];
+const draw = (state) => setNotices(host, { state: state === 'ready' ? 'ready' : state, items: state === 'ready' ? items : [], error: 'The notices could not be read.' });
+for (const button of root.querySelectorAll('[data-doc-state]')) {
+    button.addEventListener('click', () => draw(button.dataset.docState));
+}
+draw('ready');
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack kp-gap-md&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-fp-notices&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-gap-sm&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;State&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;ready&quot;</span>&gt;Ready&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;loading&quot;</span>&gt;Loading&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;empty&quot;</span>&gt;Empty&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;error&quot;</span>&gt;Failed&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-notices&quot;</span> <span class="kp-code__keyword">data-kp-notices</span> <span class="kp-code__keyword">data-kp-notices-look</span><span class="kp-code__string">=&quot;page&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-fp-notices-host&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-footprint-max: 14rem&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachNotices, setNotices } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/notices'</span>;
+<span class="kp-code__keyword">const</span> root = document.getElementById(<span class="kp-code__string">'doc-fp-notices'</span>);
+<span class="kp-code__keyword">const</span> host = document.getElementById(<span class="kp-code__string">'doc-fp-notices-host'</span>);
+attachNotices(root);
+<span class="kp-code__keyword">const</span> items = [
+    { key: <span class="kp-code__string">'disk'</span>, severity: <span class="kp-code__string">'critical'</span>, title: <span class="kp-code__string">'Pool media is 93% full'</span>, since: <span class="kp-code__string">'2026-10-17T18:02:00+02:00'</span>, consequence: <span class="kp-code__string">'Backups will stop at 100%.'</span>, remedy: <span class="kp-code__string">'Remove old snapshots.'</span>, fix: { label: <span class="kp-code__string">'Open snapshots'</span> } },
+    { key: <span class="kp-code__string">'cert'</span>, severity: <span class="kp-code__string">'warning'</span>, title: <span class="kp-code__string">'Certificate expires in 6 days'</span>, since: <span class="kp-code__string">'2026-10-16T09:30:00+02:00'</span>, consequence: <span class="kp-code__string">'Clients will refuse the connection.'</span>, remedy: <span class="kp-code__string">'Renew it.'</span>, fix: { label: <span class="kp-code__string">'Renew'</span> } },
+    { key: <span class="kp-code__string">'fw'</span>, severity: <span class="kp-code__string">'info'</span>, title: <span class="kp-code__string">'Firmware 4.2 is available'</span>, since: <span class="kp-code__string">'2026-10-15T08:00:00+02:00'</span>, consequence: <span class="kp-code__string">'Nothing stops.'</span>, remedy: <span class="kp-code__string">'Plan the update.'</span> },
+];
+<span class="kp-code__keyword">const</span> draw = (state) =&gt; setNotices(host, { state: state === <span class="kp-code__string">'ready'</span> ? <span class="kp-code__string">'ready'</span> : state, items: state === <span class="kp-code__string">'ready'</span> ? items : [], error: <span class="kp-code__string">'The notices could not be read.'</span> });
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> button <span class="kp-code__keyword">of</span> root.querySelectorAll(<span class="kp-code__string">'[data-doc-state]'</span>)) {
+    button.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; draw(button.dataset.docState));
+}
+draw(<span class="kp-code__string">'ready'</span>);</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -355,6 +447,13 @@ setNotices(centre, {
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>the script</code></td><td>`attachNotices(root, options)` wires every `[data-kp-notices]` and returns a detach; `noticesOf(el)` answers the handle; `setNotices(el, { state, items, sources, quietUntil, error })` hands over the data. `NOTICES` is the selector and `NOTICE_SEVERITIES` the three levels (`critical`, `warning`, `info`).</td></tr>
+                            <tr><td><code>events</code></td><td>`kp-notice-fix` `{ key }`, `kp-notice-read` `{ key, read }`, `kp-notices-read-all`, `kp-notices-source` `{ source, muted }`, `kp-notices-retry`, `kp-notices-end-quiet` and `kp-notices-open-inbox`, bubbling from the root.</td></tr>
+                            <tr><td><code>.kp-notices__trigger / __label / __count / __moon</code></td><td>The counter that opens the panel: its label, the exact number (a `.kp-badge`) and the moon of a quiet period.</td></tr>
+                            <tr><td><code>.kp-notices__panel / __page / __head / __heading / __tools / __body</code></td><td>The panel (a `.kp-popover`, a full-height sheet on a phone) or, in the page look, the page; its head with the heading and the tools, and the body that holds the list or a state.</td></tr>
+                            <tr><td><code>.kp-notices__quiet / __end-quiet / __read-all / __inbox</code></td><td>“Quiet until 09:00” with End quiet, Mark all read and the link “All 37 in the Inbox”.</td></tr>
+                            <tr><td><code>.kp-notices__list / __item</code></td><td>One notice: an item with `data-kp-severity` and `data-kp-unread`, holding `__mark` (the severity as a mark and a word), `__title`, `__since`, `__consequence`, `__remedy` and `__actions` (`__fix`, `__mark-read`).</td></tr>
+                            <tr><td><code>.kp-notices__sources / __state / __foot</code></td><td>The switch per source, the plate of a loading, empty or failed list, and the foot of the panel.</td></tr>
                             <tr><td><code>data-kp-notices-look</code></td><td>`both` (default: counter, panel and a link to the Inbox), `panel` (no link) or `page` (the list stands in the page, with the per-source switches).</td></tr>
                             <tr><td><code>data-kp-count</code></td><td>The number the counter shows when it is not the number of unread notices; exact, never “9+”.</td></tr>
                             <tr><td><code>data-kp-count-in-title</code></td><td>`off` leaves the tab title alone; by default it gets “(5) ” in front.</td></tr>

@@ -307,6 +307,41 @@
     &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A chart that failed to load</figcaption>
+                        <p class="kp-text-muted">A chart whose data carries `error` draws a tinted, bordered plate with a heading-size sentence and a Retry in the plot’s place (the same plate every other failed area uses, dressed by the theme). Retry fires `kp-chart-retry` on the chart; the page fetches again and calls `setChartData`.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<figure class="kp-chart" id="doc-chart-failed" data-kp-chart aria-label="Pressure" lang="en-GB">
+    <figcaption class="kp-chart__title">Pressure, bar</figcaption>
+    <script type="application/json" data-kp-chart-data>{"unit":"bar","digits":2,"error":"The readings could not be loaded.","series":[]}</script>
+</figure>
+                            <script type="module">
+import { setChartData } from '../../js/chart.js';
+
+document.getElementById('doc-chart-failed').addEventListener('kp-chart-retry', () => {
+    setChartData(document.getElementById('doc-chart-failed'), {
+        unit: 'bar',
+        digits: 2,
+        series: [{ label: 'Pump house 1', start: 1791010800000, step: 3600000, values: [3.36, 3.45, 3.44, 3.4, 3.35, 3.41, 3.48, 3.55] }],
+    });
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-chart-failed&quot;</span> <span class="kp-code__keyword">data-kp-chart</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pressure&quot;</span> <span class="kp-code__keyword">lang</span><span class="kp-code__string">=&quot;en-GB&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">figcaption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart__title&quot;</span>&gt;Pressure, bar&lt;/<span class="kp-code__keyword">figcaption</span>&gt;
+    &lt;<span class="kp-code__keyword">script</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;application/json&quot;</span> <span class="kp-code__keyword">data-kp-chart-data</span>&gt;{&quot;unit&quot;:&quot;bar&quot;,&quot;digits&quot;:2,&quot;error&quot;:&quot;The readings could not be loaded.&quot;,&quot;series&quot;:[]}&lt;/<span class="kp-code__keyword">script</span>&gt;
+&lt;/<span class="kp-code__keyword">figure</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { setChartData } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/chart'</span>;
+
+document.getElementById(<span class="kp-code__string">'doc-chart-failed'</span>).addEventListener(<span class="kp-code__string">'kp-chart-retry'</span>, () =&gt; {
+    setChartData(document.getElementById(<span class="kp-code__string">'doc-chart-failed'</span>), {
+        unit: <span class="kp-code__string">'bar'</span>,
+        digits: <span class="kp-code__string">2</span>,
+        series: [{ label: <span class="kp-code__string">'Pump house 1'</span>, start: <span class="kp-code__string">1791010800000</span>, step: <span class="kp-code__string">3600000</span>, values: [<span class="kp-code__string">3.36</span>, <span class="kp-code__string">3.45</span>, <span class="kp-code__string">3.44</span>, <span class="kp-code__string">3.4</span>, <span class="kp-code__string">3.35</span>, <span class="kp-code__string">3.41</span>, <span class="kp-code__string">3.48</span>, <span class="kp-code__string">3.55</span>] }],
+    });
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>
@@ -2898,6 +2933,8 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>kp-chart-retry</code></td><td>Fired on the chart, bubbling, when Retry is pressed in a failed chart (`CHART_RETRY_EVENT` in js/chart.js; the button’s words are the string `chartRetry`). The focus moves to the plot first, because the button goes with the state.</td></tr>
+                            <tr><td><code>axis labels</code></td><td>The first and the last time label anchor to their tick when, centred, they would cross the drawing’s edge, so an end label is never cut.</td></tr>
                             <tr><td><code>data-kp-outside</code></td><td>Written on the tooltip while its pinned moment lies outside the window: it docks at the plot’s edge and says so.</td></tr>
                             <tr><td><code>[data-kp-chart]</code></td><td>A chart; usually a `figure.kp-chart` with a `.kp-chart__title` caption. Its data comes from a `script[type=&quot;application/json&quot;][data-kp-chart-data]` child or from `setChartData(el, data)`, before or after it is attached.</td></tr>
                             <tr><td><code>data-kp-chart=&quot;spark&quot;</code></td><td>The spark variant: one source’s line over a soft area, its value at the crosshair (or now) beside its name, on the group’s crosshair.</td></tr>

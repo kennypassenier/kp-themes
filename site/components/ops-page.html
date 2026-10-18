@@ -279,6 +279,59 @@
     &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A page that failed to load</figcaption>
+                        <p class="kp-text-muted">The page writes `data-kp-state=&quot;error&quot;` on `.kp-ops`; no script is needed. By default (`plate`) the failure takes the body whole: the alert is centred at heading size, holds the height the page had, and the cards of the last read are hidden. `data-kp-ops-failed=&quot;keep&quot;` leaves the cards and lays the alert as a band on top. The switch changes the attribute at runtime.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack kp-gap-md">
+    <label class="kp-switch"><input class="kp-switch__input" type="checkbox" role="switch" id="doc-ops-keep"><span>Keep the earlier cards under the band</span></label>
+    <div class="kp-ops" id="doc-ops-failed" data-kp-state="error" data-kp-ops-sticky="none" data-kp-ops-width="full">
+        <header class="kp-ops__head kp-page-header"><h1 class="kp-page-header__title">Overview</h1></header>
+        <div class="kp-ops__kpis"><div class="kp-kpis"><div class="kp-kpi"><span class="kp-kpi__label">Stacks</span><span class="kp-kpi__value">24</span></div><div class="kp-kpi"><span class="kp-kpi__label">Failed</span><span class="kp-kpi__value">0</span></div></div></div>
+        <div class="kp-ops__attention kp-attention">
+            <div class="kp-alert kp-alert--destructive kp-attention__item" role="alert" data-kp-severity="critical">
+                <span class="kp-attention__icon" aria-hidden="true">!</span>
+                <div class="kp-attention__text"><strong><span class="kp-sr-only">Critical: </span>The overview could not be read</strong><span>The host did not answer.</span></div>
+                <div class="kp-attention__actions"><button type="button" class="kp-button kp-button--sm">Retry</button></div>
+            </div>
+        </div>
+        <div class="kp-ops__body">
+            <section class="kp-card" data-kp-span="8"><h2 class="kp-card__title">Backups</h2><p>Last run 03:00, 31 volumes.</p></section>
+            <section class="kp-card" data-kp-span="4"><h2 class="kp-card__title">Disk</h2><p>63% used.</p></section>
+        </div>
+    </div>
+</div>
+                            <script type="module">
+const ops = document.getElementById('doc-ops-failed');
+document.getElementById('doc-ops-keep').addEventListener('change', (event) => {
+    ops.setAttribute('data-kp-ops-failed', event.target.checked ? 'keep' : 'plate');
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack kp-gap-md&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-switch__input&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;checkbox&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;switch&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-ops-keep&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;Keep the earlier cards under the band&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-ops&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-ops-failed&quot;</span> <span class="kp-code__keyword">data-kp-state</span><span class="kp-code__string">=&quot;error&quot;</span> <span class="kp-code__keyword">data-kp-ops-sticky</span><span class="kp-code__string">=&quot;none&quot;</span> <span class="kp-code__keyword">data-kp-ops-width</span><span class="kp-code__string">=&quot;full&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">header</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-ops__head kp-page-header&quot;</span>&gt;&lt;<span class="kp-code__keyword">h1</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header__title&quot;</span>&gt;Overview&lt;/<span class="kp-code__keyword">h1</span>&gt;&lt;/<span class="kp-code__keyword">header</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-ops__kpis&quot;</span>&gt;&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpis&quot;</span>&gt;&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Stacks&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>&gt;24&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__label&quot;</span>&gt;Failed&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span>&gt;0&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-ops__attention kp-attention&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--destructive kp-attention__item&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;alert&quot;</span> <span class="kp-code__keyword">data-kp-severity</span><span class="kp-code__string">=&quot;critical&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__icon&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;!&lt;/<span class="kp-code__keyword">span</span>&gt;
+                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__text&quot;</span>&gt;&lt;<span class="kp-code__keyword">strong</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;Critical: &lt;/<span class="kp-code__keyword">span</span>&gt;The overview could not be read&lt;/<span class="kp-code__keyword">strong</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;The host did not answer.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-attention__actions&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span>&gt;Retry&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-ops__body&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span> <span class="kp-code__keyword">data-kp-span</span><span class="kp-code__string">=&quot;8&quot;</span>&gt;&lt;<span class="kp-code__keyword">h2</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span>&gt;Backups&lt;/<span class="kp-code__keyword">h2</span>&gt;&lt;<span class="kp-code__keyword">p</span>&gt;Last run 03:00, 31 volumes.&lt;/<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">section</span>&gt;
+            &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span> <span class="kp-code__keyword">data-kp-span</span><span class="kp-code__string">=&quot;4&quot;</span>&gt;&lt;<span class="kp-code__keyword">h2</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span>&gt;Disk&lt;/<span class="kp-code__keyword">h2</span>&gt;&lt;<span class="kp-code__keyword">p</span>&gt;63% used.&lt;/<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">section</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">const</span> ops = document.getElementById(<span class="kp-code__string">'doc-ops-failed'</span>);
+document.getElementById(<span class="kp-code__string">'doc-ops-keep'</span>).addEventListener(<span class="kp-code__string">'change'</span>, (event) =&gt; {
+    ops.setAttribute(<span class="kp-code__string">'data-kp-ops-failed'</span>, event.target.checked ? <span class="kp-code__string">'keep'</span> : <span class="kp-code__string">'plate'</span>);
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -327,6 +380,9 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>the footprint</code></td><td>The page is a footprint host (js/footprint.js): while it is `loading` or `error` it keeps the height it had when it was ready, as a minimum, so the failed plate stands where the cards stood. `FOOTPRINT_MAX` is the cap behind the knob, 48rem; the other hosts are the matrix, the entity grid, the checklist, the notices, the gallery, the availability grid and the request inspector (`FOOTPRINT_HOSTS`).</td></tr>
+                            <tr><td><code>.kp-ops__head / __kpis / __attention / __toolbar / __body</code></td><td>The five slots, in this fixed order whatever the source order. The head and the body are required; a missing or empty slot takes no room. The attention slot is a `.kp-attention` with one alert per problem; the toolbar is a `.kp-toolbar`.</td></tr>
+                            <tr><td><code>data-kp-state</code></td><td>On `.kp-ops`: `loading`, `empty` or `error` (the last is the failed page above). The page is a footprint host: in a state it holds the height it had when ready (js/footprint.js), so the page under it does not jump.</td></tr>
                             <tr><td><code>data-kp-ops-width</code></td><td>`80vw` (default, never under 64rem), `full` or `measure` (64rem).</td></tr>
                             <tr><td><code>data-kp-ops-cards</code></td><td>The default span of a card in twelve columns: `12`, `8`, `6` (default), `4` or `3`.</td></tr>
                             <tr><td><code>data-kp-ops-sticky</code></td><td>`toolbar` (default), `head` or `none`: the part that stays reachable.</td></tr>

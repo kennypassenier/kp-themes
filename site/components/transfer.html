@@ -286,6 +286,53 @@ attachTransfers(row.parentElement);
 setTransfer(row, { done: <span class="kp-code__string">1000000000</span>, total: <span class="kp-code__string">4100000000</span>, at: now - <span class="kp-code__string">5000</span> });
 setTransfer(row, { done: <span class="kp-code__string">1200000000</span>, total: <span class="kp-code__string">4100000000</span>, at: now });</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Stalled, failed, done and a size nobody knows</figcaption>
+                        <p class="kp-text-muted">The same row in its other states. No new byte for ten seconds is “stalled” (a warning, the time left hidden); `failed` ends the transfer with the app’s own sentence and a Retry that fires `kp-transfer-retry`; a transfer that reaches its total says “4.1 GB in 3 min 12 s” and, after the linger, fires `kp-transfer-leave`; without a total the row says what it knows, “1.2 GB so far”, and “size unknown”.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-progress-group kp-progress-group--transfer" id="doc-transfer-states" data-kp-linger="0">
+    <div class="kp-progress__wrap" data-kp-transfer id="doc-transfer-stalled"></div>
+    <div class="kp-progress__wrap" data-kp-transfer id="doc-transfer-failed"></div>
+    <div class="kp-progress__wrap" data-kp-transfer id="doc-transfer-done"></div>
+    <div class="kp-progress__wrap" data-kp-transfer id="doc-transfer-unknown"></div>
+</div>
+                            <script type="module">
+import { attachTransfers, setTransfer } from '../../js/transfer.js';
+
+attachTransfers(document.getElementById('doc-transfer-states'));
+const base = Date.now();
+const clock = { now: () => base };
+setTransfer(document.getElementById('doc-transfer-stalled'), { name: 'photos.tar.zst', done: 2000000000, total: 4000000000, at: base - 30000 }, clock);
+setTransfer(document.getElementById('doc-transfer-stalled'), { done: 2000000000, total: 4000000000, at: base }, clock);
+setTransfer(document.getElementById('doc-transfer-failed'), { name: 'media.tar.zst', done: 1500000000, total: 6000000000, at: base - 4000 }, clock);
+setTransfer(document.getElementById('doc-transfer-failed'), { failed: 'The disk is full', at: base }, clock);
+setTransfer(document.getElementById('doc-transfer-done'), { name: 'docs.tar.zst', done: 0, total: 4100000000, at: base - 192000 }, clock);
+setTransfer(document.getElementById('doc-transfer-done'), { done: 4100000000, total: 4100000000, at: base }, clock);
+setTransfer(document.getElementById('doc-transfer-unknown'), { name: 'stream.log', done: 1200000000, at: base - 5000 }, clock);
+setTransfer(document.getElementById('doc-transfer-unknown'), { done: 1260000000, at: base }, clock);
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress-group kp-progress-group--transfer&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-transfer-states&quot;</span> <span class="kp-code__keyword">data-kp-linger</span><span class="kp-code__string">=&quot;0&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span> <span class="kp-code__keyword">data-kp-transfer</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-transfer-stalled&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span> <span class="kp-code__keyword">data-kp-transfer</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-transfer-failed&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span> <span class="kp-code__keyword">data-kp-transfer</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-transfer-done&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-progress__wrap&quot;</span> <span class="kp-code__keyword">data-kp-transfer</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-transfer-unknown&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachTransfers, setTransfer } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/transfer'</span>;
+
+attachTransfers(document.getElementById(<span class="kp-code__string">'doc-transfer-states'</span>));
+<span class="kp-code__keyword">const</span> base = Date.now();
+<span class="kp-code__keyword">const</span> clock = { now: () =&gt; base };
+setTransfer(document.getElementById(<span class="kp-code__string">'doc-transfer-stalled'</span>), { name: <span class="kp-code__string">'photos.tar.zst'</span>, done: <span class="kp-code__string">2000000000</span>, total: <span class="kp-code__string">4000000000</span>, at: base - <span class="kp-code__string">30000</span> }, clock);
+setTransfer(document.getElementById(<span class="kp-code__string">'doc-transfer-stalled'</span>), { done: <span class="kp-code__string">2000000000</span>, total: <span class="kp-code__string">4000000000</span>, at: base }, clock);
+setTransfer(document.getElementById(<span class="kp-code__string">'doc-transfer-failed'</span>), { name: <span class="kp-code__string">'media.tar.zst'</span>, done: <span class="kp-code__string">1500000000</span>, total: <span class="kp-code__string">6000000000</span>, at: base - <span class="kp-code__string">4000</span> }, clock);
+setTransfer(document.getElementById(<span class="kp-code__string">'doc-transfer-failed'</span>), { failed: <span class="kp-code__string">'The disk is full'</span>, at: base }, clock);
+setTransfer(document.getElementById(<span class="kp-code__string">'doc-transfer-done'</span>), { name: <span class="kp-code__string">'docs.tar.zst'</span>, done: <span class="kp-code__string">0</span>, total: <span class="kp-code__string">4100000000</span>, at: base - <span class="kp-code__string">192000</span> }, clock);
+setTransfer(document.getElementById(<span class="kp-code__string">'doc-transfer-done'</span>), { done: <span class="kp-code__string">4100000000</span>, total: <span class="kp-code__string">4100000000</span>, at: base }, clock);
+setTransfer(document.getElementById(<span class="kp-code__string">'doc-transfer-unknown'</span>), { name: <span class="kp-code__string">'stream.log'</span>, done: <span class="kp-code__string">1200000000</span>, at: base - <span class="kp-code__string">5000</span> }, clock);
+setTransfer(document.getElementById(<span class="kp-code__string">'doc-transfer-unknown'</span>), { done: <span class="kp-code__string">1260000000</span>, at: base }, clock);</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -344,6 +391,10 @@ setTransfer(row, { done: <span class="kp-code__string">1200000000</span>, total:
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>the script</code></td><td>`attachTransfers(root)` wires every `[data-kp-transfer]` and returns a detach; `setTransfer(row, { done, total, at, name, failed }, { now })` reports progress (the first report starts the transfer, a report that reaches `total` ends it); `resetTransfer(row)` clears a row for a new try; `transferRate(samples, windowS)` and `transferEta(seconds)` are the two calculations, exported for a page that draws its own reading. `TRANSFER` is the selector.</td></tr>
+                            <tr><td><code>events</code></td><td>`kp-transfer-done` `{ total, ms }`, `kp-transfer-retry` and `kp-transfer-leave` (`TRANSFER_DONE_EVENT`, `TRANSFER_RETRY_EVENT`, `TRANSFER_LEAVE_EVENT`), bubbling from the row.</td></tr>
+                            <tr><td><code>.kp-progress__rate / __eta</code></td><td>The two parts the transfer adds to the progress bar’s label, track and value: “12 MB/s” and “about 3 min left”, in tabular figures and in columns shared by every row of the group.</td></tr>
+                            <tr><td><code>.kp-transfer__failure / __retry / __voice</code></td><td>The failed note with the app’s reason, its Retry, and the line only a screen reader hears (25, 50, 75 and 100 percent).</td></tr>
                             <tr><td><code>data-kp-transfer-name</code></td><td>The file’s name, written in the label.</td></tr>
                             <tr><td><code>data-kp-rate-window</code></td><td>Seconds (5): the moving average; a single sample jumps.</td></tr>
                             <tr><td><code>data-kp-eta-after</code></td><td>Seconds (3): no time left until that much has been measured (“estimating…”).</td></tr>
