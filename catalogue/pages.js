@@ -105,6 +105,12 @@ export const PAGES = [
                 label: 'HTTPSwitchboard: try a translation and reloads',
                 about: 'Two pages HTTPSwitchboard does not have yet, in formal only: pick a profile, paste a sample message and see the translated body and a before and after diff without delivering anything; and a timeline of reloads of the profile file (applied, needs a restart, invalid) with an N new pill and an alert for the latest invalid reload. 6 sections in 2 topics.',
             },
+            // Kenny, 2026-10-19 (almanac on kp-themes 11.0.0), formal only.
+            {
+                href: 'research/almanac-calendar-views/demo.html',
+                label: 'Almanac: deliveries per day and this week',
+                about: 'Two new views for Almanac: a month that shows how many events it delivered each day (pick a day to see them), and a week agenda of the events it put in the calendars, coloured per calendar. 2 sections, formal only, sample data.',
+            },
             // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
             // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             // Kenny, 2026-10-08 (update 1): deco's grammar did not convince him ("fancy, distinguished … lots of gold accents and fancy blue backgrounds … elegance without being too in your face"); thirteen questions redrawn as thin gold on lacquer with the wallpaper, his six picks kept.

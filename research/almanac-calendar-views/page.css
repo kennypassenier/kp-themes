@@ -1,0 +1,80 @@
+/* research/almanac-calendar-views: the frame of the page. Everything with a kp- class is the package; these acv- rules only lay
+   out the intro, the section heads and the two detail areas that sit beside or under a component. */
+
+.acv-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.acv-intro,
+.acv-sec,
+.acv-sec__head {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.acv-intro :is(h1, p),
+.acv-sec__head :is(h2, p),
+.acv-expected :is(p, ul) {
+    margin: 0;
+}
+
+.acv-expected ul {
+    padding-inline-start: 1.25rem;
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.acv-controls,
+.acv-controls > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* The heatmap and its day: the detail is wider than the package's 16rem so four table columns fit without cutting a word. */
+.acv-layout {
+    --kp-calendar-aside: 30rem;
+}
+
+.acv-detail {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.acv-detail__title {
+    margin: 0;
+}
+
+/* The table holds the height of a ten-row day, so picking another day moves nothing under it. */
+.acv-table {
+    min-block-size: 20rem;
+}
+
+.acv-weekblock {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+.acv-sub {
+    display: block;
+    color: var(--muted-foreground);
+}
+
+/* Narrow: the package puts the detail under the grid; a wider aside must not keep a second track open. */
+@media (max-width: 60rem) {
+    .acv-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* The failed alert of the table in a narrow aside lays its text beside Try again; the button's words never break mid-word. */
+.acv-table [data-kp-datatable-retry] {
+    white-space: nowrap;
+}
