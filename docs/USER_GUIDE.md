@@ -1893,6 +1893,29 @@ ancestor), because a plate in the middle of 1600 px is out of sight; a `min-bloc
 of the two); a content-box host is held at its content height. A checklist with no items writes `data-kp-state="empty"` itself, and a
 checklist set to `error` shows the failed plate alone (its rows stay in memory for the next ready).
 
+### A failed operations page
+
+A `.kp-ops` page with `data-kp-state="error"` shows the failure whole [t56-statefix-1018, S12]. `data-kp-ops-failed` chooses how:
+`plate` (the default) lets the failure alert take the page's body, centred and at heading size (`--kp-stateplate-text`), at the height the page had
+when it was ready (the page is one of the hosts of `js/footprint.js`, capped by `--kp-footprint-max`), with the cards of the last read hidden; `keep` leaves the
+cards where they are under one attention band on top, the behaviour before this option. It is read from the attribute, so changing it on a live page switches the look with no script.
+
+### A segmented control that scrolls
+
+A segmented track wider than its room scrolls inside its bar and carries `data-kp-segmented-overflow` (written by `js/segmented.js`). A resting scroll lands on
+a whole segment (`scroll-snap-type: x proximity`, `scroll-padding-inline` of the fade width), and the side that has more segments out of sight fades out, so a label is never
+left cut at the edge [t56-scrolledge-1018]. `js/segmented.js` writes `data-kp-segmented-more` on the track while it scrolls and lays out: `start`, `end` or `start end`
+(export `MORE_ATTRIBUTE`); a side with nothing beyond it is not faded. Set the width of the fade with `--kp-seg-fade` (default `1.5rem`; `--kp-seg-fade-start` and
+`--kp-seg-fade-end` are set by the attribute and are not meant to be set). Nothing animates, so reduced motion changes nothing. The refresh chooser and the
+request inspector's filter are such tracks on a phone.
+
+### Staying inside the row
+
+Four components keep their parts inside their own row at any width [t56-sharedfix-1018]; none has an option. A version badge (`.kp-badge--version`) is
+as wide as its row at most, and `.kp-version__from` and `.kp-version__to` break inside a word only when the text has no dot, hyphen, underscore or colon to break after (a raw digest). A checklist item's
+detail gets at most half of the row and wraps, the label keeps its words. An availability row that carries answers puts the person's name on its own line above them. The first and last time label of a chart anchor to
+their tick (start and end) when centred they would cross the edge of the drawing, 4 px kept.
+
 ### Rows with a lead: an inbox, a backlog, files, appointments
 
 `.kp-action-list--lead` adds a lead column before the words of the list's
@@ -2581,7 +2604,7 @@ setEntityGrid(document.getElementById('stacks'), [{ key: 'media', name: 'media',
 
 `attachEntityCards(root)` (`js/entity-card.js`, attached by `js/auto.js`) keeps the cards in step with the grid's options; `setEntityGrid(grid, list)` draws or refills by key (a card already there changes its words in place, so a card under the pointer never moves)
 and `setEntity(card, data)` draws one. Every row is kept whether it holds anything or not and every card of a grid is as high as the tallest. `data-kp-entity-meters` (0 to 3, default 2), `-flags-max` (3; more are an exact "+2" that opens the package's menu
-button, and a flag that does not fit the width goes there too), `-inline` (3 action buttons in fixed columns, the rest in "More"; under 30rem all fold into "More", and a button that does not fit the card's width folds into it too, for every card of the grid), `-link` (the name's link template, stretched over the card), `-mark`, `-min` (22rem) on the grid or a card,
+button, and a flag that does not fit the width goes there too), `-inline` (3 action buttons in fixed columns, the rest in "More"; under 30rem all fold into "More", and a button that does not fit the card's width folds into it too, for every card of the grid; the grid notes it in `data-kp-entity-fit`, written), `-link` (the name's link template, stretched over the card), `-mark`, `-min` (22rem) on the grid or a card,
 `data-kp-selectable` (a tick; the card is a row of a selection) and `data-kp-density="compact"` (no figures row); every attribute draws the cards again. Events `kp-entity-action`, `kp-entity-flag`, `kp-entity-tick`, `kp-entity-retry`, `kp-entity-new`,
 `kp-entity-grid-retry`. A card with `status: 'loading' | 'empty' | 'error'` shows bones, "not measured" or a failed state with Retry at the same height; `setEntityGridState(grid, 'loading' | 'empty' | 'error')` shows skeleton cards under the busy card,
 the empty plate "No stacks yet" with its action, or the failed plate with Retry. The words are `entity…`.
