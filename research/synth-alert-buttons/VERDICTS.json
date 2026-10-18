@@ -1,4 +1,19 @@
 {
     "demo": "synth-alert-buttons",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "synth-alert-buttons-f2c3df02-8748-49b9-acc1-00323b8593cd",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-19 00:50: 1 of 1 judged, 1 approved, 0 not approved. Option kept: \"Dark keys on every red alert (as approved on 18/10)\", the current package behaviour (css/synthwave-register.css, commit 186895bd); scope-94's \"Alleen Try again\" is superseded for buttons on a red alert.",
+            "approved": [
+                {
+                    "item": "alert-buttons",
+                    "theme": "synthwave"
+                }
+            ],
+            "notApproved": [],
+            "choices": []
+        }
+    ]
 }

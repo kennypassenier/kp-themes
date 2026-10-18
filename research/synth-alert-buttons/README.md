@@ -1,5 +1,7 @@
 # research/synth-alert-buttons: buttons on a red alert in synthwave
 
+**Decided (2026-10-19 00:50):** Kenny approved "Dark keys on every red alert (as approved on 18/10)", the current package behaviour; scope-94's "Alleen Try again" is superseded for buttons on a red alert. Recorded in `VERDICTS.json`; the page is not offered again.
+
 Round `synth-alert-buttons-f2c3df02-8748-49b9-acc1-00323b8593cd` (2026-10-19): 1 section, 1 pair (synthwave).
 
 Two rulings of Kenny's disagree about the buttons on a synthwave red alert (`.kp-alert--destructive`):
