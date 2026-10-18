@@ -1652,9 +1652,10 @@
     [data-theme='blueprint'] .kp-switch__input::before {
         border: 1px solid var(--foreground);
         background:
-            linear-gradient(hsl(from var(--foreground) h s l / 0.6), hsl(from var(--foreground) h s l / 0.6)) 50% 50% / 1px 100% no-repeat,
-            linear-gradient(hsl(from var(--foreground) h s l / 0.6), hsl(from var(--foreground) h s l / 0.6)) 50% 50% / 100% 1px no-repeat,
-            var(--background);
+            /* One upright tick, the witness line of a handle: the crossed square (a window pane) read as a checkbox
+               [t56-eye-1018]. */
+            linear-gradient(hsl(from var(--foreground) h s l / 0.6), hsl(from var(--foreground) h s l / 0.6)) 50% 50% / 1px 60% no-repeat,
+            hsl(from var(--foreground) h s l / 0.12);
         box-sizing: border-box;
     }
 
