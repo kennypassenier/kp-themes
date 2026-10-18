@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="kyu-11-topics" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kyu on kp-themes 11.0.0: the Topics page</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="kt-page">
+            <header class="kt-intro">
+                <p class="kt-intro__eyebrow">Review demo · kyu on kp-themes 11.0.0</p>
+                <p class="kt-intro__title" role="heading" aria-level="1">The Topics page, rebuilt with the new components</p>
+                <p class="kt-intro__text">
+                    kyu&rsquo;s page that lists every topic on the hub (<code>/topics</code>), drawn with the package&rsquo;s own components. Everything
+                    here is <b>mock data</b>: five made-up topics, five subscriptions and a stand-in for kyu that answers the automatic refresh. The two
+                    sections marked <b>New</b> show something kyu cannot do today.
+                </p>
+            </header>
+
+            <!-- 1 · page header -->
+            <section
+                class="kt-sec"
+                id="topics-header"
+                data-review-item="topics-header" data-review-topic="page" data-review-topic-title="The Topics page, built from what kyu has today"
+                data-review-title="Page header, lede and headline"
+                data-review-components="page-header lede effects freshness"
+                aria-labelledby="h-topics-header"
+                data-review-choices='[
+                    { "id": "lede-fold", "label": "A long lede", "default": "open", "options": [
+                        { "value": "open", "label": "Always shown in full", "hint": "The sentence under the title is never hidden; it is short on purpose." },
+                        { "value": "fold", "label": "Folds behind More", "hint": "A lede longer than 90 characters shows its first sentence and a More button." }]},
+                    { "id": "reveal-every", "label": "Headline reveal", "default": "session", "options": [
+                        { "value": "session", "label": "Once per session", "hint": "The title arrives the theme&rsquo;s way the first time you open the page in a browser session, then stands still." },
+                        { "value": "load", "label": "On every load", "hint": "The title arrives each time the page is opened." },
+                        { "value": "off", "label": "Never", "hint": "The title is always just there." }]}]'
+            >
+                <div class="kt-sec__head">
+                    <h2 id="h-topics-header">Page header, lede and headline</h2>
+                    <p>
+                        The title of the page, one plain sentence saying what the page is for, and a line saying how many topics there are and how old
+                        the numbers are.
+                    </p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The title <b>Topics</b> arrives with the theme&rsquo;s headline reveal, the lede stands under it, and the line below reads
+                            &ldquo;5 topics · updated 4 s ago&rdquo;; the age keeps counting, and its full time shows when you point at it.
+                        </li>
+                        <li>
+                            <b>Replay the reveal</b> plays the title&rsquo;s arrival again. <b>Loading</b> keeps the title and the lede and shows the
+                            line as a waiting line of the same size; <b>Could not read</b> keeps them too and says in that line that the topics could not
+                            be read, with a Retry of normal size.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s headline is a plain arrival (no decipher): the title appears once and stays. The lede and the line below start at
+                        the title&rsquo;s left edge, nothing touches an edge, and the loading and failed lines are as tall as the filled one.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="topics-header-component">
+                    <div role="group" aria-label="State of the header">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-kt-head-state="ready">Filled</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-kt-head-state="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-kt-head-state="error">Could not read</button>
+                    </div>
+                    <div role="group" aria-label="Headline">
+                        <b>Headline:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kt-replay>Replay the reveal</button>
+                    </div>
+                </div>
+                <div id="topics-header-component" class="kt-stage">
+                    <header class="kp-page-header" data-kt-header>
+                        <div class="kp-page-header__inner">
+                            <div class="kt-header__body">
+                                <h1 class="kp-page-header__title" data-kp-reveal="headline" data-kt-title>Topics</h1>
+                                <p class="kp-lede" data-kt-lede>
+                                    Every topic on this hub. A topic exists once something publishes to it; open one for its subscriptions, dead letters
+                                    and the commands that work against it.
+                                </p>
+                                <p class="kt-meta" data-kt-meta aria-live="polite"></p>
+                            </div>
+                        </div>
+                    </header>
+                </div>
+            </section>
+
+            <!-- 2 · the page: key figures, attention, table -->
+            <section
+                class="kt-sec"
+                id="topics-page"
+                data-review-item="topics-page" data-review-topic="page"
+                <!-- kpi variants on this page: kp-kpi--toggle here, kp-kpi--trend in the topics-trends section -->
+                data-review-components="kpi attention datatable barcell stackbar idmark freshness hovercard auto-refresh tick update empty art anchors actions"
+                aria-labelledby="h-topics-page"
+                data-review-choices='[
+                    { "id": "multi-sort", "label": "Sorting on more than one column", "default": "shift", "options": [
+                        { "value": "shift", "label": "Shift + click adds a column", "hint": "A plain click sorts on that column alone; Shift + click adds the next one (the headers number the keys)." },
+                        { "value": "click", "label": "A plain click adds a column", "hint": "Every click adds a key; Shift + click sorts on that column alone." }]},
+                    { "id": "filter-mode", "label": "Where the column filters are", "default": "panel", "options": [
+                        { "value": "panel", "label": "One panel for all filters", "hint": "A Filters button opens a panel with every filterable column." },
+                        { "value": "add", "label": "+ Add filter, one pill each", "hint": "You add a filter from a menu and each filter stays as a pill you can reopen." }]},
+                    { "id": "quiet-after", "label": "A topic counts as quiet after", "default": "86400", "options": [
+                        { "value": "3600", "label": "1 hour", "hint": "Marks any topic that has not published for an hour." },
+                        { "value": "21600", "label": "6 hours" },
+                        { "value": "86400", "label": "24 hours", "hint": "Only newsflash.items (40 h) is quiet in the sample." }]},
+                    { "id": "refresh-look", "label": "The refresh control", "default": "segmented", "options": [
+                        { "value": "segmented", "label": "Choices side by side", "hint": "Paused, 15 s, 30 s, 1 min, 5 min as one row of buttons." },
+                        { "value": "menu", "label": "One menu button", "hint": "The same choices behind a single button; better when the bar is crowded." }]},
+                    { "id": "refresh-hover", "label": "Refreshing while you read the table", "default": "pause", "options": [
+                        { "value": "pause", "label": "Waits while the pointer is on the table", "hint": "The numbers do not move under your pointer; they refresh when you leave." },
+                        { "value": "keep", "label": "Keeps refreshing", "hint": "The table refreshes even while you point at it." }]}]'
+            >
+                <!-- kpi variants on this page: kp-kpi--toggle here, kp-kpi--trend in the topics-trends section -->
+                <div class="kt-sec__head">
+                    <h2 id="h-topics-page">Key figures, attention and the topics table</h2>
+                    <p>
+                        What the hub looks like at a glance: four key figures (Backlog and Dead filter the table), a band for what needs a decision, and
+                        one table with a row per topic that refreshes by itself.
+                    </p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            On load: <b>Topics 5</b>, <b>Messages 3,820</b>, <b>Backlog 207</b>, <b>Dead 5</b>; above them the attention band, worst first
+                            (a dead letter on notify.kenny, dead letters on almanac.sync, the desktop subscription flagged, newsflash.items quiet). Its
+                            buttons take you to the row.
+                        </li>
+                        <li>
+                            Press the <b>Backlog</b> tile: it is marked as pressed, says &ldquo;Filtering ×&rdquo;, and the table keeps the topics with a
+                            backlog (a pill shows the filter); press it again or remove the pill and the tile lets go. <b>Dead</b> does the same for dead
+                            letters.
+                        </li>
+                        <li>
+                            Table: click a header to sort (the arrow and <code>aria-sort</code> follow), Shift + click for a second key, type in the search,
+                            filter <b>Status</b> by its words, use <b>Columns</b> to hide a column; your sort, columns and density are remembered on this
+                            device. Backlog and Dead are bars (amber from 75 % of the largest, red from 90 %), the <b>Flow</b> bar splits each topic
+                            into waiting / in flight / dead / lapsed, <b>Last published</b> counts up and turns to a warning plate when the topic is quiet,
+                            and pointing at a cell opens a card with the details.
+                        </li>
+                        <li>
+                            <b>Refresh now</b> (or R): the stand-in for kyu answers, the four figures count up to their new numbers, the changed cells and
+                            the status words change in the theme&rsquo;s way, and the attention band keeps the items that did not change. Choose <b>15 s</b>
+                            and it repeats; it waits while the pointer is on the table or a field has focus.
+                        </li>
+                        <li>
+                            States: <b>Loading</b> puts the theme&rsquo;s busy card over the table at its loaded height; <b>Empty</b> is the page of a hub
+                            with no topics yet, a drawing, a sentence, the same height; <b>Could not read</b> is one plate with a Retry. <b>All quiet</b>
+                            empties the band; pressing <b>Dead</b> then shows &ldquo;Nothing is dead&rdquo; with the all-clear drawing. <b>Phone</b> turns
+                            every row into a card and puts the tiles two by two.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal is paper and ink: ruled lines, a navy hairline for the pressed tile, sharp corners. Look at the columns: the numbers end on one
+                        right edge, the bars start in one place on every row, the idmarks are the same colours as in the band, and no text touches a cell
+                        edge. In the loading state the card covers the whole table, and the empty and failed plates are as tall as the filled table.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="topics-page-component">
+                    <div role="group" aria-label="State of the page">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-kt-state="ready">Filled</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-kt-state="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-kt-state="empty">Empty (no topics)</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-kt-state="error">Could not read</button>
+                    </div>
+                    <div role="group" aria-label="What the hub looks like">
+                        <b>Hub:</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-kt-hub="busy">Busy</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-kt-hub="quiet">All quiet</button>
+                    </div>
+                    <div role="group" aria-label="Width">
+                        <b>Width:</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-kt-width="full">Full (1280)</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-kt-width="phone">Phone (390)</button>
+                    </div>
+                    <div role="group" aria-label="Refresh">
+                        <b>Refresh:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kt-refresh-now>Refresh now</button>
+                    </div>
+                </div>
+                <div id="topics-page-component" class="kt-stage" data-kt-stage data-kt-width="full" data-kp-anchors="rows" data-kp-anchor-show="hover">
+                    <div class="kt-live-bar">
+                        <div
+                            class="kp-refresh"
+                            data-kp-refresh="0"
+                            data-kp-refresh-mode="region"
+                            data-kp-refresh-region="#kt-kpis"
+                            data-kp-refresh-hover="pause"
+                            data-kp-refresh-choices="0,15,30,60,300"
+                            data-kp-remember="kyu-demo-topics-refresh"
+                            data-kt-refresh
+                        ></div>
+                    </div>
+                    <div class="kp-attention kp-attention--soft" role="region" aria-label="Needs attention" data-kt-attention></div>
+                    <div class="kp-kpis" id="kt-kpis" role="group" aria-label="The hub right now" data-kp-kpis-columns="all 2 1" data-kt-kpis></div>
+                    <figure class="kp-stackbar kt-hubbar" data-kp-stackbar data-kt-hubbar></figure>
+                    <div class="kt-table" data-kt-table-host>
+                        <div
+                            class="kp-datatable"
+                            data-kp-datatable
+                            data-kp-cards
+                            data-kp-sort-multi
+                            data-kp-column-menu
+                            data-kp-page-sizes="none"
+                            data-kp-remember="kyu-demo-topics"
+                            data-kt-datatable
+                        >
+                            <div class="kp-datatable__bar">
+                                <input
+                                    class="kp-field__input kp-datatable__search"
+                                    type="search"
+                                    data-kp-datatable-search
+                                    aria-label="Search topics"
+                                    placeholder="Search topics"
+                                />
+                                <select class="kp-field__input kp-datatable__select" data-kp-datatable-scope aria-label="Search in"></select>
+                                <select class="kp-field__input kp-datatable__select" data-kp-datatable-density aria-label="Row density"></select>
+                            </div>
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <caption>
+                                        Topics on this hub (mock data)
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" data-kp-sort="text" data-kp-column-locked>Topic</th>
+                                            <th
+                                                scope="col"
+                                                data-kp-sort="text"
+                                                data-kp-sort-order="Dead letters,Backlog,Quiet,Healthy"
+                                                data-kp-filter="choice"
+                                                data-kp-filter-options="Dead letters,Backlog,Quiet,Healthy"
+                                            >
+                                                Status
+                                            </th>
+                                            <th scope="col" data-kp-sort="number" class="kp-text-end">Messages</th>
+                                            <th scope="col" data-kp-sort="number" data-kp-filter="range" class="kp-text-end">Backlog</th>
+                                            <th scope="col" data-kp-sort="number" data-kp-filter="range" class="kp-text-end">Dead</th>
+                                            <th scope="col" data-kp-sort="number">Flow</th>
+                                            <th scope="col" data-kp-sort="number">Last published</th>
+                                            <th scope="col">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-kt-rows></tbody>
+                                </table>
+                            </div>
+                            <div class="kp-empty" data-kp-datatable-empty data-kp-art="nomatch" hidden>
+                                <p class="kp-empty__title" data-kt-empty-title>No topic matches</p>
+                                <p class="kp-empty__body" data-kt-empty-body>Loosen the search or remove a filter.</p>
+                                <button type="button" class="kp-button" data-kp-datatable-clear>Clear the filters</button>
+                            </div>
+                            <div class="kp-datatable__bar">
+                                <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                                <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                            </div>
+                        </div>
+                        <div class="kp-empty kt-none" data-kp-art="none" data-kt-none hidden>
+                            <p class="kp-empty__title" data-kt-none-title>No topics yet</p>
+                            <p class="kp-empty__body" data-kt-none-body>
+                                A topic exists as soon as something publishes to it. Run the command under &ldquo;Start a topic&rdquo; and it appears here.
+                            </p>
+                            <button type="button" class="kp-button" data-kt-none-retry hidden>Try again</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3 · start a topic: the command block -->
+            <section
+                class="kt-sec"
+                id="start-topic"
+                data-review-item="start-topic" data-review-topic="page"
+                data-review-title="Start a topic: the command to copy"
+                data-review-components="command anchors"
+                aria-labelledby="h-start-topic"
+                data-review-choices='[
+                    { "id": "command-wrap", "label": "A long line", "default": "wrap", "options": [
+                        { "value": "wrap", "label": "Wraps under its first character", "hint": "Nothing is cut or scrolled; the continuation lines are indented." },
+                        { "value": "scroll", "label": "Stays one line and scrolls", "hint": "The code scrolls sideways inside its block, reachable with the keyboard." }]}]'
+            >
+                <div class="kt-sec__head">
+                    <h2 id="h-start-topic">Start a topic: the command to copy</h2>
+                    <p>
+                        A topic exists as soon as something publishes to it, so this is the one command that makes the first one, with the terminal it
+                        runs in and a Copy button that says it copied.
+                    </p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            A block headed <b>bash</b> with the command behind a <code>$</code> prompt that is not copied, the line &ldquo;Runs on any
+                            machine that can reach kyu&rdquo;, and a <b>Copy</b> button. Press Copy: it says <b>Copied</b> and the clipboard holds the
+                            three lines exactly as written.
+                        </li>
+                        <li>
+                            <b>Copy is refused</b> (the browser says no) makes Copy say so in words instead of failing silently. <b>Phone</b> wraps the
+                            lines inside 390 px. The <b>#</b> beside the heading (point at it) copies a link to this heading.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The block is a ruled paper slip: the prompt sits in its own column, the continuation lines are indented under the first, the
+                        Copy button keeps one width for both words, and no line touches the right edge of the block.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="start-topic-component">
+                    <div role="group" aria-label="The clipboard" data-review-latent>
+                        <b>Clipboard:</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-kt-clipboard="allowed">Allows copying</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-kt-clipboard="refused">Refuses copying</button>
+                    </div>
+                    <div role="group" aria-label="Width">
+                        <b>Width:</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-kt-cmd-width="full">Full (1280)</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-kt-cmd-width="phone">Phone (390)</button>
+                    </div>
+                </div>
+                <div id="start-topic-component" class="kt-stage kt-start" data-kt-cmd-stage data-kt-width="full" data-kp-anchors="headings" data-kp-anchor-levels="3">
+                    <h3 id="start-a-topic">Start a topic</h3>
+                    <p class="kp-lede">A topic exists as soon as something publishes to it.</p>
+                    <div class="kp-command" data-kp-command="bash" data-kp-command-where="any machine that can reach kyu" data-kt-command>
+                        <pre class="kp-command__code"><code>curl -s -H 'content-type: application/json' \
+  -d '{"hello":"world"}' \
+  "$KYU_URL/t/notify.kenny"</code></pre>
+                    </div>
+                    <p class="kt-then">
+                        Then open the topic to see the receive and acknowledge commands, filled in with its own data and a working token.
+                    </p>
+                    <p class="kt-copy-log" data-kt-copy-log aria-live="polite"></p>
+                </div>
+            </section>
+
+            <!-- 4 · heat map topic x hour [server] -->
+            <section
+                class="kt-sec"
+                id="topics-heat"
+                data-review-item="topics-heat" data-review-topic="server" data-review-topic-title="New uses: history kyu does not keep today"
+                data-review-title="New: a heat map of topic by hour"
+                data-review-components="heat hovercard idmark"
+                aria-labelledby="h-topics-heat"
+            >
+                <div class="kt-sec__head">
+                    <h2 id="h-topics-heat">New: a heat map of topic by hour</h2>
+                    <p>
+                        <b>New: kyu would need</b> to count, per topic and per hour, the messages published and the messages that died, and keep those
+                        counts for a day or more (a small history table); it keeps no such history today. The grid shows when each topic is busy and when
+                        things die.
+                    </p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Five rows (one per topic, with its mark) by 24 columns (the last 24 hours, the hour number on the axis), darker where more
+                            messages were published, and a bottom row for the whole hub. Point at a cell: a card says the topic, the hour and the count.
+                            Press a cell: the whole hour is pinned and the line under the grid names it.
+                        </li>
+                        <li>
+                            <b>Dead letters</b> shows the same grid for messages that died: a calm cell where none did, a warning or red cell where some
+                            did. Press a topic name to keep only the rows you press. Arrow keys move between the cells.
+                        </li>
+                        <li>
+                            <b>Loading</b> keeps the grid&rsquo;s shape with the theme&rsquo;s waiting cells and the busy card over it;
+                            <b>Empty</b> says there is no history yet, over the grid&rsquo;s whole footprint; <b>Could not read</b> says so with a normal
+                            Retry.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal tones the grid like a ledger: one ink in steps of strength for the counts, a quiet cell for nothing. Check that the hour
+                        axis labels are not cramped, the row names wrap rather than cut, and the loading, empty and failed plates are as tall as the grid.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="topics-heat-component">
+                    <div role="group" aria-label="State of the heat map">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-kt-heat-state="ready">Filled</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-kt-heat-state="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-kt-heat-state="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-kt-heat-state="error">Could not read</button>
+                    </div>
+                    <div role="group" aria-label="What the cells count">
+                        <b>Counts:</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-kt-heat-metric="published">Published</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-kt-heat-metric="dead">Dead letters</button>
+                    </div>
+                    <div role="group" aria-label="Width">
+                        <b>Width:</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-kt-heat-width="full">Full (1280)</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-kt-heat-width="phone">Phone (390)</button>
+                    </div>
+                </div>
+                <div id="topics-heat-component" class="kt-stage" data-kt-heat-stage data-kt-width="full">
+                    <div class="kp-heat" data-kp-heat data-kp-heat-toggle data-kt-heat></div>
+                    <ul class="kp-heat__legend" aria-label="Legend" data-kt-heat-legend></ul>
+                    <div class="kt-readout-row">
+                        <p class="kt-readout" data-kt-heat-readout aria-live="polite">No hour pinned. Press a cell to pin its hour.</p>
+                        <button type="button" class="kp-button" data-kt-heat-retry hidden>Retry</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5 · sparklines in the key figures [server] -->
+            <section
+                class="kt-sec"
+                id="topics-trends"
+                data-review-item="topics-trends" data-review-topic="server"
+                data-review-title="New: the key figures with their last 24 hours"
+                data-review-components="kpi chart"
+                aria-labelledby="h-topics-trends"
+            >
+                <!-- kpi variants on this page: kp-kpi--trend here, kp-kpi--toggle in the topics-page section -->
+                <div class="kt-sec__head">
+                    <h2 id="h-topics-trends">New: the key figures with their last 24 hours</h2>
+                    <p>
+                        <b>New: kyu would need</b> to sample the hub&rsquo;s totals (messages, backlog, dead letters) once an hour and keep a day of
+                        them (a metric it does not keep today); the tiles then show how each number got here.
+                    </p>
+                </div>
+                <div class="kt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The same four tiles as the page, each with a line of its last 24 hours under the number: published messages per hour
+                            (Messages), the waiting count (Backlog), dead letters (Dead) and the number of topics (flat). A change since yesterday stands
+                            beside it as a small arrow with its size.
+                        </li>
+                        <li>
+                            Point at a line or use the arrow keys on it: a chip shows the moment (dd/mm/yyyy HH:mm) and the value of that point.
+                            <b>Loading</b> leaves each line empty at its height; <b>No history yet</b> shows the tile without a line and says so;
+                            <b>Could not read</b> is one plate over the strip with a Retry.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The lines are one navy ink over a faint area, the same height in every tile, with the axis words under each. Check that a tile
+                        is as tall loading and empty as filled, and that the delta arrows are not colour alone.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="topics-trends-component">
+                    <div role="group" aria-label="State of the key figures">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-kt-trend-state="ready">Filled</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-kt-trend-state="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-kt-trend-state="empty">No history yet</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-kt-trend-state="error">Could not read</button>
+                    </div>
+                    <div role="group" aria-label="Width">
+                        <b>Width:</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-kt-trend-width="full">Full (1280)</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-kt-trend-width="phone">Phone (390)</button>
+                    </div>
+                </div>
+                <div id="topics-trends-component" class="kt-stage" data-kt-trend-stage data-kt-width="full">
+                    <div class="kp-kpis" role="group" aria-label="The hub with its last 24 hours" data-kp-kpis-columns="all 2 1" data-kt-trends></div>
+                    <div class="kp-empty kt-trend-plate" data-kp-art="error" data-kt-trend-plate hidden>
+                        <p class="kp-empty__title">Could not read the hourly history</p>
+                        <p class="kp-empty__body">The hub did not answer. The numbers on the Topics page are still current.</p>
+                        <button type="button" class="kp-button" data-kt-trend-retry>Retry</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "r1-9d3e0c52-77a4-4f0a-9c6e-1b2f5e8a40d1" }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

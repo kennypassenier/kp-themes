@@ -1,0 +1,205 @@
+/* research/kyu-11-topics: the frame of the page. Everything with a kp- class is the package; these kt- rules only lay out the intro,
+   the section heads, the stage a component stands in and the few cells that hold two package parts side by side. */
+
+.kt-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.kt-intro {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.kt-intro :is(p) {
+    margin: 0;
+}
+
+.kt-intro__eyebrow {
+    color: var(--muted-foreground);
+    font-size: 0.8125rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.kt-intro__title {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.kt-intro__text {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+/* a section: heading, one sentence, what to expect, then the component */
+.kt-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+.kt-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.kt-sec__head :is(h2, p),
+.kt-expected :is(p, ul) {
+    margin: 0;
+}
+
+.kt-expected ul {
+    padding-inline-start: 1.25rem;
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+/* the controls that stand at a component */
+[data-review-controls] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
+    align-items: center;
+}
+
+[data-review-controls] > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-xs, 0.25rem);
+    align-items: center;
+}
+
+/* the stage: as wide as a phone when "Phone (390)" is pressed */
+.kt-stage {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    align-content: start;
+}
+
+.kt-stage[data-kt-width='phone'] {
+    inline-size: min(390px, 100%);
+}
+
+.kt-live-bar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.kt-table {
+    display: grid;
+    min-inline-size: 0;
+}
+
+.kt-table > [hidden] {
+    display: none;
+}
+
+/* the empty hub: a plate as tall as the table was, its content centred in it */
+.kt-none {
+    display: grid;
+    align-content: center;
+    justify-items: center;
+    text-align: center;
+}
+
+/* header */
+.kt-header__body {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 0;
+}
+
+.kt-header__body > :is(h1, p) {
+    margin: 0;
+}
+
+.kt-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    align-items: center;
+    min-block-size: 2rem;
+    color: var(--muted-foreground);
+}
+
+/* the topic cell: the mark and the name side by side */
+.kt-topic {
+    display: inline-flex;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-items: center;
+    min-inline-size: 0;
+}
+
+.kt-topic__link {
+    overflow-wrap: anywhere;
+}
+
+.kt-hover {
+    cursor: help;
+}
+
+.kt-flow {
+    min-inline-size: 11rem;
+}
+
+.kt-then,
+.kt-copy-log,
+.kt-readout {
+    margin: 0;
+    color: var(--muted-foreground);
+}
+
+.kt-copy-log {
+    min-block-size: 1.5em;
+}
+
+.kt-start {
+    max-inline-size: 60rem;
+}
+
+.kt-start > :is(h3, p) {
+    margin: 0;
+}
+
+.kt-trend-plate {
+    min-block-size: 14rem;
+}
+
+.kt-name {
+    min-inline-size: 12rem;
+}
+
+.kp-table .kp-badge {
+    white-space: nowrap;
+}
+
+/* A heat row's name wraps instead of being cut with an ellipsis. */
+.kp-heat__label-text {
+    overflow: visible;
+    text-overflow: clip;
+    white-space: normal;
+    overflow-wrap: anywhere;
+}
+
+.kt-flow .kp-stackbar {
+    min-inline-size: 8rem;
+    inline-size: 100%;
+}
+
+/* The heat grid's own knob: its empty and failed states are as tall as the grid. */
+.kt-stage [data-kt-heat] {
+    --kp-heat-state-height: 13.5rem;
+}
+
+.kt-readout-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    align-items: center;
+    justify-content: space-between;
+    min-block-size: 2.5rem;
+}

@@ -169,6 +169,11 @@ export const PAGES = [
                 about: 'The command palette, keyboard shortcuts and their help sheet, a first-visit tour, links to a heading or a row, and two overviews of which app reads which topic. Formal only.',
             },
             {
+                href: 'research/kyu-11-topics/demo.html',
+                label: 'kyu, part 2 of 5: the Topics page',
+                about: 'The list of every topic: key figures that filter the table, what needs attention first, the topics table with bars, flow and live refresh, the command to start a topic, and two new views (a heat map per hour and trend tiles). Formal only; items marked New need kyu backend work.',
+            },
+            {
                 href: 'research/kyu-11-topic-subs/demo.html',
                 label: 'kyu, part 3 of 5: the Topic page, sending and subscriptions',
                 about: 'The topic header, the four commands to send and receive with the token kept hidden, the warning when no app token exists yet, and the subscriptions table with its filter, row menu, archive with undo and delete by typing the name. Formal only.',
