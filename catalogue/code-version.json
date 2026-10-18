@@ -144,6 +144,8 @@
         "blueprint||@media (forced-colors: active)||a)": "4648413ef869dda3",
         "blueprint||@media (hover: hover)||.kp-checklist__row": "3cc8a80fbdb9b81e",
         "blueprint||@media (hover: hover)||.kp-segmented__item": "19006eea47ffc41b",
+        "blueprint||@media (max-width: 30rem)||.kp-segmented__item": "c22beb8f0e65b336",
+        "blueprint||@media (max-width: 30rem)||.kp-segmented__label": "a2348c59204cf3c1",
         "blueprint||@media (prefers-reduced-motion: no-preference) § @container kp-nav (max-width: 40rem)||.kp-nav__links": "8068e18cc3a7beca",
         "blueprint||@media (prefers-reduced-motion: no-preference) § @container kp-nav (max-width: 40rem)||.kp-nav__menu": "3c15554c5c9793ba",
         "blueprint||@media (prefers-reduced-motion: no-preference)||)": "5e72fafcb50951c9",

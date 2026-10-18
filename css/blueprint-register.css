@@ -5911,4 +5911,26 @@
         max-inline-size: 100%;
         overflow-wrap: break-word;
     }
+
+    /* The lettering of a segment is tracked 0.08 em, which on a phone left "Last" 2.9 px (1.1 px in the frozen states) and the
+       weekday and month cells 4 px or less from their own edges, and pushed the calm switch's three segments 45 px past
+       their section (kpadopt5-time/weekdays, kpadopt5-basics/calm-mode, 390 px). On a phone the tracking is a quarter of that
+       and the day cells are set a size smaller. */
+    @media (max-width: 30rem) {
+        [data-theme='blueprint'] .kp-segmented__label {
+            letter-spacing: 0.02em;
+        }
+
+        [data-theme='blueprint'] .kp-weekdays .kp-segmented__item {
+            font-size: 0.6875rem;
+        }
+
+        [data-theme='blueprint'] .kp-weekdays .kp-segmented__label {
+            letter-spacing: 0;
+        }
+
+        [data-theme='blueprint'] .kp-segmented[data-kp-segmented='single'] > .kp-segmented__item {
+            padding-inline: 0.5rem;
+        }
+    }
 }
