@@ -283,6 +283,65 @@
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">data-kp-count</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-count: 1200; --kp-count-from: 100&quot;</span> <span class="kp-code__keyword">data-kp-count-state</span><span class="kp-code__string">=&quot;done&quot;</span>&gt;640&lt;/<span class="kp-code__keyword">span</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A live number that ticks when its text changes</figcaption>
+                        <p class="kp-text-muted">`[data-kp-count]` counts once, when a number first arrives. A live counter changes after that: mark it with `data-kp-tick`, write the new number the way you always do (or let the framework re-render it), and the module counts from the number shown to the new one, ending on exactly the text that was written, never a rounded or shortened one. It writes into the element’s own text node, so a framework that owns that node still finds it. `tickTo(el, text, { from, duration })` is the same by call, and down counts too. While it runs the element carries `aria-busy=&quot;true&quot;` and `data-kp-tick-state=&quot;running&quot;` (`done` after), so a live region speaks only the number it lands on, and `kp-tick` fires when it lands with `{ value }`. The nearest `lang` says which separator groups: `1.204` is a thousand two hundred and four in Dutch.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <p><strong class="kp-kpi__value" id="doc-tick-open" data-kp-tick>12</strong> open items</p>
+    <p lang="nl"><strong class="kp-kpi__value" id="doc-tick-nl" data-kp-tick>1.204</strong> bestanden</p>
+    <div class="kp-row kp-flex-wrap kp-gap-sm" role="group" aria-label="Change the numbers">
+        <button type="button" class="kp-button" id="doc-tick-up">The next poll says 15</button>
+        <button type="button" class="kp-button" id="doc-tick-down">Back down to 12</button>
+        <button type="button" class="kp-button" id="doc-tick-call">Tick by call, over 2 s</button>
+    </div>
+    <pre class="kp-code-block" id="doc-tick-log" aria-live="polite">Press a button.</pre>
+</div>
+                            <script type="module">
+import { TICK_EVENT, attachTicks, tickTo } from '../../js/tick.js';
+
+const open = document.getElementById('doc-tick-open');
+const dutch = document.getElementById('doc-tick-nl');
+attachTicks(open.closest('.kp-stack'));
+document.getElementById('doc-tick-up').addEventListener('click', () => {
+    open.textContent = '15'; // written the way a poll would; the module notices
+    dutch.textContent = '1.210';
+});
+document.getElementById('doc-tick-down').addEventListener('click', () => {
+    open.textContent = '12';
+    dutch.textContent = '1.204';
+});
+document.getElementById('doc-tick-call').addEventListener('click', () => tickTo(dutch, '1.500', { from: 1204, duration: 2000 }));
+document.addEventListener(TICK_EVENT, (event) => (document.getElementById('doc-tick-log').textContent = 'kp-tick { value: ' + event.detail.value + ' }'));
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span>&gt;&lt;<span class="kp-code__keyword">strong</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-tick-open&quot;</span> <span class="kp-code__keyword">data-kp-tick</span>&gt;12&lt;/<span class="kp-code__keyword">strong</span>&gt; open items&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">lang</span><span class="kp-code__string">=&quot;nl&quot;</span>&gt;&lt;<span class="kp-code__keyword">strong</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-kpi__value&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-tick-nl&quot;</span> <span class="kp-code__keyword">data-kp-tick</span>&gt;1.204&lt;/<span class="kp-code__keyword">strong</span>&gt; bestanden&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-flex-wrap kp-gap-sm&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Change the numbers&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-tick-up&quot;</span>&gt;The next poll says 15&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-tick-down&quot;</span>&gt;Back down to 12&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-tick-call&quot;</span>&gt;Tick by call, over 2 s&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code-block&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-tick-log&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;Press a button.&lt;/<span class="kp-code__keyword">pre</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { TICK_EVENT, attachTicks, tickTo } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/tick'</span>;
+
+<span class="kp-code__keyword">const</span> open = document.getElementById(<span class="kp-code__string">'doc-tick-open'</span>);
+<span class="kp-code__keyword">const</span> dutch = document.getElementById(<span class="kp-code__string">'doc-tick-nl'</span>);
+attachTicks(open.closest(<span class="kp-code__string">'.kp-stack'</span>));
+document.getElementById(<span class="kp-code__string">'doc-tick-up'</span>).addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; {
+    open.textContent = <span class="kp-code__string">'15'</span>; <span class="kp-code__comment">// written the way a poll would; the module notices</span>
+    dutch.textContent = <span class="kp-code__string">'1.210'</span>;
+});
+document.getElementById(<span class="kp-code__string">'doc-tick-down'</span>).addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; {
+    open.textContent = <span class="kp-code__string">'12'</span>;
+    dutch.textContent = <span class="kp-code__string">'1.204'</span>;
+});
+document.getElementById(<span class="kp-code__string">'doc-tick-call'</span>).addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; tickTo(dutch, <span class="kp-code__string">'1.500'</span>, { <span class="kp-code__keyword">from</span>: <span class="kp-code__string">1204</span>, duration: <span class="kp-code__string">2000</span> }));
+document.addEventListener(TICK_EVENT, (event) =&gt; (document.getElementById(<span class="kp-code__string">'doc-tick-log'</span>).textContent = <span class="kp-code__string">'kp-tick { value: '</span> + event.detail.value + <span class="kp-code__string">' }'</span>));</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -327,7 +386,15 @@
                 </section>
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
-                    <p class="kp-text-muted">This unit has one appearance and no states.</p>
+                    <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-tick</code></td><td>Marks a number that ticks to its new value when its text is changed by anyone but the module. The first text is the number shown; after that every change counts from the last number shown to the new one.</td></tr>
+                            <tr><td><code>data-kp-tick-state</code></td><td>Written by the module: `running` while it counts (with `aria-busy=&quot;true&quot;` on the element, so a live region speaks only the number it lands on), `done` after, and from the first moment it is attached.</td></tr>
+                            <tr><td><code>kp-tick</code></td><td>Fires on the element, bubbling, when a tick lands: `{ value }`, the number it landed on (`null` when the text held no number and was written at once).</td></tr>
+                            <tr><td><code>tickTo(el, text, { from, duration })</code></td><td>The same by call. `text` left out means the element’s own text is the target; `from` is the number to start at (the one last shown by default) and `duration` the length in ms. Without a number in either, `text` is written at once.</td></tr>
+                            <tr><td><code>parseTick(text, locale)</code></td><td>The first number in a text in the shape the locale writes numbers, with a `render(value)` that writes another value back in the same shape (the same text around it, the same grouping and decimals); `null` when the text holds no number.</td></tr>
+                            <tr><td><code>attachTicks(root) and TICK_MS</code></td><td>`attachTicks(root)` watches every `[data-kp-tick]` under it, including those added later, and returns a detach that makes every running tick land on its number. `TICK_MS` is the default length, 600 ms.</td></tr>
+                            <tr><td><code>a jump too long to follow</code></td><td>More than 400 steps of the number’s precision is drawn as 400, ending on the real number; a reader who asked for less motion, and a tick length of 0, see the new number at once.</td></tr>
+                    </tbody></table></div>
                 </section>
                 </div>
             </main>

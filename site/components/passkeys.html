@@ -292,6 +292,187 @@ setPasskeys(list, {
     rename: <span class="kp-code__keyword">async</span> () =&gt; {},
 });</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Four kinds, a refusal, an unused way and the options</figcaption>
+                        <p class="kp-text-muted">`kind` is `passkey`, `magic-link`, `password` or `token`, each with its own glyph; the list is sorted with the one in use first, then by last use (`sortPasskeys`). A way unused for `neverUsedAfter` days (90 by default; `unusedDays(row, now, limit)` is the count) is flagged as a candidate to remove. `now` is the clock, here fixed so the example does not age. When `remove` rejects, its message is the server’s reason and shows on the row, which stays. Removing the only way in is refused (`protectLast: 'refuse'`): `refuseLook` is `button` (Remove stays, held off, the reason under the name) or `note` (the reason takes the button’s place). Press Remove on the other rows: the first asks in a dialog, and the token’s removal is refused by the page.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-passkeys" id="doc-passkeys-kinds" data-kp-passkeys data-kp-confirm="dialog" data-kp-never-used-after="90"></div>
+<pre class="kp-code-block" id="doc-passkeys-log" aria-live="polite">Press Rename or Remove.</pre>
+                            <script type="module">
+import { PASSKEYS_REMOVE_EVENT, PASSKEYS_RENAME_EVENT, attachPasskeys, setPasskeys } from '../../js/passkeys.js';
+
+const list = document.getElementById('doc-passkeys-kinds');
+const log = document.getElementById('doc-passkeys-log');
+attachPasskeys(list.parentElement);
+const now = Date.parse('2026-10-18T12:00:00+02:00');
+setPasskeys(list, {
+    now: () => now,
+    markCurrent: true,
+    refuseLook: 'button',
+    rows: [
+        { key: 'pk1', label: 'Work laptop', kind: 'passkey', createdAt: Date.parse('2026-08-02T09:00:00+02:00'), lastUsedAt: now - 3_600_000, current: true },
+        { key: 'ml', label: 'Magic link to anna@example.org', kind: 'magic-link', createdAt: Date.parse('2026-05-20T10:00:00+02:00'), lastUsedAt: now - 9 * 86_400_000 },
+        { key: 'pw', label: 'Password', kind: 'password', createdAt: Date.parse('2025-11-02T10:00:00+01:00'), lastUsedAt: now - 140 * 86_400_000 },
+        { key: 'tok', label: 'Backup token', kind: 'token', createdAt: Date.parse('2026-01-02T10:00:00+01:00'), lastUsedAt: null },
+    ],
+    remove: async (row) => {
+        log.textContent = 'remove(' + row.key + ')';
+        if (row.kind === 'token') throw new Error('The server could not reach the token store. Try again in a minute.');
+    },
+    rename: async (row, label) => (log.textContent = 'rename(' + row.key + ', ' + JSON.stringify(label) + ')'),
+});
+// Without remove and rename the page answers the cancelable events itself.
+list.addEventListener(PASSKEYS_REMOVE_EVENT, (event) => (log.textContent = PASSKEYS_REMOVE_EVENT + ' { key: ' + event.detail.key + ' }'));
+list.addEventListener(PASSKEYS_RENAME_EVENT, (event) => (log.textContent = PASSKEYS_RENAME_EVENT + ' { key: ' + event.detail.key + ' }'));
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-passkeys&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-passkeys-kinds&quot;</span> <span class="kp-code__keyword">data-kp-passkeys</span> <span class="kp-code__keyword">data-kp-confirm</span><span class="kp-code__string">=&quot;dialog&quot;</span> <span class="kp-code__keyword">data-kp-never-used-after</span><span class="kp-code__string">=&quot;90&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code-block&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-passkeys-log&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;Press Rename or Remove.&lt;/<span class="kp-code__keyword">pre</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { PASSKEYS_REMOVE_EVENT, PASSKEYS_RENAME_EVENT, attachPasskeys, setPasskeys } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/passkeys'</span>;
+
+<span class="kp-code__keyword">const</span> list = document.getElementById(<span class="kp-code__string">'doc-passkeys-kinds'</span>);
+<span class="kp-code__keyword">const</span> log = document.getElementById(<span class="kp-code__string">'doc-passkeys-log'</span>);
+attachPasskeys(list.parentElement);
+<span class="kp-code__keyword">const</span> now = Date.parse(<span class="kp-code__string">'2026-10-18T12:00:00+02:00'</span>);
+setPasskeys(list, {
+    now: () =&gt; now,
+    markCurrent: <span class="kp-code__keyword">true</span>,
+    refuseLook: <span class="kp-code__string">'button'</span>,
+    rows: [
+        { key: <span class="kp-code__string">'pk1'</span>, label: <span class="kp-code__string">'Work laptop'</span>, kind: <span class="kp-code__string">'passkey'</span>, createdAt: Date.parse(<span class="kp-code__string">'2026-08-02T09:00:00+02:00'</span>), lastUsedAt: now - <span class="kp-code__string">3_600_000</span>, current: <span class="kp-code__keyword">true</span> },
+        { key: <span class="kp-code__string">'ml'</span>, label: <span class="kp-code__string">'Magic link to anna@example.org'</span>, kind: <span class="kp-code__string">'magic-link'</span>, createdAt: Date.parse(<span class="kp-code__string">'2026-05-20T10:00:00+02:00'</span>), lastUsedAt: now - <span class="kp-code__string">9</span> * <span class="kp-code__string">86_400_000</span> },
+        { key: <span class="kp-code__string">'pw'</span>, label: <span class="kp-code__string">'Password'</span>, kind: <span class="kp-code__string">'password'</span>, createdAt: Date.parse(<span class="kp-code__string">'2025-11-02T10:00:00+01:00'</span>), lastUsedAt: now - <span class="kp-code__string">140</span> * <span class="kp-code__string">86_400_000</span> },
+        { key: <span class="kp-code__string">'tok'</span>, label: <span class="kp-code__string">'Backup token'</span>, kind: <span class="kp-code__string">'token'</span>, createdAt: Date.parse(<span class="kp-code__string">'2026-01-02T10:00:00+01:00'</span>), lastUsedAt: <span class="kp-code__keyword">null</span> },
+    ],
+    remove: <span class="kp-code__keyword">async</span> (row) =&gt; {
+        log.textContent = <span class="kp-code__string">'remove('</span> + row.key + <span class="kp-code__string">')'</span>;
+        <span class="kp-code__keyword">if</span> (row.kind === <span class="kp-code__string">'token'</span>) <span class="kp-code__keyword">throw</span> <span class="kp-code__keyword">new</span> Error(<span class="kp-code__string">'The server could not reach the token store. Try again in a minute.'</span>);
+    },
+    rename: <span class="kp-code__keyword">async</span> (row, label) =&gt; (log.textContent = <span class="kp-code__string">'rename('</span> + row.key + <span class="kp-code__string">', '</span> + JSON.stringify(label) + <span class="kp-code__string">')'</span>),
+});
+<span class="kp-code__comment">// Without remove and rename the page answers the cancelable events itself.</span>
+list.addEventListener(PASSKEYS_REMOVE_EVENT, (event) =&gt; (log.textContent = PASSKEYS_REMOVE_EVENT + <span class="kp-code__string">' { key: '</span> + event.detail.key + <span class="kp-code__string">' }'</span>));
+list.addEventListener(PASSKEYS_RENAME_EVENT, (event) =&gt; (log.textContent = PASSKEYS_RENAME_EVENT + <span class="kp-code__string">' { key: '</span> + event.detail.key + <span class="kp-code__string">' }'</span>));</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Only one way in: refused as a button, as a note, or behind a typed name</figcaption>
+                        <p class="kp-text-muted">The same last way in three times. `refuse` keeps Remove on the row, held off, with the reason under the name; `refuse` with `refuseLook: 'note'` puts the reason where the button was; `confirm` lets it through behind a typed name and a warning, and `confirm: 'type-name'` asks for the exact name for every removal, not only for the one in use. `markCurrent: false` leaves the “This device” badge out.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-passkeys" id="doc-passkeys-a" data-kp-passkeys data-kp-protect-last="refuse"></div>
+    <div class="kp-passkeys" id="doc-passkeys-b" data-kp-passkeys data-kp-protect-last="refuse" data-kp-refuse-look="note" data-kp-mark-current="off"></div>
+    <div class="kp-passkeys" id="doc-passkeys-c" data-kp-passkeys data-kp-protect-last="confirm" data-kp-confirm="type-name"></div>
+</div>
+                            <script type="module">
+import { attachPasskeys, setPasskeys } from '../../js/passkeys.js';
+
+const only = [{ key: 'pk1', label: 'Phone', kind: 'passkey', createdAt: Date.parse('2026-03-11T18:40:00+01:00'), lastUsedAt: Date.parse('2026-10-18T08:00:00+02:00'), current: true }];
+for (const id of ['doc-passkeys-a', 'doc-passkeys-b', 'doc-passkeys-c']) {
+    const list = document.getElementById(id);
+    attachPasskeys(list.parentElement);
+    setPasskeys(list, { now: () => Date.parse('2026-10-18T12:00:00+02:00'), rows: only, remove: async () => {}, rename: async () => {} });
+}
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-passkeys&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-passkeys-a&quot;</span> <span class="kp-code__keyword">data-kp-passkeys</span> <span class="kp-code__keyword">data-kp-protect-last</span><span class="kp-code__string">=&quot;refuse&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-passkeys&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-passkeys-b&quot;</span> <span class="kp-code__keyword">data-kp-passkeys</span> <span class="kp-code__keyword">data-kp-protect-last</span><span class="kp-code__string">=&quot;refuse&quot;</span> <span class="kp-code__keyword">data-kp-refuse-look</span><span class="kp-code__string">=&quot;note&quot;</span> <span class="kp-code__keyword">data-kp-mark-current</span><span class="kp-code__string">=&quot;off&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-passkeys&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-passkeys-c&quot;</span> <span class="kp-code__keyword">data-kp-passkeys</span> <span class="kp-code__keyword">data-kp-protect-last</span><span class="kp-code__string">=&quot;confirm&quot;</span> <span class="kp-code__keyword">data-kp-confirm</span><span class="kp-code__string">=&quot;type-name&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachPasskeys, setPasskeys } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/passkeys'</span>;
+
+<span class="kp-code__keyword">const</span> only = [{ key: <span class="kp-code__string">'pk1'</span>, label: <span class="kp-code__string">'Phone'</span>, kind: <span class="kp-code__string">'passkey'</span>, createdAt: Date.parse(<span class="kp-code__string">'2026-03-11T18:40:00+01:00'</span>), lastUsedAt: Date.parse(<span class="kp-code__string">'2026-10-18T08:00:00+02:00'</span>), current: <span class="kp-code__keyword">true</span> }];
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> id <span class="kp-code__keyword">of</span> [<span class="kp-code__string">'doc-passkeys-a'</span>, <span class="kp-code__string">'doc-passkeys-b'</span>, <span class="kp-code__string">'doc-passkeys-c'</span>]) {
+    <span class="kp-code__keyword">const</span> list = document.getElementById(id);
+    attachPasskeys(list.parentElement);
+    setPasskeys(list, { now: () =&gt; Date.parse(<span class="kp-code__string">'2026-10-18T12:00:00+02:00'</span>), rows: only, remove: <span class="kp-code__keyword">async</span> () =&gt; {}, rename: <span class="kp-code__keyword">async</span> () =&gt; {} });
+}</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Loading, empty, could not read, and not over https</figcaption>
+                        <p class="kp-text-muted">`state: 'loading'` keeps the rows’ geometry as waiting rows under the busy card (`loadingRows`, `loadingWords`); `empty` (“No passkey registered yet” and Register, `kp-passkeys-register`; `register: false` leaves the button out) and `error` (the sentence in `message` and Retry, `kp-passkeys-retry`; `retry: false` leaves it out) fill the whole footprint of the list, centred; `insecure: true` puts a warning with what to do next above the list, because passkeys need https.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-row kp-flex-wrap kp-gap-sm" role="group" aria-label="States">
+        <button type="button" class="kp-button" data-doc-passkeys-state="ready">Ready</button>
+        <button type="button" class="kp-button" data-doc-passkeys-state="loading">Loading</button>
+        <button type="button" class="kp-button" data-doc-passkeys-state="empty">Empty</button>
+        <button type="button" class="kp-button" data-doc-passkeys-state="error">Could not read</button>
+        <button type="button" class="kp-button" data-doc-passkeys-state="insecure">Not https</button>
+    </div>
+    <div class="kp-passkeys" id="doc-passkeys-states" data-kp-passkeys></div>
+</div>
+                            <script type="module">
+import { PASSKEYS_REGISTER_EVENT, PASSKEYS_RETRY_EVENT, attachPasskeys, setPasskeys } from '../../js/passkeys.js';
+
+const list = document.getElementById('doc-passkeys-states');
+attachPasskeys(list.parentElement);
+const rows = [
+    { key: 'pk1', label: 'Work laptop', kind: 'passkey', createdAt: Date.parse('2026-08-02T09:00:00+02:00'), lastUsedAt: Date.parse('2026-10-18T08:00:00+02:00'), current: true },
+    { key: 'pk2', label: 'Phone', kind: 'passkey', createdAt: Date.parse('2026-03-11T18:40:00+01:00'), lastUsedAt: Date.parse('2026-10-10T08:00:00+02:00') },
+];
+const draw = (state) =>
+    setPasskeys(list, {
+        now: () => Date.parse('2026-10-18T12:00:00+02:00'),
+        rows: state === 'empty' ? [] : rows,
+        state: state === 'insecure' ? 'ready' : state,
+        insecure: state === 'insecure',
+        message: 'The ways to sign in could not be read. Try again in a minute.',
+        remove: async () => {},
+        rename: async () => {},
+    });
+draw('ready');
+for (const button of document.querySelectorAll('[data-doc-passkeys-state]')) {
+    button.addEventListener('click', () => draw(button.getAttribute('data-doc-passkeys-state')));
+}
+list.addEventListener(PASSKEYS_RETRY_EVENT, () => {
+    draw('loading');
+    setTimeout(() => draw('ready'), 1000);
+});
+list.addEventListener(PASSKEYS_REGISTER_EVENT, () => draw('ready'));
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-flex-wrap kp-gap-sm&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;States&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-passkeys-state</span><span class="kp-code__string">=&quot;ready&quot;</span>&gt;Ready&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-passkeys-state</span><span class="kp-code__string">=&quot;loading&quot;</span>&gt;Loading&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-passkeys-state</span><span class="kp-code__string">=&quot;empty&quot;</span>&gt;Empty&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-passkeys-state</span><span class="kp-code__string">=&quot;error&quot;</span>&gt;Could not read&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-passkeys-state</span><span class="kp-code__string">=&quot;insecure&quot;</span>&gt;Not https&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-passkeys&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-passkeys-states&quot;</span> <span class="kp-code__keyword">data-kp-passkeys</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { PASSKEYS_REGISTER_EVENT, PASSKEYS_RETRY_EVENT, attachPasskeys, setPasskeys } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/passkeys'</span>;
+
+<span class="kp-code__keyword">const</span> list = document.getElementById(<span class="kp-code__string">'doc-passkeys-states'</span>);
+attachPasskeys(list.parentElement);
+<span class="kp-code__keyword">const</span> rows = [
+    { key: <span class="kp-code__string">'pk1'</span>, label: <span class="kp-code__string">'Work laptop'</span>, kind: <span class="kp-code__string">'passkey'</span>, createdAt: Date.parse(<span class="kp-code__string">'2026-08-02T09:00:00+02:00'</span>), lastUsedAt: Date.parse(<span class="kp-code__string">'2026-10-18T08:00:00+02:00'</span>), current: <span class="kp-code__keyword">true</span> },
+    { key: <span class="kp-code__string">'pk2'</span>, label: <span class="kp-code__string">'Phone'</span>, kind: <span class="kp-code__string">'passkey'</span>, createdAt: Date.parse(<span class="kp-code__string">'2026-03-11T18:40:00+01:00'</span>), lastUsedAt: Date.parse(<span class="kp-code__string">'2026-10-10T08:00:00+02:00'</span>) },
+];
+<span class="kp-code__keyword">const</span> draw = (state) =&gt;
+    setPasskeys(list, {
+        now: () =&gt; Date.parse(<span class="kp-code__string">'2026-10-18T12:00:00+02:00'</span>),
+        rows: state === <span class="kp-code__string">'empty'</span> ? [] : rows,
+        state: state === <span class="kp-code__string">'insecure'</span> ? <span class="kp-code__string">'ready'</span> : state,
+        insecure: state === <span class="kp-code__string">'insecure'</span>,
+        message: <span class="kp-code__string">'The ways to sign in could not be read. Try again in a minute.'</span>,
+        remove: <span class="kp-code__keyword">async</span> () =&gt; {},
+        rename: <span class="kp-code__keyword">async</span> () =&gt; {},
+    });
+draw(<span class="kp-code__string">'ready'</span>);
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> button <span class="kp-code__keyword">of</span> document.querySelectorAll(<span class="kp-code__string">'[data-doc-passkeys-state]'</span>)) {
+    button.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; draw(button.getAttribute(<span class="kp-code__string">'data-doc-passkeys-state'</span>)));
+}
+list.addEventListener(PASSKEYS_RETRY_EVENT, () =&gt; {
+    draw(<span class="kp-code__string">'loading'</span>);
+    setTimeout(() =&gt; draw(<span class="kp-code__string">'ready'</span>), <span class="kp-code__string">1000</span>);
+});
+list.addEventListener(PASSKEYS_REGISTER_EVENT, () =&gt; draw(<span class="kp-code__string">'ready'</span>));</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -354,6 +535,9 @@ setPasskeys(list, {
                             <tr><td><code>data-kp-refuse-look</code></td><td>How the refusal reads: `button` (default: Remove stays on the row, held off, reason under the name) or `note` (the reason takes its place).</td></tr>
                             <tr><td><code>data-kp-mark-current</code></td><td>`off` leaves the “This device” badge out.</td></tr>
                             <tr><td><code>data-kp-never-used-after</code></td><td>Days (90): a way not used for that long is flagged as a candidate to remove; 0 never flags.</td></tr>
+                            <tr><td><code>sortPasskeys, unusedDays and passkeyOptions</code></td><td>`sortPasskeys(rows)` is the list’s order (the one in use first, then the most recently used, a way never used last); `unusedDays(row, now, limit)` is the whole days a way has gone unused, or `null` when it was used within the limit or the flag is off; `passkeyOptions(el, spec)` is the options as drawn: the spec first, then the attribute, then the default.</td></tr>
+                            <tr><td><code>kp-passkeys-register, -retry, -remove and -rename</code></td><td>Register and Retry are the buttons of the empty and failed lists. Remove (`{ key, row }`) and Rename (`{ key, row, label }`) are cancelable and fire only when the page gave no `remove` or `rename`: `preventDefault` means the page does it and calls `setPasskeys` again.</td></tr>
+                            <tr><td><code>PASSKEY_KINDS and the `passkeys…` strings</code></td><td>The four kinds, each with one glyph from one set; and every word of the list (the badge, the last-used sentence, the refusals, the dialogs and the states) is in the dictionary under `passkeys…`.</td></tr>
                             <tr><td><code>states</code></td><td>`loading` keeps the rows’ geometry as waiting rows; `empty` (“No passkey registered yet” and Register) and `error` (Retry) fill the list’s whole footprint; `insecure` puts a warning above the list, because passkeys need https.</td></tr>
                     </tbody></table></div>
                 </section>

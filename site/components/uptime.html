@@ -265,6 +265,39 @@
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-uptime&quot;</span> <span class="kp-code__keyword">data-kp-uptime</span> <span class="kp-code__keyword">data-kp-uptime-label</span><span class="kp-code__string">=&quot;jellyfin&quot;</span> <span class="kp-code__keyword">data-kp-uptime-count</span><span class="kp-code__string">=&quot;90&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Calm tones: thirty days of watering</figcaption>
+                        <p class="kp-text-muted">With `data-kp-tones=&quot;calm&quot;` the strip follows the same attribute as the calendar: `up` and `degraded` are logged, `down` is quiet and its word is “nothing logged”, never an outage. The page still hands over the periods it has, with `down` for a day nothing was logged.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-uptime" id="doc-uptime-calm" data-kp-uptime data-kp-tones="calm" data-kp-uptime-label="Watering"></div>
+                            <script type="module">
+import { attachUptimes, setUptime } from '../../js/uptime.js';
+
+const strip = document.getElementById('doc-uptime-calm');
+attachUptimes(strip.parentElement);
+const periods = Array.from({ length: 30 }, (_, i) => {
+    const day = new Date(Date.UTC(2026, 8, 18 + i));
+    const label = String(day.getUTCDate()).padStart(2, '0') + '/' + String(day.getUTCMonth() + 1).padStart(2, '0') + '/2026';
+    const state = i % 7 === 3 || i % 11 === 5 ? 'down' : i > 27 ? 'none' : 'up';
+    return { key: day.toISOString().slice(0, 10), label, state };
+});
+setUptime(strip, { label: 'Watering', periods, from: '30 days ago', to: 'Today' });
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-uptime&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-uptime-calm&quot;</span> <span class="kp-code__keyword">data-kp-uptime</span> <span class="kp-code__keyword">data-kp-tones</span><span class="kp-code__string">=&quot;calm&quot;</span> <span class="kp-code__keyword">data-kp-uptime-label</span><span class="kp-code__string">=&quot;Watering&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachUptimes, setUptime } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/uptime'</span>;
+
+<span class="kp-code__keyword">const</span> strip = document.getElementById(<span class="kp-code__string">'doc-uptime-calm'</span>);
+attachUptimes(strip.parentElement);
+<span class="kp-code__keyword">const</span> periods = Array.<span class="kp-code__keyword">from</span>({ length: <span class="kp-code__string">30</span> }, (_, i) =&gt; {
+    <span class="kp-code__keyword">const</span> day = <span class="kp-code__keyword">new</span> Date(Date.UTC(<span class="kp-code__string">2026</span>, <span class="kp-code__string">8</span>, <span class="kp-code__string">18</span> + i));
+    <span class="kp-code__keyword">const</span> label = String(day.getUTCDate()).padStart(<span class="kp-code__string">2</span>, <span class="kp-code__string">'0'</span>) + <span class="kp-code__string">'/'</span> + String(day.getUTCMonth() + <span class="kp-code__string">1</span>).padStart(<span class="kp-code__string">2</span>, <span class="kp-code__string">'0'</span>) + <span class="kp-code__string">'/2026'</span>;
+    <span class="kp-code__keyword">const</span> state = i % <span class="kp-code__string">7</span> === <span class="kp-code__string">3</span> || i % <span class="kp-code__string">11</span> === <span class="kp-code__string">5</span> ? <span class="kp-code__string">'down'</span> : i &gt; <span class="kp-code__string">27</span> ? <span class="kp-code__string">'none'</span> : <span class="kp-code__string">'up'</span>;
+    <span class="kp-code__keyword">return</span> { key: day.toISOString().slice(<span class="kp-code__string">0</span>, <span class="kp-code__string">10</span>), label, state };
+});
+setUptime(strip, { label: <span class="kp-code__string">'Watering'</span>, periods, <span class="kp-code__keyword">from</span>: <span class="kp-code__string">'30 days ago'</span>, to: <span class="kp-code__string">'Today'</span> });</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>

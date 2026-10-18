@@ -265,6 +265,134 @@
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code&quot;</span> <span class="kp-code__keyword">data-kp-code</span> <span class="kp-code__keyword">data-kp-code-title</span><span class="kp-code__string">=&quot;Payload&quot;</span> <span class="kp-code__keyword">data-kp-code-language</span><span class="kp-code__string">=&quot;JSON&quot;</span> <span class="kp-code__keyword">data-kp-code-lines</span>&gt;&lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">code</span>&gt;{&quot;topic&quot;:&quot;backup.done&quot;,&quot;ok&quot;:true,&quot;volumes&quot;:[&quot;media&quot;,&quot;photos&quot;]}&lt;/<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">pre</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Pretty and Raw, folded, wrapped, and cut off</figcaption>
+                        <p class="kp-text-muted">JSON that parses gets Pretty and Raw (`data-kp-code-layout=&quot;raw&quot;` starts raw, and a layout the reader picks stays); anything else has no such control. `data-kp-code-max` folds a long block to that many lines with “Show all N lines” under it, `data-kp-code-wrap` wraps from the start (the reader can still toggle Wrap), and `data-kp-code-size` is the size said in the head. Copy copies the whole text, folded or not. A page that only received the start says so in the foot with `setCode(el, { truncated: { shown, total } })`.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <figure class="kp-code" data-kp-code data-kp-code-title="Request" data-kp-code-language="JSON" data-kp-code-max="6"><pre class="kp-code__body"><code>{"id":"01J9ZK","topic":"backup.done","ok":true,"volumes":["media","photos","documents","music"],"took_ms":18204,"host":"backup-1","retries":0,"notes":"nightly run, all volumes, no warnings"}</code></pre></figure>
+    <figure class="kp-code" id="doc-code-cut" data-kp-code data-kp-code-title="Response" data-kp-code-language="JSON" data-kp-code-wrap data-kp-code-size="4 kB"><pre class="kp-code__body"><code>{"items":[{"id":1,"name":"media"},{"id":2,"name":"photos"},{"id":3,"name":"documents"},{"id":4,"name":"music"}</code></pre></figure>
+</div>
+                            <script type="module">
+import { attachCodes, setCode } from '../../js/code.js';
+
+const block = document.getElementById('doc-code-cut');
+attachCodes(block.parentElement);
+setCode(block, { text: block.querySelector('code').textContent, title: 'Response', language: 'JSON', wrap: true, size: '4 kB', truncated: { shown: '1 kB', total: '4 kB' } });
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code&quot;</span> <span class="kp-code__keyword">data-kp-code</span> <span class="kp-code__keyword">data-kp-code-title</span><span class="kp-code__string">=&quot;Request&quot;</span> <span class="kp-code__keyword">data-kp-code-language</span><span class="kp-code__string">=&quot;JSON&quot;</span> <span class="kp-code__keyword">data-kp-code-max</span><span class="kp-code__string">=&quot;6&quot;</span>&gt;&lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">code</span>&gt;{&quot;id&quot;:&quot;01J9ZK&quot;,&quot;topic&quot;:&quot;backup.done&quot;,&quot;ok&quot;:true,&quot;volumes&quot;:[&quot;media&quot;,&quot;photos&quot;,&quot;documents&quot;,&quot;music&quot;],&quot;took_ms&quot;:18204,&quot;host&quot;:&quot;backup-1&quot;,&quot;retries&quot;:0,&quot;notes&quot;:&quot;nightly run, all volumes, no warnings&quot;}&lt;/<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">pre</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-code-cut&quot;</span> <span class="kp-code__keyword">data-kp-code</span> <span class="kp-code__keyword">data-kp-code-title</span><span class="kp-code__string">=&quot;Response&quot;</span> <span class="kp-code__keyword">data-kp-code-language</span><span class="kp-code__string">=&quot;JSON&quot;</span> <span class="kp-code__keyword">data-kp-code-wrap</span> <span class="kp-code__keyword">data-kp-code-size</span><span class="kp-code__string">=&quot;4 kB&quot;</span>&gt;&lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">code</span>&gt;{&quot;items&quot;:[{&quot;id&quot;:1,&quot;name&quot;:&quot;media&quot;},{&quot;id&quot;:2,&quot;name&quot;:&quot;photos&quot;},{&quot;id&quot;:3,&quot;name&quot;:&quot;documents&quot;},{&quot;id&quot;:4,&quot;name&quot;:&quot;music&quot;}&lt;/<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">pre</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachCodes, setCode } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/code'</span>;
+
+<span class="kp-code__keyword">const</span> block = document.getElementById(<span class="kp-code__string">'doc-code-cut'</span>);
+attachCodes(block.parentElement);
+setCode(block, { text: block.querySelector(<span class="kp-code__string">'code'</span>).textContent, title: <span class="kp-code__string">'Response'</span>, language: <span class="kp-code__string">'JSON'</span>, wrap: <span class="kp-code__keyword">true</span>, size: <span class="kp-code__string">'4 kB'</span>, truncated: { shown: <span class="kp-code__string">'1 kB'</span>, total: <span class="kp-code__string">'4 kB'</span> } });</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">The states and the events</figcaption>
+                        <p class="kp-text-muted">`setCode(el, { state })` is `loading` (the body keeps its height under the busy card; the tools wait, disabled), `empty`, `binary` (with `size`) or `error` (with `message`), each a sentence in the body’s place at its height, with the tools where they were. The block fires `kp-code-copy` with `{ text }` (and `kp-code-copy-failed`), `kp-code-wrap` with `{ wrap }`, `kp-code-layout` with `{ layout }` and `kp-code-fold` with `{ folded }`; “Copied” stays for `CODE_COPIED_MS` (1500 ms) in the width of the longest word, so nothing beside it moves. `loadingWords` words the busy card, `copy: false` takes Copy away, and `prettyJson(text)` is the two-space layout on its own (`null` when the text does not parse).</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-row kp-flex-wrap kp-gap-sm" role="group" aria-label="States">
+        <button type="button" class="kp-button" data-doc-code-state="ready">Ready</button>
+        <button type="button" class="kp-button" data-doc-code-state="loading">Loading</button>
+        <button type="button" class="kp-button" data-doc-code-state="empty">Empty</button>
+        <button type="button" class="kp-button" data-doc-code-state="binary">Binary</button>
+        <button type="button" class="kp-button" data-doc-code-state="error">Could not read</button>
+    </div>
+    <figure class="kp-code" id="doc-code-states" data-kp-code></figure>
+    <pre class="kp-code-block" id="doc-code-log" aria-live="polite">Press Copy, Wrap or Raw.</pre>
+</div>
+                            <script type="module">
+import { CODE_COPIED_MS, attachCodes, setCode } from '../../js/code.js';
+
+const block = document.getElementById('doc-code-states');
+const log = document.getElementById('doc-code-log');
+attachCodes(block.parentElement);
+const text = '{"topic":"backup.done","ok":true,"volumes":["media","photos"],"took_ms":18204}';
+const draw = (state) =>
+    setCode(block, {
+        text: state === 'empty' ? '' : text,
+        title: 'Payload',
+        language: 'JSON',
+        size: '86 B',
+        state,
+        message: state === 'error' ? 'The payload could not be read. Try again in a minute.' : undefined,
+        loadingWords: 'Reading the payload',
+    });
+draw('ready');
+for (const button of document.querySelectorAll('[data-doc-code-state]')) {
+    button.addEventListener('click', () => draw(button.getAttribute('data-doc-code-state')));
+}
+for (const name of ['kp-code-copy', 'kp-code-copy-failed', 'kp-code-wrap', 'kp-code-layout', 'kp-code-fold']) {
+    block.addEventListener(name, (event) => (log.textContent = name + ' ' + JSON.stringify(event.detail ?? {}) + ' (Copied stays ' + CODE_COPIED_MS + ' ms)'));
+}
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-flex-wrap kp-gap-sm&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;States&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-code-state</span><span class="kp-code__string">=&quot;ready&quot;</span>&gt;Ready&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-code-state</span><span class="kp-code__string">=&quot;loading&quot;</span>&gt;Loading&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-code-state</span><span class="kp-code__string">=&quot;empty&quot;</span>&gt;Empty&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-code-state</span><span class="kp-code__string">=&quot;binary&quot;</span>&gt;Binary&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-code-state</span><span class="kp-code__string">=&quot;error&quot;</span>&gt;Could not read&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-code-states&quot;</span> <span class="kp-code__keyword">data-kp-code</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+    &lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code-block&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-code-log&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;Press Copy, Wrap or Raw.&lt;/<span class="kp-code__keyword">pre</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { CODE_COPIED_MS, attachCodes, setCode } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/code'</span>;
+
+<span class="kp-code__keyword">const</span> block = document.getElementById(<span class="kp-code__string">'doc-code-states'</span>);
+<span class="kp-code__keyword">const</span> log = document.getElementById(<span class="kp-code__string">'doc-code-log'</span>);
+attachCodes(block.parentElement);
+<span class="kp-code__keyword">const</span> text = <span class="kp-code__string">'{&quot;topic&quot;:&quot;backup.done&quot;,&quot;ok&quot;:true,&quot;volumes&quot;:[&quot;media&quot;,&quot;photos&quot;],&quot;took_ms&quot;:18204}'</span>;
+<span class="kp-code__keyword">const</span> draw = (state) =&gt;
+    setCode(block, {
+        text: state === <span class="kp-code__string">'empty'</span> ? <span class="kp-code__string">''</span> : text,
+        title: <span class="kp-code__string">'Payload'</span>,
+        language: <span class="kp-code__string">'JSON'</span>,
+        size: <span class="kp-code__string">'86 B'</span>,
+        state,
+        message: state === <span class="kp-code__string">'error'</span> ? <span class="kp-code__string">'The payload could not be read. Try again in a minute.'</span> : <span class="kp-code__keyword">undefined</span>,
+        loadingWords: <span class="kp-code__string">'Reading the payload'</span>,
+    });
+draw(<span class="kp-code__string">'ready'</span>);
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> button <span class="kp-code__keyword">of</span> document.querySelectorAll(<span class="kp-code__string">'[data-doc-code-state]'</span>)) {
+    button.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; draw(button.getAttribute(<span class="kp-code__string">'data-doc-code-state'</span>)));
+}
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> name <span class="kp-code__keyword">of</span> [<span class="kp-code__string">'kp-code-copy'</span>, <span class="kp-code__string">'kp-code-copy-failed'</span>, <span class="kp-code__string">'kp-code-wrap'</span>, <span class="kp-code__string">'kp-code-layout'</span>, <span class="kp-code__string">'kp-code-fold'</span>]) {
+    block.addEventListener(name, (event) =&gt; (log.textContent = name + <span class="kp-code__string">' '</span> + JSON.stringify(event.detail ?? {}) + <span class="kp-code__string">' (Copied stays '</span> + CODE_COPIED_MS + <span class="kp-code__string">' ms)'</span>));
+}</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">In a table cell</figcaption>
+                        <p class="kp-text-muted">`.kp-code--cell` is the block for a cell: no title, the words wrap so a row never scrolls sideways, three lines show and “Show all 40 lines” opens the rest in place (`data-kp-code-open=&quot;inline&quot;`, the default) or in a dialog (`&quot;dialog&quot;`). `data-kp-code-language=&quot;auto&quot;` makes it JSON only when the text parses. `data-kp-binary-size` (bytes) with `data-kp-download` gives the one muted line “binary, 2.1 kB” and its link; `data-kp-truncated=&quot;1024/4096&quot;` (bytes shown / bytes in all) gives the foot line; `data-kp-copy=&quot;false&quot;` takes Copy away. Empty is the muted line “empty payload”.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-table-wrap"><table class="kp-table">
+        <caption class="kp-sr-only">Dead letters with their payload</caption>
+        <thead><tr><th scope="col">Topic</th><th scope="col">Payload</th></tr></thead>
+        <tbody>
+            <tr><th scope="row">backup.done</th><td><figure class="kp-code kp-code--cell" data-kp-code data-kp-code-language="auto"><pre class="kp-code__body"><code>{"ok":true,"volumes":["media","photos","documents","music","video","archive"],"took_ms":18204,"host":"backup-1","retries":0,"notes":"nightly run, all volumes"}</code></pre></figure></td></tr>
+            <tr><th scope="row">scan.result</th><td><figure class="kp-code kp-code--cell" data-kp-code data-kp-code-open="dialog" data-kp-truncated="1024/4096"><pre class="kp-code__body"><code>scan started, 120 files read, 4 files skipped, report written, scan finished, nothing left to do, waiting for the next run, then the same again tomorrow night</code></pre></figure></td></tr>
+            <tr><th scope="row">thumbnail</th><td><figure class="kp-code kp-code--cell" data-kp-code data-kp-binary-size="2150" data-kp-download="#thumbnail.png"><pre class="kp-code__body"><code></code></pre></figure></td></tr>
+            <tr><th scope="row">ping</th><td><figure class="kp-code kp-code--cell" data-kp-code data-kp-copy="false"><pre class="kp-code__body"><code></code></pre></figure></td></tr>
+        </tbody></table></div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span>&gt;&lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">caption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;Dead letters with their payload&lt;/<span class="kp-code__keyword">caption</span>&gt;
+        &lt;<span class="kp-code__keyword">thead</span>&gt;&lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Topic&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Payload&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;&lt;/<span class="kp-code__keyword">thead</span>&gt;
+        &lt;<span class="kp-code__keyword">tbody</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;row&quot;</span>&gt;backup.done&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code kp-code--cell&quot;</span> <span class="kp-code__keyword">data-kp-code</span> <span class="kp-code__keyword">data-kp-code-language</span><span class="kp-code__string">=&quot;auto&quot;</span>&gt;&lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">code</span>&gt;{&quot;ok&quot;:true,&quot;volumes&quot;:[&quot;media&quot;,&quot;photos&quot;,&quot;documents&quot;,&quot;music&quot;,&quot;video&quot;,&quot;archive&quot;],&quot;took_ms&quot;:18204,&quot;host&quot;:&quot;backup-1&quot;,&quot;retries&quot;:0,&quot;notes&quot;:&quot;nightly run, all volumes&quot;}&lt;/<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">pre</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;row&quot;</span>&gt;scan.result&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code kp-code--cell&quot;</span> <span class="kp-code__keyword">data-kp-code</span> <span class="kp-code__keyword">data-kp-code-open</span><span class="kp-code__string">=&quot;dialog&quot;</span> <span class="kp-code__keyword">data-kp-truncated</span><span class="kp-code__string">=&quot;1024/4096&quot;</span>&gt;&lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">code</span>&gt;scan started, 120 files read, 4 files skipped, report written, scan finished, nothing left to do, waiting for the next run, then the same again tomorrow night&lt;/<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">pre</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;row&quot;</span>&gt;thumbnail&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code kp-code--cell&quot;</span> <span class="kp-code__keyword">data-kp-code</span> <span class="kp-code__keyword">data-kp-binary-size</span><span class="kp-code__string">=&quot;2150&quot;</span> <span class="kp-code__keyword">data-kp-download</span><span class="kp-code__string">=&quot;#thumbnail.png&quot;</span>&gt;&lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">pre</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;row&quot;</span>&gt;ping&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code kp-code--cell&quot;</span> <span class="kp-code__keyword">data-kp-code</span> <span class="kp-code__keyword">data-kp-copy</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;&lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">pre</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;/<span class="kp-code__keyword">tbody</span>&gt;&lt;/<span class="kp-code__keyword">table</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -330,6 +458,12 @@
                             <tr><td><code>data-kp-code-wrap / -max / -layout</code></td><td>Wrapped from the start; folded past N lines; Raw instead of Pretty.</td></tr>
                             <tr><td><code>state</code></td><td>`loading`, `empty`, `binary` (with `size`) and `error`.</td></tr>
                             <tr><td><code>truncated</code></td><td>`{ shown, total }`: the foot says only the start was sent.</td></tr>
+                            <tr><td><code>data-kp-code-title, -language, -size and -lines</code></td><td>The head’s title, the language it names (`JSON` offers Pretty and Raw when the text parses), the size it states, and line numbers in a gutter outside the text, which a copy or a selection never takes.</td></tr>
+                            <tr><td><code>setCode options</code></td><td>`setCode(el, { text, title, language, size, lines, wrap, maxLines, layout, copy, truncated, state, message, loadingWords })`: `maxLines` folds past that many lines (0 never), `layout` is `pretty` or `raw`, `copy: false` leaves Copy out, and a page that draws later calls it again to redraw in place.</td></tr>
+                            <tr><td><code>.kp-code--cell and its attributes</code></td><td>The table-cell block: `data-kp-code-open` (`inline` or `dialog`), `data-kp-code-language=&quot;auto&quot;`, `data-kp-binary-size`, `data-kp-download`, `data-kp-truncated` (`shown/total` in bytes) and `data-kp-copy=&quot;false&quot;`. Loading is a skeleton line, since the table around it lays the busy card.</td></tr>
+                            <tr><td><code>kp-code-copy, -copy-failed, -wrap, -layout and -fold</code></td><td>`{ text }` (the whole value, folded or not), nothing, `{ wrap }`, `{ layout }` and `{ folded }`.</td></tr>
+                            <tr><td><code>prettyJson and CODE_COPIED_MS</code></td><td>`prettyJson(text)` is the JSON laid out with two-space indents, or `null` when it does not parse; `CODE_COPIED_MS` is how long “Copied” stays, 1500 ms.</td></tr>
+                            <tr><td><code>codeLabel … codeCopiedAnnouncement strings</code></td><td>Every word of the block is in the dictionary: `codeLabel`, `codeWrap`, `codePretty`, `codeRaw`, `codeFormat`, `codeShowAll`, `codeShowLess`, `codeLines`, `codeEmpty`, `codeBinary`, `codeTruncated`, `codeLoading`, `codeError` and `codeCopiedAnnouncement`.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

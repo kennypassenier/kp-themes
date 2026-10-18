@@ -307,6 +307,221 @@
     &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Events by kind, a maintenance window and the median</figcaption>
+                        <p class="kp-text-muted">An event with a `kind` takes its tone and its word from the chart’s `kinds` map (`tone` is `info`, `warning` or `critical`); an event with `until` is a band from `at` to there, drawn `tint` across the plot, `hatch` as diagonal lines (readable without colour) or as a `bracket` along the top (`data-kp-chart-band`, or `band` in the data). The key above the plot names the kinds present and each item switches its kind off and on (`kp-chart-kinds` fires with `{ off }`; `data-kp-chart-annotation-key=&quot;off&quot;` leaves the key out). An event outside the window shows as an arrow with its count at the edge. `data-kp-chart-median` draws each shown source’s median as a dashed line with its value, and `data-kp-chart-median-label` words it.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-row kp-flex-wrap kp-gap-sm" role="group" aria-label="How a window is drawn">
+        <button type="button" class="kp-button" data-doc-band="tint" aria-pressed="true">Tint</button>
+        <button type="button" class="kp-button" data-doc-band="hatch" aria-pressed="false">Hatch</button>
+        <button type="button" class="kp-button" data-doc-band="bracket" aria-pressed="false">Bracket</button>
+    </div>
+    <figure class="kp-chart" id="doc-chart-events" data-kp-chart data-kp-chart-median data-kp-chart-band="tint" aria-label="Pump house 1 pressure" lang="en-GB">
+        <figcaption class="kp-chart__title">Pump house 1 pressure, bar</figcaption>
+    </figure>
+    <pre class="kp-code-block" id="doc-chart-log" aria-live="polite">Switch a kind off in the key.</pre>
+</div>
+                            <script type="module">
+import { attachCharts, setChartData } from '../../js/chart.js';
+
+const chart = document.getElementById('doc-chart-events');
+attachCharts(chart.parentElement);
+const HOUR = 3_600_000;
+const to = Date.UTC(2026, 9, 17, 10, 0) - 12 * HOUR;
+const from = to - 72 * HOUR;
+const points = [];
+for (let t = from - 6 * HOUR; t <= to + 12 * HOUR; t += HOUR) {
+    points.push([t, 3.7 - 0.5 * Math.max(0, Math.sin((((t / HOUR) % 24) / 24) * Math.PI * 2 - 1.2)) + 0.06 * Math.sin(t / HOUR)]);
+}
+setChartData(chart, {
+    unit: 'bar',
+    from,
+    to,
+    height: 190,
+    series: [{ label: 'Pump house 1', points }],
+    kinds: {
+        operation: { label: 'An operation the host ran', tone: 'info' },
+        update: { label: 'An update', tone: 'warning' },
+        failure: { label: 'A failure', tone: 'critical' },
+        window: { label: 'A maintenance window', tone: 'warning' },
+    },
+    events: [
+        { at: from - 30 * HOUR, label: 'Backup', kind: 'operation' },
+        { at: from + 9 * HOUR, label: 'Backup finished', kind: 'operation' },
+        { at: from + 22 * HOUR, label: 'Firmware 4.2 installed', kind: 'update' },
+        { at: from + 33 * HOUR, until: from + 38 * HOUR, label: 'Maintenance window: pump house 1', kind: 'window' },
+        { at: from + 50 * HOUR, label: 'Pressure sensor lost contact', kind: 'failure' },
+        { at: to + 5 * HOUR, label: 'Firmware 4.3 installed', kind: 'update' },
+    ],
+});
+chart.addEventListener('kp-chart-kinds', (event) => (document.getElementById('doc-chart-log').textContent = 'kp-chart-kinds { off: ' + JSON.stringify(event.detail.off) + ' }'));
+for (const button of document.querySelectorAll('[data-doc-band]')) {
+    button.addEventListener('click', () => {
+        for (const other of document.querySelectorAll('[data-doc-band]')) other.setAttribute('aria-pressed', String(other === button));
+        chart.setAttribute('data-kp-chart-band', button.getAttribute('data-doc-band'));
+    });
+}
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-flex-wrap kp-gap-sm&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;How a window is drawn&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-band</span><span class="kp-code__string">=&quot;tint&quot;</span> <span class="kp-code__keyword">aria-pressed</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;Tint&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-band</span><span class="kp-code__string">=&quot;hatch&quot;</span> <span class="kp-code__keyword">aria-pressed</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;Hatch&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-band</span><span class="kp-code__string">=&quot;bracket&quot;</span> <span class="kp-code__keyword">aria-pressed</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;Bracket&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-chart-events&quot;</span> <span class="kp-code__keyword">data-kp-chart</span> <span class="kp-code__keyword">data-kp-chart-median</span> <span class="kp-code__keyword">data-kp-chart-band</span><span class="kp-code__string">=&quot;tint&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pump house 1 pressure&quot;</span> <span class="kp-code__keyword">lang</span><span class="kp-code__string">=&quot;en-GB&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">figcaption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart__title&quot;</span>&gt;Pump house 1 pressure, bar&lt;/<span class="kp-code__keyword">figcaption</span>&gt;
+    &lt;/<span class="kp-code__keyword">figure</span>&gt;
+    &lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code-block&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-chart-log&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;Switch a kind off in the key.&lt;/<span class="kp-code__keyword">pre</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachCharts, setChartData } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/chart'</span>;
+
+<span class="kp-code__keyword">const</span> chart = document.getElementById(<span class="kp-code__string">'doc-chart-events'</span>);
+attachCharts(chart.parentElement);
+<span class="kp-code__keyword">const</span> HOUR = <span class="kp-code__string">3_600_000</span>;
+<span class="kp-code__keyword">const</span> to = Date.UTC(<span class="kp-code__string">2026</span>, <span class="kp-code__string">9</span>, <span class="kp-code__string">17</span>, <span class="kp-code__string">10</span>, <span class="kp-code__string">0</span>) - <span class="kp-code__string">12</span> * HOUR;
+<span class="kp-code__keyword">const</span> <span class="kp-code__keyword">from</span> = to - <span class="kp-code__string">72</span> * HOUR;
+<span class="kp-code__keyword">const</span> points = [];
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">let</span> t = <span class="kp-code__keyword">from</span> - <span class="kp-code__string">6</span> * HOUR; t &lt;= to + <span class="kp-code__string">12</span> * HOUR; t += HOUR) {
+    points.push([t, <span class="kp-code__string">3.7</span> - <span class="kp-code__string">0.5</span> * Math.max(<span class="kp-code__string">0</span>, Math.sin((((t / HOUR) % <span class="kp-code__string">24</span>) / <span class="kp-code__string">24</span>) * Math.PI * <span class="kp-code__string">2</span> - <span class="kp-code__string">1.2</span>)) + <span class="kp-code__string">0.06</span> * Math.sin(t / HOUR)]);
+}
+setChartData(chart, {
+    unit: <span class="kp-code__string">'bar'</span>,
+    <span class="kp-code__keyword">from</span>,
+    to,
+    height: <span class="kp-code__string">190</span>,
+    series: [{ label: <span class="kp-code__string">'Pump house 1'</span>, points }],
+    kinds: {
+        operation: { label: <span class="kp-code__string">'An operation the host ran'</span>, tone: <span class="kp-code__string">'info'</span> },
+        update: { label: <span class="kp-code__string">'An update'</span>, tone: <span class="kp-code__string">'warning'</span> },
+        failure: { label: <span class="kp-code__string">'A failure'</span>, tone: <span class="kp-code__string">'critical'</span> },
+        window: { label: <span class="kp-code__string">'A maintenance window'</span>, tone: <span class="kp-code__string">'warning'</span> },
+    },
+    events: [
+        { at: <span class="kp-code__keyword">from</span> - <span class="kp-code__string">30</span> * HOUR, label: <span class="kp-code__string">'Backup'</span>, kind: <span class="kp-code__string">'operation'</span> },
+        { at: <span class="kp-code__keyword">from</span> + <span class="kp-code__string">9</span> * HOUR, label: <span class="kp-code__string">'Backup finished'</span>, kind: <span class="kp-code__string">'operation'</span> },
+        { at: <span class="kp-code__keyword">from</span> + <span class="kp-code__string">22</span> * HOUR, label: <span class="kp-code__string">'Firmware 4.2 installed'</span>, kind: <span class="kp-code__string">'update'</span> },
+        { at: <span class="kp-code__keyword">from</span> + <span class="kp-code__string">33</span> * HOUR, until: <span class="kp-code__keyword">from</span> + <span class="kp-code__string">38</span> * HOUR, label: <span class="kp-code__string">'Maintenance window: pump house 1'</span>, kind: <span class="kp-code__string">'window'</span> },
+        { at: <span class="kp-code__keyword">from</span> + <span class="kp-code__string">50</span> * HOUR, label: <span class="kp-code__string">'Pressure sensor lost contact'</span>, kind: <span class="kp-code__string">'failure'</span> },
+        { at: to + <span class="kp-code__string">5</span> * HOUR, label: <span class="kp-code__string">'Firmware 4.3 installed'</span>, kind: <span class="kp-code__string">'update'</span> },
+    ],
+});
+chart.addEventListener(<span class="kp-code__string">'kp-chart-kinds'</span>, (event) =&gt; (document.getElementById(<span class="kp-code__string">'doc-chart-log'</span>).textContent = <span class="kp-code__string">'kp-chart-kinds { off: '</span> + JSON.stringify(event.detail.off) + <span class="kp-code__string">' }'</span>));
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> button <span class="kp-code__keyword">of</span> document.querySelectorAll(<span class="kp-code__string">'[data-doc-band]'</span>)) {
+    button.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; {
+        <span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> other <span class="kp-code__keyword">of</span> document.querySelectorAll(<span class="kp-code__string">'[data-doc-band]'</span>)) other.setAttribute(<span class="kp-code__string">'aria-pressed'</span>, String(other === button));
+        chart.setAttribute(<span class="kp-code__string">'data-kp-chart-band'</span>, button.getAttribute(<span class="kp-code__string">'data-doc-band'</span>));
+    });
+}</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A run chart: the median and the runs</figcaption>
+                        <p class="kp-text-muted">`data-kp-chart-runs=&quot;mark&quot;` rings the points of every run of six or more on one side of the median (the run-chart rule; a point exactly on the median neither breaks a run nor counts in it), and the key explains the ring. `chartMedian(values)` and `chartRuns(values, median, least)` are the two calculations on their own, for a page that draws something else with them.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<figure class="kp-chart" id="doc-chart-runs" data-kp-chart data-kp-chart-median data-kp-chart-median-label="median" data-kp-chart-runs="mark" aria-label="Mood each day" lang="en-GB">
+    <figcaption class="kp-chart__title">Mood each day, 1 (low) to 5 (high)</figcaption>
+</figure>
+                            <script type="module">
+import { attachCharts, setChartData } from '../../js/chart.js';
+
+const chart = document.getElementById('doc-chart-runs');
+attachCharts(chart.parentElement);
+const DAY = 86_400_000;
+const to = Date.UTC(2026, 9, 17, 10, 0);
+const from = to - 28 * DAY;
+const mood = [3, 4, 3, 4, 3, 4, 4, 2, 2, 1, 2, 2, 1, 2, 2, 3, 4, 3, 4, 4, 5, 4, 4, 5, 4, 5, 4, 5];
+setChartData(chart, {
+    from,
+    to,
+    height: 190,
+    yMax: 5,
+    series: [{ label: 'Mood', points: mood.map((v, i) => [from + (i + 0.5) * DAY, v]) }],
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-chart-runs&quot;</span> <span class="kp-code__keyword">data-kp-chart</span> <span class="kp-code__keyword">data-kp-chart-median</span> <span class="kp-code__keyword">data-kp-chart-median-label</span><span class="kp-code__string">=&quot;median&quot;</span> <span class="kp-code__keyword">data-kp-chart-runs</span><span class="kp-code__string">=&quot;mark&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Mood each day&quot;</span> <span class="kp-code__keyword">lang</span><span class="kp-code__string">=&quot;en-GB&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">figcaption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart__title&quot;</span>&gt;Mood each day, 1 (low) to 5 (high)&lt;/<span class="kp-code__keyword">figcaption</span>&gt;
+&lt;/<span class="kp-code__keyword">figure</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachCharts, setChartData } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/chart'</span>;
+
+<span class="kp-code__keyword">const</span> chart = document.getElementById(<span class="kp-code__string">'doc-chart-runs'</span>);
+attachCharts(chart.parentElement);
+<span class="kp-code__keyword">const</span> DAY = <span class="kp-code__string">86_400_000</span>;
+<span class="kp-code__keyword">const</span> to = Date.UTC(<span class="kp-code__string">2026</span>, <span class="kp-code__string">9</span>, <span class="kp-code__string">17</span>, <span class="kp-code__string">10</span>, <span class="kp-code__string">0</span>);
+<span class="kp-code__keyword">const</span> <span class="kp-code__keyword">from</span> = to - <span class="kp-code__string">28</span> * DAY;
+<span class="kp-code__keyword">const</span> mood = [<span class="kp-code__string">3</span>, <span class="kp-code__string">4</span>, <span class="kp-code__string">3</span>, <span class="kp-code__string">4</span>, <span class="kp-code__string">3</span>, <span class="kp-code__string">4</span>, <span class="kp-code__string">4</span>, <span class="kp-code__string">2</span>, <span class="kp-code__string">2</span>, <span class="kp-code__string">1</span>, <span class="kp-code__string">2</span>, <span class="kp-code__string">2</span>, <span class="kp-code__string">1</span>, <span class="kp-code__string">2</span>, <span class="kp-code__string">2</span>, <span class="kp-code__string">3</span>, <span class="kp-code__string">4</span>, <span class="kp-code__string">3</span>, <span class="kp-code__string">4</span>, <span class="kp-code__string">4</span>, <span class="kp-code__string">5</span>, <span class="kp-code__string">4</span>, <span class="kp-code__string">4</span>, <span class="kp-code__string">5</span>, <span class="kp-code__string">4</span>, <span class="kp-code__string">5</span>, <span class="kp-code__string">4</span>, <span class="kp-code__string">5</span>];
+setChartData(chart, {
+    <span class="kp-code__keyword">from</span>,
+    to,
+    height: <span class="kp-code__string">190</span>,
+    yMax: <span class="kp-code__string">5</span>,
+    series: [{ label: <span class="kp-code__string">'Mood'</span>, points: mood.map((v, i) =&gt; [<span class="kp-code__keyword">from</span> + (i + <span class="kp-code__string">0.5</span>) * DAY, v]) }],
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Too few readings for a trend</figcaption>
+                        <p class="kp-text-muted">`data-kp-chart-min-points=&quot;7&quot;` (`minPoints`) holds the lines back until there are enough readings and says “3 of 7 days needed before a trend means something” on an opaque plate, at heading size, over the empty plot at its full height; `data-kp-chart-min-unit` (`minUnit`) names the readings. The chart draws itself the moment enough arrive.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-row kp-flex-wrap kp-gap-sm" role="group" aria-label="Readings">
+        <button type="button" class="kp-button" id="doc-chart-more">Enough readings</button>
+    </div>
+    <figure class="kp-chart" id="doc-chart-few" data-kp-chart data-kp-chart-min-points="7" data-kp-chart-min-unit="days" aria-label="Sleep" lang="en-GB">
+        <figcaption class="kp-chart__title">Sleep, hours</figcaption>
+    </figure>
+</div>
+                            <script type="module">
+import { attachCharts, setChartData } from '../../js/chart.js';
+
+const chart = document.getElementById('doc-chart-few');
+attachCharts(chart.parentElement);
+const DAY = 86_400_000;
+const to = Date.UTC(2026, 9, 17, 10, 0);
+const hours = [6.5, 7.2, 5.9, 7.8, 8.1, 6.4, 7.0];
+const draw = (n) =>
+    setChartData(chart, {
+        from: to - 7 * DAY,
+        to,
+        height: 190,
+        yMax: 10,
+        unit: 'h',
+        series: [{ label: 'Sleep', points: hours.slice(0, n).map((v, i) => [to - (n - i) * DAY, v]) }],
+    });
+draw(3);
+document.getElementById('doc-chart-more').addEventListener('click', () => draw(hours.length));
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-flex-wrap kp-gap-sm&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Readings&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-chart-more&quot;</span>&gt;Enough readings&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-chart-few&quot;</span> <span class="kp-code__keyword">data-kp-chart</span> <span class="kp-code__keyword">data-kp-chart-min-points</span><span class="kp-code__string">=&quot;7&quot;</span> <span class="kp-code__keyword">data-kp-chart-min-unit</span><span class="kp-code__string">=&quot;days&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Sleep&quot;</span> <span class="kp-code__keyword">lang</span><span class="kp-code__string">=&quot;en-GB&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">figcaption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-chart__title&quot;</span>&gt;Sleep, hours&lt;/<span class="kp-code__keyword">figcaption</span>&gt;
+    &lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachCharts, setChartData } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/chart'</span>;
+
+<span class="kp-code__keyword">const</span> chart = document.getElementById(<span class="kp-code__string">'doc-chart-few'</span>);
+attachCharts(chart.parentElement);
+<span class="kp-code__keyword">const</span> DAY = <span class="kp-code__string">86_400_000</span>;
+<span class="kp-code__keyword">const</span> to = Date.UTC(<span class="kp-code__string">2026</span>, <span class="kp-code__string">9</span>, <span class="kp-code__string">17</span>, <span class="kp-code__string">10</span>, <span class="kp-code__string">0</span>);
+<span class="kp-code__keyword">const</span> hours = [<span class="kp-code__string">6.5</span>, <span class="kp-code__string">7.2</span>, <span class="kp-code__string">5.9</span>, <span class="kp-code__string">7.8</span>, <span class="kp-code__string">8.1</span>, <span class="kp-code__string">6.4</span>, <span class="kp-code__string">7.0</span>];
+<span class="kp-code__keyword">const</span> draw = (n) =&gt;
+    setChartData(chart, {
+        <span class="kp-code__keyword">from</span>: to - <span class="kp-code__string">7</span> * DAY,
+        to,
+        height: <span class="kp-code__string">190</span>,
+        yMax: <span class="kp-code__string">10</span>,
+        unit: <span class="kp-code__string">'h'</span>,
+        series: [{ label: <span class="kp-code__string">'Sleep'</span>, points: hours.slice(<span class="kp-code__string">0</span>, n).map((v, i) =&gt; [to - (n - i) * DAY, v]) }],
+    });
+draw(<span class="kp-code__string">3</span>);
+document.getElementById(<span class="kp-code__string">'doc-chart-more'</span>).addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; draw(hours.length));</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>
@@ -2906,6 +3121,14 @@
                             <tr><td><code>.kp-chart-zoom</code></td><td>`[data-kp-chart-zoom]`: the chip the script fills while the group is zoomed, with its Reset; `kp-chart-zoom` fires on the group.</td></tr>
                             <tr><td><code>the legend</code></td><td>Hover or focus singles a source out; a click keeps one or several on and fires `kp-chart-select`; Show all and Esc reset. Hidden for a single source.</td></tr>
                             <tr><td><code>the tooltip</code></td><td>Beside the crosshair, on the side with room: every visible source’s value, ▲/▼ over the hour before, the events within a thirtieth of the window. A click pins it; ✕ or Esc releases it.</td></tr>
+                            <tr><td><code>event kind and kinds</code></td><td>An event’s `kind` is the application’s own name for it (“operation”, “update”, “failure”); the data’s `kinds` maps each to a word for the key and a tone (`info`, `warning`, `critical`). An event’s own `tone` wins, then its kind’s, then `info`.</td></tr>
+                            <tr><td><code>event until and data-kp-chart-band</code></td><td>An event with `until` is a band from `at` to there instead of a line. `tint` (the default) lies across the plot, `hatch` is diagonal lines that read without colour, `bracket` is a line along the top with short ticks. Point at a band for its start and end in words.</td></tr>
+                            <tr><td><code>data-kp-chart-median and data-kp-chart-median-label</code></td><td>A dashed median line per shown source, in the source’s colour, with its value at the end; `off` leaves it out, and the label words the value (“median 3.4 bar”). The key says what the line is when one source shows.</td></tr>
+                            <tr><td><code>data-kp-chart-runs</code></td><td>`mark` rings the points of every run of six or more on one side of the median; `off` is the default.</td></tr>
+                            <tr><td><code>data-kp-chart-min-points and data-kp-chart-min-unit</code></td><td>Below this many readings the chart says it is too early for a trend over the faint points already known; the unit names the readings (“days”).</td></tr>
+                            <tr><td><code>data-kp-chart-annotation-key</code></td><td>`off` leaves out the key above the plot, which is on while the chart has events, a median or runs. Each item of the key is a button that switches its kind of event off and on; `kp-chart-kinds` carries `{ off }`.</td></tr>
+                            <tr><td><code>chartMedian and chartRuns</code></td><td>`chartMedian(values)` is the median (the mean of the middle two for an even count), or `null` for none; `chartRuns(values, median, least)` is the set of indexes that belong to a run of at least `least` (6) points on one side of the median.</td></tr>
+                            <tr><td><code>chartMedian … chartKindOn strings</code></td><td>Every word of the annotations is in the dictionary: `chartMedian`, `chartFew`, `chartFewUnit`, `chartAnnotationKey`, `chartKindTone`, `chartRunsKey`, `chartMarkBand`, `chartBandWhen`, `chartEdgeBefore`, `chartEdgeAfter` and `chartKindOn`.</td></tr>
                             <tr><td><code>colours</code></td><td>The theme’s five chart colours in order; from the sixth source on they come round again with one of three dashes. A series’ own `colour` overrides.</td></tr>
                             <tr><td><code>under the lines</code></td><td>A soft area while one or two sources are on, a stronger one for a source alone; with three or more, the lines alone. Stacked sources are areas.</td></tr>
                     </tbody></table></div>
