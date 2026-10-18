@@ -327,19 +327,67 @@ for (const part of PARTS) {
 }
 for (const [key, n] of placed) if (n !== 1) throw new Error(`${key} is in ${n} parts`);
 
-/** The look-at block of a section: one line per theme asked. @param {string} id */
-function lookBlock(id) {
+/** The look-at block of a section: one line per theme asked. @param {string} id @param {string[]} themes */
+function lookBlock(id, themes) {
     const kind = id.endsWith('-states') ? 'states' : 'main';
-    return `<div data-review-look>\n${THEMES.map((t) => `<p data-for="${t}">${escapeHtml(LOOK[t][kind])}</p>`).join('\n')}\n</div>`;
+    return `<div data-review-look>\n${themes.map((t) => `<p data-for="${t}">${escapeHtml(LOOK[t][kind])}</p>`).join('\n')}\n</div>`;
 }
 
-/** @param {string} text a section @param {string} id */
-function ready(text, id) {
+/**
+ * What a later round of a part says it changed in a section, for the lane's head (the kit reads a `…-changed` block):
+ * keyed `<topic>/<section id>`, the round's own words about Kenny's verdict. A section without an entry shows none.
+ * @type {Record<string, string>}
+ */
+const CHANGED = {
+    'fields/time-field':
+        'You saw the list open by itself when you pressed <b>Presets loading</b> or <b>Presets failed</b>. That was the demo, not ' +
+        'the field: after giving the list its state, the demo pressed the field&rsquo;s clock button (and a second press closed it ' +
+        'again). Now the buttons under <b>The list</b> only change what the list holds and open nothing. To see the state at once, a ' +
+        'fourth field stands under the sentence, <b>The list, shown open</b>: its list stays open on the page and follows the ' +
+        'button you press. The first field shows the same when you open it yourself, or with <b>Show it open</b>.',
+    'fields/autosize-grow':
+        'Your note here was the same words as on the time field (a list that opens by itself), and this box has no list or ' +
+        'menu, so it may have been meant for the time field. Looked at in dark anyway, side by side with cyberpunk and formal: ' +
+        'the box grows from 3 lines to 20 and stops there (494 px, a scroll bar inside), 5 lines is 5 lines and Clear gives ' +
+        'the height back, the same as in the other themes. One real fault was found and fixed: the demo&rsquo;s script ' +
+        'stopped with an error once the states section had left the page (it filled a read-only box that only stands ' +
+        'there); the box itself was not affected. If something else in dark is wrong here, a word in the note is enough.',
+};
+
+/**
+ * @param {string} text a section @param {string} id @param {string} topic the part
+ * @param {string[]} themes the themes this round asks it in
+ */
+function ready(text, id, topic, themes) {
     const looks = text.match(/<div data-review-look>[\s\S]*?<\/div>/g) ?? [];
     if (looks.length !== 1) throw new Error(`${id}: ${looks.length} look-at blocks`);
     if (/<div[\s\S]*<div data-review-look>/.test(looks[0])) throw new Error(`${id}: look-at block is nested`);
+    let out = text.replace(looks[0], lookBlock(id, themes));
+    // A section asked in fewer themes than the part names them (a later round: the approved themes left the page).
+    if (themes.length < THEMES.length) out = out.replace(/<section\b/, `<section data-review-themes="${themes.join(',')}"`);
+    const changed = CHANGED[`${topic}/${id}`];
+    if (changed) out = out.replace(/<section\b[^>]*>/, (open) => `${open}\n<div class="k56-changed"><p><b>What changed since your last review:</b> ${changed}</p></div>`);
     // Every control group names the component it drives and stands at it in the dialog (Kenny, 2026-10-18 07:09).
-    return declareControls(text.replace(looks[0], lookBlock(id)), id);
+    return declareControls(out, id);
+}
+
+/**
+ * Which themes a round still asks each section in: a later round shows only the pairs Kenny has not approved (DEMO_RULES
+ * ch. 6, gates/check-rereview.mjs). The latest round naming a pair wins; an `allJudged` round approved every pair of its
+ * page it does not list as not approved; a `reopened` pair is asked again.
+ * @param {any} verdicts @param {string[]} items
+ * @returns {Map<string, string[]>} section id → open themes, in the part's order
+ */
+function openThemes(verdicts, items) {
+    /** @type {Map<string, string>} */
+    const latest = new Map();
+    for (const round of verdicts.rounds ?? []) {
+        if (round.allJudged) for (const item of items) for (const theme of THEMES) latest.set(`${theme}|${item}`, 'approved');
+        for (const p of round.approved ?? []) latest.set(`${p.theme}|${p.item}`, 'approved');
+        for (const p of round.notApproved ?? []) latest.set(`${p.theme}|${p.item}`, 'not approved');
+    }
+    for (const r of verdicts.reopened ?? []) if (String(r.reason ?? '').trim()) latest.delete(`${r.theme}|${r.item}`);
+    return new Map(items.map((item) => [item, THEMES.filter((theme) => latest.get(`${theme}|${item}`) !== 'approved')]));
 }
 
 const TEMPLATE_HEAD = (/** @type {string} */ id, /** @type {string} */ title, /** @type {string[]} */ styles) => `<!doctype html>
@@ -388,8 +436,35 @@ for (const [i, part] of PARTS.entries()) {
     const current = existsSync(out) ? /"round":\s*"([^"]+)"/.exec(readFileSync(out, 'utf8'))?.[1] : undefined;
     const roundId = current && !received.includes(current) && /[0-9a-f]{8}-[0-9a-f]{4}-/.test(current) ? current : `${part.topic}-${randomUUID()}`;
 
-    const demos = [...new Set(part.items.map(([d]) => d))];
-    const body = part.items.map(([d, itemId]) => ready(/** @type {{ text: string }} */ (sections.get(d)?.find((s) => s.id === itemId)).text, itemId)).join('\n\n');
+    const open = openThemes(
+        verdicts,
+        part.items.map(([, itemId]) => itemId),
+    );
+    const asked = part.items.filter(([, itemId]) => (open.get(itemId) ?? []).length > 0);
+    if (!asked.length) {
+        console.log(`${id}: every pair approved, the page is left as it is (Decided)`);
+        continue;
+    }
+    const demos = [...new Set(asked.map(([d]) => d))];
+    /** A topic's title rides on its first section shown, also when the section that carried it was approved and left. */
+    const topicTitles = new Map();
+    for (const [d, itemId] of part.items) {
+        const text = /** @type {{ text: string }} */ (sections.get(d)?.find((s) => s.id === itemId)).text;
+        const topic = /data-review-topic="([^"]+)"/.exec(text)?.[1];
+        const title = /data-review-topic-title="([^"]+)"/.exec(text)?.[1];
+        if (topic && title && !topicTitles.has(topic)) topicTitles.set(topic, title);
+    }
+    const body = asked
+        .map(([d, itemId]) => {
+            let text = ready(/** @type {{ text: string }} */ (sections.get(d)?.find((s) => s.id === itemId)).text, itemId, part.topic, open.get(itemId) ?? []);
+            const topic = /data-review-topic="([^"]+)"/.exec(text)?.[1];
+            if (topic && topicTitles.has(topic) && !/data-review-topic-title="/.test(text))
+                text = text.replace(/data-review-topic="[^"]+"/, (m) => `${m} data-review-topic-title="${topicTitles.get(topic)}"`);
+            if (topic) topicTitles.delete(topic);
+            return text;
+        })
+        .join('\n\n');
+    const pairs = asked.reduce((n, [, itemId]) => n + (open.get(itemId) ?? []).length, 0);
     // A part page holds ONLY the sections it asks (Kenny, 2026-10-18 07:11): no laid-aside sections of the other
     // components of its demos, so no foreign control group or content can reach the review dialog. The demos' scripts
     // tolerate a section that is not on the page.
@@ -412,9 +487,13 @@ for (const [i, part] of PARTS.entries()) {
     const intro = `            <header class="k56-intro">
                 <h1>The fifth and sixth adoption rounds, part ${i + 1} of ${PARTS.length}: ${escapeHtml(part.title)}</h1>
                 <p class="cat-intro">
-                    Formal is approved. ${escapeHtml(part.summary)} This part asks the eleven other themes for ${part.items.length} sections (${part.items.length * THEMES.length}
+                    Formal is approved. ${escapeHtml(part.summary)} ${
+                        received.length
+                            ? `This round asks only what you did not approve in your last review: ${asked.length} section${asked.length === 1 ? '' : 's'} (${pairs} pairs), one theme per step in the review dialog; each says under <b>What changed since your last review</b> what was done about your words.`
+                            : `This part asks the eleven other themes for ${part.items.length} sections (${part.items.length * THEMES.length}
                     pairs), one theme per step in the review dialog. The sections were approved in formal in several rounds; each is shown here in
-                    its latest version, with the defaults you chose.
+                    its latest version, with the defaults you chose.`
+                    }
                 </p>
                 <p>
                     Every section says under <b>Expected</b> what you should see and what each control does (written for formal; the line under
@@ -459,7 +538,7 @@ ${autoFirst.map(script).join('\n')}${autoFirst.length ? '\n' : ''}        <scrip
                 `of the formal reviews are not asked again, because a default belongs to the component, not to a theme. Split off on Kenny's ` +
                 `rule of 2026-10-17: a review asks at most 100 pairs, so the 79 sections are grouped by kind of component.\n`,
         );
-    console.log(`${id}: ${part.items.length} sections, ${part.items.length * THEMES.length} pairs, round ${roundId}`);
+    console.log(`${id}: ${asked.length} sections, ${pairs} pairs, round ${roundId}`);
 }
 if (problems.length) {
     console.error(`build-parts: ${problems.length} problem(s)\n  ${problems.join('\n  ')}`);
