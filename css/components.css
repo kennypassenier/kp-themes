@@ -26792,7 +26792,10 @@
     /* The icon: a square the height of a control, the glyph in the middle. */
     .kp-button[data-kp-toggle][data-kp-look='icon'] {
         inline-size: var(--kp-control-height, 2.25rem);
-        padding-inline: 0;
+        /* Important on purpose: a register sets its own inline padding on every button (1.2 rem and more), and in a square that
+         * is only as wide as it is high that padding left the glyph less than its own width, so it spilled 5 to 10 px out
+         * [t56-words-1018]. An important declaration of the earlier layer outranks the register's normal one. */
+        padding-inline: 0 !important;
     }
 
     .kp-toggle__label {
