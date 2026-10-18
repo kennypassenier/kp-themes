@@ -6369,6 +6369,8 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
             { name: '.kp-shortcuts__row', what: 'One pair: the keys in a fixed column, the description beside them in quiet ink.' },
             { name: '.kp-shortcuts__group-label', what: 'A small heading over a group of rows, for a sheet long enough to need sections.' },
             { name: '.kp-shortcuts-pending', what: 'The hint the shortcut engine shows after the first key of a chord: the keys pressed so far and what can follow, until the chord completes or times out.' },
+            { name: 'data-kp-shortcuts-hint', what: 'On <html>: where that hint stands, `centre` (the default, the middle of what is in view) or `bottom-centre` (the middle of its foot); `configureShortcuts({ hintPlace })` does the same. Switched at runtime; never the top.' },
+            { name: 'data-kp-shortcuts-place', what: 'Written by the engine on the hint itself, `centre` or `bottom-centre`, from the option above; the stylesheet places the hint by it.' },
             { name: 'data-kp-shortcuts-live', what: 'On the sheet: the engine fills it from the shortcuts registered, grouped, with the reserved group first.' },
             { name: 'data-kp-shortcuts-scope / -group', what: 'On the sheet: list only the shortcuts of those scope names (comma separated), or only those groups, in that order.' },
             { name: 'data-kp-shortcuts-reserved-group / -empty', what: 'The name of the group of fixed keys (Anywhere by default); `off` leaves out the line shown when nothing is registered.' },

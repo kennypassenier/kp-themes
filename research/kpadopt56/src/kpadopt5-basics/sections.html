@@ -126,9 +126,15 @@
                     <p><b>Expected:</b></p>
                     <ul>
                         <li>
-                            Press <kbd class="kp-kbd">g</kbd>: a small cap “g …” appears near the bottom edge and leaves after 1.5 s. Then press
-                            <kbd class="kp-kbd">i</kbd>, <kbd class="kp-kbd">h</kbd> or <kbd class="kp-kbd">c</kbd>: the line under the list says
-                            where you went. Typing in the field never fires a letter.
+                            Press <kbd class="kp-kbd">g</kbd>: a small cap “g …” appears in the middle of what you see and leaves after 1.5 s.
+                            Then press <kbd class="kp-kbd">i</kbd>, <kbd class="kp-kbd">h</kbd> or <kbd class="kp-kbd">c</kbd>: the line under
+                            the list says where you went. Typing in the field never fires a letter. In the review dialog the keys work wherever
+                            you clicked last: on the component, on the dialog&rsquo;s header or on the verdict panel.
+                        </li>
+                        <li>
+                            <b>Where the cap stands</b> is an option of the component (<code>data-kp-shortcuts-hint</code> on the page, or
+                            <code>configureShortcuts({ hintPlace })</code>): <b>Centre</b> (the default) or <b>Bottom centre</b>, at the foot
+                            of what you see. Switch it with <b>Chord cap</b> above the component and press <kbd class="kp-kbd">g</kbd> again.
                         </li>
                         <li>
                             Click a row (or Tab into the list) and press <kbd class="kp-kbd">j</kbd> / <kbd class="kp-kbd">k</kbd> to move,
@@ -161,6 +167,15 @@
                         <input class="kp-switch__input" type="checkbox" role="switch" id="kb-keys-hint" />
                         <span>Say “No shortcut on …” after a chord that does nothing</span>
                     </label>
+                </div>
+                <div class="kb-controls" data-review-controls data-review-latent>
+                    <div role="group" aria-label="Where the chord's cap stands">
+                        <b>Chord cap:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kb-hint-place="centre" aria-pressed="true">Centre</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kb-hint-place="bottom-centre" aria-pressed="false">
+                            Bottom centre
+                        </button>
+                    </div>
                 </div>
                 <div class="kb-grid">
                     <div>

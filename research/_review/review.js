@@ -184,11 +184,49 @@ function lane() {
     addEventListener('storage', (event) => event.key === STORAGE_KEY && event.stopImmediatePropagation(), true);
     const TYPING = 'textarea, select, input:not([type="checkbox"], [type="radio"], [type="button"])';
     const OPEN = 'dialog[open], [popover]:popover-open, .kp-datepicker__panel:not([hidden]), [aria-expanded="true"]';
+    // [lane-keys] The demo's own shortcuts (js/shortcuts.js) keep their keys inside a focused lane, where a dialog key
+    // with the same letter yields (Kenny, 2026-10-18 18:42: "er gebeurt niks als ik g typ": the chords' g is the
+    // dialog's bulk key, so the frame handed every g up and the demo never heard one). The engine is the demo's own
+    // module instance (same address), loaded here only to ask it; it registers nothing.
+    /** @type {(event: KeyboardEvent) => boolean} */
+    let claims = () => false;
+    void import('../../js/shortcuts.js')
+        .then((engine) => {
+            claims = engine.shortcutClaims;
+            // While a chord waits, the page around this frame sends the next key here, wherever the focus is.
+            document.addEventListener(engine.SHORTCUT_PENDING_EVENT, (event) => {
+                const { waiting, ms } = /** @type {CustomEvent} */ (event).detail;
+                if (parent !== window) parent.postMessage({ type: 'rv-lane-chord', waiting, ms }, location.origin);
+            });
+        })
+        .catch(() => undefined);
+    // A key the dialog did not use, pressed with the focus outside this frame, is played here (see "lane-keys" below).
+    let forwarding = false;
+    addEventListener('message', (event) => {
+        const data = event.data || {};
+        if (event.origin !== location.origin || event.source !== parent) return;
+        if (data.type === 'rv-stage-key') {
+            forwarding = true;
+            try {
+                document.body.dispatchEvent(
+                    new KeyboardEvent('keydown', { key: data.key, code: data.code, shiftKey: data.shiftKey, bubbles: true, cancelable: true }),
+                );
+            } finally {
+                forwarding = false;
+            }
+        } else if (data.type === 'rv-lane-view') {
+            // The part of this frame in the dialog's view, so what the demo pins to the window (the chord's cap) stands in it.
+            root.style.setProperty('--kp-shortcuts-view-top', `${Math.round(data.top)}px`);
+            root.style.setProperty('--kp-shortcuts-view-height', `${Math.round(data.height)}px`);
+        }
+    });
+    if (parent !== window) parent.postMessage({ type: 'rv-lane-hello' }, location.origin);
     addEventListener(
         'keydown',
         (event) => {
-            if (parent === window || event.altKey || event.ctrlKey || event.metaKey) return;
+            if (parent === window || forwarding || event.altKey || event.ctrlKey || event.metaKey) return;
             if (/** @type {Element} */ (event.target).matches?.(TYPING)) return;
+            if (claims(event)) return; // [lane-keys] the demo's own key (Escape only while its chord waits)
             if (event.key === 'Escape' ? document.querySelector(OPEN) : event.code !== 'KeyV' && event.code !== 'KeyL' && !FRAME_KEYS.has(event.code))
                 return; // [kit-keys] FRAME_KEYS
             event.preventDefault();
@@ -835,7 +873,7 @@ const noteOf = (pair) => state[pair.key]?.note || '';
 const NOTE_PAUSE_MS = 600;
 /** Notes typed and not yet in the journal, per pair key. @type {Map<string, { timer: ReturnType<typeof setTimeout>, write: () => void }>} */
 const pendingNotes = new Map();
-/** Writes one change of a pair to the journal. @param {Pair} pair @param {{ verdict?: string | null, note?: string, choice?: { id: string, value: string, label?: string } | null, key?: string }} change */
+/** Writes one change of a pair to the journal. @param {Pair} pair @param {{ verdict?: string | null, note?: string, choice?: { id: string, value: string, label?: string } | null, key?: string, kind?: 'all-themes', source?: string }} change */
 function record(pair, change) {
     const key = change.key || pair.key;
     pendingNotes.get(key) && clearTimeout(/** @type {any} */ (pendingNotes.get(key)).timer);
@@ -847,6 +885,7 @@ function record(pair, change) {
         note: change.note ?? '',
         choice: change.choice ?? null,
         label: key === pair.key ? pair.label : undefined,
+        ...(change.kind ? { kind: change.kind, source: change.source } : {}),
     });
     emit('verdict', { pair, change });
 }
@@ -981,7 +1020,16 @@ function answer() {
     if (themesDone.length) lines.push('', `Approved in full: ${themesDone.join(', ')}`);
     const extraDone = pairs.filter((p) => p.extra && verdictOf(p) === 'approved');
     if (extraDone.length) lines.push('', 'Catalogue pairs approved:', ...extraDone.map((p) => `- ${p.label}`));
-    if (rejected.length) lines.push('', 'Not approved:', ...rejected.map((p) => `- ${p.label}: ${noteOf(p)}`));
+    // "Every theme" (Kenny, 2026-10-18 19:08): the pair it was ticked on and its copies in the other themes are ONE line.
+    const grouped = new Set();
+    const groupLines = [];
+    for (const source of rejected.filter((p) => state[p.key]?.everyTheme && !state[p.key]?.copiedFrom)) {
+        const copies = rejected.filter((p) => p !== source && p.item === source.item && state[p.key]?.copiedFrom === source.theme && noteOf(p) === noteOf(source));
+        if (!copies.length) continue;
+        for (const p of [source, ...copies]) grouped.add(p);
+        groupLines.push(`- ${source.item.id} · every theme: ${noteOf(source)}`);
+    }
+    if (rejected.length) lines.push('', 'Not approved:', ...groupLines, ...rejected.filter((p) => !grouped.has(p)).map((p) => `- ${p.label}: ${noteOf(p)}`));
     const notes = pairs.filter((p) => verdictOf(p) === 'approved' && noteOf(p));
     if (notes.length) lines.push('', 'Approved, with a note:', ...notes.map((p) => `- ${p.label}: ${noteOf(p)}`));
     lines.push(...kk.answerLines()); // [kit-keys] pairs approved unseen by G
@@ -2100,6 +2148,102 @@ addEventListener('storage', (event) => event.key === STORAGE_KEY && laneWatch !=
 
 /** The lane frame a message came from, by its window. */
 const laneOf = (/** @type {MessageEventSource | null} */ source) => lanes.find((lane) => lane.frame.contentWindow === source);
+
+/*
+ * [lane-keys] A demo's shortcuts work in the dialog after a click anywhere (Kenny, 2026-10-18 18:42: "het niet meer
+ * werkt vanaf ik ergens op klik"). Who owns a key:
+ * - focus in a lane (a click on the component): the demo's registered keys (js/shortcuts.js `shortcutClaims`) stay in
+ *   the lane, also where the dialog uses the same letter (G bulk, X Not approved, C reject); every other dialog key is
+ *   handed up as before (FRAME_KEYS, V, L, Escape);
+ * - focus on the dialog (its header, the verdict panel, the stage around the frames): the dialog's keys act as always,
+ *   and a printable key the dialog did not use is played in the lane most in view, so "g i" or "j" reach the demo;
+ * - while a demo's chord waits for its second key (the lane says so, `rv-lane-chord`), that key goes to the lane whatever
+ *   has the focus, so the "c" of "g c" never rejects a section.
+ * A lane also learns which part of it is in the dialog's view (`rv-lane-view`), so the chord's cap stands where Kenny
+ * looks and not at the frame's top or bottom far out of view.
+ */
+/** @type {{ lane: any, until: number } | null} */
+let laneChord = null;
+const LANE_TYPING = 'textarea, select, [contenteditable], input:not([type="checkbox"]):not([type="radio"]):not([type="button"])';
+/** @param {any} lane @param {KeyboardEvent} event */
+const playInLane = (lane, event) =>
+    lane.frame.contentWindow?.postMessage({ type: 'rv-stage-key', key: event.key, code: event.code, shiftKey: event.shiftKey }, location.origin);
+const laneView = () => (stage.closest('.rv-dialog__view') ?? stage).getBoundingClientRect();
+/** The lane most in the dialog's view. */
+function laneInView() {
+    const view = laneView();
+    let best = null;
+    let most = 0;
+    for (const lane of lanes) {
+        if (!lane.frame.isConnected) continue;
+        const r = lane.frame.getBoundingClientRect();
+        const seen = Math.max(0, Math.min(view.bottom, r.bottom) - Math.max(view.top, r.top));
+        if (seen > most) [best, most] = [lane, seen];
+    }
+    return best;
+}
+/** Tells each lane which part of it is in view. */
+function sendLaneViews() {
+    const view = laneView();
+    for (const lane of lanes) {
+        if (!lane.frame.isConnected) continue;
+        const r = lane.frame.getBoundingClientRect();
+        const top = Math.max(view.top, r.top) - r.top;
+        const bottom = Math.min(view.bottom, r.bottom, innerHeight) - r.top;
+        if (bottom > top) lane.frame.contentWindow?.postMessage({ type: 'rv-lane-view', top, height: bottom - top }, location.origin);
+    }
+}
+let viewQueued = false;
+const queueLaneViews = () => {
+    if (viewQueued) return;
+    viewQueued = true;
+    requestAnimationFrame(() => {
+        viewQueued = false;
+        if (dialog.open) sendLaneViews();
+    });
+};
+addEventListener('scroll', queueLaneViews, true);
+addEventListener('resize', queueLaneViews);
+addEventListener('message', (event) => {
+    const data = event.data || {};
+    if (event.origin !== location.origin) return;
+    const lane = laneOf(event.source);
+    if (!lane) return;
+    if (data.type === 'rv-lane-hello') queueLaneViews();
+    else if (data.type === 'rv-lane-chord') {
+        laneChord = data.waiting ? { lane, until: Date.now() + (Number(data.ms) || 1500) } : laneChord?.lane === lane ? null : laneChord;
+        if (data.waiting) queueLaneViews();
+    }
+});
+// Window capture, before the key helpers (rv-keys.js, also window capture, mounted further down): a waiting chord's
+// next key belongs to its lane.
+addEventListener(
+    'keydown',
+    (event) => {
+        if (!dialog.open || !laneChord || event.altKey || event.ctrlKey || event.metaKey) return;
+        if (Date.now() > laneChord.until || !laneChord.lane.frame.isConnected) {
+            laneChord = null;
+            return;
+        }
+        if (['Shift', 'Control', 'Alt', 'Meta', 'AltGraph', 'CapsLock'].includes(event.key)) return;
+        if (/** @type {Element} */ (event.target).matches?.(LANE_TYPING)) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        playInLane(laneChord.lane, event);
+        laneChord = null;
+    },
+    true,
+);
+// Window bubble, after every listener of the dialog: a printable key nobody used goes to the lane in view.
+addEventListener('keydown', (event) => {
+    if (!dialog.open || event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (event.key.length !== 1 || event.key === ' ') return;
+    const from = /** @type {Element} */ (event.target);
+    if (from.matches?.(LANE_TYPING) || from.closest?.('[popover]:popover-open, [data-rv-help]')) return;
+    const lane = laneInView();
+    if (lane) playInLane(lane, event);
+});
+
 addEventListener('message', (event) => {
     const data = event.data || {};
     if (event.origin !== location.origin || data.type !== 'rv-lane-key' || !dialog.open) return;
@@ -2221,6 +2365,9 @@ function frameFor(pair) {
     return box;
 }
 
+/** The same section in the other themes of this page ("Every theme"): its other pairs, none for a catalogue block. */
+const otherThemePairs = (/** @type {Pair} */ pair) => pairs.filter((p) => p.item && p.item === pair.item && p !== pair);
+
 function rowFor(pair, only = null, name = '', shared = new Set()) {
     const li = document.createElement('li');
     li.className = 'rv-row';
@@ -2237,6 +2384,11 @@ function rowFor(pair, only = null, name = '', shared = new Set()) {
         </div>
         <p class="rv-row__look" data-rv-row-look></p>
         <textarea class="kp-field__input kp-field__input--multiline rv-row__note" rows="2" placeholder="What should change" data-rv-row-note hidden></textarea>
+        <span class="kp-field kp-field--check rv-row__every" data-rv-every-wrap hidden>
+            <input class="kp-field__check" type="checkbox" id="${id}-every" data-rv-every />
+            <label class="kp-field__label" for="${id}-every">Every theme</label>
+        </span>
+        <p class="rv-row__copied" data-rv-copied hidden></p>
         <div class="rv-row__choices" data-rv-choices></div>`;
     li.querySelector('[data-rv-jump]').textContent = name || pair.title;
     const look = pair.item ? lookFor(pair.item.section, pair.theme) : pair.look;
@@ -2348,6 +2500,25 @@ function rowFor(pair, only = null, name = '', shared = new Set()) {
     if (only) note.placeholder = `What should change in this aspect of ${pair.title}`;
     note.hidden = !box.checked && !note.value;
     li.classList.toggle('rv-row--rejected', box.checked);
+    // "Every theme" (Kenny, 2026-10-18 19:08): offered beside the note of a rejected section that other themes ask too; the
+    // verdict is copied to them when it is given (approveStep, applyEveryTheme).
+    const every = /** @type {HTMLInputElement} */ (li.querySelector('[data-rv-every]'));
+    const everyWrap = /** @type {HTMLElement} */ (li.querySelector('[data-rv-every-wrap]'));
+    const copied = /** @type {HTMLElement} */ (li.querySelector('[data-rv-copied]'));
+    const others = !only && pair.item ? otherThemePairs(pair) : [];
+    const paintEvery = () => {
+        everyWrap.hidden = !others.length || !box.checked;
+        every.checked = Boolean(state[pair.key]?.everyTheme) && box.checked;
+        const from = state[pair.key]?.copiedFrom;
+        copied.hidden = !from || !box.checked;
+        copied.textContent = from ? `Copied from ${LABEL[from] || from} (every theme). Change it here to make it this theme's own.` : '';
+    };
+    everyWrap.title = `Counts for every theme: when you give your verdict, ${pair.item?.title || 'this section'} gets this same verdict and note in all ${others.length} other theme(s) of this page, and those steps are skipped. W undoes it all.`;
+    every.addEventListener('change', () => {
+        state[pair.key] = { ...state[pair.key], everyTheme: every.checked };
+        save();
+    });
+    paintEvery();
     box.addEventListener('change', () => {
         note.hidden = !box.checked && !note.value;
         li.classList.toggle('rv-row--rejected', box.checked);
@@ -2355,14 +2526,18 @@ function rowFor(pair, only = null, name = '', shared = new Set()) {
         if (box.checked) note.focus();
         if (!only) {
             kk.snap([pair.key], `${box.checked ? 'not approved' : 'approved'} ${pair.label}`); // [kit-keys]
+            // A change made here makes the verdict this theme's own, and unticking "Not approved" drops "Every theme".
             state[pair.key] = {
                 ...state[pair.key],
                 verdict: box.checked ? 'rejected' : 'approved',
                 note: note.value.trim(),
                 at: new Date().toISOString(),
+                copiedFrom: undefined,
+                ...(box.checked ? {} : { everyTheme: false }),
             };
             save();
             record(pair, { verdict: box.checked ? 'rejected' : 'approved', note: note.value.trim() });
+            paintEvery();
             render();
         } else
             record(pair, {
@@ -2382,8 +2557,10 @@ function rowFor(pair, only = null, name = '', shared = new Set()) {
             verdict: box.checked ? 'rejected' : state[pair.key]?.verdict || 'approved',
             note: note.value.trim(),
             at: new Date().toISOString(),
+            copiedFrom: undefined,
         };
         save();
+        paintEvery();
         recordSoon(pair, () => ({ verdict: box.checked ? 'rejected' : state[pair.key]?.verdict || 'approved', note: note.value.trim() }));
         render();
     });
@@ -2683,23 +2860,64 @@ function approveStep() {
         refused.hidden = false;
         return;
     }
+    // "Every theme" (Kenny, 2026-10-18 19:08): a rejected section ticked so gives the same section in every other theme of
+    // the page the same verdict and note, as distinct journal entries (kind "all-themes"); W undoes the whole group.
+    const everyTargets = everyThemeTargets(rowOf);
     kk.snap(
-        shownPairs.map((p) => p.key),
-        `approved ${current.title}`,
+        [...shownPairs.map((p) => p.key), ...everyTargets.map(({ target }) => target.key)],
+        `approved ${current.title}${everyTargets.length ? ` and ${everyTargets.length} copies in other themes` : ''}`,
+        // W undoes the whole group: the source pair goes back to open too, not to the Not approved its box already set.
+        Object.fromEntries(
+            [...new Set(everyTargets.map(({ source }) => source))].map((source) => {
+                const { verdict, note, at, everyTheme, ...rest } = state[source.key] || {};
+                return [source.key, Object.keys(rest).length ? rest : null];
+            }),
+        ),
     ); // [kit-keys]
     const at = new Date().toISOString();
     for (const pair of shownPairs) {
         const row = rowOf(pair);
         const rejected = /** @type {HTMLInputElement} */ (row.querySelector('[data-rv-reject]')).checked;
         const note = /** @type {HTMLTextAreaElement} */ (row.querySelector('[data-rv-row-note]')).value.trim();
-        state[pair.key] = { ...state[pair.key], verdict: rejected ? 'rejected' : 'approved', note, at };
+        // A row copied from another theme and left as it is stays as the copy (its journal entry says where it came from).
+        if (state[pair.key]?.copiedFrom && rejected && state[pair.key].verdict === 'rejected' && state[pair.key].note === note) continue;
+        state[pair.key] = { ...state[pair.key], verdict: rejected ? 'rejected' : 'approved', note, at, copiedFrom: undefined };
         record(pair, { verdict: rejected ? 'rejected' : 'approved', note });
+    }
+    for (const { source, target, note } of everyTargets) {
+        state[target.key] = { ...state[target.key], verdict: 'rejected', note, at, copiedFrom: source.theme, everyTheme: undefined };
+        record(target, { verdict: 'rejected', note, kind: 'all-themes', source: source.theme });
     }
     save();
     render();
+    if (everyTargets.length)
+        kk.say(`Every theme: ${everyTargets.length} other theme${everyTargets.length === 1 ? '' : 's'} got the same verdict and note and are skipped. W undoes all of it.`);
     const next = nextOpenStep(index);
     if (next < 0) finished();
     else show(next);
+}
+
+/**
+ * The pairs an "Every theme" tick reaches on Approve: for each rejected row of the step with the tick, the same section in
+ * every other theme of the page, with the note as written. A pair Kenny rejected himself in his own words stays his own.
+ * @param {(pair: Pair) => HTMLElement} rowOf @returns {{ source: Pair, target: Pair, note: string }[]}
+ */
+function everyThemeTargets(rowOf) {
+    /** @type {{ source: Pair, target: Pair, note: string }[]} */
+    const out = [];
+    for (const source of shownPairs) {
+        const row = rowOf(source);
+        const tick = /** @type {HTMLInputElement | null} */ (row.querySelector('[data-rv-every]'));
+        if (!tick?.checked || !/** @type {HTMLInputElement} */ (row.querySelector('[data-rv-reject]')).checked) continue;
+        const note = /** @type {HTMLTextAreaElement} */ (row.querySelector('[data-rv-row-note]')).value.trim();
+        for (const target of otherThemePairs(source)) {
+            if (shownPairs.includes(target)) continue;
+            const own = state[target.key];
+            if (own?.verdict === 'rejected' && !own.copiedFrom) continue;
+            out.push({ source, target, note });
+        }
+    }
+    return out;
 }
 
 /** Records one aspect step: its pick, or "None of these" with a note; the theme's verdict once every aspect is answered. */

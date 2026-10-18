@@ -7348,6 +7348,8 @@ __export(shortcuts_exports, {
   CHORD_MS: () => CHORD_MS,
   SHORTCUTS_LIVE_SHEET: () => SHORTCUTS_LIVE_SHEET,
   SHORTCUT_EVENT: () => SHORTCUT_EVENT,
+  SHORTCUT_HINT_PLACES: () => SHORTCUT_HINT_PLACES,
+  SHORTCUT_PENDING_EVENT: () => SHORTCUT_PENDING_EVENT,
   UNKNOWN_MS: () => UNKNOWN_MS,
   attachShortcuts: () => attachShortcuts,
   configureShortcuts: () => configureShortcuts,
@@ -7355,10 +7357,12 @@ __export(shortcuts_exports, {
   listShortcuts: () => listShortcuts,
   parseShortcutKeys: () => parseShortcutKeys,
   registerShortcuts: () => registerShortcuts,
-  renderShortcutSheet: () => renderShortcutSheet
+  renderShortcutSheet: () => renderShortcutSheet,
+  shortcutClaims: () => shortcutClaims
 });
 function configureShortcuts(next2) {
   Object.assign(config, next2);
+  placeHint();
   queueSheets();
 }
 function inDevelopment() {
@@ -7438,8 +7442,31 @@ function showHint(text, role = "status") {
   const modal = [...document.querySelectorAll("dialog")].filter((d) => d.matches(":modal")).pop();
   const home = modal ?? document.body;
   if (hint.parentElement !== home) home.append(hint);
+  placeHint();
   hint.textContent = text;
   hint.hidden = false;
+}
+function placeHint() {
+  if (!hint) return;
+  const wanted = config.hintPlace ?? document.documentElement.getAttribute("data-kp-shortcuts-hint") ?? "centre";
+  hint.setAttribute("data-kp-shortcuts-place", SHORTCUT_HINT_PLACES.includes(
+    /** @type {any} */
+    wanted
+  ) ? wanted : "centre");
+}
+function announcePending() {
+  if (typeof document === "undefined") return;
+  document.dispatchEvent(
+    new CustomEvent(SHORTCUT_PENDING_EVENT, { detail: { keys: pending?.shown ?? "", waiting: pending !== null, ms: pending ? config.chordMs : 0 } })
+  );
+}
+function shortcutClaims(event) {
+  if (!listening || event.isComposing) return false;
+  const now = event.timeStamp || Date.now();
+  if (pending && now - pending.at <= config.chordMs) return true;
+  const hits = [...entries].filter(scopeActive).filter((entry) => entry.steps[0] && matches(entry.steps[0], event));
+  if (hits.length === 0) return false;
+  return !typing(event.target) || hits.every((entry) => entry.steps[0].mods.includes("mod"));
 }
 function hideHint() {
   window.clearTimeout(hintTimer);
@@ -7448,6 +7475,7 @@ function hideHint() {
 function chordHint(typed, unknown) {
   if (!hint) showHint("");
   if (!hint) return;
+  placeHint();
   hint.replaceChildren();
   for (const key of typed) {
     const cap = document.createElement("kbd");
@@ -7471,6 +7499,11 @@ function chordHint(typed, unknown) {
   hint.hidden = false;
 }
 function onKey(event) {
+  const before = pending;
+  handleKey(event);
+  if (pending !== before) announcePending();
+}
+function handleKey(event) {
   if (event.isComposing || event.repeat || event.key === "Dead" || event.key === "Shift" || event.key === "Control" || event.key === "Alt" || event.key === "Meta")
     return;
   const now = event.timeStamp || Date.now();
@@ -7511,6 +7544,7 @@ function onKey(event) {
     hintTimer = window.setTimeout(() => {
       pending = null;
       hideHint();
+      announcePending();
     }, config.chordMs);
     return;
   }
@@ -7729,7 +7763,7 @@ function attachShortcuts(root = document) {
     for (const clean of cleanups) clean();
   };
 }
-var CHORD_MS, UNKNOWN_MS, SHORTCUTS_LIVE_SHEET, SHORTCUT_EVENT, ALTGR_KEYS, MODIFIERS, RESERVED, config, normal, entries, order, pending, listening, hint, hintTimer, queued;
+var CHORD_MS, UNKNOWN_MS, SHORTCUTS_LIVE_SHEET, SHORTCUT_EVENT, SHORTCUT_PENDING_EVENT, SHORTCUT_HINT_PLACES, ALTGR_KEYS, MODIFIERS, RESERVED, config, normal, entries, order, pending, listening, hint, hintTimer, queued;
 var init_shortcuts = __esm({
   "js/shortcuts.js"() {
     "use strict";
@@ -7738,6 +7772,9 @@ var init_shortcuts = __esm({
     UNKNOWN_MS = 1500;
     SHORTCUTS_LIVE_SHEET = "[data-kp-shortcuts][data-kp-shortcuts-live]";
     SHORTCUT_EVENT = "kp-shortcut-run";
+    SHORTCUT_PENDING_EVENT = "kp-shortcut-pending";
+    SHORTCUT_HINT_PLACES = /** @type {const} */
+    ["centre", "bottom-centre"];
     ALTGR_KEYS = Object.freeze(["[", "]", "{", "}", "@", "#", "\\", "|", "~", "\u20AC", "`", "^"]);
     MODIFIERS = /* @__PURE__ */ new Set(["mod", "ctrl", "control", "alt", "shift", "meta", "cmd"]);
     RESERVED = ["mod+k", "?"];
@@ -44708,7 +44745,7 @@ function attachOne7(button, options) {
   }
   const writeHint = () => {
     if (!hint2) return;
-    hint2.textContent = stateOf4(button) === "true" ? button.getAttribute("data-kp-pressed-hint") ?? "" : "";
+    hint2.textContent = button.getAttribute("data-kp-pressed-hint") ?? "";
   };
   writeHint();
   const hintWatch = new MutationObserver(writeHint);
@@ -58953,6 +58990,8 @@ export {
   SEVERITIES,
   SHORTCUTS_LIVE_SHEET,
   SHORTCUT_EVENT,
+  SHORTCUT_HINT_PLACES,
+  SHORTCUT_PENDING_EVENT,
   SIDENAV_LAUNCHER,
   SIDENAV_MODE_EVENT,
   SIDENAV_OWNED,
@@ -59801,6 +59840,7 @@ export {
   shareText,
   shiftDay,
   shiftMonth,
+  shortcutClaims,
   shortcuts_exports as shortcutsExports,
   shouldStartTour,
   showAlarm,
