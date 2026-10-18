@@ -1,4 +1,138 @@
 {
     "demo": "kpadopt56-formal",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "formal-8a67c2e1-80ab-4582-900b-0a92b9255d47",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 17:45: 29 of 29 judged in formal, 24 approved, 5 not approved. Defaults kept.",
+            "approved": [
+                {
+                    "item": "auto-refresh",
+                    "theme": "formal"
+                },
+                {
+                    "item": "request-inspector",
+                    "theme": "formal"
+                },
+                {
+                    "item": "segmented-scroll",
+                    "theme": "formal"
+                },
+                {
+                    "item": "version",
+                    "theme": "formal"
+                },
+                {
+                    "item": "version-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "claim-row-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "entity",
+                    "theme": "formal"
+                },
+                {
+                    "item": "entity-behaviour",
+                    "theme": "formal"
+                },
+                {
+                    "item": "entity-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "chart-annotations",
+                    "theme": "formal"
+                },
+                {
+                    "item": "chart-annotations-runs",
+                    "theme": "formal"
+                },
+                {
+                    "item": "availability-grid-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "availability-grid-answering",
+                    "theme": "formal"
+                },
+                {
+                    "item": "availability-grid-best",
+                    "theme": "formal"
+                },
+                {
+                    "item": "availability-grid-layout",
+                    "theme": "formal"
+                },
+                {
+                    "item": "availability-grid-phone",
+                    "theme": "formal"
+                },
+                {
+                    "item": "gallery-grid",
+                    "theme": "formal"
+                },
+                {
+                    "item": "gallery-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "ops-page-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "quote-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "today-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "explain-lede",
+                    "theme": "formal"
+                },
+                {
+                    "item": "uses-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "notices",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "print-checklist",
+                    "theme": "formal",
+                    "note": "sheet 1, 2, 3 zien er niet goed uit, de titel lijkt veel te veel naar links te staan"
+                },
+                {
+                    "item": "chart-annotations-few",
+                    "theme": "formal",
+                    "note": "Er lijkt nog altijd een lijn getekend te zijn, die lijn is door de transparante look van de \"3 of 7 days...\" tekst zichtbaar"
+                },
+                {
+                    "item": "rating-states",
+                    "theme": "formal",
+                    "note": "state knoppen werken niet"
+                },
+                {
+                    "item": "usual-states",
+                    "theme": "formal",
+                    "note": "state knoppen werken niet"
+                },
+                {
+                    "item": "focus-states",
+                    "theme": "formal",
+                    "note": "state knoppen werken niet, er lijken ook geen questions te verschijnen?"
+                }
+            ],
+            "choices": [],
+            "generalNote": "General (17:45): bij sommige stappen werkten de states knoppen niet, bv in formal star rating step 12/14, in de meeste gevallen werkten de state knoppen wel."
+        }
+    ]
 }

@@ -525,13 +525,38 @@ ${frame('Full width: room enough, no scrolling', 'k56f-seg-full', 'none', 'k56f-
 </section>`;
 }
 
-// Page assembly: all sections in the order of WANTED, with the new segmented section after the two bars it belongs to.
+// A later round shows only the sections Kenny has not approved (DEMO_RULES ch. 6, gates/check-rereview.mjs): the verdicts are
+// read from VERDICTS.json (recorded before the page changes), the latest round naming a section wins, and an `allJudged` round
+// approved every section it does not list as not approved.
+const verdictsFile = new URL('VERDICTS.json', here);
+if (!existsSync(verdictsFile)) writeFileSync(verdictsFile, `${JSON.stringify({ demo: ID, rounds: [] }, null, 4)}\n`);
+const verdicts = JSON.parse(readFileSync(verdictsFile, 'utf8'));
+/** @type {Map<string, 'approved' | 'not approved'>} */
+const latest = new Map();
+const everyItem = [...WANTED.map((spec) => spec.id), 'segmented-scroll'];
+for (const round of verdicts.rounds ?? []) {
+    if (round.allJudged) for (const item of everyItem) latest.set(item, 'approved');
+    for (const p of round.approved ?? []) if (p.theme === 'formal') latest.set(p.item, 'approved');
+    for (const p of round.notApproved ?? []) if (p.theme === 'formal') latest.set(p.item, 'not approved');
+}
+const open = (/** @type {string} */ item) => latest.get(item) !== 'approved';
+
+// A topic's title rides on its first section shown, also when the section that carried it was approved and left the page.
+const SHOWN = WANTED.filter((spec) => open(spec.id)).map((spec, i, list) => {
+    const first = list.findIndex((s) => s.topic === spec.topic) === i;
+    const title = WANTED.find((s) => s.topic === spec.topic && s.title)?.title;
+    return { ...spec, title: first ? title : undefined };
+});
+
+// Page assembly: the open sections in the order of WANTED, with the segmented section after the two bars it belongs to.
 const bodyParts = [];
-for (const spec of WANTED) {
+for (const spec of SHOWN) {
     // Every control group names the component it drives and stands at it in the dialog (Kenny, 2026-10-18 07:09).
     bodyParts.push(declareControls(section(spec), spec.id));
-    if (spec.id === 'request-inspector') bodyParts.push(declareControls(segmentedSection(), 'segmented-scroll'));
+    if (spec.id === 'request-inspector' && open('segmented-scroll')) bodyParts.push(declareControls(segmentedSection(), 'segmented-scroll'));
 }
+if (open('segmented-scroll') && !SHOWN.some((spec) => spec.id === 'request-inspector'))
+    bodyParts.unshift(declareControls(segmentedSection(), 'segmented-scroll'));
 const body = bodyParts.join('\n\n');
 const demos = Object.keys(DEMOS);
 // The page holds only its own sections (Kenny, 2026-10-18 07:11): no laid-aside sections of the source demos, so no foreign
@@ -544,9 +569,6 @@ for (const m of body.matchAll(/\sid="([^"]+)"/g)) seen.set(m[1], (seen.get(m[1])
 for (const [k, n] of seen) if (n > 1) problems.push(`the id "${k}" stands ${n} times`);
 
 // A page round id never collides and is never reused: keep the id while its answer is not received, else take a fresh one.
-const verdictsFile = new URL('VERDICTS.json', here);
-if (!existsSync(verdictsFile)) writeFileSync(verdictsFile, `${JSON.stringify({ demo: ID, rounds: [] }, null, 4)}\n`);
-const verdicts = JSON.parse(readFileSync(verdictsFile, 'utf8'));
 const received = [...new Set((verdicts.rounds ?? []).map((/** @type {any} */ r) => r.page).filter(Boolean))];
 const out = fileURLToPath(new URL('demo.html', here));
 const current = existsSync(out) ? /"round":\s*"([^"]+)"/.exec(readFileSync(out, 'utf8'))?.[1] : undefined;
@@ -556,7 +578,7 @@ const styles = ['../kpadopt56/part.css', './page.css', ...demos.map((d) => `../k
 const script = (/** @type {string} */ d) => `        <script type="module" src="../kpadopt56/src/${d}/demo.js"></script>`;
 const demoFirst = demos.filter((d) => !DEMOS[d].autoFirst);
 const autoFirst = demos.filter((d) => DEMOS[d].autoFirst);
-const pairs = WANTED.length + 1;
+const pairs = bodyParts.length;
 const page = `<!doctype html>
 <html lang="en" data-theme="formal" data-review="${ID}" data-review-themes="formal">
     <head>

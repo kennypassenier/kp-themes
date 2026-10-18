@@ -1,0 +1,100 @@
+/* research/kpadopt56-formal: the frame of the formal-only re-review of the sections the shared package fixes changed.
+   Everything with a kp- class is the package; these k56f- rules lay out what only this page adds: the "what changed" box, the
+   width switch's stage and the frames of the scrolling segmented control. */
+
+.k56f-changed {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+}
+
+.k56f-changed p {
+    margin: 0;
+}
+
+/* The width switch: the stage after a section's controls is as wide as a phone when "Phone (390)" is pressed. */
+.k56f-stage {
+    display: block;
+    min-inline-size: 0;
+}
+
+.k56f-stage[data-k56f-width='phone'] {
+    inline-size: min(390px, 100%);
+}
+
+/* The new section (segmented-scroll): its head, expected block and frames. */
+.k56f-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+.k56f-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.k56f-sec__head :is(h2, p),
+.k56f-expected :is(p, ul) {
+    margin: 0;
+}
+
+.k56f-expected ul {
+    padding-inline-start: 1.25rem;
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.k56f-controls,
+.k56f-controls > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.k56f-stage-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(390px, 100%), 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.k56f-case {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 0;
+}
+
+.k56f-label {
+    margin: 0;
+    color: var(--muted-foreground);
+}
+
+.k56f-frame {
+    padding: var(--kp-space-sm, 0.5rem);
+    border: 1px solid var(--border);
+    min-inline-size: 0;
+}
+
+.k56f-frame--phone {
+    inline-size: min(390px, 100%);
+    box-sizing: border-box;
+}
+
+.k56f-frame--full {
+    inline-size: 100%;
+    box-sizing: border-box;
+}
+
+/* A full-width bar must have room for all eight choices, even in a narrow dialog: it is the roomy example. */
+.k56f-frame--full .kp-segmented {
+    inline-size: max-content;
+    max-inline-size: 100%;
+}
+
+/* The roomy bar has a whole row to itself, so all eight choices fit. */
+.k56f-case:has(> .k56f-frame--full) {
+    grid-column: 1 / -1;
+}
