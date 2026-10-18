@@ -5395,6 +5395,158 @@ export type Strings = {
      * The word a screen reader hears after a chip with no answer [kpadopt6]
      */
     usualUnansweredWord: string;
+    /**
+     * The pill's word for a log line, singular and plural (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerUnit: string;
+    /**
+     * The viewer's name for a screen reader when the page gives none (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerLabel: string;
+    /**
+     * The scrolling list's name for a screen reader (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerLogLabel: string;
+    /**
+     * The search box's label (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerSearch: string;
+    /**
+     * The search box's placeholder (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerSearchHint: string;
+    /**
+     * The count when nothing matches (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerSearchNone: string;
+    /**
+     * The count while the box is empty (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerSearchIdle: string;
+    /**
+     * The count when there are matches and none is current (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerMatches: (n: number) => string;
+    /**
+     * The count with the current match (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerMatchAt: (at: number, n: number) => string;
+    /**
+     * The button that goes to the match before (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerPrevious: string;
+    /**
+     * The button that goes to the next match (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerNext: string;
+    /**
+     * The toggle that hides lines without a match (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerOnly: string;
+    /**
+     * The toggle that wraps long lines (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerWrap: string;
+    /**
+     * The time column control's name (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerTimeLabel: string;
+    /**
+     * Its first choice, the time of day (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerTimeShort: string;
+    /**
+     * Its second choice, date and time (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerTimeFull: string;
+    /**
+     * Its third choice, no time column (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerTimeOff: string;
+    /**
+     * The level select's label (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerLevel: string;
+    /**
+     * Its first entry, every level (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerLevelAll: string;
+    /**
+     * Its other entries: 'info', 'warning' or 'error' and above (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerLevelFrom: (level: 'info' | 'warning' | 'error') => string;
+    /**
+     * The copy button (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerCopy: string;
+    /**
+     * The copy button's result word (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerCopied: string;
+    /**
+     * The copy button's refusal word (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerNotCopied: string;
+    /**
+     * The download button (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerDownload: string;
+    /**
+     * Why copy and download are off when no line is shown (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerNothing: string;
+    /**
+     * The foot's count of lines shown (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerCount: (shown: number, total: number) => string;
+    /**
+     * The foot's note about lines pushed out by the cap (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerDropped: (n: number, max: number) => string;
+    /**
+     * The words under the busy card while the lines are read (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerLoading: string;
+    /**
+     * The empty plate's heading (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerEmptyTitle: string;
+    /**
+     * Its sentence (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerEmptyText: string;
+    /**
+     * The plate's heading when a search or level hides every line (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerNoMatchTitle: string;
+    /**
+     * Its sentence (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerNoMatchText: string;
+    /**
+     * Its button that takes the search and the level away (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerClear: string;
+    /**
+     * The failed plate's heading (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerFailed: string;
+    /**
+     * Its sentence (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerFailedText: string;
+    /**
+     * Its button (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerRetry: string;
+    /**
+     * The shortcut sheet's line for the search key (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerKeySearch: string;
+    /**
+     * The sheet's heading (js/logviewer.js) [gap-log-viewer]
+     */
+    logviewerKeyGroup: string;
 };
 /**
  * @typedef {object} Strings
@@ -6840,6 +6992,44 @@ export type Strings = {
  * @property {string} usualHadItWord  The word a screen reader hears after a chip that is had it [kpadopt6]
  * @property {(label: string) => string} usualUnanswered  What is said when an answer is taken back: "Headache: not answered" [kpadopt6]
  * @property {string} usualUnansweredWord  The word a screen reader hears after a chip with no answer [kpadopt6]
+ * @property {string} logviewerUnit  The pill's word for a log line, singular and plural (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerLabel  The viewer's name for a screen reader when the page gives none (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerLogLabel  The scrolling list's name for a screen reader (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerSearch  The search box's label (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerSearchHint  The search box's placeholder (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerSearchNone  The count when nothing matches (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerSearchIdle  The count while the box is empty (js/logviewer.js) [gap-log-viewer]
+ * @property {(n: number) => string} logviewerMatches  The count when there are matches and none is current (js/logviewer.js) [gap-log-viewer]
+ * @property {(at: number, n: number) => string} logviewerMatchAt  The count with the current match (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerPrevious  The button that goes to the match before (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerNext  The button that goes to the next match (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerOnly  The toggle that hides lines without a match (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerWrap  The toggle that wraps long lines (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerTimeLabel  The time column control's name (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerTimeShort  Its first choice, the time of day (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerTimeFull  Its second choice, date and time (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerTimeOff  Its third choice, no time column (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerLevel  The level select's label (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerLevelAll  Its first entry, every level (js/logviewer.js) [gap-log-viewer]
+ * @property {(level: 'info' | 'warning' | 'error') => string} logviewerLevelFrom  Its other entries: 'info', 'warning' or 'error' and above (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerCopy  The copy button (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerCopied  The copy button's result word (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerNotCopied  The copy button's refusal word (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerDownload  The download button (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerNothing  Why copy and download are off when no line is shown (js/logviewer.js) [gap-log-viewer]
+ * @property {(shown: number, total: number) => string} logviewerCount  The foot's count of lines shown (js/logviewer.js) [gap-log-viewer]
+ * @property {(n: number, max: number) => string} logviewerDropped  The foot's note about lines pushed out by the cap (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerLoading  The words under the busy card while the lines are read (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerEmptyTitle  The empty plate's heading (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerEmptyText  Its sentence (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerNoMatchTitle  The plate's heading when a search or level hides every line (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerNoMatchText  Its sentence (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerClear  Its button that takes the search and the level away (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerFailed  The failed plate's heading (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerFailedText  Its sentence (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerRetry  Its button (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerKeySearch  The shortcut sheet's line for the search key (js/logviewer.js) [gap-log-viewer]
+ * @property {string} logviewerKeyGroup  The sheet's heading (js/logviewer.js) [gap-log-viewer]
  */
 /**
  * The defaults. English, by Kenny's decision of 2026-09-04 — the package

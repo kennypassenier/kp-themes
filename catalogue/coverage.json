@@ -35,6 +35,7 @@
         "kp-matrix",
         "kp-passkeys",
         "kp-console",
+        "kp-logviewer",
         "kp-time",
         "kp-qr",
         "kp-availability",

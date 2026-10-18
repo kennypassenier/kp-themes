@@ -284,6 +284,12 @@ export const REQUIRED = [
         why: 'The console measures its own width and stacks the select, prompt and Run on a phone; the query reaches only its own parts [kpadopt6-social].',
     },
     {
+        container: 'kp-logviewer',
+        class: 'kp-logviewer',
+        self: true,
+        why: 'The viewer lays its search and its tools in two rows or three by its own width; the query reaches only its own parts [gap-log-viewer].',
+    },
+    {
         container: 'kp-range',
         class: 'kp-range',
         self: true,
