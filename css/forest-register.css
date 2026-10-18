@@ -5869,3 +5869,41 @@
     }
 }
 /* ── end t56-q2 confirm ── */
+
+/* ── t56-q2 choose: the waiting picker's panel fits its room ── */
+@layer kp.signature {
+    /* The panel that stands for an open list (18 rem) reached 26 px past the 24 rem a picker's case keeps for it and covered the
+       next case's caption. 16 rem is still a list's height and ends inside the room. */
+    [data-theme='forest'] .kp-usual {
+        --kp-usual-panel-min: 16rem;
+    }
+}
+/* ── end t56-q2 choose ── */
+
+/* ── t56-q2 schedule: the quiet buttons have a plate ── */
+@layer kp.signature {
+    /* The quick picks, End snooze and Show more were ghost buttons with a transparent edge: only a stray arc of the leaf corner
+       showed. They stand on the card with the leaf's own line. */
+    [data-theme='forest'] :is(.kp-weekdays__preset, .kp-snooze__end, .kp-runs__more).kp-button--ghost {
+        background: var(--card);
+        border-color: var(--border-strong);
+    }
+    [data-theme='forest'] :is(.kp-weekdays__preset, .kp-snooze__end, .kp-runs__more).kp-button--ghost:disabled {
+        border-color: var(--border);
+        opacity: 0.55;
+    }
+}
+/* ── end t56-q2 schedule ── */
+
+/* ── t56-q2 schedule: the snooze tiles share one grid ── */
+@layer kp.signature {
+    /* The tiles of a row were centred in it: a shorter tile (one line of its words) sat offset beside a taller one (three lines).
+       A row is as tall as its tallest tile and every tile fills it. */
+    [data-theme='forest'] .kp-snooze .kp-snooze__chips {
+        align-items: stretch;
+    }
+    [data-theme='forest'] .kp-snooze .kp-snooze__chips > .kp-snooze__chip {
+        align-self: stretch;
+    }
+}
+/* ── end t56-q2 schedule ── */
