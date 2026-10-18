@@ -22284,8 +22284,11 @@
         color: var(--foreground);
     }
 
+    /* The action is a normal button: it took the plate's heading size (Retry was 23.7 px text in a 36 px button), so it reads at
+     * the control size and the title carries the heading. A register's own button size still wins [t56-statefix-1018]. */
     .kp-stateplate__action {
         margin-block-start: var(--kp-space-xs, 0.25rem);
+        font-size: var(--kp-text-md, 1rem);
     }
 
     /* kpadopt5-ops:stateplate:end */
