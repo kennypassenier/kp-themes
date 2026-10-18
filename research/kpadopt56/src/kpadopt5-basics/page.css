@@ -186,11 +186,19 @@
     outline-offset: calc(-1 * var(--focus-ring-width, 2px));
 }
 
-/* A frame that holds a dialog shown in place: the dialog is positioned inside it and the frame keeps its size. */
+/* A frame that holds a dialog shown in place: the dialog is positioned inside it, the frame keeps its size and a longer sheet
+   scrolls inside it (28rem holds the empty sheet whole). */
 .kb-frame--stage {
     position: relative;
-    min-block-size: 24rem;
+    block-size: 28rem;
+    overflow: auto;
     contain: layout;
+}
+
+/* The sheet scrolls inside itself, as the package's modal sheet does, so what is cut off is clipped by the sheet's own box. */
+.kb-frame--stage > dialog {
+    max-block-size: calc(100% - 2 * var(--kp-space-md, 0.75rem));
+    overflow-y: auto;
 }
 
 .kb-card {
