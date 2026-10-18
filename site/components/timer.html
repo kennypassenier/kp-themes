@@ -259,13 +259,57 @@
                     <h2 class="kp-fw-semibold">Live example</h2>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">A list and a starter in a sentence</figcaption>
-                        <p class="kp-text-muted">The list draws its cards; the starter names the duration and the timer.</p>
+                        <p class="kp-text-muted">The list draws its cards; a starter anywhere in the page names the duration (`10m`, `1h30m`, `90s`, `10:00` or seconds) and the timer. Pressed again while its timer runs it starts no second one: the focus goes to the one that runs. Each card has its name, a state word, the time left in figures of one width, the theme’s progress bar, Pause or Resume, +1 min and Remove, and nothing in it changes size as the clock runs. It counts from the moment it ends, so a page in the background shows the right time again. `startTimer(list, { name, seconds })` starts one from the page; the events are `kp-timer-start`, `kp-timer-change` (pause, resume, add, stop-ring), `kp-timer-done` and `kp-timer-stop`.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="kp-timers" data-kp-timers id="timers" aria-label="Kitchen timers"></div>
-<p>Let the sauce simmer for <button type="button" class="kp-button kp-button--sm" data-kp-timer-start="10m" data-kp-timer-name="Sauce" data-kp-timer-for="timers">10 minutes</button>.</p>
+<div class="kp-timers" data-kp-timers id="doc-timers" aria-label="Kitchen timers"></div>
+<p>Let the sauce simmer for <button type="button" class="kp-button kp-button--sm" data-kp-timer-start="10m" data-kp-timer-name="Sauce" data-kp-timer-for="doc-timers">10 minutes</button>, then the rice <button type="button" class="kp-button kp-button--sm" data-kp-timer-start="90s" data-kp-timer-name="Rice" data-kp-timer-for="doc-timers">90 seconds</button>.</p>
+<p class="kp-text-muted" id="doc-timers-said" role="status">No timer has run out.</p>
+                            <script type="module">
+import { attachTimers, startTimer, addTimerTime } from '../../js/timer.js';
+
+const timers = document.getElementById('doc-timers');
+attachTimers(timers.parentElement);
+startTimer(timers, { name: 'Eggs', seconds: 7 * 60 });
+const said = document.getElementById('doc-timers-said');
+timers.addEventListener('kp-timer-done', (event) => { said.textContent = event.detail.timer.name + ' is done.'; });
+timers.addEventListener('kp-timer-change', (event) => { said.textContent = event.detail.timer.name + ': ' + event.detail.action + '.'; });
+                            </script>
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timers&quot;</span> <span class="kp-code__keyword">data-kp-timers</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;timers&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Kitchen timers&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
-&lt;<span class="kp-code__keyword">p</span>&gt;Let the sauce simmer for &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-kp-timer-start</span><span class="kp-code__string">=&quot;10m&quot;</span> <span class="kp-code__keyword">data-kp-timer-name</span><span class="kp-code__string">=&quot;Sauce&quot;</span> <span class="kp-code__keyword">data-kp-timer-for</span><span class="kp-code__string">=&quot;timers&quot;</span>&gt;10 minutes&lt;/<span class="kp-code__keyword">button</span>&gt;.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timers&quot;</span> <span class="kp-code__keyword">data-kp-timers</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-timers&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Kitchen timers&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span>&gt;Let the sauce simmer for &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-kp-timer-start</span><span class="kp-code__string">=&quot;10m&quot;</span> <span class="kp-code__keyword">data-kp-timer-name</span><span class="kp-code__string">=&quot;Sauce&quot;</span> <span class="kp-code__keyword">data-kp-timer-for</span><span class="kp-code__string">=&quot;doc-timers&quot;</span>&gt;10 minutes&lt;/<span class="kp-code__keyword">button</span>&gt;, then the rice &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-kp-timer-start</span><span class="kp-code__string">=&quot;90s&quot;</span> <span class="kp-code__keyword">data-kp-timer-name</span><span class="kp-code__string">=&quot;Rice&quot;</span> <span class="kp-code__keyword">data-kp-timer-for</span><span class="kp-code__string">=&quot;doc-timers&quot;</span>&gt;90 seconds&lt;/<span class="kp-code__keyword">button</span>&gt;.&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-timers-said&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;No timer has run out.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachTimers, startTimer, addTimerTime } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/timer'</span>;
+
+<span class="kp-code__keyword">const</span> timers = document.getElementById(<span class="kp-code__string">'doc-timers'</span>);
+attachTimers(timers.parentElement);
+startTimer(timers, { name: <span class="kp-code__string">'Eggs'</span>, seconds: <span class="kp-code__string">7</span> * <span class="kp-code__string">60</span> });
+<span class="kp-code__keyword">const</span> said = document.getElementById(<span class="kp-code__string">'doc-timers-said'</span>);
+timers.addEventListener(<span class="kp-code__string">'kp-timer-done'</span>, (event) =&gt; { said.textContent = event.detail.timer.name + <span class="kp-code__string">' is done.'</span>; });
+timers.addEventListener(<span class="kp-code__string">'kp-timer-change'</span>, (event) =&gt; { said.textContent = event.detail.timer.name + <span class="kp-code__string">': '</span> + event.detail.action + <span class="kp-code__string">'.'</span>; });</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A timer that is about to ring, and the options of the list</figcaption>
+                        <p class="kp-text-muted">This one ends in 4 seconds: the card turns to the done plate with the name large (“Toast is done”) and one big Stop; a soft two-note chime plays every few seconds, the phone buzzes where it can and the system shows a notification when the page has the permission (`askTimerNotifications()` asks, from a press). The list here has the sound off, so only the card tells. `data-kp-timers-ring` is how long it rings in seconds (60; 0 is once), `data-kp-timers-sound` is `chime`, `bell`, `buzzer` or `off`, `data-kp-timers-speak=&quot;on&quot;` says the message aloud, `data-kp-timers-notify=&quot;false&quot;` sends no notification and `data-kp-timers-empty` is the sentence of an empty list (the second list below).</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-timers" data-kp-timers data-kp-timers-sound="off" id="doc-timers-ring" aria-label="A timer that rings"></div>
+<div class="kp-timers" data-kp-timers data-kp-timers-empty="Nothing is cooking. Press a duration to start a timer." id="doc-timers-empty" aria-label="Timers, none running"></div>
+                            <script type="module">
+import { attachTimers, startTimer } from '../../js/timer.js';
+
+const ring = document.getElementById('doc-timers-ring');
+attachTimers(ring.parentElement);
+startTimer(ring, { name: 'Toast', seconds: 4 });
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timers&quot;</span> <span class="kp-code__keyword">data-kp-timers</span> <span class="kp-code__keyword">data-kp-timers-sound</span><span class="kp-code__string">=&quot;off&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-timers-ring&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;A timer that rings&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timers&quot;</span> <span class="kp-code__keyword">data-kp-timers</span> <span class="kp-code__keyword">data-kp-timers-empty</span><span class="kp-code__string">=&quot;Nothing is cooking. Press a duration to start a timer.&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-timers-empty&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Timers, none running&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachTimers, startTimer } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/timer'</span>;
+
+<span class="kp-code__keyword">const</span> ring = document.getElementById(<span class="kp-code__string">'doc-timers-ring'</span>);
+attachTimers(ring.parentElement);
+startTimer(ring, { name: <span class="kp-code__string">'Toast'</span>, seconds: <span class="kp-code__string">4</span> });</code></pre>
                     </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
@@ -341,6 +385,10 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-timers-sound</code></td><td>`chime` (default, the soft two-note chime), `bell` (a wind-up kitchen timer’s hammer on two bells), `buzzer` (a harsher electronic beep) or `off`. All are made with Web Audio, no file; `playTimerSound()` plays one for a picker’s preview, from a press.</td></tr>
+                            <tr><td><code>data-kp-timers-speak</code></td><td>`on` says the timer’s message aloud with speech synthesis once the sound has played, again at every ring. The message is `data-kp-timer-say` on a starter, else “&lt;name&gt; is done”. Nothing is said, and nothing fails, where speech synthesis is missing.</td></tr>
+                            <tr><td><code>data-kp-timer-start</code></td><td>On any button: the duration it starts (`10m`, `1h30m`, `90s`, `10:00` or seconds), with `-name`, `-for` (the list’s id; else the page’s first) and `-id`. `data-kp-timer-running` is written on it while its timer runs.</td></tr>
+                            <tr><td><code>parseDuration</code></td><td>Re-exported from js/countdown.js; the clock is the countdown’s `formatCountdown`.</td></tr>
                             <tr><td><code>data-kp-timers-ring</code></td><td>How long an ended timer chimes, in seconds (60; 0 is once).</td></tr>
                             <tr><td><code>data-kp-timers-sound=&quot;off&quot;</code></td><td>No chime.</td></tr>
                             <tr><td><code>data-kp-timers-notify=&quot;false&quot;</code></td><td>No system notification even with the permission.</td></tr>

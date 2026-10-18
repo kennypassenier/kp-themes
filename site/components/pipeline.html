@@ -259,11 +259,159 @@
                     <h2 class="kp-fw-semibold">Live example</h2>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">Applications by stage</figcaption>
-                        <p class="kp-text-muted">The markup is the empty board; the script draws the lanes and cards from what the page hands over, keeping cards by id so a refresh moves nothing that stayed.</p>
+                        <p class="kp-text-muted">The markup is the empty board; the script hands over the lanes and the cards. `tone` 1 to 5 is the stage’s colour on its plate, a card with `href` is a link and one without is a button, and `data-kp-pipeline-limit=&quot;4&quot;` keeps four cards per lane behind “+N more” while the counts stay exact. Press a card: the page hears `kp-pipeline-open`, marks it with `setPipelineSelected` and says which in the line under the board.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
 <section class="kp-pipeline" data-kp-pipeline data-kp-pipeline-limit="4" id="doc-pipeline" aria-label="Applications by stage"></section>
+<p class="kp-text-muted" id="doc-pipeline-said" role="status">Nothing opened yet.</p>
+                            <script type="module">
+import { attachPipelines, setPipeline, setPipelineSelected } from '../../js/pipeline.js';
+
+const board = document.getElementById('doc-pipeline');
+attachPipelines(board.parentElement);
+setPipeline(board, {
+    lanes: [
+        { key: 'draft', label: 'Draft', tone: 1 },
+        { key: 'sent', label: 'Sent', tone: 2 },
+        { key: 'interview', label: 'Interview', tone: 3 },
+        { key: 'offer', label: 'Offer', tone: 4 },
+        { key: 'closed', label: 'Closed · no status', closed: true },
+    ],
+    cards: [
+        { id: 'a1', lane: 'draft', title: 'Platform engineer', sub: 'Northwind', mark: 'NW' },
+        { id: 'a2', lane: 'draft', title: 'Rust developer', sub: 'Contoso', mark: 'CO' },
+        { id: 'a3', lane: 'sent', title: 'Frontend developer', sub: 'Acme', meta: '02/10/2026', mark: 'AC', href: '#acme' },
+        { id: 'a4', lane: 'sent', title: 'Backend developer', sub: 'Globex', meta: '05/10/2026', mark: 'GL' },
+        { id: 'a5', lane: 'sent', title: 'DevOps engineer', sub: 'Initech', meta: '07/10/2026', mark: 'IN' },
+        { id: 'a6', lane: 'sent', title: 'Site reliability engineer', sub: 'Umbrella', meta: '08/10/2026', mark: 'UM' },
+        { id: 'a7', lane: 'sent', title: 'Tooling developer', sub: 'Hooli', meta: '09/10/2026', mark: 'HO' },
+        { id: 'a8', lane: 'interview', title: 'Full-stack developer', sub: 'Corvid', meta: '16/10/2026', mark: 'CV' },
+        { id: 'a9', lane: 'offer', title: 'Software engineer', sub: 'Vandelay', meta: '12/10/2026', mark: 'VA' },
+        { id: 'a10', lane: 'closed', title: 'Web developer', sub: 'Pied Piper', meta: '21/09/2026', mark: 'PP' },
+    ],
+});
+const said = document.getElementById('doc-pipeline-said');
+board.addEventListener('kp-pipeline-open', (event) => {
+    setPipelineSelected(board, event.detail.id);
+    said.textContent = 'Opened ' + event.detail.card.title + ' (' + event.detail.source + ').';
+});
+board.addEventListener('kp-pipeline-more', (event) => {
+    said.textContent = 'The ' + event.detail.lane + ' lane shows ' + (event.detail.open ? 'every card' : 'four cards') + '.';
+});
+                            </script>
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-pipeline&quot;</span> <span class="kp-code__keyword">data-kp-pipeline</span> <span class="kp-code__keyword">data-kp-pipeline-limit</span><span class="kp-code__string">=&quot;4&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-pipeline&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Applications by stage&quot;</span>&gt;&lt;/<span class="kp-code__keyword">section</span>&gt;</code></pre>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-pipeline&quot;</span> <span class="kp-code__keyword">data-kp-pipeline</span> <span class="kp-code__keyword">data-kp-pipeline-limit</span><span class="kp-code__string">=&quot;4&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-pipeline&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Applications by stage&quot;</span>&gt;&lt;/<span class="kp-code__keyword">section</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-pipeline-said&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;Nothing opened yet.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachPipelines, setPipeline, setPipelineSelected } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/pipeline'</span>;
+
+<span class="kp-code__keyword">const</span> board = document.getElementById(<span class="kp-code__string">'doc-pipeline'</span>);
+attachPipelines(board.parentElement);
+setPipeline(board, {
+    lanes: [
+        { key: <span class="kp-code__string">'draft'</span>, label: <span class="kp-code__string">'Draft'</span>, tone: <span class="kp-code__string">1</span> },
+        { key: <span class="kp-code__string">'sent'</span>, label: <span class="kp-code__string">'Sent'</span>, tone: <span class="kp-code__string">2</span> },
+        { key: <span class="kp-code__string">'interview'</span>, label: <span class="kp-code__string">'Interview'</span>, tone: <span class="kp-code__string">3</span> },
+        { key: <span class="kp-code__string">'offer'</span>, label: <span class="kp-code__string">'Offer'</span>, tone: <span class="kp-code__string">4</span> },
+        { key: <span class="kp-code__string">'closed'</span>, label: <span class="kp-code__string">'Closed · no status'</span>, closed: <span class="kp-code__keyword">true</span> },
+    ],
+    cards: [
+        { id: <span class="kp-code__string">'a1'</span>, lane: <span class="kp-code__string">'draft'</span>, title: <span class="kp-code__string">'Platform engineer'</span>, sub: <span class="kp-code__string">'Northwind'</span>, mark: <span class="kp-code__string">'NW'</span> },
+        { id: <span class="kp-code__string">'a2'</span>, lane: <span class="kp-code__string">'draft'</span>, title: <span class="kp-code__string">'Rust developer'</span>, sub: <span class="kp-code__string">'Contoso'</span>, mark: <span class="kp-code__string">'CO'</span> },
+        { id: <span class="kp-code__string">'a3'</span>, lane: <span class="kp-code__string">'sent'</span>, title: <span class="kp-code__string">'Frontend developer'</span>, sub: <span class="kp-code__string">'Acme'</span>, meta: <span class="kp-code__string">'02/10/2026'</span>, mark: <span class="kp-code__string">'AC'</span>, href: <span class="kp-code__string">'#acme'</span> },
+        { id: <span class="kp-code__string">'a4'</span>, lane: <span class="kp-code__string">'sent'</span>, title: <span class="kp-code__string">'Backend developer'</span>, sub: <span class="kp-code__string">'Globex'</span>, meta: <span class="kp-code__string">'05/10/2026'</span>, mark: <span class="kp-code__string">'GL'</span> },
+        { id: <span class="kp-code__string">'a5'</span>, lane: <span class="kp-code__string">'sent'</span>, title: <span class="kp-code__string">'DevOps engineer'</span>, sub: <span class="kp-code__string">'Initech'</span>, meta: <span class="kp-code__string">'07/10/2026'</span>, mark: <span class="kp-code__string">'IN'</span> },
+        { id: <span class="kp-code__string">'a6'</span>, lane: <span class="kp-code__string">'sent'</span>, title: <span class="kp-code__string">'Site reliability engineer'</span>, sub: <span class="kp-code__string">'Umbrella'</span>, meta: <span class="kp-code__string">'08/10/2026'</span>, mark: <span class="kp-code__string">'UM'</span> },
+        { id: <span class="kp-code__string">'a7'</span>, lane: <span class="kp-code__string">'sent'</span>, title: <span class="kp-code__string">'Tooling developer'</span>, sub: <span class="kp-code__string">'Hooli'</span>, meta: <span class="kp-code__string">'09/10/2026'</span>, mark: <span class="kp-code__string">'HO'</span> },
+        { id: <span class="kp-code__string">'a8'</span>, lane: <span class="kp-code__string">'interview'</span>, title: <span class="kp-code__string">'Full-stack developer'</span>, sub: <span class="kp-code__string">'Corvid'</span>, meta: <span class="kp-code__string">'16/10/2026'</span>, mark: <span class="kp-code__string">'CV'</span> },
+        { id: <span class="kp-code__string">'a9'</span>, lane: <span class="kp-code__string">'offer'</span>, title: <span class="kp-code__string">'Software engineer'</span>, sub: <span class="kp-code__string">'Vandelay'</span>, meta: <span class="kp-code__string">'12/10/2026'</span>, mark: <span class="kp-code__string">'VA'</span> },
+        { id: <span class="kp-code__string">'a10'</span>, lane: <span class="kp-code__string">'closed'</span>, title: <span class="kp-code__string">'Web developer'</span>, sub: <span class="kp-code__string">'Pied Piper'</span>, meta: <span class="kp-code__string">'21/09/2026'</span>, mark: <span class="kp-code__string">'PP'</span> },
+    ],
+});
+<span class="kp-code__keyword">const</span> said = document.getElementById(<span class="kp-code__string">'doc-pipeline-said'</span>);
+board.addEventListener(<span class="kp-code__string">'kp-pipeline-open'</span>, (event) =&gt; {
+    setPipelineSelected(board, event.detail.id);
+    said.textContent = <span class="kp-code__string">'Opened '</span> + event.detail.card.title + <span class="kp-code__string">' ('</span> + event.detail.source + <span class="kp-code__string">').'</span>;
+});
+board.addEventListener(<span class="kp-code__string">'kp-pipeline-more'</span>, (event) =&gt; {
+    said.textContent = <span class="kp-code__string">'The '</span> + event.detail.lane + <span class="kp-code__string">' lane shows '</span> + (event.detail.open ? <span class="kp-code__string">'every card'</span> : <span class="kp-code__string">'four cards'</span>) + <span class="kp-code__string">'.'</span>;
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Loading, empty and failed: the lanes stay</figcaption>
+                        <p class="kp-text-muted">`setPipelineState(el, state, words)` takes `loading`, `ready`, `empty` or `error`. Loading keeps the lanes and lays the data table’s loading card over them, the cards are drawn once it has gone; empty shows every lane with “none” and one sentence on a plate above the lanes; error says why and offers Try again, which fires `kp-pipeline-retry`. Press Try again on the third board: it loads and then fills. `data-kp-pipeline-share=&quot;false&quot;` leaves the share of all out of every lane here.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<section class="kp-pipeline" data-kp-pipeline data-kp-pipeline-share="false" id="doc-pipeline-loading" aria-label="Applications, loading"></section>
+<section class="kp-pipeline" data-kp-pipeline data-kp-pipeline-share="false" id="doc-pipeline-empty" aria-label="Applications, empty"></section>
+<section class="kp-pipeline" data-kp-pipeline data-kp-pipeline-share="false" id="doc-pipeline-failed" aria-label="Applications, failed"></section>
+                            <script type="module">
+import { attachPipelines, setPipeline, setPipelineState } from '../../js/pipeline.js';
+
+const lanes = [
+    { key: 'draft', label: 'Draft', tone: 1 },
+    { key: 'sent', label: 'Sent', tone: 2 },
+    { key: 'interview', label: 'Interview', tone: 3 },
+    { key: 'offer', label: 'Offer', tone: 4 },
+];
+const loading = document.getElementById('doc-pipeline-loading');
+const empty = document.getElementById('doc-pipeline-empty');
+const failed = document.getElementById('doc-pipeline-failed');
+attachPipelines(loading.parentElement);
+setPipeline(loading, { lanes, cards: [] });
+setPipelineState(loading, 'loading');
+setPipeline(empty, { lanes, cards: [] });
+setPipelineState(empty, 'empty', 'No applications yet. They appear here once you start one.');
+setPipeline(failed, { lanes, cards: [] });
+setPipelineState(failed, 'error', 'The database did not answer in 10 seconds.');
+failed.addEventListener('kp-pipeline-retry', () => {
+    setPipelineState(failed, 'loading');
+    setTimeout(() => {
+        setPipeline(failed, {
+            lanes,
+            cards: [
+                { id: 'r1', lane: 'sent', title: 'Frontend developer', sub: 'Acme', mark: 'AC' },
+                { id: 'r2', lane: 'interview', title: 'Full-stack developer', sub: 'Corvid', mark: 'CV' },
+            ],
+        });
+        setPipelineState(failed, 'ready');
+    }, 1500);
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-pipeline&quot;</span> <span class="kp-code__keyword">data-kp-pipeline</span> <span class="kp-code__keyword">data-kp-pipeline-share</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-pipeline-loading&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Applications, loading&quot;</span>&gt;&lt;/<span class="kp-code__keyword">section</span>&gt;
+&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-pipeline&quot;</span> <span class="kp-code__keyword">data-kp-pipeline</span> <span class="kp-code__keyword">data-kp-pipeline-share</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-pipeline-empty&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Applications, empty&quot;</span>&gt;&lt;/<span class="kp-code__keyword">section</span>&gt;
+&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-pipeline&quot;</span> <span class="kp-code__keyword">data-kp-pipeline</span> <span class="kp-code__keyword">data-kp-pipeline-share</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-pipeline-failed&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Applications, failed&quot;</span>&gt;&lt;/<span class="kp-code__keyword">section</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachPipelines, setPipeline, setPipelineState } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/pipeline'</span>;
+
+<span class="kp-code__keyword">const</span> lanes = [
+    { key: <span class="kp-code__string">'draft'</span>, label: <span class="kp-code__string">'Draft'</span>, tone: <span class="kp-code__string">1</span> },
+    { key: <span class="kp-code__string">'sent'</span>, label: <span class="kp-code__string">'Sent'</span>, tone: <span class="kp-code__string">2</span> },
+    { key: <span class="kp-code__string">'interview'</span>, label: <span class="kp-code__string">'Interview'</span>, tone: <span class="kp-code__string">3</span> },
+    { key: <span class="kp-code__string">'offer'</span>, label: <span class="kp-code__string">'Offer'</span>, tone: <span class="kp-code__string">4</span> },
+];
+<span class="kp-code__keyword">const</span> loading = document.getElementById(<span class="kp-code__string">'doc-pipeline-loading'</span>);
+<span class="kp-code__keyword">const</span> empty = document.getElementById(<span class="kp-code__string">'doc-pipeline-empty'</span>);
+<span class="kp-code__keyword">const</span> failed = document.getElementById(<span class="kp-code__string">'doc-pipeline-failed'</span>);
+attachPipelines(loading.parentElement);
+setPipeline(loading, { lanes, cards: [] });
+setPipelineState(loading, <span class="kp-code__string">'loading'</span>);
+setPipeline(empty, { lanes, cards: [] });
+setPipelineState(empty, <span class="kp-code__string">'empty'</span>, <span class="kp-code__string">'No applications yet. They appear here once you start one.'</span>);
+setPipeline(failed, { lanes, cards: [] });
+setPipelineState(failed, <span class="kp-code__string">'error'</span>, <span class="kp-code__string">'The database did not answer in 10 seconds.'</span>);
+failed.addEventListener(<span class="kp-code__string">'kp-pipeline-retry'</span>, () =&gt; {
+    setPipelineState(failed, <span class="kp-code__string">'loading'</span>);
+    setTimeout(() =&gt; {
+        setPipeline(failed, {
+            lanes,
+            cards: [
+                { id: <span class="kp-code__string">'r1'</span>, lane: <span class="kp-code__string">'sent'</span>, title: <span class="kp-code__string">'Frontend developer'</span>, sub: <span class="kp-code__string">'Acme'</span>, mark: <span class="kp-code__string">'AC'</span> },
+                { id: <span class="kp-code__string">'r2'</span>, lane: <span class="kp-code__string">'interview'</span>, title: <span class="kp-code__string">'Full-stack developer'</span>, sub: <span class="kp-code__string">'Corvid'</span>, mark: <span class="kp-code__string">'CV'</span> },
+            ],
+        });
+        setPipelineState(failed, <span class="kp-code__string">'ready'</span>);
+    }, <span class="kp-code__string">1500</span>);
+});</code></pre>
                     </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
@@ -323,6 +471,8 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>setPipelineState</code></td><td>`setPipelineState(el, state, words)` with `loading`, `ready`, `empty` or `error`; `words` is the sentence of the empty and the failed plate.</td></tr>
+                            <tr><td><code>setPipelineSelected</code></td><td>Marks the open card with `aria-current`, or none; answer `kp-pipeline-open` with it.</td></tr>
                             <tr><td><code>data-kp-pipeline</code></td><td>Marks the board; `attachPipelines` fills it.</td></tr>
                             <tr><td><code>data-kp-pipeline-limit</code></td><td>Cards per lane before “+N more” (a toggle, `aria-expanded`; `data-kp-pipeline-more` names its lane); 0 or none shows every card.</td></tr>
                             <tr><td><code>data-kp-pipeline-share</code></td><td>`false`: no share of all under the lane’s plate.</td></tr>

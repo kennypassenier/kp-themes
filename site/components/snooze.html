@@ -258,12 +258,72 @@
                 <section class="kp-section" data-sc-section="example" id="example">
                     <h2 class="kp-fw-semibold">Live example</h2>
                     <figure class="sc-example">
-                        <figcaption class="kp-fw-semibold">The mix</figcaption>
-                        <p class="kp-text-muted">The markup is the empty box; the script builds the button, the menu and the panel.</p>
+                        <figcaption class="kp-fw-semibold">The mix, as chips</figcaption>
+                        <p class="kp-text-muted">Each choice stands over the exact moment it means, so nobody works out when “1 day” falls. The choices are `15m`, `1h`, `4h` (any number with m, h, d or w), `tonight`, `tomorrow`, `monday`, `next-week` and `pick`, the last a panel with a date and a time. A choice that has passed (tonight, after the evening hour) or lies past `data-kp-snooze-max` (7d) is left out, not greyed. `data-kp-now` fixes the clock here so the moments stay the same. The page hears `kp-snooze` with `{ until, choice }`, stores the moment and tells the picker back with `setSnoozedUntil`, while it saves with `setSnoozeBusy`. “Your last pick” is offered at the top; `data-kp-remember` keeps it across visits.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="kp-snooze" data-kp-snooze data-kp-snooze-choices="1h 4h tonight tomorrow monday pick"></div>
+<div class="kp-snooze" id="doc-snooze" data-kp-snooze data-kp-snooze-choices="1h 4h tonight tomorrow monday pick" data-kp-now="2026-10-18T15:00:00+02:00"></div>
+<p class="kp-text-muted" id="doc-snooze-said" role="status">Not snoozed.</p>
+                            <script type="module">
+import { attachSnoozes, setSnoozeBusy, setSnoozedUntil } from '../../js/snooze.js';
+
+const picker = document.getElementById('doc-snooze');
+attachSnoozes(picker.parentElement);
+const said = document.getElementById('doc-snooze-said');
+picker.addEventListener('kp-snooze', (event) => {
+    setSnoozeBusy(picker, true);
+    said.textContent = 'Saving ' + event.detail.choice + '...';
+    setTimeout(() => {
+        setSnoozeBusy(picker, false);
+        setSnoozedUntil(picker, event.detail.until);
+        said.textContent = 'Snoozed until ' + event.detail.until + '.';
+    }, 800);
+});
+picker.addEventListener('kp-snooze-end', () => {
+    setSnoozedUntil(picker, null);
+    said.textContent = 'Snooze ended.';
+});
+                            </script>
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-snooze&quot;</span> <span class="kp-code__keyword">data-kp-snooze</span> <span class="kp-code__keyword">data-kp-snooze-choices</span><span class="kp-code__string">=&quot;1h 4h tonight tomorrow monday pick&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-snooze&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-snooze&quot;</span> <span class="kp-code__keyword">data-kp-snooze</span> <span class="kp-code__keyword">data-kp-snooze-choices</span><span class="kp-code__string">=&quot;1h 4h tonight tomorrow monday pick&quot;</span> <span class="kp-code__keyword">data-kp-now</span><span class="kp-code__string">=&quot;2026-10-18T15:00:00+02:00&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-snooze-said&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;Not snoozed.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachSnoozes, setSnoozeBusy, setSnoozedUntil } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/snooze'</span>;
+
+<span class="kp-code__keyword">const</span> picker = document.getElementById(<span class="kp-code__string">'doc-snooze'</span>);
+attachSnoozes(picker.parentElement);
+<span class="kp-code__keyword">const</span> said = document.getElementById(<span class="kp-code__string">'doc-snooze-said'</span>);
+picker.addEventListener(<span class="kp-code__string">'kp-snooze'</span>, (event) =&gt; {
+    setSnoozeBusy(picker, <span class="kp-code__keyword">true</span>);
+    said.textContent = <span class="kp-code__string">'Saving '</span> + event.detail.choice + <span class="kp-code__string">'...'</span>;
+    setTimeout(() =&gt; {
+        setSnoozeBusy(picker, <span class="kp-code__keyword">false</span>);
+        setSnoozedUntil(picker, event.detail.until);
+        said.textContent = <span class="kp-code__string">'Snoozed until '</span> + event.detail.until + <span class="kp-code__string">'.'</span>;
+    }, <span class="kp-code__string">800</span>);
+});
+picker.addEventListener(<span class="kp-code__string">'kp-snooze-end'</span>, () =&gt; {
+    setSnoozedUntil(picker, <span class="kp-code__keyword">null</span>);
+    said.textContent = <span class="kp-code__string">'Snooze ended.'</span>;
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">As a menu, with its own hours, and already snoozed</figcaption>
+                        <p class="kp-text-muted">`data-kp-look=&quot;menu&quot;` is a button with the package’s menu (arrow keys, Home, End, Esc) instead of the row of chips. `data-kp-snooze-morning` and `-evening` say what tomorrow, Monday and next week, and tonight, mean (09:00 and 18:00 by default); `data-kp-snooze-max` the longest a reminder may be put off. `data-kp-snoozed-until` shows “Snoozed until …” with End snooze, which fires `kp-snooze-end`; `openSnoozePanel` opens the date and time panel from the page. `data-kp-time-zone` names another zone.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-snooze" id="doc-snooze-menu" data-kp-snooze data-kp-look="menu" data-kp-snooze-choices="15m 1h tomorrow next-week pick" data-kp-snooze-morning="07:30" data-kp-snooze-max="30d" data-kp-now="2026-10-18T15:00:00+02:00"></div>
+<div class="kp-snooze" data-kp-snooze data-kp-snoozed-until="2026-10-19T09:00:00+02:00" data-kp-now="2026-10-18T15:00:00+02:00"></div>
+                            <script type="module">
+import { attachSnoozes } from '../../js/snooze.js';
+
+attachSnoozes(document.getElementById('doc-snooze-menu').parentElement);
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-snooze&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-snooze-menu&quot;</span> <span class="kp-code__keyword">data-kp-snooze</span> <span class="kp-code__keyword">data-kp-look</span><span class="kp-code__string">=&quot;menu&quot;</span> <span class="kp-code__keyword">data-kp-snooze-choices</span><span class="kp-code__string">=&quot;15m 1h tomorrow next-week pick&quot;</span> <span class="kp-code__keyword">data-kp-snooze-morning</span><span class="kp-code__string">=&quot;07:30&quot;</span> <span class="kp-code__keyword">data-kp-snooze-max</span><span class="kp-code__string">=&quot;30d&quot;</span> <span class="kp-code__keyword">data-kp-now</span><span class="kp-code__string">=&quot;2026-10-18T15:00:00+02:00&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-snooze&quot;</span> <span class="kp-code__keyword">data-kp-snooze</span> <span class="kp-code__keyword">data-kp-snoozed-until</span><span class="kp-code__string">=&quot;2026-10-19T09:00:00+02:00&quot;</span> <span class="kp-code__keyword">data-kp-now</span><span class="kp-code__string">=&quot;2026-10-18T15:00:00+02:00&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachSnoozes } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/snooze'</span>;
+
+attachSnoozes(document.getElementById(<span class="kp-code__string">'doc-snooze-menu'</span>).parentElement);</code></pre>
                     </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
@@ -321,6 +381,8 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>snooze / snoozeChoices / dayAt</code></td><td>`snooze(el)` is the handle of a picker (`until`, `setUntil`, `setBusy`, `choices`, `openPanel`, `closePanel`); `snoozeChoices` computes the choices and their moments for a clock; `dayAt` is a day at a time in a zone.</td></tr>
+                            <tr><td><code>kp-snooze / kp-snooze-end</code></td><td>`kp-snooze` carries `{ until, choice }` (`SNOOZE_EVENT`); End snooze fires `kp-snooze-end` (`SNOOZE_END_EVENT`).</td></tr>
                             <tr><td><code>data-kp-snooze-choices</code></td><td>The choices, space separated: `15m`, `1h`, `4h`, `tonight`, `tomorrow`, `monday`, `next-week`, `pick`.</td></tr>
                             <tr><td><code>data-kp-snooze-morning</code></td><td>What tomorrow, Monday and next week mean; 09:00.</td></tr>
                             <tr><td><code>data-kp-snooze-evening</code></td><td>What tonight means; 18:00.</td></tr>

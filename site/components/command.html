@@ -259,11 +259,63 @@
                     <h2 class="kp-fw-semibold">Live example</h2>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">A WSL command that needs sudo</figcaption>
-                        <p class="kp-text-muted">The markup is the code and three attributes; the head, the prompt and the copy button are the script’s, and the copy is the command as written.</p>
+                        <p class="kp-text-muted">The markup is the code and three attributes; the head (the terminal’s name, the amber `admin` or `sudo` badge, the copy button), the prompt and the note “Runs on …” are the script’s. The prompt is drawn by the stylesheet, so a copy is the command as written. The copy button is the package’s own: it says “Copied” on itself, announces it and fires `kp-copy`; a refused copy fires `kp-copy-failed`.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="kp-command" data-kp-command="wsl" data-kp-command-elevated data-kp-command-where="CT 109 (kyu)"><pre class="kp-command__code"><code>sudo systemctl restart kyu</code></pre></div>
+<div class="kp-command" id="doc-command" data-kp-command="wsl" data-kp-command-elevated data-kp-command-where="CT 109 (kyu)"><pre class="kp-command__code"><code>sudo systemctl restart kyu</code></pre></div>
+<p class="kp-text-muted" id="doc-command-said" role="status">Nothing copied yet.</p>
+                            <script type="module">
+import { attachCommands } from '../../js/command.js';
+
+const block = document.getElementById('doc-command');
+attachCommands(block.parentElement);
+block.addEventListener('kp-copy', () => { document.getElementById('doc-command-said').textContent = 'Copied to the clipboard.'; });
+block.addEventListener('kp-copy-failed', () => { document.getElementById('doc-command-said').textContent = 'The clipboard refused it.'; });
+                            </script>
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-command&quot;</span> <span class="kp-code__keyword">data-kp-command</span><span class="kp-code__string">=&quot;wsl&quot;</span> <span class="kp-code__keyword">data-kp-command-elevated</span> <span class="kp-code__keyword">data-kp-command-where</span><span class="kp-code__string">=&quot;CT 109 (kyu)&quot;</span>&gt;&lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-command__code&quot;</span>&gt;&lt;<span class="kp-code__keyword">code</span>&gt;sudo systemctl restart kyu&lt;/<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">pre</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-command&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-command&quot;</span> <span class="kp-code__keyword">data-kp-command</span><span class="kp-code__string">=&quot;wsl&quot;</span> <span class="kp-code__keyword">data-kp-command-elevated</span> <span class="kp-code__keyword">data-kp-command-where</span><span class="kp-code__string">=&quot;CT 109 (kyu)&quot;</span>&gt;&lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-command__code&quot;</span>&gt;&lt;<span class="kp-code__keyword">code</span>&gt;sudo systemctl restart kyu&lt;/<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">pre</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-command-said&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;Nothing copied yet.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachCommands } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/command'</span>;
+
+<span class="kp-code__keyword">const</span> block = document.getElementById(<span class="kp-code__string">'doc-command'</span>);
+attachCommands(block.parentElement);
+block.addEventListener(<span class="kp-code__string">'kp-copy'</span>, () =&gt; { document.getElementById(<span class="kp-code__string">'doc-command-said'</span>).textContent = <span class="kp-code__string">'Copied to the clipboard.'</span>; });
+block.addEventListener(<span class="kp-code__string">'kp-copy-failed'</span>, () =&gt; { document.getElementById(<span class="kp-code__string">'doc-command-said'</span>).textContent = <span class="kp-code__string">'The clipboard refused it.'</span>; });</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">The five terminals, continued lines and a long line that scrolls</figcaption>
+                        <p class="kp-text-muted">The terminal decides the name, the prompt and the continuation mark: `$` and a backslash for `bash`, `wsl` and `garuda`, `PS&gt;` and a backtick for `powershell`, `&gt;` and a caret for `cmd`. A line that ends in that mark, a pipe, or `&amp;&amp;` and `||` in a Linux shell carries on, indented and without a prompt (`data-kp-continued`). A long line wraps under its first character; `data-kp-command-wrap=&quot;scroll&quot;` keeps it whole and the code scrolls, a focusable region with a fading edge on the side that has more. `data-kp-command-label` names a terminal the dictionary does not know.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-command" data-kp-command="powershell" data-kp-command-elevated data-kp-command-where="the workstation"><pre class="kp-command__code"><code>Get-ChildItem C:\Users -Recurse `
+            -Filter *.log |
+            Remove-Item -WhatIf</code></pre></div>
+<div class="kp-command" data-kp-command="cmd"><pre class="kp-command__code"><code>dir C:\Users ^
+            /s /b</code></pre></div>
+<div class="kp-command" data-kp-command="garuda" data-kp-command-wrap="scroll"><pre class="kp-command__code"><code>sudo pacman -Syu --noconfirm &amp;&amp; flatpak update -y &amp;&amp; sudo journalctl --vacuum-time=7d &amp;&amp; echo "everything is up to date"</code></pre></div>
+<div class="kp-command" data-kp-command="bash"><pre class="kp-command__code"><code>docker compose \
+            --project-name media \
+            up -d</code></pre></div>
+<div class="kp-command" data-kp-command="fish" data-kp-command-label="Fish"><pre class="kp-command__code"><code>set -x EDITOR nvim</code></pre></div>
+                            <script type="module">
+import { attachCommands } from '../../js/command.js';
+
+attachCommands(document.getElementById('doc-command').parentElement.parentElement);
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-command&quot;</span> <span class="kp-code__keyword">data-kp-command</span><span class="kp-code__string">=&quot;powershell&quot;</span> <span class="kp-code__keyword">data-kp-command-elevated</span> <span class="kp-code__keyword">data-kp-command-where</span><span class="kp-code__string">=&quot;the workstation&quot;</span>&gt;&lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-command__code&quot;</span>&gt;&lt;<span class="kp-code__keyword">code</span>&gt;Get-ChildItem C:\Users -Recurse `
+            -Filter *.log |
+            Remove-Item -WhatIf&lt;/<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">pre</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-command&quot;</span> <span class="kp-code__keyword">data-kp-command</span><span class="kp-code__string">=&quot;cmd&quot;</span>&gt;&lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-command__code&quot;</span>&gt;&lt;<span class="kp-code__keyword">code</span>&gt;dir C:\Users ^
+            /s /b&lt;/<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">pre</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-command&quot;</span> <span class="kp-code__keyword">data-kp-command</span><span class="kp-code__string">=&quot;garuda&quot;</span> <span class="kp-code__keyword">data-kp-command-wrap</span><span class="kp-code__string">=&quot;scroll&quot;</span>&gt;&lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-command__code&quot;</span>&gt;&lt;<span class="kp-code__keyword">code</span>&gt;sudo pacman -Syu --noconfirm &amp;amp;&amp;amp; flatpak update -y &amp;amp;&amp;amp; sudo journalctl --vacuum-time=7d &amp;amp;&amp;amp; echo &quot;everything is up to date&quot;&lt;/<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">pre</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-command&quot;</span> <span class="kp-code__keyword">data-kp-command</span><span class="kp-code__string">=&quot;bash&quot;</span>&gt;&lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-command__code&quot;</span>&gt;&lt;<span class="kp-code__keyword">code</span>&gt;docker compose \
+            --project-name media \
+            up -d&lt;/<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">pre</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-command&quot;</span> <span class="kp-code__keyword">data-kp-command</span><span class="kp-code__string">=&quot;fish&quot;</span> <span class="kp-code__keyword">data-kp-command-label</span><span class="kp-code__string">=&quot;Fish&quot;</span>&gt;&lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-command__code&quot;</span>&gt;&lt;<span class="kp-code__keyword">code</span>&gt;set -x EDITOR nvim&lt;/<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">pre</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachCommands } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/command'</span>;
+
+attachCommands(document.getElementById(<span class="kp-code__string">'doc-command'</span>).parentElement.parentElement);</code></pre>
                     </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">

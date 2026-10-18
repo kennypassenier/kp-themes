@@ -259,19 +259,120 @@
                     <h2 class="kp-fw-semibold">Live example</h2>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">A recipe</figcaption>
-                        <p class="kp-text-muted">The module draws the parts from the steps it is given; the root needs a height.</p>
+                        <p class="kp-text-muted">The module draws the head (“Step 3 of 8”, the theme’s progress bar, Read aloud when the browser can, the screen line), the step with what it needs, a timer button, a note and the two big buttons from the steps it is given; the root needs a height. While it is attached the screen stays on where the Wake Lock API allows (`data-kp-focus-steps-wake=&quot;false&quot;` does not ask); the arrows, PageUp and PageDown, Space and a swipe turn the step. A step’s timer button starts a timer in the list named by `data-kp-focus-steps-timers`. `kp-focus-steps-change` carries `{ index, from, total, step }` so the page can remember where a person stopped, and `kp-focus-steps-done` fires on Done.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="kp-focus-steps" data-kp-focus-steps aria-label="Chicken curry"></div>
+<div class="kp-focus-steps" id="doc-focus" data-kp-focus-steps data-kp-focus-steps-timers="doc-focus-timers" style="block-size: 30rem" aria-label="Chicken curry"></div>
+<div class="kp-timers" id="doc-focus-timers" data-kp-timers aria-label="Timers of this recipe"></div>
+<p class="kp-text-muted" id="doc-focus-said" role="status">At the first step.</p>
+                            <script type="module">
+import { attachFocusSteps, setFocusSteps, goToStep } from '../../js/focus-steps.js';
+
+const root = document.getElementById('doc-focus');
+attachFocusSteps(root.parentElement);
+setFocusSteps(root, [
+    { text: 'Rinse the rice until the water runs clear, then leave it to drain.', ingredients: [{ amount: '300 g', name: 'basmati rice' }] },
+    { text: 'Cook the rice with the lid on. Do not lift the lid.', ingredients: [{ amount: '600 ml', name: 'water' }, { amount: '1 tsp', name: 'salt' }], timer: { seconds: 600, name: 'Rice' }, note: 'Do not walk away: it catches fast.' },
+    { text: 'Brown the chicken in the pan, then add the curry paste and stir for a minute.', ingredients: [{ amount: '600 g', name: 'chicken thighs' }, { amount: '2 tbsp', name: 'curry paste' }] },
+    { text: 'Pour in the coconut milk, simmer, and serve over the rice.', ingredients: [{ amount: '400 ml', name: 'coconut milk' }], timer: { seconds: 900, name: 'Curry' } },
+]);
+const said = document.getElementById('doc-focus-said');
+root.addEventListener('kp-focus-steps-change', (event) => { said.textContent = 'Now at step ' + (event.detail.index + 1) + ' of ' + event.detail.total + '.'; });
+root.addEventListener('kp-focus-steps-done', (event) => { said.textContent = 'Done: ' + event.detail.total + ' steps.'; goToStep(root, 0); });
+                            </script>
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-focus-steps&quot;</span> <span class="kp-code__keyword">data-kp-focus-steps</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Chicken curry&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-focus-steps&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-focus&quot;</span> <span class="kp-code__keyword">data-kp-focus-steps</span> <span class="kp-code__keyword">data-kp-focus-steps-timers</span><span class="kp-code__string">=&quot;doc-focus-timers&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;block-size: 30rem&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Chicken curry&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timers&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-focus-timers&quot;</span> <span class="kp-code__keyword">data-kp-timers</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Timers of this recipe&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-focus-said&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;At the first step.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachFocusSteps, setFocusSteps, goToStep } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/focus-steps'</span>;
+
+<span class="kp-code__keyword">const</span> root = document.getElementById(<span class="kp-code__string">'doc-focus'</span>);
+attachFocusSteps(root.parentElement);
+setFocusSteps(root, [
+    { text: <span class="kp-code__string">'Rinse the rice until the water runs clear, then leave it to drain.'</span>, ingredients: [{ amount: <span class="kp-code__string">'300 g'</span>, name: <span class="kp-code__string">'basmati rice'</span> }] },
+    { text: <span class="kp-code__string">'Cook the rice with the lid on. Do not lift the lid.'</span>, ingredients: [{ amount: <span class="kp-code__string">'600 ml'</span>, name: <span class="kp-code__string">'water'</span> }, { amount: <span class="kp-code__string">'1 tsp'</span>, name: <span class="kp-code__string">'salt'</span> }], timer: { seconds: <span class="kp-code__string">600</span>, name: <span class="kp-code__string">'Rice'</span> }, note: <span class="kp-code__string">'Do not walk away: it catches fast.'</span> },
+    { text: <span class="kp-code__string">'Brown the chicken in the pan, then add the curry paste and stir for a minute.'</span>, ingredients: [{ amount: <span class="kp-code__string">'600 g'</span>, name: <span class="kp-code__string">'chicken thighs'</span> }, { amount: <span class="kp-code__string">'2 tbsp'</span>, name: <span class="kp-code__string">'curry paste'</span> }] },
+    { text: <span class="kp-code__string">'Pour in the coconut milk, simmer, and serve over the rice.'</span>, ingredients: [{ amount: <span class="kp-code__string">'400 ml'</span>, name: <span class="kp-code__string">'coconut milk'</span> }], timer: { seconds: <span class="kp-code__string">900</span>, name: <span class="kp-code__string">'Curry'</span> } },
+]);
+<span class="kp-code__keyword">const</span> said = document.getElementById(<span class="kp-code__string">'doc-focus-said'</span>);
+root.addEventListener(<span class="kp-code__string">'kp-focus-steps-change'</span>, (event) =&gt; { said.textContent = <span class="kp-code__string">'Now at step '</span> + (event.detail.index + <span class="kp-code__string">1</span>) + <span class="kp-code__string">' of '</span> + event.detail.total + <span class="kp-code__string">'.'</span>; });
+root.addEventListener(<span class="kp-code__string">'kp-focus-steps-done'</span>, (event) =&gt; { said.textContent = <span class="kp-code__string">'Done: '</span> + event.detail.total + <span class="kp-code__string">' steps.'</span>; goToStep(root, <span class="kp-code__string">0</span>); });</code></pre>
                     </figure>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">Answering one question per screen</figcaption>
-                        <p class="kp-text-muted">`data-kp-focus-mode=&quot;answer&quot;` and steps that carry an `answer`: big answer buttons, “Same as yesterday” and “Same as usual” with their value in the label, and Not today. One tap on a choice moves on after 350 ms; a multi pick and a written line use Next.</p>
+                        <p class="kp-text-muted">`data-kp-focus-mode=&quot;answer&quot;` and steps that carry an `answer`: big answer buttons, “Same as yesterday: Ok” and “Same as usual: Good” with their value in the label, and Not today. One tap on a choice moves on after `data-kp-advance-ms` (350, the read-back of what you hit); a `multi` pick and a `text` box use Next. The page hears `kp-focus-steps-answer` for each answer (`{ index, id, value, source, same?, previous }`) and Done carries `{ total, answers, startedAt, finishedAt }`. The other options are `data-kp-same`, `data-kp-skip`, `data-kp-back`, `data-kp-pinned-first`, `data-kp-choice-layout` and `-height`, `data-kp-progress`, `data-kp-summary`, and `data-kp-resume` with `data-kp-remember` to pick up where a person stopped.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="kp-focus-steps" data-kp-focus-steps data-kp-focus-mode="answer" data-kp-remember="checkin" aria-label="Daily check-in"></div>
+<div class="kp-focus-steps" id="doc-focus-answer" data-kp-focus-steps data-kp-focus-mode="answer" data-kp-pinned-first='[{"value":"none","label":"Nothing to log"}]' data-kp-summary="on" style="block-size: 40rem" aria-label="Daily check-in"></div>
+<p class="kp-text-muted" id="doc-focus-answer-said" role="status">No answer yet.</p>
+                            <script type="module">
+import { attachFocusSteps, setFocusSteps } from '../../js/focus-steps.js';
+
+const root = document.getElementById('doc-focus-answer');
+attachFocusSteps(root.parentElement);
+setFocusSteps(root, [
+    { text: 'How was your energy?', answer: { id: 'energy', kind: 'choice', previous: 'ok', usual: 'good', choices: [{ value: 'low', label: 'Low' }, { value: 'ok', label: 'Ok' }, { value: 'good', label: 'Good' }] } },
+    { text: 'What did you eat today?', answer: { id: 'meals', kind: 'multi', choices: [{ value: 'breakfast', label: 'Breakfast' }, { value: 'lunch', label: 'Lunch' }, { value: 'dinner', label: 'Dinner' }] } },
+    { text: 'Anything else to note?', answer: { id: 'note', kind: 'text', placeholder: 'A few words' } },
+]);
+const said = document.getElementById('doc-focus-answer-said');
+root.addEventListener('kp-focus-steps-answer', (event) => {
+    said.textContent = event.detail.id + ': ' + [].concat(event.detail.value ?? 'skipped').join(', ') + ' (' + event.detail.source + ').';
+});
+                            </script>
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-focus-steps&quot;</span> <span class="kp-code__keyword">data-kp-focus-steps</span> <span class="kp-code__keyword">data-kp-focus-mode</span><span class="kp-code__string">=&quot;answer&quot;</span> <span class="kp-code__keyword">data-kp-remember</span><span class="kp-code__string">=&quot;checkin&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Daily check-in&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-focus-steps&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-focus-answer&quot;</span> <span class="kp-code__keyword">data-kp-focus-steps</span> <span class="kp-code__keyword">data-kp-focus-mode</span><span class="kp-code__string">=&quot;answer&quot;</span> <span class="kp-code__keyword">data-kp-pinned-first</span><span class="kp-code__string">='[{&quot;value&quot;:&quot;none&quot;,&quot;label&quot;:&quot;Nothing to log&quot;}]'</span> <span class="kp-code__keyword">data-kp-summary</span><span class="kp-code__string">=&quot;on&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;block-size: 40rem&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Daily check-in&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-focus-answer-said&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;No answer yet.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachFocusSteps, setFocusSteps } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/focus-steps'</span>;
+
+<span class="kp-code__keyword">const</span> root = document.getElementById(<span class="kp-code__string">'doc-focus-answer'</span>);
+attachFocusSteps(root.parentElement);
+setFocusSteps(root, [
+    { text: <span class="kp-code__string">'How was your energy?'</span>, answer: { id: <span class="kp-code__string">'energy'</span>, kind: <span class="kp-code__string">'choice'</span>, previous: <span class="kp-code__string">'ok'</span>, usual: <span class="kp-code__string">'good'</span>, choices: [{ value: <span class="kp-code__string">'low'</span>, label: <span class="kp-code__string">'Low'</span> }, { value: <span class="kp-code__string">'ok'</span>, label: <span class="kp-code__string">'Ok'</span> }, { value: <span class="kp-code__string">'good'</span>, label: <span class="kp-code__string">'Good'</span> }] } },
+    { text: <span class="kp-code__string">'What did you eat today?'</span>, answer: { id: <span class="kp-code__string">'meals'</span>, kind: <span class="kp-code__string">'multi'</span>, choices: [{ value: <span class="kp-code__string">'breakfast'</span>, label: <span class="kp-code__string">'Breakfast'</span> }, { value: <span class="kp-code__string">'lunch'</span>, label: <span class="kp-code__string">'Lunch'</span> }, { value: <span class="kp-code__string">'dinner'</span>, label: <span class="kp-code__string">'Dinner'</span> }] } },
+    { text: <span class="kp-code__string">'Anything else to note?'</span>, answer: { id: <span class="kp-code__string">'note'</span>, kind: <span class="kp-code__string">'text'</span>, placeholder: <span class="kp-code__string">'A few words'</span> } },
+]);
+<span class="kp-code__keyword">const</span> said = document.getElementById(<span class="kp-code__string">'doc-focus-answer-said'</span>);
+root.addEventListener(<span class="kp-code__string">'kp-focus-steps-answer'</span>, (event) =&gt; {
+    said.textContent = event.detail.id + <span class="kp-code__string">': '</span> + [].concat(event.detail.value ?? <span class="kp-code__string">'skipped'</span>).join(<span class="kp-code__string">', '</span>) + <span class="kp-code__string">' ('</span> + event.detail.source + <span class="kp-code__string">').'</span>;
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Loading, no steps and a failed recipe</figcaption>
+                        <p class="kp-text-muted">`setFocusStepsState(root, &quot;loading&quot; | &quot;error&quot; | &quot;save-error&quot; | &quot;ready&quot;, message)`: loading lays the busy card over the body, error says the message where the step was, `save-error` keeps the answers and says “Could not save your answers” with Try again (`kp-focus-steps-save-retry`; `kp-focus-steps-retry` is the failed plate’s button). No steps says `data-kp-focus-steps-empty`, else the dictionary’s sentence.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-focus-steps" id="doc-focus-loading" data-kp-focus-steps style="block-size: 14rem" aria-label="Loading recipe"></div>
+<div class="kp-focus-steps" id="doc-focus-empty" data-kp-focus-steps data-kp-focus-steps-empty="This recipe has no steps yet." style="block-size: 14rem" aria-label="Recipe without steps"></div>
+<div class="kp-focus-steps" id="doc-focus-failed" data-kp-focus-steps style="block-size: 14rem" aria-label="Failed recipe"></div>
+                            <script type="module">
+import { attachFocusSteps, setFocusSteps, setFocusStepsState } from '../../js/focus-steps.js';
+
+const loading = document.getElementById('doc-focus-loading');
+const empty = document.getElementById('doc-focus-empty');
+const failed = document.getElementById('doc-focus-failed');
+attachFocusSteps(loading.parentElement);
+setFocusSteps(loading, []);
+setFocusStepsState(loading, 'loading');
+setFocusSteps(empty, []);
+setFocusSteps(failed, []);
+setFocusStepsState(failed, 'error', 'The recipe could not be read.');
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-focus-steps&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-focus-loading&quot;</span> <span class="kp-code__keyword">data-kp-focus-steps</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;block-size: 14rem&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Loading recipe&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-focus-steps&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-focus-empty&quot;</span> <span class="kp-code__keyword">data-kp-focus-steps</span> <span class="kp-code__keyword">data-kp-focus-steps-empty</span><span class="kp-code__string">=&quot;This recipe has no steps yet.&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;block-size: 14rem&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Recipe without steps&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-focus-steps&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-focus-failed&quot;</span> <span class="kp-code__keyword">data-kp-focus-steps</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;block-size: 14rem&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Failed recipe&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachFocusSteps, setFocusSteps, setFocusStepsState } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/focus-steps'</span>;
+
+<span class="kp-code__keyword">const</span> loading = document.getElementById(<span class="kp-code__string">'doc-focus-loading'</span>);
+<span class="kp-code__keyword">const</span> empty = document.getElementById(<span class="kp-code__string">'doc-focus-empty'</span>);
+<span class="kp-code__keyword">const</span> failed = document.getElementById(<span class="kp-code__string">'doc-focus-failed'</span>);
+attachFocusSteps(loading.parentElement);
+setFocusSteps(loading, []);
+setFocusStepsState(loading, <span class="kp-code__string">'loading'</span>);
+setFocusSteps(empty, []);
+setFocusSteps(failed, []);
+setFocusStepsState(failed, <span class="kp-code__string">'error'</span>, <span class="kp-code__string">'The recipe could not be read.'</span>);</code></pre>
                     </figure>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">A check-in that runs: choice, several, a written line, and the plates</figcaption>

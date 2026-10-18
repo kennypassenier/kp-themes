@@ -259,15 +259,73 @@
                     <h2 class="kp-fw-semibold">Live example</h2>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">Portions, from 1 to 12</figcaption>
-                        <p class="kp-text-muted">The buttons are the theme’s own; the number and the unit share one field box; the minus is dimmed at the bound and keeps its place.</p>
+                        <p class="kp-text-muted">The module writes the two buttons, the field box and the unit around the `input`; the unit follows the number (“1 portion”, “2 portions”). The number is a spin button: type 2,5 or 2.5, use the arrows, PageUp and PageDown (ten steps), Home and End. A press at a bound does nothing and keeps the focus; a button held down repeats, slowly first. `kp-quantity-change` tells `{ value, previous, source }`; `getQuantity` and `setQuantity` read and write it from the page.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="kp-quantity" data-kp-quantity data-kp-quantity-min="1" data-kp-quantity-max="12" data-kp-quantity-unit="portions" data-kp-quantity-unit-one="portion" data-kp-quantity-label="Portions">
+<div class="kp-quantity" id="doc-quantity" data-kp-quantity data-kp-quantity-min="1" data-kp-quantity-max="12" data-kp-quantity-unit="portions" data-kp-quantity-unit-one="portion" data-kp-quantity-label="Portions">
     <input class="kp-quantity__input" value="2" />
 </div>
+<p class="kp-text-muted" id="doc-quantity-said" role="status">2 portions.</p>
+<button type="button" class="kp-button kp-button--sm" id="doc-quantity-set">Set 8 from the page</button>
+                            <script type="module">
+import { attachQuantities, getQuantity, setQuantity } from '../../js/quantity.js';
+
+const quantity = document.getElementById('doc-quantity');
+attachQuantities(quantity.parentElement);
+const said = document.getElementById('doc-quantity-said');
+quantity.addEventListener('kp-quantity-change', (event) => {
+    said.textContent = event.detail.value + ' (was ' + event.detail.previous + ', by ' + event.detail.source + ').';
+});
+document.getElementById('doc-quantity-set').addEventListener('click', () => {
+    setQuantity(quantity, 8);
+    said.textContent = 'Set from the page: ' + getQuantity(quantity) + '.';
+});
+                            </script>
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quantity&quot;</span> <span class="kp-code__keyword">data-kp-quantity</span> <span class="kp-code__keyword">data-kp-quantity-min</span><span class="kp-code__string">=&quot;1&quot;</span> <span class="kp-code__keyword">data-kp-quantity-max</span><span class="kp-code__string">=&quot;12&quot;</span> <span class="kp-code__keyword">data-kp-quantity-unit</span><span class="kp-code__string">=&quot;portions&quot;</span> <span class="kp-code__keyword">data-kp-quantity-unit-one</span><span class="kp-code__string">=&quot;portion&quot;</span> <span class="kp-code__keyword">data-kp-quantity-label</span><span class="kp-code__string">=&quot;Portions&quot;</span>&gt;
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quantity&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-quantity&quot;</span> <span class="kp-code__keyword">data-kp-quantity</span> <span class="kp-code__keyword">data-kp-quantity-min</span><span class="kp-code__string">=&quot;1&quot;</span> <span class="kp-code__keyword">data-kp-quantity-max</span><span class="kp-code__string">=&quot;12&quot;</span> <span class="kp-code__keyword">data-kp-quantity-unit</span><span class="kp-code__string">=&quot;portions&quot;</span> <span class="kp-code__keyword">data-kp-quantity-unit-one</span><span class="kp-code__string">=&quot;portion&quot;</span> <span class="kp-code__keyword">data-kp-quantity-label</span><span class="kp-code__string">=&quot;Portions&quot;</span>&gt;
     &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quantity__input&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;2&quot;</span> /&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-quantity-said&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;2 portions.&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-quantity-set&quot;</span>&gt;Set 8 from the page&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachQuantities, getQuantity, setQuantity } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/quantity'</span>;
+
+<span class="kp-code__keyword">const</span> quantity = document.getElementById(<span class="kp-code__string">'doc-quantity'</span>);
+attachQuantities(quantity.parentElement);
+<span class="kp-code__keyword">const</span> said = document.getElementById(<span class="kp-code__string">'doc-quantity-said'</span>);
+quantity.addEventListener(<span class="kp-code__string">'kp-quantity-change'</span>, (event) =&gt; {
+    said.textContent = event.detail.value + <span class="kp-code__string">' (was '</span> + event.detail.previous + <span class="kp-code__string">', by '</span> + event.detail.source + <span class="kp-code__string">').'</span>;
+});
+document.getElementById(<span class="kp-code__string">'doc-quantity-set'</span>).addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; {
+    setQuantity(quantity, <span class="kp-code__string">8</span>);
+    said.textContent = <span class="kp-code__string">'Set from the page: '</span> + getQuantity(quantity) + <span class="kp-code__string">'.'</span>;
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Steps of 0.5, larger, and disabled</figcaption>
+                        <p class="kp-text-muted">The step’s decimals are the number’s decimals, so `data-kp-quantity-step=&quot;0.5&quot;` shows one; `data-kp-quantity-locale` sets the decimal mark (the nearest `lang` otherwise). `.kp-quantity--lg` makes the buttons and the number larger, for a screen at arm’s length, and `data-kp-quantity-disabled` dims the whole control and takes it out of reach. Text that is not a number marks the field invalid while it stands and the last value is put back when you leave it.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-quantity kp-quantity--lg" id="doc-quantity-lg" data-kp-quantity data-kp-quantity-min="0" data-kp-quantity-max="5" data-kp-quantity-step="0.5" data-kp-quantity-unit="kg" data-kp-quantity-locale="nl-BE" data-kp-quantity-label="Rice">
+    <input class="kp-quantity__input" value="1,5" />
+</div>
+<div class="kp-quantity" data-kp-quantity data-kp-quantity-min="1" data-kp-quantity-max="12" data-kp-quantity-unit="portions" data-kp-quantity-unit-one="portion" data-kp-quantity-label="Portions, fixed" data-kp-quantity-disabled>
+    <input class="kp-quantity__input" value="4" />
+</div>
+                            <script type="module">
+import { attachQuantities } from '../../js/quantity.js';
+
+attachQuantities(document.getElementById('doc-quantity-lg').parentElement);
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quantity kp-quantity--lg&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-quantity-lg&quot;</span> <span class="kp-code__keyword">data-kp-quantity</span> <span class="kp-code__keyword">data-kp-quantity-min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">data-kp-quantity-max</span><span class="kp-code__string">=&quot;5&quot;</span> <span class="kp-code__keyword">data-kp-quantity-step</span><span class="kp-code__string">=&quot;0.5&quot;</span> <span class="kp-code__keyword">data-kp-quantity-unit</span><span class="kp-code__string">=&quot;kg&quot;</span> <span class="kp-code__keyword">data-kp-quantity-locale</span><span class="kp-code__string">=&quot;nl-BE&quot;</span> <span class="kp-code__keyword">data-kp-quantity-label</span><span class="kp-code__string">=&quot;Rice&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quantity__input&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;1,5&quot;</span> /&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quantity&quot;</span> <span class="kp-code__keyword">data-kp-quantity</span> <span class="kp-code__keyword">data-kp-quantity-min</span><span class="kp-code__string">=&quot;1&quot;</span> <span class="kp-code__keyword">data-kp-quantity-max</span><span class="kp-code__string">=&quot;12&quot;</span> <span class="kp-code__keyword">data-kp-quantity-unit</span><span class="kp-code__string">=&quot;portions&quot;</span> <span class="kp-code__keyword">data-kp-quantity-unit-one</span><span class="kp-code__string">=&quot;portion&quot;</span> <span class="kp-code__keyword">data-kp-quantity-label</span><span class="kp-code__string">=&quot;Portions, fixed&quot;</span> <span class="kp-code__keyword">data-kp-quantity-disabled</span>&gt;
+    &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quantity__input&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;4&quot;</span> /&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachQuantities } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/quantity'</span>;
+
+attachQuantities(document.getElementById(<span class="kp-code__string">'doc-quantity-lg'</span>).parentElement);</code></pre>
                     </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">

@@ -258,12 +258,175 @@
                 <section class="kp-section" data-sc-section="example" id="example">
                     <h2 class="kp-fw-semibold">Live example</h2>
                     <figure class="sc-example">
-                        <figcaption class="kp-fw-semibold">A packing list</figcaption>
-                        <p class="kp-text-muted">The page says who is looking and answers each press; the module draws the rows from the items, each with its claim.</p>
+                        <figcaption class="kp-fw-semibold">A packing list: who brings what</figcaption>
+                        <p class="kp-text-muted">`data-kp-checklist-claim` turns a checklist into a claim list. The page says who is looking (`setClaimViewer`; the module reads no session) and gives the items with their `claim`; each row shows the people who bring it, their mark and name, or the loud gap “Nobody yet” (a glyph and words, never colour alone), and one button: “I’ll bring it”, or while you are one of them “I’m bringing it” (pressed; a press lets go, behind Undo). The page answers the cancelable `kp-claim-change` with `detail.settle(promise)`: the button shows the spinner and the row waits. Here the pretend server takes 700 ms, and the Tent was taken by Tom a moment before you: the row goes back to what the server says, its edge flashes and a polite line says so. `setClaim(list, id, claim)` is a push update (try Anna takes the Stove).</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="kp-checklist" data-kp-checklist data-kp-checklist-claim data-kp-claim-viewer="kenny" data-kp-claim-viewer-name="Kenny" aria-label="Packing list"></div>
+<div class="kp-checklist" id="doc-claim" data-kp-checklist data-kp-checklist-claim data-kp-claim-viewer="kenny" data-kp-claim-viewer-name="Kenny" aria-label="Packing list"></div>
+<p class="kp-text-muted" id="doc-claim-said" role="status">Nobody has pressed anything yet.</p>
+<button type="button" class="kp-button kp-button--sm" id="doc-claim-push">Anna takes the stove</button>
+                            <script type="module">
+import { attachClaims, setClaim, setClaimViewer } from '../../js/claim.js';
+import { attachChecklists, setChecklistItems } from '../../js/checklist.js';
+
+const KENNY = { id: 'kenny', name: 'Kenny' };
+const ANNA = { id: 'anna', name: 'Anna' };
+const TOM = { id: 'tom', name: 'Tom' };
+const list = document.getElementById('doc-claim');
+attachChecklists(list.parentElement);
+attachClaims(list.parentElement);
+setClaimViewer(list, KENNY);
+setChecklistItems(list, [
+    { id: 'tent', label: 'Four-person tent', detail: '1', group: 'Sleeping', claim: { by: [] } },
+    { id: 'mats', label: 'Sleeping mats', detail: '4', group: 'Sleeping', claim: { by: [ANNA] } },
+    { id: 'stove', label: 'Gas stove', detail: '1', group: 'Kitchen', claim: { by: [] } },
+    { id: 'pans', label: 'Pans and plates', group: 'Kitchen', claim: { by: [TOM, ANNA] } },
+    { id: 'aid', label: 'First-aid kit', detail: '1', group: 'Safety', claim: { by: [], locked: 'Already packed in the van' } },
+]);
+const said = document.getElementById('doc-claim-said');
+list.addEventListener('kp-claim-change', (event) => {
+    const detail = event.detail;
+    said.textContent = detail.action + ' ' + detail.id + ': ' + (detail.by.map((person) => person.name).join(', ') || 'nobody') + '.';
+    detail.settle(new Promise((resolve) => {
+        setTimeout(() => resolve(detail.action === 'join' && detail.id === 'tent' ? { refused: true, by: [TOM] } : true), 700);
+    }));
+});
+document.getElementById('doc-claim-push').addEventListener('click', () => {
+    setClaim(list, 'stove', { by: [ANNA] });
+});
+                            </script>
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-checklist&quot;</span> <span class="kp-code__keyword">data-kp-checklist</span> <span class="kp-code__keyword">data-kp-checklist-claim</span> <span class="kp-code__keyword">data-kp-claim-viewer</span><span class="kp-code__string">=&quot;kenny&quot;</span> <span class="kp-code__keyword">data-kp-claim-viewer-name</span><span class="kp-code__string">=&quot;Kenny&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Packing list&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-checklist&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-claim&quot;</span> <span class="kp-code__keyword">data-kp-checklist</span> <span class="kp-code__keyword">data-kp-checklist-claim</span> <span class="kp-code__keyword">data-kp-claim-viewer</span><span class="kp-code__string">=&quot;kenny&quot;</span> <span class="kp-code__keyword">data-kp-claim-viewer-name</span><span class="kp-code__string">=&quot;Kenny&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Packing list&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-claim-said&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;Nobody has pressed anything yet.&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-claim-push&quot;</span>&gt;Anna takes the stove&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachClaims, setClaim, setClaimViewer } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/claim'</span>;
+<span class="kp-code__keyword">import</span> { attachChecklists, setChecklistItems } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/checklist'</span>;
+
+<span class="kp-code__keyword">const</span> KENNY = { id: <span class="kp-code__string">'kenny'</span>, name: <span class="kp-code__string">'Kenny'</span> };
+<span class="kp-code__keyword">const</span> ANNA = { id: <span class="kp-code__string">'anna'</span>, name: <span class="kp-code__string">'Anna'</span> };
+<span class="kp-code__keyword">const</span> TOM = { id: <span class="kp-code__string">'tom'</span>, name: <span class="kp-code__string">'Tom'</span> };
+<span class="kp-code__keyword">const</span> list = document.getElementById(<span class="kp-code__string">'doc-claim'</span>);
+attachChecklists(list.parentElement);
+attachClaims(list.parentElement);
+setClaimViewer(list, KENNY);
+setChecklistItems(list, [
+    { id: <span class="kp-code__string">'tent'</span>, label: <span class="kp-code__string">'Four-person tent'</span>, detail: <span class="kp-code__string">'1'</span>, group: <span class="kp-code__string">'Sleeping'</span>, claim: { by: [] } },
+    { id: <span class="kp-code__string">'mats'</span>, label: <span class="kp-code__string">'Sleeping mats'</span>, detail: <span class="kp-code__string">'4'</span>, group: <span class="kp-code__string">'Sleeping'</span>, claim: { by: [ANNA] } },
+    { id: <span class="kp-code__string">'stove'</span>, label: <span class="kp-code__string">'Gas stove'</span>, detail: <span class="kp-code__string">'1'</span>, group: <span class="kp-code__string">'Kitchen'</span>, claim: { by: [] } },
+    { id: <span class="kp-code__string">'pans'</span>, label: <span class="kp-code__string">'Pans and plates'</span>, group: <span class="kp-code__string">'Kitchen'</span>, claim: { by: [TOM, ANNA] } },
+    { id: <span class="kp-code__string">'aid'</span>, label: <span class="kp-code__string">'First-aid kit'</span>, detail: <span class="kp-code__string">'1'</span>, group: <span class="kp-code__string">'Safety'</span>, claim: { by: [], locked: <span class="kp-code__string">'Already packed in the van'</span> } },
+]);
+<span class="kp-code__keyword">const</span> said = document.getElementById(<span class="kp-code__string">'doc-claim-said'</span>);
+list.addEventListener(<span class="kp-code__string">'kp-claim-change'</span>, (event) =&gt; {
+    <span class="kp-code__keyword">const</span> detail = event.detail;
+    said.textContent = detail.action + <span class="kp-code__string">' '</span> + detail.id + <span class="kp-code__string">': '</span> + (detail.by.map((person) =&gt; person.name).join(<span class="kp-code__string">', '</span>) || <span class="kp-code__string">'nobody'</span>) + <span class="kp-code__string">'.'</span>;
+    detail.settle(<span class="kp-code__keyword">new</span> Promise((resolve) =&gt; {
+        setTimeout(() =&gt; resolve(detail.action === <span class="kp-code__string">'join'</span> &amp;&amp; detail.id === <span class="kp-code__string">'tent'</span> ? { refused: <span class="kp-code__keyword">true</span>, by: [TOM] } : <span class="kp-code__keyword">true</span>), <span class="kp-code__string">700</span>);
+    }));
+});
+document.getElementById(<span class="kp-code__string">'doc-claim-push'</span>).addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; {
+    setClaim(list, <span class="kp-code__string">'stove'</span>, { by: [ANNA] });
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Choosing who: assign mode, filters and the bar</figcaption>
+                        <p class="kp-text-muted">`data-kp-claim-mode=&quot;assign&quot;` puts a person menu on each row in place of the button (`setClaimPeople` gives the people); `data-kp-claim-max` caps how many may bring one item, here two. `data-kp-claim-person` is `both`, `name` or `idmark`; `data-kp-claim-count` puts the count in the `bar`, per `group`, `both` or `none`; `data-kp-claim-gap=&quot;quiet&quot;` draws a gap without the loud edge and `data-kp-claim-gap-sort=&quot;top&quot;` sorts the rows nobody takes first in their group. `data-kp-claim-take-all` adds “Take every open item” behind Undo and `data-kp-claim-copy` “Copy the open list”. The bar’s chips (all, open, mine) are a `.kp-segmented--chips`, and `data-kp-claim-filter=&quot;false&quot;` hides them.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-checklist" id="doc-claim-assign" data-kp-checklist data-kp-checklist-claim data-kp-claim-mode="assign" data-kp-claim-max="2" data-kp-claim-gap="quiet" data-kp-claim-gap-sort="top" data-kp-claim-person="name" data-kp-claim-count="bar" data-kp-claim-take-all data-kp-claim-copy aria-label="Chores for the weekend"></div>
+                            <script type="module">
+import { attachClaims, setClaimPeople, setClaimViewer } from '../../js/claim.js';
+import { attachChecklists, setChecklistItems } from '../../js/checklist.js';
+
+const ANNA = { id: 'anna', name: 'Anna' };
+const TOM = { id: 'tom', name: 'Tom' };
+const BO = { id: 'bo', name: 'Bo' };
+const list = document.getElementById('doc-claim-assign');
+attachChecklists(list.parentElement);
+attachClaims(list.parentElement);
+setClaimPeople(list, [ANNA, TOM, BO, { id: 'kenny', name: 'Kenny' }]);
+setClaimViewer(list, { id: 'kenny', name: 'Kenny' });
+setChecklistItems(list, [
+    { id: 'cook', label: 'Cook on Friday', group: 'Chores', claim: { by: [ANNA] } },
+    { id: 'dishes', label: 'Do the dishes', group: 'Chores', claim: { by: [] } },
+    { id: 'fire', label: 'Keep the fire going', group: 'Chores', claim: { by: [TOM, BO] } },
+    { id: 'drive', label: 'Drive home on Sunday', group: 'Chores', claim: { by: [] } },
+]);
+list.addEventListener('kp-claim-change', (event) => event.detail.settle(Promise.resolve(true)));
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-checklist&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-claim-assign&quot;</span> <span class="kp-code__keyword">data-kp-checklist</span> <span class="kp-code__keyword">data-kp-checklist-claim</span> <span class="kp-code__keyword">data-kp-claim-mode</span><span class="kp-code__string">=&quot;assign&quot;</span> <span class="kp-code__keyword">data-kp-claim-max</span><span class="kp-code__string">=&quot;2&quot;</span> <span class="kp-code__keyword">data-kp-claim-gap</span><span class="kp-code__string">=&quot;quiet&quot;</span> <span class="kp-code__keyword">data-kp-claim-gap-sort</span><span class="kp-code__string">=&quot;top&quot;</span> <span class="kp-code__keyword">data-kp-claim-person</span><span class="kp-code__string">=&quot;name&quot;</span> <span class="kp-code__keyword">data-kp-claim-count</span><span class="kp-code__string">=&quot;bar&quot;</span> <span class="kp-code__keyword">data-kp-claim-take-all</span> <span class="kp-code__keyword">data-kp-claim-copy</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Chores for the weekend&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachClaims, setClaimPeople, setClaimViewer } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/claim'</span>;
+<span class="kp-code__keyword">import</span> { attachChecklists, setChecklistItems } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/checklist'</span>;
+
+<span class="kp-code__keyword">const</span> ANNA = { id: <span class="kp-code__string">'anna'</span>, name: <span class="kp-code__string">'Anna'</span> };
+<span class="kp-code__keyword">const</span> TOM = { id: <span class="kp-code__string">'tom'</span>, name: <span class="kp-code__string">'Tom'</span> };
+<span class="kp-code__keyword">const</span> BO = { id: <span class="kp-code__string">'bo'</span>, name: <span class="kp-code__string">'Bo'</span> };
+<span class="kp-code__keyword">const</span> list = document.getElementById(<span class="kp-code__string">'doc-claim-assign'</span>);
+attachChecklists(list.parentElement);
+attachClaims(list.parentElement);
+setClaimPeople(list, [ANNA, TOM, BO, { id: <span class="kp-code__string">'kenny'</span>, name: <span class="kp-code__string">'Kenny'</span> }]);
+setClaimViewer(list, { id: <span class="kp-code__string">'kenny'</span>, name: <span class="kp-code__string">'Kenny'</span> });
+setChecklistItems(list, [
+    { id: <span class="kp-code__string">'cook'</span>, label: <span class="kp-code__string">'Cook on Friday'</span>, group: <span class="kp-code__string">'Chores'</span>, claim: { by: [ANNA] } },
+    { id: <span class="kp-code__string">'dishes'</span>, label: <span class="kp-code__string">'Do the dishes'</span>, group: <span class="kp-code__string">'Chores'</span>, claim: { by: [] } },
+    { id: <span class="kp-code__string">'fire'</span>, label: <span class="kp-code__string">'Keep the fire going'</span>, group: <span class="kp-code__string">'Chores'</span>, claim: { by: [TOM, BO] } },
+    { id: <span class="kp-code__string">'drive'</span>, label: <span class="kp-code__string">'Drive home on Sunday'</span>, group: <span class="kp-code__string">'Chores'</span>, claim: { by: [] } },
+]);
+list.addEventListener(<span class="kp-code__string">'kp-claim-change'</span>, (event) =&gt; event.detail.settle(Promise.resolve(<span class="kp-code__keyword">true</span>)));</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Loading and failed lists, with a Retry</figcaption>
+                        <p class="kp-text-muted">A failed claim list says why centred in its box with a normal-size Retry (not a strip across the box); Retry fires `kp-claim-retry`, which the page answers by loading again. `data-kp-claim-disabled` with `data-kp-claim-disabled-reason` makes every press say why it does nothing; `data-kp-remember=&quot;claim-filter&quot;` keeps the chip across visits.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-checklist" id="doc-claim-failed" data-kp-checklist data-kp-checklist-claim data-kp-claim-viewer="kenny" data-kp-claim-viewer-name="Kenny" aria-label="Packing list, failed"></div>
+                            <script type="module">
+import { attachClaims } from '../../js/claim.js';
+import { attachChecklists, setChecklistItems, setChecklistState } from '../../js/checklist.js';
+
+const list = document.getElementById('doc-claim-failed');
+attachChecklists(list.parentElement);
+attachClaims(list.parentElement);
+const fail = () => {
+    setChecklistItems(list, []);
+    setChecklistState(list, 'error', 'The packing list could not be read. Check the connection and try again.');
+};
+fail();
+list.addEventListener('kp-claim-retry', () => {
+    setChecklistState(list, 'loading');
+    setTimeout(() => {
+        setChecklistItems(list, [
+            { id: 'tent', label: 'Four-person tent', group: 'Sleeping', claim: { by: [] } },
+            { id: 'stove', label: 'Gas stove', group: 'Kitchen', claim: { by: [{ id: 'anna', name: 'Anna' }] } },
+        ]);
+        setChecklistState(list, 'ready');
+    }, 1200);
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-checklist&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-claim-failed&quot;</span> <span class="kp-code__keyword">data-kp-checklist</span> <span class="kp-code__keyword">data-kp-checklist-claim</span> <span class="kp-code__keyword">data-kp-claim-viewer</span><span class="kp-code__string">=&quot;kenny&quot;</span> <span class="kp-code__keyword">data-kp-claim-viewer-name</span><span class="kp-code__string">=&quot;Kenny&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Packing list, failed&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachClaims } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/claim'</span>;
+<span class="kp-code__keyword">import</span> { attachChecklists, setChecklistItems, setChecklistState } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/checklist'</span>;
+
+<span class="kp-code__keyword">const</span> list = document.getElementById(<span class="kp-code__string">'doc-claim-failed'</span>);
+attachChecklists(list.parentElement);
+attachClaims(list.parentElement);
+<span class="kp-code__keyword">const</span> fail = () =&gt; {
+    setChecklistItems(list, []);
+    setChecklistState(list, <span class="kp-code__string">'error'</span>, <span class="kp-code__string">'The packing list could not be read. Check the connection and try again.'</span>);
+};
+fail();
+list.addEventListener(<span class="kp-code__string">'kp-claim-retry'</span>, () =&gt; {
+    setChecklistState(list, <span class="kp-code__string">'loading'</span>);
+    setTimeout(() =&gt; {
+        setChecklistItems(list, [
+            { id: <span class="kp-code__string">'tent'</span>, label: <span class="kp-code__string">'Four-person tent'</span>, group: <span class="kp-code__string">'Sleeping'</span>, claim: { by: [] } },
+            { id: <span class="kp-code__string">'stove'</span>, label: <span class="kp-code__string">'Gas stove'</span>, group: <span class="kp-code__string">'Kitchen'</span>, claim: { by: [{ id: <span class="kp-code__string">'anna'</span>, name: <span class="kp-code__string">'Anna'</span> }] } },
+        ]);
+        setChecklistState(list, <span class="kp-code__string">'ready'</span>);
+    }, <span class="kp-code__string">1200</span>);
+});</code></pre>
                     </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
@@ -335,6 +498,14 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-claim-filter</code></td><td>`all` (default), `gaps` or `mine`: the chip that is on; `false` hides the chips. `claimFilter` and `setClaimFilter` read and set it; `kp-claim-filter` reports a change.</td></tr>
+                            <tr><td><code>data-kp-claim-undo-ms</code></td><td>How long Undo is offered after letting go (6000; 0 for none).</td></tr>
+                            <tr><td><code>data-kp-claim-self-label</code></td><td>The words of the take face of the button, in place of the dictionary’s.</td></tr>
+                            <tr><td><code>data-kp-claim-keys</code></td><td>`false` turns the keys off (`c` on a focused row takes or lets go, Shift C goes to the gaps).</td></tr>
+                            <tr><td><code>data-kp-claim-copy</code></td><td>Present: “Copy the open list” in the bar.</td></tr>
+                            <tr><td><code>data-kp-claim-disabled</code></td><td>Present: nobody can press; `data-kp-claim-disabled-reason` says why under the button.</td></tr>
+                            <tr><td><code>data-kp-claim-viewer</code></td><td>Who is looking, when the page writes it in the markup (`data-kp-claim-viewer-name` is the name); else `setClaimViewer`.</td></tr>
+                            <tr><td><code>setClaim / setClaimPeople</code></td><td>`setClaim(list, id, claim)` is a push update, another person took it while the page was open; `setClaimPeople(list, people)` gives the menu of assign mode its people.</td></tr>
                             <tr><td><code>data-kp-claim-mode</code></td><td>`claim` (default, a button on each row) or `assign` (a person menu).</td></tr>
                             <tr><td><code>data-kp-claim-gap</code></td><td>`loud` (default) or `quiet`.</td></tr>
                             <tr><td><code>data-kp-claim-gap-sort</code></td><td>`keep` (default) or `top`.</td></tr>

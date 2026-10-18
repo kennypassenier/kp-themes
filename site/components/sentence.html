@@ -258,22 +258,92 @@
                 <section class="kp-section" data-sc-section="example" id="example">
                     <h2 class="kp-fw-semibold">Live example</h2>
                     <figure class="sc-example">
-                        <figcaption class="kp-fw-semibold">A schedule</figcaption>
-                        <p class="kp-text-muted">Each control carries its own `aria-label`; the words round it are not its label.</p>
+                        <figcaption class="kp-fw-semibold">A schedule that reads as a sentence</figcaption>
+                        <p class="kp-text-muted">Each control carries its own `aria-label`; the words round it are not its label. A phrase with `data-kp-show-when=&quot;field=value&quot;` shows only then: here the weekday picker is only there when it runs weekly, and a hidden phrase is `hidden` and `inert`, its controls disabled, so it is neither tabbed to nor submitted. A field that is a `data-kp-block` always takes a line of its own. A status region says the whole sentence in words after a change; `sentenceSummary(el)` reads the same text, and `kp-sentence-change` fires with it. Enter in the last field submits the form.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<fieldset class="kp-sentence" data-kp-sentence>
+<form class="kp-sentence" id="doc-sentence" data-kp-sentence>
     <p class="kp-sentence__text">
         Run <span class="kp-sentence__field"><select name="job" aria-label="What to run"><option>backup</option><option>cleanup</option></select></span>
+        on <span class="kp-sentence__field"><select name="stack" aria-label="On which stack"><option>nextcloud</option><option>media</option></select></span>
+        <span class="kp-sentence__field"><select name="how" aria-label="How often"><option value="once">once</option><option value="weekly" selected>every week</option></select></span><span class="kp-sentence__when" data-kp-show-when="how=weekly"> on <span class="kp-sentence__field" data-kp-block><span class="kp-weekdays" data-kp-weekdays data-kp-value="1" aria-label="On which days"></span></span></span>
         at <span class="kp-sentence__field"><input name="at" size="5" value="03:00" aria-label="At (HH:MM)" /></span>.
     </p>
-</fieldset>
+    <p class="kp-field__error" id="doc-sentence-why" hidden></p>
+</form>
+<p class="kp-text-muted" id="doc-sentence-said" role="status"></p>
+                            <script type="module">
+import { attachSentences, sentenceSummary, setSentenceInvalid } from '../../js/sentence.js';
+import { attachWeekdays } from '../../js/weekdays.js';
+
+const form = document.getElementById('doc-sentence');
+attachWeekdays(form);
+attachSentences(form.parentElement);
+const said = document.getElementById('doc-sentence-said');
+said.textContent = sentenceSummary(form);
+form.addEventListener('kp-sentence-change', (event) => {
+    said.textContent = event.detail.summary;
+    const at = form.elements.at.value;
+    if (/^([01]\d|2[0-3]):[0-5]\d$/.test(at)) setSentenceInvalid(form, 'at', '');
+    else setSentenceInvalid(form, 'at', 'Write the time as HH:MM, for example 03:00.');
+});
+form.addEventListener('submit', (event) => event.preventDefault());
+                            </script>
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">fieldset</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sentence&quot;</span> <span class="kp-code__keyword">data-kp-sentence</span>&gt;
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">form</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sentence&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-sentence&quot;</span> <span class="kp-code__keyword">data-kp-sentence</span>&gt;
     &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sentence__text&quot;</span>&gt;
         Run &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sentence__field&quot;</span>&gt;&lt;<span class="kp-code__keyword">select</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;job&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;What to run&quot;</span>&gt;&lt;<span class="kp-code__keyword">option</span>&gt;backup&lt;/<span class="kp-code__keyword">option</span>&gt;&lt;<span class="kp-code__keyword">option</span>&gt;cleanup&lt;/<span class="kp-code__keyword">option</span>&gt;&lt;/<span class="kp-code__keyword">select</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        on &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sentence__field&quot;</span>&gt;&lt;<span class="kp-code__keyword">select</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;stack&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;On which stack&quot;</span>&gt;&lt;<span class="kp-code__keyword">option</span>&gt;nextcloud&lt;/<span class="kp-code__keyword">option</span>&gt;&lt;<span class="kp-code__keyword">option</span>&gt;media&lt;/<span class="kp-code__keyword">option</span>&gt;&lt;/<span class="kp-code__keyword">select</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sentence__field&quot;</span>&gt;&lt;<span class="kp-code__keyword">select</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;how&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;How often&quot;</span>&gt;&lt;<span class="kp-code__keyword">option</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;once&quot;</span>&gt;once&lt;/<span class="kp-code__keyword">option</span>&gt;&lt;<span class="kp-code__keyword">option</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;weekly&quot;</span> <span class="kp-code__keyword">selected</span>&gt;every week&lt;/<span class="kp-code__keyword">option</span>&gt;&lt;/<span class="kp-code__keyword">select</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sentence__when&quot;</span> <span class="kp-code__keyword">data-kp-show-when</span><span class="kp-code__string">=&quot;how=weekly&quot;</span>&gt; on &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sentence__field&quot;</span> <span class="kp-code__keyword">data-kp-block</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-weekdays&quot;</span> <span class="kp-code__keyword">data-kp-weekdays</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;1&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;On which days&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
         at &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sentence__field&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;at&quot;</span> <span class="kp-code__keyword">size</span><span class="kp-code__string">=&quot;5&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;03:00&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;At (HH:MM)&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;.
     &lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__error&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-sentence-why&quot;</span> <span class="kp-code__keyword">hidden</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">form</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-sentence-said&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachSentences, sentenceSummary, setSentenceInvalid } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/sentence'</span>;
+<span class="kp-code__keyword">import</span> { attachWeekdays } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/weekdays'</span>;
+
+<span class="kp-code__keyword">const</span> form = document.getElementById(<span class="kp-code__string">'doc-sentence'</span>);
+attachWeekdays(form);
+attachSentences(form.parentElement);
+<span class="kp-code__keyword">const</span> said = document.getElementById(<span class="kp-code__string">'doc-sentence-said'</span>);
+said.textContent = sentenceSummary(form);
+form.addEventListener(<span class="kp-code__string">'kp-sentence-change'</span>, (event) =&gt; {
+    said.textContent = event.detail.summary;
+    <span class="kp-code__keyword">const</span> at = form.elements.at.value;
+    <span class="kp-code__keyword">if</span> (/^([<span class="kp-code__string">01</span>]\d|<span class="kp-code__string">2</span>[<span class="kp-code__string">0</span>-<span class="kp-code__string">3</span>]):[<span class="kp-code__string">0</span>-<span class="kp-code__string">5</span>]\d$/.test(at)) setSentenceInvalid(form, <span class="kp-code__string">'at'</span>, <span class="kp-code__string">''</span>);
+    <span class="kp-code__keyword">else</span> setSentenceInvalid(form, <span class="kp-code__string">'at'</span>, <span class="kp-code__string">'Write the time as HH:MM, for example 03:00.'</span>);
+});
+form.addEventListener(<span class="kp-code__string">'submit'</span>, (event) =&gt; event.preventDefault());</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Boxed, medium, stacked on a narrow screen, and loading fields</figcaption>
+                        <p class="kp-text-muted">`data-kp-look=&quot;boxed&quot;` draws each field as a box instead of an underline and `data-kp-sentence-size=&quot;md&quot;` sets the text at 1rem. `data-kp-narrow` is `wrap` (default: the sentence runs on over several lines), `stack` (every field on its own line below 30rem) or `flow` (never). A field whose natural width is more than `data-kp-own-line-ratio` of the line takes a line of its own. `setSentenceFieldState(field, &quot;loading&quot;)` shows a field’s own skeleton at the width it had, so the sentence does not reflow when its choices arrive; `setSentenceWhy` writes the line that names what is wrong; `data-kp-disabled-reason` on a disabled fieldset says why it is off.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<fieldset class="kp-sentence" id="doc-sentence-boxed" data-kp-sentence data-kp-look="boxed" data-kp-sentence-size="md" data-kp-narrow="stack" data-kp-own-line-ratio="0.5">
+    <p class="kp-sentence__text">
+        Move <span class="kp-sentence__field"><input name="count" size="3" value="12" aria-label="How many files" /></span> files to
+        <span class="kp-sentence__field" id="doc-sentence-loading-field"><select name="where" aria-label="Where to"><option>archive</option></select></span>.
+    </p>
+</fieldset>
+                            <script type="module">
+import { attachSentences, setSentenceFieldState } from '../../js/sentence.js';
+
+attachSentences(document.getElementById('doc-sentence-boxed').parentElement);
+setSentenceFieldState(document.getElementById('doc-sentence-loading-field'), 'loading');
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">fieldset</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sentence&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-sentence-boxed&quot;</span> <span class="kp-code__keyword">data-kp-sentence</span> <span class="kp-code__keyword">data-kp-look</span><span class="kp-code__string">=&quot;boxed&quot;</span> <span class="kp-code__keyword">data-kp-sentence-size</span><span class="kp-code__string">=&quot;md&quot;</span> <span class="kp-code__keyword">data-kp-narrow</span><span class="kp-code__string">=&quot;stack&quot;</span> <span class="kp-code__keyword">data-kp-own-line-ratio</span><span class="kp-code__string">=&quot;0.5&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sentence__text&quot;</span>&gt;
+        Move &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sentence__field&quot;</span>&gt;&lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;count&quot;</span> <span class="kp-code__keyword">size</span><span class="kp-code__string">=&quot;3&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;12&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;How many files&quot;</span> /&gt;&lt;/<span class="kp-code__keyword">span</span>&gt; files to
+        &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sentence__field&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-sentence-loading-field&quot;</span>&gt;&lt;<span class="kp-code__keyword">select</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;where&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Where to&quot;</span>&gt;&lt;<span class="kp-code__keyword">option</span>&gt;archive&lt;/<span class="kp-code__keyword">option</span>&gt;&lt;/<span class="kp-code__keyword">select</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;.
+    &lt;/<span class="kp-code__keyword">p</span>&gt;
 &lt;/<span class="kp-code__keyword">fieldset</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachSentences, setSentenceFieldState } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/sentence'</span>;
+
+attachSentences(document.getElementById(<span class="kp-code__string">'doc-sentence-boxed'</span>).parentElement);
+setSentenceFieldState(document.getElementById(<span class="kp-code__string">'doc-sentence-loading-field'</span>), <span class="kp-code__string">'loading'</span>);</code></pre>
                     </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
@@ -334,6 +404,9 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-disabled-reason</code></td><td>On a disabled fieldset: the sentence that says why the whole sentence is off.</td></tr>
+                            <tr><td><code>sentence / sentenceSummary</code></td><td>`sentence(el)` is the handle of a form; `sentenceSummary(el)` the sentence in words, as the status region says it.</td></tr>
+                            <tr><td><code>setSentenceInvalid / setSentenceWhy / setSentenceFieldState</code></td><td>`setSentenceInvalid(el, name, why)` marks a control and writes the line under the sentence; `setSentenceWhy(el, text)` writes the line alone; `setSentenceFieldState(field, &quot;loading&quot;)` shows the field’s skeleton at the width it had.</td></tr>
                             <tr><td><code>data-kp-look</code></td><td>`underline` (default) or `boxed`.</td></tr>
                             <tr><td><code>data-kp-sentence-size</code></td><td>`lg` (default, 1.125rem on a 2.4 line) or `md`.</td></tr>
                             <tr><td><code>data-kp-narrow</code></td><td>`wrap` (default), `stack` or `flow`: what a narrow screen does.</td></tr>

@@ -259,11 +259,97 @@
                     <h2 class="kp-fw-semibold">Live example</h2>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">Snapshots</figcaption>
-                        <p class="kp-text-muted">The markup is the empty box; the page hands over the options with `setDatedOptions`.</p>
+                        <p class="kp-text-muted">The page hands over the options with `setDatedOptions(el, options, value)`: `{ value, label?, when?, meta?, disabled? }`. Up to `data-kp-picker-inline-max` (7) they are radio rows in one group, the newest first and badged “Latest”, with the meta in one column so it lines up from row to row; type a few letters and the first option starting with them is chosen. `disabled` is the sentence that says why an option cannot be chosen now. `data-kp-now` fixes the clock so “3 days ago” stays true here. `kp-dated-change` carries `{ value, option }`; `datedValue(el)` reads the choice.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="kp-dated" data-kp-dated aria-label="Snapshot to restore"></div>
+<div class="kp-dated" id="doc-dated" data-kp-dated data-kp-now="2026-10-18T12:00:00+02:00" aria-label="Snapshot to restore"></div>
+<p class="kp-text-muted" id="doc-dated-said" role="status">The newest snapshot is chosen.</p>
+                            <script type="module">
+import { attachDatedOptions, datedValue, setDatedOptions } from '../../js/dated-options.js';
+
+const picker = document.getElementById('doc-dated');
+attachDatedOptions(picker.parentElement);
+setDatedOptions(picker, [
+    { value: 'a1', when: '2026-10-15T04:00:00+02:00', meta: '4.1 GB' },
+    { value: 'a2', when: '2026-10-16T04:00:00+02:00', meta: '4.2 GB' },
+    { value: 'a3', when: '2026-10-17T04:00:00+02:00', meta: '4.2 GB' },
+    { value: 'a4', label: 'Before the upgrade', when: '2026-10-10T21:30:00+02:00', meta: '3.9 GB' },
+    { value: 'a5', when: '2026-09-30T04:00:00+02:00', meta: '3.7 GB', disabled: 'Pruned: only the catalogue is left.' },
+]);
+const said = document.getElementById('doc-dated-said');
+picker.addEventListener('kp-dated-change', (event) => {
+    said.textContent = 'Chosen: ' + datedValue(picker) + ' (' + event.detail.option.value + ').';
+});
+                            </script>
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dated&quot;</span> <span class="kp-code__keyword">data-kp-dated</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Snapshot to restore&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dated&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-dated&quot;</span> <span class="kp-code__keyword">data-kp-dated</span> <span class="kp-code__keyword">data-kp-now</span><span class="kp-code__string">=&quot;2026-10-18T12:00:00+02:00&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Snapshot to restore&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-dated-said&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;The newest snapshot is chosen.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachDatedOptions, datedValue, setDatedOptions } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/dated-options'</span>;
+
+<span class="kp-code__keyword">const</span> picker = document.getElementById(<span class="kp-code__string">'doc-dated'</span>);
+attachDatedOptions(picker.parentElement);
+setDatedOptions(picker, [
+    { value: <span class="kp-code__string">'a1'</span>, when: <span class="kp-code__string">'2026-10-15T04:00:00+02:00'</span>, meta: <span class="kp-code__string">'4.1 GB'</span> },
+    { value: <span class="kp-code__string">'a2'</span>, when: <span class="kp-code__string">'2026-10-16T04:00:00+02:00'</span>, meta: <span class="kp-code__string">'4.2 GB'</span> },
+    { value: <span class="kp-code__string">'a3'</span>, when: <span class="kp-code__string">'2026-10-17T04:00:00+02:00'</span>, meta: <span class="kp-code__string">'4.2 GB'</span> },
+    { value: <span class="kp-code__string">'a4'</span>, label: <span class="kp-code__string">'Before the upgrade'</span>, when: <span class="kp-code__string">'2026-10-10T21:30:00+02:00'</span>, meta: <span class="kp-code__string">'3.9 GB'</span> },
+    { value: <span class="kp-code__string">'a5'</span>, when: <span class="kp-code__string">'2026-09-30T04:00:00+02:00'</span>, meta: <span class="kp-code__string">'3.7 GB'</span>, disabled: <span class="kp-code__string">'Pruned: only the catalogue is left.'</span> },
+]);
+<span class="kp-code__keyword">const</span> said = document.getElementById(<span class="kp-code__string">'doc-dated-said'</span>);
+picker.addEventListener(<span class="kp-code__string">'kp-dated-change'</span>, (event) =&gt; {
+    said.textContent = <span class="kp-code__string">'Chosen: '</span> + datedValue(picker) + <span class="kp-code__string">' ('</span> + event.detail.option.value + <span class="kp-code__string">').'</span>;
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A long list in a combobox, the options, and the states</figcaption>
+                        <p class="kp-text-muted">More than the inline maximum becomes the package’s searchable combobox whose list shows the same two lines (`data-kp-picker=&quot;radio&quot;` or `&quot;combobox&quot;` forces one). `data-kp-order` is `newest` (default), `oldest` or `given`, `data-kp-latest=&quot;none&quot;` leaves the badge off, `data-kp-meta-column=&quot;false&quot;` writes the meta under the name, `data-kp-preselect=&quot;false&quot;` leaves the newest unchosen, `data-kp-value` chooses a value when the options arrive and `data-kp-name` names the radios for a form. `setDatedState(el, state, options)`: loading is the busy card over placeholder rows (`data-kp-rows` is how many), empty is the page’s `reason` and an `action` centred in the package’s empty plate, error is the alert with Try again (`kp-dated-retry`).</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-dated" id="doc-dated-long" data-kp-dated data-kp-picker="combobox" data-kp-order="oldest" data-kp-latest="none" data-kp-now="2026-10-18T12:00:00+02:00" aria-label="Backup to restore"></div>
+<div class="kp-dated" id="doc-dated-plain" data-kp-dated data-kp-meta-column="false" data-kp-preselect="false" data-kp-now="2026-10-18T12:00:00+02:00" aria-label="Version"></div>
+<div class="kp-dated" id="doc-dated-loading" data-kp-dated data-kp-rows="3" aria-label="Snapshots, loading"></div>
+<div class="kp-dated" id="doc-dated-empty" data-kp-dated data-kp-rows="3" aria-label="Snapshots, none"></div>
+<div class="kp-dated" id="doc-dated-failed" data-kp-dated data-kp-rows="3" aria-label="Snapshots, failed"></div>
+                            <script type="module">
+import { attachDatedOptions, setDatedOptions, setDatedState } from '../../js/dated-options.js';
+
+const long = document.getElementById('doc-dated-long');
+attachDatedOptions(long.parentElement);
+const many = [];
+for (let day = 1; day <= 12; day++) {
+    many.push({ value: 'b' + day, when: '2026-10-' + String(day).padStart(2, '0') + 'T03:00:00+02:00', meta: (3 + day / 10).toFixed(1) + ' GB' });
+}
+setDatedOptions(long, many);
+setDatedOptions(document.getElementById('doc-dated-plain'), [
+    { value: 'v1', label: 'Version 2.4', when: '2026-10-12T10:00:00+02:00', meta: 'stable' },
+    { value: 'v2', label: 'Version 2.5', when: '2026-10-16T10:00:00+02:00', meta: 'beta' },
+]);
+setDatedState(document.getElementById('doc-dated-loading'), 'loading');
+setDatedState(document.getElementById('doc-dated-empty'), 'empty', { reason: 'No snapshots yet.' });
+setDatedState(document.getElementById('doc-dated-failed'), 'error', { title: 'Could not list the snapshots', text: 'The backup disk did not answer.' });
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dated&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-dated-long&quot;</span> <span class="kp-code__keyword">data-kp-dated</span> <span class="kp-code__keyword">data-kp-picker</span><span class="kp-code__string">=&quot;combobox&quot;</span> <span class="kp-code__keyword">data-kp-order</span><span class="kp-code__string">=&quot;oldest&quot;</span> <span class="kp-code__keyword">data-kp-latest</span><span class="kp-code__string">=&quot;none&quot;</span> <span class="kp-code__keyword">data-kp-now</span><span class="kp-code__string">=&quot;2026-10-18T12:00:00+02:00&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Backup to restore&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dated&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-dated-plain&quot;</span> <span class="kp-code__keyword">data-kp-dated</span> <span class="kp-code__keyword">data-kp-meta-column</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">data-kp-preselect</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">data-kp-now</span><span class="kp-code__string">=&quot;2026-10-18T12:00:00+02:00&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Version&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dated&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-dated-loading&quot;</span> <span class="kp-code__keyword">data-kp-dated</span> <span class="kp-code__keyword">data-kp-rows</span><span class="kp-code__string">=&quot;3&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Snapshots, loading&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dated&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-dated-empty&quot;</span> <span class="kp-code__keyword">data-kp-dated</span> <span class="kp-code__keyword">data-kp-rows</span><span class="kp-code__string">=&quot;3&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Snapshots, none&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dated&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-dated-failed&quot;</span> <span class="kp-code__keyword">data-kp-dated</span> <span class="kp-code__keyword">data-kp-rows</span><span class="kp-code__string">=&quot;3&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Snapshots, failed&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachDatedOptions, setDatedOptions, setDatedState } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/dated-options'</span>;
+
+<span class="kp-code__keyword">const</span> long = document.getElementById(<span class="kp-code__string">'doc-dated-long'</span>);
+attachDatedOptions(long.parentElement);
+<span class="kp-code__keyword">const</span> many = [];
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">let</span> day = <span class="kp-code__string">1</span>; day &lt;= <span class="kp-code__string">12</span>; day++) {
+    many.push({ value: <span class="kp-code__string">'b'</span> + day, when: <span class="kp-code__string">'2026-10-'</span> + String(day).padStart(<span class="kp-code__string">2</span>, <span class="kp-code__string">'0'</span>) + <span class="kp-code__string">'T03:00:00+02:00'</span>, meta: (<span class="kp-code__string">3</span> + day / <span class="kp-code__string">10</span>).toFixed(<span class="kp-code__string">1</span>) + <span class="kp-code__string">' GB'</span> });
+}
+setDatedOptions(long, many);
+setDatedOptions(document.getElementById(<span class="kp-code__string">'doc-dated-plain'</span>), [
+    { value: <span class="kp-code__string">'v1'</span>, label: <span class="kp-code__string">'Version 2.4'</span>, when: <span class="kp-code__string">'2026-10-12T10:00:00+02:00'</span>, meta: <span class="kp-code__string">'stable'</span> },
+    { value: <span class="kp-code__string">'v2'</span>, label: <span class="kp-code__string">'Version 2.5'</span>, when: <span class="kp-code__string">'2026-10-16T10:00:00+02:00'</span>, meta: <span class="kp-code__string">'beta'</span> },
+]);
+setDatedState(document.getElementById(<span class="kp-code__string">'doc-dated-loading'</span>), <span class="kp-code__string">'loading'</span>);
+setDatedState(document.getElementById(<span class="kp-code__string">'doc-dated-empty'</span>), <span class="kp-code__string">'empty'</span>, { reason: <span class="kp-code__string">'No snapshots yet.'</span> });
+setDatedState(document.getElementById(<span class="kp-code__string">'doc-dated-failed'</span>), <span class="kp-code__string">'error'</span>, { title: <span class="kp-code__string">'Could not list the snapshots'</span>, text: <span class="kp-code__string">'The backup disk did not answer.'</span> });</code></pre>
                     </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
@@ -334,6 +420,10 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-preselect</code></td><td>`false` leaves the newest unchosen; else it is chosen when the options arrive.</td></tr>
+                            <tr><td><code>data-kp-name / data-kp-value</code></td><td>The radios’ name, for a form (the element’s id by default), and the value chosen when the options arrive (the newest).</td></tr>
+                            <tr><td><code>datedAge / orderDated</code></td><td>The age in words of a moment for a clock, and the options in an order (`newest`, `oldest`, `given`).</td></tr>
+                            <tr><td><code>datedOptions / setDatedState</code></td><td>`datedOptions(el)` gives the options in the order shown; `setDatedState(el, state, { reason, action, title, text })` the other states. `kp-dated-retry` is Try again on a failed picker.</td></tr>
                             <tr><td><code>data-kp-picker</code></td><td>`radio`, `combobox` or `auto` (default): rows up to the inline maximum, a search above it.</td></tr>
                             <tr><td><code>data-kp-picker-inline-max</code></td><td>The longest list drawn as rows; 7.</td></tr>
                             <tr><td><code>data-kp-latest</code></td><td>`first` (default) labels the newest; `none`.</td></tr>

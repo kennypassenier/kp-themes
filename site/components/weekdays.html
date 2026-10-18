@@ -259,11 +259,65 @@
                     <h2 class="kp-fw-semibold">Live example</h2>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">Mondays and Thursdays</figcaption>
-                        <p class="kp-text-muted">The markup is the empty box; the script builds the chips, the quick picks and the line.</p>
+                        <p class="kp-text-muted">The markup is the empty box; the script builds the chips, the quick picks (Weekdays, Weekend, Every day) and the line in words under them. It is the chip group in multi mode with three differences: all seven days is a real choice and none is a wrong one, the week starts where the reader’s week starts (`data-kp-week-starts-on`, 0 is Sunday) and the line says what is picked. Below `data-kp-min` days (1) the group says so under the chips and still reports the value, so the page decides. `kp-weekdays-change` carries `{ values, summary, valid }`; `weekdays(el)` and `setWeekdays(el, values)` read and write it.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="kp-weekdays" data-kp-weekdays data-kp-value="1,4" aria-label="Run on"></div>
+<div class="kp-weekdays" id="doc-weekdays" data-kp-weekdays data-kp-value="1,4" aria-label="Run on"></div>
+<p class="kp-text-muted" id="doc-weekdays-said" role="status">Mon and Thu.</p>
+<button type="button" class="kp-button kp-button--sm" id="doc-weekdays-set">Set weekdays from the page</button>
+                            <script type="module">
+import { attachWeekdays, setWeekdays, weekdays } from '../../js/weekdays.js';
+
+const picker = document.getElementById('doc-weekdays');
+attachWeekdays(picker.parentElement, { weekStartsOn: 1 });
+const said = document.getElementById('doc-weekdays-said');
+picker.addEventListener('kp-weekdays-change', (event) => {
+    said.textContent = event.detail.summary + (event.detail.valid ? '' : ' (not enough days)') + ' - values ' + event.detail.values.join(',') + '.';
+});
+document.getElementById('doc-weekdays-set').addEventListener('click', () => {
+    setWeekdays(picker, [1, 2, 3, 4, 5]);
+    said.textContent = 'Set: ' + weekdays(picker).join(',') + '.';
+});
+                            </script>
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-weekdays&quot;</span> <span class="kp-code__keyword">data-kp-weekdays</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;1,4&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Run on&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-weekdays&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-weekdays&quot;</span> <span class="kp-code__keyword">data-kp-weekdays</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;1,4&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Run on&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-weekdays-said&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;Mon and Thu.&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-weekdays-set&quot;</span>&gt;Set weekdays from the page&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachWeekdays, setWeekdays, weekdays } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/weekdays'</span>;
+
+<span class="kp-code__keyword">const</span> picker = document.getElementById(<span class="kp-code__string">'doc-weekdays'</span>);
+attachWeekdays(picker.parentElement, { weekStartsOn: <span class="kp-code__string">1</span> });
+<span class="kp-code__keyword">const</span> said = document.getElementById(<span class="kp-code__string">'doc-weekdays-said'</span>);
+picker.addEventListener(<span class="kp-code__string">'kp-weekdays-change'</span>, (event) =&gt; {
+    said.textContent = event.detail.summary + (event.detail.valid ? <span class="kp-code__string">''</span> : <span class="kp-code__string">' (not enough days)'</span>) + <span class="kp-code__string">' - values '</span> + event.detail.values.join(<span class="kp-code__string">','</span>) + <span class="kp-code__string">'.'</span>;
+});
+document.getElementById(<span class="kp-code__string">'doc-weekdays-set'</span>).addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; {
+    setWeekdays(picker, [<span class="kp-code__string">1</span>, <span class="kp-code__string">2</span>, <span class="kp-code__string">3</span>, <span class="kp-code__string">4</span>, <span class="kp-code__string">5</span>]);
+    said.textContent = <span class="kp-code__string">'Set: '</span> + weekdays(picker).join(<span class="kp-code__string">','</span>) + <span class="kp-code__string">'.'</span>;
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Narrow names, a Sunday start, a month, and a picker that is off</figcaption>
+                        <p class="kp-text-muted">`data-kp-day-names=&quot;narrow&quot;` shows M for Monday and `data-kp-week-starts-on=&quot;0&quot;` starts the week on Sunday. `data-kp-days=&quot;month&quot;` draws the days 1 to 31 and Last, for a monthly schedule (`.kp-weekdays__chips--month`); a value there is the day numbers and `last`. `data-kp-presets=&quot;false&quot;` leaves the quick picks out and `data-kp-summary=&quot;false&quot;` the line in words; `data-kp-min=&quot;0&quot;` allows none. `data-kp-disabled` turns the whole picker off, and `data-kp-disabled-reason` says why under the chips.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-weekdays" id="doc-weekdays-narrow" data-kp-weekdays data-kp-day-names="narrow" data-kp-week-starts-on="0" data-kp-presets="weekdays,every" data-kp-value="sat,sun" aria-label="Run on, narrow"></div>
+<div class="kp-weekdays" data-kp-weekdays data-kp-days="month" data-kp-value="1,15,last" data-kp-presets="false" aria-label="Run on days of the month"></div>
+<div class="kp-weekdays" data-kp-weekdays data-kp-min="0" data-kp-summary="false" aria-label="Run on, optional"></div>
+<div class="kp-weekdays" data-kp-weekdays data-kp-value="1,2,3,4,5" data-kp-disabled data-kp-disabled-reason="The backup runs every weekday while the migration is on." aria-label="Run on, fixed"></div>
+                            <script type="module">
+import { attachWeekdays } from '../../js/weekdays.js';
+
+attachWeekdays(document.getElementById('doc-weekdays-narrow').parentElement);
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-weekdays&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-weekdays-narrow&quot;</span> <span class="kp-code__keyword">data-kp-weekdays</span> <span class="kp-code__keyword">data-kp-day-names</span><span class="kp-code__string">=&quot;narrow&quot;</span> <span class="kp-code__keyword">data-kp-week-starts-on</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">data-kp-presets</span><span class="kp-code__string">=&quot;weekdays,every&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;sat,sun&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Run on, narrow&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-weekdays&quot;</span> <span class="kp-code__keyword">data-kp-weekdays</span> <span class="kp-code__keyword">data-kp-days</span><span class="kp-code__string">=&quot;month&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;1,15,last&quot;</span> <span class="kp-code__keyword">data-kp-presets</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Run on days of the month&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-weekdays&quot;</span> <span class="kp-code__keyword">data-kp-weekdays</span> <span class="kp-code__keyword">data-kp-min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">data-kp-summary</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Run on, optional&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-weekdays&quot;</span> <span class="kp-code__keyword">data-kp-weekdays</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;1,2,3,4,5&quot;</span> <span class="kp-code__keyword">data-kp-disabled</span> <span class="kp-code__keyword">data-kp-disabled-reason</span><span class="kp-code__string">=&quot;The backup runs every weekday while the migration is on.&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Run on, fixed&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachWeekdays } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/weekdays'</span>;
+
+attachWeekdays(document.getElementById(<span class="kp-code__string">'doc-weekdays-narrow'</span>).parentElement);</code></pre>
                     </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
@@ -318,6 +372,8 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>weekdays / setWeekdays</code></td><td>`weekdays(el)` gives the days that are on (numbers, 0 is Sunday); `setWeekdays(el, values)` sets them without an event; `weekdaysOf(el)` the days with their names.</td></tr>
+                            <tr><td><code>weekdaySummary / monthSummary / dayNames</code></td><td>The line in words for a set of days (“Mon and Thu”, “Every weekday”), the same for a month, and the names of the week in the reader’s language; `joinWords` joins a list the way the line does and `dayNumber` reads a name or a number.</td></tr>
                             <tr><td><code>data-kp-days</code></td><td>`week` (default) or `month`: the days 1 to 31 and Last.</td></tr>
                             <tr><td><code>data-kp-week-starts-on</code></td><td>The first day, 0 (Sunday) to 6; the locale’s by default.</td></tr>
                             <tr><td><code>data-kp-day-names</code></td><td>`short` (Mon) or `narrow` (M).</td></tr>
