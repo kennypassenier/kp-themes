@@ -424,6 +424,10 @@
             "types": "./js/undo-toast.d.ts",
             "default": "./js/undo-toast.js"
         },
+        "./js/feed": {
+            "types": "./js/feed.d.ts",
+            "default": "./js/feed.js"
+        },
         "./js/newpill": {
             "types": "./js/newpill.d.ts",
             "default": "./js/newpill.js"

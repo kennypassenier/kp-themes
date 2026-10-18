@@ -194,6 +194,12 @@ export const REQUIRED = [
         why: 'The block measures its own width and puts its tools under its title when narrow; the query reaches only its head [kpadopt4-data].',
     },
     {
+        container: 'kp-feed',
+        class: 'kp-feed',
+        self: true,
+        why: 'The feed measures its own width and puts each row\u2019s actor and time on a line under its text when narrow; the query reaches only its own rows [gap-activity-feed-1019].',
+    },
+    {
         container: 'kp-selection',
         class: 'kp-selection',
         self: true,

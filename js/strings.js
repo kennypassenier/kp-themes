@@ -1480,6 +1480,35 @@
  * @property {string} usualHadItWord  The word a screen reader hears after a chip that is had it [kpadopt6]
  * @property {(label: string) => string} usualUnanswered  What is said when an answer is taken back: "Headache: not answered" [kpadopt6]
  * @property {string} usualUnansweredWord  The word a screen reader hears after a chip with no answer [kpadopt6]
+ * @property {string} feedLabel  The accessible name of the feed's list when the host has none (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedUnitOne  The word for one row when the page names none, "event" (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedUnitMany  The word for several rows, "events" (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedToday  The heading of today's rows (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedYesterday  The heading of yesterday's rows (js/feed.js) [gap-activity-feed-1019]
+ * @property {(shown: number, total: number, unit: string) => string} feedShown  The count above the list when only some rows are loaded, "24 of 129 operations" (exact numbers) (js/feed.js) [gap-activity-feed-1019]
+ * @property {(n: number) => string} feedFailed  A day heading's failed count, "2 failed" (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedAllOk  A day heading when nothing failed, "all ok" (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedStateRunning  A running row, as a screen reader hears it (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedStateInfo  A row that is a note, not an outcome, as a screen reader hears it (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedBy  The word before who started a row, for a screen reader, "by Claude" (js/feed.js) [gap-activity-feed-1019]
+ * @property {(title: string) => string} feedMoreLabel  The accessible name of the lines that open under a row (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedOpen  The link inside an opened row that goes where its title would (js/feed.js) [gap-activity-feed-1019]
+ * @property {(reason: string, since: string) => string} feedStale  The head line of a feed whose refresh failed while its rows are still good, "Not refreshed: the host did not answer. Rows from 14:02." (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedStaleAction  The button that reads a stale feed again (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedLoading  What the busy card over the feed says (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedEmptyTitle  The empty plate's title (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedEmptyText  The empty plate's sentence when the page gives no reason (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedErrorTitle  The failed plate's title (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedErrorText  The failed plate's sentence when the page gives no reason (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedRetry  The failed plate's Retry button (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedEarlier  The button that loads earlier rows (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedEarlierLoading  The same button while it works (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedEarlierError  The sentence when earlier rows could not be loaded (js/feed.js) [gap-activity-feed-1019]
+ * @property {string} feedEarlierRetry  The button that tries again (js/feed.js) [gap-activity-feed-1019]
+ * @property {(shown: number, total: number, date: string) => string} feedBackTo  The note under Load earlier, "Showing 24 of 129, back to 14/10/2026" (js/feed.js) [gap-activity-feed-1019]
+ * @property {(shown: number, date: string) => string} feedEnd  The foot when there is nothing earlier, "Nothing earlier: all 24 are shown, back to 14/10/2026" (js/feed.js) [gap-activity-feed-1019]
+ * @property {(title: string) => string} feedNew  Announced when one new row arrived (js/feed.js) [gap-activity-feed-1019]
+ * @property {(n: number, title: string) => string} feedNewMany  Announced when several arrived, naming the newest (js/feed.js) [gap-activity-feed-1019]
  */
 
 /**
@@ -3180,6 +3209,38 @@ export const DEFAULT_STRINGS = Object.freeze({
     usualHadItWord: 'had it',
     usualUnanswered: (label) => `${label}: not answered`,
     usualUnansweredWord: 'not answered',
+    // gap-activity-feed:feed:start
+    // The activity feed (js/feed.js) [gap-activity-feed-1019].
+    feedLabel: 'Activity',
+    feedUnitOne: 'event',
+    feedUnitMany: 'events',
+    feedToday: 'Today',
+    feedYesterday: 'Yesterday',
+    feedShown: (shown, total, unit) => `${shown} of ${total} ${unit}`,
+    feedFailed: (n) => `${n} failed`,
+    feedAllOk: 'all ok',
+    feedStateRunning: 'running',
+    feedStateInfo: 'note',
+    feedBy: 'by',
+    feedMoreLabel: (title) => `Details of ${title}`,
+    feedOpen: 'Open',
+    feedStale: (reason, since) => `Not refreshed: ${reason}.${since ? ` Rows from ${since}.` : ''}`,
+    feedStaleAction: 'Read it again',
+    feedLoading: 'Reading the activity…',
+    feedEmptyTitle: 'Nothing happened yet',
+    feedEmptyText: 'New activity shows up here as it happens.',
+    feedErrorTitle: 'The activity could not be read',
+    feedErrorText: 'The host did not answer. Nothing was lost.',
+    feedRetry: 'Retry',
+    feedEarlier: 'Load earlier',
+    feedEarlierLoading: 'Loading earlier…',
+    feedEarlierError: 'Earlier activity could not be loaded.',
+    feedEarlierRetry: 'Try again',
+    feedBackTo: (shown, total, date) => (shown === total ? `Showing ${shown}, back to ${date}` : `Showing ${shown} of ${total}, back to ${date}`),
+    feedEnd: (shown, date) => `Nothing earlier: all ${shown} are shown, back to ${date}.`,
+    feedNew: (title) => `New: ${title}`,
+    feedNewMany: (n, title) => `${n} new, the newest: ${title}`,
+    // gap-activity-feed:feed:end
 });
 
 // STRINGS_NL was removed in 4.0.0 [D3]. Kenny decided that on

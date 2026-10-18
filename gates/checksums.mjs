@@ -215,6 +215,7 @@ export const FILES = [
     'js/selection-bar.js',
     'js/undo-toast.js',
     'js/newpill.js',
+    'js/feed.js',
     'js/json-field.js',
     'js/request-inspector.js',
     'js/quantity.js',

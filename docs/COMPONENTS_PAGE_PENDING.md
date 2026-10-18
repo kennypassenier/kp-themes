@@ -12,6 +12,8 @@ each line its example and its option row, and empties the list.
 
 ## Waiting
 
+- **The activity feed `kp-feed`** (js/feed.js, `data-kp-feed`; gap-activity-feed-1019, judged in formal first): the rows (`{ key, title, at, state, actor, detail, href, more }`), the model (`state`, `rows`, `total`, `earlier`, `updatedAt`, `stale`, `error`, `emptyText`), `setFeed`, `feedOf`, `attachFeeds`, the options `data-kp-feed-group`, `-summary`, `-unit`, `-time`, `-actor`, `-expand`, `-rail`, `-head`, `-max` and `-level`, the events `kp-feed-retry`, `kp-feed-earlier` and `kp-feed-open`, the knobs `--kp-feed-*`, and the new `data-kp-ago-bare` of the freshness line (a ticking time without its verb).
+
 (The pass of 2026-10-18, on Kenny's go "components-page: Nu bijwerken", brought every line that stood here onto its page: the new components rating,
 quote, passkeys, thread, idmark, stackbar, bullets, kv, formrows, code, pipeline, quantity, checklist (with its claim part), timers, focus steps,
 wheel, uptime, command, weekdays, runs, snooze, dated options, sentence, gallery, viewer, docpreview, slider, availability, qr, time, console,

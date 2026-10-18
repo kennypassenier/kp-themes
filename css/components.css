@@ -28109,3 +28109,535 @@
         inset: 0;
     }
 }
+
+@layer kp.components {
+    /* gap-activity-feed:feed:start */
+    /* --- The activity feed [gap-activity-feed-1019] ------------------------------
+     * js/feed.js. Who did what, and when, day by day: a row is a state mark (the status
+     * row's shapes and glyph tokens, so a theme's step and status marks are one family),
+     * a title with its muted detail line, the identity chip of whoever started it and the
+     * time, which is the ticking `kp-ago` for the first 24 hours (js/freshness.js). The
+     * timeline's rule joins the marks of a day; a day heading (the thread's divider, with
+     * the day's count) separates the days. The list is ONE grid: the mark, the text, the
+     * actor and the time are columns every row of every day gives its parts to (subgrids),
+     * so the chips and the times stand under each other whichever row is longer, and the
+     * column is as wide as its longest chip and no wider [fix-64]. Loading, empty and
+     * failed fill the body's footprint (the busy card, the state plate), and the foot
+     * keeps the room of "Load earlier" in all four of its states, so nothing moves when
+     * one changes.
+     * Knobs [KT6]: --kp-feed-min (the body's least height, 20rem), --kp-feed-max (set by
+     * data-kp-feed-max: the list scrolls and the day headings stay), --kp-feed-pad (a
+     * row's air above and below, 0.625rem), --kp-feed-gap (between the columns),
+     * --kp-feed-actor-max (the chip column's ceiling, 12rem), --kp-feed-ground (what the
+     * sticky day headings are drawn on, the card), --kp-feed-foot-min, --kp-feed-head-min,
+     * and the status-row marks' --kp-statusrow-mark, --kp-statusrow-mark-radius and
+     * --kp-glyph-done, --kp-glyph-failed, --kp-glyph-warn. */
+    .kp-feed {
+        container: kp-feed / inline-size;
+        --kp-feed-mark-size: var(--kp-statusrow-mark, 1.25rem);
+        --kp-feed-row-pad: var(--kp-feed-pad, 0.625rem);
+        display: flex;
+        flex-direction: column;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 0;
+    }
+
+    .kp-feed__head {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        min-block-size: var(--kp-feed-head-min, 2.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-feed__head[hidden],
+    .kp-feed__stale[hidden],
+    .kp-feed__fresh[hidden],
+    .kp-feed__state[hidden],
+    .kp-feed__skeleton[hidden],
+    .kp-feed__list[hidden] {
+        display: none;
+    }
+
+    .kp-feed__count {
+        color: var(--foreground);
+        font-weight: 600;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-feed__fresh {
+        margin-inline-start: auto;
+    }
+
+    /* A refresh that failed while the rows are still good: the warning pair on its own plate, the reason in plain words, and the one button. */
+    .kp-feed__stale {
+        display: flex;
+        flex: 1 1 auto;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+        padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        border-radius: calc(var(--radius, 0.5rem) * 0.75);
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+
+    .kp-feed__stale-text {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    /* --- The body: the list, the skeleton and the state plate share one cell --- */
+    .kp-feed__body {
+        position: relative;
+        display: grid;
+        flex: 1 1 auto;
+        min-block-size: var(--kp-feed-min, 20rem);
+    }
+
+    .kp-feed__body > * {
+        grid-area: 1 / 1;
+        min-inline-size: 0;
+    }
+
+    /* A list that scrolls keeps the wash of a failed row and the scrollbar clear of the text: the box has air of its own. */
+    .kp-feed[data-kp-feed-scroll] > .kp-feed__body {
+        max-block-size: var(--kp-feed-max);
+        padding-inline: var(--kp-space-sm, 0.5rem);
+        overflow: auto;
+        scrollbar-gutter: stable;
+    }
+
+    .kp-feed__state {
+        display: grid;
+    }
+
+    /* One grid for every day: mark, text, actor, time. The group, its rows and each row are subgrids of it. */
+    .kp-feed__list,
+    .kp-feed__rows {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    .kp-feed__list {
+        display: grid;
+        grid-template-columns: var(--kp-feed-mark-size) minmax(0, 1fr) max-content max-content;
+        column-gap: var(--kp-feed-gap, var(--kp-space-md, 0.75rem));
+        align-content: start;
+    }
+
+    .kp-feed[data-kp-feed-actor-mode='off'] .kp-feed__list {
+        grid-template-columns: var(--kp-feed-mark-size) minmax(0, 1fr) max-content;
+    }
+
+    .kp-feed__group,
+    .kp-feed__rows,
+    .kp-feed__row {
+        display: grid;
+        grid-template-columns: subgrid;
+        grid-column: 1 / -1;
+        min-inline-size: 0;
+    }
+
+    .kp-feed__group:not(:first-child) > .kp-feed__day {
+        margin-block-start: var(--kp-space-md, 0.75rem);
+    }
+
+    /* A day heading: the thread's divider, with the word first and the day's count at the end. */
+    .kp-feed__day {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        grid-column: 1 / -1;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        padding-block: var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-feed__day-word {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-feed__day-date,
+    .kp-feed__day-summary {
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-feed__day-rule {
+        flex: 1 1 var(--kp-space-lg, 1.5rem);
+        border-block-start: 1px solid var(--border-strong, var(--border));
+    }
+
+    .kp-feed[data-kp-feed-scroll] .kp-feed__day {
+        position: sticky;
+        inset-block-start: 0;
+        z-index: 2;
+        margin-inline: calc(var(--kp-space-sm, 0.5rem) * -1);
+        padding-inline: var(--kp-space-sm, 0.5rem);
+        background: var(--kp-feed-ground, var(--card));
+    }
+
+    /* --- A row --- */
+    .kp-feed__row {
+        position: relative;
+        isolation: isolate;
+        align-items: start;
+        padding-block: var(--kp-feed-row-pad);
+    }
+
+    /* The mark sits on the title's first line: the cell is one line high and centres it. */
+    .kp-feed__mark-cell {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        block-size: 1lh;
+    }
+
+    .kp-feed__mark {
+        box-sizing: border-box;
+        display: grid;
+        place-items: center;
+        inline-size: var(--kp-feed-mark-size);
+        block-size: var(--kp-feed-mark-size);
+        border: 2px dashed var(--border-strong);
+        border-radius: var(--kp-statusrow-mark-radius, var(--kp-steplist-mark-radius, var(--kp-radius-pill, 999px)));
+        font-size: 0.75rem;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .kp-feed__mark > .kp-spinner {
+        --kp-spinner-size: var(--kp-feed-mark-size);
+    }
+
+    .kp-feed__row[data-state] .kp-feed__mark {
+        border-style: solid;
+    }
+
+    .kp-feed__row[data-state='ok'] .kp-feed__mark {
+        border-color: var(--success-foreground);
+        background: var(--success);
+        color: var(--success-foreground);
+    }
+
+    .kp-feed__row[data-state='ok'] .kp-feed__mark::after {
+        content: var(--kp-glyph-done, var(--kp-glyph-check, '✓'));
+    }
+
+    .kp-feed__row[data-state='failed'] .kp-feed__mark {
+        border-color: var(--destructive);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    .kp-feed__row[data-state='failed'] .kp-feed__mark::after {
+        content: var(--kp-glyph-failed, '✕');
+    }
+
+    .kp-feed__row[data-state='warn'] .kp-feed__mark {
+        border-color: var(--warning-foreground);
+        background: var(--warning);
+        color: var(--warning-foreground);
+    }
+
+    .kp-feed__row[data-state='warn'] .kp-feed__mark::after {
+        content: var(--kp-glyph-warn, '!');
+    }
+
+    .kp-feed__row[data-state='info'] .kp-feed__mark {
+        border-color: var(--info-foreground);
+        background: var(--info);
+        color: var(--info-foreground);
+    }
+
+    .kp-feed__row[data-state='info'] .kp-feed__mark::after {
+        content: var(--kp-glyph-info, 'i');
+    }
+
+    .kp-feed__row[data-state='running'] .kp-feed__mark {
+        border-color: transparent;
+    }
+
+    /* A row that failed or needs attention is found at a glance: a faint wash of its own colour behind the whole row (the words keep the page's ink). */
+    .kp-feed__row:is([data-state='failed'], [data-state='warn'])::after {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset-block: 0;
+        inset-inline: calc(var(--kp-space-sm, 0.5rem) * -1);
+        border-radius: calc(var(--radius, 0.5rem) * 0.75);
+        background: color-mix(in oklab, var(--destructive) 8%, transparent);
+        pointer-events: none;
+    }
+
+    .kp-feed__row[data-state='warn']::after {
+        background: color-mix(in oklab, var(--warning) 40%, transparent);
+    }
+
+    /* The timeline's rule: from under this mark to above the next one, only inside a day. */
+    .kp-feed__row:not(:last-child)::before {
+        content: '';
+        position: absolute;
+        z-index: -1;
+        inset-inline-start: calc(var(--kp-feed-mark-size) / 2 - 0.5px);
+        inset-block-start: calc(var(--kp-feed-row-pad) + (1lh + var(--kp-feed-mark-size)) / 2 + 3px);
+        inset-block-end: calc((var(--kp-feed-row-pad) + (1lh - var(--kp-feed-mark-size)) / 2 - 3px) * -1);
+        inline-size: 1px;
+        background: var(--border-strong, var(--border));
+    }
+
+    .kp-feed[data-kp-feed-no-rail] .kp-feed__row::before {
+        content: none;
+    }
+
+    .kp-feed__text {
+        display: grid;
+        gap: 0.125rem;
+        min-inline-size: 0;
+    }
+
+    .kp-feed__title {
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-feed__detail {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-feed__toggle,
+    .kp-feed__link {
+        display: inline-flex;
+        align-items: baseline;
+        gap: var(--kp-space-xs, 0.25rem);
+        max-inline-size: 100%;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        background: none;
+        color: inherit;
+        font: inherit;
+        font-weight: inherit;
+        text-align: start;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .kp-feed__toggle:hover > .kp-feed__title-text,
+    .kp-feed__link:hover > .kp-feed__title-text {
+        text-decoration: underline;
+        text-underline-offset: 0.2em;
+    }
+
+    .kp-feed__toggle:focus-visible,
+    .kp-feed__link:focus-visible,
+    .kp-feed__open:focus-visible {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring);
+        outline-offset: 2px;
+    }
+
+    .kp-feed__chevron {
+        display: inline-grid;
+        flex: none;
+        place-items: center;
+        inline-size: 1em;
+        color: var(--muted-foreground);
+    }
+
+    .kp-feed__chevron::before {
+        content: var(--kp-glyph-open, '›');
+        display: inline-block;
+    }
+
+    .kp-feed__toggle[aria-expanded='true'] > .kp-feed__chevron::before {
+        rotate: 90deg;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .kp-feed__chevron::before {
+            transition: rotate var(--fx-duration, 150ms) var(--fx-ease, ease);
+        }
+    }
+
+    /* The lines that open under a row: a log excerpt in the mono face, on the muted plate. */
+    .kp-feed__more {
+        display: grid;
+        gap: 0.125rem;
+        margin-block-start: var(--kp-space-xs, 0.25rem);
+        padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+        border: 1px solid var(--border);
+        border-radius: calc(var(--radius, 0.5rem) * 0.75);
+        background: var(--muted);
+        color: var(--foreground);
+        font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+        font-size: var(--kp-text-xs, 0.75rem);
+        line-height: 1.5;
+    }
+
+    .kp-feed__more[hidden] {
+        display: none;
+    }
+
+    .kp-feed__line {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-feed__open {
+        justify-self: start;
+        margin-block-start: var(--kp-space-xs, 0.25rem);
+        font-family: var(--font-sans, inherit);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    /* The meta cell gives its two parts to the list's columns on a wide feed. */
+    .kp-feed__meta {
+        display: contents;
+    }
+
+    .kp-feed__actor,
+    .kp-feed__when {
+        display: flex;
+        align-items: center;
+        min-block-size: 1lh;
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-feed__actor {
+        min-inline-size: 0;
+        max-inline-size: var(--kp-feed-actor-max, 12rem);
+    }
+
+    .kp-feed__actor-name {
+        overflow-wrap: anywhere;
+    }
+
+    .kp-feed__when {
+        justify-content: flex-end;
+        color: var(--muted-foreground);
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+        text-align: end;
+    }
+
+    /* --- Loading: the final geometry in skeletons, the busy card laid over it by the script --- */
+    .kp-feed__skeleton {
+        display: grid;
+        align-content: start;
+        gap: var(--kp-space-lg, 1.5rem);
+    }
+
+    .kp-feed__skel-group {
+        display: grid;
+        gap: var(--kp-feed-row-pad);
+    }
+
+    .kp-feed__skel-day {
+        inline-size: 9rem;
+        block-size: 1rem;
+    }
+
+    .kp-feed__skel-row {
+        display: grid;
+        grid-template-columns: var(--kp-feed-mark-size) minmax(0, 1fr) minmax(0, 7rem) minmax(0, 5rem);
+        align-items: center;
+        column-gap: var(--kp-feed-gap, var(--kp-space-md, 0.75rem));
+        padding-block: calc(var(--kp-feed-row-pad) / 2);
+    }
+
+    .kp-feed__skel-mark {
+        --kp-skeleton-circle: var(--kp-feed-mark-size);
+    }
+
+    .kp-feed__skel-text,
+    .kp-feed__skel-chip,
+    .kp-feed__skel-when {
+        block-size: 1rem;
+        margin: 0 !important;
+    }
+
+    .kp-feed__skel-text {
+        inline-size: 70%;
+    }
+
+    /* --- The foot: "Load earlier", the same room in all four states --- */
+    .kp-feed__foot {
+        display: grid;
+        justify-items: center;
+        align-content: center;
+        gap: var(--kp-space-xs, 0.25rem);
+        padding-block: var(--kp-space-sm, 0.5rem);
+        text-align: center;
+    }
+
+    .kp-feed__foot:not([data-kp-earlier='none']) {
+        min-block-size: var(--kp-feed-foot-min, 5.5rem);
+    }
+
+    .kp-feed__foot:empty {
+        display: none;
+    }
+
+    .kp-feed__foot-note {
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        font-variant-numeric: tabular-nums;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-feed__foot-note--error {
+        color: var(--foreground);
+        font-weight: 600;
+    }
+
+    .kp-feed__earlier {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        min-inline-size: 11rem;
+    }
+
+    .kp-feed__earlier > .kp-spinner {
+        --kp-spinner-size: 1.125rem;
+    }
+
+    /* A feed narrower than this puts the actor and the time on a line of their own under the text. */
+    @container kp-feed (max-width: 34rem) {
+        .kp-feed__list,
+        .kp-feed[data-kp-feed-actor-mode='off'] .kp-feed__list {
+            grid-template-columns: var(--kp-feed-mark-size) minmax(0, 1fr);
+        }
+
+        .kp-feed__meta {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            grid-column: 2;
+            gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+            justify-content: space-between;
+        }
+
+        .kp-feed__actor {
+            max-inline-size: 100%;
+        }
+
+        .kp-feed__skel-row {
+            grid-template-columns: var(--kp-feed-mark-size) minmax(0, 1fr) minmax(0, 4rem);
+        }
+
+        .kp-feed__skel-chip {
+            display: none;
+        }
+    }
+
+    /* gap-activity-feed:feed:end */
+}
