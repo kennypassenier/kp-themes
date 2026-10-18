@@ -5755,4 +5755,11 @@
         white-space: normal;
         overflow-wrap: anywhere;
     }
+
+    /* The names left out of a group ("+4") open in a list that the package gives a soft drop shadow; pastel has no soft shadow
+       anywhere (G7): the list is paper with the sky pass 6 px off register, as its menus are. */
+    [data-theme='pastel'] .kp-idmark-group__list {
+        border-radius: var(--kp-sig-pa-r-plate);
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+    }
 }

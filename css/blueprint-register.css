@@ -6044,4 +6044,11 @@
     [data-theme='blueprint'] .kp-question .kp-button--destructive {
         border-color: var(--background);
     }
+
+    /* The names left out of a group ("+4") open in a list that the package gives a soft drop shadow; nothing glows on the sheet:
+       the list is the sheet's plate, one line and no shadow. */
+    [data-theme='blueprint'] .kp-idmark-group__list {
+        border-radius: var(--radius);
+        box-shadow: none;
+    }
 }
