@@ -2604,6 +2604,20 @@
         font-size: 1.05rem;
     }
 
+    /* The "too few days" sentence on a chart is a slab with its words, not an empty state: no zero stamp, and the room under
+       it is kept for the axis dates, so the slab never covers them [t56-eye-1018]. */
+    [data-theme='brutalism'] .kp-chart__few {
+        padding-block-end: 2rem;
+    }
+
+    [data-theme='brutalism'] .kp-chart__few-plate {
+        padding-block: 0.75rem;
+    }
+
+    [data-theme='brutalism'] .kp-chart__few-plate::before {
+        display: none;
+    }
+
     [data-theme='brutalism'] .kp-empty__title {
         margin: 0 0 0.3rem;
         color: var(--foreground);
