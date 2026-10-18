@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en" data-theme="synthwave" data-review="synth-alert-buttons" data-review-themes="synthwave">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Synthwave: buttons on a red alert</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'synthwave';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main sab-page">
+            <header>
+                <h1>Buttons on a red alert</h1>
+                <p class="cat-intro">
+                    Two rulings of yours disagree about the buttons on a red alert in synthwave. This page shows every place such a button stands, one under
+                    the other, and lets you flip between the two rulings on the component.
+                </p>
+            </header>
+            <section
+                id="alert-buttons"
+                data-review-item="alert-buttons"
+                data-review-topic="alert-buttons"
+                data-review-topic-title="Buttons on a red alert"
+                data-review-components="question"
+                data-review-title="Buttons on a red alert: dark keys everywhere, or only on the named plates"
+                aria-labelledby="h-alert-buttons"
+            >
+                <div class="sab-asked">
+                    <p>
+                        <b>What is asked:</b> On 15/09/2026 (scope-94, &ldquo;Alleen Try again&rdquo;) you ruled that on a synthwave red alert only the
+                        data table&rsquo;s Try again takes the alert&rsquo;s ink as its frame, and every other button on a red alert keeps its pink frame.
+                        On 18/10/2026 (round t56) you approved, in the eleven-theme review, that buttons on a coral plate are dark keys with a near-white
+                        frame. That rule was written for the failed state, an urgent question and a refused question, but its selector reaches every red
+                        alert, so the plain Try again in the empty-table example is a dark key too, against what you ruled in September. Look at the five
+                        places below with each option and say which look is right: dark keys on every red alert, or dark keys only on the plates named
+                        on 18/10 and a pink frame on the rest.
+                    </p>
+                </div>
+                <div class="sab-intro">
+                    <h2 id="h-alert-buttons">Every button on a red alert, in synthwave</h2>
+                    <p>
+                        Five red alerts, each with its button, in the order they come up in the package. The option at the top of the component swaps the
+                        rule that dresses them.
+                    </p>
+                </div>
+                <div class="sab-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Dark keys on every red alert (as approved on 18/10)</b>, the package as it is now: the plain Try again and the button of the plain
+                            alert are dark keys with a near-white frame, like the data table&rsquo;s.
+                        </li>
+                        <li>
+                            <b>Dark keys only on the plates named on 18/10, the rest pink (scope-94)</b>: the failed-state plate and the two questions stay as
+                            they are, the data table&rsquo;s Try again takes the alert&rsquo;s ink as its frame, and the plain Try again and the button of
+                            the plain alert get the pink frame back.
+                        </li>
+                        <li>Every label stays whole and clear of the plate&rsquo;s edge in both options.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="synthwave">
+                        Synthwave is the drive into the sunset, 1984: a neon horizon, the grid floor, the striped sun and tubes with a soft bloom. Compare
+                        each of the five buttons between the two options: on the coral, does the button read at a glance, and is a pink frame on coral
+                        (option 2, plain alert) better or worse than the dark key? Check that the buttons of the three named plates do not change between
+                        the options.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="alert-buttons-component">
+                    <div role="group" aria-label="Buttons on a red alert">
+                        <b>Buttons on a red alert:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-sab-mode="every" aria-pressed="true">
+                            Dark keys on every red alert (as approved on 18/10)
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-sab-mode="named" aria-pressed="false">
+                            Dark keys only on the plates named on 18/10, the rest pink (scope-94)
+                        </button>
+                    </div>
+                </div>
+                <div id="alert-buttons-component" class="sab-stack" data-sab-buttons="every">
+                    <div class="sab-case">
+                        <p class="sab-case__name">1. The failed-state plate</p>
+                        <p class="sab-case__note">A named plate of 18/10. The plate an area shows when it could not be read.</p>
+                        <div class="sab-case__box">
+                            <div class="kp-alert kp-alert--destructive kp-stateplate kp-stateplate--error" role="alert">
+                                <strong class="kp-stateplate__title">The incident list could not be loaded</strong>
+                                <span class="kp-stateplate__text">The status service answered 503. Nothing was changed.</span>
+                                <button type="button" class="kp-button kp-stateplate__action">Retry</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sab-case">
+                        <p class="sab-case__name">2. An urgent question</p>
+                        <p class="sab-case__note">A named plate of 18/10. The host is waiting and the time is nearly up.</p>
+                        <div id="sab-question-urgent" data-kp-questions data-kp-title="off"></div>
+                    </div>
+                    <div class="sab-case">
+                        <p class="sab-case__name">3. A refused question</p>
+                        <p class="sab-case__note">A named plate of 18/10. The answer could not be sent.</p>
+                        <div id="sab-question-refused" data-kp-questions data-kp-title="off"></div>
+                    </div>
+                    <div class="sab-case">
+                        <p class="sab-case__name">4. The data table&rsquo;s Try again</p>
+                        <p class="sab-case__note">The one button scope-94 named: the table&rsquo;s failed slot, its Try again.</p>
+                        <div class="kp-datatable" data-kp-state="failed">
+                            <div class="kp-alert kp-alert--destructive" data-kp-datatable-failed role="alert">
+                                <p class="kp-alert__label">The incident list could not be loaded</p>
+                                <p>The status service answered 503. Nothing was changed.</p>
+                                <button type="button" class="kp-button" data-kp-datatable-retry>Try again</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sab-case">
+                        <p class="sab-case__name">5. The plain Try again of the empty-table example</p>
+                        <p class="sab-case__note">The alert under the loading table on the table page (#empty). Not a named plate, not the data table&rsquo;s slot.</p>
+                        <div class="kp-alert kp-alert--destructive" role="alert">
+                            <p class="kp-alert__label">The incident list could not be loaded</p>
+                            <p>The status service answered 503. Nothing was changed; the list you saw before is unchanged.</p>
+                            <button type="button" class="kp-button">Try again</button>
+                        </div>
+                    </div>
+                    <div class="sab-case">
+                        <p class="sab-case__name">6. A plain alert with an action button</p>
+                        <p class="sab-case__note">Any red alert a page writes itself, with a button that is not Try again.</p>
+                        <div class="kp-alert kp-alert--destructive" role="alert">
+                            <p class="kp-alert__label">The backup did not finish</p>
+                            <p>The disk filled up at 92 percent of the copy. The last good backup is from 18/10/2026 22:00.</p>
+                            <button type="button" class="kp-button">Open the log</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "synth-alert-buttons-f2c3df02-8748-49b9-acc1-00323b8593cd", "received": ["synth-alert-buttons-f2c3df02-8748-49b9-acc1-00323b8593cd"] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

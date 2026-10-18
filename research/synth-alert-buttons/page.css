@@ -1,0 +1,69 @@
+/* research/synth-alert-buttons: the frame of the page, and the one rule the second option adds. Everything with a kp- class is the package. */
+
+.sab-page {
+    max-inline-size: 64rem;
+    margin-inline: auto;
+}
+
+.sab-asked,
+.sab-expected {
+    padding: var(--kp-space-md, 0.75rem) var(--kp-space-lg, 1.5rem);
+}
+
+.sab-stack {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1.5rem);
+}
+
+.sab-case {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.sab-case__name {
+    margin: 0;
+    padding-inline: var(--kp-space-xs, 0.25rem);
+    font-weight: 700;
+}
+
+.sab-case__note {
+    margin: 0;
+    padding-inline: var(--kp-space-xs, 0.25rem);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* The failed-state plate fills a box of its own, as it does in an area. */
+.sab-case__box {
+    display: grid;
+    min-block-size: 11rem;
+}
+
+/* Option 2, "Dark keys only on the plates named on 18/10, the rest pink (scope-94)". A scoped copy of the old rules, for this demo only:
+   on a red alert that is not one of the named plates (the failed-state plate, the failures of a card, a run, a dated list, an urgent or a
+   refused question) the button gets the theme's pink frame back; the data table's Try again takes the alert's ink (css/synthwave-register.css
+   ~1434, scope-94). Unlayered, so it wins over the package's layers; the named plates are left to the package. */
+[data-theme='synthwave'] [data-sab-buttons='named']
+    .kp-alert--destructive:not(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure, .kp-question)
+    .kp-button:not(.kp-icon-button) {
+    --kp-frame: var(--primary);
+    --kp-glow: hsl(from var(--primary) h s l / 0.45);
+    --kp-sw-cut-ink: var(--background);
+    background: transparent;
+    color: var(--kp-core);
+    text-shadow: var(--kp-tube-pink);
+}
+
+[data-theme='synthwave'] [data-sab-buttons='named']
+    .kp-alert--destructive:not(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure, .kp-question)
+    .kp-button:not(.kp-icon-button):hover {
+    --kp-frame: var(--primary);
+    background: transparent;
+}
+
+[data-theme='synthwave'] [data-sab-buttons='named'] [data-kp-datatable-failed].kp-alert--destructive .kp-button[data-kp-datatable-retry],
+[data-theme='synthwave'] [data-sab-buttons='named'] [data-kp-datatable-failed].kp-alert--destructive .kp-button[data-kp-datatable-retry]:hover {
+    --kp-frame: var(--destructive-foreground);
+}

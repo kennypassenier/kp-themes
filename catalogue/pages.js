@@ -118,6 +118,13 @@ export const PAGES = [
         // Decided demos stay reachable from the Agenda's Done list, not from the side navigation (Kenny, 2026-10-13).
         nav: false,
         pages: [
+            // Decided 2026-10-19 00:50: Kenny approved dark keys on every red alert in synthwave (research/synth-alert-buttons/decided.json).
+            // Kenny, 2026-10-19 (synth-alert-1019): two rulings disagree about the buttons on a synthwave red alert (scope-94 "Alleen Try again", 2026-09-15; round t56 dark keys, approved 2026-10-18). One section, five red-alert contexts, one option at the component to flip between the rulings. Hand-written page: research/synth-alert-buttons.
+            {
+                href: 'research/synth-alert-buttons/demo.html',
+                label: 'Synthwave: buttons on a red alert, dark keys everywhere or only on the named plates',
+                about: 'Your September ruling (only the data table\'s Try again takes the alert\'s ink, every other button keeps its pink frame) and the dark keys you approved on 18/10 disagree for the plain Try again and any plain red alert. 1 section (1 pair, synthwave): five red alerts one under the other, and an option to see each ruling.',
+            },
             // Decided 2026-10-18 22:36: Kenny approved every choose pair over three rounds (research/kpadopt56-choose/decided.json).
             {
                 href: 'research/kpadopt56-choose/demo.html',
