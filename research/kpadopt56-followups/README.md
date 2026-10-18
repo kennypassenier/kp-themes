@@ -1,5 +1,7 @@
 # research/kpadopt56-followups: two faults found in approved work
 
+**Decided (2026-10-18 22:09):** Kenny approved every pair. Recorded in `VERDICTS.json`; the page is not offered again.
+
 Round `followups-1c17f9d4-3e96-4ad7-8489-4c09af816abb` (2026-10-18): 2 sections, 13 pairs. Changes to approved work go back to Kenny
 through the review dialog (DEMO_RULES ch. 7 and 9), so each fix is a section with a plain "What changed since you approved it" text.
 

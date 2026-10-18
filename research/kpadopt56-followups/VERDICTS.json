@@ -1,4 +1,67 @@
 {
     "demo": "kpadopt56-followups",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "followups-1c17f9d4-3e96-4ad7-8489-4c09af816abb",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 22:09: 13 of 13 judged, 13 approved, 0 not approved.",
+            "approved": [
+                {
+                    "item": "selection-bar-place",
+                    "theme": "dark"
+                },
+                {
+                    "item": "selection-bar-place",
+                    "theme": "formal"
+                },
+                {
+                    "item": "selection-bar-place",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "selection-bar-place",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "selection-bar-place",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "selection-bar-place",
+                    "theme": "forest"
+                },
+                {
+                    "item": "selection-bar-place",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "selection-bar-place",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "selection-bar-place",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "selection-bar-place",
+                    "theme": "deco"
+                },
+                {
+                    "item": "selection-bar-place",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "selection-bar-place",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "usual-states",
+                    "theme": "formal"
+                }
+            ],
+            "notApproved": [],
+            "choices": []
+        }
+    ]
 }
