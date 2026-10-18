@@ -6073,20 +6073,6 @@
     }
 }
 
-/* The time box in a sentence is 5.5 characters wide in the package, and this theme's field plate takes a thin 4.5 px of side padding, so
-   the last digit ran into the edge ("03:0"). The box is the five characters plus its own padding and a margin
-   [t56-eye-1018]. */
-@layer kp.signature {
-    [data-theme='nostromo'] .kp-time--inline .kp-time__input.kp-field__input {
-        padding-inline: 0.5em;
-        inline-size: calc(4.8ch + 1.75em);
-    }
-
-    [data-theme='nostromo'] .kp-time--inline .kp-time__skeleton {
-        inline-size: calc(4.8ch + 1.75em);
-    }
-}
-
 /* A destructive button that stands on a destructive plate (the urgent and the refused question card, a failed plate with its
    action) is drawn like the card's other button: a destructive fill on a destructive plate, or red ink on orange, left it
    without a plate [t56-eye-1018]. */

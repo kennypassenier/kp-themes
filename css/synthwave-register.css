@@ -6278,16 +6278,6 @@
 }
 /* ── end t56-q2 fields ── */
 
-/* ── t56-q2 fields: the time in a sentence fits its box ── */
-@layer kp.signature {
-    /* The box of a time in a sentence was 5.5 characters wide including its 14 px padding and frame, so it showed "03". */
-    [data-theme='synthwave'] .kp-time--inline .kp-time__input.kp-field__input {
-        box-sizing: content-box;
-        inline-size: calc(5ch + 0.3em);
-    }
-}
-/* ── end t56-q2 fields ── */
-
 /* ── t56-q2 confirm: the floor stays under the question's words ── */
 @layer kp.signature {
     /* The grid floor of an urgent or refused question was 22% of a tall card and its lines ran through the last button, its

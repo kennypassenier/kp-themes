@@ -29181,8 +29181,11 @@
         line-height: 1.5;
     }
 
+    /* The box is sized to its value, not to its frame: five characters of content and a little air, whatever side padding or edge a
+     * register gives the field, so the last digit is never cut ("03:0") [t56-shared3-1018]. */
     .kp-time--inline .kp-time__input.kp-field__input {
-        inline-size: 5.5ch;
+        box-sizing: content-box;
+        inline-size: calc(5ch + 0.3em);
         min-block-size: 0;
         block-size: auto;
         padding: 0 0.25em;
@@ -29204,7 +29207,7 @@
     }
 
     .kp-time--inline .kp-time__skeleton {
-        inline-size: 5.5ch;
+        inline-size: calc(5ch + 1.3em);
         block-size: 1.5em;
     }
 
@@ -44886,16 +44889,6 @@
 }
 /* ── end t56-q2 fields ── */
 
-/* ── t56-q2 fields: the time in a sentence fits its box ── */
-@layer kp.signature {
-    /* The box of a time in a sentence was 5.5 characters wide including its 14 px padding and frame, so it showed "03". */
-    [data-theme='synthwave'] .kp-time--inline .kp-time__input.kp-field__input {
-        box-sizing: content-box;
-        inline-size: calc(5ch + 0.3em);
-    }
-}
-/* ── end t56-q2 fields ── */
-
 /* ── t56-q2 confirm: the floor stays under the question's words ── */
 @layer kp.signature {
     /* The grid floor of an urgent or refused question was 22% of a tall card and its lines ran through the last button, its
@@ -51306,20 +51299,6 @@
             letter-spacing: 0.04em;
             padding-inline: 0.75rem;
         }
-    }
-}
-
-/* The time box in a sentence is 5.5 characters wide in the package, and this theme's field plate takes 0.8 rem of side padding, so
-   the last digit ran into the edge ("03:0"). The box is the five characters plus its own padding and a margin
-   [t56-eye-1018]. */
-@layer kp.signature {
-    [data-theme='brutalism'] .kp-time--inline .kp-time__input.kp-field__input {
-        padding-inline: 0.5em;
-        inline-size: calc(4.8ch + 1.75em);
-    }
-
-    [data-theme='brutalism'] .kp-time--inline .kp-time__skeleton {
-        inline-size: calc(4.8ch + 1.75em);
     }
 }
 
@@ -62701,16 +62680,6 @@
     }
 }
 /* ── end t56-q2 people ── */
-
-/* ── t56-q2 fields: the time in a sentence fits its box ── */
-@layer kp.signature {
-    /* The pill of a time in a sentence was 5.5 characters wide including its 12 px padding, so the last digits were cut (now five characters content-box). */
-    [data-theme='pastel'] .kp-time--inline .kp-time__input.kp-field__input {
-        box-sizing: content-box;
-        inline-size: calc(5ch + 0.3em);
-    }
-}
-/* ── end t56-q2 fields ── */
 
 /* ── t56-q2 confirm: Stop keeps its plate on the red card ── */
 @layer kp.signature {
@@ -75047,20 +75016,6 @@
     }
     [data-theme='deco'] .kp-code__head {
         min-inline-size: 0;
-    }
-}
-
-/* The time box in a sentence is 5.5 characters wide in the package, and this theme's field plate takes 0.7 rem of side padding, so
-   the last digit ran into the edge ("03:0"). The box is the five characters plus its own padding and a margin
-   [t56-eye-1018]. */
-@layer kp.signature {
-    [data-theme='deco'] .kp-time--inline .kp-time__input.kp-field__input {
-        padding-inline: 0.5em;
-        inline-size: calc(4.8ch + 1.75em);
-    }
-
-    [data-theme='deco'] .kp-time--inline .kp-time__skeleton {
-        inline-size: calc(4.8ch + 1.75em);
     }
 }
 
@@ -87468,20 +87423,6 @@
     }
 }
 
-/* The time box in a sentence is 5.5 characters wide in the package, and this theme's field plate takes a thin 4.5 px of side padding, so
-   the last digit ran into the edge ("03:0"). The box is the five characters plus its own padding and a margin
-   [t56-eye-1018]. */
-@layer kp.signature {
-    [data-theme='nostromo'] .kp-time--inline .kp-time__input.kp-field__input {
-        padding-inline: 0.5em;
-        inline-size: calc(4.8ch + 1.75em);
-    }
-
-    [data-theme='nostromo'] .kp-time--inline .kp-time__skeleton {
-        inline-size: calc(4.8ch + 1.75em);
-    }
-}
-
 /* A destructive button that stands on a destructive plate (the urgent and the refused question card, a failed plate with its
    action) is drawn like the card's other button: a destructive fill on a destructive plate, or red ink on orange, left it
    without a plate [t56-eye-1018]. */
@@ -93055,17 +92996,6 @@
     }
 }
 /* ── end t56-q ── */
-
-/* ── t56-q2 fields: the time in a sentence fits its box ── */
-@layer kp.signature {
-    /* The box of a time in a sentence was 5.5 characters wide including its padding and frame, so the last digit was cut
-       ("03:0"). The box is as wide as its five characters plus a little. */
-    [data-theme='dark'] .kp-time--inline .kp-time__input.kp-field__input {
-        box-sizing: content-box;
-        inline-size: calc(5ch + 0.3em);
-    }
-}
-/* ── end t56-q2 fields ── */
 
 /* ── t56-q2 choose: the waiting picker's panel fits its room ── */
 @layer kp.signature {

@@ -26246,8 +26246,11 @@
         line-height: 1.5;
     }
 
+    /* The box is sized to its value, not to its frame: five characters of content and a little air, whatever side padding or edge a
+     * register gives the field, so the last digit is never cut ("03:0") [t56-shared3-1018]. */
     .kp-time--inline .kp-time__input.kp-field__input {
-        inline-size: 5.5ch;
+        box-sizing: content-box;
+        inline-size: calc(5ch + 0.3em);
         min-block-size: 0;
         block-size: auto;
         padding: 0 0.25em;
@@ -26269,7 +26272,7 @@
     }
 
     .kp-time--inline .kp-time__skeleton {
-        inline-size: 5.5ch;
+        inline-size: calc(5ch + 1.3em);
         block-size: 1.5em;
     }
 
