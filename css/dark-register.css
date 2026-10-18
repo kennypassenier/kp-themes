@@ -5476,3 +5476,60 @@
     }
 }
 /* ── end t56 ── */
+
+/* ── t56-q: the failed plate wears the film, whole ── */
+@layer kp.signature {
+    /* A failed area was an alert: its 1 px border sat under the chamfer's clip, so the top line stopped short, the right edge
+       started lower and the corners never met. It takes the card's construction instead: the plate (ground, cut and a film edge
+       in the failure's red) on its own ::after, the cut drawn once with its border inside it. */
+    [data-theme='dark']
+        :is(
+            .kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure),
+            .kp-chart__state[data-kp-state='error']
+        ) {
+        position: relative;
+        isolation: isolate;
+        clip-path: none;
+        border: 1px solid transparent;
+        border-radius: 0;
+        background: transparent;
+    }
+    [data-theme='dark']
+        :is(
+            .kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure),
+            .kp-chart__state[data-kp-state='error']
+        )::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        z-index: -1;
+        pointer-events: none;
+        border: 1px solid transparent;
+        clip-path: polygon(
+            0 0,
+            calc(100% - var(--kp-chamfer-panel)) 0,
+            100% var(--kp-chamfer-panel),
+            100% 100%,
+            var(--kp-chamfer-panel) 100%,
+            0 calc(100% - var(--kp-chamfer-panel))
+        );
+        background:
+            linear-gradient(hsl(from var(--destructive) h s l / 0.1), hsl(from var(--destructive) h s l / 0.1)) padding-box,
+            linear-gradient(var(--card), var(--card)) padding-box,
+            linear-gradient(100deg, var(--destructive), hsl(from var(--destructive) h s l / 0.35) 55%, var(--destructive)) border-box;
+    }
+    /* The chart's dot sat beside the first line of the sentence; every other failed plate carries the sentence alone. */
+    [data-theme='dark'] .kp-chart__state[data-kp-state='error'] .kp-chart__dot {
+        display: none;
+    }
+}
+/* ── t56-q: the busy card's words stay above the comet ── */
+@layer kp.signature {
+    /* The comet is the panel's ::before at z-index 1, laid over what is waiting, so it crossed the card's own sentence (the vertical
+       bar through "Reading..."). Around the content, never through it: the words and the spinner stand above the sweep. */
+    [data-theme='dark'] :is(.kp-datatable__busy-panel, .kp-calendar--busy-whole > .kp-calendar__busy) > * {
+        position: relative;
+        z-index: 2;
+    }
+}
+/* ── end t56-q ── */

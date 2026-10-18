@@ -38492,6 +38492,48 @@
 }
 /* ── end t56 ── */
 
+/* ── t56-q: the failed plate keeps its cut edge ── */
+@layer kp.signature {
+    /* A failed chart was a pale tint with a dot beside the first line. It is the alarm plate every failed area here is: the void
+       tinted with the alert's red, its edge, the cut at the foot, the words pulled toward white. */
+    [data-theme='cyberpunk'] .kp-chart__state[data-kp-state='error'] {
+        --kp-cp-neon: var(--fx-hot-alarm, var(--destructive));
+        --kp-cp-neon-edge: var(--destructive);
+        background-color: hsl(from var(--destructive) h calc(s * 0.6) 8%);
+        color: hsl(from var(--kp-cp-neon) h calc(s * 0.6) 90%);
+        border: 1px solid hsl(from var(--destructive) h s l / 0.85);
+        border-left: 3px solid var(--destructive);
+        border-radius: 0;
+        clip-path: polygon(0 0, 100% 0, 100% calc(100% - var(--fx-notch-sm)), calc(100% - var(--fx-notch-sm)) 100%, 0 100%);
+    }
+    [data-theme='cyberpunk'] .kp-chart__state[data-kp-state='error'] .kp-chart__dot {
+        display: none;
+    }
+    /* The clip took the edge along the cut with it, so the foot's corner read as missing: the cut is drawn as a line. */
+    [data-theme='cyberpunk']
+        :is(
+            .kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure),
+            .kp-chart__state[data-kp-state='error']
+        ) {
+        position: relative;
+    }
+    [data-theme='cyberpunk']
+        :is(
+            .kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure),
+            .kp-chart__state[data-kp-state='error']
+        )::after {
+        content: '';
+        position: absolute;
+        inset-inline-end: 0;
+        inset-block-end: 0;
+        inline-size: var(--fx-notch-sm);
+        block-size: var(--fx-notch-sm);
+        background: linear-gradient(135deg, transparent calc(50% - 1px), var(--destructive) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px));
+        pointer-events: none;
+    }
+}
+/* ── end t56-q ── */
+
 @layer kp.register {
     /* @kp-soft/themes — css/synthwave-register.css
    The synthwave register, 5.0.0 [S48, LIFT_PLAN row 1]: the horizon
@@ -44646,6 +44688,107 @@
     }
 }
 /* ── end t56 ── */
+
+/* ── t56-q: the failed plate is a tube on the floor ── */
+@layer kp.signature {
+    /* A failed area (the state plate) and an urgent or refused question stood as a flat coral slab with a black square above the
+       heading. Synthwave's failure is the VCR stop in a neon tube: the tape plate (card ground, the stripe along its top, the sides
+       falling from it, the grid floor under the words) in the failure's coral, a hollow stop square lit like a tube (near-white
+       core, coral bloom) above a coral heading, the sentence in the plain ink. The same look in every part that fails. */
+    [data-theme='synthwave'] :is(:is(.kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure), .kp-chart__state[data-kp-state='error']), .kp-question.kp-alert--destructive) {
+        --kp-stripe-from: var(--destructive);
+        --kp-stripe-to: var(--destructive);
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+        color: var(--foreground);
+        background:
+            linear-gradient(to right, var(--destructive), var(--destructive)) 0 0 / 100% var(--kp-sw-side) no-repeat,
+            linear-gradient(hsl(from var(--kp-core) h s l / 0.22) 0 0) 0 var(--kp-sw-side) / 100% 1px no-repeat,
+            linear-gradient(to bottom, var(--destructive), hsl(from var(--destructive) h s l / 0.5) 50%, transparent) 0 0 / var(--kp-sw-side) 100% no-repeat,
+            linear-gradient(to bottom, var(--destructive), hsl(from var(--destructive) h s l / 0.5) 50%, transparent) 100% 0 / var(--kp-sw-side) 100% no-repeat,
+            var(--card);
+        border: 0;
+        border-radius: 0;
+        box-shadow:
+            inset 0 -2px 0 0 hsl(from var(--sidebar-background) h s l / 0.7),
+            0 0 24px hsl(from var(--destructive) h s l / 0.22);
+    }
+    /* The floor, in the failure's colour, under the plate's foot. */
+    [data-theme='synthwave'] :is(:is(.kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure), .kp-chart__state[data-kp-state='error']), .kp-question.kp-alert--destructive)::after {
+        content: '';
+        position: absolute;
+        inset: auto 0 0;
+        z-index: -1;
+        block-size: clamp(2.5rem, 22%, 5rem);
+        border-block-start: 1px solid hsl(from var(--destructive) h s l / 0.7);
+        background:
+            linear-gradient(hsl(from var(--destructive) h s l / 0.3) 0 0) 0 30% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--destructive) h s l / 0.34) 0 0) 0 62% / 100% 1px no-repeat,
+            repeating-conic-gradient(from 180deg at 50% -40%, hsl(from var(--destructive) h s l / 0.4) 0 0.7deg, transparent 0.7deg 9deg);
+        box-shadow: 0 -2px 12px hsl(from var(--destructive) h s l / 0.3);
+        pointer-events: none;
+    }
+    /* The stop: a hollow square tube. */
+    [data-theme='synthwave'] :is(.kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure), .kp-chart__state[data-kp-state='error'])::before {
+        content: '';
+        inline-size: 1.75rem;
+        block-size: 1.75rem;
+        box-sizing: border-box;
+        border: 3px solid var(--kp-core);
+        background: transparent;
+        filter: none;
+        box-shadow:
+            0 0 6px var(--destructive),
+            0 0 14px hsl(from var(--destructive) h s l / 0.7),
+            inset 0 0 6px hsl(from var(--destructive) h s l / 0.8);
+        font-size: inherit;
+    }
+    [data-theme='synthwave'] .kp-question.kp-alert--destructive::before {
+        background: transparent;
+        box-sizing: border-box;
+        border: 2px solid var(--kp-core);
+        inline-size: 1.1rem;
+        block-size: 1.1rem;
+        filter: none;
+        box-shadow:
+            0 0 5px var(--destructive),
+            0 0 12px hsl(from var(--destructive) h s l / 0.7);
+    }
+    [data-theme='synthwave'] :is(.kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure), .kp-chart__state[data-kp-state='error']) :is(.kp-stateplate__title, .kp-runs__failure-title, .kp-dated__failure-title, .kp-card__state-title, .kp-chart__state-text) {
+        color: var(--destructive);
+        text-shadow:
+            0 0 2px var(--sidebar-background),
+            0 0 8px hsl(from var(--destructive) h s l / 0.6);
+    }
+    [data-theme='synthwave'] :is(.kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure), .kp-chart__state[data-kp-state='error']) :is(.kp-stateplate__text, .kp-card__state-text) {
+        color: var(--foreground);
+    }
+    /* Its buttons are the theme's own framed keys, the frame in the failure's coral. */
+    [data-theme='synthwave']
+        :is(:is(.kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure), .kp-chart__state[data-kp-state='error']), .kp-question.kp-alert--destructive)
+        .kp-button:not(.kp-icon-button) {
+        --kp-frame: var(--destructive);
+        --kp-glow: hsl(from var(--destructive) h s l / 0.5);
+        --kp-sw-cut-ink: var(--card);
+        background: var(--card);
+        color: var(--foreground);
+        text-shadow: none;
+    }
+    [data-theme='synthwave']
+        :is(:is(.kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure), .kp-chart__state[data-kp-state='error']), .kp-question.kp-alert--destructive)
+        .kp-button:not(.kp-icon-button):hover {
+        --kp-frame: var(--kp-core);
+        background: hsl(from var(--destructive) h s l / 0.18);
+    }
+}
+@layer kp.signature {
+    /* The chart's own dot sits beside the sentence; the stop tube above it says the same, so the dot leaves. */
+    [data-theme='synthwave'] .kp-chart__state[data-kp-state='error'] .kp-chart__dot {
+        display: none;
+    }
+}
+/* ── end t56-q ── */
 
 /* A share, 0 to 1 (a progress bar's, a meter's), is walked to its value on
    two registered copies, one on each mirror of the motion, so that a rise is
@@ -58661,7 +58804,8 @@
             .kp-tour,
             .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
             .kp-datatable__busy-panel,
-            .kp-calendar__busy
+            .kp-calendar__busy,
+            .kp-chart__state[data-kp-state='error']
         ) {
         isolation: isolate;
         border-color: transparent;
@@ -58678,7 +58822,7 @@
         --kp-sig-pa-edge: var(--border-strong);
     }
 
-    [data-theme='pastel'] :is(.kp-toast, .kp-alert, .kp-datatable__busy-panel) {
+    [data-theme='pastel'] :is(.kp-toast, .kp-alert, .kp-datatable__busy-panel, .kp-chart__state[data-kp-state='error']) {
         position: relative;
         border-radius: var(--kp-sig-pa-r-plate);
     }
@@ -58703,7 +58847,8 @@
             .kp-tour,
             .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
             .kp-datatable__busy-panel,
-            .kp-calendar__busy
+            .kp-calendar__busy,
+            .kp-chart__state[data-kp-state='error']
         )::before {
         content: '';
         position: absolute;
@@ -58729,7 +58874,8 @@
             .kp-tour,
             .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
             .kp-datatable__busy-panel,
-            .kp-calendar__busy
+            .kp-calendar__busy,
+            .kp-chart__state[data-kp-state='error']
         )::after {
         content: '';
         position: absolute;
@@ -58788,7 +58934,7 @@
         --kp-sig-pa-edge: var(--warning);
     }
 
-    [data-theme='pastel'] :is(.kp-toast--destructive, .kp-toast--error, .kp-alert--destructive) {
+    [data-theme='pastel'] :is(.kp-toast--destructive, .kp-toast--error, .kp-alert--destructive, .kp-chart__state[data-kp-state='error']) {
         --kp-sig-pa-plate: var(--destructive);
         --kp-sig-pa-edge: var(--destructive);
     }
@@ -62238,6 +62384,41 @@
         padding-inline: 1rem;
     }
 }
+
+/* ── t56-q: the failed chart is the failed plate ── */
+@layer kp.signature {
+    /* A failed chart was a pale tint with a dot beside the first line. It is the red sticker every failed area here is (the
+       pass and the paper from the alert's own rules above), the sentence in the sticker's ink, no dot. */
+    [data-theme='pastel'] .kp-chart__state[data-kp-state='error'] {
+        color: var(--destructive-foreground);
+        border-color: transparent;
+        background: transparent;
+    }
+    [data-theme='pastel'] .kp-chart__state[data-kp-state='error'] .kp-chart__dot {
+        display: none;
+    }
+}
+/* ── end t56-q ── */
+
+/* ── t56-q: the too-early plate stays off the axis ── */
+@layer kp.signature {
+    /* The note of a chart with too few readings filled the plot down to its date labels and covered them. The plot keeps the band of
+       its axis free and the plate is a compact one (a smaller picture, less air) so it fits above it. */
+    [data-theme='pastel'] .kp-chart__few {
+        padding-block-end: 2rem;
+    }
+    [data-theme='pastel'] .kp-chart__few .kp-chart__few-plate {
+        --kp-sig-pa-lip: 1.4rem;
+        max-block-size: 100%;
+        padding: 0.6rem 1.25rem 0.85rem;
+    }
+    [data-theme='pastel'] .kp-chart__few .kp-chart__few-plate::before {
+        inline-size: 2.5rem;
+        block-size: 2.25rem;
+        margin-block-end: 0.35rem;
+    }
+}
+/* ── end t56-q ── */
 
 /* The busy progress bar's breath, 0 (bare ground) to 1 (the full row),
    registered so the keyframes interpolate it; at the top level because
@@ -68064,6 +68245,40 @@
         padding-inline: 1rem;
     }
 }
+
+/* ── t56-q: the failed chart is the failed plate ── */
+@layer kp.signature {
+    /* A failed chart was a pale tint with a dot beside the first line; every other failed area in the field kit is the rust plate
+       with the leaf corners and its sentence in the plate's ink. */
+    [data-theme='forest'] .kp-chart__state[data-kp-state='error'] {
+        background: var(--destructive);
+        border-color: var(--destructive);
+        color: var(--destructive-foreground);
+    }
+    [data-theme='forest'] .kp-chart__state[data-kp-state='error'] .kp-chart__dot {
+        display: none;
+    }
+}
+/* ── end t56-q ── */
+
+/* ── t56-q: the too-early plate stays off the axis ── */
+@layer kp.signature {
+    /* The note of a chart with too few readings filled the plot down to its date labels and covered them. The plot keeps the band of
+       its axis free and the plate is a compact one (a smaller picture, less air) so it fits above it. */
+    [data-theme='forest'] .kp-chart__few {
+        padding-block-end: 2rem;
+    }
+    [data-theme='forest'] .kp-chart__few .kp-chart__few-plate {
+        max-block-size: 100%;
+        padding: 0.6rem 1.25rem 0.85rem;
+    }
+    [data-theme='forest'] .kp-chart__few .kp-chart__few-plate::before {
+        inline-size: 2.5rem;
+        block-size: 2.25rem;
+        margin-block-end: 0.35rem;
+    }
+}
+/* ── end t56-q ── */
 
 /* The numbers deco's motion is made of, registered at the top level because
    Firefox does not register an @property inside a cascade layer; with no
@@ -92092,6 +92307,63 @@
     }
 }
 /* ── end t56 ── */
+
+/* ── t56-q: the failed plate wears the film, whole ── */
+@layer kp.signature {
+    /* A failed area was an alert: its 1 px border sat under the chamfer's clip, so the top line stopped short, the right edge
+       started lower and the corners never met. It takes the card's construction instead: the plate (ground, cut and a film edge
+       in the failure's red) on its own ::after, the cut drawn once with its border inside it. */
+    [data-theme='dark']
+        :is(
+            .kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure),
+            .kp-chart__state[data-kp-state='error']
+        ) {
+        position: relative;
+        isolation: isolate;
+        clip-path: none;
+        border: 1px solid transparent;
+        border-radius: 0;
+        background: transparent;
+    }
+    [data-theme='dark']
+        :is(
+            .kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure),
+            .kp-chart__state[data-kp-state='error']
+        )::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        z-index: -1;
+        pointer-events: none;
+        border: 1px solid transparent;
+        clip-path: polygon(
+            0 0,
+            calc(100% - var(--kp-chamfer-panel)) 0,
+            100% var(--kp-chamfer-panel),
+            100% 100%,
+            var(--kp-chamfer-panel) 100%,
+            0 calc(100% - var(--kp-chamfer-panel))
+        );
+        background:
+            linear-gradient(hsl(from var(--destructive) h s l / 0.1), hsl(from var(--destructive) h s l / 0.1)) padding-box,
+            linear-gradient(var(--card), var(--card)) padding-box,
+            linear-gradient(100deg, var(--destructive), hsl(from var(--destructive) h s l / 0.35) 55%, var(--destructive)) border-box;
+    }
+    /* The chart's dot sat beside the first line of the sentence; every other failed plate carries the sentence alone. */
+    [data-theme='dark'] .kp-chart__state[data-kp-state='error'] .kp-chart__dot {
+        display: none;
+    }
+}
+/* ── t56-q: the busy card's words stay above the comet ── */
+@layer kp.signature {
+    /* The comet is the panel's ::before at z-index 1, laid over what is waiting, so it crossed the card's own sentence (the vertical
+       bar through "Reading..."). Around the content, never through it: the words and the spinner stand above the sweep. */
+    [data-theme='dark'] :is(.kp-datatable__busy-panel, .kp-calendar--busy-whole > .kp-calendar__busy) > * {
+        position: relative;
+        z-index: 2;
+    }
+}
+/* ── end t56-q ── */
 
 /* The numbers formal's motion is made of, registered at the top level
    because Firefox does not register an @property inside a cascade layer;

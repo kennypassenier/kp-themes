@@ -6152,3 +6152,104 @@
     }
 }
 /* ── end t56 ── */
+
+/* ── t56-q: the failed plate is a tube on the floor ── */
+@layer kp.signature {
+    /* A failed area (the state plate) and an urgent or refused question stood as a flat coral slab with a black square above the
+       heading. Synthwave's failure is the VCR stop in a neon tube: the tape plate (card ground, the stripe along its top, the sides
+       falling from it, the grid floor under the words) in the failure's coral, a hollow stop square lit like a tube (near-white
+       core, coral bloom) above a coral heading, the sentence in the plain ink. The same look in every part that fails. */
+    [data-theme='synthwave'] :is(:is(.kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure), .kp-chart__state[data-kp-state='error']), .kp-question.kp-alert--destructive) {
+        --kp-stripe-from: var(--destructive);
+        --kp-stripe-to: var(--destructive);
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+        color: var(--foreground);
+        background:
+            linear-gradient(to right, var(--destructive), var(--destructive)) 0 0 / 100% var(--kp-sw-side) no-repeat,
+            linear-gradient(hsl(from var(--kp-core) h s l / 0.22) 0 0) 0 var(--kp-sw-side) / 100% 1px no-repeat,
+            linear-gradient(to bottom, var(--destructive), hsl(from var(--destructive) h s l / 0.5) 50%, transparent) 0 0 / var(--kp-sw-side) 100% no-repeat,
+            linear-gradient(to bottom, var(--destructive), hsl(from var(--destructive) h s l / 0.5) 50%, transparent) 100% 0 / var(--kp-sw-side) 100% no-repeat,
+            var(--card);
+        border: 0;
+        border-radius: 0;
+        box-shadow:
+            inset 0 -2px 0 0 hsl(from var(--sidebar-background) h s l / 0.7),
+            0 0 24px hsl(from var(--destructive) h s l / 0.22);
+    }
+    /* The floor, in the failure's colour, under the plate's foot. */
+    [data-theme='synthwave'] :is(:is(.kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure), .kp-chart__state[data-kp-state='error']), .kp-question.kp-alert--destructive)::after {
+        content: '';
+        position: absolute;
+        inset: auto 0 0;
+        z-index: -1;
+        block-size: clamp(2.5rem, 22%, 5rem);
+        border-block-start: 1px solid hsl(from var(--destructive) h s l / 0.7);
+        background:
+            linear-gradient(hsl(from var(--destructive) h s l / 0.3) 0 0) 0 30% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--destructive) h s l / 0.34) 0 0) 0 62% / 100% 1px no-repeat,
+            repeating-conic-gradient(from 180deg at 50% -40%, hsl(from var(--destructive) h s l / 0.4) 0 0.7deg, transparent 0.7deg 9deg);
+        box-shadow: 0 -2px 12px hsl(from var(--destructive) h s l / 0.3);
+        pointer-events: none;
+    }
+    /* The stop: a hollow square tube. */
+    [data-theme='synthwave'] :is(.kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure), .kp-chart__state[data-kp-state='error'])::before {
+        content: '';
+        inline-size: 1.75rem;
+        block-size: 1.75rem;
+        box-sizing: border-box;
+        border: 3px solid var(--kp-core);
+        background: transparent;
+        filter: none;
+        box-shadow:
+            0 0 6px var(--destructive),
+            0 0 14px hsl(from var(--destructive) h s l / 0.7),
+            inset 0 0 6px hsl(from var(--destructive) h s l / 0.8);
+        font-size: inherit;
+    }
+    [data-theme='synthwave'] .kp-question.kp-alert--destructive::before {
+        background: transparent;
+        box-sizing: border-box;
+        border: 2px solid var(--kp-core);
+        inline-size: 1.1rem;
+        block-size: 1.1rem;
+        filter: none;
+        box-shadow:
+            0 0 5px var(--destructive),
+            0 0 12px hsl(from var(--destructive) h s l / 0.7);
+    }
+    [data-theme='synthwave'] :is(.kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure), .kp-chart__state[data-kp-state='error']) :is(.kp-stateplate__title, .kp-runs__failure-title, .kp-dated__failure-title, .kp-card__state-title, .kp-chart__state-text) {
+        color: var(--destructive);
+        text-shadow:
+            0 0 2px var(--sidebar-background),
+            0 0 8px hsl(from var(--destructive) h s l / 0.6);
+    }
+    [data-theme='synthwave'] :is(.kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure), .kp-chart__state[data-kp-state='error']) :is(.kp-stateplate__text, .kp-card__state-text) {
+        color: var(--foreground);
+    }
+    /* Its buttons are the theme's own framed keys, the frame in the failure's coral. */
+    [data-theme='synthwave']
+        :is(:is(.kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure), .kp-chart__state[data-kp-state='error']), .kp-question.kp-alert--destructive)
+        .kp-button:not(.kp-icon-button) {
+        --kp-frame: var(--destructive);
+        --kp-glow: hsl(from var(--destructive) h s l / 0.5);
+        --kp-sw-cut-ink: var(--card);
+        background: var(--card);
+        color: var(--foreground);
+        text-shadow: none;
+    }
+    [data-theme='synthwave']
+        :is(:is(.kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure), .kp-chart__state[data-kp-state='error']), .kp-question.kp-alert--destructive)
+        .kp-button:not(.kp-icon-button):hover {
+        --kp-frame: var(--kp-core);
+        background: hsl(from var(--destructive) h s l / 0.18);
+    }
+}
+@layer kp.signature {
+    /* The chart's own dot sits beside the sentence; the stop tube above it says the same, so the dot leaves. */
+    [data-theme='synthwave'] .kp-chart__state[data-kp-state='error'] .kp-chart__dot {
+        display: none;
+    }
+}
+/* ── end t56-q ── */
