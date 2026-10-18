@@ -72,12 +72,13 @@ function measure() {
         const brokenAt = (n) => {
             const g = document.createRange();
             const perLine = new Map();
-            const wordTops = [];
-            let word = null;
+            const lineText = new Map();
+            let cut = false;
+            let prevTop = null;
             for (let i = 0; i < n.data.length; i++) {
                 const ch = n.data[i];
                 if (/\s/.test(ch)) {
-                    word = null;
+                    prevTop = null;
                     continue;
                 }
                 g.setStart(n, i);
@@ -86,12 +87,20 @@ function measure() {
                 if (!q) continue;
                 const top = Math.round(q.top / 3);
                 perLine.set(top, (perLine.get(top) ?? 0) + 1);
-                if (!word) wordTops.push((word = new Set()));
-                word.add(top);
+                lineText.set(top, (lineText.get(top) ?? '') + ch);
+                // A break inside one word is a fault, except after a hyphen that joins two pieces ("Vandenbroucke-Lemmens",
+                // "immich-machine-learning") or a slash: those are where a name may wrap. A dash run ("--service") is no joint.
+                if (prevTop !== null && top !== prevTop) {
+                    const before = n.data[i - 1];
+                    const joint = (before === '-' && /[\p{L}\p{N}]/u.test(n.data[i - 2] ?? '') && /[\p{L}\p{N}]/u.test(ch)) || before === '/';
+                    if (!joint) cut = true;
+                }
+                prevTop = top;
             }
             if (perLine.size < 2) return '';
-            if (wordTops.some((w) => w.size > 1)) return 'a word is cut in two';
-            if ([...perLine.values()].some((c) => c <= 2)) return 'a line is left holding 1-2 characters';
+            if (cut) return 'a word is cut in two';
+            // A whole two-letter word on a line ("Bo") is ordinary wrapping, a stray "+" or "2" is not.
+            if ([...lineText.values()].some((t) => t.length <= 2 && !/^\p{L}{2}$/u.test(t))) return 'a line is left holding 1-2 characters';
             return '';
         };
         const owners = new Map();
