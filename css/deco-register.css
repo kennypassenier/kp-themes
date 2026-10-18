@@ -6266,9 +6266,14 @@
         border-color: hsl(from var(--primary) h s l / 0.3);
         text-decoration: none;
     }
+    /* The words of a waiting part are a brass nameplate on the doors: lacquer under them and a gold hairline round them, so the
+       seams and the lozenges run behind the plate and never through a letter [t56-eye-1018]. */
     [data-theme='deco'] .kp-datatable__busy-words {
         position: relative;
         z-index: 4;
+        padding: 0.2em 0.75em;
+        background: var(--kp-sig-deco-lac);
+        box-shadow: inset 0 0 0 1px hsl(from var(--primary) h s l / 0.55);
     }
     [data-theme='deco'] .kp-quote__text::before {
         --kp-glyph-quote: '\25C6';
@@ -6348,5 +6353,19 @@
     }
     [data-theme='deco'] .kp-code__head {
         min-inline-size: 0;
+    }
+}
+
+/* The time box in a sentence is 5.5 characters wide in the package, and this theme's field plate takes 0.7 rem of side padding, so
+   the last digit ran into the edge ("03:0"). The box is the five characters plus its own padding and a margin
+   [t56-eye-1018]. */
+@layer kp.signature {
+    [data-theme='deco'] .kp-time--inline .kp-time__input.kp-field__input {
+        padding-inline: 0.5em;
+        inline-size: calc(4.8ch + 1.75em);
+    }
+
+    [data-theme='deco'] .kp-time--inline .kp-time__skeleton {
+        inline-size: calc(4.8ch + 1.75em);
     }
 }
