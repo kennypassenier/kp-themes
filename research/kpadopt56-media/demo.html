@@ -8,7 +8,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>kpadopt5 and 6 in the other themes, part 10 of 11: Pictures, documents and printing</title>
+        <title>kpadopt5 and 6 in the other themes, part 11 of 12: Pictures, documents and printing</title>
         <link rel="stylesheet" href="../../css/fonts.css" />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
@@ -39,10 +39,10 @@
 
         <main id="main" class="cat-main k56-page">
             <header class="k56-intro">
-                <h1>The fifth and sixth adoption rounds, part 10 of 11: Pictures, documents and printing</h1>
+                <h1>The fifth and sixth adoption rounds, part 11 of 12: Pictures, documents and printing</h1>
                 <p class="cat-intro">
                     Formal is approved. Things you look at or take away: the picture gallery, the document preview, anchors on headings and rows, a QR
-                    code, and a printed checklist. This part asks the eleven other themes for 8 sections (88 pairs), one theme per step in the review
+                    code, and a printed checklist. This part asks the eleven other themes for 9 sections (99 pairs), one theme per step in the review
                     dialog. The sections were approved in formal in several rounds; each is shown here in its latest version, with the defaults you
                     chose.
                 </p>
@@ -1024,16 +1024,16 @@
 
             <section
                 class="ks-sec"
-                id="qr-code"
-                data-review-item="qr-code"
+                id="qr-code-states"
+                data-review-item="qr-code-states"
                 data-review-topic="qr-code"
                 data-review-topic-title="QR code"
                 data-review-components="qr"
-                data-review-title="A link as a QR code a phone can scan"
-                aria-labelledby="h-qr-code"
+                data-review-title="A link as a QR code a phone can scan: states"
+                aria-labelledby="h-qr-code-states"
             >
                 <div class="ks-sec__head">
-                    <h2 id="h-qr-code">QR code</h2>
+                    <h2 id="h-qr-code-states">QR code: states</h2>
                     <p>
                         A link shown as a QR code that a phone can scan, with the link as text and a Copy button under it. The code is drawn on the
                         page itself: the link never goes to a service.
@@ -1059,6 +1059,130 @@
                         <li>
                             At 390 px the code is the full width up to 16 rem, centred, and Copy fills the line, 44 px high. The last frame puts the
                             link and Copy first.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="dark">
+                        In dark, waiting is a comet with a film tail over the whole component; empty and failed are one centred plate at normal size
+                        with a normal-size button. Check each sample keeps the component’s footprint, the chamfered corners hold, and at phone width
+                        nothing is cut or touches an edge.
+                    </p>
+                    <p data-for="cyberpunk">
+                        In cyberpunk, waiting is signal loss: the word and the plate glitch while the whole component stays in place. Check loading,
+                        empty and failed keep the full footprint, the red is used only for a real failure, and at phone width the cut corners clip no
+                        text.
+                    </p>
+                    <p data-for="synthwave">
+                        In synthwave, waiting is the marquee chasing along the whole component. Check loading, empty and failed keep the full
+                        footprint, the chase is visible and moving, and at phone width the bloom clips nothing.
+                    </p>
+                    <p data-for="pastel">
+                        In pastel, waiting is washi tape fluttering over the whole component. Check loading, empty and failed keep the full footprint,
+                        the misregistered second ink is visible but readable, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="forest">
+                        In forest, waiting is the row of planted trees along the whole component. Check loading, empty and failed keep the full
+                        footprint, the trees stand and grow as the bar fills, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="blueprint">
+                        In blueprint, waiting is the section hatched across the whole component. Check loading, empty and failed keep the full
+                        footprint, the hatching moves, a failure is flagged in amber or red and not just a colour change, and at phone width nothing
+                        is cut.
+                    </p>
+                    <p data-for="solstice">
+                        In solstice, waiting is the sun crossing the whole component and a warning reddens the sky. Check loading, empty and failed
+                        keep the full footprint, the crossing is visible and calm, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="brutalism">
+                        In brutalism, waiting is a lintel hoisted across the whole component and a warning is taped off. Check loading, empty and
+                        failed keep the full footprint, the hard steps are visible, and at phone width the shadow clips nothing.
+                    </p>
+                    <p data-for="deco">
+                        In deco, waiting is lift doors over the whole component. Check loading, empty and failed keep the full footprint, the doors
+                        and the inlay move slowly and cleanly, and at phone width the gold edge cuts no text.
+                    </p>
+                    <p data-for="nostromo">
+                        In nostromo, waiting is the raster building up on the screen across the whole component. Check loading, empty and failed keep
+                        the full footprint, the lamps tell the state, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="titanium">
+                        In titanium, waiting is the machined film sweeping the whole component. Check loading, empty and failed keep the full
+                        footprint, the sweep is visible, and at phone width nothing is cut.
+                    </p>
+                </div>
+                <div class="ks-controls" data-review-controls data-review-controls-for="qr-code-states-component">
+                    <div role="group" aria-label="Code state">
+                        <b>Code state:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-qr-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-qr-state="loading" aria-pressed="false">Making the link</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-qr-state="empty" aria-pressed="false">No link yet</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-qr-state="long" aria-pressed="false">Link too long</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-qr-state="dense" aria-pressed="false">Long link (dense)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-qr-state="expired" aria-pressed="false">Expired</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-qr-state="hidden" aria-pressed="false">
+                            Hidden until shown
+                        </button>
+                    </div>
+                </div>
+                <p class="ks-readout" role="status" data-ks-qr-readout>Nothing copied yet.</p>
+                <div id="qr-code-states-component" class="ks-pair">
+                    <div class="ks-stack">
+                        <p class="ks-label">The invitation link (inside a flex row too)</p>
+                        <div class="ks-flexrow">
+                            <div class="kp-qr" data-kp-qr data-kp-qr-value="https://kp-soft.dev/invite/7Hq2-nT9a" data-kp-qr-retry id="ks-qr"></div>
+                        </div>
+                    </div>
+                    <div class="ks-stack">
+                        <p class="ks-label">390 px</p>
+                        <div class="ks-frame ks-frame--phone">
+                            <div class="kp-qr" data-kp-qr data-kp-qr-value="https://kp-soft.dev/invite/7Hq2-nT9a" id="ks-qr-phone"></div>
+                        </div>
+                        <p class="ks-label">390 px, link and Copy first</p>
+                        <div class="ks-frame ks-frame--phone">
+                            <div
+                                class="kp-qr"
+                                data-kp-qr
+                                data-kp-qr-narrow="link"
+                                data-kp-qr-value="https://kp-soft.dev/invite/7Hq2-nT9a"
+                                id="ks-qr-link"
+                            ></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="ks-sec"
+                id="qr-code"
+                data-review-item="qr-code"
+                data-review-topic="qr-code"
+                data-review-components="qr"
+                data-review-title="A link as a QR code a phone can scan: options"
+                aria-labelledby="h-qr-code"
+            >
+                <div class="ks-sec__head">
+                    <h2 id="h-qr-code">QR code: options</h2>
+                    <p>
+                        A link shown as a QR code that a phone can scan, with the link as text and a Copy button under it. The code is drawn on the
+                        page itself: the link never goes to a service.
+                    </p>
+                </div>
+                <div class="ks-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The component is one code for the invitation link. Each group below the heading changes one setting and the code redraws
+                            at once, nothing reloads.
+                        </li>
+                        <li>
+                            <b>Colour</b>: the plate (dark modules on white, the default) or the theme&rsquo;s own ink, which falls back to the plate
+                            when it would read under 7 to 1. <b>Dots</b>: square or round. <b>Size</b>: 12 rem or 16 rem. <b>Download</b>: off, or a
+                            PNG or SVG button under the code.
+                        </li>
+                        <li>
+                            The four samples under the heading show each choice side by side, plus quality H and a secret link behind a button. Point
+                            a phone camera at any of them: each still scans.
                         </li>
                         <li>
                             The groups marked <b>(live option)</b> change one setting of the main component while it runs and it redraws at once,
@@ -1123,84 +1247,48 @@
                         or swells, and that text keeps clear of the milled edge.
                     </p>
                 </div>
-                <div class="ks-controls" data-review-controls data-review-controls-for="qr-code-component">
-                    <div role="group" aria-label="Code state">
-                        <b>Code state:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-qr-state="ready" aria-pressed="true">Ready</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-qr-state="loading" aria-pressed="false">Making the link</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-qr-state="empty" aria-pressed="false">No link yet</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-qr-state="long" aria-pressed="false">Link too long</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-qr-state="dense" aria-pressed="false">Long link (dense)</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-qr-state="expired" aria-pressed="false">Expired</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-qr-state="hidden" aria-pressed="false">
-                            Hidden until shown
-                        </button>
-                    </div>
+                <div class="ks-controls" data-review-controls data-review-controls-for="ks-qr-opt">
                     <div role="group" aria-label="Colour (live option)">
                         <b>Colour (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-qr|data-kp-qr-look|plate" aria-pressed="true">
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-qr-opt|data-kp-qr-look|plate" aria-pressed="true">
                             Plate
                         </button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-qr|data-kp-qr-look|theme" aria-pressed="false">
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-qr-opt|data-kp-qr-look|theme" aria-pressed="false">
                             Theme ink
                         </button>
                     </div>
                     <div role="group" aria-label="Dots (live option)">
                         <b>Dots (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-qr|data-kp-qr-modules|square" aria-pressed="true">
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-qr-opt|data-kp-qr-modules|square" aria-pressed="true">
                             Square
                         </button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-qr|data-kp-qr-modules|round" aria-pressed="false">
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-qr-opt|data-kp-qr-modules|round" aria-pressed="false">
                             Round
                         </button>
                     </div>
                     <div role="group" aria-label="Size (live option)">
                         <b>Size (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-qr|data-kp-qr-size|12rem" aria-pressed="true">
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-qr-opt|data-kp-qr-size|12rem" aria-pressed="true">
                             12 rem
                         </button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-qr|data-kp-qr-size|lg" aria-pressed="false">
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-qr-opt|data-kp-qr-size|lg" aria-pressed="false">
                             16 rem
                         </button>
                     </div>
                     <div role="group" aria-label="Download (live option)">
                         <b>Download (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-qr|data-kp-qr-download|false" aria-pressed="true">
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-qr-opt|data-kp-qr-download|false" aria-pressed="true">
                             Off
                         </button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-qr|data-kp-qr-download|png" aria-pressed="false">
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-qr-opt|data-kp-qr-download|png" aria-pressed="false">
                             PNG
                         </button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-qr|data-kp-qr-download|svg" aria-pressed="false">
+                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-qr-opt|data-kp-qr-download|svg" aria-pressed="false">
                             SVG
                         </button>
                     </div>
                 </div>
-                <p class="ks-readout" role="status" data-ks-qr-readout>Nothing copied yet.</p>
-                <div id="qr-code-component" class="ks-pair">
-                    <div class="ks-stack">
-                        <p class="ks-label">The invitation link (inside a flex row too)</p>
-                        <div class="ks-flexrow">
-                            <div class="kp-qr" data-kp-qr data-kp-qr-value="https://kp-soft.dev/invite/7Hq2-nT9a" data-kp-qr-retry id="ks-qr"></div>
-                        </div>
-                    </div>
-                    <div class="ks-stack">
-                        <p class="ks-label">390 px</p>
-                        <div class="ks-frame ks-frame--phone">
-                            <div class="kp-qr" data-kp-qr data-kp-qr-value="https://kp-soft.dev/invite/7Hq2-nT9a" id="ks-qr-phone"></div>
-                        </div>
-                        <p class="ks-label">390 px, link and Copy first</p>
-                        <div class="ks-frame ks-frame--phone">
-                            <div
-                                class="kp-qr"
-                                data-kp-qr
-                                data-kp-qr-narrow="link"
-                                data-kp-qr-value="https://kp-soft.dev/invite/7Hq2-nT9a"
-                                id="ks-qr-link"
-                            ></div>
-                        </div>
-                    </div>
-                </div>
+                <div class="kp-qr" data-kp-qr data-kp-qr-value="https://kp-soft.dev/invite/7Hq2-nT9a" id="ks-qr-opt"></div>
                 <p class="ks-label">Each choice, side by side</p>
                 <div class="ks-trio">
                     <div class="ks-stack">

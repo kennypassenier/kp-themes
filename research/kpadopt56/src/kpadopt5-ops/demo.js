@@ -73,6 +73,9 @@ const restoreTile = (tile) => {
 function initOpsPage() {
     const pages = /** @type {HTMLElement[]} */ ([...document.querySelectorAll('[data-ko-ops]')]);
     if (!pages.length) return;
+    // A section's buttons drive only the pages of their own section (the states and the options are two sections).
+    const siblings = (/** @type {Element} */ el) =>
+        /** @type {HTMLElement[]} */ ([...(el.closest('section') ?? document).querySelectorAll('[data-ko-ops]')]);
     /** @param {HTMLElement} page */
     const attention = (page, on = true, error = false) => {
         const band = /** @type {HTMLElement | null} */ (page.querySelector('[data-ko-ops-attention]'));
@@ -81,7 +84,7 @@ function initOpsPage() {
         retry.type = 'button';
         retry.className = 'kp-button kp-button--sm';
         retry.textContent = error ? 'Retry' : 'Restart the modem';
-        if (error) retry.addEventListener('click', () => setState('ready'));
+        if (error) retry.addEventListener('click', () => setState('ready', siblings(page)));
         setAttention(
             band,
             error
@@ -156,32 +159,32 @@ function initOpsPage() {
         attention(page);
     }
     /** @param {'ready' | 'loading' | 'error'} next */
-    function setState(next) {
+    function setState(next, scope = pages) {
         state = next;
-        for (const page of pages) {
+        for (const page of scope) {
             page.setAttribute('data-kp-state', next);
             for (const tile of page.querySelectorAll('.kp-kpi')) (next === 'loading' ? skeletonTile : restoreTile)(tile);
             for (const card of page.querySelectorAll('.kp-card'))
                 setCardState(/** @type {HTMLElement} */ (card), next === 'loading' ? 'loading' : 'ready');
             attention(page, band && next !== 'error', next === 'error');
         }
-        for (const b of document.querySelectorAll('[data-ko-ops-state]'))
+        for (const b of (scope[0]?.closest('section') ?? document).querySelectorAll('[data-ko-ops-state]'))
             b.setAttribute('aria-pressed', String(/** @type {HTMLElement} */ (b).dataset.koOpsState === next));
     }
     for (const button of document.querySelectorAll('[data-ko-ops-state]'))
         button.addEventListener('click', () =>
-            setState(/** @type {'ready' | 'loading' | 'error'} */ (/** @type {HTMLElement} */ (button).dataset.koOpsState)),
+            setState(/** @type {'ready' | 'loading' | 'error'} */ (/** @type {HTMLElement} */ (button).dataset.koOpsState), siblings(button)),
         );
     for (const button of document.querySelectorAll('[data-ko-ops-band]'))
         button.addEventListener('click', () => {
             press(/** @type {Element} */ (button.closest('[role="group"]')), button);
             band = /** @type {HTMLElement} */ (button).dataset.koOpsBand === 'one';
-            for (const page of pages) attention(page, band && state !== 'error', state === 'error');
+            for (const page of siblings(button)) attention(page, band && state !== 'error', state === 'error');
         });
     for (const button of document.querySelectorAll('[data-ko-ops-sticky]'))
         button.addEventListener('click', () => {
             press(/** @type {Element} */ (button.closest('[role="group"]')), button);
-            for (const page of pages) page.setAttribute('data-kp-ops-sticky', /** @type {HTMLElement} */ (button).dataset.koOpsSticky ?? 'toolbar');
+            for (const page of siblings(button)) page.setAttribute('data-kp-ops-sticky', /** @type {HTMLElement} */ (button).dataset.koOpsSticky ?? 'toolbar');
         });
     const readout = document.querySelector('[data-ko-ops-readout]');
     const probe = document.createElement('div');
@@ -200,13 +203,13 @@ function initOpsPage() {
         button.addEventListener('click', () => {
             press(/** @type {Element} */ (button.closest('[role="group"]')), button);
             const width = /** @type {HTMLElement} */ (button).dataset.koOpsWidth ?? '80vw';
-            for (const page of pages) page.setAttribute('data-kp-ops-width', width);
+            for (const page of siblings(button)) page.setAttribute('data-kp-ops-width', width);
             say(width);
         });
     for (const button of document.querySelectorAll('[data-ko-ops-density]'))
         button.addEventListener('click', () => {
             press(/** @type {Element} */ (button.closest('[role="group"]')), button);
-            for (const page of pages) page.setAttribute('data-kp-density', /** @type {HTMLElement} */ (button).dataset.koOpsDensity ?? 'comfortable');
+            for (const page of siblings(button)) page.setAttribute('data-kp-density', /** @type {HTMLElement} */ (button).dataset.koOpsDensity ?? 'comfortable');
         });
 }
 

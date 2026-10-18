@@ -13,7 +13,7 @@ if (!port) {
     console.error('usage: node research/kpadopt56/check-wiring.mjs <port> [theme] [part ...]');
     process.exit(2);
 }
-const PARTS = ['schedule', 'choose', 'fields', 'updates', 'confirm', 'lists', 'status', 'calm', 'charts', 'media', 'people'].filter((p) => !only.length || only.includes(p));
+const PARTS = ['schedule', 'choose', 'fields', 'updates', 'confirm', 'lists', 'pages', 'status', 'calm', 'charts', 'media', 'people'].filter((p) => !only.length || only.includes(p));
 const browser = await firefox.launch({ executablePath: `${process.env.HOME}/.cache/ms-playwright/firefox-1538/firefox/firefox` });
 let found = 0;
 for (const part of PARTS) {

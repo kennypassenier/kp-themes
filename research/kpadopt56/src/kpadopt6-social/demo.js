@@ -71,6 +71,7 @@ const chores = () => [
 
 const lists = {
     main: $('#ks-claim'),
+    opt: $('#ks-claim-opt'),
     phone: $('#ks-claim-phone'),
     quiet: $('#ks-claim-quiet'),
     top: $('#ks-claim-top'),
@@ -466,16 +467,22 @@ function host(command, context) {
 }
 
 onReady(() => {
-    for (const id of ['ks-console', 'ks-console-phone', 'ks-console-first', 'ks-console-word']) {
+    for (const id of ['ks-console', 'ks-console-phone', 'ks-console-first', 'ks-console-word', 'ks-console-opt']) {
         const c = $(`#${id}`);
         if (!c) continue;
         setConsoleRun(c, host);
-        if (id === 'ks-console' || id === 'ks-console-phone') setConsoleContext(c, { options: CONTAINERS, value: '', label: 'Container' });
+        if (id === 'ks-console' || id === 'ks-console-phone' || id === 'ks-console-opt') setConsoleContext(c, { options: CONTAINERS, value: '', label: 'Container' });
     }
     if (conMain)
         setConsoleComplete(conMain, (prefix) =>
             ['uptime', 'ls -la /etc', 'ping -c 8 nextcloud', 'df -h', 'dump-logs'].filter((c) => c.startsWith(prefix.trim())),
         );
+    // The options console starts with two finished commands, so the order, the result, Cancel and the timer have something to act on.
+    const seeded = $('#ks-console-opt');
+    if (seeded) {
+        void runConsoleCommand(seeded, 'true');
+        setTimeout(() => void runConsoleCommand(seeded, 'false'), 150);
+    }
     // The bar-only console hands its blocks to the page's own list.
     const bar = $('#ks-console-bar');
     const barList = $('[data-ks-barlist]');
@@ -556,9 +563,9 @@ const REVIEW_OPTIONS = /** @type {Record<string, string>} */ ({
     best: '#ks-av|data-kp-availability-best|',
     summary: '#ks-av|data-kp-availability-summary|',
     unit: '#ks-av|data-kp-availability-unit-switch|',
-    order: '#ks-console|data-kp-console-order|',
-    status: '#ks-console|data-kp-console-status|',
-    cancel: '#ks-console|data-kp-console-cancel|',
+    order: '#ks-console-opt|data-kp-console-order|',
+    status: '#ks-console-opt|data-kp-console-status|',
+    cancel: '#ks-console-opt|data-kp-console-cancel|',
 });
 document.addEventListener('review:choice', (event) => {
     const { id, value } = /** @type {CustomEvent} */ (event).detail;
