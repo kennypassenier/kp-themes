@@ -2674,8 +2674,10 @@
     }
 
     [data-theme='nostromo'] .kp-datatable__busy-panel::after {
+        /* The glass is content-box: 1.5rem inside its 3 px bezel. The word fills that inside, so it sits in the middle of the
+           screen and the scanline mask never leaves it cut at the foot [t56-eye-1018]. */
         inset: auto calc(0.75rem + 3px) calc(0.75rem + 3px);
-        block-size: calc(1.5rem - 6px);
+        block-size: 1.5rem;
         padding-inline: 0.55rem;
     }
 
@@ -6068,5 +6070,19 @@
         border-color: var(--border-strong);
         background: var(--kp-no-seam, var(--muted));
         box-shadow: var(--kp-sig-no-well, inset 0 1px 2px hsl(from var(--foreground) h s l / 0.3));
+    }
+}
+
+/* The time box in a sentence is 5.5 characters wide in the package, and this theme's field plate takes a thin 4.5 px of side padding, so
+   the last digit ran into the edge ("03:0"). The box is the five characters plus its own padding and a margin
+   [t56-eye-1018]. */
+@layer kp.signature {
+    [data-theme='nostromo'] .kp-time--inline .kp-time__input.kp-field__input {
+        padding-inline: 0.5em;
+        inline-size: calc(4.8ch + 1.75em);
+    }
+
+    [data-theme='nostromo'] .kp-time--inline .kp-time__skeleton {
+        inline-size: calc(4.8ch + 1.75em);
     }
 }
