@@ -117,3 +117,4 @@ the key-figure label wrap and the side navigation's `data-kp-sidenav-opener`; th
 - Shared state fixes [t56-statefix-1018] S12 (operations page): new option `data-kp-ops-failed` on `.kp-ops`, `plate` (default: the failure alert takes the body, centred, holds the height, stale cards hidden) or `keep` (cards stay, a band on top); needs `data-kp-state="error"` on the page; the page also holds its footprint. Show both on the ops page, with a switch.
 - Shared state fixes [t56-statefix-1018]: `.kp-stateplate__action` (Retry, Add) is at the control size, `--kp-text-md`, not the plate heading size. No new option.
 - Shared state fixes [t56-statefix-1018]: the loading gallery tiles keep the loaded tiles square footprint in every theme. No new option.
+- Shared state fixes [t56-statefix-1018]: a failed checklist (`.kp-checklist__empty`) centres its words and a normal Retry (`.kp-claim__retry`, 2.25rem) instead of a strip across the box. No new option.

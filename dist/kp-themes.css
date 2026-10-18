@@ -18511,6 +18511,8 @@
     .kp-checklist__empty {
         display: grid;
         place-content: center;
+        /* The words and the Retry under them sit in the middle: a button is as wide as its words, never a strip across the box. */
+        justify-items: center;
         min-block-size: var(--kp-checklist-body-min);
         box-sizing: border-box;
         margin: 0;
@@ -28438,6 +28440,7 @@
 
     .kp-claim__retry {
         margin-block-start: var(--kp-space-md, 0.75rem);
+        min-block-size: 2.25rem;
     }
 
     .kp-checklist__empty:has(.kp-claim__retry) {
