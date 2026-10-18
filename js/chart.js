@@ -1357,7 +1357,8 @@ function plotChart(host, group, locale, ctx) {
     /** @param {ChartEvent} ev the key item an event belongs to: its kind, else its tone */
     const kindOf = (ev) => ev.kind ?? toneOf(ev);
     /** @param {string} kind */
-    const kindWord = (kind) => data.kinds?.[kind]?.label ?? (kind === 'info' || kind === 'warning' || kind === 'critical' ? strings.kindTone(kind) : kind);
+    const kindWord = (kind) =>
+        data.kinds?.[kind]?.label ?? (kind === 'info' || kind === 'warning' || kind === 'critical' ? strings.kindTone(kind) : kind);
     /** The events the key has not switched off. */
     const shownEvents = () => (data.events ?? []).filter((ev) => !kindsOff.has(kindOf(ev)));
     /** Reads a chart option from the data, else from the element's attribute. */
@@ -1373,7 +1374,9 @@ function plotChart(host, group, locale, ctx) {
             minPoints: Number.isFinite(min) && min > 0 ? Math.floor(min) : 0,
             minUnit: data.minUnit ?? attr('min-unit') ?? '',
             key: data.annotationKey ?? attr('annotation-key') !== 'off',
-            band: /** @type {'tint' | 'hatch' | 'bracket'} */ ((data.band ?? attr('band')) === 'hatch' ? 'hatch' : (data.band ?? attr('band')) === 'bracket' ? 'bracket' : 'tint'),
+            band: /** @type {'tint' | 'hatch' | 'bracket'} */ (
+                (data.band ?? attr('band')) === 'hatch' ? 'hatch' : (data.band ?? attr('band')) === 'bracket' ? 'bracket' : 'tint'
+            ),
         };
     };
 
@@ -1401,7 +1404,10 @@ function plotChart(host, group, locale, ctx) {
         const signature = JSON.stringify([...kinds].map(([k, v]) => [k, v.tone, v.count, kindWord(k)]).concat(notes.map((n) => [n])));
         if (signature !== keyMemo) {
             keyMemo = signature;
-            const focused = doc.activeElement instanceof HTMLElement && annKey.contains(doc.activeElement) ? doc.activeElement.getAttribute('data-kp-kind') : null;
+            const focused =
+                doc.activeElement instanceof HTMLElement && annKey.contains(doc.activeElement)
+                    ? doc.activeElement.getAttribute('data-kp-kind')
+                    : null;
             const items = [...kinds].map(([k, v]) => {
                 const dot = h(doc, 'i', { class: 'kp-chart__dot', 'data-kp-tone': v.tone, 'aria-hidden': 'true' });
                 const button = h(
@@ -1422,8 +1428,20 @@ function plotChart(host, group, locale, ctx) {
             });
             const extra = notes.map((n) =>
                 n === 'median'
-                    ? h(doc, 'span', { class: 'kp-chart__annkey-note', 'data-kp-note': 'median' }, h(doc, 'i', { class: 'kp-chart__annkey-line', 'aria-hidden': 'true' }), h(doc, 'span', { class: 'kp-chart__annkey-median' }))
-                    : h(doc, 'span', { class: 'kp-chart__annkey-note', 'data-kp-note': 'runs' }, h(doc, 'i', { class: 'kp-chart__annkey-ring', 'aria-hidden': 'true' }), strings.runsKey),
+                    ? h(
+                          doc,
+                          'span',
+                          { class: 'kp-chart__annkey-note', 'data-kp-note': 'median' },
+                          h(doc, 'i', { class: 'kp-chart__annkey-line', 'aria-hidden': 'true' }),
+                          h(doc, 'span', { class: 'kp-chart__annkey-median' }),
+                      )
+                    : h(
+                          doc,
+                          'span',
+                          { class: 'kp-chart__annkey-note', 'data-kp-note': 'runs' },
+                          h(doc, 'i', { class: 'kp-chart__annkey-ring', 'aria-hidden': 'true' }),
+                          strings.runsKey,
+                      ),
             );
             annKey.replaceChildren(...items, ...extra);
             if (focused) /** @type {HTMLElement | null} */ (annKey.querySelector(`[data-kp-kind="${CSS.escape(focused)}"]`))?.focus();
@@ -1550,8 +1568,7 @@ function plotChart(host, group, locale, ctx) {
                     },
                 }),
             );
-        }
-        else box.append(h(doc, 'div', { class: 'kp-chart__state-text' }, words));
+        } else box.append(h(doc, 'div', { class: 'kp-chart__state-text' }, words));
         plot.replaceChildren(box);
         // Said once, not on every redraw.
         if (shown !== `${kind} ${words}`) {
@@ -1663,13 +1680,26 @@ function plotChart(host, group, locale, ctx) {
                         const id = `${clip}-hatch-${tone}`;
                         if (!hatches.has(id)) {
                             hatches.add(id);
-                            const pattern = s(doc, 'pattern', { id, width: 6, height: 6, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)', 'data-kp-tone': tone });
+                            const pattern = s(doc, 'pattern', {
+                                id,
+                                width: 6,
+                                height: 6,
+                                patternUnits: 'userSpaceOnUse',
+                                patternTransform: 'rotate(45)',
+                                'data-kp-tone': tone,
+                            });
                             pattern.append(s(doc, 'line', { class: 'kp-chart__hatch', x1: 0, y1: 0, x2: 0, y2: 6 }));
                             defs.append(pattern);
                         }
                         fill = `url(#${id})`;
                     }
-                    const rect = s(doc, 'rect', { class: 'kp-chart__band-fill', x: x0, y: P.t - 4, width: Math.max(1, x1 - x0), height: H - P.b - P.t + 4 });
+                    const rect = s(doc, 'rect', {
+                        class: 'kp-chart__band-fill',
+                        x: x0,
+                        y: P.t - 4,
+                        width: Math.max(1, x1 - x0),
+                        height: H - P.b - P.t + 4,
+                    });
                     if (fill) rect.setAttribute('fill', fill);
                     band.append(rect);
                     if (ev.at >= from) band.append(s(doc, 'line', { class: 'kp-chart__band-edge', x1: x0, x2: x0, y1: P.t - 4, y2: H - P.b }));
@@ -1683,7 +1713,9 @@ function plotChart(host, group, locale, ctx) {
         const base = (points[0] ?? []).map(() => 0);
         const fill = vis.length <= 2 && !stacked;
         data.series.forEach((series, si) => {
-            if (!vis.includes(si)) return;
+            // Too few readings for a trend: no line, no area and no dot is drawn, only the empty plot and the sentence
+            // (Kenny, 2026-10-18 17:45: a faint line still showed through the "3 of 7 days" plate).
+            if (!vis.includes(si) || few) return;
             const pts = points[si].map((p, k) => [x(p[0]), y(stacked ? (base[k] ?? 0) + p[1] : p[1])]);
             if (pts.length === 0) return;
             const d = pts.map((p, k) => `${k ? 'L' : 'M'}${p[0].toFixed(1)},${p[1].toFixed(1)}`).join('');
@@ -1749,7 +1781,12 @@ function plotChart(host, group, locale, ctx) {
             if (medians.length === 1) {
                 const m = medians[0];
                 const up = y(m.v) - 6 < P.t + 8;
-                const text = s(doc, 'text', { class: 'kp-chart__median-label', x: W - P.r - 4, y: up ? y(m.v) + 14 : y(m.v) - 6, 'text-anchor': 'end' });
+                const text = s(doc, 'text', {
+                    class: 'kp-chart__median-label',
+                    x: W - P.r - 4,
+                    y: up ? y(m.v) + 14 : y(m.v) - 6,
+                    'text-anchor': 'end',
+                });
                 text.textContent = `${medianWords(opt)} ${fmt(m.v, 'tip')}`;
                 svg.append(text);
             }
@@ -1829,14 +1866,21 @@ function plotChart(host, group, locale, ctx) {
         if (afterCount) aria.push(strings.edgeAfter(afterCount));
         plot.setAttribute('aria-label', aria.join(', '));
         if (few) {
-            // Too early for a trend: the readings so far, faint, and the sentence in the middle of the plot's whole height.
+            // Too early for a trend: the empty plot, faint, and the sentence on an opaque plate in the middle of its whole height.
             const words = strings.few(have, opt.minPoints, opt.minUnit || strings.fewUnit);
             svg.setAttribute('data-kp-faint', '');
             geo = null;
             tip.hidden = true;
             hint.hidden = true;
             note.hidden = true;
-            const plate = h(doc, 'div', { class: 'kp-chart__few' }, h(doc, 'p', { class: 'kp-empty kp-chart__few-plate', role: 'status' }, words));
+            // The plate stands on an opaque ground of the card's colour, so a theme that draws its empty plate as a
+            // see-through texture keeps that texture and still lets nothing of the plot show through (Kenny, 2026-10-18 17:45).
+            const plate = h(
+                doc,
+                'div',
+                { class: 'kp-chart__few' },
+                h(doc, 'div', { class: 'kp-chart__few-ground' }, h(doc, 'p', { class: 'kp-empty kp-chart__few-plate', role: 'status' }, words)),
+            );
             plot.append(plate);
             if (shown !== `few ${words}`) {
                 shown = `few ${words}`;
@@ -1887,7 +1931,9 @@ function plotChart(host, group, locale, ctx) {
     const eventsNear = (t) => {
         if (!geo) return [];
         const reach = (geo.to - geo.from) / 30;
-        return shownEvents().filter((ev) => (ev.until != null && ev.until > ev.at ? t >= ev.at - reach && t <= ev.until + reach : Math.abs(ev.at - t) < reach));
+        return shownEvents().filter((ev) =>
+            ev.until != null && ev.until > ev.at ? t >= ev.at - reach && t <= ev.until + reach : Math.abs(ev.at - t) < reach,
+        );
     };
     /** @param {number} d */
     const change = (d) => (d === 0 ? '±0' : `${d > 0 ? '▲' : '▼'} ${fmt(Math.abs(d), 'delta')}`);
@@ -1951,7 +1997,10 @@ function plotChart(host, group, locale, ctx) {
         );
         // On a phone the median's words are not on the plot: the tooltip carries them.
         tipMedian.hidden = medians.length === 0;
-        if (medians.length) tipMedian.textContent = medians.map((m) => `${medians.length > 1 ? `${m.label}: ` : ''}${medianWords(option())} ${fmt(m.v, 'tip')}`).join('; ');
+        if (medians.length)
+            tipMedian.textContent = medians
+                .map((m) => `${medians.length > 1 ? `${m.label}: ` : ''}${medianWords(option())} ${fmt(m.v, 'tip')}`)
+                .join('; ');
         tip.hidden = false;
         tip.toggleAttribute('data-kp-pinned', pinned != null);
         tip.toggleAttribute('data-kp-outside', outside);

@@ -5101,6 +5101,15 @@
         pointer-events: none;
     }
 
+    /* The plate is opaque: it stands on a ground of the card's colour, under whatever ground the theme gives the plate
+       itself, so nothing of the plot shows through its words (Kenny, 2026-10-18 17:45). */
+    .kp-chart__few-ground {
+        display: grid;
+        max-inline-size: 100%;
+        border-radius: var(--radius, 0.5rem);
+        background: var(--card);
+    }
+
     .kp-chart__few-plate {
         box-sizing: border-box;
         max-inline-size: min(36ch, 100%);
