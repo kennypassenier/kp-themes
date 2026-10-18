@@ -6247,6 +6247,16 @@
         inset-block-start: 0.35em;
         opacity: 1;
     }
+    /* The rating's failed state is the alert laid over the stars' own place [rating-states]: this register's `.kp-alert` is
+       positioned `relative`, which took the package's `position: absolute; inset: 0` away, put the plate under the hidden
+       stars and grew the component from 80 px to 178 (brutalism) or 201 (deco). */
+    [data-theme='deco'] .kp-alert.kp-rating__failure {
+        position: absolute;
+        inset: 0;
+        padding: 0.25rem 0.5rem;
+        row-gap: 0.25rem;
+    }
+
     [data-theme='deco'] .kp-focus-steps__nav > .kp-button {
         padding-inline: 1rem;
         letter-spacing: 0.06em;
