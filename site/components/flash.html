@@ -284,6 +284,124 @@ button.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; r
     <span class="kp-code__keyword">return</span> <span class="kp-code__string">'Sent'</span>;
 }));</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Where a refusal is told, and the words a button says</figcaption>
+                        <p class="kp-text-muted">The work answers `{ error, remedy }` for a refusal: the button shows its short word (`data-kp-refused-word`) and the sentence stands where `data-kp-refusal` says. `line` (the default) writes it in a line right under the button, until the next press; `button` lets the button grow to hold it; `toast` sends it to the toast. `data-kp-busy-label` writes a word beside the spinner, `data-kp-flash-word` is the success word, `data-kp-flash-ms` and `data-kp-flash-error-ms` set how long a result stays, and `data-kp-flash-line` names the element that holds the line. Every press fires `kp-flash` with `{ state, ok, word, line }`, the state being `busy`, `success`, `refused` or `rest`.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack" id="doc-flash-box">
+    <div><button class="kp-button" type="button" data-kp-flash-button data-kp-refusal="line" data-kp-flash-word="Sent" data-kp-refused-word="Refused">Send to the client</button></div>
+    <div><button class="kp-button" type="button" data-kp-flash-button data-kp-refusal="button" data-kp-flash-error-ms="4000">Save the settings</button></div>
+    <div><button class="kp-button" type="button" data-kp-flash-button data-kp-refusal="toast" data-kp-busy-label="Copying" data-kp-flash-word="Copied" data-kp-flash-ms="2500">Copy the key</button></div>
+    <div><button class="kp-button" type="button" data-kp-flash-button data-kp-flash-line="#doc-flash-line">Export</button></div>
+    <p class="kp-text-muted" id="doc-flash-line" aria-live="polite"></p>
+    <p class="kp-text-muted" id="doc-flash-log" aria-live="polite">The first and second buttons are refused, the third copies, the fourth exports.</p>
+</div>
+                            <script type="module">
+import { runFlashButton } from '../../js/flash.js';
+
+const [send, save, copy, exportAll] = document.querySelectorAll('#doc-flash-box [data-kp-flash-button]');
+const wait = (ms) => new Promise((done) => setTimeout(done, ms));
+send.addEventListener('click', () => runFlashButton(send, async () => {
+    await wait(700);
+    return { error: 'The client refused the test message.', remedy: 'Check that it is switched on, then send again.' };
+}));
+save.addEventListener('click', () => runFlashButton(save, async () => {
+    await wait(700);
+    return { error: 'Retention must be 365 days or fewer.', word: 'Too long' };
+}));
+copy.addEventListener('click', () => runFlashButton(copy, async () => { await wait(500); }));
+exportAll.addEventListener('click', () => runFlashButton(exportAll, async () => {
+    await wait(900);
+    return { word: 'Exported 48 files', line: 'The export is in your downloads.' };
+}));
+document.addEventListener('kp-flash', (event) => {
+    if (event.detail.state === 'success' || event.detail.state === 'refused') {
+        document.getElementById('doc-flash-log').textContent = 'The button said “' + event.detail.word + '” (' + event.detail.state + ').';
+    }
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-flash-box&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-flash-button</span> <span class="kp-code__keyword">data-kp-refusal</span><span class="kp-code__string">=&quot;line&quot;</span> <span class="kp-code__keyword">data-kp-flash-word</span><span class="kp-code__string">=&quot;Sent&quot;</span> <span class="kp-code__keyword">data-kp-refused-word</span><span class="kp-code__string">=&quot;Refused&quot;</span>&gt;Send to the client&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-flash-button</span> <span class="kp-code__keyword">data-kp-refusal</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-flash-error-ms</span><span class="kp-code__string">=&quot;4000&quot;</span>&gt;Save the settings&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-flash-button</span> <span class="kp-code__keyword">data-kp-refusal</span><span class="kp-code__string">=&quot;toast&quot;</span> <span class="kp-code__keyword">data-kp-busy-label</span><span class="kp-code__string">=&quot;Copying&quot;</span> <span class="kp-code__keyword">data-kp-flash-word</span><span class="kp-code__string">=&quot;Copied&quot;</span> <span class="kp-code__keyword">data-kp-flash-ms</span><span class="kp-code__string">=&quot;2500&quot;</span>&gt;Copy the key&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-flash-button</span> <span class="kp-code__keyword">data-kp-flash-line</span><span class="kp-code__string">=&quot;#doc-flash-line&quot;</span>&gt;Export&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-flash-line&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-flash-log&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;The first and second buttons are refused, the third copies, the fourth exports.&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { runFlashButton } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/flash'</span>;
+
+<span class="kp-code__keyword">const</span> [send, save, copy, exportAll] = document.querySelectorAll(<span class="kp-code__string">'#doc-flash-box [data-kp-flash-button]'</span>);
+<span class="kp-code__keyword">const</span> wait = (ms) =&gt; <span class="kp-code__keyword">new</span> Promise((done) =&gt; setTimeout(done, ms));
+send.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; runFlashButton(send, <span class="kp-code__keyword">async</span> () =&gt; {
+    <span class="kp-code__keyword">await</span> wait(<span class="kp-code__string">700</span>);
+    <span class="kp-code__keyword">return</span> { error: <span class="kp-code__string">'The client refused the test message.'</span>, remedy: <span class="kp-code__string">'Check that it is switched on, then send again.'</span> };
+}));
+save.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; runFlashButton(save, <span class="kp-code__keyword">async</span> () =&gt; {
+    <span class="kp-code__keyword">await</span> wait(<span class="kp-code__string">700</span>);
+    <span class="kp-code__keyword">return</span> { error: <span class="kp-code__string">'Retention must be 365 days or fewer.'</span>, word: <span class="kp-code__string">'Too long'</span> };
+}));
+copy.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; runFlashButton(copy, <span class="kp-code__keyword">async</span> () =&gt; { <span class="kp-code__keyword">await</span> wait(<span class="kp-code__string">500</span>); }));
+exportAll.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; runFlashButton(exportAll, <span class="kp-code__keyword">async</span> () =&gt; {
+    <span class="kp-code__keyword">await</span> wait(<span class="kp-code__string">900</span>);
+    <span class="kp-code__keyword">return</span> { word: <span class="kp-code__string">'Exported 48 files'</span>, line: <span class="kp-code__string">'The export is in your downloads.'</span> };
+}));
+document.addEventListener(<span class="kp-code__string">'kp-flash'</span>, (event) =&gt; {
+    <span class="kp-code__keyword">if</span> (event.detail.state === <span class="kp-code__string">'success'</span> || event.detail.state === <span class="kp-code__string">'refused'</span>) {
+        document.getElementById(<span class="kp-code__string">'doc-flash-log'</span>).textContent = <span class="kp-code__string">'The button said “'</span> + event.detail.word + <span class="kp-code__string">'” ('</span> + event.detail.state + <span class="kp-code__string">').'</span>;
+    }
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Posting to the server with no script of your own</figcaption>
+                        <p class="kp-text-muted">`data-kp-post` is the chassis pattern: pressing the button sends the request (`data-kp-method` is POST unless it says otherwise, `data-kp-post-body` is its JSON body) and shows the answer. A success shows `data-kp-flash-word`, and a `message` in the answer’s JSON is written in the line. A failing status is a refusal with the answer’s `error` and `remedy`. `data-kp-reload` is `none` (the default), `page` (the page is read again) or `region`, which fires `kp-flash-reload` with `{ target }` for the region named by `data-kp-reload-target`. Here a stand-in answers the two addresses; a real page has a server.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-row">
+    <button class="kp-button" type="button" data-kp-post="/api/doc-flash/test" data-kp-post-body="{&quot;client&quot;:7}" data-kp-flash-word="Sent" data-kp-reload="region" data-kp-reload-target="#doc-flash-region">Send a test</button>
+    <button class="kp-button" type="button" data-kp-post="/api/doc-flash/busy" data-kp-method="PUT">Start the backup</button>
+</div>
+<p class="kp-text-muted" id="doc-flash-region" aria-live="polite">Region: not read again yet.</p>
+                            <script type="module">
+// A stand-in for the server, so the example answers without one.
+const realFetch = window.fetch.bind(window);
+window.fetch = (url, init) => {
+    const path = String(url);
+    if (path === '/api/doc-flash/test') {
+        return new Promise((done) => setTimeout(() => done(Response.json({ message: 'Test message sent to 3 clients.' })), 700));
+    }
+    if (path === '/api/doc-flash/busy') {
+        return Promise.resolve(Response.json({ error: 'A backup is already running.', remedy: 'Wait until it has finished.' }, { status: 409 }));
+    }
+    return realFetch(url, init);
+};
+document.addEventListener('kp-flash-reload', (event) => {
+    document.querySelector(event.detail.target).textContent = 'Region: read again.';
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-post</span><span class="kp-code__string">=&quot;/api/doc-flash/test&quot;</span> <span class="kp-code__keyword">data-kp-post-body</span><span class="kp-code__string">=&quot;{&amp;quot;client&amp;quot;:7}&quot;</span> <span class="kp-code__keyword">data-kp-flash-word</span><span class="kp-code__string">=&quot;Sent&quot;</span> <span class="kp-code__keyword">data-kp-reload</span><span class="kp-code__string">=&quot;region&quot;</span> <span class="kp-code__keyword">data-kp-reload-target</span><span class="kp-code__string">=&quot;#doc-flash-region&quot;</span>&gt;Send a test&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-post</span><span class="kp-code__string">=&quot;/api/doc-flash/busy&quot;</span> <span class="kp-code__keyword">data-kp-method</span><span class="kp-code__string">=&quot;PUT&quot;</span>&gt;Start the backup&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-flash-region&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;Region: not read again yet.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__comment">// A stand-in for the server, so the example answers without one.</span>
+<span class="kp-code__keyword">const</span> realFetch = window.fetch.bind(window);
+window.fetch = (url, init) =&gt; {
+    <span class="kp-code__keyword">const</span> path = String(url);
+    <span class="kp-code__keyword">if</span> (path === <span class="kp-code__string">'/api/doc-flash/test'</span>) {
+        <span class="kp-code__keyword">return</span> <span class="kp-code__keyword">new</span> Promise((done) =&gt; setTimeout(() =&gt; done(Response.json({ message: <span class="kp-code__string">'Test message sent to 3 clients.'</span> })), <span class="kp-code__string">700</span>));
+    }
+    <span class="kp-code__keyword">if</span> (path === <span class="kp-code__string">'/api/doc-flash/busy'</span>) {
+        <span class="kp-code__keyword">return</span> Promise.resolve(Response.json({ error: <span class="kp-code__string">'A backup is already running.'</span>, remedy: <span class="kp-code__string">'Wait until it has finished.'</span> }, { status: <span class="kp-code__string">409</span> }));
+    }
+    <span class="kp-code__keyword">return</span> realFetch(url, init);
+};
+document.addEventListener(<span class="kp-code__string">'kp-flash-reload'</span>, (event) =&gt; {
+    document.querySelector(event.detail.target).textContent = <span class="kp-code__string">'Region: read again.'</span>;
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>

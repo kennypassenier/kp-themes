@@ -381,6 +381,124 @@ setGallery(document.getElementById(<span class="kp-code__string">'doc-gallery-lo
 setGallery(document.getElementById(<span class="kp-code__string">'doc-gallery-empty'</span>), { state: <span class="kp-code__string">'empty'</span>, message: <span class="kp-code__string">'No pictures yet. Add the first one.'</span> });
 setGallery(document.getElementById(<span class="kp-code__string">'doc-gallery-failed'</span>), { state: <span class="kp-code__string">'error'</span>, message: <span class="kp-code__string">'The pictures could not be read.'</span> });</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Photos in a grid, opened large</figcaption>
+                        <p class="kp-text-muted">`setGallery(el, { items })` draws the tiles from items `{ id, src, thumb, width, height, alt, caption, uploader, at, bytes }`; give width and height so each tile’s box is reserved before it loads (`data-kp-lazy`). `data-kp-grid-columns=&quot;4&quot;` fixes the columns, `data-kp-tile-shape=&quot;ratio&quot;` lets each picture keep its own shape, `data-kp-caption=&quot;always&quot;` writes the captions on the tiles, and `data-kp-lightbox-info=&quot;details&quot;` adds the size in the lightbox. The lightbox steps with the arrows, Home and End, zooms with `z` and stops at the last picture (`data-kp-lightbox-loop=&quot;on&quot;` wraps round). `actions` gives each picture its foot buttons and `add` shows an Add pictures tile that fires `kp-gallery-add` with `{ files }`. `kp-gallery-open` and `kp-gallery-close` say what was looked at.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-gallery" id="doc-gallery-photos" data-kp-gallery data-kp-grid-columns="4" data-kp-tile-shape="ratio" data-kp-caption="always" data-kp-lightbox-info="details" data-kp-lightbox-actions="open download copy-link" data-kp-lightbox-hash="off" aria-label="Trip photos"></div>
+    <p class="kp-text-muted" id="doc-gallery-log" aria-live="polite">Press a photo to open it.</p>
+</div>
+                            <script type="module">
+import { setGallery } from '../../js/gallery.js';
+
+const picture = (hue, width, height) =>
+    'data:image/svg+xml,' +
+    encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="' + width + '" height="' + height + '" viewBox="0 0 ' + width + ' ' + height + '">' +
+            '<rect width="100%" height="100%" fill="hsl(' + hue + ' 45% 80%)"/>' +
+            '<circle cx="' + width / 2 + '" cy="' + height / 2 + '" r="' + Math.min(width, height) * 0.22 + '" fill="hsl(' + hue + ' 55% 35%)"/></svg>',
+    );
+const shapes = [[1200, 800], [800, 1200], [1200, 800], [1200, 800], [800, 1200], [1200, 800], [1200, 800], [1200, 800], [800, 1200], [1200, 800], [1200, 800]];
+const items = shapes.map(([width, height], i) => ({
+    id: 'p' + (i + 1),
+    src: picture(i * 40, width, height),
+    width,
+    height,
+    alt: 'Photo ' + (i + 1) + ' of the trip',
+    caption: ['Station', 'Harbour', 'Market', 'Roof terrace', 'Old bridge', 'Museum steps', 'Night walk', 'Breakfast', 'Stairs', 'Square', 'Departure'][i],
+    uploader: ['Kenny', 'Lies', 'Tom'][i % 3],
+    at: Date.UTC(2026, 5, 19 + i, 12, 0),
+    bytes: 180000 + i * 41000,
+}));
+const box = document.getElementById('doc-gallery-photos');
+const log = document.getElementById('doc-gallery-log');
+setGallery(box, { items, add: true, actions: (item) => [{ label: 'Remove', tone: 'destructive', confirm: 'Remove ' + item.caption + '?', run: () => { log.textContent = 'Removed ' + item.id; } }] });
+box.addEventListener('kp-gallery-open', (event) => { log.textContent = 'Opened ' + event.detail.item.caption + '.'; });
+box.addEventListener('kp-gallery-close', () => { log.textContent = 'Closed the lightbox.'; });
+box.addEventListener('kp-gallery-add', (event) => { log.textContent = event.detail.files.length + ' picture(s) chosen to add.'; });
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-gallery&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-gallery-photos&quot;</span> <span class="kp-code__keyword">data-kp-gallery</span> <span class="kp-code__keyword">data-kp-grid-columns</span><span class="kp-code__string">=&quot;4&quot;</span> <span class="kp-code__keyword">data-kp-tile-shape</span><span class="kp-code__string">=&quot;ratio&quot;</span> <span class="kp-code__keyword">data-kp-caption</span><span class="kp-code__string">=&quot;always&quot;</span> <span class="kp-code__keyword">data-kp-lightbox-info</span><span class="kp-code__string">=&quot;details&quot;</span> <span class="kp-code__keyword">data-kp-lightbox-actions</span><span class="kp-code__string">=&quot;open download copy-link&quot;</span> <span class="kp-code__keyword">data-kp-lightbox-hash</span><span class="kp-code__string">=&quot;off&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Trip photos&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-gallery-log&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;Press a photo to open it.&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { setGallery } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/gallery'</span>;
+
+<span class="kp-code__keyword">const</span> picture = (hue, width, height) =&gt;
+    <span class="kp-code__string">'data:image/svg+xml,'</span> +
+    encodeURIComponent(
+        <span class="kp-code__string">'&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;'</span> + width + <span class="kp-code__string">'&quot; height=&quot;'</span> + height + <span class="kp-code__string">'&quot; viewBox=&quot;0 0 '</span> + width + <span class="kp-code__string">' '</span> + height + <span class="kp-code__string">'&quot;&gt;'</span> +
+            <span class="kp-code__string">'&lt;rect width=&quot;100%&quot; height=&quot;100%&quot; fill=&quot;hsl('</span> + hue + <span class="kp-code__string">' 45% 80%)&quot;/&gt;'</span> +
+            <span class="kp-code__string">'&lt;circle cx=&quot;'</span> + width / <span class="kp-code__string">2</span> + <span class="kp-code__string">'&quot; cy=&quot;'</span> + height / <span class="kp-code__string">2</span> + <span class="kp-code__string">'&quot; r=&quot;'</span> + Math.min(width, height) * <span class="kp-code__string">0.22</span> + <span class="kp-code__string">'&quot; fill=&quot;hsl('</span> + hue + <span class="kp-code__string">' 55% 35%)&quot;/&gt;&lt;/svg&gt;'</span>,
+    );
+<span class="kp-code__keyword">const</span> shapes = [[<span class="kp-code__string">1200</span>, <span class="kp-code__string">800</span>], [<span class="kp-code__string">800</span>, <span class="kp-code__string">1200</span>], [<span class="kp-code__string">1200</span>, <span class="kp-code__string">800</span>], [<span class="kp-code__string">1200</span>, <span class="kp-code__string">800</span>], [<span class="kp-code__string">800</span>, <span class="kp-code__string">1200</span>], [<span class="kp-code__string">1200</span>, <span class="kp-code__string">800</span>], [<span class="kp-code__string">1200</span>, <span class="kp-code__string">800</span>], [<span class="kp-code__string">1200</span>, <span class="kp-code__string">800</span>], [<span class="kp-code__string">800</span>, <span class="kp-code__string">1200</span>], [<span class="kp-code__string">1200</span>, <span class="kp-code__string">800</span>], [<span class="kp-code__string">1200</span>, <span class="kp-code__string">800</span>]];
+<span class="kp-code__keyword">const</span> items = shapes.map(([width, height], i) =&gt; ({
+    id: <span class="kp-code__string">'p'</span> + (i + <span class="kp-code__string">1</span>),
+    src: picture(i * <span class="kp-code__string">40</span>, width, height),
+    width,
+    height,
+    alt: <span class="kp-code__string">'Photo '</span> + (i + <span class="kp-code__string">1</span>) + <span class="kp-code__string">' of the trip'</span>,
+    caption: [<span class="kp-code__string">'Station'</span>, <span class="kp-code__string">'Harbour'</span>, <span class="kp-code__string">'Market'</span>, <span class="kp-code__string">'Roof terrace'</span>, <span class="kp-code__string">'Old bridge'</span>, <span class="kp-code__string">'Museum steps'</span>, <span class="kp-code__string">'Night walk'</span>, <span class="kp-code__string">'Breakfast'</span>, <span class="kp-code__string">'Stairs'</span>, <span class="kp-code__string">'Square'</span>, <span class="kp-code__string">'Departure'</span>][i],
+    uploader: [<span class="kp-code__string">'Kenny'</span>, <span class="kp-code__string">'Lies'</span>, <span class="kp-code__string">'Tom'</span>][i % <span class="kp-code__string">3</span>],
+    at: Date.UTC(<span class="kp-code__string">2026</span>, <span class="kp-code__string">5</span>, <span class="kp-code__string">19</span> + i, <span class="kp-code__string">12</span>, <span class="kp-code__string">0</span>),
+    bytes: <span class="kp-code__string">180000</span> + i * <span class="kp-code__string">41000</span>,
+}));
+<span class="kp-code__keyword">const</span> box = document.getElementById(<span class="kp-code__string">'doc-gallery-photos'</span>);
+<span class="kp-code__keyword">const</span> log = document.getElementById(<span class="kp-code__string">'doc-gallery-log'</span>);
+setGallery(box, { items, add: <span class="kp-code__keyword">true</span>, actions: (item) =&gt; [{ label: <span class="kp-code__string">'Remove'</span>, tone: <span class="kp-code__string">'destructive'</span>, confirm: <span class="kp-code__string">'Remove '</span> + item.caption + <span class="kp-code__string">'?'</span>, run: () =&gt; { log.textContent = <span class="kp-code__string">'Removed '</span> + item.id; } }] });
+box.addEventListener(<span class="kp-code__string">'kp-gallery-open'</span>, (event) =&gt; { log.textContent = <span class="kp-code__string">'Opened '</span> + event.detail.item.caption + <span class="kp-code__string">'.'</span>; });
+box.addEventListener(<span class="kp-code__string">'kp-gallery-close'</span>, () =&gt; { log.textContent = <span class="kp-code__string">'Closed the lightbox.'</span>; });
+box.addEventListener(<span class="kp-code__string">'kp-gallery-add'</span>, (event) =&gt; { log.textContent = event.detail.files.length + <span class="kp-code__string">' picture(s) chosen to add.'</span>; });</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Loading, empty, failed and a picture that does not load</figcaption>
+                        <p class="kp-text-muted">The state of a gallery is `loading` (the busy card over the whole gallery, with `skeleton` waiting tiles that keep the loaded tiles’ square footprint in every theme), `empty` or `error` (the package’s plates over the whole footprint, `message` their words), or `ready`; a call with items after it is ready. A Retry on the failed plate fires `kp-gallery-retry`. A single picture that fails to load turns its tile, and the stage when opened, into a plate with Retry, and fires `kp-gallery-picture-failed` with `{ id }`.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-gallery" id="doc-gallery-loading" data-kp-gallery aria-label="Photos being fetched"></div>
+    <div class="kp-gallery" id="doc-gallery-empty" data-kp-gallery aria-label="No photos yet"></div>
+    <div class="kp-gallery" id="doc-gallery-failed" data-kp-gallery aria-label="Photos that could not be read"></div>
+    <div class="kp-gallery" id="doc-gallery-broken" data-kp-gallery data-kp-lightbox-hash="off" aria-label="Photos, one of them broken"></div>
+</div>
+                            <script type="module">
+import { setGallery } from '../../js/gallery.js';
+
+setGallery(document.getElementById('doc-gallery-loading'), { state: 'loading', skeleton: 4 });
+setGallery(document.getElementById('doc-gallery-empty'), { state: 'empty', message: 'No photos have been added yet.' });
+const failed = document.getElementById('doc-gallery-failed');
+setGallery(failed, { state: 'error', message: 'The photos could not be read.' });
+failed.addEventListener('kp-gallery-retry', () => setGallery(failed, { state: 'loading', skeleton: 4 }));
+setGallery(document.getElementById('doc-gallery-broken'), {
+    items: [
+        { id: 'ok', src: 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27400%27 height=%27400%27%3E%3Crect width=%27400%27 height=%27400%27 fill=%27%23b9c8e6%27/%3E%3C/svg%3E', width: 400, height: 400, alt: 'A plain blue square', caption: 'Fine' },
+        { id: 'gone', src: 'missing/gone.jpg', width: 400, height: 400, alt: 'A photo that is not there', caption: 'Gone' },
+    ],
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-gallery&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-gallery-loading&quot;</span> <span class="kp-code__keyword">data-kp-gallery</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Photos being fetched&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-gallery&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-gallery-empty&quot;</span> <span class="kp-code__keyword">data-kp-gallery</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;No photos yet&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-gallery&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-gallery-failed&quot;</span> <span class="kp-code__keyword">data-kp-gallery</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Photos that could not be read&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-gallery&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-gallery-broken&quot;</span> <span class="kp-code__keyword">data-kp-gallery</span> <span class="kp-code__keyword">data-kp-lightbox-hash</span><span class="kp-code__string">=&quot;off&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Photos, one of them broken&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { setGallery } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/gallery'</span>;
+
+setGallery(document.getElementById(<span class="kp-code__string">'doc-gallery-loading'</span>), { state: <span class="kp-code__string">'loading'</span>, skeleton: <span class="kp-code__string">4</span> });
+setGallery(document.getElementById(<span class="kp-code__string">'doc-gallery-empty'</span>), { state: <span class="kp-code__string">'empty'</span>, message: <span class="kp-code__string">'No photos have been added yet.'</span> });
+<span class="kp-code__keyword">const</span> failed = document.getElementById(<span class="kp-code__string">'doc-gallery-failed'</span>);
+setGallery(failed, { state: <span class="kp-code__string">'error'</span>, message: <span class="kp-code__string">'The photos could not be read.'</span> });
+failed.addEventListener(<span class="kp-code__string">'kp-gallery-retry'</span>, () =&gt; setGallery(failed, { state: <span class="kp-code__string">'loading'</span>, skeleton: <span class="kp-code__string">4</span> }));
+setGallery(document.getElementById(<span class="kp-code__string">'doc-gallery-broken'</span>), {
+    items: [
+        { id: <span class="kp-code__string">'ok'</span>, src: <span class="kp-code__string">'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27400%27 height=%27400%27%3E%3Crect width=%27400%27 height=%27400%27 fill=%27%23b9c8e6%27/%3E%3C/svg%3E'</span>, width: <span class="kp-code__string">400</span>, height: <span class="kp-code__string">400</span>, alt: <span class="kp-code__string">'A plain blue square'</span>, caption: <span class="kp-code__string">'Fine'</span> },
+        { id: <span class="kp-code__string">'gone'</span>, src: <span class="kp-code__string">'missing/gone.jpg'</span>, width: <span class="kp-code__string">400</span>, height: <span class="kp-code__string">400</span>, alt: <span class="kp-code__string">'A photo that is not there'</span>, caption: <span class="kp-code__string">'Gone'</span> },
+    ],
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>

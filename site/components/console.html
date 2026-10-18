@@ -265,6 +265,133 @@
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-console&quot;</span> <span class="kp-code__keyword">data-kp-console</span> <span class="kp-code__keyword">data-kp-console-prompt</span><span class="kp-code__string">=&quot;#&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Host console&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A host console with every kind of block</figcaption>
+                        <p class="kp-text-muted">The page supplies `run(command, context)`; it returns a job whose `update(handler)` reports `{ state, code, output, append, error, remedy }`. A block is `running` (with its elapsed time and, with `data-kp-console-cancel`, a Cancel), then `ok` or `failed` with the exit code, or `refused` with what is wrong and what to do. The line a refusal came from stays in the prompt. `data-kp-console-context=&quot;select&quot;` puts a labelled select before the prompt whose value is the second argument of `run`; `data-kp-console-confirm` makes a matching line need a second press; Tab completes through `setConsoleComplete`.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-console" id="doc-console-host" data-kp-console data-kp-console-prompt="#" data-kp-console-context="select" data-kp-console-cancel data-kp-console-tab="complete" data-kp-console-confirm="reboot,rm" data-kp-console-hint="Try: uptime, ls /missing, build, reboot. Tab completes." aria-label="Host console"></div>
+                            <script type="module">
+import { setConsoleRun, setConsoleContext, setConsoleComplete, runConsoleCommand } from '../../js/console.js';
+
+const box = document.getElementById('doc-console-host');
+setConsoleContext(box, { label: 'Host', options: [{ value: 'media', label: 'media' }, { value: 'backups', label: 'backups' }] });
+setConsoleComplete(box, (prefix) => ['uptime', 'ls /missing', 'build', 'reboot'].filter((word) => word.startsWith(prefix)));
+setConsoleRun(box, (command, host) => ({
+    update(handler) {
+        const done = (change, ms) => setTimeout(() => handler(change), ms);
+        if (command === 'uptime') {
+            done({ state: 'ok', code: 0, output: '22:41:07 up 12 days, 3:02, 1 user, load average: 0.12, 0.09, 0.08' }, 300);
+        } else if (command.startsWith('ls')) {
+            done({ state: 'failed', code: 2, output: 'ls: cannot access ' + command.slice(3) + ': No such file or directory' }, 300);
+        } else if (command === 'build') {
+            handler({ state: 'running', output: 'Compiling on ' + host + '…\n' });
+            [1, 2, 3, 4].forEach((step) => done({ state: 'running', append: 'step ' + step + ' of 4\n' }, step * 600));
+            done({ state: 'ok', code: 0, append: 'Finished.\n' }, 2900);
+        } else {
+            done({ state: 'refused', error: 'Rebooting is not allowed here.', remedy: 'Ask for a maintenance window first.' }, 300);
+        }
+    },
+    cancel() {},
+}));
+['uptime', 'ls /missing', 'reboot'].forEach((command) => runConsoleCommand(box, command));
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-console&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-console-host&quot;</span> <span class="kp-code__keyword">data-kp-console</span> <span class="kp-code__keyword">data-kp-console-prompt</span><span class="kp-code__string">=&quot;#&quot;</span> <span class="kp-code__keyword">data-kp-console-context</span><span class="kp-code__string">=&quot;select&quot;</span> <span class="kp-code__keyword">data-kp-console-cancel</span> <span class="kp-code__keyword">data-kp-console-tab</span><span class="kp-code__string">=&quot;complete&quot;</span> <span class="kp-code__keyword">data-kp-console-confirm</span><span class="kp-code__string">=&quot;reboot,rm&quot;</span> <span class="kp-code__keyword">data-kp-console-hint</span><span class="kp-code__string">=&quot;Try: uptime, ls /missing, build, reboot. Tab completes.&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Host console&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { setConsoleRun, setConsoleContext, setConsoleComplete, runConsoleCommand } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/console'</span>;
+
+<span class="kp-code__keyword">const</span> box = document.getElementById(<span class="kp-code__string">'doc-console-host'</span>);
+setConsoleContext(box, { label: <span class="kp-code__string">'Host'</span>, options: [{ value: <span class="kp-code__string">'media'</span>, label: <span class="kp-code__string">'media'</span> }, { value: <span class="kp-code__string">'backups'</span>, label: <span class="kp-code__string">'backups'</span> }] });
+setConsoleComplete(box, (prefix) =&gt; [<span class="kp-code__string">'uptime'</span>, <span class="kp-code__string">'ls /missing'</span>, <span class="kp-code__string">'build'</span>, <span class="kp-code__string">'reboot'</span>].filter((word) =&gt; word.startsWith(prefix)));
+setConsoleRun(box, (command, host) =&gt; ({
+    update(handler) {
+        <span class="kp-code__keyword">const</span> done = (change, ms) =&gt; setTimeout(() =&gt; handler(change), ms);
+        <span class="kp-code__keyword">if</span> (command === <span class="kp-code__string">'uptime'</span>) {
+            done({ state: <span class="kp-code__string">'ok'</span>, code: <span class="kp-code__string">0</span>, output: <span class="kp-code__string">'22:41:07 up 12 days, 3:02, 1 user, load average: 0.12, 0.09, 0.08'</span> }, <span class="kp-code__string">300</span>);
+        } <span class="kp-code__keyword">else</span> <span class="kp-code__keyword">if</span> (command.startsWith(<span class="kp-code__string">'ls'</span>)) {
+            done({ state: <span class="kp-code__string">'failed'</span>, code: <span class="kp-code__string">2</span>, output: <span class="kp-code__string">'ls: cannot access '</span> + command.slice(<span class="kp-code__string">3</span>) + <span class="kp-code__string">': No such file or directory'</span> }, <span class="kp-code__string">300</span>);
+        } <span class="kp-code__keyword">else</span> <span class="kp-code__keyword">if</span> (command === <span class="kp-code__string">'build'</span>) {
+            handler({ state: <span class="kp-code__string">'running'</span>, output: <span class="kp-code__string">'Compiling on '</span> + host + <span class="kp-code__string">'…\n'</span> });
+            [<span class="kp-code__string">1</span>, <span class="kp-code__string">2</span>, <span class="kp-code__string">3</span>, <span class="kp-code__string">4</span>].forEach((step) =&gt; done({ state: <span class="kp-code__string">'running'</span>, append: <span class="kp-code__string">'step '</span> + step + <span class="kp-code__string">' of 4\n'</span> }, step * <span class="kp-code__string">600</span>));
+            done({ state: <span class="kp-code__string">'ok'</span>, code: <span class="kp-code__string">0</span>, append: <span class="kp-code__string">'Finished.\n'</span> }, <span class="kp-code__string">2900</span>);
+        } <span class="kp-code__keyword">else</span> {
+            done({ state: <span class="kp-code__string">'refused'</span>, error: <span class="kp-code__string">'Rebooting is not allowed here.'</span>, remedy: <span class="kp-code__string">'Ask for a maintenance window first.'</span> }, <span class="kp-code__string">300</span>);
+        }
+    },
+    cancel() {},
+}));
+[<span class="kp-code__string">'uptime'</span>, <span class="kp-code__string">'ls /missing'</span>, <span class="kp-code__string">'reboot'</span>].forEach((command) =&gt; runConsoleCommand(box, command));</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Loading, unreachable and off with a reason</figcaption>
+                        <p class="kp-text-muted">`setConsole(el, { state })` is `loading` (the busy card over the output at its final size), `error` (a plate saying the host could not be reached, with Retry, which fires `kp-console-retry`) or `ready`. `data-kp-disabled-reason` with `disabled` stops the prompt and says why.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-console" id="doc-console-loading" data-kp-console aria-label="Console that is connecting"></div>
+    <div class="kp-console" id="doc-console-failed" data-kp-console aria-label="Console that cannot reach its host"></div>
+    <div class="kp-console" data-kp-console disabled data-kp-disabled-reason="Commands are off while a backup is running." aria-label="Console that is switched off"></div>
+</div>
+                            <script type="module">
+import { setConsole } from '../../js/console.js';
+
+setConsole(document.getElementById('doc-console-loading'), { state: 'loading' });
+setConsole(document.getElementById('doc-console-failed'), { state: 'error', message: 'The host did not answer.' });
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-console&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-console-loading&quot;</span> <span class="kp-code__keyword">data-kp-console</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Console that is connecting&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-console&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-console-failed&quot;</span> <span class="kp-code__keyword">data-kp-console</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Console that cannot reach its host&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-console&quot;</span> <span class="kp-code__keyword">data-kp-console</span> <span class="kp-code__keyword">disabled</span> <span class="kp-code__keyword">data-kp-disabled-reason</span><span class="kp-code__string">=&quot;Commands are off while a backup is running.&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Console that is switched off&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { setConsole } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/console'</span>;
+
+setConsole(document.getElementById(<span class="kp-code__string">'doc-console-loading'</span>), { state: <span class="kp-code__string">'loading'</span> });
+setConsole(document.getElementById(<span class="kp-code__string">'doc-console-failed'</span>), { state: <span class="kp-code__string">'error'</span>, message: <span class="kp-code__string">'The host did not answer.'</span> });</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A console that is only a bar</figcaption>
+                        <p class="kp-text-muted">`data-kp-console-mode=&quot;bar&quot;` keeps the prompt, the select and Run; the blocks are not drawn but go out as `kp-console-block` with `{ block }`, for a page that shows the output in a panel of its own. `data-kp-console-order=&quot;newest-first&quot;` and `data-kp-console-max-lines` change how a full console reads.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-console" id="doc-console-bar" data-kp-console data-kp-console-mode="bar" data-kp-console-prompt="$" aria-label="Command bar"></div>
+    <pre class="kp-code-block" id="doc-console-out" aria-live="polite"><code>Nothing run yet.</code></pre>
+</div>
+                            <script type="module">
+import { setConsoleRun } from '../../js/console.js';
+
+const bar = document.getElementById('doc-console-bar');
+const out = document.getElementById('doc-console-out').querySelector('code');
+setConsoleRun(bar, (command) => ({
+    update(handler) {
+        setTimeout(() => handler({ state: 'ok', code: 0, output: 'ran: ' + command }), 200);
+    },
+}));
+bar.addEventListener('kp-console-block', (event) => {
+    const { command, state, output } = event.detail.block;
+    out.textContent = '$ ' + command + '\n[' + state + '] ' + output;
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-console&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-console-bar&quot;</span> <span class="kp-code__keyword">data-kp-console</span> <span class="kp-code__keyword">data-kp-console-mode</span><span class="kp-code__string">=&quot;bar&quot;</span> <span class="kp-code__keyword">data-kp-console-prompt</span><span class="kp-code__string">=&quot;$&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Command bar&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code-block&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-console-out&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;<span class="kp-code__keyword">code</span>&gt;Nothing run yet.&lt;/<span class="kp-code__keyword">code</span>&gt;&lt;/<span class="kp-code__keyword">pre</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { setConsoleRun } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/console'</span>;
+
+<span class="kp-code__keyword">const</span> bar = document.getElementById(<span class="kp-code__string">'doc-console-bar'</span>);
+<span class="kp-code__keyword">const</span> out = document.getElementById(<span class="kp-code__string">'doc-console-out'</span>).querySelector(<span class="kp-code__string">'code'</span>);
+setConsoleRun(bar, (command) =&gt; ({
+    update(handler) {
+        setTimeout(() =&gt; handler({ state: <span class="kp-code__string">'ok'</span>, code: <span class="kp-code__string">0</span>, output: <span class="kp-code__string">'ran: '</span> + command }), <span class="kp-code__string">200</span>);
+    },
+}));
+bar.addEventListener(<span class="kp-code__string">'kp-console-block'</span>, (event) =&gt; {
+    <span class="kp-code__keyword">const</span> { command, state, output } = event.detail.block;
+    out.textContent = <span class="kp-code__string">'$ '</span> + command + <span class="kp-code__string">'\n['</span> + state + <span class="kp-code__string">'] '</span> + output;
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>

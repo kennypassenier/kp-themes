@@ -265,6 +265,81 @@
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-slider&quot;</span> <span class="kp-code__keyword">data-kp-slider</span> <span class="kp-code__keyword">data-kp-min</span><span class="kp-code__string">=&quot;10&quot;</span> <span class="kp-code__keyword">data-kp-max</span><span class="kp-code__string">=&quot;30&quot;</span> <span class="kp-code__keyword">data-kp-step</span><span class="kp-code__string">=&quot;0.5&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;21&quot;</span> <span class="kp-code__keyword">data-kp-unit</span><span class="kp-code__string">=&quot;°C&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Temperature&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A price range with two thumbs</figcaption>
+                        <p class="kp-text-muted">`data-kp-slider=&quot;range&quot;` takes two values (`data-kp-value=&quot;100,300&quot;`) that never cross; `data-kp-min-gap` is the least between them. `data-kp-slider-value=&quot;both&quot;` shows the number in the box and in a bubble over the thumb, `data-kp-ticks` draws marks (a `:Label` names one), and `data-kp-name` gives the two inputs the names `price-min` and `price-max` for a form.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-slider" data-kp-slider="range" data-kp-min="0" data-kp-max="500" data-kp-step="10" data-kp-value="100,300" data-kp-default="100,300" data-kp-min-gap="50" data-kp-unit="€" data-kp-slider-value="both" data-kp-ticks="0,250:Half,500" data-kp-name="price" aria-label="Price"></div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-slider&quot;</span> <span class="kp-code__keyword">data-kp-slider</span><span class="kp-code__string">=&quot;range&quot;</span> <span class="kp-code__keyword">data-kp-min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">data-kp-max</span><span class="kp-code__string">=&quot;500&quot;</span> <span class="kp-code__keyword">data-kp-step</span><span class="kp-code__string">=&quot;10&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;100,300&quot;</span> <span class="kp-code__keyword">data-kp-default</span><span class="kp-code__string">=&quot;100,300&quot;</span> <span class="kp-code__keyword">data-kp-min-gap</span><span class="kp-code__string">=&quot;50&quot;</span> <span class="kp-code__keyword">data-kp-unit</span><span class="kp-code__string">=&quot;€&quot;</span> <span class="kp-code__keyword">data-kp-slider-value</span><span class="kp-code__string">=&quot;both&quot;</span> <span class="kp-code__keyword">data-kp-ticks</span><span class="kp-code__string">=&quot;0,250:Half,500&quot;</span> <span class="kp-code__keyword">data-kp-name</span><span class="kp-code__string">=&quot;price&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Price&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Formats and a vertical slider</figcaption>
+                        <p class="kp-text-muted">`data-kp-format` writes the value as a percentage, a size (`bytes`) or a duration (the value is seconds); `data-kp-orientation=&quot;vertical&quot;` stands the track up, 10rem high unless `--kp-slider-length` says otherwise.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-slider" data-kp-slider data-kp-min="0" data-kp-max="100" data-kp-value="60" data-kp-format="percent" aria-label="Volume"></div>
+    <div class="kp-slider" data-kp-slider data-kp-min="0" data-kp-max="3600" data-kp-step="60" data-kp-value="900" data-kp-format="duration" aria-label="Snooze for"></div>
+    <div class="kp-slider" data-kp-slider data-kp-min="0" data-kp-max="1073741824" data-kp-step="1048576" data-kp-value="268435456" data-kp-format="bytes" aria-label="Upload limit"></div>
+    <div class="kp-slider" data-kp-slider data-kp-orientation="vertical" data-kp-min="0" data-kp-max="10" data-kp-value="4" data-kp-commit="input" aria-label="Brightness"></div>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-slider&quot;</span> <span class="kp-code__keyword">data-kp-slider</span> <span class="kp-code__keyword">data-kp-min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">data-kp-max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;60&quot;</span> <span class="kp-code__keyword">data-kp-format</span><span class="kp-code__string">=&quot;percent&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Volume&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-slider&quot;</span> <span class="kp-code__keyword">data-kp-slider</span> <span class="kp-code__keyword">data-kp-min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">data-kp-max</span><span class="kp-code__string">=&quot;3600&quot;</span> <span class="kp-code__keyword">data-kp-step</span><span class="kp-code__string">=&quot;60&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;900&quot;</span> <span class="kp-code__keyword">data-kp-format</span><span class="kp-code__string">=&quot;duration&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Snooze for&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-slider&quot;</span> <span class="kp-code__keyword">data-kp-slider</span> <span class="kp-code__keyword">data-kp-min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">data-kp-max</span><span class="kp-code__string">=&quot;1073741824&quot;</span> <span class="kp-code__keyword">data-kp-step</span><span class="kp-code__string">=&quot;1048576&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;268435456&quot;</span> <span class="kp-code__keyword">data-kp-format</span><span class="kp-code__string">=&quot;bytes&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Upload limit&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-slider&quot;</span> <span class="kp-code__keyword">data-kp-slider</span> <span class="kp-code__keyword">data-kp-orientation</span><span class="kp-code__string">=&quot;vertical&quot;</span> <span class="kp-code__keyword">data-kp-min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">data-kp-max</span><span class="kp-code__string">=&quot;10&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;4&quot;</span> <span class="kp-code__keyword">data-kp-commit</span><span class="kp-code__string">=&quot;input&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Brightness&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Off with a reason, and loading</figcaption>
+                        <p class="kp-text-muted">`data-kp-disabled` turns every control off and `data-kp-disabled-reason` is the sentence that says why, shown under the slider. `data-kp-state=&quot;loading&quot;` draws the package’s skeleton at the final size of the track and the box, so nothing moves when the value arrives.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-slider" data-kp-slider data-kp-min="10" data-kp-max="30" data-kp-value="21" data-kp-unit="°C" data-kp-disabled data-kp-disabled-reason="The thermostat is on a schedule until 18:00." aria-label="Target temperature"></div>
+    <div class="kp-slider" data-kp-slider data-kp-min="10" data-kp-max="30" data-kp-value="21" data-kp-unit="°C" data-kp-state="loading" aria-label="Current temperature"></div>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-slider&quot;</span> <span class="kp-code__keyword">data-kp-slider</span> <span class="kp-code__keyword">data-kp-min</span><span class="kp-code__string">=&quot;10&quot;</span> <span class="kp-code__keyword">data-kp-max</span><span class="kp-code__string">=&quot;30&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;21&quot;</span> <span class="kp-code__keyword">data-kp-unit</span><span class="kp-code__string">=&quot;°C&quot;</span> <span class="kp-code__keyword">data-kp-disabled</span> <span class="kp-code__keyword">data-kp-disabled-reason</span><span class="kp-code__string">=&quot;The thermostat is on a schedule until 18:00.&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Target temperature&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-slider&quot;</span> <span class="kp-code__keyword">data-kp-slider</span> <span class="kp-code__keyword">data-kp-min</span><span class="kp-code__string">=&quot;10&quot;</span> <span class="kp-code__keyword">data-kp-max</span><span class="kp-code__string">=&quot;30&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;21&quot;</span> <span class="kp-code__keyword">data-kp-unit</span><span class="kp-code__string">=&quot;°C&quot;</span> <span class="kp-code__keyword">data-kp-state</span><span class="kp-code__string">=&quot;loading&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Current temperature&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Doing the work on commit, and setting a value from the page</figcaption>
+                        <p class="kp-text-muted">`kp-slider-change` carries `{ values, value, thumb, text }` and fires on release; `kp-slider-input` fires on every move and is for drawing, not for sending. `setSliderValues(el, [..])` moves the thumbs and `sliderValues(el)` reads them.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-slider" id="doc-slider-volume" data-kp-slider data-kp-min="0" data-kp-max="100" data-kp-value="30" data-kp-unit="%" aria-label="Speaker volume"></div>
+    <p class="kp-text-muted" id="doc-slider-log" aria-live="polite">Release the thumb to commit.</p>
+    <button class="kp-button" type="button" id="doc-slider-reset">Back to 30 %</button>
+</div>
+                            <script type="module">
+import { setSliderValues, sliderValues } from '../../js/slider.js';
+
+const box = document.getElementById('doc-slider-volume');
+const log = document.getElementById('doc-slider-log');
+box.addEventListener('kp-slider-change', (event) => {
+    log.textContent = 'Committed ' + event.detail.text + ' (values: ' + sliderValues(box).join(', ') + ')';
+});
+document.getElementById('doc-slider-reset').addEventListener('click', () => setSliderValues(box, [30]));
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-slider&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-slider-volume&quot;</span> <span class="kp-code__keyword">data-kp-slider</span> <span class="kp-code__keyword">data-kp-min</span><span class="kp-code__string">=&quot;0&quot;</span> <span class="kp-code__keyword">data-kp-max</span><span class="kp-code__string">=&quot;100&quot;</span> <span class="kp-code__keyword">data-kp-value</span><span class="kp-code__string">=&quot;30&quot;</span> <span class="kp-code__keyword">data-kp-unit</span><span class="kp-code__string">=&quot;%&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Speaker volume&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-slider-log&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;Release the thumb to commit.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-slider-reset&quot;</span>&gt;Back to 30 %&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { setSliderValues, sliderValues } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/slider'</span>;
+
+<span class="kp-code__keyword">const</span> box = document.getElementById(<span class="kp-code__string">'doc-slider-volume'</span>);
+<span class="kp-code__keyword">const</span> log = document.getElementById(<span class="kp-code__string">'doc-slider-log'</span>);
+box.addEventListener(<span class="kp-code__string">'kp-slider-change'</span>, (event) =&gt; {
+    log.textContent = <span class="kp-code__string">'Committed '</span> + event.detail.text + <span class="kp-code__string">' (values: '</span> + sliderValues(box).join(<span class="kp-code__string">', '</span>) + <span class="kp-code__string">')'</span>;
+});
+document.getElementById(<span class="kp-code__string">'doc-slider-reset'</span>).addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; setSliderValues(box, [<span class="kp-code__string">30</span>]));</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -340,6 +415,12 @@
                             <tr><td><code>data-kp-commit</code></td><td>`change` (default, on release) or `input`.</td></tr>
                             <tr><td><code>data-kp-orientation</code></td><td>`horizontal` (default) or `vertical`.</td></tr>
                             <tr><td><code>data-kp-state</code></td><td>`loading` shows the skeleton over track and box.</td></tr>
+                            <tr><td><code>data-kp-min, data-kp-max, data-kp-step</code></td><td>The range and the step (0, 100 and 1). A typed value is snapped to the step and refused with a line under the slider when it is not in range.</td></tr>
+                            <tr><td><code>data-kp-value / data-kp-default</code></td><td>The value at first (`20,60` for a range) and the one a double-click on a thumb goes back to.</td></tr>
+                            <tr><td><code>data-kp-unit</code></td><td>Text after the number (`°C`, `%`, `min`); it is part of `aria-valuetext`.</td></tr>
+                            <tr><td><code>data-kp-min-gap</code></td><td>On a range: the least distance between the two thumbs; the step by default.</td></tr>
+                            <tr><td><code>data-kp-name</code></td><td>The inputs’ name for a form; a range uses `name-min` and `name-max`.</td></tr>
+                            <tr><td><code>data-kp-disabled</code></td><td>Every control is off; with `data-kp-disabled-reason` the sentence that says why is written under the slider.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

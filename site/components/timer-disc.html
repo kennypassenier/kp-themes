@@ -265,6 +265,51 @@
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timer-disc&quot;</span> <span class="kp-code__keyword">data-kp-timer-disc</span><span class="kp-code__string">=&quot;25m&quot;</span> <span class="kp-code__keyword">data-kp-timer-disc-name</span><span class="kp-code__string">=&quot;Focus&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A classic 60-minute dial, a short timer and a disabled one</figcaption>
+                        <p class="kp-text-muted">Without `data-kp-timer-disc-scale` the whole disc is the set length, so a five-minute timer starts full and shrinks to nothing; with `scale=&quot;60&quot;` the face is a 60-minute dial and 25 minutes is a sector of 150 degrees. A length is `25m`, `1h30m`, `45s`, `90` (seconds) or `25:00`. `data-kp-timer-disc-disabled` turns the buttons off. Reset fills the disc again in the theme’s own time and curve; under reduced motion the disc steps once a minute.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-row">
+    <div class="kp-timer-disc" data-kp-timer-disc="25m" data-kp-timer-disc-scale="60" data-kp-timer-disc-name="Focus"></div>
+    <div class="kp-timer-disc" data-kp-timer-disc="5m" data-kp-timer-disc-name="Break"></div>
+    <div class="kp-timer-disc" data-kp-timer-disc="1h30m" data-kp-timer-disc-scale="120" data-kp-timer-disc-name="Homework" data-kp-timer-disc-disabled></div>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timer-disc&quot;</span> <span class="kp-code__keyword">data-kp-timer-disc</span><span class="kp-code__string">=&quot;25m&quot;</span> <span class="kp-code__keyword">data-kp-timer-disc-scale</span><span class="kp-code__string">=&quot;60&quot;</span> <span class="kp-code__keyword">data-kp-timer-disc-name</span><span class="kp-code__string">=&quot;Focus&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timer-disc&quot;</span> <span class="kp-code__keyword">data-kp-timer-disc</span><span class="kp-code__string">=&quot;5m&quot;</span> <span class="kp-code__keyword">data-kp-timer-disc-name</span><span class="kp-code__string">=&quot;Break&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timer-disc&quot;</span> <span class="kp-code__keyword">data-kp-timer-disc</span><span class="kp-code__string">=&quot;1h30m&quot;</span> <span class="kp-code__keyword">data-kp-timer-disc-scale</span><span class="kp-code__string">=&quot;120&quot;</span> <span class="kp-code__keyword">data-kp-timer-disc-name</span><span class="kp-code__string">=&quot;Homework&quot;</span> <span class="kp-code__keyword">data-kp-timer-disc-disabled</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Running, paused and ended</figcaption>
+                        <p class="kp-text-muted">`timerDiscOf(el)` is the clock of an attached disc (`start()`, `pause()`, `reset(seconds)`, `add(seconds)`, `remaining()`), shared with the countdown. `data-kp-timer-disc-state` follows it (`idle`, `running`, `paused`, `ended`). The disc fires the countdown’s events: `kp-countdown-change` with `{ state, remaining, total }` and `kp-countdown-end` with `{ total }`, after which the face breathes three times and the line says “Time is up”.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-timer-disc" id="doc-disc-run" data-kp-timer-disc="12s" data-kp-timer-disc-name="Twelve seconds"></div>
+<p class="kp-text-muted" id="doc-disc-log" aria-live="polite">Starting in a moment.</p>
+                            <script type="module">
+import { attachTimerDiscs, timerDiscOf } from '../../js/timer-disc.js';
+
+const disc = document.getElementById('doc-disc-run');
+const log = document.getElementById('doc-disc-log');
+attachTimerDiscs(disc.parentElement);
+disc.addEventListener('kp-countdown-change', (event) => { log.textContent = 'State: ' + event.detail.state + '.'; });
+disc.addEventListener('kp-countdown-end', () => { log.textContent = 'The time is up.'; });
+setTimeout(() => timerDiscOf(disc)?.start(), 800);
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-timer-disc&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-disc-run&quot;</span> <span class="kp-code__keyword">data-kp-timer-disc</span><span class="kp-code__string">=&quot;12s&quot;</span> <span class="kp-code__keyword">data-kp-timer-disc-name</span><span class="kp-code__string">=&quot;Twelve seconds&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-disc-log&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;Starting in a moment.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachTimerDiscs, timerDiscOf } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/timer-disc'</span>;
+
+<span class="kp-code__keyword">const</span> disc = document.getElementById(<span class="kp-code__string">'doc-disc-run'</span>);
+<span class="kp-code__keyword">const</span> log = document.getElementById(<span class="kp-code__string">'doc-disc-log'</span>);
+attachTimerDiscs(disc.parentElement);
+disc.addEventListener(<span class="kp-code__string">'kp-countdown-change'</span>, (event) =&gt; { log.textContent = <span class="kp-code__string">'State: '</span> + event.detail.state + <span class="kp-code__string">'.'</span>; });
+disc.addEventListener(<span class="kp-code__string">'kp-countdown-end'</span>, () =&gt; { log.textContent = <span class="kp-code__string">'The time is up.'</span>; });
+setTimeout(() =&gt; timerDiscOf(disc)?.start(), <span class="kp-code__string">800</span>);</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>

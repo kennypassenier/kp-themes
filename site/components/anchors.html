@@ -271,6 +271,106 @@
     &lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;&lt;<span class="kp-code__keyword">tbody</span>&gt;&lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-anchor</span><span class="kp-code__string">=&quot;dead-4f2a&quot;</span> <span class="kp-code__keyword">data-kp-anchor-label</span><span class="kp-code__string">=&quot;Dead letter 4f2a&quot;</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;row&quot;</span>&gt;4f2a&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Consumer timed out&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;&lt;/<span class="kp-code__keyword">tbody</span>&gt;&lt;/<span class="kp-code__keyword">table</span>&gt;
 &lt;/<span class="kp-code__keyword">main</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A guide: marks always shown, a fold and the words after a copy</figcaption>
+                        <p class="kp-text-muted">`data-kp-anchors=&quot;headings&quot;` marks every heading of the levels in `data-kp-anchor-levels` (`2,3` by default; here only level 3). `data-kp-anchor-show=&quot;always&quot;` keeps the `#` visible instead of waiting for the pointer, `data-kp-anchor-copy=&quot;hash&quot;` copies only `#id`, and a heading’s own `id` is never overwritten. A link that lands inside a folded `details` opens it first (`data-kp-anchor-open`). `kp-anchor-copy` carries `{ id, url, text, markdown, ok }`; Shift with the press copies a Markdown link. `refreshAnchors(box)` draws the marks again after an option changed.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<main class="kp-stack" id="doc-anchors-guide" data-kp-anchors="headings" data-kp-anchor-levels="3" data-kp-anchor-show="always" data-kp-anchor-copy="hash">
+    <h2>Restoring a backup</h2>
+    <h3>Before you start</h3>
+    <p>Stop the stack, then check that the disk has 40 GB free.</p>
+    <h3 id="doc-anchors-steps">The steps</h3>
+    <details>
+        <summary>Folded: what to do when the copy is damaged</summary>
+        <h3 id="doc-anchors-damaged">A damaged copy</h3>
+        <p>Take the copy of the night before and run the check again.</p>
+    </details>
+    <p class="kp-text-muted" id="doc-anchors-log" aria-live="polite">Press a # to copy its link.</p>
+</main>
+                            <script type="module">
+const guide = document.getElementById('doc-anchors-guide');
+const log = document.getElementById('doc-anchors-log');
+guide.addEventListener('kp-anchor-copy', (event) => {
+    log.textContent = event.detail.ok ? 'Copied ' + event.detail.text + ' for ' + event.detail.id + '.' : 'The browser refused the copy.';
+});
+guide.addEventListener('kp-anchor-missing', (event) => {
+    log.textContent = 'There is nothing called ' + event.detail.id + ' on this page.';
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">main</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-anchors-guide&quot;</span> <span class="kp-code__keyword">data-kp-anchors</span><span class="kp-code__string">=&quot;headings&quot;</span> <span class="kp-code__keyword">data-kp-anchor-levels</span><span class="kp-code__string">=&quot;3&quot;</span> <span class="kp-code__keyword">data-kp-anchor-show</span><span class="kp-code__string">=&quot;always&quot;</span> <span class="kp-code__keyword">data-kp-anchor-copy</span><span class="kp-code__string">=&quot;hash&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">h2</span>&gt;Restoring a backup&lt;/<span class="kp-code__keyword">h2</span>&gt;
+    &lt;<span class="kp-code__keyword">h3</span>&gt;Before you start&lt;/<span class="kp-code__keyword">h3</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span>&gt;Stop the stack, then check that the disk has 40 GB free.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-anchors-steps&quot;</span>&gt;The steps&lt;/<span class="kp-code__keyword">h3</span>&gt;
+    &lt;<span class="kp-code__keyword">details</span>&gt;
+        &lt;<span class="kp-code__keyword">summary</span>&gt;Folded: what to do when the copy is damaged&lt;/<span class="kp-code__keyword">summary</span>&gt;
+        &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-anchors-damaged&quot;</span>&gt;A damaged copy&lt;/<span class="kp-code__keyword">h3</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span>&gt;Take the copy of the night before and run the check again.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">details</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-anchors-log&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;Press a # to copy its link.&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">main</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">const</span> guide = document.getElementById(<span class="kp-code__string">'doc-anchors-guide'</span>);
+<span class="kp-code__keyword">const</span> log = document.getElementById(<span class="kp-code__string">'doc-anchors-log'</span>);
+guide.addEventListener(<span class="kp-code__string">'kp-anchor-copy'</span>, (event) =&gt; {
+    log.textContent = event.detail.ok ? <span class="kp-code__string">'Copied '</span> + event.detail.text + <span class="kp-code__string">' for '</span> + event.detail.id + <span class="kp-code__string">'.'</span> : <span class="kp-code__string">'The browser refused the copy.'</span>;
+});
+guide.addEventListener(<span class="kp-code__string">'kp-anchor-missing'</span>, (event) =&gt; {
+    log.textContent = <span class="kp-code__string">'There is nothing called '</span> + event.detail.id + <span class="kp-code__string">' on this page.'</span>;
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Rows that keep their link after a re-sort, and a mark that moves</figcaption>
+                        <p class="kp-text-muted">A row says its own id with `data-kp-anchor` (the id of the data, never its place in the list), so a link survives a re-sort; `data-kp-anchor-label` is what the mark’s accessible name says (“Copy link to Dead letter 4f2a”). `data-kp-anchor-position` is `before` for rows and `after` for headings, and `data-kp-anchor-target=&quot;none&quot;` stops marking the place a link lands on. A link to a row that is not on the page yet is waited for, and one that has no place to land says so in a notice with a button that clears the address.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack" id="doc-anchors-rows" data-kp-anchors="rows" data-kp-anchor-show="always">
+    <table class="kp-table">
+        <thead><tr><th scope="col">Message</th><th scope="col">Why it failed</th></tr></thead>
+        <tbody>
+            <tr data-kp-anchor="dead-4f2a" data-kp-anchor-label="Dead letter 4f2a"><th scope="row">4f2a</th><td>Consumer timed out</td></tr>
+            <tr data-kp-anchor="dead-91bc" data-kp-anchor-label="Dead letter 91bc"><th scope="row">91bc</th><td>Payload too large</td></tr>
+            <tr data-kp-anchor="dead-c07e" data-kp-anchor-label="Dead letter c07e"><th scope="row">c07e</th><td>Unknown topic</td></tr>
+        </tbody>
+    </table>
+    <button class="kp-button" type="button" id="doc-anchors-move">Put the marks after the row</button>
+</div>
+                            <script type="module">
+import { refreshAnchors } from '../../js/anchors.js';
+
+const box = document.getElementById('doc-anchors-rows');
+const button = document.getElementById('doc-anchors-move');
+button.addEventListener('click', () => {
+    const after = box.getAttribute('data-kp-anchor-position') !== 'after';
+    box.setAttribute('data-kp-anchor-position', after ? 'after' : 'before');
+    refreshAnchors(box);
+    button.textContent = after ? 'Put the marks before the row' : 'Put the marks after the row';
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-anchors-rows&quot;</span> <span class="kp-code__keyword">data-kp-anchors</span><span class="kp-code__string">=&quot;rows&quot;</span> <span class="kp-code__keyword">data-kp-anchor-show</span><span class="kp-code__string">=&quot;always&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">thead</span>&gt;&lt;<span class="kp-code__keyword">tr</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Message&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span>&gt;Why it failed&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;&lt;/<span class="kp-code__keyword">thead</span>&gt;
+        &lt;<span class="kp-code__keyword">tbody</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-anchor</span><span class="kp-code__string">=&quot;dead-4f2a&quot;</span> <span class="kp-code__keyword">data-kp-anchor-label</span><span class="kp-code__string">=&quot;Dead letter 4f2a&quot;</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;row&quot;</span>&gt;4f2a&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Consumer timed out&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-anchor</span><span class="kp-code__string">=&quot;dead-91bc&quot;</span> <span class="kp-code__keyword">data-kp-anchor-label</span><span class="kp-code__string">=&quot;Dead letter 91bc&quot;</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;row&quot;</span>&gt;91bc&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Payload too large&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-anchor</span><span class="kp-code__string">=&quot;dead-c07e&quot;</span> <span class="kp-code__keyword">data-kp-anchor-label</span><span class="kp-code__string">=&quot;Dead letter c07e&quot;</span>&gt;&lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;row&quot;</span>&gt;c07e&lt;/<span class="kp-code__keyword">th</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Unknown topic&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+        &lt;/<span class="kp-code__keyword">tbody</span>&gt;
+    &lt;/<span class="kp-code__keyword">table</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-anchors-move&quot;</span>&gt;Put the marks after the row&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { refreshAnchors } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/anchors'</span>;
+
+<span class="kp-code__keyword">const</span> box = document.getElementById(<span class="kp-code__string">'doc-anchors-rows'</span>);
+<span class="kp-code__keyword">const</span> button = document.getElementById(<span class="kp-code__string">'doc-anchors-move'</span>);
+button.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; {
+    <span class="kp-code__keyword">const</span> after = box.getAttribute(<span class="kp-code__string">'data-kp-anchor-position'</span>) !== <span class="kp-code__string">'after'</span>;
+    box.setAttribute(<span class="kp-code__string">'data-kp-anchor-position'</span>, after ? <span class="kp-code__string">'after'</span> : <span class="kp-code__string">'before'</span>);
+    refreshAnchors(box);
+    button.textContent = after ? <span class="kp-code__string">'Put the marks before the row'</span> : <span class="kp-code__string">'Put the marks after the row'</span>;
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>

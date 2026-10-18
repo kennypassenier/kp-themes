@@ -267,6 +267,76 @@
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-checklist&quot;</span> <span class="kp-code__keyword">data-kp-checklist</span> <span class="kp-code__keyword">data-kp-print-title</span><span class="kp-code__string">=&quot;Packing list&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Packing list&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-kp-print-action</span>&gt;Print this list&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A packing list with groups, ticks and handwriting room</figcaption>
+                        <p class="kp-text-muted">The page shows the list as usual; Ctrl+P (or the button) gives the sheet. `data-kp-print-done` says what a ticked item becomes on paper (`show` a filled box with a tick, `hide`, or `strike`), `data-kp-print-box=&quot;round&quot;` draws round boxes, `data-kp-print-groups=&quot;columns&quot;` sets a long list in two columns while group headings stay with their first items, `data-kp-print-notes-lines` adds a dotted line under each item for notes, `data-kp-print-notes=&quot;hide&quot;` drops the detail line, and `data-kp-print-links=&quot;url&quot;` prints the address after a link. `data-kp-print=&quot;exclude&quot;` drops a part of the page from the sheet, `include` keeps one that would be dropped.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-checklist" id="doc-print-list" data-kp-checklist data-kp-print-title="Packing list, Rome" data-kp-print-done="strike" data-kp-print-box="round" data-kp-print-groups="columns" data-kp-print-notes-lines data-kp-print-links="url" aria-label="Packing list"></div>
+    <div class="kp-row"><button class="kp-button kp-button--primary" type="button" data-kp-print-action>Print this list</button><span class="kp-text-muted" data-kp-print="exclude">This line is left off the sheet.</span></div>
+</div>
+                            <script type="module">
+import { setChecklistItems } from '../../js/checklist.js';
+
+setChecklistItems(document.getElementById('doc-print-list'), [
+    { id: 'passport', label: 'Passport', detail: 'valid until 2029', group: 'Papers', checked: true },
+    { id: 'tickets', label: 'Train tickets', detail: 'print them', group: 'Papers' },
+    { id: 'hotel', label: 'Hotel booking', group: 'Papers' },
+    { id: 'charger', label: 'Phone charger', group: 'Bag', checked: true },
+    { id: 'adapter', label: 'Plug adapter', detail: 'type L', group: 'Bag' },
+    { id: 'umbrella', label: 'Umbrella', group: 'Bag' },
+]);
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-checklist&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-print-list&quot;</span> <span class="kp-code__keyword">data-kp-checklist</span> <span class="kp-code__keyword">data-kp-print-title</span><span class="kp-code__string">=&quot;Packing list, Rome&quot;</span> <span class="kp-code__keyword">data-kp-print-done</span><span class="kp-code__string">=&quot;strike&quot;</span> <span class="kp-code__keyword">data-kp-print-box</span><span class="kp-code__string">=&quot;round&quot;</span> <span class="kp-code__keyword">data-kp-print-groups</span><span class="kp-code__string">=&quot;columns&quot;</span> <span class="kp-code__keyword">data-kp-print-notes-lines</span> <span class="kp-code__keyword">data-kp-print-links</span><span class="kp-code__string">=&quot;url&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Packing list&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-print-action</span>&gt;Print this list&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">data-kp-print</span><span class="kp-code__string">=&quot;exclude&quot;</span>&gt;This line is left off the sheet.&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { setChecklistItems } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/checklist'</span>;
+
+setChecklistItems(document.getElementById(<span class="kp-code__string">'doc-print-list'</span>), [
+    { id: <span class="kp-code__string">'passport'</span>, label: <span class="kp-code__string">'Passport'</span>, detail: <span class="kp-code__string">'valid until 2029'</span>, group: <span class="kp-code__string">'Papers'</span>, checked: <span class="kp-code__keyword">true</span> },
+    { id: <span class="kp-code__string">'tickets'</span>, label: <span class="kp-code__string">'Train tickets'</span>, detail: <span class="kp-code__string">'print them'</span>, group: <span class="kp-code__string">'Papers'</span> },
+    { id: <span class="kp-code__string">'hotel'</span>, label: <span class="kp-code__string">'Hotel booking'</span>, group: <span class="kp-code__string">'Papers'</span> },
+    { id: <span class="kp-code__string">'charger'</span>, label: <span class="kp-code__string">'Phone charger'</span>, group: <span class="kp-code__string">'Bag'</span>, checked: <span class="kp-code__keyword">true</span> },
+    { id: <span class="kp-code__string">'adapter'</span>, label: <span class="kp-code__string">'Plug adapter'</span>, detail: <span class="kp-code__string">'type L'</span>, group: <span class="kp-code__string">'Bag'</span> },
+    { id: <span class="kp-code__string">'umbrella'</span>, label: <span class="kp-code__string">'Umbrella'</span>, group: <span class="kp-code__string">'Bag'</span> },
+]);</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A list that is not a checklist, and a word before the sheet</figcaption>
+                        <p class="kp-text-muted">`data-kp-print-sheet` marks a list that is not a checklist but should get the sheet’s title, its state sentence (a list that is still loading or failed prints its sentence, never a blank sheet) and the date of printing. `kp-print-prepare` fires on the document just before the sheet is built, with `{ sheets }`, so the page can last-minute change what goes on paper; `preparePrint(document)` does the same work by hand and returns what undoes it.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<section id="doc-print-sheet" data-kp-print-sheet data-kp-print-title="Opening hours" data-kp-print-date="off" aria-label="Opening hours">
+    <h3 class="kp-fw-semibold">Opening hours</h3>
+    <ul>
+        <li>Monday to Friday, 09:00 to 17:30</li>
+        <li>Saturday, 10:00 to 14:00</li>
+        <li>Sunday, closed</li>
+    </ul>
+</section>
+<p class="kp-text-muted" id="doc-print-log" aria-live="polite">Press Ctrl+P: the sheet is built, and this line is told.</p>
+                            <script type="module">
+document.addEventListener('kp-print-prepare', (event) => {
+    document.getElementById('doc-print-log').textContent = 'Preparing ' + event.detail.sheets.length + ' sheet(s) for the printer.';
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-print-sheet&quot;</span> <span class="kp-code__keyword">data-kp-print-sheet</span> <span class="kp-code__keyword">data-kp-print-title</span><span class="kp-code__string">=&quot;Opening hours&quot;</span> <span class="kp-code__keyword">data-kp-print-date</span><span class="kp-code__string">=&quot;off&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Opening hours&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-fw-semibold&quot;</span>&gt;Opening hours&lt;/<span class="kp-code__keyword">h3</span>&gt;
+    &lt;<span class="kp-code__keyword">ul</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;Monday to Friday, 09:00 to 17:30&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;Saturday, 10:00 to 14:00&lt;/<span class="kp-code__keyword">li</span>&gt;
+        &lt;<span class="kp-code__keyword">li</span>&gt;Sunday, closed&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;/<span class="kp-code__keyword">ul</span>&gt;
+&lt;/<span class="kp-code__keyword">section</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-print-log&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;Press Ctrl+P: the sheet is built, and this line is told.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code>document.addEventListener(<span class="kp-code__string">'kp-print-prepare'</span>, (event) =&gt; {
+    document.getElementById(<span class="kp-code__string">'doc-print-log'</span>).textContent = <span class="kp-code__string">'Preparing '</span> + event.detail.sheets.length + <span class="kp-code__string">' sheet(s) for the printer.'</span>;
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -327,6 +397,7 @@
                             <tr><td><code>data-kp-print-action</code></td><td>On a button: pressing it prints the page.</td></tr>
                             <tr><td><code>data-kp-print-sheet</code></td><td>Marks a list that is not a checklist but should get the sheet's title, state sentence and date.</td></tr>
                             <tr><td><code>kp-print-prepare</code></td><td>Fired on the document just before the sheet is built: `{ sheets }`.</td></tr>
+                            <tr><td><code>--kp-print-box</code></td><td>The size of the drawn box on paper: 1.1em, never under 4 mm, so a pen can tick it.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

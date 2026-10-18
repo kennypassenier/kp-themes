@@ -297,6 +297,85 @@
     &lt;/<span class="kp-code__keyword">section</span>&gt;
 &lt;/<span class="kp-code__keyword">dialog</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A sheet filled from the keys the page registers</figcaption>
+                        <p class="kp-text-muted">`registerShortcuts(scope, list, options)` handles the keys and fills every sheet marked `data-kp-shortcuts-live` from the same list, so the sheet cannot promise a key that does nothing. A `keys` chord is steps separated by spaces (`g s`; `Mod K`, where Mod is Ctrl or ⌘). A letter never fires while someone types in a field. `when` switches a shortcut off and the sheet shows it dimmed with its `reason` (`.kp-shortcuts__row--off`, `__reason`); a scope may be an element, so a table’s `j` and `k` live only while the table is on screen. On the sheet, `data-kp-shortcuts-reserved-group` renames the fixed group, `data-kp-shortcuts-group` orders the groups and `data-kp-shortcuts-scope` lists only some scopes. It returns a function that takes the keys away.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-row">
+    <button class="kp-button" type="button" id="doc-keys-open">Show the sheet</button>
+    <button class="kp-button" type="button" id="doc-keys-lock">Lock the stacks</button>
+</div>
+<p class="kp-text-muted" id="doc-keys-log" aria-live="polite">Press g then s, or ?.</p>
+<dialog class="kp-shortcuts" id="doc-keys-sheet" data-kp-shortcuts data-kp-shortcuts-live data-kp-shortcuts-reserved-group="Everywhere" data-kp-shortcuts-group="Navigation,Stacks" aria-label="Keyboard shortcuts">
+    <h2 class="kp-dialog__title">Keyboard shortcuts</h2>
+</dialog>
+                            <script type="module">
+import { configureShortcuts, listShortcuts, registerShortcuts, renderShortcutSheet } from '../../js/shortcuts.js';
+
+const log = document.getElementById('doc-keys-log');
+const sheet = document.getElementById('doc-keys-sheet');
+let locked = false;
+configureShortcuts({ unknownHint: true, layoutGuard: 'warn', chordMs: 1500 });
+registerShortcuts('doc-page', [
+    { keys: 'g s', what: 'Go to Stacks', group: 'Navigation', run: () => { log.textContent = 'Went to Stacks.'; } },
+    { keys: 'g h', what: 'Go to Host', group: 'Navigation', run: () => { log.textContent = 'Went to Host.'; } },
+    {
+        keys: 'r',
+        what: 'Restart the stack',
+        group: 'Stacks',
+        when: () => !locked,
+        reason: 'The stacks are locked.',
+        run: () => { log.textContent = 'Restarting.'; },
+    },
+]);
+document.getElementById('doc-keys-open').addEventListener('click', () => {
+    renderShortcutSheet(sheet);
+    sheet.showModal();
+});
+document.getElementById('doc-keys-lock').addEventListener('click', (event) => {
+    locked = !locked;
+    event.currentTarget.textContent = locked ? 'Unlock the stacks' : 'Lock the stacks';
+    log.textContent = listShortcuts().length + ' shortcuts registered; the stacks are ' + (locked ? 'locked' : 'open') + '.';
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-keys-open&quot;</span>&gt;Show the sheet&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-keys-lock&quot;</span>&gt;Lock the stacks&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-keys-log&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;Press g then s, or ?.&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">dialog</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-shortcuts&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-keys-sheet&quot;</span> <span class="kp-code__keyword">data-kp-shortcuts</span> <span class="kp-code__keyword">data-kp-shortcuts-live</span> <span class="kp-code__keyword">data-kp-shortcuts-reserved-group</span><span class="kp-code__string">=&quot;Everywhere&quot;</span> <span class="kp-code__keyword">data-kp-shortcuts-group</span><span class="kp-code__string">=&quot;Navigation,Stacks&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Keyboard shortcuts&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">h2</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-dialog__title&quot;</span>&gt;Keyboard shortcuts&lt;/<span class="kp-code__keyword">h2</span>&gt;
+&lt;/<span class="kp-code__keyword">dialog</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { configureShortcuts, listShortcuts, registerShortcuts, renderShortcutSheet } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/shortcuts'</span>;
+
+<span class="kp-code__keyword">const</span> log = document.getElementById(<span class="kp-code__string">'doc-keys-log'</span>);
+<span class="kp-code__keyword">const</span> sheet = document.getElementById(<span class="kp-code__string">'doc-keys-sheet'</span>);
+<span class="kp-code__keyword">let</span> locked = <span class="kp-code__keyword">false</span>;
+configureShortcuts({ unknownHint: <span class="kp-code__keyword">true</span>, layoutGuard: <span class="kp-code__string">'warn'</span>, chordMs: <span class="kp-code__string">1500</span> });
+registerShortcuts(<span class="kp-code__string">'doc-page'</span>, [
+    { keys: <span class="kp-code__string">'g s'</span>, what: <span class="kp-code__string">'Go to Stacks'</span>, group: <span class="kp-code__string">'Navigation'</span>, run: () =&gt; { log.textContent = <span class="kp-code__string">'Went to Stacks.'</span>; } },
+    { keys: <span class="kp-code__string">'g h'</span>, what: <span class="kp-code__string">'Go to Host'</span>, group: <span class="kp-code__string">'Navigation'</span>, run: () =&gt; { log.textContent = <span class="kp-code__string">'Went to Host.'</span>; } },
+    {
+        keys: <span class="kp-code__string">'r'</span>,
+        what: <span class="kp-code__string">'Restart the stack'</span>,
+        group: <span class="kp-code__string">'Stacks'</span>,
+        when: () =&gt; !locked,
+        reason: <span class="kp-code__string">'The stacks are locked.'</span>,
+        run: () =&gt; { log.textContent = <span class="kp-code__string">'Restarting.'</span>; },
+    },
+]);
+document.getElementById(<span class="kp-code__string">'doc-keys-open'</span>).addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; {
+    renderShortcutSheet(sheet);
+    sheet.showModal();
+});
+document.getElementById(<span class="kp-code__string">'doc-keys-lock'</span>).addEventListener(<span class="kp-code__string">'click'</span>, (event) =&gt; {
+    locked = !locked;
+    event.currentTarget.textContent = locked ? <span class="kp-code__string">'Unlock the stacks'</span> : <span class="kp-code__string">'Lock the stacks'</span>;
+    log.textContent = listShortcuts().length + <span class="kp-code__string">' shortcuts registered; the stacks are '</span> + (locked ? <span class="kp-code__string">'locked'</span> : <span class="kp-code__string">'open'</span>) + <span class="kp-code__string">'.'</span>;
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>

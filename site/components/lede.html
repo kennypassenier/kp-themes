@@ -267,6 +267,79 @@
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">h2</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;schedules&quot;</span>&gt;Schedules&lt;/<span class="kp-code__keyword">h2</span>&gt;
 &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-lede&quot;</span>&gt;Each schedule starts a job at fixed times. Pause one to stop it without deleting it.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Measure, tone, a long text folded and a Learn more link</figcaption>
+                        <p class="kp-text-muted">`data-kp-lede-measure` is `narrow` (48ch), `normal` (70ch, the default) or `full`; `data-kp-lede-tone=&quot;plain&quot;` uses the body ink instead of the quiet one. A lede longer than about N characters (`data-kp-lede-collapsible=&quot;140&quot;`, or the bare attribute) shows its first sentences and folds the rest behind More and Less, and `data-kp-lede-link` adds a Learn more link at the end (on a lede of its own: a folded lede takes no link). Both need the module attached; the heading is described by its lede, so a screen reader reads them together. The knobs are `--kp-lede-measure` and `--kp-lede-size`.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div><h3 class="kp-fw-semibold" id="doc-lede-narrow">A narrow lede</h3><p class="kp-lede" data-kp-lede-measure="narrow">Each schedule starts a job at fixed times. Pause one to stop it without deleting it.</p></div>
+    <div><h3 class="kp-fw-semibold" id="doc-lede-plain">A plain full-width lede</h3><p class="kp-lede" data-kp-lede-measure="full" data-kp-lede-tone="plain">This one runs the full width of its place and uses the body ink, for a page whose first sentence is the point.</p></div>
+    <div><h3 class="kp-fw-semibold" id="doc-lede-long">A long lede that folds</h3><p class="kp-lede" data-kp-lede-collapsible="100">Backups are made every night at 03:00 and kept for thirty days. A backup that fails is tried again an hour later, and a second failure sends a message to the person on duty. Restoring is always done from the newest backup that passed its check, never from one that was only copied.</p></div>
+    <div><h3 class="kp-fw-semibold" id="doc-lede-link">A lede with a link</h3><p class="kp-lede" data-kp-lede-link="https://example.com/help/restore">Restoring puts a backup back on the disk it came from.</p></div>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span>&gt;&lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-fw-semibold&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-lede-narrow&quot;</span>&gt;A narrow lede&lt;/<span class="kp-code__keyword">h3</span>&gt;&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-lede&quot;</span> <span class="kp-code__keyword">data-kp-lede-measure</span><span class="kp-code__string">=&quot;narrow&quot;</span>&gt;Each schedule starts a job at fixed times. Pause one to stop it without deleting it.&lt;/<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span>&gt;&lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-fw-semibold&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-lede-plain&quot;</span>&gt;A plain full-width lede&lt;/<span class="kp-code__keyword">h3</span>&gt;&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-lede&quot;</span> <span class="kp-code__keyword">data-kp-lede-measure</span><span class="kp-code__string">=&quot;full&quot;</span> <span class="kp-code__keyword">data-kp-lede-tone</span><span class="kp-code__string">=&quot;plain&quot;</span>&gt;This one runs the full width of its place and uses the body ink, for a page whose first sentence is the point.&lt;/<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span>&gt;&lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-fw-semibold&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-lede-long&quot;</span>&gt;A long lede that folds&lt;/<span class="kp-code__keyword">h3</span>&gt;&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-lede&quot;</span> <span class="kp-code__keyword">data-kp-lede-collapsible</span><span class="kp-code__string">=&quot;100&quot;</span>&gt;Backups are made every night at 03:00 and kept for thirty days. A backup that fails is tried again an hour later, and a second failure sends a message to the person on duty. Restoring is always done from the newest backup that passed its check, never from one that was only copied.&lt;/<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span>&gt;&lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-fw-semibold&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-lede-link&quot;</span>&gt;A lede with a link&lt;/<span class="kp-code__keyword">h3</span>&gt;&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-lede&quot;</span> <span class="kp-code__keyword">data-kp-lede-link</span><span class="kp-code__string">=&quot;https://example.com/help/restore&quot;</span>&gt;Restoring puts a backup back on the disk it came from.&lt;/<span class="kp-code__keyword">p</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">The reason under a field, and headings with no lede</figcaption>
+                        <p class="kp-text-muted">`.kp-field__why` is the reason line under a field, in the field help’s size; `data-kp-blocking` turns it into the destructive ink for a reason that stops the form. `missingLedes(root)` lists the headings of `.kp-card__title`, and of every heading inside a container marked `data-kp-lede-required`, that have no lede after them; `attachLedes()` warns about them in the console.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-field">
+        <label class="kp-field__label" for="doc-lede-key">API key</label>
+        <input class="kp-field__input" id="doc-lede-key" value="" aria-describedby="doc-lede-why" />
+        <p class="kp-field__why" id="doc-lede-why">Needed to read the backups; ask the person on duty.</p>
+    </div>
+    <div class="kp-field">
+        <label class="kp-field__label" for="doc-lede-days">Retention</label>
+        <input class="kp-field__input" id="doc-lede-days" value="400" aria-describedby="doc-lede-days-why" />
+        <p class="kp-field__why" id="doc-lede-days-why" data-kp-blocking>At most 365 days; the disk cannot hold more.</p>
+    </div>
+    <section id="doc-lede-audit" data-kp-lede-required>
+        <h3 class="kp-fw-semibold">Has a lede</h3>
+        <p class="kp-lede">This section says what it is for.</p>
+        <h3 class="kp-fw-semibold">Has none</h3>
+    </section>
+    <p class="kp-text-muted" id="doc-lede-log" aria-live="polite"></p>
+</div>
+                            <script type="module">
+import { missingLedes } from '../../js/lede.js';
+
+const missing = missingLedes(document.getElementById('doc-lede-audit'));
+document.getElementById('doc-lede-log').textContent =
+    missing.length + ' heading without a lede: ' + missing.map((heading) => heading.textContent).join(', ') + '.';
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-lede-key&quot;</span>&gt;API key&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-lede-key&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;&quot;</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;doc-lede-why&quot;</span> /&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__why&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-lede-why&quot;</span>&gt;Needed to read the backups; ask the person on duty.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-lede-days&quot;</span>&gt;Retention&lt;/<span class="kp-code__keyword">label</span>&gt;
+        &lt;<span class="kp-code__keyword">input</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-lede-days&quot;</span> <span class="kp-code__keyword">value</span><span class="kp-code__string">=&quot;400&quot;</span> <span class="kp-code__keyword">aria-describedby</span><span class="kp-code__string">=&quot;doc-lede-days-why&quot;</span> /&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__why&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-lede-days-why&quot;</span> <span class="kp-code__keyword">data-kp-blocking</span>&gt;At most 365 days; the disk cannot hold more.&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-lede-audit&quot;</span> <span class="kp-code__keyword">data-kp-lede-required</span>&gt;
+        &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-fw-semibold&quot;</span>&gt;Has a lede&lt;/<span class="kp-code__keyword">h3</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-lede&quot;</span>&gt;This section says what it is for.&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-fw-semibold&quot;</span>&gt;Has none&lt;/<span class="kp-code__keyword">h3</span>&gt;
+    &lt;/<span class="kp-code__keyword">section</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-lede-log&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { missingLedes } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/lede'</span>;
+
+<span class="kp-code__keyword">const</span> missing = missingLedes(document.getElementById(<span class="kp-code__string">'doc-lede-audit'</span>));
+document.getElementById(<span class="kp-code__string">'doc-lede-log'</span>).textContent =
+    missing.length + <span class="kp-code__string">' heading without a lede: '</span> + missing.map((heading) =&gt; heading.textContent).join(<span class="kp-code__string">', '</span>) + <span class="kp-code__string">'.'</span>;</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>
@@ -347,6 +420,7 @@
                             <tr><td><code>data-kp-lede-collapsible</code></td><td>A lede longer than about N characters (140 by default) shows its first sentences and folds the rest behind More and Less.</td></tr>
                             <tr><td><code>data-kp-lede-link</code></td><td>A URL: a “Learn more” link at the end.</td></tr>
                             <tr><td><code>data-kp-lede-required</code></td><td>On a container: every heading inside it must have a lede, and `missingLedes` lists the ones that do not. Card titles are always checked.</td></tr>
+                            <tr><td><code>data-kp-blocking</code></td><td>On a `.kp-field__why` line: the reason stops the form, so it is written in the destructive ink instead of the quiet one.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

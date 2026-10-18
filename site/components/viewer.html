@@ -265,6 +265,103 @@
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-kp-preview</span><span class="kp-code__string">=&quot;files/report.pdf&quot;</span>&gt;Preview the report&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Opening a viewer from a script, in each state</figcaption>
+                        <p class="kp-text-muted">`openViewer({ title, desc, facts, size, actions })` returns a handle: `setContent(node)` fills the stage, `setPosition({ index, total })` writes an exact, announced “2 of 5”, and `setState` is `ready`, `loading` (the busy card over the whole stage), `error` (a plate with the message and a Retry) or `unsupported` (a plate that says the browser cannot show it). The foot always keeps its actions (`open`, `download`, `print`, `copy-link`, or your own with `run`), so a file that cannot be shown can still be opened or saved. Escape, the close button or a press on the dim closes it and the focus goes back to the opener; `kp-viewer-close` fires on the document with `{ dialog }`.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-row">
+    <button class="kp-button" type="button" data-doc-viewer="ready">A text, ready</button>
+    <button class="kp-button" type="button" data-doc-viewer="loading">Loading, then ready</button>
+    <button class="kp-button" type="button" data-doc-viewer="error">A file that fails</button>
+    <button class="kp-button" type="button" data-doc-viewer="unsupported">A file this browser cannot show</button>
+    <button class="kp-button" type="button" data-doc-viewer="full">Full size</button>
+</div>
+<p class="kp-text-muted" id="doc-viewer-log" aria-live="polite">Open one, then press Escape.</p>
+                            <script type="module">
+import { openViewer } from '../../js/viewer.js';
+
+const log = document.getElementById('doc-viewer-log');
+const href = 'data:text/plain;charset=utf-8,Packing%20list%0A-%20passport%0A-%20charger';
+const actions = [
+    { kind: 'open', href },
+    { kind: 'download', href, name: 'packing-list.txt' },
+    { kind: 'copy-link', href },
+    { kind: 'print', run: () => log.textContent = 'The page prints it here.' },
+];
+const show = (kind, opener) => {
+    const viewer = openViewer({
+        title: 'Packing list',
+        desc: kind === 'unsupported' ? 'Shown by the browser' : 'Shown as text',
+        facts: 'Text · 61 bytes · 18/10/2026 09:12',
+        size: kind === 'full' ? 'full' : 'wide',
+        actions,
+        opener,
+    });
+    const text = document.createElement('pre');
+    text.textContent = 'Packing list\n- passport\n- charger';
+    viewer.setContent(text);
+    viewer.setPosition({ index: 2, total: 5 });
+    if (kind === 'loading') {
+        viewer.setState('loading');
+        setTimeout(() => viewer.setState('ready'), 1800);
+    } else if (kind === 'error') {
+        viewer.setState('error', { message: 'The server says the file is gone.', retry: () => viewer.setState('ready') });
+    } else if (kind === 'unsupported') {
+        viewer.setState('unsupported', { message: 'This browser cannot show this kind of file here.' });
+    }
+};
+for (const button of document.querySelectorAll('[data-doc-viewer]')) {
+    button.addEventListener('click', () => show(button.dataset.docViewer, button));
+}
+document.addEventListener('kp-viewer-close', () => { log.textContent = 'The viewer closed and the focus went back to its button.'; });
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-doc-viewer</span><span class="kp-code__string">=&quot;ready&quot;</span>&gt;A text, ready&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-doc-viewer</span><span class="kp-code__string">=&quot;loading&quot;</span>&gt;Loading, then ready&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-doc-viewer</span><span class="kp-code__string">=&quot;error&quot;</span>&gt;A file that fails&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-doc-viewer</span><span class="kp-code__string">=&quot;unsupported&quot;</span>&gt;A file this browser cannot show&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-doc-viewer</span><span class="kp-code__string">=&quot;full&quot;</span>&gt;Full size&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-viewer-log&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;Open one, then press Escape.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { openViewer } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/viewer'</span>;
+
+<span class="kp-code__keyword">const</span> log = document.getElementById(<span class="kp-code__string">'doc-viewer-log'</span>);
+<span class="kp-code__keyword">const</span> href = <span class="kp-code__string">'data:text/plain;charset=utf-8,Packing%20list%0A-%20passport%0A-%20charger'</span>;
+<span class="kp-code__keyword">const</span> actions = [
+    { kind: <span class="kp-code__string">'open'</span>, href },
+    { kind: <span class="kp-code__string">'download'</span>, href, name: <span class="kp-code__string">'packing-list.txt'</span> },
+    { kind: <span class="kp-code__string">'copy-link'</span>, href },
+    { kind: <span class="kp-code__string">'print'</span>, run: () =&gt; log.textContent = <span class="kp-code__string">'The page prints it here.'</span> },
+];
+<span class="kp-code__keyword">const</span> show = (kind, opener) =&gt; {
+    <span class="kp-code__keyword">const</span> viewer = openViewer({
+        title: <span class="kp-code__string">'Packing list'</span>,
+        desc: kind === <span class="kp-code__string">'unsupported'</span> ? <span class="kp-code__string">'Shown by the browser'</span> : <span class="kp-code__string">'Shown as text'</span>,
+        facts: <span class="kp-code__string">'Text · 61 bytes · 18/10/2026 09:12'</span>,
+        size: kind === <span class="kp-code__string">'full'</span> ? <span class="kp-code__string">'full'</span> : <span class="kp-code__string">'wide'</span>,
+        actions,
+        opener,
+    });
+    <span class="kp-code__keyword">const</span> text = document.createElement(<span class="kp-code__string">'pre'</span>);
+    text.textContent = <span class="kp-code__string">'Packing list\n- passport\n- charger'</span>;
+    viewer.setContent(text);
+    viewer.setPosition({ index: <span class="kp-code__string">2</span>, total: <span class="kp-code__string">5</span> });
+    <span class="kp-code__keyword">if</span> (kind === <span class="kp-code__string">'loading'</span>) {
+        viewer.setState(<span class="kp-code__string">'loading'</span>);
+        setTimeout(() =&gt; viewer.setState(<span class="kp-code__string">'ready'</span>), <span class="kp-code__string">1800</span>);
+    } <span class="kp-code__keyword">else</span> <span class="kp-code__keyword">if</span> (kind === <span class="kp-code__string">'error'</span>) {
+        viewer.setState(<span class="kp-code__string">'error'</span>, { message: <span class="kp-code__string">'The server says the file is gone.'</span>, retry: () =&gt; viewer.setState(<span class="kp-code__string">'ready'</span>) });
+    } <span class="kp-code__keyword">else</span> <span class="kp-code__keyword">if</span> (kind === <span class="kp-code__string">'unsupported'</span>) {
+        viewer.setState(<span class="kp-code__string">'unsupported'</span>, { message: <span class="kp-code__string">'This browser cannot show this kind of file here.'</span> });
+    }
+};
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> button <span class="kp-code__keyword">of</span> document.querySelectorAll(<span class="kp-code__string">'[data-doc-viewer]'</span>)) {
+    button.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; show(button.dataset.docViewer, button));
+}
+document.addEventListener(<span class="kp-code__string">'kp-viewer-close'</span>, () =&gt; { log.textContent = <span class="kp-code__string">'The viewer closed and the focus went back to its button.'</span>; });</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
