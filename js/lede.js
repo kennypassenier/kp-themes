@@ -5,7 +5,7 @@
 //   · the heading it follows is described by it (`aria-describedby`), so a screen reader hears it with the heading
 //   · `data-kp-lede-collapsible[=N]`: a lede longer than about N characters (default 140) shows its first sentences and folds
 //     the rest behind "More" / "Less"
-//   · `data-kp-lede-link="<url>"`: a "Learn more" link at the end
+//   · `data-kp-lede-link="<url>"`: a "Learn more" link at the end (also on a folded lede: after the folded part)
 //   · `missingLedes(root)` lists the headings of `.kp-card__title`, and of every heading inside a container marked
 //     `data-kp-lede-required`, that have no lede after them; attachLedes() warns about them in the console
 //
@@ -83,9 +83,12 @@ export function attachLedes(root = document) {
             if (!ids.includes(lede.id)) heading.setAttribute('aria-describedby', [...ids, lede.id].join(' '));
         }
 
+        // The text to fold is read before the link is appended: the link is an element of its own, and a lede that already
+        // carries one would otherwise read as a lede with markup in it and never fold [findings-1019].
         const href = lede.getAttribute('data-kp-lede-link');
         /** @type {HTMLAnchorElement | null} */
         let link = null;
+        const plain = lede.childElementCount === 0 ? (lede.textContent ?? '').trim().replace(/\s+/g, ' ') : '';
         if (href) {
             link = lede.ownerDocument.createElement('a');
             link.className = 'kp-lede__link';
@@ -101,7 +104,6 @@ export function attachLedes(root = document) {
         // A very long lede folds after its first sentences, by splitting the text itself (a clipped line would still be
         // laid out underneath the content that follows it): the rest is a hidden span that "More" opens.
         const limit = Number.parseInt(lede.getAttribute('data-kp-lede-collapsible') ?? '', 10) || 140;
-        const plain = lede.childElementCount === 0 ? (lede.textContent ?? '').trim().replace(/\s+/g, ' ') : '';
         if (lede.hasAttribute('data-kp-lede-collapsible') && plain.length > limit * 1.5) {
             const sentences = plain.split(/(?<=[.!?])\s+/);
             let head = '';
@@ -114,6 +116,8 @@ export function attachLedes(root = document) {
                 rest.hidden = true;
                 rest.textContent = sentences.slice(at).join(' ');
                 lede.append(rest);
+                // The link stays at the end of the whole lede, after the folded part.
+                if (link) lede.append(' ', link);
                 toggle = lede.ownerDocument.createElement('button');
                 toggle.type = 'button';
                 toggle.className = 'kp-button kp-button--ghost kp-button--sm kp-lede__toggle';

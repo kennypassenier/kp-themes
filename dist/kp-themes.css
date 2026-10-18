@@ -18993,13 +18993,19 @@
         min-block-size: var(--kp-focus-steps-busy-height, 12rem);
     }
 
+    /* Back and Next share the width equally; where both words do not fit side by side the second goes under the first, at
+       full width. A button is never squeezed below its own label: it breaks per letter when squeezed [findings-1019]. */
     .kp-focus-steps__nav {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        display: flex;
+        flex-wrap: wrap;
         gap: var(--kp-space-sm, 0.5rem);
     }
 
     .kp-focus-steps__nav > .kp-button {
+        flex: 1 1 0;
+        min-inline-size: max-content;
+        white-space: nowrap;
+        overflow-wrap: normal;
         gap: var(--kp-space-sm, 0.5rem);
         min-block-size: var(--kp-focus-steps-target, 4rem);
         font-size: var(--kp-focus-steps-button-text, 1.125rem);
@@ -19697,6 +19703,9 @@
 
     .kp-command__head {
         display: flex;
+        /* Too narrow for the name, the badge and Copy on one line: Copy goes under them, it is never squeezed (a button
+           breaks per letter when squeezed, .kp-button wraps anywhere) [findings-1019]. */
+        flex-wrap: wrap;
         align-items: center;
         gap: var(--kp-space-sm, 0.5rem);
         box-sizing: border-box;
@@ -19719,7 +19728,13 @@
     /* The copy button and its two invisible copies share one cell, as wide as the wider word. */
     .kp-command__copy-slot {
         display: inline-grid;
+        flex: none;
         margin-inline-start: auto;
+    }
+
+    .kp-command__copy {
+        white-space: nowrap;
+        overflow-wrap: normal;
     }
 
     .kp-command__copy-slot > * {
@@ -22300,11 +22315,19 @@
         color: var(--destructive-foreground);
     }
 
-    .kp-flash[data-kp-width='grow'] .kp-flash__stack > :is(.kp-flash__face--rest, .kp-flash__face--busy, .kp-flash__ghost) {
+    /* `grow` (a refusal on the button sets it, or a page by hand): the button is as wide as what it says. At rest and busy
+       it is its own face, with no unseen words holding extra width; while the result stands, the result is the face and
+       takes the room its sentence needs. Before [findings-1019] the rest and busy faces were gone for good, so a hand-set
+       `grow` was an empty button. */
+    .kp-flash[data-kp-width='grow'] .kp-flash__ghost {
         display: none;
     }
 
-    .kp-flash[data-kp-width='grow'] .kp-flash__face--result {
+    .kp-flash[data-kp-width='grow']:is([data-kp-flash-state='success'], [data-kp-flash-state='refused']) .kp-flash__stack > :is(.kp-flash__face--rest, .kp-flash__face--busy) {
+        display: none;
+    }
+
+    .kp-flash[data-kp-width='grow']:is([data-kp-flash-state='success'], [data-kp-flash-state='refused']) .kp-flash__face--result {
         position: static;
         grid-area: 1 / 1;
         white-space: normal;

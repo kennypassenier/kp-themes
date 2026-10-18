@@ -40609,6 +40609,7 @@ function attachLedes(root = document) {
     }
     const href = lede.getAttribute("data-kp-lede-link");
     let link = null;
+    const plain2 = lede.childElementCount === 0 ? (lede.textContent ?? "").trim().replace(/\s+/g, " ") : "";
     if (href) {
       link = lede.ownerDocument.createElement("a");
       link.className = "kp-lede__link";
@@ -40619,7 +40620,6 @@ function attachLedes(root = document) {
     let toggle2 = null;
     let rest = null;
     const limit = Number.parseInt(lede.getAttribute("data-kp-lede-collapsible") ?? "", 10) || 140;
-    const plain2 = lede.childElementCount === 0 ? (lede.textContent ?? "").trim().replace(/\s+/g, " ") : "";
     if (lede.hasAttribute("data-kp-lede-collapsible") && plain2.length > limit * 1.5) {
       const sentences = plain2.split(/(?<=[.!?])\s+/);
       let head = "";
@@ -40632,6 +40632,7 @@ function attachLedes(root = document) {
         rest.hidden = true;
         rest.textContent = sentences.slice(at).join(" ");
         lede.append(rest);
+        if (link) lede.append(" ", link);
         toggle2 = lede.ownerDocument.createElement("button");
         toggle2.type = "button";
         toggle2.className = "kp-button kp-button--ghost kp-button--sm kp-lede__toggle";
@@ -41222,6 +41223,7 @@ async function runFlashButton(button, work, options = {}) {
   glyph3.className = "kp-flash__glyph";
   glyph3.textContent = ok ? "\u2713" : "\u2715";
   w.result.append(glyph3, ` ${onButton || word}`);
+  const handWidth = button.getAttribute("data-kp-width");
   if (onButton) button.setAttribute("data-kp-width", "grow");
   w.status.textContent = "";
   window.setTimeout(() => {
@@ -41238,7 +41240,10 @@ async function runFlashButton(button, work, options = {}) {
   const ms = ok ? num(button, "data-kp-flash-ms", options.flashMs ?? FLASH_MS) : num(button, "data-kp-flash-error-ms", options.errorMs ?? FLASH_ERROR_MS);
   w.timer = window.setTimeout(() => {
     if (!wired2.has(button)) return;
-    if (onButton && options.width === void 0) button.removeAttribute("data-kp-width");
+    if (onButton && options.width === void 0) {
+      if (handWidth === null) button.removeAttribute("data-kp-width");
+      else button.setAttribute("data-kp-width", handWidth);
+    }
     setState(button, w, "rest");
   }, ms);
   return { ok, word, line };
