@@ -191,3 +191,30 @@
 .ks-time-opened[data-ks-shown] {
     padding-block-end: 24rem;
 }
+
+/* The time field's demo in three columns: the fields, the list shown open, the 390 px frame (Kenny, 2026-10-18 19:53:
+   "Als ik de bovenste backup time open, dan opent die onderaan bij backup time, its list shown open"). Under the fields
+   in one column, the shown-open list lay in the room every other field's list opens into: the top field's list fell
+   over it, two lists stood on each other, and one seemed to open at the other's field. A list is 13rem wide and opens
+   from its field's left edge, so a field's list stays inside its column, and the column of 18rem the shown-open list
+   has to itself is reached by no other list. Narrower, the 390 px frame goes under the two (each list still in its own
+   column); in one column (a phone) the shown-open list stays closed (demo.js, keepOpened). */
+.ks-pair--time {
+    grid-template-columns: minmax(0, 1fr) 18rem min(390px, 100%);
+}
+
+@container ks-sec (max-width: 80rem) {
+    .ks-pair--time {
+        grid-template-columns: minmax(0, 1fr) 18rem;
+    }
+
+    .ks-pair--time > :last-child {
+        grid-column: 1 / -1;
+    }
+}
+
+@container ks-sec (max-width: 40rem) {
+    .ks-pair--time {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}

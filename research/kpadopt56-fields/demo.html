@@ -32,7 +32,6 @@
         <link rel="stylesheet" href="../../catalogue/catalogue.css" />
         <link rel="stylesheet" href="../kpadopt56/part.css" />
         <link rel="stylesheet" href="../kpadopt56/src/kpadopt6-social/page.css" />
-        <link rel="stylesheet" href="../kpadopt56/src/kpadopt6-media/page.css" />
     </head>
     <body>
         <a class="kp-skip-link" href="#main">Skip to content</a>
@@ -42,7 +41,7 @@
                 <h1>The fifth and sixth adoption rounds, part 4 of 14: Fields and inputs</h1>
                 <p class="cat-intro">
                     Formal is approved. Entering a value: a slider with a typed value beside it, a time of day, a text box that grows, a JSON box that
-                    checks what you type, and a star rating. This round asks only what you did not approve in your last review: 2 sections (12 pairs),
+                    checks what you type, and a star rating. This round asks only what you did not approve in your last review: 1 section (11 pairs),
                     one theme per step in the review dialog; each says under <b>What changed since your last review</b> what was done about your
                     words.
                 </p>
@@ -64,12 +63,17 @@
             >
                 <div class="k56-changed">
                     <p>
-                        <b>What changed since your last review:</b> You saw the list open by itself when you pressed <b>Presets loading</b> or
-                        <b>Presets failed</b>. That was the demo, not the field: after giving the list its state, the demo pressed the field&rsquo;s
-                        clock button (and a second press closed it again). Now the buttons under <b>The list</b> only change what the list holds and
-                        open nothing. To see the state at once, a fourth field stands under the sentence, <b>The list, shown open</b>: its list stays
-                        open on the page and follows the button you press. The first field shows the same when you open it yourself, or with
-                        <b>Show it open</b>.
+                        <b>What changed since your last review:</b> You opened the top <b>Backup time</b> and its list seemed to open down at
+                        <b>Backup time, its list shown open</b>. It did open under its own field, but the shown-open list lay right under the top
+                        field, in the room its list opens into, and the demo opened that list again after your click, so it was put over the list you
+                        had just opened. Two things changed. The list shown open now has a column of its own between the fields and the 390 px frame,
+                        and no other field&rsquo;s list reaches that column, so each list hangs under its own field and the two never lie on each
+                        other. And the demo now opens the shown-open list again within the same press, before your click, so the list you open is
+                        always the one on top. The clock and <b>Alt+Down</b> both do this, on every field. You also saw the line under the field run
+                        past it, about twice its width. In dark and titanium the field&rsquo;s line ran under the whole block around the time field
+                        (288 px, or 371 px in the row of three), while the box is 136 px wide. It now runs under the box itself: it starts at the
+                        box&rsquo;s left edge and stops at its right edge, on every time field. The other nine themes draw no such line. Formal has
+                        none either, so formal does not change.
                     </p>
                 </div>
                 <div class="ks-sec__head">
@@ -188,7 +192,7 @@
                     </div>
                 </div>
                 <p class="ks-readout" role="status" data-ks-time-readout>Nothing changed yet.</p>
-                <div id="time-field-component" class="ks-pair">
+                <div id="time-field-component" class="ks-pair ks-pair--time">
                     <div class="ks-stack">
                         <p class="ks-label">In a form (inside a flex row too)</p>
                         <div class="ks-flexrow">
@@ -250,6 +254,8 @@
                                 >.
                             </p>
                         </form>
+                    </div>
+                    <div class="ks-stack">
                         <p class="ks-label">The list, shown open: it follows the state chosen under The list</p>
                         <div class="ks-time-opened" data-ks-time-opened-case>
                             <div class="kp-field">
@@ -287,118 +293,15 @@
                     </div>
                 </div>
             </section>
-
-            <section
-                data-review-themes="dark"
-                class="km-sec"
-                id="autosize-grow"
-                data-review-item="autosize-grow"
-                data-review-components="autosize"
-                data-review-topic="autosize"
-                data-review-topic-title="Growing text box"
-                data-review-title="Growing text box: type, paste, the 20-line limit"
-                aria-labelledby="h-autosize-grow"
-            >
-                <div class="k56-changed">
-                    <p>
-                        <b>What changed since your last review:</b> Your note here was the same words as on the time field (a list that opens by
-                        itself), and this box has no list or menu, so it may have been meant for the time field. Looked at in dark anyway, side by
-                        side with cyberpunk and formal: the box grows from 3 lines to 20 and stops there (494 px, a scroll bar inside), 5 lines is 5
-                        lines and Clear gives the height back, the same as in the other themes. One real fault was found and fixed: the demo&rsquo;s
-                        script stopped with an error once the states section had left the page (it filled a read-only box that only stands there); the
-                        box itself was not affected. If something else in dark is wrong here, a word in the note is enough.
-                    </p>
-                </div>
-                <div class="km-sec__head">
-                    <h2 id="h-autosize-grow">Growing text box: type, paste, the 20-line limit</h2>
-                    <p>
-                        <code>&lt;textarea class="kp-field__input--multiline" data-kp-autosize&gt;</code> (js/autosize.js): the box is as tall as its
-                        text, from 3 lines up to 20, then it scrolls inside.
-                    </p>
-                </div>
-                <div class="km-expected">
-                    <p><b>Expected:</b></p>
-                    <ul>
-                        <li>
-                            <b>First box:</b> a message box 3 lines high. Type lines: it grows one line at a time and the Send button below moves down
-                            with it; delete lines and it gives the height back. It never gets taller than 20 lines: past that a scroll bar appears
-                            inside the box and the Send button stays where it is. The corner handle still drags the height; typing again takes over.
-                        </li>
-                        <li>
-                            <b>Paste 40 lines</b> (button): the box stops at 20 lines with the <i>start</i> of the pasted mail in view and a scroll
-                            bar. <b>Paste 5 lines</b> grows to exactly 5 lines. <b>Clear</b> goes back to 3.
-                        </li>
-                        <li>
-                            The counter under the box (<b>0 of 4,000 characters</b>) counts as you type, in steady digits; from 3,600 characters it
-                            turns into the warning plate (<b>Paste 3,700 characters</b> shows it), at 4,000 it says so.
-                            <kbd class="kp-kbd">Ctrl</kbd> + <kbd class="kp-kbd">Enter</kbd> in the box sends the form (the line under it says
-                            <b>Sent</b>); it is listed in the <kbd class="kp-kbd">?</kbd> sheet.
-                        </li>
-                        <li><b>Second box</b> (the JSON box of the package) now grows through the same code and still stops at 20 lines.</li>
-                    </ul>
-                </div>
-                <div data-review-look>
-                    <p data-for="dark">
-                        Dark is a spectral instrument: near-black with a faint grid, chamfered corners and one film of cyan-to-magenta light along the
-                        edges that matter. Check that this part wears that film on its frames and focus, that anything opening or arriving is swept in
-                        from the left over its own box and never just faded, and that text keeps clear of every edge.
-                    </p>
-                </div>
-                <div data-review-controls data-review-controls-for="autosize-grow-component">
-                    <div role="group" aria-label="Fill the first box" class="km-actions">
-                        <button type="button" class="kp-button" id="km-auto-paste40">Paste 40 lines</button>
-                        <button type="button" class="kp-button" id="km-auto-paste5">Paste 5 lines</button>
-                        <button type="button" class="kp-button" id="km-auto-paste-long">Paste 3,700 characters</button>
-                        <button type="button" class="kp-button" id="km-auto-clear">Clear</button>
-                    </div>
-                </div>
-                <div id="autosize-grow-component" class="km-pair">
-                    <div class="km-case">
-                        <form class="km-form" id="km-auto-form" novalidate>
-                            <div class="kp-field">
-                                <label class="kp-field__label" for="km-auto-mail">Message to the candidate</label>
-                                <textarea
-                                    class="kp-field__input kp-field__input--multiline"
-                                    id="km-auto-mail"
-                                    name="mail"
-                                    rows="3"
-                                    maxlength="4000"
-                                    data-kp-autosize
-                                    data-kp-counter="chars"
-                                    data-kp-submit-key="mod-enter"
-                                    placeholder="Paste the mail here"
-                                ></textarea>
-                            </div>
-                            <div class="km-actions">
-                                <button type="submit" class="kp-button kp-button--primary">Send</button>
-                                <span id="km-auto-sent" role="status"></span>
-                            </div>
-                        </form>
-                        <pre class="km-log" id="km-auto-log" aria-live="polite"></pre>
-                    </div>
-                    <div class="km-case">
-                        <div class="kp-field">
-                            <label class="kp-field__label" for="km-auto-json">Payload to publish</label>
-                            <textarea
-                                class="kp-field__input kp-field__input--multiline"
-                                id="km-auto-json"
-                                name="payload"
-                                rows="6"
-                                data-kp-json
-                                spellcheck="false"
-                            >
-{ "topic": "backups/nightly", "status": "done" }</textarea>
-                        </div>
-                    </div>
-                </div>
-            </section>
         </main>
         <script type="application/json" data-review-round>
-            { "round": "fields-ed220403-0d3a-4007-a0e6-0ae6fa0ae4a3", "received": ["fields-e964c16d-becc-4743-9938-5fb1103a0d6f"] }
+            {
+                "round": "fields-dfc3f5bc-c1f9-4e98-a36b-f50ebc4c0c24",
+                "received": ["fields-e964c16d-becc-4743-9938-5fb1103a0d6f", "fields-ed220403-0d3a-4007-a0e6-0ae6fa0ae4a3"]
+            }
         </script>
         <script type="module" src="../kpadopt56/src/kpadopt6-social/demo.js"></script>
         <script type="module" src="../../js/auto.js"></script>
-        <script type="module" src="../kpadopt56/src/kpadopt6-media/demo.js"></script>
         <script type="module" src="../_review/review.js"></script>
         <script src="../../catalogue/boot-check.js"></script>
         <script type="module" src="../../catalogue/catalogue.js"></script>

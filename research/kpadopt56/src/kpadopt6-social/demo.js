@@ -437,6 +437,13 @@ onReady(() => {
             },
             true,
         );
+        // A press elsewhere closes the shown-open list (the field's own outside press, on the document while capturing),
+        // and it opens again in the same press, after every other listener has run: before the click that opens the list
+        // the person asked for. The top layer stacks overlays in the order they were raised, so the list the person
+        // opened is raised last and lies over the shown-open one, under its own field (Kenny, 2026-10-18 19:53: "Als ik
+        // de bovenste backup time open, dan opent die onderaan"). Opened again only on the click, it was raised after
+        // the person's list and covered it, and the person's list seemed to open at the shown-open field.
+        window.addEventListener('pointerdown', keepOpened);
         // Whatever else closed it, the shown-open list is open again once the press or the focus has settled.
         for (const type of ['click', 'focusout', 'keyup']) document.addEventListener(type, () => setTimeout(keepOpened, 0));
         window.matchMedia('(max-width: 40rem)').addEventListener('change', keepOpened);

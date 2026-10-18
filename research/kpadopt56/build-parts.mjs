@@ -354,11 +354,17 @@ function lookBlock(id, themes) {
  */
 const CHANGED = {
     'fields/time-field':
-        'You saw the list open by itself when you pressed <b>Presets loading</b> or <b>Presets failed</b>. That was the demo, not ' +
-        'the field: after giving the list its state, the demo pressed the field&rsquo;s clock button (and a second press closed it ' +
-        'again). Now the buttons under <b>The list</b> only change what the list holds and open nothing. To see the state at once, a ' +
-        'fourth field stands under the sentence, <b>The list, shown open</b>: its list stays open on the page and follows the ' +
-        'button you press. The first field shows the same when you open it yourself, or with <b>Show it open</b>.',
+        'You opened the top <b>Backup time</b> and its list seemed to open down at <b>Backup time, its list shown open</b>. It ' +
+        'did open under its own field, but the shown-open list lay right under the top field, in the room its list opens ' +
+        'into, and the demo opened that list again after your click, so it was put over the list you had just opened. Two ' +
+        'things changed. The list shown open now has a column of its own between the fields and the 390 px frame, and no ' +
+        'other field&rsquo;s list reaches that column, so each list hangs under its own field and the two never lie on each ' +
+        'other. And the demo now opens the shown-open list again within the same press, before your click, so the list you ' +
+        'open is always the one on top. The clock and <b>Alt+Down</b> both do this, on every field. ' +
+        'You also saw the line under the field run past it, about twice its width. In dark and titanium the field&rsquo;s ' +
+        'line ran under the whole block around the time field (288 px, or 371 px in the row of three), while the box is ' +
+        '136 px wide. It now runs under the box itself: it starts at the box&rsquo;s left edge and stops at its right edge, ' +
+        'on every time field. The other nine themes draw no such line. Formal has none either, so formal does not change.',
     'fields/autosize-grow':
         'Your note here was the same words as on the time field (a list that opens by itself), and this box has no list or ' +
         'menu, so it may have been meant for the time field. Looked at in dark anyway, side by side with cyberpunk and formal: ' +
