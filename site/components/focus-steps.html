@@ -273,6 +273,107 @@
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-focus-steps&quot;</span> <span class="kp-code__keyword">data-kp-focus-steps</span> <span class="kp-code__keyword">data-kp-focus-mode</span><span class="kp-code__string">=&quot;answer&quot;</span> <span class="kp-code__keyword">data-kp-remember</span><span class="kp-code__string">=&quot;checkin&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Daily check-in&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A check-in that runs: choice, several, a written line, and the plates</figcaption>
+                        <p class="kp-text-muted">Each step carries `answer: { id, kind, choices, previous, usual, placeholder }`: `kind` is `choice` (one tap picks and the flow moves on), `multi` (several taps, then Next) or `text` (a box, whose `placeholder` is its hint; Not today passes it). `previous` and `usual` are the application’s memory and are written into the buttons, “Same as yesterday: Matig”. `data-kp-pinned-first` puts “Nothing to log” first in every question. Every answer fires `kp-focus-steps-answer`, and Done carries all of them; the page here refuses to save, so `setFocusStepsState(el, 'save-error')` shows the plate that keeps the answers and offers Try again.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-focus-steps" id="doc-checkin" data-kp-focus-steps data-kp-focus-mode="answer" data-kp-pinned-first='[{"value":"none","label":"Nothing to log"}]' aria-label="Daily check-in"></div>
+<pre class="kp-code-block" id="doc-checkin-log" aria-live="polite">Answer a question.</pre>
+                            <script type="module">
+import { FOCUS_STEPS_ANSWER_EVENT, FOCUS_STEPS_DONE_EVENT, FOCUS_STEPS_SAVE_RETRY_EVENT, attachFocusSteps, setFocusSteps, setFocusStepsState } from '../../js/focus-steps.js';
+
+const root = document.getElementById('doc-checkin');
+const log = document.getElementById('doc-checkin-log');
+attachFocusSteps(root.parentElement);
+setFocusSteps(root, [
+    {
+        text: 'How is your mood today?',
+        answer: {
+            id: 'mood',
+            kind: 'choice',
+            previous: 'matig',
+            usual: 'good',
+            choices: [
+                { value: 'rough', label: 'Rough' },
+                { value: 'matig', label: 'Matig' },
+                { value: 'good', label: 'Good' },
+            ],
+        },
+    },
+    {
+        text: 'What got in the way of sleep?',
+        answer: {
+            id: 'sleep',
+            kind: 'multi',
+            previous: ['noise'],
+            choices: [
+                { value: 'noise', label: 'Noise' },
+                { value: 'thoughts', label: 'Thoughts' },
+                { value: 'pain', label: 'Pain' },
+            ],
+        },
+    },
+    { text: 'One sentence about today, if you like.', answer: { id: 'line', kind: 'text', placeholder: 'Write what you want, or press Not today' } },
+]);
+root.addEventListener(FOCUS_STEPS_ANSWER_EVENT, (event) => {
+    const { id, value, source } = event.detail;
+    log.textContent = 'kp-focus-steps-answer { id: ' + id + ', value: ' + JSON.stringify(value) + ', source: ' + source + ' }';
+});
+root.addEventListener(FOCUS_STEPS_DONE_EVENT, (event) => {
+    log.textContent = 'Done: ' + Object.keys(event.detail.answers).length + ' answers kept in the page; the save is refused.';
+    setFocusStepsState(root, 'save-error');
+});
+root.addEventListener(FOCUS_STEPS_SAVE_RETRY_EVENT, () => (log.textContent = 'kp-focus-steps-save-retry: the page tries to save again'));
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-focus-steps&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-checkin&quot;</span> <span class="kp-code__keyword">data-kp-focus-steps</span> <span class="kp-code__keyword">data-kp-focus-mode</span><span class="kp-code__string">=&quot;answer&quot;</span> <span class="kp-code__keyword">data-kp-pinned-first</span><span class="kp-code__string">='[{&quot;value&quot;:&quot;none&quot;,&quot;label&quot;:&quot;Nothing to log&quot;}]'</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Daily check-in&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code-block&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-checkin-log&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;Answer a question.&lt;/<span class="kp-code__keyword">pre</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { FOCUS_STEPS_ANSWER_EVENT, FOCUS_STEPS_DONE_EVENT, FOCUS_STEPS_SAVE_RETRY_EVENT, attachFocusSteps, setFocusSteps, setFocusStepsState } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/focus-steps'</span>;
+
+<span class="kp-code__keyword">const</span> root = document.getElementById(<span class="kp-code__string">'doc-checkin'</span>);
+<span class="kp-code__keyword">const</span> log = document.getElementById(<span class="kp-code__string">'doc-checkin-log'</span>);
+attachFocusSteps(root.parentElement);
+setFocusSteps(root, [
+    {
+        text: <span class="kp-code__string">'How is your mood today?'</span>,
+        answer: {
+            id: <span class="kp-code__string">'mood'</span>,
+            kind: <span class="kp-code__string">'choice'</span>,
+            previous: <span class="kp-code__string">'matig'</span>,
+            usual: <span class="kp-code__string">'good'</span>,
+            choices: [
+                { value: <span class="kp-code__string">'rough'</span>, label: <span class="kp-code__string">'Rough'</span> },
+                { value: <span class="kp-code__string">'matig'</span>, label: <span class="kp-code__string">'Matig'</span> },
+                { value: <span class="kp-code__string">'good'</span>, label: <span class="kp-code__string">'Good'</span> },
+            ],
+        },
+    },
+    {
+        text: <span class="kp-code__string">'What got in the way of sleep?'</span>,
+        answer: {
+            id: <span class="kp-code__string">'sleep'</span>,
+            kind: <span class="kp-code__string">'multi'</span>,
+            previous: [<span class="kp-code__string">'noise'</span>],
+            choices: [
+                { value: <span class="kp-code__string">'noise'</span>, label: <span class="kp-code__string">'Noise'</span> },
+                { value: <span class="kp-code__string">'thoughts'</span>, label: <span class="kp-code__string">'Thoughts'</span> },
+                { value: <span class="kp-code__string">'pain'</span>, label: <span class="kp-code__string">'Pain'</span> },
+            ],
+        },
+    },
+    { text: <span class="kp-code__string">'One sentence about today, if you like.'</span>, answer: { id: <span class="kp-code__string">'line'</span>, kind: <span class="kp-code__string">'text'</span>, placeholder: <span class="kp-code__string">'Write what you want, or press Not today'</span> } },
+]);
+root.addEventListener(FOCUS_STEPS_ANSWER_EVENT, (event) =&gt; {
+    <span class="kp-code__keyword">const</span> { id, value, source } = event.detail;
+    log.textContent = <span class="kp-code__string">'kp-focus-steps-answer { id: '</span> + id + <span class="kp-code__string">', value: '</span> + JSON.stringify(value) + <span class="kp-code__string">', source: '</span> + source + <span class="kp-code__string">' }'</span>;
+});
+root.addEventListener(FOCUS_STEPS_DONE_EVENT, (event) =&gt; {
+    log.textContent = <span class="kp-code__string">'Done: '</span> + Object.keys(event.detail.answers).length + <span class="kp-code__string">' answers kept in the page; the save is refused.'</span>;
+    setFocusStepsState(root, <span class="kp-code__string">'save-error'</span>);
+});
+root.addEventListener(FOCUS_STEPS_SAVE_RETRY_EVENT, () =&gt; (log.textContent = <span class="kp-code__string">'kp-focus-steps-save-retry: the page tries to save again'</span>));</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>

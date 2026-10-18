@@ -319,6 +319,99 @@
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-calendar&quot;</span> <span class="kp-code__keyword">data-kp-calendar</span> <span class="kp-code__keyword">data-kp-tones</span><span class="kp-code__string">=&quot;calm&quot;</span> <span class="kp-code__keyword">data-kp-calendar-month</span><span class="kp-code__string">=&quot;2026-10&quot;</span> <span class="kp-code__keyword">data-kp-paused-range</span><span class="kp-code__string">=&quot;2026-10-03/2026-10-06&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Movement&quot;</span>&gt;&lt;/<span class="kp-code__keyword">section</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Calm days with their minutes, a caption, and the states</figcaption>
+                        <p class="kp-text-muted">The page hands over the logged days only; every other day is quiet, and the days inside `data-kp-paused-range` are paused. A calm month with nothing logged keeps its six rows under one centred plate, and a month that could not be read is dimmed under a plate with Retry, which fires `kp-calendar-retry` for the page to answer. `setCalendarCaption` writes the page’s own sentence under the grid, and `data-kp-logged-fill=&quot;success&quot;` asks for the success plate instead of the accent.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <section class="kp-calendar kp-calendar--busy-days" id="doc-calm-calendar" data-kp-calendar data-kp-tones="calm" data-kp-calendar-month="2026-10" data-kp-paused-range="2026-10-03/2026-10-06" aria-label="Movement"></section>
+    <div class="kp-row kp-flex-wrap kp-gap-sm" role="group" aria-label="States">
+        <button type="button" class="kp-button" data-doc-calm-state="ready">Ready</button>
+        <button type="button" class="kp-button" data-doc-calm-state="loading">Loading</button>
+        <button type="button" class="kp-button" data-doc-calm-state="empty">Nothing logged</button>
+        <button type="button" class="kp-button" data-doc-calm-state="error">Could not read</button>
+        <button type="button" class="kp-button" data-doc-calm-fill="success" aria-pressed="false">Success plate</button>
+    </div>
+</div>
+                            <script type="module">
+import { CALENDAR_RETRY_EVENT, attachCalendars, setCalendarCaption, setCalendarDays, setCalendarState } from '../../js/calendar.js';
+
+const calendar = document.getElementById('doc-calm-calendar');
+attachCalendars(calendar.parentElement);
+const minutes = { 1: 20, 2: 35, 7: 15, 8: 40, 9: 25, 12: 30, 13: 45, 14: 20, 15: 10 };
+const logged = {};
+for (const [day, count] of Object.entries(minutes)) {
+    logged['2026-10-' + day.padStart(2, '0')] = { tone: 'logged', count: String(count), label: count + ' minutes' };
+}
+setCalendarDays(calendar, logged);
+setCalendarCaption(calendar, 'Trends count the days that were logged');
+for (const button of document.querySelectorAll('[data-doc-calm-state]')) {
+    button.addEventListener('click', () => {
+        const state = button.getAttribute('data-doc-calm-state');
+        if (state === 'empty') setCalendarDays(calendar, {});
+        else if (state === 'ready') setCalendarDays(calendar, logged);
+        setCalendarState(calendar, state === 'empty' ? 'empty' : state);
+    });
+}
+calendar.addEventListener(CALENDAR_RETRY_EVENT, () => {
+    setCalendarState(calendar, 'loading');
+    setTimeout(() => {
+        setCalendarDays(calendar, logged);
+        setCalendarState(calendar, 'ready');
+    }, 1000);
+});
+document.querySelector('[data-doc-calm-fill]').addEventListener('click', (event) => {
+    const on = calendar.getAttribute('data-kp-logged-fill') !== 'success';
+    if (on) calendar.setAttribute('data-kp-logged-fill', 'success');
+    else calendar.removeAttribute('data-kp-logged-fill');
+    event.currentTarget.setAttribute('aria-pressed', String(on));
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-calendar kp-calendar--busy-days&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-calm-calendar&quot;</span> <span class="kp-code__keyword">data-kp-calendar</span> <span class="kp-code__keyword">data-kp-tones</span><span class="kp-code__string">=&quot;calm&quot;</span> <span class="kp-code__keyword">data-kp-calendar-month</span><span class="kp-code__string">=&quot;2026-10&quot;</span> <span class="kp-code__keyword">data-kp-paused-range</span><span class="kp-code__string">=&quot;2026-10-03/2026-10-06&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Movement&quot;</span>&gt;&lt;/<span class="kp-code__keyword">section</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-flex-wrap kp-gap-sm&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;States&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-calm-state</span><span class="kp-code__string">=&quot;ready&quot;</span>&gt;Ready&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-calm-state</span><span class="kp-code__string">=&quot;loading&quot;</span>&gt;Loading&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-calm-state</span><span class="kp-code__string">=&quot;empty&quot;</span>&gt;Nothing logged&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-calm-state</span><span class="kp-code__string">=&quot;error&quot;</span>&gt;Could not read&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-calm-fill</span><span class="kp-code__string">=&quot;success&quot;</span> <span class="kp-code__keyword">aria-pressed</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;Success plate&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { CALENDAR_RETRY_EVENT, attachCalendars, setCalendarCaption, setCalendarDays, setCalendarState } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/calendar'</span>;
+
+<span class="kp-code__keyword">const</span> calendar = document.getElementById(<span class="kp-code__string">'doc-calm-calendar'</span>);
+attachCalendars(calendar.parentElement);
+<span class="kp-code__keyword">const</span> minutes = { <span class="kp-code__string">1</span>: <span class="kp-code__string">20</span>, <span class="kp-code__string">2</span>: <span class="kp-code__string">35</span>, <span class="kp-code__string">7</span>: <span class="kp-code__string">15</span>, <span class="kp-code__string">8</span>: <span class="kp-code__string">40</span>, <span class="kp-code__string">9</span>: <span class="kp-code__string">25</span>, <span class="kp-code__string">12</span>: <span class="kp-code__string">30</span>, <span class="kp-code__string">13</span>: <span class="kp-code__string">45</span>, <span class="kp-code__string">14</span>: <span class="kp-code__string">20</span>, <span class="kp-code__string">15</span>: <span class="kp-code__string">10</span> };
+<span class="kp-code__keyword">const</span> logged = {};
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> [day, count] <span class="kp-code__keyword">of</span> Object.entries(minutes)) {
+    logged[<span class="kp-code__string">'2026-10-'</span> + day.padStart(<span class="kp-code__string">2</span>, <span class="kp-code__string">'0'</span>)] = { tone: <span class="kp-code__string">'logged'</span>, count: String(count), label: count + <span class="kp-code__string">' minutes'</span> };
+}
+setCalendarDays(calendar, logged);
+setCalendarCaption(calendar, <span class="kp-code__string">'Trends count the days that were logged'</span>);
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> button <span class="kp-code__keyword">of</span> document.querySelectorAll(<span class="kp-code__string">'[data-doc-calm-state]'</span>)) {
+    button.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; {
+        <span class="kp-code__keyword">const</span> state = button.getAttribute(<span class="kp-code__string">'data-doc-calm-state'</span>);
+        <span class="kp-code__keyword">if</span> (state === <span class="kp-code__string">'empty'</span>) setCalendarDays(calendar, {});
+        <span class="kp-code__keyword">else</span> <span class="kp-code__keyword">if</span> (state === <span class="kp-code__string">'ready'</span>) setCalendarDays(calendar, logged);
+        setCalendarState(calendar, state === <span class="kp-code__string">'empty'</span> ? <span class="kp-code__string">'empty'</span> : state);
+    });
+}
+calendar.addEventListener(CALENDAR_RETRY_EVENT, () =&gt; {
+    setCalendarState(calendar, <span class="kp-code__string">'loading'</span>);
+    setTimeout(() =&gt; {
+        setCalendarDays(calendar, logged);
+        setCalendarState(calendar, <span class="kp-code__string">'ready'</span>);
+    }, <span class="kp-code__string">1000</span>);
+});
+document.querySelector(<span class="kp-code__string">'[data-doc-calm-fill]'</span>).addEventListener(<span class="kp-code__string">'click'</span>, (event) =&gt; {
+    <span class="kp-code__keyword">const</span> on = calendar.getAttribute(<span class="kp-code__string">'data-kp-logged-fill'</span>) !== <span class="kp-code__string">'success'</span>;
+    <span class="kp-code__keyword">if</span> (on) calendar.setAttribute(<span class="kp-code__string">'data-kp-logged-fill'</span>, <span class="kp-code__string">'success'</span>);
+    <span class="kp-code__keyword">else</span> calendar.removeAttribute(<span class="kp-code__string">'data-kp-logged-fill'</span>);
+    event.currentTarget.setAttribute(<span class="kp-code__string">'aria-pressed'</span>, String(on));
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>
@@ -545,6 +638,8 @@
                             <tr><td><code>data-kp-paused-range</code></td><td>`2026-10-03/2026-10-14` (an end is optional): quiet days inside it are drawn as paused.</td></tr>
                             <tr><td><code>data-kp-legend</code></td><td>`hide` leaves out the calm legend (Logged, Nothing logged, Paused).</td></tr>
                             <tr><td><code>kp-calendar-retry and setCalendarCaption</code></td><td>A calm month with nothing logged keeps its six quiet rows under a centred plate; a month that could not be read is dimmed under one with Retry, which fires `kp-calendar-retry`. `setCalendarCaption(el, text)` writes the page’s own sentence under the grid.</td></tr>
+                            <tr><td><code>.kp-calendar__plate and .kp-calendar__caption</code></td><td>The plate that stands over a calm month with nothing logged or one that could not be read (its sentence and, when failed, a normal-size Retry), and the page’s own sentence under the grid. Both are made by the module.</td></tr>
+                            <tr><td><code>calmTone, calmWord, inPausedRange and CALM_TONES</code></td><td>js/calm-tones.js on its own, for a page that draws its own cells: `calmTone(tone, el)` maps a tone to the calm vocabulary (ok to logged, the rest to quiet, one console warning per foreign tone), `calmWord(tone)` is “logged”, “nothing logged” or “paused” and never “missed”, `inPausedRange(range, iso)` says whether a `YYYY-MM-DD` lies in a `from/to` pause, and `CALM_TONES` lists the six tones: logged, quiet, paused, future, before, loading.</td></tr>
                             <tr><td><code>marks the module writes</code></td><td>`data-kp-plate` (which plate stands over the grid) and `data-kp-dim` (a failed month’s grid).</td></tr>
                     </tbody></table></div>
                 </section>

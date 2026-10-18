@@ -347,6 +347,55 @@ attachHeats(grid.parentElement);
 setHeat(grid, { columns, summary, rows, label: <span class="kp-code__string">'Snapshots per stack per night'</span>, picked: String(NIGHTS - <span class="kp-code__string">2</span>) });</code></pre>
                     </figure>
                     <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Calm tones: three habits over a week</figcaption>
+                        <p class="kp-text-muted">`data-kp-tones=&quot;calm&quot;` gives the cells `logged`, `quiet` and `paused` instead of ok, warn and bad, and a legend that says Logged, Nothing logged and Paused (`data-kp-legend=&quot;hide&quot;` leaves it out). A quiet cell has no border, glyph or count, and its name still says “nothing logged”. A page that hands over `bad` by habit gets `quiet` and one console warning, so no red reaches a tracker by mistake (`data-kp-calm-map=&quot;none&quot;` passes tones through).</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-heat" id="doc-heat-calm" data-kp-heat data-kp-tones="calm" aria-label="Habits"></div>
+                            <script type="module">
+import { attachHeats, setHeat } from '../../js/heat.js';
+
+const grid = document.getElementById('doc-heat-calm');
+attachHeats(grid.parentElement);
+const days = Array.from({ length: 7 }, (_, i) => ({ key: String(i + 10), label: String(i + 10) }));
+const cells = (pattern) =>
+    [...pattern].map((c) =>
+        c === 'x' ? { tone: 'logged', label: 'logged' } : c === 'p' ? { tone: 'paused', label: 'paused' } : { tone: 'quiet', label: 'nothing logged' },
+    );
+setHeat(grid, {
+    columns: days,
+    rows: [
+        { key: 'walk', label: 'Walk', cells: cells('xx.x..x') },
+        { key: 'stretch', label: 'Stretch', cells: cells('x.x.x.p') },
+        { key: 'journal', label: 'Journal', cells: cells('xx.xxx.') },
+    ],
+    label: 'Habits, one week',
+    every: 1,
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-heat&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-heat-calm&quot;</span> <span class="kp-code__keyword">data-kp-heat</span> <span class="kp-code__keyword">data-kp-tones</span><span class="kp-code__string">=&quot;calm&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Habits&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachHeats, setHeat } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/heat'</span>;
+
+<span class="kp-code__keyword">const</span> grid = document.getElementById(<span class="kp-code__string">'doc-heat-calm'</span>);
+attachHeats(grid.parentElement);
+<span class="kp-code__keyword">const</span> days = Array.<span class="kp-code__keyword">from</span>({ length: <span class="kp-code__string">7</span> }, (_, i) =&gt; ({ key: String(i + <span class="kp-code__string">10</span>), label: String(i + <span class="kp-code__string">10</span>) }));
+<span class="kp-code__keyword">const</span> cells = (pattern) =&gt;
+    [...pattern].map((c) =&gt;
+        c === <span class="kp-code__string">'x'</span> ? { tone: <span class="kp-code__string">'logged'</span>, label: <span class="kp-code__string">'logged'</span> } : c === <span class="kp-code__string">'p'</span> ? { tone: <span class="kp-code__string">'paused'</span>, label: <span class="kp-code__string">'paused'</span> } : { tone: <span class="kp-code__string">'quiet'</span>, label: <span class="kp-code__string">'nothing logged'</span> },
+    );
+setHeat(grid, {
+    columns: days,
+    rows: [
+        { key: <span class="kp-code__string">'walk'</span>, label: <span class="kp-code__string">'Walk'</span>, cells: cells(<span class="kp-code__string">'xx.x..x'</span>) },
+        { key: <span class="kp-code__string">'stretch'</span>, label: <span class="kp-code__string">'Stretch'</span>, cells: cells(<span class="kp-code__string">'x.x.x.p'</span>) },
+        { key: <span class="kp-code__string">'journal'</span>, label: <span class="kp-code__string">'Journal'</span>, cells: cells(<span class="kp-code__string">'xx.xxx.'</span>) },
+    ],
+    label: <span class="kp-code__string">'Habits, one week'</span>,
+    every: <span class="kp-code__string">1</span>,
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">Tone by value, and the three states</figcaption>
                         <p class="kp-text-muted">The tone `level` darkens with a cell’s `level` (0 to 1): a count per day, a load per hour. The three states keep the grid’s footprint: `loading` shows skeleton cells in place (and the data table’s loading card over them), `empty` and `error` give one sentence of the grid’s minimum height (`message`). `skeleton` is the shape of a loading grid that has no data yet.</p>
                         <div class="sc-example__live kp-card" data-sc-live>

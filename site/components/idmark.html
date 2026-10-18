@@ -273,6 +273,96 @@
     &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-idmark-group&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;img&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Acme, Contoso and 7 more&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-idmark kp-idmark--round&quot;</span> <span class="kp-code__keyword">data-kp-idmark</span><span class="kp-code__string">=&quot;Acme&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-idmark kp-idmark--round&quot;</span> <span class="kp-code__keyword">data-kp-idmark</span><span class="kp-code__string">=&quot;Contoso&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-idmark-group__more&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;+7&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">An avatar: a photo, a photo that fails, a status, a frame</figcaption>
+                        <p class="kp-text-muted">`data-kp-idmark-src` puts a photo on the mark: the plate keeps its size and its letters underneath while the photo loads, the photo fades in, and a photo that fails leaves the letters with no error mark, because the person is still identified. `kp-idmark-photo` fires with `{ state, src }` (`data-kp-photo` is `loading`, `loaded` or `failed`). `data-kp-idmark-status` is `online`, `away` or `busy`: a dot whose shape differs too (full, ring, barred) and whose word joins the mark’s label, so the mark becomes an image called “Ada Lovelace, online”. `data-kp-idmark-alt=&quot;name&quot;` makes a mark an image called by the name; `data-kp-idmark-loading=&quot;eager&quot;` loads at once instead of lazily. `data-kp-idmark-frame` sets the photo’s frame: `edge` (the default), `ring` or `inset`.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<ul class="kp-stack" aria-label="People">
+    <li class="kp-idmark-name"><span class="kp-idmark kp-idmark--round kp-idmark--lg" data-kp-idmark="Ada Lovelace" data-doc-photo data-kp-idmark-status="online" data-kp-idmark-loading="eager"></span><span>Ada Lovelace</span></li>
+    <li class="kp-idmark-name"><span class="kp-idmark kp-idmark--round kp-idmark--lg" data-kp-idmark="Grace Hopper" data-kp-idmark-src="missing-photo.jpg" data-kp-idmark-status="away"></span><span>Grace Hopper: the photo is gone, the letters stay</span></li>
+    <li class="kp-idmark-name"><span class="kp-idmark kp-idmark--round kp-idmark--lg" data-kp-idmark="Alan Turing" data-kp-idmark-status="busy" data-kp-idmark-alt="name"></span><span>Alan Turing</span></li>
+    <li class="kp-idmark-name"><span class="kp-idmark kp-idmark--round kp-idmark--lg" data-kp-idmark="Edsger Dijkstra" data-doc-photo data-kp-idmark-frame="ring"></span><span>Edsger Dijkstra, ring frame</span></li>
+    <li class="kp-idmark-name"><span class="kp-idmark kp-idmark--round kp-idmark--lg" data-kp-idmark="Barbara Liskov" data-doc-photo data-kp-idmark-frame="inset"></span><span>Barbara Liskov, inset frame</span></li>
+</ul>
+<pre class="kp-code-block" id="doc-idmark-log" aria-live="polite">Waiting for the photos.</pre>
+                            <script type="module">
+import { attachIdmarks } from '../../js/idmark.js';
+
+// A small drawn portrait stands in for a photo, so the example needs no network.
+const portrait = (hue) =>
+    'data:image/svg+xml,' +
+    encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="hsl(' + hue + ' 45% 72%)"/><circle cx="32" cy="25" r="11" fill="hsl(' + hue + ' 35% 38%)"/><path d="M10 64a22 22 0 0 1 44 0z" fill="hsl(' + hue + ' 35% 38%)"/></svg>',
+    );
+const log = document.getElementById('doc-idmark-log');
+document.addEventListener('kp-idmark-photo', (event) => {
+    log.textContent = 'kp-idmark-photo { state: ' + event.detail.state + ', src: ' + event.detail.src.slice(0, 24) + '… }';
+});
+[...document.querySelectorAll('[data-doc-photo]')].forEach((mark, n) => mark.setAttribute('data-kp-idmark-src', portrait(200 + n * 70)));
+attachIdmarks(document.querySelector('[data-doc-photo]').closest('ul'));
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;People&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-idmark-name&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-idmark kp-idmark--round kp-idmark--lg&quot;</span> <span class="kp-code__keyword">data-kp-idmark</span><span class="kp-code__string">=&quot;Ada Lovelace&quot;</span> <span class="kp-code__keyword">data-doc-photo</span> <span class="kp-code__keyword">data-kp-idmark-status</span><span class="kp-code__string">=&quot;online&quot;</span> <span class="kp-code__keyword">data-kp-idmark-loading</span><span class="kp-code__string">=&quot;eager&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;Ada Lovelace&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-idmark-name&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-idmark kp-idmark--round kp-idmark--lg&quot;</span> <span class="kp-code__keyword">data-kp-idmark</span><span class="kp-code__string">=&quot;Grace Hopper&quot;</span> <span class="kp-code__keyword">data-kp-idmark-src</span><span class="kp-code__string">=&quot;missing-photo.jpg&quot;</span> <span class="kp-code__keyword">data-kp-idmark-status</span><span class="kp-code__string">=&quot;away&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;Grace Hopper: the photo is gone, the letters stay&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-idmark-name&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-idmark kp-idmark--round kp-idmark--lg&quot;</span> <span class="kp-code__keyword">data-kp-idmark</span><span class="kp-code__string">=&quot;Alan Turing&quot;</span> <span class="kp-code__keyword">data-kp-idmark-status</span><span class="kp-code__string">=&quot;busy&quot;</span> <span class="kp-code__keyword">data-kp-idmark-alt</span><span class="kp-code__string">=&quot;name&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;Alan Turing&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-idmark-name&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-idmark kp-idmark--round kp-idmark--lg&quot;</span> <span class="kp-code__keyword">data-kp-idmark</span><span class="kp-code__string">=&quot;Edsger Dijkstra&quot;</span> <span class="kp-code__keyword">data-doc-photo</span> <span class="kp-code__keyword">data-kp-idmark-frame</span><span class="kp-code__string">=&quot;ring&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;Edsger Dijkstra, ring frame&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+    &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-idmark-name&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-idmark kp-idmark--round kp-idmark--lg&quot;</span> <span class="kp-code__keyword">data-kp-idmark</span><span class="kp-code__string">=&quot;Barbara Liskov&quot;</span> <span class="kp-code__keyword">data-doc-photo</span> <span class="kp-code__keyword">data-kp-idmark-frame</span><span class="kp-code__string">=&quot;inset&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;Barbara Liskov, inset frame&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
+&lt;/<span class="kp-code__keyword">ul</span>&gt;
+&lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code-block&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-idmark-log&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;Waiting for the photos.&lt;/<span class="kp-code__keyword">pre</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachIdmarks } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/idmark'</span>;
+
+<span class="kp-code__comment">// A small drawn portrait stands in for a photo, so the example needs no network.</span>
+<span class="kp-code__keyword">const</span> portrait = (hue) =&gt;
+    <span class="kp-code__string">'data:image/svg+xml,'</span> +
+    encodeURIComponent(
+        <span class="kp-code__string">'&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; viewBox=&quot;0 0 64 64&quot;&gt;&lt;rect width=&quot;64&quot; height=&quot;64&quot; fill=&quot;hsl('</span> + hue + <span class="kp-code__string">' 45% 72%)&quot;/&gt;&lt;circle cx=&quot;32&quot; cy=&quot;25&quot; r=&quot;11&quot; fill=&quot;hsl('</span> + hue + <span class="kp-code__string">' 35% 38%)&quot;/&gt;&lt;path d=&quot;M10 64a22 22 0 0 1 44 0z&quot; fill=&quot;hsl('</span> + hue + <span class="kp-code__string">' 35% 38%)&quot;/&gt;&lt;/svg&gt;'</span>,
+    );
+<span class="kp-code__keyword">const</span> log = document.getElementById(<span class="kp-code__string">'doc-idmark-log'</span>);
+document.addEventListener(<span class="kp-code__string">'kp-idmark-photo'</span>, (event) =&gt; {
+    log.textContent = <span class="kp-code__string">'kp-idmark-photo { state: '</span> + event.detail.state + <span class="kp-code__string">', src: '</span> + event.detail.src.slice(<span class="kp-code__string">0</span>, <span class="kp-code__string">24</span>) + <span class="kp-code__string">'… }'</span>;
+});
+[...document.querySelectorAll(<span class="kp-code__string">'[data-doc-photo]'</span>)].forEach((mark, n) =&gt; mark.setAttribute(<span class="kp-code__string">'data-kp-idmark-src'</span>, portrait(<span class="kp-code__string">200</span> + n * <span class="kp-code__string">70</span>)));
+attachIdmarks(document.querySelector(<span class="kp-code__string">'[data-doc-photo]'</span>).closest(<span class="kp-code__string">'ul'</span>));</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A group of avatars with an exact +N that opens the names</figcaption>
+                        <p class="kp-text-muted">`setIdmarkGroup(el, people, { max, size, round, list })` draws the first `max` people and an exact “+N” (never “9+”). By default the “+N” is a button that opens the list of the names left out, each with its mark; `list: false` leaves it a plain count whose title lists the names. A group of small marks takes `.kp-idmark-group--sm` for its “+N”. Put a name that must wrap, in a heading or a list, in `.kp-idmark-name--wrap`.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div id="doc-idmark-group"></div>
+    <div id="doc-idmark-group-count"></div>
+    <p class="kp-idmark-name kp-idmark-name--wrap"><span class="kp-idmark kp-idmark--round" data-kp-idmark="Ada Lovelace" aria-hidden="true"></span><span>A long name that wraps instead of being cut: Augusta Ada King, Countess of Lovelace</span></p>
+</div>
+                            <script type="module">
+import { attachIdmarks, setIdmarkGroup } from '../../js/idmark.js';
+
+const people = ['Ada Lovelace', 'Grace Hopper', 'Alan Turing', 'Edsger Dijkstra', 'Barbara Liskov', 'Donald Knuth', 'Margaret Hamilton'].map((name, n) => ({
+    name,
+    status: n === 0 ? 'online' : n === 2 ? 'busy' : 'none',
+}));
+setIdmarkGroup(document.getElementById('doc-idmark-group'), people, { max: 4 });
+setIdmarkGroup(document.getElementById('doc-idmark-group-count'), people, { max: 3, size: 'sm', list: false });
+attachIdmarks(document.getElementById('doc-idmark-group').parentElement);
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-idmark-group&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-idmark-group-count&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-idmark-name kp-idmark-name--wrap&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-idmark kp-idmark--round&quot;</span> <span class="kp-code__keyword">data-kp-idmark</span><span class="kp-code__string">=&quot;Ada Lovelace&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span>&gt;A long name that wraps instead of being cut: Augusta Ada King, Countess of Lovelace&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachIdmarks, setIdmarkGroup } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/idmark'</span>;
+
+<span class="kp-code__keyword">const</span> people = [<span class="kp-code__string">'Ada Lovelace'</span>, <span class="kp-code__string">'Grace Hopper'</span>, <span class="kp-code__string">'Alan Turing'</span>, <span class="kp-code__string">'Edsger Dijkstra'</span>, <span class="kp-code__string">'Barbara Liskov'</span>, <span class="kp-code__string">'Donald Knuth'</span>, <span class="kp-code__string">'Margaret Hamilton'</span>].map((name, n) =&gt; ({
+    name,
+    status: n === <span class="kp-code__string">0</span> ? <span class="kp-code__string">'online'</span> : n === <span class="kp-code__string">2</span> ? <span class="kp-code__string">'busy'</span> : <span class="kp-code__string">'none'</span>,
+}));
+setIdmarkGroup(document.getElementById(<span class="kp-code__string">'doc-idmark-group'</span>), people, { max: <span class="kp-code__string">4</span> });
+setIdmarkGroup(document.getElementById(<span class="kp-code__string">'doc-idmark-group-count'</span>), people, { max: <span class="kp-code__string">3</span>, size: <span class="kp-code__string">'sm'</span>, list: <span class="kp-code__keyword">false</span> });
+attachIdmarks(document.getElementById(<span class="kp-code__string">'doc-idmark-group'</span>).parentElement);</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -338,6 +428,15 @@
                             <tr><td><code>data-kp-idmark-hue=&quot;free&quot;</code></td><td>A hue of its own from the name, on the lightness and strength of the first chart colour.</td></tr>
                             <tr><td><code>aria-current / data-kp-idmark-selected</code></td><td>The current one in a list: a ring kept off its neighbours by a halo.</td></tr>
                             <tr><td><code>.kp-idmark.kp-skeleton.kp-skeleton--block</code></td><td>Loading: the plate’s own shape, drawn as the theme draws a waiting block.</td></tr>
+                            <tr><td><code>data-kp-idmark-src and kp-idmark-photo</code></td><td>The photo; the letters stay under it until it has loaded and after it has failed. The event carries `{ state, src }`; `data-kp-photo` (`loading`, `loaded`, `failed`) is written on the mark.</td></tr>
+                            <tr><td><code>data-kp-idmark-loading</code></td><td>`lazy` (the default) or `eager`, as the image’s own `loading`.</td></tr>
+                            <tr><td><code>data-kp-idmark-alt</code></td><td>`decorative` (the default: hidden from a screen reader, the name stands beside it) or `name` (the mark is an image called by the name).</td></tr>
+                            <tr><td><code>data-kp-idmark-status</code></td><td>`online`, `away` or `busy` (`none` is the default): a dot at the foot corner, full, ring or barred, whose word is added to the label (“Ada Lovelace, online”). A status makes the mark an image.</td></tr>
+                            <tr><td><code>data-kp-idmark-frame</code></td><td>The photo’s frame: `edge` (the default: the plate’s own edge in the name’s colour), `ring` (a ring held off the photo) or `inset` (the photo set into the plate like a picture in a mount).</td></tr>
+                            <tr><td><code>setIdmarkGroup and IDMARK_STATUSES</code></td><td>`setIdmarkGroup(el, people, { max, size, round, list })` with people `{ name, src, status }`; `.kp-idmark-group__more` is the “+N” (a button when `list` is on) and `.kp-idmark-group__list` the panel of the names left out, closed by Escape or a press elsewhere; `IDMARK_STATUSES` is `online`, `away`, `busy`.</td></tr>
+                            <tr><td><code>.kp-idmark-group--sm and .kp-idmark-name--wrap</code></td><td>The small group’s “+N” kept in step with its marks, and a name that wraps (for a heading or a list, not a table cell) instead of being cut.</td></tr>
+                            <tr><td><code>idmarkLetters and idmarkUnknown</code></td><td>`idmarkLetters(name, count)` is the initials of the first two words, else the first two letters, upper case. A mark with an empty name is a dashed plate with a “?”, and `idmarkUnknown` is the word a screen reader gets for it.</td></tr>
+                            <tr><td><code>idmarkOnline … idmarkMoreTitle</code></td><td>The words of the avatar are in the dictionary: `idmarkOnline`, `idmarkAway`, `idmarkBusy`, `idmarkLabel` (“Ada, online”), `idmarkGroup` (“Acme, Contoso and 7 more”), `idmarkMore` and `idmarkMoreTitle`.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

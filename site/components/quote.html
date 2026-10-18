@@ -269,6 +269,119 @@
     &lt;<span class="kp-code__keyword">blockquote</span>&gt;Wandelen na het eten hielp, mijn hoofd werd rustiger.&lt;/<span class="kp-code__keyword">blockquote</span>&gt;
 &lt;/<span class="kp-code__keyword">figure</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Hero size, a link to the day, Copy, a long entry and the date styles</figcaption>
+                        <p class="kp-text-muted">`data-kp-quote-size=&quot;lg&quot;` is for a hero place; `-source` makes “Open that day” and the blockquote’s `cite`; `-copy` shows Copy; `-hide=&quot;off&quot;` leaves out the hide. A long entry folds behind Show all after `-lines` lines and the whole text stays in the page. `-date-style` is `date`, `relative` or `both`, and `-now` is the moment the relative words count from, so an example does not age.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <figure class="kp-quote" data-kp-quote data-kp-quote-size="lg" data-kp-quote-copy data-kp-quote-hide="off" data-kp-quote-date="2026-10-12T08:15:00+02:00" data-kp-quote-source="#doc-quote-day" data-kp-quote-lang="nl">
+        <blockquote>Kleine stappen tellen ook.</blockquote>
+    </figure>
+    <figure class="kp-quote" data-kp-quote data-kp-quote-lines="2" data-kp-quote-lang="nl" data-kp-quote-by="You" data-kp-quote-date="2026-10-14T19:40:00+02:00" data-kp-quote-now="2026-10-17T12:00:00+02:00" data-kp-quote-date-style="relative">
+        <blockquote>Vandaag was een zware dag, maar ik ben toch even naar buiten gegaan. Eerst alleen tot de hoek van de straat, toen tot aan het park. Daar heb ik op een bank gezeten en niets gedaan, en dat voelde voor het eerst die week niet als falen. Thuis heb ik soep gemaakt en vroeg gegeten.</blockquote>
+    </figure>
+    <p class="kp-text-muted" id="doc-quote-day">The link above goes to this line; the day’s own page is the application’s.</p>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quote&quot;</span> <span class="kp-code__keyword">data-kp-quote</span> <span class="kp-code__keyword">data-kp-quote-size</span><span class="kp-code__string">=&quot;lg&quot;</span> <span class="kp-code__keyword">data-kp-quote-copy</span> <span class="kp-code__keyword">data-kp-quote-hide</span><span class="kp-code__string">=&quot;off&quot;</span> <span class="kp-code__keyword">data-kp-quote-date</span><span class="kp-code__string">=&quot;2026-10-12T08:15:00+02:00&quot;</span> <span class="kp-code__keyword">data-kp-quote-source</span><span class="kp-code__string">=&quot;#doc-quote-day&quot;</span> <span class="kp-code__keyword">data-kp-quote-lang</span><span class="kp-code__string">=&quot;nl&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">blockquote</span>&gt;Kleine stappen tellen ook.&lt;/<span class="kp-code__keyword">blockquote</span>&gt;
+    &lt;/<span class="kp-code__keyword">figure</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quote&quot;</span> <span class="kp-code__keyword">data-kp-quote</span> <span class="kp-code__keyword">data-kp-quote-lines</span><span class="kp-code__string">=&quot;2&quot;</span> <span class="kp-code__keyword">data-kp-quote-lang</span><span class="kp-code__string">=&quot;nl&quot;</span> <span class="kp-code__keyword">data-kp-quote-by</span><span class="kp-code__string">=&quot;You&quot;</span> <span class="kp-code__keyword">data-kp-quote-date</span><span class="kp-code__string">=&quot;2026-10-14T19:40:00+02:00&quot;</span> <span class="kp-code__keyword">data-kp-quote-now</span><span class="kp-code__string">=&quot;2026-10-17T12:00:00+02:00&quot;</span> <span class="kp-code__keyword">data-kp-quote-date-style</span><span class="kp-code__string">=&quot;relative&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">blockquote</span>&gt;Vandaag was een zware dag, maar ik ben toch even naar buiten gegaan. Eerst alleen tot de hoek van de straat, toen tot aan het park. Daar heb ik op een bank gezeten en niets gedaan, en dat voelde voor het eerst die week niet als falen. Thuis heb ik soep gemaakt en vroeg gegeten.&lt;/<span class="kp-code__keyword">blockquote</span>&gt;
+    &lt;/<span class="kp-code__keyword">figure</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-quote-day&quot;</span>&gt;The link above goes to this line; the day’s own page is the application’s.&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Several quotes: three, and Show all</figcaption>
+                        <p class="kp-text-muted">A `data-kp-quote-list` holds the cards and shows `data-kp-quote-max` of them (3 by default, 1 to 5), then a button with the exact number, “Show all 5”.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-quote-list" data-kp-quote-list>
+    <figure class="kp-quote" data-kp-quote data-kp-quote-hide="off" data-kp-quote-lang="nl" data-kp-quote-date="2026-10-14T19:40:00+02:00"><blockquote>Wandelen na het eten hielp.</blockquote></figure>
+    <figure class="kp-quote" data-kp-quote data-kp-quote-hide="off" data-kp-quote-lang="nl" data-kp-quote-date="2026-10-11T20:10:00+02:00"><blockquote>Vroeg naar bed, de ochtend was beter.</blockquote></figure>
+    <figure class="kp-quote" data-kp-quote data-kp-quote-hide="off" data-kp-quote-lang="nl" data-kp-quote-date="2026-10-09T18:30:00+02:00"><blockquote>Even buiten zitten met thee.</blockquote></figure>
+    <figure class="kp-quote" data-kp-quote data-kp-quote-hide="off" data-kp-quote-lang="nl" data-kp-quote-date="2026-10-06T09:00:00+02:00"><blockquote>Eerst de brief schrijven, daarna pas de rest.</blockquote></figure>
+    <figure class="kp-quote" data-kp-quote data-kp-quote-hide="off" data-kp-quote-lang="nl" data-kp-quote-date="2026-10-03T17:45:00+02:00"><blockquote>Muziek opgezet tijdens het koken.</blockquote></figure>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quote-list&quot;</span> <span class="kp-code__keyword">data-kp-quote-list</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quote&quot;</span> <span class="kp-code__keyword">data-kp-quote</span> <span class="kp-code__keyword">data-kp-quote-hide</span><span class="kp-code__string">=&quot;off&quot;</span> <span class="kp-code__keyword">data-kp-quote-lang</span><span class="kp-code__string">=&quot;nl&quot;</span> <span class="kp-code__keyword">data-kp-quote-date</span><span class="kp-code__string">=&quot;2026-10-14T19:40:00+02:00&quot;</span>&gt;&lt;<span class="kp-code__keyword">blockquote</span>&gt;Wandelen na het eten hielp.&lt;/<span class="kp-code__keyword">blockquote</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quote&quot;</span> <span class="kp-code__keyword">data-kp-quote</span> <span class="kp-code__keyword">data-kp-quote-hide</span><span class="kp-code__string">=&quot;off&quot;</span> <span class="kp-code__keyword">data-kp-quote-lang</span><span class="kp-code__string">=&quot;nl&quot;</span> <span class="kp-code__keyword">data-kp-quote-date</span><span class="kp-code__string">=&quot;2026-10-11T20:10:00+02:00&quot;</span>&gt;&lt;<span class="kp-code__keyword">blockquote</span>&gt;Vroeg naar bed, de ochtend was beter.&lt;/<span class="kp-code__keyword">blockquote</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quote&quot;</span> <span class="kp-code__keyword">data-kp-quote</span> <span class="kp-code__keyword">data-kp-quote-hide</span><span class="kp-code__string">=&quot;off&quot;</span> <span class="kp-code__keyword">data-kp-quote-lang</span><span class="kp-code__string">=&quot;nl&quot;</span> <span class="kp-code__keyword">data-kp-quote-date</span><span class="kp-code__string">=&quot;2026-10-09T18:30:00+02:00&quot;</span>&gt;&lt;<span class="kp-code__keyword">blockquote</span>&gt;Even buiten zitten met thee.&lt;/<span class="kp-code__keyword">blockquote</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quote&quot;</span> <span class="kp-code__keyword">data-kp-quote</span> <span class="kp-code__keyword">data-kp-quote-hide</span><span class="kp-code__string">=&quot;off&quot;</span> <span class="kp-code__keyword">data-kp-quote-lang</span><span class="kp-code__string">=&quot;nl&quot;</span> <span class="kp-code__keyword">data-kp-quote-date</span><span class="kp-code__string">=&quot;2026-10-06T09:00:00+02:00&quot;</span>&gt;&lt;<span class="kp-code__keyword">blockquote</span>&gt;Eerst de brief schrijven, daarna pas de rest.&lt;/<span class="kp-code__keyword">blockquote</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quote&quot;</span> <span class="kp-code__keyword">data-kp-quote</span> <span class="kp-code__keyword">data-kp-quote-hide</span><span class="kp-code__string">=&quot;off&quot;</span> <span class="kp-code__keyword">data-kp-quote-lang</span><span class="kp-code__string">=&quot;nl&quot;</span> <span class="kp-code__keyword">data-kp-quote-date</span><span class="kp-code__string">=&quot;2026-10-03T17:45:00+02:00&quot;</span>&gt;&lt;<span class="kp-code__keyword">blockquote</span>&gt;Muziek opgezet tijdens het koken.&lt;/<span class="kp-code__keyword">blockquote</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Hide with a save, and the card’s other states</figcaption>
+                        <p class="kp-text-muted">Hide waits out the Undo window, then fires `kp-quote-hide` with `{ text, wait }`: hand `wait` the page’s save and a refusal puts the card back with the reason in the toast. `kp-quote-fold` fires with `{ expanded }` when a long entry opens or folds, and `kp-quote-retry` when Retry is pressed on a failed card. `setQuoteState(el, state)` draws `loading`, `empty` or `error` in the same footprint as the quote.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <figure class="kp-quote" id="doc-quote-hide" data-kp-quote data-kp-undo-ms="2500" data-kp-quote-lang="nl" data-kp-quote-why="What helped last time" data-kp-quote-date="2026-10-14T19:40:00+02:00">
+        <blockquote>Wandelen na het eten hielp, mijn hoofd werd rustiger.</blockquote>
+    </figure>
+    <div class="kp-row kp-flex-wrap kp-gap-sm" role="group" aria-label="States">
+        <button type="button" class="kp-button" data-doc-quote-state="loading">Loading</button>
+        <button type="button" class="kp-button" data-doc-quote-state="empty">Empty</button>
+        <button type="button" class="kp-button" data-doc-quote-state="error">Could not read</button>
+        <button type="button" class="kp-button" data-doc-quote-state="ready">Ready</button>
+    </div>
+    <pre class="kp-code-block" id="doc-quote-log" aria-live="polite">Press Hide.</pre>
+</div>
+                            <script type="module">
+import { QUOTE_FOLD_EVENT, QUOTE_HIDE_EVENT, QUOTE_RETRY_EVENT, setQuoteState } from '../../js/quote.js';
+
+const card = document.getElementById('doc-quote-hide');
+const log = document.getElementById('doc-quote-log');
+const say = (text) => (log.textContent = text);
+card.addEventListener(QUOTE_HIDE_EVENT, (event) => {
+    say('kp-quote-hide: saving');
+    event.detail.wait(new Promise((resolve) => setTimeout(resolve, 600)).then(() => say('kp-quote-hide: saved')));
+});
+card.addEventListener(QUOTE_FOLD_EVENT, (event) => say('kp-quote-fold: ' + event.detail.expanded));
+card.addEventListener(QUOTE_RETRY_EVENT, () => {
+    say('kp-quote-retry');
+    setQuoteState(card, 'loading');
+    setTimeout(() => setQuoteState(card, 'ready'), 1000);
+});
+for (const button of document.querySelectorAll('[data-doc-quote-state]')) {
+    button.addEventListener('click', () => setQuoteState(card, button.getAttribute('data-doc-quote-state')));
+}
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-quote&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-quote-hide&quot;</span> <span class="kp-code__keyword">data-kp-quote</span> <span class="kp-code__keyword">data-kp-undo-ms</span><span class="kp-code__string">=&quot;2500&quot;</span> <span class="kp-code__keyword">data-kp-quote-lang</span><span class="kp-code__string">=&quot;nl&quot;</span> <span class="kp-code__keyword">data-kp-quote-why</span><span class="kp-code__string">=&quot;What helped last time&quot;</span> <span class="kp-code__keyword">data-kp-quote-date</span><span class="kp-code__string">=&quot;2026-10-14T19:40:00+02:00&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">blockquote</span>&gt;Wandelen na het eten hielp, mijn hoofd werd rustiger.&lt;/<span class="kp-code__keyword">blockquote</span>&gt;
+    &lt;/<span class="kp-code__keyword">figure</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-flex-wrap kp-gap-sm&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;States&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-quote-state</span><span class="kp-code__string">=&quot;loading&quot;</span>&gt;Loading&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-quote-state</span><span class="kp-code__string">=&quot;empty&quot;</span>&gt;Empty&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-quote-state</span><span class="kp-code__string">=&quot;error&quot;</span>&gt;Could not read&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-quote-state</span><span class="kp-code__string">=&quot;ready&quot;</span>&gt;Ready&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code-block&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-quote-log&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;Press Hide.&lt;/<span class="kp-code__keyword">pre</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { QUOTE_FOLD_EVENT, QUOTE_HIDE_EVENT, QUOTE_RETRY_EVENT, setQuoteState } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/quote'</span>;
+
+<span class="kp-code__keyword">const</span> card = document.getElementById(<span class="kp-code__string">'doc-quote-hide'</span>);
+<span class="kp-code__keyword">const</span> log = document.getElementById(<span class="kp-code__string">'doc-quote-log'</span>);
+<span class="kp-code__keyword">const</span> say = (text) =&gt; (log.textContent = text);
+card.addEventListener(QUOTE_HIDE_EVENT, (event) =&gt; {
+    say(<span class="kp-code__string">'kp-quote-hide: saving'</span>);
+    event.detail.wait(<span class="kp-code__keyword">new</span> Promise((resolve) =&gt; setTimeout(resolve, <span class="kp-code__string">600</span>)).then(() =&gt; say(<span class="kp-code__string">'kp-quote-hide: saved'</span>)));
+});
+card.addEventListener(QUOTE_FOLD_EVENT, (event) =&gt; say(<span class="kp-code__string">'kp-quote-fold: '</span> + event.detail.expanded));
+card.addEventListener(QUOTE_RETRY_EVENT, () =&gt; {
+    say(<span class="kp-code__string">'kp-quote-retry'</span>);
+    setQuoteState(card, <span class="kp-code__string">'loading'</span>);
+    setTimeout(() =&gt; setQuoteState(card, <span class="kp-code__string">'ready'</span>), <span class="kp-code__string">1000</span>);
+});
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> button <span class="kp-code__keyword">of</span> document.querySelectorAll(<span class="kp-code__string">'[data-doc-quote-state]'</span>)) {
+    button.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; setQuoteState(card, button.getAttribute(<span class="kp-code__string">'data-doc-quote-state'</span>)));
+}</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -350,6 +463,12 @@
                             <tr><td><code>data-kp-quote-lang</code></td><td>The language of the words.</td></tr>
                             <tr><td><code>data-kp-quote-max</code></td><td>On `data-kp-quote-list`: how many quotes before “Show all 7” (1 to 5, 3).</td></tr>
                             <tr><td><code>data-kp-quote-text</code></td><td>The words, instead of a blockquote.</td></tr>
+                            <tr><td><code>.kp-quote__why / __text / __more</code></td><td>The small line saying why the words are here, the blockquote, and Show all (Show less once open), which exists only when the text is longer than `data-kp-quote-lines`.</td></tr>
+                            <tr><td><code>.kp-quote__caption / __by / __sep / __when / __source</code></td><td>The `figcaption`: who, a separator, the `time` element (its `datetime` is the ISO moment, its title the exact `dd/mm/yyyy HH:mm`), and the link “Open that day”.</td></tr>
+                            <tr><td><code>.kp-quote__actions / __hide / __copy</code></td><td>The row of Hide (“Do not show this again”, with Undo) and Copy; a card with both off has no row.</td></tr>
+                            <tr><td><code>.kp-quote__live</code></td><td>The visually hidden polite region that says a hide, a copy and a fold.</td></tr>
+                            <tr><td><code>.kp-quote--lg and the list’s __more</code></td><td>The hero size, written from `data-kp-quote-size`; and `.kp-quote-list__more`, the “Show all N” button of a list.</td></tr>
+                            <tr><td><code>quote(el) and setQuote(el, spec)</code></td><td>The handle (`text()`, `set`, `setState`, `hide()`) and the way to write a quote’s words and options from a script instead of markup; `quoteWhen(ms, style, now)` is the “Wednesday 14/10/2026 (3 days ago)” sentence on its own.</td></tr>
                             <tr><td><code>data-kp-folded</code></td><td>Written on a folded blockquote.</td></tr>
                             <tr><td><code>data-kp-quote-list-attached and data-kp-quote-list-hidden</code></td><td>Written on a list and on the quotes a list folds away.</td></tr>
                             <tr><td><code>data-kp-quote-gone</code></td><td>Marks a quote a page took out of a list.</td></tr>

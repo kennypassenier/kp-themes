@@ -290,6 +290,156 @@ setThread(thread, {
     ],
 });</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A longer thread: folds, groups, attachments, a failed message and an action</figcaption>
+                        <p class="kp-text-muted">Consecutive messages of one side from one sender within `group` minutes share one header; a day divider (“Monday 13/10/2026”) sits between days. Older messages keep their first `foldLines` lines behind “Show all N lines” while the newest is whole (`fold: 'newest'`; `'full'` or a number are the other looks), and `kp-thread-fold` carries `{ key, expanded }`. A message may carry `attachments`, a `status` of `sending` (faded) or `failed` with `error` (“Not sent: why” and Retry, `kp-thread-retry` with `{ key }`), and the thread’s `actions` put a button on every bubble that fires `kp-thread-action` with `{ key, id }`. `avatar: 'both'` shows the sender’s mark on both sides. The thread scrolls inside its box and offers Jump to newest when it is scrolled away.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-thread" id="doc-thread-long" data-kp-thread data-kp-thread-fold-lines="2" data-kp-thread-avatar="both"></div>
+<pre class="kp-code-block" id="doc-thread-log" aria-live="polite">Press Retry, Rename or Show all.</pre>
+                            <script type="module">
+import { THREAD_ACTION_EVENT, THREAD_FOLD_EVENT, THREAD_RETRY_EVENT, attachThreads, setThread } from '../../js/thread.js';
+
+const thread = document.getElementById('doc-thread-long');
+const log = document.getElementById('doc-thread-log');
+attachThreads(thread.parentElement);
+const at = (day, time) => Date.parse('2026-10-' + day + 'T' + time + ':00+02:00');
+const messages = [
+    { key: 'm1', dir: 'in', sender: 'Acme HR', at: at('13', '14:02'), text: 'Thanks for applying.' },
+    { key: 'm2', dir: 'in', sender: 'Acme HR', at: at('13', '14:04'), text: 'Could we talk on Thursday?' },
+    { key: 'm3', dir: 'out', at: at('13', '15:10'), text: 'Happy to. Thursday at 10:00 works.', attachments: [{ name: 'cv.pdf', size: 184000, href: '#cv' }, { name: 'letter.pdf', size: 52000, href: '#letter' }] },
+    { key: 'm4', dir: 'in', sender: 'Acme HR', at: at('13', '16:30'), text: 'Great.\nPlease bring a portfolio.\nWe have a room on the second floor.\nAsk at the desk for Sam.\nParking is behind the building.' },
+    { key: 's1', dir: 'system', at: at('14', '09:00'), text: 'Status changed to Interview' },
+    { key: 'm5', dir: 'out', at: at('14', '09:20'), text: 'Will do. One question about the dress code.', status: 'failed', error: 'No connection' },
+];
+const draw = () =>
+    setThread(thread, { label: 'Correspondence with Acme', messages, actions: [{ id: 'rename', label: 'Rename' }] });
+draw();
+thread.addEventListener(THREAD_FOLD_EVENT, (event) => (log.textContent = THREAD_FOLD_EVENT + ' { key: ' + event.detail.key + ', expanded: ' + event.detail.expanded + ' }'));
+thread.addEventListener(THREAD_ACTION_EVENT, (event) => (log.textContent = THREAD_ACTION_EVENT + ' { key: ' + event.detail.key + ', id: ' + event.detail.id + ' }'));
+thread.addEventListener(THREAD_RETRY_EVENT, (event) => {
+    log.textContent = THREAD_RETRY_EVENT + ' { key: ' + event.detail.key + ' }';
+    messages.find((m) => m.key === event.detail.key).status = 'sending';
+    draw();
+    setTimeout(() => {
+        delete messages.find((m) => m.key === event.detail.key).status;
+        draw();
+    }, 1200);
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-thread&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-thread-long&quot;</span> <span class="kp-code__keyword">data-kp-thread</span> <span class="kp-code__keyword">data-kp-thread-fold-lines</span><span class="kp-code__string">=&quot;2&quot;</span> <span class="kp-code__keyword">data-kp-thread-avatar</span><span class="kp-code__string">=&quot;both&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">pre</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-code-block&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-thread-log&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;Press Retry, Rename or Show all.&lt;/<span class="kp-code__keyword">pre</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { THREAD_ACTION_EVENT, THREAD_FOLD_EVENT, THREAD_RETRY_EVENT, attachThreads, setThread } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/thread'</span>;
+
+<span class="kp-code__keyword">const</span> thread = document.getElementById(<span class="kp-code__string">'doc-thread-long'</span>);
+<span class="kp-code__keyword">const</span> log = document.getElementById(<span class="kp-code__string">'doc-thread-log'</span>);
+attachThreads(thread.parentElement);
+<span class="kp-code__keyword">const</span> at = (day, time) =&gt; Date.parse(<span class="kp-code__string">'2026-10-'</span> + day + <span class="kp-code__string">'T'</span> + time + <span class="kp-code__string">':00+02:00'</span>);
+<span class="kp-code__keyword">const</span> messages = [
+    { key: <span class="kp-code__string">'m1'</span>, dir: <span class="kp-code__string">'in'</span>, sender: <span class="kp-code__string">'Acme HR'</span>, at: at(<span class="kp-code__string">'13'</span>, <span class="kp-code__string">'14:02'</span>), text: <span class="kp-code__string">'Thanks for applying.'</span> },
+    { key: <span class="kp-code__string">'m2'</span>, dir: <span class="kp-code__string">'in'</span>, sender: <span class="kp-code__string">'Acme HR'</span>, at: at(<span class="kp-code__string">'13'</span>, <span class="kp-code__string">'14:04'</span>), text: <span class="kp-code__string">'Could we talk on Thursday?'</span> },
+    { key: <span class="kp-code__string">'m3'</span>, dir: <span class="kp-code__string">'out'</span>, at: at(<span class="kp-code__string">'13'</span>, <span class="kp-code__string">'15:10'</span>), text: <span class="kp-code__string">'Happy to. Thursday at 10:00 works.'</span>, attachments: [{ name: <span class="kp-code__string">'cv.pdf'</span>, size: <span class="kp-code__string">184000</span>, href: <span class="kp-code__string">'#cv'</span> }, { name: <span class="kp-code__string">'letter.pdf'</span>, size: <span class="kp-code__string">52000</span>, href: <span class="kp-code__string">'#letter'</span> }] },
+    { key: <span class="kp-code__string">'m4'</span>, dir: <span class="kp-code__string">'in'</span>, sender: <span class="kp-code__string">'Acme HR'</span>, at: at(<span class="kp-code__string">'13'</span>, <span class="kp-code__string">'16:30'</span>), text: <span class="kp-code__string">'Great.\nPlease bring a portfolio.\nWe have a room on the second floor.\nAsk at the desk for Sam.\nParking is behind the building.'</span> },
+    { key: <span class="kp-code__string">'s1'</span>, dir: <span class="kp-code__string">'system'</span>, at: at(<span class="kp-code__string">'14'</span>, <span class="kp-code__string">'09:00'</span>), text: <span class="kp-code__string">'Status changed to Interview'</span> },
+    { key: <span class="kp-code__string">'m5'</span>, dir: <span class="kp-code__string">'out'</span>, at: at(<span class="kp-code__string">'14'</span>, <span class="kp-code__string">'09:20'</span>), text: <span class="kp-code__string">'Will do. One question about the dress code.'</span>, status: <span class="kp-code__string">'failed'</span>, error: <span class="kp-code__string">'No connection'</span> },
+];
+<span class="kp-code__keyword">const</span> draw = () =&gt;
+    setThread(thread, { label: <span class="kp-code__string">'Correspondence with Acme'</span>, messages, actions: [{ id: <span class="kp-code__string">'rename'</span>, label: <span class="kp-code__string">'Rename'</span> }] });
+draw();
+thread.addEventListener(THREAD_FOLD_EVENT, (event) =&gt; (log.textContent = THREAD_FOLD_EVENT + <span class="kp-code__string">' { key: '</span> + event.detail.key + <span class="kp-code__string">', expanded: '</span> + event.detail.expanded + <span class="kp-code__string">' }'</span>));
+thread.addEventListener(THREAD_ACTION_EVENT, (event) =&gt; (log.textContent = THREAD_ACTION_EVENT + <span class="kp-code__string">' { key: '</span> + event.detail.key + <span class="kp-code__string">', id: '</span> + event.detail.id + <span class="kp-code__string">' }'</span>));
+thread.addEventListener(THREAD_RETRY_EVENT, (event) =&gt; {
+    log.textContent = THREAD_RETRY_EVENT + <span class="kp-code__string">' { key: '</span> + event.detail.key + <span class="kp-code__string">' }'</span>;
+    messages.find((m) =&gt; m.key === event.detail.key).status = <span class="kp-code__string">'sending'</span>;
+    draw();
+    setTimeout(() =&gt; {
+        <span class="kp-code__keyword">delete</span> messages.find((m) =&gt; m.key === event.detail.key).status;
+        draw();
+    }, <span class="kp-code__string">1200</span>);
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Newest first, plain bubbles, and the states</figcaption>
+                        <p class="kp-text-muted">`order: 'newest'` puts the newest on top; `bubble` is `tinted` (your own on a wash of the primary colour), `plain` (both on the card plate, yours only at the end of the row) or `filled`; `days: false` leaves the dividers out; `avatar: 'none'` the marks. `loading` keeps the box and shows one waiting bubble on each side; `empty` (“No messages yet” and Add, `kp-thread-add`; `add: false` leaves the button out) and `error` (Retry, `kp-thread-retry` without a key; `retry: false` leaves it out) fill the box, centred.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-row kp-flex-wrap kp-gap-sm" role="group" aria-label="States">
+        <button type="button" class="kp-button" data-doc-thread-state="ready">Ready</button>
+        <button type="button" class="kp-button" data-doc-thread-state="loading">Loading</button>
+        <button type="button" class="kp-button" data-doc-thread-state="empty">Empty</button>
+        <button type="button" class="kp-button" data-doc-thread-state="error">Could not read</button>
+    </div>
+    <div class="kp-thread" id="doc-thread-states" data-kp-thread></div>
+</div>
+                            <script type="module">
+import { THREAD_ADD_EVENT, THREAD_RETRY_EVENT, attachThreads, setThread } from '../../js/thread.js';
+
+const thread = document.getElementById('doc-thread-states');
+attachThreads(thread.parentElement);
+const at = (day, time) => Date.parse('2026-10-' + day + 'T' + time + ':00+02:00');
+const messages = [
+    { key: 'a', dir: 'in', sender: 'Sam Peeters', at: at('13', '14:02'), text: 'Could we talk on Thursday?' },
+    { key: 'b', dir: 'out', at: at('13', '15:10'), text: 'Thursday at 10:00 works.' },
+    { key: 'c', dir: 'in', sender: 'Sam Peeters', at: at('14', '09:00'), text: 'See you then.' },
+];
+const draw = (state) =>
+    setThread(thread, {
+        messages: state === 'empty' ? [] : messages,
+        state,
+        order: 'newest',
+        bubble: 'plain',
+        message: 'The conversation could not be read. Try again in a minute.',
+    });
+draw('ready');
+for (const button of document.querySelectorAll('[data-doc-thread-state]')) {
+    button.addEventListener('click', () => draw(button.getAttribute('data-doc-thread-state')));
+}
+thread.addEventListener(THREAD_RETRY_EVENT, () => {
+    draw('loading');
+    setTimeout(() => draw('ready'), 1000);
+});
+thread.addEventListener(THREAD_ADD_EVENT, () => draw('ready'));
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-flex-wrap kp-gap-sm&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;States&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-thread-state</span><span class="kp-code__string">=&quot;ready&quot;</span>&gt;Ready&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-thread-state</span><span class="kp-code__string">=&quot;loading&quot;</span>&gt;Loading&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-thread-state</span><span class="kp-code__string">=&quot;empty&quot;</span>&gt;Empty&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-thread-state</span><span class="kp-code__string">=&quot;error&quot;</span>&gt;Could not read&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-thread&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-thread-states&quot;</span> <span class="kp-code__keyword">data-kp-thread</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { THREAD_ADD_EVENT, THREAD_RETRY_EVENT, attachThreads, setThread } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/thread'</span>;
+
+<span class="kp-code__keyword">const</span> thread = document.getElementById(<span class="kp-code__string">'doc-thread-states'</span>);
+attachThreads(thread.parentElement);
+<span class="kp-code__keyword">const</span> at = (day, time) =&gt; Date.parse(<span class="kp-code__string">'2026-10-'</span> + day + <span class="kp-code__string">'T'</span> + time + <span class="kp-code__string">':00+02:00'</span>);
+<span class="kp-code__keyword">const</span> messages = [
+    { key: <span class="kp-code__string">'a'</span>, dir: <span class="kp-code__string">'in'</span>, sender: <span class="kp-code__string">'Sam Peeters'</span>, at: at(<span class="kp-code__string">'13'</span>, <span class="kp-code__string">'14:02'</span>), text: <span class="kp-code__string">'Could we talk on Thursday?'</span> },
+    { key: <span class="kp-code__string">'b'</span>, dir: <span class="kp-code__string">'out'</span>, at: at(<span class="kp-code__string">'13'</span>, <span class="kp-code__string">'15:10'</span>), text: <span class="kp-code__string">'Thursday at 10:00 works.'</span> },
+    { key: <span class="kp-code__string">'c'</span>, dir: <span class="kp-code__string">'in'</span>, sender: <span class="kp-code__string">'Sam Peeters'</span>, at: at(<span class="kp-code__string">'14'</span>, <span class="kp-code__string">'09:00'</span>), text: <span class="kp-code__string">'See you then.'</span> },
+];
+<span class="kp-code__keyword">const</span> draw = (state) =&gt;
+    setThread(thread, {
+        messages: state === <span class="kp-code__string">'empty'</span> ? [] : messages,
+        state,
+        order: <span class="kp-code__string">'newest'</span>,
+        bubble: <span class="kp-code__string">'plain'</span>,
+        message: <span class="kp-code__string">'The conversation could not be read. Try again in a minute.'</span>,
+    });
+draw(<span class="kp-code__string">'ready'</span>);
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> button <span class="kp-code__keyword">of</span> document.querySelectorAll(<span class="kp-code__string">'[data-doc-thread-state]'</span>)) {
+    button.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; draw(button.getAttribute(<span class="kp-code__string">'data-doc-thread-state'</span>)));
+}
+thread.addEventListener(THREAD_RETRY_EVENT, () =&gt; {
+    draw(<span class="kp-code__string">'loading'</span>);
+    setTimeout(() =&gt; draw(<span class="kp-code__string">'ready'</span>), <span class="kp-code__string">1000</span>);
+});
+thread.addEventListener(THREAD_ADD_EVENT, () =&gt; draw(<span class="kp-code__string">'ready'</span>));</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -367,6 +517,9 @@ setThread(thread, {
                             <tr><td><code>data-kp-thread-days</code></td><td>`off` leaves the day dividers out.</td></tr>
                             <tr><td><code>data-kp-thread-avatar</code></td><td>`in` (default), `both` or `none`: the sender’s mark beside the bubble.</td></tr>
                             <tr><td><code>data-kp-thread-bubble</code></td><td>How the sides are told apart: `tinted` (default), `plain` or `filled`.</td></tr>
+                            <tr><td><code>groupMessages, dayLabel and threadOptions</code></td><td>`groupMessages(messages, minutes)` splits messages (oldest first) into the runs that share one header: the same side and sender, the same day, each within the minutes of the one before, system lines alone; `dayLabel(ms, locale)` is “Monday 13/10/2026”; `threadOptions(el, spec)` is the options as drawn: the spec first, then the attribute, then the default.</td></tr>
+                            <tr><td><code>kp-thread-retry, -add, -action and -fold</code></td><td>Retry carries `{ key }` for a message that was not sent and nothing for a thread that could not be read; Add is the empty thread’s button; Action carries `{ key, id }`; Fold carries `{ key, expanded }`.</td></tr>
+                            <tr><td><code>THREAD_TIME_ZONE and the `thread…` strings</code></td><td>Every time is written in Europe/Brussels as dd/mm/yyyy HH:mm; every word the thread adds (the day divider, Show all N lines, Copy text, Jump to newest, Sending…, Not sent, the states) is in the dictionary under `thread…`.</td></tr>
                             <tr><td><code>per message</code></td><td>`attachments`, `status` (`sending`, or `failed` with Retry) and `actions` (`{ id, label }` buttons that fire `kp-thread-action`).</td></tr>
                             <tr><td><code>states</code></td><td>`loading` (one waiting bubble on each side), `empty` (“No messages yet” and Add) and `error` (Retry) fill the box.</td></tr>
                     </tbody></table></div>

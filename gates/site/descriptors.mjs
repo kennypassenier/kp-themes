@@ -1688,8 +1688,49 @@ export const DESCRIPTORS = [
 <span data-kp-count style="--kp-count: 1200; --kp-count-from: 100" data-kp-count-state="done">640</span>
 `,
             },
+            {
+                title: 'A live number that ticks when its text changes',
+                why: '`[data-kp-count]` counts once, when a number first arrives. A live counter changes after that: mark it with `data-kp-tick`, write the new number the way you always do (or let the framework re-render it), and the module counts from the number shown to the new one, ending on exactly the text that was written, never a rounded or shortened one. It writes into the element’s own text node, so a framework that owns that node still finds it. `tickTo(el, text, { from, duration })` is the same by call, and down counts too. While it runs the element carries `aria-busy="true"` and `data-kp-tick-state="running"` (`done` after), so a live region speaks only the number it lands on, and `kp-tick` fires when it lands with `{ value }`. The nearest `lang` says which separator groups: `1.204` is a thousand two hundred and four in Dutch.',
+                markup: `
+<div class="kp-stack">
+<p><strong class="kp-kpi__value" id="doc-tick-open" data-kp-tick>12</strong> open items</p>
+<p lang="nl"><strong class="kp-kpi__value" id="doc-tick-nl" data-kp-tick>1.204</strong> bestanden</p>
+<div class="kp-row kp-flex-wrap kp-gap-sm" role="group" aria-label="Change the numbers">
+<button type="button" class="kp-button" id="doc-tick-up">The next poll says 15</button>
+<button type="button" class="kp-button" id="doc-tick-down">Back down to 12</button>
+<button type="button" class="kp-button" id="doc-tick-call">Tick by call, over 2 s</button>
+</div>
+<pre class="kp-code-block" id="doc-tick-log" aria-live="polite">Press a button.</pre>
+</div>
+`,
+                script: `
+import { TICK_EVENT, attachTicks, tickTo } from '@kp-soft/themes/js/tick';
+
+const open = document.getElementById('doc-tick-open');
+const dutch = document.getElementById('doc-tick-nl');
+attachTicks(open.closest('.kp-stack'));
+document.getElementById('doc-tick-up').addEventListener('click', () => {
+    open.textContent = '15'; // written the way a poll would; the module notices
+    dutch.textContent = '1.210';
+});
+document.getElementById('doc-tick-down').addEventListener('click', () => {
+    open.textContent = '12';
+    dutch.textContent = '1.204';
+});
+document.getElementById('doc-tick-call').addEventListener('click', () => tickTo(dutch, '1.500', { from: 1204, duration: 2000 }));
+document.addEventListener(TICK_EVENT, (event) => (document.getElementById('doc-tick-log').textContent = 'kp-tick { value: ' + event.detail.value + ' }'));
+`,
+            },
         ],
-        variants: [],
+        variants: [
+            { name: 'data-kp-tick', what: 'Marks a number that ticks to its new value when its text is changed by anyone but the module. The first text is the number shown; after that every change counts from the last number shown to the new one.' },
+            { name: 'data-kp-tick-state', what: 'Written by the module: `running` while it counts (with `aria-busy="true"` on the element, so a live region speaks only the number it lands on), `done` after, and from the first moment it is attached.' },
+            { name: 'kp-tick', what: 'Fires on the element, bubbling, when a tick lands: `{ value }`, the number it landed on (`null` when the text held no number and was written at once).' },
+            { name: 'tickTo(el, text, { from, duration })', what: 'The same by call. `text` left out means the element’s own text is the target; `from` is the number to start at (the one last shown by default) and `duration` the length in ms. Without a number in either, `text` is written at once.' },
+            { name: 'parseTick(text, locale)', what: 'The first number in a text in the shape the locale writes numbers, with a `render(value)` that writes another value back in the same shape (the same text around it, the same grouping and decimals); `null` when the text holds no number.' },
+            { name: 'attachTicks(root) and TICK_MS', what: '`attachTicks(root)` watches every `[data-kp-tick]` under it, including those added later, and returns a detach that makes every running tick land on its number. `TICK_MS` is the default length, 600 ms.' },
+            { name: 'a jump too long to follow', what: 'More than 400 steps of the number’s precision is drawn as 400, ending on the real number; a reader who asked for less motion, and a tick length of 0, see the new number at once.' },
+        ],
         accessibility: [
             'The final number is written in the HTML, so a page without the module and a reader with reduced motion both see the real figure — the count is decoration over content that is already there.',
             'At the reduced-motion setting the number never changes at all: it is not counted quickly, it is not counted.',
@@ -2570,6 +2611,124 @@ for (const button of document.querySelectorAll('[data-doc-toast]')) {
 </div>
 `,
             },
+            {
+                title: 'Events by kind, a maintenance window and the median',
+                why: 'An event with a `kind` takes its tone and its word from the chart’s `kinds` map (`tone` is `info`, `warning` or `critical`); an event with `until` is a band from `at` to there, drawn `tint` across the plot, `hatch` as diagonal lines (readable without colour) or as a `bracket` along the top (`data-kp-chart-band`, or `band` in the data). The key above the plot names the kinds present and each item switches its kind off and on (`kp-chart-kinds` fires with `{ off }`; `data-kp-chart-annotation-key="off"` leaves the key out). An event outside the window shows as an arrow with its count at the edge. `data-kp-chart-median` draws each shown source’s median as a dashed line with its value, and `data-kp-chart-median-label` words it.',
+                markup: `
+<div class="kp-stack">
+<div class="kp-row kp-flex-wrap kp-gap-sm" role="group" aria-label="How a window is drawn">
+<button type="button" class="kp-button" data-doc-band="tint" aria-pressed="true">Tint</button>
+<button type="button" class="kp-button" data-doc-band="hatch" aria-pressed="false">Hatch</button>
+<button type="button" class="kp-button" data-doc-band="bracket" aria-pressed="false">Bracket</button>
+</div>
+<figure class="kp-chart" id="doc-chart-events" data-kp-chart data-kp-chart-median data-kp-chart-band="tint" aria-label="Pump house 1 pressure" lang="en-GB">
+<figcaption class="kp-chart__title">Pump house 1 pressure, bar</figcaption>
+</figure>
+<pre class="kp-code-block" id="doc-chart-log" aria-live="polite">Switch a kind off in the key.</pre>
+</div>
+`,
+                script: `
+import { attachCharts, setChartData } from '@kp-soft/themes/js/chart';
+
+const chart = document.getElementById('doc-chart-events');
+attachCharts(chart.parentElement);
+const HOUR = 3_600_000;
+const to = Date.UTC(2026, 9, 17, 10, 0) - 12 * HOUR;
+const from = to - 72 * HOUR;
+const points = [];
+for (let t = from - 6 * HOUR; t <= to + 12 * HOUR; t += HOUR) {
+    points.push([t, 3.7 - 0.5 * Math.max(0, Math.sin((((t / HOUR) % 24) / 24) * Math.PI * 2 - 1.2)) + 0.06 * Math.sin(t / HOUR)]);
+}
+setChartData(chart, {
+    unit: 'bar',
+    from,
+    to,
+    height: 190,
+    series: [{ label: 'Pump house 1', points }],
+    kinds: {
+        operation: { label: 'An operation the host ran', tone: 'info' },
+        update: { label: 'An update', tone: 'warning' },
+        failure: { label: 'A failure', tone: 'critical' },
+        window: { label: 'A maintenance window', tone: 'warning' },
+    },
+    events: [
+        { at: from - 30 * HOUR, label: 'Backup', kind: 'operation' },
+        { at: from + 9 * HOUR, label: 'Backup finished', kind: 'operation' },
+        { at: from + 22 * HOUR, label: 'Firmware 4.2 installed', kind: 'update' },
+        { at: from + 33 * HOUR, until: from + 38 * HOUR, label: 'Maintenance window: pump house 1', kind: 'window' },
+        { at: from + 50 * HOUR, label: 'Pressure sensor lost contact', kind: 'failure' },
+        { at: to + 5 * HOUR, label: 'Firmware 4.3 installed', kind: 'update' },
+    ],
+});
+chart.addEventListener('kp-chart-kinds', (event) => (document.getElementById('doc-chart-log').textContent = 'kp-chart-kinds { off: ' + JSON.stringify(event.detail.off) + ' }'));
+for (const button of document.querySelectorAll('[data-doc-band]')) {
+    button.addEventListener('click', () => {
+        for (const other of document.querySelectorAll('[data-doc-band]')) other.setAttribute('aria-pressed', String(other === button));
+        chart.setAttribute('data-kp-chart-band', button.getAttribute('data-doc-band'));
+    });
+}
+`,
+            },
+            {
+                title: 'A run chart: the median and the runs',
+                why: '`data-kp-chart-runs="mark"` rings the points of every run of six or more on one side of the median (the run-chart rule; a point exactly on the median neither breaks a run nor counts in it), and the key explains the ring. `chartMedian(values)` and `chartRuns(values, median, least)` are the two calculations on their own, for a page that draws something else with them.',
+                markup: `
+<figure class="kp-chart" id="doc-chart-runs" data-kp-chart data-kp-chart-median data-kp-chart-median-label="median" data-kp-chart-runs="mark" aria-label="Mood each day" lang="en-GB">
+<figcaption class="kp-chart__title">Mood each day, 1 (low) to 5 (high)</figcaption>
+</figure>
+`,
+                script: `
+import { attachCharts, setChartData } from '@kp-soft/themes/js/chart';
+
+const chart = document.getElementById('doc-chart-runs');
+attachCharts(chart.parentElement);
+const DAY = 86_400_000;
+const to = Date.UTC(2026, 9, 17, 10, 0);
+const from = to - 28 * DAY;
+const mood = [3, 4, 3, 4, 3, 4, 4, 2, 2, 1, 2, 2, 1, 2, 2, 3, 4, 3, 4, 4, 5, 4, 4, 5, 4, 5, 4, 5];
+setChartData(chart, {
+    from,
+    to,
+    height: 190,
+    yMax: 5,
+    series: [{ label: 'Mood', points: mood.map((v, i) => [from + (i + 0.5) * DAY, v]) }],
+});
+`,
+            },
+            {
+                title: 'Too few readings for a trend',
+                why: '`data-kp-chart-min-points="7"` (`minPoints`) holds the lines back until there are enough readings and says “3 of 7 days needed before a trend means something” on an opaque plate, at heading size, over the empty plot at its full height; `data-kp-chart-min-unit` (`minUnit`) names the readings. The chart draws itself the moment enough arrive.',
+                markup: `
+<div class="kp-stack">
+<div class="kp-row kp-flex-wrap kp-gap-sm" role="group" aria-label="Readings">
+<button type="button" class="kp-button" id="doc-chart-more">Enough readings</button>
+</div>
+<figure class="kp-chart" id="doc-chart-few" data-kp-chart data-kp-chart-min-points="7" data-kp-chart-min-unit="days" aria-label="Sleep" lang="en-GB">
+<figcaption class="kp-chart__title">Sleep, hours</figcaption>
+</figure>
+</div>
+`,
+                script: `
+import { attachCharts, setChartData } from '@kp-soft/themes/js/chart';
+
+const chart = document.getElementById('doc-chart-few');
+attachCharts(chart.parentElement);
+const DAY = 86_400_000;
+const to = Date.UTC(2026, 9, 17, 10, 0);
+const hours = [6.5, 7.2, 5.9, 7.8, 8.1, 6.4, 7.0];
+const draw = (n) =>
+    setChartData(chart, {
+        from: to - 7 * DAY,
+        to,
+        height: 190,
+        yMax: 10,
+        unit: 'h',
+        series: [{ label: 'Sleep', points: hours.slice(0, n).map((v, i) => [to - (n - i) * DAY, v]) }],
+    });
+draw(3);
+document.getElementById('doc-chart-more').addEventListener('click', () => draw(hours.length));
+`,
+            },
         ],
         variants: [
             { name: 'data-kp-outside', what: 'Written on the tooltip while its pinned moment lies outside the window: it docks at the plot’s edge and says so.' },
@@ -2580,6 +2739,14 @@ for (const button of document.querySelectorAll('[data-doc-toast]')) {
             { name: '.kp-chart-zoom', what: '`[data-kp-chart-zoom]`: the chip the script fills while the group is zoomed, with its Reset; `kp-chart-zoom` fires on the group.' },
             { name: 'the legend', what: 'Hover or focus singles a source out; a click keeps one or several on and fires `kp-chart-select`; Show all and Esc reset. Hidden for a single source.' },
             { name: 'the tooltip', what: 'Beside the crosshair, on the side with room: every visible source’s value, ▲/▼ over the hour before, the events within a thirtieth of the window. A click pins it; ✕ or Esc releases it.' },
+            { name: 'event kind and kinds', what: 'An event’s `kind` is the application’s own name for it (“operation”, “update”, “failure”); the data’s `kinds` maps each to a word for the key and a tone (`info`, `warning`, `critical`). An event’s own `tone` wins, then its kind’s, then `info`.' },
+            { name: 'event until and data-kp-chart-band', what: 'An event with `until` is a band from `at` to there instead of a line. `tint` (the default) lies across the plot, `hatch` is diagonal lines that read without colour, `bracket` is a line along the top with short ticks. Point at a band for its start and end in words.' },
+            { name: 'data-kp-chart-median and data-kp-chart-median-label', what: 'A dashed median line per shown source, in the source’s colour, with its value at the end; `off` leaves it out, and the label words the value (“median 3.4 bar”). The key says what the line is when one source shows.' },
+            { name: 'data-kp-chart-runs', what: '`mark` rings the points of every run of six or more on one side of the median; `off` is the default.' },
+            { name: 'data-kp-chart-min-points and data-kp-chart-min-unit', what: 'Below this many readings the chart says it is too early for a trend over the faint points already known; the unit names the readings (“days”).' },
+            { name: 'data-kp-chart-annotation-key', what: '`off` leaves out the key above the plot, which is on while the chart has events, a median or runs. Each item of the key is a button that switches its kind of event off and on; `kp-chart-kinds` carries `{ off }`.' },
+            { name: 'chartMedian and chartRuns', what: '`chartMedian(values)` is the median (the mean of the middle two for an even count), or `null` for none; `chartRuns(values, median, least)` is the set of indexes that belong to a run of at least `least` (6) points on one side of the median.' },
+            { name: 'chartMedian … chartKindOn strings', what: 'Every word of the annotations is in the dictionary: `chartMedian`, `chartFew`, `chartFewUnit`, `chartAnnotationKey`, `chartKindTone`, `chartRunsKey`, `chartMarkBand`, `chartBandWhen`, `chartEdgeBefore`, `chartEdgeAfter` and `chartKindOn`.' },
             { name: 'colours', what: 'The theme’s five chart colours in order; from the sixth source on they come round again with one of three dashes. A series’ own `colour` overrides.' },
             { name: 'under the lines', what: 'A soft area while one or two sources are on, a stronger one for a source alone; with three or more, the lines alone. Stacked sources are areas.' },
         ],
@@ -2755,6 +2922,56 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
 <section class="kp-calendar" data-kp-calendar data-kp-tones="calm" data-kp-calendar-month="2026-10" data-kp-paused-range="2026-10-03/2026-10-06" aria-label="Movement"></section>
 `,
             },
+            {
+                title: 'Calm days with their minutes, a caption, and the states',
+                why: 'The page hands over the logged days only; every other day is quiet, and the days inside `data-kp-paused-range` are paused. A calm month with nothing logged keeps its six rows under one centred plate, and a month that could not be read is dimmed under a plate with Retry, which fires `kp-calendar-retry` for the page to answer. `setCalendarCaption` writes the page’s own sentence under the grid, and `data-kp-logged-fill="success"` asks for the success plate instead of the accent.',
+                markup: `
+<div class="kp-stack">
+<section class="kp-calendar kp-calendar--busy-days" id="doc-calm-calendar" data-kp-calendar data-kp-tones="calm" data-kp-calendar-month="2026-10" data-kp-paused-range="2026-10-03/2026-10-06" aria-label="Movement"></section>
+<div class="kp-row kp-flex-wrap kp-gap-sm" role="group" aria-label="States">
+<button type="button" class="kp-button" data-doc-calm-state="ready">Ready</button>
+<button type="button" class="kp-button" data-doc-calm-state="loading">Loading</button>
+<button type="button" class="kp-button" data-doc-calm-state="empty">Nothing logged</button>
+<button type="button" class="kp-button" data-doc-calm-state="error">Could not read</button>
+<button type="button" class="kp-button" data-doc-calm-fill="success" aria-pressed="false">Success plate</button>
+</div>
+</div>
+`,
+                script: `
+import { CALENDAR_RETRY_EVENT, attachCalendars, setCalendarCaption, setCalendarDays, setCalendarState } from '@kp-soft/themes/js/calendar';
+
+const calendar = document.getElementById('doc-calm-calendar');
+attachCalendars(calendar.parentElement);
+const minutes = { 1: 20, 2: 35, 7: 15, 8: 40, 9: 25, 12: 30, 13: 45, 14: 20, 15: 10 };
+const logged = {};
+for (const [day, count] of Object.entries(minutes)) {
+    logged['2026-10-' + day.padStart(2, '0')] = { tone: 'logged', count: String(count), label: count + ' minutes' };
+}
+setCalendarDays(calendar, logged);
+setCalendarCaption(calendar, 'Trends count the days that were logged');
+for (const button of document.querySelectorAll('[data-doc-calm-state]')) {
+    button.addEventListener('click', () => {
+        const state = button.getAttribute('data-doc-calm-state');
+        if (state === 'empty') setCalendarDays(calendar, {});
+        else if (state === 'ready') setCalendarDays(calendar, logged);
+        setCalendarState(calendar, state === 'empty' ? 'empty' : state);
+    });
+}
+calendar.addEventListener(CALENDAR_RETRY_EVENT, () => {
+    setCalendarState(calendar, 'loading');
+    setTimeout(() => {
+        setCalendarDays(calendar, logged);
+        setCalendarState(calendar, 'ready');
+    }, 1000);
+});
+document.querySelector('[data-doc-calm-fill]').addEventListener('click', (event) => {
+    const on = calendar.getAttribute('data-kp-logged-fill') !== 'success';
+    if (on) calendar.setAttribute('data-kp-logged-fill', 'success');
+    else calendar.removeAttribute('data-kp-logged-fill');
+    event.currentTarget.setAttribute('aria-pressed', String(on));
+});
+`,
+            },
         ],
         variants: [
             { name: '[data-kp-calendar]', what: 'The calendar; `data-kp-calendar-month="YYYY-MM"` is the month it shows first (today’s by default) and `data-kp-calendar-selected="YYYY-MM-DD"` the day picked at first.' },
@@ -2778,6 +2995,8 @@ for (const month of document.querySelectorAll('[data-doc-calendar-month]')) setC
             { name: 'data-kp-paused-range', what: '`2026-10-03/2026-10-14` (an end is optional): quiet days inside it are drawn as paused.' },
             { name: 'data-kp-legend', what: '`hide` leaves out the calm legend (Logged, Nothing logged, Paused).' },
             { name: 'kp-calendar-retry and setCalendarCaption', what: 'A calm month with nothing logged keeps its six quiet rows under a centred plate; a month that could not be read is dimmed under one with Retry, which fires `kp-calendar-retry`. `setCalendarCaption(el, text)` writes the page’s own sentence under the grid.' },
+            { name: '.kp-calendar__plate and .kp-calendar__caption', what: 'The plate that stands over a calm month with nothing logged or one that could not be read (its sentence and, when failed, a normal-size Retry), and the page’s own sentence under the grid. Both are made by the module.' },
+            { name: 'calmTone, calmWord, inPausedRange and CALM_TONES', what: 'js/calm-tones.js on its own, for a page that draws its own cells: `calmTone(tone, el)` maps a tone to the calm vocabulary (ok to logged, the rest to quiet, one console warning per foreign tone), `calmWord(tone)` is “logged”, “nothing logged” or “paused” and never “missed”, `inPausedRange(range, iso)` says whether a `YYYY-MM-DD` lies in a `from/to` pause, and `CALM_TONES` lists the six tones: logged, quiet, paused, future, before, loading.' },
             { name: 'marks the module writes', what: '`data-kp-plate` (which plate stands over the grid) and `data-kp-dim` (a failed month’s grid).' },
         ],
         accessibility: [
@@ -2926,6 +3145,34 @@ const summary = {
     }),
 };
 setHeat(grid, { columns, summary, rows, label: 'Snapshots per stack per night', picked: String(NIGHTS - 2) });
+`,
+            },
+            {
+                title: 'Calm tones: three habits over a week',
+                why: '`data-kp-tones="calm"` gives the cells `logged`, `quiet` and `paused` instead of ok, warn and bad, and a legend that says Logged, Nothing logged and Paused (`data-kp-legend="hide"` leaves it out). A quiet cell has no border, glyph or count, and its name still says “nothing logged”. A page that hands over `bad` by habit gets `quiet` and one console warning, so no red reaches a tracker by mistake (`data-kp-calm-map="none"` passes tones through).',
+                markup: `
+<div class="kp-heat" id="doc-heat-calm" data-kp-heat data-kp-tones="calm" aria-label="Habits"></div>
+`,
+                script: `
+import { attachHeats, setHeat } from '@kp-soft/themes/js/heat';
+
+const grid = document.getElementById('doc-heat-calm');
+attachHeats(grid.parentElement);
+const days = Array.from({ length: 7 }, (_, i) => ({ key: String(i + 10), label: String(i + 10) }));
+const cells = (pattern) =>
+    [...pattern].map((c) =>
+        c === 'x' ? { tone: 'logged', label: 'logged' } : c === 'p' ? { tone: 'paused', label: 'paused' } : { tone: 'quiet', label: 'nothing logged' },
+    );
+setHeat(grid, {
+    columns: days,
+    rows: [
+        { key: 'walk', label: 'Walk', cells: cells('xx.x..x') },
+        { key: 'stretch', label: 'Stretch', cells: cells('x.x.x.p') },
+        { key: 'journal', label: 'Journal', cells: cells('xx.xxx.') },
+    ],
+    label: 'Habits, one week',
+    every: 1,
+});
 `,
             },
             {
@@ -3356,6 +3603,26 @@ setGanttState(timeline, 'loading');
                 why: 'The markup is the empty strip with its name and its number of periods; the script draws the cells from the periods the page hands over, and draws the loading state before that.',
                 markup: `
 <div class="kp-uptime" data-kp-uptime data-kp-uptime-label="jellyfin" data-kp-uptime-count="90"></div>
+`,
+            },
+            {
+                title: 'Calm tones: thirty days of watering',
+                why: 'With `data-kp-tones="calm"` the strip follows the same attribute as the calendar: `up` and `degraded` are logged, `down` is quiet and its word is “nothing logged”, never an outage. The page still hands over the periods it has, with `down` for a day nothing was logged.',
+                markup: `
+<div class="kp-uptime" id="doc-uptime-calm" data-kp-uptime data-kp-tones="calm" data-kp-uptime-label="Watering"></div>
+`,
+                script: `
+import { attachUptimes, setUptime } from '@kp-soft/themes/js/uptime';
+
+const strip = document.getElementById('doc-uptime-calm');
+attachUptimes(strip.parentElement);
+const periods = Array.from({ length: 30 }, (_, i) => {
+    const day = new Date(Date.UTC(2026, 8, 18 + i));
+    const label = String(day.getUTCDate()).padStart(2, '0') + '/' + String(day.getUTCMonth() + 1).padStart(2, '0') + '/2026';
+    const state = i % 7 === 3 || i % 11 === 5 ? 'down' : i > 27 ? 'none' : 'up';
+    return { key: day.toISOString().slice(0, 10), label, state };
+});
+setUptime(strip, { label: 'Watering', periods, from: '30 days ago', to: 'Today' });
 `,
             },
         ],
@@ -4061,6 +4328,78 @@ setEntityGrid(document.getElementById('doc-entities'), [
 <div class="kp-rating" data-kp-rating data-kp-rating-mode="display" data-kp-rating-for="Lasagne" data-kp-rating-value="4.5" data-kp-rating-count="12"></div>
 `,
             },
+            {
+                title: 'Half stars, sizes, Save rating, locked and read only',
+                why: 'Every option is an attribute and can be changed while the page runs; the row draws itself again. `data-kp-rating-step="0.5"` makes the row one slider (a press on the left half of a star is the half); `data-kp-rating-commit="confirm"` holds the pick until Save rating or Cancel; `data-kp-disabled-reason` is written under the stars, not in a tooltip; `data-kp-readonly` is drawn as an input that does nothing.',
+                markup: `
+<div class="kp-stack">
+<div class="kp-rating" data-kp-rating data-kp-rating-step="0.5" data-kp-rating-for="Tiramisu" data-kp-rating-value="3.5"></div>
+<div class="kp-rating" data-kp-rating data-kp-rating-size="lg" data-kp-rating-for="Carbonnade" data-kp-rating-value="5" data-kp-rating-preview="off"></div>
+<div class="kp-rating" data-kp-rating data-kp-rating-commit="confirm" data-kp-rating-for="Risotto" data-kp-rating-value="2"></div>
+<div class="kp-rating" data-kp-rating data-kp-rating-for="Moussaka" data-kp-rating-value="3" data-kp-disabled data-kp-disabled-reason="Locked while the recipe is being edited"></div>
+<div class="kp-rating" data-kp-rating data-kp-rating-for="Ratatouille" data-kp-rating-value="5" data-kp-readonly></div>
+</div>
+`,
+            },
+            {
+                title: 'A save that waits, a refused save, and a rating that cannot be read',
+                why: '`kp-rating-change` carries `{ value, previous, source, wait }`: hand `wait` the page’s save and the row is busy until it settles; a rejection puts the previous stars back and says so under the row for a few seconds. `setRatingState(el, \'error\')` replaces the stars with one plate over the whole box (the stars, the words and the buttons) and a normal-size Retry, which fires `kp-rating-retry`; `\'loading\'` keeps the size as dashed, breathing stars. The page decides what a retry is.',
+                markup: `
+<div class="kp-stack">
+<div class="kp-rating" id="doc-rating-save" data-kp-rating data-kp-rating-for="Lasagne" data-kp-rating-value="4" data-kp-rating-labels="Not for me|Okay|Good|Great|Make again"></div>
+<div class="kp-row kp-flex-wrap kp-gap-sm" role="group" aria-label="States">
+<button type="button" class="kp-button" id="doc-rating-refuse" aria-pressed="false">The next save is refused</button>
+<button type="button" class="kp-button" id="doc-rating-fail">Could not read it</button>
+</div>
+</div>
+`,
+                script: `
+import { RATING_EVENT, RATING_RETRY_EVENT, setRatingState } from '@kp-soft/themes/js/rating';
+
+const row = document.getElementById('doc-rating-save');
+const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+let refuse = false;
+row.addEventListener(RATING_EVENT, (event) => {
+    event.detail.wait(sleep(700).then(() => (refuse ? Promise.reject(new Error('refused')) : undefined)));
+});
+row.addEventListener(RATING_RETRY_EVENT, () => {
+    setRatingState(row, 'loading');
+    setTimeout(() => setRatingState(row, 'ready'), 900);
+});
+document.getElementById('doc-rating-refuse').addEventListener('click', (event) => {
+    refuse = !refuse;
+    event.currentTarget.setAttribute('aria-pressed', String(refuse));
+});
+document.getElementById('doc-rating-fail').addEventListener('click', () => setRatingState(row, 'error'));
+`,
+            },
+            {
+                title: 'In a table cell',
+                why: '`ratingCell(cell, value, { max, count, for })` puts a read-only row in a table cell and writes the number on the cell as its sort value, so the data table sorts by stars and a recipe with no rating sorts last.',
+                markup: `
+<div class="kp-datatable" data-kp-datatable data-kp-page-sizes="none">
+<div class="kp-table-wrap"><table class="kp-table" id="doc-rating-table">
+<caption class="kp-sr-only">Recipes with their rating. Press Rating to sort by the number of stars.</caption>
+<thead><tr><th scope="col" data-kp-sort="text">Recipe</th><th scope="col" data-kp-sort="number">Rating</th></tr></thead>
+<tbody>
+<tr><td>Lasagne</td><td data-doc-rating="4.5|12"></td></tr>
+<tr><td>Stoofvlees</td><td data-doc-rating="3|4"></td></tr>
+<tr><td>Waterzooi</td><td data-doc-rating=""></td></tr>
+<tr><td>Carbonnade</td><td data-doc-rating="5|9"></td></tr>
+</tbody></table></div>
+</div>
+`,
+                script: `
+import { ratingCell } from '@kp-soft/themes/js/rating';
+
+for (const cell of document.querySelectorAll('#doc-rating-table [data-doc-rating]')) {
+    const [value, count] = cell.getAttribute('data-doc-rating').split('|');
+    const name = cell.previousElementSibling.textContent;
+    if (value) ratingCell(cell, Number(value), { count: Number(count), for: name });
+    else ratingCell(cell, 0, { for: name });
+}
+`,
+            },
         ],
         variants: [
             { name: 'data-kp-rating-max', what: 'The scale, 3 to 10 (5).' },
@@ -4080,8 +4419,14 @@ setEntityGrid(document.getElementById('doc-entities'), [
             { name: 'data-kp-disabled and data-kp-disabled-reason', what: 'A temporary lock, and the sentence under the row.' },
             { name: 'data-kp-undo-ms and data-kp-flash-error-ms', what: 'The Undo window after a change (6000, 0 for none) and how long a refused save is told (3000).' },
             { name: 'data-kp-state', what: '`loading` (dashed stars that breathe) or `error` (“Could not read the rating” and Retry, `kp-rating-retry`).' },
+            { name: 'data-kp-state="error"', what: 'The failed state covers the rating’s whole box with its plate, the stars and the words and the buttons together, at the same height; it is not a small line under the stars [t56-statefix-1018]. No option; Retry fires the retry event.' },
             { name: 'ratingCell(cell, value)', what: 'A display row in a data table cell, and the number the table sorts by on the cell.' },
-            { name: 'marks the module writes', what: '`data-kp-star` (a star’s number), `data-kp-whole`, `data-kp-popped` and `data-kp-previewing` (the star just chosen and the one under the pointer), `data-kp-rating-busy` (a save is on its way).' },
+            { name: '.kp-rating--sm / --md / --lg / --display / --input', what: 'Written by the module on the host: the size (`data-kp-rating-size`) and the mode (`data-kp-rating-mode`). Style by them, do not set them by hand.' },
+            { name: '.kp-rating__body / __row / __star / __glyph', what: 'The module’s parts: the box that holds everything, the row of stars, one star (a radio in the input, an image part in the display) and the star’s drawing, which has an `__empty` and a `__full` layer so a half star is a clip of the full one.' },
+            { name: '.kp-rating__foot / __caption / __actions', what: 'The line under the row: the caption (the word of the chosen level, or “Not rated yet”, or “4.5 (12)”), and the buttons `__clear` (Clear, hidden on a phone), `__save` (Save rating) and `__drop` (Cancel) of a rating that holds its pick.' },
+            { name: '.kp-rating__reason / __flash', what: 'The sentence of a lock, under the row; and the line that tells a refused save for a few seconds (`role="alert"`).' },
+            { name: '.kp-rating__failure / __failure-text / __retry', what: 'The plate of the error state, its sentence and its Retry.' },
+            { name: 'marks the module writes', what: '`data-kp-star` (a star’s number), `data-kp-lit` (a star with any fill), `data-kp-whole`, `data-kp-popped` and `data-kp-previewing` (the star just chosen and the one under the pointer), `data-kp-rating-busy` (a save is on its way).' },
         ],
         accessibility: [
             'Built in — the input is a radio group named “Rating for Lasagne”; each star is “4 of 5” (with a word, “4 of 5, Good”); the display is one image, “Rated 4 of 5”, or “Not rated yet”.',
@@ -4107,6 +4452,72 @@ setEntityGrid(document.getElementById('doc-entities'), [
 </figure>
 `,
             },
+            {
+                title: 'Hero size, a link to the day, Copy, a long entry and the date styles',
+                why: '`data-kp-quote-size="lg"` is for a hero place; `-source` makes “Open that day” and the blockquote’s `cite`; `-copy` shows Copy; `-hide="off"` leaves out the hide. A long entry folds behind Show all after `-lines` lines and the whole text stays in the page. `-date-style` is `date`, `relative` or `both`, and `-now` is the moment the relative words count from, so an example does not age.',
+                markup: `
+<div class="kp-stack">
+<figure class="kp-quote" data-kp-quote data-kp-quote-size="lg" data-kp-quote-copy data-kp-quote-hide="off" data-kp-quote-date="2026-10-12T08:15:00+02:00" data-kp-quote-source="#doc-quote-day" data-kp-quote-lang="nl">
+<blockquote>Kleine stappen tellen ook.</blockquote>
+</figure>
+<figure class="kp-quote" data-kp-quote data-kp-quote-lines="2" data-kp-quote-lang="nl" data-kp-quote-by="You" data-kp-quote-date="2026-10-14T19:40:00+02:00" data-kp-quote-now="2026-10-17T12:00:00+02:00" data-kp-quote-date-style="relative">
+<blockquote>Vandaag was een zware dag, maar ik ben toch even naar buiten gegaan. Eerst alleen tot de hoek van de straat, toen tot aan het park. Daar heb ik op een bank gezeten en niets gedaan, en dat voelde voor het eerst die week niet als falen. Thuis heb ik soep gemaakt en vroeg gegeten.</blockquote>
+</figure>
+<p class="kp-text-muted" id="doc-quote-day">The link above goes to this line; the day’s own page is the application’s.</p>
+</div>
+`,
+            },
+            {
+                title: 'Several quotes: three, and Show all',
+                why: 'A `data-kp-quote-list` holds the cards and shows `data-kp-quote-max` of them (3 by default, 1 to 5), then a button with the exact number, “Show all 5”.',
+                markup: `
+<div class="kp-quote-list" data-kp-quote-list>
+<figure class="kp-quote" data-kp-quote data-kp-quote-hide="off" data-kp-quote-lang="nl" data-kp-quote-date="2026-10-14T19:40:00+02:00"><blockquote>Wandelen na het eten hielp.</blockquote></figure>
+<figure class="kp-quote" data-kp-quote data-kp-quote-hide="off" data-kp-quote-lang="nl" data-kp-quote-date="2026-10-11T20:10:00+02:00"><blockquote>Vroeg naar bed, de ochtend was beter.</blockquote></figure>
+<figure class="kp-quote" data-kp-quote data-kp-quote-hide="off" data-kp-quote-lang="nl" data-kp-quote-date="2026-10-09T18:30:00+02:00"><blockquote>Even buiten zitten met thee.</blockquote></figure>
+<figure class="kp-quote" data-kp-quote data-kp-quote-hide="off" data-kp-quote-lang="nl" data-kp-quote-date="2026-10-06T09:00:00+02:00"><blockquote>Eerst de brief schrijven, daarna pas de rest.</blockquote></figure>
+<figure class="kp-quote" data-kp-quote data-kp-quote-hide="off" data-kp-quote-lang="nl" data-kp-quote-date="2026-10-03T17:45:00+02:00"><blockquote>Muziek opgezet tijdens het koken.</blockquote></figure>
+</div>
+`,
+            },
+            {
+                title: 'Hide with a save, and the card’s other states',
+                why: 'Hide waits out the Undo window, then fires `kp-quote-hide` with `{ text, wait }`: hand `wait` the page’s save and a refusal puts the card back with the reason in the toast. `kp-quote-fold` fires with `{ expanded }` when a long entry opens or folds, and `kp-quote-retry` when Retry is pressed on a failed card. `setQuoteState(el, state)` draws `loading`, `empty` or `error` in the same footprint as the quote.',
+                markup: `
+<div class="kp-stack">
+<figure class="kp-quote" id="doc-quote-hide" data-kp-quote data-kp-undo-ms="2500" data-kp-quote-lang="nl" data-kp-quote-why="What helped last time" data-kp-quote-date="2026-10-14T19:40:00+02:00">
+<blockquote>Wandelen na het eten hielp, mijn hoofd werd rustiger.</blockquote>
+</figure>
+<div class="kp-row kp-flex-wrap kp-gap-sm" role="group" aria-label="States">
+<button type="button" class="kp-button" data-doc-quote-state="loading">Loading</button>
+<button type="button" class="kp-button" data-doc-quote-state="empty">Empty</button>
+<button type="button" class="kp-button" data-doc-quote-state="error">Could not read</button>
+<button type="button" class="kp-button" data-doc-quote-state="ready">Ready</button>
+</div>
+<pre class="kp-code-block" id="doc-quote-log" aria-live="polite">Press Hide.</pre>
+</div>
+`,
+                script: `
+import { QUOTE_FOLD_EVENT, QUOTE_HIDE_EVENT, QUOTE_RETRY_EVENT, setQuoteState } from '@kp-soft/themes/js/quote';
+
+const card = document.getElementById('doc-quote-hide');
+const log = document.getElementById('doc-quote-log');
+const say = (text) => (log.textContent = text);
+card.addEventListener(QUOTE_HIDE_EVENT, (event) => {
+    say('kp-quote-hide: saving');
+    event.detail.wait(new Promise((resolve) => setTimeout(resolve, 600)).then(() => say('kp-quote-hide: saved')));
+});
+card.addEventListener(QUOTE_FOLD_EVENT, (event) => say('kp-quote-fold: ' + event.detail.expanded));
+card.addEventListener(QUOTE_RETRY_EVENT, () => {
+    say('kp-quote-retry');
+    setQuoteState(card, 'loading');
+    setTimeout(() => setQuoteState(card, 'ready'), 1000);
+});
+for (const button of document.querySelectorAll('[data-doc-quote-state]')) {
+    button.addEventListener('click', () => setQuoteState(card, button.getAttribute('data-doc-quote-state')));
+}
+`,
+            },
         ],
         variants: [
             { name: 'data-kp-quote-by', what: 'Who wrote it (“You”).' },
@@ -4121,6 +4532,12 @@ setEntityGrid(document.getElementById('doc-entities'), [
             { name: 'data-kp-quote-lang', what: 'The language of the words.' },
             { name: 'data-kp-quote-max', what: 'On `data-kp-quote-list`: how many quotes before “Show all 7” (1 to 5, 3).' },
             { name: 'data-kp-quote-text', what: 'The words, instead of a blockquote.' },
+            { name: '.kp-quote__why / __text / __more', what: 'The small line saying why the words are here, the blockquote, and Show all (Show less once open), which exists only when the text is longer than `data-kp-quote-lines`.' },
+            { name: '.kp-quote__caption / __by / __sep / __when / __source', what: 'The `figcaption`: who, a separator, the `time` element (its `datetime` is the ISO moment, its title the exact `dd/mm/yyyy HH:mm`), and the link “Open that day”.' },
+            { name: '.kp-quote__actions / __hide / __copy', what: 'The row of Hide (“Do not show this again”, with Undo) and Copy; a card with both off has no row.' },
+            { name: '.kp-quote__live', what: 'The visually hidden polite region that says a hide, a copy and a fold.' },
+            { name: '.kp-quote--lg and the list’s __more', what: 'The hero size, written from `data-kp-quote-size`; and `.kp-quote-list__more`, the “Show all N” button of a list.' },
+            { name: 'quote(el) and setQuote(el, spec)', what: 'The handle (`text()`, `set`, `setState`, `hide()`) and the way to write a quote’s words and options from a script instead of markup; `quoteWhen(ms, style, now)` is the “Wednesday 14/10/2026 (3 days ago)” sentence on its own.' },
             { name: 'data-kp-folded', what: 'Written on a folded blockquote.' },
             { name: 'data-kp-quote-list-attached and data-kp-quote-list-hidden', what: 'Written on a list and on the quotes a list folds away.' },
             { name: 'data-kp-quote-gone', what: 'Marks a quote a page took out of a list.' },
@@ -4156,6 +4573,73 @@ setEntityGrid(document.getElementById('doc-entities'), [
 </div>
 `,
             },
+            {
+                title: 'The check under the field: Had it, Not today, and the guard',
+                why: 'A usual choice is something logged nearly every day, so “it did not happen today” is an answer of its own, different from “not filled in yet”. `data-kp-not-today` (a bare attribute is `rows`) gives the usual choices their own check under the field: a heading, one line saying what Not today means, and one row per choice with the segmented pair Had it / Not today (neither pressed: not answered). Had it is the same as picking the item, Not today takes its tag away; the check and the tags are one state. `data-kp-not-today-label` words the heading. Try the guard: typing “Fatigu” puts “Did you mean Fatigue?” first, Enter lights it and a second Enter takes it; a name already picked says so in the list and lights its tag; an added name is announced under the field with Undo.',
+                markup: `
+<div class="kp-combobox" data-kp-combobox id="doc-usual-check" data-kp-usual='["headache","fatigue","nausea","neck"]' data-kp-multiple data-kp-add="inline" data-kp-not-today data-kp-not-today-label="Your usual today" data-kp-hint="Last time you wrote: tired and a stiff neck" data-kp-pinned='[{"value":"none","label":"Nothing to log"}]'>
+<label class="kp-field__label" for="doc-usual-check-input">Symptoms today</label>
+<div data-kp-tag-list hidden></div>
+<input class="kp-combobox__input kp-field__input" id="doc-usual-check-input" type="text" role="combobox" aria-expanded="false" aria-controls="doc-usual-check-list" autocomplete="off" />
+<ul class="kp-combobox__list" id="doc-usual-check-list" role="listbox" hidden>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="fatigue">Fatigue</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="nausea">Nausea</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="dizziness">Dizziness</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="neck">Neck pain</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="back">Back pain</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="stomach">Stomach ache</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="cramps">Cramps</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="anxiety">Anxiety</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="brainfog">Brain fog</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="cough">Cough</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="chills">Chills</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="rash">Rash</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="insomnia">Insomnia</li>
+</ul>
+<p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+</div>
+<pre class="kp-code-block" id="doc-usual-check-log" aria-live="polite">Pick, add or press Not today.</pre>
+`,
+                script: `
+import { USUAL_ADD_EVENT, USUAL_NOT_TODAY_EVENT, USUAL_PICK_EVENT, usualNotToday } from '@kp-soft/themes/js/usual-picker';
+
+const picker = document.getElementById('doc-usual-check');
+const log = document.getElementById('doc-usual-check-log');
+const say = (name, detail) => (log.textContent = name + ' ' + JSON.stringify(detail) + '\\nNot today: ' + JSON.stringify(usualNotToday(picker)));
+picker.addEventListener(USUAL_PICK_EVENT, (event) => say(USUAL_PICK_EVENT, event.detail));
+picker.addEventListener(USUAL_NOT_TODAY_EVENT, (event) => say(USUAL_NOT_TODAY_EVENT, event.detail));
+picker.addEventListener(USUAL_ADD_EVENT, (event) => say(USUAL_ADD_EVENT, { label: event.detail.label, nearTo: event.detail.nearTo }));
+`,
+            },
+            {
+                title: 'The same check as three-way chips, and the Undo as a toast',
+                why: '`data-kp-not-today="chips"` draws the check as one row of the package’s three-way chips: one press is had it (a tick), a second is not today (a cross, struck through), a third clears. `data-kp-usual-undo="toast"` moves the Undo after an added name from the line under the field to the Undo toast; `field` is the default. `off` takes the check away, so the picker is only a picker.',
+                markup: `
+<div class="kp-combobox" data-kp-combobox id="doc-usual-chips" data-kp-usual='["headache","fatigue","nausea","neck"]' data-kp-multiple data-kp-add="inline" data-kp-not-today="chips" data-kp-usual-undo="toast" data-kp-pinned='[{"value":"none","label":"Nothing to log"}]'>
+<label class="kp-field__label" for="doc-usual-chips-input">Symptoms today (chips)</label>
+<div data-kp-tag-list hidden></div>
+<input class="kp-combobox__input kp-field__input" id="doc-usual-chips-input" type="text" role="combobox" aria-expanded="false" aria-controls="doc-usual-chips-list" autocomplete="off" />
+<ul class="kp-combobox__list" id="doc-usual-chips-list" role="listbox" hidden>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="fatigue">Fatigue</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="nausea">Nausea</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="dizziness">Dizziness</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="neck">Neck pain</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="back">Back pain</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="stomach">Stomach ache</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="cramps">Cramps</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="anxiety">Anxiety</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="brainfog">Brain fog</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="cough">Cough</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="chills">Chills</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="rash">Rash</li>
+<li class="kp-combobox__option" role="option" data-kp-option data-value="insomnia">Insomnia</li>
+</ul>
+<p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+</div>
+`,
+            },
         ],
         variants: [
             { name: 'data-kp-usual and data-kp-usual-source', what: 'The band: a comma list, a JSON array, or `{ value, uses }` with the source `counts` (ranked by uses, ties alphabetical; `given` is the default).' },
@@ -4164,12 +4648,20 @@ setEntityGrid(document.getElementById('doc-entities'), [
             { name: 'data-kp-pinned', what: 'JSON `[{ "value", "label" }]`: “Nothing to log” and “Not sure” stand first and are never usual.' },
             { name: 'data-kp-all', what: '`open` or `fold` (the default for more than 12 items): the band and “Show all 38”.' },
             { name: 'data-kp-multiple and data-kp-preselect', what: 'Tag mode; `usual` pre-ticks the band (`none` is the default: a stock picker never answers for a person).' },
-            { name: 'data-kp-not-today', what: 'Present gives a ticked item a one-tap “Not today”, distinct from unset (`usualNotToday(el)`).' },
+            { name: 'data-kp-not-today and data-kp-not-today-label', what: 'The usual choices’ own check under the field: `rows` (the default; a bare attribute is rows: one line per usual choice with the segmented pair “Had it” / “Not today”), `chips` (the three-way chips) or `off`. The tags carry no Not today button; the check is where it is answered, distinct from unset (`usualNotToday(el)`). The label words the check’s heading (“Your usual today”).' },
+            { name: 'data-kp-usual-undo', what: '`field` (the default: “Added ‘hoofdpjn’ as new” with Undo under the field) or `toast` (the Undo toast).' },
             { name: 'data-kp-add, data-kp-near, data-kp-near-threshold and data-kp-near-max', what: '`inline` adds at the point of use (`off`); `ask`, `select` or `off` for the near-match guard; similarity from 0.5 to 1 (0.8); up to 5 names (3).' },
             { name: 'data-kp-reason', what: 'On an option: it cannot be picked, and the sentence is written under its label (and is its description for a screen reader).' },
             { name: 'data-kp-hint, data-kp-remember and data-kp-undo-ms', what: 'The app’s line under the input once something is chosen; the folded list is remembered per picker; the Undo window after an add (6000).' },
             { name: 'data-kp-state', what: '`loading` (the busy card in the place of the list), `empty` (a plate, with Add where adding is on) or `error` (a plate with Retry, `kp-usual-retry`).' },
             { name: 'kp-usual-pick, kp-usual-add and kp-usual-not-today', what: '`{ value, from: usual | all | pinned | typed }`; cancelable `{ label, nearTo }` (the app keeps the vocabulary and may refuse); `{ value, on }`.' },
+            { name: '.kp-usual__check and its parts', what: 'The check: `__check-title` and `__check-what` (the heading and the one line that says what Not today means), `__check-rows` with a `__check-name` and a `__check-pair` (the segmented pair) per usual choice, or `__check-chips` for the three-way look (`.kp-usual__check--rows` or `--chips` on the check). Made by the module.' },
+            { name: '.kp-usual__note, __note-text and __undo', what: 'The line under the field after an add (“Added ‘hoofdpjn’ as new”) and the Undo in it; Undo takes the name out again and says so.' },
+            { name: '.kp-usual__already and .kp-tag[data-kp-usual-flash]', what: 'The row of the list that says a name is already picked, and the tag it lights for about a second so nothing typed is answered by silence.' },
+            { name: 'segmented words', what: 'The three-way chips read `data-kp-segmented-words` on their group (`{ include, exclude, any }`), so the check’s own words, “had it”, “not today”, “not answered”, are spoken by the chips without a second dictionary.' },
+            { name: 'usualAlreadyPicked and the other `usual…` strings', what: 'Every word the picker adds is in the dictionary: `usualAlreadyPicked`, `usualPicked`, `usualTookClosest`, `usualAsk`, `usualAddedNote`, `usualUndo`, `usualUndoName`, `usualAddUndone`, `usualCheckTitle`, `usualCheckWhat`, `usualCheckWhatChips`, `usualHadIt`, `usualHadItWord`, `usualUnanswered` and `usualUnansweredWord`.' },
+            { name: 'normaliseName, similarity and nearNames', what: 'The guard on its own: `normaliseName(text)` ignores case, accents and spacing, `similarity(a, b)` is 0 to 1, and `nearNames(typed, names, threshold, max)` lists the close ones, also by the start of a name (“Fatigu”).' },
+            { name: 'combobox handle extend(hook)', what: 'How this layer stands on the combobox: `combobox(el).extend(hook)` lets a layer decide which options show, what the status line says and what a choice does. One layer per combobox; `null` takes it off.' },
             { name: 'marks the module writes', what: '`data-kp-usual-ready`, `data-kp-band`, `data-kp-rest`, `data-kp-group` (a heading), `data-kp-more`, `data-kp-near-value`, `data-kp-panel`, `data-kp-synth` (a row the module added), `data-kp-usual-add-button` and `data-kp-usual-retry`.' },
         ],
         accessibility: [
@@ -4615,6 +5107,67 @@ list.addEventListener('kp-status-retry', (event) => {
 </ul>
 `,
             },
+            {
+                title: 'A today card: Pause, Resume with a reason, open rows first, and the events',
+                why: '`data-kp-today-pause` adds Pause to open rows and Resume stays on paused ones; both fire a cancelable event (`kp-status-pause`, `kp-status-resume`, with `{ item, id }`) and offer Undo, which fires `kp-status-undo` with `{ item, id, action }`. A row with `data-kp-resume-reason` cannot be resumed and says why in its own words. `data-kp-today-order="open-first"` orders the rows once, when the list attaches, and a row that becomes done never moves under a thumb. The list sits in a `.kp-card` so loading, empty and failed have somewhere to go.',
+                markup: `
+<section class="kp-card" id="doc-today" data-kp-state="ready" aria-labelledby="doc-today-title">
+<div class="kp-card__header"><h3 class="kp-card__title" id="doc-today-title">Today</h3></div>
+<div class="kp-card__stage"><div class="kp-card__data">
+<ul class="kp-statuslist kp-statuslist--rows" aria-label="Today" data-kp-status-vocab="calm" data-kp-today-now="2026-10-17T12:00:00+02:00" data-kp-today-pause data-kp-today-order="open-first" data-kp-today-since="relative">
+<li class="kp-statusrow" data-state="done" data-kp-status-id="done"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Evening check-in</span><span class="kp-statusrow__detail"></span></span></li>
+<li class="kp-statusrow" data-state="open" data-kp-status-id="walk"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Walk after dinner</span><span class="kp-statusrow__detail"></span></span></li>
+<li class="kp-statusrow" data-state="paused" data-kp-status-id="move" data-kp-since="2026-10-03"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Movement</span><span class="kp-statusrow__detail"></span></span></li>
+<li class="kp-statusrow" data-state="paused" data-kp-status-id="pills" data-kp-since="2026-10-10" data-kp-resume-reason="Wait for the pharmacy to confirm the new dose"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Morning pills</span><span class="kp-statusrow__detail"></span></span></li>
+</ul>
+</div></div>
+</section>
+<pre class="kp-code-block" id="doc-today-log" aria-live="polite">Press Pause or Resume.</pre>
+`,
+                script: `
+import { STATUS_PAUSE_EVENT, STATUS_RESUME_EVENT, STATUS_UNDO_EVENT } from '@kp-soft/themes/js/statusrow';
+
+const list = document.querySelector('#doc-today .kp-statuslist');
+const log = document.getElementById('doc-today-log');
+for (const name of [STATUS_PAUSE_EVENT, STATUS_RESUME_EVENT, STATUS_UNDO_EVENT]) {
+    list.addEventListener(name, (event) => (log.textContent = name + ' { id: ' + event.detail.id + ' }'));
+}
+`,
+            },
+            {
+                title: 'Long pauses gathered behind one line, and the card’s states',
+                why: '`data-kp-today-paused="fold"` gathers rows paused longer than `data-kp-today-fold-after` days (30 by default) into one expandable line, so a long list of old pauses does not stand between a person and today. The calm vocabulary is `CALM_STATUS_STATES` (`open`, `done`, `paused`, `unknown`, `loading`); `setTodayState(card, state)` draws the card’s `loading`, `empty` and `error` (a blame-free sentence and a normal-size Retry) in the footprint of the rows, and `settleToday(list)` orders and folds again after rows were changed by a script.',
+                markup: `
+<div class="kp-stack">
+<section class="kp-card" id="doc-today-fold" data-kp-state="ready" aria-labelledby="doc-today-fold-title">
+<div class="kp-card__header"><h3 class="kp-card__title" id="doc-today-fold-title">Today</h3></div>
+<div class="kp-card__stage"><div class="kp-card__data">
+<ul class="kp-statuslist kp-statuslist--rows" aria-label="Today" data-kp-status-vocab="calm" data-kp-today-now="2026-10-17T12:00:00+02:00" data-kp-today-paused="fold" data-kp-today-fold-after="30">
+<li class="kp-statusrow" data-state="open" data-kp-status-id="a"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Call the pharmacy</span><span class="kp-statusrow__detail"></span></span></li>
+<li class="kp-statusrow" data-state="paused" data-kp-status-id="b" data-kp-since="2026-10-03"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Movement</span><span class="kp-statusrow__detail"></span></span></li>
+<li class="kp-statusrow" data-state="paused" data-kp-status-id="c" data-kp-since="2026-08-20"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Reading</span><span class="kp-statusrow__detail"></span></span></li>
+<li class="kp-statusrow" data-state="paused" data-kp-status-id="d" data-kp-since="2026-07-02"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Evening stretch</span><span class="kp-statusrow__detail"></span></span></li>
+<li class="kp-statusrow" data-state="paused" data-kp-status-id="e" data-kp-since="2026-05-11"><span class="kp-statusrow__mark" aria-hidden="true"></span><span class="kp-statusrow__body"><span class="kp-statusrow__label">Cold shower</span><span class="kp-statusrow__detail"></span></span></li>
+</ul>
+</div></div>
+</section>
+<div class="kp-row kp-flex-wrap kp-gap-sm" role="group" aria-label="States">
+<button type="button" class="kp-button" data-doc-today-state="ready">Ready</button>
+<button type="button" class="kp-button" data-doc-today-state="loading">Loading</button>
+<button type="button" class="kp-button" data-doc-today-state="empty">Empty</button>
+<button type="button" class="kp-button" data-doc-today-state="error">Could not read</button>
+</div>
+</div>
+`,
+                script: `
+import { setTodayState } from '@kp-soft/themes/js/statusrow';
+
+const card = document.getElementById('doc-today-fold');
+for (const button of document.querySelectorAll('[data-doc-today-state]')) {
+    button.addEventListener('click', () => setTodayState(card, button.getAttribute('data-doc-today-state')));
+}
+`,
+            },
         ],
         variants: [
             { name: 'data-state', what: '`ok` (a disc with a tick), `loading` (the theme’s spinner), `failed` (a disc with a cross, a red edge and a Retry), `empty` (a dashed ring and a dashed edge).' },
@@ -4634,6 +5187,8 @@ list.addEventListener('kp-status-retry', (event) => {
             { name: 'data-kp-today-now', what: 'An ISO moment that “today” is for, for a page with its own clock.' },
             { name: 'data-kp-undo-ms', what: 'How long Undo is offered after Resume or Pause (6000, 0 for none).' },
             { name: 'kp-status-resume, kp-status-pause, kp-status-undo', what: 'Resume and Pause are cancelable and carry `{ item, id }`; Undo puts the row back as it was and carries `{ item, id, action }`. `settleToday(list)` orders and folds again; `setTodayState(card, state)` is the card’s loading, empty and failed.' },
+            { name: '.kp-statusrow--fold and .kp-statusrow__fold', what: 'The one line that gathers the long-paused rows, “3 paused for more than 30 days”, with the exact number, as a button that opens them (`aria-expanded`). It is the module’s, put last in the list, not written in markup.' },
+            { name: 'CALM_STATUS_STATES', what: 'The states a calm row may be in: `open`, `done`, `paused`, `unknown`, and `loading`. Anything else is drawn as `unknown`.' },
             { name: 'marks the module writes', what: '`data-kp-detail-auto` (the since line is the module’s), `data-kp-folded` (a row gathered behind the fold line).' },
         ],
         accessibility: [
@@ -4827,6 +5382,60 @@ group.addEventListener('kp-facet-change', (event) => {
                 why: '`data-kp-focus-mode="answer"` and steps that carry an `answer`: big answer buttons, “Same as yesterday” and “Same as usual” with their value in the label, and Not today. One tap on a choice moves on after 350 ms; a multi pick and a written line use Next.',
                 markup: `
 <div class="kp-focus-steps" data-kp-focus-steps data-kp-focus-mode="answer" data-kp-remember="checkin" aria-label="Daily check-in"></div>
+`,
+            },
+            {
+                title: 'A check-in that runs: choice, several, a written line, and the plates',
+                why: 'Each step carries `answer: { id, kind, choices, previous, usual, placeholder }`: `kind` is `choice` (one tap picks and the flow moves on), `multi` (several taps, then Next) or `text` (a box, whose `placeholder` is its hint; Not today passes it). `previous` and `usual` are the application’s memory and are written into the buttons, “Same as yesterday: Matig”. `data-kp-pinned-first` puts “Nothing to log” first in every question. Every answer fires `kp-focus-steps-answer`, and Done carries all of them; the page here refuses to save, so `setFocusStepsState(el, \'save-error\')` shows the plate that keeps the answers and offers Try again.',
+                markup: `
+<div class="kp-focus-steps" id="doc-checkin" data-kp-focus-steps data-kp-focus-mode="answer" data-kp-pinned-first='[{"value":"none","label":"Nothing to log"}]' aria-label="Daily check-in"></div>
+<pre class="kp-code-block" id="doc-checkin-log" aria-live="polite">Answer a question.</pre>
+`,
+                script: `
+import { FOCUS_STEPS_ANSWER_EVENT, FOCUS_STEPS_DONE_EVENT, FOCUS_STEPS_SAVE_RETRY_EVENT, attachFocusSteps, setFocusSteps, setFocusStepsState } from '@kp-soft/themes/js/focus-steps';
+
+const root = document.getElementById('doc-checkin');
+const log = document.getElementById('doc-checkin-log');
+attachFocusSteps(root.parentElement);
+setFocusSteps(root, [
+    {
+        text: 'How is your mood today?',
+        answer: {
+            id: 'mood',
+            kind: 'choice',
+            previous: 'matig',
+            usual: 'good',
+            choices: [
+                { value: 'rough', label: 'Rough' },
+                { value: 'matig', label: 'Matig' },
+                { value: 'good', label: 'Good' },
+            ],
+        },
+    },
+    {
+        text: 'What got in the way of sleep?',
+        answer: {
+            id: 'sleep',
+            kind: 'multi',
+            previous: ['noise'],
+            choices: [
+                { value: 'noise', label: 'Noise' },
+                { value: 'thoughts', label: 'Thoughts' },
+                { value: 'pain', label: 'Pain' },
+            ],
+        },
+    },
+    { text: 'One sentence about today, if you like.', answer: { id: 'line', kind: 'text', placeholder: 'Write what you want, or press Not today' } },
+]);
+root.addEventListener(FOCUS_STEPS_ANSWER_EVENT, (event) => {
+    const { id, value, source } = event.detail;
+    log.textContent = 'kp-focus-steps-answer { id: ' + id + ', value: ' + JSON.stringify(value) + ', source: ' + source + ' }';
+});
+root.addEventListener(FOCUS_STEPS_DONE_EVENT, (event) => {
+    log.textContent = 'Done: ' + Object.keys(event.detail.answers).length + ' answers kept in the page; the save is refused.';
+    setFocusStepsState(root, 'save-error');
+});
+root.addEventListener(FOCUS_STEPS_SAVE_RETRY_EVENT, () => (log.textContent = 'kp-focus-steps-save-retry: the page tries to save again'));
 `,
             },
         ],
@@ -6705,6 +7314,58 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
 </div>
 `,
             },
+            {
+                title: 'An avatar: a photo, a photo that fails, a status, a frame',
+                why: '`data-kp-idmark-src` puts a photo on the mark: the plate keeps its size and its letters underneath while the photo loads, the photo fades in, and a photo that fails leaves the letters with no error mark, because the person is still identified. `kp-idmark-photo` fires with `{ state, src }` (`data-kp-photo` is `loading`, `loaded` or `failed`). `data-kp-idmark-status` is `online`, `away` or `busy`: a dot whose shape differs too (full, ring, barred) and whose word joins the mark’s label, so the mark becomes an image called “Ada Lovelace, online”. `data-kp-idmark-alt="name"` makes a mark an image called by the name; `data-kp-idmark-loading="eager"` loads at once instead of lazily. `data-kp-idmark-frame` sets the photo’s frame: `edge` (the default), `ring` or `inset`.',
+                markup: `
+<ul class="kp-stack" aria-label="People">
+<li class="kp-idmark-name"><span class="kp-idmark kp-idmark--round kp-idmark--lg" data-kp-idmark="Ada Lovelace" data-doc-photo data-kp-idmark-status="online" data-kp-idmark-loading="eager"></span><span>Ada Lovelace</span></li>
+<li class="kp-idmark-name"><span class="kp-idmark kp-idmark--round kp-idmark--lg" data-kp-idmark="Grace Hopper" data-kp-idmark-src="missing-photo.jpg" data-kp-idmark-status="away"></span><span>Grace Hopper: the photo is gone, the letters stay</span></li>
+<li class="kp-idmark-name"><span class="kp-idmark kp-idmark--round kp-idmark--lg" data-kp-idmark="Alan Turing" data-kp-idmark-status="busy" data-kp-idmark-alt="name"></span><span>Alan Turing</span></li>
+<li class="kp-idmark-name"><span class="kp-idmark kp-idmark--round kp-idmark--lg" data-kp-idmark="Edsger Dijkstra" data-doc-photo data-kp-idmark-frame="ring"></span><span>Edsger Dijkstra, ring frame</span></li>
+<li class="kp-idmark-name"><span class="kp-idmark kp-idmark--round kp-idmark--lg" data-kp-idmark="Barbara Liskov" data-doc-photo data-kp-idmark-frame="inset"></span><span>Barbara Liskov, inset frame</span></li>
+</ul>
+<pre class="kp-code-block" id="doc-idmark-log" aria-live="polite">Waiting for the photos.</pre>
+`,
+                script: `
+import { attachIdmarks } from '@kp-soft/themes/js/idmark';
+
+// A small drawn portrait stands in for a photo, so the example needs no network.
+const portrait = (hue) =>
+    'data:image/svg+xml,' +
+    encodeURIComponent(
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="hsl(' + hue + ' 45% 72%)"/><circle cx="32" cy="25" r="11" fill="hsl(' + hue + ' 35% 38%)"/><path d="M10 64a22 22 0 0 1 44 0z" fill="hsl(' + hue + ' 35% 38%)"/></svg>',
+    );
+const log = document.getElementById('doc-idmark-log');
+document.addEventListener('kp-idmark-photo', (event) => {
+    log.textContent = 'kp-idmark-photo { state: ' + event.detail.state + ', src: ' + event.detail.src.slice(0, 24) + '… }';
+});
+[...document.querySelectorAll('[data-doc-photo]')].forEach((mark, n) => mark.setAttribute('data-kp-idmark-src', portrait(200 + n * 70)));
+attachIdmarks(document.querySelector('[data-doc-photo]').closest('ul'));
+`,
+            },
+            {
+                title: 'A group of avatars with an exact +N that opens the names',
+                why: '`setIdmarkGroup(el, people, { max, size, round, list })` draws the first `max` people and an exact “+N” (never “9+”). By default the “+N” is a button that opens the list of the names left out, each with its mark; `list: false` leaves it a plain count whose title lists the names. A group of small marks takes `.kp-idmark-group--sm` for its “+N”. Put a name that must wrap, in a heading or a list, in `.kp-idmark-name--wrap`.',
+                markup: `
+<div class="kp-stack">
+<div id="doc-idmark-group"></div>
+<div id="doc-idmark-group-count"></div>
+<p class="kp-idmark-name kp-idmark-name--wrap"><span class="kp-idmark kp-idmark--round" data-kp-idmark="Ada Lovelace" aria-hidden="true"></span><span>A long name that wraps instead of being cut: Augusta Ada King, Countess of Lovelace</span></p>
+</div>
+`,
+                script: `
+import { attachIdmarks, setIdmarkGroup } from '@kp-soft/themes/js/idmark';
+
+const people = ['Ada Lovelace', 'Grace Hopper', 'Alan Turing', 'Edsger Dijkstra', 'Barbara Liskov', 'Donald Knuth', 'Margaret Hamilton'].map((name, n) => ({
+    name,
+    status: n === 0 ? 'online' : n === 2 ? 'busy' : 'none',
+}));
+setIdmarkGroup(document.getElementById('doc-idmark-group'), people, { max: 4 });
+setIdmarkGroup(document.getElementById('doc-idmark-group-count'), people, { max: 3, size: 'sm', list: false });
+attachIdmarks(document.getElementById('doc-idmark-group').parentElement);
+`,
+            },
         ],
         variants: [
             { name: '.kp-idmark--xs / --sm / --lg / --xl', what: 'Sizes 20, 24, 44 and 56 px around the 32 px default; extra small shows one letter.' },
@@ -6712,6 +7373,15 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
             { name: 'data-kp-idmark-hue="free"', what: 'A hue of its own from the name, on the lightness and strength of the first chart colour.' },
             { name: 'aria-current / data-kp-idmark-selected', what: 'The current one in a list: a ring kept off its neighbours by a halo.' },
             { name: '.kp-idmark.kp-skeleton.kp-skeleton--block', what: 'Loading: the plate’s own shape, drawn as the theme draws a waiting block.' },
+            { name: 'data-kp-idmark-src and kp-idmark-photo', what: 'The photo; the letters stay under it until it has loaded and after it has failed. The event carries `{ state, src }`; `data-kp-photo` (`loading`, `loaded`, `failed`) is written on the mark.' },
+            { name: 'data-kp-idmark-loading', what: '`lazy` (the default) or `eager`, as the image’s own `loading`.' },
+            { name: 'data-kp-idmark-alt', what: '`decorative` (the default: hidden from a screen reader, the name stands beside it) or `name` (the mark is an image called by the name).' },
+            { name: 'data-kp-idmark-status', what: '`online`, `away` or `busy` (`none` is the default): a dot at the foot corner, full, ring or barred, whose word is added to the label (“Ada Lovelace, online”). A status makes the mark an image.' },
+            { name: 'data-kp-idmark-frame', what: 'The photo’s frame: `edge` (the default: the plate’s own edge in the name’s colour), `ring` (a ring held off the photo) or `inset` (the photo set into the plate like a picture in a mount).' },
+            { name: 'setIdmarkGroup and IDMARK_STATUSES', what: '`setIdmarkGroup(el, people, { max, size, round, list })` with people `{ name, src, status }`; `.kp-idmark-group__more` is the “+N” (a button when `list` is on) and `.kp-idmark-group__list` the panel of the names left out, closed by Escape or a press elsewhere; `IDMARK_STATUSES` is `online`, `away`, `busy`.' },
+            { name: '.kp-idmark-group--sm and .kp-idmark-name--wrap', what: 'The small group’s “+N” kept in step with its marks, and a name that wraps (for a heading or a list, not a table cell) instead of being cut.' },
+            { name: 'idmarkLetters and idmarkUnknown', what: '`idmarkLetters(name, count)` is the initials of the first two words, else the first two letters, upper case. A mark with an empty name is a dashed plate with a “?”, and `idmarkUnknown` is the word a screen reader gets for it.' },
+            { name: 'idmarkOnline … idmarkMoreTitle', what: 'The words of the avatar are in the dictionary: `idmarkOnline`, `idmarkAway`, `idmarkBusy`, `idmarkLabel` (“Ada, online”), `idmarkGroup` (“Acme, Contoso and 7 more”), `idmarkMore` and `idmarkMoreTitle`.' },
         ],
         accessibility: ['Built in — the mark is hidden from a screen reader.', 'Yours — always put the name beside it, and name a group in words.'],
     },
@@ -6833,11 +7503,91 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
 <figure class="kp-code" data-kp-code data-kp-code-title="Payload" data-kp-code-language="JSON" data-kp-code-lines><pre class="kp-code__body"><code>{"topic":"backup.done","ok":true,"volumes":["media","photos"]}</code></pre></figure>
 `,
             },
+            {
+                title: 'Pretty and Raw, folded, wrapped, and cut off',
+                why: 'JSON that parses gets Pretty and Raw (`data-kp-code-layout="raw"` starts raw, and a layout the reader picks stays); anything else has no such control. `data-kp-code-max` folds a long block to that many lines with “Show all N lines” under it, `data-kp-code-wrap` wraps from the start (the reader can still toggle Wrap), and `data-kp-code-size` is the size said in the head. Copy copies the whole text, folded or not. A page that only received the start says so in the foot with `setCode(el, { truncated: { shown, total } })`.',
+                markup: `
+<div class="kp-stack">
+<figure class="kp-code" data-kp-code data-kp-code-title="Request" data-kp-code-language="JSON" data-kp-code-max="6"><pre class="kp-code__body"><code>{"id":"01J9ZK","topic":"backup.done","ok":true,"volumes":["media","photos","documents","music"],"took_ms":18204,"host":"backup-1","retries":0,"notes":"nightly run, all volumes, no warnings"}</code></pre></figure>
+<figure class="kp-code" id="doc-code-cut" data-kp-code data-kp-code-title="Response" data-kp-code-language="JSON" data-kp-code-wrap data-kp-code-size="4 kB"><pre class="kp-code__body"><code>{"items":[{"id":1,"name":"media"},{"id":2,"name":"photos"},{"id":3,"name":"documents"},{"id":4,"name":"music"}</code></pre></figure>
+</div>
+`,
+                script: `
+import { attachCodes, setCode } from '@kp-soft/themes/js/code';
+
+const block = document.getElementById('doc-code-cut');
+attachCodes(block.parentElement);
+setCode(block, { text: block.querySelector('code').textContent, title: 'Response', language: 'JSON', wrap: true, size: '4 kB', truncated: { shown: '1 kB', total: '4 kB' } });
+`,
+            },
+            {
+                title: 'The states and the events',
+                why: '`setCode(el, { state })` is `loading` (the body keeps its height under the busy card; the tools wait, disabled), `empty`, `binary` (with `size`) or `error` (with `message`), each a sentence in the body’s place at its height, with the tools where they were. The block fires `kp-code-copy` with `{ text }` (and `kp-code-copy-failed`), `kp-code-wrap` with `{ wrap }`, `kp-code-layout` with `{ layout }` and `kp-code-fold` with `{ folded }`; “Copied” stays for `CODE_COPIED_MS` (1500 ms) in the width of the longest word, so nothing beside it moves. `loadingWords` words the busy card, `copy: false` takes Copy away, and `prettyJson(text)` is the two-space layout on its own (`null` when the text does not parse).',
+                markup: `
+<div class="kp-stack">
+<div class="kp-row kp-flex-wrap kp-gap-sm" role="group" aria-label="States">
+<button type="button" class="kp-button" data-doc-code-state="ready">Ready</button>
+<button type="button" class="kp-button" data-doc-code-state="loading">Loading</button>
+<button type="button" class="kp-button" data-doc-code-state="empty">Empty</button>
+<button type="button" class="kp-button" data-doc-code-state="binary">Binary</button>
+<button type="button" class="kp-button" data-doc-code-state="error">Could not read</button>
+</div>
+<figure class="kp-code" id="doc-code-states" data-kp-code></figure>
+<pre class="kp-code-block" id="doc-code-log" aria-live="polite">Press Copy, Wrap or Raw.</pre>
+</div>
+`,
+                script: `
+import { CODE_COPIED_MS, attachCodes, setCode } from '@kp-soft/themes/js/code';
+
+const block = document.getElementById('doc-code-states');
+const log = document.getElementById('doc-code-log');
+attachCodes(block.parentElement);
+const text = '{"topic":"backup.done","ok":true,"volumes":["media","photos"],"took_ms":18204}';
+const draw = (state) =>
+    setCode(block, {
+        text: state === 'empty' ? '' : text,
+        title: 'Payload',
+        language: 'JSON',
+        size: '86 B',
+        state,
+        message: state === 'error' ? 'The payload could not be read. Try again in a minute.' : undefined,
+        loadingWords: 'Reading the payload',
+    });
+draw('ready');
+for (const button of document.querySelectorAll('[data-doc-code-state]')) {
+    button.addEventListener('click', () => draw(button.getAttribute('data-doc-code-state')));
+}
+for (const name of ['kp-code-copy', 'kp-code-copy-failed', 'kp-code-wrap', 'kp-code-layout', 'kp-code-fold']) {
+    block.addEventListener(name, (event) => (log.textContent = name + ' ' + JSON.stringify(event.detail ?? {}) + ' (Copied stays ' + CODE_COPIED_MS + ' ms)'));
+}
+`,
+            },
+            {
+                title: 'In a table cell',
+                why: '`.kp-code--cell` is the block for a cell: no title, the words wrap so a row never scrolls sideways, three lines show and “Show all 40 lines” opens the rest in place (`data-kp-code-open="inline"`, the default) or in a dialog (`"dialog"`). `data-kp-code-language="auto"` makes it JSON only when the text parses. `data-kp-binary-size` (bytes) with `data-kp-download` gives the one muted line “binary, 2.1 kB” and its link; `data-kp-truncated="1024/4096"` (bytes shown / bytes in all) gives the foot line; `data-kp-copy="false"` takes Copy away. Empty is the muted line “empty payload”.',
+                markup: `
+<div class="kp-table-wrap"><table class="kp-table">
+<caption class="kp-sr-only">Dead letters with their payload</caption>
+<thead><tr><th scope="col">Topic</th><th scope="col">Payload</th></tr></thead>
+<tbody>
+<tr><th scope="row">backup.done</th><td><figure class="kp-code kp-code--cell" data-kp-code data-kp-code-language="auto"><pre class="kp-code__body"><code>{"ok":true,"volumes":["media","photos","documents","music","video","archive"],"took_ms":18204,"host":"backup-1","retries":0,"notes":"nightly run, all volumes"}</code></pre></figure></td></tr>
+<tr><th scope="row">scan.result</th><td><figure class="kp-code kp-code--cell" data-kp-code data-kp-code-open="dialog" data-kp-truncated="1024/4096"><pre class="kp-code__body"><code>scan started, 120 files read, 4 files skipped, report written, scan finished, nothing left to do, waiting for the next run, then the same again tomorrow night</code></pre></figure></td></tr>
+<tr><th scope="row">thumbnail</th><td><figure class="kp-code kp-code--cell" data-kp-code data-kp-binary-size="2150" data-kp-download="#thumbnail.png"><pre class="kp-code__body"><code></code></pre></figure></td></tr>
+<tr><th scope="row">ping</th><td><figure class="kp-code kp-code--cell" data-kp-code data-kp-copy="false"><pre class="kp-code__body"><code></code></pre></figure></td></tr>
+</tbody></table></div>
+`,
+            },
         ],
         variants: [
             { name: 'data-kp-code-wrap / -max / -layout', what: 'Wrapped from the start; folded past N lines; Raw instead of Pretty.' },
             { name: 'state', what: '`loading`, `empty`, `binary` (with `size`) and `error`.' },
             { name: 'truncated', what: '`{ shown, total }`: the foot says only the start was sent.' },
+            { name: 'data-kp-code-title, -language, -size and -lines', what: 'The head’s title, the language it names (`JSON` offers Pretty and Raw when the text parses), the size it states, and line numbers in a gutter outside the text, which a copy or a selection never takes.' },
+            { name: 'setCode options', what: '`setCode(el, { text, title, language, size, lines, wrap, maxLines, layout, copy, truncated, state, message, loadingWords })`: `maxLines` folds past that many lines (0 never), `layout` is `pretty` or `raw`, `copy: false` leaves Copy out, and a page that draws later calls it again to redraw in place.' },
+            { name: '.kp-code--cell and its attributes', what: 'The table-cell block: `data-kp-code-open` (`inline` or `dialog`), `data-kp-code-language="auto"`, `data-kp-binary-size`, `data-kp-download`, `data-kp-truncated` (`shown/total` in bytes) and `data-kp-copy="false"`. Loading is a skeleton line, since the table around it lays the busy card.' },
+            { name: 'kp-code-copy, -copy-failed, -wrap, -layout and -fold', what: '`{ text }` (the whole value, folded or not), nothing, `{ wrap }`, `{ layout }` and `{ folded }`.' },
+            { name: 'prettyJson and CODE_COPIED_MS', what: '`prettyJson(text)` is the JSON laid out with two-space indents, or `null` when it does not parse; `CODE_COPIED_MS` is how long “Copied” stays, 1500 ms.' },
+            { name: 'codeLabel … codeCopiedAnnouncement strings', what: 'Every word of the block is in the dictionary: `codeLabel`, `codeWrap`, `codePretty`, `codeRaw`, `codeFormat`, `codeShowAll`, `codeShowLess`, `codeLines`, `codeEmpty`, `codeBinary`, `codeTruncated`, `codeLoading`, `codeError` and `codeCopiedAnnouncement`.' },
         ],
         accessibility: ['Built in — the body is a named region that takes focus, so a keyboard can scroll it; a copy is announced.', 'Built in — line numbers are never copied or read.'],
     },
@@ -7285,6 +8035,107 @@ setPasskeys(list, {
 });
 `,
             },
+            {
+                title: 'Four kinds, a refusal, an unused way and the options',
+                why: '`kind` is `passkey`, `magic-link`, `password` or `token`, each with its own glyph; the list is sorted with the one in use first, then by last use (`sortPasskeys`). A way unused for `neverUsedAfter` days (90 by default; `unusedDays(row, now, limit)` is the count) is flagged as a candidate to remove. `now` is the clock, here fixed so the example does not age. When `remove` rejects, its message is the server’s reason and shows on the row, which stays. Removing the only way in is refused (`protectLast: \'refuse\'`): `refuseLook` is `button` (Remove stays, held off, the reason under the name) or `note` (the reason takes the button’s place). Press Remove on the other rows: the first asks in a dialog, and the token’s removal is refused by the page.',
+                markup: `
+<div class="kp-passkeys" id="doc-passkeys-kinds" data-kp-passkeys data-kp-confirm="dialog" data-kp-never-used-after="90"></div>
+<pre class="kp-code-block" id="doc-passkeys-log" aria-live="polite">Press Rename or Remove.</pre>
+`,
+                script: `
+import { PASSKEYS_REMOVE_EVENT, PASSKEYS_RENAME_EVENT, attachPasskeys, setPasskeys } from '@kp-soft/themes/js/passkeys';
+
+const list = document.getElementById('doc-passkeys-kinds');
+const log = document.getElementById('doc-passkeys-log');
+attachPasskeys(list.parentElement);
+const now = Date.parse('2026-10-18T12:00:00+02:00');
+setPasskeys(list, {
+    now: () => now,
+    markCurrent: true,
+    refuseLook: 'button',
+    rows: [
+        { key: 'pk1', label: 'Work laptop', kind: 'passkey', createdAt: Date.parse('2026-08-02T09:00:00+02:00'), lastUsedAt: now - 3_600_000, current: true },
+        { key: 'ml', label: 'Magic link to anna@example.org', kind: 'magic-link', createdAt: Date.parse('2026-05-20T10:00:00+02:00'), lastUsedAt: now - 9 * 86_400_000 },
+        { key: 'pw', label: 'Password', kind: 'password', createdAt: Date.parse('2025-11-02T10:00:00+01:00'), lastUsedAt: now - 140 * 86_400_000 },
+        { key: 'tok', label: 'Backup token', kind: 'token', createdAt: Date.parse('2026-01-02T10:00:00+01:00'), lastUsedAt: null },
+    ],
+    remove: async (row) => {
+        log.textContent = 'remove(' + row.key + ')';
+        if (row.kind === 'token') throw new Error('The server could not reach the token store. Try again in a minute.');
+    },
+    rename: async (row, label) => (log.textContent = 'rename(' + row.key + ', ' + JSON.stringify(label) + ')'),
+});
+// Without remove and rename the page answers the cancelable events itself.
+list.addEventListener(PASSKEYS_REMOVE_EVENT, (event) => (log.textContent = PASSKEYS_REMOVE_EVENT + ' { key: ' + event.detail.key + ' }'));
+list.addEventListener(PASSKEYS_RENAME_EVENT, (event) => (log.textContent = PASSKEYS_RENAME_EVENT + ' { key: ' + event.detail.key + ' }'));
+`,
+            },
+            {
+                title: 'Only one way in: refused as a button, as a note, or behind a typed name',
+                why: 'The same last way in three times. `refuse` keeps Remove on the row, held off, with the reason under the name; `refuse` with `refuseLook: \'note\'` puts the reason where the button was; `confirm` lets it through behind a typed name and a warning, and `confirm: \'type-name\'` asks for the exact name for every removal, not only for the one in use. `markCurrent: false` leaves the “This device” badge out.',
+                markup: `
+<div class="kp-stack">
+<div class="kp-passkeys" id="doc-passkeys-a" data-kp-passkeys data-kp-protect-last="refuse"></div>
+<div class="kp-passkeys" id="doc-passkeys-b" data-kp-passkeys data-kp-protect-last="refuse" data-kp-refuse-look="note" data-kp-mark-current="off"></div>
+<div class="kp-passkeys" id="doc-passkeys-c" data-kp-passkeys data-kp-protect-last="confirm" data-kp-confirm="type-name"></div>
+</div>
+`,
+                script: `
+import { attachPasskeys, setPasskeys } from '@kp-soft/themes/js/passkeys';
+
+const only = [{ key: 'pk1', label: 'Phone', kind: 'passkey', createdAt: Date.parse('2026-03-11T18:40:00+01:00'), lastUsedAt: Date.parse('2026-10-18T08:00:00+02:00'), current: true }];
+for (const id of ['doc-passkeys-a', 'doc-passkeys-b', 'doc-passkeys-c']) {
+    const list = document.getElementById(id);
+    attachPasskeys(list.parentElement);
+    setPasskeys(list, { now: () => Date.parse('2026-10-18T12:00:00+02:00'), rows: only, remove: async () => {}, rename: async () => {} });
+}
+`,
+            },
+            {
+                title: 'Loading, empty, could not read, and not over https',
+                why: '`state: \'loading\'` keeps the rows’ geometry as waiting rows under the busy card (`loadingRows`, `loadingWords`); `empty` (“No passkey registered yet” and Register, `kp-passkeys-register`; `register: false` leaves the button out) and `error` (the sentence in `message` and Retry, `kp-passkeys-retry`; `retry: false` leaves it out) fill the whole footprint of the list, centred; `insecure: true` puts a warning with what to do next above the list, because passkeys need https.',
+                markup: `
+<div class="kp-stack">
+<div class="kp-row kp-flex-wrap kp-gap-sm" role="group" aria-label="States">
+<button type="button" class="kp-button" data-doc-passkeys-state="ready">Ready</button>
+<button type="button" class="kp-button" data-doc-passkeys-state="loading">Loading</button>
+<button type="button" class="kp-button" data-doc-passkeys-state="empty">Empty</button>
+<button type="button" class="kp-button" data-doc-passkeys-state="error">Could not read</button>
+<button type="button" class="kp-button" data-doc-passkeys-state="insecure">Not https</button>
+</div>
+<div class="kp-passkeys" id="doc-passkeys-states" data-kp-passkeys></div>
+</div>
+`,
+                script: `
+import { PASSKEYS_REGISTER_EVENT, PASSKEYS_RETRY_EVENT, attachPasskeys, setPasskeys } from '@kp-soft/themes/js/passkeys';
+
+const list = document.getElementById('doc-passkeys-states');
+attachPasskeys(list.parentElement);
+const rows = [
+    { key: 'pk1', label: 'Work laptop', kind: 'passkey', createdAt: Date.parse('2026-08-02T09:00:00+02:00'), lastUsedAt: Date.parse('2026-10-18T08:00:00+02:00'), current: true },
+    { key: 'pk2', label: 'Phone', kind: 'passkey', createdAt: Date.parse('2026-03-11T18:40:00+01:00'), lastUsedAt: Date.parse('2026-10-10T08:00:00+02:00') },
+];
+const draw = (state) =>
+    setPasskeys(list, {
+        now: () => Date.parse('2026-10-18T12:00:00+02:00'),
+        rows: state === 'empty' ? [] : rows,
+        state: state === 'insecure' ? 'ready' : state,
+        insecure: state === 'insecure',
+        message: 'The ways to sign in could not be read. Try again in a minute.',
+        remove: async () => {},
+        rename: async () => {},
+    });
+draw('ready');
+for (const button of document.querySelectorAll('[data-doc-passkeys-state]')) {
+    button.addEventListener('click', () => draw(button.getAttribute('data-doc-passkeys-state')));
+}
+list.addEventListener(PASSKEYS_RETRY_EVENT, () => {
+    draw('loading');
+    setTimeout(() => draw('ready'), 1000);
+});
+list.addEventListener(PASSKEYS_REGISTER_EVENT, () => draw('ready'));
+`,
+            },
         ],
         variants: [
             { name: 'data-kp-protect-last', what: '`refuse` (default: Remove stays held off with the reason), `confirm` (through behind a typed name and a warning) or `off`.' },
@@ -7292,6 +8143,9 @@ setPasskeys(list, {
             { name: 'data-kp-refuse-look', what: 'How the refusal reads: `button` (default: Remove stays on the row, held off, reason under the name) or `note` (the reason takes its place).' },
             { name: 'data-kp-mark-current', what: '`off` leaves the “This device” badge out.' },
             { name: 'data-kp-never-used-after', what: 'Days (90): a way not used for that long is flagged as a candidate to remove; 0 never flags.' },
+            { name: 'sortPasskeys, unusedDays and passkeyOptions', what: '`sortPasskeys(rows)` is the list’s order (the one in use first, then the most recently used, a way never used last); `unusedDays(row, now, limit)` is the whole days a way has gone unused, or `null` when it was used within the limit or the flag is off; `passkeyOptions(el, spec)` is the options as drawn: the spec first, then the attribute, then the default.' },
+            { name: 'kp-passkeys-register, -retry, -remove and -rename', what: 'Register and Retry are the buttons of the empty and failed lists. Remove (`{ key, row }`) and Rename (`{ key, row, label }`) are cancelable and fire only when the page gave no `remove` or `rename`: `preventDefault` means the page does it and calls `setPasskeys` again.' },
+            { name: 'PASSKEY_KINDS and the `passkeys…` strings', what: 'The four kinds, each with one glyph from one set; and every word of the list (the badge, the last-used sentence, the refusals, the dialogs and the states) is in the dictionary under `passkeys…`.' },
             { name: 'states', what: '`loading` keeps the rows’ geometry as waiting rows; `empty` (“No passkey registered yet” and Register) and `error` (Retry) fill the list’s whole footprint; `insecure` puts a warning above the list, because passkeys need https.' },
         ],
         accessibility: [
@@ -7542,6 +8396,88 @@ setThread(thread, {
 });
 `,
             },
+            {
+                title: 'A longer thread: folds, groups, attachments, a failed message and an action',
+                why: 'Consecutive messages of one side from one sender within `group` minutes share one header; a day divider (“Monday 13/10/2026”) sits between days. Older messages keep their first `foldLines` lines behind “Show all N lines” while the newest is whole (`fold: \'newest\'`; `\'full\'` or a number are the other looks), and `kp-thread-fold` carries `{ key, expanded }`. A message may carry `attachments`, a `status` of `sending` (faded) or `failed` with `error` (“Not sent: why” and Retry, `kp-thread-retry` with `{ key }`), and the thread’s `actions` put a button on every bubble that fires `kp-thread-action` with `{ key, id }`. `avatar: \'both\'` shows the sender’s mark on both sides. The thread scrolls inside its box and offers Jump to newest when it is scrolled away.',
+                markup: `
+<div class="kp-thread" id="doc-thread-long" data-kp-thread data-kp-thread-fold-lines="2" data-kp-thread-avatar="both"></div>
+<pre class="kp-code-block" id="doc-thread-log" aria-live="polite">Press Retry, Rename or Show all.</pre>
+`,
+                script: `
+import { THREAD_ACTION_EVENT, THREAD_FOLD_EVENT, THREAD_RETRY_EVENT, attachThreads, setThread } from '@kp-soft/themes/js/thread';
+
+const thread = document.getElementById('doc-thread-long');
+const log = document.getElementById('doc-thread-log');
+attachThreads(thread.parentElement);
+const at = (day, time) => Date.parse('2026-10-' + day + 'T' + time + ':00+02:00');
+const messages = [
+    { key: 'm1', dir: 'in', sender: 'Acme HR', at: at('13', '14:02'), text: 'Thanks for applying.' },
+    { key: 'm2', dir: 'in', sender: 'Acme HR', at: at('13', '14:04'), text: 'Could we talk on Thursday?' },
+    { key: 'm3', dir: 'out', at: at('13', '15:10'), text: 'Happy to. Thursday at 10:00 works.', attachments: [{ name: 'cv.pdf', size: 184000, href: '#cv' }, { name: 'letter.pdf', size: 52000, href: '#letter' }] },
+    { key: 'm4', dir: 'in', sender: 'Acme HR', at: at('13', '16:30'), text: 'Great.\\nPlease bring a portfolio.\\nWe have a room on the second floor.\\nAsk at the desk for Sam.\\nParking is behind the building.' },
+    { key: 's1', dir: 'system', at: at('14', '09:00'), text: 'Status changed to Interview' },
+    { key: 'm5', dir: 'out', at: at('14', '09:20'), text: 'Will do. One question about the dress code.', status: 'failed', error: 'No connection' },
+];
+const draw = () =>
+    setThread(thread, { label: 'Correspondence with Acme', messages, actions: [{ id: 'rename', label: 'Rename' }] });
+draw();
+thread.addEventListener(THREAD_FOLD_EVENT, (event) => (log.textContent = THREAD_FOLD_EVENT + ' { key: ' + event.detail.key + ', expanded: ' + event.detail.expanded + ' }'));
+thread.addEventListener(THREAD_ACTION_EVENT, (event) => (log.textContent = THREAD_ACTION_EVENT + ' { key: ' + event.detail.key + ', id: ' + event.detail.id + ' }'));
+thread.addEventListener(THREAD_RETRY_EVENT, (event) => {
+    log.textContent = THREAD_RETRY_EVENT + ' { key: ' + event.detail.key + ' }';
+    messages.find((m) => m.key === event.detail.key).status = 'sending';
+    draw();
+    setTimeout(() => {
+        delete messages.find((m) => m.key === event.detail.key).status;
+        draw();
+    }, 1200);
+});
+`,
+            },
+            {
+                title: 'Newest first, plain bubbles, and the states',
+                why: '`order: \'newest\'` puts the newest on top; `bubble` is `tinted` (your own on a wash of the primary colour), `plain` (both on the card plate, yours only at the end of the row) or `filled`; `days: false` leaves the dividers out; `avatar: \'none\'` the marks. `loading` keeps the box and shows one waiting bubble on each side; `empty` (“No messages yet” and Add, `kp-thread-add`; `add: false` leaves the button out) and `error` (Retry, `kp-thread-retry` without a key; `retry: false` leaves it out) fill the box, centred.',
+                markup: `
+<div class="kp-stack">
+<div class="kp-row kp-flex-wrap kp-gap-sm" role="group" aria-label="States">
+<button type="button" class="kp-button" data-doc-thread-state="ready">Ready</button>
+<button type="button" class="kp-button" data-doc-thread-state="loading">Loading</button>
+<button type="button" class="kp-button" data-doc-thread-state="empty">Empty</button>
+<button type="button" class="kp-button" data-doc-thread-state="error">Could not read</button>
+</div>
+<div class="kp-thread" id="doc-thread-states" data-kp-thread></div>
+</div>
+`,
+                script: `
+import { THREAD_ADD_EVENT, THREAD_RETRY_EVENT, attachThreads, setThread } from '@kp-soft/themes/js/thread';
+
+const thread = document.getElementById('doc-thread-states');
+attachThreads(thread.parentElement);
+const at = (day, time) => Date.parse('2026-10-' + day + 'T' + time + ':00+02:00');
+const messages = [
+    { key: 'a', dir: 'in', sender: 'Sam Peeters', at: at('13', '14:02'), text: 'Could we talk on Thursday?' },
+    { key: 'b', dir: 'out', at: at('13', '15:10'), text: 'Thursday at 10:00 works.' },
+    { key: 'c', dir: 'in', sender: 'Sam Peeters', at: at('14', '09:00'), text: 'See you then.' },
+];
+const draw = (state) =>
+    setThread(thread, {
+        messages: state === 'empty' ? [] : messages,
+        state,
+        order: 'newest',
+        bubble: 'plain',
+        message: 'The conversation could not be read. Try again in a minute.',
+    });
+draw('ready');
+for (const button of document.querySelectorAll('[data-doc-thread-state]')) {
+    button.addEventListener('click', () => draw(button.getAttribute('data-doc-thread-state')));
+}
+thread.addEventListener(THREAD_RETRY_EVENT, () => {
+    draw('loading');
+    setTimeout(() => draw('ready'), 1000);
+});
+thread.addEventListener(THREAD_ADD_EVENT, () => draw('ready'));
+`,
+            },
         ],
         variants: [
             { name: 'data-kp-thread-order', what: '`oldest` (default, like mail) or `newest`.' },
@@ -7551,6 +8487,9 @@ setThread(thread, {
             { name: 'data-kp-thread-days', what: '`off` leaves the day dividers out.' },
             { name: 'data-kp-thread-avatar', what: '`in` (default), `both` or `none`: the sender’s mark beside the bubble.' },
             { name: 'data-kp-thread-bubble', what: 'How the sides are told apart: `tinted` (default), `plain` or `filled`.' },
+            { name: 'groupMessages, dayLabel and threadOptions', what: '`groupMessages(messages, minutes)` splits messages (oldest first) into the runs that share one header: the same side and sender, the same day, each within the minutes of the one before, system lines alone; `dayLabel(ms, locale)` is “Monday 13/10/2026”; `threadOptions(el, spec)` is the options as drawn: the spec first, then the attribute, then the default.' },
+            { name: 'kp-thread-retry, -add, -action and -fold', what: 'Retry carries `{ key }` for a message that was not sent and nothing for a thread that could not be read; Add is the empty thread’s button; Action carries `{ key, id }`; Fold carries `{ key, expanded }`.' },
+            { name: 'THREAD_TIME_ZONE and the `thread…` strings', what: 'Every time is written in Europe/Brussels as dd/mm/yyyy HH:mm; every word the thread adds (the day divider, Show all N lines, Copy text, Jump to newest, Sending…, Not sent, the states) is in the dictionary under `thread…`.' },
             { name: 'per message', what: '`attachments`, `status` (`sending`, or `failed` with Retry) and `actions` (`{ id, label }` buttons that fire `kp-thread-action`).' },
             { name: 'states', what: '`loading` (one waiting bubble on each side), `empty` (“No messages yet” and Add) and `error` (Retry) fill the box.' },
         ],
