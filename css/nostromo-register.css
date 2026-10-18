@@ -5951,29 +5951,6 @@
     }
 }
 
-/* ── kpadopt5/6 fit: the request inspector's row in a narrow card [t56-nostromo-1018] ── */
-@layer kp.signature {
-    /* In the card of a phone the row is 250 px and method, status, source and time cannot share one line in this
-       theme's wide letters (the source tag was squeezed to single letters over the date). Method and status take the
-       first line, the path the next, the source and the time share the last, the time always at its end. */
-    @container kp-inspector (max-width: 40rem) {
-        [data-theme='nostromo'] .kp-inspector__row {
-            grid-template-columns: auto minmax(0, 1fr);
-            grid-template-areas:
-                'method status'
-                'path path'
-                'source time';
-        }
-        [data-theme='nostromo'] .kp-inspector__status {
-            justify-self: start;
-        }
-        [data-theme='nostromo'] .kp-inspector__time {
-            justify-self: end;
-            text-align: end;
-        }
-    }
-}
-
 /* ── kpadopt5/6 fit: the folded quote [t56-nostromo-1018] ── */
 @layer kp.signature {
     /* Titillium Web's line box is taller than a 1.5 line pitch, so the clamped fifth line's box reached into the Show all
@@ -5992,10 +5969,8 @@
 
 /* ── kpadopt5/6 fit: the availability list on a phone [t56-nostromo-1018] ── */
 @layer kp.signature {
-    /* The signed-in person's own row carries three answer keys; with the lamp and the label tape they are wider than the
-       row, and the key row pushed the person's name down to nothing. The name takes its own line over the keys. */
+    /* The signed-in person's own row: the package puts the answer keys under the name; here the two lines sit tighter. */
     [data-theme='nostromo'] .kp-availability__column-row:has(> .kp-availability__column-answers) {
-        grid-template-columns: minmax(0, 1fr);
         row-gap: 0.25rem;
         padding-block: 0.25rem;
     }
@@ -6013,47 +5988,6 @@
        `--kp-size-step`; 0 means the size time). */
     [data-theme='nostromo'] .kp-field:has(> .kp-autosize) {
         --kp-size-step: 0ms;
-    }
-}
-
-/* ── kpadopt5/6 fit: the checklist's detail on a phone [t56-nostromo-1018] ── */
-@layer kp.signature {
-    /* The detail never wraps in the shared part; in this theme's mono it is wider than the row and ran off the plate
-       (cut at the screen edge) while it squeezed the label to a column of single letters. On a phone it wraps in a
-       column of at most 9rem, at its end. */
-    @media (max-width: 34rem) {
-        [data-theme='nostromo'] .kp-checklist__detail {
-            max-inline-size: 9rem;
-            white-space: normal;
-            overflow-wrap: anywhere;
-        }
-    }
-}
-
-/* ── kpadopt5/6 fit: the version chip with a long unbroken version [t56-nostromo-1018] ── */
-@layer kp.signature {
-    /* A 64-character hash has no place to break; in this theme's wide mono it ran out of its box. Only when no break
-       place is left on the line may it break inside the string. */
-    [data-theme='nostromo'] .kp-badge--version {
-        max-inline-size: 100%;
-    }
-    [data-theme='nostromo'] :is(.kp-version__from, .kp-version__to) {
-        min-inline-size: 0;
-        overflow-wrap: anywhere;
-    }
-}
-
-/* ── kpadopt5/6 fit: bars of controls in a card on a phone [t56-nostromo-1018] ── */
-@layer kp.signature {
-    /* The card is a grid whose one track took the width of its widest unbreakable line, so a bar of segments or buttons
-       pushed the card's content out of the card. The track is the card's width; the bar's own wrapping and the track's
-       scrolling then do their work. */
-    [data-theme='nostromo'] :is(.kp-inspector, .kp-refresh) {
-        grid-template-columns: minmax(0, 1fr);
-    }
-    [data-theme='nostromo'] :is(.kp-inspector__bar, .kp-refresh__bar, .kp-refresh__chooser) {
-        min-inline-size: 0;
-        max-inline-size: 100%;
     }
 }
 
