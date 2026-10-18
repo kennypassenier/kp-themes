@@ -6243,3 +6243,31 @@
         font-size: var(--kp-text-md, 1rem);
     }
 }
+
+/* ── The acknowledge gate is flagged, not filled [G13, t56-eye-1018] ──
+   A warning on the sheet is the outlined triangle in the lit amber before its title on the two axes drawn in that ink, on no
+   plate: the flat brown block carried no mark of the sheet. */
+@layer kp.signature {
+    [data-theme='blueprint'] .kp-ack.kp-alert--warning {
+        --kp-bp-warn-ink: hsl(from var(--warning) h s 62%);
+        --kp-bp-axes-img:
+            linear-gradient(var(--kp-bp-warn-ink), var(--kp-bp-warn-ink)), linear-gradient(var(--kp-bp-warn-ink), var(--kp-bp-warn-ink)),
+            repeating-linear-gradient(90deg, var(--kp-bp-warn-ink) 0 1px, transparent 1px 8px),
+            repeating-linear-gradient(0deg, var(--kp-bp-warn-ink) 0 1px, transparent 1px 8px),
+            repeating-linear-gradient(90deg, var(--kp-bp-warn-ink) 0 1px, transparent 1px 40px),
+            repeating-linear-gradient(0deg, var(--kp-bp-warn-ink) 0 1px, transparent 1px 40px);
+        background-color: transparent;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+        background-repeat: no-repeat;
+        border-color: transparent;
+        box-shadow: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='blueprint'] .kp-ack.kp-alert--warning .kp-alert__body > strong::before {
+        content: '\25B3\00a0';
+        color: var(--kp-bp-warn-ink);
+    }
+}
