@@ -4448,3 +4448,31 @@
         }
     }
 }
+
+/* ── The new adoption parts in solstice [t56-solstice-1018] ──
+   A full digest is one unbroken run of hex: in the serif-set badge it ran 3 px past the badge's own edge, so it is allowed
+   to break anywhere (a version number still breaks only where it was given a place to). */
+@layer kp.signature {
+    [data-theme='solstice'] .kp-badge--version[data-kp-version-digest='full'] :is(.kp-version__from, .kp-version__to) {
+        overflow-wrap: anywhere;
+    }
+
+    /* A bubble is a plate lit from below (G7): the foot edge catching the low light and a faint rust wash rising from it;
+       the sender's own bubble is lit warmer (the amber wash), the words stand above the wash. */
+    [data-theme='solstice'] .kp-thread__bubble {
+        --kp-so-sky: var(--accent);
+        --kp-so-foot: hsl(from var(--primary) h s l / 0.45);
+        background:
+            linear-gradient(var(--kp-so-foot), var(--kp-so-foot)) 0 100% / 100% 1px no-repeat,
+            linear-gradient(to top, hsl(from var(--kp-so-sky) h s l / 0.14), transparent) 0 100% / 100% 45% no-repeat,
+            var(--card);
+    }
+    [data-theme='solstice'] .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        --kp-so-sky: var(--primary);
+        --kp-so-foot: hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='solstice'] .kp-thread__bubble[data-kp-status='failed'] {
+        --kp-so-sky: var(--destructive);
+        --kp-so-foot: var(--destructive);
+    }
+}
