@@ -835,7 +835,7 @@ const noteOf = (pair) => state[pair.key]?.note || '';
 const NOTE_PAUSE_MS = 600;
 /** Notes typed and not yet in the journal, per pair key. @type {Map<string, { timer: ReturnType<typeof setTimeout>, write: () => void }>} */
 const pendingNotes = new Map();
-/** Writes one change of a pair to the journal. @param {Pair} pair @param {{ verdict?: string | null, note?: string, choice?: { id: string, value: string, label?: string } | null, key?: string }} change */
+/** Writes one change of a pair to the journal. @param {Pair} pair @param {{ verdict?: string | null, note?: string, choice?: { id: string, value: string, label?: string } | null, key?: string, kind?: 'all-themes', source?: string }} change */
 function record(pair, change) {
     const key = change.key || pair.key;
     pendingNotes.get(key) && clearTimeout(/** @type {any} */ (pendingNotes.get(key)).timer);
@@ -847,6 +847,7 @@ function record(pair, change) {
         note: change.note ?? '',
         choice: change.choice ?? null,
         label: key === pair.key ? pair.label : undefined,
+        ...(change.kind ? { kind: change.kind, source: change.source } : {}),
     });
     emit('verdict', { pair, change });
 }
@@ -981,7 +982,16 @@ function answer() {
     if (themesDone.length) lines.push('', `Approved in full: ${themesDone.join(', ')}`);
     const extraDone = pairs.filter((p) => p.extra && verdictOf(p) === 'approved');
     if (extraDone.length) lines.push('', 'Catalogue pairs approved:', ...extraDone.map((p) => `- ${p.label}`));
-    if (rejected.length) lines.push('', 'Not approved:', ...rejected.map((p) => `- ${p.label}: ${noteOf(p)}`));
+    // "Every theme" (Kenny, 2026-10-18 19:08): the pair it was ticked on and its copies in the other themes are ONE line.
+    const grouped = new Set();
+    const groupLines = [];
+    for (const source of rejected.filter((p) => state[p.key]?.everyTheme && !state[p.key]?.copiedFrom)) {
+        const copies = rejected.filter((p) => p !== source && p.item === source.item && state[p.key]?.copiedFrom === source.theme && noteOf(p) === noteOf(source));
+        if (!copies.length) continue;
+        for (const p of [source, ...copies]) grouped.add(p);
+        groupLines.push(`- ${source.item.id} · every theme: ${noteOf(source)}`);
+    }
+    if (rejected.length) lines.push('', 'Not approved:', ...groupLines, ...rejected.filter((p) => !grouped.has(p)).map((p) => `- ${p.label}: ${noteOf(p)}`));
     const notes = pairs.filter((p) => verdictOf(p) === 'approved' && noteOf(p));
     if (notes.length) lines.push('', 'Approved, with a note:', ...notes.map((p) => `- ${p.label}: ${noteOf(p)}`));
     lines.push(...kk.answerLines()); // [kit-keys] pairs approved unseen by G
@@ -2221,6 +2231,9 @@ function frameFor(pair) {
     return box;
 }
 
+/** The same section in the other themes of this page ("Every theme"): its other pairs, none for a catalogue block. */
+const otherThemePairs = (/** @type {Pair} */ pair) => pairs.filter((p) => p.item && p.item === pair.item && p !== pair);
+
 function rowFor(pair, only = null, name = '', shared = new Set()) {
     const li = document.createElement('li');
     li.className = 'rv-row';
@@ -2237,6 +2250,11 @@ function rowFor(pair, only = null, name = '', shared = new Set()) {
         </div>
         <p class="rv-row__look" data-rv-row-look></p>
         <textarea class="kp-field__input kp-field__input--multiline rv-row__note" rows="2" placeholder="What should change" data-rv-row-note hidden></textarea>
+        <span class="kp-field kp-field--check rv-row__every" data-rv-every-wrap hidden>
+            <input class="kp-field__check" type="checkbox" id="${id}-every" data-rv-every />
+            <label class="kp-field__label" for="${id}-every">Every theme</label>
+        </span>
+        <p class="rv-row__copied" data-rv-copied hidden></p>
         <div class="rv-row__choices" data-rv-choices></div>`;
     li.querySelector('[data-rv-jump]').textContent = name || pair.title;
     const look = pair.item ? lookFor(pair.item.section, pair.theme) : pair.look;
@@ -2348,6 +2366,25 @@ function rowFor(pair, only = null, name = '', shared = new Set()) {
     if (only) note.placeholder = `What should change in this aspect of ${pair.title}`;
     note.hidden = !box.checked && !note.value;
     li.classList.toggle('rv-row--rejected', box.checked);
+    // "Every theme" (Kenny, 2026-10-18 19:08): offered beside the note of a rejected section that other themes ask too; the
+    // verdict is copied to them when it is given (approveStep, applyEveryTheme).
+    const every = /** @type {HTMLInputElement} */ (li.querySelector('[data-rv-every]'));
+    const everyWrap = /** @type {HTMLElement} */ (li.querySelector('[data-rv-every-wrap]'));
+    const copied = /** @type {HTMLElement} */ (li.querySelector('[data-rv-copied]'));
+    const others = !only && pair.item ? otherThemePairs(pair) : [];
+    const paintEvery = () => {
+        everyWrap.hidden = !others.length || !box.checked;
+        every.checked = Boolean(state[pair.key]?.everyTheme) && box.checked;
+        const from = state[pair.key]?.copiedFrom;
+        copied.hidden = !from || !box.checked;
+        copied.textContent = from ? `Copied from ${LABEL[from] || from} (every theme). Change it here to make it this theme's own.` : '';
+    };
+    everyWrap.title = `Counts for every theme: when you give your verdict, ${pair.item?.title || 'this section'} gets this same verdict and note in all ${others.length} other theme(s) of this page, and those steps are skipped. W undoes it all.`;
+    every.addEventListener('change', () => {
+        state[pair.key] = { ...state[pair.key], everyTheme: every.checked };
+        save();
+    });
+    paintEvery();
     box.addEventListener('change', () => {
         note.hidden = !box.checked && !note.value;
         li.classList.toggle('rv-row--rejected', box.checked);
@@ -2355,14 +2392,18 @@ function rowFor(pair, only = null, name = '', shared = new Set()) {
         if (box.checked) note.focus();
         if (!only) {
             kk.snap([pair.key], `${box.checked ? 'not approved' : 'approved'} ${pair.label}`); // [kit-keys]
+            // A change made here makes the verdict this theme's own, and unticking "Not approved" drops "Every theme".
             state[pair.key] = {
                 ...state[pair.key],
                 verdict: box.checked ? 'rejected' : 'approved',
                 note: note.value.trim(),
                 at: new Date().toISOString(),
+                copiedFrom: undefined,
+                ...(box.checked ? {} : { everyTheme: false }),
             };
             save();
             record(pair, { verdict: box.checked ? 'rejected' : 'approved', note: note.value.trim() });
+            paintEvery();
             render();
         } else
             record(pair, {
@@ -2382,8 +2423,10 @@ function rowFor(pair, only = null, name = '', shared = new Set()) {
             verdict: box.checked ? 'rejected' : state[pair.key]?.verdict || 'approved',
             note: note.value.trim(),
             at: new Date().toISOString(),
+            copiedFrom: undefined,
         };
         save();
+        paintEvery();
         recordSoon(pair, () => ({ verdict: box.checked ? 'rejected' : state[pair.key]?.verdict || 'approved', note: note.value.trim() }));
         render();
     });
@@ -2683,23 +2726,64 @@ function approveStep() {
         refused.hidden = false;
         return;
     }
+    // "Every theme" (Kenny, 2026-10-18 19:08): a rejected section ticked so gives the same section in every other theme of
+    // the page the same verdict and note, as distinct journal entries (kind "all-themes"); W undoes the whole group.
+    const everyTargets = everyThemeTargets(rowOf);
     kk.snap(
-        shownPairs.map((p) => p.key),
-        `approved ${current.title}`,
+        [...shownPairs.map((p) => p.key), ...everyTargets.map(({ target }) => target.key)],
+        `approved ${current.title}${everyTargets.length ? ` and ${everyTargets.length} copies in other themes` : ''}`,
+        // W undoes the whole group: the source pair goes back to open too, not to the Not approved its box already set.
+        Object.fromEntries(
+            [...new Set(everyTargets.map(({ source }) => source))].map((source) => {
+                const { verdict, note, at, everyTheme, ...rest } = state[source.key] || {};
+                return [source.key, Object.keys(rest).length ? rest : null];
+            }),
+        ),
     ); // [kit-keys]
     const at = new Date().toISOString();
     for (const pair of shownPairs) {
         const row = rowOf(pair);
         const rejected = /** @type {HTMLInputElement} */ (row.querySelector('[data-rv-reject]')).checked;
         const note = /** @type {HTMLTextAreaElement} */ (row.querySelector('[data-rv-row-note]')).value.trim();
-        state[pair.key] = { ...state[pair.key], verdict: rejected ? 'rejected' : 'approved', note, at };
+        // A row copied from another theme and left as it is stays as the copy (its journal entry says where it came from).
+        if (state[pair.key]?.copiedFrom && rejected && state[pair.key].verdict === 'rejected' && state[pair.key].note === note) continue;
+        state[pair.key] = { ...state[pair.key], verdict: rejected ? 'rejected' : 'approved', note, at, copiedFrom: undefined };
         record(pair, { verdict: rejected ? 'rejected' : 'approved', note });
+    }
+    for (const { source, target, note } of everyTargets) {
+        state[target.key] = { ...state[target.key], verdict: 'rejected', note, at, copiedFrom: source.theme, everyTheme: undefined };
+        record(target, { verdict: 'rejected', note, kind: 'all-themes', source: source.theme });
     }
     save();
     render();
+    if (everyTargets.length)
+        kk.say(`Every theme: ${everyTargets.length} other theme${everyTargets.length === 1 ? '' : 's'} got the same verdict and note and are skipped. W undoes all of it.`);
     const next = nextOpenStep(index);
     if (next < 0) finished();
     else show(next);
+}
+
+/**
+ * The pairs an "Every theme" tick reaches on Approve: for each rejected row of the step with the tick, the same section in
+ * every other theme of the page, with the note as written. A pair Kenny rejected himself in his own words stays his own.
+ * @param {(pair: Pair) => HTMLElement} rowOf @returns {{ source: Pair, target: Pair, note: string }[]}
+ */
+function everyThemeTargets(rowOf) {
+    /** @type {{ source: Pair, target: Pair, note: string }[]} */
+    const out = [];
+    for (const source of shownPairs) {
+        const row = rowOf(source);
+        const tick = /** @type {HTMLInputElement | null} */ (row.querySelector('[data-rv-every]'));
+        if (!tick?.checked || !/** @type {HTMLInputElement} */ (row.querySelector('[data-rv-reject]')).checked) continue;
+        const note = /** @type {HTMLTextAreaElement} */ (row.querySelector('[data-rv-row-note]')).value.trim();
+        for (const target of otherThemePairs(source)) {
+            if (shownPairs.includes(target)) continue;
+            const own = state[target.key];
+            if (own?.verdict === 'rejected' && !own.copiedFrom) continue;
+            out.push({ source, target, note });
+        }
+    }
+    return out;
 }
 
 /** Records one aspect step: its pick, or "None of these" with a note; the theme's verdict once every aspect is answered. */

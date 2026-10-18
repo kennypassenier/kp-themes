@@ -467,8 +467,10 @@ export const journalKey = (demo) => `${storeKey(demo)}:journal`;
  * @property {string} note
  * @property {{ id: string, value: string, label?: string, changed?: boolean, removed?: boolean } | null} choice  a choice ticked, with the option's label
  * @property {string} [label]  the pair as the answer names it (`<item> · <theme>`)
- * @property {'undo' | 'bulk'} [kind]  [kit-keys] 'undo': an Undo (U) put the pair back, `verdict` is what it went back to
- *   (null = open again); 'bulk': approved unseen by G, `unseen` is the pair count of that bulk approval
+ * @property {'undo' | 'bulk' | 'all-themes'} [kind]  [kit-keys] 'undo': an Undo (U) put the pair back, `verdict` is what it went back to
+ *   (null = open again); 'bulk': approved unseen by G, `unseen` is the pair count of that bulk approval; 'all-themes': the
+ *   verdict and note were applied from another theme's pair because the reviewer ticked "Every theme" there (`source`)
+ * @property {string} [source]  for kind 'all-themes': the theme the verdict was given in
  * @property {number} [unseen]
  */
 
@@ -493,7 +495,7 @@ export const JOURNAL_FAILED_EVENT = 'kp-demo-journal-failed';
  */
 export function journal(demo, entry) {
     const list = journalOf(demo);
-    const full = { at: entry.at || new Date().toISOString(), demo, round: entry.round || '', pair: entry.pair, verdict: entry.verdict ?? null, note: entry.note || '', choice: entry.choice ?? null, ...(entry.label ? { label: entry.label } : {}), ...(entry.kind ? { kind: entry.kind } : {}), ...(entry.unseen ? { unseen: entry.unseen } : {}) };
+    const full = { at: entry.at || new Date().toISOString(), demo, round: entry.round || '', pair: entry.pair, verdict: entry.verdict ?? null, note: entry.note || '', choice: entry.choice ?? null, ...(entry.label ? { label: entry.label } : {}), ...(entry.kind ? { kind: entry.kind } : {}), ...(entry.source ? { source: entry.source } : {}), ...(entry.unseen ? { unseen: entry.unseen } : {}) };
     const last = [...list].reverse().find((e) => e?.pair === full.pair && e?.round === full.round);
     const same = (/** @type {JournalEntry} */ e) =>
         e.verdict === full.verdict && e.note === full.note && (e.kind || '') === (full.kind || '') && JSON.stringify(e.choice ?? null) === JSON.stringify(full.choice);
@@ -545,9 +547,10 @@ export function rebuildAnswer(demo, round) {
     /** @type {Map<string, { verdict: string | null, note: string, label: string, choices: Map<string, string> }>} */
     const pairs = new Map();
     for (const e of entries) {
-        const now = pairs.get(e.pair) ?? { verdict: null, note: '', label: e.label || labelOfKey(e.pair), choices: new Map(), unseen: 0 };
+        const now = pairs.get(e.pair) ?? { verdict: null, note: '', label: e.label || labelOfKey(e.pair), choices: new Map(), unseen: 0, every: '' };
         // [kit-keys] An undo puts the pair back to what the entry says (null = open again); a bulk approval is "approved unseen".
         if (e.kind === 'undo') {
+            now.every = '';
             now.verdict = e.verdict;
             now.note = e.verdict ? e.note : '';
             now.unseen = 0;
@@ -563,6 +566,8 @@ export function rebuildAnswer(demo, round) {
         if (e.verdict) {
             now.verdict = e.verdict;
             now.unseen = 0;
+            // [every-theme] 'all-themes': the same verdict and note applied from the pair of another theme.
+            now.every = e.kind === 'all-themes' ? e.source || '?' : '';
         }
         if (e.verdict || e.note || !e.choice) now.note = e.note;
         // A choice set only asks for the default: pressing back to the default clears the change (defaults-1017).
@@ -584,7 +589,21 @@ export function rebuildAnswer(demo, round) {
     ];
     const plain = approved.filter(([, p]) => !p.note && !p.unseen).map(([, p]) => p.label);
     if (plain.length) lines.push('', 'Approved:', ...plain.map((label) => `- ${label}`));
-    if (rejected.length) lines.push('', 'Not approved:', ...rejected.map(([, p]) => `- ${p.label}: ${p.note}`));
+    // [every-theme] A verdict ticked "Every theme" is one line: the source pair and its copies in the other themes.
+    const itemOf = (/** @type {string} */ key) => key.split('|')[1] ?? key;
+    const sources = new Set(rejected.filter(([, p]) => p.every).map(([key, p]) => `${p.every}|${itemOf(key)}|${p.note}`));
+    const grouped = new Set();
+    const groupLines = [];
+    for (const mark of sources) {
+        const [theme, item, ...note] = mark.split('|');
+        const from = rejected.find(([key, p]) => key === `${theme}|${item}` && !p.every && p.note === note.join('|'));
+        if (!from) continue;
+        grouped.add(from[0]);
+        for (const [key, p] of rejected) if (p.every === theme && itemOf(key) === item && p.note === note.join('|')) grouped.add(key);
+        groupLines.push(`- ${item} · every theme: ${note.join('|')}`);
+    }
+    if (rejected.length)
+        lines.push('', 'Not approved:', ...groupLines, ...rejected.filter(([key]) => !grouped.has(key)).map(([, p]) => `- ${p.label}: ${p.note}`));
     const noted = approved.filter(([, p]) => p.note && !p.unseen);
     if (noted.length) lines.push('', 'Approved, with a note:', ...noted.map(([, p]) => `- ${p.label}: ${p.note}`));
     const unseen = approved.filter(([, p]) => p.unseen);
