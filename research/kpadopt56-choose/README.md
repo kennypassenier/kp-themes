@@ -1,5 +1,7 @@
 # research/kpadopt56-choose: the fifth and sixth adoption rounds in the other themes, part 2 of 11
 
+**Decided (2026-10-18 22:36):** Kenny approved every pair. Recorded in `VERDICTS.json`; the part is not offered again.
+
 Pickers and palettes, in the eleven themes other than formal (dark, cyberpunk, synthwave, pastel, forest, blueprint, solstice, brutalism, deco, nostromo, titanium): usual, usual-band, usual-states, intent, intent-states. Round 1: 5 sections, 55 pairs.
 
 **Round 2** (2026-10-18): Kenny approved intent and intent-states in all eleven themes and rejected the three usual sections in all eleven (VERDICTS.json): the picks did not show (the package's combobox never showed a tag list written `hidden`, js/combobox.js now shows it once it holds a tag), and the two samples shown opened kept opening and closing when half in view (the demo closed them below 90% visibility while the lane grew to hold them; src/kpadopt6-calm/demo.js now opens them once). Round 2 asks usual, usual-band and usual-states: 3 sections, 33 pairs. `_previous/` holds round 1.

@@ -108,11 +108,6 @@ export const PAGES = [
             // Kenny, 2026-10-16 (kp-adopt-rest, round 2): eight things the admin dashboard still draws itself (action tiles, status rows, the facet list, the coverage heat grid, the reachability matrix, bars in table cells with data-kp-sort-value, the week agenda, the run timeline), built in the package first as ONE demo, formal only until Kenny approves it.
             // Kenny, 2026-10-16 (kp-adopt-rest, round 3): six things the dashboard still drew itself, each an opt-in option of an approved component (nav separator, choice-filter value, timeline day buttons and series legend, the week's next-N phone list, facet identity patterns, the heat grid's jump to the latest), formal only.
             // Kenny, 2026-10-18 (kpadopt5/6, other themes): the 79 sections of the fifth and sixth adoption rounds that he approved in formal, now asked in the eleven other themes (dark, cyberpunk, synthwave, pastel, forest, blueprint, solstice, brutalism, deco, nostromo, titanium), grouped by kind of component into eleven reviews of at most 99 pairs each, generated from research/kpadopt56/src by research/kpadopt56/build-parts.mjs.
-            {
-                href: 'research/kpadopt56-choose/demo.html',
-                label: 'Fifth and sixth adoption rounds in the other themes, part 2 of 14: Pickers and palettes',
-                about: 'Picking from a list: the usual on top, with its band and its states, and words in any order. 5 sections (55 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
-            },
         ],
     },
     {
@@ -123,6 +118,12 @@ export const PAGES = [
         // Decided demos stay reachable from the Agenda's Done list, not from the side navigation (Kenny, 2026-10-13).
         nav: false,
         pages: [
+            // Decided 2026-10-18 22:36: Kenny approved every choose pair over three rounds (research/kpadopt56-choose/decided.json).
+            {
+                href: 'research/kpadopt56-choose/demo.html',
+                label: 'Fifth and sixth adoption rounds in the other themes, part 2 of 14: Pickers and palettes',
+                about: 'Picking from a list: the usual on top, with its band and its states, and words in any order. 5 sections (55 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+            },
             // Decided 2026-10-18 21:37: Kenny approved every fields pair (research/kpadopt56-fields/decided.json).
             {
                 href: 'research/kpadopt56-fields/demo.html',
