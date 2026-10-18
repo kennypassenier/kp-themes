@@ -2452,7 +2452,7 @@ document.addEventListener(
             // link keeps its own Enter.
             event.preventDefault();
             approveStep();
-        } else if (step?.aspect && (event.key === 'ArrowDown' || event.key.toLowerCase() === 'n')) {
+        } else if (step?.aspect && (event.key === 'ArrowDown' || event.code === 'KeyC')) {
             event.preventDefault();
             const box = /** @type {HTMLInputElement} */ (list.querySelector('[data-rv-reject]'));
             if (box && !box.checked) {

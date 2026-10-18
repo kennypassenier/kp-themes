@@ -6,13 +6,14 @@
 // dialog's head, or `window.kpReviewKeys.set('bulk', true)`):
 //
 //   legend    default ON   the one compact line that lists the keys
-//   undo      default ON   U undoes the last approve or reject
-//   rejected  default ON   Y (or the button) opens "Rejected so far", an overlay on the stage
+//   undo      default ON   W undoes the last approve or reject
+//   rejected  default ON   B (or the button) opens "Rejected so far", an overlay on the stage
 //   bulk      default OFF  G approves the rest of a theme after 3 approvals in a row there, with a 10 s undo
 //
 // Keys are PHYSICAL key codes (event.code), so they sit under the same fingers on AZERTY and QWERTY. The kit's rule is
-// the left hand on the home row and the right on the arrows (DEMO_RULES 7): X and G are left hand; J K U Y are
-// right-hand letters Kenny's brief named, kept in KEYS below so moving one is a one-line change.
+// the left hand on the home row and the right on the arrows (DEMO_RULES 7): every helper key is a left-hand
+// letter (Q S X C W B G on AZERTY), none taken by the walking keys of the aspect pages; Down is the right-hand way to reject.
+// KEYS below is the only place a key is named.
 //
 // The journal stays append-only: an undo and a bulk approval are appended as entries (`kind: 'undo' | 'bulk'`,
 // progress.js), nothing is ever removed.
@@ -20,13 +21,13 @@ import { journal, storeKey } from './progress.js';
 
 /** The physical key of every action; the only place a key is named. */
 export const KEYS = {
-    next: 'KeyJ', // focus the next section
-    prev: 'KeyK', // focus the previous section
-    toggle: 'KeyX', // toggle "Not approved" on the focused section
-    reject: 'KeyN', // with ArrowDown: reject the focused section (never un-rejects)
-    undo: 'KeyU',
-    rejected: 'KeyY',
-    bulk: 'KeyG',
+    next: 'KeyS', // AZERTY S: focus the next section (as S steps forward on aspect pages)
+    prev: 'KeyA', // AZERTY Q: focus the previous section
+    toggle: 'KeyX', // AZERTY X: toggle "Not approved" on the focused section
+    reject: 'KeyC', // AZERTY C, with ArrowDown: reject the focused section (never un-rejects)
+    undo: 'KeyZ', // AZERTY W (Z on QWERTY, as Ctrl+Z)
+    rejected: 'KeyB', // AZERTY B
+    bulk: 'KeyG', // AZERTY G
 };
 /** The keys a lane frame hands up to the dialog (review.js lane()), besides V and L. */
 export const FRAME_KEYS = new Set([KEYS.next, KEYS.prev, KEYS.toggle, KEYS.reject, KEYS.undo, KEYS.rejected, KEYS.bulk]);
@@ -35,8 +36,8 @@ const SETTINGS_KEY = 'kp-review-keys';
 const DEFAULTS = { legend: true, undo: true, rejected: true, bulk: false };
 const OPTION_TEXT = {
     legend: ['Key legend', 'One line that lists the keys.'],
-    undo: ['Undo (U)', 'Takes back the last approve or reject.'],
-    rejected: ['Rejected so far (Y)', 'An overlay with your rejections, changed defaults and removed options.'],
+    undo: ['Undo (W)', 'Takes back the last approve or reject.'],
+    rejected: ['Rejected so far (B)', 'An overlay with your rejections, changed defaults and removed options.'],
     bulk: ['Approve the rest of a theme (G)', 'Offered after 3 approvals in a row in a theme; recorded as approved unseen.'],
 };
 const STREAK = 3;
@@ -127,7 +128,7 @@ export function mountKeys(api) {
     pop.setAttribute('aria-label', 'Rejected so far');
     const popHead = el('div', 'rvk-pop__head');
     popHead.append(el('b', '', 'Rejected so far'));
-    const popClose = el('button', 'kp-button kp-button--sm kp-button--ghost', 'Close (Y)');
+    const popClose = el('button', 'kp-button kp-button--sm kp-button--ghost', 'Close (B)');
     popClose.type = 'button';
     popHead.append(popClose);
     const popList = el('ul', 'rvk-pop__list');
@@ -203,22 +204,22 @@ export function mountKeys(api) {
         if (isAspect()) {
             add(['←', '→'], 'flip');
             add(['↑'], 'pick');
-            add(['↓', 'N'], 'none of these');
+            add(['↓', 'C'], 'none of these');
         } else {
             add(['↑'], 'approve');
-            add(['↓', 'N'], 'reject focused');
-            add(['J', 'K'], 'focus', 'J moves the focus to the next section, K to the previous one');
+            add(['↓', 'C'], 'reject focused');
+            add(['Q', 'S'], 'focus', 'S moves the focus to the next section, Q to the previous one (AZERTY labels)');
             add(['X'], 'not approved', 'Toggles "Not approved" on the focused section');
             add(['←', '→'], 'step');
         }
-        if (options.undo) add(['U'], 'undo');
-        if (options.rejected) add(['Y'], 'rejected so far');
+        if (options.undo) add(['W'], 'undo');
+        if (options.rejected) add(['B'], 'rejected so far');
         if (options.bulk) {
             const offer = bulkOffer();
             if (offer) add(['G'], `approve the rest of ${api.label(offer.theme)} (${offer.keys.length})`, 'Approves every open pair of this theme without showing it');
         }
         add(['Esc'], 'close');
-        rejectedButton.setAttribute('aria-keyshortcuts', 'Y');
+        rejectedButton.setAttribute('aria-keyshortcuts', 'B');
     }
 
     /* -------------------------------------------------------------- focus */
@@ -302,7 +303,7 @@ export function mountKeys(api) {
         persist();
         if (top.kind === 'bulk' && Date.now() > top.until) {
             hideToast();
-            return say('That bulk approval is final: its 10 s are over. U now undoes the action before it.');
+            return say('That bulk approval is final: its 10 s are over. W now undoes the action before it.');
         }
         const state = api.state();
         for (const key of top.keys) {
@@ -480,7 +481,7 @@ export function mountKeys(api) {
             (box) => {
                 const text = el('p', 'rvk-toast__text');
                 text.append(el('b', '', `Approved unseen: ${n} pair${n === 1 ? '' : 's'} of ${api.label(offer.theme)}.`), document.createTextNode(' Undo within 10 s.'));
-                const back = el('button', 'kp-button kp-button--sm', 'Undo (U)');
+                const back = el('button', 'kp-button kp-button--sm', 'Undo (W)');
                 back.type = 'button';
                 back.addEventListener('click', undo);
                 box.append(text, back);
