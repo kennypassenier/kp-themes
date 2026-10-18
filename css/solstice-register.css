@@ -1522,6 +1522,24 @@
         font-size: 1.3rem;
     }
 
+    /* The empty plate a failure borrows (passkeys, thread: `data-kp-tone='error'`) is the red sky, not the rising sun: the
+       sun is time passing and the empty state (G16); a failure reddens the foot light (G13). */
+    [data-theme='solstice'] .kp-empty[data-kp-tone='error'] {
+        background:
+            linear-gradient(to top, hsl(from var(--destructive) h s l / 0.3), transparent 75%),
+            var(--card);
+        border-color: hsl(from var(--destructive) h s l / 0.55);
+        box-shadow: inset 0 -2px 0 hsl(from var(--destructive) h s 50%);
+    }
+
+    [data-theme='solstice'] .kp-empty[data-kp-tone='error']::before {
+        display: none;
+    }
+
+    [data-theme='solstice'] .kp-empty[data-kp-tone='error'] .kp-empty__title {
+        color: hsl(from var(--destructive) h s 68%);
+    }
+
     [data-theme='solstice'] .kp-empty__body {
         margin: 0;
     }

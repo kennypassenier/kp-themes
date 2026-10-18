@@ -2599,6 +2599,24 @@
         text-transform: uppercase;
     }
 
+    /* The empty plate a failure borrows (passkeys, thread: `data-kp-tone='error'`) is the taped red slab of every other
+       failure, not the lavender zero of an empty list. */
+    [data-theme='brutalism'] .kp-empty[data-kp-tone='error'] {
+        padding-block-end: calc(1.4rem + 0.5rem);
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    [data-theme='brutalism'] .kp-empty[data-kp-tone='error']::before {
+        display: none;
+    }
+
+    [data-theme='brutalism'] .kp-empty[data-kp-tone='error'] :is(.kp-empty__title, .kp-empty__body) {
+        color: var(--destructive-foreground);
+    }
+
     [data-theme='brutalism'] .kp-empty__body {
         margin: 0;
         color: var(--foreground);

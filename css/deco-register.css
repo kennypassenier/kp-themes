@@ -2713,6 +2713,18 @@
         letter-spacing: var(--kp-sig-deco-title-track);
     }
 
+    /* The empty plate a failure borrows (passkeys, thread: `data-kp-tone='error'`) says so in the ruby with the gold rule. */
+    [data-theme='deco'] .kp-empty[data-kp-tone='error'] .kp-empty__title {
+        /* Josefin in sentence case like the other failed plates: the ruby in Poiret's hairline strokes did not read. */
+        font-family: var(--theme-font-body);
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        text-transform: none;
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.3em;
+    }
+
     /* An empty plate that fills its whole component is set at heading size (the package's 1.125rem; the rule above made it
        1.05rem, a small line in a large plate). */
     [data-theme='deco'] .kp-empty__title:is(.kp-dated__empty-title, .kp-runs__empty-title, .kp-passkeys__note-title, .kp-thread__note-title) {
