@@ -6361,20 +6361,6 @@
     }
 }
 
-/* The time box in a sentence is 5.5 characters wide in the package, and this theme's field plate takes 0.8 rem of side padding, so
-   the last digit ran into the edge ("03:0"). The box is the five characters plus its own padding and a margin
-   [t56-eye-1018]. */
-@layer kp.signature {
-    [data-theme='brutalism'] .kp-time--inline .kp-time__input.kp-field__input {
-        padding-inline: 0.5em;
-        inline-size: calc(4.8ch + 1.75em);
-    }
-
-    [data-theme='brutalism'] .kp-time--inline .kp-time__skeleton {
-        inline-size: calc(4.8ch + 1.75em);
-    }
-}
-
 /* ── The whole grid loading: one lintel, not one per day [t56-eye-1018] ──
    While the whole calendar waits, the busy card over the grid carries the hoisted lintel; a day under it is only the paper,
    its number readable. The lintel in every day's well struck through the numbers and said "hoisted" 31 times. A day that

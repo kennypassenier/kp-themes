@@ -6356,20 +6356,6 @@
     }
 }
 
-/* The time box in a sentence is 5.5 characters wide in the package, and this theme's field plate takes 0.7 rem of side padding, so
-   the last digit ran into the edge ("03:0"). The box is the five characters plus its own padding and a margin
-   [t56-eye-1018]. */
-@layer kp.signature {
-    [data-theme='deco'] .kp-time--inline .kp-time__input.kp-field__input {
-        padding-inline: 0.5em;
-        inline-size: calc(4.8ch + 1.75em);
-    }
-
-    [data-theme='deco'] .kp-time--inline .kp-time__skeleton {
-        inline-size: calc(4.8ch + 1.75em);
-    }
-}
-
 /* ── The whole grid loading: one pair of doors over it, not one pair in every day [t56-eye-1018] ──
    The busy card over the grid is the lift doors; a day under it stands as lacquer with its number, so the seams and the
    lozenges no longer cross the figures and the doors do not appear 36 times. A day that loads on its own keeps its doors. */

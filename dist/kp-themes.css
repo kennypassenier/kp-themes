@@ -5649,6 +5649,17 @@
         border-color: var(--destructive);
     }
 
+    /* A destructive action on a destructive plate (Stop on an urgent or a refused question, a failed plate's action) is an outlined key: its
+     * own destructive fill with the plate's ink as its edge and a hairline of the plate's colour outside that, so it is never red on red,
+     * and on a light or dark card the same edge still reads as the button's own [t56-shared3-1018]. */
+    .kp-alert--destructive .kp-button--destructive,
+    .kp-alert--destructive .kp-button--destructive:hover:not(:disabled),
+    .kp-alert--destructive .kp-button--destructive:active:not(:disabled),
+    .kp-alert--destructive .kp-button--destructive:disabled {
+        border-color: var(--destructive-foreground);
+        box-shadow: 0 0 0 1px var(--destructive);
+    }
+
     /* The flavour is named in text as well as coloured [DI4]: four coloured
  * plates are four colours to someone who sees them all as one. */
     .kp-alert__label {
@@ -20187,7 +20198,9 @@
         outline-offset: var(--kp-weekdays-invalid-offset, 0.375rem);
     }
 
+    /* The quick picks are dimmed like the chips beside them (a segmented control's disabled 0.45) and unreachable [t56-shared3-1018]. */
     .kp-weekdays[data-kp-disabled] .kp-weekdays__presets {
+        opacity: 0.45;
         pointer-events: none;
     }
 
@@ -29220,8 +29233,11 @@
         line-height: 1.5;
     }
 
+    /* The box is sized to its value, not to its frame: five characters of content and a little air, whatever side padding or edge a
+     * register gives the field, so the last digit is never cut ("03:0") [t56-shared3-1018]. */
     .kp-time--inline .kp-time__input.kp-field__input {
-        inline-size: 5.5ch;
+        box-sizing: content-box;
+        inline-size: calc(5ch + 0.3em);
         min-block-size: 0;
         block-size: auto;
         padding: 0 0.25em;
@@ -29243,7 +29259,7 @@
     }
 
     .kp-time--inline .kp-time__skeleton {
-        inline-size: 5.5ch;
+        inline-size: calc(5ch + 1.3em);
         block-size: 1.5em;
     }
 
@@ -29952,8 +29968,11 @@
         block-size: 100%;
     }
 
+    /* Above the commands that stay (a failed palette): as high as the list was minus those commands, so the palette keeps its loaded
+     * footprint [t56-shared3-1018]. */
     .kp-palette__nomatch[data-kp-above] {
-        min-block-size: 11rem;
+        box-sizing: border-box;
+        min-block-size: var(--kp-palette-plate-height, 11rem);
     }
 }
 
@@ -44925,16 +44944,6 @@
 }
 /* ── end t56-q2 fields ── */
 
-/* ── t56-q2 fields: the time in a sentence fits its box ── */
-@layer kp.signature {
-    /* The box of a time in a sentence was 5.5 characters wide including its 14 px padding and frame, so it showed "03". */
-    [data-theme='synthwave'] .kp-time--inline .kp-time__input.kp-field__input {
-        box-sizing: content-box;
-        inline-size: calc(5ch + 0.3em);
-    }
-}
-/* ── end t56-q2 fields ── */
-
 /* ── t56-q2 confirm: the floor stays under the question's words ── */
 @layer kp.signature {
     /* The grid floor of an urgent or refused question was 22% of a tall card and its lines ran through the last button, its
@@ -51345,20 +51354,6 @@
             letter-spacing: 0.04em;
             padding-inline: 0.75rem;
         }
-    }
-}
-
-/* The time box in a sentence is 5.5 characters wide in the package, and this theme's field plate takes 0.8 rem of side padding, so
-   the last digit ran into the edge ("03:0"). The box is the five characters plus its own padding and a margin
-   [t56-eye-1018]. */
-@layer kp.signature {
-    [data-theme='brutalism'] .kp-time--inline .kp-time__input.kp-field__input {
-        padding-inline: 0.5em;
-        inline-size: calc(4.8ch + 1.75em);
-    }
-
-    [data-theme='brutalism'] .kp-time--inline .kp-time__skeleton {
-        inline-size: calc(4.8ch + 1.75em);
     }
 }
 
@@ -62740,16 +62735,6 @@
     }
 }
 /* ── end t56-q2 people ── */
-
-/* ── t56-q2 fields: the time in a sentence fits its box ── */
-@layer kp.signature {
-    /* The pill of a time in a sentence was 5.5 characters wide including its 12 px padding, so the last digits were cut (now five characters content-box). */
-    [data-theme='pastel'] .kp-time--inline .kp-time__input.kp-field__input {
-        box-sizing: content-box;
-        inline-size: calc(5ch + 0.3em);
-    }
-}
-/* ── end t56-q2 fields ── */
 
 /* ── t56-q2 confirm: Stop keeps its plate on the red card ── */
 @layer kp.signature {
@@ -75089,20 +75074,6 @@
     }
 }
 
-/* The time box in a sentence is 5.5 characters wide in the package, and this theme's field plate takes 0.7 rem of side padding, so
-   the last digit ran into the edge ("03:0"). The box is the five characters plus its own padding and a margin
-   [t56-eye-1018]. */
-@layer kp.signature {
-    [data-theme='deco'] .kp-time--inline .kp-time__input.kp-field__input {
-        padding-inline: 0.5em;
-        inline-size: calc(4.8ch + 1.75em);
-    }
-
-    [data-theme='deco'] .kp-time--inline .kp-time__skeleton {
-        inline-size: calc(4.8ch + 1.75em);
-    }
-}
-
 /* ── The whole grid loading: one pair of doors over it, not one pair in every day [t56-eye-1018] ──
    The busy card over the grid is the lift doors; a day under it stands as lacquer with its number, so the seams and the
    lozenges no longer cross the figures and the doors do not appear 36 times. A day that loads on its own keeps its doors. */
@@ -81425,13 +81396,6 @@
     }
 }
 
-/* The quick picks of a disabled weekday picker are dimmed with its chips [t56-eye-1018]. */
-@layer kp.signature {
-    [data-theme='blueprint'] .kp-weekdays[data-kp-disabled] .kp-weekdays__presets {
-        opacity: 0.5;
-    }
-}
-
 @layer kp.register {
     /* @kp-soft/themes — css/nostromo-register.css
    The nostromo register, 5.0.0 [S48, LIFT_PLAN nostromo row]: cassette
@@ -87507,20 +87471,6 @@
     }
 }
 
-/* The time box in a sentence is 5.5 characters wide in the package, and this theme's field plate takes a thin 4.5 px of side padding, so
-   the last digit ran into the edge ("03:0"). The box is the five characters plus its own padding and a margin
-   [t56-eye-1018]. */
-@layer kp.signature {
-    [data-theme='nostromo'] .kp-time--inline .kp-time__input.kp-field__input {
-        padding-inline: 0.5em;
-        inline-size: calc(4.8ch + 1.75em);
-    }
-
-    [data-theme='nostromo'] .kp-time--inline .kp-time__skeleton {
-        inline-size: calc(4.8ch + 1.75em);
-    }
-}
-
 /* A destructive button that stands on a destructive plate (the urgent and the refused question card, a failed plate with its
    action) is drawn like the card's other button: a destructive fill on a destructive plate, or red ink on orange, left it
    without a plate [t56-eye-1018]. */
@@ -93094,17 +93044,6 @@
     }
 }
 /* ── end t56-q ── */
-
-/* ── t56-q2 fields: the time in a sentence fits its box ── */
-@layer kp.signature {
-    /* The box of a time in a sentence was 5.5 characters wide including its padding and frame, so the last digit was cut
-       ("03:0"). The box is as wide as its five characters plus a little. */
-    [data-theme='dark'] .kp-time--inline .kp-time__input.kp-field__input {
-        box-sizing: content-box;
-        inline-size: calc(5ch + 0.3em);
-    }
-}
-/* ── end t56-q2 fields ── */
 
 /* ── t56-q2 choose: the waiting picker's panel fits its room ── */
 @layer kp.signature {
@@ -102522,13 +102461,6 @@
         border-color: var(--border-strong);
         color: var(--foreground);
         box-shadow: inset 0 -2px 0 hsl(from var(--destructive) h s 50%);
-    }
-}
-
-/* The quick picks of a disabled weekday picker are dimmed with its chips [t56-eye-1018]. */
-@layer kp.signature {
-    [data-theme='solstice'] .kp-weekdays[data-kp-disabled] .kp-weekdays__presets {
-        opacity: 0.5;
     }
 }
 

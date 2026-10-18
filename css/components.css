@@ -2714,6 +2714,17 @@
         border-color: var(--destructive);
     }
 
+    /* A destructive action on a destructive plate (Stop on an urgent or a refused question, a failed plate's action) is an outlined key: its
+     * own destructive fill with the plate's ink as its edge and a hairline of the plate's colour outside that, so it is never red on red,
+     * and on a light or dark card the same edge still reads as the button's own [t56-shared3-1018]. */
+    .kp-alert--destructive .kp-button--destructive,
+    .kp-alert--destructive .kp-button--destructive:hover:not(:disabled),
+    .kp-alert--destructive .kp-button--destructive:active:not(:disabled),
+    .kp-alert--destructive .kp-button--destructive:disabled {
+        border-color: var(--destructive-foreground);
+        box-shadow: 0 0 0 1px var(--destructive);
+    }
+
     /* The flavour is named in text as well as coloured [DI4]: four coloured
  * plates are four colours to someone who sees them all as one. */
     .kp-alert__label {
@@ -17252,7 +17263,9 @@
         outline-offset: var(--kp-weekdays-invalid-offset, 0.375rem);
     }
 
+    /* The quick picks are dimmed like the chips beside them (a segmented control's disabled 0.45) and unreachable [t56-shared3-1018]. */
     .kp-weekdays[data-kp-disabled] .kp-weekdays__presets {
+        opacity: 0.45;
         pointer-events: none;
     }
 
@@ -26285,8 +26298,11 @@
         line-height: 1.5;
     }
 
+    /* The box is sized to its value, not to its frame: five characters of content and a little air, whatever side padding or edge a
+     * register gives the field, so the last digit is never cut ("03:0") [t56-shared3-1018]. */
     .kp-time--inline .kp-time__input.kp-field__input {
-        inline-size: 5.5ch;
+        box-sizing: content-box;
+        inline-size: calc(5ch + 0.3em);
         min-block-size: 0;
         block-size: auto;
         padding: 0 0.25em;
@@ -26308,7 +26324,7 @@
     }
 
     .kp-time--inline .kp-time__skeleton {
-        inline-size: 5.5ch;
+        inline-size: calc(5ch + 1.3em);
         block-size: 1.5em;
     }
 
@@ -27017,8 +27033,11 @@
         block-size: 100%;
     }
 
+    /* Above the commands that stay (a failed palette): as high as the list was minus those commands, so the palette keeps its loaded
+     * footprint [t56-shared3-1018]. */
     .kp-palette__nomatch[data-kp-above] {
-        min-block-size: 11rem;
+        box-sizing: border-box;
+        min-block-size: var(--kp-palette-plate-height, 11rem);
     }
 }
 

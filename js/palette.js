@@ -385,8 +385,29 @@ function createIntentFilter(dialog, list, status) {
         if (el.hidden !== hidden) el.hidden = hidden;
     };
 
+    /** What the list's own height cap was before a failed plate capped it; null while it is not capped by us. @type {string | null} */
+    let ownListCap = null;
+    /** @param {number} px */
+    const capList = (px) => {
+        ownListCap = list.style.getPropertyValue('--kp-palette-list-max-height');
+        // `max-height` counts the padding and the border unless the list is border-box.
+        const cs = getComputedStyle(list);
+        const frame =
+            cs.boxSizing === 'border-box'
+                ? 0
+                : parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom) + parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth);
+        list.style.setProperty('--kp-palette-list-max-height', `${Math.max(px - frame, 0)}px`);
+    };
+    const releaseListCap = () => {
+        if (ownListCap === null) return;
+        if (ownListCap) list.style.setProperty('--kp-palette-list-max-height', ownListCap);
+        else list.style.removeProperty('--kp-palette-list-max-height');
+        ownListCap = null;
+    };
+
     const hidePlate = () => {
         if (plate) plate.hidden = true;
+        releaseListCap();
         setHidden(list, false);
     };
 
@@ -404,10 +425,19 @@ function createIntentFilter(dialog, list, status) {
                     : {}),
             }),
         );
-        holder.style.setProperty('--kp-palette-plate-height', `${Math.max(footprint, 0)}px`);
         holder.toggleAttribute('data-kp-above', !replacesList);
         holder.hidden = false;
         setHidden(list, replacesList);
+        // A plate that replaces the list is as high as the list was. A plate above the commands that stay (the failed one) is as high
+        // as the list was minus those commands, so the palette keeps its loaded footprint in a failed state too [t56-shared3-1018].
+        releaseListCap();
+        const staying = replacesList || list.hidden ? 0 : list.offsetHeight;
+        holder.style.setProperty('--kp-palette-plate-height', '0px');
+        // The plate needs room for its words and its action; when the commands that stay take more than what is left, they scroll.
+        const needed = holder.offsetHeight;
+        const room = Math.max(footprint - staying, needed);
+        holder.style.setProperty('--kp-palette-plate-height', `${room}px`);
+        if (staying > 0 && staying + room > footprint) capList(Math.max(footprint - room, 0));
     };
 
     /**
@@ -419,7 +449,8 @@ function createIntentFilter(dialog, list, status) {
         const s = getStrings();
         const mode = modeOptions();
         const want = queryWords(rawQuery, mode);
-        if (!list.hidden && list.offsetHeight > 0) footprint = list.offsetHeight;
+        // The footprint is read from a list that shows commands, never from the few that stay under a failed plate.
+        if (!list.hidden && list.offsetHeight > 0 && (plate === null || plate.hidden)) footprint = list.offsetHeight;
         const options = /** @type {HTMLElement[]} */ ([...list.querySelectorAll(OPTION_SELECTOR)]);
         assignOrigins(options);
         const context = dialog.dataset.kpContext ?? null;
