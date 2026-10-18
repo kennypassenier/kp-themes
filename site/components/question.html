@@ -300,6 +300,41 @@ askQuestion(container, {
 });
 container.addEventListener(<span class="kp-code__string">'kp-question-answer'</span>, (event) =&gt; event.detail.respond(<span class="kp-code__keyword">true</span>));</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">The bar clock, the urgent card and the ones that finished</figcaption>
+                        <p class="kp-text-muted">`measure: 'bar'` (JS option `countdown`) drains a rule instead of the ring. From `urgentAt` seconds the card is stronger and its time bold; the last card has `expired: 'remove'`. The clock is frozen here (the second argument of `askQuestion`) so the page does not change under you; a card that is answered, refused or expired keeps its outcome with a Dismiss button.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div data-kp-questions id="doc-questions-more" data-kp-title="off"></div>
+                            <script type="module">
+import { askQuestion, attachQuestions } from '../../js/question-card.js';
+
+const container = document.getElementById('doc-questions-more');
+attachQuestions(container.parentElement);
+const answers = [
+    { value: 'allow', label: 'Allow', consequence: 'Updates the stack now.', outcome: 'Allowed. The update goes on.' },
+    { value: 'later', label: 'Later', consequence: 'Asks again tomorrow.', outcome: 'Postponed until tomorrow.' },
+];
+const now = Date.now();
+askQuestion(container, { id: 'q-bar', question: 'Update media tonight?', deadline: now + 600000, answers, defaultAnswer: 'later', countdown: 'bar' }, { now: () => now, frozen: true });
+askQuestion(container, { id: 'q-urgent', question: 'Restart the gateway?', deadline: now + 20000, answers, defaultAnswer: 'later', urgentAt: 30 }, { now: () => now, frozen: true });
+askQuestion(container, { id: 'q-expired', question: 'Clean the cache?', deadline: now - 1000, answers, defaultAnswer: 'later', expired: 'keep' }, { now: () => now, frozen: true });
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">data-kp-questions</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-questions-more&quot;</span> <span class="kp-code__keyword">data-kp-title</span><span class="kp-code__string">=&quot;off&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { askQuestion, attachQuestions } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/question-card'</span>;
+
+<span class="kp-code__keyword">const</span> container = document.getElementById(<span class="kp-code__string">'doc-questions-more'</span>);
+attachQuestions(container.parentElement);
+<span class="kp-code__keyword">const</span> answers = [
+    { value: <span class="kp-code__string">'allow'</span>, label: <span class="kp-code__string">'Allow'</span>, consequence: <span class="kp-code__string">'Updates the stack now.'</span>, outcome: <span class="kp-code__string">'Allowed. The update goes on.'</span> },
+    { value: <span class="kp-code__string">'later'</span>, label: <span class="kp-code__string">'Later'</span>, consequence: <span class="kp-code__string">'Asks again tomorrow.'</span>, outcome: <span class="kp-code__string">'Postponed until tomorrow.'</span> },
+];
+<span class="kp-code__keyword">const</span> now = Date.now();
+askQuestion(container, { id: <span class="kp-code__string">'q-bar'</span>, question: <span class="kp-code__string">'Update media tonight?'</span>, deadline: now + <span class="kp-code__string">600000</span>, answers, defaultAnswer: <span class="kp-code__string">'later'</span>, countdown: <span class="kp-code__string">'bar'</span> }, { now: () =&gt; now, frozen: <span class="kp-code__keyword">true</span> });
+askQuestion(container, { id: <span class="kp-code__string">'q-urgent'</span>, question: <span class="kp-code__string">'Restart the gateway?'</span>, deadline: now + <span class="kp-code__string">20000</span>, answers, defaultAnswer: <span class="kp-code__string">'later'</span>, urgentAt: <span class="kp-code__string">30</span> }, { now: () =&gt; now, frozen: <span class="kp-code__keyword">true</span> });
+askQuestion(container, { id: <span class="kp-code__string">'q-expired'</span>, question: <span class="kp-code__string">'Clean the cache?'</span>, deadline: now - <span class="kp-code__string">1000</span>, answers, defaultAnswer: <span class="kp-code__string">'later'</span>, expired: <span class="kp-code__string">'keep'</span> }, { now: () =&gt; now, frozen: <span class="kp-code__keyword">true</span> });</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -350,6 +385,12 @@ container.addEventListener(<span class="kp-code__string">'kp-question-answer'</s
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>the script</code></td><td>`askQuestion(container, spec, { now, frozen })` adds a card and answers its handle; `attachQuestions(root)` wires every `[data-kp-questions]` container and returns a detach; `questionOf(el)` answers the handle of a card. `QUESTIONS` is the selector and `QUESTION_URGENT_AT` (30) the default behind `urgentAt`. The spec’s fields are `id`, `question`, `text`, `deadline`, `answers`, `defaultAnswer`, `urgentAt`, `expired` and `countdown`.</td></tr>
+                            <tr><td><code>events</code></td><td>`kp-question-answer` `{ id, value, respond(ok, why) }`, `kp-question-expire` `{ id, defaultAnswer }` and `kp-question-dismiss` `{ id }` (`QUESTION_ANSWER_EVENT`, `QUESTION_EXPIRE_EVENT`, `QUESTION_DISMISS_EVENT`).</td></tr>
+                            <tr><td><code>.kp-question__head / __title / __text / __time / __left / __default</code></td><td>The card’s head: the question, its sentence, the time left (“1 min 30 s”) and the line that says what happens at zero, “If nobody answers: stops”.</td></tr>
+                            <tr><td><code>.kp-question__bar / __fill / __ring</code></td><td>The three clocks: the draining rule (`bar`) and the ring (`ring`, the default); `text` draws the time alone.</td></tr>
+                            <tr><td><code>.kp-question__answers / __answer / __button / __consequence</code></td><td>One answer: a button with what it sets in motion under it, tied to the button as its description. On a phone the buttons are full width.</td></tr>
+                            <tr><td><code>.kp-question__outcome / __dismiss</code></td><td>What a finished card says (“Allowed. The operation goes on.”) and its Dismiss button.</td></tr>
                             <tr><td><code>deadline</code></td><td>An ISO string or epoch milliseconds; required. The card counts to it.</td></tr>
                             <tr><td><code>data-kp-asked</code></td><td>When it was asked (now by default); the countdown bar is measured from it.</td></tr>
                             <tr><td><code>default-answer</code></td><td>The value that happens at zero, said on the card (“If nobody answers: stops”).</td></tr>

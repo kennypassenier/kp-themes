@@ -363,6 +363,61 @@ setChecklistState(document.getElementById(<span class="kp-code__string">'doc-che
 setChecklistItems(document.getElementById(<span class="kp-code__string">'doc-checklist-failed'</span>), []);
 setChecklistState(document.getElementById(<span class="kp-code__string">'doc-checklist-failed'</span>), <span class="kp-code__string">'error'</span>, <span class="kp-code__string">'The list could not be read. Check the connection and try again.'</span>);</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Holding its height in a state</figcaption>
+                        <p class="kp-text-muted">Loaded, the component is as high as its rows. Loading, empty or failed it keeps that height as a minimum, so the page under it does not jump twice; the first load has nothing remembered and is left alone. A very tall list holds a screen, not its full length (the cap is set on the host or any ancestor; it is 12 rem here to show it). Press the states.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack kp-gap-md" id="doc-fp-checklist">
+    <div class="kp-row kp-gap-sm" role="group" aria-label="State">
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="ready">Ready</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="loading">Loading</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="empty">Empty</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="error">Failed</button>
+    </div>
+    <div class="kp-checklist" data-kp-checklist id="doc-fp-checklist-host" aria-label="Shopping list" style="--kp-footprint-max: 12rem"></div>
+</div>
+                            <script type="module">
+import { attachChecklists, setChecklistItems, setChecklistState } from '../../js/checklist.js';
+const root = document.getElementById('doc-fp-checklist');
+const host = document.getElementById('doc-fp-checklist-host');
+attachChecklists(root);
+const items = ['Milk', 'Bread', 'Eggs', 'Butter', 'Coffee', 'Rice'].map((label, i) => ({ id: 'i' + i, label, group: i < 3 ? 'Colruyt' : 'Bakery' }));
+const draw = (state) => {
+    if (state === 'ready') { setChecklistItems(host, items); setChecklistState(host, 'ready'); }
+    else if (state === 'empty') { setChecklistItems(host, []); setChecklistState(host, 'ready'); }
+    else setChecklistState(host, state, 'The list could not be read.');
+};
+for (const button of root.querySelectorAll('[data-doc-state]')) {
+    button.addEventListener('click', () => draw(button.dataset.docState));
+}
+draw('ready');
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack kp-gap-md&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-fp-checklist&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-gap-sm&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;State&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;ready&quot;</span>&gt;Ready&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;loading&quot;</span>&gt;Loading&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;empty&quot;</span>&gt;Empty&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;error&quot;</span>&gt;Failed&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-checklist&quot;</span> <span class="kp-code__keyword">data-kp-checklist</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-fp-checklist-host&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Shopping list&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-footprint-max: 12rem&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachChecklists, setChecklistItems, setChecklistState } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/checklist'</span>;
+<span class="kp-code__keyword">const</span> root = document.getElementById(<span class="kp-code__string">'doc-fp-checklist'</span>);
+<span class="kp-code__keyword">const</span> host = document.getElementById(<span class="kp-code__string">'doc-fp-checklist-host'</span>);
+attachChecklists(root);
+<span class="kp-code__keyword">const</span> items = [<span class="kp-code__string">'Milk'</span>, <span class="kp-code__string">'Bread'</span>, <span class="kp-code__string">'Eggs'</span>, <span class="kp-code__string">'Butter'</span>, <span class="kp-code__string">'Coffee'</span>, <span class="kp-code__string">'Rice'</span>].map((label, i) =&gt; ({ id: <span class="kp-code__string">'i'</span> + i, label, group: i &lt; <span class="kp-code__string">3</span> ? <span class="kp-code__string">'Colruyt'</span> : <span class="kp-code__string">'Bakery'</span> }));
+<span class="kp-code__keyword">const</span> draw = (state) =&gt; {
+    <span class="kp-code__keyword">if</span> (state === <span class="kp-code__string">'ready'</span>) { setChecklistItems(host, items); setChecklistState(host, <span class="kp-code__string">'ready'</span>); }
+    <span class="kp-code__keyword">else</span> <span class="kp-code__keyword">if</span> (state === <span class="kp-code__string">'empty'</span>) { setChecklistItems(host, []); setChecklistState(host, <span class="kp-code__string">'ready'</span>); }
+    <span class="kp-code__keyword">else</span> setChecklistState(host, state, <span class="kp-code__string">'The list could not be read.'</span>);
+};
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> button <span class="kp-code__keyword">of</span> root.querySelectorAll(<span class="kp-code__string">'[data-doc-state]'</span>)) {
+    button.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; draw(button.dataset.docState));
+}
+draw(<span class="kp-code__string">'ready'</span>);</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -431,6 +486,7 @@ setChecklistState(document.getElementById(<span class="kp-code__string">'doc-che
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
                             <tr><td><code>kp-checklist-render</code></td><td>Fired on the list after every draw (not bubbling), so a part that adds a cell to the rows can draw it; the claim part does.</td></tr>
+                            <tr><td><code>a detail</code></td><td>A row’s detail (“3 pieces”) wraps inside its row and never widens the list. A checklist with no items writes `data-kp-state=&quot;empty&quot;` and shows the empty plate; a failed one shows the failed plate alone; both, like a loading one, hold the height the list had.</td></tr>
                             <tr><td><code>data-kp-checklist-sink=&quot;false&quot;</code></td><td>A ticked row stays where it is, struck through.</td></tr>
                             <tr><td><code>data-kp-checklist-undo-ms</code></td><td>How long Undo is offered after Clear checked (6000).</td></tr>
                             <tr><td><code>data-kp-checklist-empty</code></td><td>The sentence of an empty list.</td></tr>

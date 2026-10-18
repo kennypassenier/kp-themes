@@ -278,6 +278,49 @@ document.getElementById(<span class="kp-code__string">'undo-demo'</span>).addEve
     undoToast(<span class="kp-code__string">'3 schedules deleted'</span>, { commit: () =&gt; {}, undo: () =&gt; {} });
 });</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">The three clocks, a reverse and a failure</figcaption>
+                        <p class="kp-text-muted">The ring is the default; `clock: 'bar'` drains a rule under the words; `clock: 'text'` says the seconds. `mode: 'revert'` is for an action already done: nothing is deferred and Undo calls the page’s reverse. When a commit rejects, the toast turns into “Not done: why” and the row comes back (`restore`, which is `undo` by default).</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-row kp-gap-sm">
+    <button type="button" class="kp-button" data-doc-undo="ring">Ring</button>
+    <button type="button" class="kp-button" data-doc-undo="bar">Bar, ten seconds</button>
+    <button type="button" class="kp-button" data-doc-undo="revert">Text, already done</button>
+    <button type="button" class="kp-button" data-doc-undo="failed">A commit that fails</button>
+</div>
+                            <script type="module">
+import { undoToast } from '../../js/undo-toast.js';
+
+const shows = {
+    ring: () => undoToast('Schedule deleted', { commit: () => {}, undo: () => {} }),
+    bar: () => undoToast('2 backups removed', { clock: 'bar', ms: 10000, commit: () => {}, undo: () => {} }),
+    revert: () => undoToast('Snapshot restored', { mode: 'revert', clock: 'text', undo: () => {} }),
+    failed: () => undoToast('Volume removed', { ms: 1500, commit: () => Promise.reject(new Error('The volume is in use')), undo: () => {} }),
+};
+for (const button of document.querySelectorAll('[data-doc-undo]')) {
+    button.addEventListener('click', () => shows[button.dataset.docUndo]());
+}
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-gap-sm&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-undo</span><span class="kp-code__string">=&quot;ring&quot;</span>&gt;Ring&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-undo</span><span class="kp-code__string">=&quot;bar&quot;</span>&gt;Bar, ten seconds&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-undo</span><span class="kp-code__string">=&quot;revert&quot;</span>&gt;Text, already done&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-undo</span><span class="kp-code__string">=&quot;failed&quot;</span>&gt;A commit that fails&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { undoToast } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/undo-toast'</span>;
+
+<span class="kp-code__keyword">const</span> shows = {
+    ring: () =&gt; undoToast(<span class="kp-code__string">'Schedule deleted'</span>, { commit: () =&gt; {}, undo: () =&gt; {} }),
+    bar: () =&gt; undoToast(<span class="kp-code__string">'2 backups removed'</span>, { clock: <span class="kp-code__string">'bar'</span>, ms: <span class="kp-code__string">10000</span>, commit: () =&gt; {}, undo: () =&gt; {} }),
+    revert: () =&gt; undoToast(<span class="kp-code__string">'Snapshot restored'</span>, { mode: <span class="kp-code__string">'revert'</span>, clock: <span class="kp-code__string">'text'</span>, undo: () =&gt; {} }),
+    failed: () =&gt; undoToast(<span class="kp-code__string">'Volume removed'</span>, { ms: <span class="kp-code__string">1500</span>, commit: () =&gt; Promise.reject(<span class="kp-code__keyword">new</span> Error(<span class="kp-code__string">'The volume is in use'</span>)), undo: () =&gt; {} }),
+};
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> button <span class="kp-code__keyword">of</span> document.querySelectorAll(<span class="kp-code__string">'[data-doc-undo]'</span>)) {
+    button.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; shows[button.dataset.docUndo]());
+}</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -334,6 +377,9 @@ document.getElementById(<span class="kp-code__string">'undo-demo'</span>).addEve
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>.kp-toast--undo</code></td><td>The toast’s own class (`UNDO_TOAST`), on the ordinary toast of js/overlays.js. It carries `data-kp-undo-state` (counting, committing, failed, undone, done) and `data-kp-paused` while the pointer or the focus holds it.</td></tr>
+                            <tr><td><code>.kp-undo / __text / __ringbox / __ring / __secs / __clock</code></td><td>The parts inside it: the words, the box of the ring (a track and a fill that drains over the window), the seconds left in words and the plain clock of `text`.</td></tr>
+                            <tr><td><code>UNDO_RESTORED_MS / UNDO_MAX</code></td><td>How long “Restored” stays after Undo (1500 ms) and how many toasts stand at once (3), the defaults behind `max`.</td></tr>
                             <tr><td><code>ms</code></td><td>How long Undo is offered; 6000, 0 commits at once.</td></tr>
                             <tr><td><code>mode</code></td><td>`defer` (default: the action waits) or `revert` (the action is done; Undo calls the page’s reverse).</td></tr>
                             <tr><td><code>clock</code></td><td>`ring` (default), `bar`, `text` or `none`; also `data-kp-undo-clock`.</td></tr>

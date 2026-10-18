@@ -271,6 +271,43 @@
 &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-ack-go&quot;</span>&gt;Update&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Several gates, one button</figcaption>
+                        <p class="kp-text-muted">`data-kp-ack-mode=&quot;all&quot;` turns the gates guarding one control into one tick for the lot, for low-risk batches. The first gate also requires its notes link to be opened once (`data-kp-ack-require-link`) before the tick can be set, and its tone is `destructive`. `kp-ack-change` fires on the gate with `{ key, checked, remaining, at }`; ticking the box sets `data-kp-checked` on it.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div id="doc-ack-batch">
+    <div class="kp-alert kp-alert--destructive" data-kp-ack data-kp-ack-for="#doc-ack-batch-go" data-kp-ack-key="restore" data-kp-ack-tone="destructive" data-kp-ack-mode="all" data-kp-ack-label="I understand that the restore overwrites live data" data-kp-ack-link="https://example.com/restore-notes" data-kp-ack-link-label="Read the restore notes" data-kp-ack-require-link>
+        <div class="kp-alert__body"><strong>Restoring media replaces what is on the disk now.</strong> Files changed since the backup are lost.</div>
+    </div>
+    <div class="kp-alert kp-alert--warning" data-kp-ack data-kp-ack-for="#doc-ack-batch-go" data-kp-ack-key="restart" data-kp-ack-mode="all" data-kp-ack-label="I understand that the stack restarts">
+        <div class="kp-alert__body"><strong>The stack restarts once it is restored.</strong> It is unreachable for about a minute.</div>
+    </div>
+    <button class="kp-button kp-button--destructive" type="button" id="doc-ack-batch-go">Restore</button>
+</div>
+                            <script type="module">
+import { attachAckGates } from '../../js/ack-gate.js';
+
+const batch = document.getElementById('doc-ack-batch');
+attachAckGates(batch);
+batch.addEventListener('kp-ack-change', (event) => console.info('ack', event.detail.key, event.detail.checked, event.detail.remaining));
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-ack-batch&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--destructive&quot;</span> <span class="kp-code__keyword">data-kp-ack</span> <span class="kp-code__keyword">data-kp-ack-for</span><span class="kp-code__string">=&quot;#doc-ack-batch-go&quot;</span> <span class="kp-code__keyword">data-kp-ack-key</span><span class="kp-code__string">=&quot;restore&quot;</span> <span class="kp-code__keyword">data-kp-ack-tone</span><span class="kp-code__string">=&quot;destructive&quot;</span> <span class="kp-code__keyword">data-kp-ack-mode</span><span class="kp-code__string">=&quot;all&quot;</span> <span class="kp-code__keyword">data-kp-ack-label</span><span class="kp-code__string">=&quot;I understand that the restore overwrites live data&quot;</span> <span class="kp-code__keyword">data-kp-ack-link</span><span class="kp-code__string">=&quot;https://example.com/restore-notes&quot;</span> <span class="kp-code__keyword">data-kp-ack-link-label</span><span class="kp-code__string">=&quot;Read the restore notes&quot;</span> <span class="kp-code__keyword">data-kp-ack-require-link</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">strong</span>&gt;Restoring media replaces what is on the disk now.&lt;/<span class="kp-code__keyword">strong</span>&gt; Files changed since the backup are lost.&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert kp-alert--warning&quot;</span> <span class="kp-code__keyword">data-kp-ack</span> <span class="kp-code__keyword">data-kp-ack-for</span><span class="kp-code__string">=&quot;#doc-ack-batch-go&quot;</span> <span class="kp-code__keyword">data-kp-ack-key</span><span class="kp-code__string">=&quot;restart&quot;</span> <span class="kp-code__keyword">data-kp-ack-mode</span><span class="kp-code__string">=&quot;all&quot;</span> <span class="kp-code__keyword">data-kp-ack-label</span><span class="kp-code__string">=&quot;I understand that the stack restarts&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-alert__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">strong</span>&gt;The stack restarts once it is restored.&lt;/<span class="kp-code__keyword">strong</span>&gt; It is unreachable for about a minute.&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-ack-batch-go&quot;</span>&gt;Restore&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachAckGates } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/ack-gate'</span>;
+
+<span class="kp-code__keyword">const</span> batch = document.getElementById(<span class="kp-code__string">'doc-ack-batch'</span>);
+attachAckGates(batch);
+batch.addEventListener(<span class="kp-code__string">'kp-ack-change'</span>, (event) =&gt; console.info(<span class="kp-code__string">'ack'</span>, event.detail.key, event.detail.checked, event.detail.remaining));</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -337,6 +374,12 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>the script</code></td><td>`attachAckGates(root)` wires every `[data-kp-ack]` and returns a detach; `ackGate(el)` answers the handle of a gate. `ACK_GATE` is the selector; the events are `ACK_EVENT` (`kp-ack-change`, `{ key, checked, remaining, at }`) and `ACK_RETRY_EVENT` (`kp-ack-retry`).</td></tr>
+                            <tr><td><code>data-kp-ack-for / -label / -link / -link-label</code></td><td>The control(s) to enable (a selector, required), the tick’s words, the notes address and the words of its link (opened in a new tab; opening it ticks nothing for the reader).</td></tr>
+                            <tr><td><code>data-kp-ack-tone / -min-ms / -focus / -key / -locked / -version</code></td><td>The alert’s tone (`warning` default, `destructive` or `info`); a wait in milliseconds before the tick may be set; whether a press on the off control takes the focus to the first open tick (`off` to stop it); the name of the item in the event and the announcement; a lock while the job runs; and a version that clears the tick when it changes.</td></tr>
+                            <tr><td><code>data-kp-checked</code></td><td>Written on the gate while its box is ticked.</td></tr>
+                            <tr><td><code>.kp-ack__frame / __side / __link / __tick / __label</code></td><td>The parts: the frame round the alert and the tick, the side that holds the notes link, the link, the label with its checkbox and the sentence of the tick.</td></tr>
+                            <tr><td><code>.kp-ack__wait / __bone / __problem / __problem-text / __retry</code></td><td>The loading state (skeleton lines, the height kept), and the failed one: no notes found, with Retry (`data-kp-ack-retry`, `kp-ack-retry`).</td></tr>
                             <tr><td><code>data-kp-ack-mode</code></td><td>`each` (default): one tick per gate; `all`: one tick for the lot, for low-risk batches.</td></tr>
                             <tr><td><code>data-kp-ack-reset</code></td><td>`on-change` (default): a changed key, label or version clears the tick; `never`.</td></tr>
                             <tr><td><code>data-kp-ack-require-link</code></td><td>The tick stays off until the notes link was opened once; `data-kp-ack-min-ms` waits a time instead.</td></tr>

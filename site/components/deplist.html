@@ -280,6 +280,33 @@ setDeplist(document.getElementById(<span class="kp-code__string">'doc-deplist'</
     { <span class="kp-code__keyword">from</span>: <span class="kp-code__string">'immich'</span>, to: <span class="kp-code__string">'redis'</span> },
 ]);</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Grouped, with states, a cycle and a copy button</figcaption>
+                        <p class="kp-text-muted">With `data-kp-dep-order=&quot;none&quot;` the rows stand in the order given and `data-kp-dep-group=&quot;by-to&quot;` groups them under the app that changes; `data-kp-dep-states` puts a word and a tone beside each needed thing; `data-kp-dep-copy` adds a button that copies the rows as text. A cycle (paperless needs redis needs paperless) is never looped: it is one destructive row, unnumbered, naming each thing in it.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-deplist" data-kp-deplist id="doc-deplist-more" data-kp-dep-order="none" data-kp-dep-group="by-to" data-kp-dep-states data-kp-dep-copy data-kp-dep-heading="{n} rows" data-kp-dep-arrow="⇒"></div>
+                            <script type="module">
+import { setDeplist } from '../../js/deplist.js';
+setDeplist(document.getElementById('doc-deplist-more'), [
+    { from: 'paperless', to: 'postgres', state: 'running' },
+    { from: 'immich', to: 'postgres', state: 'running' },
+    { from: 'immich', to: 'redis', state: 'stopped' },
+    { from: 'paperless', to: 'redis', state: 'running' },
+    { from: 'redis', to: 'paperless' },
+]);
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-deplist&quot;</span> <span class="kp-code__keyword">data-kp-deplist</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-deplist-more&quot;</span> <span class="kp-code__keyword">data-kp-dep-order</span><span class="kp-code__string">=&quot;none&quot;</span> <span class="kp-code__keyword">data-kp-dep-group</span><span class="kp-code__string">=&quot;by-to&quot;</span> <span class="kp-code__keyword">data-kp-dep-states</span> <span class="kp-code__keyword">data-kp-dep-copy</span> <span class="kp-code__keyword">data-kp-dep-heading</span><span class="kp-code__string">=&quot;{n} rows&quot;</span> <span class="kp-code__keyword">data-kp-dep-arrow</span><span class="kp-code__string">=&quot;⇒&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { setDeplist } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/deplist'</span>;
+setDeplist(document.getElementById(<span class="kp-code__string">'doc-deplist-more'</span>), [
+    { <span class="kp-code__keyword">from</span>: <span class="kp-code__string">'paperless'</span>, to: <span class="kp-code__string">'postgres'</span>, state: <span class="kp-code__string">'running'</span> },
+    { <span class="kp-code__keyword">from</span>: <span class="kp-code__string">'immich'</span>, to: <span class="kp-code__string">'postgres'</span>, state: <span class="kp-code__string">'running'</span> },
+    { <span class="kp-code__keyword">from</span>: <span class="kp-code__string">'immich'</span>, to: <span class="kp-code__string">'redis'</span>, state: <span class="kp-code__string">'stopped'</span> },
+    { <span class="kp-code__keyword">from</span>: <span class="kp-code__string">'paperless'</span>, to: <span class="kp-code__string">'redis'</span>, state: <span class="kp-code__string">'running'</span> },
+    { <span class="kp-code__keyword">from</span>: <span class="kp-code__string">'redis'</span>, to: <span class="kp-code__string">'paperless'</span> },
+]);</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -338,6 +365,11 @@ setDeplist(document.getElementById(<span class="kp-code__string">'doc-deplist'</
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>the script</code></td><td>`attachDeplists(root)` wires every `[data-kp-deplist]` and returns a detach; `setDeplist(el, items)` hands over the rows (`{ from, to, state }`); `deplist(el)` answers the handle; `orderDependencies(items, { numbers })` and `depText(items)` are the ordering and the copy text on their own. `DEPLIST` is the selector, `DEPLIST_COLLAPSE` (8) the default behind `data-kp-dep-collapse`, and `DEPLIST_RETRY_EVENT` is `kp-deplist-retry`.</td></tr>
+                            <tr><td><code>data-kp-dep-direction / -arrow / -link / -self / -empty / -heading / -copy / -rows</code></td><td>Whose sentence it is (`from-needs-to` default, or `from-reaches-to`); the arrow glyph; a template for each name’s page (`{name}`); whether a thing lists itself (`hide` default or `show`); the sentence of an empty list; the heading with the exact count (`{n}`); a button that copies the rows as text; and the least rows the list stands as high as in a state (3).</td></tr>
+                            <tr><td><code>.kp-deplist__heading / __body / __list / __row / __group</code></td><td>The heading (a polite live region with the exact count), the body, the ordered list, one row and a group heading.</td></tr>
+                            <tr><td><code>.kp-deplist__no / __name / __name--to / __text / __arrow / __state</code></td><td>The cells of a row, the same columns in every row: the number, the thing that needs, the thing needed (`__name--to`), the words of the row for a screen reader, the arrow and the state (a `.kp-badge`).</td></tr>
+                            <tr><td><code>.kp-deplist__cycle / __foot / __more / __copy / __bone / __busy</code></td><td>The destructive row of a cycle (a `.kp-alert--destructive`), the foot with “Show all 23” (`__more`) and the copy button, the placeholder rows and the busy card of a loading list.</td></tr>
                             <tr><td><code>data-kp-dep-order</code></td><td>`numbers` (default: one row per step, numbered 1, 2, 3) or `none` (the order given).</td></tr>
                             <tr><td><code>data-kp-dep-group</code></td><td>`by-to` or `by-from` with `data-kp-dep-order=&quot;none&quot;`: rows grouped under the app that changes.</td></tr>
                             <tr><td><code>data-kp-dep-states</code></td><td>A word and a tone beside each needed thing: running, stopped or unknown.</td></tr>

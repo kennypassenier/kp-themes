@@ -283,6 +283,43 @@
     &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-toggle</span> <span class="kp-code__keyword">data-kp-look</span><span class="kp-code__string">=&quot;chip&quot;</span> <span class="kp-code__keyword">data-kp-count</span><span class="kp-code__string">=&quot;95&quot;</span>&gt;Info&lt;/<span class="kp-code__keyword">button</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A toggle the server may refuse, a half-on one and an icon</figcaption>
+                        <p class="kp-text-muted">With `data-kp-toggle-async` the app answers the cancelable `kp-toggle` event with `detail.wait(promise)`: the button is busy, and when the promise rejects it is rolled back and the word “Refused” (`data-kp-refused-word` changes it) stands on the button for three seconds. `data-kp-pressed-mark=&quot;check&quot;` draws a tick while it is on, its room kept while it is off. `aria-pressed=&quot;mixed&quot;` is a dashed edge on a half wash. Press Follow: the page refuses it.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-row kp-gap-md" id="doc-toggle-more">
+    <button class="kp-button" type="button" id="doc-toggle-async" data-kp-toggle data-kp-toggle-async data-kp-pressed-mark="check" data-kp-refused-word="Not allowed" aria-pressed="false">Follow</button>
+    <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" aria-pressed="mixed" data-kp-count="3">Some stacks</button>
+    <button class="kp-button" type="button" data-kp-toggle data-kp-look="icon" aria-pressed="false" aria-label="Pin to the top" data-kp-toggle-key="p">★</button>
+</div>
+                            <script type="module">
+import { attachToggles } from '../../js/toggle.js';
+
+const row = document.getElementById('doc-toggle-more');
+attachToggles(row);
+row.addEventListener('kp-toggle', (event) => {
+    if (event.detail.button.id !== 'doc-toggle-async') return;
+    event.detail.wait(new Promise((resolve, reject) => setTimeout(() => reject(new Error('refused')), 600)));
+});
+row.addEventListener('kp-toggle-changed', (event) => console.info('pressed', event.detail.pressedKeys));
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-gap-md&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-toggle-more&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-toggle-async&quot;</span> <span class="kp-code__keyword">data-kp-toggle</span> <span class="kp-code__keyword">data-kp-toggle-async</span> <span class="kp-code__keyword">data-kp-pressed-mark</span><span class="kp-code__string">=&quot;check&quot;</span> <span class="kp-code__keyword">data-kp-refused-word</span><span class="kp-code__string">=&quot;Not allowed&quot;</span> <span class="kp-code__keyword">aria-pressed</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;Follow&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-toggle</span> <span class="kp-code__keyword">data-kp-look</span><span class="kp-code__string">=&quot;chip&quot;</span> <span class="kp-code__keyword">aria-pressed</span><span class="kp-code__string">=&quot;mixed&quot;</span> <span class="kp-code__keyword">data-kp-count</span><span class="kp-code__string">=&quot;3&quot;</span>&gt;Some stacks&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">data-kp-toggle</span> <span class="kp-code__keyword">data-kp-look</span><span class="kp-code__string">=&quot;icon&quot;</span> <span class="kp-code__keyword">aria-pressed</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Pin to the top&quot;</span> <span class="kp-code__keyword">data-kp-toggle-key</span><span class="kp-code__string">=&quot;p&quot;</span>&gt;★&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachToggles } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/toggle'</span>;
+
+<span class="kp-code__keyword">const</span> row = document.getElementById(<span class="kp-code__string">'doc-toggle-more'</span>);
+attachToggles(row);
+row.addEventListener(<span class="kp-code__string">'kp-toggle'</span>, (event) =&gt; {
+    <span class="kp-code__keyword">if</span> (event.detail.button.id !== <span class="kp-code__string">'doc-toggle-async'</span>) <span class="kp-code__keyword">return</span>;
+    event.detail.wait(<span class="kp-code__keyword">new</span> Promise((resolve, reject) =&gt; setTimeout(() =&gt; reject(<span class="kp-code__keyword">new</span> Error(<span class="kp-code__string">'refused'</span>)), <span class="kp-code__string">600</span>)));
+});
+row.addEventListener(<span class="kp-code__string">'kp-toggle-changed'</span>, (event) =&gt; console.info(<span class="kp-code__string">'pressed'</span>, event.detail.pressedKeys));</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -339,6 +376,12 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>the script</code></td><td>`attachToggles(root, options)` wires every `[data-kp-toggle]` and returns a detach; `toggle(el)` answers a button’s handle, `toggleGroup(button)` its group, `togglePressedKeys(anyMember)` the keys of the pressed members and `toggleKey(el)` the key of one (its `data-kp-toggle-value`, else its id, else its label). `TOGGLE` is the selector, `TOGGLE_LOOKS` and `TOGGLE_MODES` the allowed values.</td></tr>
+                            <tr><td><code>kp-toggle / kp-toggle-changed</code></td><td>`kp-toggle` fires on the button before anything changes, bubbling and cancelable, with `{ button, pressed, previous, group, pressedKeys, wait }`; `kp-toggle-changed` fires after, once per change (`TOGGLE_EVENT`, `TOGGLE_CHANGED_EVENT`). Space and Enter press; in a `single` group the arrow keys walk the buttons.</td></tr>
+                            <tr><td><code>.kp-toggle__label / __count / __mark / __hint</code></td><td>The parts the script writes: the label (it never changes with the state), the exact count, the tick of `data-kp-pressed-mark=&quot;check&quot;` and the hint line under the label (`data-kp-pressed-hint`), whose room is always there so nothing moves.</td></tr>
+                            <tr><td><code>.kp-toggle__refused / __bone / __live</code></td><td>The refusal word on a rolled-back button (`TOGGLE_REFUSED_MS`, 3000), the skeleton of a count that is still loading, and the polite line a screen reader hears per change (`data-kp-announce`: `state`, `all` or `off`).</td></tr>
+                            <tr><td><code>.kp-toggle__clear</code></td><td>The “Clear filters (N)” button of a group with `data-kp-toggle-clear`: in place whether or not anything is pressed.</td></tr>
+                            <tr><td><code>data-kp-toggle-value / data-kp-remember</code></td><td>The member’s key in `pressedKeys`, and a name that keeps a group’s state per device (off by default: most filters start clean). A toggle that cannot be pressed says why with `data-kp-disabled-reason`.</td></tr>
                             <tr><td><code>data-kp-look</code></td><td>`button` (default), `chip` (a pill) or `icon` (a square).</td></tr>
                             <tr><td><code>aria-pressed</code></td><td>`false` (default), `true` or `mixed` (a dashed edge on a half wash).</td></tr>
                             <tr><td><code>data-kp-toggle-mode</code></td><td>On the group: `multi` (default), `single` (one is always on, arrow keys walk) or `single-or-none`.</td></tr>

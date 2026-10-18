@@ -2966,8 +2966,31 @@ draw(3);
 document.getElementById('doc-chart-more').addEventListener('click', () => draw(hours.length));
 `,
             },
+            {
+                title: 'A chart that failed to load',
+                why: 'A chart whose data carries `error` draws a tinted, bordered plate with a heading-size sentence and a Retry in the plot’s place (the same plate every other failed area uses, dressed by the theme). Retry fires `kp-chart-retry` on the chart; the page fetches again and calls `setChartData`.',
+                markup: `
+<figure class="kp-chart" id="doc-chart-failed" data-kp-chart aria-label="Pressure" lang="en-GB">
+<figcaption class="kp-chart__title">Pressure, bar</figcaption>
+<script type="application/json" data-kp-chart-data>{"unit":"bar","digits":2,"error":"The readings could not be loaded.","series":[]}</script>
+</figure>
+`,
+                script: `
+import { setChartData } from '@kp-soft/themes/js/chart';
+
+document.getElementById('doc-chart-failed').addEventListener('kp-chart-retry', () => {
+    setChartData(document.getElementById('doc-chart-failed'), {
+        unit: 'bar',
+        digits: 2,
+        series: [{ label: 'Pump house 1', start: 1791010800000, step: 3600000, values: [3.36, 3.45, 3.44, 3.4, 3.35, 3.41, 3.48, 3.55] }],
+    });
+});
+`,
+            },
         ],
         variants: [
+            { name: 'kp-chart-retry', what: 'Fired on the chart, bubbling, when Retry is pressed in a failed chart (`CHART_RETRY_EVENT` in js/chart.js; the button’s words are the string `chartRetry`). The focus moves to the plot first, because the button goes with the state.' },
+            { name: 'axis labels', what: 'The first and the last time label anchor to their tick when, centred, they would cross the drawing’s edge, so an end label is never cut.' },
             { name: 'data-kp-outside', what: 'Written on the tooltip while its pinned moment lies outside the window: it docks at the plot’s edge and says so.' },
             { name: '[data-kp-chart]', what: 'A chart; usually a `figure.kp-chart` with a `.kp-chart__title` caption. Its data comes from a `script[type="application/json"][data-kp-chart-data]` child or from `setChartData(el, data)`, before or after it is attached.' },
             { name: 'data-kp-chart="spark"', what: 'The spark variant: one source’s line over a soft area, its value at the crosshair (or now) beside its name, on the group’s crosshair.' },
@@ -3333,10 +3356,54 @@ document.getElementById('doc-seg-tri-set').addEventListener('click', () => {
 });
 `,
             },
+            {
+                title: 'A track wider than its room, at rest, mid-scroll and at the end',
+                why: 'A track wider than its room scrolls (`data-kp-segmented-overflow`), snaps to whole segments and keeps room for the fade at its edges. The fade appears only on the side that has more out of sight, which the script names in `data-kp-segmented-more` (`start`, `end`): a label at a side with nothing beyond it stays whole. The three tracks are scrolled for you: to the start, to the middle, to the end.',
+                markup: `
+<div class="kp-stack kp-gap-md" id="doc-seg-scroll" style="inline-size: 17rem; max-inline-size: 100%">
+<div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Range, at rest">
+<button type="button" class="kp-segmented__item" data-value="5m" role="radio" aria-checked="false"><span class="kp-segmented__label">5 min</span></button>
+<button type="button" class="kp-segmented__item" data-value="15m" role="radio" aria-checked="false"><span class="kp-segmented__label">15 min</span></button>
+<button type="button" class="kp-segmented__item" data-value="1h" role="radio" aria-checked="true"><span class="kp-segmented__label">1 hour</span></button>
+<button type="button" class="kp-segmented__item" data-value="6h" role="radio" aria-checked="false"><span class="kp-segmented__label">6 hours</span></button>
+<button type="button" class="kp-segmented__item" data-value="24h" role="radio" aria-checked="false"><span class="kp-segmented__label">24 hours</span></button>
+<button type="button" class="kp-segmented__item" data-value="7d" role="radio" aria-checked="false"><span class="kp-segmented__label">7 days</span></button>
+<button type="button" class="kp-segmented__item" data-value="30d" role="radio" aria-checked="false"><span class="kp-segmented__label">30 days</span></button>
+</div>
+<div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Range, mid-scroll">
+<button type="button" class="kp-segmented__item" data-value="5m" role="radio" aria-checked="false"><span class="kp-segmented__label">5 min</span></button>
+<button type="button" class="kp-segmented__item" data-value="15m" role="radio" aria-checked="false"><span class="kp-segmented__label">15 min</span></button>
+<button type="button" class="kp-segmented__item" data-value="1h" role="radio" aria-checked="true"><span class="kp-segmented__label">1 hour</span></button>
+<button type="button" class="kp-segmented__item" data-value="6h" role="radio" aria-checked="false"><span class="kp-segmented__label">6 hours</span></button>
+<button type="button" class="kp-segmented__item" data-value="24h" role="radio" aria-checked="false"><span class="kp-segmented__label">24 hours</span></button>
+<button type="button" class="kp-segmented__item" data-value="7d" role="radio" aria-checked="false"><span class="kp-segmented__label">7 days</span></button>
+<button type="button" class="kp-segmented__item" data-value="30d" role="radio" aria-checked="false"><span class="kp-segmented__label">30 days</span></button>
+</div>
+<div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Range, at the end">
+<button type="button" class="kp-segmented__item" data-value="5m" role="radio" aria-checked="false"><span class="kp-segmented__label">5 min</span></button>
+<button type="button" class="kp-segmented__item" data-value="15m" role="radio" aria-checked="false"><span class="kp-segmented__label">15 min</span></button>
+<button type="button" class="kp-segmented__item" data-value="1h" role="radio" aria-checked="true"><span class="kp-segmented__label">1 hour</span></button>
+<button type="button" class="kp-segmented__item" data-value="6h" role="radio" aria-checked="false"><span class="kp-segmented__label">6 hours</span></button>
+<button type="button" class="kp-segmented__item" data-value="24h" role="radio" aria-checked="false"><span class="kp-segmented__label">24 hours</span></button>
+<button type="button" class="kp-segmented__item" data-value="7d" role="radio" aria-checked="false"><span class="kp-segmented__label">7 days</span></button>
+<button type="button" class="kp-segmented__item" data-value="30d" role="radio" aria-checked="false"><span class="kp-segmented__label">30 days</span></button>
+</div>
+</div>
+`,
+                script: `
+const tracks = document.querySelectorAll('#doc-seg-scroll > .kp-segmented');
+setTimeout(() => {
+    tracks[1].scrollLeft = (tracks[1].scrollWidth - tracks[1].clientWidth) / 2;
+    tracks[2].scrollLeft = tracks[2].scrollWidth;
+}, 400);
+`,
+            },
         ],
         variants: [
             { name: 'data-kp-segmented="tri"', what: 'The three-way chip group, used with `.kp-segmented--chips`. Each chip carries `data-kp-segmented-tri="include|exclude"`, absent for either way (`TRI_ATTRIBUTE`, `TRI_STATES`), and the parts `.kp-segmented__mark`, `__state` (the word a screen reader hears after the name, “Chicken, required”), `__summary` and `__live`.' },
             { name: 'getSegmentedTri / setSegmentedTri', what: 'Read `{ include, exclude }`, or set both lists without an event. `SegmentedItem.state` is the state a chip is given in `setSegmentedItems`.' },
+            { name: 'data-kp-segmented-more', what: 'Written by the script on a scrolling track, never by you: `start`, `end` or both name the sides that have more segments out of sight, so the stylesheet fades only those edges (`MORE_ATTRIBUTE` in js/segmented.js; `OVERFLOW_ATTRIBUTE` is the overflow mark).' },
+            { name: 'snapping', what: 'A track wider than its room snaps to whole segments (`scroll-snap-type: x proximity`) and keeps a scroll padding of the fade’s width, so a segment is never left half under the fade.' },
             { name: '.kp-segmented--chips', what: 'The same buttons as separate pills instead of a track; the chosen chip takes the primary colour.' },
             { name: '.kp-segmented__count', what: 'A number beside the label. While the group is `aria-busy="true"` it shows a placeholder, so nothing moves when the numbers arrive.' },
             { name: 'disabled', what: '`disabled` on an item, or `aria-disabled="true"` on the group, takes it out of the arrow keys and dims it.' },
@@ -3547,6 +3614,35 @@ setMatrix(document.getElementById('doc-matrix-live'), {
 setMatrix(document.getElementById('doc-matrix-loading'), { state: 'loading', skeleton: 3, label: 'Reachability, loading' });
 setMatrix(document.getElementById('doc-matrix-empty'), { state: 'empty', message: 'No stack is shown: every stack is filtered out.', label: 'Reachability, empty' });
 setMatrix(document.getElementById('doc-matrix-error'), { state: 'error', message: 'The firewall rules could not be read.', label: 'Reachability, failed' });
+`,
+            },
+            {
+                title: 'Holding its height in a state',
+                why: 'Loaded, the component is as high as its rows. Loading, empty or failed it keeps that height as a minimum, so the page under it does not jump twice; the first load has nothing remembered and is left alone. A very tall list holds a screen, not its full length (the cap is set on the host or any ancestor; it is 12 rem here to show it). Press the states.',
+                markup: `
+<div class="kp-stack kp-gap-md" id="doc-fp-matrix">
+<div class="kp-row kp-gap-sm" role="group" aria-label="State">
+<button type="button" class="kp-button kp-button--sm" data-doc-state="ready">Ready</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-state="loading">Loading</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-state="empty">Empty</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-state="error">Failed</button>
+</div>
+<div class="kp-matrix" data-kp-matrix id="doc-fp-matrix-host" style="--kp-footprint-max: 12rem"></div>
+</div>
+`,
+                script: `
+import { attachMatrices, setMatrix } from '@kp-soft/themes/js/heat';
+const root = document.getElementById('doc-fp-matrix');
+const host = document.getElementById('doc-fp-matrix-host');
+attachMatrices(root);
+const names = ['web', 'api', 'db', 'cache', 'queue'].map((key) => ({ key, label: key }));
+const draw = (state) => setMatrix(host, state === 'ready'
+    ? { corner: 'from ↓ to →', rows: names, columns: names, label: 'Reachability', cell: (row, column) => (row === column ? undefined : { tone: 'muted', label: 'nothing open' }) }
+    : { state, skeleton: 3, message: state === 'empty' ? 'No stack is shown.' : 'The rules could not be read.', label: 'Reachability' });
+for (const button of root.querySelectorAll('[data-doc-state]')) {
+    button.addEventListener('click', () => draw(button.dataset.docState));
+}
+draw('ready');
 `,
             },
         ],
@@ -5036,8 +5132,36 @@ document.getElementById('doc-slider-reset').addEventListener('click', () => setS
 </div>
 `,
             },
+            {
+                title: 'A toggle the server may refuse, a half-on one and an icon',
+                why: 'With `data-kp-toggle-async` the app answers the cancelable `kp-toggle` event with `detail.wait(promise)`: the button is busy, and when the promise rejects it is rolled back and the word “Refused” (`data-kp-refused-word` changes it) stands on the button for three seconds. `data-kp-pressed-mark="check"` draws a tick while it is on, its room kept while it is off. `aria-pressed="mixed"` is a dashed edge on a half wash. Press Follow: the page refuses it.',
+                markup: `
+<div class="kp-row kp-gap-md" id="doc-toggle-more">
+<button class="kp-button" type="button" id="doc-toggle-async" data-kp-toggle data-kp-toggle-async data-kp-pressed-mark="check" data-kp-refused-word="Not allowed" aria-pressed="false">Follow</button>
+<button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" aria-pressed="mixed" data-kp-count="3">Some stacks</button>
+<button class="kp-button" type="button" data-kp-toggle data-kp-look="icon" aria-pressed="false" aria-label="Pin to the top" data-kp-toggle-key="p">★</button>
+</div>
+`,
+                script: `
+import { attachToggles } from '@kp-soft/themes/js/toggle';
+
+const row = document.getElementById('doc-toggle-more');
+attachToggles(row);
+row.addEventListener('kp-toggle', (event) => {
+    if (event.detail.button.id !== 'doc-toggle-async') return;
+    event.detail.wait(new Promise((resolve, reject) => setTimeout(() => reject(new Error('refused')), 600)));
+});
+row.addEventListener('kp-toggle-changed', (event) => console.info('pressed', event.detail.pressedKeys));
+`,
+            },
         ],
         variants: [
+            { name: 'the script', what: '`attachToggles(root, options)` wires every `[data-kp-toggle]` and returns a detach; `toggle(el)` answers a button’s handle, `toggleGroup(button)` its group, `togglePressedKeys(anyMember)` the keys of the pressed members and `toggleKey(el)` the key of one (its `data-kp-toggle-value`, else its id, else its label). `TOGGLE` is the selector, `TOGGLE_LOOKS` and `TOGGLE_MODES` the allowed values.' },
+            { name: 'kp-toggle / kp-toggle-changed', what: '`kp-toggle` fires on the button before anything changes, bubbling and cancelable, with `{ button, pressed, previous, group, pressedKeys, wait }`; `kp-toggle-changed` fires after, once per change (`TOGGLE_EVENT`, `TOGGLE_CHANGED_EVENT`). Space and Enter press; in a `single` group the arrow keys walk the buttons.' },
+            { name: '.kp-toggle__label / __count / __mark / __hint', what: 'The parts the script writes: the label (it never changes with the state), the exact count, the tick of `data-kp-pressed-mark="check"` and the hint line under the label (`data-kp-pressed-hint`), whose room is always there so nothing moves.' },
+            { name: '.kp-toggle__refused / __bone / __live', what: 'The refusal word on a rolled-back button (`TOGGLE_REFUSED_MS`, 3000), the skeleton of a count that is still loading, and the polite line a screen reader hears per change (`data-kp-announce`: `state`, `all` or `off`).' },
+            { name: '.kp-toggle__clear', what: 'The “Clear filters (N)” button of a group with `data-kp-toggle-clear`: in place whether or not anything is pressed.' },
+            { name: 'data-kp-toggle-value / data-kp-remember', what: 'The member’s key in `pressedKeys`, and a name that keeps a group’s state per device (off by default: most filters start clean). A toggle that cannot be pressed says why with `data-kp-disabled-reason`.' },
             { name: 'data-kp-look', what: '`button` (default), `chip` (a pill) or `icon` (a square).' },
             { name: 'aria-pressed', what: '`false` (default), `true` or `mixed` (a dashed edge on a half wash).' },
             { name: 'data-kp-toggle-mode', what: 'On the group: `multi` (default), `single` (one is always on, arrow keys walk) or `single-or-none`.' },
@@ -5069,8 +5193,44 @@ document.getElementById('doc-slider-reset').addEventListener('click', () => setS
 <span class="kp-badge kp-badge--version" data-kp-version-from="10.11.11" data-kp-version-to="12.1" data-kp-version-href="https://example.com/releases/tag/{to}"></span>
 `,
             },
+            {
+                title: 'Schemes, a moving tag, a downgrade and a word alone',
+                why: 'Only the risky jump is loud. `data-kp-version-scheme` says how the numbers are read (`semver` looks at three, `calver` calls nothing major, `none` never decides); `data-kp-version-big-minor` on anything above the chips lists the apps whose second number counts as big, each chip naming its app in `data-kp-version-app`; `data-kp-version-level` is one app’s own say. A chip with only `to` is a moving tag; a version that went back is `downgrade`; `data-kp-version-show="level"` is the word alone, for a tight table. Shift + click copies “10.11 → 12.1”.',
+                markup: `
+<ul class="kp-stack kp-gap-sm" id="doc-version-more" data-kp-version-big-minor="immich" style="list-style: none; margin: 0; padding: 0">
+<li><span class="kp-badge kp-badge--version" data-kp-version-from="2026.3" data-kp-version-to="2026.10" data-kp-version-scheme="calver"></span> calendar versions: nothing is major</li>
+<li><span class="kp-badge kp-badge--version" data-kp-version-from="1.118.2" data-kp-version-to="1.119.0" data-kp-version-app="immich"></span> immich: the second number counts</li>
+<li><span class="kp-badge kp-badge--version" data-kp-version-from="2.4.1" data-kp-version-to="2.4.2" data-kp-version-level="other"></span> an app’s own say: other</li>
+<li><span class="kp-badge kp-badge--version" data-kp-version-to="latest"></span> a moving tag</li>
+<li><span class="kp-badge kp-badge--version" data-kp-version-from="12.1" data-kp-version-to="10.11"></span> a version that went back</li>
+<li><span class="kp-badge kp-badge--version" data-kp-version-from="10.11.11" data-kp-version-to="12.1" data-kp-version-show="level"></span> the word alone</li>
+<li><span class="kp-badge kp-badge--version" data-kp-version-from="sha256:5f1b9c0a3c4d8e7f6a2b1c0d9e8f7a6b" data-kp-version-to="sha256:0e9d8c7b6a5f4e3d2c1b0a9f8e7d6c5b"></span> a digest, cut to 12 characters</li>
+</ul>
+<p id="doc-version-summary" class="kp-text-muted"></p>
+`,
+                script: `
+import { summarizeDeltas } from '@kp-soft/themes/js/version-delta';
+
+const list = [
+    { from: '10.11.11', to: '12.1' },
+    { from: '1.118.2', to: '1.119.0', app: 'immich' },
+    { from: '2.4.1', to: '2.4.2' },
+    { from: '2.4.1', to: '2.5.0' },
+];
+document.getElementById('doc-version-summary').textContent = summarizeDeltas(list, { bigMinorApps: ['immich'] }).text;
+`,
+            },
         ],
         variants: [
+            { name: 'the script', what: '`attachVersionDeltas(root, { bigMinorApps, href })` draws every chip and keeps it in step with its attributes, and returns a detach; `setVersionDelta(el, { from, to, app, href, state, error })` changes one; `versionLevel(from, to, options)` answers `VERSION_LEVELS` (`same`, `other`, `patch`, `minor`, `major`, `downgrade`, `unknown`) and `versionNumbers(version)` the numbers it reads; `summarizeDeltas(list, options)` counts a list exactly for its heading (“2 major, 5 minor, 3 patch”); `githubRepo(upstream)` and `releaseUrl(upstream, latest)` build the release-notes address. `VERSION_DELTA` is the selector.' },
+            { name: 'data-kp-version-scheme', what: '`numbers` (default: every number in order), `semver` (the first three), `calver` (nothing is major: the first number is a year) or `none` (never decides).' },
+            { name: 'data-kp-version-big-at', what: '`first` (default) or `second`: which number’s change is big for this chip alone; `data-kp-version-big-minor` lists the apps for which it is the second.' },
+            { name: 'data-kp-version-level', what: '`auto` (default), `major`, `minor`, `patch` or `other`: one app’s own say about its jump.' },
+            { name: 'data-kp-version-arrow', what: 'The arrow’s glyph; → by default.' },
+            { name: 'data-kp-level / data-kp-raw / data-kp-sort-value', what: 'What the chip writes: its level (`data-kp-level`), the versions as given (`data-kp-raw`) and a sort value (4 older, 3 major, 2 minor, 1 patch, 0 other: `VERSION_SORT`), so an update list sorts the risky first.' },
+            { name: '.kp-version__from / __arrow / __to / __level / __bang / __word / __bone', what: 'The parts of a chip: the old version (struck, lighter), the arrow, the new one (strong), the level word with its “!” (so the risk is never colour alone), and the skeleton of a chip still loading.' },
+            { name: 'in a narrow place', what: 'A chip stays inside its component: a long version or digest breaks after a dot, a hyphen or an underscore instead of widening a table cell or a card.' },
+            { name: 'kp-version-copy', what: 'Fired when Shift + click copies the jump as text (`VERSION_COPY_EVENT`).' },
             { name: 'data-kp-version-big-minor', what: 'A list of apps whose second number counts as a big jump as well, on the chip or anything above it; the chip names its app in `data-kp-version-app`.' },
             { name: 'data-kp-version-show', what: '`both` (default), `to` or `level` (the word alone, for a tight table).' },
             { name: 'data-kp-version-tones', what: 'The tone of each level, “major:warning,minor:none”; by default only a big jump (warning) and a version that went back (destructive) are loud.' },
@@ -5102,8 +5262,36 @@ document.getElementById('doc-slider-reset').addEventListener('click', () => setS
 <button class="kp-button kp-button--primary" type="button" id="doc-ack-go">Update</button>
 `,
             },
+            {
+                title: 'Several gates, one button',
+                why: '`data-kp-ack-mode="all"` turns the gates guarding one control into one tick for the lot, for low-risk batches. The first gate also requires its notes link to be opened once (`data-kp-ack-require-link`) before the tick can be set, and its tone is `destructive`. `kp-ack-change` fires on the gate with `{ key, checked, remaining, at }`; ticking the box sets `data-kp-checked` on it.',
+                markup: `
+<div id="doc-ack-batch">
+<div class="kp-alert kp-alert--destructive" data-kp-ack data-kp-ack-for="#doc-ack-batch-go" data-kp-ack-key="restore" data-kp-ack-tone="destructive" data-kp-ack-mode="all" data-kp-ack-label="I understand that the restore overwrites live data" data-kp-ack-link="https://example.com/restore-notes" data-kp-ack-link-label="Read the restore notes" data-kp-ack-require-link>
+<div class="kp-alert__body"><strong>Restoring media replaces what is on the disk now.</strong> Files changed since the backup are lost.</div>
+</div>
+<div class="kp-alert kp-alert--warning" data-kp-ack data-kp-ack-for="#doc-ack-batch-go" data-kp-ack-key="restart" data-kp-ack-mode="all" data-kp-ack-label="I understand that the stack restarts">
+<div class="kp-alert__body"><strong>The stack restarts once it is restored.</strong> It is unreachable for about a minute.</div>
+</div>
+<button class="kp-button kp-button--destructive" type="button" id="doc-ack-batch-go">Restore</button>
+</div>
+`,
+                script: `
+import { attachAckGates } from '@kp-soft/themes/js/ack-gate';
+
+const batch = document.getElementById('doc-ack-batch');
+attachAckGates(batch);
+batch.addEventListener('kp-ack-change', (event) => console.info('ack', event.detail.key, event.detail.checked, event.detail.remaining));
+`,
+            },
         ],
         variants: [
+            { name: 'the script', what: '`attachAckGates(root)` wires every `[data-kp-ack]` and returns a detach; `ackGate(el)` answers the handle of a gate. `ACK_GATE` is the selector; the events are `ACK_EVENT` (`kp-ack-change`, `{ key, checked, remaining, at }`) and `ACK_RETRY_EVENT` (`kp-ack-retry`).' },
+            { name: 'data-kp-ack-for / -label / -link / -link-label', what: 'The control(s) to enable (a selector, required), the tick’s words, the notes address and the words of its link (opened in a new tab; opening it ticks nothing for the reader).' },
+            { name: 'data-kp-ack-tone / -min-ms / -focus / -key / -locked / -version', what: 'The alert’s tone (`warning` default, `destructive` or `info`); a wait in milliseconds before the tick may be set; whether a press on the off control takes the focus to the first open tick (`off` to stop it); the name of the item in the event and the announcement; a lock while the job runs; and a version that clears the tick when it changes.' },
+            { name: 'data-kp-checked', what: 'Written on the gate while its box is ticked.' },
+            { name: '.kp-ack__frame / __side / __link / __tick / __label', what: 'The parts: the frame round the alert and the tick, the side that holds the notes link, the link, the label with its checkbox and the sentence of the tick.' },
+            { name: '.kp-ack__wait / __bone / __problem / __problem-text / __retry', what: 'The loading state (skeleton lines, the height kept), and the failed one: no notes found, with Retry (`data-kp-ack-retry`, `kp-ack-retry`).' },
             { name: 'data-kp-ack-mode', what: '`each` (default): one tick per gate; `all`: one tick for the lot, for low-risk batches.' },
             { name: 'data-kp-ack-reset', what: '`on-change` (default): a changed key, label or version clears the tick; `never`.' },
             { name: 'data-kp-ack-require-link', what: 'The tick stays off until the notes link was opened once; `data-kp-ack-min-ms` waits a time instead.' },
@@ -5139,8 +5327,30 @@ setDeplist(document.getElementById('doc-deplist'), [
 ]);
 `,
             },
+            {
+                title: 'Grouped, with states, a cycle and a copy button',
+                why: 'With `data-kp-dep-order="none"` the rows stand in the order given and `data-kp-dep-group="by-to"` groups them under the app that changes; `data-kp-dep-states` puts a word and a tone beside each needed thing; `data-kp-dep-copy` adds a button that copies the rows as text. A cycle (paperless needs redis needs paperless) is never looped: it is one destructive row, unnumbered, naming each thing in it.',
+                markup: `
+<div class="kp-deplist" data-kp-deplist id="doc-deplist-more" data-kp-dep-order="none" data-kp-dep-group="by-to" data-kp-dep-states data-kp-dep-copy data-kp-dep-heading="{n} rows" data-kp-dep-arrow="⇒"></div>
+`,
+                script: `
+import { setDeplist } from '@kp-soft/themes/js/deplist';
+setDeplist(document.getElementById('doc-deplist-more'), [
+    { from: 'paperless', to: 'postgres', state: 'running' },
+    { from: 'immich', to: 'postgres', state: 'running' },
+    { from: 'immich', to: 'redis', state: 'stopped' },
+    { from: 'paperless', to: 'redis', state: 'running' },
+    { from: 'redis', to: 'paperless' },
+]);
+`,
+            },
         ],
         variants: [
+            { name: 'the script', what: '`attachDeplists(root)` wires every `[data-kp-deplist]` and returns a detach; `setDeplist(el, items)` hands over the rows (`{ from, to, state }`); `deplist(el)` answers the handle; `orderDependencies(items, { numbers })` and `depText(items)` are the ordering and the copy text on their own. `DEPLIST` is the selector, `DEPLIST_COLLAPSE` (8) the default behind `data-kp-dep-collapse`, and `DEPLIST_RETRY_EVENT` is `kp-deplist-retry`.' },
+            { name: 'data-kp-dep-direction / -arrow / -link / -self / -empty / -heading / -copy / -rows', what: 'Whose sentence it is (`from-needs-to` default, or `from-reaches-to`); the arrow glyph; a template for each name’s page (`{name}`); whether a thing lists itself (`hide` default or `show`); the sentence of an empty list; the heading with the exact count (`{n}`); a button that copies the rows as text; and the least rows the list stands as high as in a state (3).' },
+            { name: '.kp-deplist__heading / __body / __list / __row / __group', what: 'The heading (a polite live region with the exact count), the body, the ordered list, one row and a group heading.' },
+            { name: '.kp-deplist__no / __name / __name--to / __text / __arrow / __state', what: 'The cells of a row, the same columns in every row: the number, the thing that needs, the thing needed (`__name--to`), the words of the row for a screen reader, the arrow and the state (a `.kp-badge`).' },
+            { name: '.kp-deplist__cycle / __foot / __more / __copy / __bone / __busy', what: 'The destructive row of a cycle (a `.kp-alert--destructive`), the foot with “Show all 23” (`__more`) and the copy button, the placeholder rows and the busy card of a loading list.' },
             { name: 'data-kp-dep-order', what: '`numbers` (default: one row per step, numbered 1, 2, 3) or `none` (the order given).' },
             { name: 'data-kp-dep-group', what: '`by-to` or `by-from` with `data-kp-dep-order="none"`: rows grouped under the app that changes.' },
             { name: 'data-kp-dep-states', what: 'A word and a tone beside each needed thing: running, stopped or unknown.' },
@@ -5177,8 +5387,39 @@ setTrace(document.getElementById('doc-trace'), [
 ]);
 `,
             },
+            {
+                title: 'Every hop on its own, and the states',
+                why: '`data-kp-trace-stop="all"` shows each hop’s own verdict, for a “what if”: nothing is dimmed after a refusal. `data-kp-trace-swap` adds a Swap button (and the key S) that fires `kp-trace-swap`, for a form that swaps source and target; the rule can stand inline in the note (`data-kp-trace-rule="inline"`) and the whole trace can be copied as text. A hop with no verdict is “not measured”. `trace(el).setState(state, { message })` shows the trace running (the busy card over placeholder hops), empty or failed (Retry); the last two traces below are running and failed.',
+                markup: `
+<div class="kp-stack kp-gap-md" id="doc-trace-more">
+<div class="kp-trace" data-kp-trace id="doc-trace-all" data-kp-trace-stop="all" data-kp-trace-rule="inline" data-kp-trace-swap data-kp-trace-copy data-kp-density="compact"></div>
+<div class="kp-trace" data-kp-trace id="doc-trace-running"></div>
+<div class="kp-trace" data-kp-trace id="doc-trace-failed"></div>
+</div>
+`,
+                script: `
+import { attachTraces, setTrace, trace, traceSummary, traceText } from '@kp-soft/themes/js/path-trace';
+
+attachTraces(document.getElementById('doc-trace-more'));
+const hops = [
+    { title: 'tv', note: 'IoT network', verdict: 'allowed' },
+    { title: 'Firewall', note: 'tcp 8096', verdict: 'refused', rule: 'IoT to media' },
+    { title: 'Jellyfin', note: 'media network', verdict: 'allowed' },
+    { title: 'Disk', note: 'not measured' },
+];
+setTrace(document.getElementById('doc-trace-all'), hops);
+trace(document.getElementById('doc-trace-running')).setState('running');
+trace(document.getElementById('doc-trace-failed')).setState('error', { message: 'The firewall did not answer.' });
+document.getElementById('doc-trace-all').addEventListener('kp-trace-swap', () => console.info(traceSummary(hops, 'all'), traceText(hops, 'all')));
+`,
+            },
         ],
         variants: [
+            { name: 'the script', what: '`attachTraces(root)` wires every `[data-kp-trace]` and returns a detach; `setTrace(el, hops)` hands over the hops (`{ title, note, verdict, rule }`); `trace(el)` answers the handle; `traceStates(hops, stop)`, `traceSummary(hops, stop)` and `traceText(hops, stop)` are the verdicts, the summary line and the copy text on their own. `TRACE` is the selector.' },
+            { name: 'events', what: '`kp-trace-rule` `{ rule, hop }` when the rule chip is pressed, `kp-trace-swap` for the Swap button and the key S, `kp-trace-retry` for Retry in a failed trace (`TRACE_RULE_EVENT`, `TRACE_SWAP_EVENT`, `TRACE_RETRY_EVENT`).' },
+            { name: '.kp-steplist--trace', what: 'The step list’s modifier the trace is drawn with (`.kp-steplist.kp-steplist--trace`, js/steplist.js): an allowed hop is `done` with the check, a refused one `failed` with the cross, the hops after the first refusal `skipped` (“Not reached”) and a hop with no verdict `pending` (“Not measured”).' },
+            { name: '.kp-trace__summary / __stage / __foot', what: 'The summary line over the hops (“Blocked at rule IoT to media”, a polite status), the hops and the foot with the copy and swap buttons.' },
+            { name: '.kp-trace__rule / __copy / __swap / __busy', what: 'The deciding rule as a keyboard-reachable chip (a `.kp-badge`), the Copy and Swap buttons and the busy card of a running trace.' },
             { name: 'data-kp-trace-layout', what: '`auto` (default: a row, a column under 30rem of its own width), `row` or `column`.' },
             { name: 'data-kp-trace-stop', what: '`first-refusal` (default) or `all`, each hop’s own verdict for a “what if”.' },
             { name: 'data-kp-trace-verdict', what: '`both` (default), `mark` or `word`; never colour alone.' },
@@ -5217,8 +5458,67 @@ setEntityGrid(document.getElementById('doc-entities'), [
 ]);
 `,
             },
+            {
+                title: 'A narrow grid, a card with no action, and the states',
+                why: 'The actions come only from the data: the second card has none, so it has no actions row (`data-kp-entity-actions="none"`, written by the script). The first has three, and the grid is narrow: a button that does not fit the card goes into “More” for the whole grid, and `data-kp-entity-fit` (written on the grid) counts how many fit now; it comes back when the grid widens. `setEntityGridState` puts the whole grid in `loading`, `empty` or `error`; a single card takes a `status` of its own.',
+                markup: `
+<div class="kp-stack kp-gap-md" id="doc-entities-more">
+<div style="inline-size: 21rem; max-inline-size: 100%">
+<div class="kp-entity-grid" data-kp-entity-grid data-kp-entity-min="18rem" data-kp-entity-inline="3" id="doc-entities-narrow" role="list"></div>
+</div>
+<div class="kp-entity-grid" data-kp-entity-grid id="doc-entities-failed" role="list"></div>
+</div>
+`,
+                script: `
+import { attachEntityCards, setEntityGrid, setEntityGridState } from '@kp-soft/themes/js/entity-card';
+
+attachEntityCards(document.getElementById('doc-entities-more'));
+setEntityGrid(document.getElementById('doc-entities-narrow'), [
+    { key: 'media', name: 'media', vmid: '106', state: { label: 'running', tone: 'success' },
+      figures: [{ value: '3/5', label: 'apps up' }],
+      meters: [{ label: 'CPU', value: 0.34 }, { label: 'RAM', value: 0.71 }],
+      actions: [{ id: 'restart', label: 'Restart' }, { id: 'logs', label: 'Logs' }, { id: 'remove', label: 'Remove', danger: true }] },
+    { key: 'lab', name: 'lab', vmid: '112', state: { label: 'stopped' }, figures: [{ value: '0/2', label: 'apps up' }], meters: [{ label: 'CPU', value: null }, { label: 'RAM', value: null }] },
+]);
+setEntityGridState(document.getElementById('doc-entities-failed'), 'error', { message: 'The host did not answer.' });
+`,
+            },
+            {
+                title: 'Holding its height in a state',
+                why: 'Loaded, the component is as high as its rows. Loading, empty or failed it keeps that height as a minimum, so the page under it does not jump twice; the first load has nothing remembered and is left alone. A very tall list holds a screen, not its full length (the cap is set on the host or any ancestor; it is 12 rem here to show it). Press the states.',
+                markup: `
+<div class="kp-stack kp-gap-md" id="doc-fp-entity">
+<div class="kp-row kp-gap-sm" role="group" aria-label="State">
+<button type="button" class="kp-button kp-button--sm" data-doc-state="ready">Ready</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-state="loading">Loading</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-state="empty">Empty</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-state="error">Failed</button>
+</div>
+<div class="kp-entity-grid" data-kp-entity-grid id="doc-fp-entity-host" role="list" style="--kp-footprint-max: 14rem"></div>
+</div>
+`,
+                script: `
+import { attachEntityCards, setEntityGrid, setEntityGridState } from '@kp-soft/themes/js/entity-card';
+const root = document.getElementById('doc-fp-entity');
+const host = document.getElementById('doc-fp-entity-host');
+attachEntityCards(root);
+const stacks = ['media', 'home', 'network'].map((name, i) => ({ key: name, name, vmid: String(106 + i), state: { label: 'running', tone: 'success' }, figures: [{ value: '3/5', label: 'apps up' }], meters: [{ label: 'CPU', value: 0.3 }, { label: 'RAM', value: 0.6 }], actions: [{ id: 'logs', label: 'Logs' }] }));
+const draw = (state) => (state === 'ready' ? setEntityGrid(host, stacks) : setEntityGridState(host, state, { message: 'The host did not answer.' }));
+for (const button of root.querySelectorAll('[data-doc-state]')) {
+    button.addEventListener('click', () => draw(button.dataset.docState));
+}
+draw('ready');
+`,
+            },
         ],
         variants: [
+            { name: 'the script', what: '`attachEntityCards(root)` wires every grid and returns a detach; `setEntityGrid(grid, list)` fills it (a refill with the same key changes the words in place); `setEntity(card, data)` draws one card; `setEntityGridState(grid, state, { count, message, title, actionLabel })` puts the grid in a state. `ENTITY_GRID` and `ENTITY_CARD` are the selectors. The card’s data is `{ key, name, vmid, state, figures, flags, meters, actions, status, error }`, and an action may be `danger` or carry a `disabled` reason.' },
+            { name: 'events', what: '`kp-entity-action` `{ key, id }`, `kp-entity-flag` `{ key, flag }`, `kp-entity-tick` `{ key, ticked }`, `kp-entity-retry` `{ key }` from a card, and `kp-entity-new` and `kp-entity-grid-retry` from the grid (the `ENTITY_…_EVENT` constants).' },
+            { name: 'data-kp-entity-key / -link / -mark / -min / -narrow', what: 'The card’s stable key; the template of the name’s link (`{key}`, the whole card is its click target); the mark (`idmark` default, `icon` or `none`); on the grid, the least width of a card (22rem); `data-kp-entity-narrow`, which the script writes on the grid while it is narrower than 30rem: every action then goes into “More”.' },
+            { name: 'data-kp-entity-actions / data-kp-entity-fit', what: 'Written by the script: `none` on a card with no action (it has no actions row), and on the grid the count of action buttons that fit now. A button that does not fit the card’s width goes into “More” for every card of the grid, in one place, and comes back as the grid widens.' },
+            { name: '.is-ticked / .is-cursor', what: 'A ticked card and the card the keys j, k and x stand on (a ring); both are rows of a selection.' },
+            { name: '.kp-card--entity', what: 'The card: the same five rows in every state, so every card is as high as the next. `.kp-card--ghost` is the placeholder card of a loading grid.' },
+            { name: '.kp-entity__id / __figures / __flags / __meters / __actions', what: 'The five rows. The identity row holds `__tick`, `__name` (the link), `__vmid` and `__state`; the figures row `__figure` (`__value`, `__none`); the flags row `__flag` and `__more-flags`, the menu button whose `__plus` is the exact “+2”; the meters row `__meter` (`__meter-label`, `__meter-value`); the actions row `__action` and `__more`, the “More” menu button. `__bone` is a loading row, `__retry` the Retry of a failed card and `__busy` the card laid over a loading grid.' },
             { name: 'data-kp-entity-meters', what: 'How many meter rows a card holds, 0 to 3; two by default.' },
             { name: 'data-kp-entity-flags-max', what: 'How many flags show; the rest are an exact “+2” that opens the package’s own menu. Three by default.' },
             { name: 'data-kp-entity-inline', what: 'The most actions that stand as buttons; the rest go in “More”. The buttons come only from the data: a card with no action has no row for them, and every card has as many columns as the grid’s busiest card. Under 30rem every action folds into “More”.' },
@@ -5925,8 +6225,40 @@ setAvailability(document.getElementById('doc-av-locked'), {
 });
 `,
             },
+            {
+                title: 'Holding its height in a state',
+                why: 'Loaded, the component is as high as its rows. Loading, empty or failed it keeps that height as a minimum, so the page under it does not jump twice; the first load has nothing remembered and is left alone. A very tall list holds a screen, not its full length (the cap is set on the host or any ancestor; it is 12 rem here to show it). Press the states.',
+                markup: `
+<div class="kp-stack kp-gap-md" id="doc-fp-availability">
+<div class="kp-row kp-gap-sm" role="group" aria-label="State">
+<button type="button" class="kp-button kp-button--sm" data-doc-state="ready">Ready</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-state="loading">Loading</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-state="empty">Empty</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-state="error">Failed</button>
+</div>
+<div class="kp-availability" data-kp-availability id="doc-fp-availability-host" aria-label="Who can come" style="--kp-footprint-max: 14rem"></div>
+</div>
+`,
+                script: `
+import { attachAvailability, setAvailability } from '@kp-soft/themes/js/availability';
+const root = document.getElementById('doc-fp-availability');
+const host = document.getElementById('doc-fp-availability-host');
+attachAvailability(root);
+const spec = {
+    columns: [{ key: 'a', label: '1 to 3 May' }, { key: 'b', label: '8 to 10 May' }, { key: 'c', label: '15 to 17 May' }],
+    people: [{ id: 'me', name: 'Anna', mine: true }, { id: 'bo', name: 'Bo' }, { id: 'cy', name: 'Cy' }, { id: 'di', name: 'Di' }],
+    answers: { me: { a: 'yes', b: 'maybe', c: 'no' }, bo: { a: 'yes', b: 'yes', c: 'no' }, cy: { a: 'maybe', b: 'yes', c: 'yes' }, di: { a: 'yes', b: 'no', c: 'yes' } },
+};
+const draw = (state) => setAvailability(host, state === 'ready' ? spec : { columns: spec.columns, people: [], answers: {}, state, message: state === 'empty' ? 'Nobody is invited yet.' : 'The answers could not be read.' });
+for (const button of root.querySelectorAll('[data-doc-state]')) {
+    button.addEventListener('click', () => draw(button.dataset.docState));
+}
+draw('ready');
+`,
+            },
         ],
         variants: [
+            { name: 'a row with answers', what: 'A person’s row with answers (the menu of can, maybe and cannot, the saved and the refused marks) stays inside the grid: the row never grows past the component’s width, and the answers wrap under their names on a narrow grid. Loading, empty and failed hold the height the grid had.' },
             { name: 'data-kp-heat-edit', what: '`own` (default), `all` or `off`: whose cells a press changes.' },
             { name: 'data-kp-availability-answers', what: '`3` (can, maybe, cannot; default) or `2`.' },
             { name: 'data-kp-availability-press', what: '`menu` (default: a press opens the answers) or `cycle`.' },
@@ -6853,9 +7185,41 @@ setChecklistItems(document.getElementById('doc-checklist-failed'), []);
 setChecklistState(document.getElementById('doc-checklist-failed'), 'error', 'The list could not be read. Check the connection and try again.');
 `,
             },
+            {
+                title: 'Holding its height in a state',
+                why: 'Loaded, the component is as high as its rows. Loading, empty or failed it keeps that height as a minimum, so the page under it does not jump twice; the first load has nothing remembered and is left alone. A very tall list holds a screen, not its full length (the cap is set on the host or any ancestor; it is 12 rem here to show it). Press the states.',
+                markup: `
+<div class="kp-stack kp-gap-md" id="doc-fp-checklist">
+<div class="kp-row kp-gap-sm" role="group" aria-label="State">
+<button type="button" class="kp-button kp-button--sm" data-doc-state="ready">Ready</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-state="loading">Loading</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-state="empty">Empty</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-state="error">Failed</button>
+</div>
+<div class="kp-checklist" data-kp-checklist id="doc-fp-checklist-host" aria-label="Shopping list" style="--kp-footprint-max: 12rem"></div>
+</div>
+`,
+                script: `
+import { attachChecklists, setChecklistItems, setChecklistState } from '@kp-soft/themes/js/checklist';
+const root = document.getElementById('doc-fp-checklist');
+const host = document.getElementById('doc-fp-checklist-host');
+attachChecklists(root);
+const items = ['Milk', 'Bread', 'Eggs', 'Butter', 'Coffee', 'Rice'].map((label, i) => ({ id: 'i' + i, label, group: i < 3 ? 'Colruyt' : 'Bakery' }));
+const draw = (state) => {
+    if (state === 'ready') { setChecklistItems(host, items); setChecklistState(host, 'ready'); }
+    else if (state === 'empty') { setChecklistItems(host, []); setChecklistState(host, 'ready'); }
+    else setChecklistState(host, state, 'The list could not be read.');
+};
+for (const button of root.querySelectorAll('[data-doc-state]')) {
+    button.addEventListener('click', () => draw(button.dataset.docState));
+}
+draw('ready');
+`,
+            },
         ],
         variants: [
             { name: 'kp-checklist-render', what: 'Fired on the list after every draw (not bubbling), so a part that adds a cell to the rows can draw it; the claim part does.' },
+            { name: 'a detail', what: 'A row’s detail (“3 pieces”) wraps inside its row and never widens the list. A checklist with no items writes `data-kp-state="empty"` and shows the empty plate; a failed one shows the failed plate alone; both, like a loading one, hold the height the list had.' },
             { name: 'data-kp-checklist-sink="false"', what: 'A ticked row stays where it is, struck through.' },
             { name: 'data-kp-checklist-undo-ms', what: 'How long Undo is offered after Clear checked (6000).' },
             { name: 'data-kp-checklist-empty', what: 'The sentence of an empty list.' },
@@ -8666,8 +9030,35 @@ document.querySelector('[data-doc-confirm="blocked"]').addEventListener('click',
 </dialog>
 `,
             },
+            {
+                title: 'Words in any order, marked',
+                why: 'The query “upd jelly” is typed for you: every typed word has to start a word of the command, in whatever order, so “Update jellyfin” answers and “Update immich” and “Open the firewall” do not; the matched words are marked (`.kp-palette__mark`, a wash and a heavier weight, never colour alone; `data-kp-mark-look="wash"` keeps the wash in a theme that rules its marks instead) and the best answer comes first. “Upgrade” is a hidden synonym (`data-kp-words`) that counts weaker than the label. `data-kp-typo="1"` also finds a word one letter off.',
+                markup: `
+<dialog class="kp-palette" data-kp-palette data-kp-hotkey="none" data-kp-typo="1" id="doc-intent" aria-label="Commands" open>
+<input class="kp-palette__input" type="text" role="combobox" aria-label="Commands" aria-expanded="true" aria-controls="doc-intent-list" autocomplete="off" placeholder="Type a command…" />
+<ul class="kp-palette__list" id="doc-intent-list" role="listbox" aria-label="Commands">
+<li class="kp-palette__option" role="option" data-kp-option data-value="open-fw">Open the firewall</li>
+<li class="kp-palette__option" role="option" data-kp-option data-value="update-immich">Update immich</li>
+<li class="kp-palette__option" role="option" data-kp-option data-value="update-jellyfin" data-kp-words="upgrade">Update jellyfin</li>
+<li class="kp-palette__option" role="option" data-kp-option data-value="restart-jellyfin">Restart jellyfin</li>
+</ul>
+<p class="kp-palette__status" role="status" aria-live="polite"></p>
+</dialog>
+`,
+                script: `
+const input = document.querySelector('#doc-intent input');
+setTimeout(() => {
+    input.value = 'upd jelly';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+}, 300);
+`,
+            },
         ],
         variants: [
+            { name: 'matching options', what: 'On the palette: `data-kp-fold-diacritics` (“cafe” finds “Café”, on by default), `data-kp-split-hyphen` (“kp” finds “kp-soft”, on by default), `data-kp-typo="1"` (one letter off, never for a word under four letters), `data-kp-highlight="off"` (no marks), `data-kp-mark-look="wash"` (keep the wash in a theme that rules its marks instead) and `data-kp-group-order="Inbox, Do, Go to"` (the order of the groups).' },
+            { name: '.kp-palette__mark / __label / __nomatch', what: 'A matched word, the label the script wraps so the words can be marked (`__label` is generated, so a command’s own markup stays as written), and the plate of a query nothing answers (`data-kp-nomatch="plate"`), which names what a known verb works on.' },
+            { name: 'palette(el).setState', what: '`setState(\'loading\' | \'error\' | \'ready\', { message })` shows the busy card over the list, or the failed plate with Retry (`kp-palette-retry`) beside the commands marked `data-kp-static`, which stay.' },
+            { name: 'js/intent.js', what: 'The matcher on its own, pure and without a DOM: `matchIntent(text, query, options)`, `intentScore`, `intentRanges` (the character ranges to mark), `intentTokens` and `intentWords` (what a word is), `queryWords`, `startsWord(have, want, { typo })`, `rankCommands(commands, query, { context, maxShown, groupOrder, recent })` and `noMatchText(query, { verbs, subjects, noun, hint })`; `INTENT_MAX_SHOWN` (40) is the default behind `data-kp-max-shown`. A page that draws its own list ranks it with `rankCommands`.' },
             { name: '.kp-palette', what: 'The dialog: near the top rather than in the middle, so a list that grows downwards does not push its own input off centre.' },
             { name: '.kp-palette__input', what: 'The filter, at full width, with the list under it.' },
             { name: '.kp-palette__group / __group-label', what: 'Commands under a small heading. A group whose commands are all filtered out hides itself.' },
@@ -8923,8 +9314,33 @@ card.addEventListener('kp-card-retry', () => {
 });
 `,
             },
+            {
+                title: 'A card in each data state',
+                why: 'A card that shows data read from somewhere has `data-kp-state`: `loading` (the theme’s busy card over the stage), `empty` (the empty plate), `error` or `ready`. A failed card shows a state plate: centred, at the heading size, filling the stage and growing the card while it is failed, with a Try again at the control size that fires `kp-card-retry`. `setCardState(card, state, { title, text, action, words, retry })` is the way in for a page that draws with the script; a framework that writes the attribute follows with `attachCardStates`.',
+                markup: `
+<div class="kp-stack kp-gap-md" id="doc-card-states">
+<section class="kp-card" data-kp-state="loading" aria-labelledby="doc-card-l"><div class="kp-card__header"><h3 class="kp-card__title" id="doc-card-l">Files</h3></div><p class="kp-card__body">Everything in this application’s folder.</p><div class="kp-card__stage"><div class="kp-card__data"><p>12 files</p></div></div></section>
+<section class="kp-card" data-kp-state="empty" aria-labelledby="doc-card-e"><div class="kp-card__header"><h3 class="kp-card__title" id="doc-card-e">Appointments</h3></div><p class="kp-card__body">Interviews and calls.</p><div class="kp-card__stage"><div class="kp-card__data"></div></div></section>
+<section class="kp-card" data-kp-state="error" aria-labelledby="doc-card-f"><div class="kp-card__header"><h3 class="kp-card__title" id="doc-card-f">Backups</h3></div><p class="kp-card__body">The last run of every volume.</p><div class="kp-card__stage"><div class="kp-card__data"><p>31 volumes</p></div></div></section>
+</div>
+`,
+                script: `
+import { attachCardStates, setCardState } from '@kp-soft/themes/js/card-state';
+
+const grid = document.getElementById('doc-card-states');
+attachCardStates(grid);
+const [loading, empty, failed] = grid.querySelectorAll('.kp-card');
+setCardState(loading, 'loading', { words: 'Reading the folder…' });
+setCardState(empty, 'empty', { title: 'No appointments yet', text: 'Add the first one.' });
+setCardState(failed, 'error', { title: 'Could not read the backups', text: 'The host did not answer.' });
+failed.addEventListener('kp-card-retry', () => setCardState(failed, 'ready'));
+`,
+            },
         ],
         variants: [
+            { name: 'data-kp-state', what: '`loading`, `empty`, `error` or `ready` on a `.kp-card`, over a `.kp-card__stage` that holds the data (`.kp-card__data`) and, in the same cell, the state’s note (`.kp-card__state`), so a state never moves the header, the footer or the card beside it. Empty and failed keep the data’s room.' },
+            { name: '.kp-card__failure', what: 'A failed card’s note is a state plate: centred, at the heading size (`.kp-card__failure` holds the destructive alert, `.kp-card__retry` its Try again at the control size), filling the stage; the card grows while it is failed. The note’s other parts are `.kp-card__state-title`, `.kp-card__state-text` and `.kp-card__state-actions`.' },
+            { name: 'setCardState / attachCardStates', what: '`setCardState(card, state, options)` (js/card-state.js) writes the attribute and draws the note, keeping the options for later changes written by a framework; `attachCardStates(root)` syncs every card with a `data-kp-state` and turns a press on Try again into `kp-card-retry`. `CARD_STATES` lists the four states; `kp-card-state` fires on every change.' },
             { name: '.kp-card', what: 'The surface: the card ground, a boundary, a rounded corner, and in one theme a hard shadow the knob paints and every other theme leaves at nothing.' },
             { name: '.kp-card__title', what: 'The heading, at body size — a card is not a page and its title is not a display line.' },
             { name: '.kp-card__body', what: 'The text, in quiet ink.' },
@@ -9663,8 +10079,36 @@ for (const name of ['kp-code-copy', 'kp-code-copy-failed', 'kp-code-wrap', 'kp-c
 </tbody></table></div>
 `,
             },
+            {
+                title: 'A payload in a table row',
+                why: '`.kp-code--cell` is the same block as a table cell: no title, the words wrap so a row never scrolls sideways, three lines show and “Show all N lines” opens the rest in place (`data-kp-code-open="dialog"` opens a dialog instead). `data-kp-code-language="auto"` makes it JSON only when the text parses. A binary payload is one muted line with its size and a download link; `data-kp-truncated="1024/4096"` says only the start was sent.',
+                markup: `
+<div class="kp-table-wrap">
+<table class="kp-table">
+<caption class="kp-sr-only">Dead letters</caption>
+<thead><tr><th scope="col">Topic</th><th scope="col">Payload</th></tr></thead>
+<tbody>
+<tr><td>backup.done</td><td><figure class="kp-code kp-code--cell" data-kp-code data-kp-code-language="auto"><pre class="kp-code__body"><code>{
+  "topic": "backup.done",
+  "ok": true,
+  "volumes": ["media", "photos"],
+  "bytes": 4100000000,
+  "took": "3 min 12 s"
+}</code></pre></figure></td></tr>
+<tr><td>upload.cover</td><td><figure class="kp-code kp-code--cell" data-kp-code data-kp-binary-size="2150" data-kp-download="cover.png"></figure></td></tr>
+<tr><td>export.big</td><td><figure class="kp-code kp-code--cell" data-kp-code data-kp-code-language="auto" data-kp-truncated="1024/4096" data-kp-copy="false"><pre class="kp-code__body"><code>{"rows":[1,2,3,4,5,6,7,8,9,10,11,12</code></pre></figure></td></tr>
+<tr><td>ping</td><td><figure class="kp-code kp-code--cell" data-kp-code></figure></td></tr>
+</tbody>
+</table>
+</div>
+`,
+            },
         ],
         variants: [
+            { name: '.kp-code--cell', what: 'The block as a table cell: no title, wrapped words, three lines shown. Copy copies the whole value, folded or not; `data-kp-copy="false"` takes it away. An empty payload is the muted line “empty payload”; a loading one is a skeleton line, because the table around it lays the busy card.' },
+            { name: 'data-kp-code-open', what: '`inline` (default: “Show all 40 lines” opens the rest in the cell) or `dialog`.' },
+            { name: 'data-kp-binary-size / data-kp-download', what: 'The size in bytes of a payload that is not text, and the link to fetch it: the cell shows “binary, 2.1 kB” and the link, never the bytes.' },
+            { name: 'data-kp-truncated', what: '`shown/total` in bytes, “1024/4096”: the foot line says only the start was sent.' },
             { name: 'data-kp-code-wrap / -max / -layout', what: 'Wrapped from the start; folded past N lines; Raw instead of Pretty.' },
             { name: 'state', what: '`loading`, `empty`, `binary` (with `size`) and `error`.' },
             { name: 'truncated', what: '`{ shown, total }`: the foot says only the start was sent.' },
@@ -9701,8 +10145,37 @@ attachConnection(banner.parentElement);
 setConnection(banner, 'offline', { pending: 3 });
 `,
             },
+            {
+                title: 'Refused, reconnecting and back',
+                why: 'The same banner in its other states. `refused` is the destructive plate: the browser is online and the server refuses, the app’s own sentence is the reason. The buttons below report each state with `setConnection(el, state, { pending, why, attempt })`; `kp-connection-state` fires on every change and `kp-connection-retry` when a try is due, which the app answers with the next `setConnection`.',
+                markup: `
+<div class="kp-row kp-gap-sm">
+<button type="button" class="kp-button" data-doc-connection="refused">Refused</button>
+<button type="button" class="kp-button" data-doc-connection="reconnecting">Reconnecting</button>
+<button type="button" class="kp-button" data-doc-connection="online">Back online</button>
+</div>
+<div class="kp-connection" id="doc-connection-states" data-kp-connection data-kp-connection-source="app" data-kp-placement="top" data-kp-retry-delays="off"></div>
+`,
+                script: `
+import { attachConnection, setConnection } from '@kp-soft/themes/js/connection';
+
+const banner = document.getElementById('doc-connection-states');
+attachConnection(banner.parentElement);
+const reports = {
+    refused: () => setConnection(banner, 'refused', { why: 'The server did not accept the change.' }),
+    reconnecting: () => setConnection(banner, 'reconnecting', { pending: 3, attempt: 2 }),
+    online: () => setConnection(banner, 'online'),
+};
+for (const button of document.querySelectorAll('[data-doc-connection]')) {
+    button.addEventListener('click', () => reports[button.dataset.docConnection]());
+}
+setConnection(banner, 'refused', { why: 'The server did not accept the change.' });
+`,
+            },
         ],
         variants: [
+            { name: 'the script', what: '`attachConnection(root)` wires every `[data-kp-connection]` and returns a detach; `connectionOf(el)` answers the handle; `setConnection(el, state, { pending, why, attempt })` reports a state. `CONNECTION` is the selector and `CONNECTION_STATES` the five states; the events are `CONNECTION_STATE_EVENT` (`{ state, previous, pending }`) and `CONNECTION_RETRY_EVENT` (`{ attempt, auto }`).' },
+            { name: '.kp-connection__band', what: 'The plate inside the banner: a `.kp-alert` (warning offline, destructive refused, success when it is back) with `__mark`, `__body` (`__title`, `__why`, `__meta`: the time to the next try) and `__retry`, the Retry now button.' },
             { name: 'online', what: 'Nothing is drawn and no room is taken.' },
             { name: 'offline', what: 'The warning plate: what, why, what now, the time to the next try and Retry now.' },
             { name: 'reconnecting', what: 'A try is under way, with its attempt number.' },
@@ -9748,8 +10221,30 @@ control.addEventListener('kp-refresh', (event) => {
 });
 `,
             },
+            {
+                title: 'The menu look, and a refresh that fails',
+                why: '`data-kp-look="menu"` swaps the segments for the package’s menu button; “Other…” in it takes any whole number of seconds. Here every tick fails: the data stays, the control says when it retries (backing off: the interval, twice, four times, then that) and offers Retry now. The refresh waits while a dialog is open, a field has the focus or the tab is hidden, and R refreshes at once.',
+                markup: `
+<div class="kp-refresh" id="doc-refresh-menu" data-kp-refresh="15" data-kp-look="menu" data-kp-refresh-choices="0,15,60" data-kp-refresh-hover="pause"></div>
+`,
+                script: `
+import { attachRefresh, setRefreshInterval } from '@kp-soft/themes/js/auto-refresh';
+
+const control = document.getElementById('doc-refresh-menu');
+attachRefresh(control.parentElement);
+control.addEventListener('kp-refresh', (event) => event.detail.done(false));
+control.addEventListener('kp-refresh-interval', (event) => console.info('interval', event.detail.seconds, event.detail.by));
+setRefreshInterval(control, 15);
+`,
+            },
         ],
         variants: [
+            { name: 'the script', what: '`attachRefresh(root, { now })` wires every `[data-kp-refresh]` and returns a detach; `refreshOf(el)` answers the handle; `refreshDone(el, ok)` is `detail.done(ok)` by element; `setRefreshInterval(el, seconds)` changes the interval from the page (`by: \'script\'` on the event). `REFRESH` is the selector, `REFRESH_DEFAULT` (30) and `REFRESH_CHOICES` the defaults behind the attributes; the events are `REFRESH_EVENT` and `REFRESH_INTERVAL_EVENT`.' },
+            { name: 'kp-refresh detail', what: '`{ reason, interval, done(ok) }` with `reason` one of `timer`, `now` (the button or R), `retry` and `return` (the tab came back with a refresh due).' },
+            { name: '.kp-refresh__bar / __chooser / __menu / __segments', what: 'The first row: the chooser (the menu button of the `menu` look or the segmented control of the `segmented` look, which scrolls inside the card when it is wider than it) and, after it, the freshness line and Refresh now.' },
+            { name: '.kp-refresh__line / __ago / __busy / __now / __count', what: 'The freshness line “updated 12 s ago”, which gives way to “updating…” in the same width, the button that refreshes at once and the thin rule that runs down to the next refresh.' },
+            { name: '.kp-refresh__custom / __input / __apply / __problem', what: 'The “Other…” form: a number of seconds, Apply and the line that refuses what is not a whole number.' },
+            { name: '.kp-refresh__failure / __note / __retry', what: 'The warning after a failed refresh: “Last refresh failed, retrying in 30 s” and Retry now.' },
             { name: 'data-kp-refresh', what: 'The seconds the page opens with; 30 by default, 0 opens paused.' },
             { name: 'data-kp-refresh-choices', what: 'The seconds offered, `0,15,30,60,300` by default (0 is paused). “Other…” takes any whole number of seconds.' },
             { name: 'data-kp-refresh-mode', what: '`event` (default: the app fetches), `page` (reload the page) or `region` (fetch the same URL and swap only the region).' },
@@ -9902,8 +10397,64 @@ setRequests(box, [
 ]);
 `,
             },
+            {
+                title: 'Loading, empty and failed',
+                why: '`setRequestsState(el, state, { message })` puts the list in one of the card’s four states. Loading lays the busy card over at least three rows, an empty list says so with Send test (`kp-requests-test`), a failed one has the destructive plate with Retry (`kp-requests-retry`).',
+                markup: `
+<div class="kp-stack kp-gap-md">
+<div class="kp-card kp-inspector" data-kp-requests id="doc-req-loading"></div>
+<div class="kp-card kp-inspector" data-kp-requests id="doc-req-empty"></div>
+<div class="kp-card kp-inspector" data-kp-requests id="doc-req-failed"></div>
+</div>
+`,
+                script: `
+import { attachRequestInspectors, setRequestsState } from '@kp-soft/themes/js/request-inspector';
+
+attachRequestInspectors(document.getElementById('doc-req-loading').parentElement);
+setRequestsState(document.getElementById('doc-req-loading'), 'loading');
+setRequestsState(document.getElementById('doc-req-empty'), 'empty');
+setRequestsState(document.getElementById('doc-req-failed'), 'error', { message: 'The service did not answer.' });
+`,
+            },
+            {
+                title: 'Holding its height in a state',
+                why: 'Loaded, the component is as high as its rows. Loading, empty or failed it keeps that height as a minimum, so the page under it does not jump twice; the first load has nothing remembered and is left alone. A very tall list holds a screen, not its full length (the cap is set on the host or any ancestor; it is 12 rem here to show it). Press the states.',
+                markup: `
+<div class="kp-stack kp-gap-md" id="doc-fp-requests">
+<div class="kp-row kp-gap-sm" role="group" aria-label="State">
+<button type="button" class="kp-button kp-button--sm" data-doc-state="ready">Ready</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-state="loading">Loading</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-state="empty">Empty</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-state="error">Failed</button>
+</div>
+<div class="kp-card kp-inspector" data-kp-requests id="doc-fp-requests-host" style="--kp-footprint-max: 14rem"></div>
+</div>
+`,
+                script: `
+import { attachRequestInspectors, setRequests, setRequestsState } from '@kp-soft/themes/js/request-inspector';
+const root = document.getElementById('doc-fp-requests');
+const host = document.getElementById('doc-fp-requests-host');
+attachRequestInspectors(root);
+const requests = [
+    { at: '2026-10-17T20:18:03+02:00', method: 'POST', path: '/hooks/backup', status: 202, headers: { 'content-type': 'application/json' }, body: '{"ok":true}', bodyBytes: 11, source: 'client' },
+    { at: '2026-10-17T20:21:40+02:00', method: 'POST', path: '/hooks/restore', status: 500, headers: { 'content-type': 'application/json' }, body: '{"error":"volume busy"}', bodyBytes: 23, source: 'client' },
+    { at: '2026-10-17T20:25:12+02:00', method: 'GET', path: '/health', status: 200, headers: {}, body: 'ok', bodyBytes: 2, source: 'client' },
+];
+const draw = (state) => {
+    if (state === 'ready') { setRequests(host, requests); setRequestsState(host, 'ready'); }
+    else { if (state === 'empty') setRequests(host, []); setRequestsState(host, state, { message: 'The service did not answer.' }); }
+};
+for (const button of root.querySelectorAll('[data-doc-state]')) {
+    button.addEventListener('click', () => draw(button.dataset.docState));
+}
+draw('ready');
+`,
+            },
         ],
         variants: [
+            { name: 'toCurl / toJson', what: '`toCurl(request, { mask, secretHeaders, origin })` and `toJson(request, { mask, secretHeaders })` (js/request-inspector.js) are what the copy buttons use: a request as a curl command or as JSON, the secret headers drawn as ******** unless `mask` is false. A page that sends a request on can call them too.' },
+            { name: '.kp-inspector__…', what: 'The parts of a request: `__row` (the fold), `__method`, `__status`, `__path`, `__source`, `__time`, then opened `__body`, `__heading`, `__headers`, `__secret` (a masked value), `__actions`; and around the list `__bar` with `__filter` and `__count`, `__list`, `__older` (“Show N older”) and `__nomatch`.' },
+            { name: 'the bar', what: 'The filter bar and its segments scroll inside the card when they are wider than it; the page never scrolls sideways.' },
             { name: 'data-kp-secret-headers', what: 'Header names masked on screen and in a copy; authorization, cookie, set-cookie, x-api-key and proxy-authorization by default.' },
             { name: 'data-kp-secrets-in-copy', what: '`masked` (default: a copy carries ******** and a separate “Copy curl with secrets” button carries the real values), `masked-only` or `real`.' },
             { name: 'data-kp-requests-open', what: '`none` (default: every request folded), `failed` (the 4xx and 5xx are open) or `first`.' },
@@ -9937,8 +10488,22 @@ setRequests(box, [
 </div>
 `,
             },
+            {
+                title: 'Broken JSON, said where',
+                why: 'The field checks while it is typed. Here the value is cut off after the colon: the line says what is wrong and where, and the gutter marks that line. A form that holds the field stays held back until the text parses.',
+                markup: `
+<div class="kp-field">
+<label class="kp-field__label" for="doc-json-broken">Action arguments</label>
+<textarea class="kp-field__input kp-field__input--multiline" id="doc-json-broken" name="arguments" data-kp-json="strict" data-kp-json-indent="4">{
+    "topic": "backup.done",
+    "ok":
+}</textarea>
+</div>
+`,
+            },
         ],
         variants: [
+            { name: 'explainJson(text)', what: 'The check on its own (js/json-field.js): answers `{ ok: true, value }` or `{ ok: false, why, line, column }` in one wording whatever the engine says, so a page can word the same fault in its own validation.' },
             { name: 'data-kp-json', what: '`strict` (default: text that is not JSON blocks the form) or `allow-text` (it may be sent, and the line says so). Decided per field.' },
             { name: 'data-kp-json-check', what: '`input` (default, debounced 300 ms) or `blur`.' },
             { name: 'data-kp-json-format', what: '`button` (default: Format and Minify beside the field), `on-blur` or `off`.' },
@@ -10098,8 +10663,68 @@ setNotices(centre, {
 });
 `,
             },
+            {
+                title: 'The Inbox page, and the states',
+                why: '`data-kp-notices-look="page"` has no counter and no panel: the list stands in the page, with a switch per source, the same notices and the same Fix buttons. The list is sorted by time here (`data-kp-order="time"`), and the second source is muted. `setNotices` also takes `state` (`loading`, `empty`, `error`, or `quiet` with `quietUntil`: the counter muted with a moon, “Quiet until 09:00” and End quiet).',
+                markup: `
+<div class="kp-notices" id="doc-notices-page" data-kp-notices data-kp-notices-look="page" data-kp-order="time"></div>
+`,
+                script: `
+import { attachNotices, setNotices } from '@kp-soft/themes/js/notices';
+
+const page = document.getElementById('doc-notices-page');
+attachNotices(page.parentElement);
+setNotices(page, {
+    state: 'ready',
+    items: [
+        { key: 'disk', severity: 'critical', title: 'Pool media is 93% full', since: '2026-10-17T18:02:00+02:00', consequence: 'Backups will stop at 100%.', remedy: 'Remove old snapshots.', fix: { label: 'Open snapshots' } },
+        { key: 'cert', severity: 'warning', title: 'Certificate expires in 6 days', since: '2026-10-16T09:30:00+02:00', consequence: 'Clients will refuse the connection.', remedy: 'Renew it.', fix: { label: 'Renew' } },
+        { key: 'fw', severity: 'info', title: 'Firmware 4.2 is available', since: '2026-10-15T08:00:00+02:00', consequence: 'Nothing stops; the drift fix is not applied.', remedy: 'Plan the update.' },
+    ],
+    sources: [{ key: 'storage', label: 'Storage' }, { key: 'certs', label: 'Certificates', muted: true }],
+});
+`,
+            },
+            {
+                title: 'Holding its height in a state',
+                why: 'Loaded, the component is as high as its rows. Loading, empty or failed it keeps that height as a minimum, so the page under it does not jump twice; the first load has nothing remembered and is left alone. A very tall list holds a screen, not its full length (the cap is set on the host or any ancestor; it is 12 rem here to show it). Press the states.',
+                markup: `
+<div class="kp-stack kp-gap-md" id="doc-fp-notices">
+<div class="kp-row kp-gap-sm" role="group" aria-label="State">
+<button type="button" class="kp-button kp-button--sm" data-doc-state="ready">Ready</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-state="loading">Loading</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-state="empty">Empty</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-state="error">Failed</button>
+</div>
+<div class="kp-notices" data-kp-notices data-kp-notices-look="page" id="doc-fp-notices-host" style="--kp-footprint-max: 14rem"></div>
+</div>
+`,
+                script: `
+import { attachNotices, setNotices } from '@kp-soft/themes/js/notices';
+const root = document.getElementById('doc-fp-notices');
+const host = document.getElementById('doc-fp-notices-host');
+attachNotices(root);
+const items = [
+    { key: 'disk', severity: 'critical', title: 'Pool media is 93% full', since: '2026-10-17T18:02:00+02:00', consequence: 'Backups will stop at 100%.', remedy: 'Remove old snapshots.', fix: { label: 'Open snapshots' } },
+    { key: 'cert', severity: 'warning', title: 'Certificate expires in 6 days', since: '2026-10-16T09:30:00+02:00', consequence: 'Clients will refuse the connection.', remedy: 'Renew it.', fix: { label: 'Renew' } },
+    { key: 'fw', severity: 'info', title: 'Firmware 4.2 is available', since: '2026-10-15T08:00:00+02:00', consequence: 'Nothing stops.', remedy: 'Plan the update.' },
+];
+const draw = (state) => setNotices(host, { state: state === 'ready' ? 'ready' : state, items: state === 'ready' ? items : [], error: 'The notices could not be read.' });
+for (const button of root.querySelectorAll('[data-doc-state]')) {
+    button.addEventListener('click', () => draw(button.dataset.docState));
+}
+draw('ready');
+`,
+            },
         ],
         variants: [
+            { name: 'the script', what: '`attachNotices(root, options)` wires every `[data-kp-notices]` and returns a detach; `noticesOf(el)` answers the handle; `setNotices(el, { state, items, sources, quietUntil, error })` hands over the data. `NOTICES` is the selector and `NOTICE_SEVERITIES` the three levels (`critical`, `warning`, `info`).' },
+            { name: 'events', what: '`kp-notice-fix` `{ key }`, `kp-notice-read` `{ key, read }`, `kp-notices-read-all`, `kp-notices-source` `{ source, muted }`, `kp-notices-retry`, `kp-notices-end-quiet` and `kp-notices-open-inbox`, bubbling from the root.' },
+            { name: '.kp-notices__trigger / __label / __count / __moon', what: 'The counter that opens the panel: its label, the exact number (a `.kp-badge`) and the moon of a quiet period.' },
+            { name: '.kp-notices__panel / __page / __head / __heading / __tools / __body', what: 'The panel (a `.kp-popover`, a full-height sheet on a phone) or, in the page look, the page; its head with the heading and the tools, and the body that holds the list or a state.' },
+            { name: '.kp-notices__quiet / __end-quiet / __read-all / __inbox', what: '“Quiet until 09:00” with End quiet, Mark all read and the link “All 37 in the Inbox”.' },
+            { name: '.kp-notices__list / __item', what: 'One notice: an item with `data-kp-severity` and `data-kp-unread`, holding `__mark` (the severity as a mark and a word), `__title`, `__since`, `__consequence`, `__remedy` and `__actions` (`__fix`, `__mark-read`).' },
+            { name: '.kp-notices__sources / __state / __foot', what: 'The switch per source, the plate of a loading, empty or failed list, and the foot of the panel.' },
             { name: 'data-kp-notices-look', what: '`both` (default: counter, panel and a link to the Inbox), `panel` (no link) or `page` (the list stands in the page, with the per-source switches).' },
             { name: 'data-kp-count', what: 'The number the counter shows when it is not the number of unread notices; exact, never “9+”.' },
             { name: 'data-kp-count-in-title', what: '`off` leaves the tab title alone; by default it gets “(5) ” in front.' },
@@ -10139,8 +10764,41 @@ setNotices(centre, {
 </div>
 `,
             },
+            {
+                title: 'A page that failed to load',
+                why: 'The page writes `data-kp-state="error"` on `.kp-ops`; no script is needed. By default (`plate`) the failure takes the body whole: the alert is centred at heading size, holds the height the page had, and the cards of the last read are hidden. `data-kp-ops-failed="keep"` leaves the cards and lays the alert as a band on top. The switch changes the attribute at runtime.',
+                markup: `
+<div class="kp-stack kp-gap-md">
+<label class="kp-switch"><input class="kp-switch__input" type="checkbox" role="switch" id="doc-ops-keep"><span>Keep the earlier cards under the band</span></label>
+<div class="kp-ops" id="doc-ops-failed" data-kp-state="error" data-kp-ops-sticky="none" data-kp-ops-width="full">
+<header class="kp-ops__head kp-page-header"><h1 class="kp-page-header__title">Overview</h1></header>
+<div class="kp-ops__kpis"><div class="kp-kpis"><div class="kp-kpi"><span class="kp-kpi__label">Stacks</span><span class="kp-kpi__value">24</span></div><div class="kp-kpi"><span class="kp-kpi__label">Failed</span><span class="kp-kpi__value">0</span></div></div></div>
+<div class="kp-ops__attention kp-attention">
+<div class="kp-alert kp-alert--destructive kp-attention__item" role="alert" data-kp-severity="critical">
+<span class="kp-attention__icon" aria-hidden="true">!</span>
+<div class="kp-attention__text"><strong><span class="kp-sr-only">Critical: </span>The overview could not be read</strong><span>The host did not answer.</span></div>
+<div class="kp-attention__actions"><button type="button" class="kp-button kp-button--sm">Retry</button></div>
+</div>
+</div>
+<div class="kp-ops__body">
+<section class="kp-card" data-kp-span="8"><h2 class="kp-card__title">Backups</h2><p>Last run 03:00, 31 volumes.</p></section>
+<section class="kp-card" data-kp-span="4"><h2 class="kp-card__title">Disk</h2><p>63% used.</p></section>
+</div>
+</div>
+</div>
+`,
+                script: `
+const ops = document.getElementById('doc-ops-failed');
+document.getElementById('doc-ops-keep').addEventListener('change', (event) => {
+    ops.setAttribute('data-kp-ops-failed', event.target.checked ? 'keep' : 'plate');
+});
+`,
+            },
         ],
         variants: [
+            { name: 'the footprint', what: 'The page is a footprint host (js/footprint.js): while it is `loading` or `error` it keeps the height it had when it was ready, as a minimum, so the failed plate stands where the cards stood. `FOOTPRINT_MAX` is the cap behind the knob, 48rem; the other hosts are the matrix, the entity grid, the checklist, the notices, the gallery, the availability grid and the request inspector (`FOOTPRINT_HOSTS`).' },
+            { name: '.kp-ops__head / __kpis / __attention / __toolbar / __body', what: 'The five slots, in this fixed order whatever the source order. The head and the body are required; a missing or empty slot takes no room. The attention slot is a `.kp-attention` with one alert per problem; the toolbar is a `.kp-toolbar`.' },
+            { name: 'data-kp-state', what: 'On `.kp-ops`: `loading`, `empty` or `error` (the last is the failed page above). The page is a footprint host: in a state it holds the height it had when ready (js/footprint.js), so the page under it does not jump.' },
             { name: 'data-kp-ops-width', what: '`80vw` (default, never under 64rem), `full` or `measure` (64rem).' },
             { name: 'data-kp-ops-cards', what: 'The default span of a card in twelve columns: `12`, `8`, `6` (default), `4` or `3`.' },
             { name: 'data-kp-ops-sticky', what: '`toolbar` (default), `head` or `none`: the part that stays reachable.' },
@@ -10183,8 +10841,60 @@ setNotices(centre, {
 </div>
 `,
             },
+            {
+                title: 'The detail in each state',
+                why: '`setPaneState(root, state, options)` puts the detail in `empty`, `loading`, `error` or `ready` (`selectPane`, `openPane` and `closePane` move the selection by key). Three layouts below, one state each: the empty plate asks to pick an item, the busy card lies over the detail only while the list stays usable, and the failed plate fills the pane with a normal-size Retry that fires `kp-pane-retry`.',
+                markup: `
+<div class="kp-stack kp-gap-md" id="doc-panes-states">
+<div class="kp-split kp-split--panes" data-kp-master-detail data-kp-pane-widths="12rem 1fr" data-kp-pane-history="off" id="doc-panes-empty" style="min-block-size: 11rem">
+<section class="kp-split__pane" data-kp-pane="list" aria-label="Secrets"><ul class="kp-pane__list" role="listbox" aria-label="Secrets"><li role="option" data-kp-pane-key="db">Database</li><li role="option" data-kp-pane-key="smtp">Mail server</li></ul></section>
+<section class="kp-split__pane" data-kp-pane="detail" aria-label="Secret"><h2 data-kp-pane-heading tabindex="-1"></h2><div class="kp-pane__body"></div></section>
+</div>
+<div class="kp-split kp-split--panes" data-kp-master-detail data-kp-pane-widths="12rem 1fr" data-kp-pane-history="off" id="doc-panes-loading" style="min-block-size: 11rem">
+<section class="kp-split__pane" data-kp-pane="list" aria-label="Secrets"><ul class="kp-pane__list" role="listbox" aria-label="Secrets"><li role="option" data-kp-pane-key="db">Database</li><li role="option" data-kp-pane-key="smtp">Mail server</li></ul></section>
+<section class="kp-split__pane" data-kp-pane="detail" aria-label="Secret"><h2 data-kp-pane-heading tabindex="-1">Database</h2><div class="kp-pane__body"></div></section>
+</div>
+<div class="kp-split kp-split--panes" data-kp-master-detail data-kp-pane-widths="12rem 1fr" data-kp-pane-history="off" id="doc-panes-error" style="min-block-size: 11rem">
+<section class="kp-split__pane" data-kp-pane="list" aria-label="Secrets"><ul class="kp-pane__list" role="listbox" aria-label="Secrets"><li role="option" data-kp-pane-key="db">Database</li><li role="option" data-kp-pane-key="smtp">Mail server</li></ul></section>
+<section class="kp-split__pane" data-kp-pane="detail" aria-label="Secret"><h2 data-kp-pane-heading tabindex="-1">Database</h2><div class="kp-pane__body"></div></section>
+</div>
+</div>
+`,
+                script: `
+import { attachMasterDetails, setPaneState } from '@kp-soft/themes/js/master-detail';
+
+attachMasterDetails(document.getElementById('doc-panes-states'));
+setPaneState(document.getElementById('doc-panes-empty'), 'empty');
+setPaneState(document.getElementById('doc-panes-loading'), 'loading', { words: 'Reading the secret…' });
+setPaneState(document.getElementById('doc-panes-error'), 'error', { title: 'Could not read the secret', text: 'The vault did not answer.' });
+`,
+            },
+            {
+                title: 'The state plate on its own',
+                why: 'An empty or failed area anywhere is drawn with `statePlate(doc, { kind, title, text, actionLabel, onAction })` (js/state-plate.js): `kind: \'empty\'` is the package’s empty plate, `kind: \'error\'` the destructive alert; both carry `.kp-stateplate`, which centres the words in the whole box it is given and sets the title at the heading size. The action is a normal-size button, `.kp-stateplate__action` at the control size, never a strip.',
+                markup: `
+<div class="kp-stack kp-gap-md">
+<div id="doc-plate-empty" style="display: grid; min-block-size: 9rem"></div>
+<div id="doc-plate-error" style="display: grid; min-block-size: 9rem"></div>
+</div>
+`,
+                script: `
+import { statePlate } from '@kp-soft/themes/js/state-plate';
+
+document.getElementById('doc-plate-empty').append(
+    statePlate(document, { kind: 'empty', title: 'No secrets yet', text: 'Add the first one and it appears here.', actionLabel: 'Add a secret' }),
+);
+document.getElementById('doc-plate-error').append(
+    statePlate(document, { kind: 'error', title: 'Could not read the secrets', text: 'The vault did not answer.', actionLabel: 'Retry', onAction: () => {} }),
+);
+`,
+            },
         ],
         variants: [
+            { name: 'the script', what: '`attachMasterDetails(root, { history })` wires every `[data-kp-master-detail]` and returns a detach; `masterDetail(el)` answers the handle (`key()`, `select(key)`, `open(key)`, `close()`, `narrow()`, `setState()`); `selectPane`, `openPane` and `closePane` are the same moves by element. `MASTER_DETAIL` is the selector; `PANE_WIDTHS`, `PANE_ASIDE_WIDTH`, `PANE_FOLD_AT` and `PANE_ASIDE_FOLD_AT` are the defaults behind the attributes.' },
+            { name: 'events', what: '`kp-pane-select` when the selection moves (arrow keys, a click), `kp-pane-open` when the detail is opened (the page loads it and its router writes the address), `kp-pane-close` when the detail or the aside goes away, `kp-pane-retry` for Retry in a failed detail; the names are `PANE_SELECT_EVENT`, `PANE_OPEN_EVENT`, `PANE_CLOSE_EVENT` and `PANE_RETRY_EVENT`.' },
+            { name: '.kp-pane__list / __head / __back / __body / __state / __detail / __busy', what: 'The parts: the listbox, the head of a pane, the Back button of the folded layout, the detail’s body, the plate that fills it in a state, the detail itself and the busy card laid over it. The panes are marked by `data-kp-pane="list|detail|aside"`, not by a class.' },
+            { name: 'statePlate(doc, options)', what: 'The shared plate (js/state-plate.js) for any empty or failed area; `actionAttribute` writes a data attribute on the action so a container can listen for it by delegation. The action sits at the control size, not the plate’s heading size.' },
             { name: 'data-kp-pane-widths', what: 'The columns: `17rem 1fr`, and a third such as `24rem` when there is an aside.' },
             { name: 'data-kp-fold-at', what: 'The layout width below which the panes fold; 48rem.' },
             { name: 'data-kp-aside-fold-at', what: 'The width below which the aside moves under the other panes; 90rem.' },
@@ -10482,8 +11192,35 @@ askQuestion(container, {
 container.addEventListener('kp-question-answer', (event) => event.detail.respond(true));
 `,
             },
+            {
+                title: 'The bar clock, the urgent card and the ones that finished',
+                why: '`measure: \'bar\'` (JS option `countdown`) drains a rule instead of the ring. From `urgentAt` seconds the card is stronger and its time bold; the last card has `expired: \'remove\'`. The clock is frozen here (the second argument of `askQuestion`) so the page does not change under you; a card that is answered, refused or expired keeps its outcome with a Dismiss button.',
+                markup: `
+<div data-kp-questions id="doc-questions-more" data-kp-title="off"></div>
+`,
+                script: `
+import { askQuestion, attachQuestions } from '@kp-soft/themes/js/question-card';
+
+const container = document.getElementById('doc-questions-more');
+attachQuestions(container.parentElement);
+const answers = [
+    { value: 'allow', label: 'Allow', consequence: 'Updates the stack now.', outcome: 'Allowed. The update goes on.' },
+    { value: 'later', label: 'Later', consequence: 'Asks again tomorrow.', outcome: 'Postponed until tomorrow.' },
+];
+const now = Date.now();
+askQuestion(container, { id: 'q-bar', question: 'Update media tonight?', deadline: now + 600000, answers, defaultAnswer: 'later', countdown: 'bar' }, { now: () => now, frozen: true });
+askQuestion(container, { id: 'q-urgent', question: 'Restart the gateway?', deadline: now + 20000, answers, defaultAnswer: 'later', urgentAt: 30 }, { now: () => now, frozen: true });
+askQuestion(container, { id: 'q-expired', question: 'Clean the cache?', deadline: now - 1000, answers, defaultAnswer: 'later', expired: 'keep' }, { now: () => now, frozen: true });
+`,
+            },
         ],
         variants: [
+            { name: 'the script', what: '`askQuestion(container, spec, { now, frozen })` adds a card and answers its handle; `attachQuestions(root)` wires every `[data-kp-questions]` container and returns a detach; `questionOf(el)` answers the handle of a card. `QUESTIONS` is the selector and `QUESTION_URGENT_AT` (30) the default behind `urgentAt`. The spec’s fields are `id`, `question`, `text`, `deadline`, `answers`, `defaultAnswer`, `urgentAt`, `expired` and `countdown`.' },
+            { name: 'events', what: '`kp-question-answer` `{ id, value, respond(ok, why) }`, `kp-question-expire` `{ id, defaultAnswer }` and `kp-question-dismiss` `{ id }` (`QUESTION_ANSWER_EVENT`, `QUESTION_EXPIRE_EVENT`, `QUESTION_DISMISS_EVENT`).' },
+            { name: '.kp-question__head / __title / __text / __time / __left / __default', what: 'The card’s head: the question, its sentence, the time left (“1 min 30 s”) and the line that says what happens at zero, “If nobody answers: stops”.' },
+            { name: '.kp-question__bar / __fill / __ring', what: 'The three clocks: the draining rule (`bar`) and the ring (`ring`, the default); `text` draws the time alone.' },
+            { name: '.kp-question__answers / __answer / __button / __consequence', what: 'One answer: a button with what it sets in motion under it, tied to the button as its description. On a phone the buttons are full width.' },
+            { name: '.kp-question__outcome / __dismiss', what: 'What a finished card says (“Allowed. The operation goes on.”) and its Dismiss button.' },
             { name: 'deadline', what: 'An ISO string or epoch milliseconds; required. The card counts to it.' },
             { name: 'data-kp-asked', what: 'When it was asked (now by default); the countdown bar is measured from it.' },
             { name: 'default-answer', what: 'The value that happens at zero, said on the card (“If nobody answers: stops”).' },
@@ -10515,8 +11252,20 @@ container.addEventListener('kp-question-answer', (event) => event.detail.respond
 <button class="kp-button" type="button" disabled data-kp-disabled-reason="Nothing is selected yet">Delete</button>
 `,
             },
+            {
+                title: 'A slider and a weekday picker that are off',
+                why: 'A control that fills its line (the slider, the weekday picker, a sentence) is not shrink-wrapped by its reason anchor: the anchor takes the line and the control takes the anchor’s width, so the sentence never breaks one letter to a line. These two carry `data-kp-disabled` with the reason; hover the slider for the tooltip, and read the weekday picker’s own line under its chips.',
+                markup: `
+<div class="kp-stack kp-gap-md">
+<div class="kp-slider" data-kp-slider data-kp-min="0" data-kp-max="100" data-kp-value="40" data-kp-unit="%" data-kp-disabled data-kp-disabled-reason="Retention is set by the backup policy" aria-label="Retention"></div>
+<div class="kp-weekdays" data-kp-weekdays data-kp-value="1,4" data-kp-disabled data-kp-disabled-reason="The schedule is paused" aria-label="Run on"></div>
+</div>
+`,
+            },
         ],
         variants: [
+            { name: 'attachDisabledReasons(root)', what: 'Wires every control under `root` that carries `data-kp-disabled-reason` (js/reason.js, found by js/auto.js; `DISABLED_REASON` is the selector). Nothing runs on import; the call returns a detach that unwraps the controls again and gives back their own `aria-describedby`.' },
+            { name: '.kp-reason', what: 'The anchor the script wraps round the control: it takes the pointer a disabled button does not, and carries `data-kp-reason-off` while the reason shows. A disabled slider, weekday picker or sentence in it makes the anchor take the whole line.' },
             { name: 'follows the attribute', what: 'Change or remove the sentence and the tooltip changes or goes; a control that comes back to life loses it.' },
             { name: 'aria-disabled', what: 'A control disabled with `aria-disabled="true"` carries a reason the same way.' },
         ],
@@ -10552,8 +11301,56 @@ container.addEventListener('kp-question-answer', (event) => event.detail.respond
 </ul>
 `,
             },
+            {
+                title: 'A result, a rule and a busy bar',
+                why: '`setSelectionRules(bar, rules)` turns an action off, with the reason, for a selection it does not fit (tick order 1043 and Delete gives its reason). A press on a marked button fires `kp-selection-action` with `{ action, keys, items, matching, undoMs }`; the page calls `setSelectionBusy(bar, words)` while it works and `setSelectionResult(bar, { done, refused })` when some rows refused: the bar says “1 done, 1 refused: why” and each refused row carries its reason as a `.kp-selection__refusal` line. The keys line under the list is written by `data-kp-select-hint` (on the element that holds it, naming the list). Tick two rows, one of them order 1043, and press Requeue.',
+                markup: `
+<div id="doc-sel-live">
+<div class="kp-selection" data-kp-selection id="doc-sel-bar" data-kp-selection-for="doc-sel-list" data-kp-placement="inline">
+<div class="kp-selection__actions">
+<button class="kp-button" type="button" data-kp-selection-action="requeue">Requeue</button>
+<button class="kp-button kp-button--destructive" type="button" data-kp-selection-action="delete">Delete</button>
+</div>
+</div>
+<ul id="doc-sel-list" data-kp-select-keys>
+<li data-kp-row-key="a"><label><input type="checkbox" data-kp-select-row> Order 1041</label></li>
+<li data-kp-row-key="b"><label><input type="checkbox" data-kp-select-row> Order 1042</label></li>
+<li data-kp-row-key="c"><label><input type="checkbox" data-kp-select-row> Order 1043 (shipped)</label></li>
+</ul>
+<p data-kp-select-hint="doc-sel-list"></p>
+</div>
+`,
+                script: `
+import { attachSelectionBars, setSelectionBusy, setSelectionResult, setSelectionRules } from '@kp-soft/themes/js/selection-bar';
+
+const live = document.getElementById('doc-sel-live');
+attachSelectionBars(live);
+const bar = document.getElementById('doc-sel-bar');
+setSelectionRules(bar, {
+    delete: (items) => (items.some((item) => item.key === 'c') ? 'Order 1043 is shipped and cannot be deleted' : null),
+});
+bar.addEventListener('kp-selection-action', (event) => {
+    if (event.detail.action !== 'requeue') return;
+    setSelectionBusy(bar, 'Requeuing ' + event.detail.keys.length + '…');
+    setTimeout(() => {
+        setSelectionBusy(bar, null);
+        const refused = event.detail.keys.filter((key) => key === 'c').map((key) => ({ key, reason: 'Already shipped' }));
+        setSelectionResult(bar, { done: event.detail.keys.length - refused.length, refused });
+    }, 800);
+});
+`,
+            },
         ],
         variants: [
+            { name: 'row keys', what: 'The keys of the rows are `rowSelect(el)` (the handle of an element that has them: `keys()`, `clear()`) and `rowSelectKeys(el)` (the keys of the ticked rows, handle or not); `attachRowSelect(root, options)` gives every `[data-kp-select-keys]` and every data table with a select column the keys and returns a detach. The same options are its second argument (`range`, `arrows`, `allKey`, `scroll`). Enter on a row fires `kp-row-open`; `data-kp-select-keys="false"` turns the keys off for one element.' },
+            { name: 'kp-rows-select', what: 'Fired on the element after the keys changed the ticks: `{ keys, count, source, skipped }`. Boxes that are disabled are walked over by a range and counted in “2 skipped: cannot be selected”.' },
+            { name: '.is-cursor', what: 'The row the cursor stands on: a ring, not a fill, so a ticked row and the cursor row read apart. It survives a refresh by the row’s key.' },
+            { name: 'data-kp-selecting', what: 'On a phone a long press on a row (half a second) starts selection mode: every tap on a row then ticks it, until the last tick goes.' },
+            { name: '.kp-selection__panel / __count / __names / __more', what: 'The parts the script adds: the panel that holds the rest, the exact count in the width of the next digit, the names (wrapping, never cut with an ellipsis) and the exact “+4 more”.' },
+            { name: '.kp-selection__offer / __result / __refusal', what: 'The offer “Select all 312 that match”, the line after an action that some rows refused (`setSelectionResult`), and the reason written under each refused row (the row carries `data-kp-refused`).' },
+            { name: '.kp-selection__toggle / __clear', what: 'The Actions button that holds the page’s buttons on a narrow bar, and the button that unticks everything (Esc does the same).' },
+            { name: 'setSelection / getSelection', what: '`setSelection(bar, items, { matching })` feeds the bar by hand for a list with no boxes (a board, a selection held by the server), after which the bar ignores the boxes; `getSelection(bar)` answers `{ keys, items, count, matching }`.' },
+            { name: 'setSelectionBusy / setSelectionResult / setSelectionRules', what: 'While an action runs the buttons stop answering and the count gives way to the words; a result names how many were done and how many refused, and why; a rule is a function by the action’s id that answers the reason or nothing.' },
             { name: 'data-kp-selection-for', what: 'The ids of the tables or lists it serves, space separated; the nearest by default.' },
             { name: 'data-kp-placement', what: '`sticky-top` (default), `inline` or `floating-bottom`.' },
             { name: 'data-kp-selection-names', what: '`names` (default) or `count`.' },
@@ -10594,8 +11391,36 @@ document.getElementById('undo-demo').addEventListener('click', () => {
 });
 `,
             },
+            {
+                title: 'The three clocks, a reverse and a failure',
+                why: 'The ring is the default; `clock: \'bar\'` drains a rule under the words; `clock: \'text\'` says the seconds. `mode: \'revert\'` is for an action already done: nothing is deferred and Undo calls the page’s reverse. When a commit rejects, the toast turns into “Not done: why” and the row comes back (`restore`, which is `undo` by default).',
+                markup: `
+<div class="kp-row kp-gap-sm">
+<button type="button" class="kp-button" data-doc-undo="ring">Ring</button>
+<button type="button" class="kp-button" data-doc-undo="bar">Bar, ten seconds</button>
+<button type="button" class="kp-button" data-doc-undo="revert">Text, already done</button>
+<button type="button" class="kp-button" data-doc-undo="failed">A commit that fails</button>
+</div>
+`,
+                script: `
+import { undoToast } from '@kp-soft/themes/js/undo-toast';
+
+const shows = {
+    ring: () => undoToast('Schedule deleted', { commit: () => {}, undo: () => {} }),
+    bar: () => undoToast('2 backups removed', { clock: 'bar', ms: 10000, commit: () => {}, undo: () => {} }),
+    revert: () => undoToast('Snapshot restored', { mode: 'revert', clock: 'text', undo: () => {} }),
+    failed: () => undoToast('Volume removed', { ms: 1500, commit: () => Promise.reject(new Error('The volume is in use')), undo: () => {} }),
+};
+for (const button of document.querySelectorAll('[data-doc-undo]')) {
+    button.addEventListener('click', () => shows[button.dataset.docUndo]());
+}
+`,
+            },
         ],
         variants: [
+            { name: '.kp-toast--undo', what: 'The toast’s own class (`UNDO_TOAST`), on the ordinary toast of js/overlays.js. It carries `data-kp-undo-state` (counting, committing, failed, undone, done) and `data-kp-paused` while the pointer or the focus holds it.' },
+            { name: '.kp-undo / __text / __ringbox / __ring / __secs / __clock', what: 'The parts inside it: the words, the box of the ring (a track and a fill that drains over the window), the seconds left in words and the plain clock of `text`.' },
+            { name: 'UNDO_RESTORED_MS / UNDO_MAX', what: 'How long “Restored” stays after Undo (1500 ms) and how many toasts stand at once (3), the defaults behind `max`.' },
             { name: 'ms', what: 'How long Undo is offered; 6000, 0 commits at once.' },
             { name: 'mode', what: '`defer` (default: the action waits) or `revert` (the action is done; Undo calls the page’s reverse).' },
             { name: 'clock', what: '`ring` (default), `bar`, `text` or `none`; also `data-kp-undo-clock`.' },
@@ -10769,8 +11594,39 @@ setTransfer(row, { done: 1000000000, total: 4100000000, at: now - 5000 });
 setTransfer(row, { done: 1200000000, total: 4100000000, at: now });
 `,
             },
+            {
+                title: 'Stalled, failed, done and a size nobody knows',
+                why: 'The same row in its other states. No new byte for ten seconds is “stalled” (a warning, the time left hidden); `failed` ends the transfer with the app’s own sentence and a Retry that fires `kp-transfer-retry`; a transfer that reaches its total says “4.1 GB in 3 min 12 s” and, after the linger, fires `kp-transfer-leave`; without a total the row says what it knows, “1.2 GB so far”, and “size unknown”.',
+                markup: `
+<div class="kp-progress-group kp-progress-group--transfer" id="doc-transfer-states" data-kp-linger="0">
+<div class="kp-progress__wrap" data-kp-transfer id="doc-transfer-stalled"></div>
+<div class="kp-progress__wrap" data-kp-transfer id="doc-transfer-failed"></div>
+<div class="kp-progress__wrap" data-kp-transfer id="doc-transfer-done"></div>
+<div class="kp-progress__wrap" data-kp-transfer id="doc-transfer-unknown"></div>
+</div>
+`,
+                script: `
+import { attachTransfers, setTransfer } from '@kp-soft/themes/js/transfer';
+
+attachTransfers(document.getElementById('doc-transfer-states'));
+const base = Date.now();
+const clock = { now: () => base };
+setTransfer(document.getElementById('doc-transfer-stalled'), { name: 'photos.tar.zst', done: 2000000000, total: 4000000000, at: base - 30000 }, clock);
+setTransfer(document.getElementById('doc-transfer-stalled'), { done: 2000000000, total: 4000000000, at: base }, clock);
+setTransfer(document.getElementById('doc-transfer-failed'), { name: 'media.tar.zst', done: 1500000000, total: 6000000000, at: base - 4000 }, clock);
+setTransfer(document.getElementById('doc-transfer-failed'), { failed: 'The disk is full', at: base }, clock);
+setTransfer(document.getElementById('doc-transfer-done'), { name: 'docs.tar.zst', done: 0, total: 4100000000, at: base - 192000 }, clock);
+setTransfer(document.getElementById('doc-transfer-done'), { done: 4100000000, total: 4100000000, at: base }, clock);
+setTransfer(document.getElementById('doc-transfer-unknown'), { name: 'stream.log', done: 1200000000, at: base - 5000 }, clock);
+setTransfer(document.getElementById('doc-transfer-unknown'), { done: 1260000000, at: base }, clock);
+`,
+            },
         ],
         variants: [
+            { name: 'the script', what: '`attachTransfers(root)` wires every `[data-kp-transfer]` and returns a detach; `setTransfer(row, { done, total, at, name, failed }, { now })` reports progress (the first report starts the transfer, a report that reaches `total` ends it); `resetTransfer(row)` clears a row for a new try; `transferRate(samples, windowS)` and `transferEta(seconds)` are the two calculations, exported for a page that draws its own reading. `TRANSFER` is the selector.' },
+            { name: 'events', what: '`kp-transfer-done` `{ total, ms }`, `kp-transfer-retry` and `kp-transfer-leave` (`TRANSFER_DONE_EVENT`, `TRANSFER_RETRY_EVENT`, `TRANSFER_LEAVE_EVENT`), bubbling from the row.' },
+            { name: '.kp-progress__rate / __eta', what: 'The two parts the transfer adds to the progress bar’s label, track and value: “12 MB/s” and “about 3 min left”, in tabular figures and in columns shared by every row of the group.' },
+            { name: '.kp-transfer__failure / __retry / __voice', what: 'The failed note with the app’s reason, its Retry, and the line only a screen reader hears (25, 50, 75 and 100 percent).' },
             { name: 'data-kp-transfer-name', what: 'The file’s name, written in the label.' },
             { name: 'data-kp-rate-window', what: 'Seconds (5): the moving average; a single sample jumps.' },
             { name: 'data-kp-eta-after', what: 'Seconds (3): no time left until that much has been measured (“estimating…”).' },
@@ -11265,9 +12121,9 @@ gallery.addEventListener('kp-gallery-open', (event) => {
                 why: '`data-kp-tile-shape="ratio"` lets each picture keep its own shape in rows, `data-kp-grid-columns` fixes 2 to 8 columns (`auto` makes tiles of at least 9rem, two columns on a phone), `data-kp-caption` is `hover`, `always` or `none`, and `data-kp-lightbox-info` is `caption`, `details` (adds the size) or `off`. `setGallery(el, { add: true })` shows an Add pictures tile, which fires `kp-gallery-add` with `{ files }`; `setGalleryUploading(el, reason)` turns it off while a file goes up. The other lightbox options are `-zoom`, `-chrome`, `-preload` and `-hash` (with `data-kp-hash-prefix`); `data-kp-lazy` and `data-kp-remember` (the last opened picture, with “Continue where you were”). A state is `loading` (the busy card over the whole gallery), `empty` or `error` (plates over the whole footprint); a picture that fails to load becomes a tile and a stage with Retry.',
                 markup: `
 <div class="kp-gallery" id="doc-gallery-ratio" data-kp-gallery data-kp-tile-shape="ratio" data-kp-grid-columns="3" data-kp-caption="always" data-kp-lightbox-info="details" data-kp-lightbox-loop="on" aria-label="Rows that keep their shape"></div>
-<div class="kp-gallery" id="doc-gallery-loading" data-kp-gallery aria-label="Loading"></div>
-<div class="kp-gallery" id="doc-gallery-empty" data-kp-gallery aria-label="Empty"></div>
-<div class="kp-gallery" id="doc-gallery-failed" data-kp-gallery aria-label="Failed"></div>
+<div class="kp-gallery" id="doc-gallery-ratio-loading" data-kp-gallery aria-label="Loading"></div>
+<div class="kp-gallery" id="doc-gallery-ratio-empty" data-kp-gallery aria-label="Empty"></div>
+<div class="kp-gallery" id="doc-gallery-ratio-failed" data-kp-gallery aria-label="Failed"></div>
 `,
                 script: `
 import { attachGalleries, setGallery } from '@kp-soft/themes/js/gallery';
@@ -11282,9 +12138,9 @@ setGallery(ratio, {
     add: true,
     items: sizes.map(([w, h], index) => ({ id: 'r' + index, src: picture(index * 50, w, h), thumb: picture(index * 50, w, h), width: w, height: h, alt: 'Picture ' + (index + 1), caption: 'Picture ' + (index + 1), bytes: 1800000 })),
 });
-setGallery(document.getElementById('doc-gallery-loading'), { state: 'loading', skeleton: 4 });
-setGallery(document.getElementById('doc-gallery-empty'), { state: 'empty', message: 'No pictures yet. Add the first one.' });
-setGallery(document.getElementById('doc-gallery-failed'), { state: 'error', message: 'The pictures could not be read.' });
+setGallery(document.getElementById('doc-gallery-ratio-loading'), { state: 'loading', skeleton: 4 });
+setGallery(document.getElementById('doc-gallery-ratio-empty'), { state: 'empty', message: 'No pictures yet. Add the first one.' });
+setGallery(document.getElementById('doc-gallery-ratio-failed'), { state: 'error', message: 'The pictures could not be read.' });
 `,
             },
             {
@@ -11351,6 +12207,34 @@ setGallery(document.getElementById('doc-gallery-broken'), {
         { id: 'gone', src: 'missing/gone.jpg', width: 400, height: 400, alt: 'A photo that is not there', caption: 'Gone' },
     ],
 });
+`,
+            },
+            {
+                title: 'Holding its height in a state',
+                why: 'Loaded, the component is as high as its rows. Loading, empty or failed it keeps that height as a minimum, so the page under it does not jump twice; the first load has nothing remembered and is left alone. A very tall list holds a screen, not its full length (the cap is set on the host or any ancestor; it is 12 rem here to show it). Press the states.',
+                markup: `
+<div class="kp-stack kp-gap-md" id="doc-fp-gallery">
+<div class="kp-row kp-gap-sm" role="group" aria-label="State">
+<button type="button" class="kp-button kp-button--sm" data-doc-state="ready">Ready</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-state="loading">Loading</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-state="empty">Empty</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-state="error">Failed</button>
+</div>
+<div class="kp-gallery" data-kp-gallery id="doc-fp-gallery-host" aria-label="Photos" style="--kp-footprint-max: 14rem"></div>
+</div>
+`,
+                script: `
+import { attachGalleries, setGallery } from '@kp-soft/themes/js/gallery';
+const root = document.getElementById('doc-fp-gallery');
+const host = document.getElementById('doc-fp-gallery-host');
+attachGalleries(root);
+const picture = (hue) => 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="300" height="300"><rect width="300" height="300" fill="hsl(' + hue + ' 40% 60%)"/></svg>');
+const items = [20, 80, 140, 200, 260, 320].map((hue, i) => ({ id: 'p' + i, src: picture(hue), thumb: picture(hue), alt: 'Colour ' + (i + 1), caption: 'Colour ' + (i + 1) }));
+const draw = (state) => setGallery(host, state === 'ready' ? { items, label: 'Photos' } : { items: [], state, message: state === 'empty' ? 'No pictures yet.' : 'The pictures could not be loaded.', label: 'Photos' });
+for (const button of root.querySelectorAll('[data-doc-state]')) {
+    button.addEventListener('click', () => draw(button.dataset.docState));
+}
+draw('ready');
 `,
             },
         ],

@@ -278,6 +278,53 @@ setConnection(banner, 'offline', { pending: 3 });
 attachConnection(banner.parentElement);
 setConnection(banner, <span class="kp-code__string">'offline'</span>, { pending: <span class="kp-code__string">3</span> });</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Refused, reconnecting and back</figcaption>
+                        <p class="kp-text-muted">The same banner in its other states. `refused` is the destructive plate: the browser is online and the server refuses, the app’s own sentence is the reason. The buttons below report each state with `setConnection(el, state, { pending, why, attempt })`; `kp-connection-state` fires on every change and `kp-connection-retry` when a try is due, which the app answers with the next `setConnection`.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-row kp-gap-sm">
+    <button type="button" class="kp-button" data-doc-connection="refused">Refused</button>
+    <button type="button" class="kp-button" data-doc-connection="reconnecting">Reconnecting</button>
+    <button type="button" class="kp-button" data-doc-connection="online">Back online</button>
+</div>
+<div class="kp-connection" id="doc-connection-states" data-kp-connection data-kp-connection-source="app" data-kp-placement="top" data-kp-retry-delays="off"></div>
+                            <script type="module">
+import { attachConnection, setConnection } from '../../js/connection.js';
+
+const banner = document.getElementById('doc-connection-states');
+attachConnection(banner.parentElement);
+const reports = {
+    refused: () => setConnection(banner, 'refused', { why: 'The server did not accept the change.' }),
+    reconnecting: () => setConnection(banner, 'reconnecting', { pending: 3, attempt: 2 }),
+    online: () => setConnection(banner, 'online'),
+};
+for (const button of document.querySelectorAll('[data-doc-connection]')) {
+    button.addEventListener('click', () => reports[button.dataset.docConnection]());
+}
+setConnection(banner, 'refused', { why: 'The server did not accept the change.' });
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-gap-sm&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-connection</span><span class="kp-code__string">=&quot;refused&quot;</span>&gt;Refused&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-connection</span><span class="kp-code__string">=&quot;reconnecting&quot;</span>&gt;Reconnecting&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span> <span class="kp-code__keyword">data-doc-connection</span><span class="kp-code__string">=&quot;online&quot;</span>&gt;Back online&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-connection&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-connection-states&quot;</span> <span class="kp-code__keyword">data-kp-connection</span> <span class="kp-code__keyword">data-kp-connection-source</span><span class="kp-code__string">=&quot;app&quot;</span> <span class="kp-code__keyword">data-kp-placement</span><span class="kp-code__string">=&quot;top&quot;</span> <span class="kp-code__keyword">data-kp-retry-delays</span><span class="kp-code__string">=&quot;off&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachConnection, setConnection } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/connection'</span>;
+
+<span class="kp-code__keyword">const</span> banner = document.getElementById(<span class="kp-code__string">'doc-connection-states'</span>);
+attachConnection(banner.parentElement);
+<span class="kp-code__keyword">const</span> reports = {
+    refused: () =&gt; setConnection(banner, <span class="kp-code__string">'refused'</span>, { why: <span class="kp-code__string">'The server did not accept the change.'</span> }),
+    reconnecting: () =&gt; setConnection(banner, <span class="kp-code__string">'reconnecting'</span>, { pending: <span class="kp-code__string">3</span>, attempt: <span class="kp-code__string">2</span> }),
+    online: () =&gt; setConnection(banner, <span class="kp-code__string">'online'</span>),
+};
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> button <span class="kp-code__keyword">of</span> document.querySelectorAll(<span class="kp-code__string">'[data-doc-connection]'</span>)) {
+    button.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; reports[button.dataset.docConnection]());
+}
+setConnection(banner, <span class="kp-code__string">'refused'</span>, { why: <span class="kp-code__string">'The server did not accept the change.'</span> });</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -330,6 +377,8 @@ setConnection(banner, <span class="kp-code__string">'offline'</span>, { pending:
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>the script</code></td><td>`attachConnection(root)` wires every `[data-kp-connection]` and returns a detach; `connectionOf(el)` answers the handle; `setConnection(el, state, { pending, why, attempt })` reports a state. `CONNECTION` is the selector and `CONNECTION_STATES` the five states; the events are `CONNECTION_STATE_EVENT` (`{ state, previous, pending }`) and `CONNECTION_RETRY_EVENT` (`{ attempt, auto }`).</td></tr>
+                            <tr><td><code>.kp-connection__band</code></td><td>The plate inside the banner: a `.kp-alert` (warning offline, destructive refused, success when it is back) with `__mark`, `__body` (`__title`, `__why`, `__meta`: the time to the next try) and `__retry`, the Retry now button.</td></tr>
                             <tr><td><code>online</code></td><td>Nothing is drawn and no room is taken.</td></tr>
                             <tr><td><code>offline</code></td><td>The warning plate: what, why, what now, the time to the next try and Retry now.</td></tr>
                             <tr><td><code>reconnecting</code></td><td>A try is under way, with its attempt number.</td></tr>

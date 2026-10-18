@@ -271,6 +271,26 @@
     &lt;<span class="kp-code__keyword">textarea</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input kp-field__input--multiline&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;hook-body&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;body&quot;</span> <span class="kp-code__keyword">data-kp-json</span><span class="kp-code__string">=&quot;strict&quot;</span> <span class="kp-code__keyword">placeholder</span><span class="kp-code__string">='{&quot;topic&quot;:&quot;backup.done&quot;}'</span>&gt;{&quot;topic&quot;:&quot;backup.done&quot;,&quot;ok&quot;:true}&lt;/<span class="kp-code__keyword">textarea</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Broken JSON, said where</figcaption>
+                        <p class="kp-text-muted">The field checks while it is typed. Here the value is cut off after the colon: the line says what is wrong and where, and the gutter marks that line. A form that holds the field stays held back until the text parses.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-field">
+    <label class="kp-field__label" for="doc-json-broken">Action arguments</label>
+    <textarea class="kp-field__input kp-field__input--multiline" id="doc-json-broken" name="arguments" data-kp-json="strict" data-kp-json-indent="4">{
+        "topic": "backup.done",
+        "ok":
+        }</textarea>
+</div>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">label</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__label&quot;</span> <span class="kp-code__keyword">for</span><span class="kp-code__string">=&quot;doc-json-broken&quot;</span>&gt;Action arguments&lt;/<span class="kp-code__keyword">label</span>&gt;
+    &lt;<span class="kp-code__keyword">textarea</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-field__input kp-field__input--multiline&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-json-broken&quot;</span> <span class="kp-code__keyword">name</span><span class="kp-code__string">=&quot;arguments&quot;</span> <span class="kp-code__keyword">data-kp-json</span><span class="kp-code__string">=&quot;strict&quot;</span> <span class="kp-code__keyword">data-kp-json-indent</span><span class="kp-code__string">=&quot;4&quot;</span>&gt;{
+        &quot;topic&quot;: &quot;backup.done&quot;,
+        &quot;ok&quot;:
+        }&lt;/<span class="kp-code__keyword">textarea</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -326,6 +346,7 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>explainJson(text)</code></td><td>The check on its own (js/json-field.js): answers `{ ok: true, value }` or `{ ok: false, why, line, column }` in one wording whatever the engine says, so a page can word the same fault in its own validation.</td></tr>
                             <tr><td><code>data-kp-json</code></td><td>`strict` (default: text that is not JSON blocks the form) or `allow-text` (it may be sent, and the line says so). Decided per field.</td></tr>
                             <tr><td><code>data-kp-json-check</code></td><td>`input` (default, debounced 300 ms) or `blur`.</td></tr>
                             <tr><td><code>data-kp-json-format</code></td><td>`button` (default: Format and Minify beside the field), `on-blur` or `off`.</td></tr>

@@ -452,6 +452,61 @@ setAvailability(document.getElementById(<span class="kp-code__string">'doc-av-lo
     answers: { kenny: { [columns[<span class="kp-code__string">0</span>].key]: <span class="kp-code__string">'yes'</span> }, tom: { [columns[<span class="kp-code__string">0</span>].key]: <span class="kp-code__string">'yes'</span>, [columns[<span class="kp-code__string">1</span>].key]: <span class="kp-code__string">'no'</span> } },
 });</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Holding its height in a state</figcaption>
+                        <p class="kp-text-muted">Loaded, the component is as high as its rows. Loading, empty or failed it keeps that height as a minimum, so the page under it does not jump twice; the first load has nothing remembered and is left alone. A very tall list holds a screen, not its full length (the cap is set on the host or any ancestor; it is 12 rem here to show it). Press the states.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack kp-gap-md" id="doc-fp-availability">
+    <div class="kp-row kp-gap-sm" role="group" aria-label="State">
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="ready">Ready</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="loading">Loading</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="empty">Empty</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="error">Failed</button>
+    </div>
+    <div class="kp-availability" data-kp-availability id="doc-fp-availability-host" aria-label="Who can come" style="--kp-footprint-max: 14rem"></div>
+</div>
+                            <script type="module">
+import { attachAvailability, setAvailability } from '../../js/availability.js';
+const root = document.getElementById('doc-fp-availability');
+const host = document.getElementById('doc-fp-availability-host');
+attachAvailability(root);
+const spec = {
+    columns: [{ key: 'a', label: '1 to 3 May' }, { key: 'b', label: '8 to 10 May' }, { key: 'c', label: '15 to 17 May' }],
+    people: [{ id: 'me', name: 'Anna', mine: true }, { id: 'bo', name: 'Bo' }, { id: 'cy', name: 'Cy' }, { id: 'di', name: 'Di' }],
+    answers: { me: { a: 'yes', b: 'maybe', c: 'no' }, bo: { a: 'yes', b: 'yes', c: 'no' }, cy: { a: 'maybe', b: 'yes', c: 'yes' }, di: { a: 'yes', b: 'no', c: 'yes' } },
+};
+const draw = (state) => setAvailability(host, state === 'ready' ? spec : { columns: spec.columns, people: [], answers: {}, state, message: state === 'empty' ? 'Nobody is invited yet.' : 'The answers could not be read.' });
+for (const button of root.querySelectorAll('[data-doc-state]')) {
+    button.addEventListener('click', () => draw(button.dataset.docState));
+}
+draw('ready');
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack kp-gap-md&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-fp-availability&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-gap-sm&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;State&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;ready&quot;</span>&gt;Ready&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;loading&quot;</span>&gt;Loading&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;empty&quot;</span>&gt;Empty&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;error&quot;</span>&gt;Failed&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-availability&quot;</span> <span class="kp-code__keyword">data-kp-availability</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-fp-availability-host&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Who can come&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-footprint-max: 14rem&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachAvailability, setAvailability } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/availability'</span>;
+<span class="kp-code__keyword">const</span> root = document.getElementById(<span class="kp-code__string">'doc-fp-availability'</span>);
+<span class="kp-code__keyword">const</span> host = document.getElementById(<span class="kp-code__string">'doc-fp-availability-host'</span>);
+attachAvailability(root);
+<span class="kp-code__keyword">const</span> spec = {
+    columns: [{ key: <span class="kp-code__string">'a'</span>, label: <span class="kp-code__string">'1 to 3 May'</span> }, { key: <span class="kp-code__string">'b'</span>, label: <span class="kp-code__string">'8 to 10 May'</span> }, { key: <span class="kp-code__string">'c'</span>, label: <span class="kp-code__string">'15 to 17 May'</span> }],
+    people: [{ id: <span class="kp-code__string">'me'</span>, name: <span class="kp-code__string">'Anna'</span>, mine: <span class="kp-code__keyword">true</span> }, { id: <span class="kp-code__string">'bo'</span>, name: <span class="kp-code__string">'Bo'</span> }, { id: <span class="kp-code__string">'cy'</span>, name: <span class="kp-code__string">'Cy'</span> }, { id: <span class="kp-code__string">'di'</span>, name: <span class="kp-code__string">'Di'</span> }],
+    answers: { me: { a: <span class="kp-code__string">'yes'</span>, b: <span class="kp-code__string">'maybe'</span>, c: <span class="kp-code__string">'no'</span> }, bo: { a: <span class="kp-code__string">'yes'</span>, b: <span class="kp-code__string">'yes'</span>, c: <span class="kp-code__string">'no'</span> }, cy: { a: <span class="kp-code__string">'maybe'</span>, b: <span class="kp-code__string">'yes'</span>, c: <span class="kp-code__string">'yes'</span> }, di: { a: <span class="kp-code__string">'yes'</span>, b: <span class="kp-code__string">'no'</span>, c: <span class="kp-code__string">'yes'</span> } },
+};
+<span class="kp-code__keyword">const</span> draw = (state) =&gt; setAvailability(host, state === <span class="kp-code__string">'ready'</span> ? spec : { columns: spec.columns, people: [], answers: {}, state, message: state === <span class="kp-code__string">'empty'</span> ? <span class="kp-code__string">'Nobody is invited yet.'</span> : <span class="kp-code__string">'The answers could not be read.'</span> });
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> button <span class="kp-code__keyword">of</span> root.querySelectorAll(<span class="kp-code__string">'[data-doc-state]'</span>)) {
+    button.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; draw(button.dataset.docState));
+}
+draw(<span class="kp-code__string">'ready'</span>);</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -538,6 +593,7 @@ setAvailability(document.getElementById(<span class="kp-code__string">'doc-av-lo
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>a row with answers</code></td><td>A person’s row with answers (the menu of can, maybe and cannot, the saved and the refused marks) stays inside the grid: the row never grows past the component’s width, and the answers wrap under their names on a narrow grid. Loading, empty and failed hold the height the grid had.</td></tr>
                             <tr><td><code>data-kp-heat-edit</code></td><td>`own` (default), `all` or `off`: whose cells a press changes.</td></tr>
                             <tr><td><code>data-kp-availability-answers</code></td><td>`3` (can, maybe, cannot; default) or `2`.</td></tr>
                             <tr><td><code>data-kp-availability-press</code></td><td>`menu` (default: a press opens the answers) or `cycle`.</td></tr>

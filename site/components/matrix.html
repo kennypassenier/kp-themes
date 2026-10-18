@@ -336,6 +336,57 @@ setMatrix(document.getElementById(<span class="kp-code__string">'doc-matrix-load
 setMatrix(document.getElementById(<span class="kp-code__string">'doc-matrix-empty'</span>), { state: <span class="kp-code__string">'empty'</span>, message: <span class="kp-code__string">'No stack is shown: every stack is filtered out.'</span>, label: <span class="kp-code__string">'Reachability, empty'</span> });
 setMatrix(document.getElementById(<span class="kp-code__string">'doc-matrix-error'</span>), { state: <span class="kp-code__string">'error'</span>, message: <span class="kp-code__string">'The firewall rules could not be read.'</span>, label: <span class="kp-code__string">'Reachability, failed'</span> });</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Holding its height in a state</figcaption>
+                        <p class="kp-text-muted">Loaded, the component is as high as its rows. Loading, empty or failed it keeps that height as a minimum, so the page under it does not jump twice; the first load has nothing remembered and is left alone. A very tall list holds a screen, not its full length (the cap is set on the host or any ancestor; it is 12 rem here to show it). Press the states.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack kp-gap-md" id="doc-fp-matrix">
+    <div class="kp-row kp-gap-sm" role="group" aria-label="State">
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="ready">Ready</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="loading">Loading</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="empty">Empty</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-state="error">Failed</button>
+    </div>
+    <div class="kp-matrix" data-kp-matrix id="doc-fp-matrix-host" style="--kp-footprint-max: 12rem"></div>
+</div>
+                            <script type="module">
+import { attachMatrices, setMatrix } from '../../js/heat.js';
+const root = document.getElementById('doc-fp-matrix');
+const host = document.getElementById('doc-fp-matrix-host');
+attachMatrices(root);
+const names = ['web', 'api', 'db', 'cache', 'queue'].map((key) => ({ key, label: key }));
+const draw = (state) => setMatrix(host, state === 'ready'
+    ? { corner: 'from ↓ to →', rows: names, columns: names, label: 'Reachability', cell: (row, column) => (row === column ? undefined : { tone: 'muted', label: 'nothing open' }) }
+    : { state, skeleton: 3, message: state === 'empty' ? 'No stack is shown.' : 'The rules could not be read.', label: 'Reachability' });
+for (const button of root.querySelectorAll('[data-doc-state]')) {
+    button.addEventListener('click', () => draw(button.dataset.docState));
+}
+draw('ready');
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack kp-gap-md&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-fp-matrix&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-gap-sm&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;State&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;ready&quot;</span>&gt;Ready&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;loading&quot;</span>&gt;Loading&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;empty&quot;</span>&gt;Empty&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-state</span><span class="kp-code__string">=&quot;error&quot;</span>&gt;Failed&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-matrix&quot;</span> <span class="kp-code__keyword">data-kp-matrix</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-fp-matrix-host&quot;</span> <span class="kp-code__keyword">style</span><span class="kp-code__string">=&quot;--kp-footprint-max: 12rem&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachMatrices, setMatrix } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/heat'</span>;
+<span class="kp-code__keyword">const</span> root = document.getElementById(<span class="kp-code__string">'doc-fp-matrix'</span>);
+<span class="kp-code__keyword">const</span> host = document.getElementById(<span class="kp-code__string">'doc-fp-matrix-host'</span>);
+attachMatrices(root);
+<span class="kp-code__keyword">const</span> names = [<span class="kp-code__string">'web'</span>, <span class="kp-code__string">'api'</span>, <span class="kp-code__string">'db'</span>, <span class="kp-code__string">'cache'</span>, <span class="kp-code__string">'queue'</span>].map((key) =&gt; ({ key, label: key }));
+<span class="kp-code__keyword">const</span> draw = (state) =&gt; setMatrix(host, state === <span class="kp-code__string">'ready'</span>
+    ? { corner: <span class="kp-code__string">'from ↓ to →'</span>, rows: names, columns: names, label: <span class="kp-code__string">'Reachability'</span>, cell: (row, column) =&gt; (row === column ? <span class="kp-code__keyword">undefined</span> : { tone: <span class="kp-code__string">'muted'</span>, label: <span class="kp-code__string">'nothing open'</span> }) }
+    : { state, skeleton: <span class="kp-code__string">3</span>, message: state === <span class="kp-code__string">'empty'</span> ? <span class="kp-code__string">'No stack is shown.'</span> : <span class="kp-code__string">'The rules could not be read.'</span>, label: <span class="kp-code__string">'Reachability'</span> });
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> button <span class="kp-code__keyword">of</span> root.querySelectorAll(<span class="kp-code__string">'[data-doc-state]'</span>)) {
+    button.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; draw(button.dataset.docState));
+}
+draw(<span class="kp-code__string">'ready'</span>);</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
