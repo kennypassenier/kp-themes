@@ -62863,7 +62863,6 @@
     /* The card's Retry is the package's small button (28 px, 13 px text); a state's action is a normal-size one. */
     [data-theme='pastel'] .kp-card__failure > .kp-card__retry.kp-button--sm {
         font-size: 0.92rem;
-        min-block-size: 2.25rem;
         padding-inline: 1rem;
     }
 }
@@ -68805,7 +68804,6 @@
     /* The card's Retry is the package's small button (28 px, 13 px text); a state's action is a normal-size one. */
     [data-theme='forest'] .kp-card__failure > .kp-card__retry.kp-button--sm {
         font-size: var(--kp-text-md, 1rem);
-        min-block-size: 2.25rem;
         padding-inline: 1rem;
     }
 }
@@ -81383,7 +81381,6 @@
     /* The card's Retry is the package's small button (28 px, 13 px text); a state's action is a normal-size one. */
     [data-theme='blueprint'] .kp-card__failure > .kp-card__retry.kp-button--sm {
         font-size: var(--kp-text-md, 1rem);
-        min-block-size: 2.25rem;
         padding-inline: 1rem;
     }
 

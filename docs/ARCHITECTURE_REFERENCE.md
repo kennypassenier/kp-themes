@@ -65,6 +65,8 @@ js/loading-pieces.js a theme's loading pieces, │
                      pastel's caterpillar       │
 js/busy-card.js      the busy table's loading   │
                      card over any data area    │
+js/footprint.js      a data component keeps its │
+                     loaded height in each state│
 js/motion.js         closing, and easing a size │
 js/update.js         a value updated in place,  │
                      the theme's way            │

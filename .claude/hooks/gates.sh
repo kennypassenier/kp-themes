@@ -125,6 +125,9 @@ gate rereview node gates/check-rereview.mjs || exit 1
 # anything raised (menu, popover, hover card, drawer) keeps an opaque plate in every theme [states-1017]
 gate raised-plate node gates/check-raised-plate.mjs || exit 1
 
+# the busy card's loading card over any data area is wired and styled in every theme [KT7]
+gate busy-card node gates/check-busy-card.mjs || exit 1
+
 # every theme answers every hook (S45, AR36)
 gate hooks node gates/check-hooks.mjs || exit 1
 

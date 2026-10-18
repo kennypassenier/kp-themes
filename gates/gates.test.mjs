@@ -1553,6 +1553,7 @@ test('the README states the gate count the hook actually runs [Phase 8]', () => 
         'thirty-six': 36,
         'thirty-seven': 37,
         'thirty-eight': 38,
+        'thirty-nine': 39,
         forty: 40,
     };
     const stated = /\b([A-Za-z-]+) gates run in seconds\b/.exec(readme);

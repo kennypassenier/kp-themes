@@ -295,7 +295,10 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // The resize handle's width, --kp-sidenav-resizer-size (the behaviour options, merged): 358 + 1.
     // Re-pinned 2026-10-18 [gatefaults-1018]: the file had grown to 944 distinct names (the pin stopped at 359 after
     // the sidenav rows). Comment wildcards such as `--kp-seg-*` are no longer counted, so every name is a real knob.
-    assert.equal(result.expected, 944, 'AR21 counted the --kp-* properties in css/components.css');
+    // Re-pinned 2026-10-18 [release-11-1018]: 11 knobs arrived with the day's merged rounds, all real and read through var():
+    // --kp-notices-sizer, the segmented fade (--kp-seg-fade, -start, -end), the shortcuts hint view (--kp-shortcuts-hint-view-height, -top),
+    // the shortcuts view (--kp-shortcuts-view-height, -top), the toggle hint (--kp-toggle-hint-gap, -line) and --kp-usual-check-gap: 944 + 11.
+    assert.equal(result.expected, 955, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -356,7 +359,8 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // And the peek strip's two: 349 + 2.
     // And the action slot's two: 351 + 2.
     // And the resize handle's width, --kp-sidenav-resizer-size, read through var(): 353 + 1.
-    assert.equal(result.readCount, 936);
+    // And the 11 of 2026-10-18 [release-11-1018] (see the pin above), every one read through var(): 936 + 11.
+    assert.equal(result.readCount, 947);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).
