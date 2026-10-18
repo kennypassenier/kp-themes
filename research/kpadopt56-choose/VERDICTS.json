@@ -1,4 +1,269 @@
 {
     "demo": "kpadopt56-choose",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "choose-5ad8857b-836f-4d3d-8819-d8cfc810e668",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 18:42: 55 of 55 judged, 22 approved, 33 not approved.",
+            "approved": [
+                {
+                    "item": "intent",
+                    "theme": "dark"
+                },
+                {
+                    "item": "intent",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "intent",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "intent",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "intent",
+                    "theme": "forest"
+                },
+                {
+                    "item": "intent",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "intent",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "intent",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "intent",
+                    "theme": "deco"
+                },
+                {
+                    "item": "intent",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "intent",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "intent-states",
+                    "theme": "dark"
+                },
+                {
+                    "item": "intent-states",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "intent-states",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "intent-states",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "intent-states",
+                    "theme": "forest"
+                },
+                {
+                    "item": "intent-states",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "intent-states",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "intent-states",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "intent-states",
+                    "theme": "deco"
+                },
+                {
+                    "item": "intent-states",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "intent-states",
+                    "theme": "titanium"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "usual",
+                    "theme": "dark",
+                    "note": "MIJN SELECTIES KOMEN NIET IN DE LIJST TEVOORSCHIJN"
+                },
+                {
+                    "item": "usual-band",
+                    "theme": "dark",
+                    "note": "MIJN SELECTIES KOMEN NIET IN DE LIJST TEVOORSCHIJN"
+                },
+                {
+                    "item": "usual-states",
+                    "theme": "dark",
+                    "note": "de twee laatste die open zijn, als ik die beneden in beeld heb, dus ongeveer de helft, zitten die heel de tijd te openen/sluiten. Dit gedrag is enkel als het geopende menu niet volledig in beeld is"
+                },
+                {
+                    "item": "usual",
+                    "theme": "cyberpunk",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual-band",
+                    "theme": "cyberpunk",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual-states",
+                    "theme": "cyberpunk",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual",
+                    "theme": "synthwave",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual-band",
+                    "theme": "synthwave",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual-states",
+                    "theme": "synthwave",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual",
+                    "theme": "pastel",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual-band",
+                    "theme": "pastel",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual-states",
+                    "theme": "pastel",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual",
+                    "theme": "forest",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual-band",
+                    "theme": "forest",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual-states",
+                    "theme": "forest",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual",
+                    "theme": "blueprint",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual-band",
+                    "theme": "blueprint",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual-states",
+                    "theme": "blueprint",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual",
+                    "theme": "solstice",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual-band",
+                    "theme": "solstice",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual-states",
+                    "theme": "solstice",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual",
+                    "theme": "brutalism",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual-band",
+                    "theme": "brutalism",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual-states",
+                    "theme": "brutalism",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual",
+                    "theme": "deco",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual-band",
+                    "theme": "deco",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual-states",
+                    "theme": "deco",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual",
+                    "theme": "nostromo",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual-band",
+                    "theme": "nostromo",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual-states",
+                    "theme": "nostromo",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual",
+                    "theme": "titanium",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual-band",
+                    "theme": "titanium",
+                    "note": "zelfde problemen als het vorige thema"
+                },
+                {
+                    "item": "usual-states",
+                    "theme": "titanium",
+                    "note": "zelfde problemen als het vorige thema"
+                }
+            ],
+            "choices": []
+        }
+    ]
 }
