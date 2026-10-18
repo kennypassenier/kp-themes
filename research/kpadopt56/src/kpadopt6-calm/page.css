@@ -220,6 +220,11 @@
     --kp-focus-steps-height: 52rem;
 }
 
+/* The long-answer case must show every answer: its body would otherwise scroll with the disabled last answer under the footer. */
+#kc-focus-l {
+    --kp-focus-steps-height: 54rem;
+}
+
 /* Pickers open a list under themselves: the frames that hold them are tall enough for it. */
 .kc-pair--tall {
     min-block-size: 32rem;
@@ -227,7 +232,7 @@
 
 /* A case whose picker puts a panel over what follows keeps that room for it. */
 .kc-case--room {
-    min-block-size: 24rem;
+    min-block-size: 28rem;
     align-content: start;
 }
 

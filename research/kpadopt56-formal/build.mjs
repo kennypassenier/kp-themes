@@ -117,7 +117,7 @@ const CHANGED = [
         topic: 'chart',
         title: 'Charts',
         changed:
-            'Two changes. The first and the last date label under the chart used to stick out of the plot (the last one by about 26 px on the right, the first by about 6 px on the left); now both are anchored inside the plot. And a chart that could not be read used to show only a red dot and one small sentence with nothing to press; now it is a tinted, bordered plate over the height of the plot, the sentence at heading size and a normal-size <b>Retry</b> under it.',
+            'Two changes. The first and the last date label under the chart used to stick out of the plot (the last one by about 26 px on the right, the first by about 6 px on the left); now both are anchored inside the plot. And a chart that could not be read used to show only a red dot and one small sentence with nothing to press; now it is formal&rsquo;s own failed alert (a red bar on its left edge, not a tinted rectangle with a dot) over the height of the plot, the sentence at heading size and a normal-size <b>Retry</b> under it.',
         expect: '<b>Changed, in every chart, in the desktop and in the 390 px frame:</b> the first date label starts at the left edge of the plot and the last one ends at its right edge; no label is cut or crosses the frame. The labels between them are unchanged. <b>Press Failed</b>: one red-edged plate fills the plot, the sentence is at heading size and <b>Retry</b> is a normal button; pressing Retry shows the loading state and the chart comes back.',
         look: 'The first and last labels under the time axis stand inside the plot, at both widths, and nothing crosses the chart frame. Failed is one plate over the plot with a normal-size Retry, not a dot and a line of small text.',
     },
@@ -127,8 +127,8 @@ const CHANGED = [
         topic: 'availability',
         title: 'Availability grid',
         changed:
-            'On a phone, the row with your own answer put the answer buttons beside your name and squeezed the name to a few pixels. Now the answers stand under the name.',
-        expect: '<b>Changed, in the 390 px frames:</b> in your own row the name <b>Kenny (you)</b> has the full width of the row and the answer buttons are on a line under it. At desktop width the grid is as approved.',
+            'On a phone, the row with your own answer put the answer buttons beside your name and squeezed the name to a few pixels. Now the answers stand under the name. Also, in the 390 px frame with "A list per column", pressing <b>Loading</b> used to show an empty frame; now the waiting grid fills the frame the list had, with the busy card centred over it.',
+        expect: '<b>Changed, in the 390 px frames:</b> in your own row the name <b>Kenny (you)</b> has the full width of the row and the answer buttons are on a line under it. Choose <b>A list per column</b> and press <b>Loading</b>: the frame is not empty, the busy card is centred over the waiting grid. At desktop width the grid is as approved.',
         look: 'On a phone your own name has the full row and the answer buttons stand under it; nothing is squeezed or cut. At desktop width the grid is as approved.',
     },
 ];
@@ -248,7 +248,7 @@ const ADDED = [
         topic: 'notices',
         title: 'Notification centre',
         changed:
-            'The notification centre now holds the height it had when it was loaded: Loading, Nothing waiting and Failed used to be about 460 px high where the loaded page is about 1040 px, so the page below jumped. They now keep a taller footprint (capped at 48rem, about 768 px, because a plate in the middle of more than that is out of sight), and the Retry in the failed plate is a normal button.',
+            'The notification centre now holds the height it had when it was loaded: Loading, Nothing waiting and Failed used to be about 460 px high where the loaded page is about 1040 px, so the page below jumped. They now keep a taller footprint (capped at 48rem, about 768 px, because a plate in the middle of more than that is out of sight), and the Retry in the failed plate is a normal button. In a state the page now fills that whole 768 px (before, the plate stopped about 184 px short of the bottom).',
         expect: '<b>Changed:</b> press <b>Loading</b>, <b>Nothing waiting</b> and <b>Failed</b> after <b>Ready</b>: the centre keeps one large height (no more than 768 px); the plate is centred and <b>Retry</b> is a normal button.',
         look: 'Loading, nothing waiting and failed fill a tall footprint (never above 48rem) with the plate centred and a normal-size Retry; the page below does not jump.',
     },
@@ -268,9 +268,19 @@ const ADDED = [
         topic: 'plate',
         title: 'Buttons inside a state plate',
         changed:
-            'The button inside every empty or failed plate (<b>Retry</b>, <b>Add</b>) used to inherit the plate&rsquo;s heading size: its text was about 24 px in a 36 px button. Now the button is a normal control: body-size text, the same size as any other button.',
+            'The button inside every empty or failed plate (<b>Retry</b>, <b>Add</b>) used to inherit the plate&rsquo;s heading size: its text was about 24 px in a 36 px button. Now the button is a normal control: body-size text, the same size as any other button. The usual picker&rsquo;s loading case also grows to 448 px, and its busy card stays inside it.',
         expect: '<b>Changed:</b> press <b>Empty</b> and <b>Could not read</b> after <b>Ready</b>: <b>Add</b> and <b>Retry</b> are normal-size buttons under the plate&rsquo;s heading, not oversized.',
         look: 'The Add and Retry buttons in the plates are normal buttons: body-size text, the size of any other button, under a heading-size title.',
+    },
+    {
+        demo: 'kpadopt6-calm',
+        id: 'focus-states',
+        topic: 'focus',
+        title: 'Questions, one per screen',
+        changed:
+            'The case with a long question and long answers was too short: its body scrolled and the last answer (<b>Hard to say</b>) sat hidden under the Back and Done buttons. The case is now 864 px high, with no scrollbar, and every answer is in view.',
+        expect: '<b>Changed:</b> in the long-text case every answer, <b>Hard to say</b> included, is in view above the Back and Done buttons, and the body has no scrollbar.',
+        look: 'The long-text case is 864 px high with no scrollbar; the last answer is whole and clear of the footer.',
     },
 ];
 
@@ -307,6 +317,7 @@ const TOPICS = [
     'notices',
     'rating',
     'plate',
+    'focus',
 ];
 const ALL = [...CHANGED, ...STATE_FIXES, ...ADDED];
 const WANTED = TOPICS.flatMap((topic) => ALL.filter((spec) => spec.topic === topic));
