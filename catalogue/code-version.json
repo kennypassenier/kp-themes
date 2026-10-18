@@ -63,7 +63,7 @@
             "when": ".kp-skeleton, .kp-progressbar, .kp-meter, .kp-kpi, .kp-card, .kp-spinner, [data-kp-datatable], [data-kp-calendar], [data-kp-menu-button]"
         },
         "js/log.js": { "digest": "3fc853eb5c0c4dfa", "when": "[data-kp-source]" },
-        "js/master-detail.js": { "digest": "2d7f98a9025a7b7a", "when": "[data-kp-master-detail]" },
+        "js/master-detail.js": { "digest": "88483c33094f3130", "when": "[data-kp-master-detail]" },
         "js/menu-button.js": { "digest": "6363f9aecedcbf05", "when": "[data-kp-menu-button]" },
         "js/motion.js": {
             "digest": "2620bd6cb4175e2b",
@@ -10548,7 +10548,7 @@
             ]
         },
         "combobox": {
-            "modules": "98272b94115cfc5e",
+            "modules": "43a6dd035aa69ca3",
             "families": [
                 "data-kp-arrive",
                 "data-kp-arriving",
@@ -11866,7 +11866,7 @@
             ]
         },
         "field": {
-            "modules": "c8d70460008f7919",
+            "modules": "cb857bceb3f39b38",
             "families": [
                 "data-kp-active",
                 "data-kp-announce",
@@ -12829,7 +12829,7 @@
             ]
         },
         "page": {
-            "modules": "fe4bf2b0b19dfdfb",
+            "modules": "b94ce1a208a31423",
             "families": [
                 "data-kp-above",
                 "data-kp-armed",

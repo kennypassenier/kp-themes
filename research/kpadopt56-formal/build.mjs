@@ -7,9 +7,10 @@
 // Same sections and data as the eleven-theme parts: every section is read from research/kpadopt56/src/<demo>/sections.html and
 // every script and style is the source demo's own. Edit those sources or this builder, never the page.
 //
-// Run again after theme/t56-h is merged (S9 to S13, the state fixes): the sections in LATER below join the page by themselves
-// once the package carries data-kp-ops-failed, the ops page gets its choice set (default plate, keep switchable), and nothing
-// else needs editing.
+// The state fixes of the same night (S9 to S14: a state holds the loaded height, a card's and a chart's failure is a plate, the
+// gallery's busy card covers the whole gallery, a checklist's failed box and a rating's failed plate fill their box, a state
+// plate's Retry is a normal button, the operations page's failed option) are sections of this page too, grouped by the kind of
+// component. The ops page carries the one choice set (default plate, keep switchable live, "Remove this option" from the kit).
 //
 // Run: node research/kpadopt56-formal/build.mjs
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
@@ -29,6 +30,8 @@ const DEMOS = /** @type {Record<string, { autoFirst: boolean }>} */ ({
     'kpadopt6-ops': { autoFirst: true },
     'kpadopt6-media': { autoFirst: true },
     'kpadopt6-social': { autoFirst: false },
+    'kpadopt5-basics': { autoFirst: true },
+    'kpadopt6-calm': { autoFirst: false },
 });
 
 /**
@@ -81,7 +84,7 @@ const CHANGED = [
         demo: 'kpadopt6-media',
         id: 'print-checklist',
         topic: 'checklist',
-        title: 'Checklist detail',
+        title: 'Checklists',
         changed:
             'In the checklist on screen, the small detail beside an item used to squeeze the item name to a few letters (broken words) at phone width. Now the detail wraps inside at most half of the row and the name keeps its words.',
         expect: '<b>Changed, at 390 (use the width switch):</b> in <b>The list on screen</b> every item name keeps whole words; a long detail wraps in at most half of the row; a short detail stays on one line; nothing runs past the list. The four paper sheets are not affected.',
@@ -103,9 +106,10 @@ const CHANGED = [
         demo: 'kpadopt6-ops',
         id: 'entity-states',
         topic: 'entity',
-        changed: 'The same folding of entity card actions, in the loading, empty and failed samples and in the phone frame.',
-        expect: '<b>Changed:</b> in the 390 px frame the actions that do not fit are in <b>More</b>; loading, empty and failed keep the footprint of a loaded card.',
-        look: 'In the 390 px frame the actions that do not fit are in More and every word is whole; loading, empty and failed keep the size of a loaded card.',
+        changed:
+            'Two changes. The same folding of entity card actions, in the phone frame. And the grid now holds the height it had when loaded: Loading, Nothing and Failed used to leave the grid about 200 px away from the height of the loaded cards, so the page below jumped; now they fill the same height, and the Retry in the failed plate is a normal-size button.',
+        expect: '<b>Changed:</b> in the 390 px frame the actions that do not fit are in <b>More</b>. Press <b>Loading</b>, <b>Nothing</b> and <b>Failed</b> after <b>Cards</b>: the grid keeps the height of the loaded cards each time and the plate is centred in it; <b>Retry</b> is a normal-size button.',
+        look: 'In the 390 px frame the actions that do not fit are in More and every word is whole. Loading, nothing and failed keep the height of the loaded grid, with the plate centred and a normal-size Retry.',
     },
     {
         demo: 'kpadopt5-people',
@@ -113,19 +117,9 @@ const CHANGED = [
         topic: 'chart',
         title: 'Charts',
         changed:
-            'The first and the last date label under the chart used to stick out of the plot (the last one by about 26 px on the right, the first by about 6 px on the left). Now both are anchored inside the plot.',
-        expect: '<b>Changed, in every chart, in the desktop and in the 390 px frame:</b> the first date label starts at the left edge of the plot and the last one ends at its right edge; no label is cut or crosses the frame. The labels between them are unchanged.',
-        look: 'The first and last labels under the time axis stand inside the plot, at both widths; nothing crosses the chart frame; the labels in between are unchanged.',
-    },
-    {
-        demo: 'kpadopt6-media',
-        id: 'uses-lines',
-        topic: 'chart',
-        changed:
-            'Nothing in this map was changed by the package fixes. It is here only because it was asked together with the chart; judge it as approved.',
-        expect: '<b>Unchanged:</b> the map, the grid view and the pinned lights behave as approved.',
-        look: 'Nothing was changed here: the cards, lines and labels look as you approved them, and no text touches a card edge.',
-        width: true,
+            'Two changes. The first and the last date label under the chart used to stick out of the plot (the last one by about 26 px on the right, the first by about 6 px on the left); now both are anchored inside the plot. And a chart that could not be read used to show only a red dot and one small sentence with nothing to press; now it is a tinted, bordered plate over the height of the plot, the sentence at heading size and a normal-size <b>Retry</b> under it.',
+        expect: '<b>Changed, in every chart, in the desktop and in the 390 px frame:</b> the first date label starts at the left edge of the plot and the last one ends at its right edge; no label is cut or crosses the frame. The labels between them are unchanged. <b>Press Failed</b>: one red-edged plate fills the plot, the sentence is at heading size and <b>Retry</b> is a normal button; pressing Retry shows the loading state and the chart comes back.',
+        look: 'The first and last labels under the time axis stand inside the plot, at both widths, and nothing crosses the chart frame. Failed is one plate over the plot with a normal-size Retry, not a dot and a line of small text.',
     },
     {
         demo: 'kpadopt6-social',
@@ -140,27 +134,28 @@ const CHANGED = [
 ];
 
 /**
- * Sections that wait for theme/t56-h (S9 to S13, the state changes): they join the page once the package carries the ops page
- * failed option. `choices`: a choice set for the section (DEMO_RULES ch. 7: asks only the default, both options real).
+ * The sections of the state fixes (S9 to S14). `choices`: a choice set for the section (DEMO_RULES ch. 7: asks only the default,
+ * both options real).
  * @type {{ demo: string, id: string, topic: string, title?: string, changed: string, expect: string, look: string, choices?: string, width?: boolean }[]}
  */
-const LATER = [
+const STATE_FIXES = [
     {
         demo: 'kpadopt6-media',
         id: 'gallery-grid',
         topic: 'gallery',
         title: 'Gallery',
         changed:
-            'While the gallery loads, its busy card now stands over the whole gallery, centred, and the tiles keep their square footprint (S10).',
-        expect: '<b>Changed:</b> press <b>Loading</b>: one busy card, centred over the whole gallery, and the gallery keeps the height it had when loaded.',
+            'Two changes. While the gallery loads, its busy card now stands over the whole gallery, centred (it used to sit at the top, over a thin strip of waiting lines, with its panel cut off). And a waiting tile keeps its square size instead of shrinking to a line of 16 to 24 px.',
+        expect: '<b>Changed:</b> press <b>Loading</b>: one busy card, centred over the whole gallery, over waiting tiles that are as big as the real tiles; the gallery keeps the height it had when loaded.',
         look: 'The busy card is centred over the whole gallery, not over one tile, and the gallery keeps its loaded height.',
     },
     {
         demo: 'kpadopt6-media',
         id: 'gallery-states',
         topic: 'gallery',
-        changed: 'The same gallery change, in the states sample: loading, empty and failed hold the loaded height (S9, S10).',
-        expect: '<b>Changed:</b> loading, empty and failed fill the footprint of a loaded gallery.',
+        changed:
+            'The same gallery changes, in the states sample. Loading, empty and failed now hold the height of the loaded gallery (before, the gallery collapsed to a strip), and the Retry in the failed plate is a normal-size button.',
+        expect: '<b>Changed:</b> press <b>Loading</b>, <b>Empty</b> and <b>Failed</b>: each fills the footprint of the loaded gallery, with the plate centred and a normal-size <b>Retry</b>.',
         look: 'Loading, empty and failed keep the size of the loaded gallery and sit centred in it.',
     },
     {
@@ -169,7 +164,7 @@ const LATER = [
         topic: 'ops-page',
         title: 'Operations page',
         changed:
-            'A failed operations page used to keep the stale cards under one red band. Now, by default, one alert plate takes the whole body, centred, at the height the page had (S13). The old behaviour stays available as an option.',
+            'A failed operations page used to keep the stale cards under one red band. Now, by default, one alert plate takes the whole body, centred, at the height the page had The old behaviour stays available as an option.',
         expect: '<b>Changed:</b> press <b>Page failed</b>: with the default <b>Plate</b> one centred alert with its Retry replaces the cards; with <b>Keep the cards</b> the cards stay and a red band sits on top. Switch live with the choice in the dialog (<code>data-kp-ops-failed</code>).',
         look: 'A failed page is one prominent plate, centred in the page, at the height of the loaded page, with a normal-size Retry; the keep option brings the earlier band over the cards back.',
         choices: JSON.stringify([
@@ -194,6 +189,91 @@ const LATER = [
     },
 ];
 
+/**
+ * Sections for the other state changes: a card's failure is a plate, a state holds the loaded height, a checklist's failed box,
+ * a rating's failed plate, a state plate's Retry at control size.
+ * @type {{ demo: string, id: string, topic: string, title?: string, changed: string, expect: string, look: string, choices?: string, width?: boolean }[]}
+ */
+const ADDED = [
+    {
+        demo: 'kpadopt6-calm',
+        id: 'quote-states',
+        topic: 'cards',
+        title: 'Card that could not be read',
+        changed:
+            'When a card could not be read it showed a small alert row at the top: the words on the left, Retry on the right, at body size, filling only about a third to two thirds of the card. Now the failure is one plate that fills the whole card, centred: the title at heading size, the sentence under it and a normal-size <b>Retry</b> button. The card grows a little while it is failed, because the plate needs room for a heading, a sentence and a button.',
+        expect: '<b>Changed:</b> press <b>Could not read</b>: the plate fills the whole quote card, centred, with <b>Could not read your notes</b> at heading size and a normal <b>Retry</b>; the card is not a strip any more.',
+        look: 'A failed quote card is one plate over the whole card, centred, title at heading size, sentence at body size, Retry a normal button; nothing is a thin row at the top.',
+    },
+    {
+        demo: 'kpadopt6-calm',
+        id: 'today-states',
+        topic: 'cards',
+        changed:
+            'The same change for the today card: a failure used to be one small row (about a quarter of the card); now one plate fills the card, centred, with a heading-size title and a normal-size Retry.',
+        expect: '<b>Changed:</b> press <b>Could not read</b>: one plate fills the whole today card, centred; <b>Retry</b> is a normal button.',
+        look: 'A failed today card is one centred plate that fills the card, with a heading-size title and a normal-size Retry; the card keeps its place.',
+    },
+    {
+        demo: 'kpadopt5-basics',
+        id: 'explain-lede',
+        topic: 'cards',
+        changed:
+            'The same change for the card under the line that explains it: a failure used to be a row of body-size words with a small Retry; now it is one plate that fills the card, centred, and its Retry is a normal-size button (it was 28 px high, now 36 px).',
+        expect: '<b>Changed:</b> in the card press <b>Failed</b>: the lede stays under the heading; the plate fills the rest of the card, centred, and <b>Retry</b> is a normal button.',
+        look: 'A failed card keeps its lede under the heading and shows one centred plate that fills the card, with a heading-size title and a normal-size Retry.',
+    },
+    {
+        demo: 'kpadopt6-media',
+        id: 'uses-states',
+        topic: 'uses',
+        title: 'Uses map',
+        changed:
+            'A data component now holds the height it had when it was loaded. Before, the map jumped by about 12 px while loading and by about 190 px when empty or failed, so everything below moved. Now loading, empty and failed keep the loaded height, and the plate (with its normal-size Retry) is centred in it.',
+        expect: '<b>Changed:</b> press <b>Loading</b>, <b>Empty</b> and <b>Failed</b> after <b>Ready</b>: the map keeps one height each time; the busy card or plate is centred in it and nothing below the map moves.',
+        look: 'Loading, empty and failed take the height of the loaded map, with the busy card or plate centred in it and a normal-size Retry; the content below never moves.',
+    },
+    {
+        demo: 'kpadopt6-social',
+        id: 'claim-row',
+        topic: 'checklist',
+        changed:
+            'The packing list (the checklist with who brings what) had a failed box whose Retry stretched across the whole box like a strip. Now the box centres its items and Retry is a normal button (about 71 by 36 px). A list that fails straight from loaded shows the failed plate alone, with no rows behind it, and the plate fills the height the list had; empty keeps that height too.',
+        expect: '<b>Changed:</b> press <b>Failed</b> and then <b>Empty</b> after <b>Ready</b>: the box keeps the height of the loaded list, the plate is centred, and <b>Retry</b> is a normal-size button, not a strip.',
+        look: 'A failed list is one centred plate with a normal-size Retry that fills the height of the loaded list; empty and loading keep that height too.',
+    },
+    {
+        demo: 'kpadopt5-ops',
+        id: 'notices',
+        topic: 'notices',
+        title: 'Notification centre',
+        changed:
+            'The notification centre now holds the height it had when it was loaded: Loading, Nothing waiting and Failed used to be about 460 px high where the loaded page is about 1040 px, so the page below jumped. They now keep a taller footprint (capped at 48rem, about 768 px, because a plate in the middle of more than that is out of sight), and the Retry in the failed plate is a normal button.',
+        expect: '<b>Changed:</b> press <b>Loading</b>, <b>Nothing waiting</b> and <b>Failed</b> after <b>Ready</b>: the centre keeps one large height (no more than 768 px); the plate is centred and <b>Retry</b> is a normal button.',
+        look: 'Loading, nothing waiting and failed fill a tall footprint (never above 48rem) with the plate centred and a normal-size Retry; the page below does not jump.',
+    },
+    {
+        demo: 'kpadopt6-calm',
+        id: 'rating-states',
+        topic: 'rating',
+        title: 'Star rating',
+        changed:
+            'When the rating could not be read, the plate was laid over only the stars, which are narrow, so a rating in a wide row showed a small patch the width of the stars. Now the plate covers the whole rating box, at the same height as the stars had, with a normal-size Retry.',
+        expect: '<b>Changed:</b> press <b>Could not read</b>: one red-edged plate covers the whole rating box (as wide as the box, as tall as the ready rating) with <b>Could not read the rating</b> centred and a normal <b>Retry</b>.',
+        look: 'A failed rating is one plate over the whole rating box, as tall as the ready rating, centred, with a normal-size Retry; the stars are not left beside it.',
+    },
+    {
+        demo: 'kpadopt6-calm',
+        id: 'usual-states',
+        topic: 'plate',
+        title: 'Buttons inside a state plate',
+        changed:
+            'The button inside every empty or failed plate (<b>Retry</b>, <b>Add</b>) used to inherit the plate&rsquo;s heading size: its text was about 24 px in a 36 px button. Now the button is a normal control: body-size text, the same size as any other button.',
+        expect: '<b>Changed:</b> press <b>Empty</b> and <b>Could not read</b> after <b>Ready</b>: <b>Add</b> and <b>Retry</b> are normal-size buttons under the plate&rsquo;s heading, not oversized.',
+        look: 'The Add and Retry buttons in the plates are normal buttons: body-size text, the size of any other button, under a heading-size title.',
+    },
+];
+
 const read = (/** @type {string} */ path, base = here) => readFileSync(fileURLToPath(new URL(path, base)), 'utf8');
 const escapeAttr = (/** @type {string} */ s) => s.replace(/&/g, '&amp;').replace(/'/g, '&#39;');
 
@@ -208,9 +288,29 @@ for (const demo of Object.keys(DEMOS)) {
     sources.set(demo, list);
 }
 
-/** True once the package carries the ops page failed option (theme/t56-h merged). */
-const hasStateFixes = /data-kp-ops-failed/.test(read('css/components.css', root));
-const WANTED = hasStateFixes ? [...CHANGED, ...LATER] : CHANGED;
+// The ops page's failed option is the one choice set of this page: it needs the package to carry it.
+if (!/data-kp-ops-failed/.test(read('css/components.css', root)))
+    throw new Error('css/components.css has no data-kp-ops-failed: merge the state fixes first');
+
+/** Sections grouped by the kind of component, in this order of topics (a topic's sections keep their order above). */
+const TOPICS = [
+    'bars',
+    'version',
+    'checklist',
+    'entity',
+    'chart',
+    'availability',
+    'gallery',
+    'ops-page',
+    'cards',
+    'uses',
+    'notices',
+    'rating',
+    'plate',
+];
+const ALL = [...CHANGED, ...STATE_FIXES, ...ADDED];
+const WANTED = TOPICS.flatMap((topic) => ALL.filter((spec) => spec.topic === topic));
+if (WANTED.length !== ALL.length) throw new Error('a section has a topic that TOPICS does not list');
 
 /** The index just after the `</div>` that closes the `<div` opened at `start`. @param {string} text @param {number} start */
 function endOfDiv(text, start) {
@@ -388,14 +488,6 @@ const script = (/** @type {string} */ d) => `        <script type="module" src="
 const demoFirst = demos.filter((d) => !DEMOS[d].autoFirst);
 const autoFirst = demos.filter((d) => DEMOS[d].autoFirst);
 const pairs = WANTED.length + 1;
-const hook = hasStateFixes
-    ? ''
-    : `
-            <!-- HOOK for theme/t56-h (S9 to S13, the state fixes): they are not on this branch yet. After that branch is merged, run
-                 node research/kpadopt56-formal/build.mjs again: the gallery and the operations page (with its failed option choice set,
-                 default plate, keep switchable: data-kp-ops-failed) join this page by themselves. -->
-`;
-
 const page = `<!doctype html>
 <html lang="en" data-theme="formal" data-review="${ID}" data-review-themes="formal">
     <head>
@@ -438,7 +530,6 @@ ${styles.map((s) => `        <link rel="stylesheet" href="${s}" />`).join('\n')}
                     dialog shows the section at 1280 and at 390 (a phone).
                 </p>
             </header>
-${hook}
 ${body}
 
             <div hidden style="display: none" data-kpadopt56-other>
@@ -469,6 +560,4 @@ if (problems.length) {
     console.error(`build: ${problems.length} problem(s)\n  ${problems.join('\n  ')}`);
     process.exit(1);
 }
-console.log(
-    `${ID}: ${pairs} sections, ${pairs} pairs (formal), state fixes ${hasStateFixes ? 'included' : 'not on this branch yet (hook left)'}, round ${roundId}`,
-);
+console.log(`${ID}: ${pairs} sections, ${pairs} pairs (formal), round ${roundId}`);

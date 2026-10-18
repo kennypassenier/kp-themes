@@ -51,6 +51,7 @@
 //
 // Nothing runs on import; attachMasterDetails(root) returns a detach.
 
+import { scrollWithin } from './listbox.js';
 import { openBusyCard } from './busy-card.js';
 import { arriveShown } from './motion.js';
 import { statePlate } from './state-plate.js';
@@ -331,7 +332,7 @@ function wire(rootEl, historyOption) {
         selected = item ? key : null;
         paint();
         if (item && how.focus) item.focus({ preventScroll: false });
-        if (item) item.scrollIntoView({ block: 'nearest' });
+        if (item) scrollWithin(item); // the pane's own scroller only, never the window
         rootEl.dispatchEvent(new CustomEvent(PANE_SELECT_EVENT, { bubbles: true, detail: { key: selected, item } }));
     };
     const heading = () => /** @type {HTMLElement | null} */ (detail.querySelector('[data-kp-pane-heading], h1, h2, h3, h4'));
