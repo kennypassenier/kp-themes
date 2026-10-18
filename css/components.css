@@ -27641,7 +27641,7 @@
 
     .kp-entity__actions {
         display: grid !important;
-        grid-template-columns: repeat(var(--kp-entity-cols, 4), minmax(0, 1fr));
+        grid-template-columns: repeat(var(--kp-entity-cols, 4), minmax(min-content, 1fr));
         gap: var(--kp-space-sm, 0.5rem);
         align-items: center;
         padding-block-start: var(--kp-entity-actions-gap, var(--kp-space-md, 0.75rem));
@@ -27657,6 +27657,10 @@
     .kp-entity__actions .kp-button,
     .kp-entity__actions .kp-menu-button {
         inline-size: 100%;
+    }
+
+    .kp-entity__actions .kp-button {
+        overflow-wrap: normal;
     }
 
     .kp-entity__actions > .kp-entity__retry {

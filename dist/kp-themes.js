@@ -15836,7 +15836,7 @@ function attachDatePickers(root = document, {
         button.textContent = glyph3;
         button.addEventListener("click", () => {
           cursor = to();
-          redraw();
+          redraw2();
           panel.querySelector(".kp-datepicker__head")?.children[slot]?.focus();
         });
         return button;
@@ -15965,7 +15965,7 @@ function attachDatePickers(root = document, {
       }
       panel.prepend(head, grid2);
     };
-    const redraw = () => {
+    const redraw2 = () => {
       const before2 = shown4;
       draw8();
       if (view === "days" && shown4 !== before2)
@@ -15979,7 +15979,7 @@ function attachDatePickers(root = document, {
     );
     const settle = () => {
       if (view === "days") pin = null;
-      redraw();
+      redraw2();
       const s2 = getStrings();
       const year = cursor.getFullYear();
       const from = yearBlockStart(year);
@@ -16113,7 +16113,7 @@ function attachDatePickers(root = document, {
         if (delta === null) return;
         event.preventDefault();
         cursor = jump.dataset.kpMonth !== void 0 ? clampToMonth(year, month + delta, cursor.getDate()) : clampToMonth(year + delta, month, cursor.getDate());
-        redraw();
+        redraw2();
         focusCurrent();
         return;
       }
@@ -16146,7 +16146,7 @@ function attachDatePickers(root = document, {
       if (moved === void 0) return;
       event.preventDefault();
       cursor = moved;
-      redraw();
+      redraw2();
       panel.querySelector(`[data-kp-day="${toISO(moved)}"]`)?.focus();
     };
     const onPanelClick = (event) => {
@@ -45916,6 +45916,35 @@ function fitFlags(card, shown4) {
     }
   });
 }
+function fitActions(host, inline) {
+  if (inline <= 0 || ACTIONS_QUEUED.has(host)) return;
+  ACTIONS_QUEUED.add(host);
+  host.ownerDocument.defaultView?.requestAnimationFrame(() => {
+    ACTIONS_QUEUED.delete(host);
+    if (!host.isConnected || Number(host.dataset.kpEntityFit ?? inline) < inline) return;
+    const cards2 = (
+      /** @type {HTMLElement[]} */
+      host.matches(ENTITY_GRID) ? [...host.querySelectorAll(":scope > .kp-card--entity")] : [host]
+    );
+    const tooWide = cards2.some((card) => {
+      const row = slotOf(card, "actions");
+      if (!row || row.hidden || row.clientWidth === 0 || card.dataset.kpState === "error") return false;
+      const edge = row.getBoundingClientRect().right + 0.5;
+      return [...row.children].some((child) => child.getBoundingClientRect().right > edge);
+    });
+    if (!tooWide) return;
+    host.dataset.kpEntityFit = String(inline - 1);
+    redraw(cards2);
+  });
+}
+function redraw(cards2, slots = ["actions"]) {
+  for (const card of cards2) {
+    const was = DRAWN4.get(card);
+    if (!was) continue;
+    for (const name of slots) delete was.drawn[name];
+    setEntity(card, was.data);
+  }
+}
 function setEntity(card, data) {
   frame2(card);
   const doc = card.ownerDocument;
@@ -46067,15 +46096,17 @@ function setEntity(card, data) {
     }
   });
   const narrow = card.closest(ENTITY_GRID)?.hasAttribute("data-kp-entity-narrow") ?? false;
-  const inline = narrow ? 0 : Math.max(0, Number(opt2(card, "data-kp-entity-inline") ?? 3));
+  const inlineAsked = narrow ? 0 : Math.max(0, Number(opt2(card, "data-kp-entity-inline") ?? 3));
+  const fitHost = (
+    /** @type {HTMLElement} */
+    card.closest(ENTITY_GRID) ?? card
+  );
+  const inline = Math.min(inlineAsked, Number(fitHost.dataset.kpEntityFit ?? inlineAsked));
   const noActions = status !== "error" && (data.actions ?? []).length === 0;
   if (noActions) card.setAttribute("data-kp-entity-actions", "none");
   else card.removeAttribute("data-kp-entity-actions");
   slotOf(card, "actions").hidden = noActions;
-  const host = (
-    /** @type {HTMLElement} */
-    card.closest(ENTITY_GRID) ?? card
-  );
+  const host = fitHost;
   host.style.setProperty("--kp-entity-cols", String(columnsFor(host, inline)));
   slot("actions", { a: data.actions, inline, status }, (el14) => {
     if (status === "error") {
@@ -46139,6 +46170,7 @@ function setEntity(card, data) {
       });
     }
   });
+  fitActions(host, inline);
 }
 function setEntityGrid(grid2, list) {
   grid2.setAttribute("data-kp-entity-grid", "");
@@ -46234,18 +46266,13 @@ function attachEntityCards(root = document) {
     const refit = () => {
       if (grid2.clientWidth === lastWidth) return;
       lastWidth = grid2.clientWidth;
-      for (
-        const card of
+      delete grid2.dataset.kpEntityFit;
+      const cards2 = (
         /** @type {HTMLElement[]} */
         [...grid2.querySelectorAll(":scope > .kp-card--entity")]
-      ) {
-        delete card.dataset.kpFlagsFit;
-        const was = DRAWN4.get(card);
-        if (was) {
-          delete was.drawn.flags;
-          setEntity(card, was.data);
-        }
-      }
+      );
+      for (const card of cards2) delete card.dataset.kpFlagsFit;
+      redraw(cards2, ["flags", "actions"]);
     };
     const fold2 = () => grid2.toggleAttribute("data-kp-entity-narrow", grid2.clientWidth > 0 && grid2.clientWidth < 480);
     fold2();
@@ -46257,6 +46284,7 @@ function attachEntityCards(root = document) {
     undo.push(() => resize?.disconnect());
     const watch2 = new MutationObserver(() => {
       apply();
+      delete grid2.dataset.kpEntityFit;
       for (
         const card of
         /** @type {HTMLElement[]} */
@@ -46286,7 +46314,7 @@ function attachEntityCards(root = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var ENTITY_GRID, ENTITY_CARD, ENTITY_ACTION_EVENT, ENTITY_FLAG_EVENT, ENTITY_TICK_EVENT, ENTITY_RETRY_EVENT, ENTITY_NEW_EVENT, ENTITY_GRID_RETRY_EVENT, DRAWN4, opt2, made5, sig, SLOTS, slotOf, BUSY2;
+var ENTITY_GRID, ENTITY_CARD, ENTITY_ACTION_EVENT, ENTITY_FLAG_EVENT, ENTITY_TICK_EVENT, ENTITY_RETRY_EVENT, ENTITY_NEW_EVENT, ENTITY_GRID_RETRY_EVENT, DRAWN4, opt2, made5, sig, SLOTS, slotOf, ACTIONS_QUEUED, BUSY2;
 var init_entity_card = __esm({
   "js/entity-card.js"() {
     "use strict";
@@ -46317,6 +46345,7 @@ var init_entity_card = __esm({
       /** @type {HTMLElement} */
       card.querySelector(`:scope > .kp-entity__${slot}`)
     );
+    ACTIONS_QUEUED = /* @__PURE__ */ new WeakSet();
     BUSY2 = /* @__PURE__ */ new WeakMap();
   }
 });

@@ -18,7 +18,7 @@ the selectors and their order are identical, which is what
 | `css/_rules.css` | 37.1 kB | 19.0 kB | 49% |
 | `css/blueprint-register.css` | 240.2 kB | 129.4 kB | 46% |
 | `css/brutalism-register.css` | 241.5 kB | 138.0 kB | 43% |
-| `css/components.css` | 917.0 kB | 456.6 kB | 50% |
+| `css/components.css` | 917.0 kB | 456.7 kB | 50% |
 | `css/cyberpunk-register.css` | 309.5 kB | 179.9 kB | 42% |
 | `css/dark-register.css` | 217.3 kB | 109.3 kB | 50% |
 | `css/deco-register.css` | 246.6 kB | 143.7 kB | 42% |
@@ -33,8 +33,8 @@ the selectors and their order are identical, which is what
 | `css/themes.css` | 131.6 kB | 82.3 kB | 37% |
 | `css/titanium-register.css` | 206.5 kB | 113.7 kB | 45% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 3826.3 kB | 2066.6 kB | 46% |
-| `dist/kp-themes.js` | 2295.1 kB | 1299.7 kB | 43% |
+| `dist/kp-themes.css` | 3826.4 kB | 2066.7 kB | 46% |
+| `dist/kp-themes.js` | 2296.5 kB | 1300.4 kB | 43% |
 
 The loose stylesheets together weigh **3879.5 kB** authored and
 **2098.5 kB** minified, 46% less. A page loading one theme's
