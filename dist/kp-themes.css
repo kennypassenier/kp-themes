@@ -28762,6 +28762,14 @@
         display: none;
     }
 
+    .kp-availability__columns--waiting :is(.kp-availability__column-sum, .kp-availability__column-answers, .kp-availability__column-value) {
+        visibility: hidden;
+    }
+
+    .kp-availability__busy {
+        display: none;
+    }
+
     @container kp-availability (max-width: 34rem) {
         .kp-availability {
             --kp-availability-label: 6rem;
@@ -28774,6 +28782,11 @@
         .kp-availability[data-kp-availability-narrow='by-column'] .kp-availability__columns {
             display: grid;
             gap: var(--kp-space-md, 0.75rem);
+        }
+
+        /* Loading: the list's rows wait (answers hidden, geometry kept) under the theme's busy card. */
+        .kp-availability__busy {
+            display: grid;
         }
 
         .kp-availability__foot .kp-availability__choose {

@@ -53088,6 +53088,7 @@ function render4(root) {
   if (state2 === "empty" || state2 === "error" || state2 === "ready" && columns2.length === 0) {
     if (grid2 && grid2.offsetHeight > 0) body.style.setProperty("--kp-availability-body-min", `${Math.round(grid2.offsetHeight)}px`);
     grid2?.remove();
+    syncListCard(root, body, false);
     const kind = state2 === "error" ? "error" : "empty";
     const plate = statePlate(document, {
       kind,
@@ -53161,10 +53162,17 @@ function render4(root) {
   grid2.toggleAttribute("data-kp-availability-number", attr10(root, "summary", "both") !== "bar");
   paintSummary(root);
   root.toggleAttribute("data-kp-availability-nobody", total > 0 && people.every((p) => Object.keys(st.set.answers[p.id] ?? {}).length === 0));
-  if (attr10(root, "narrow", "scroll") === "by-column" && !loading) body.append(columnsList(root, people));
+  const byColumn = attr10(root, "narrow", "scroll") === "by-column";
+  if (byColumn) body.append(columnsList(root, people, loading));
+  syncListCard(root, body, loading && byColumn);
   requestAnimationFrame(() => {
-    if (grid2 && grid2.isConnected && !loading && grid2.offsetHeight > 0)
-      body.style.setProperty("--kp-availability-body-min", `${Math.round(grid2.offsetHeight)}px`);
+    if (!grid2 || !grid2.isConnected || loading) return;
+    const list = (
+      /** @type {HTMLElement | null} */
+      body.querySelector(":scope > .kp-availability__columns")
+    );
+    const high = grid2.offsetHeight > 0 ? grid2.offsetHeight : list?.offsetHeight ?? 0;
+    if (high > 0) body.style.setProperty("--kp-availability-body-min", `${Math.round(high)}px`);
   });
   const reason = root.getAttribute("data-kp-disabled-reason");
   if (root.hasAttribute("data-kp-availability-disabled") && reason) grid2.setAttribute("data-kp-disabled-reason-text", reason);
@@ -53183,10 +53191,38 @@ function render4(root) {
   const at = mem?.read("scroll", null);
   if (typeof at === "number") grid2.scrollLeft = at;
 }
-function columnsList(root, people) {
+function syncListCard(root, body, on) {
+  const card = LIST_CARDS.get(root);
+  if (!on) {
+    if (card) {
+      LIST_CARDS.delete(root);
+      card.remove();
+    }
+    return;
+  }
+  const list = (
+    /** @type {HTMLElement | null} */
+    body.querySelector(":scope > .kp-availability__columns")
+  );
+  if (!list) return;
+  if (card) {
+    if (card.layer.parentElement !== body) body.append(card.layer);
+    card.place();
+    return;
+  }
+  LIST_CARDS.set(
+    root,
+    openBusyCard(body, { words: getStrings().heatLoading, area: () => [list], className: "kp-availability__busy", arrive: false })
+  );
+}
+function columnsList(root, people, waiting = false) {
   const st = stateOf6(root);
   const s2 = getStrings();
   const wrap = el10("kp-availability__columns");
+  if (waiting) {
+    wrap.classList.add("kp-availability__columns--waiting");
+    wrap.inert = true;
+  }
   for (const c of st.set.columns) {
     const f = columnFacts(root, c.key);
     const sec = el10("kp-availability__column", "section");
@@ -53788,11 +53824,12 @@ function attachAvailability(root = document) {
   }
   return () => undo.forEach((u) => u());
 }
-var AVAILABILITY, AVAILABILITY_EVENT, AVAILABILITY_CHOOSE_EVENT, AVAILABILITY_UNIT_EVENT, AVAILABILITY_RETRY_EVENT, AVAILABILITY_ANSWERS, AVAILABILITY_REFUSED_MS, AVAILABILITY_UNDO_MS, STATE5, el10, attr10, cellKey, toneOf3, glyphOf, wordOf, stateOf6, viewerOf, allowed, editMode;
+var AVAILABILITY, AVAILABILITY_EVENT, AVAILABILITY_CHOOSE_EVENT, AVAILABILITY_UNIT_EVENT, AVAILABILITY_RETRY_EVENT, AVAILABILITY_ANSWERS, AVAILABILITY_REFUSED_MS, AVAILABILITY_UNDO_MS, STATE5, el10, attr10, cellKey, toneOf3, glyphOf, wordOf, stateOf6, viewerOf, allowed, editMode, LIST_CARDS;
 var init_availability = __esm({
   "js/availability.js"() {
     "use strict";
     init_strings();
+    init_busy_card();
     init_heat();
     init_state_plate();
     init_shortcuts();
@@ -53831,6 +53868,7 @@ var init_availability = __esm({
       const v = root.getAttribute("data-kp-heat-edit");
       return v === "all" || v === "off" ? v : "own";
     };
+    LIST_CARDS = /* @__PURE__ */ new WeakMap();
   }
 });
 

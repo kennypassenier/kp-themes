@@ -48,6 +48,7 @@
 // `kp-availability-retry`. Every word is in js/strings.js; nothing runs on import.
 
 import { getStrings } from './strings.js';
+import { openBusyCard } from './busy-card.js';
 import { attachHeats, setHeat, setHeatPick } from './heat.js';
 import { statePlate } from './state-plate.js';
 import { registerShortcuts } from './shortcuts.js';
@@ -418,6 +419,7 @@ function render(root) {
         // The plate keeps the footprint the grid had.
         if (grid && grid.offsetHeight > 0) body.style.setProperty('--kp-availability-body-min', `${Math.round(grid.offsetHeight)}px`);
         grid?.remove();
+        syncListCard(root, body, false);
         const kind = state === 'error' ? 'error' : 'empty';
         const plate = statePlate(document, {
             kind,
@@ -492,11 +494,16 @@ function render(root) {
     grid.toggleAttribute('data-kp-availability-number', attr(root, 'summary', 'both') !== 'bar');
     paintSummary(root);
     root.toggleAttribute('data-kp-availability-nobody', total > 0 && people.every((p) => Object.keys(st.set.answers[p.id] ?? {}).length === 0));
-    // The by-column list for a phone.
-    if (attr(root, 'narrow', 'scroll') === 'by-column' && !loading) body.append(columnsList(root, people));
+    // The by-column list for a phone; while loading its rows wait under the busy card (the grid is hidden in that mode).
+    const byColumn = attr(root, 'narrow', 'scroll') === 'by-column';
+    if (byColumn) body.append(columnsList(root, people, loading));
+    syncListCard(root, body, loading && byColumn);
     requestAnimationFrame(() => {
-        if (grid && grid.isConnected && !loading && grid.offsetHeight > 0)
-            body.style.setProperty('--kp-availability-body-min', `${Math.round(grid.offsetHeight)}px`);
+        if (!grid || !grid.isConnected || loading) return;
+        // On a phone with a list per column the grid is hidden: the list is the footprint.
+        const list = /** @type {HTMLElement | null} */ (body.querySelector(':scope > .kp-availability__columns'));
+        const high = grid.offsetHeight > 0 ? grid.offsetHeight : (list?.offsetHeight ?? 0);
+        if (high > 0) body.style.setProperty('--kp-availability-body-min', `${Math.round(high)}px`);
     });
     const reason = root.getAttribute('data-kp-disabled-reason');
     if (root.hasAttribute('data-kp-availability-disabled') && reason) grid.setAttribute('data-kp-disabled-reason-text', reason);
@@ -514,11 +521,47 @@ function render(root) {
     if (typeof at === 'number') grid.scrollLeft = at;
 }
 
-/** A list per column, the same data for a narrow screen. @param {HTMLElement} root @param {AvailabilityPerson[]} people */
-function columnsList(root, people) {
+/** The busy card over a loading by-column list. @type {WeakMap<Element, import('./busy-card.js').BusyCard>} */
+const LIST_CARDS = new WeakMap();
+
+/**
+ * A loading list per column holds the data table's busy card, centred over the whole list; any other state holds none.
+ * @param {HTMLElement} root @param {HTMLElement} body @param {boolean} on
+ */
+function syncListCard(root, body, on) {
+    const card = LIST_CARDS.get(root);
+    if (!on) {
+        if (card) {
+            LIST_CARDS.delete(root);
+            card.remove();
+        }
+        return;
+    }
+    const list = /** @type {HTMLElement | null} */ (body.querySelector(':scope > .kp-availability__columns'));
+    if (!list) return;
+    if (card) {
+        if (card.layer.parentElement !== body) body.append(card.layer);
+        card.place();
+        return;
+    }
+    LIST_CARDS.set(
+        root,
+        openBusyCard(body, { words: getStrings().heatLoading, area: () => [list], className: 'kp-availability__busy', arrive: false }),
+    );
+}
+
+/**
+ * A list per column, the same data for a narrow screen. `waiting`: the rows stand without answers, for a loading state.
+ * @param {HTMLElement} root @param {AvailabilityPerson[]} people @param {boolean} [waiting]
+ */
+function columnsList(root, people, waiting = false) {
     const st = stateOf(root);
     const s = getStrings();
     const wrap = el('kp-availability__columns');
+    if (waiting) {
+        wrap.classList.add('kp-availability__columns--waiting');
+        wrap.inert = true;
+    }
     for (const c of st.set.columns) {
         const f = columnFacts(root, c.key);
         const sec = el('kp-availability__column', 'section');
