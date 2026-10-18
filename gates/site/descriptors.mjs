@@ -268,6 +268,13 @@ export const DESCRIPTORS = [
 `,
             },
             {
+                title: 'A removal that lists what it will leave without',
+                why: '`data-kp-confirm-dependents` alone does not block: the confirmation lists what still uses the thing, under a heading with the exact count, and Confirm stays available for a reader who knows. Put `data-kp-confirm-blocked` on it as well (as above) when the removal may not go ahead.',
+                markup: `
+<button type="button" class="kp-button kp-button--destructive" data-kp-destructive data-kp-confirm="Delete the source Household?" data-kp-confirm-dependents="kyu-runner; Home Assistant; Almanac">Delete</button>
+`,
+            },
+            {
                 title: 'A row action that acts at once and offers the way back',
                 why: 'The optimistic half: the row goes away immediately, an undo appears beside it, and the action commits only when the window closes. The consumer hears both outcomes as events.',
                 markup: `
@@ -410,6 +417,28 @@ export const DESCRIPTORS = [
 </fieldset>
 `,
             },
+            {
+                title: 'Choices as tiles',
+                why: 'The same fieldset, legend and `.kp-field__option` labels as any group, with `data-kp-layout="tiles"`: each option is a tile the whole of which is the target, the native box at the start, a `.kp-field__option-title` and a `.kp-field__option-hint` under it. A checkbox group picks several and a radio group one. Tiles share one height per row, wrap to one column on a phone, and a disabled tile is dashed with its hint saying why. A group that is not valid takes `aria-invalid="true"`, which outlines the fieldset, and the error line under it is tied to it with `aria-describedby`.',
+                markup: `
+<div class="kp-stack">
+<fieldset class="kp-fieldset" data-kp-layout="tiles">
+<legend class="kp-field__label">What should the reply do?</legend>
+<label class="kp-field__option"><input class="kp-field__check" type="checkbox" name="doc-tiles-act" value="thank" checked /><span class="kp-field__option-title">Thank them for the interview</span><span class="kp-field__option-hint">One sentence about Tuesday’s talk.</span></label>
+<label class="kp-field__option"><input class="kp-field__check" type="checkbox" name="doc-tiles-act" value="confirm" /><span class="kp-field__option-title">Confirm the second round</span><span class="kp-field__option-hint">Accept Thursday at 14:00 and ask who joins.</span></label>
+<label class="kp-field__option"><input class="kp-field__check" type="checkbox" name="doc-tiles-act" value="portfolio" disabled /><span class="kp-field__option-title">Send the portfolio again</span><span class="kp-field__option-hint">Not possible: this dossier has no portfolio file.</span></label>
+</fieldset>
+<div class="kp-stack">
+<fieldset class="kp-fieldset" data-kp-layout="tiles" aria-invalid="true" aria-describedby="doc-tiles-error">
+<legend class="kp-field__label">Which CV goes with it?</legend>
+<label class="kp-field__option"><input class="kp-field__check" type="radio" name="doc-tiles-cv" value="master" /><span class="kp-field__option-title">Master CV</span><span class="kp-field__option-hint">Two pages, 12/10/2026.</span></label>
+<label class="kp-field__option"><input class="kp-field__check" type="radio" name="doc-tiles-cv" value="platform" /><span class="kp-field__option-title">Platform variant</span><span class="kp-field__option-hint">Leads with Kubernetes and Rust.</span></label>
+</fieldset>
+<p class="kp-field__error" id="doc-tiles-error">Choose a CV: the reply needs one attached.</p>
+</div>
+</div>
+`,
+            },
         ],
         variants: [
             { name: '.kp-field', what: 'The stacked default: label above control, help and error under it.' },
@@ -418,6 +447,8 @@ export const DESCRIPTORS = [
             { name: '.kp-field__input--multiline', what: 'A textarea: taller, and resizable vertically only, because one dragged wider breaks the column it sits in.' },
             { name: '.kp-fieldset', what: 'A group of radios or checkboxes with a legend, so the question is read once before the answers rather than once per answer.' },
             { name: 'inline layout', what: 'A radio group laid out in a row instead of a column, with the legend on its own line above them.' },
+            { name: 'tiles layout', what: '`data-kp-layout="tiles"` on a `.kp-fieldset`: every option a tile with a title and a hint. A tile that is checked takes the primary edge, an inner ring and a faint wash; hover lights the edge, focus puts the ring round the whole tile, disabled is dashed on the muted ground, and an invalid group outlines the fieldset.' },
+            { name: '.kp-field__option-title, __option-hint', what: 'A tile’s name in the heavier weight, and one muted line under it that says more, or why the tile is disabled.' },
             { name: '.kp-field__required', what: 'The required marking: a star and the word, because a star alone is read as “star”.' },
         ],
         accessibility: [
@@ -1061,6 +1092,52 @@ export const DESCRIPTORS = [
 </div>
 `,
             },
+            {
+                title: 'A table the page sorts itself, and a column that cannot be sorted now',
+                why: '`data-kp-sort-external` makes the page the one that sorts: a header press draws the arrow, `aria-sort`, the key numbers, the sort summary and Reset, remembers the sort and fires `kp-datatable-sort`, but the rows keep the order the page renders. The page reorders its rows (here in the browser, in a real page from the server) and calls `refresh()`. A header with `aria-disabled="true"` is a column that cannot be sorted now: pressing it does nothing and the sort stays as it is. Sort the table by Snapshots; Notes cannot be sorted.',
+                markup: `
+<div class="kp-datatable" data-kp-datatable data-kp-sort-external data-kp-page-sizes="none" data-doc-external>
+<div class="kp-table-wrap">
+<table class="kp-table">
+<caption class="kp-sr-only">Backup repositories, sorted by the page</caption>
+<thead><tr>
+<th scope="col" data-kp-sort="text">Stack</th>
+<th scope="col" data-kp-sort="number" class="kp-text-end">Snapshots</th>
+<th scope="col" data-kp-sort="text" aria-disabled="true">Notes</th>
+</tr></thead>
+<tbody>
+<tr data-kp-row-key="media"><td>media</td><td class="kp-text-end kp-numeric">42</td><td>Nightly</td></tr>
+<tr data-kp-row-key="home"><td>home</td><td class="kp-text-end kp-numeric">7</td><td>Weekly</td></tr>
+<tr data-kp-row-key="network"><td>network</td><td class="kp-text-end kp-numeric">120</td><td>Hourly</td></tr>
+<tr data-kp-row-key="docs"><td>docs</td><td class="kp-text-end kp-numeric">19</td><td>Nightly</td></tr>
+</tbody>
+</table>
+</div>
+<div class="kp-datatable__bar">
+<p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+</div>
+</div>
+`,
+                script: `
+import { dataTable } from '@kp-soft/themes/js/datatable';
+
+const wrap = document.querySelector('[data-doc-external]');
+const body = wrap.querySelector('tbody');
+const given = [...body.rows];
+
+wrap.addEventListener('kp-datatable-sort', (event) => {
+    const sort = event.detail;
+    const rows = [...given];
+    if (sort) {
+        const sign = sort.direction === 'ascending' ? 1 : -1;
+        const value = (row) => row.cells[sort.column].textContent.trim();
+        rows.sort((a, b) => sign * value(a).localeCompare(value(b), undefined, { numeric: true }));
+    }
+    body.replaceChildren(...rows);
+    dataTable(wrap).refresh();
+});
+`,
+            },
         ],
         variants: [
             { name: 'data-kp-sort-multi="click"', what: 'A plain press on a header (Enter, Space) adds a sort key and Shift + click sorts on that column alone; without a value, Shift + click adds the key as it always did. `multiSort: \'click\'` is the same in script.' },
@@ -1393,6 +1470,40 @@ export const DESCRIPTORS = [
                 markup: `
 <div class="kp-secret" data-kp-secret data-kp-secret-reveal-on="hold" data-kp-secret-label="Root password" data-kp-secret-value="correct-horse-battery"></div>
 <div class="kp-secret" data-kp-secret data-kp-secret-label="Signing key" data-kp-secret-disabled="Only the owner can read the signing key."></div>
+`,
+            },
+            {
+                title: 'A value that is read from the server only when it is asked for',
+                why: 'A field with no `data-kp-secret-value` asks for its value when it is shown or copied by firing `kp-secret-request` on itself. The page calls `preventDefault()` and answers with `detail.respond(value)` or `detail.fail(reason)`; `detail.purpose` is `reveal` or `copy`. While the page reads, the field is `loading` and says so under its buttons; a refusal shows its reason there and the Reveal button becomes Try again. The value is in the page only while it is shown. The second field never answers, so it shows the failure. A page that asks for its value in one place can pass `secretLoad(field, purpose)` to `attachPatterns` instead.',
+                markup: `
+<div class="kp-stack">
+<div class="kp-secret" data-kp-secret data-kp-secret-ttl="15" data-kp-secret-label="Client secret" data-doc-secret="ok"></div>
+<div class="kp-secret" data-kp-secret data-kp-secret-label="Webhook key" data-doc-secret="fail"></div>
+</div>
+`,
+                script: `
+const ask = (field, event) => {
+    event.preventDefault();
+    const { respond, fail } = event.detail;
+    setTimeout(() => {
+        if (field.dataset.docSecret === 'fail') fail('The vault did not answer.');
+        else respond('cs_9f2Qm7Lx4TbV1nRc8WzK');
+    }, 700);
+};
+for (const field of document.querySelectorAll('[data-doc-secret]')) {
+    field.addEventListener('kp-secret-request', (event) => ask(field, event));
+    field.addEventListener('kp-secret', (event) => console.log(event.detail.shown ? 'shown' : 'hidden', event.detail.reason));
+}
+`,
+            },
+            {
+                title: 'Options: a long value that wraps, a short mask, no Copy, and a value that stays until hidden',
+                why: '`data-kp-secret-wrap="wrap"` lets a long value wrap in a box that keeps `data-kp-secret-lines` lines of room (otherwise it stays on one line and scrolls inside its box, a fade at the end saying there is more). `data-kp-secret-mask` and `data-kp-secret-mask-char` set the mask’s length and character, `data-kp-secret-copy="false"` leaves Copy out and `data-kp-secret-ttl="0"` keeps a shown value until Hide is pressed. While a value is shown, a drain rule under it runs out with the countdown.',
+                markup: `
+<div class="kp-stack">
+<div class="kp-secret" data-kp-secret data-kp-secret-wrap="wrap" data-kp-secret-lines="3" data-kp-secret-label="Private key" data-kp-secret-value="MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC7VJTUt9Us8cKjMzEfYyjiWA4R4/M2bS1GB4t7NXp98C3SC6dVMvDuictGeurT8jNbvJZHtCSuYEvuNMoSfm76oqFvAp8Gy0iz5sxjZmSnXyCdPEovGhLa0VzMaQ8s+CLOyS56YyCFGeJZ"></div>
+<div class="kp-secret" data-kp-secret data-kp-secret-mask="6" data-kp-secret-mask-char="*" data-kp-secret-ttl="0" data-kp-secret-copy="false" data-kp-secret-label="PIN" data-kp-secret-value="482913"></div>
+</div>
 `,
             },
         ],
@@ -2256,11 +2367,108 @@ for (const button of document.querySelectorAll('[data-doc-toast]')) {
 </div>
 `,
             },
+            {
+                title: 'Rows with a lead: an inbox that is walked by keyboard and acts on one row',
+                why: '`kp-action-list--lead` gives every row a lead column before its words (`.kp-action-list__lead`: a state dot, a badge, a file format, a day and hour), as wide as the widest lead in the list so every title starts at one edge. The words are `.kp-action-list__main` with a `.kp-action-list__title`, a `.kp-action-list__text` and a `.kp-action-list__meta` line whose parts are set apart by a dot. A row says its state on `data-kp-state` (`new`, `active`, `warn`, `failed`, `next`, `done`, `past`) by a bar along its start edge that every row reserves, so a state moves nothing. `data-kp-row-keys` on the list lets j and k (or the arrows) walk the rows, Home and End jump, and Enter on a row fires `kp-row-open`; `attachRowKeys(root)` wires it. `setRowBusy(row, true, button)` makes the row wait without moving a column (the pressed button shows the spinner where its words are) and `removeRow(row)` lets the row leave the theme’s way and keeps the keyboard’s place. Press Mark seen on a row, or focus the list and press j.',
+                markup: `
+<div class="kp-stack">
+<ul class="kp-action-list kp-action-list--lead" aria-label="Inbox" data-kp-row-keys data-doc-inbox>
+<li data-kp-state="new">
+<span class="kp-action-list__lead"><span class="kp-health" data-state="warn"><span class="kp-health__dot" aria-hidden="true"></span><span class="kp-sr-only">Warning</span></span></span>
+<div class="kp-action-list__main"><strong class="kp-action-list__title">Backup of media is late</strong><span class="kp-action-list__text">The nightly copy has not finished after 3 h 10 min.</span><span class="kp-action-list__meta"><span>Backups</span><span>Nightly copy</span><span>12 min ago</span></span></div>
+<div class="kp-row-actions"><button type="button" class="kp-button kp-button--sm kp-button--primary" data-kp-action="open">Open</button><button type="button" class="kp-button kp-button--sm" data-kp-action="seen" data-doc-seen>Mark seen</button></div>
+</li>
+<li data-kp-state="failed">
+<span class="kp-action-list__lead"><span class="kp-health" data-state="down"><span class="kp-health__dot" aria-hidden="true"></span><span class="kp-sr-only">Failed</span></span></span>
+<div class="kp-action-list__main"><strong class="kp-action-list__title">Certificate renewal failed</strong><span class="kp-action-list__text">The challenge for the wildcard certificate was refused.</span><span class="kp-action-list__meta"><span>Platform</span><span>Renewals</span><span>1 h ago</span></span></div>
+<div class="kp-row-actions"><button type="button" class="kp-button kp-button--sm kp-button--primary" data-kp-action="open">Open</button></div>
+</li>
+<li data-kp-state="done">
+<span class="kp-action-list__lead"><span class="kp-health" data-state="ok"><span class="kp-health__dot" aria-hidden="true"></span><span class="kp-sr-only">Fine</span></span></span>
+<div class="kp-action-list__main"><strong class="kp-action-list__title">Restore test passed</strong><span class="kp-action-list__text">The weekly restore of the home stack matched its checksum.</span><span class="kp-action-list__meta"><span>Backups</span><span>Restore test</span><span>Yesterday</span></span></div>
+<div class="kp-row-actions"><button type="button" class="kp-button kp-button--sm" data-kp-action="open">Open</button><button type="button" class="kp-button kp-button--sm" data-kp-action="seen" data-doc-seen>Mark seen</button></div>
+</li>
+</ul>
+<p class="kp-text-muted" data-doc-inbox-said role="status">Press Mark seen, or focus the list and press j, k or Enter.</p>
+</div>
+`,
+                script: `
+import { attachActionColumns, attachRowKeys, removeRow, setRowBusy } from '@kp-soft/themes/js/actions';
+
+const list = document.querySelector('[data-doc-inbox]');
+const said = document.querySelector('[data-doc-inbox-said]');
+attachActionColumns(list.parentElement);
+attachRowKeys(list.parentElement);
+
+list.addEventListener('kp-row-open', (event) => {
+    said.textContent = 'Opened: ' + event.detail.row.querySelector('.kp-action-list__title').textContent;
+});
+list.addEventListener('click', async (event) => {
+    const seen = event.target.closest('[data-doc-seen]');
+    const row = event.target.closest('li');
+    if (!seen || row.getAttribute('aria-busy') === 'true') return;
+    setRowBusy(row, true, seen);
+    await new Promise((done) => setTimeout(done, 1200));
+    await removeRow(row);
+    said.textContent = 'Marked seen.';
+});
+`,
+            },
+            {
+                title: 'Rows with a lead: a backlog with a payload, appointments in groups',
+                why: 'The same list with other leads. A badge for a message’s state, and a `.kp-action-list__more` fold (the accordion’s bare item) with a `.kp-action-list__payload` that opens with the theme’s fold motion. Appointments lead with a `.kp-action-list__when` (a day over an hour); the next one up is `next` (the bar, a primary wash and the lead in the primary), earlier ones `past` (quieter ink, not opacity), and an `li.kp-action-list__group` is a heading row across the list.',
+                markup: `
+<div class="kp-stack">
+<ul class="kp-action-list kp-action-list--lead" aria-label="Backlog">
+<li data-kp-state="failed">
+<span class="kp-action-list__lead"><span class="kp-badge kp-badge--destructive">dead</span></span>
+<div class="kp-action-list__main"><span class="kp-action-list__title kp-id">msg-7f3a21</span><span class="kp-action-list__meta"><span>published 16/10/2026 03:12</span><span>5 attempts</span></span>
+<details class="kp-accordion__item kp-accordion__item--bare kp-action-list__more"><summary>Payload</summary><pre class="kp-action-list__payload">{"topic":"backup.done","ok":false,"volume":"media"}</pre></details></div>
+<div class="kp-row-actions"><button type="button" class="kp-button kp-button--sm" data-kp-action="requeue">Requeue</button><button type="button" class="kp-button kp-button--sm kp-button--destructive" data-kp-action="delete">Delete</button></div>
+</li>
+<li data-kp-state="active">
+<span class="kp-action-list__lead"><span class="kp-badge kp-badge--info">claimed</span></span>
+<div class="kp-action-list__main"><span class="kp-action-list__title kp-id">msg-7f3a22</span><span class="kp-action-list__meta"><span>published 16/10/2026 03:14</span><span>1 attempt</span></span></div>
+<div class="kp-row-actions"><button type="button" class="kp-button kp-button--sm kp-button--destructive" data-kp-action="delete">Delete</button></div>
+</li>
+</ul>
+<ul class="kp-action-list kp-action-list--lead" aria-label="Appointments">
+<li class="kp-action-list__group"><h4>Upcoming</h4></li>
+<li data-kp-state="next">
+<span class="kp-action-list__lead"><time class="kp-action-list__when"><span>Tue 21/10/2026</span><span>14:00</span></time></span>
+<div class="kp-action-list__main"><strong class="kp-action-list__title">Second interview</strong><span class="kp-action-list__text">Two people from the team; at their office.</span></div>
+<div class="kp-row-actions"><button type="button" class="kp-button kp-button--sm" data-kp-action="edit">Edit</button><button type="button" class="kp-button kp-button--sm kp-button--destructive" data-kp-action="delete">Delete</button></div>
+</li>
+<li>
+<span class="kp-action-list__lead"><time class="kp-action-list__when"><span>Tue 28/10/2026</span><span>10:00</span></time></span>
+<div class="kp-action-list__main"><strong class="kp-action-list__title">Technical test</strong><span class="kp-action-list__text">Two hours, remote.</span></div>
+<div class="kp-row-actions"><button type="button" class="kp-button kp-button--sm" data-kp-action="edit">Edit</button><button type="button" class="kp-button kp-button--sm kp-button--destructive" data-kp-action="delete">Delete</button></div>
+</li>
+<li class="kp-action-list__group"><h4>Past</h4></li>
+<li data-kp-state="past">
+<span class="kp-action-list__lead"><time class="kp-action-list__when"><span>Tue 14/10/2026</span><span>09:30</span></time></span>
+<div class="kp-action-list__main"><strong class="kp-action-list__title">Intro call</strong><span class="kp-action-list__text">Twenty minutes with the recruiter.</span></div>
+<div class="kp-row-actions"><button type="button" class="kp-button kp-button--sm" data-kp-action="edit">Edit</button><button type="button" class="kp-button kp-button--sm kp-button--destructive" data-kp-action="delete">Delete</button></div>
+</li>
+</ul>
+</div>
+`,
+            },
         ],
         variants: [
             { name: '.kp-action-list', what: 'A list (`ul` or `ol`) whose rows are one grid: the row’s text first, then one column per button.' },
             { name: '.kp-row-actions', what: 'The button box in a row or a table cell. Empty, it takes no room.' },
             { name: 'data-kp-action', what: 'A button’s role, for rows whose buttons are not the same from the end: one column per role, in the order the rows give them.' },
+            { name: '.kp-action-list--lead', what: 'Rows with a lead column before their words, as wide as the widest lead and no wider; the buttons keep their shared columns. In a narrow list the lead stays beside the words and the buttons go under them.' },
+            { name: '.kp-action-list__lead, __main', what: 'The lead (a state dot or badge, a file’s format, a day and hour) sits on the title’s first line; the words are the main part.' },
+            { name: '.kp-action-list__title, __text, __meta', what: 'The title in the heavier weight, one muted sentence, and a muted line of parts set apart by a dot that never starts a wrapped line.' },
+            { name: '.kp-action-list__when', what: 'A moment as two lines, a day over an hour; in a `next` row the second line takes the primary ink.' },
+            { name: '.kp-action-list__more, __payload', what: 'A fold for a payload (the accordion’s bare item), and the text inside it in the mono face at a readable height.' },
+            { name: 'li.kp-action-list__group', what: 'A heading row across the whole list (Upcoming, Past); the keyboard walk skips it.' },
+            { name: 'data-kp-state on a row', what: '`new` (unread), `active` (claimed, in flight), `warn`, `failed`, `next` (the next one up: the bar, a primary wash and the lead in the primary), `done` and `past` (quieter ink, not opacity). Every row reserves the bar, so a state moves nothing.' },
+            { name: 'setRowBusy(row, busy, button)', what: 'The row carries `aria-busy`, every button in it refuses a press with `aria-disabled` (the focus stays), and the pressed one shows the theme’s spinner in `.kp-button__busy` while its words (`.kp-button__text`) keep their room, so no column moves.' },
+            { name: 'removeRow(row)', what: 'The row leaves the theme’s way (at once under reduced motion). When the focus is in it, the focus goes first to the same place in the next row, else the row before, else the list.' },
+            { name: 'data-kp-row-keys / attachRowKeys(root) / ROW_KEYS', what: 'j or ↓ next row, k or ↑ the row before, Home and End the first and last, Enter on the row fires `kp-row-open` with `{ row }`. Never while typing in a field or with a modifier held; a button in a row keeps Enter. One row is in the tab order, so Tab reaches the list once.' },
             {
                 name: 'on a phone',
                 what: 'In a list narrower than 30rem the buttons go under the row’s text, side by side, spread over the full width in equal columns, so a role still lines up from row to row. In a narrow table they stack in the cell at one width.',
@@ -3267,6 +3475,91 @@ import { attachGantts, setGanttState } from '@kp-soft/themes/js/gantt';
 const timeline = document.querySelector('[data-kp-doc-loading]');
 attachGantts(timeline.parentElement);
 setGanttState(timeline, 'loading');
+`,
+            },
+            {
+                title: 'Moments instead of runs: points, kinds and zones',
+                why: 'A point is a moment, not a stretch: `setGanttPoints(el, points, lanes)` puts a mark in its lane, and `setGanttKinds(el, kinds)` names each kind in the legend with a shape (`dot`, `diamond`, `square`, `triangle`, `ring`) and a colour (`series` 1 to 5, or a `tone`). A point that is `planned` is hollow. `setGanttZones(el, zones)` lays a thin band in one lane (waiting since the last contact) or, without a `lane`, a band behind every lane (the holiday), named in the legend. A lane with `href` is a link and `sub` is a second line under its name. The range word `all` fits everything on the timeline and now and stays fitted when the data changes; the timeline has no runs, so the run states leave the legend. Marks closer than the eye can tell apart become one mark with a count (“+2”) whose card names them all; opening it fires `kp-gantt-open` with every point in `points`.',
+                markup: `
+<div class="kp-stack">
+<section class="kp-gantt" data-kp-gantt data-kp-gantt-points data-kp-gantt-ranges="all 24h 7d" data-kp-gantt-range="all" aria-label="Contacts per application" data-doc-points></section>
+<p class="kp-text-muted" data-doc-points-said role="status">Open a mark to see what it stands for.</p>
+</div>
+`,
+                script: `
+import { attachGantts, setGanttKinds, setGanttPoints, setGanttZones } from '@kp-soft/themes/js/gantt';
+
+const DAY = 86_400_000;
+const today = new Date();
+today.setHours(10, 0, 0, 0);
+const at = (days) => today.getTime() + days * DAY;
+
+const timeline = document.querySelector('[data-doc-points]');
+attachGantts(timeline.parentElement);
+
+setGanttKinds(timeline, [
+    { kind: 'applied', label: 'applied', shape: 'dot', series: 2 },
+    { kind: 'mail', label: 'mail', shape: 'square', series: 1 },
+    { kind: 'contact', label: 'contact', shape: 'diamond', series: 3 },
+    { kind: 'interview', label: 'interview', shape: 'triangle', series: 4 },
+    { kind: 'follow', label: 'follow-up', shape: 'ring', tone: 'info' },
+]);
+setGanttZones(timeline, [
+    { lane: 'acme', from: at(-7), to: today.getTime(), label: 'waiting for an answer' },
+    { from: at(3), to: at(10), label: 'recruiters away (autumn holiday)', tone: 'muted' },
+]);
+setGanttPoints(
+    timeline,
+    [
+        { id: 'a1', lane: 'acme', at: at(-13), kind: 'applied', label: 'Acme Analytics: applied' },
+        { id: 'a2', lane: 'acme', at: at(-7), kind: 'mail', label: 'Acme Analytics: received, in review' },
+        { id: 'a3', lane: 'acme', at: at(-7), kind: 'contact', label: 'Acme Analytics: short call with the hiring manager' },
+        { id: 'c1', lane: 'corvid', at: at(-20), kind: 'applied', label: 'Corvid Systems: applied' },
+        { id: 'c2', lane: 'corvid', at: at(-12), kind: 'contact', label: 'Corvid Systems: call with the team lead' },
+        { id: 'c3', lane: 'corvid', at: at(4), kind: 'interview', label: 'Corvid Systems: interview, second round', planned: true },
+        { id: 'c4', lane: 'corvid', at: at(11), kind: 'follow', label: 'Corvid Systems: follow-up', planned: true },
+    ],
+    [
+        { id: 'acme', label: 'Senior UI engineer', sub: 'Acme Analytics', href: '#acme' },
+        { id: 'corvid', label: 'Senior frontend engineer', sub: 'Corvid Systems', href: '#corvid' },
+    ],
+);
+timeline.addEventListener('kp-gantt-open', (event) => {
+    document.querySelector('[data-doc-points-said]').textContent =
+        'Opened: ' + event.detail.points.map((point) => point.label).join(' · ');
+});
+`,
+            },
+            {
+                title: 'One lane as a dated line',
+                why: '`kp-gantt--line` is one lane with no toolbar, no lane names, no hint and no brush, the axis under the line, fitted to its data: the dated line under a journey stepper (see the step list). Add `data-kp-gantt-points` and give it points and kinds as above.',
+                markup: `
+<div class="kp-gantt kp-gantt--line" data-kp-gantt data-kp-gantt-points aria-label="What happened when, Northwind Logistics" data-doc-line></div>
+`,
+                script: `
+import { attachGantts, setGanttKinds, setGanttPoints } from '@kp-soft/themes/js/gantt';
+
+const DAY = 86_400_000;
+const today = new Date();
+today.setHours(10, 0, 0, 0);
+const at = (days) => today.getTime() + days * DAY;
+
+const line = document.querySelector('[data-doc-line]');
+attachGantts(line.parentElement);
+setGanttKinds(line, [
+    { kind: 'applied', label: 'applied', shape: 'dot', series: 2 },
+    { kind: 'contact', label: 'contact', shape: 'diamond', series: 3 },
+    { kind: 'interview', label: 'interview', shape: 'triangle', series: 4 },
+]);
+setGanttPoints(
+    line,
+    [
+        { id: 'n1', lane: 'northwind', at: at(-21), kind: 'applied', label: 'Applied' },
+        { id: 'n2', lane: 'northwind', at: at(-9), kind: 'contact', label: 'Call with the recruiter' },
+        { id: 'n3', lane: 'northwind', at: at(-2), kind: 'interview', label: 'Interview at the office' },
+    ],
+    [{ id: 'northwind', label: 'Northwind Logistics' }],
+);
 `,
             },
         ],
@@ -4604,6 +4897,44 @@ list.addEventListener('kp-status-retry', (event) => {
 `,
             },
             {
+                title: 'A check list: a reservation, the fix written out, a summary line',
+                why: '`warn` is a pass with a reservation: the warning pair on the mark and a “!” as its shape. A failed or warn row may carry `fix`, what to do about it, written out under the detail in `.kp-statusrow__fix` (a row in any other state hides it). `buildStatusList` and `setStatus` take `fix`, and `countStatus(list)` counts the rows by state as they are now, for a line such as “2 of 4 checks pass”. Press Fix the folder to see the row pass and the line change.',
+                markup: `
+<div class="kp-stack">
+<p data-doc-checks-summary role="status"></p>
+<div id="doc-checks-host"></div>
+<div class="kp-row"><button type="button" class="kp-button kp-button--sm" data-doc-checks-fix>Fix the folder</button></div>
+</div>
+`,
+                script: `
+import { attachStatusLists, buildStatusList, countStatus, setStatus } from '@kp-soft/themes/js/statusrow';
+
+const host = document.getElementById('doc-checks-host');
+const summary = document.querySelector('[data-doc-checks-summary]');
+const list = buildStatusList(
+    [
+        { id: 'disk', label: 'Free disk space', state: 'ok', detail: '81 GB free' },
+        { id: 'clock', label: 'Clock', state: 'warn', detail: 'Two seconds off', fix: 'Turn on time sync in the host settings.' },
+        { id: 'folder', label: 'Data folder', state: 'failed', detail: 'Not writable', fix: 'Give the service account write access to /srv/data.' },
+        { id: 'mail', label: 'Mail server', state: 'ok', detail: 'Answered in 120 ms' },
+    ],
+    { label: 'Readiness checks', single: true },
+);
+host.append(list);
+attachStatusLists(host);
+
+const tell = () => {
+    const counts = countStatus(list);
+    summary.textContent = counts.ok + ' of ' + counts.total + ' checks pass, ' + counts.warn + ' with a reservation, ' + counts.failed + ' failed';
+};
+tell();
+document.querySelector('[data-doc-checks-fix]').addEventListener('click', () => {
+    setStatus(list, 'folder', { state: 'ok', detail: 'Writable', fix: '' });
+    tell();
+});
+`,
+            },
+            {
                 title: 'A calm list: open, done, paused, not known',
                 why: '`data-kp-status-vocab="calm"` swaps the four states for ones with no red: a paused row says since when and offers Resume (one press, with Undo); a row nothing is known about is `unknown`, never done. Put it in a `.kp-card` for the loading, empty and failed states (`setTodayState`).',
                 markup: `
@@ -4618,6 +4949,9 @@ list.addEventListener('kp-status-retry', (event) => {
         ],
         variants: [
             { name: 'data-state', what: '`ok` (a disc with a tick), `loading` (the theme’s spinner), `failed` (a disc with a cross, a red edge and a Retry), `empty` (a dashed ring and a dashed edge).' },
+            { name: 'data-state="warn"', what: 'A pass with a reservation: the warning pair on the mark with a “!” as its shape, never colour alone. Like `failed` it may carry a fix.' },
+            { name: '.kp-statusrow__fix', what: 'Inside the row’s body: the fix written out, in the row’s own words. Shown on a `failed` or `warn` row only; `fix` of `buildStatusList` and `setStatus` fills it, and an empty `fix` clears it.' },
+            { name: 'countStatus(list)', what: 'How many rows are in each state (and the total) as they stand now, for a summary line such as “3 of 4 checks pass”; a calm list counts its own states.' },
             { name: 'data-kp-status-id', what: 'Names a row for `setStatus(list, id, { state, label, detail })`.' },
             { name: 'data-kp-status-retry="false"', what: 'On the list: no Retry button on failed rows.' },
             { name: '.kp-statuslist--rows', what: 'One column instead of a grid of columns of at least 16rem.' },
@@ -4954,6 +5288,55 @@ document.getElementById('doc-steps-run').addEventListener('click', async (event)
 <li class="kp-steplist__item" data-state="current" data-kp-tone="3"><span class="kp-steplist__mark" aria-hidden="true"></span><span class="kp-steplist__body"><span class="kp-steplist__title">Interview</span></span><time class="kp-steplist__time">09/10</time></li>
 <li class="kp-steplist__item" data-state="pending"><span class="kp-steplist__mark" aria-hidden="true"></span><span class="kp-steplist__body"><span class="kp-steplist__title">Offer</span></span><time class="kp-steplist__time"></time></li>
 </ol>
+`,
+            },
+            {
+                title: 'A journey built from rows, with its dated line under it',
+                why: '`buildSteplist` takes a `tone` (1 to 5) per row, which becomes `data-kp-tone`, and a `time` that in a journey is the date the step was reached. Under the stepper stands `.kp-gantt--line` (the run timeline as one dated line, see there) with the moments that led there, so the path says where the application stands and the line says when each thing happened. A closed path ends with a `failed` step. A built list becomes a journey by adding `kp-steplist--journey` to it.',
+                markup: `
+<div class="kp-stack">
+<div id="doc-journey"></div>
+<div class="kp-gantt kp-gantt--line" data-kp-gantt data-kp-gantt-points aria-label="What happened when, Delta Freight" data-doc-journey-line></div>
+</div>
+`,
+                script: `
+import { buildSteplist, attachSteplists } from '@kp-soft/themes/js/steplist';
+import { attachGantts, setGanttKinds, setGanttPoints } from '@kp-soft/themes/js/gantt';
+
+const host = document.getElementById('doc-journey');
+const journey = buildSteplist(
+    [
+        { id: 'draft', title: 'Draft', state: 'done', tone: 1, time: '12/09' },
+        { id: 'sent', title: 'Sent', state: 'done', tone: 2, time: '14/09' },
+        { id: 'screening', title: 'Screening call', state: 'done', tone: 3, time: '24/09' },
+        { id: 'rejected', title: 'Rejected', state: 'failed', time: '30/09' },
+    ],
+    { label: 'Where the application at Delta Freight stands' },
+);
+journey.classList.add('kp-steplist--journey');
+host.append(journey);
+attachSteplists(host);
+
+const DAY = 86_400_000;
+const today = new Date();
+today.setHours(10, 0, 0, 0);
+const at = (days) => today.getTime() + days * DAY;
+const line = document.querySelector('[data-doc-journey-line]');
+attachGantts(line.parentElement);
+setGanttKinds(line, [
+    { kind: 'applied', label: 'applied', shape: 'dot', series: 2 },
+    { kind: 'contact', label: 'contact', shape: 'diamond', series: 3 },
+    { kind: 'mail', label: 'mail', shape: 'square', series: 1 },
+]);
+setGanttPoints(
+    line,
+    [
+        { id: 'd1', lane: 'delta', at: at(-34), kind: 'applied', label: 'Applied' },
+        { id: 'd2', lane: 'delta', at: at(-24), kind: 'contact', label: 'Screening call' },
+        { id: 'd3', lane: 'delta', at: at(-16), kind: 'mail', label: 'Mail: rejected' },
+    ],
+    [{ id: 'delta', label: 'Delta Freight' }],
+);
 `,
             },
         ],
@@ -6204,6 +6587,39 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
 `,
             },
             {
+                title: 'A confirmation that lists what still uses the thing, and one that blocks',
+                why: '`openConfirmation(button, options)` in js/components.js is what a button with `data-kp-confirm` opens; a page can call it itself. `dependents` lists what still uses the thing under the description, in `.kp-confirm__dependents` (a `.kp-dialog__heading` with the exact count, then `.kp-confirm__list`, one line each). `blocked` (a sentence, or `true` for the dictionary’s) makes it a notice instead of a question: one Close button, no Confirm, and no typed field either. The same options come from the button as `data-kp-confirm-dependents` (one name per `;`) and `data-kp-confirm-blocked`. `onAccept` runs only on Confirm.',
+                markup: `
+<div class="kp-row kp-gap-sm">
+<button type="button" class="kp-button kp-button--destructive" data-doc-confirm="list">Delete the source…</button>
+<button type="button" class="kp-button kp-button--destructive" data-doc-confirm="blocked">Delete the calendar…</button>
+</div>
+<p class="kp-text-muted" data-doc-confirm-said role="status">Nothing has been deleted.</p>
+`,
+                script: `
+import { openConfirmation } from '@kp-soft/themes/js/components';
+
+const said = document.querySelector('[data-doc-confirm-said]');
+const dependents = ['kyu-runner', 'Home Assistant', 'Almanac'];
+
+document.querySelector('[data-doc-confirm="list"]').addEventListener('click', (event) => {
+    openConfirmation(event.currentTarget, {
+        phrase: 'Delete the source Household?',
+        dependents,
+        onAccept: () => { said.textContent = 'Deleted. Three things lost their source.'; },
+    });
+});
+document.querySelector('[data-doc-confirm="blocked"]').addEventListener('click', (event) => {
+    openConfirmation(event.currentTarget, {
+        phrase: 'Delete the calendar Household?',
+        dependents: dependents.slice(0, 2),
+        blocked: 'Delete those two sources first, on the Sources page.',
+        onAccept: () => { said.textContent = 'This is never reached: a blocked removal has no Confirm.'; },
+    });
+});
+`,
+            },
+            {
                 title: 'The parts, with the dialog left open',
                 why: 'Printed open so the pieces can be seen at rest: the title, the description under it, the close in the corner and the actions at the end.',
                 markup: `
@@ -6233,6 +6649,8 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
             { name: '.kp-dialog__head', what: 'The title with a state badge beside it and the description under both.' },
             { name: '.kp-dialog__section / __heading / __note', what: 'One part of the body under its heading, with an optional note under it; sections are divided by a rule.' },
             { name: '.kp-dialog__section--danger', what: 'The last section, for what cannot be undone: ruled along its start edge in the destructive colour.' },
+            { name: '.kp-confirm__dependents, .kp-confirm__list', what: 'In a confirmation: what still uses the thing, a section with a heading that carries the exact count and a list of one line each. Set by `dependents` or `data-kp-confirm-dependents`; the dialog is then described by its description and this list.' },
+            { name: 'blocked confirmation', what: '`blocked` or `data-kp-confirm-blocked`: the description becomes the sentence that says what to do first, and the only button is Close. A blocked removal shows no typed field and no Confirm.' },
             { name: 'backdrop', what: 'A dimming rather than a theme colour: a tinted backdrop paints the page instead of pushing it back.' },
             { name: 'pastel', what: 'In pastel a dialog is printed twice and stuck on: its second pass, a flat silhouette in the second ink drawn by its ::backdrop and placed on it by anchor positioning, springs into its rest 6 px off register, then the dialog swings down onto it from its top-start corner on the soft landing (one 8 % overshoot, settled once); a strip of washi tape crosses its top-start corner, and the modal’s dim is the backdrop’s border, so a click outside still reaches it. The close is that opening played backwards. Without anchor positioning the pass rests as a flat shadow and the dialog opens with the swing alone; under reduced motion it is simply there.' },
         ],
@@ -6462,6 +6880,60 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
 </article>
 `,
             },
+            {
+                title: 'One card in four data states',
+                why: 'A card that shows data read from somewhere has a `data-kp-state` of `loading`, `empty`, `error` or `ready`, and keeps its place and size in all of them: `.kp-card__stage` holds `.kp-card__data` and, over it in the same cell, the state’s note `.kp-card__state`. Loading lays the data table’s own loading card over the stage (the words come from `data-kp-loading-words` or `words`) and dims the data, which stays readable and inert. Empty is the package’s empty state with a title, a sentence and an optional action; error is the destructive alert with Try again, which fires `kp-card-retry` and which the page answers. `setCardState(card, state, { words, title, text, action, retry })` is the way in, and `attachCardStates` wires the retry button and follows `data-kp-state` for a framework that writes it. Try the four buttons.',
+                markup: `
+<div class="kp-stack">
+<div class="kp-row kp-gap-sm" role="group" aria-label="State of the card">
+<button type="button" class="kp-button kp-button--sm" data-doc-card-state="loading">Loading</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-card-state="empty">Empty</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-card-state="error">Failed</button>
+<button type="button" class="kp-button kp-button--sm" data-doc-card-state="ready">Filled</button>
+</div>
+<section class="kp-card" data-kp-state="ready" data-kp-loading-words="Reading the appointments" aria-labelledby="doc-card-title" data-doc-card>
+<div class="kp-card__header">
+<h3 class="kp-card__title" id="doc-card-title">Appointments</h3>
+</div>
+<p class="kp-card__body">Everything planned for this application.</p>
+<div class="kp-card__stage">
+<div class="kp-card__data">
+<ul class="kp-stack">
+<li>21/10/2026 14:00 · Second interview</li>
+<li>28/10/2026 09:30 · Technical assessment</li>
+<li>04/11/2026 11:00 · Meet the team</li>
+</ul>
+</div>
+</div>
+</section>
+</div>
+`,
+                script: `
+import { attachCardStates, setCardState } from '@kp-soft/themes/js/card-state';
+
+const card = document.querySelector('[data-doc-card]');
+attachCardStates(card.parentElement);
+
+const add = document.createElement('button');
+add.type = 'button';
+add.className = 'kp-button kp-button--sm kp-button--primary';
+add.textContent = 'Add an appointment';
+
+const show = {
+    loading: () => setCardState(card, 'loading'),
+    empty: () => setCardState(card, 'empty', { title: 'No appointments yet', text: 'Plan the first one and it shows here.', action: add }),
+    error: () => setCardState(card, 'error', { title: 'Could not list the appointments', text: 'The calendar did not answer.' }),
+    ready: () => setCardState(card, 'ready'),
+};
+for (const button of document.querySelectorAll('[data-doc-card-state]')) {
+    button.addEventListener('click', () => show[button.dataset.docCardState]());
+}
+card.addEventListener('kp-card-retry', () => {
+    setCardState(card, 'loading');
+    setTimeout(() => setCardState(card, 'ready'), 1500);
+});
+`,
+            },
         ],
         variants: [
             { name: '.kp-card', what: 'The surface: the card ground, a boundary, a rounded corner, and in one theme a hard shadow the knob paints and every other theme leaves at nothing.' },
@@ -6471,6 +6943,11 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
             { name: '.kp-card__actions', what: 'The controls in that row, spaced by the scale.' },
             { name: '.kp-card__footer', what: 'A closing row, separated by a rule and the scale’s own distance.' },
             { name: 'pastel: the thumbtack', what: 'In pastel every card is fixed to the page with a thumbtack at its top centre. A card that leaves loses its tack first, then lifts off as its landing backwards, and its space folds after the tack is out; one put back arrives as that backwards, the tack pushed in last.' },
+            { name: 'data-kp-state', what: '`loading`, `empty`, `error` or `ready` on a card with a stage: the card keeps its header, footer and size, and only the stage changes. In `empty` and `error` the data keeps its room, hidden rather than removed, so a failed refresh of a full card does not collapse it.' },
+            { name: '.kp-card__stage, __data, __state', what: 'The stage holds the data and, in the same grid cell over it, the note of the state; `.kp-card__state` is made by the module (`data-kp-card-built`) unless the page draws its own inside it.' },
+            { name: '.kp-card__empty, __failure, __state-title, __state-text, __state-actions', what: 'The empty state, the destructive alert, and the note’s first line, sentence and action.' },
+            { name: '.kp-card__retry', what: 'Try again, in an error note; a press fires `kp-card-retry` on the card. `retry: false` leaves it out of a read the page cannot repeat.' },
+            { name: '.kp-card__busy', what: 'The data table’s loading card laid over the stage while loading; the first loading card is there from the first frame and does not arrive.' },
             { name: '[aria-busy="true"]', what: 'A card waiting for its content. In pastel it becomes caterpillar: a head on its top-end corner and legs along its foot that step in turn (js/loading-pieces.js). Other themes draw nothing extra.' },
         ],
         accessibility: [
@@ -6554,8 +7031,34 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
 </header>
 `,
             },
+            {
+                title: 'A mark before the title, a badge and the freshness line beside it',
+                why: 'Wrap the title in `.kp-page-header__heading` and the header gets a heading line: `.kp-page-header__lead` holds a mark (an identity mark here), and `.kp-page-header__line` holds the title, a badge and the freshness line (`.kp-ago.kp-page-header__meta`). When the room runs out the line wraps under the title’s own words, never under the lead, and the freshness line keeps its width as it ticks, so nothing beside it moves.',
+                markup: `
+<header class="kp-page-header">
+<div class="kp-page-header__inner">
+<div>
+<div class="kp-page-header__heading">
+<span class="kp-page-header__lead"><span class="kp-idmark kp-idmark--lg" data-kp-idmark="Brightline Health" aria-hidden="true"></span></span>
+<div class="kp-page-header__line">
+<h1 class="kp-page-header__title">Brightline Health</h1>
+<span class="kp-badge kp-badge--info">Interview</span>
+<time class="kp-ago kp-page-header__meta" datetime="2026-10-18T12:00:00Z" data-kp-ago data-kp-ago-verb="updated">updated 4 s ago</time>
+</div>
+</div>
+<p class="kp-page-header__description">Data engineer, Antwerp. Second interview on 21/10/2026 at 14:00.</p>
+</div>
+<div class="kp-page-header__actions">
+<button type="button" class="kp-button">Export</button>
+<button type="button" class="kp-button kp-button--primary">Log a contact</button>
+</div>
+</div>
+</header>
+`,
+            },
         ],
         variants: [
+            { name: '.kp-page-header__heading, __lead, __line, __meta', what: 'The opt-in heading line: a flex row of the lead (a mark, never wrapped under) and the line that holds the title, a badge and the muted `.kp-ago.kp-page-header__meta` freshness line, which does not wrap inside itself.' },
             { name: '.kp-page-header', what: 'The header; it measures its own width.' },
             { name: '.kp-page-header__inner', what: 'Two columns: the text block, and the actions against the far edge, level with the title.' },
             { name: '.kp-page-header__title, __description', what: 'The page’s heading, and one sentence under it at a readable measure in the muted ink.' },
@@ -6731,11 +7234,102 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
 <figure class="kp-stackbar" data-kp-stackbar='{"title":"Root volume","total":120,"parts":[{"label":"Docker images","value":41},{"label":"Volumes","value":18.5},{"label":"Logs","value":6.5}]}'></figure>
 `,
             },
+            {
+                title: 'Small parts merged, a warning tick, a part that needs attention, and a bar past its whole',
+                why: '`other` is a share: every part under it joins one “Other” part. `marks` puts a tick across the bar at a share of the whole, with its words in a tooltip; a part with `tone` takes the warning or destructive colour in place of a chart colour; `restLabel` renames the free row. The second bar holds more than its total: it is drawn as their sum, a ▸ stands at its end and the legend says “Over by …”. `legend: false` leaves the legend out and `summary` replaces the words at the head’s end. The bars are `--sm` and `--lg`.',
+                markup: `
+<div class="kp-stack">
+<figure class="kp-stackbar kp-stackbar--lg" data-doc-share="volume"></figure>
+<figure class="kp-stackbar" data-doc-share="over"></figure>
+<figure class="kp-stackbar kp-stackbar--sm" data-doc-share="compact"></figure>
+</div>
+`,
+                script: `
+import { setStackbar } from '@kp-soft/themes/js/stackbar';
+
+const gb = (value) => value + ' GB';
+const bar = (name) => document.querySelector('[data-doc-share="' + name + '"]');
+
+setStackbar(bar('volume'), {
+    title: 'Root volume',
+    total: 120,
+    format: gb,
+    other: 0.05,
+    restLabel: 'Free space',
+    marks: [{ at: 0.8, label: '80 % warning level' }],
+    parts: [
+        { key: 'images', label: 'Docker images', value: 41 },
+        { key: 'volumes', label: 'Volumes', value: 18.5 },
+        { key: 'logs', label: '/var/log', value: 31, tone: 'warning' },
+        { key: 'tmp', label: '/tmp', value: 2 },
+        { key: 'cache', label: 'Cache', value: 3 },
+    ],
+});
+
+setStackbar(bar('over'), {
+    title: 'Monthly budget',
+    total: 100,
+    format: (value) => '€ ' + value,
+    parts: [
+        { label: 'Hosting', value: 64 },
+        { label: 'Backups', value: 31 },
+        { label: 'Domains', value: 17 },
+    ],
+});
+
+setStackbar(bar('compact'), {
+    title: 'Quota',
+    summary: '3 of 5 seats',
+    total: 5,
+    legend: false,
+    parts: [{ label: 'Seats in use', value: 3 }],
+});
+`,
+            },
+            {
+                title: 'Waiting, nothing to show, and failed with a Retry',
+                why: '`state` is `loading` (the bar is the meter’s own loading picture and the legend keeps its rows as waiting lines), `empty` or `error` (a calm note with the words, filling the footprint the bar and legend had, so nothing under it moves). `message` replaces the default words. A failed bar has a normal-size Retry that fires `kp-stackbar-retry`; `retry: false` leaves it out. A press on a part or on its legend row fires `kp-stackbar-pick`; try the third bar.',
+                markup: `
+<div class="kp-stack">
+<figure class="kp-stackbar" data-doc-share="loading"></figure>
+<figure class="kp-stackbar" data-doc-share="empty"></figure>
+<figure class="kp-stackbar" data-doc-share="failed"></figure>
+<p class="kp-text-muted" data-doc-share-said role="status">Press a part, or fail the read and press Retry.</p>
+</div>
+`,
+                script: `
+import { setStackbar } from '@kp-soft/themes/js/stackbar';
+
+const bar = (name) => document.querySelector('[data-doc-share="' + name + '"]');
+const said = document.querySelector('[data-doc-share-said]');
+const gb = (value) => value + ' GB';
+const parts = [
+    { key: 'images', label: 'Docker images', value: 41 },
+    { key: 'volumes', label: 'Volumes', value: 18.5 },
+];
+
+setStackbar(bar('loading'), { title: 'Root volume', state: 'loading' });
+setStackbar(bar('empty'), { title: 'Backups volume', state: 'empty', message: 'Nothing has been measured on this volume yet.' });
+
+const failed = bar('failed');
+const draw = (state) => setStackbar(failed, { title: 'Data volume', total: 120, format: gb, parts, state, message: 'The disk could not be read.' });
+draw('error');
+failed.addEventListener('kp-stackbar-retry', () => draw('ready'));
+failed.addEventListener('kp-stackbar-pick', (event) => {
+    said.textContent = 'Pressed: ' + event.detail.key;
+});
+`,
+            },
         ],
         variants: [
             { name: '.kp-stackbar--sm / --lg', what: 'An 8 px or a 20 px bar around the 12 px default.' },
             { name: 'other, marks', what: 'Parts under a share merged into “Other”; ticks across the bar at a share.' },
             { name: 'over the whole', what: 'Parts adding up past the total: the bar is their sum, a ▸ at its end, “Over by …” in the legend.' },
+            { name: 'tone', what: 'A part with `tone: \'warning\'` or `\'destructive\'` takes that status colour in place of a chart colour.' },
+            { name: 'the sixth part', what: 'From the sixth part on the chart colours come round again, hatched, so two parts never share one look.' },
+            { name: 'state: loading', what: 'The bar is the meter’s loading picture, the theme’s own way a bar waits; the legend keeps its rows as waiting lines and the root is `aria-busy`.' },
+            { name: 'state: empty / error', what: 'One calm note, `.kp-stackbar__note` with `.kp-stackbar__note-title`, over the whole footprint the bar and legend had; an error also has `.kp-stackbar__retry`, a normal-size button. A bar without a legend keeps its track and says the words in its name and hover card.' },
+            { name: 'retry: false', what: 'A failed bar for a read the page cannot repeat: the words and no Retry.' },
         ],
         accessibility: ['Built in — the bar is a group of parts, each named with its value and share; one tab stop, arrow keys within.', 'Built in — the legend holds every exact value.'],
     },
@@ -6755,10 +7349,75 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
 <div class="kp-bullets" data-kp-bullets='{"threshold":14,"bad":21,"rows":[{"key":"a","label":"Data engineer","detail":"due since 02/10/2026","value":22,"lead":"Acme"},{"key":"b","label":"Project lead","value":9,"lead":"Contoso"}]}'></div>
 `,
             },
+            {
+                title: 'A formatted figure, links and buttons, a row with nothing to measure',
+                why: '`format` writes the figure (here “22 d”), `max` is where the bar ends (twice the threshold unless given) and `sort: \'none\'` keeps the order given instead of worst first. A row with `href` is a link and one with `pick: true` a button that fires `kp-bullets-pick` with its key; the whole row is the press area. A `value` of `null` is a dash and no bar, and `figure` writes the figure as it is.',
+                markup: `
+<div class="kp-stack">
+<div class="kp-bullets" data-doc-bullets="rows"></div>
+<p class="kp-text-muted" data-doc-bullets-said role="status">Press a row that is a button.</p>
+</div>
+`,
+                script: `
+import { setBullets } from '@kp-soft/themes/js/bullets';
+
+const list = document.querySelector('[data-doc-bullets="rows"]');
+setBullets(list, {
+    threshold: 14,
+    bad: 21,
+    max: 28,
+    sort: 'none',
+    format: (days) => days + ' d',
+    rows: [
+        { key: 'a', lead: 'Acme Logistics', label: 'Data engineer', detail: 'last contact 02/10/2026', value: 22, href: '#acme' },
+        { key: 'b', lead: 'Contoso', label: 'Project lead', detail: 'last contact 10/10/2026', value: 15, pick: true },
+        { key: 'c', lead: 'Fabrikam', label: 'Site reliability engineer', value: 6, pick: true },
+        { key: 'd', lead: 'Northwind', label: 'Platform engineer', detail: 'no contact yet', value: null },
+    ],
+});
+list.addEventListener('kp-bullets-pick', (event) => {
+    document.querySelector('[data-doc-bullets-said]').textContent = 'Pressed: ' + event.detail.key;
+});
+`,
+            },
+            {
+                title: 'Waiting, nothing to list, and failed with a Retry',
+                why: '`state: \'loading\'` keeps the rows’ geometry as waiting rows (`loadingRows` says how many, `loadingWords` what the busy card says) and lays the data table’s busy card over them. `empty` is a full-size empty state with `emptyTitle` and `emptyText`; `error` says `message` with a normal-size Retry that fires `kp-bullets-retry` (`retry: false` leaves it out). Nothing under a state moves: it fills the height the rows had.',
+                markup: `
+<div class="kp-stack">
+<div class="kp-bullets" data-doc-bullets="loading"></div>
+<div class="kp-bullets" data-doc-bullets="empty"></div>
+<div class="kp-bullets" data-doc-bullets="failed"></div>
+</div>
+`,
+                script: `
+import { setBullets } from '@kp-soft/themes/js/bullets';
+
+const list = (name) => document.querySelector('[data-doc-bullets="' + name + '"]');
+
+setBullets(list('loading'), { threshold: 14, state: 'loading', loadingRows: 3, loadingWords: 'Reading the follow-ups' });
+setBullets(list('empty'), {
+    threshold: 14,
+    state: 'empty',
+    emptyTitle: 'No open applications',
+    emptyText: 'Add an application and its follow-up clock shows here.',
+});
+
+const failed = list('failed');
+const rows = [{ key: 'a', lead: 'Acme', label: 'Data engineer', value: 9 }];
+const draw = (state) => setBullets(failed, { threshold: 14, rows, state, message: 'The follow-ups could not be read.' });
+draw('error');
+failed.addEventListener('kp-bullets-retry', () => draw('ready'));
+`,
+            },
         ],
         variants: [
             { name: 'href / pick', what: 'A row that is a link, or a button that fires `kp-bullets-pick`; its press area is the whole row.' },
             { name: 'value: null', what: 'Nothing to measure: a dash and no bar, the row keeping its height.' },
+            { name: 'tones', what: 'A value at or past the threshold takes the warning tone (the figure on the warning plate), at or past `bad` the destructive one, and past `max` the bar’s ▸ says so. `bulletTone(value, threshold, bad)` gives the same answer to a page that needs it elsewhere.' },
+            { name: 'state: loading', what: 'The rows are drawn as waiting rows and the data table’s busy card lies over them; the real rows are drawn once the card has gone.' },
+            { name: 'state: empty / error', what: 'The package’s empty state, `.kp-bullets__note` (`.kp-empty` with `.kp-bullets__note-title`, `.kp-bullets__note-text`), filling the height the rows had. An error also has `.kp-bullets__retry`, a normal-size button.' },
+            { name: 'retry: false', what: 'A failed list for a read the page cannot repeat: the words and no Retry.' },
         ],
         accessibility: ['Built in — each meter reads its figure and the threshold.', 'Yours — say in the card what the threshold is.'],
     },
@@ -6780,6 +7439,38 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
 <div class="kp-kv__row" data-kp-changed><dt>Retention</dt><dd>30 days</dd></div>
 <div class="kp-kv__row"><dt>Image digest</dt><dd><span class="kp-kv__none">—<span class="kp-sr-only">not known</span></span></dd></div>
 </dl>
+`,
+            },
+            {
+                title: 'Rich values, a failed row, a waiting row',
+                why: 'A value is any inline part of the package: a copyable id, a badge, a timestamp, an ago line. `data-kp-changed` puts a dot after a label that has an unsaved value, `data-kp-state="error"` a rule on the row’s start edge with the reason as its value, and `.kp-kv__wait` (a skeleton inside) holds the place of a value that has not arrived, one text line high so the row does not grow when the value comes. `.kp-kv__none` is a value that is not known, with its words for a screen reader.',
+                markup: `
+<dl class="kp-kv kp-kv--lines">
+<div class="kp-kv__row"><dt>Release</dt><dd>4.0.1 <span class="kp-badge kp-badge--info">signed</span></dd></div>
+<div class="kp-kv__row"><dt>Container id</dt><dd><span class="kp-copyable"><span class="kp-copyable__value" id="doc-kv-id">ct-109-kyu-4f2a9c</span><button type="button" class="kp-button kp-button--sm" data-kp-copy="doc-kv-id">Copy</button></span></dd></div>
+<div class="kp-kv__row" data-kp-changed><dt>Retention</dt><dd>30 days (was 14, not saved yet)</dd></div>
+<div class="kp-kv__row" data-kp-state="error"><dt>Checksum</dt><dd>Could not be read: the release has no checksum file.</dd></div>
+<div class="kp-kv__row"><dt>Last backup</dt><dd><span class="kp-timestamp">16/10/2026 03:12</span></dd></div>
+<div class="kp-kv__row"><dt>Disk</dt><dd><span class="kp-kv__wait" aria-hidden="true"><span class="kp-skeleton"></span></span><span class="kp-sr-only">Loading</span></dd></div>
+</dl>
+`,
+            },
+            {
+                title: 'Lists side by side, and each label over its value',
+                why: '`kp-kv--columns` lays rows in as many columns as fit (each at least a set width) with the label column a set width, the same in every list; `kp-kv--stack` puts each label over its value, for a narrow card or a long value such as an address.',
+                markup: `
+<div class="kp-stack">
+<dl class="kp-kv kp-kv--columns kp-kv--lines">
+<div class="kp-kv__row"><dt>CPU</dt><dd><span class="kp-numeric">4 cores, 12 %</span></dd></div>
+<div class="kp-kv__row"><dt>Memory</dt><dd><span class="kp-numeric">3.1 GB of 8 GB</span></dd></div>
+<div class="kp-kv__row"><dt>Uptime</dt><dd>12 days 4 h</dd></div>
+<div class="kp-kv__row"><dt>Kernel</dt><dd><span class="kp-id">6.8.12-2-pve</span></dd></div>
+</dl>
+<dl class="kp-kv kp-kv--stack">
+<div class="kp-kv__row"><dt>Topic</dt><dd><span class="kp-id">backup.done</span></dd></div>
+<div class="kp-kv__row"><dt>Address</dt><dd><span class="kp-url">https://grafana.home.example.net/d/host-overview/proxmox-node-pve-01</span></dd></div>
+</dl>
+</div>
 `,
             },
         ],
@@ -6809,10 +7500,25 @@ for (const button of document.querySelectorAll('[data-doc-tab]')) {
 </div>
 `,
             },
+            {
+                title: 'A failed row, a choice with an Edit, a switch, and tall controls',
+                why: 'A row with `data-kp-state="error"` gets a rule on its start edge and the control carries the field’s own error line, tied with `aria-describedby`. The aside holds where a value comes from, a badge or a button. `kp-formrow--top` puts the label at the top of a tall control and `kp-formrow--wide` lets the control take the aside’s column as well. A switch’s label is a `span` with an id that the switch names with `aria-labelledby`.',
+                markup: `
+<div class="kp-formrows kp-formrows--lines">
+<div class="kp-formrow"><label class="kp-formrow__label" for="doc-keep">Keep snapshots for<small>snapshot.keep</small></label><div class="kp-formrow__control"><select class="kp-field__input" id="doc-keep"><option>7 days</option><option selected>30 days</option><option>90 days</option></select></div><div class="kp-formrow__aside"><span class="kp-badge">override</span><button type="button" class="kp-button kp-button--sm kp-button--ghost">Reset</button></div></div>
+<div class="kp-formrow" data-kp-state="error"><label class="kp-formrow__label" for="doc-mail">Mail server<small>notify.smtp_host</small></label><div class="kp-formrow__control kp-field--invalid"><input class="kp-field__input" id="doc-mail" value="smtp.example" aria-invalid="true" aria-describedby="doc-mail-error" /><p class="kp-field__error" id="doc-mail-error">Not a host name: it needs a domain, as in smtp.example.net.</p></div><div class="kp-formrow__aside"><span>Set 02/10/2026 09:41</span></div></div>
+<div class="kp-formrow"><span class="kp-formrow__label" id="doc-night-label">Night alarms</span><div class="kp-formrow__control"><label class="kp-switch"><input class="kp-switch__input" type="checkbox" role="switch" checked aria-labelledby="doc-night-label" /><span class="kp-switch__state" aria-hidden="true"></span><span>On between 23:00 and 07:00</span></label></div><div class="kp-formrow__aside"><span>Applies at once</span></div></div>
+<div class="kp-formrow kp-formrow--top"><label class="kp-formrow__label" for="doc-desc">Description</label><div class="kp-formrow__control"><textarea class="kp-field__input kp-field__input--multiline" id="doc-desc" rows="3">Nightly copy of every container volume to the NAS, checked after it is written.</textarea></div><div class="kp-formrow__aside"><span>Set 27/09/2026 06:57</span></div></div>
+<div class="kp-formrow kp-formrow--wide kp-formrow--top"><label class="kp-formrow__label" for="doc-notes">Notes</label><div class="kp-formrow__control"><textarea class="kp-field__input kp-field__input--multiline" id="doc-notes" rows="2">The NAS sleeps after 02:00; the copy wakes it first.</textarea></div></div>
+</div>
+`,
+            },
         ],
         variants: [
             { name: '.kp-formrows--lines', what: 'A hairline between rows.' },
             { name: '.kp-formrow--top / --wide', what: 'The label at the top for a tall control; the control takes the aside’s column too.' },
+            { name: 'data-kp-changed / data-kp-state="error" / data-kp-locked', what: 'On a `.kp-formrow`: a rule on the start edge for a value not saved; a destructive rule for a failed one; the label muted for a value the reader cannot change, with `.kp-formrow__lock` in the aside saying why.' },
+            { name: '.kp-formrow__label small', what: 'The setting’s own key under its label, in the quiet face.' },
         ],
         accessibility: ['Built in — the label is a real label.', 'Yours — tie help and errors to the control with aria-describedby.'],
     },

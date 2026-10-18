@@ -313,6 +313,107 @@
     &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__body&quot;</span>&gt;Reading the pressure from the field unit…&lt;/<span class="kp-code__keyword">p</span>&gt;
 &lt;/<span class="kp-code__keyword">article</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">One card in four data states</figcaption>
+                        <p class="kp-text-muted">A card that shows data read from somewhere has a `data-kp-state` of `loading`, `empty`, `error` or `ready`, and keeps its place and size in all of them: `.kp-card__stage` holds `.kp-card__data` and, over it in the same cell, the state’s note `.kp-card__state`. Loading lays the data table’s own loading card over the stage (the words come from `data-kp-loading-words` or `words`) and dims the data, which stays readable and inert. Empty is the package’s empty state with a title, a sentence and an optional action; error is the destructive alert with Try again, which fires `kp-card-retry` and which the page answers. `setCardState(card, state, { words, title, text, action, retry })` is the way in, and `attachCardStates` wires the retry button and follows `data-kp-state` for a framework that writes it. Try the four buttons.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-row kp-gap-sm" role="group" aria-label="State of the card">
+        <button type="button" class="kp-button kp-button--sm" data-doc-card-state="loading">Loading</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-card-state="empty">Empty</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-card-state="error">Failed</button>
+        <button type="button" class="kp-button kp-button--sm" data-doc-card-state="ready">Filled</button>
+    </div>
+    <section class="kp-card" data-kp-state="ready" data-kp-loading-words="Reading the appointments" aria-labelledby="doc-card-title" data-doc-card>
+        <div class="kp-card__header">
+            <h3 class="kp-card__title" id="doc-card-title">Appointments</h3>
+        </div>
+        <p class="kp-card__body">Everything planned for this application.</p>
+        <div class="kp-card__stage">
+            <div class="kp-card__data">
+                <ul class="kp-stack">
+                    <li>21/10/2026 14:00 · Second interview</li>
+                    <li>28/10/2026 09:30 · Technical assessment</li>
+                    <li>04/11/2026 11:00 · Meet the team</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</div>
+                            <script type="module">
+import { attachCardStates, setCardState } from '../../js/card-state.js';
+
+const card = document.querySelector('[data-doc-card]');
+attachCardStates(card.parentElement);
+
+const add = document.createElement('button');
+add.type = 'button';
+add.className = 'kp-button kp-button--sm kp-button--primary';
+add.textContent = 'Add an appointment';
+
+const show = {
+    loading: () => setCardState(card, 'loading'),
+    empty: () => setCardState(card, 'empty', { title: 'No appointments yet', text: 'Plan the first one and it shows here.', action: add }),
+    error: () => setCardState(card, 'error', { title: 'Could not list the appointments', text: 'The calendar did not answer.' }),
+    ready: () => setCardState(card, 'ready'),
+};
+for (const button of document.querySelectorAll('[data-doc-card-state]')) {
+    button.addEventListener('click', () => show[button.dataset.docCardState]());
+}
+card.addEventListener('kp-card-retry', () => {
+    setCardState(card, 'loading');
+    setTimeout(() => setCardState(card, 'ready'), 1500);
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-gap-sm&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;State of the card&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-card-state</span><span class="kp-code__string">=&quot;loading&quot;</span>&gt;Loading&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-card-state</span><span class="kp-code__string">=&quot;empty&quot;</span>&gt;Empty&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-card-state</span><span class="kp-code__string">=&quot;error&quot;</span>&gt;Failed&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-card-state</span><span class="kp-code__string">=&quot;ready&quot;</span>&gt;Filled&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card&quot;</span> <span class="kp-code__keyword">data-kp-state</span><span class="kp-code__string">=&quot;ready&quot;</span> <span class="kp-code__keyword">data-kp-loading-words</span><span class="kp-code__string">=&quot;Reading the appointments&quot;</span> <span class="kp-code__keyword">aria-labelledby</span><span class="kp-code__string">=&quot;doc-card-title&quot;</span> <span class="kp-code__keyword">data-doc-card</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__header&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">h3</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__title&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-card-title&quot;</span>&gt;Appointments&lt;/<span class="kp-code__keyword">h3</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__body&quot;</span>&gt;Everything planned for this application.&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__stage&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-card__data&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">ul</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;21/10/2026 14:00 · Second interview&lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;28/10/2026 09:30 · Technical assessment&lt;/<span class="kp-code__keyword">li</span>&gt;
+                    &lt;<span class="kp-code__keyword">li</span>&gt;04/11/2026 11:00 · Meet the team&lt;/<span class="kp-code__keyword">li</span>&gt;
+                &lt;/<span class="kp-code__keyword">ul</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">section</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachCardStates, setCardState } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/card-state'</span>;
+
+<span class="kp-code__keyword">const</span> card = document.querySelector(<span class="kp-code__string">'[data-doc-card]'</span>);
+attachCardStates(card.parentElement);
+
+<span class="kp-code__keyword">const</span> add = document.createElement(<span class="kp-code__string">'button'</span>);
+add.type = <span class="kp-code__string">'button'</span>;
+add.className = <span class="kp-code__string">'kp-button kp-button--sm kp-button--primary'</span>;
+add.textContent = <span class="kp-code__string">'Add an appointment'</span>;
+
+<span class="kp-code__keyword">const</span> show = {
+    loading: () =&gt; setCardState(card, <span class="kp-code__string">'loading'</span>),
+    empty: () =&gt; setCardState(card, <span class="kp-code__string">'empty'</span>, { title: <span class="kp-code__string">'No appointments yet'</span>, text: <span class="kp-code__string">'Plan the first one and it shows here.'</span>, action: add }),
+    error: () =&gt; setCardState(card, <span class="kp-code__string">'error'</span>, { title: <span class="kp-code__string">'Could not list the appointments'</span>, text: <span class="kp-code__string">'The calendar did not answer.'</span> }),
+    ready: () =&gt; setCardState(card, <span class="kp-code__string">'ready'</span>),
+};
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">const</span> button <span class="kp-code__keyword">of</span> document.querySelectorAll(<span class="kp-code__string">'[data-doc-card-state]'</span>)) {
+    button.addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; show[button.dataset.docCardState]());
+}
+card.addEventListener(<span class="kp-code__string">'kp-card-retry'</span>, () =&gt; {
+    setCardState(card, <span class="kp-code__string">'loading'</span>);
+    setTimeout(() =&gt; setCardState(card, <span class="kp-code__string">'ready'</span>), <span class="kp-code__string">1500</span>);
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>
@@ -917,6 +1018,11 @@
                             <tr><td><code>.kp-card__actions</code></td><td>The controls in that row, spaced by the scale.</td></tr>
                             <tr><td><code>.kp-card__footer</code></td><td>A closing row, separated by a rule and the scale’s own distance.</td></tr>
                             <tr><td><code>pastel: the thumbtack</code></td><td>In pastel every card is fixed to the page with a thumbtack at its top centre. A card that leaves loses its tack first, then lifts off as its landing backwards, and its space folds after the tack is out; one put back arrives as that backwards, the tack pushed in last.</td></tr>
+                            <tr><td><code>data-kp-state</code></td><td>`loading`, `empty`, `error` or `ready` on a card with a stage: the card keeps its header, footer and size, and only the stage changes. In `empty` and `error` the data keeps its room, hidden rather than removed, so a failed refresh of a full card does not collapse it.</td></tr>
+                            <tr><td><code>.kp-card__stage, __data, __state</code></td><td>The stage holds the data and, in the same grid cell over it, the note of the state; `.kp-card__state` is made by the module (`data-kp-card-built`) unless the page draws its own inside it.</td></tr>
+                            <tr><td><code>.kp-card__empty, __failure, __state-title, __state-text, __state-actions</code></td><td>The empty state, the destructive alert, and the note’s first line, sentence and action.</td></tr>
+                            <tr><td><code>.kp-card__retry</code></td><td>Try again, in an error note; a press fires `kp-card-retry` on the card. `retry: false` leaves it out of a read the page cannot repeat.</td></tr>
+                            <tr><td><code>.kp-card__busy</code></td><td>The data table’s loading card laid over the stage while loading; the first loading card is there from the first frame and does not arrive.</td></tr>
                             <tr><td><code>[aria-busy=&quot;true&quot;]</code></td><td>A card waiting for its content. In pastel it becomes caterpillar: a head on its top-end corner and legs along its foot that step in turn (js/loading-pieces.js). Other themes draw nothing extra.</td></tr>
                     </tbody></table></div>
                 </section>

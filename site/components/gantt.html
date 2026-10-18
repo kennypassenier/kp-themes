@@ -384,6 +384,162 @@ setGanttState(timeline, 'loading');
 attachGantts(timeline.parentElement);
 setGanttState(timeline, <span class="kp-code__string">'loading'</span>);</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Moments instead of runs: points, kinds and zones</figcaption>
+                        <p class="kp-text-muted">A point is a moment, not a stretch: `setGanttPoints(el, points, lanes)` puts a mark in its lane, and `setGanttKinds(el, kinds)` names each kind in the legend with a shape (`dot`, `diamond`, `square`, `triangle`, `ring`) and a colour (`series` 1 to 5, or a `tone`). A point that is `planned` is hollow. `setGanttZones(el, zones)` lays a thin band in one lane (waiting since the last contact) or, without a `lane`, a band behind every lane (the holiday), named in the legend. A lane with `href` is a link and `sub` is a second line under its name. The range word `all` fits everything on the timeline and now and stays fitted when the data changes; the timeline has no runs, so the run states leave the legend. Marks closer than the eye can tell apart become one mark with a count (“+2”) whose card names them all; opening it fires `kp-gantt-open` with every point in `points`.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <section class="kp-gantt" data-kp-gantt data-kp-gantt-points data-kp-gantt-ranges="all 24h 7d" data-kp-gantt-range="all" aria-label="Contacts per application" data-doc-points></section>
+    <p class="kp-text-muted" data-doc-points-said role="status">Open a mark to see what it stands for.</p>
+</div>
+                            <script type="module">
+import { attachGantts, setGanttKinds, setGanttPoints, setGanttZones } from '../../js/gantt.js';
+
+const DAY = 86_400_000;
+const today = new Date();
+today.setHours(10, 0, 0, 0);
+const at = (days) => today.getTime() + days * DAY;
+
+const timeline = document.querySelector('[data-doc-points]');
+attachGantts(timeline.parentElement);
+
+setGanttKinds(timeline, [
+    { kind: 'applied', label: 'applied', shape: 'dot', series: 2 },
+    { kind: 'mail', label: 'mail', shape: 'square', series: 1 },
+    { kind: 'contact', label: 'contact', shape: 'diamond', series: 3 },
+    { kind: 'interview', label: 'interview', shape: 'triangle', series: 4 },
+    { kind: 'follow', label: 'follow-up', shape: 'ring', tone: 'info' },
+]);
+setGanttZones(timeline, [
+    { lane: 'acme', from: at(-7), to: today.getTime(), label: 'waiting for an answer' },
+    { from: at(3), to: at(10), label: 'recruiters away (autumn holiday)', tone: 'muted' },
+]);
+setGanttPoints(
+    timeline,
+    [
+        { id: 'a1', lane: 'acme', at: at(-13), kind: 'applied', label: 'Acme Analytics: applied' },
+        { id: 'a2', lane: 'acme', at: at(-7), kind: 'mail', label: 'Acme Analytics: received, in review' },
+        { id: 'a3', lane: 'acme', at: at(-7), kind: 'contact', label: 'Acme Analytics: short call with the hiring manager' },
+        { id: 'c1', lane: 'corvid', at: at(-20), kind: 'applied', label: 'Corvid Systems: applied' },
+        { id: 'c2', lane: 'corvid', at: at(-12), kind: 'contact', label: 'Corvid Systems: call with the team lead' },
+        { id: 'c3', lane: 'corvid', at: at(4), kind: 'interview', label: 'Corvid Systems: interview, second round', planned: true },
+        { id: 'c4', lane: 'corvid', at: at(11), kind: 'follow', label: 'Corvid Systems: follow-up', planned: true },
+    ],
+    [
+        { id: 'acme', label: 'Senior UI engineer', sub: 'Acme Analytics', href: '#acme' },
+        { id: 'corvid', label: 'Senior frontend engineer', sub: 'Corvid Systems', href: '#corvid' },
+    ],
+);
+timeline.addEventListener('kp-gantt-open', (event) => {
+    document.querySelector('[data-doc-points-said]').textContent =
+        'Opened: ' + event.detail.points.map((point) => point.label).join(' · ');
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">section</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-gantt&quot;</span> <span class="kp-code__keyword">data-kp-gantt</span> <span class="kp-code__keyword">data-kp-gantt-points</span> <span class="kp-code__keyword">data-kp-gantt-ranges</span><span class="kp-code__string">=&quot;all 24h 7d&quot;</span> <span class="kp-code__keyword">data-kp-gantt-range</span><span class="kp-code__string">=&quot;all&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Contacts per application&quot;</span> <span class="kp-code__keyword">data-doc-points</span>&gt;&lt;/<span class="kp-code__keyword">section</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">data-doc-points-said</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;Open a mark to see what it stands for.&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachGantts, setGanttKinds, setGanttPoints, setGanttZones } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/gantt'</span>;
+
+<span class="kp-code__keyword">const</span> DAY = <span class="kp-code__string">86_400_000</span>;
+<span class="kp-code__keyword">const</span> today = <span class="kp-code__keyword">new</span> Date();
+today.setHours(<span class="kp-code__string">10</span>, <span class="kp-code__string">0</span>, <span class="kp-code__string">0</span>, <span class="kp-code__string">0</span>);
+<span class="kp-code__keyword">const</span> at = (days) =&gt; today.getTime() + days * DAY;
+
+<span class="kp-code__keyword">const</span> timeline = document.querySelector(<span class="kp-code__string">'[data-doc-points]'</span>);
+attachGantts(timeline.parentElement);
+
+setGanttKinds(timeline, [
+    { kind: <span class="kp-code__string">'applied'</span>, label: <span class="kp-code__string">'applied'</span>, shape: <span class="kp-code__string">'dot'</span>, series: <span class="kp-code__string">2</span> },
+    { kind: <span class="kp-code__string">'mail'</span>, label: <span class="kp-code__string">'mail'</span>, shape: <span class="kp-code__string">'square'</span>, series: <span class="kp-code__string">1</span> },
+    { kind: <span class="kp-code__string">'contact'</span>, label: <span class="kp-code__string">'contact'</span>, shape: <span class="kp-code__string">'diamond'</span>, series: <span class="kp-code__string">3</span> },
+    { kind: <span class="kp-code__string">'interview'</span>, label: <span class="kp-code__string">'interview'</span>, shape: <span class="kp-code__string">'triangle'</span>, series: <span class="kp-code__string">4</span> },
+    { kind: <span class="kp-code__string">'follow'</span>, label: <span class="kp-code__string">'follow-up'</span>, shape: <span class="kp-code__string">'ring'</span>, tone: <span class="kp-code__string">'info'</span> },
+]);
+setGanttZones(timeline, [
+    { lane: <span class="kp-code__string">'acme'</span>, <span class="kp-code__keyword">from</span>: at(-<span class="kp-code__string">7</span>), to: today.getTime(), label: <span class="kp-code__string">'waiting for an answer'</span> },
+    { <span class="kp-code__keyword">from</span>: at(<span class="kp-code__string">3</span>), to: at(<span class="kp-code__string">10</span>), label: <span class="kp-code__string">'recruiters away (autumn holiday)'</span>, tone: <span class="kp-code__string">'muted'</span> },
+]);
+setGanttPoints(
+    timeline,
+    [
+        { id: <span class="kp-code__string">'a1'</span>, lane: <span class="kp-code__string">'acme'</span>, at: at(-<span class="kp-code__string">13</span>), kind: <span class="kp-code__string">'applied'</span>, label: <span class="kp-code__string">'Acme Analytics: applied'</span> },
+        { id: <span class="kp-code__string">'a2'</span>, lane: <span class="kp-code__string">'acme'</span>, at: at(-<span class="kp-code__string">7</span>), kind: <span class="kp-code__string">'mail'</span>, label: <span class="kp-code__string">'Acme Analytics: received, in review'</span> },
+        { id: <span class="kp-code__string">'a3'</span>, lane: <span class="kp-code__string">'acme'</span>, at: at(-<span class="kp-code__string">7</span>), kind: <span class="kp-code__string">'contact'</span>, label: <span class="kp-code__string">'Acme Analytics: short call with the hiring manager'</span> },
+        { id: <span class="kp-code__string">'c1'</span>, lane: <span class="kp-code__string">'corvid'</span>, at: at(-<span class="kp-code__string">20</span>), kind: <span class="kp-code__string">'applied'</span>, label: <span class="kp-code__string">'Corvid Systems: applied'</span> },
+        { id: <span class="kp-code__string">'c2'</span>, lane: <span class="kp-code__string">'corvid'</span>, at: at(-<span class="kp-code__string">12</span>), kind: <span class="kp-code__string">'contact'</span>, label: <span class="kp-code__string">'Corvid Systems: call with the team lead'</span> },
+        { id: <span class="kp-code__string">'c3'</span>, lane: <span class="kp-code__string">'corvid'</span>, at: at(<span class="kp-code__string">4</span>), kind: <span class="kp-code__string">'interview'</span>, label: <span class="kp-code__string">'Corvid Systems: interview, second round'</span>, planned: <span class="kp-code__keyword">true</span> },
+        { id: <span class="kp-code__string">'c4'</span>, lane: <span class="kp-code__string">'corvid'</span>, at: at(<span class="kp-code__string">11</span>), kind: <span class="kp-code__string">'follow'</span>, label: <span class="kp-code__string">'Corvid Systems: follow-up'</span>, planned: <span class="kp-code__keyword">true</span> },
+    ],
+    [
+        { id: <span class="kp-code__string">'acme'</span>, label: <span class="kp-code__string">'Senior UI engineer'</span>, sub: <span class="kp-code__string">'Acme Analytics'</span>, href: <span class="kp-code__string">'#acme'</span> },
+        { id: <span class="kp-code__string">'corvid'</span>, label: <span class="kp-code__string">'Senior frontend engineer'</span>, sub: <span class="kp-code__string">'Corvid Systems'</span>, href: <span class="kp-code__string">'#corvid'</span> },
+    ],
+);
+timeline.addEventListener(<span class="kp-code__string">'kp-gantt-open'</span>, (event) =&gt; {
+    document.querySelector(<span class="kp-code__string">'[data-doc-points-said]'</span>).textContent =
+        <span class="kp-code__string">'Opened: '</span> + event.detail.points.map((point) =&gt; point.label).join(<span class="kp-code__string">' · '</span>);
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">One lane as a dated line</figcaption>
+                        <p class="kp-text-muted">`kp-gantt--line` is one lane with no toolbar, no lane names, no hint and no brush, the axis under the line, fitted to its data: the dated line under a journey stepper (see the step list). Add `data-kp-gantt-points` and give it points and kinds as above.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-gantt kp-gantt--line" data-kp-gantt data-kp-gantt-points aria-label="What happened when, Northwind Logistics" data-doc-line></div>
+                            <script type="module">
+import { attachGantts, setGanttKinds, setGanttPoints } from '../../js/gantt.js';
+
+const DAY = 86_400_000;
+const today = new Date();
+today.setHours(10, 0, 0, 0);
+const at = (days) => today.getTime() + days * DAY;
+
+const line = document.querySelector('[data-doc-line]');
+attachGantts(line.parentElement);
+setGanttKinds(line, [
+    { kind: 'applied', label: 'applied', shape: 'dot', series: 2 },
+    { kind: 'contact', label: 'contact', shape: 'diamond', series: 3 },
+    { kind: 'interview', label: 'interview', shape: 'triangle', series: 4 },
+]);
+setGanttPoints(
+    line,
+    [
+        { id: 'n1', lane: 'northwind', at: at(-21), kind: 'applied', label: 'Applied' },
+        { id: 'n2', lane: 'northwind', at: at(-9), kind: 'contact', label: 'Call with the recruiter' },
+        { id: 'n3', lane: 'northwind', at: at(-2), kind: 'interview', label: 'Interview at the office' },
+    ],
+    [{ id: 'northwind', label: 'Northwind Logistics' }],
+);
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-gantt kp-gantt--line&quot;</span> <span class="kp-code__keyword">data-kp-gantt</span> <span class="kp-code__keyword">data-kp-gantt-points</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;What happened when, Northwind Logistics&quot;</span> <span class="kp-code__keyword">data-doc-line</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachGantts, setGanttKinds, setGanttPoints } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/gantt'</span>;
+
+<span class="kp-code__keyword">const</span> DAY = <span class="kp-code__string">86_400_000</span>;
+<span class="kp-code__keyword">const</span> today = <span class="kp-code__keyword">new</span> Date();
+today.setHours(<span class="kp-code__string">10</span>, <span class="kp-code__string">0</span>, <span class="kp-code__string">0</span>, <span class="kp-code__string">0</span>);
+<span class="kp-code__keyword">const</span> at = (days) =&gt; today.getTime() + days * DAY;
+
+<span class="kp-code__keyword">const</span> line = document.querySelector(<span class="kp-code__string">'[data-doc-line]'</span>);
+attachGantts(line.parentElement);
+setGanttKinds(line, [
+    { kind: <span class="kp-code__string">'applied'</span>, label: <span class="kp-code__string">'applied'</span>, shape: <span class="kp-code__string">'dot'</span>, series: <span class="kp-code__string">2</span> },
+    { kind: <span class="kp-code__string">'contact'</span>, label: <span class="kp-code__string">'contact'</span>, shape: <span class="kp-code__string">'diamond'</span>, series: <span class="kp-code__string">3</span> },
+    { kind: <span class="kp-code__string">'interview'</span>, label: <span class="kp-code__string">'interview'</span>, shape: <span class="kp-code__string">'triangle'</span>, series: <span class="kp-code__string">4</span> },
+]);
+setGanttPoints(
+    line,
+    [
+        { id: <span class="kp-code__string">'n1'</span>, lane: <span class="kp-code__string">'northwind'</span>, at: at(-<span class="kp-code__string">21</span>), kind: <span class="kp-code__string">'applied'</span>, label: <span class="kp-code__string">'Applied'</span> },
+        { id: <span class="kp-code__string">'n2'</span>, lane: <span class="kp-code__string">'northwind'</span>, at: at(-<span class="kp-code__string">9</span>), kind: <span class="kp-code__string">'contact'</span>, label: <span class="kp-code__string">'Call with the recruiter'</span> },
+        { id: <span class="kp-code__string">'n3'</span>, lane: <span class="kp-code__string">'northwind'</span>, at: at(-<span class="kp-code__string">2</span>), kind: <span class="kp-code__string">'interview'</span>, label: <span class="kp-code__string">'Interview at the office'</span> },
+    ],
+    [{ id: <span class="kp-code__string">'northwind'</span>, label: <span class="kp-code__string">'Northwind Logistics'</span> }],
+);</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>

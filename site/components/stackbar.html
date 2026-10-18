@@ -265,6 +265,164 @@
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stackbar&quot;</span> <span class="kp-code__keyword">data-kp-stackbar</span><span class="kp-code__string">='{&quot;title&quot;:&quot;Root volume&quot;,&quot;total&quot;:120,&quot;parts&quot;:[{&quot;label&quot;:&quot;Docker images&quot;,&quot;value&quot;:41},{&quot;label&quot;:&quot;Volumes&quot;,&quot;value&quot;:18.5},{&quot;label&quot;:&quot;Logs&quot;,&quot;value&quot;:6.5}]}'</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Small parts merged, a warning tick, a part that needs attention, and a bar past its whole</figcaption>
+                        <p class="kp-text-muted">`other` is a share: every part under it joins one “Other” part. `marks` puts a tick across the bar at a share of the whole, with its words in a tooltip; a part with `tone` takes the warning or destructive colour in place of a chart colour; `restLabel` renames the free row. The second bar holds more than its total: it is drawn as their sum, a ▸ stands at its end and the legend says “Over by …”. `legend: false` leaves the legend out and `summary` replaces the words at the head’s end. The bars are `--sm` and `--lg`.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <figure class="kp-stackbar kp-stackbar--lg" data-doc-share="volume"></figure>
+    <figure class="kp-stackbar" data-doc-share="over"></figure>
+    <figure class="kp-stackbar kp-stackbar--sm" data-doc-share="compact"></figure>
+</div>
+                            <script type="module">
+import { setStackbar } from '../../js/stackbar.js';
+
+const gb = (value) => value + ' GB';
+const bar = (name) => document.querySelector('[data-doc-share="' + name + '"]');
+
+setStackbar(bar('volume'), {
+    title: 'Root volume',
+    total: 120,
+    format: gb,
+    other: 0.05,
+    restLabel: 'Free space',
+    marks: [{ at: 0.8, label: '80 % warning level' }],
+    parts: [
+        { key: 'images', label: 'Docker images', value: 41 },
+        { key: 'volumes', label: 'Volumes', value: 18.5 },
+        { key: 'logs', label: '/var/log', value: 31, tone: 'warning' },
+        { key: 'tmp', label: '/tmp', value: 2 },
+        { key: 'cache', label: 'Cache', value: 3 },
+    ],
+});
+
+setStackbar(bar('over'), {
+    title: 'Monthly budget',
+    total: 100,
+    format: (value) => '€ ' + value,
+    parts: [
+        { label: 'Hosting', value: 64 },
+        { label: 'Backups', value: 31 },
+        { label: 'Domains', value: 17 },
+    ],
+});
+
+setStackbar(bar('compact'), {
+    title: 'Quota',
+    summary: '3 of 5 seats',
+    total: 5,
+    legend: false,
+    parts: [{ label: 'Seats in use', value: 3 }],
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stackbar kp-stackbar--lg&quot;</span> <span class="kp-code__keyword">data-doc-share</span><span class="kp-code__string">=&quot;volume&quot;</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stackbar&quot;</span> <span class="kp-code__keyword">data-doc-share</span><span class="kp-code__string">=&quot;over&quot;</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stackbar kp-stackbar--sm&quot;</span> <span class="kp-code__keyword">data-doc-share</span><span class="kp-code__string">=&quot;compact&quot;</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { setStackbar } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/stackbar'</span>;
+
+<span class="kp-code__keyword">const</span> gb = (value) =&gt; value + <span class="kp-code__string">' GB'</span>;
+<span class="kp-code__keyword">const</span> bar = (name) =&gt; document.querySelector(<span class="kp-code__string">'[data-doc-share=&quot;'</span> + name + <span class="kp-code__string">'&quot;]'</span>);
+
+setStackbar(bar(<span class="kp-code__string">'volume'</span>), {
+    title: <span class="kp-code__string">'Root volume'</span>,
+    total: <span class="kp-code__string">120</span>,
+    format: gb,
+    other: <span class="kp-code__string">0.05</span>,
+    restLabel: <span class="kp-code__string">'Free space'</span>,
+    marks: [{ at: <span class="kp-code__string">0.8</span>, label: <span class="kp-code__string">'80 % warning level'</span> }],
+    parts: [
+        { key: <span class="kp-code__string">'images'</span>, label: <span class="kp-code__string">'Docker images'</span>, value: <span class="kp-code__string">41</span> },
+        { key: <span class="kp-code__string">'volumes'</span>, label: <span class="kp-code__string">'Volumes'</span>, value: <span class="kp-code__string">18.5</span> },
+        { key: <span class="kp-code__string">'logs'</span>, label: <span class="kp-code__string">'/var/log'</span>, value: <span class="kp-code__string">31</span>, tone: <span class="kp-code__string">'warning'</span> },
+        { key: <span class="kp-code__string">'tmp'</span>, label: <span class="kp-code__string">'/tmp'</span>, value: <span class="kp-code__string">2</span> },
+        { key: <span class="kp-code__string">'cache'</span>, label: <span class="kp-code__string">'Cache'</span>, value: <span class="kp-code__string">3</span> },
+    ],
+});
+
+setStackbar(bar(<span class="kp-code__string">'over'</span>), {
+    title: <span class="kp-code__string">'Monthly budget'</span>,
+    total: <span class="kp-code__string">100</span>,
+    format: (value) =&gt; <span class="kp-code__string">'€ '</span> + value,
+    parts: [
+        { label: <span class="kp-code__string">'Hosting'</span>, value: <span class="kp-code__string">64</span> },
+        { label: <span class="kp-code__string">'Backups'</span>, value: <span class="kp-code__string">31</span> },
+        { label: <span class="kp-code__string">'Domains'</span>, value: <span class="kp-code__string">17</span> },
+    ],
+});
+
+setStackbar(bar(<span class="kp-code__string">'compact'</span>), {
+    title: <span class="kp-code__string">'Quota'</span>,
+    summary: <span class="kp-code__string">'3 of 5 seats'</span>,
+    total: <span class="kp-code__string">5</span>,
+    legend: <span class="kp-code__keyword">false</span>,
+    parts: [{ label: <span class="kp-code__string">'Seats in use'</span>, value: <span class="kp-code__string">3</span> }],
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Waiting, nothing to show, and failed with a Retry</figcaption>
+                        <p class="kp-text-muted">`state` is `loading` (the bar is the meter’s own loading picture and the legend keeps its rows as waiting lines), `empty` or `error` (a calm note with the words, filling the footprint the bar and legend had, so nothing under it moves). `message` replaces the default words. A failed bar has a normal-size Retry that fires `kp-stackbar-retry`; `retry: false` leaves it out. A press on a part or on its legend row fires `kp-stackbar-pick`; try the third bar.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <figure class="kp-stackbar" data-doc-share="loading"></figure>
+    <figure class="kp-stackbar" data-doc-share="empty"></figure>
+    <figure class="kp-stackbar" data-doc-share="failed"></figure>
+    <p class="kp-text-muted" data-doc-share-said role="status">Press a part, or fail the read and press Retry.</p>
+</div>
+                            <script type="module">
+import { setStackbar } from '../../js/stackbar.js';
+
+const bar = (name) => document.querySelector('[data-doc-share="' + name + '"]');
+const said = document.querySelector('[data-doc-share-said]');
+const gb = (value) => value + ' GB';
+const parts = [
+    { key: 'images', label: 'Docker images', value: 41 },
+    { key: 'volumes', label: 'Volumes', value: 18.5 },
+];
+
+setStackbar(bar('loading'), { title: 'Root volume', state: 'loading' });
+setStackbar(bar('empty'), { title: 'Backups volume', state: 'empty', message: 'Nothing has been measured on this volume yet.' });
+
+const failed = bar('failed');
+const draw = (state) => setStackbar(failed, { title: 'Data volume', total: 120, format: gb, parts, state, message: 'The disk could not be read.' });
+draw('error');
+failed.addEventListener('kp-stackbar-retry', () => draw('ready'));
+failed.addEventListener('kp-stackbar-pick', (event) => {
+    said.textContent = 'Pressed: ' + event.detail.key;
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stackbar&quot;</span> <span class="kp-code__keyword">data-doc-share</span><span class="kp-code__string">=&quot;loading&quot;</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stackbar&quot;</span> <span class="kp-code__keyword">data-doc-share</span><span class="kp-code__string">=&quot;empty&quot;</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+    &lt;<span class="kp-code__keyword">figure</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stackbar&quot;</span> <span class="kp-code__keyword">data-doc-share</span><span class="kp-code__string">=&quot;failed&quot;</span>&gt;&lt;/<span class="kp-code__keyword">figure</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">data-doc-share-said</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;Press a part, or fail the read and press Retry.&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { setStackbar } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/stackbar'</span>;
+
+<span class="kp-code__keyword">const</span> bar = (name) =&gt; document.querySelector(<span class="kp-code__string">'[data-doc-share=&quot;'</span> + name + <span class="kp-code__string">'&quot;]'</span>);
+<span class="kp-code__keyword">const</span> said = document.querySelector(<span class="kp-code__string">'[data-doc-share-said]'</span>);
+<span class="kp-code__keyword">const</span> gb = (value) =&gt; value + <span class="kp-code__string">' GB'</span>;
+<span class="kp-code__keyword">const</span> parts = [
+    { key: <span class="kp-code__string">'images'</span>, label: <span class="kp-code__string">'Docker images'</span>, value: <span class="kp-code__string">41</span> },
+    { key: <span class="kp-code__string">'volumes'</span>, label: <span class="kp-code__string">'Volumes'</span>, value: <span class="kp-code__string">18.5</span> },
+];
+
+setStackbar(bar(<span class="kp-code__string">'loading'</span>), { title: <span class="kp-code__string">'Root volume'</span>, state: <span class="kp-code__string">'loading'</span> });
+setStackbar(bar(<span class="kp-code__string">'empty'</span>), { title: <span class="kp-code__string">'Backups volume'</span>, state: <span class="kp-code__string">'empty'</span>, message: <span class="kp-code__string">'Nothing has been measured on this volume yet.'</span> });
+
+<span class="kp-code__keyword">const</span> failed = bar(<span class="kp-code__string">'failed'</span>);
+<span class="kp-code__keyword">const</span> draw = (state) =&gt; setStackbar(failed, { title: <span class="kp-code__string">'Data volume'</span>, total: <span class="kp-code__string">120</span>, format: gb, parts, state, message: <span class="kp-code__string">'The disk could not be read.'</span> });
+draw(<span class="kp-code__string">'error'</span>);
+failed.addEventListener(<span class="kp-code__string">'kp-stackbar-retry'</span>, () =&gt; draw(<span class="kp-code__string">'ready'</span>));
+failed.addEventListener(<span class="kp-code__string">'kp-stackbar-pick'</span>, (event) =&gt; {
+    said.textContent = <span class="kp-code__string">'Pressed: '</span> + event.detail.key;
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -328,6 +486,11 @@
                             <tr><td><code>.kp-stackbar--sm / --lg</code></td><td>An 8 px or a 20 px bar around the 12 px default.</td></tr>
                             <tr><td><code>other, marks</code></td><td>Parts under a share merged into “Other”; ticks across the bar at a share.</td></tr>
                             <tr><td><code>over the whole</code></td><td>Parts adding up past the total: the bar is their sum, a ▸ at its end, “Over by …” in the legend.</td></tr>
+                            <tr><td><code>tone</code></td><td>A part with `tone: 'warning'` or `'destructive'` takes that status colour in place of a chart colour.</td></tr>
+                            <tr><td><code>the sixth part</code></td><td>From the sixth part on the chart colours come round again, hatched, so two parts never share one look.</td></tr>
+                            <tr><td><code>state: loading</code></td><td>The bar is the meter’s loading picture, the theme’s own way a bar waits; the legend keeps its rows as waiting lines and the root is `aria-busy`.</td></tr>
+                            <tr><td><code>state: empty / error</code></td><td>One calm note, `.kp-stackbar__note` with `.kp-stackbar__note-title`, over the whole footprint the bar and legend had; an error also has `.kp-stackbar__retry`, a normal-size button. A bar without a legend keeps its track and says the words in its name and hover card.</td></tr>
+                            <tr><td><code>retry: false</code></td><td>A failed bar for a read the page cannot repeat: the words and no Retry.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>

@@ -301,6 +301,50 @@
     &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">header</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A mark before the title, a badge and the freshness line beside it</figcaption>
+                        <p class="kp-text-muted">Wrap the title in `.kp-page-header__heading` and the header gets a heading line: `.kp-page-header__lead` holds a mark (an identity mark here), and `.kp-page-header__line` holds the title, a badge and the freshness line (`.kp-ago.kp-page-header__meta`). When the room runs out the line wraps under the title’s own words, never under the lead, and the freshness line keeps its width as it ticks, so nothing beside it moves.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<header class="kp-page-header">
+    <div class="kp-page-header__inner">
+        <div>
+            <div class="kp-page-header__heading">
+                <span class="kp-page-header__lead"><span class="kp-idmark kp-idmark--lg" data-kp-idmark="Brightline Health" aria-hidden="true"></span></span>
+                <div class="kp-page-header__line">
+                    <h1 class="kp-page-header__title">Brightline Health</h1>
+                    <span class="kp-badge kp-badge--info">Interview</span>
+                    <time class="kp-ago kp-page-header__meta" datetime="2026-10-18T12:00:00Z" data-kp-ago data-kp-ago-verb="updated">updated 4 s ago</time>
+                </div>
+            </div>
+            <p class="kp-page-header__description">Data engineer, Antwerp. Second interview on 21/10/2026 at 14:00.</p>
+        </div>
+        <div class="kp-page-header__actions">
+            <button type="button" class="kp-button">Export</button>
+            <button type="button" class="kp-button kp-button--primary">Log a contact</button>
+        </div>
+    </div>
+</header>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">header</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header__inner&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header__heading&quot;</span>&gt;
+                &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header__lead&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-idmark kp-idmark--lg&quot;</span> <span class="kp-code__keyword">data-kp-idmark</span><span class="kp-code__string">=&quot;Brightline Health&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;
+                &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header__line&quot;</span>&gt;
+                    &lt;<span class="kp-code__keyword">h1</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header__title&quot;</span>&gt;Brightline Health&lt;/<span class="kp-code__keyword">h1</span>&gt;
+                    &lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-badge kp-badge--info&quot;</span>&gt;Interview&lt;/<span class="kp-code__keyword">span</span>&gt;
+                    &lt;<span class="kp-code__keyword">time</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-ago kp-page-header__meta&quot;</span> <span class="kp-code__keyword">datetime</span><span class="kp-code__string">=&quot;2026-10-18T12:00:00Z&quot;</span> <span class="kp-code__keyword">data-kp-ago</span> <span class="kp-code__keyword">data-kp-ago-verb</span><span class="kp-code__string">=&quot;updated&quot;</span>&gt;updated 4 s ago&lt;/<span class="kp-code__keyword">time</span>&gt;
+                &lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;/<span class="kp-code__keyword">div</span>&gt;
+            &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header__description&quot;</span>&gt;Data engineer, Antwerp. Second interview on 21/10/2026 at 14:00.&lt;/<span class="kp-code__keyword">p</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+        &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-page-header__actions&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button&quot;</span>&gt;Export&lt;/<span class="kp-code__keyword">button</span>&gt;
+            &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--primary&quot;</span>&gt;Log a contact&lt;/<span class="kp-code__keyword">button</span>&gt;
+        &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">header</span>&gt;</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>
@@ -511,6 +555,7 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>.kp-page-header__heading, __lead, __line, __meta</code></td><td>The opt-in heading line: a flex row of the lead (a mark, never wrapped under) and the line that holds the title, a badge and the muted `.kp-ago.kp-page-header__meta` freshness line, which does not wrap inside itself.</td></tr>
                             <tr><td><code>.kp-page-header</code></td><td>The header; it measures its own width.</td></tr>
                             <tr><td><code>.kp-page-header__inner</code></td><td>Two columns: the text block, and the actions against the far edge, level with the title.</td></tr>
                             <tr><td><code>.kp-page-header__title, __description</code></td><td>The page’s heading, and one sentence under it at a readable measure in the muted ink.</td></tr>

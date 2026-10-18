@@ -265,6 +265,114 @@
                         </div>
                         <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-bullets&quot;</span> <span class="kp-code__keyword">data-kp-bullets</span><span class="kp-code__string">='{&quot;threshold&quot;:14,&quot;bad&quot;:21,&quot;rows&quot;:[{&quot;key&quot;:&quot;a&quot;,&quot;label&quot;:&quot;Data engineer&quot;,&quot;detail&quot;:&quot;due since 02/10/2026&quot;,&quot;value&quot;:22,&quot;lead&quot;:&quot;Acme&quot;},{&quot;key&quot;:&quot;b&quot;,&quot;label&quot;:&quot;Project lead&quot;,&quot;value&quot;:9,&quot;lead&quot;:&quot;Contoso&quot;}]}'</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A formatted figure, links and buttons, a row with nothing to measure</figcaption>
+                        <p class="kp-text-muted">`format` writes the figure (here “22 d”), `max` is where the bar ends (twice the threshold unless given) and `sort: 'none'` keeps the order given instead of worst first. A row with `href` is a link and one with `pick: true` a button that fires `kp-bullets-pick` with its key; the whole row is the press area. A `value` of `null` is a dash and no bar, and `figure` writes the figure as it is.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-bullets" data-doc-bullets="rows"></div>
+    <p class="kp-text-muted" data-doc-bullets-said role="status">Press a row that is a button.</p>
+</div>
+                            <script type="module">
+import { setBullets } from '../../js/bullets.js';
+
+const list = document.querySelector('[data-doc-bullets="rows"]');
+setBullets(list, {
+    threshold: 14,
+    bad: 21,
+    max: 28,
+    sort: 'none',
+    format: (days) => days + ' d',
+    rows: [
+        { key: 'a', lead: 'Acme Logistics', label: 'Data engineer', detail: 'last contact 02/10/2026', value: 22, href: '#acme' },
+        { key: 'b', lead: 'Contoso', label: 'Project lead', detail: 'last contact 10/10/2026', value: 15, pick: true },
+        { key: 'c', lead: 'Fabrikam', label: 'Site reliability engineer', value: 6, pick: true },
+        { key: 'd', lead: 'Northwind', label: 'Platform engineer', detail: 'no contact yet', value: null },
+    ],
+});
+list.addEventListener('kp-bullets-pick', (event) => {
+    document.querySelector('[data-doc-bullets-said]').textContent = 'Pressed: ' + event.detail.key;
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-bullets&quot;</span> <span class="kp-code__keyword">data-doc-bullets</span><span class="kp-code__string">=&quot;rows&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">data-doc-bullets-said</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;Press a row that is a button.&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { setBullets } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/bullets'</span>;
+
+<span class="kp-code__keyword">const</span> list = document.querySelector(<span class="kp-code__string">'[data-doc-bullets=&quot;rows&quot;]'</span>);
+setBullets(list, {
+    threshold: <span class="kp-code__string">14</span>,
+    bad: <span class="kp-code__string">21</span>,
+    max: <span class="kp-code__string">28</span>,
+    sort: <span class="kp-code__string">'none'</span>,
+    format: (days) =&gt; days + <span class="kp-code__string">' d'</span>,
+    rows: [
+        { key: <span class="kp-code__string">'a'</span>, lead: <span class="kp-code__string">'Acme Logistics'</span>, label: <span class="kp-code__string">'Data engineer'</span>, detail: <span class="kp-code__string">'last contact 02/10/2026'</span>, value: <span class="kp-code__string">22</span>, href: <span class="kp-code__string">'#acme'</span> },
+        { key: <span class="kp-code__string">'b'</span>, lead: <span class="kp-code__string">'Contoso'</span>, label: <span class="kp-code__string">'Project lead'</span>, detail: <span class="kp-code__string">'last contact 10/10/2026'</span>, value: <span class="kp-code__string">15</span>, pick: <span class="kp-code__keyword">true</span> },
+        { key: <span class="kp-code__string">'c'</span>, lead: <span class="kp-code__string">'Fabrikam'</span>, label: <span class="kp-code__string">'Site reliability engineer'</span>, value: <span class="kp-code__string">6</span>, pick: <span class="kp-code__keyword">true</span> },
+        { key: <span class="kp-code__string">'d'</span>, lead: <span class="kp-code__string">'Northwind'</span>, label: <span class="kp-code__string">'Platform engineer'</span>, detail: <span class="kp-code__string">'no contact yet'</span>, value: <span class="kp-code__keyword">null</span> },
+    ],
+});
+list.addEventListener(<span class="kp-code__string">'kp-bullets-pick'</span>, (event) =&gt; {
+    document.querySelector(<span class="kp-code__string">'[data-doc-bullets-said]'</span>).textContent = <span class="kp-code__string">'Pressed: '</span> + event.detail.key;
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Waiting, nothing to list, and failed with a Retry</figcaption>
+                        <p class="kp-text-muted">`state: 'loading'` keeps the rows’ geometry as waiting rows (`loadingRows` says how many, `loadingWords` what the busy card says) and lays the data table’s busy card over them. `empty` is a full-size empty state with `emptyTitle` and `emptyText`; `error` says `message` with a normal-size Retry that fires `kp-bullets-retry` (`retry: false` leaves it out). Nothing under a state moves: it fills the height the rows had.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div class="kp-bullets" data-doc-bullets="loading"></div>
+    <div class="kp-bullets" data-doc-bullets="empty"></div>
+    <div class="kp-bullets" data-doc-bullets="failed"></div>
+</div>
+                            <script type="module">
+import { setBullets } from '../../js/bullets.js';
+
+const list = (name) => document.querySelector('[data-doc-bullets="' + name + '"]');
+
+setBullets(list('loading'), { threshold: 14, state: 'loading', loadingRows: 3, loadingWords: 'Reading the follow-ups' });
+setBullets(list('empty'), {
+    threshold: 14,
+    state: 'empty',
+    emptyTitle: 'No open applications',
+    emptyText: 'Add an application and its follow-up clock shows here.',
+});
+
+const failed = list('failed');
+const rows = [{ key: 'a', lead: 'Acme', label: 'Data engineer', value: 9 }];
+const draw = (state) => setBullets(failed, { threshold: 14, rows, state, message: 'The follow-ups could not be read.' });
+draw('error');
+failed.addEventListener('kp-bullets-retry', () => draw('ready'));
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-bullets&quot;</span> <span class="kp-code__keyword">data-doc-bullets</span><span class="kp-code__string">=&quot;loading&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-bullets&quot;</span> <span class="kp-code__keyword">data-doc-bullets</span><span class="kp-code__string">=&quot;empty&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-bullets&quot;</span> <span class="kp-code__keyword">data-doc-bullets</span><span class="kp-code__string">=&quot;failed&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { setBullets } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/bullets'</span>;
+
+<span class="kp-code__keyword">const</span> list = (name) =&gt; document.querySelector(<span class="kp-code__string">'[data-doc-bullets=&quot;'</span> + name + <span class="kp-code__string">'&quot;]'</span>);
+
+setBullets(list(<span class="kp-code__string">'loading'</span>), { threshold: <span class="kp-code__string">14</span>, state: <span class="kp-code__string">'loading'</span>, loadingRows: <span class="kp-code__string">3</span>, loadingWords: <span class="kp-code__string">'Reading the follow-ups'</span> });
+setBullets(list(<span class="kp-code__string">'empty'</span>), {
+    threshold: <span class="kp-code__string">14</span>,
+    state: <span class="kp-code__string">'empty'</span>,
+    emptyTitle: <span class="kp-code__string">'No open applications'</span>,
+    emptyText: <span class="kp-code__string">'Add an application and its follow-up clock shows here.'</span>,
+});
+
+<span class="kp-code__keyword">const</span> failed = list(<span class="kp-code__string">'failed'</span>);
+<span class="kp-code__keyword">const</span> rows = [{ key: <span class="kp-code__string">'a'</span>, lead: <span class="kp-code__string">'Acme'</span>, label: <span class="kp-code__string">'Data engineer'</span>, value: <span class="kp-code__string">9</span> }];
+<span class="kp-code__keyword">const</span> draw = (state) =&gt; setBullets(failed, { threshold: <span class="kp-code__string">14</span>, rows, state, message: <span class="kp-code__string">'The follow-ups could not be read.'</span> });
+draw(<span class="kp-code__string">'error'</span>);
+failed.addEventListener(<span class="kp-code__string">'kp-bullets-retry'</span>, () =&gt; draw(<span class="kp-code__string">'ready'</span>));</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -319,6 +427,10 @@
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
                             <tr><td><code>href / pick</code></td><td>A row that is a link, or a button that fires `kp-bullets-pick`; its press area is the whole row.</td></tr>
                             <tr><td><code>value: null</code></td><td>Nothing to measure: a dash and no bar, the row keeping its height.</td></tr>
+                            <tr><td><code>tones</code></td><td>A value at or past the threshold takes the warning tone (the figure on the warning plate), at or past `bad` the destructive one, and past `max` the bar’s ▸ says so. `bulletTone(value, threshold, bad)` gives the same answer to a page that needs it elsewhere.</td></tr>
+                            <tr><td><code>state: loading</code></td><td>The rows are drawn as waiting rows and the data table’s busy card lies over them; the real rows are drawn once the card has gone.</td></tr>
+                            <tr><td><code>state: empty / error</code></td><td>The package’s empty state, `.kp-bullets__note` (`.kp-empty` with `.kp-bullets__note-title`, `.kp-bullets__note-text`), filling the height the rows had. An error also has `.kp-bullets__retry`, a normal-size button.</td></tr>
+                            <tr><td><code>retry: false</code></td><td>A failed list for a read the page cannot repeat: the words and no Retry.</td></tr>
                     </tbody></table></div>
                 </section>
                 </div>
