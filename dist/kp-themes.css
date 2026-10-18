@@ -51813,6 +51813,12 @@
         border: 1px solid var(--border-strong);
     }
 
+    /* A badge is a straight plate under its chamfer: the shared pill radius drew an arc inside the straight cut
+       (Kenny, 2026-10-18 04:03, titanium-badge: "Aanpassen in titanium"). */
+    [data-theme='titanium'] .kp-badge {
+        border-radius: 0;
+    }
+
     [data-theme='titanium'] .kp-skeleton {
         background: var(--accent);
     }
@@ -55164,10 +55170,26 @@
     }
 
     /* ── A card in four data states ── */
+    /* The state names itself at heading size, in the display face the empty plate's own title uses (DEMO_RULES 3):
+       it was 13 px engraved mono, smaller than formal's 16. */
     [data-theme='titanium'] .kp-card__state-title {
-        font-family: var(--theme-font-mono);
-        font-size: 0.8125rem;
-        letter-spacing: 0.01em;
+        font-family: var(--theme-font-display);
+        font-size: clamp(1.125rem, 1rem + 0.45vw, 1.3125rem);
+        letter-spacing: -0.01em;
+        line-height: 1.3;
+    }
+
+    /* The action in an empty or failed plate is a normal-size button: it took the plate's heading size (24 px "Retry"
+       and "Add" in a 36 px key), so it reads at the control size and the title carries the heading. */
+    [data-theme='titanium'] .kp-stateplate__action {
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    /* The picked row of the master-detail list is marked by its plate and bar; the 600 weight of the shared rule is wider
+       in Be Vietnam Pro and wrapped a long name to a fourth line, so picking a row (or the detail failing on it) moved
+       the list 24 px. The row keeps its weight. */
+    [data-theme='titanium'] .kp-pane__list > [data-kp-pane-key][aria-selected='true'] {
+        font-weight: inherit;
     }
 
     /* ── Pipeline: plates in a rack, the stage an oxide strip along the head ── */
@@ -56060,6 +56082,225 @@
     }
     [data-theme='titanium'] .kp-dialog__actions > .kp-button {
         white-space: nowrap;
+    }
+}
+
+/* ── kpadopt5/6 fit: the 79 adopted parts at 390 px [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* A rating in a table cell: the words go under the stars, so the cell keeps its column. */
+    @media (max-width: 30rem) {
+        [data-theme='titanium'] .kp-table td .kp-rating--display .kp-rating__body {
+            grid-auto-flow: row;
+            row-gap: 0.125rem;
+        }
+    }
+}
+
+/* ── kpadopt5/6 fit: a segmented track that is wider than its room [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* In this theme's wide mono capitals a track outgrows a phone, scrolled, and its last label was clipped at the track's
+       edge. Under 34rem the segments take less padding and tracking. A track of up to three also shares its width and a
+       long label wraps between words. A track of four or more takes rows instead of scrolling (the segments of a row share
+       it); the sliding plate cannot follow a second row, so the chosen segment carries its own plate there. A label is
+       never cut by an ellipsis. The inspector's filter does the same whenever its card is narrower than 34rem. */
+    @media (max-width: 34rem) {
+        [data-theme='titanium'] .kp-segmented:not(.kp-segmented--chips) {
+            --kp-seg-item-pad-inline: 0.5rem;
+            letter-spacing: 0.02em;
+        }
+        [data-theme='titanium'] .kp-segmented:not(.kp-segmented--chips, :has(> :nth-child(4))) {
+            grid-auto-columns: minmax(0, 1fr);
+            letter-spacing: 0.04em;
+        }
+        [data-theme='titanium'] .kp-segmented:not(.kp-segmented--chips, :has(> :nth-child(4))) > .kp-segmented__item {
+            white-space: normal;
+            overflow-wrap: normal;
+            line-height: 1.25;
+        }
+        [data-theme='titanium'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(4)) {
+            display: flex;
+            flex-wrap: wrap;
+            inline-size: 100%;
+        }
+        [data-theme='titanium'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item {
+            flex: 1 1 auto;
+        }
+        [data-theme='titanium'] .kp-segmented[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4))::before {
+            display: none;
+        }
+        [data-theme='titanium'] .kp-segmented[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item[aria-checked='true'] {
+            background: var(--kp-seg-thumb, var(--card));
+            box-shadow: var(--kp-seg-thumb-edge, 0 0 0 1px var(--border-strong)), var(--kp-seg-thumb-lift, 0 0 0 0 transparent);
+        }
+        [data-theme='titanium'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item[aria-checked='true'] {
+            clip-path: polygon(var(--kp-chamfer, 0.4rem) 0, 100% 0, 100% calc(100% - var(--kp-chamfer, 0.4rem)), calc(100% - var(--kp-chamfer, 0.4rem)) 100%, 0 100%, 0 var(--kp-chamfer, 0.4rem));
+        }
+    }
+    @container kp-inspector (max-width: 34rem) {
+        [data-theme='titanium'] .kp-inspector__filter:not(.kp-segmented--chips):has(> :nth-child(4)) {
+            display: flex;
+            flex-wrap: wrap;
+            inline-size: 100%;
+        }
+        [data-theme='titanium'] .kp-inspector__filter:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item {
+            flex: 1 1 auto;
+        }
+        [data-theme='titanium'] .kp-inspector__filter[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4))::before {
+            display: none;
+        }
+        [data-theme='titanium'] .kp-inspector__filter[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item[aria-checked='true'] {
+            background: var(--kp-seg-thumb, var(--card));
+            box-shadow: var(--kp-seg-thumb-edge, 0 0 0 1px var(--border-strong)), var(--kp-seg-thumb-lift, 0 0 0 0 transparent);
+        }
+        [data-theme='titanium'] .kp-inspector__filter:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item[aria-checked='true'] {
+            clip-path: polygon(var(--kp-chamfer, 0.4rem) 0, 100% 0, 100% calc(100% - var(--kp-chamfer, 0.4rem)), calc(100% - var(--kp-chamfer, 0.4rem)) 100%, 0 100%, 0 var(--kp-chamfer, 0.4rem));
+        }
+    }
+}
+
+/* ── kpadopt5/6 fit: the weekday chips [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* Seven (and thirty-one) chips share one phone-wide row; the tracked mono capitals touched the chip edge. */
+    @media (max-width: 34rem) {
+        [data-theme='titanium'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+            font-size: 0.625rem;
+            letter-spacing: 0.02em;
+        }
+        /* The month's thirty-one cells are narrower still: "Last" is four of Martian Mono's wide capitals. */
+        [data-theme='titanium'] .kp-weekdays .kp-weekdays__chips--month > .kp-segmented__item {
+            font-size: 0.5625rem;
+            letter-spacing: 0;
+        }
+    }
+}
+
+/* ── kpadopt5/6 fit: the fold button of a code cell [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* "Show all 38 lines" sizes the button to its longest word; in a 200 px cell its wide capitals outgrew the button. */
+    [data-theme='titanium'] .kp-code--cell .kp-code__foot .kp-button {
+        font-size: 0.6875rem;
+        letter-spacing: 0.02em;
+    }
+}
+
+/* ── kpadopt5/6 fit: the request inspector's row in a narrow card [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* In the card of a phone the row is 250 px and method, status, source and time cannot share one line in this
+       theme's wide letters (the source tag was squeezed to single letters over the date). Method and status take the
+       first line, the path the next, the source and the time share the last, the time always at its end. */
+    @container kp-inspector (max-width: 40rem) {
+        [data-theme='titanium'] .kp-inspector__row {
+            grid-template-columns: auto minmax(0, 1fr);
+            grid-template-areas:
+                'method status'
+                'path path'
+                'source time';
+        }
+        [data-theme='titanium'] .kp-inspector__status {
+            justify-self: start;
+        }
+        [data-theme='titanium'] .kp-inspector__time {
+            justify-self: end;
+            text-align: end;
+        }
+    }
+}
+
+/* ── kpadopt5/6 fit: the checklist's detail on a phone [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* The detail never wraps in the shared part; in this theme's mono it is wider than the row and ran off the plate
+       (cut at the screen edge) while it squeezed the label to a column of single letters. On a phone it wraps in a
+       column of at most 9rem, at its end. */
+    @media (max-width: 34rem) {
+        [data-theme='titanium'] .kp-checklist__detail {
+            max-inline-size: 9rem;
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+    }
+}
+
+/* ── kpadopt5/6 parts: titanium's own corners [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* Square corners (G7): a tag, a count, a counter, a groove and a swatch are cut metal, not pills. The marks that
+       are turned parts (the avatar, the spinner, a step's mark, a dot) stay round. */
+    [data-theme='titanium'] :is(.kp-chart__annkey-item, .kp-segmented__count, .kp-uses__chip, .kp-slider__rail, .kp-anchor, .kp-autosize__counter, .kp-uses__open, .kp-availability__best-swatch) {
+        border-radius: 0;
+    }
+
+    /* The slider (G6, G8): the groove is a machined slot, the thumb a bare-metal slug with its tool edge and an
+       engraved index line; focus turns the slug's rim to the register's ring. The 2.75rem box stays the touch target. */
+    [data-theme='titanium'] .kp-slider__input {
+        --kp-slider-thumb-art:
+            linear-gradient(var(--background), var(--background)) 50% 50% / 2px 0.75rem no-repeat,
+            linear-gradient(hsl(from var(--foreground) h s l / 0.5), hsl(from var(--foreground) h s l / 0.5)) 50% calc(50% - 0.6875rem) / 0.875rem 1px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 0.875rem 1.5rem no-repeat;
+    }
+    [data-theme='titanium'] .kp-slider__input:focus-visible {
+        --kp-slider-thumb-art:
+            linear-gradient(var(--background), var(--background)) 50% 50% / 2px 0.75rem no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 0.5rem 1.125rem no-repeat,
+            linear-gradient(var(--focus-ring), var(--focus-ring)) 50% 50% / 1.125rem 1.75rem no-repeat;
+    }
+    [data-theme='titanium'] .kp-slider__input:disabled {
+        --kp-slider-thumb-art:
+            linear-gradient(var(--border-strong), var(--border-strong)) 50% 50% / 0.875rem 1.5rem no-repeat;
+    }
+    [data-theme='titanium'] .kp-slider__input::-moz-range-thumb,
+    [data-theme='titanium'] .kp-slider__input::-webkit-slider-thumb {
+        clip-path: polygon(
+            calc(50% - 0.5625rem + 0.375rem) calc(50% - 0.875rem),
+            calc(50% + 0.5625rem) calc(50% - 0.875rem),
+            calc(50% + 0.5625rem) calc(50% + 0.875rem - 0.375rem),
+            calc(50% + 0.5625rem - 0.375rem) calc(50% + 0.875rem),
+            calc(50% - 0.5625rem) calc(50% + 0.875rem),
+            calc(50% - 0.5625rem) calc(50% - 0.875rem + 0.375rem)
+        );
+    }
+    [data-theme='titanium'] .kp-slider__rail {
+        border-color: var(--background);
+        background: var(--muted);
+        box-shadow: inset 0 1px 0 hsl(from var(--background) h s l / 0.8), 0 1px 0 hsl(from var(--foreground) h s l / 0.1);
+    }
+}
+
+/* ── kpadopt5/6 fit: the version chip with a long unbroken version [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* A 64-character hash has no place to break; in this theme's wide mono it ran out of its box. Only when no break
+       place is left on the line may it break inside the string. */
+    [data-theme='titanium'] .kp-badge--version {
+        max-inline-size: 100%;
+    }
+    [data-theme='titanium'] :is(.kp-version__from, .kp-version__to) {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+}
+
+/* ── kpadopt5/6 fit: bars of controls in a card on a phone [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* The card is a grid whose one track took the width of its widest unbreakable line, so a bar of segments or buttons
+       pushed the card's content out of the card. The track is the card's width; the bar's own wrapping and the track's
+       scrolling then do their work. */
+    [data-theme='titanium'] :is(.kp-inspector, .kp-refresh) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    [data-theme='titanium'] :is(.kp-inspector__bar, .kp-refresh__bar, .kp-refresh__chooser) {
+        min-inline-size: 0;
+        max-inline-size: 100%;
+    }
+}
+
+/* ── kpadopt5/6 fit: the code box's tools [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* Pretty/Raw, Wrap and Copy in one nowrap row: the Pretty/Raw track was squeezed to a 30 px sliver. The tools take a
+       second row when they do not fit, and the track keeps its width. */
+    [data-theme='titanium'] .kp-code__tools {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+    [data-theme='titanium'] .kp-code__tools > .kp-segmented {
+        flex: none;
     }
 }
 
@@ -81936,16 +82177,20 @@
         border-radius: 1px;
     }
 
-    [data-theme='nostromo'] .kp-empty__title {
+    /* The empty plate's ink tape names the state at heading size (DEMO_RULES 3): the stateplate's title is the same
+       tape as every other empty title, so an empty area reads alike wherever the page draws it. */
+    [data-theme='nostromo'] :is(.kp-empty__title, .kp-stateplate--empty .kp-stateplate__title) {
         display: inline-block;
         margin-block-end: 0.5rem;
-        padding: 0.15rem 0.6rem;
+        padding: 0.2rem 0.75rem;
         border-radius: 2px;
         background: var(--foreground);
         color: var(--primary-foreground);
         font-family: var(--theme-font-mono);
-        font-size: 0.8rem;
-        letter-spacing: 0.12em;
+        font-size: clamp(1rem, 0.9rem + 0.4vw, 1.25rem);
+        font-weight: 400;
+        letter-spacing: 0.08em;
+        line-height: 1.3;
         text-transform: uppercase;
     }
 
@@ -84395,9 +84640,14 @@
     /* A card in four data states: the stage is a bay; its note and its failure keep the empty state's and alert's plates. */
     [data-theme='nostromo'] .kp-card__state-title {
         font-family: var(--theme-font-mono);
-        font-size: 0.8rem;
-        letter-spacing: 0.1em;
+        font-size: clamp(1rem, 0.9rem + 0.4vw, 1.25rem);
+        letter-spacing: 0.08em;
+        line-height: 1.3;
         text-transform: uppercase;
+    }
+    /* The klaxon plate is solid red: its title keeps the plate's own ink, not the page's (dark on red was unreadable). */
+    [data-theme='nostromo'] .kp-alert--destructive .kp-card__state-title {
+        color: inherit;
     }
     [data-theme='nostromo'] .kp-card__state > .kp-card__empty {
         border-radius: var(--kp-sig-no-key);
@@ -85491,6 +85741,268 @@
     }
     [data-theme='nostromo'] .kp-dialog__actions > .kp-button {
         white-space: nowrap;
+    }
+}
+
+/* ── kpadopt5/6 fit: a segmented track that is wider than its room [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* In this theme's wide mono capitals a track outgrows a phone, scrolled, and its last label was clipped at the track's
+       edge. Under 34rem the segments take less padding and tracking. A track of up to three also shares its width and a
+       long label wraps between words. A track of four or more takes rows instead of scrolling (the segments of a row share
+       it); the sliding plate cannot follow a second row, so the chosen segment carries its own plate there. A label is
+       never cut by an ellipsis. The inspector's filter does the same whenever its card is narrower than 34rem. */
+    @media (max-width: 34rem) {
+        [data-theme='nostromo'] .kp-segmented:not(.kp-segmented--chips) {
+            --kp-seg-item-pad-inline: 0.5rem;
+            letter-spacing: 0.02em;
+        }
+        [data-theme='nostromo'] .kp-segmented:not(.kp-segmented--chips, :has(> :nth-child(4))) {
+            grid-auto-columns: minmax(0, 1fr);
+            letter-spacing: 0.04em;
+        }
+        [data-theme='nostromo'] .kp-segmented:not(.kp-segmented--chips, :has(> :nth-child(4))) > .kp-segmented__item {
+            white-space: normal;
+            overflow-wrap: normal;
+            line-height: 1.25;
+        }
+        [data-theme='nostromo'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(4)) {
+            display: flex;
+            flex-wrap: wrap;
+            inline-size: 100%;
+        }
+        [data-theme='nostromo'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item {
+            flex: 1 1 auto;
+        }
+        [data-theme='nostromo'] .kp-segmented[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4))::before {
+            display: none;
+        }
+        [data-theme='nostromo'] .kp-segmented[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item[aria-checked='true'] {
+            background: var(--kp-seg-thumb, var(--card));
+            box-shadow: var(--kp-seg-thumb-edge, 0 0 0 1px var(--border-strong)), var(--kp-seg-thumb-lift, 0 0 0 0 transparent);
+        }
+    }
+    @container kp-inspector (max-width: 34rem) {
+        [data-theme='nostromo'] .kp-inspector__filter:not(.kp-segmented--chips):has(> :nth-child(4)) {
+            display: flex;
+            flex-wrap: wrap;
+            inline-size: 100%;
+        }
+        [data-theme='nostromo'] .kp-inspector__filter:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item {
+            flex: 1 1 auto;
+        }
+        [data-theme='nostromo'] .kp-inspector__filter[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4))::before {
+            display: none;
+        }
+        [data-theme='nostromo'] .kp-inspector__filter[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item[aria-checked='true'] {
+            background: var(--kp-seg-thumb, var(--card));
+            box-shadow: var(--kp-seg-thumb-edge, 0 0 0 1px var(--border-strong)), var(--kp-seg-thumb-lift, 0 0 0 0 transparent);
+        }
+    }
+}
+
+/* ── kpadopt5/6 fit: the weekday chips [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* Seven (and thirty-one) chips share one phone-wide row; the tracked mono capitals touched the chip edge. */
+    @media (max-width: 34rem) {
+        [data-theme='nostromo'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+            font-size: 0.625rem;
+            letter-spacing: 0.02em;
+        }
+    }
+}
+
+/* ── kpadopt5/6 fit: the fold button of a code cell [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* "Show all 38 lines" sizes the button to its longest word; in a 200 px cell its wide capitals outgrew the button. */
+    [data-theme='nostromo'] .kp-code--cell .kp-code__foot .kp-button {
+        font-size: 0.6875rem;
+        letter-spacing: 0.02em;
+    }
+}
+
+/* ── kpadopt5/6 fit: the request inspector's row in a narrow card [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* In the card of a phone the row is 250 px and method, status, source and time cannot share one line in this
+       theme's wide letters (the source tag was squeezed to single letters over the date). Method and status take the
+       first line, the path the next, the source and the time share the last, the time always at its end. */
+    @container kp-inspector (max-width: 40rem) {
+        [data-theme='nostromo'] .kp-inspector__row {
+            grid-template-columns: auto minmax(0, 1fr);
+            grid-template-areas:
+                'method status'
+                'path path'
+                'source time';
+        }
+        [data-theme='nostromo'] .kp-inspector__status {
+            justify-self: start;
+        }
+        [data-theme='nostromo'] .kp-inspector__time {
+            justify-self: end;
+            text-align: end;
+        }
+    }
+}
+
+/* ── kpadopt5/6 fit: the folded quote [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* Titillium Web's line box is taller than a 1.5 line pitch, so the clamped fifth line's box reached into the Show all
+       button below it. At 1.6 every line box ends where the next begins and the fold cuts exactly under line four. */
+    [data-theme='nostromo'] .kp-quote__text {
+        line-height: 1.6;
+    }
+
+    /* The quote's loading stage keeps the room of the busy card (--kp-quote-min), and nostromo's tall busy panel (reel,
+       words and the LED window) needs all of it; the quote at rest was 26 px shorter, so loading pushed the page down.
+       The stage holds that room in every state. */
+    [data-theme='nostromo'] .kp-quote > .kp-card__stage {
+        min-block-size: var(--kp-quote-min, 9rem);
+    }
+}
+
+/* ── kpadopt5/6 fit: the availability list on a phone [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* The signed-in person's own row carries three answer keys; with the lamp and the label tape they are wider than the
+       row, and the key row pushed the person's name down to nothing. The name takes its own line over the keys. */
+    [data-theme='nostromo'] .kp-availability__column-row:has(> .kp-availability__column-answers) {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 0.25rem;
+        padding-block: 0.25rem;
+    }
+    [data-theme='nostromo'] .kp-availability__column-answers > .kp-availability__pick {
+        letter-spacing: 0.04em;
+        padding-inline-end: 0.5rem;
+    }
+}
+
+/* ── kpadopt5/6 fit: the growing text box [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* The theme's size motion moves a box one line per 80 ms frame. A text box that takes a whole mail (87 lines at 390 px)
+       therefore glided for 6960 ms with its field clipped, and the box under it stood on the unfinished one. A growing
+       text box keeps the line-by-line steps but takes the theme's strike time for all of them (js/motion.js reads
+       `--kp-size-step`; 0 means the size time). */
+    [data-theme='nostromo'] .kp-field:has(> .kp-autosize) {
+        --kp-size-step: 0ms;
+    }
+}
+
+/* ── kpadopt5/6 fit: the checklist's detail on a phone [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* The detail never wraps in the shared part; in this theme's mono it is wider than the row and ran off the plate
+       (cut at the screen edge) while it squeezed the label to a column of single letters. On a phone it wraps in a
+       column of at most 9rem, at its end. */
+    @media (max-width: 34rem) {
+        [data-theme='nostromo'] .kp-checklist__detail {
+            max-inline-size: 9rem;
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+    }
+}
+
+/* ── kpadopt5/6 fit: the version chip with a long unbroken version [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* A 64-character hash has no place to break; in this theme's wide mono it ran out of its box. Only when no break
+       place is left on the line may it break inside the string. */
+    [data-theme='nostromo'] .kp-badge--version {
+        max-inline-size: 100%;
+    }
+    [data-theme='nostromo'] :is(.kp-version__from, .kp-version__to) {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+}
+
+/* ── kpadopt5/6 fit: bars of controls in a card on a phone [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* The card is a grid whose one track took the width of its widest unbreakable line, so a bar of segments or buttons
+       pushed the card's content out of the card. The track is the card's width; the bar's own wrapping and the track's
+       scrolling then do their work. */
+    [data-theme='nostromo'] :is(.kp-inspector, .kp-refresh) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    [data-theme='nostromo'] :is(.kp-inspector__bar, .kp-refresh__bar, .kp-refresh__chooser) {
+        min-inline-size: 0;
+        max-inline-size: 100%;
+    }
+}
+
+/* ── kpadopt5/6 fit: the code box's tools [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* Pretty/Raw, Wrap and Copy in one nowrap row: the Pretty/Raw track was squeezed to a 30 px sliver. The tools take a
+       second row when they do not fit, and the track keeps its width. */
+    [data-theme='nostromo'] .kp-code__tools {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+    [data-theme='nostromo'] .kp-code__tools > .kp-segmented {
+        flex: none;
+    }
+}
+
+/* ── kpadopt5/6 parts: nostromo's own corners and chart kinds [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* Label tape is cut square (G6): a key chip, a count, a map chip and the slider's groove are tape or vent, not pills.
+       Lamps, reels and rings stay round. */
+    [data-theme='nostromo'] :is(.kp-chart__annkey-item, .kp-segmented__count, .kp-uses__chip, .kp-slider__rail) {
+        border-radius: 2px;
+    }
+
+    /* The chart's event kinds on the case: the package paints them in the tones' ink, which in this theme is cream (made
+       for text on a coloured plate), so on the beige plot an operation, an update and a window were three pale dots no
+       one could tell apart. On the case a kind takes the tone's own colour, as the tape does. */
+    [data-theme='nostromo'] .kp-chart:has(.kp-chart__annkey) {
+        --kp-nostromo-kind-info: var(--info);
+        --kp-nostromo-kind-warning: var(--warning);
+    }
+    [data-theme='nostromo'] .kp-chart:has(.kp-chart__annkey) :is(.kp-chart__mark, .kp-chart__band, .kp-chart__annkey-item, pattern) {
+        --kp-chart-tone: var(--kp-nostromo-kind-info);
+    }
+    [data-theme='nostromo'] .kp-chart:has(.kp-chart__annkey) [data-kp-tone='warning'] {
+        --kp-chart-tone: var(--kp-nostromo-kind-warning);
+    }
+    [data-theme='nostromo'] .kp-chart:has(.kp-chart__annkey) [data-kp-tone='critical'] {
+        --kp-chart-tone: var(--destructive);
+    }
+}
+
+/* ── kpadopt5/6 parts: nostromo's slider is a fader [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* A fader on the console (G6, G14): the groove is a vent slot, the thumb a moulded key cap in the case's plastic with
+       an ink rim and a printed index line; focus lights the cap's lamp in the register's ring; the cap does not move
+       when pressed, it goes in (a well). The 2.75rem box stays the touch target. */
+    [data-theme='nostromo'] .kp-slider__input {
+        --kp-slider-thumb-art:
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 2px 0.875rem no-repeat,
+            repeating-linear-gradient(0deg, hsl(from var(--foreground) h s l / 0.09) 0 1px, transparent 1px 3px) 50% 50% / 1rem 1.5rem no-repeat,
+            linear-gradient(var(--secondary), var(--secondary)) 50% 50% / 1rem 1.5rem no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 1.25rem 1.75rem no-repeat;
+    }
+    [data-theme='nostromo'] .kp-slider__input:focus-visible {
+        --kp-slider-thumb-art:
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 2px 0.875rem no-repeat,
+            radial-gradient(circle at 50% calc(50% - 0.5625rem), var(--sidebar-primary) 0 2px, transparent 2.5px),
+            linear-gradient(var(--secondary), var(--secondary)) 50% 50% / 1rem 1.5rem no-repeat,
+            linear-gradient(var(--focus-ring), var(--focus-ring)) 50% 50% / 1.25rem 1.75rem no-repeat;
+    }
+    [data-theme='nostromo'] .kp-slider__input:active {
+        --kp-slider-thumb-art:
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 2px 0.875rem no-repeat,
+            linear-gradient(color-mix(in oklab, var(--secondary) 82%, var(--foreground)), color-mix(in oklab, var(--secondary) 82%, var(--foreground))) 50% 50% / 1rem 1.5rem no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 1.25rem 1.75rem no-repeat;
+    }
+    [data-theme='nostromo'] .kp-slider__input:disabled {
+        --kp-slider-thumb-art:
+            linear-gradient(var(--muted), var(--muted)) 50% 50% / 1rem 1.5rem no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 50% 50% / 1.25rem 1.75rem no-repeat;
+    }
+    [data-theme='nostromo'] .kp-slider__input::-moz-range-thumb,
+    [data-theme='nostromo'] .kp-slider__input::-webkit-slider-thumb {
+        clip-path: inset(calc(50% - 0.875rem) calc(50% - 0.625rem) round 0.3rem);
+    }
+    [data-theme='nostromo'] .kp-slider__rail {
+        border-color: var(--border-strong);
+        background: var(--kp-no-seam, var(--muted));
+        box-shadow: var(--kp-sig-no-well, inset 0 1px 2px hsl(from var(--foreground) h s l / 0.3));
     }
 }
 
