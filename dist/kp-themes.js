@@ -55780,7 +55780,8 @@ var init_footprint = __esm({
       "[data-kp-notices]",
       "[data-kp-gallery]",
       "[data-kp-availability]",
-      "[data-kp-requests]"
+      "[data-kp-requests]",
+      ".kp-ops"
     ].join(", ");
     FOOTPRINT_MAX = "48rem";
     HOLDING = /* @__PURE__ */ new Set(["loading", "empty", "error"]);
@@ -57339,10 +57340,10 @@ var NEEDS = [
   { name: "timefield", when: "[data-kp-time]", load: () => Promise.resolve().then(() => (init_timefield(), timefield_exports)), attach: (m, root) => [m.attachTimes(root)] },
   {
     // A data component keeps the height it had while a state shows in its place [t56-statefix-1018]: the matrix, the entity
-    // grid, the checklist, the notices, the gallery, the availability grid and the request inspector. The selector is
+    // grid, the checklist, the notices, the gallery, the availability grid, the request inspector and the operations page. The selector is
     // `FOOTPRINT_HOSTS` of js/footprint.js.
     name: "footprint",
-    when: "[data-kp-matrix], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-gallery], [data-kp-availability], [data-kp-requests]",
+    when: "[data-kp-matrix], [data-kp-entity-grid], [data-kp-checklist], [data-kp-notices], [data-kp-gallery], [data-kp-availability], [data-kp-requests], .kp-ops",
     load: () => Promise.resolve().then(() => (init_footprint(), footprint_exports)),
     attach: (m, root) => [m.attachFootprints(root)]
   },

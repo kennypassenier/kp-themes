@@ -7196,6 +7196,7 @@ setNotices(centre, {
             { name: 'data-kp-ops-width', what: '`80vw` (default, never under 64rem), `full` or `measure` (64rem).' },
             { name: 'data-kp-ops-cards', what: 'The default span of a card in twelve columns: `12`, `8`, `6` (default), `4` or `3`.' },
             { name: 'data-kp-ops-sticky', what: '`toolbar` (default), `head` or `none`: the part that stays reachable.' },
+            { name: 'data-kp-ops-failed', what: '`plate` (default) or `keep`: what a page with `data-kp-state="error"` shows. `plate`: the alert takes the body, centred at heading size, at the height the page had, the stale cards hidden. `keep`: the cards stay, the alert is a band on top. Switchable at runtime.' },
             { name: 'data-kp-uniform', what: '`off`: cards in a row keep their own height; by default a row has one height.' },
             { name: 'data-kp-density', what: '`comfortable` (default) or `compact`.' },
             { name: 'data-kp-span', what: 'On a card: `3`, `4`, `6`, `8` or `12` columns.' },

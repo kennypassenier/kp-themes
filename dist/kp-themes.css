@@ -22490,6 +22490,8 @@
      *   data-kp-ops-width   80vw (default, never under 64rem) | full | measure (64rem)
      *   data-kp-ops-cards   the default span of a card: 12 | 8 | 6 (default) | 4 | 3
      *   data-kp-ops-sticky  toolbar (default) | head | none: the part that stays reachable
+     *   data-kp-ops-failed  plate (default) | keep: what a failed page (`data-kp-state="error"`) shows; plate = the alert takes the body,
+     *                       centred, at the height the page had, the stale cards hidden; keep = the cards stay, the alert is a band on top
      *   data-kp-uniform     off: cards in a row keep their own height (default: one height per row)
      *   data-kp-density     comfortable (default) | compact
      * and on a card `data-kp-span="3|4|6|8|12"`. Spans are 12 / 8 / 6 / 4 / 3 on a wide
@@ -30692,6 +30694,40 @@
 
     .kp-card__failure > .kp-card__retry {
         min-block-size: 2.25rem;
+    }
+}
+
+/* A failed operations page [t56-statefix-1018, S12]. `data-kp-ops-failed` on `.kp-ops`, switchable at runtime (an attribute change
+ * is all it takes, there is no script): `plate` (the default) shows the failure whole, the alert taking the page's body, centred at
+ * heading size and holding the height the page had (js/footprint.js), the cards of the last read hidden; `keep` is what the page did
+ * before, its cards staying under one attention band on top (the page says "what is shown is from earlier"). It needs the page to
+ * write `data-kp-state="error"` on `.kp-ops`. In the last layer, because a register styles `.kp-attention__item` and beats
+ * kp.components. */
+@layer kp.layout {
+    .kp-ops[data-kp-state='error']:not([data-kp-ops-failed='keep']) > :is(.kp-ops__kpis, .kp-ops__toolbar, .kp-ops__body) {
+        display: none;
+    }
+
+    .kp-ops[data-kp-state='error']:not([data-kp-ops-failed='keep']) > .kp-ops__attention {
+        display: grid;
+        flex: 1 1 auto;
+        min-block-size: 24rem;
+    }
+
+    .kp-ops[data-kp-state='error']:not([data-kp-ops-failed='keep']) .kp-attention__item {
+        grid-template-columns: minmax(0, 1fr);
+        place-content: center;
+        justify-items: center;
+        text-align: center;
+        padding: var(--kp-space-xl, 2rem);
+    }
+
+    .kp-ops[data-kp-state='error']:not([data-kp-ops-failed='keep']) .kp-attention__text > strong {
+        font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem));
+    }
+
+    .kp-ops[data-kp-state='error']:not([data-kp-ops-failed='keep']) .kp-attention__actions {
+        justify-content: center;
     }
 }
 

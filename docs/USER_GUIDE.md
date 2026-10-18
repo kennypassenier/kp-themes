@@ -1885,7 +1885,7 @@ Strings: `cardLoading`, `cardEmpty`, `cardFailed`, `cardRetry`. Knobs:
 
 A data component that is loading, empty or failed fills the height it had when it was loaded, so the page under it does not
 jump twice [t56-statefix-1018; Kenny, 2026-10-16: "de hele grootte van de component gebruiken"]. The matrix, the entity grid,
-the checklist, the notices, the gallery, the availability grid and the request inspector write `data-kp-state` on their host, and
+the checklist, the notices, the gallery, the availability grid, the request inspector and the operations page (`.kp-ops`) write `data-kp-state` on their host, and
 `js/footprint.js` follows that one attribute (loaded by `js/auto.js`; `attachFootprints(root)` for a subtree you render yourself, `holdFootprint(host)` for one host):
 while the host is ready it remembers its height, and while it is `loading`, `empty` or `error` it holds that height as `min-block-size`.
 The first load has nothing remembered and is left alone. The hold is capped by `--kp-footprint-max` (default `48rem`; set it on the host or on any
