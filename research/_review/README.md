@@ -199,6 +199,23 @@ note, so the keys keep working. Keys pressed inside a lane frame are handed up l
 carries six lines marked `[kit-keys]`; the entries `kind: "undo" | "bulk"` are read by `progress.js` (`rebuildAnswer`)
 and the Agenda's "Saved verdicts".
 
+### A demo's own keys in a lane [lane-keys]
+
+Kenny, 2026-10-18 18:42, on the shortcut engine: "er gebeurt niks als ik g typ" and "het niet meer werkt vanaf ik ergens op
+klik". The frame handed every G up (the bulk key), and with the focus on the dialog no key reached the demo. Who owns a key
+now (review.js, the block marked `[lane-keys]`):
+
+| Focus                                                   | Key                                                         | Goes to                                                          |
+| ------------------------------------------------------- | ----------------------------------------------------------- | ---------------------------------------------------------------- |
+| in a lane (a click on the component)                    | a key the demo registered (`js/shortcuts.js`)               | the demo, also G, X, C and `?`: the dialog's letter yields there |
+| in a lane                                               | any other dialog key (FRAME_KEYS, V, L, Escape)             | the dialog, as before                                            |
+| on the dialog (header, verdict panel, the lane's head)  | a dialog key (arrows, Enter, Escape, `?`, Q S X C W B, V L) | the dialog                                                       |
+| on the dialog                                           | a printable key the dialog did not use                      | the lane most in view, played on its body                        |
+| anywhere, while a demo's chord waits for its second key | the next key                                                | that lane (so the "c" of "g c" never rejects a section)          |
+
+The lane asks the engine `shortcutClaims(event)` and hears `kp-shortcut-pending`; the dialog tells each lane which part of
+it is in view (`rv-lane-view`, set as `--kp-shortcuts-view-top/-height`), so the chord's cap stands where Kenny looks.
+
 ## Play open and close, slowly
 
 A section that opens and closes something also has **Play open and close (L)** and a speed, **1×** or **¼×**. The kit presses the
