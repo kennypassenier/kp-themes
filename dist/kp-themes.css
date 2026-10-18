@@ -80331,6 +80331,14 @@
         }
     }
 
+    /* A 360 px phone leaves the seven day chips under 40 px each: the mono lettering closes up once more so "Last" keeps
+       4 px of plate on both sides (3.1 px before). */
+    @container kp-weekdays (max-width: 18rem) {
+        [data-theme='blueprint'] .kp-weekdays .kp-segmented__item {
+            font-size: 0.625rem;
+        }
+    }
+
     /* The request inspector's status filter is five segments (a label and its exact count each) and stood in one row wider than
        a phone: the bar stuck out 91 to 93 px past its section (kpadopt5-rows/request-inspector, 390 px). Wrapping them breaks the
        package's sliding plate, so on a phone the five share the width, with less padding, and nothing is cut. */

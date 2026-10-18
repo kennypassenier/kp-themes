@@ -145,6 +145,7 @@
         "blueprint||@container kp-journey (max-width: 30rem)||[data-state='current']))": "93053966b3906246",
         "blueprint||@container kp-nav (max-width: 40rem)||.kp-nav__menu": "1dbe526c704db7d0",
         "blueprint||@container kp-nav (max-width: 40rem)||.kp-nav__sep": "a2a1ad4af221c708",
+        "blueprint||@container kp-weekdays (max-width: 18rem)||.kp-segmented__item": "dd6835a32adff76e",
         "blueprint||@media (forced-colors: active)||a)": "4648413ef869dda3",
         "blueprint||@media (hover: hover)||.kp-checklist__row": "3cc8a80fbdb9b81e",
         "blueprint||@media (hover: hover)||.kp-segmented__item": "19006eea47ffc41b",
