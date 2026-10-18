@@ -8,7 +8,7 @@
 
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { census, MarkdownRefusal, renderMarkdown, storyPaths } from './markdown.mjs';
 
 /** @param {string} source @param {{ file?: string }} [options] */
@@ -103,9 +103,11 @@ test('T10: an underscore inside a word stays a literal underscore', () => {
     assert.equal(html('the constant TAB_CHANGE_EVENT'), '<p>the constant TAB_CHANGE_EVENT</p>');
 });
 
-test('TH102: all 16 stories render, and every construct the source holds comes out', () => {
+test('TH102: every shipped theme story renders, and every construct the source holds comes out', () => {
     const paths = storyPaths();
-    assert.equal(paths.length, 16);
+    // One story per theme directory: the count comes from the themes/ folder, not from a literal.
+    const themeDirs = readdirSync(new URL('../../themes/', import.meta.url), { withFileTypes: true }).filter((e) => e.isDirectory()).length;
+    assert.equal(paths.length, themeDirs);
     for (const path of paths) {
         const source = readFileSync(new URL(`../../${path}`, import.meta.url), 'utf8');
         const { html: rendered, counts } = renderMarkdown(source, { file: path });
