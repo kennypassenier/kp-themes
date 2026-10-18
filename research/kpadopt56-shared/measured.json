@@ -1,0 +1,974 @@
+{
+ "formal": {
+  "now": {
+   "s1-refresh": {
+    "over": 203,
+    "scrolls": 0
+   },
+   "s1-inspector": {
+    "over": 99,
+    "cardClip": 93,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 228
+   },
+   "s3-checklist": {
+    "label": 8,
+    "broken": 2,
+    "over": 0
+   },
+   "s4-entity": {
+    "broken": 0,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 26,
+    "label": 71
+   },
+   "s6-availability": {
+    "name": 76
+   },
+   "s7-shortcuts": {
+    "over": 1816
+   },
+   "s8-badge": {
+    "radius": 0
+   }
+  },
+  "prop": {
+   "s1-refresh": {
+    "over": 0,
+    "scrolls": 203
+   },
+   "s1-inspector": {
+    "over": 0,
+    "cardClip": 0,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 0
+   },
+   "s3-checklist": {
+    "label": 104,
+    "broken": 0,
+    "over": 0
+   },
+   "s4-entity": {
+    "broken": 0,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 0,
+    "label": 71
+   },
+   "s6-availability": {
+    "name": 290
+   },
+   "s7-shortcuts": {
+    "over": 0
+   },
+   "s8-badge": {
+    "radius": 0
+   }
+  },
+  "modal": {
+   "top": 19,
+   "bottom": 825,
+   "vh": 844,
+   "width": 352,
+   "scrolls": true
+  }
+ },
+ "dark": {
+  "now": {
+   "s1-refresh": {
+    "over": 278,
+    "scrolls": 0
+   },
+   "s1-inspector": {
+    "over": 111,
+    "cardClip": 106,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 178
+   },
+   "s3-checklist": {
+    "label": 22,
+    "broken": 2,
+    "over": 0
+   },
+   "s4-entity": {
+    "broken": 0,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 19,
+    "label": 58
+   },
+   "s6-availability": {
+    "name": 5
+   },
+   "s7-shortcuts": {
+    "over": 1792
+   },
+   "s8-badge": {
+    "radius": 999
+   }
+  },
+  "prop": {
+   "s1-refresh": {
+    "over": 0,
+    "scrolls": 278
+   },
+   "s1-inspector": {
+    "over": 0,
+    "cardClip": 0,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 0
+   },
+   "s3-checklist": {
+    "label": 104,
+    "broken": 0,
+    "over": 0
+   },
+   "s4-entity": {
+    "broken": 0,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 0,
+    "label": 58
+   },
+   "s6-availability": {
+    "name": 290
+   },
+   "s7-shortcuts": {
+    "over": 0
+   },
+   "s8-badge": {
+    "radius": 999
+   }
+  },
+  "modal": {
+   "top": 19,
+   "bottom": 825,
+   "vh": 844,
+   "width": 352,
+   "scrolls": true
+  }
+ },
+ "cyberpunk": {
+  "now": {
+   "s1-refresh": {
+    "over": 266,
+    "scrolls": 0
+   },
+   "s1-inspector": {
+    "over": 113,
+    "cardClip": 89,
+    "broken": 1
+   },
+   "s2-version": {
+    "over": 266
+   },
+   "s3-checklist": {
+    "label": 49,
+    "broken": 1,
+    "over": 0
+   },
+   "s4-entity": {
+    "broken": 6,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 15,
+    "label": 49
+   },
+   "s6-availability": {
+    "name": 0
+   },
+   "s7-shortcuts": {
+    "over": 1138
+   },
+   "s8-badge": {
+    "radius": 0
+   }
+  },
+  "prop": {
+   "s1-refresh": {
+    "over": 0,
+    "scrolls": 266
+   },
+   "s1-inspector": {
+    "over": 0,
+    "cardClip": 0,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 0
+   },
+   "s3-checklist": {
+    "label": 104,
+    "broken": 0,
+    "over": 0
+   },
+   "s4-entity": {
+    "broken": 0,
+    "over": 1
+   },
+   "s5-chart": {
+    "over": 0,
+    "label": 49
+   },
+   "s6-availability": {
+    "name": 290
+   },
+   "s7-shortcuts": {
+    "over": 0
+   },
+   "s8-badge": {
+    "radius": 0
+   }
+  },
+  "modal": {
+   "top": 19,
+   "bottom": 825,
+   "vh": 844,
+   "width": 352,
+   "scrolls": true
+  }
+ },
+ "synthwave": {
+  "now": {
+   "s1-refresh": {
+    "over": 294,
+    "scrolls": 0
+   },
+   "s1-inspector": {
+    "over": 122,
+    "cardClip": 116,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 134
+   },
+   "s3-checklist": {
+    "label": 48,
+    "broken": 1,
+    "over": 0
+   },
+   "s4-entity": {
+    "broken": 6,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 15,
+    "label": 49
+   },
+   "s6-availability": {
+    "name": 0
+   },
+   "s7-shortcuts": {
+    "over": 1118
+   },
+   "s8-badge": {
+    "radius": 2
+   }
+  },
+  "prop": {
+   "s1-refresh": {
+    "over": 0,
+    "scrolls": 294
+   },
+   "s1-inspector": {
+    "over": 0,
+    "cardClip": 0,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 0
+   },
+   "s3-checklist": {
+    "label": 104,
+    "broken": 0,
+    "over": 0
+   },
+   "s4-entity": {
+    "broken": 0,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 0,
+    "label": 49
+   },
+   "s6-availability": {
+    "name": 290
+   },
+   "s7-shortcuts": {
+    "over": 0
+   },
+   "s8-badge": {
+    "radius": 2
+   }
+  },
+  "modal": {
+   "top": 19,
+   "bottom": 825,
+   "vh": 844,
+   "width": 352,
+   "scrolls": true
+  }
+ },
+ "pastel": {
+  "now": {
+   "s1-refresh": {
+    "over": 205,
+    "scrolls": 0
+   },
+   "s1-inspector": {
+    "over": 101,
+    "cardClip": 95,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 182
+   },
+   "s3-checklist": {
+    "label": 8,
+    "broken": 2,
+    "over": 0
+   },
+   "s4-entity": {
+    "broken": 0,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 23,
+    "label": 65
+   },
+   "s6-availability": {
+    "name": 76
+   },
+   "s7-shortcuts": {
+    "over": 1816
+   },
+   "s8-badge": {
+    "radius": 999
+   }
+  },
+  "prop": {
+   "s1-refresh": {
+    "over": 0,
+    "scrolls": 205
+   },
+   "s1-inspector": {
+    "over": 0,
+    "cardClip": 0,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 0
+   },
+   "s3-checklist": {
+    "label": 103,
+    "broken": 0,
+    "over": 0
+   },
+   "s4-entity": {
+    "broken": 0,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 0,
+    "label": 65
+   },
+   "s6-availability": {
+    "name": 290
+   },
+   "s7-shortcuts": {
+    "over": 0
+   },
+   "s8-badge": {
+    "radius": 999
+   }
+  },
+  "modal": {
+   "top": 19,
+   "bottom": 825,
+   "vh": 844,
+   "width": 352,
+   "scrolls": true
+  }
+ },
+ "forest": {
+  "now": {
+   "s1-refresh": {
+    "over": 203,
+    "scrolls": 0
+   },
+   "s1-inspector": {
+    "over": 99,
+    "cardClip": 93,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 199
+   },
+   "s3-checklist": {
+    "label": 0,
+    "broken": 2,
+    "over": 4
+   },
+   "s4-entity": {
+    "broken": 0,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 23,
+    "label": 65
+   },
+   "s6-availability": {
+    "name": 79
+   },
+   "s7-shortcuts": {
+    "over": 1816
+   },
+   "s8-badge": {
+    "radius": 0
+   }
+  },
+  "prop": {
+   "s1-refresh": {
+    "over": 0,
+    "scrolls": 203
+   },
+   "s1-inspector": {
+    "over": 0,
+    "cardClip": 0,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 0
+   },
+   "s3-checklist": {
+    "label": 98,
+    "broken": 0,
+    "over": 0
+   },
+   "s4-entity": {
+    "broken": 0,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 0,
+    "label": 65
+   },
+   "s6-availability": {
+    "name": 290
+   },
+   "s7-shortcuts": {
+    "over": 0
+   },
+   "s8-badge": {
+    "radius": 0
+   }
+  },
+  "modal": {
+   "top": 19,
+   "bottom": 825,
+   "vh": 844,
+   "width": 352,
+   "scrolls": true
+  }
+ },
+ "blueprint": {
+  "now": {
+   "s1-refresh": {
+    "over": 285,
+    "scrolls": 0
+   },
+   "s1-inspector": {
+    "over": 101,
+    "cardClip": 93,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 233
+   },
+   "s3-checklist": {
+    "label": 0,
+    "broken": 2,
+    "over": 49
+   },
+   "s4-entity": {
+    "broken": 0,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 23,
+    "label": 65
+   },
+   "s6-availability": {
+    "name": 76
+   },
+   "s7-shortcuts": {
+    "over": 1816
+   },
+   "s8-badge": {
+    "radius": 2
+   }
+  },
+  "prop": {
+   "s1-refresh": {
+    "over": 0,
+    "scrolls": 285
+   },
+   "s1-inspector": {
+    "over": 0,
+    "cardClip": 0,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 0
+   },
+   "s3-checklist": {
+    "label": 104,
+    "broken": 0,
+    "over": 0
+   },
+   "s4-entity": {
+    "broken": 0,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 0,
+    "label": 65
+   },
+   "s6-availability": {
+    "name": 290
+   },
+   "s7-shortcuts": {
+    "over": 0
+   },
+   "s8-badge": {
+    "radius": 2
+   }
+  },
+  "modal": {
+   "top": 19,
+   "bottom": 825,
+   "vh": 844,
+   "width": 352,
+   "scrolls": true
+  }
+ },
+ "solstice": {
+  "now": {
+   "s1-refresh": {
+    "over": 203,
+    "scrolls": 0
+   },
+   "s1-inspector": {
+    "over": 99,
+    "cardClip": 93,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 182
+   },
+   "s3-checklist": {
+    "label": 8,
+    "broken": 2,
+    "over": 0
+   },
+   "s4-entity": {
+    "broken": 0,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 23,
+    "label": 65
+   },
+   "s6-availability": {
+    "name": 76
+   },
+   "s7-shortcuts": {
+    "over": 1816
+   },
+   "s8-badge": {
+    "radius": 10
+   }
+  },
+  "prop": {
+   "s1-refresh": {
+    "over": 0,
+    "scrolls": 203
+   },
+   "s1-inspector": {
+    "over": 0,
+    "cardClip": 0,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 0
+   },
+   "s3-checklist": {
+    "label": 104,
+    "broken": 0,
+    "over": 0
+   },
+   "s4-entity": {
+    "broken": 0,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 0,
+    "label": 65
+   },
+   "s6-availability": {
+    "name": 290
+   },
+   "s7-shortcuts": {
+    "over": 0
+   },
+   "s8-badge": {
+    "radius": 10
+   }
+  },
+  "modal": {
+   "top": 19,
+   "bottom": 825,
+   "vh": 844,
+   "width": 352,
+   "scrolls": true
+  }
+ },
+ "brutalism": {
+  "now": {
+   "s1-refresh": {
+    "over": 316,
+    "scrolls": 0
+   },
+   "s1-inspector": {
+    "over": 140,
+    "cardClip": 133,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 283
+   },
+   "s3-checklist": {
+    "label": 0,
+    "broken": 2,
+    "over": 56
+   },
+   "s4-entity": {
+    "broken": 6,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 23,
+    "label": 65
+   },
+   "s6-availability": {
+    "name": 0
+   },
+   "s7-shortcuts": {
+    "over": 2057
+   },
+   "s8-badge": {
+    "radius": 0
+   }
+  },
+  "prop": {
+   "s1-refresh": {
+    "over": 0,
+    "scrolls": 316
+   },
+   "s1-inspector": {
+    "over": 0,
+    "cardClip": 0,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 0
+   },
+   "s3-checklist": {
+    "label": 102,
+    "broken": 0,
+    "over": 0
+   },
+   "s4-entity": {
+    "broken": 0,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 0,
+    "label": 65
+   },
+   "s6-availability": {
+    "name": 290
+   },
+   "s7-shortcuts": {
+    "over": 0
+   },
+   "s8-badge": {
+    "radius": 0
+   }
+  },
+  "modal": {
+   "top": 19,
+   "bottom": 825,
+   "vh": 844,
+   "width": 352,
+   "scrolls": true
+  }
+ },
+ "deco": {
+  "now": {
+   "s1-refresh": {
+    "over": 327,
+    "scrolls": 0
+   },
+   "s1-inspector": {
+    "over": 134,
+    "cardClip": 128,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 254
+   },
+   "s3-checklist": {
+    "label": 25,
+    "broken": 2,
+    "over": 0
+   },
+   "s4-entity": {
+    "broken": 3,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 17,
+    "label": 55
+   },
+   "s6-availability": {
+    "name": 7
+   },
+   "s7-shortcuts": {
+    "over": 1795
+   },
+   "s8-badge": {
+    "radius": 0
+   }
+  },
+  "prop": {
+   "s1-refresh": {
+    "over": 0,
+    "scrolls": 327
+   },
+   "s1-inspector": {
+    "over": 0,
+    "cardClip": 0,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 0
+   },
+   "s3-checklist": {
+    "label": 103,
+    "broken": 0,
+    "over": 0
+   },
+   "s4-entity": {
+    "broken": 0,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 0,
+    "label": 55
+   },
+   "s6-availability": {
+    "name": 290
+   },
+   "s7-shortcuts": {
+    "over": 0
+   },
+   "s8-badge": {
+    "radius": 0
+   }
+  },
+  "modal": {
+   "top": 19,
+   "bottom": 825,
+   "vh": 844,
+   "width": 352,
+   "scrolls": true
+  }
+ },
+ "nostromo": {
+  "now": {
+   "s1-refresh": {
+    "over": 320,
+    "scrolls": 0
+   },
+   "s1-inspector": {
+    "over": 116,
+    "cardClip": 110,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 250
+   },
+   "s3-checklist": {
+    "label": 0,
+    "broken": 2,
+    "over": 31
+   },
+   "s4-entity": {
+    "broken": 6,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 20,
+    "label": 60
+   },
+   "s6-availability": {
+    "name": 0
+   },
+   "s7-shortcuts": {
+    "over": 1118
+   },
+   "s8-badge": {
+    "radius": 2
+   }
+  },
+  "prop": {
+   "s1-refresh": {
+    "over": 0,
+    "scrolls": 320
+   },
+   "s1-inspector": {
+    "over": 0,
+    "cardClip": 0,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 0
+   },
+   "s3-checklist": {
+    "label": 104,
+    "broken": 0,
+    "over": 0
+   },
+   "s4-entity": {
+    "broken": 0,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 0,
+    "label": 60
+   },
+   "s6-availability": {
+    "name": 290
+   },
+   "s7-shortcuts": {
+    "over": 0
+   },
+   "s8-badge": {
+    "radius": 2
+   }
+  },
+  "modal": {
+   "top": 19,
+   "bottom": 825,
+   "vh": 844,
+   "width": 352,
+   "scrolls": true
+  }
+ },
+ "titanium": {
+  "now": {
+   "s1-refresh": {
+    "over": 346,
+    "scrolls": 0
+   },
+   "s1-inspector": {
+    "over": 123,
+    "cardClip": 117,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 226
+   },
+   "s3-checklist": {
+    "label": 0,
+    "broken": 2,
+    "over": 78
+   },
+   "s4-entity": {
+    "broken": 0,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 22,
+    "label": 64
+   },
+   "s6-availability": {
+    "name": 68
+   },
+   "s7-shortcuts": {
+    "over": 2032
+   },
+   "s8-badge": {
+    "radius": 999
+   }
+  },
+  "prop": {
+   "s1-refresh": {
+    "over": 0,
+    "scrolls": 346
+   },
+   "s1-inspector": {
+    "over": 0,
+    "cardClip": 0,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 0
+   },
+   "s3-checklist": {
+    "label": 104,
+    "broken": 0,
+    "over": 0
+   },
+   "s4-entity": {
+    "broken": 0,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 0,
+    "label": 64
+   },
+   "s6-availability": {
+    "name": 290
+   },
+   "s7-shortcuts": {
+    "over": 0
+   },
+   "s8-badge": {
+    "radius": 0
+   }
+  },
+  "modal": {
+   "top": 19,
+   "bottom": 825,
+   "vh": 844,
+   "width": 352,
+   "scrolls": true
+  }
+ }
+}
