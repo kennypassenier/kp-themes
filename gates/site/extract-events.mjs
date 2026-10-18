@@ -43,6 +43,21 @@ function docAbove(source, index) {
 }
 
 /**
+ * How often a module dispatches an event constant: directly through
+ * `new CustomEvent(CONSTANT …)` (also as one branch of the type expression,
+ * `cond ? A_EVENT : B_EVENT`), or through a local `emit(…, CONSTANT …)` helper
+ * that builds and dispatches the event itself.
+ *
+ * @param {string} code the module with comments stripped
+ * @param {string} constant
+ */
+function countDispatches(code, constant) {
+    const direct = new RegExp(`new CustomEvent\\(\\s*[^,;]*\\b${constant}\\b`, 'g');
+    const helper = new RegExp(`\\bemit\\w*\\(\\s*[^;()]*\\b${constant}\\b`, 'g');
+    return [...code.matchAll(direct)].length + [...code.matchAll(helper)].length;
+}
+
+/**
  * @returns {{ events: EventRecord[], expected: number, mismatched: string[], unnamed: string[] }}
  */
 export function extractEvents() {
@@ -90,7 +105,7 @@ export function extractEvents() {
                 family: file.replace(/\.js$/, ''),
                 description,
                 detail,
-                dispatches: [...code.matchAll(new RegExp(`new CustomEvent\\(\\s*${constant}\\b`, 'g'))].length,
+                dispatches: countDispatches(code, constant),
             });
         }
     }

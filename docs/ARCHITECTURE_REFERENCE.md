@@ -105,6 +105,98 @@ components/*.jsx     React, rendering the same classes as the CSS above
 fx/*.jsx             cyberpunk effects
 ```
 
+The modules the diagram above leaves out are the opt-in components of the
+later adoption rounds. Each follows the same rule: importing one attaches
+nothing, and `js/auto.js` wires the ones a page carries markup for. What each
+one is, from its own header comment:
+
+```
+js/ack-gate.js             a tick that must be set before the button it guards may be pressed
+js/action-tiles.js         a button or link with a title and the one sentence that says what it does
+js/anchors.js              a "#" beside a heading or row that copies a link to that place
+js/art.js                  drawings for an empty state, in the theme's own hand
+js/auto-refresh.js         the "Every 30 s / Paused" chooser; the app does the fetching
+js/autosize.js             a multiline field that grows with its text
+js/availability.js         who can come: people in rows, days in columns, edited as a grid (on js/heat.js)
+js/barcell.js              a value with a proportional bar inside a table cell
+js/bullets.js              rows of a value against a threshold
+js/calm-tones.js           calm tones: a day with nothing logged is quiet, not failed
+js/calm.js                 one page-level switch that turns movement and effects off
+js/card-state.js           a card in four data states: filled, empty, loading, error
+js/checklist.js            tick items off; the ticked ones sink to the end of their group
+js/claim.js                who brings it: a claim on every row of a checklist
+js/code.js                 a payload, request or snippet shown as text, with Copy and a full view
+js/command.js              one command to run, with its terminal, privilege and a copy button
+js/compare.js              two versions stacked with a draggable divider between them
+js/connection.js           the connection banner: offline and reconnecting, apart from stale data
+js/console.js              a prompt and, per command, a block saying whether it runs, succeeded or failed
+js/countdown.js            a named timer in digits, with Start, Pause, Reset and a minute more
+js/dated-options.js        a choice where every option has a date and an age
+js/deplist.js              rows "A → B" saying what needs what, numbered in order
+js/docpreview.js           a document shown without downloading it, in the viewer shell
+js/entity-card.js          one fixed card per thing, the same height in every state
+js/facets.js               checkbox rows with a count and an "only" button
+js/flash.js                a button that shows its result for a moment, at one width
+js/focus-steps.js          one step at a time, large, with the screen kept on
+js/gallery.js              a grid of pictures that open large in the viewer shell
+js/gantt.js                a run timeline: one bar per run, running bars growing live
+js/heat.js                 the heat grid and the matrix
+js/hovercard.js            one tooltip for a whole page, filled when it opens
+js/idmark.js               a small chip made from a name, the same on every page
+js/intent.js               words in any order: the palette's default match
+js/json-field.js           a text box that checks, formats and minifies JSON as it is typed
+js/keys.js                 the inline line of keyboard shortcuts, as key caps
+js/lede.js                 the short paragraph under a heading that says what the section does
+js/master-detail.js        a list and its detail side by side, folding to one pane on a phone
+js/nav-fold.js             a bar that folds the links that do not fit behind a "More" menu
+js/newpill.js              the "N new lines" pill on a live list or log
+js/notices.js              the notification centre: counter, newest panel, per-source switches
+js/passkeys.js             the list of ways to sign in: passkeys, magic links, passwords, tokens
+js/path-trace.js           the path of one connection: hops, each allowed or refused
+js/pipeline.js             where each item stands, one lane per stage
+js/print.js                the words a printed list needs, and a Print button
+js/problems.js             the problem alert: what is wrong, why, and what to do now
+js/qr.js                   a link as a QR code a phone can scan
+js/quantity.js             a number between a minus and a plus, with its unit
+js/question-card.js        the host waits for your answer: a question and what each answer does
+js/quote.js                your own earlier words, verbatim, with who wrote them and when
+js/range.js                the range picker: a preset or a custom from-to
+js/rating.js               a star rating, given or shown
+js/reason.js               a disabled control says why, as a tooltip and as its description
+js/request-inspector.js    a foldable block per captured HTTP request
+js/row-select.js           rows ticked with the keyboard and with Shift-click
+js/runs.js                 the next times: what a repetition really does
+js/segmented.js            the segmented control and the filter chips
+js/selection-bar.js        the bar that appears when rows are ticked, with their actions
+js/sentence.js             a form that reads as a sentence, the fields standing inside the words
+js/shortcuts.js            one list that both handles the keys and fills the help sheet
+js/slider.js               one value, or a range with two thumbs
+js/snooze.js               the "remind me later" picker, each choice with its exact moment
+js/stackbar.js             one bar split into the parts of a whole
+js/state-plate.js          the plate an empty or failed area is drawn with
+js/statusrow.js            status rows: one state per item
+js/steplist.js             the steps of one run, live
+js/tabbar.js               the bottom tab bar for phone widths
+js/thread.js               a conversation in bubbles
+js/tick.js                 a live number that ticks to its new value
+js/timefield.js            a field for a time of day, 24 hours, typed, stepped or picked
+js/timer-disc.js           the visual timer: the time left as a shrinking disc
+js/timer.js                kitchen timers: named countdowns that keep running
+js/toggle.js               a button that stays pressed until it is pressed again
+js/toolbar.js              the bar above a list, log, board or chart
+js/transfer.js             a progress bar with a file name, speed and the time left
+js/undo-toast.js           a toast with Undo and a visible clock
+js/unsaved.js              the unsaved-changes bar, with Save and Discard
+js/uptime.js               one thin strip of cells, one per period, toned by how the service did
+js/uses-map.js             "used by": sources and their users joined by lines
+js/usual-picker.js         a combobox with the usual choices on top
+js/version-delta.js        the version jump chip, "10.11 → 12.1", with the size of the jump
+js/viewer.js               the viewer shell: one thing opened large in a modal dialog
+js/week.js                 a week agenda: seven day columns with the items placed in time
+js/weekdays.js             the weekday picker: seven chips, or the days of a month
+js/wheel.js                a wheel that picks for you, with weights
+```
+
 Nothing here is compiled. The package ships the files a browser reads.
 
 ## Two generated artefacts, and why
