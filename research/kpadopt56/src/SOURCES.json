@@ -1,0 +1,147 @@
+{
+    "head": "13465dff",
+    "demos": {
+        "kpadopt5-basics": {
+            "items": {
+                "calm-mode": "b9fad73b",
+                "shortcut-engine": "b9fad73b",
+                "explain-lede": "b9fad73b",
+                "result-flash-button": "b9fad73b",
+                "problem-alert": "13465dff"
+            },
+            "scripts": "demo.js",
+            "styles": "demo.css",
+            "renamed": null
+        },
+        "kpadopt5-people": {
+            "items": {
+                "avatar": "767709e1",
+                "passkey-list": "767709e1",
+                "chart-annotations": "767709e1",
+                "conversation-thread": "13465dff"
+            },
+            "scripts": "people.js",
+            "styles": "people.css",
+            "renamed": null
+        },
+        "kpadopt5-time": {
+            "items": {
+                "weekdays": "709b44df",
+                "weekdays-states": "709b44df",
+                "runs": "709b44df",
+                "runs-states": "709b44df",
+                "snooze": "709b44df",
+                "snooze-states": "709b44df",
+                "dated": "709b44df",
+                "dated-states": "709b44df",
+                "unsaved": "709b44df",
+                "unsaved-states": "709b44df",
+                "sentence": "13465dff",
+                "sentence-states": "13465dff",
+                "slider": "13465dff",
+                "slider-states": "13465dff"
+            },
+            "scripts": "demo.js",
+            "styles": "page.css",
+            "renamed": null
+        },
+        "kpadopt5-rows": {
+            "items": {
+                "row-keyboard-select": "7957a5ce",
+                "selection-bar": "7957a5ce",
+                "undo-toast": "7957a5ce",
+                "new-items-pill": "dbeac68c",
+                "payload-cell": "7957a5ce",
+                "json-textarea": "13465dff",
+                "request-inspector": "7957a5ce"
+            },
+            "scripts": "rows.js",
+            "styles": "rows.css",
+            "renamed": null
+        },
+        "kpadopt5-ops": {
+            "items": {
+                "ops-page": "8a04c6ad",
+                "master-detail": "8a04c6ad",
+                "auto-refresh": "8a04c6ad",
+                "connection": "babe78c3",
+                "transfer": "13465dff",
+                "question": "8a04c6ad",
+                "notices": "babe78c3"
+            },
+            "scripts": "demo.js",
+            "styles": "page.css",
+            "renamed": null
+        },
+        "kpadopt6-calm": {
+            "items": {
+                "usual": "13465dff",
+                "usual-states": "e0f8e76c",
+                "focus": "13465dff",
+                "focus-states": "13465dff",
+                "today": "13465dff",
+                "today-states": "13465dff",
+                "quote": "13465dff",
+                "quote-states": "13465dff",
+                "calm-tones": "13465dff",
+                "calm-tones-states": "13465dff",
+                "rating": "13465dff",
+                "rating-states": "13465dff"
+            },
+            "scripts": "demo.js",
+            "styles": "page.css",
+            "renamed": "k6 -> kc"
+        },
+        "kpadopt6-social": {
+            "items": {
+                "claim-row": "77cabb06",
+                "availability-grid": "13465dff",
+                "qr-code": "77cabb06",
+                "time-field": "77cabb06",
+                "interactive-console": "13465dff"
+            },
+            "scripts": "social.js",
+            "styles": "social.css",
+            "renamed": "k6 -> ks"
+        },
+        "kpadopt6-media": {
+            "items": {
+                "uses-lines": "13465dff",
+                "uses-states": "13465dff",
+                "gallery-grid": "13465dff",
+                "gallery-states": "13465dff",
+                "docpreview-open": "13465dff",
+                "docpreview-states": "13465dff",
+                "autosize-grow": "13465dff",
+                "autosize-states": "13465dff",
+                "anchors-headings": "13465dff",
+                "anchors-rows": "13465dff",
+                "print-checklist": "13465dff"
+            },
+            "scripts": "demo.js",
+            "styles": "page.css",
+            "renamed": "kt -> km"
+        },
+        "kpadopt6-ops": {
+            "items": {
+                "toggle": "13465dff",
+                "intent": "13465dff",
+                "entity": "13465dff",
+                "toggle-states": "a3c71370",
+                "intent-states": "a3c71370",
+                "entity-states": "a3c71370",
+                "version": "a3c71370",
+                "version-states": "a3c71370",
+                "ack": "a3c71370",
+                "ack-states": "a3c71370",
+                "deplist": "a3c71370",
+                "deplist-states": "a3c71370",
+                "trace": "a3c71370",
+                "trace-states": "a3c71370"
+            },
+            "scripts": "demo.js",
+            "styles": "page.css",
+            "renamed": "k6 -> kv"
+        }
+    }
+}

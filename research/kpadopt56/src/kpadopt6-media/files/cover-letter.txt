@@ -1,0 +1,11 @@
+Dear hiring team,
+
+I am writing about the frontend role at Harbour Systems. I have spent eight years making dashboards that stay calm when the data is not.
+
+What I would bring:
+- tables that stay readable at ten thousand rows
+- forms that explain themselves
+- loading states that never jump
+
+Kind regards,
+Alex Verbeke

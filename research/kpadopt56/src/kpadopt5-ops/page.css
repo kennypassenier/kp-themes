@@ -1,0 +1,232 @@
+/* research/kpadopt5-ops: the one page of the operations components. Everything with a kp- class is the package; these ko- rules
+   only lay the sections out, frame the widths and draw the readouts. */
+
+.ko-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.ko-intro,
+.ko-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.ko-intro :is(h1, p),
+.ko-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.ko-intro p,
+.ko-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.ko-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.ko-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.ko-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.ko-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.ko-label {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 600;
+}
+
+.ko-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.ko-controls > [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.ko-controls > [role='group'] > b {
+    min-inline-size: 9rem;
+}
+
+.ko-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(24rem, 100%), 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.ko-grid > * {
+    display: grid;
+    align-content: start;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 0;
+}
+
+/* A frame of a fixed width: what the component does at that width, whatever the page's. */
+.ko-frame {
+    box-sizing: border-box;
+    max-inline-size: 100%;
+    padding: var(--kp-space-md, 0.75rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.ko-frame--phone {
+    inline-size: min(390px, 100%);
+}
+
+.ko-log {
+    min-block-size: 4.5rem;
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    overflow: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+    color: var(--muted-foreground);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.ko-readout {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* The demo's fake secret detail. */
+.ko-fields {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-lg, 1.5rem);
+    margin: 0;
+}
+
+.ko-fields dt {
+    color: var(--muted-foreground);
+}
+
+.ko-fields dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.ko-history {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.ko-history li {
+    display: grid;
+    gap: 2px;
+    overflow-wrap: anywhere;
+}
+
+.ko-history small {
+    color: var(--muted-foreground);
+}
+
+.ko-stack {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1.5rem);
+}
+
+/* A frame round a whole page: the sticky part sticks to the top of the window while the page scrolls past. */
+.ko-pageframe {
+    box-sizing: border-box;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+}
+
+.ko-pageframe--phone {
+    padding: 0;
+}
+
+/* A mock page: an app bar, a slot, a body. */
+.ko-mockpage {
+    display: grid;
+    align-content: start;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+    overflow: hidden;
+}
+
+.ko-mockbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-md, 0.75rem);
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-block-end: 1px solid var(--border);
+    background: var(--card);
+}
+
+.ko-mockbar span {
+    color: var(--muted-foreground);
+}
+
+.ko-mockbody {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    padding: var(--kp-space-md, 0.75rem);
+}
+
+.ko-mockbody p {
+    margin: 0;
+}
+
+.ko-mockbar--end {
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* A mock page that holds a banner fixed to its foot: the page is the frame the banner is fixed to, and has the height to show it. */
+.ko-mockpage--page {
+    position: relative;
+    contain: layout;
+    min-block-size: 15rem;
+    align-content: stretch;
+    grid-template-rows: auto 1fr;
+}
+
+.ko-mockpage--page:has([data-kp-placement='top']) {
+    grid-template-rows: auto auto 1fr;
+}

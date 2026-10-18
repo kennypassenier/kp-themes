@@ -1,0 +1,189 @@
+/* research/kpadopt5-people: the page around the components. Nothing here styles a kp-* part; these rules lay out the
+   sections, the captions and the 390 px frames that stand for a phone. */
+
+.kp5-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 76rem;
+    margin-inline: auto;
+    padding: var(--kp-space-lg, 1rem);
+}
+
+.kp5-intro,
+.kp5-sec__head,
+.kp5-block {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.kp5-intro :is(h1, p),
+.kp5-sec__head :is(h2, p),
+.kp5-block :is(h3, p) {
+    margin: 0;
+}
+
+.kp5-intro p,
+.kp5-sec__head p,
+.kp5-caption {
+    max-inline-size: 80ch;
+}
+
+.kp5-intro p {
+    color: var(--muted-foreground);
+}
+
+.kp5-caption {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.kp5-topic {
+    margin: var(--kp-space-lg, 1.5rem) 0 0;
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 2px solid var(--border);
+}
+
+.kp5-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1rem);
+    border: 1px solid var(--border);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.kp5-block + .kp5-block {
+    padding-block-start: var(--kp-space-lg, 1rem);
+    border-block-start: 1px solid var(--border);
+}
+
+.kp5-expect {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--card);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.kp5-expect p,
+.kp5-expect ul {
+    margin: 0;
+}
+
+.kp5-expect ul {
+    padding-inline-start: 1.25rem;
+}
+
+.kp5-expect li + li {
+    margin-block-start: 0.25rem;
+}
+
+.kp5-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1rem);
+}
+
+.kp5-controls > [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.kp5-controls b {
+    margin-inline-end: var(--kp-space-xs, 0.25rem);
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.kp5-card {
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+/* The desk width first, the 390 px phone frame beside or under it. */
+.kp5-pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1rem);
+    align-items: start;
+}
+
+.kp5-pair > * {
+    min-inline-size: 0;
+}
+
+@media (min-width: 64rem) {
+    .kp5-pair--phone {
+        grid-template-columns: minmax(0, 1fr) 24.375rem;
+    }
+}
+
+.kp5-phone {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    inline-size: 100%;
+    max-inline-size: 24.375rem;
+}
+
+.kp5-phone > .kp5-card {
+    padding: var(--kp-space-md, 0.75rem);
+}
+
+/* The mark table: one row per look, one column per size. */
+.kp5-marks {
+    display: grid;
+    grid-template-columns: minmax(9rem, max-content) repeat(4, minmax(3.75rem, max-content));
+    align-items: center;
+    gap: var(--kp-space-lg, 1.25rem) var(--kp-space-xl, 2rem);
+    overflow-x: auto;
+    padding: 0.75rem;
+}
+
+.kp5-marks > b {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-xs, 0.75rem);
+    font-weight: 600;
+}
+
+.kp5-marks > .kp5-name {
+    font-size: var(--kp-text-sm, 0.875rem);
+}
+
+.kp5-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-md, 0.75rem) var(--kp-space-xl, 2rem);
+}
+
+.kp5-stack {
+    display: grid;
+    gap: var(--kp-space-lg, 1rem);
+}
+
+/* The group's open list hangs below it: the card keeps room for it. */
+.kp5-group-room {
+    align-content: start;
+    min-block-size: 15rem;
+}
+
+.kp5-readout {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-variant-numeric: tabular-nums;
+}
+
+.kp5-chart-frame {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
