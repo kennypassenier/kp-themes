@@ -5372,6 +5372,11 @@
         [data-theme='dark'] .kp-segmented:not(.kp-segmented--chips) > .kp-segmented__item {
             white-space: normal;
         }
+        /* A two-line label breaks into two even lines ("Every" over "1 min"), never a number stranded from its unit
+           ("Every 1" over "min"). */
+        [data-theme='dark'] .kp-segmented:not(.kp-segmented--chips) .kp-segmented__label {
+            text-wrap: balance;
+        }
         /* A track of five or more segments (a filter with its counts) closes its tracking and padding up so it fits a phone. */
         [data-theme='dark'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(5)) {
             --kp-seg-item-pad-inline: 0.375rem;

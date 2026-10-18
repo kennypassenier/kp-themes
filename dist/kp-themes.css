@@ -38380,6 +38380,11 @@
         [data-theme='cyberpunk'] .kp-segmented:not(.kp-segmented--chips) > .kp-segmented__item {
             white-space: normal;
         }
+        /* A two-line label breaks into two even lines ("Every" over "1 min"), never a number stranded from its unit
+           ("Every 1" over "min"). */
+        [data-theme='cyberpunk'] .kp-segmented:not(.kp-segmented--chips) .kp-segmented__label {
+            text-wrap: balance;
+        }
         /* A track of five or more segments (a filter with its counts) closes its tracking and padding up so it fits a phone. */
         [data-theme='cyberpunk'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(5)) {
             --kp-seg-item-pad-inline: 0.375rem;
@@ -44452,6 +44457,11 @@
         }
         [data-theme='synthwave'] .kp-segmented:not(.kp-segmented--chips) > .kp-segmented__item {
             white-space: normal;
+        }
+        /* A two-line label breaks into two even lines ("Every" over "1 min"), never a number stranded from its unit
+           ("Every 1" over "min"). */
+        [data-theme='synthwave'] .kp-segmented:not(.kp-segmented--chips) .kp-segmented__label {
+            text-wrap: balance;
         }
         /* A track of five or more segments (a filter with its counts) closes its tracking and padding up so it fits a phone. */
         [data-theme='synthwave'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(5)) {
@@ -80330,6 +80340,14 @@
         }
     }
 
+    /* A 360 px phone leaves the seven day chips under 40 px each: the mono lettering closes up once more so "Last" keeps
+       4 px of plate on both sides (3.1 px before). */
+    @container kp-weekdays (max-width: 18rem) {
+        [data-theme='blueprint'] .kp-weekdays .kp-segmented__item {
+            font-size: 0.625rem;
+        }
+    }
+
     /* The request inspector's status filter is five segments (a label and its exact count each) and stood in one row wider than
        a phone: the bar stuck out 91 to 93 px past its section (kpadopt5-rows/request-inspector, 390 px). Wrapping them breaks the
        package's sliding plate, so on a phone the five share the width, with less padding, and nothing is cut. */
@@ -91969,6 +91987,11 @@
         }
         [data-theme='dark'] .kp-segmented:not(.kp-segmented--chips) > .kp-segmented__item {
             white-space: normal;
+        }
+        /* A two-line label breaks into two even lines ("Every" over "1 min"), never a number stranded from its unit
+           ("Every 1" over "min"). */
+        [data-theme='dark'] .kp-segmented:not(.kp-segmented--chips) .kp-segmented__label {
+            text-wrap: balance;
         }
         /* A track of five or more segments (a filter with its counts) closes its tracking and padding up so it fits a phone. */
         [data-theme='dark'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(5)) {
