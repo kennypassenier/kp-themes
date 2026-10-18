@@ -2683,6 +2683,15 @@
         text-underline-offset: 0.3em;
     }
 
+    /* A failed area says so in the ruby with the gold rule under it (G8), the same ruby as the alert's label: the lacquer
+       plate of a failure was otherwise indistinguishable from an empty one. */
+    [data-theme='deco'] .kp-alert--destructive:is(.kp-stateplate, .kp-card__failure) :is(.kp-stateplate__title, .kp-card__state-title),
+    [data-theme='deco'] .kp-alert--destructive.kp-rating__failure .kp-rating__failure-text {
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.3em;
+    }
+
     /* The empty state: no crest (Q19), its title in capitals. */
     [data-theme='deco'] .kp-empty {
         display: grid;
