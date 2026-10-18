@@ -24680,9 +24680,13 @@
         white-space: nowrap;
     }
 
+    /* The stage and its content are one definite cell, so a picture's max-block-size: 100% resolves against the stage and the
+       whole picture shows; an auto row made the percentage cyclic and a tall picture was cut at the stage's foot
+       (Kenny, 2026-10-18 19:08: "het toont niet alle content"). */
     .kp-viewer__stage {
         position: relative;
         display: grid;
+        grid-template: minmax(0, 1fr) / minmax(0, 1fr);
         min-block-size: 0;
         min-inline-size: 0;
         overflow: hidden;
@@ -24690,6 +24694,7 @@
 
     .kp-viewer__content {
         display: grid;
+        grid-template: minmax(0, 1fr) / minmax(0, 1fr);
         min-block-size: 0;
         min-inline-size: 0;
     }

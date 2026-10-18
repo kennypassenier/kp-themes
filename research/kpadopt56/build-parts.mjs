@@ -306,7 +306,13 @@ const LOOK = {
  * the page above the Expected block ("What changed since your last review"), and as one more Expected bullet.
  * @type {Record<string, { changed: string, expect: string }>}
  */
-const CHANGED = {};
+const CHANGED = {
+    'media/docpreview-open': {
+        changed:
+            'In your last review (18/10) the preview that opens was far too low and showed almost nothing of the file. Two causes. The review dialog shows each section in a frame as tall as the section (219 px here), and the preview takes 90% of the window it stands in, so it was 197 px high with a stage of 58 px. Now, while a preview (or any dialog of a section) is open, the frame is as tall as the review dialog has room for and the section is brought to the top, so the preview is 779 px high with a stage of 640 px at 1920 by 965, as it would be in an app; it shrinks back when you close it. And a tall picture was cut at the foot of the stage; the stage now holds the whole picture, scaled to fit.',
+        expect: '<b>Preview the CV</b> opens a preview of about 90% of the dialog&rsquo;s height, its stage showing the file at full size; <kbd class="kp-kbd">&rarr;</kbd> shows the whole cover letter and then the whole photo (sky to the foot of the mountains), nothing cut; <kbd class="kp-kbd">Esc</kbd> closes it and the frame returns to the three files.',
+    },
+};
 
 const read = (/** @type {string} */ path) => readFileSync(fileURLToPath(new URL(path, here)), 'utf8');
 /** @param {string} text */

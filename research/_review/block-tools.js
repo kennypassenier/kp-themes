@@ -496,10 +496,34 @@ export async function isolate(frame, item, theme) {
     };
     section.addEventListener('focusout', () => setTimeout(settleRoom, 300));
     setInterval(() => frame.isConnected && settleRoom(), 1000);
+    // A modal dialog the section opens (the document preview, a confirm) takes its size from the viewport, and the viewport
+    // of a lane is the frame, sized to the section: a viewer of "90% of the window" was 90% of a 219 px frame, its stage
+    // 58 px, and showed nothing of the file (Kenny, 2026-10-18 19:08: "de dialog die opent is veel te nauw (verticaal) het
+    // toont niet alle content"). While a modal is open the frame is as tall as the dialog's view has room under the lane's
+    // head, so the modal gets the window it would get in an app, and the lane is brought to the top of the view; it
+    // shrinks back when the modal closes.
+    const outerView = /** @type {HTMLElement | null} */ (frame.closest('.rv-dialog__view'));
+    const modalOpen = () => [...doc.querySelectorAll('dialog[open]')].some((el) => el.matches(':modal'));
+    let modalShown = false;
+    const modalRoom = () => {
+        if (!outerView || !modalOpen()) {
+            modalShown = false;
+            return 0;
+        }
+        const card = /** @type {HTMLElement} */ (frame.parentElement);
+        const head = frame.getBoundingClientRect().top - card.getBoundingClientRect().top;
+        if (!modalShown) {
+            modalShown = true;
+            const view = outerView.getBoundingClientRect();
+            const top = card.getBoundingClientRect().top;
+            if (Math.abs(top - view.top) > 1) outerView.scrollTop += top - view.top;
+        }
+        return Math.max(0, outerView.clientHeight - head - 8);
+    };
     const fit = () => {
         const content = Math.max(doc.body.scrollHeight, doc.body.getBoundingClientRect().height);
         const panelBottom = Math.max(0, ...panels().map((el) => el.getBoundingClientRect().bottom + 16));
-        const next = Math.ceil(Math.max(content + room, panelBottom));
+        const next = Math.ceil(Math.max(content + room, panelBottom, modalRoom()));
         const grew = next - last;
         echoes = grew > 0 && grew === step ? echoes + 1 : 0;
         step = grew;
@@ -519,5 +543,11 @@ export async function isolate(frame, item, theme) {
             fit();
         });
     }).observe(section, { subtree: true, childList: true, attributes: true, attributeFilter: ['class', 'hidden', 'open', 'aria-expanded', 'style'] });
+    // A modal is appended to the body, outside the section, and showModal() and close() change no box: the frame follows
+    // a dialog that opens or closes anywhere in the document.
+    const followModal = () => requestAnimationFrame(fit);
+    new MutationObserver(followModal).observe(doc.body, { subtree: true, attributes: true, attributeFilter: ['open'] });
+    new MutationObserver(followModal).observe(doc.body, { childList: true });
+    doc.addEventListener('close', followModal, true);
     fit();
 }
