@@ -360,6 +360,97 @@ document.getElementById(<span class="kp-code__string">'doc-steps-run'</span>).ad
     &lt;<span class="kp-code__keyword">li</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-steplist__item&quot;</span> <span class="kp-code__keyword">data-state</span><span class="kp-code__string">=&quot;pending&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-steplist__mark&quot;</span> <span class="kp-code__keyword">aria-hidden</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-steplist__body&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-steplist__title&quot;</span>&gt;Offer&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;<span class="kp-code__keyword">time</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-steplist__time&quot;</span>&gt;&lt;/<span class="kp-code__keyword">time</span>&gt;&lt;/<span class="kp-code__keyword">li</span>&gt;
 &lt;/<span class="kp-code__keyword">ol</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A journey built from rows, with its dated line under it</figcaption>
+                        <p class="kp-text-muted">`buildSteplist` takes a `tone` (1 to 5) per row, which becomes `data-kp-tone`, and a `time` that in a journey is the date the step was reached. Under the stepper stands `.kp-gantt--line` (the run timeline as one dated line, see there) with the moments that led there, so the path says where the application stands and the line says when each thing happened. A closed path ends with a `failed` step. A built list becomes a journey by adding `kp-steplist--journey` to it.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <div id="doc-journey"></div>
+    <div class="kp-gantt kp-gantt--line" data-kp-gantt data-kp-gantt-points aria-label="What happened when, Delta Freight" data-doc-journey-line></div>
+</div>
+                            <script type="module">
+import { buildSteplist, attachSteplists } from '../../js/steplist.js';
+import { attachGantts, setGanttKinds, setGanttPoints } from '../../js/gantt.js';
+
+const host = document.getElementById('doc-journey');
+const journey = buildSteplist(
+    [
+        { id: 'draft', title: 'Draft', state: 'done', tone: 1, time: '12/09' },
+        { id: 'sent', title: 'Sent', state: 'done', tone: 2, time: '14/09' },
+        { id: 'screening', title: 'Screening call', state: 'done', tone: 3, time: '24/09' },
+        { id: 'rejected', title: 'Rejected', state: 'failed', time: '30/09' },
+    ],
+    { label: 'Where the application at Delta Freight stands' },
+);
+journey.classList.add('kp-steplist--journey');
+host.append(journey);
+attachSteplists(host);
+
+const DAY = 86_400_000;
+const today = new Date();
+today.setHours(10, 0, 0, 0);
+const at = (days) => today.getTime() + days * DAY;
+const line = document.querySelector('[data-doc-journey-line]');
+attachGantts(line.parentElement);
+setGanttKinds(line, [
+    { kind: 'applied', label: 'applied', shape: 'dot', series: 2 },
+    { kind: 'contact', label: 'contact', shape: 'diamond', series: 3 },
+    { kind: 'mail', label: 'mail', shape: 'square', series: 1 },
+]);
+setGanttPoints(
+    line,
+    [
+        { id: 'd1', lane: 'delta', at: at(-34), kind: 'applied', label: 'Applied' },
+        { id: 'd2', lane: 'delta', at: at(-24), kind: 'contact', label: 'Screening call' },
+        { id: 'd3', lane: 'delta', at: at(-16), kind: 'mail', label: 'Mail: rejected' },
+    ],
+    [{ id: 'delta', label: 'Delta Freight' }],
+);
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-journey&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-gantt kp-gantt--line&quot;</span> <span class="kp-code__keyword">data-kp-gantt</span> <span class="kp-code__keyword">data-kp-gantt-points</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;What happened when, Delta Freight&quot;</span> <span class="kp-code__keyword">data-doc-journey-line</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { buildSteplist, attachSteplists } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/steplist'</span>;
+<span class="kp-code__keyword">import</span> { attachGantts, setGanttKinds, setGanttPoints } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/gantt'</span>;
+
+<span class="kp-code__keyword">const</span> host = document.getElementById(<span class="kp-code__string">'doc-journey'</span>);
+<span class="kp-code__keyword">const</span> journey = buildSteplist(
+    [
+        { id: <span class="kp-code__string">'draft'</span>, title: <span class="kp-code__string">'Draft'</span>, state: <span class="kp-code__string">'done'</span>, tone: <span class="kp-code__string">1</span>, time: <span class="kp-code__string">'12/09'</span> },
+        { id: <span class="kp-code__string">'sent'</span>, title: <span class="kp-code__string">'Sent'</span>, state: <span class="kp-code__string">'done'</span>, tone: <span class="kp-code__string">2</span>, time: <span class="kp-code__string">'14/09'</span> },
+        { id: <span class="kp-code__string">'screening'</span>, title: <span class="kp-code__string">'Screening call'</span>, state: <span class="kp-code__string">'done'</span>, tone: <span class="kp-code__string">3</span>, time: <span class="kp-code__string">'24/09'</span> },
+        { id: <span class="kp-code__string">'rejected'</span>, title: <span class="kp-code__string">'Rejected'</span>, state: <span class="kp-code__string">'failed'</span>, time: <span class="kp-code__string">'30/09'</span> },
+    ],
+    { label: <span class="kp-code__string">'Where the application at Delta Freight stands'</span> },
+);
+journey.classList.add(<span class="kp-code__string">'kp-steplist--journey'</span>);
+host.append(journey);
+attachSteplists(host);
+
+<span class="kp-code__keyword">const</span> DAY = <span class="kp-code__string">86_400_000</span>;
+<span class="kp-code__keyword">const</span> today = <span class="kp-code__keyword">new</span> Date();
+today.setHours(<span class="kp-code__string">10</span>, <span class="kp-code__string">0</span>, <span class="kp-code__string">0</span>, <span class="kp-code__string">0</span>);
+<span class="kp-code__keyword">const</span> at = (days) =&gt; today.getTime() + days * DAY;
+<span class="kp-code__keyword">const</span> line = document.querySelector(<span class="kp-code__string">'[data-doc-journey-line]'</span>);
+attachGantts(line.parentElement);
+setGanttKinds(line, [
+    { kind: <span class="kp-code__string">'applied'</span>, label: <span class="kp-code__string">'applied'</span>, shape: <span class="kp-code__string">'dot'</span>, series: <span class="kp-code__string">2</span> },
+    { kind: <span class="kp-code__string">'contact'</span>, label: <span class="kp-code__string">'contact'</span>, shape: <span class="kp-code__string">'diamond'</span>, series: <span class="kp-code__string">3</span> },
+    { kind: <span class="kp-code__string">'mail'</span>, label: <span class="kp-code__string">'mail'</span>, shape: <span class="kp-code__string">'square'</span>, series: <span class="kp-code__string">1</span> },
+]);
+setGanttPoints(
+    line,
+    [
+        { id: <span class="kp-code__string">'d1'</span>, lane: <span class="kp-code__string">'delta'</span>, at: at(-<span class="kp-code__string">34</span>), kind: <span class="kp-code__string">'applied'</span>, label: <span class="kp-code__string">'Applied'</span> },
+        { id: <span class="kp-code__string">'d2'</span>, lane: <span class="kp-code__string">'delta'</span>, at: at(-<span class="kp-code__string">24</span>), kind: <span class="kp-code__string">'contact'</span>, label: <span class="kp-code__string">'Screening call'</span> },
+        { id: <span class="kp-code__string">'d3'</span>, lane: <span class="kp-code__string">'delta'</span>, at: at(-<span class="kp-code__string">16</span>), kind: <span class="kp-code__string">'mail'</span>, label: <span class="kp-code__string">'Mail: rejected'</span> },
+    ],
+    [{ id: <span class="kp-code__string">'delta'</span>, label: <span class="kp-code__string">'Delta Freight'</span> }],
+);</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>

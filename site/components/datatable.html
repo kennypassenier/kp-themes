@@ -455,6 +455,91 @@
     &lt;/<span class="kp-code__keyword">div</span>&gt;
 &lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A table the page sorts itself, and a column that cannot be sorted now</figcaption>
+                        <p class="kp-text-muted">`data-kp-sort-external` makes the page the one that sorts: a header press draws the arrow, `aria-sort`, the key numbers, the sort summary and Reset, remembers the sort and fires `kp-datatable-sort`, but the rows keep the order the page renders. The page reorders its rows (here in the browser, in a real page from the server) and calls `refresh()`. A header with `aria-disabled=&quot;true&quot;` is a column that cannot be sorted now: pressing it does nothing and the sort stays as it is. Sort the table by Snapshots; Notes cannot be sorted.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-datatable" data-kp-datatable data-kp-sort-external data-kp-page-sizes="none" data-doc-external>
+    <div class="kp-table-wrap">
+        <table class="kp-table">
+            <caption class="kp-sr-only">Backup repositories, sorted by the page</caption>
+            <thead><tr>
+                    <th scope="col" data-kp-sort="text">Stack</th>
+                    <th scope="col" data-kp-sort="number" class="kp-text-end">Snapshots</th>
+                    <th scope="col" data-kp-sort="text" aria-disabled="true">Notes</th>
+                </tr></thead>
+            <tbody>
+                <tr data-kp-row-key="media"><td>media</td><td class="kp-text-end kp-numeric">42</td><td>Nightly</td></tr>
+                <tr data-kp-row-key="home"><td>home</td><td class="kp-text-end kp-numeric">7</td><td>Weekly</td></tr>
+                <tr data-kp-row-key="network"><td>network</td><td class="kp-text-end kp-numeric">120</td><td>Hourly</td></tr>
+                <tr data-kp-row-key="docs"><td>docs</td><td class="kp-text-end kp-numeric">19</td><td>Nightly</td></tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="kp-datatable__bar">
+        <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+    </div>
+</div>
+                            <script type="module">
+import { dataTable } from '../../js/datatable.js';
+
+const wrap = document.querySelector('[data-doc-external]');
+const body = wrap.querySelector('tbody');
+const given = [...body.rows];
+
+wrap.addEventListener('kp-datatable-sort', (event) => {
+    const sort = event.detail;
+    const rows = [...given];
+    if (sort) {
+        const sign = sort.direction === 'ascending' ? 1 : -1;
+        const value = (row) => row.cells[sort.column].textContent.trim();
+        rows.sort((a, b) => sign * value(a).localeCompare(value(b), undefined, { numeric: true }));
+    }
+    body.replaceChildren(...rows);
+    dataTable(wrap).refresh();
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable&quot;</span> <span class="kp-code__keyword">data-kp-datatable</span> <span class="kp-code__keyword">data-kp-sort-external</span> <span class="kp-code__keyword">data-kp-page-sizes</span><span class="kp-code__string">=&quot;none&quot;</span> <span class="kp-code__keyword">data-doc-external</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table-wrap&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">table</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-table&quot;</span>&gt;
+            &lt;<span class="kp-code__keyword">caption</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-sr-only&quot;</span>&gt;Backup repositories, sorted by the page&lt;/<span class="kp-code__keyword">caption</span>&gt;
+            &lt;<span class="kp-code__keyword">thead</span>&gt;&lt;<span class="kp-code__keyword">tr</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-sort</span><span class="kp-code__string">=&quot;text&quot;</span>&gt;Stack&lt;/<span class="kp-code__keyword">th</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-sort</span><span class="kp-code__string">=&quot;number&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-end&quot;</span>&gt;Snapshots&lt;/<span class="kp-code__keyword">th</span>&gt;
+                    &lt;<span class="kp-code__keyword">th</span> <span class="kp-code__keyword">scope</span><span class="kp-code__string">=&quot;col&quot;</span> <span class="kp-code__keyword">data-kp-sort</span><span class="kp-code__string">=&quot;text&quot;</span> <span class="kp-code__keyword">aria-disabled</span><span class="kp-code__string">=&quot;true&quot;</span>&gt;Notes&lt;/<span class="kp-code__keyword">th</span>&gt;
+                &lt;/<span class="kp-code__keyword">tr</span>&gt;&lt;/<span class="kp-code__keyword">thead</span>&gt;
+            &lt;<span class="kp-code__keyword">tbody</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;media&quot;</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;media&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-end kp-numeric&quot;</span>&gt;42&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Nightly&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;home&quot;</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;home&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-end kp-numeric&quot;</span>&gt;7&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Weekly&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;network&quot;</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;network&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-end kp-numeric&quot;</span>&gt;120&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Hourly&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+                &lt;<span class="kp-code__keyword">tr</span> <span class="kp-code__keyword">data-kp-row-key</span><span class="kp-code__string">=&quot;docs&quot;</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;docs&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-end kp-numeric&quot;</span>&gt;19&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;<span class="kp-code__keyword">td</span>&gt;Nightly&lt;/<span class="kp-code__keyword">td</span>&gt;&lt;/<span class="kp-code__keyword">tr</span>&gt;
+            &lt;/<span class="kp-code__keyword">tbody</span>&gt;
+        &lt;/<span class="kp-code__keyword">table</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__bar&quot;</span>&gt;
+        &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-datatable__status&quot;</span> <span class="kp-code__keyword">data-kp-datatable-status</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span> <span class="kp-code__keyword">aria-live</span><span class="kp-code__string">=&quot;polite&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { dataTable } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/datatable'</span>;
+
+<span class="kp-code__keyword">const</span> wrap = document.querySelector(<span class="kp-code__string">'[data-doc-external]'</span>);
+<span class="kp-code__keyword">const</span> body = wrap.querySelector(<span class="kp-code__string">'tbody'</span>);
+<span class="kp-code__keyword">const</span> given = [...body.rows];
+
+wrap.addEventListener(<span class="kp-code__string">'kp-datatable-sort'</span>, (event) =&gt; {
+    <span class="kp-code__keyword">const</span> sort = event.detail;
+    <span class="kp-code__keyword">const</span> rows = [...given];
+    <span class="kp-code__keyword">if</span> (sort) {
+        <span class="kp-code__keyword">const</span> sign = sort.direction === <span class="kp-code__string">'ascending'</span> ? <span class="kp-code__string">1</span> : -<span class="kp-code__string">1</span>;
+        <span class="kp-code__keyword">const</span> value = (row) =&gt; row.cells[sort.column].textContent.trim();
+        rows.sort((a, b) =&gt; sign * value(a).localeCompare(value(b), <span class="kp-code__keyword">undefined</span>, { numeric: <span class="kp-code__keyword">true</span> }));
+    }
+    body.replaceChildren(...rows);
+    dataTable(wrap).refresh();
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="more-examples" id="more-examples">
                     <h2 class="kp-fw-semibold">More examples</h2>

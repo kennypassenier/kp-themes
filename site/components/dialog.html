@@ -332,6 +332,65 @@
 &lt;/<span class="kp-code__keyword">dialog</span>&gt;</code></pre>
                     </figure>
                     <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A confirmation that lists what still uses the thing, and one that blocks</figcaption>
+                        <p class="kp-text-muted">`openConfirmation(button, options)` in js/components.js is what a button with `data-kp-confirm` opens; a page can call it itself. `dependents` lists what still uses the thing under the description, in `.kp-confirm__dependents` (a `.kp-dialog__heading` with the exact count, then `.kp-confirm__list`, one line each). `blocked` (a sentence, or `true` for the dictionary’s) makes it a notice instead of a question: one Close button, no Confirm, and no typed field either. The same options come from the button as `data-kp-confirm-dependents` (one name per `;`) and `data-kp-confirm-blocked`. `onAccept` runs only on Confirm.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-row kp-gap-sm">
+    <button type="button" class="kp-button kp-button--destructive" data-doc-confirm="list">Delete the source…</button>
+    <button type="button" class="kp-button kp-button--destructive" data-doc-confirm="blocked">Delete the calendar…</button>
+</div>
+<p class="kp-text-muted" data-doc-confirm-said role="status">Nothing has been deleted.</p>
+                            <script type="module">
+import { openConfirmation } from '../../js/components.js';
+
+const said = document.querySelector('[data-doc-confirm-said]');
+const dependents = ['kyu-runner', 'Home Assistant', 'Almanac'];
+
+document.querySelector('[data-doc-confirm="list"]').addEventListener('click', (event) => {
+    openConfirmation(event.currentTarget, {
+        phrase: 'Delete the source Household?',
+        dependents,
+        onAccept: () => { said.textContent = 'Deleted. Three things lost their source.'; },
+    });
+});
+document.querySelector('[data-doc-confirm="blocked"]').addEventListener('click', (event) => {
+    openConfirmation(event.currentTarget, {
+        phrase: 'Delete the calendar Household?',
+        dependents: dependents.slice(0, 2),
+        blocked: 'Delete those two sources first, on the Sources page.',
+        onAccept: () => { said.textContent = 'This is never reached: a blocked removal has no Confirm.'; },
+    });
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row kp-gap-sm&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive&quot;</span> <span class="kp-code__keyword">data-doc-confirm</span><span class="kp-code__string">=&quot;list&quot;</span>&gt;Delete the source…&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--destructive&quot;</span> <span class="kp-code__keyword">data-doc-confirm</span><span class="kp-code__string">=&quot;blocked&quot;</span>&gt;Delete the calendar…&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">data-doc-confirm-said</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;Nothing has been deleted.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { openConfirmation } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/components'</span>;
+
+<span class="kp-code__keyword">const</span> said = document.querySelector(<span class="kp-code__string">'[data-doc-confirm-said]'</span>);
+<span class="kp-code__keyword">const</span> dependents = [<span class="kp-code__string">'kyu-runner'</span>, <span class="kp-code__string">'Home Assistant'</span>, <span class="kp-code__string">'Almanac'</span>];
+
+document.querySelector(<span class="kp-code__string">'[data-doc-confirm=&quot;list&quot;]'</span>).addEventListener(<span class="kp-code__string">'click'</span>, (event) =&gt; {
+    openConfirmation(event.currentTarget, {
+        phrase: <span class="kp-code__string">'Delete the source Household?'</span>,
+        dependents,
+        onAccept: () =&gt; { said.textContent = <span class="kp-code__string">'Deleted. Three things lost their source.'</span>; },
+    });
+});
+document.querySelector(<span class="kp-code__string">'[data-doc-confirm=&quot;blocked&quot;]'</span>).addEventListener(<span class="kp-code__string">'click'</span>, (event) =&gt; {
+    openConfirmation(event.currentTarget, {
+        phrase: <span class="kp-code__string">'Delete the calendar Household?'</span>,
+        dependents: dependents.slice(<span class="kp-code__string">0</span>, <span class="kp-code__string">2</span>),
+        blocked: <span class="kp-code__string">'Delete those two sources first, on the Sources page.'</span>,
+        onAccept: () =&gt; { said.textContent = <span class="kp-code__string">'This is never reached: a blocked removal has no Confirm.'</span>; },
+    });
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">The parts, with the dialog left open</figcaption>
                         <p class="kp-text-muted">Printed open so the pieces can be seen at rest: the title, the description under it, the close in the corner and the actions at the end.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
@@ -1995,6 +2054,8 @@ Delete incident
                             <tr><td><code>.kp-dialog__head</code></td><td>The title with a state badge beside it and the description under both.</td></tr>
                             <tr><td><code>.kp-dialog__section / __heading / __note</code></td><td>One part of the body under its heading, with an optional note under it; sections are divided by a rule.</td></tr>
                             <tr><td><code>.kp-dialog__section--danger</code></td><td>The last section, for what cannot be undone: ruled along its start edge in the destructive colour.</td></tr>
+                            <tr><td><code>.kp-confirm__dependents, .kp-confirm__list</code></td><td>In a confirmation: what still uses the thing, a section with a heading that carries the exact count and a list of one line each. Set by `dependents` or `data-kp-confirm-dependents`; the dialog is then described by its description and this list.</td></tr>
+                            <tr><td><code>blocked confirmation</code></td><td>`blocked` or `data-kp-confirm-blocked`: the description becomes the sentence that says what to do first, and the only button is Close. A blocked removal shows no typed field and no Confirm.</td></tr>
                             <tr><td><code>backdrop</code></td><td>A dimming rather than a theme colour: a tinted backdrop paints the page instead of pushing it back.</td></tr>
                             <tr><td><code>pastel</code></td><td>In pastel a dialog is printed twice and stuck on: its second pass, a flat silhouette in the second ink drawn by its ::backdrop and placed on it by anchor positioning, springs into its rest 6 px off register, then the dialog swings down onto it from its top-start corner on the soft landing (one 8 % overshoot, settled once); a strip of washi tape crosses its top-start corner, and the modal’s dim is the backdrop’s border, so a click outside still reaches it. The close is that opening played backwards. Without anchor positioning the pass rests as a flat shadow and the dialog opens with the swing alone; under reduced motion it is simply there.</td></tr>
                     </tbody></table></div>

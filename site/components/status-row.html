@@ -327,6 +327,75 @@ list.addEventListener(<span class="kp-code__string">'kp-status-retry'</span>, (e
 });</code></pre>
                     </figure>
                     <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A check list: a reservation, the fix written out, a summary line</figcaption>
+                        <p class="kp-text-muted">`warn` is a pass with a reservation: the warning pair on the mark and a “!” as its shape. A failed or warn row may carry `fix`, what to do about it, written out under the detail in `.kp-statusrow__fix` (a row in any other state hides it). `buildStatusList` and `setStatus` take `fix`, and `countStatus(list)` counts the rows by state as they are now, for a line such as “2 of 4 checks pass”. Press Fix the folder to see the row pass and the line change.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-stack">
+    <p data-doc-checks-summary role="status"></p>
+    <div id="doc-checks-host"></div>
+    <div class="kp-row"><button type="button" class="kp-button kp-button--sm" data-doc-checks-fix>Fix the folder</button></div>
+</div>
+                            <script type="module">
+import { attachStatusLists, buildStatusList, countStatus, setStatus } from '../../js/statusrow.js';
+
+const host = document.getElementById('doc-checks-host');
+const summary = document.querySelector('[data-doc-checks-summary]');
+const list = buildStatusList(
+    [
+        { id: 'disk', label: 'Free disk space', state: 'ok', detail: '81 GB free' },
+        { id: 'clock', label: 'Clock', state: 'warn', detail: 'Two seconds off', fix: 'Turn on time sync in the host settings.' },
+        { id: 'folder', label: 'Data folder', state: 'failed', detail: 'Not writable', fix: 'Give the service account write access to /srv/data.' },
+        { id: 'mail', label: 'Mail server', state: 'ok', detail: 'Answered in 120 ms' },
+    ],
+    { label: 'Readiness checks', single: true },
+);
+host.append(list);
+attachStatusLists(host);
+
+const tell = () => {
+    const counts = countStatus(list);
+    summary.textContent = counts.ok + ' of ' + counts.total + ' checks pass, ' + counts.warn + ' with a reservation, ' + counts.failed + ' failed';
+};
+tell();
+document.querySelector('[data-doc-checks-fix]').addEventListener('click', () => {
+    setStatus(list, 'folder', { state: 'ok', detail: 'Writable', fix: '' });
+    tell();
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-stack&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">data-doc-checks-summary</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;&lt;/<span class="kp-code__keyword">p</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-checks-host&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+    &lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-row&quot;</span>&gt;&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">data-doc-checks-fix</span>&gt;Fix the folder&lt;/<span class="kp-code__keyword">button</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachStatusLists, buildStatusList, countStatus, setStatus } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/statusrow'</span>;
+
+<span class="kp-code__keyword">const</span> host = document.getElementById(<span class="kp-code__string">'doc-checks-host'</span>);
+<span class="kp-code__keyword">const</span> summary = document.querySelector(<span class="kp-code__string">'[data-doc-checks-summary]'</span>);
+<span class="kp-code__keyword">const</span> list = buildStatusList(
+    [
+        { id: <span class="kp-code__string">'disk'</span>, label: <span class="kp-code__string">'Free disk space'</span>, state: <span class="kp-code__string">'ok'</span>, detail: <span class="kp-code__string">'81 GB free'</span> },
+        { id: <span class="kp-code__string">'clock'</span>, label: <span class="kp-code__string">'Clock'</span>, state: <span class="kp-code__string">'warn'</span>, detail: <span class="kp-code__string">'Two seconds off'</span>, fix: <span class="kp-code__string">'Turn on time sync in the host settings.'</span> },
+        { id: <span class="kp-code__string">'folder'</span>, label: <span class="kp-code__string">'Data folder'</span>, state: <span class="kp-code__string">'failed'</span>, detail: <span class="kp-code__string">'Not writable'</span>, fix: <span class="kp-code__string">'Give the service account write access to /srv/data.'</span> },
+        { id: <span class="kp-code__string">'mail'</span>, label: <span class="kp-code__string">'Mail server'</span>, state: <span class="kp-code__string">'ok'</span>, detail: <span class="kp-code__string">'Answered in 120 ms'</span> },
+    ],
+    { label: <span class="kp-code__string">'Readiness checks'</span>, single: <span class="kp-code__keyword">true</span> },
+);
+host.append(list);
+attachStatusLists(host);
+
+<span class="kp-code__keyword">const</span> tell = () =&gt; {
+    <span class="kp-code__keyword">const</span> counts = countStatus(list);
+    summary.textContent = counts.ok + <span class="kp-code__string">' of '</span> + counts.total + <span class="kp-code__string">' checks pass, '</span> + counts.warn + <span class="kp-code__string">' with a reservation, '</span> + counts.failed + <span class="kp-code__string">' failed'</span>;
+};
+tell();
+document.querySelector(<span class="kp-code__string">'[data-doc-checks-fix]'</span>).addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; {
+    setStatus(list, <span class="kp-code__string">'folder'</span>, { state: <span class="kp-code__string">'ok'</span>, detail: <span class="kp-code__string">'Writable'</span>, fix: <span class="kp-code__string">''</span> });
+    tell();
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">A calm list: open, done, paused, not known</figcaption>
                         <p class="kp-text-muted">`data-kp-status-vocab=&quot;calm&quot;` swaps the four states for ones with no red: a paused row says since when and offers Resume (one press, with Undo); a row nothing is known about is `unknown`, never done. Put it in a `.kp-card` for the loading, empty and failed states (`setTodayState`).</p>
                         <div class="sc-example__live kp-card" data-sc-live>
@@ -542,6 +611,9 @@ for (const button of document.querySelectorAll('[data-doc-today-state]')) {
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
                             <tr><td><code>data-state</code></td><td>`ok` (a disc with a tick), `loading` (the theme’s spinner), `failed` (a disc with a cross, a red edge and a Retry), `empty` (a dashed ring and a dashed edge).</td></tr>
+                            <tr><td><code>data-state=&quot;warn&quot;</code></td><td>A pass with a reservation: the warning pair on the mark with a “!” as its shape, never colour alone. Like `failed` it may carry a fix.</td></tr>
+                            <tr><td><code>.kp-statusrow__fix</code></td><td>Inside the row’s body: the fix written out, in the row’s own words. Shown on a `failed` or `warn` row only; `fix` of `buildStatusList` and `setStatus` fills it, and an empty `fix` clears it.</td></tr>
+                            <tr><td><code>countStatus(list)</code></td><td>How many rows are in each state (and the total) as they stand now, for a summary line such as “3 of 4 checks pass”; a calm list counts its own states.</td></tr>
                             <tr><td><code>data-kp-status-id</code></td><td>Names a row for `setStatus(list, id, { state, label, detail })`.</td></tr>
                             <tr><td><code>data-kp-status-retry=&quot;false&quot;</code></td><td>On the list: no Retry button on failed rows.</td></tr>
                             <tr><td><code>.kp-statuslist--rows</code></td><td>One column instead of a grid of columns of at least 16rem.</td></tr>
