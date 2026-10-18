@@ -1,4 +1,323 @@
 {
     "demo": "kpadopt56-charts",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "charts-6504213a-d57a-4a18-8e06-d9d9ab45e1d8",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 19:08: 77 of 77 judged, 77 approved, 0 not approved.",
+            "approved": [
+                {
+                    "item": "chart-annotations",
+                    "theme": "dark"
+                },
+                {
+                    "item": "chart-annotations",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "chart-annotations",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "chart-annotations",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "chart-annotations",
+                    "theme": "forest"
+                },
+                {
+                    "item": "chart-annotations",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "chart-annotations",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "chart-annotations",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "chart-annotations",
+                    "theme": "deco"
+                },
+                {
+                    "item": "chart-annotations",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "chart-annotations",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "chart-annotations-runs",
+                    "theme": "dark"
+                },
+                {
+                    "item": "chart-annotations-runs",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "chart-annotations-runs",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "chart-annotations-runs",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "chart-annotations-runs",
+                    "theme": "forest"
+                },
+                {
+                    "item": "chart-annotations-runs",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "chart-annotations-runs",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "chart-annotations-runs",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "chart-annotations-runs",
+                    "theme": "deco"
+                },
+                {
+                    "item": "chart-annotations-runs",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "chart-annotations-runs",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "chart-annotations-few",
+                    "theme": "dark"
+                },
+                {
+                    "item": "chart-annotations-few",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "chart-annotations-few",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "chart-annotations-few",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "chart-annotations-few",
+                    "theme": "forest"
+                },
+                {
+                    "item": "chart-annotations-few",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "chart-annotations-few",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "chart-annotations-few",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "chart-annotations-few",
+                    "theme": "deco"
+                },
+                {
+                    "item": "chart-annotations-few",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "chart-annotations-few",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "uses-lines",
+                    "theme": "dark"
+                },
+                {
+                    "item": "uses-lines",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "uses-lines",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "uses-lines",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "uses-lines",
+                    "theme": "forest"
+                },
+                {
+                    "item": "uses-lines",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "uses-lines",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "uses-lines",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "uses-lines",
+                    "theme": "deco"
+                },
+                {
+                    "item": "uses-lines",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "uses-lines",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "uses-states",
+                    "theme": "dark"
+                },
+                {
+                    "item": "uses-states",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "uses-states",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "uses-states",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "uses-states",
+                    "theme": "forest"
+                },
+                {
+                    "item": "uses-states",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "uses-states",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "uses-states",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "uses-states",
+                    "theme": "deco"
+                },
+                {
+                    "item": "uses-states",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "uses-states",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "trace",
+                    "theme": "dark"
+                },
+                {
+                    "item": "trace",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "trace",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "trace",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "trace",
+                    "theme": "forest"
+                },
+                {
+                    "item": "trace",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "trace",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "trace",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "trace",
+                    "theme": "deco"
+                },
+                {
+                    "item": "trace",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "trace",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "trace-states",
+                    "theme": "dark"
+                },
+                {
+                    "item": "trace-states",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "trace-states",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "trace-states",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "trace-states",
+                    "theme": "forest"
+                },
+                {
+                    "item": "trace-states",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "trace-states",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "trace-states",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "trace-states",
+                    "theme": "deco"
+                },
+                {
+                    "item": "trace-states",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "trace-states",
+                    "theme": "titanium"
+                }
+            ],
+            "notApproved": [],
+            "choices": []
+        }
+    ]
 }

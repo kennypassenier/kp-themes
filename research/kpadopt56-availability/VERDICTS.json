@@ -1,4 +1,235 @@
 {
     "demo": "kpadopt56-availability",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "availability-3b7837b8-66ce-46ff-b65a-9c5fccc152d2",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 19:08: 55 of 55 judged, 55 approved, 0 not approved.",
+            "approved": [
+                {
+                    "item": "availability-grid-states",
+                    "theme": "dark"
+                },
+                {
+                    "item": "availability-grid-states",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "availability-grid-states",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "availability-grid-states",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "availability-grid-states",
+                    "theme": "forest"
+                },
+                {
+                    "item": "availability-grid-states",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "availability-grid-states",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "availability-grid-states",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "availability-grid-states",
+                    "theme": "deco"
+                },
+                {
+                    "item": "availability-grid-states",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "availability-grid-states",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "availability-grid-answering",
+                    "theme": "dark"
+                },
+                {
+                    "item": "availability-grid-answering",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "availability-grid-answering",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "availability-grid-answering",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "availability-grid-answering",
+                    "theme": "forest"
+                },
+                {
+                    "item": "availability-grid-answering",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "availability-grid-answering",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "availability-grid-answering",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "availability-grid-answering",
+                    "theme": "deco"
+                },
+                {
+                    "item": "availability-grid-answering",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "availability-grid-answering",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "availability-grid-best",
+                    "theme": "dark"
+                },
+                {
+                    "item": "availability-grid-best",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "availability-grid-best",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "availability-grid-best",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "availability-grid-best",
+                    "theme": "forest"
+                },
+                {
+                    "item": "availability-grid-best",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "availability-grid-best",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "availability-grid-best",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "availability-grid-best",
+                    "theme": "deco"
+                },
+                {
+                    "item": "availability-grid-best",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "availability-grid-best",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "availability-grid-layout",
+                    "theme": "dark"
+                },
+                {
+                    "item": "availability-grid-layout",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "availability-grid-layout",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "availability-grid-layout",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "availability-grid-layout",
+                    "theme": "forest"
+                },
+                {
+                    "item": "availability-grid-layout",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "availability-grid-layout",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "availability-grid-layout",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "availability-grid-layout",
+                    "theme": "deco"
+                },
+                {
+                    "item": "availability-grid-layout",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "availability-grid-layout",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "availability-grid-phone",
+                    "theme": "dark"
+                },
+                {
+                    "item": "availability-grid-phone",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "availability-grid-phone",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "availability-grid-phone",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "availability-grid-phone",
+                    "theme": "forest"
+                },
+                {
+                    "item": "availability-grid-phone",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "availability-grid-phone",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "availability-grid-phone",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "availability-grid-phone",
+                    "theme": "deco"
+                },
+                {
+                    "item": "availability-grid-phone",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "availability-grid-phone",
+                    "theme": "titanium"
+                }
+            ],
+            "notApproved": [],
+            "choices": []
+        }
+    ]
 }
