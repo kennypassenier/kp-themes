@@ -219,54 +219,52 @@ const avSpec = (/** @type {{ state?: any, nobody?: boolean, people?: any, unit?:
     };
 };
 
-const avs = {
-    main: $('#ks-av'),
-    phone: $('#ks-av-phone'),
-    list: $('#ks-av-list'),
-    cycle: $('#ks-av-cycle'),
-    strict: $('#ks-av-strict'),
-};
-const avReadout = $('[data-ks-av-readout]');
+// Every availability grid on the page is wired the same way; the one marked `data-ks-av-main` is the organiser's (it can switch
+// between periods and days). The state, server and push buttons act on the grids of their own section, and a grid's readout is
+// the one in its own section, so a section that is not on the page (a part holds only the sections it asks) is simply skipped.
+const avGrids = $$('[data-kp-availability]');
+/** @param {HTMLElement} el */
+const avIsMain = (el) => el.hasAttribute('data-ks-av-main');
+/** @param {HTMLElement} el the readout of the section the element stands in */
+const avReadoutOf = (el) => $('[data-ks-av-readout]', el.closest('section') ?? document);
+/** @param {HTMLElement} button the grids of the section a button stands in */
+const avGridsOf = (button) => $$('[data-kp-availability]', button.closest('section') ?? document);
 let avRefuse = false;
 let avChosen = false;
-for (const el of Object.values(avs)) {
-    el?.addEventListener('kp-availability-change', (event) => {
+for (const el of avGrids) {
+    el.addEventListener('kp-availability-change', (event) => {
         const d = /** @type {CustomEvent} */ (event).detail;
         if (d.restored) return;
-        if (avReadout) avReadout.textContent = `${d.person} set ${d.keys.length} cell${d.keys.length === 1 ? '' : 's'} to ${d.answer ?? 'empty'}`;
+        const readout = avReadoutOf(el);
+        if (readout) readout.textContent = `${d.person} set ${d.keys.length} cell${d.keys.length === 1 ? '' : 's'} to ${d.answer ?? 'empty'}`;
         d.settle(wait(650).then(() => (avRefuse ? { refused: true } : true)));
     });
-    el?.addEventListener('kp-availability-choose', (event) => {
-        if (avReadout) avReadout.textContent = `Choose: ${/** @type {CustomEvent} */ (event).detail.keys.join(', ')}`;
+    el.addEventListener('kp-availability-choose', (event) => {
+        const readout = avReadoutOf(el);
+        if (readout) readout.textContent = `Choose: ${/** @type {CustomEvent} */ (event).detail.keys.join(', ')}`;
     });
-    el?.addEventListener('kp-availability-retry', () => {
-        if (!el) return;
-        setAvailability(el, avSpec({ state: 'loading', switchable: el === avs.main }));
+    el.addEventListener('kp-availability-retry', () => {
+        setAvailability(el, avSpec({ state: 'loading', switchable: avIsMain(el) }));
         setTimeout(() => {
-            setAvailability(el, avSpec({ switchable: el === avs.main }));
-            const b = $('[data-ks-av-state="ready"]');
+            setAvailability(el, avSpec({ switchable: avIsMain(el) }));
+            const b = $('[data-ks-av-state="ready"]', el.closest('section') ?? document);
             if (b) pick(b);
         }, 1200);
     });
 }
 
 onReady(() => {
-    if (avs.main) setAvailability(avs.main, avSpec({ switchable: true }));
-    if (avs.phone) setAvailability(avs.phone, avSpec());
-    if (avs.list) setAvailability(avs.list, avSpec());
-    if (avs.cycle) setAvailability(avs.cycle, avSpec({ unit: 'range' }));
-    if (avs.strict) setAvailability(avs.strict, avSpec());
+    for (const el of avGrids) setAvailability(el, avSpec({ switchable: avIsMain(el) }));
     for (const button of $$('[data-ks-av-state]')) {
         button.addEventListener('click', () => {
             pick(button);
             const state = button.getAttribute('data-ks-av-state') ?? 'ready';
             avChosen = state === 'chosen';
-            for (const el of [avs.main, avs.phone, avs.list]) {
-                if (!el) continue;
+            for (const el of avGridsOf(button)) {
                 el.toggleAttribute('data-kp-availability-disabled', avChosen);
                 if (avChosen) el.setAttribute('data-kp-disabled-reason', 'The dates are chosen.');
                 else el.removeAttribute('data-kp-disabled-reason');
-                const sw = el === avs.main;
+                const sw = avIsMain(el);
                 if (state === 'loading') setAvailability(el, avSpec({ state: 'loading', switchable: sw }));
                 else if (state === 'empty')
                     setAvailability(el, {
@@ -286,13 +284,13 @@ onReady(() => {
             avRefuse = button.getAttribute('data-ks-av-server') === 'refuses';
         });
     }
-    $('[data-ks-av-push]')?.addEventListener('click', () => {
-        for (const el of [avs.main, avs.phone, avs.list]) {
-            if (!el) continue;
-            for (const c of RANGES) if (!availabilityAnswers(el).lies?.[c.key]) setAvailabilityAnswer(el, 'lies', c.key, 'yes');
-        }
-        if (avReadout) avReadout.textContent = 'Lies answered the empty cells (a push update, no event).';
-    });
+    for (const push of $$('[data-ks-av-push]')) {
+        push.addEventListener('click', () => {
+            for (const el of avGridsOf(push)) for (const c of RANGES) if (!availabilityAnswers(el).lies?.[c.key]) setAvailabilityAnswer(el, 'lies', c.key, 'yes');
+            const readout = avReadoutOf(push);
+            if (readout) readout.textContent = 'Lies answered the empty cells (a push update, no event).';
+        });
+    }
 });
 
 // ---------------------------------------------------------------- qr-code (a link as a code)

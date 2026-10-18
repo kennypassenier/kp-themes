@@ -158,8 +158,14 @@ export const PAGES = [
             {
                 href: 'research/kpadopt56-charts/demo.html',
                 rework: 'by-eye findings of 2026-10-18 being fixed (research/kpadopt56/EYE_FINDINGS.md); it joins the Agenda as soon as its part is done',
-                label: 'Fifth and sixth adoption rounds in the other themes, part 9 of 11: Charts and maps',
-                about: 'Drawings of data: chart markers and a median line, what uses what, the path of a connection, and who can come when. 6 sections (66 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+                label: 'Fifth and sixth adoption rounds in the other themes, part 9 of 12: Charts and maps',
+                about: 'Drawings of data: chart markers and a median line, what uses what, and the path of a connection. 7 sections (77 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+            },
+            {
+                href: 'research/kpadopt56-availability/demo.html',
+                rework: 'by-eye findings of 2026-10-18 being fixed (research/kpadopt56/EYE_FINDINGS.md); it joins the Agenda as soon as its part is done',
+                label: 'Fifth and sixth adoption rounds in the other themes, part 10 of 12: Who can come',
+                about: 'People over days or periods, in five sections of the same grid: its states, how people answer, the best column, the rows and the summary, and the phone and density. 5 sections (55 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
             },
             {
                 href: 'research/kpadopt56-media/demo.html',

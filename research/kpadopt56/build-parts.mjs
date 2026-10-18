@@ -171,14 +171,27 @@ const PARTS = [
     {
         topic: 'charts',
         title: 'Charts and maps',
-        summary: 'Drawings of data: chart markers and a median line, what uses what, the path of a connection, and who can come when.',
+        summary: 'Drawings of data: chart markers and a median line, what uses what, and the path of a connection.',
         items: [
             ['kpadopt5-people', 'chart-annotations'],
+            ['kpadopt5-people', 'chart-annotations-runs'],
+            ['kpadopt5-people', 'chart-annotations-few'],
             ['kpadopt6-media', 'uses-lines'],
             ['kpadopt6-media', 'uses-states'],
             ['kpadopt6-ops', 'trace'],
             ['kpadopt6-ops', 'trace-states'],
-            ['kpadopt6-social', 'availability-grid'],
+        ],
+    },
+    {
+        topic: 'availability',
+        title: 'Who can come',
+        summary: 'People over days or periods, in five sections of the same grid: its states, how people answer, the best column, the rows and the summary, and the phone and density.',
+        items: [
+            ['kpadopt6-social', 'availability-grid-states'],
+            ['kpadopt6-social', 'availability-grid-answering'],
+            ['kpadopt6-social', 'availability-grid-best'],
+            ['kpadopt6-social', 'availability-grid-layout'],
+            ['kpadopt6-social', 'availability-grid-phone'],
         ],
     },
     {
