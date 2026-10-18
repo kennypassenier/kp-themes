@@ -6305,8 +6305,12 @@
 @layer kp.signature {
     /* The floor of a failed plate (a fifth of its height) ran behind the foot of Retry. The words and the button keep a band above
        the floor, so the floor is only ever the ground under them. */
-    [data-theme='synthwave'] :is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure).kp-alert--destructive {
+    [data-theme='synthwave'] :is(.kp-stateplate--error, .kp-dated__failure).kp-alert--destructive {
         padding-block-end: 3.25rem;
+    }
+    /* The runs' frame is three rows high and never changes height: its floor is the thin strip under the button. */
+    [data-theme='synthwave'] .kp-runs__failure.kp-alert--destructive::after {
+        block-size: 0.75rem;
     }
 }
 /* ── end t56-q2 updates ── */
@@ -6320,3 +6324,16 @@
     }
 }
 /* ── end t56-q2 choose ── */
+
+/* ── t56-q2 schedule: the snooze tiles share one grid ── */
+@layer kp.signature {
+    /* The tiles of a row were centred in it: a shorter tile (one line of its words) sat offset beside a taller one (three lines).
+       A row is as tall as its tallest tile and every tile fills it. */
+    [data-theme='synthwave'] .kp-snooze .kp-snooze__chips {
+        align-items: stretch;
+    }
+    [data-theme='synthwave'] .kp-snooze .kp-snooze__chips > .kp-snooze__chip {
+        align-self: stretch;
+    }
+}
+/* ── end t56-q2 schedule ── */

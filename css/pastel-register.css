@@ -5945,3 +5945,26 @@
     }
 }
 /* ── end t56-q2 choose ── */
+
+/* ── t56-q2 schedule: a disabled quick pick is dimmed with its chips ── */
+@layer kp.signature {
+    /* The quick picks of a disabled weekday picker kept their full ink and peel while the chips were dimmed. */
+    [data-theme='pastel'] :is(.kp-weekdays__preset, .kp-snooze__end, .kp-runs__more):disabled {
+        opacity: 0.5;
+        box-shadow: 0 3px 0 var(--border);
+    }
+}
+/* ── end t56-q2 schedule ── */
+
+/* ── t56-q2 schedule: the snooze tiles share one grid ── */
+@layer kp.signature {
+    /* The tiles of a row were centred in it: a shorter tile (one line of its words) sat offset beside a taller one (three lines).
+       A row is as tall as its tallest tile and every tile fills it. */
+    [data-theme='pastel'] .kp-snooze .kp-snooze__chips {
+        align-items: stretch;
+    }
+    [data-theme='pastel'] .kp-snooze .kp-snooze__chips > .kp-snooze__chip {
+        align-self: stretch;
+    }
+}
+/* ── end t56-q2 schedule ── */
