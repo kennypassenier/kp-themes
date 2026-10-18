@@ -526,6 +526,23 @@
         border-radius: var(--radius);
     }
 
+    /* A failed area is the red sky (G13, the busy failure decided as r2-so-failure-1): the dark card plate, the wash rising
+       from its foot, the foot edge and a 1 px ring in the red, the words in the lifted red ink. The package's flat
+       `--destructive` fill (a salmon block over the whole component) is no part of solstice's light. */
+    [data-theme='solstice'] .kp-alert--destructive:is(.kp-stateplate, .kp-rating__failure) {
+        background:
+            linear-gradient(to top, hsl(from var(--destructive) h s l / 0.3), transparent 75%),
+            var(--card);
+        color: var(--foreground);
+        border-color: hsl(from var(--destructive) h s l / 0.55);
+        box-shadow: inset 0 -2px 0 hsl(from var(--destructive) h s 50%);
+    }
+
+    [data-theme='solstice'] .kp-alert--destructive:is(.kp-stateplate, .kp-rating__failure) .kp-stateplate__title,
+    [data-theme='solstice'] .kp-alert--destructive.kp-rating__failure .kp-rating__failure-text {
+        color: hsl(from var(--destructive) h s 68%);
+    }
+
     [data-theme='solstice'] .kp-grid {
         gap: var(--kp-space-lg);
     }
@@ -1503,6 +1520,24 @@
         color: var(--foreground);
         font-family: var(--theme-font-display);
         font-size: 1.3rem;
+    }
+
+    /* The empty plate a failure borrows (passkeys, thread: `data-kp-tone='error'`) is the red sky, not the rising sun: the
+       sun is time passing and the empty state (G16); a failure reddens the foot light (G13). */
+    [data-theme='solstice'] .kp-empty[data-kp-tone='error'] {
+        background:
+            linear-gradient(to top, hsl(from var(--destructive) h s l / 0.3), transparent 75%),
+            var(--card);
+        border-color: hsl(from var(--destructive) h s l / 0.55);
+        box-shadow: inset 0 -2px 0 hsl(from var(--destructive) h s 50%);
+    }
+
+    [data-theme='solstice'] .kp-empty[data-kp-tone='error']::before {
+        display: none;
+    }
+
+    [data-theme='solstice'] .kp-empty[data-kp-tone='error'] .kp-empty__title {
+        color: hsl(from var(--destructive) h s 68%);
     }
 
     [data-theme='solstice'] .kp-empty__body {
@@ -3663,6 +3698,11 @@
         background:
             linear-gradient(var(--destructive), var(--destructive)) 0 100% / 100% 1px no-repeat,
             linear-gradient(to top, hsl(from var(--destructive) h s l / 0.2), transparent 70%);
+        /* On the card's dark sky the package's destructive-foreground (a dark red) left "why" unreadable. */
+        color: var(--foreground);
+    }
+    [data-theme='solstice'] .kp-card[data-kp-state='error'] > .kp-card__stage > .kp-card__state .kp-card__state-title {
+        color: hsl(from var(--destructive) h s 68%);
     }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='solstice'] .kp-card[data-kp-state='ready'] > .kp-card__stage > .kp-card__data {
@@ -4446,5 +4486,57 @@
         [data-theme='solstice'] .kp-wheel__segment {
             transition: fill calc(var(--kp-sig-solstice-contact) * 3) var(--kp-sig-solstice-touch);
         }
+    }
+}
+
+/* ── The new adoption parts in solstice [t56-solstice-1018] ──
+   A full digest is one unbroken run of hex: in the serif-set badge it ran 3 px past the badge's own edge, so it is allowed
+   to break anywhere (a version number still breaks only where it was given a place to). */
+@layer kp.signature {
+    [data-theme='solstice'] .kp-badge--version[data-kp-version-digest='full'] :is(.kp-version__from, .kp-version__to) {
+        overflow-wrap: anywhere;
+    }
+
+    /* A bubble is a plate lit from below (G7): the foot edge catching the low light and a faint rust wash rising from it;
+       the sender's own bubble is lit warmer (the amber wash), the words stand above the wash. */
+    [data-theme='solstice'] .kp-thread__bubble {
+        --kp-so-sky: var(--accent);
+        --kp-so-foot: hsl(from var(--primary) h s l / 0.45);
+        background:
+            linear-gradient(var(--kp-so-foot), var(--kp-so-foot)) 0 100% / 100% 1px no-repeat,
+            linear-gradient(to top, hsl(from var(--kp-so-sky) h s l / 0.14), transparent) 0 100% / 100% 45% no-repeat,
+            var(--card);
+    }
+    [data-theme='solstice'] .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        --kp-so-sky: var(--primary);
+        --kp-so-foot: hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='solstice'] .kp-thread__bubble[data-kp-status='failed'] {
+        --kp-so-sky: var(--destructive);
+        --kp-so-foot: var(--destructive);
+    }
+
+
+    /* A checklist row's detail wraps in a narrow row instead of crowding the label out (print checklist at 390 px: the label
+       was 0 to 25 px wide). */
+    [data-theme='solstice'] .kp-checklist__detail {
+        max-inline-size: 11rem;
+        overflow-wrap: anywhere;
+        white-space: normal;
+    }
+
+    /* A table in a phone-wide box keeps its last column inside the box: tighter cells, so the words never touch the edge. */
+    @media (max-width: 30rem) {
+        [data-theme='solstice'] .kp-datatable .kp-table :is(th, td) {
+            padding-inline: 0.5rem;
+        }
+    }
+
+    /* The code box's tools wrap under the title when the line is short, instead of pushing Copy past the box's edge. */
+    [data-theme='solstice'] .kp-code__tools {
+        flex-wrap: wrap;
+    }
+    [data-theme='solstice'] .kp-code__head {
+        min-inline-size: 0;
     }
 }

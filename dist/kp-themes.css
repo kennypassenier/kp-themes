@@ -18444,7 +18444,7 @@
 
     .kp-checklist__row {
         display: grid;
-        grid-template-columns: auto minmax(0, 1fr) auto;
+        grid-template-columns: auto minmax(0, 1fr) fit-content(50%);
         align-items: center;
         gap: var(--kp-space-md, 0.75rem);
         box-sizing: border-box;
@@ -18476,7 +18476,8 @@
         font-size: var(--kp-text-sm, 0.8125rem);
         font-variant-numeric: tabular-nums;
         text-align: end;
-        white-space: nowrap;
+        white-space: normal;
+        overflow-wrap: anywhere;
     }
 
     .kp-checklist__item[data-kp-checklist-checked] .kp-checklist__label {
@@ -22655,8 +22656,16 @@
      * time to the next refresh), --kp-refresh-rule (the rule's thickness, 2px). */
     .kp-refresh {
         display: grid;
+        grid-template-columns: minmax(0, 1fr);
         gap: var(--kp-space-sm, 0.5rem);
         min-inline-size: 0;
+    }
+
+    /* The chooser may be narrower than its segments, so the track scrolls along its own line
+       (data-kp-segmented-overflow) and never pushes the card wider [t56-sharedfix-1018]. */
+    .kp-refresh__chooser {
+        min-inline-size: 0;
+        max-inline-size: 100%;
     }
 
     .kp-refresh__bar {
@@ -25936,6 +25945,7 @@
     .kp-inspector {
         container: kp-inspector / inline-size;
         display: grid;
+        grid-template-columns: minmax(0, 1fr);
         gap: var(--kp-space-sm, 0.5rem);
         min-inline-size: 0;
     }
@@ -25946,6 +25956,11 @@
         align-items: center;
         justify-content: space-between;
         gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-inspector__filter {
+        min-inline-size: 0;
+        max-inline-size: 100%;
     }
 
     .kp-inspector__count {
@@ -26080,6 +26095,24 @@
 
         .kp-inspector__time {
             min-inline-size: 0;
+        }
+    }
+
+    /* Narrower still, the row wraps whole items (a badge is never torn) and the path takes a line of its own. */
+    @container kp-inspector (max-width: 40rem) {
+        .kp-inspector__row {
+            display: inline-flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+        }
+
+        .kp-inspector__path {
+            order: 1;
+            flex: 1 0 100%;
+        }
+
+        .kp-inspector__time {
+            margin-inline-start: auto;
         }
     }
 
@@ -28701,6 +28734,11 @@
         min-block-size: 2.75rem;
     }
 
+    /* The row that carries answers puts them under the name, so the name keeps the whole line. */
+    .kp-availability__column-row:has(> .kp-availability__column-answers) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
     .kp-availability__column-answers {
         display: flex;
         flex-wrap: wrap;
@@ -29793,6 +29831,8 @@
         align-items: baseline;
         column-gap: var(--kp-version-gap, 0.4em);
         row-gap: 0;
+        max-inline-size: 100%;
+        box-sizing: border-box;
         font-variant-numeric: tabular-nums;
         /* A version breaks only where it was given a place to (after a dot, a hyphen, an underscore or a colon), never in a number. */
         overflow-wrap: normal;
@@ -29800,6 +29840,13 @@
 
     .kp-badge--version[data-kp-size='md'] {
         font-size: var(--kp-text-md, 1rem);
+    }
+
+    /* A part wider than the chip breaks inside the word rather than past the chip's edge; a normal version never gets there. */
+    .kp-version__from,
+    .kp-version__to {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
     }
 
     .kp-version__from {
@@ -30529,7 +30576,7 @@
 
     .kp-entity__actions {
         display: grid !important;
-        grid-template-columns: repeat(var(--kp-entity-cols, 4), minmax(0, 1fr));
+        grid-template-columns: repeat(var(--kp-entity-cols, 4), minmax(min-content, 1fr));
         gap: var(--kp-space-sm, 0.5rem);
         align-items: center;
         padding-block-start: var(--kp-entity-actions-gap, var(--kp-space-md, 0.75rem));
@@ -30545,6 +30592,10 @@
     .kp-entity__actions .kp-button,
     .kp-entity__actions .kp-menu-button {
         inline-size: 100%;
+    }
+
+    .kp-entity__actions .kp-button {
+        overflow-wrap: normal;
     }
 
     .kp-entity__actions > .kp-entity__retry {
@@ -38125,6 +38176,162 @@
 }
 /* ── end the kpadopt4 secrets, time, cooking and commands ── */
 
+/* ── t56: the kpadopt5/6 parts inside cyberpunk ── */
+@layer kp.signature {
+    /* A segmented track that outgrows a phone wraps its labels between words instead of scrolling a label under the
+       edge: the columns keep the longest word and share the rest. */
+    @media (max-width: 30rem) {
+        [data-theme='cyberpunk'] .kp-segmented:not(.kp-segmented--chips):not(.kp-segmented--block) {
+            grid-auto-columns: minmax(min-content, 1fr);
+        }
+        [data-theme='cyberpunk'] .kp-segmented:not(.kp-segmented--chips) > .kp-segmented__item {
+            white-space: normal;
+        }
+        /* A track of five or more segments (a filter with its counts) closes its tracking and padding up so it fits a phone. */
+        [data-theme='cyberpunk'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(5)) {
+            --kp-seg-item-pad-inline: 0.375rem;
+            --kp-seg-tracking: 0.02em;
+        }
+        [data-theme='cyberpunk'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(5)) {
+            --kp-seg-size: 0.6875rem;
+        }
+    }
+    /* The weekday chips are seven equal columns: on a narrow picker the track letters close up so a day keeps room. */
+    @container kp-weekdays (max-width: 22rem) {
+        [data-theme='cyberpunk'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+            letter-spacing: 0;
+            font-size: 0.6875rem;
+        }
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the gallery tile ── */
+@layer kp.signature {
+    /* A picture is a jacked-in feed: the plate's notch, a scan raster over the picture and a tag caption. Pointing at it
+       burns the hazard yellow on the edge. */
+    [data-theme='cyberpunk'] .kp-gallery__tile {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-plate);
+    }
+    [data-theme='cyberpunk'] .kp-gallery__tile:not(.kp-skeleton)::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--kp-cp-scan);
+        mix-blend-mode: multiply;
+        pointer-events: none;
+    }
+    [data-theme='cyberpunk'] .kp-gallery__tile:hover,
+    [data-theme='cyberpunk'] .kp-gallery__tile:focus-within {
+        border-color: var(--primary);
+    }
+    [data-theme='cyberpunk'] .kp-gallery__caption {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        border-inline-start: 3px solid var(--primary);
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the conversation bubble ── */
+@layer kp.signature {
+    /* A message is a packet: the plate's notch on the far corner (top right for theirs, top left for yours), the sender as a
+       tag and the time in the mono. */
+    [data-theme='cyberpunk'] .kp-thread__scroll {
+        border-radius: 0;
+    }
+    [data-theme='cyberpunk'] .kp-thread__bubble {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-plate);
+    }
+    [data-theme='cyberpunk'] .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        clip-path: polygon(var(--kp-cp-notch) 0, 100% 0, 100% 100%, 0 100%, 0 var(--kp-cp-notch));
+    }
+    [data-theme='cyberpunk'] .kp-thread__sender {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='cyberpunk'] .kp-thread__sender::before {
+        content: '// ';
+        color: var(--accent);
+    }
+    [data-theme='cyberpunk'] .kp-thread__time {
+        font-family: var(--theme-font-mono);
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: what has to fit a phone ── */
+@layer kp.signature {
+    /* The tools of a code block (Pretty, Raw, Wrap, Copy) may take a second line instead of leaving the block. */
+    [data-theme='cyberpunk'] .kp-code__tools {
+        flex-wrap: wrap;
+    }
+    /* A digest (64 characters, no place to break) breaks at the badge's edge rather than leaving it. */
+    [data-theme='cyberpunk'] .kp-badge--version,
+    [data-theme='cyberpunk'] .kp-badge--version > :is(.kp-version__from, .kp-version__to) {
+        min-inline-size: 0;
+        overflow-wrap: break-word;
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the inspector row on a phone ── */
+@layer kp.signature {
+    /* The status tag with its tracking, the time and the source tag are wider together than a phone row: the source tag
+       got no column (a sliver, its letters standing on top of each other) and the time ran out of the row. On a phone the
+       row is three lines: method and status, the path, then the time with the source at the end. */
+    @container kp-inspector (max-width: 26rem) {
+        [data-theme='cyberpunk'] .kp-inspector__row {
+            grid-template-columns: auto minmax(0, 1fr) auto;
+            grid-template-areas:
+                'method status status'
+                'path path path'
+                'time time source';
+        }
+        [data-theme='cyberpunk'] .kp-inspector__row :is(.kp-badge, .kp-inspector__time) {
+            white-space: nowrap;
+        }
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: a long detail in a checklist row ── */
+@layer kp.signature {
+    /* A detail that cannot wrap ("check-in after 15:00, reference 8841-KP") left the label 22 px, which broke it in the
+       middle of its words. The detail wraps inside ten rem and the label keeps the rest of the row. */
+    [data-theme='cyberpunk'] .kp-checklist__detail {
+        max-inline-size: 10rem;
+        white-space: normal;
+        overflow-wrap: break-word;
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the trace's rule tag ── */
+@layer kp.signature {
+    /* The tag's "// " lead is a flex item of the badge, so a rule name that did not fit its column wrapped under it and the
+       lead stood alone on the first line. As a block the lead is part of the text and the tag wraps like words do. */
+    [data-theme='cyberpunk'] .kp-trace__rule {
+        display: block;
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the quote card keeps its room ── */
+@layer kp.signature {
+    /* The loading card reserves room for its busy panel (--kp-quote-min), the loaded card did not: loading grew the card by
+       a third. The loaded card keeps the same room, so empty, failed, loading and loaded are one footprint. */
+    [data-theme='cyberpunk'] .kp-quote > .kp-card__stage {
+        min-block-size: var(--kp-quote-min, 9rem);
+    }
+}
+/* ── end t56 ── */
+
 @layer kp.register {
     /* @kp-soft/themes — css/synthwave-register.css
    The synthwave register, 5.0.0 [S48, LIFT_PLAN row 1]: the horizon
@@ -44080,6 +44287,239 @@
 }
 /* ── end the kpadopt4 secrets, time, cooking and commands ── */
 
+/* ── t56: the kpadopt5/6 parts inside synthwave ── */
+@layer kp.signature {
+    /* A segmented track that outgrows a phone wraps its labels between words instead of scrolling a label under the
+       edge: the columns keep the longest word and share the rest. */
+    @media (max-width: 30rem) {
+        [data-theme='synthwave'] .kp-segmented:not(.kp-segmented--chips):not(.kp-segmented--block) {
+            grid-auto-columns: minmax(min-content, 1fr);
+        }
+        [data-theme='synthwave'] .kp-segmented:not(.kp-segmented--chips) > .kp-segmented__item {
+            white-space: normal;
+        }
+        /* A track of five or more segments (a filter with its counts) closes its tracking and padding up so it fits a phone. */
+        [data-theme='synthwave'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(5)) {
+            --kp-seg-item-pad-inline: 0.375rem;
+            --kp-seg-tracking: 0.02em;
+        }
+        [data-theme='synthwave'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(5)) {
+            --kp-seg-size: 0.6875rem;
+        }
+    }
+    /* The weekday chips are seven equal columns: on a narrow picker the track letters close up so a day keeps room. */
+    @container kp-weekdays (max-width: 22rem) {
+        [data-theme='synthwave'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+            letter-spacing: 0;
+            font-size: 0.6875rem;
+        }
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the small neon ring keeps its letters off the ring ── */
+@layer kp.signature {
+    /* The 24 px and 32 px rings leave too little inside their 2 px line for two chrome capitals: the small ring goes to 1 px (its
+       glow still draws the neon) and both sizes close their letters up, so the letters stand 4 px clear of the ring. */
+    [data-theme='synthwave'] .kp-idmark--sm.kp-idmark--round {
+        border-width: 1px;
+        font-size: calc(var(--kp-idmark-s) * 0.36);
+        letter-spacing: 0;
+    }
+    [data-theme='synthwave'] .kp-idmark--round:not(.kp-idmark--xs, .kp-idmark--sm, .kp-idmark--lg, .kp-idmark--xl) {
+        font-size: calc(var(--kp-idmark-s) * 0.37);
+        letter-spacing: 0;
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the foot of a code cell ── */
+@layer kp.signature {
+    /* The "Show all N lines" button of a code cell in a narrow cell is shrunk below its own text by the 0.16em track: the
+       track tightens and the padding halves, so the words stand clear of both sides of the button. */
+    [data-theme='synthwave'] .kp-code--cell .kp-code__foot .kp-button {
+        letter-spacing: 0.06em;
+        padding-inline: 0.5rem;
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the attention band keeps its grid ── */
+@layer kp.signature {
+    /* The VCR symbol of a warning or failure (a pause, a stop) is the alert's ::before and so a grid item of its own: in the
+       band's three column row it took the icon's column and pushed the icon, the text and the actions one column on, the
+       actions under the text. The row gets a column for it. */
+    [data-theme='synthwave'] .kp-attention__item:is(.kp-alert--warning, .kp-alert--destructive) {
+        grid-template-columns: auto auto minmax(0, 1fr) auto;
+    }
+    @container kp-attention (max-width: 34rem) {
+        [data-theme='synthwave'] .kp-attention__item:is(.kp-alert--warning, .kp-alert--destructive) {
+            grid-template-columns: auto auto minmax(0, 1fr);
+        }
+    }
+    /* The question card is a column of rows: the symbol would be a row of its own above the title. It stands in the card's
+       top corner instead, where the title's line leaves room for it. */
+    [data-theme='synthwave'] .kp-question:is(.kp-alert--warning, .kp-alert--destructive) {
+        position: relative;
+    }
+    [data-theme='synthwave'] .kp-question:is(.kp-alert--warning, .kp-alert--destructive)::before {
+        position: absolute;
+        inset-block-start: 0.875rem;
+        inset-inline-end: 0.875rem;
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the gallery tile ── */
+@layer kp.signature {
+    /* A picture is a lit screen: a pink-to-cyan tube round the edge (the card's stripe), and a glow when pointed at. */
+    [data-theme='synthwave'] .kp-gallery__tile:not(.kp-skeleton, [data-kp-state='error']) {
+        border-radius: 0;
+        border: 1px solid transparent;
+        background:
+            linear-gradient(var(--muted), var(--muted)) padding-box,
+            linear-gradient(135deg, var(--kp-pink-text), var(--kp-core)) border-box;
+    }
+    [data-theme='synthwave'] .kp-gallery__tile:hover,
+    [data-theme='synthwave'] .kp-gallery__tile:focus-within {
+        box-shadow: 0 0 14px hsl(from var(--primary) h s l / 0.6);
+    }
+    [data-theme='synthwave'] .kp-gallery__caption {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        border-block-start: 1px solid var(--kp-hairline);
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the conversation bubble ── */
+@layer kp.signature {
+    /* A message is a lit tube: theirs a cyan line down its start edge, yours a pink one down its end edge, both glowing; the
+       sender in the display face's spaced capitals. */
+    [data-theme='synthwave'] .kp-thread__scroll {
+        border-radius: 0;
+    }
+    [data-theme='synthwave'] .kp-thread__bubble {
+        border-radius: 0;
+        border-inline-start: 3px solid var(--kp-core);
+        box-shadow: -6px 0 14px -6px hsl(from var(--kp-core) h s l / 0.6);
+    }
+    [data-theme='synthwave'] .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        border-inline-start-width: 1px;
+        border-inline-end: 3px solid var(--primary);
+        box-shadow: 6px 0 14px -6px hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='synthwave'] .kp-thread__sender {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: what has to fit a phone ── */
+@layer kp.signature {
+    /* The tools of a code block (Pretty, Raw, Wrap, Copy) may take a second line instead of leaving the block. */
+    [data-theme='synthwave'] .kp-code__tools {
+        flex-wrap: wrap;
+    }
+    /* A digest (64 characters, no place to break) breaks at the badge's edge rather than leaving it. */
+    [data-theme='synthwave'] .kp-badge--version,
+    [data-theme='synthwave'] .kp-badge--version > :is(.kp-version__from, .kp-version__to) {
+        min-inline-size: 0;
+        overflow-wrap: break-word;
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the inspector row on a phone ── */
+@layer kp.signature {
+    /* The status tag with its tracking, the time and the source tag are wider together than a phone row: the source tag
+       got no column (a sliver, its letters standing on top of each other) and the time ran out of the row. On a phone the
+       row is three lines: method and status, the path, then the time with the source at the end. */
+    @container kp-inspector (max-width: 26rem) {
+        [data-theme='synthwave'] .kp-inspector__row {
+            grid-template-columns: auto minmax(0, 1fr) auto;
+            grid-template-areas:
+                'method status status'
+                'path path path'
+                'time time source';
+        }
+        [data-theme='synthwave'] .kp-inspector__row :is(.kp-badge, .kp-inspector__time) {
+            white-space: nowrap;
+        }
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: a long detail in a checklist row ── */
+@layer kp.signature {
+    /* A detail that cannot wrap ("check-in after 15:00, reference 8841-KP") left the label 22 px, which broke it in the
+       middle of its words. The detail wraps inside ten rem and the label keeps the rest of the row. */
+    [data-theme='synthwave'] .kp-checklist__detail {
+        max-inline-size: 10rem;
+        white-space: normal;
+        overflow-wrap: break-word;
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: states ── */
+@layer kp.signature {
+    /* A solid coral plate (a failed state, an urgent or refused question) carries its buttons as dark keys: the plate's own
+       ink as the ground, a near-white tube round it. The pink frame on the coral did not read. */
+    [data-theme='synthwave'] .kp-alert--destructive .kp-button:not(.kp-icon-button) {
+        --kp-frame: var(--kp-core);
+        --kp-glow: transparent;
+        --kp-sw-cut-ink: var(--destructive-foreground);
+        background: var(--destructive-foreground);
+        color: var(--kp-core);
+        text-shadow: none;
+    }
+    [data-theme='synthwave'] .kp-alert--destructive .kp-button:not(.kp-icon-button):hover {
+        --kp-frame: var(--kp-pink-text);
+        background: hsl(from var(--destructive-foreground) h s calc(l + 6));
+    }
+    [data-theme='synthwave'] .kp-alert--destructive .kp-button[aria-disabled='true'],
+    [data-theme='synthwave'] .kp-alert--destructive .kp-button:disabled {
+        opacity: 0.7;
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: cook mode navigation ── */
+@layer kp.signature {
+    /* Back and Next of the cook mode keep their words whole on a phone: less ink round the label, a tighter track. */
+    [data-theme='synthwave'] .kp-focus-steps__nav > .kp-button {
+        padding-inline: 0.75rem;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+        overflow-wrap: normal;
+        word-break: keep-all;
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the quote card keeps its room ── */
+@layer kp.signature {
+    /* The loading card reserves room for its busy panel (--kp-quote-min), the loaded card did not: loading grew the card by
+       a third. The loaded card keeps the same room, so empty, failed, loading and loaded are one footprint. */
+    [data-theme='synthwave'] .kp-quote > .kp-card__stage {
+        min-block-size: var(--kp-quote-min, 9rem);
+    }
+    /* The sun plate and the failure's wrapped words need a little more on a phone. */
+    @container kp-quote (max-width: 25rem) {
+        [data-theme='synthwave'] .kp-quote > .kp-card__stage {
+            min-block-size: max(var(--kp-quote-min, 9rem), 10.5rem);
+        }
+    }
+}
+/* ── end t56 ── */
+
 /* A share, 0 to 1 (a progress bar's, a meter's), is walked to its value on
    two registered copies, one on each mirror of the motion, so that a rise is
    the picture's fall and a fall is that fall turned around; registered so
@@ -45837,6 +46277,9 @@
         padding: 0.1rem 0.35rem;
         opacity: 0;
         pointer-events: none;
+        /* Out of the box tree until pointed at: an invisible tab hanging past a small button at the right edge still made the
+           section scroll sideways (7 px at 390 px, choose / intent-states). */
+        display: none;
     }
 
     [data-theme='brutalism'] .kp-button::after {
@@ -45871,6 +46314,7 @@
     [data-theme='brutalism'] .kp-alert:hover::after,
     [data-theme='brutalism'] .kp-badge:hover::after,
     [data-theme='brutalism'] .kp-sidenav:hover::after {
+        display: block;
         opacity: 1;
     }
 
@@ -46669,12 +47113,43 @@
         rotate: -8deg;
     }
 
+    /* In the two short components (the quote card's 142 px, the runs list's 134 px) the 3 rem zero and its air made the plate
+       28 px and 20 px taller than the component: a smaller stamp, same slab, no growth between states. */
+    [data-theme='brutalism'] :is(.kp-card__empty, .kp-runs__empty) {
+        padding-block: 0.6rem;
+    }
+
+    [data-theme='brutalism'] :is(.kp-card__empty, .kp-runs__empty)::before {
+        inline-size: 2.25rem;
+        block-size: 2.25rem;
+        margin-block-end: 0.3rem;
+        font-size: 1.05rem;
+    }
+
     [data-theme='brutalism'] .kp-empty__title {
         margin: 0 0 0.3rem;
         color: var(--foreground);
         font-family: var(--theme-font-display);
         font-size: 1.15rem;
         text-transform: uppercase;
+    }
+
+    /* The empty plate a failure borrows (passkeys, thread: `data-kp-tone='error'`) is the taped red slab of every other
+       failure, not the lavender zero of an empty list. */
+    [data-theme='brutalism'] .kp-empty[data-kp-tone='error'] {
+        padding-block-end: calc(1.4rem + 0.5rem);
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    [data-theme='brutalism'] .kp-empty[data-kp-tone='error']::before {
+        display: none;
+    }
+
+    [data-theme='brutalism'] .kp-empty[data-kp-tone='error'] :is(.kp-empty__title, .kp-empty__body) {
+        color: var(--destructive-foreground);
     }
 
     [data-theme='brutalism'] .kp-empty__body {
@@ -49336,6 +49811,8 @@
         background:
             repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
             var(--card);
+        /* The plate is the white slab; the package's cream destructive-foreground left "why" unreadable on it. */
+        color: var(--foreground);
     }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='brutalism'] .kp-card[data-kp-state='ready'] > .kp-card__stage > .kp-card__data {
@@ -50244,6 +50721,156 @@
         [data-theme='brutalism'] .kp-wheel__outcome:not(:empty, [data-kp-wheel-note]) {
             animation: kp-sig-brutalism-secret-slam calc(var(--kp-sig-br-time) + 12 * 100ms) linear both;
         }
+    }
+}
+
+/* ── The new adoption parts in brutalism [t56-brutalism-1018] ──
+   A small part is the 2 px line on a 3 px hard shadow (G7): the weekday chips and the small identity mark stand on a
+   shadow that never reaches a neighbour, and the shadow of a field keeps a clear gap before the unit that follows it.
+   On a phone the labels are set tight, so a day's name, a segment, a Back or Next never breaks mid-word (the 4 px
+   margin rule of research/_review/DEMO_RULES.md, chapter 2). */
+@layer kp.signature {
+    [data-theme='brutalism'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+        border-width: 2px;
+    }
+    [data-theme='brutalism'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item[aria-pressed='true'] {
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    @container kp-weekdays (max-width: 26rem) {
+        [data-theme='brutalism'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+            font-size: 0.65rem;
+            letter-spacing: 0.02em;
+        }
+        [data-theme='brutalism'] .kp-weekdays .kp-weekdays__chips--month > .kp-segmented__item {
+            font-size: 0.6rem;
+            letter-spacing: 0;
+        }
+    }
+    /* The stamped inner frame is for the big marks; below that the letters need the room (4 px from the line). */
+    [data-theme='brutalism'] .kp-idmark--round:not(.kp-idmark--lg, .kp-idmark--xl) {
+        outline: 0;
+        font-size: calc(var(--kp-idmark-s) * 0.38);
+    }
+    [data-theme='brutalism'] .kp-idmark--sm.kp-idmark--round {
+        border-width: 1px;
+        font-size: calc(var(--kp-idmark-s) * 0.36);
+    }
+    [data-theme='brutalism'] .kp-slider__fields,
+    [data-theme='brutalism'] .kp-slider__field-wrap {
+        gap: 0.75rem;
+    }
+    [data-theme='brutalism'] .kp-code--cell .kp-code__foot {
+        padding-inline: 0.375rem;
+    }
+    [data-theme='brutalism'] .kp-code--cell .kp-code__foot .kp-button {
+        padding-inline: 0.375rem;
+        letter-spacing: 0.02em;
+    }
+    /* The rating's failed state is the alert laid over the stars' own place [rating-states]: this register's `.kp-alert` is
+       positioned `relative`, which took the package's `position: absolute; inset: 0` away, put the plate under the hidden
+       stars and grew the component from 80 px to 178 (brutalism) or 201 (deco). */
+    [data-theme='brutalism'] .kp-alert.kp-rating__failure {
+        position: absolute;
+        inset: 0;
+        padding-block: 0.25rem;
+        row-gap: 0.25rem;
+    }
+
+    [data-theme='brutalism'] .kp-focus-steps__nav > .kp-button {
+        padding-inline: 1rem;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+    }
+    [data-theme='brutalism'] .kp-statusrow__label {
+        overflow-wrap: normal;
+    }
+    @media (max-width: 30rem) {
+        [data-theme='brutalism'] .kp-segmented:not(.kp-segmented--chips, .kp-segmented--block) {
+            --kp-seg-tracking: 0.04em;
+            --kp-seg-size: 0.72rem;
+            --kp-seg-item-pad-inline: 0.5rem;
+        }
+        [data-theme='brutalism'] .kp-statuslist[data-kp-status-vocab='calm'] .kp-statusrow {
+            column-gap: 0.5rem;
+        }
+        [data-theme='brutalism'] .kp-rating--display .kp-rating__body {
+            grid-auto-flow: row;
+            row-gap: 0.125rem;
+        }
+        [data-theme='brutalism'] .kp-calendar__day .kp-calendar__num {
+            font-size: 0.875rem;
+        }
+        [data-theme='brutalism'] .kp-statusrow__action.kp-button {
+            padding-inline: 0.625rem;
+            letter-spacing: 0.04em;
+        }
+    }
+
+    /* Slabs (G7): a bubble, a gallery tile and the plate of a QR code are small parts or plates in the ink line on their hard
+       shadow; the sender's own bubble is the yellow of a hand (G5). The code keeps its white quiet zone inside the line. */
+    [data-theme='brutalism'] .kp-thread__bubble {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: 3px 3px 0 var(--border-strong);
+        margin-inline-end: 3px;
+        margin-block-end: 3px;
+    }
+    [data-theme='brutalism'] .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        border-color: var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+    [data-theme='brutalism'] .kp-thread__item[data-kp-first='true'] > .kp-thread__bubble {
+        border-radius: 0;
+    }
+    [data-theme='brutalism'] .kp-gallery__tile {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-qr__plate {
+        border: 3px solid var(--border-strong);
+        border-radius: 0;
+        overflow: visible;
+        box-shadow: 6px 6px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-qr__svg {
+        padding: 0;
+    }
+
+    /* A full digest is one unbroken run of hex; it may break anywhere (a version number still breaks only after a dot). */
+    [data-theme='brutalism'] .kp-badge--version[data-kp-version-digest='full'] :is(.kp-version__from, .kp-version__to) {
+        overflow-wrap: anywhere;
+    }
+
+    /* A checklist row's detail wraps in a narrow row instead of crowding the label out (print checklist at 390 px: the label
+       was 0 to 25 px wide). */
+    [data-theme='brutalism'] .kp-checklist__detail {
+        max-inline-size: 11rem;
+        overflow-wrap: anywhere;
+        white-space: normal;
+    }
+
+    /* The code box's tools wrap under the title when the line is short (Pretty, Raw, Wrap and Copy are chunkier in the slab). */
+    [data-theme='brutalism'] .kp-code__tools {
+        flex-wrap: wrap;
+    }
+    [data-theme='brutalism'] .kp-code__head {
+        min-inline-size: 0;
+    }
+    @media (max-width: 30rem) {
+        [data-theme='brutalism'] .kp-button--sm {
+            letter-spacing: 0.04em;
+            padding-inline: 0.75rem;
+        }
+    }
+
+    /* The answer buttons of a person's own row wrap inside part of the row, so the name keeps its room. */
+    [data-theme='brutalism'] .kp-availability__column-row {
+        grid-template-columns: minmax(6rem, 1fr) minmax(0, max-content);
+    }
+    [data-theme='brutalism'] .kp-availability__column-answers {
+        justify-content: flex-end;
     }
 }
 
@@ -51235,6 +51862,12 @@
     [data-theme='titanium'] .kp-badge,
     [data-theme='titanium'] .kp-tag {
         border: 1px solid var(--border-strong);
+    }
+
+    /* A badge is a straight plate under its chamfer: the shared pill radius drew an arc inside the straight cut
+       (Kenny, 2026-10-18 04:03, titanium-badge: "Aanpassen in titanium"). */
+    [data-theme='titanium'] .kp-badge {
+        border-radius: 0;
     }
 
     [data-theme='titanium'] .kp-skeleton {
@@ -54588,10 +55221,26 @@
     }
 
     /* ── A card in four data states ── */
+    /* The state names itself at heading size, in the display face the empty plate's own title uses (DEMO_RULES 3):
+       it was 13 px engraved mono, smaller than formal's 16. */
     [data-theme='titanium'] .kp-card__state-title {
-        font-family: var(--theme-font-mono);
-        font-size: 0.8125rem;
-        letter-spacing: 0.01em;
+        font-family: var(--theme-font-display);
+        font-size: clamp(1.125rem, 1rem + 0.45vw, 1.3125rem);
+        letter-spacing: -0.01em;
+        line-height: 1.3;
+    }
+
+    /* The action in an empty or failed plate is a normal-size button: it took the plate's heading size (24 px "Retry"
+       and "Add" in a 36 px key), so it reads at the control size and the title carries the heading. */
+    [data-theme='titanium'] .kp-stateplate__action {
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    /* The picked row of the master-detail list is marked by its plate and bar; the 600 weight of the shared rule is wider
+       in Be Vietnam Pro and wrapped a long name to a fourth line, so picking a row (or the detail failing on it) moved
+       the list 24 px. The row keeps its weight. */
+    [data-theme='titanium'] .kp-pane__list > [data-kp-pane-key][aria-selected='true'] {
+        font-weight: inherit;
     }
 
     /* ── Pipeline: plates in a rack, the stage an oxide strip along the head ── */
@@ -55484,6 +56133,225 @@
     }
     [data-theme='titanium'] .kp-dialog__actions > .kp-button {
         white-space: nowrap;
+    }
+}
+
+/* ── kpadopt5/6 fit: the 79 adopted parts at 390 px [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* A rating in a table cell: the words go under the stars, so the cell keeps its column. */
+    @media (max-width: 30rem) {
+        [data-theme='titanium'] .kp-table td .kp-rating--display .kp-rating__body {
+            grid-auto-flow: row;
+            row-gap: 0.125rem;
+        }
+    }
+}
+
+/* ── kpadopt5/6 fit: a segmented track that is wider than its room [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* In this theme's wide mono capitals a track outgrows a phone, scrolled, and its last label was clipped at the track's
+       edge. Under 34rem the segments take less padding and tracking. A track of up to three also shares its width and a
+       long label wraps between words. A track of four or more takes rows instead of scrolling (the segments of a row share
+       it); the sliding plate cannot follow a second row, so the chosen segment carries its own plate there. A label is
+       never cut by an ellipsis. The inspector's filter does the same whenever its card is narrower than 34rem. */
+    @media (max-width: 34rem) {
+        [data-theme='titanium'] .kp-segmented:not(.kp-segmented--chips) {
+            --kp-seg-item-pad-inline: 0.5rem;
+            letter-spacing: 0.02em;
+        }
+        [data-theme='titanium'] .kp-segmented:not(.kp-segmented--chips, :has(> :nth-child(4))) {
+            grid-auto-columns: minmax(0, 1fr);
+            letter-spacing: 0.04em;
+        }
+        [data-theme='titanium'] .kp-segmented:not(.kp-segmented--chips, :has(> :nth-child(4))) > .kp-segmented__item {
+            white-space: normal;
+            overflow-wrap: normal;
+            line-height: 1.25;
+        }
+        [data-theme='titanium'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(4)) {
+            display: flex;
+            flex-wrap: wrap;
+            inline-size: 100%;
+        }
+        [data-theme='titanium'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item {
+            flex: 1 1 auto;
+        }
+        [data-theme='titanium'] .kp-segmented[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4))::before {
+            display: none;
+        }
+        [data-theme='titanium'] .kp-segmented[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item[aria-checked='true'] {
+            background: var(--kp-seg-thumb, var(--card));
+            box-shadow: var(--kp-seg-thumb-edge, 0 0 0 1px var(--border-strong)), var(--kp-seg-thumb-lift, 0 0 0 0 transparent);
+        }
+        [data-theme='titanium'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item[aria-checked='true'] {
+            clip-path: polygon(var(--kp-chamfer, 0.4rem) 0, 100% 0, 100% calc(100% - var(--kp-chamfer, 0.4rem)), calc(100% - var(--kp-chamfer, 0.4rem)) 100%, 0 100%, 0 var(--kp-chamfer, 0.4rem));
+        }
+    }
+    @container kp-inspector (max-width: 34rem) {
+        [data-theme='titanium'] .kp-inspector__filter:not(.kp-segmented--chips):has(> :nth-child(4)) {
+            display: flex;
+            flex-wrap: wrap;
+            inline-size: 100%;
+        }
+        [data-theme='titanium'] .kp-inspector__filter:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item {
+            flex: 1 1 auto;
+        }
+        [data-theme='titanium'] .kp-inspector__filter[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4))::before {
+            display: none;
+        }
+        [data-theme='titanium'] .kp-inspector__filter[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item[aria-checked='true'] {
+            background: var(--kp-seg-thumb, var(--card));
+            box-shadow: var(--kp-seg-thumb-edge, 0 0 0 1px var(--border-strong)), var(--kp-seg-thumb-lift, 0 0 0 0 transparent);
+        }
+        [data-theme='titanium'] .kp-inspector__filter:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item[aria-checked='true'] {
+            clip-path: polygon(var(--kp-chamfer, 0.4rem) 0, 100% 0, 100% calc(100% - var(--kp-chamfer, 0.4rem)), calc(100% - var(--kp-chamfer, 0.4rem)) 100%, 0 100%, 0 var(--kp-chamfer, 0.4rem));
+        }
+    }
+}
+
+/* ── kpadopt5/6 fit: the weekday chips [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* Seven (and thirty-one) chips share one phone-wide row; the tracked mono capitals touched the chip edge. */
+    @media (max-width: 34rem) {
+        [data-theme='titanium'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+            font-size: 0.625rem;
+            letter-spacing: 0.02em;
+        }
+        /* The month's thirty-one cells are narrower still: "Last" is four of Martian Mono's wide capitals. */
+        [data-theme='titanium'] .kp-weekdays .kp-weekdays__chips--month > .kp-segmented__item {
+            font-size: 0.5625rem;
+            letter-spacing: 0;
+        }
+    }
+}
+
+/* ── kpadopt5/6 fit: the fold button of a code cell [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* "Show all 38 lines" sizes the button to its longest word; in a 200 px cell its wide capitals outgrew the button. */
+    [data-theme='titanium'] .kp-code--cell .kp-code__foot .kp-button {
+        font-size: 0.6875rem;
+        letter-spacing: 0.02em;
+    }
+}
+
+/* ── kpadopt5/6 fit: the request inspector's row in a narrow card [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* In the card of a phone the row is 250 px and method, status, source and time cannot share one line in this
+       theme's wide letters (the source tag was squeezed to single letters over the date). Method and status take the
+       first line, the path the next, the source and the time share the last, the time always at its end. */
+    @container kp-inspector (max-width: 40rem) {
+        [data-theme='titanium'] .kp-inspector__row {
+            grid-template-columns: auto minmax(0, 1fr);
+            grid-template-areas:
+                'method status'
+                'path path'
+                'source time';
+        }
+        [data-theme='titanium'] .kp-inspector__status {
+            justify-self: start;
+        }
+        [data-theme='titanium'] .kp-inspector__time {
+            justify-self: end;
+            text-align: end;
+        }
+    }
+}
+
+/* ── kpadopt5/6 fit: the checklist's detail on a phone [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* The detail never wraps in the shared part; in this theme's mono it is wider than the row and ran off the plate
+       (cut at the screen edge) while it squeezed the label to a column of single letters. On a phone it wraps in a
+       column of at most 9rem, at its end. */
+    @media (max-width: 34rem) {
+        [data-theme='titanium'] .kp-checklist__detail {
+            max-inline-size: 9rem;
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+    }
+}
+
+/* ── kpadopt5/6 parts: titanium's own corners [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* Square corners (G7): a tag, a count, a counter, a groove and a swatch are cut metal, not pills. The marks that
+       are turned parts (the avatar, the spinner, a step's mark, a dot) stay round. */
+    [data-theme='titanium'] :is(.kp-chart__annkey-item, .kp-segmented__count, .kp-uses__chip, .kp-slider__rail, .kp-anchor, .kp-autosize__counter, .kp-uses__open, .kp-availability__best-swatch) {
+        border-radius: 0;
+    }
+
+    /* The slider (G6, G8): the groove is a machined slot, the thumb a bare-metal slug with its tool edge and an
+       engraved index line; focus turns the slug's rim to the register's ring. The 2.75rem box stays the touch target. */
+    [data-theme='titanium'] .kp-slider__input {
+        --kp-slider-thumb-art:
+            linear-gradient(var(--background), var(--background)) 50% 50% / 2px 0.75rem no-repeat,
+            linear-gradient(hsl(from var(--foreground) h s l / 0.5), hsl(from var(--foreground) h s l / 0.5)) 50% calc(50% - 0.6875rem) / 0.875rem 1px no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 0.875rem 1.5rem no-repeat;
+    }
+    [data-theme='titanium'] .kp-slider__input:focus-visible {
+        --kp-slider-thumb-art:
+            linear-gradient(var(--background), var(--background)) 50% 50% / 2px 0.75rem no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 0.5rem 1.125rem no-repeat,
+            linear-gradient(var(--focus-ring), var(--focus-ring)) 50% 50% / 1.125rem 1.75rem no-repeat;
+    }
+    [data-theme='titanium'] .kp-slider__input:disabled {
+        --kp-slider-thumb-art:
+            linear-gradient(var(--border-strong), var(--border-strong)) 50% 50% / 0.875rem 1.5rem no-repeat;
+    }
+    [data-theme='titanium'] .kp-slider__input::-moz-range-thumb,
+    [data-theme='titanium'] .kp-slider__input::-webkit-slider-thumb {
+        clip-path: polygon(
+            calc(50% - 0.5625rem + 0.375rem) calc(50% - 0.875rem),
+            calc(50% + 0.5625rem) calc(50% - 0.875rem),
+            calc(50% + 0.5625rem) calc(50% + 0.875rem - 0.375rem),
+            calc(50% + 0.5625rem - 0.375rem) calc(50% + 0.875rem),
+            calc(50% - 0.5625rem) calc(50% + 0.875rem),
+            calc(50% - 0.5625rem) calc(50% - 0.875rem + 0.375rem)
+        );
+    }
+    [data-theme='titanium'] .kp-slider__rail {
+        border-color: var(--background);
+        background: var(--muted);
+        box-shadow: inset 0 1px 0 hsl(from var(--background) h s l / 0.8), 0 1px 0 hsl(from var(--foreground) h s l / 0.1);
+    }
+}
+
+/* ── kpadopt5/6 fit: the version chip with a long unbroken version [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* A 64-character hash has no place to break; in this theme's wide mono it ran out of its box. Only when no break
+       place is left on the line may it break inside the string. */
+    [data-theme='titanium'] .kp-badge--version {
+        max-inline-size: 100%;
+    }
+    [data-theme='titanium'] :is(.kp-version__from, .kp-version__to) {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+}
+
+/* ── kpadopt5/6 fit: bars of controls in a card on a phone [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* The card is a grid whose one track took the width of its widest unbreakable line, so a bar of segments or buttons
+       pushed the card's content out of the card. The track is the card's width; the bar's own wrapping and the track's
+       scrolling then do their work. */
+    [data-theme='titanium'] :is(.kp-inspector, .kp-refresh) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    [data-theme='titanium'] :is(.kp-inspector__bar, .kp-refresh__bar, .kp-refresh__chooser) {
+        min-inline-size: 0;
+        max-inline-size: 100%;
+    }
+}
+
+/* ── kpadopt5/6 fit: the code box's tools [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* Pretty/Raw, Wrap and Copy in one nowrap row: the Pretty/Raw track was squeezed to a 30 px sliver. The tools take a
+       second row when they do not fit, and the track keeps its width. */
+    [data-theme='titanium'] .kp-code__tools {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+    [data-theme='titanium'] .kp-code__tools > .kp-segmented {
+        flex: none;
     }
 }
 
@@ -67712,6 +68580,17 @@
         padding-inline: 0.9rem;
     }
 
+    /* "Mark unread" is 133 px wide with the capitals and the 0.08em tracking: the package's 7.5rem read column cut it by 6 px
+       behind the button's own clip. */
+    [data-theme='deco'] .kp-notices {
+        --kp-notices-read-col: 9rem;
+    }
+
+    /* The code box's "Show all N lines" took the width its words wrapped to and the clip cut 5 to 9 px of them at 390 px. */
+    [data-theme='deco'] .kp-code__foot .kp-button {
+        min-inline-size: max-content;
+    }
+
     [data-theme='deco'] .kp-button--lg {
         font-size: 0.95rem;
         padding-inline: 1.7rem;
@@ -69951,9 +70830,21 @@
         text-underline-offset: 0.3em;
     }
 
+    /* A failed area says so in the ruby with the gold rule under it (G8), the same ruby as the alert's label: the lacquer
+       plate of a failure was otherwise indistinguishable from an empty one. */
+    [data-theme='deco'] .kp-alert--destructive:is(.kp-stateplate, .kp-card__failure) :is(.kp-stateplate__title, .kp-card__state-title),
+    [data-theme='deco'] .kp-alert--destructive.kp-rating__failure .kp-rating__failure-text {
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.3em;
+    }
+
     /* The empty state: no crest (Q19), its title in capitals. */
     [data-theme='deco'] .kp-empty {
         display: grid;
+        /* The grid's rows stretched over a tall plate (dated-states: the title at the top, the button at the foot);
+           the package's own empty plates are flex columns centred in the middle. */
+        align-content: center;
         justify-items: center;
         gap: 0.3rem;
         padding: 1.2rem 1.1rem;
@@ -69967,6 +70858,24 @@
     [data-theme='deco'] .kp-empty__title {
         font-size: 1.05rem;
         letter-spacing: var(--kp-sig-deco-title-track);
+    }
+
+    /* The empty plate a failure borrows (passkeys, thread: `data-kp-tone='error'`) says so in the ruby with the gold rule. */
+    [data-theme='deco'] .kp-empty[data-kp-tone='error'] .kp-empty__title {
+        /* Josefin in sentence case like the other failed plates: the ruby in Poiret's hairline strokes did not read. */
+        font-family: var(--theme-font-body);
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        text-transform: none;
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.3em;
+    }
+
+    /* An empty plate that fills its whole component is set at heading size (the package's 1.125rem; the rule above made it
+       1.05rem, a small line in a large plate). */
+    [data-theme='deco'] .kp-empty__title:is(.kp-dated__empty-title, .kp-runs__empty-title, .kp-passkeys__note-title, .kp-thread__note-title) {
+        font-size: 1.375rem;
     }
 
     /* The dialog: lacquer, the double rule under its title (the dialog is
@@ -73478,6 +74387,135 @@
     }
     [data-theme='deco'] .kp-wheel__caption {
         letter-spacing: 0.04em;
+    }
+}
+
+/* ── The new adoption parts in deco [t56-deco-1018] ──
+   Deco's own (themes/deco/CHARACTER.md, G5 to G7, G14): what is empty or failed inside a list is the lobby's plate, lacquer
+   with the wallpaper and the double gold inlay, never a bare black void; the words of a waiting part stand over the doors
+   that part and close, so they read at every moment of the loop; the quote mark is a gold jewel. On a phone the labels
+   are set tight, so a day's name, a segment, a Back or a Next never breaks mid-word (DEMO_RULES.md, chapter 2). */
+@layer kp.signature {
+    [data-theme='deco'] .kp-checklist__empty {
+        border: 1px solid hsl(from var(--primary) h s l / 0.3);
+        background-color: var(--kp-sig-deco-lac);
+        background-image:
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px);
+        background-size: 24px 24px;
+        box-shadow:
+            inset 0 0 0 3px var(--kp-sig-deco-lac),
+            inset 0 0 0 4px hsl(from var(--primary) h s l / 0.6);
+        color: var(--foreground);
+        letter-spacing: var(--kp-sig-deco-title-track);
+    }
+    [data-theme='deco'] .kp-checklist__empty[data-kp-checklist-failed] {
+        border-color: hsl(from var(--primary) h s l / 0.3);
+        text-decoration: none;
+    }
+    [data-theme='deco'] .kp-datatable__busy-words {
+        position: relative;
+        z-index: 4;
+    }
+    [data-theme='deco'] .kp-quote__text::before {
+        --kp-glyph-quote: '\25C6';
+        color: var(--primary);
+        font-size: calc(var(--kp-quote-mark-size, 2.25rem) * 0.42);
+        inset-block-start: 0.35em;
+        opacity: 1;
+    }
+    /* The rating's failed state is the alert laid over the stars' own place [rating-states]: this register's `.kp-alert` is
+       positioned `relative`, which took the package's `position: absolute; inset: 0` away, put the plate under the hidden
+       stars and grew the component from 80 px to 178 (brutalism) or 201 (deco). */
+    [data-theme='deco'] .kp-alert.kp-rating__failure {
+        position: absolute;
+        inset: 0;
+        padding: 0.25rem 0.5rem;
+        row-gap: 0.25rem;
+    }
+
+    [data-theme='deco'] .kp-focus-steps__nav > .kp-button {
+        padding-inline: 1rem;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+    }
+    @container kp-weekdays (max-width: 26rem) {
+        [data-theme='deco'] .kp-weekdays .kp-weekdays__chips {
+            gap: 0.125rem;
+        }
+        [data-theme='deco'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+            font-size: 0.625rem;
+            letter-spacing: 0.02em;
+        }
+    }
+    @media (max-width: 30rem) {
+        [data-theme='deco'] .kp-segmented:not(.kp-segmented--chips, .kp-segmented--block) {
+            --kp-seg-tracking: 0.02em;
+            --kp-seg-size: 0.68rem;
+            --kp-seg-item-pad-inline: 0.375rem;
+        }
+    }
+
+    /* The bubbles of a conversation, the tiles of a gallery and the plate of a QR code are lobby plates in little: lacquer
+       with the wallpaper, a hairline and the second hairline 3 px inside it (G5, G7). A picture and a code keep their own
+       ground (the tile's picture, the white a scanner needs), so their second rule stands 3 px outside, in the gap. */
+    [data-theme='deco'] .kp-thread__bubble {
+        border: 1px solid hsl(from var(--primary) h s l / 0.3);
+        border-radius: 0;
+        background-color: var(--kp-sig-deco-lac);
+        background-image:
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px);
+        background-size: 24px 24px;
+        box-shadow:
+            inset 0 0 0 3px var(--kp-sig-deco-lac),
+            inset 0 0 0 4px hsl(from var(--primary) h s l / 0.5);
+        padding-inline: 1rem;
+        padding-block: 0.75rem;
+    }
+    [data-theme='deco'] .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        border-color: hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='deco'] .kp-thread__item[data-kp-first='true'] > .kp-thread__bubble {
+        border-radius: 0;
+    }
+    [data-theme='deco'] .kp-gallery__tile,
+    [data-theme='deco'] .kp-qr__plate {
+        border: 1px solid hsl(from var(--primary) h s l / 0.7);
+        border-radius: 0;
+        overflow: visible;
+        box-shadow:
+            0 0 0 3px var(--background),
+            0 0 0 4px hsl(from var(--primary) h s l / 0.5);
+    }
+
+    /* A full digest is one unbroken run of hex; it may break anywhere (a version number still breaks only after a dot). */
+    [data-theme='deco'] .kp-badge--version[data-kp-version-digest='full'] :is(.kp-version__from, .kp-version__to) {
+        overflow-wrap: anywhere;
+    }
+
+    /* A checklist row's detail wraps in a narrow row instead of crowding the label out (print checklist at 390 px: the label
+       was 0 to 25 px wide). */
+    [data-theme='deco'] .kp-checklist__detail {
+        max-inline-size: 11rem;
+        overflow-wrap: anywhere;
+        white-space: normal;
+    }
+
+    /* The answer buttons of a person's own row wrap inside part of the row, so the name keeps its room. */
+    [data-theme='deco'] .kp-availability__column-row {
+        grid-template-columns: minmax(6rem, 1fr) minmax(0, max-content);
+    }
+    [data-theme='deco'] .kp-availability__column-answers {
+        justify-content: flex-end;
+    }
+
+    /* The code box's tools wrap under the title when the line is short, instead of pushing Copy past the box's edge. */
+    [data-theme='deco'] .kp-code__tools {
+        flex-wrap: wrap;
+    }
+    [data-theme='deco'] .kp-code__head {
+        min-inline-size: 0;
     }
 }
 
@@ -81968,16 +83006,20 @@
         border-radius: 1px;
     }
 
-    [data-theme='nostromo'] .kp-empty__title {
+    /* The empty plate's ink tape names the state at heading size (DEMO_RULES 3): the stateplate's title is the same
+       tape as every other empty title, so an empty area reads alike wherever the page draws it. */
+    [data-theme='nostromo'] :is(.kp-empty__title, .kp-stateplate--empty .kp-stateplate__title) {
         display: inline-block;
         margin-block-end: 0.5rem;
-        padding: 0.15rem 0.6rem;
+        padding: 0.2rem 0.75rem;
         border-radius: 2px;
         background: var(--foreground);
         color: var(--primary-foreground);
         font-family: var(--theme-font-mono);
-        font-size: 0.8rem;
-        letter-spacing: 0.12em;
+        font-size: clamp(1rem, 0.9rem + 0.4vw, 1.25rem);
+        font-weight: 400;
+        letter-spacing: 0.08em;
+        line-height: 1.3;
         text-transform: uppercase;
     }
 
@@ -84427,9 +85469,14 @@
     /* A card in four data states: the stage is a bay; its note and its failure keep the empty state's and alert's plates. */
     [data-theme='nostromo'] .kp-card__state-title {
         font-family: var(--theme-font-mono);
-        font-size: 0.8rem;
-        letter-spacing: 0.1em;
+        font-size: clamp(1rem, 0.9rem + 0.4vw, 1.25rem);
+        letter-spacing: 0.08em;
+        line-height: 1.3;
         text-transform: uppercase;
+    }
+    /* The klaxon plate is solid red: its title keeps the plate's own ink, not the page's (dark on red was unreadable). */
+    [data-theme='nostromo'] .kp-alert--destructive .kp-card__state-title {
+        color: inherit;
     }
     [data-theme='nostromo'] .kp-card__state > .kp-card__empty {
         border-radius: var(--kp-sig-no-key);
@@ -85523,6 +86570,268 @@
     }
     [data-theme='nostromo'] .kp-dialog__actions > .kp-button {
         white-space: nowrap;
+    }
+}
+
+/* ── kpadopt5/6 fit: a segmented track that is wider than its room [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* In this theme's wide mono capitals a track outgrows a phone, scrolled, and its last label was clipped at the track's
+       edge. Under 34rem the segments take less padding and tracking. A track of up to three also shares its width and a
+       long label wraps between words. A track of four or more takes rows instead of scrolling (the segments of a row share
+       it); the sliding plate cannot follow a second row, so the chosen segment carries its own plate there. A label is
+       never cut by an ellipsis. The inspector's filter does the same whenever its card is narrower than 34rem. */
+    @media (max-width: 34rem) {
+        [data-theme='nostromo'] .kp-segmented:not(.kp-segmented--chips) {
+            --kp-seg-item-pad-inline: 0.5rem;
+            letter-spacing: 0.02em;
+        }
+        [data-theme='nostromo'] .kp-segmented:not(.kp-segmented--chips, :has(> :nth-child(4))) {
+            grid-auto-columns: minmax(0, 1fr);
+            letter-spacing: 0.04em;
+        }
+        [data-theme='nostromo'] .kp-segmented:not(.kp-segmented--chips, :has(> :nth-child(4))) > .kp-segmented__item {
+            white-space: normal;
+            overflow-wrap: normal;
+            line-height: 1.25;
+        }
+        [data-theme='nostromo'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(4)) {
+            display: flex;
+            flex-wrap: wrap;
+            inline-size: 100%;
+        }
+        [data-theme='nostromo'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item {
+            flex: 1 1 auto;
+        }
+        [data-theme='nostromo'] .kp-segmented[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4))::before {
+            display: none;
+        }
+        [data-theme='nostromo'] .kp-segmented[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item[aria-checked='true'] {
+            background: var(--kp-seg-thumb, var(--card));
+            box-shadow: var(--kp-seg-thumb-edge, 0 0 0 1px var(--border-strong)), var(--kp-seg-thumb-lift, 0 0 0 0 transparent);
+        }
+    }
+    @container kp-inspector (max-width: 34rem) {
+        [data-theme='nostromo'] .kp-inspector__filter:not(.kp-segmented--chips):has(> :nth-child(4)) {
+            display: flex;
+            flex-wrap: wrap;
+            inline-size: 100%;
+        }
+        [data-theme='nostromo'] .kp-inspector__filter:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item {
+            flex: 1 1 auto;
+        }
+        [data-theme='nostromo'] .kp-inspector__filter[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4))::before {
+            display: none;
+        }
+        [data-theme='nostromo'] .kp-inspector__filter[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item[aria-checked='true'] {
+            background: var(--kp-seg-thumb, var(--card));
+            box-shadow: var(--kp-seg-thumb-edge, 0 0 0 1px var(--border-strong)), var(--kp-seg-thumb-lift, 0 0 0 0 transparent);
+        }
+    }
+}
+
+/* ── kpadopt5/6 fit: the weekday chips [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* Seven (and thirty-one) chips share one phone-wide row; the tracked mono capitals touched the chip edge. */
+    @media (max-width: 34rem) {
+        [data-theme='nostromo'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+            font-size: 0.625rem;
+            letter-spacing: 0.02em;
+        }
+    }
+}
+
+/* ── kpadopt5/6 fit: the fold button of a code cell [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* "Show all 38 lines" sizes the button to its longest word; in a 200 px cell its wide capitals outgrew the button. */
+    [data-theme='nostromo'] .kp-code--cell .kp-code__foot .kp-button {
+        font-size: 0.6875rem;
+        letter-spacing: 0.02em;
+    }
+}
+
+/* ── kpadopt5/6 fit: the request inspector's row in a narrow card [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* In the card of a phone the row is 250 px and method, status, source and time cannot share one line in this
+       theme's wide letters (the source tag was squeezed to single letters over the date). Method and status take the
+       first line, the path the next, the source and the time share the last, the time always at its end. */
+    @container kp-inspector (max-width: 40rem) {
+        [data-theme='nostromo'] .kp-inspector__row {
+            grid-template-columns: auto minmax(0, 1fr);
+            grid-template-areas:
+                'method status'
+                'path path'
+                'source time';
+        }
+        [data-theme='nostromo'] .kp-inspector__status {
+            justify-self: start;
+        }
+        [data-theme='nostromo'] .kp-inspector__time {
+            justify-self: end;
+            text-align: end;
+        }
+    }
+}
+
+/* ── kpadopt5/6 fit: the folded quote [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* Titillium Web's line box is taller than a 1.5 line pitch, so the clamped fifth line's box reached into the Show all
+       button below it. At 1.6 every line box ends where the next begins and the fold cuts exactly under line four. */
+    [data-theme='nostromo'] .kp-quote__text {
+        line-height: 1.6;
+    }
+
+    /* The quote's loading stage keeps the room of the busy card (--kp-quote-min), and nostromo's tall busy panel (reel,
+       words and the LED window) needs all of it; the quote at rest was 26 px shorter, so loading pushed the page down.
+       The stage holds that room in every state. */
+    [data-theme='nostromo'] .kp-quote > .kp-card__stage {
+        min-block-size: var(--kp-quote-min, 9rem);
+    }
+}
+
+/* ── kpadopt5/6 fit: the availability list on a phone [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* The signed-in person's own row carries three answer keys; with the lamp and the label tape they are wider than the
+       row, and the key row pushed the person's name down to nothing. The name takes its own line over the keys. */
+    [data-theme='nostromo'] .kp-availability__column-row:has(> .kp-availability__column-answers) {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 0.25rem;
+        padding-block: 0.25rem;
+    }
+    [data-theme='nostromo'] .kp-availability__column-answers > .kp-availability__pick {
+        letter-spacing: 0.04em;
+        padding-inline-end: 0.5rem;
+    }
+}
+
+/* ── kpadopt5/6 fit: the growing text box [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* The theme's size motion moves a box one line per 80 ms frame. A text box that takes a whole mail (87 lines at 390 px)
+       therefore glided for 6960 ms with its field clipped, and the box under it stood on the unfinished one. A growing
+       text box keeps the line-by-line steps but takes the theme's strike time for all of them (js/motion.js reads
+       `--kp-size-step`; 0 means the size time). */
+    [data-theme='nostromo'] .kp-field:has(> .kp-autosize) {
+        --kp-size-step: 0ms;
+    }
+}
+
+/* ── kpadopt5/6 fit: the checklist's detail on a phone [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* The detail never wraps in the shared part; in this theme's mono it is wider than the row and ran off the plate
+       (cut at the screen edge) while it squeezed the label to a column of single letters. On a phone it wraps in a
+       column of at most 9rem, at its end. */
+    @media (max-width: 34rem) {
+        [data-theme='nostromo'] .kp-checklist__detail {
+            max-inline-size: 9rem;
+            white-space: normal;
+            overflow-wrap: anywhere;
+        }
+    }
+}
+
+/* ── kpadopt5/6 fit: the version chip with a long unbroken version [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* A 64-character hash has no place to break; in this theme's wide mono it ran out of its box. Only when no break
+       place is left on the line may it break inside the string. */
+    [data-theme='nostromo'] .kp-badge--version {
+        max-inline-size: 100%;
+    }
+    [data-theme='nostromo'] :is(.kp-version__from, .kp-version__to) {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+}
+
+/* ── kpadopt5/6 fit: bars of controls in a card on a phone [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* The card is a grid whose one track took the width of its widest unbreakable line, so a bar of segments or buttons
+       pushed the card's content out of the card. The track is the card's width; the bar's own wrapping and the track's
+       scrolling then do their work. */
+    [data-theme='nostromo'] :is(.kp-inspector, .kp-refresh) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    [data-theme='nostromo'] :is(.kp-inspector__bar, .kp-refresh__bar, .kp-refresh__chooser) {
+        min-inline-size: 0;
+        max-inline-size: 100%;
+    }
+}
+
+/* ── kpadopt5/6 fit: the code box's tools [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* Pretty/Raw, Wrap and Copy in one nowrap row: the Pretty/Raw track was squeezed to a 30 px sliver. The tools take a
+       second row when they do not fit, and the track keeps its width. */
+    [data-theme='nostromo'] .kp-code__tools {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+    [data-theme='nostromo'] .kp-code__tools > .kp-segmented {
+        flex: none;
+    }
+}
+
+/* ── kpadopt5/6 parts: nostromo's own corners and chart kinds [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* Label tape is cut square (G6): a key chip, a count, a map chip and the slider's groove are tape or vent, not pills.
+       Lamps, reels and rings stay round. */
+    [data-theme='nostromo'] :is(.kp-chart__annkey-item, .kp-segmented__count, .kp-uses__chip, .kp-slider__rail) {
+        border-radius: 2px;
+    }
+
+    /* The chart's event kinds on the case: the package paints them in the tones' ink, which in this theme is cream (made
+       for text on a coloured plate), so on the beige plot an operation, an update and a window were three pale dots no
+       one could tell apart. On the case a kind takes the tone's own colour, as the tape does. */
+    [data-theme='nostromo'] .kp-chart:has(.kp-chart__annkey) {
+        --kp-nostromo-kind-info: var(--info);
+        --kp-nostromo-kind-warning: var(--warning);
+    }
+    [data-theme='nostromo'] .kp-chart:has(.kp-chart__annkey) :is(.kp-chart__mark, .kp-chart__band, .kp-chart__annkey-item, pattern) {
+        --kp-chart-tone: var(--kp-nostromo-kind-info);
+    }
+    [data-theme='nostromo'] .kp-chart:has(.kp-chart__annkey) [data-kp-tone='warning'] {
+        --kp-chart-tone: var(--kp-nostromo-kind-warning);
+    }
+    [data-theme='nostromo'] .kp-chart:has(.kp-chart__annkey) [data-kp-tone='critical'] {
+        --kp-chart-tone: var(--destructive);
+    }
+}
+
+/* ── kpadopt5/6 parts: nostromo's slider is a fader [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* A fader on the console (G6, G14): the groove is a vent slot, the thumb a moulded key cap in the case's plastic with
+       an ink rim and a printed index line; focus lights the cap's lamp in the register's ring; the cap does not move
+       when pressed, it goes in (a well). The 2.75rem box stays the touch target. */
+    [data-theme='nostromo'] .kp-slider__input {
+        --kp-slider-thumb-art:
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 2px 0.875rem no-repeat,
+            repeating-linear-gradient(0deg, hsl(from var(--foreground) h s l / 0.09) 0 1px, transparent 1px 3px) 50% 50% / 1rem 1.5rem no-repeat,
+            linear-gradient(var(--secondary), var(--secondary)) 50% 50% / 1rem 1.5rem no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 1.25rem 1.75rem no-repeat;
+    }
+    [data-theme='nostromo'] .kp-slider__input:focus-visible {
+        --kp-slider-thumb-art:
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 2px 0.875rem no-repeat,
+            radial-gradient(circle at 50% calc(50% - 0.5625rem), var(--sidebar-primary) 0 2px, transparent 2.5px),
+            linear-gradient(var(--secondary), var(--secondary)) 50% 50% / 1rem 1.5rem no-repeat,
+            linear-gradient(var(--focus-ring), var(--focus-ring)) 50% 50% / 1.25rem 1.75rem no-repeat;
+    }
+    [data-theme='nostromo'] .kp-slider__input:active {
+        --kp-slider-thumb-art:
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 2px 0.875rem no-repeat,
+            linear-gradient(color-mix(in oklab, var(--secondary) 82%, var(--foreground)), color-mix(in oklab, var(--secondary) 82%, var(--foreground))) 50% 50% / 1rem 1.5rem no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 1.25rem 1.75rem no-repeat;
+    }
+    [data-theme='nostromo'] .kp-slider__input:disabled {
+        --kp-slider-thumb-art:
+            linear-gradient(var(--muted), var(--muted)) 50% 50% / 1rem 1.5rem no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 50% 50% / 1.25rem 1.75rem no-repeat;
+    }
+    [data-theme='nostromo'] .kp-slider__input::-moz-range-thumb,
+    [data-theme='nostromo'] .kp-slider__input::-webkit-slider-thumb {
+        clip-path: inset(calc(50% - 0.875rem) calc(50% - 0.625rem) round 0.3rem);
+    }
+    [data-theme='nostromo'] .kp-slider__rail {
+        border-color: var(--border-strong);
+        background: var(--kp-no-seam, var(--muted));
+        box-shadow: var(--kp-sig-no-well, inset 0 1px 2px hsl(from var(--foreground) h s l / 0.3));
     }
 }
 
@@ -90889,6 +92198,158 @@
 }
 /* ── end the kpadopt4 secrets, time, cooking and commands ── */
 
+/* ── t56: the kpadopt5/6 parts inside dark ── */
+@layer kp.signature {
+    /* A segmented track that outgrows a phone wraps its labels between words instead of scrolling a label under the
+       edge: the columns keep the longest word and share the rest. */
+    @media (max-width: 30rem) {
+        [data-theme='dark'] .kp-segmented:not(.kp-segmented--chips):not(.kp-segmented--block) {
+            grid-auto-columns: minmax(min-content, 1fr);
+        }
+        [data-theme='dark'] .kp-segmented:not(.kp-segmented--chips) > .kp-segmented__item {
+            white-space: normal;
+        }
+        /* A track of five or more segments (a filter with its counts) closes its tracking and padding up so it fits a phone. */
+        [data-theme='dark'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(5)) {
+            --kp-seg-item-pad-inline: 0.375rem;
+            --kp-seg-tracking: 0.02em;
+        }
+        [data-theme='dark'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(5)) {
+            --kp-seg-size: 0.6875rem;
+            --kp-seg-tracking: 0;
+            --kp-seg-item-pad-inline: 0.3rem;
+        }
+    }
+    /* The weekday chips are seven equal columns: on a narrow picker the track letters close up so a day keeps room. */
+    @container kp-weekdays (max-width: 22rem) {
+        [data-theme='dark'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+            letter-spacing: 0;
+            font-size: 0.65rem;
+        }
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the version badge ── */
+@layer kp.signature {
+    /* A sha256 is 64 characters that break only after the colon. The badge is one row wide, so it stays inside the row
+       (border box) and the digest is set at 12 px, which leaves it 8 px clear of the cut edge at the widest row. */
+    [data-theme='dark'] .kp-badge--version {
+        box-sizing: border-box;
+        border-radius: 0;
+        font-size: 0.75rem;
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the gallery tile ── */
+@layer kp.signature {
+    /* A picture is a plate like every dark part: cut on two opposite corners, its edge the strong line; pointing at it rests
+       the film's cyan on the edge (the line stops at the start edge, G15). The caption is the ticker's mono. */
+    [data-theme='dark'] .kp-gallery__tile {
+        border-radius: 0;
+        border-color: var(--border-strong);
+        clip-path: var(--kp-dk4-cut);
+    }
+    [data-theme='dark'] .kp-gallery__tile:hover,
+    [data-theme='dark'] .kp-gallery__tile:focus-within {
+        border-color: var(--chart-1);
+    }
+    [data-theme='dark'] .kp-gallery__caption {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0;
+        border-block-start: 1px solid var(--chart-1);
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the conversation bubble ── */
+@layer kp.signature {
+    /* A message is a plate cut on two opposite corners; yours is cut the other way round, so the two sides read as two
+       hands even without their colour. The time is the ticker's mono. */
+    [data-theme='dark'] .kp-thread__scroll {
+        border-radius: 0;
+    }
+    [data-theme='dark'] .kp-thread__bubble {
+        border-radius: 0;
+        border-color: var(--border-strong);
+        clip-path: var(--kp-dk4-cut);
+    }
+    [data-theme='dark'] .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        clip-path: polygon(
+            var(--kp-dk4-c) 0,
+            100% 0,
+            100% calc(100% - var(--kp-dk4-c)),
+            calc(100% - var(--kp-dk4-c)) 100%,
+            0 100%,
+            0 var(--kp-dk4-c)
+        );
+    }
+    [data-theme='dark'] .kp-thread__time {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0;
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: what has to fit a phone ── */
+@layer kp.signature {
+    /* The tools of a code block (Pretty, Raw, Wrap, Copy) may take a second line instead of leaving the block. */
+    [data-theme='dark'] .kp-code__tools {
+        flex-wrap: wrap;
+    }
+    /* A digest (64 characters, no place to break) breaks at the badge's edge rather than leaving it. */
+    [data-theme='dark'] .kp-badge--version,
+    [data-theme='dark'] .kp-badge--version > :is(.kp-version__from, .kp-version__to) {
+        min-inline-size: 0;
+        overflow-wrap: break-word;
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the inspector row on a phone ── */
+@layer kp.signature {
+    /* The status tag with its tracking, the time and the source tag are wider together than a phone row: the source tag
+       got no column (a sliver, its letters standing on top of each other) and the time ran out of the row. On a phone the
+       row is three lines: method and status, the path, then the time with the source at the end. */
+    @container kp-inspector (max-width: 26rem) {
+        [data-theme='dark'] .kp-inspector__row {
+            grid-template-columns: auto minmax(0, 1fr) auto;
+            grid-template-areas:
+                'method status status'
+                'path path path'
+                'time time source';
+        }
+        [data-theme='dark'] .kp-inspector__row :is(.kp-badge, .kp-inspector__time) {
+            white-space: nowrap;
+        }
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: a long detail in a checklist row ── */
+@layer kp.signature {
+    /* A detail that cannot wrap ("check-in after 15:00, reference 8841-KP") left the label 22 px, which broke it in the
+       middle of its words. The detail wraps inside ten rem and the label keeps the rest of the row. */
+    [data-theme='dark'] .kp-checklist__detail {
+        max-inline-size: 10rem;
+        white-space: normal;
+        overflow-wrap: break-word;
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the quote card keeps its room ── */
+@layer kp.signature {
+    /* The loading card reserves room for its busy panel (--kp-quote-min), the loaded card did not: loading grew the card by
+       a third. The loaded card keeps the same room, so empty, failed, loading and loaded are one footprint. */
+    [data-theme='dark'] .kp-quote > .kp-card__stage {
+        min-block-size: var(--kp-quote-min, 9rem);
+    }
+}
+/* ── end t56 ── */
+
 /* The numbers formal's motion is made of, registered at the top level
    because Firefox does not register an @property inside a cascade layer;
    with no registration every keyframe below would flip between its two
@@ -96236,6 +97697,23 @@
         border-radius: var(--radius);
     }
 
+    /* A failed area is the red sky (G13, the busy failure decided as r2-so-failure-1): the dark card plate, the wash rising
+       from its foot, the foot edge and a 1 px ring in the red, the words in the lifted red ink. The package's flat
+       `--destructive` fill (a salmon block over the whole component) is no part of solstice's light. */
+    [data-theme='solstice'] .kp-alert--destructive:is(.kp-stateplate, .kp-rating__failure) {
+        background:
+            linear-gradient(to top, hsl(from var(--destructive) h s l / 0.3), transparent 75%),
+            var(--card);
+        color: var(--foreground);
+        border-color: hsl(from var(--destructive) h s l / 0.55);
+        box-shadow: inset 0 -2px 0 hsl(from var(--destructive) h s 50%);
+    }
+
+    [data-theme='solstice'] .kp-alert--destructive:is(.kp-stateplate, .kp-rating__failure) .kp-stateplate__title,
+    [data-theme='solstice'] .kp-alert--destructive.kp-rating__failure .kp-rating__failure-text {
+        color: hsl(from var(--destructive) h s 68%);
+    }
+
     [data-theme='solstice'] .kp-grid {
         gap: var(--kp-space-lg);
     }
@@ -97213,6 +98691,24 @@
         color: var(--foreground);
         font-family: var(--theme-font-display);
         font-size: 1.3rem;
+    }
+
+    /* The empty plate a failure borrows (passkeys, thread: `data-kp-tone='error'`) is the red sky, not the rising sun: the
+       sun is time passing and the empty state (G16); a failure reddens the foot light (G13). */
+    [data-theme='solstice'] .kp-empty[data-kp-tone='error'] {
+        background:
+            linear-gradient(to top, hsl(from var(--destructive) h s l / 0.3), transparent 75%),
+            var(--card);
+        border-color: hsl(from var(--destructive) h s l / 0.55);
+        box-shadow: inset 0 -2px 0 hsl(from var(--destructive) h s 50%);
+    }
+
+    [data-theme='solstice'] .kp-empty[data-kp-tone='error']::before {
+        display: none;
+    }
+
+    [data-theme='solstice'] .kp-empty[data-kp-tone='error'] .kp-empty__title {
+        color: hsl(from var(--destructive) h s 68%);
     }
 
     [data-theme='solstice'] .kp-empty__body {
@@ -99373,6 +100869,11 @@
         background:
             linear-gradient(var(--destructive), var(--destructive)) 0 100% / 100% 1px no-repeat,
             linear-gradient(to top, hsl(from var(--destructive) h s l / 0.2), transparent 70%);
+        /* On the card's dark sky the package's destructive-foreground (a dark red) left "why" unreadable. */
+        color: var(--foreground);
+    }
+    [data-theme='solstice'] .kp-card[data-kp-state='error'] > .kp-card__stage > .kp-card__state .kp-card__state-title {
+        color: hsl(from var(--destructive) h s 68%);
     }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='solstice'] .kp-card[data-kp-state='ready'] > .kp-card__stage > .kp-card__data {
@@ -100156,6 +101657,58 @@
         [data-theme='solstice'] .kp-wheel__segment {
             transition: fill calc(var(--kp-sig-solstice-contact) * 3) var(--kp-sig-solstice-touch);
         }
+    }
+}
+
+/* ── The new adoption parts in solstice [t56-solstice-1018] ──
+   A full digest is one unbroken run of hex: in the serif-set badge it ran 3 px past the badge's own edge, so it is allowed
+   to break anywhere (a version number still breaks only where it was given a place to). */
+@layer kp.signature {
+    [data-theme='solstice'] .kp-badge--version[data-kp-version-digest='full'] :is(.kp-version__from, .kp-version__to) {
+        overflow-wrap: anywhere;
+    }
+
+    /* A bubble is a plate lit from below (G7): the foot edge catching the low light and a faint rust wash rising from it;
+       the sender's own bubble is lit warmer (the amber wash), the words stand above the wash. */
+    [data-theme='solstice'] .kp-thread__bubble {
+        --kp-so-sky: var(--accent);
+        --kp-so-foot: hsl(from var(--primary) h s l / 0.45);
+        background:
+            linear-gradient(var(--kp-so-foot), var(--kp-so-foot)) 0 100% / 100% 1px no-repeat,
+            linear-gradient(to top, hsl(from var(--kp-so-sky) h s l / 0.14), transparent) 0 100% / 100% 45% no-repeat,
+            var(--card);
+    }
+    [data-theme='solstice'] .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        --kp-so-sky: var(--primary);
+        --kp-so-foot: hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='solstice'] .kp-thread__bubble[data-kp-status='failed'] {
+        --kp-so-sky: var(--destructive);
+        --kp-so-foot: var(--destructive);
+    }
+
+
+    /* A checklist row's detail wraps in a narrow row instead of crowding the label out (print checklist at 390 px: the label
+       was 0 to 25 px wide). */
+    [data-theme='solstice'] .kp-checklist__detail {
+        max-inline-size: 11rem;
+        overflow-wrap: anywhere;
+        white-space: normal;
+    }
+
+    /* A table in a phone-wide box keeps its last column inside the box: tighter cells, so the words never touch the edge. */
+    @media (max-width: 30rem) {
+        [data-theme='solstice'] .kp-datatable .kp-table :is(th, td) {
+            padding-inline: 0.5rem;
+        }
+    }
+
+    /* The code box's tools wrap under the title when the line is short, instead of pushing Copy past the box's edge. */
+    [data-theme='solstice'] .kp-code__tools {
+        flex-wrap: wrap;
+    }
+    [data-theme='solstice'] .kp-code__head {
+        min-inline-size: 0;
     }
 }
 

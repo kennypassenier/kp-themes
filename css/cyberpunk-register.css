@@ -7560,3 +7560,159 @@
     }
 }
 /* ── end the kpadopt4 secrets, time, cooking and commands ── */
+
+/* ── t56: the kpadopt5/6 parts inside cyberpunk ── */
+@layer kp.signature {
+    /* A segmented track that outgrows a phone wraps its labels between words instead of scrolling a label under the
+       edge: the columns keep the longest word and share the rest. */
+    @media (max-width: 30rem) {
+        [data-theme='cyberpunk'] .kp-segmented:not(.kp-segmented--chips):not(.kp-segmented--block) {
+            grid-auto-columns: minmax(min-content, 1fr);
+        }
+        [data-theme='cyberpunk'] .kp-segmented:not(.kp-segmented--chips) > .kp-segmented__item {
+            white-space: normal;
+        }
+        /* A track of five or more segments (a filter with its counts) closes its tracking and padding up so it fits a phone. */
+        [data-theme='cyberpunk'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(5)) {
+            --kp-seg-item-pad-inline: 0.375rem;
+            --kp-seg-tracking: 0.02em;
+        }
+        [data-theme='cyberpunk'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(5)) {
+            --kp-seg-size: 0.6875rem;
+        }
+    }
+    /* The weekday chips are seven equal columns: on a narrow picker the track letters close up so a day keeps room. */
+    @container kp-weekdays (max-width: 22rem) {
+        [data-theme='cyberpunk'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+            letter-spacing: 0;
+            font-size: 0.6875rem;
+        }
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the gallery tile ── */
+@layer kp.signature {
+    /* A picture is a jacked-in feed: the plate's notch, a scan raster over the picture and a tag caption. Pointing at it
+       burns the hazard yellow on the edge. */
+    [data-theme='cyberpunk'] .kp-gallery__tile {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-plate);
+    }
+    [data-theme='cyberpunk'] .kp-gallery__tile:not(.kp-skeleton)::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--kp-cp-scan);
+        mix-blend-mode: multiply;
+        pointer-events: none;
+    }
+    [data-theme='cyberpunk'] .kp-gallery__tile:hover,
+    [data-theme='cyberpunk'] .kp-gallery__tile:focus-within {
+        border-color: var(--primary);
+    }
+    [data-theme='cyberpunk'] .kp-gallery__caption {
+        font-family: var(--theme-font-mono);
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        border-inline-start: 3px solid var(--primary);
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the conversation bubble ── */
+@layer kp.signature {
+    /* A message is a packet: the plate's notch on the far corner (top right for theirs, top left for yours), the sender as a
+       tag and the time in the mono. */
+    [data-theme='cyberpunk'] .kp-thread__scroll {
+        border-radius: 0;
+    }
+    [data-theme='cyberpunk'] .kp-thread__bubble {
+        border-radius: 0;
+        clip-path: var(--kp-cp-clip-plate);
+    }
+    [data-theme='cyberpunk'] .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        clip-path: polygon(var(--kp-cp-notch) 0, 100% 0, 100% 100%, 0 100%, 0 var(--kp-cp-notch));
+    }
+    [data-theme='cyberpunk'] .kp-thread__sender {
+        font-family: var(--theme-font-mono);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    [data-theme='cyberpunk'] .kp-thread__sender::before {
+        content: '// ';
+        color: var(--accent);
+    }
+    [data-theme='cyberpunk'] .kp-thread__time {
+        font-family: var(--theme-font-mono);
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: what has to fit a phone ── */
+@layer kp.signature {
+    /* The tools of a code block (Pretty, Raw, Wrap, Copy) may take a second line instead of leaving the block. */
+    [data-theme='cyberpunk'] .kp-code__tools {
+        flex-wrap: wrap;
+    }
+    /* A digest (64 characters, no place to break) breaks at the badge's edge rather than leaving it. */
+    [data-theme='cyberpunk'] .kp-badge--version,
+    [data-theme='cyberpunk'] .kp-badge--version > :is(.kp-version__from, .kp-version__to) {
+        min-inline-size: 0;
+        overflow-wrap: break-word;
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the inspector row on a phone ── */
+@layer kp.signature {
+    /* The status tag with its tracking, the time and the source tag are wider together than a phone row: the source tag
+       got no column (a sliver, its letters standing on top of each other) and the time ran out of the row. On a phone the
+       row is three lines: method and status, the path, then the time with the source at the end. */
+    @container kp-inspector (max-width: 26rem) {
+        [data-theme='cyberpunk'] .kp-inspector__row {
+            grid-template-columns: auto minmax(0, 1fr) auto;
+            grid-template-areas:
+                'method status status'
+                'path path path'
+                'time time source';
+        }
+        [data-theme='cyberpunk'] .kp-inspector__row :is(.kp-badge, .kp-inspector__time) {
+            white-space: nowrap;
+        }
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: a long detail in a checklist row ── */
+@layer kp.signature {
+    /* A detail that cannot wrap ("check-in after 15:00, reference 8841-KP") left the label 22 px, which broke it in the
+       middle of its words. The detail wraps inside ten rem and the label keeps the rest of the row. */
+    [data-theme='cyberpunk'] .kp-checklist__detail {
+        max-inline-size: 10rem;
+        white-space: normal;
+        overflow-wrap: break-word;
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the trace's rule tag ── */
+@layer kp.signature {
+    /* The tag's "// " lead is a flex item of the badge, so a rule name that did not fit its column wrapped under it and the
+       lead stood alone on the first line. As a block the lead is part of the text and the tag wraps like words do. */
+    [data-theme='cyberpunk'] .kp-trace__rule {
+        display: block;
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the quote card keeps its room ── */
+@layer kp.signature {
+    /* The loading card reserves room for its busy panel (--kp-quote-min), the loaded card did not: loading grew the card by
+       a third. The loaded card keeps the same room, so empty, failed, loading and loaded are one footprint. */
+    [data-theme='cyberpunk'] .kp-quote > .kp-card__stage {
+        min-block-size: var(--kp-quote-min, 9rem);
+    }
+}
+/* ── end t56 ── */
