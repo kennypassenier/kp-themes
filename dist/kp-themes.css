@@ -83877,6 +83877,10 @@
         line-height: 1.3;
         text-transform: uppercase;
     }
+    /* The klaxon plate is solid red: its title keeps the plate's own ink, not the page's (dark on red was unreadable). */
+    [data-theme='nostromo'] .kp-alert--destructive .kp-card__state-title {
+        color: inherit;
+    }
     [data-theme='nostromo'] .kp-card__state > .kp-card__empty {
         border-radius: var(--kp-sig-no-key);
     }
