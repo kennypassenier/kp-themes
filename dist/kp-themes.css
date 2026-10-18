@@ -44430,6 +44430,19 @@
 }
 /* ── end t56 ── */
 
+/* ── t56: cook mode navigation ── */
+@layer kp.signature {
+    /* Back and Next of the cook mode keep their words whole on a phone: less ink round the label, a tighter track. */
+    [data-theme='synthwave'] .kp-focus-steps__nav > .kp-button {
+        padding-inline: 0.75rem;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+        overflow-wrap: normal;
+        word-break: keep-all;
+    }
+}
+/* ── end t56 ── */
+
 /* A share, 0 to 1 (a progress bar's, a meter's), is walked to its value on
    two registered copies, one on each mirror of the motion, so that a rise is
    the picture's fall and a fall is that fall turned around; registered so

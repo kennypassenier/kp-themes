@@ -29,15 +29,15 @@ the selectors and their order are identical, which is what
 | `css/nostromo-register.css` | 234.0 kB | 130.9 kB | 44% |
 | `css/pastel-register.css` | 224.0 kB | 120.9 kB | 46% |
 | `css/solstice-register.css` | 183.6 kB | 108.9 kB | 41% |
-| `css/synthwave-register.css` | 242.6 kB | 132.7 kB | 45% |
+| `css/synthwave-register.css` | 243.1 kB | 132.9 kB | 45% |
 | `css/themes.css` | 131.6 kB | 82.3 kB | 37% |
 | `css/titanium-register.css` | 206.5 kB | 113.7 kB | 45% |
 | `css/utilities.css` | 8.4 kB | 4.6 kB | 45% |
-| `dist/kp-themes.css` | 3845.2 kB | 2075.1 kB | 46% |
+| `dist/kp-themes.css` | 3845.7 kB | 2075.3 kB | 46% |
 | `dist/kp-themes.js` | 2294.6 kB | 1299.4 kB | 43% |
 
-The loose stylesheets together weigh **3898.4 kB** authored and
-**2106.9 kB** minified, 46% less. A page loading one theme's
+The loose stylesheets together weigh **3898.8 kB** authored and
+**2107.1 kB** minified, 46% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
 The wire is smaller again: gzip takes the minified bundle to roughly a
