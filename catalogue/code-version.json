@@ -5739,6 +5739,8 @@
         "solstice||||.kp-button.kp-alarm__ack.kp-alarm__ack": "8bb79ca229bd76e9",
         "solstice||||.kp-button.kp-alarm__ack.kp-alarm__ack:not()": "8bb79ca229bd76e9",
         "solstice||||.kp-button.kp-alarm__keep.kp-alarm__keep": "f0d2013f4b6aa53d",
+        "solstice||||.kp-button[data-kp-toggle][aria-pressed='true']": "a80f910a54f2a845",
+        "solstice||||.kp-button[data-kp-toggle][data-kp-look='chip'][aria-pressed='true']": "a80f910a54f2a845",
         "solstice||||.kp-card": "35ff1da638263d04",
         "solstice||||.kp-card[data-kp-label]": "155bdcca2f7b1800",
         "solstice||||.kp-card[data-kp-open]": "19cf39c5d519d177",
