@@ -336,6 +336,59 @@ attachSegmented(group.parentElement);
 document.getElementById(<span class="kp-code__string">'doc-seg-reload'</span>).addEventListener(<span class="kp-code__string">'click'</span>, load);
 load();</code></pre>
                     </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Three ways: with, without, or either</figcaption>
+                        <p class="kp-text-muted">`data-kp-segmented=&quot;tri&quot;` on a chip group: each chip stands for something that must be in, must not be in, or does not matter. A press includes it (the chip filled, a ✓ mark), a second press leaves it out (the destructive edge, a ✕, the label struck through), a third lets it go; Delete or Backspace lets the focused chip go at once. The mark is always there and always the same size, so nothing moves. The chip marked `data-kp-segmented-all` is Clear all, dimmed while nothing is chosen, and `data-kp-segmented-summary` keeps one line after the group: its value is the hint while nothing is chosen, then it says what is. `kp-segmented-change` gains `include`, `exclude` and `state`; `getSegmentedTri` and `setSegmentedTri` read and write the two lists without an event.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-segmented kp-segmented--chips" id="doc-seg-tri" data-kp-segmented="tri" data-kp-segmented-summary="Press a chip to require it, again to leave it out." role="group" aria-label="Ingredients">
+    <button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all><span class="kp-segmented__label">Clear all</span></button>
+    <button type="button" class="kp-segmented__item" data-value="chicken"><span class="kp-segmented__label">Chicken</span></button>
+    <button type="button" class="kp-segmented__item" data-value="rice"><span class="kp-segmented__label">Rice</span></button>
+    <button type="button" class="kp-segmented__item" data-value="mushrooms"><span class="kp-segmented__label">Mushrooms</span></button>
+    <button type="button" class="kp-segmented__item" data-value="peanuts"><span class="kp-segmented__label">Peanuts</span></button>
+</div>
+<p class="kp-text-muted" id="doc-seg-tri-said" role="status">Nothing chosen.</p>
+<button type="button" class="kp-button kp-button--sm" id="doc-seg-tri-set">Set: with chicken, without peanuts</button>
+                            <script type="module">
+import { attachSegmented, getSegmentedTri, setSegmentedTri } from '../../js/segmented.js';
+
+const group = document.getElementById('doc-seg-tri');
+attachSegmented(group.parentElement);
+const said = document.getElementById('doc-seg-tri-said');
+group.addEventListener('kp-segmented-change', (event) => {
+    const { include, exclude, state } = event.detail;
+    said.textContent = 'With: ' + (include.join(', ') || 'nothing') + '. Without: ' + (exclude.join(', ') || 'nothing') + '. (' + event.detail.value + ' is now ' + state + '.)';
+});
+document.getElementById('doc-seg-tri-set').addEventListener('click', () => {
+    setSegmentedTri(group, { include: ['chicken'], exclude: ['peanuts'] });
+    said.textContent = 'Set from the page: ' + JSON.stringify(getSegmentedTri(group)) + '.';
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented kp-segmented--chips&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-seg-tri&quot;</span> <span class="kp-code__keyword">data-kp-segmented</span><span class="kp-code__string">=&quot;tri&quot;</span> <span class="kp-code__keyword">data-kp-segmented-summary</span><span class="kp-code__string">=&quot;Press a chip to require it, again to leave it out.&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;group&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Ingredients&quot;</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__item&quot;</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;all&quot;</span> <span class="kp-code__keyword">data-kp-segmented-all</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__label&quot;</span>&gt;Clear all&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__item&quot;</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;chicken&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__label&quot;</span>&gt;Chicken&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__item&quot;</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;rice&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__label&quot;</span>&gt;Rice&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__item&quot;</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;mushrooms&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__label&quot;</span>&gt;Mushrooms&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+    &lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__item&quot;</span> <span class="kp-code__keyword">data-value</span><span class="kp-code__string">=&quot;peanuts&quot;</span>&gt;&lt;<span class="kp-code__keyword">span</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-segmented__label&quot;</span>&gt;Peanuts&lt;/<span class="kp-code__keyword">span</span>&gt;&lt;/<span class="kp-code__keyword">button</span>&gt;
+&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-seg-tri-said&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;Nothing chosen.&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-seg-tri-set&quot;</span>&gt;Set: with chicken, without peanuts&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachSegmented, getSegmentedTri, setSegmentedTri } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/segmented'</span>;
+
+<span class="kp-code__keyword">const</span> group = document.getElementById(<span class="kp-code__string">'doc-seg-tri'</span>);
+attachSegmented(group.parentElement);
+<span class="kp-code__keyword">const</span> said = document.getElementById(<span class="kp-code__string">'doc-seg-tri-said'</span>);
+group.addEventListener(<span class="kp-code__string">'kp-segmented-change'</span>, (event) =&gt; {
+    <span class="kp-code__keyword">const</span> { include, exclude, state } = event.detail;
+    said.textContent = <span class="kp-code__string">'With: '</span> + (include.join(<span class="kp-code__string">', '</span>) || <span class="kp-code__string">'nothing'</span>) + <span class="kp-code__string">'. Without: '</span> + (exclude.join(<span class="kp-code__string">', '</span>) || <span class="kp-code__string">'nothing'</span>) + <span class="kp-code__string">'. ('</span> + event.detail.value + <span class="kp-code__string">' is now '</span> + state + <span class="kp-code__string">'.)'</span>;
+});
+document.getElementById(<span class="kp-code__string">'doc-seg-tri-set'</span>).addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; {
+    setSegmentedTri(group, { include: [<span class="kp-code__string">'chicken'</span>], exclude: [<span class="kp-code__string">'peanuts'</span>] });
+    said.textContent = <span class="kp-code__string">'Set from the page: '</span> + JSON.stringify(getSegmentedTri(group)) + <span class="kp-code__string">'.'</span>;
+});</code></pre>
+                    </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
                     <h2 class="kp-fw-semibold">Framework-free markup</h2>
@@ -442,6 +495,8 @@ load();</code></pre>
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-segmented=&quot;tri&quot;</code></td><td>The three-way chip group, used with `.kp-segmented--chips`. Each chip carries `data-kp-segmented-tri=&quot;include|exclude&quot;`, absent for either way (`TRI_ATTRIBUTE`, `TRI_STATES`), and the parts `.kp-segmented__mark`, `__state` (the word a screen reader hears after the name, “Chicken, required”), `__summary` and `__live`.</td></tr>
+                            <tr><td><code>getSegmentedTri / setSegmentedTri</code></td><td>Read `{ include, exclude }`, or set both lists without an event. `SegmentedItem.state` is the state a chip is given in `setSegmentedItems`.</td></tr>
                             <tr><td><code>.kp-segmented--chips</code></td><td>The same buttons as separate pills instead of a track; the chosen chip takes the primary colour.</td></tr>
                             <tr><td><code>.kp-segmented__count</code></td><td>A number beside the label. While the group is `aria-busy=&quot;true&quot;` it shows a placeholder, so nothing moves when the numbers arrive.</td></tr>
                             <tr><td><code>disabled</code></td><td>`disabled` on an item, or `aria-disabled=&quot;true&quot;` on the group, takes it out of the arrow keys and dims it.</td></tr>

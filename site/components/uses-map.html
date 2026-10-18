@@ -258,12 +258,120 @@
                 <section class="kp-section" data-sc-section="example" id="example">
                     <h2 class="kp-fw-semibold">Live example</h2>
                     <figure class="sc-example">
-                        <figcaption class="kp-fw-semibold">The lines view</figcaption>
-                        <p class="kp-text-muted">The same box as the matrix; a script gives it its rows, columns and cell function.</p>
+                        <figcaption class="kp-fw-semibold">Which CV each application uses</figcaption>
+                        <p class="kp-text-muted">The same box as the matrix with `data-kp-view=&quot;lines&quot;`; the matrix’s data gives the map: `rows` are the sources, `columns` the things that use them, and `cell(row, column)` returning something is a line. A node may carry `sub`, a document `glyph` (`pdf`, `doc`, `sheet`, `image`, `text`, `unknown`), an `href`, a `ghost` (a faint group) and `dashed` lines. Hover or focus a card and its lines light while the rest dims; a press pins it (`kp-uses-pin` reports `{ key, side, pinned, related }`); Escape lets go. Every card says the relation in words, so the phone list and the map hold the same text. Under 640 px the lines give way to a list of cards with their users as chips.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="kp-matrix" data-kp-matrix data-kp-view="lines" aria-label="What uses what"></div>
+<div class="kp-matrix" id="doc-uses" data-kp-matrix data-kp-view="lines" aria-label="Which CV each application uses"></div>
+<p class="kp-text-muted" id="doc-uses-said" role="status">Nothing pinned.</p>
+                            <script type="module">
+import { attachMatrices, setMatrix } from '../../js/heat.js';
+
+const map = document.getElementById('doc-uses');
+attachMatrices(map.parentElement);
+const used = { 'cv-nl': ['deloitte', 'takto', 'acme'], 'cv-en': ['globex'], none: ['initech'] };
+setMatrix(map, {
+    view: 'lines',
+    label: 'Which CV each application uses',
+    rows: [
+        { key: 'cv-nl', label: 'CV Developer NL', sub: 'generic master, made 06/2026', glyph: 'pdf', href: '#cv-nl' },
+        { key: 'cv-en', label: 'CV Developer EN', sub: 'tailored, made 09/2026', glyph: 'pdf' },
+        { key: 'cv-old', label: 'CV 2024', sub: 'replaced', glyph: 'doc' },
+        { key: 'none', label: 'No CV', ghost: true, dashed: true },
+    ],
+    columns: [
+        { key: 'deloitte', label: 'Deloitte', href: '#deloitte' },
+        { key: 'takto', label: 'Takto' },
+        { key: 'acme', label: 'Acme' },
+        { key: 'globex', label: 'Globex' },
+        { key: 'initech', label: 'Initech' },
+    ],
+    cell: (row, column) => ((used[row] ?? []).includes(column) ? { tone: 'ok' } : null),
+});
+map.addEventListener('kp-uses-pin', (event) => {
+    document.getElementById('doc-uses-said').textContent = event.detail.pinned ? event.detail.key + ' pinned, used with ' + event.detail.related.join(', ') + '.' : 'Nothing pinned.';
+});
+                            </script>
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-matrix&quot;</span> <span class="kp-code__keyword">data-kp-matrix</span> <span class="kp-code__keyword">data-kp-view</span><span class="kp-code__string">=&quot;lines&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;What uses what&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-matrix&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-uses&quot;</span> <span class="kp-code__keyword">data-kp-matrix</span> <span class="kp-code__keyword">data-kp-view</span><span class="kp-code__string">=&quot;lines&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Which CV each application uses&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-uses-said&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;Nothing pinned.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachMatrices, setMatrix } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/heat'</span>;
+
+<span class="kp-code__keyword">const</span> map = document.getElementById(<span class="kp-code__string">'doc-uses'</span>);
+attachMatrices(map.parentElement);
+<span class="kp-code__keyword">const</span> used = { <span class="kp-code__string">'cv-nl'</span>: [<span class="kp-code__string">'deloitte'</span>, <span class="kp-code__string">'takto'</span>, <span class="kp-code__string">'acme'</span>], <span class="kp-code__string">'cv-en'</span>: [<span class="kp-code__string">'globex'</span>], none: [<span class="kp-code__string">'initech'</span>] };
+setMatrix(map, {
+    view: <span class="kp-code__string">'lines'</span>,
+    label: <span class="kp-code__string">'Which CV each application uses'</span>,
+    rows: [
+        { key: <span class="kp-code__string">'cv-nl'</span>, label: <span class="kp-code__string">'CV Developer NL'</span>, sub: <span class="kp-code__string">'generic master, made 06/2026'</span>, glyph: <span class="kp-code__string">'pdf'</span>, href: <span class="kp-code__string">'#cv-nl'</span> },
+        { key: <span class="kp-code__string">'cv-en'</span>, label: <span class="kp-code__string">'CV Developer EN'</span>, sub: <span class="kp-code__string">'tailored, made 09/2026'</span>, glyph: <span class="kp-code__string">'pdf'</span> },
+        { key: <span class="kp-code__string">'cv-old'</span>, label: <span class="kp-code__string">'CV 2024'</span>, sub: <span class="kp-code__string">'replaced'</span>, glyph: <span class="kp-code__string">'doc'</span> },
+        { key: <span class="kp-code__string">'none'</span>, label: <span class="kp-code__string">'No CV'</span>, ghost: <span class="kp-code__keyword">true</span>, dashed: <span class="kp-code__keyword">true</span> },
+    ],
+    columns: [
+        { key: <span class="kp-code__string">'deloitte'</span>, label: <span class="kp-code__string">'Deloitte'</span>, href: <span class="kp-code__string">'#deloitte'</span> },
+        { key: <span class="kp-code__string">'takto'</span>, label: <span class="kp-code__string">'Takto'</span> },
+        { key: <span class="kp-code__string">'acme'</span>, label: <span class="kp-code__string">'Acme'</span> },
+        { key: <span class="kp-code__string">'globex'</span>, label: <span class="kp-code__string">'Globex'</span> },
+        { key: <span class="kp-code__string">'initech'</span>, label: <span class="kp-code__string">'Initech'</span> },
+    ],
+    cell: (row, column) =&gt; ((used[row] ?? []).includes(column) ? { tone: <span class="kp-code__string">'ok'</span> } : <span class="kp-code__keyword">null</span>),
+});
+map.addEventListener(<span class="kp-code__string">'kp-uses-pin'</span>, (event) =&gt; {
+    document.getElementById(<span class="kp-code__string">'doc-uses-said'</span>).textContent = event.detail.pinned ? event.detail.key + <span class="kp-code__string">' pinned, used with '</span> + event.detail.related.join(<span class="kp-code__string">', '</span>) + <span class="kp-code__string">'.'</span> : <span class="kp-code__string">'Nothing pinned.'</span>;
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Sources on the right, elbow lines, and the states</figcaption>
+                        <p class="kp-text-muted">`data-kp-lines-side=&quot;sources-right&quot;` swaps the columns, `data-kp-lines-shape` is `curve`, `elbow` or `straight`, `data-kp-lines-light` is `both`, `hover`, `pick` or `off`, `data-kp-lines-count=&quot;off&quot;` leaves the exact count on each source out, `data-kp-lines-empty-sources=&quot;hide&quot;` hides a source nothing uses (else it says “Not used”) and `data-kp-lines-collapse-below` is the width under which the lines give way to the list. A node nobody can open carries a `disabledReason`. Loading lays the theme’s busy card over the whole map; empty and failed fill its footprint with the package’s plates.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-matrix" id="doc-uses-right" data-kp-matrix data-kp-view="lines" data-kp-lines-side="sources-right" data-kp-lines-shape="elbow" data-kp-lines-count="off" data-kp-lines-empty-sources="hide" aria-label="Which secret feeds which stack"></div>
+<div class="kp-matrix" id="doc-uses-loading" data-kp-matrix data-kp-view="lines" aria-label="Loading"></div>
+<div class="kp-matrix" id="doc-uses-failed" data-kp-matrix data-kp-view="lines" aria-label="Failed"></div>
+                            <script type="module">
+import { attachMatrices, setMatrix } from '../../js/heat.js';
+
+const right = document.getElementById('doc-uses-right');
+attachMatrices(right.parentElement);
+const feeds = { 'db-password': ['media', 'cloud'], 'api-key': ['media'] };
+setMatrix(right, {
+    view: 'lines',
+    label: 'Which secret feeds which stack',
+    rows: [
+        { key: 'db-password', label: 'db-password' },
+        { key: 'api-key', label: 'api-key' },
+        { key: 'old-token', label: 'old-token', disabledReason: 'Nothing uses it any more.' },
+    ],
+    columns: [{ key: 'media', label: 'media' }, { key: 'cloud', label: 'cloud' }],
+    cell: (row, column) => ((feeds[row] ?? []).includes(column) ? { tone: 'ok' } : null),
+});
+setMatrix(document.getElementById('doc-uses-loading'), { view: 'lines', state: 'loading', label: 'Uses, loading' });
+setMatrix(document.getElementById('doc-uses-failed'), { view: 'lines', state: 'error', message: 'The uses could not be read.', label: 'Uses, failed' });
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-matrix&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-uses-right&quot;</span> <span class="kp-code__keyword">data-kp-matrix</span> <span class="kp-code__keyword">data-kp-view</span><span class="kp-code__string">=&quot;lines&quot;</span> <span class="kp-code__keyword">data-kp-lines-side</span><span class="kp-code__string">=&quot;sources-right&quot;</span> <span class="kp-code__keyword">data-kp-lines-shape</span><span class="kp-code__string">=&quot;elbow&quot;</span> <span class="kp-code__keyword">data-kp-lines-count</span><span class="kp-code__string">=&quot;off&quot;</span> <span class="kp-code__keyword">data-kp-lines-empty-sources</span><span class="kp-code__string">=&quot;hide&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Which secret feeds which stack&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-matrix&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-uses-loading&quot;</span> <span class="kp-code__keyword">data-kp-matrix</span> <span class="kp-code__keyword">data-kp-view</span><span class="kp-code__string">=&quot;lines&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Loading&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-matrix&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-uses-failed&quot;</span> <span class="kp-code__keyword">data-kp-matrix</span> <span class="kp-code__keyword">data-kp-view</span><span class="kp-code__string">=&quot;lines&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Failed&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachMatrices, setMatrix } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/heat'</span>;
+
+<span class="kp-code__keyword">const</span> right = document.getElementById(<span class="kp-code__string">'doc-uses-right'</span>);
+attachMatrices(right.parentElement);
+<span class="kp-code__keyword">const</span> feeds = { <span class="kp-code__string">'db-password'</span>: [<span class="kp-code__string">'media'</span>, <span class="kp-code__string">'cloud'</span>], <span class="kp-code__string">'api-key'</span>: [<span class="kp-code__string">'media'</span>] };
+setMatrix(right, {
+    view: <span class="kp-code__string">'lines'</span>,
+    label: <span class="kp-code__string">'Which secret feeds which stack'</span>,
+    rows: [
+        { key: <span class="kp-code__string">'db-password'</span>, label: <span class="kp-code__string">'db-password'</span> },
+        { key: <span class="kp-code__string">'api-key'</span>, label: <span class="kp-code__string">'api-key'</span> },
+        { key: <span class="kp-code__string">'old-token'</span>, label: <span class="kp-code__string">'old-token'</span>, disabledReason: <span class="kp-code__string">'Nothing uses it any more.'</span> },
+    ],
+    columns: [{ key: <span class="kp-code__string">'media'</span>, label: <span class="kp-code__string">'media'</span> }, { key: <span class="kp-code__string">'cloud'</span>, label: <span class="kp-code__string">'cloud'</span> }],
+    cell: (row, column) =&gt; ((feeds[row] ?? []).includes(column) ? { tone: <span class="kp-code__string">'ok'</span> } : <span class="kp-code__keyword">null</span>),
+});
+setMatrix(document.getElementById(<span class="kp-code__string">'doc-uses-loading'</span>), { view: <span class="kp-code__string">'lines'</span>, state: <span class="kp-code__string">'loading'</span>, label: <span class="kp-code__string">'Uses, loading'</span> });
+setMatrix(document.getElementById(<span class="kp-code__string">'doc-uses-failed'</span>), { view: <span class="kp-code__string">'lines'</span>, state: <span class="kp-code__string">'error'</span>, message: <span class="kp-code__string">'The uses could not be read.'</span>, label: <span class="kp-code__string">'Uses, failed'</span> });</code></pre>
                     </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
@@ -323,6 +431,8 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>usesRelation / usesPath / setUsesPin</code></td><td>`usesRelation(spec)` gives which nodes each node is joined to, `usesPath(shape, x1, y1, x2, y2)` the line between two points and `setUsesPin(el, key)` pins a node from the page. `rememberedView` reads the view kept by `data-kp-remember`.</td></tr>
+                            <tr><td><code>kp-uses-pin / kp-uses-retry</code></td><td>`kp-uses-pin` carries `{ key, side, pinned, related }` (`USES_PIN_EVENT`); Try again on a failed map fires `kp-uses-retry` (`USES_RETRY_EVENT`).</td></tr>
                             <tr><td><code>data-kp-view</code></td><td>`grid` (default, unchanged) or `lines`.</td></tr>
                             <tr><td><code>data-kp-lines-side</code></td><td>`sources-left` (default) or `sources-right`.</td></tr>
                             <tr><td><code>data-kp-lines-shape</code></td><td>`curve` (default), `elbow` or `straight`.</td></tr>

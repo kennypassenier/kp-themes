@@ -258,12 +258,110 @@
                 <section class="kp-section" data-sc-section="example" id="example">
                     <h2 class="kp-fw-semibold">Live example</h2>
                     <figure class="sc-example">
-                        <figcaption class="kp-fw-semibold">A shopping list</figcaption>
-                        <p class="kp-text-muted">The module draws the rows from the items it is given; the markup is only the root.</p>
+                        <figcaption class="kp-fw-semibold">A shopping list by shop</figcaption>
+                        <p class="kp-text-muted">The module draws the groups, the counts and the bar from the items it is given; the markup is only the root. A ticked row is struck through and glides to the end of its group; ticked with the keyboard, the focus goes to the open item that took its place. Check all, Clear checked and its Undo fire `kp-checklist-change` (`{ id, checked, items }`, id null for all), `kp-checklist-clear` and `kp-checklist-undo` with the whole list, so the page stores it; nothing is stored here. The line under the list prints what the page heard.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="kp-checklist" data-kp-checklist aria-label="Shopping list"></div>
+<div class="kp-checklist" id="doc-checklist" data-kp-checklist aria-label="Shopping list"></div>
+<p class="kp-text-muted" id="doc-checklist-said" role="status">Nothing ticked yet.</p>
+                            <script type="module">
+import { attachChecklists, setChecklistItems } from '../../js/checklist.js';
+
+const list = document.getElementById('doc-checklist');
+attachChecklists(list.parentElement);
+setChecklistItems(list, [
+    { id: 'chicken', label: 'Chicken thighs', detail: '600 g', group: 'Colruyt' },
+    { id: 'rice', label: 'Basmati rice', detail: '1 kg', group: 'Colruyt' },
+    { id: 'milk', label: 'Milk', detail: '2 l', group: 'Colruyt' },
+    { id: 'butter', label: 'Butter', detail: '250 g', group: 'Colruyt', checked: true },
+    { id: 'stock', label: 'Vegetable stock cubes, the low-salt ones in the green box', detail: '1 box', group: 'Colruyt' },
+    { id: 'bread', label: 'Spelt bread, sliced', detail: '1', group: 'Bakery', checked: true },
+    { id: 'croissant', label: 'Croissants', detail: '4', group: 'Bakery' },
+    { id: 'coriander', label: 'Coriander', detail: '1 bunch', group: 'Market' },
+]);
+const said = document.getElementById('doc-checklist-said');
+const open = (items) => items.filter((item) => !item.checked).length + ' still to get.';
+list.addEventListener('kp-checklist-change', (event) => {
+    said.textContent = (event.detail.id ?? 'Everything') + (event.detail.checked ? ' ticked. ' : ' unticked. ') + open(event.detail.items);
+});
+list.addEventListener('kp-checklist-clear', (event) => {
+    said.textContent = event.detail.removed.length + ' ticked items cleared. ' + open(event.detail.items);
+});
+list.addEventListener('kp-checklist-undo', (event) => {
+    said.textContent = event.detail.restored.length + ' items back. ' + open(event.detail.items);
+});
+                            </script>
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-checklist&quot;</span> <span class="kp-code__keyword">data-kp-checklist</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Shopping list&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-checklist&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-checklist&quot;</span> <span class="kp-code__keyword">data-kp-checklist</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Shopping list&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-checklist-said&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;Nothing ticked yet.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachChecklists, setChecklistItems } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/checklist'</span>;
+
+<span class="kp-code__keyword">const</span> list = document.getElementById(<span class="kp-code__string">'doc-checklist'</span>);
+attachChecklists(list.parentElement);
+setChecklistItems(list, [
+    { id: <span class="kp-code__string">'chicken'</span>, label: <span class="kp-code__string">'Chicken thighs'</span>, detail: <span class="kp-code__string">'600 g'</span>, group: <span class="kp-code__string">'Colruyt'</span> },
+    { id: <span class="kp-code__string">'rice'</span>, label: <span class="kp-code__string">'Basmati rice'</span>, detail: <span class="kp-code__string">'1 kg'</span>, group: <span class="kp-code__string">'Colruyt'</span> },
+    { id: <span class="kp-code__string">'milk'</span>, label: <span class="kp-code__string">'Milk'</span>, detail: <span class="kp-code__string">'2 l'</span>, group: <span class="kp-code__string">'Colruyt'</span> },
+    { id: <span class="kp-code__string">'butter'</span>, label: <span class="kp-code__string">'Butter'</span>, detail: <span class="kp-code__string">'250 g'</span>, group: <span class="kp-code__string">'Colruyt'</span>, checked: <span class="kp-code__keyword">true</span> },
+    { id: <span class="kp-code__string">'stock'</span>, label: <span class="kp-code__string">'Vegetable stock cubes, the low-salt ones in the green box'</span>, detail: <span class="kp-code__string">'1 box'</span>, group: <span class="kp-code__string">'Colruyt'</span> },
+    { id: <span class="kp-code__string">'bread'</span>, label: <span class="kp-code__string">'Spelt bread, sliced'</span>, detail: <span class="kp-code__string">'1'</span>, group: <span class="kp-code__string">'Bakery'</span>, checked: <span class="kp-code__keyword">true</span> },
+    { id: <span class="kp-code__string">'croissant'</span>, label: <span class="kp-code__string">'Croissants'</span>, detail: <span class="kp-code__string">'4'</span>, group: <span class="kp-code__string">'Bakery'</span> },
+    { id: <span class="kp-code__string">'coriander'</span>, label: <span class="kp-code__string">'Coriander'</span>, detail: <span class="kp-code__string">'1 bunch'</span>, group: <span class="kp-code__string">'Market'</span> },
+]);
+<span class="kp-code__keyword">const</span> said = document.getElementById(<span class="kp-code__string">'doc-checklist-said'</span>);
+<span class="kp-code__keyword">const</span> open = (items) =&gt; items.filter((item) =&gt; !item.checked).length + <span class="kp-code__string">' still to get.'</span>;
+list.addEventListener(<span class="kp-code__string">'kp-checklist-change'</span>, (event) =&gt; {
+    said.textContent = (event.detail.id ?? <span class="kp-code__string">'Everything'</span>) + (event.detail.checked ? <span class="kp-code__string">' ticked. '</span> : <span class="kp-code__string">' unticked. '</span>) + open(event.detail.items);
+});
+list.addEventListener(<span class="kp-code__string">'kp-checklist-clear'</span>, (event) =&gt; {
+    said.textContent = event.detail.removed.length + <span class="kp-code__string">' ticked items cleared. '</span> + open(event.detail.items);
+});
+list.addEventListener(<span class="kp-code__string">'kp-checklist-undo'</span>, (event) =&gt; {
+    said.textContent = event.detail.restored.length + <span class="kp-code__string">' items back. '</span> + open(event.detail.items);
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A ticked row that stays, an empty list, loading and a failed list</figcaption>
+                        <p class="kp-text-muted">`data-kp-checklist-sink=&quot;false&quot;` keeps a ticked row where it stands, struck through. `setChecklistState(list, &quot;loading&quot; | &quot;error&quot; | &quot;ready&quot;, message)`: loading lays the data table’s busy card over the body, error says the message in the empty line’s place, centred in the box. An empty list says `data-kp-checklist-empty`, else the dictionary’s sentence. `data-kp-checklist-undo-ms` is how long Undo is offered and `data-kp-checklist-heading` the level of the group headings.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-checklist" id="doc-checklist-stay" data-kp-checklist data-kp-checklist-sink="false" aria-label="Packing list, ticked rows stay"></div>
+<div class="kp-checklist" id="doc-checklist-empty" data-kp-checklist data-kp-checklist-empty="Nothing to buy. Add the first item above." aria-label="Empty list"></div>
+<div class="kp-checklist" id="doc-checklist-loading" data-kp-checklist aria-label="Loading list"></div>
+<div class="kp-checklist" id="doc-checklist-failed" data-kp-checklist aria-label="Failed list"></div>
+                            <script type="module">
+import { attachChecklists, setChecklistItems, setChecklistState } from '../../js/checklist.js';
+
+attachChecklists(document.getElementById('doc-checklist-stay').parentElement);
+setChecklistItems(document.getElementById('doc-checklist-stay'), [
+    { id: 'knife', label: 'Sharp knife', group: 'Kitchen bag', checked: true },
+    { id: 'board', label: 'Cutting board', group: 'Kitchen bag' },
+    { id: 'apron', label: 'Apron', group: 'Kitchen bag' },
+]);
+setChecklistItems(document.getElementById('doc-checklist-empty'), []);
+setChecklistItems(document.getElementById('doc-checklist-loading'), []);
+setChecklistState(document.getElementById('doc-checklist-loading'), 'loading');
+setChecklistItems(document.getElementById('doc-checklist-failed'), []);
+setChecklistState(document.getElementById('doc-checklist-failed'), 'error', 'The list could not be read. Check the connection and try again.');
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-checklist&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-checklist-stay&quot;</span> <span class="kp-code__keyword">data-kp-checklist</span> <span class="kp-code__keyword">data-kp-checklist-sink</span><span class="kp-code__string">=&quot;false&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Packing list, ticked rows stay&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-checklist&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-checklist-empty&quot;</span> <span class="kp-code__keyword">data-kp-checklist</span> <span class="kp-code__keyword">data-kp-checklist-empty</span><span class="kp-code__string">=&quot;Nothing to buy. Add the first item above.&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Empty list&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-checklist&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-checklist-loading&quot;</span> <span class="kp-code__keyword">data-kp-checklist</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Loading list&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-checklist&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-checklist-failed&quot;</span> <span class="kp-code__keyword">data-kp-checklist</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Failed list&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachChecklists, setChecklistItems, setChecklistState } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/checklist'</span>;
+
+attachChecklists(document.getElementById(<span class="kp-code__string">'doc-checklist-stay'</span>).parentElement);
+setChecklistItems(document.getElementById(<span class="kp-code__string">'doc-checklist-stay'</span>), [
+    { id: <span class="kp-code__string">'knife'</span>, label: <span class="kp-code__string">'Sharp knife'</span>, group: <span class="kp-code__string">'Kitchen bag'</span>, checked: <span class="kp-code__keyword">true</span> },
+    { id: <span class="kp-code__string">'board'</span>, label: <span class="kp-code__string">'Cutting board'</span>, group: <span class="kp-code__string">'Kitchen bag'</span> },
+    { id: <span class="kp-code__string">'apron'</span>, label: <span class="kp-code__string">'Apron'</span>, group: <span class="kp-code__string">'Kitchen bag'</span> },
+]);
+setChecklistItems(document.getElementById(<span class="kp-code__string">'doc-checklist-empty'</span>), []);
+setChecklistItems(document.getElementById(<span class="kp-code__string">'doc-checklist-loading'</span>), []);
+setChecklistState(document.getElementById(<span class="kp-code__string">'doc-checklist-loading'</span>), <span class="kp-code__string">'loading'</span>);
+setChecklistItems(document.getElementById(<span class="kp-code__string">'doc-checklist-failed'</span>), []);
+setChecklistState(document.getElementById(<span class="kp-code__string">'doc-checklist-failed'</span>), <span class="kp-code__string">'error'</span>, <span class="kp-code__string">'The list could not be read. Check the connection and try again.'</span>);</code></pre>
                     </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
@@ -332,6 +430,7 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>kp-checklist-render</code></td><td>Fired on the list after every draw (not bubbling), so a part that adds a cell to the rows can draw it; the claim part does.</td></tr>
                             <tr><td><code>data-kp-checklist-sink=&quot;false&quot;</code></td><td>A ticked row stays where it is, struck through.</td></tr>
                             <tr><td><code>data-kp-checklist-undo-ms</code></td><td>How long Undo is offered after Clear checked (6000).</td></tr>
                             <tr><td><code>data-kp-checklist-empty</code></td><td>The sentence of an empty list.</td></tr>

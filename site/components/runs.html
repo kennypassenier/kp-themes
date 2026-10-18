@@ -258,12 +258,78 @@
                 <section class="kp-section" data-sc-section="example" id="example">
                     <h2 class="kp-fw-semibold">Live example</h2>
                     <figure class="sc-example">
-                        <figcaption class="kp-fw-semibold">Three nights</figcaption>
-                        <p class="kp-text-muted">The markup is the empty box; the page hands over the times.</p>
+                        <figcaption class="kp-fw-semibold">Three nights, with the clock turned back</figcaption>
+                        <p class="kp-text-muted">The app owns the rule and computes the times; the package draws them: the time with its weekday (dd/mm/yyyy HH:MM, Europe/Brussels), how far away it is, and a mark where the clock is turned before a run (“Clock goes back 1 h”: the wall time is the schedule’s, the moment is not the same distance from the run before) or the page names a conflict (`{ at, conflict }`). `data-kp-now` fixes the clock here so the words stay the same; the real page leaves it out and the relative words refresh every minute. A time is a number (ms), an ISO string or a Date.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="kp-runs" data-kp-runs data-kp-runs-count="3" data-kp-runs-values="2026-10-18T03:00:00+02:00,2026-10-19T03:00:00+02:00,2026-10-20T03:00:00+02:00"></div>
+<div class="kp-runs" id="doc-runs" data-kp-runs data-kp-runs-count="3" data-kp-now="2026-10-23T12:00:00+02:00" data-kp-runs-more="2"></div>
+                            <script type="module">
+import { attachRuns, setRuns } from '../../js/runs.js';
+
+const list = document.getElementById('doc-runs');
+attachRuns(list.parentElement);
+setRuns(list, [
+    '2026-10-24T02:30:00+02:00',
+    { at: '2026-10-25T02:30:00+02:00', conflict: 'Overlaps the backup of vault' },
+    '2026-10-26T02:30:00+01:00',
+    '2026-10-27T02:30:00+01:00',
+    '2026-10-28T02:30:00+01:00',
+]);
+                            </script>
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-runs&quot;</span> <span class="kp-code__keyword">data-kp-runs</span> <span class="kp-code__keyword">data-kp-runs-count</span><span class="kp-code__string">=&quot;3&quot;</span> <span class="kp-code__keyword">data-kp-runs-values</span><span class="kp-code__string">=&quot;2026-10-18T03:00:00+02:00,2026-10-19T03:00:00+02:00,2026-10-20T03:00:00+02:00&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-runs&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-runs&quot;</span> <span class="kp-code__keyword">data-kp-runs</span> <span class="kp-code__keyword">data-kp-runs-count</span><span class="kp-code__string">=&quot;3&quot;</span> <span class="kp-code__keyword">data-kp-now</span><span class="kp-code__string">=&quot;2026-10-23T12:00:00+02:00&quot;</span> <span class="kp-code__keyword">data-kp-runs-more</span><span class="kp-code__string">=&quot;2&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachRuns, setRuns } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/runs'</span>;
+
+<span class="kp-code__keyword">const</span> list = document.getElementById(<span class="kp-code__string">'doc-runs'</span>);
+attachRuns(list.parentElement);
+setRuns(list, [
+    <span class="kp-code__string">'2026-10-24T02:30:00+02:00'</span>,
+    { at: <span class="kp-code__string">'2026-10-25T02:30:00+02:00'</span>, conflict: <span class="kp-code__string">'Overlaps the backup of vault'</span> },
+    <span class="kp-code__string">'2026-10-26T02:30:00+01:00'</span>,
+    <span class="kp-code__string">'2026-10-27T02:30:00+01:00'</span>,
+    <span class="kp-code__string">'2026-10-28T02:30:00+01:00'</span>,
+]);</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Empty, loading and failed, in the same height</figcaption>
+                        <p class="kp-text-muted">All four states keep the footprint of `count` rows, so nothing under the list moves. `setRuns(el, [], { reason })` is the empty state: the app’s reason, centred at heading size in the package’s empty plate. `setRunsState(el, &quot;loading&quot;)` lays the theme’s busy card over placeholder rows. `error` says “Could not work out the next times” with Try again, which fires `kp-runs-retry`. `data-kp-runs-title` renames the heading, `data-kp-runs-relative=&quot;false&quot;` leaves “in 2 days” out, `data-kp-runs-warn=&quot;false&quot;` the marks, and `data-kp-time-zone` names another zone.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-runs" id="doc-runs-empty" data-kp-runs data-kp-runs-count="3" data-kp-runs-title="Next backups"></div>
+<div class="kp-runs" id="doc-runs-loading" data-kp-runs data-kp-runs-count="3" data-kp-runs-relative="false"></div>
+<div class="kp-runs" id="doc-runs-failed" data-kp-runs data-kp-runs-count="3" data-kp-time-zone="America/New_York" data-kp-runs-warn="false"></div>
+                            <script type="module">
+import { attachRuns, setRuns, setRunsState } from '../../js/runs.js';
+
+const empty = document.getElementById('doc-runs-empty');
+const loading = document.getElementById('doc-runs-loading');
+const failed = document.getElementById('doc-runs-failed');
+attachRuns(empty.parentElement);
+setRuns(empty, [], { reason: 'Pick at least one weekday.' });
+setRunsState(loading, 'loading');
+setRunsState(failed, 'error');
+failed.addEventListener('kp-runs-retry', () => {
+    setRunsState(failed, 'loading');
+    setTimeout(() => setRuns(failed, [Date.now() + 86400000, Date.now() + 2 * 86400000]), 1200);
+});
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-runs&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-runs-empty&quot;</span> <span class="kp-code__keyword">data-kp-runs</span> <span class="kp-code__keyword">data-kp-runs-count</span><span class="kp-code__string">=&quot;3&quot;</span> <span class="kp-code__keyword">data-kp-runs-title</span><span class="kp-code__string">=&quot;Next backups&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-runs&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-runs-loading&quot;</span> <span class="kp-code__keyword">data-kp-runs</span> <span class="kp-code__keyword">data-kp-runs-count</span><span class="kp-code__string">=&quot;3&quot;</span> <span class="kp-code__keyword">data-kp-runs-relative</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-runs&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-runs-failed&quot;</span> <span class="kp-code__keyword">data-kp-runs</span> <span class="kp-code__keyword">data-kp-runs-count</span><span class="kp-code__string">=&quot;3&quot;</span> <span class="kp-code__keyword">data-kp-time-zone</span><span class="kp-code__string">=&quot;America/New_York&quot;</span> <span class="kp-code__keyword">data-kp-runs-warn</span><span class="kp-code__string">=&quot;false&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachRuns, setRuns, setRunsState } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/runs'</span>;
+
+<span class="kp-code__keyword">const</span> empty = document.getElementById(<span class="kp-code__string">'doc-runs-empty'</span>);
+<span class="kp-code__keyword">const</span> loading = document.getElementById(<span class="kp-code__string">'doc-runs-loading'</span>);
+<span class="kp-code__keyword">const</span> failed = document.getElementById(<span class="kp-code__string">'doc-runs-failed'</span>);
+attachRuns(empty.parentElement);
+setRuns(empty, [], { reason: <span class="kp-code__string">'Pick at least one weekday.'</span> });
+setRunsState(loading, <span class="kp-code__string">'loading'</span>);
+setRunsState(failed, <span class="kp-code__string">'error'</span>);
+failed.addEventListener(<span class="kp-code__string">'kp-runs-retry'</span>, () =&gt; {
+    setRunsState(failed, <span class="kp-code__string">'loading'</span>);
+    setTimeout(() =&gt; setRuns(failed, [Date.now() + <span class="kp-code__string">86400000</span>, Date.now() + <span class="kp-code__string">2</span> * <span class="kp-code__string">86400000</span>]), <span class="kp-code__string">1200</span>);
+});</code></pre>
                     </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
@@ -323,6 +389,10 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-runs-title</code></td><td>The heading over the list (“Next times”).</td></tr>
+                            <tr><td><code>setRuns / setRunsState</code></td><td>`setRuns(el, times, { reason })` draws the rows, or the empty state with the reason when there are none; `setRunsState(el, &quot;loading&quot; | &quot;error&quot; | ...)` the other states. `runs(el)` gives the rows drawn.</td></tr>
+                            <tr><td><code>runsRelative / runMoment / clockShift / zoneOffset</code></td><td>The pieces the list is made of: how far away a time is in words, a time as the list writes it, whether the clock turned between two runs and a zone’s offset at a moment.</td></tr>
+                            <tr><td><code>kp-runs-retry</code></td><td>Try again on a failed list was pressed (`RUNS_RETRY_EVENT`).</td></tr>
                             <tr><td><code>data-kp-runs-count</code></td><td>How many rows; 3 by default.</td></tr>
                             <tr><td><code>data-kp-runs-relative</code></td><td>`false` leaves the “in 2 days” out.</td></tr>
                             <tr><td><code>data-kp-runs-warn</code></td><td>`false` leaves the clock-change and conflict marks out.</td></tr>

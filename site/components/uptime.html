@@ -259,11 +259,136 @@
                     <h2 class="kp-fw-semibold">Live example</h2>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">A service over 90 days</figcaption>
-                        <p class="kp-text-muted">The markup is the empty strip with its name and its number of periods; the script draws the cells from the periods the page hands over, and draws the loading state before that.</p>
+                        <p class="kp-text-muted">The markup is the empty strip with its name and its number of periods; before the script draws it, the strip waits as the theme’s skeleton under the data table’s loading card. `setUptime(el, { label, periods })` draws one cell per period, oldest first, toned up, degraded (ruled), down (striped) or none (an empty frame). The summary above is exact: the share is cut, never rounded up, and the incident count is the number. A period’s share is its `uptime` (0 to 1) when measured, else 1 for up and degraded and 0 for down; its incidents are `incidents`, else 1 for a degraded or down period. Hover or focus a cell for its card; a press fires `kp-uptime-pick`.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="kp-uptime" data-kp-uptime data-kp-uptime-label="jellyfin" data-kp-uptime-count="90"></div>
+<div class="kp-uptime" id="doc-uptime" data-kp-uptime data-kp-uptime-label="jellyfin" data-kp-uptime-count="90"></div>
+<p class="kp-text-muted" id="doc-uptime-said" role="status">No period picked.</p>
+                            <script type="module">
+import { attachUptimes, setUptime } from '../../js/uptime.js';
+
+const strip = document.getElementById('doc-uptime');
+attachUptimes(strip.parentElement);
+const day = (back) => {
+    const date = new Date(Date.UTC(2026, 9, 17) - back * 86400000);
+    return { key: date.toISOString().slice(0, 10), label: String(date.getUTCDate()).padStart(2, '0') + '/' + String(date.getUTCMonth() + 1).padStart(2, '0') + '/' + date.getUTCFullYear() };
+};
+const periods = [];
+for (let back = 89; back >= 0; back--) {
+    const state = back === 12 ? 'down' : back === 40 || back === 41 || back === 63 ? 'degraded' : back > 84 ? 'none' : 'up';
+    periods.push({ ...day(back), state, uptime: state === 'down' ? 0.82 : state === 'degraded' ? 0.97 : undefined });
+}
+setUptime(strip, { label: 'jellyfin', periods });
+strip.addEventListener('kp-uptime-pick', (event) => {
+    document.getElementById('doc-uptime-said').textContent = 'Picked ' + event.detail.period.label + ' (' + event.detail.period.state + ').';
+});
+                            </script>
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-uptime&quot;</span> <span class="kp-code__keyword">data-kp-uptime</span> <span class="kp-code__keyword">data-kp-uptime-label</span><span class="kp-code__string">=&quot;jellyfin&quot;</span> <span class="kp-code__keyword">data-kp-uptime-count</span><span class="kp-code__string">=&quot;90&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-uptime&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-uptime&quot;</span> <span class="kp-code__keyword">data-kp-uptime</span> <span class="kp-code__keyword">data-kp-uptime-label</span><span class="kp-code__string">=&quot;jellyfin&quot;</span> <span class="kp-code__keyword">data-kp-uptime-count</span><span class="kp-code__string">=&quot;90&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-uptime-said&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;No period picked.&lt;/<span class="kp-code__keyword">p</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachUptimes, setUptime } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/uptime'</span>;
+
+<span class="kp-code__keyword">const</span> strip = document.getElementById(<span class="kp-code__string">'doc-uptime'</span>);
+attachUptimes(strip.parentElement);
+<span class="kp-code__keyword">const</span> day = (back) =&gt; {
+    <span class="kp-code__keyword">const</span> date = <span class="kp-code__keyword">new</span> Date(Date.UTC(<span class="kp-code__string">2026</span>, <span class="kp-code__string">9</span>, <span class="kp-code__string">17</span>) - back * <span class="kp-code__string">86400000</span>);
+    <span class="kp-code__keyword">return</span> { key: date.toISOString().slice(<span class="kp-code__string">0</span>, <span class="kp-code__string">10</span>), label: String(date.getUTCDate()).padStart(<span class="kp-code__string">2</span>, <span class="kp-code__string">'0'</span>) + <span class="kp-code__string">'/'</span> + String(date.getUTCMonth() + <span class="kp-code__string">1</span>).padStart(<span class="kp-code__string">2</span>, <span class="kp-code__string">'0'</span>) + <span class="kp-code__string">'/'</span> + date.getUTCFullYear() };
+};
+<span class="kp-code__keyword">const</span> periods = [];
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">let</span> back = <span class="kp-code__string">89</span>; back &gt;= <span class="kp-code__string">0</span>; back--) {
+    <span class="kp-code__keyword">const</span> state = back === <span class="kp-code__string">12</span> ? <span class="kp-code__string">'down'</span> : back === <span class="kp-code__string">40</span> || back === <span class="kp-code__string">41</span> || back === <span class="kp-code__string">63</span> ? <span class="kp-code__string">'degraded'</span> : back &gt; <span class="kp-code__string">84</span> ? <span class="kp-code__string">'none'</span> : <span class="kp-code__string">'up'</span>;
+    periods.push({ ...day(back), state, uptime: state === <span class="kp-code__string">'down'</span> ? <span class="kp-code__string">0.82</span> : state === <span class="kp-code__string">'degraded'</span> ? <span class="kp-code__string">0.97</span> : <span class="kp-code__keyword">undefined</span> });
+}
+setUptime(strip, { label: <span class="kp-code__string">'jellyfin'</span>, periods });
+strip.addEventListener(<span class="kp-code__string">'kp-uptime-pick'</span>, (event) =&gt; {
+    document.getElementById(<span class="kp-code__string">'doc-uptime-said'</span>).textContent = <span class="kp-code__string">'Picked '</span> + event.detail.period.label + <span class="kp-code__string">' ('</span> + event.detail.period.state + <span class="kp-code__string">').'</span>;
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">The four states, and a strip that scrolls</figcaption>
+                        <p class="kp-text-muted">Each state keeps the strip’s footprint, so nothing moves between them: `loading` (skeleton cells under the data table’s loading card), `empty` (every cell without data, the summary says so), `error` (the summary carries the page’s sentence on the destructive plate) and `ready`. `data-kp-uptime-fit=&quot;scroll&quot;` keeps every period on a narrow page and scrolls sideways from the latest, with a fading edge on the side that has more; without it the strip shows the latest periods that fit and says how many (“55 of 90 shown”). `data-kp-uptime-state` in the markup is the state the strip starts in.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-uptime" id="doc-uptime-loading" data-kp-uptime data-kp-uptime-label="jellyfin, loading" data-kp-uptime-count="48"></div>
+<div class="kp-uptime" id="doc-uptime-empty" data-kp-uptime data-kp-uptime-label="jellyfin, empty" data-kp-uptime-count="48"></div>
+<div class="kp-uptime" id="doc-uptime-failed" data-kp-uptime data-kp-uptime-label="jellyfin, failed" data-kp-uptime-count="48"></div>
+<div class="kp-uptime" id="doc-uptime-scroll" data-kp-uptime data-kp-uptime-fit="scroll" data-kp-uptime-label="queue, 48 hours" data-kp-uptime-count="48"></div>
+                            <script type="module">
+import { attachUptimes, setUptime } from '../../js/uptime.js';
+
+attachUptimes(document.getElementById('doc-uptime-loading').parentElement);
+const hours = [];
+for (let back = 47; back >= 0; back--) {
+    const hour = (((14 - back) % 24) + 24) % 24;
+    hours.push({ key: 'h' + back, label: String(hour).padStart(2, '0') + ':00', state: back === 20 ? 'degraded' : back === 7 ? 'down' : 'up' });
+}
+setUptime(document.getElementById('doc-uptime-loading'), { state: 'loading' });
+setUptime(document.getElementById('doc-uptime-empty'), { state: 'empty', periods: [] });
+setUptime(document.getElementById('doc-uptime-failed'), { state: 'error', message: 'The checks could not be read.' });
+setUptime(document.getElementById('doc-uptime-scroll'), { periods: hours });
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-uptime&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-uptime-loading&quot;</span> <span class="kp-code__keyword">data-kp-uptime</span> <span class="kp-code__keyword">data-kp-uptime-label</span><span class="kp-code__string">=&quot;jellyfin, loading&quot;</span> <span class="kp-code__keyword">data-kp-uptime-count</span><span class="kp-code__string">=&quot;48&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-uptime&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-uptime-empty&quot;</span> <span class="kp-code__keyword">data-kp-uptime</span> <span class="kp-code__keyword">data-kp-uptime-label</span><span class="kp-code__string">=&quot;jellyfin, empty&quot;</span> <span class="kp-code__keyword">data-kp-uptime-count</span><span class="kp-code__string">=&quot;48&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-uptime&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-uptime-failed&quot;</span> <span class="kp-code__keyword">data-kp-uptime</span> <span class="kp-code__keyword">data-kp-uptime-label</span><span class="kp-code__string">=&quot;jellyfin, failed&quot;</span> <span class="kp-code__keyword">data-kp-uptime-count</span><span class="kp-code__string">=&quot;48&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-uptime&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-uptime-scroll&quot;</span> <span class="kp-code__keyword">data-kp-uptime</span> <span class="kp-code__keyword">data-kp-uptime-fit</span><span class="kp-code__string">=&quot;scroll&quot;</span> <span class="kp-code__keyword">data-kp-uptime-label</span><span class="kp-code__string">=&quot;queue, 48 hours&quot;</span> <span class="kp-code__keyword">data-kp-uptime-count</span><span class="kp-code__string">=&quot;48&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachUptimes, setUptime } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/uptime'</span>;
+
+attachUptimes(document.getElementById(<span class="kp-code__string">'doc-uptime-loading'</span>).parentElement);
+<span class="kp-code__keyword">const</span> hours = [];
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">let</span> back = <span class="kp-code__string">47</span>; back &gt;= <span class="kp-code__string">0</span>; back--) {
+    <span class="kp-code__keyword">const</span> hour = (((<span class="kp-code__string">14</span> - back) % <span class="kp-code__string">24</span>) + <span class="kp-code__string">24</span>) % <span class="kp-code__string">24</span>;
+    hours.push({ key: <span class="kp-code__string">'h'</span> + back, label: String(hour).padStart(<span class="kp-code__string">2</span>, <span class="kp-code__string">'0'</span>) + <span class="kp-code__string">':00'</span>, state: back === <span class="kp-code__string">20</span> ? <span class="kp-code__string">'degraded'</span> : back === <span class="kp-code__string">7</span> ? <span class="kp-code__string">'down'</span> : <span class="kp-code__string">'up'</span> });
+}
+setUptime(document.getElementById(<span class="kp-code__string">'doc-uptime-loading'</span>), { state: <span class="kp-code__string">'loading'</span> });
+setUptime(document.getElementById(<span class="kp-code__string">'doc-uptime-empty'</span>), { state: <span class="kp-code__string">'empty'</span>, periods: [] });
+setUptime(document.getElementById(<span class="kp-code__string">'doc-uptime-failed'</span>), { state: <span class="kp-code__string">'error'</span>, message: <span class="kp-code__string">'The checks could not be read.'</span> });
+setUptime(document.getElementById(<span class="kp-code__string">'doc-uptime-scroll'</span>), { periods: hours });</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">A cell that opens its period: a link, or quick info</figcaption>
+                        <p class="kp-text-muted">A cell can open something. A period with `href` is a link to that period’s own page: a press, Enter or Space follows it (the hover card stays). `open: &quot;info&quot;` (or `data-kp-uptime-open=&quot;info&quot;`) makes a press open the period’s quick info under its cell: the theme’s popover plate with the period, its state as a swatch and a word, its exact figures, the period’s `details` lines and, when it has an `href`, a link to its page. One at a time; the arrows carry it along the strip, a second press, Escape or a press outside closes it. `kp-uptime-open` fires first and is cancelable, so the page may show its own.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-uptime" id="doc-uptime-info" data-kp-uptime data-kp-uptime-label="vault" data-kp-uptime-count="14"></div>
+                            <script type="module">
+import { attachUptimes, setUptime } from '../../js/uptime.js';
+
+const strip = document.getElementById('doc-uptime-info');
+attachUptimes(strip.parentElement);
+const periods = [];
+for (let day = 4; day <= 17; day++) {
+    const down = day === 11;
+    periods.push({
+        key: '2026-10-' + String(day).padStart(2, '0'),
+        label: String(day).padStart(2, '0') + '/10/2026',
+        state: down ? 'down' : day === 14 ? 'degraded' : 'up',
+        uptime: down ? 0.9 : undefined,
+        href: '#day-' + day,
+        details: down ? ['The database restarted at 03:10.', 'Back after 2 h 24 min.'] : day === 14 ? ['Slow answers between 14:00 and 14:40.'] : [],
+    });
+}
+setUptime(strip, { label: 'vault', periods, open: 'info' });
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-uptime&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-uptime-info&quot;</span> <span class="kp-code__keyword">data-kp-uptime</span> <span class="kp-code__keyword">data-kp-uptime-label</span><span class="kp-code__string">=&quot;vault&quot;</span> <span class="kp-code__keyword">data-kp-uptime-count</span><span class="kp-code__string">=&quot;14&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachUptimes, setUptime } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/uptime'</span>;
+
+<span class="kp-code__keyword">const</span> strip = document.getElementById(<span class="kp-code__string">'doc-uptime-info'</span>);
+attachUptimes(strip.parentElement);
+<span class="kp-code__keyword">const</span> periods = [];
+<span class="kp-code__keyword">for</span> (<span class="kp-code__keyword">let</span> day = <span class="kp-code__string">4</span>; day &lt;= <span class="kp-code__string">17</span>; day++) {
+    <span class="kp-code__keyword">const</span> down = day === <span class="kp-code__string">11</span>;
+    periods.push({
+        key: <span class="kp-code__string">'2026-10-'</span> + String(day).padStart(<span class="kp-code__string">2</span>, <span class="kp-code__string">'0'</span>),
+        label: String(day).padStart(<span class="kp-code__string">2</span>, <span class="kp-code__string">'0'</span>) + <span class="kp-code__string">'/10/2026'</span>,
+        state: down ? <span class="kp-code__string">'down'</span> : day === <span class="kp-code__string">14</span> ? <span class="kp-code__string">'degraded'</span> : <span class="kp-code__string">'up'</span>,
+        uptime: down ? <span class="kp-code__string">0.9</span> : <span class="kp-code__keyword">undefined</span>,
+        href: <span class="kp-code__string">'#day-'</span> + day,
+        details: down ? [<span class="kp-code__string">'The database restarted at 03:10.'</span>, <span class="kp-code__string">'Back after 2 h 24 min.'</span>] : day === <span class="kp-code__string">14</span> ? [<span class="kp-code__string">'Slow answers between 14:00 and 14:40.'</span>] : [],
+    });
+}
+setUptime(strip, { label: <span class="kp-code__string">'vault'</span>, periods, open: <span class="kp-code__string">'info'</span> });</code></pre>
                     </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
@@ -332,6 +457,8 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-uptime-open</code></td><td>`info`: a press opens the period’s quick info under its cell (the same as `open: &quot;info&quot;`); without it a period with `href` is a link.</td></tr>
+                            <tr><td><code>uptimeFigures / uptimePercent / uptimeFit</code></td><td>The window’s figures from its periods, a share written as the strip writes it (cut to one decimal, never rounded up) and how many periods fit a width.</td></tr>
                             <tr><td><code>data-kp-uptime</code></td><td>Marks the strip; `attachUptimes` wires it and draws its loading state until `setUptime` is called.</td></tr>
                             <tr><td><code>data-kp-uptime-label</code></td><td>The strip’s title (the service) when `setUptime` is given none.</td></tr>
                             <tr><td><code>data-kp-uptime-count</code></td><td>How many cells a loading or empty strip waits with; 90 by default.</td></tr>

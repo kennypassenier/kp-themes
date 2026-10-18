@@ -259,11 +259,93 @@
                     <h2 class="kp-fw-semibold">Live example</h2>
                     <figure class="sc-example">
                         <figcaption class="kp-fw-semibold">Tonight’s dinner</figcaption>
-                        <p class="kp-text-muted">The module draws the wheel from the items it is given.</p>
+                        <p class="kp-text-muted">The module draws the wheel from the items it is given. The segments are as large as their odds: a weight of 4 beside two of 1 is two thirds of the disc and two thirds likely. The outcome is drawn first, by the weights (`pickWeighted`), and the wheel then turns to it, so the motion is honest; spinning again never lands on the same choice twice in a row. Spin with the button or Space. `kp-wheel-spin` carries `{ item, index, turns }` when the turn starts and `kp-wheel-result` `{ item, index, source }` when it settles; the outcome is also said once to a screen reader. Change the weights with the second button: the segments glide to their new size. The wheel never moves the page: it keeps its size.</p>
                         <div class="sc-example__live kp-card" data-sc-live>
-<div class="kp-wheel" data-kp-wheel aria-label="Tonight’s dinner"></div>
+<div class="kp-wheel" id="doc-wheel" data-kp-wheel aria-label="Tonight’s dinner"></div>
+<p class="kp-text-muted" id="doc-wheel-said" role="status">Not spun yet.</p>
+<button type="button" class="kp-button kp-button--sm" id="doc-wheel-weights">Make the curry less likely</button>
+                            <script type="module">
+import { attachWheels, setWheelItems, getWheelResult } from '../../js/wheel.js';
+
+const wheel = document.getElementById('doc-wheel');
+attachWheels(wheel.parentElement);
+const items = [
+    { id: 'curry', label: 'Chicken curry', weight: 4 },
+    { id: 'pasta', label: 'Pasta pesto', weight: 1 },
+    { id: 'soup', label: 'Tomato soup', weight: 1 },
+    { id: 'stir', label: 'Vegetable stir-fry with a very long name', weight: 2 },
+];
+setWheelItems(wheel, items);
+const said = document.getElementById('doc-wheel-said');
+wheel.addEventListener('kp-wheel-spin', (event) => { said.textContent = 'Spinning to ' + event.detail.item.label + ' in ' + event.detail.turns + ' turns.'; });
+wheel.addEventListener('kp-wheel-result', (event) => { said.textContent = 'Tonight: ' + event.detail.item.label + ' (' + event.detail.source + '). Last result: ' + getWheelResult(wheel).label + '.'; });
+document.getElementById('doc-wheel-weights').addEventListener('click', () => {
+    setWheelItems(wheel, items.map((item) => (item.id === 'curry' ? { ...item, weight: 1 } : item)));
+});
+                            </script>
                         </div>
-                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-wheel&quot;</span> <span class="kp-code__keyword">data-kp-wheel</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Tonight’s dinner&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-wheel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-wheel&quot;</span> <span class="kp-code__keyword">data-kp-wheel</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Tonight’s dinner&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">p</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-text-muted&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-wheel-said&quot;</span> <span class="kp-code__keyword">role</span><span class="kp-code__string">=&quot;status&quot;</span>&gt;Not spun yet.&lt;/<span class="kp-code__keyword">p</span>&gt;
+&lt;<span class="kp-code__keyword">button</span> <span class="kp-code__keyword">type</span><span class="kp-code__string">=&quot;button&quot;</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-button kp-button--sm&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-wheel-weights&quot;</span>&gt;Make the curry less likely&lt;/<span class="kp-code__keyword">button</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachWheels, setWheelItems, getWheelResult } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/wheel'</span>;
+
+<span class="kp-code__keyword">const</span> wheel = document.getElementById(<span class="kp-code__string">'doc-wheel'</span>);
+attachWheels(wheel.parentElement);
+<span class="kp-code__keyword">const</span> items = [
+    { id: <span class="kp-code__string">'curry'</span>, label: <span class="kp-code__string">'Chicken curry'</span>, weight: <span class="kp-code__string">4</span> },
+    { id: <span class="kp-code__string">'pasta'</span>, label: <span class="kp-code__string">'Pasta pesto'</span>, weight: <span class="kp-code__string">1</span> },
+    { id: <span class="kp-code__string">'soup'</span>, label: <span class="kp-code__string">'Tomato soup'</span>, weight: <span class="kp-code__string">1</span> },
+    { id: <span class="kp-code__string">'stir'</span>, label: <span class="kp-code__string">'Vegetable stir-fry with a very long name'</span>, weight: <span class="kp-code__string">2</span> },
+];
+setWheelItems(wheel, items);
+<span class="kp-code__keyword">const</span> said = document.getElementById(<span class="kp-code__string">'doc-wheel-said'</span>);
+wheel.addEventListener(<span class="kp-code__string">'kp-wheel-spin'</span>, (event) =&gt; { said.textContent = <span class="kp-code__string">'Spinning to '</span> + event.detail.item.label + <span class="kp-code__string">' in '</span> + event.detail.turns + <span class="kp-code__string">' turns.'</span>; });
+wheel.addEventListener(<span class="kp-code__string">'kp-wheel-result'</span>, (event) =&gt; { said.textContent = <span class="kp-code__string">'Tonight: '</span> + event.detail.item.label + <span class="kp-code__string">' ('</span> + event.detail.source + <span class="kp-code__string">'). Last result: '</span> + getWheelResult(wheel).label + <span class="kp-code__string">'.'</span>; });
+document.getElementById(<span class="kp-code__string">'doc-wheel-weights'</span>).addEventListener(<span class="kp-code__string">'click'</span>, () =&gt; {
+    setWheelItems(wheel, items.map((item) =&gt; (item.id === <span class="kp-code__string">'curry'</span> ? { ...item, weight: <span class="kp-code__string">1</span> } : item)));
+});</code></pre>
+                    </figure>
+                    <figure class="sc-example">
+                        <figcaption class="kp-fw-semibold">Spin options, one choice, none, loading and failed</figcaption>
+                        <p class="kp-text-muted">`data-kp-wheel-turns` fixes the whole turns, else a number between 3 and 6 is drawn per spin (`data-kp-wheel-turns-min` and `-max`); `data-kp-wheel-duration` is the time of the mean travel in ms (3600) and a longer travel takes proportionally longer; `data-kp-wheel-reduced-ms` is the short way for a reader who asked for less motion (600; 0 places it at once, with no whole turn); `data-kp-wheel-repeat=&quot;true&quot;` lets a spin land on the same choice again. With one choice there is no spin, the outcome comes at once; with none the wheel says `data-kp-wheel-empty`. `setWheelState(wheel, &quot;loading&quot; | &quot;error&quot; | &quot;ready&quot;, message)` lays the busy card over the wheel or says the message where the outcome goes.</p>
+                        <div class="sc-example__live kp-card" data-sc-live>
+<div class="kp-wheel" id="doc-wheel-fast" data-kp-wheel data-kp-wheel-turns="2" data-kp-wheel-duration="1500" data-kp-wheel-repeat="true" aria-label="A quick wheel"></div>
+<div class="kp-wheel" id="doc-wheel-one" data-kp-wheel aria-label="One choice"></div>
+<div class="kp-wheel" id="doc-wheel-none" data-kp-wheel data-kp-wheel-empty="Nothing fits. Loosen a filter." aria-label="No choice"></div>
+<div class="kp-wheel" id="doc-wheel-loading" data-kp-wheel aria-label="Loading"></div>
+<div class="kp-wheel" id="doc-wheel-failed" data-kp-wheel aria-label="Failed"></div>
+                            <script type="module">
+import { attachWheels, setWheelItems, setWheelState } from '../../js/wheel.js';
+
+const fast = document.getElementById('doc-wheel-fast');
+attachWheels(fast.parentElement);
+setWheelItems(fast, [{ id: 'a', label: 'Left' }, { id: 'b', label: 'Right' }, { id: 'c', label: 'Straight on' }]);
+setWheelItems(document.getElementById('doc-wheel-one'), [{ id: 'only', label: 'Soup' }]);
+setWheelItems(document.getElementById('doc-wheel-none'), []);
+setWheelItems(document.getElementById('doc-wheel-loading'), [{ id: 'a', label: 'One' }, { id: 'b', label: 'Two' }]);
+setWheelState(document.getElementById('doc-wheel-loading'), 'loading');
+setWheelItems(document.getElementById('doc-wheel-failed'), [{ id: 'a', label: 'One' }, { id: 'b', label: 'Two' }]);
+setWheelState(document.getElementById('doc-wheel-failed'), 'error', 'The choices could not be read.');
+                            </script>
+                        </div>
+                        <pre class="kp-code-block" data-sc-snippet><code>&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-wheel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-wheel-fast&quot;</span> <span class="kp-code__keyword">data-kp-wheel</span> <span class="kp-code__keyword">data-kp-wheel-turns</span><span class="kp-code__string">=&quot;2&quot;</span> <span class="kp-code__keyword">data-kp-wheel-duration</span><span class="kp-code__string">=&quot;1500&quot;</span> <span class="kp-code__keyword">data-kp-wheel-repeat</span><span class="kp-code__string">=&quot;true&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;A quick wheel&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-wheel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-wheel-one&quot;</span> <span class="kp-code__keyword">data-kp-wheel</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;One choice&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-wheel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-wheel-none&quot;</span> <span class="kp-code__keyword">data-kp-wheel</span> <span class="kp-code__keyword">data-kp-wheel-empty</span><span class="kp-code__string">=&quot;Nothing fits. Loosen a filter.&quot;</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;No choice&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-wheel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-wheel-loading&quot;</span> <span class="kp-code__keyword">data-kp-wheel</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Loading&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;
+&lt;<span class="kp-code__keyword">div</span> <span class="kp-code__keyword">class</span><span class="kp-code__string">=&quot;kp-wheel&quot;</span> <span class="kp-code__keyword">id</span><span class="kp-code__string">=&quot;doc-wheel-failed&quot;</span> <span class="kp-code__keyword">data-kp-wheel</span> <span class="kp-code__keyword">aria-label</span><span class="kp-code__string">=&quot;Failed&quot;</span>&gt;&lt;/<span class="kp-code__keyword">div</span>&gt;</code></pre>
+                        <p class="kp-text-muted">The page’s part: it hands the component its data.</p>
+                        <pre class="kp-code-block" data-sc-snippet><code><span class="kp-code__keyword">import</span> { attachWheels, setWheelItems, setWheelState } <span class="kp-code__keyword">from</span> <span class="kp-code__string">'@kp-soft/themes/js/wheel'</span>;
+
+<span class="kp-code__keyword">const</span> fast = document.getElementById(<span class="kp-code__string">'doc-wheel-fast'</span>);
+attachWheels(fast.parentElement);
+setWheelItems(fast, [{ id: <span class="kp-code__string">'a'</span>, label: <span class="kp-code__string">'Left'</span> }, { id: <span class="kp-code__string">'b'</span>, label: <span class="kp-code__string">'Right'</span> }, { id: <span class="kp-code__string">'c'</span>, label: <span class="kp-code__string">'Straight on'</span> }]);
+setWheelItems(document.getElementById(<span class="kp-code__string">'doc-wheel-one'</span>), [{ id: <span class="kp-code__string">'only'</span>, label: <span class="kp-code__string">'Soup'</span> }]);
+setWheelItems(document.getElementById(<span class="kp-code__string">'doc-wheel-none'</span>), []);
+setWheelItems(document.getElementById(<span class="kp-code__string">'doc-wheel-loading'</span>), [{ id: <span class="kp-code__string">'a'</span>, label: <span class="kp-code__string">'One'</span> }, { id: <span class="kp-code__string">'b'</span>, label: <span class="kp-code__string">'Two'</span> }]);
+setWheelState(document.getElementById(<span class="kp-code__string">'doc-wheel-loading'</span>), <span class="kp-code__string">'loading'</span>);
+setWheelItems(document.getElementById(<span class="kp-code__string">'doc-wheel-failed'</span>), [{ id: <span class="kp-code__string">'a'</span>, label: <span class="kp-code__string">'One'</span> }, { id: <span class="kp-code__string">'b'</span>, label: <span class="kp-code__string">'Two'</span> }]);
+setWheelState(document.getElementById(<span class="kp-code__string">'doc-wheel-failed'</span>), <span class="kp-code__string">'error'</span>, <span class="kp-code__string">'The choices could not be read.'</span>);</code></pre>
                     </figure>
                 </section>
                 <section class="kp-section" data-sc-section="markup" id="markup">
@@ -335,6 +417,9 @@
                 <section class="kp-section" data-sc-section="variants" id="variants">
                     <h2 class="kp-fw-semibold">Variants and states</h2>
                     <div class="kp-table-wrap" data-kp-region-label="Variants and states"><table class="kp-table"><thead><tr><th>Name</th><th>What it is</th></tr></thead><tbody>
+                            <tr><td><code>data-kp-wheel-turns-min / -max</code></td><td>The range a spin’s whole turns are drawn from (3 to 6); `data-kp-wheel-turns` fixes both.</td></tr>
+                            <tr><td><code>pickWeighted / wheelAngles</code></td><td>`pickWeighted(items, { random, avoid })` draws a choice by its weight, never the one to `avoid`; `wheelAngles(weights)` gives each segment’s angle.</td></tr>
+                            <tr><td><code>getWheelResult / spinWheel</code></td><td>`spinWheel(wheel)` spins from the page and resolves when it settles; `getWheelResult(wheel)` is the last outcome.</td></tr>
                             <tr><td><code>data-kp-wheel-duration</code></td><td>How long a spin takes, in ms (3600).</td></tr>
                             <tr><td><code>data-kp-wheel-turns</code></td><td>Whole turns before it settles (4).</td></tr>
                             <tr><td><code>data-kp-wheel-reduced-ms</code></td><td>The short turn under reduced motion, in ms (600; 0 places it at once).</td></tr>
