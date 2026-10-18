@@ -28,6 +28,7 @@ import {
     journalOf,
     rebuildAnswer,
 } from '../research/_review/progress.js';
+import { paintAgenda } from '../research/_review/rv-progress.js'; // [kit-strip-1018]
 import { composeBlocks, counted, demoStatus, dependentsOf, inOrder, labelOf, readDecided, readDemo, researchPages, reviewUrl } from './waiting.js';
 
 const ROOT = new URL('../', import.meta.url);
@@ -428,6 +429,8 @@ function render() {
     renderStart(open, reading);
     renderAnswers();
     renderSaved();
+    // [kit-strip-1018] rv-progress.js: remaining line on each row, Continue, Review options.
+    paintAgenda(demos.map((demo) => ({ href: demo.page.href, label: demo.page.label, shape: demo.shape })));
     document.title = `${reading ? '…' : open.length} waiting · Agenda · kp-themes catalogue`;
 }
 
