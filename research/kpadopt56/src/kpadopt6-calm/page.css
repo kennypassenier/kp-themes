@@ -227,7 +227,7 @@
 
 /* A case whose picker puts a panel over what follows keeps that room for it. */
 .kc-case--room {
-    min-block-size: 24rem;
+    min-block-size: 28rem;
     align-content: start;
 }
 
