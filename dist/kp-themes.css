@@ -46226,6 +46226,9 @@
         padding: 0.1rem 0.35rem;
         opacity: 0;
         pointer-events: none;
+        /* Out of the box tree until pointed at: an invisible tab hanging past a small button at the right edge still made the
+           section scroll sideways (7 px at 390 px, choose / intent-states). */
+        display: none;
     }
 
     [data-theme='brutalism'] .kp-button::after {
@@ -46260,6 +46263,7 @@
     [data-theme='brutalism'] .kp-alert:hover::after,
     [data-theme='brutalism'] .kp-badge:hover::after,
     [data-theme='brutalism'] .kp-sidenav:hover::after {
+        display: block;
         opacity: 1;
     }
 
@@ -47058,12 +47062,43 @@
         rotate: -8deg;
     }
 
+    /* In the two short components (the quote card's 142 px, the runs list's 134 px) the 3 rem zero and its air made the plate
+       28 px and 20 px taller than the component: a smaller stamp, same slab, no growth between states. */
+    [data-theme='brutalism'] :is(.kp-card__empty, .kp-runs__empty) {
+        padding-block: 0.6rem;
+    }
+
+    [data-theme='brutalism'] :is(.kp-card__empty, .kp-runs__empty)::before {
+        inline-size: 2.25rem;
+        block-size: 2.25rem;
+        margin-block-end: 0.3rem;
+        font-size: 1.05rem;
+    }
+
     [data-theme='brutalism'] .kp-empty__title {
         margin: 0 0 0.3rem;
         color: var(--foreground);
         font-family: var(--theme-font-display);
         font-size: 1.15rem;
         text-transform: uppercase;
+    }
+
+    /* The empty plate a failure borrows (passkeys, thread: `data-kp-tone='error'`) is the taped red slab of every other
+       failure, not the lavender zero of an empty list. */
+    [data-theme='brutalism'] .kp-empty[data-kp-tone='error'] {
+        padding-block-end: calc(1.4rem + 0.5rem);
+        background:
+            repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
+            var(--destructive);
+        color: var(--destructive-foreground);
+    }
+
+    [data-theme='brutalism'] .kp-empty[data-kp-tone='error']::before {
+        display: none;
+    }
+
+    [data-theme='brutalism'] .kp-empty[data-kp-tone='error'] :is(.kp-empty__title, .kp-empty__body) {
+        color: var(--destructive-foreground);
     }
 
     [data-theme='brutalism'] .kp-empty__body {
@@ -49725,6 +49760,8 @@
         background:
             repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
             var(--card);
+        /* The plate is the white slab; the package's cream destructive-foreground left "why" unreadable on it. */
+        color: var(--foreground);
     }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='brutalism'] .kp-card[data-kp-state='ready'] > .kp-card__stage > .kp-card__data {
@@ -50633,6 +50670,156 @@
         [data-theme='brutalism'] .kp-wheel__outcome:not(:empty, [data-kp-wheel-note]) {
             animation: kp-sig-brutalism-secret-slam calc(var(--kp-sig-br-time) + 12 * 100ms) linear both;
         }
+    }
+}
+
+/* ── The new adoption parts in brutalism [t56-brutalism-1018] ──
+   A small part is the 2 px line on a 3 px hard shadow (G7): the weekday chips and the small identity mark stand on a
+   shadow that never reaches a neighbour, and the shadow of a field keeps a clear gap before the unit that follows it.
+   On a phone the labels are set tight, so a day's name, a segment, a Back or Next never breaks mid-word (the 4 px
+   margin rule of research/_review/DEMO_RULES.md, chapter 2). */
+@layer kp.signature {
+    [data-theme='brutalism'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+        border-width: 2px;
+    }
+    [data-theme='brutalism'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item[aria-pressed='true'] {
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    @container kp-weekdays (max-width: 26rem) {
+        [data-theme='brutalism'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+            font-size: 0.65rem;
+            letter-spacing: 0.02em;
+        }
+        [data-theme='brutalism'] .kp-weekdays .kp-weekdays__chips--month > .kp-segmented__item {
+            font-size: 0.6rem;
+            letter-spacing: 0;
+        }
+    }
+    /* The stamped inner frame is for the big marks; below that the letters need the room (4 px from the line). */
+    [data-theme='brutalism'] .kp-idmark--round:not(.kp-idmark--lg, .kp-idmark--xl) {
+        outline: 0;
+        font-size: calc(var(--kp-idmark-s) * 0.38);
+    }
+    [data-theme='brutalism'] .kp-idmark--sm.kp-idmark--round {
+        border-width: 1px;
+        font-size: calc(var(--kp-idmark-s) * 0.36);
+    }
+    [data-theme='brutalism'] .kp-slider__fields,
+    [data-theme='brutalism'] .kp-slider__field-wrap {
+        gap: 0.75rem;
+    }
+    [data-theme='brutalism'] .kp-code--cell .kp-code__foot {
+        padding-inline: 0.375rem;
+    }
+    [data-theme='brutalism'] .kp-code--cell .kp-code__foot .kp-button {
+        padding-inline: 0.375rem;
+        letter-spacing: 0.02em;
+    }
+    /* The rating's failed state is the alert laid over the stars' own place [rating-states]: this register's `.kp-alert` is
+       positioned `relative`, which took the package's `position: absolute; inset: 0` away, put the plate under the hidden
+       stars and grew the component from 80 px to 178 (brutalism) or 201 (deco). */
+    [data-theme='brutalism'] .kp-alert.kp-rating__failure {
+        position: absolute;
+        inset: 0;
+        padding-block: 0.25rem;
+        row-gap: 0.25rem;
+    }
+
+    [data-theme='brutalism'] .kp-focus-steps__nav > .kp-button {
+        padding-inline: 1rem;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+    }
+    [data-theme='brutalism'] .kp-statusrow__label {
+        overflow-wrap: normal;
+    }
+    @media (max-width: 30rem) {
+        [data-theme='brutalism'] .kp-segmented:not(.kp-segmented--chips, .kp-segmented--block) {
+            --kp-seg-tracking: 0.04em;
+            --kp-seg-size: 0.72rem;
+            --kp-seg-item-pad-inline: 0.5rem;
+        }
+        [data-theme='brutalism'] .kp-statuslist[data-kp-status-vocab='calm'] .kp-statusrow {
+            column-gap: 0.5rem;
+        }
+        [data-theme='brutalism'] .kp-rating--display .kp-rating__body {
+            grid-auto-flow: row;
+            row-gap: 0.125rem;
+        }
+        [data-theme='brutalism'] .kp-calendar__day .kp-calendar__num {
+            font-size: 0.875rem;
+        }
+        [data-theme='brutalism'] .kp-statusrow__action.kp-button {
+            padding-inline: 0.625rem;
+            letter-spacing: 0.04em;
+        }
+    }
+
+    /* Slabs (G7): a bubble, a gallery tile and the plate of a QR code are small parts or plates in the ink line on their hard
+       shadow; the sender's own bubble is the yellow of a hand (G5). The code keeps its white quiet zone inside the line. */
+    [data-theme='brutalism'] .kp-thread__bubble {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: 3px 3px 0 var(--border-strong);
+        margin-inline-end: 3px;
+        margin-block-end: 3px;
+    }
+    [data-theme='brutalism'] .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        border-color: var(--border-strong);
+        background: var(--secondary);
+        color: var(--secondary-foreground);
+    }
+    [data-theme='brutalism'] .kp-thread__item[data-kp-first='true'] > .kp-thread__bubble {
+        border-radius: 0;
+    }
+    [data-theme='brutalism'] .kp-gallery__tile {
+        border: 2px solid var(--border-strong);
+        border-radius: 0;
+        box-shadow: 3px 3px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-qr__plate {
+        border: 3px solid var(--border-strong);
+        border-radius: 0;
+        overflow: visible;
+        box-shadow: 6px 6px 0 var(--border-strong);
+    }
+    [data-theme='brutalism'] .kp-qr__svg {
+        padding: 0;
+    }
+
+    /* A full digest is one unbroken run of hex; it may break anywhere (a version number still breaks only after a dot). */
+    [data-theme='brutalism'] .kp-badge--version[data-kp-version-digest='full'] :is(.kp-version__from, .kp-version__to) {
+        overflow-wrap: anywhere;
+    }
+
+    /* A checklist row's detail wraps in a narrow row instead of crowding the label out (print checklist at 390 px: the label
+       was 0 to 25 px wide). */
+    [data-theme='brutalism'] .kp-checklist__detail {
+        max-inline-size: 11rem;
+        overflow-wrap: anywhere;
+        white-space: normal;
+    }
+
+    /* The code box's tools wrap under the title when the line is short (Pretty, Raw, Wrap and Copy are chunkier in the slab). */
+    [data-theme='brutalism'] .kp-code__tools {
+        flex-wrap: wrap;
+    }
+    [data-theme='brutalism'] .kp-code__head {
+        min-inline-size: 0;
+    }
+    @media (max-width: 30rem) {
+        [data-theme='brutalism'] .kp-button--sm {
+            letter-spacing: 0.04em;
+            padding-inline: 0.75rem;
+        }
+    }
+
+    /* The answer buttons of a person's own row wrap inside part of the row, so the name keeps its room. */
+    [data-theme='brutalism'] .kp-availability__column-row {
+        grid-template-columns: minmax(6rem, 1fr) minmax(0, max-content);
+    }
+    [data-theme='brutalism'] .kp-availability__column-answers {
+        justify-content: flex-end;
     }
 }
 
@@ -67604,6 +67791,17 @@
         padding-inline: 0.9rem;
     }
 
+    /* "Mark unread" is 133 px wide with the capitals and the 0.08em tracking: the package's 7.5rem read column cut it by 6 px
+       behind the button's own clip. */
+    [data-theme='deco'] .kp-notices {
+        --kp-notices-read-col: 9rem;
+    }
+
+    /* The code box's "Show all N lines" took the width its words wrapped to and the clip cut 5 to 9 px of them at 390 px. */
+    [data-theme='deco'] .kp-code__foot .kp-button {
+        min-inline-size: max-content;
+    }
+
     [data-theme='deco'] .kp-button--lg {
         font-size: 0.95rem;
         padding-inline: 1.7rem;
@@ -69843,9 +70041,21 @@
         text-underline-offset: 0.3em;
     }
 
+    /* A failed area says so in the ruby with the gold rule under it (G8), the same ruby as the alert's label: the lacquer
+       plate of a failure was otherwise indistinguishable from an empty one. */
+    [data-theme='deco'] .kp-alert--destructive:is(.kp-stateplate, .kp-card__failure) :is(.kp-stateplate__title, .kp-card__state-title),
+    [data-theme='deco'] .kp-alert--destructive.kp-rating__failure .kp-rating__failure-text {
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.3em;
+    }
+
     /* The empty state: no crest (Q19), its title in capitals. */
     [data-theme='deco'] .kp-empty {
         display: grid;
+        /* The grid's rows stretched over a tall plate (dated-states: the title at the top, the button at the foot);
+           the package's own empty plates are flex columns centred in the middle. */
+        align-content: center;
         justify-items: center;
         gap: 0.3rem;
         padding: 1.2rem 1.1rem;
@@ -69859,6 +70069,24 @@
     [data-theme='deco'] .kp-empty__title {
         font-size: 1.05rem;
         letter-spacing: var(--kp-sig-deco-title-track);
+    }
+
+    /* The empty plate a failure borrows (passkeys, thread: `data-kp-tone='error'`) says so in the ruby with the gold rule. */
+    [data-theme='deco'] .kp-empty[data-kp-tone='error'] .kp-empty__title {
+        /* Josefin in sentence case like the other failed plates: the ruby in Poiret's hairline strokes did not read. */
+        font-family: var(--theme-font-body);
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        text-transform: none;
+        color: hsl(from var(--destructive) h s calc(l + 4));
+        text-decoration: underline 1px var(--primary);
+        text-underline-offset: 0.3em;
+    }
+
+    /* An empty plate that fills its whole component is set at heading size (the package's 1.125rem; the rule above made it
+       1.05rem, a small line in a large plate). */
+    [data-theme='deco'] .kp-empty__title:is(.kp-dated__empty-title, .kp-runs__empty-title, .kp-passkeys__note-title, .kp-thread__note-title) {
+        font-size: 1.375rem;
     }
 
     /* The dialog: lacquer, the double rule under its title (the dialog is
@@ -73370,6 +73598,135 @@
     }
     [data-theme='deco'] .kp-wheel__caption {
         letter-spacing: 0.04em;
+    }
+}
+
+/* ── The new adoption parts in deco [t56-deco-1018] ──
+   Deco's own (themes/deco/CHARACTER.md, G5 to G7, G14): what is empty or failed inside a list is the lobby's plate, lacquer
+   with the wallpaper and the double gold inlay, never a bare black void; the words of a waiting part stand over the doors
+   that part and close, so they read at every moment of the loop; the quote mark is a gold jewel. On a phone the labels
+   are set tight, so a day's name, a segment, a Back or a Next never breaks mid-word (DEMO_RULES.md, chapter 2). */
+@layer kp.signature {
+    [data-theme='deco'] .kp-checklist__empty {
+        border: 1px solid hsl(from var(--primary) h s l / 0.3);
+        background-color: var(--kp-sig-deco-lac);
+        background-image:
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px);
+        background-size: 24px 24px;
+        box-shadow:
+            inset 0 0 0 3px var(--kp-sig-deco-lac),
+            inset 0 0 0 4px hsl(from var(--primary) h s l / 0.6);
+        color: var(--foreground);
+        letter-spacing: var(--kp-sig-deco-title-track);
+    }
+    [data-theme='deco'] .kp-checklist__empty[data-kp-checklist-failed] {
+        border-color: hsl(from var(--primary) h s l / 0.3);
+        text-decoration: none;
+    }
+    [data-theme='deco'] .kp-datatable__busy-words {
+        position: relative;
+        z-index: 4;
+    }
+    [data-theme='deco'] .kp-quote__text::before {
+        --kp-glyph-quote: '\25C6';
+        color: var(--primary);
+        font-size: calc(var(--kp-quote-mark-size, 2.25rem) * 0.42);
+        inset-block-start: 0.35em;
+        opacity: 1;
+    }
+    /* The rating's failed state is the alert laid over the stars' own place [rating-states]: this register's `.kp-alert` is
+       positioned `relative`, which took the package's `position: absolute; inset: 0` away, put the plate under the hidden
+       stars and grew the component from 80 px to 178 (brutalism) or 201 (deco). */
+    [data-theme='deco'] .kp-alert.kp-rating__failure {
+        position: absolute;
+        inset: 0;
+        padding: 0.25rem 0.5rem;
+        row-gap: 0.25rem;
+    }
+
+    [data-theme='deco'] .kp-focus-steps__nav > .kp-button {
+        padding-inline: 1rem;
+        letter-spacing: 0.06em;
+        white-space: nowrap;
+    }
+    @container kp-weekdays (max-width: 26rem) {
+        [data-theme='deco'] .kp-weekdays .kp-weekdays__chips {
+            gap: 0.125rem;
+        }
+        [data-theme='deco'] .kp-weekdays .kp-weekdays__chips > .kp-segmented__item {
+            font-size: 0.625rem;
+            letter-spacing: 0.02em;
+        }
+    }
+    @media (max-width: 30rem) {
+        [data-theme='deco'] .kp-segmented:not(.kp-segmented--chips, .kp-segmented--block) {
+            --kp-seg-tracking: 0.02em;
+            --kp-seg-size: 0.68rem;
+            --kp-seg-item-pad-inline: 0.375rem;
+        }
+    }
+
+    /* The bubbles of a conversation, the tiles of a gallery and the plate of a QR code are lobby plates in little: lacquer
+       with the wallpaper, a hairline and the second hairline 3 px inside it (G5, G7). A picture and a code keep their own
+       ground (the tile's picture, the white a scanner needs), so their second rule stands 3 px outside, in the gap. */
+    [data-theme='deco'] .kp-thread__bubble {
+        border: 1px solid hsl(from var(--primary) h s l / 0.3);
+        border-radius: 0;
+        background-color: var(--kp-sig-deco-lac);
+        background-image:
+            repeating-linear-gradient(135deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px),
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / var(--kp-sig-deco-wall)) 0 1px, transparent 1px 12px);
+        background-size: 24px 24px;
+        box-shadow:
+            inset 0 0 0 3px var(--kp-sig-deco-lac),
+            inset 0 0 0 4px hsl(from var(--primary) h s l / 0.5);
+        padding-inline: 1rem;
+        padding-block: 0.75rem;
+    }
+    [data-theme='deco'] .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        border-color: hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='deco'] .kp-thread__item[data-kp-first='true'] > .kp-thread__bubble {
+        border-radius: 0;
+    }
+    [data-theme='deco'] .kp-gallery__tile,
+    [data-theme='deco'] .kp-qr__plate {
+        border: 1px solid hsl(from var(--primary) h s l / 0.7);
+        border-radius: 0;
+        overflow: visible;
+        box-shadow:
+            0 0 0 3px var(--background),
+            0 0 0 4px hsl(from var(--primary) h s l / 0.5);
+    }
+
+    /* A full digest is one unbroken run of hex; it may break anywhere (a version number still breaks only after a dot). */
+    [data-theme='deco'] .kp-badge--version[data-kp-version-digest='full'] :is(.kp-version__from, .kp-version__to) {
+        overflow-wrap: anywhere;
+    }
+
+    /* A checklist row's detail wraps in a narrow row instead of crowding the label out (print checklist at 390 px: the label
+       was 0 to 25 px wide). */
+    [data-theme='deco'] .kp-checklist__detail {
+        max-inline-size: 11rem;
+        overflow-wrap: anywhere;
+        white-space: normal;
+    }
+
+    /* The answer buttons of a person's own row wrap inside part of the row, so the name keeps its room. */
+    [data-theme='deco'] .kp-availability__column-row {
+        grid-template-columns: minmax(6rem, 1fr) minmax(0, max-content);
+    }
+    [data-theme='deco'] .kp-availability__column-answers {
+        justify-content: flex-end;
+    }
+
+    /* The code box's tools wrap under the title when the line is short, instead of pushing Copy past the box's edge. */
+    [data-theme='deco'] .kp-code__tools {
+        flex-wrap: wrap;
+    }
+    [data-theme='deco'] .kp-code__head {
+        min-inline-size: 0;
     }
 }
 
@@ -95999,6 +96356,23 @@
         border-radius: var(--radius);
     }
 
+    /* A failed area is the red sky (G13, the busy failure decided as r2-so-failure-1): the dark card plate, the wash rising
+       from its foot, the foot edge and a 1 px ring in the red, the words in the lifted red ink. The package's flat
+       `--destructive` fill (a salmon block over the whole component) is no part of solstice's light. */
+    [data-theme='solstice'] .kp-alert--destructive:is(.kp-stateplate, .kp-rating__failure) {
+        background:
+            linear-gradient(to top, hsl(from var(--destructive) h s l / 0.3), transparent 75%),
+            var(--card);
+        color: var(--foreground);
+        border-color: hsl(from var(--destructive) h s l / 0.55);
+        box-shadow: inset 0 -2px 0 hsl(from var(--destructive) h s 50%);
+    }
+
+    [data-theme='solstice'] .kp-alert--destructive:is(.kp-stateplate, .kp-rating__failure) .kp-stateplate__title,
+    [data-theme='solstice'] .kp-alert--destructive.kp-rating__failure .kp-rating__failure-text {
+        color: hsl(from var(--destructive) h s 68%);
+    }
+
     [data-theme='solstice'] .kp-grid {
         gap: var(--kp-space-lg);
     }
@@ -96976,6 +97350,24 @@
         color: var(--foreground);
         font-family: var(--theme-font-display);
         font-size: 1.3rem;
+    }
+
+    /* The empty plate a failure borrows (passkeys, thread: `data-kp-tone='error'`) is the red sky, not the rising sun: the
+       sun is time passing and the empty state (G16); a failure reddens the foot light (G13). */
+    [data-theme='solstice'] .kp-empty[data-kp-tone='error'] {
+        background:
+            linear-gradient(to top, hsl(from var(--destructive) h s l / 0.3), transparent 75%),
+            var(--card);
+        border-color: hsl(from var(--destructive) h s l / 0.55);
+        box-shadow: inset 0 -2px 0 hsl(from var(--destructive) h s 50%);
+    }
+
+    [data-theme='solstice'] .kp-empty[data-kp-tone='error']::before {
+        display: none;
+    }
+
+    [data-theme='solstice'] .kp-empty[data-kp-tone='error'] .kp-empty__title {
+        color: hsl(from var(--destructive) h s 68%);
     }
 
     [data-theme='solstice'] .kp-empty__body {
@@ -99136,6 +99528,11 @@
         background:
             linear-gradient(var(--destructive), var(--destructive)) 0 100% / 100% 1px no-repeat,
             linear-gradient(to top, hsl(from var(--destructive) h s l / 0.2), transparent 70%);
+        /* On the card's dark sky the package's destructive-foreground (a dark red) left "why" unreadable. */
+        color: var(--foreground);
+    }
+    [data-theme='solstice'] .kp-card[data-kp-state='error'] > .kp-card__stage > .kp-card__state .kp-card__state-title {
+        color: hsl(from var(--destructive) h s 68%);
     }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='solstice'] .kp-card[data-kp-state='ready'] > .kp-card__stage > .kp-card__data {
@@ -99919,6 +100316,58 @@
         [data-theme='solstice'] .kp-wheel__segment {
             transition: fill calc(var(--kp-sig-solstice-contact) * 3) var(--kp-sig-solstice-touch);
         }
+    }
+}
+
+/* ── The new adoption parts in solstice [t56-solstice-1018] ──
+   A full digest is one unbroken run of hex: in the serif-set badge it ran 3 px past the badge's own edge, so it is allowed
+   to break anywhere (a version number still breaks only where it was given a place to). */
+@layer kp.signature {
+    [data-theme='solstice'] .kp-badge--version[data-kp-version-digest='full'] :is(.kp-version__from, .kp-version__to) {
+        overflow-wrap: anywhere;
+    }
+
+    /* A bubble is a plate lit from below (G7): the foot edge catching the low light and a faint rust wash rising from it;
+       the sender's own bubble is lit warmer (the amber wash), the words stand above the wash. */
+    [data-theme='solstice'] .kp-thread__bubble {
+        --kp-so-sky: var(--accent);
+        --kp-so-foot: hsl(from var(--primary) h s l / 0.45);
+        background:
+            linear-gradient(var(--kp-so-foot), var(--kp-so-foot)) 0 100% / 100% 1px no-repeat,
+            linear-gradient(to top, hsl(from var(--kp-so-sky) h s l / 0.14), transparent) 0 100% / 100% 45% no-repeat,
+            var(--card);
+    }
+    [data-theme='solstice'] .kp-thread__item[data-kp-dir='out'] > .kp-thread__bubble {
+        --kp-so-sky: var(--primary);
+        --kp-so-foot: hsl(from var(--primary) h s l / 0.7);
+    }
+    [data-theme='solstice'] .kp-thread__bubble[data-kp-status='failed'] {
+        --kp-so-sky: var(--destructive);
+        --kp-so-foot: var(--destructive);
+    }
+
+
+    /* A checklist row's detail wraps in a narrow row instead of crowding the label out (print checklist at 390 px: the label
+       was 0 to 25 px wide). */
+    [data-theme='solstice'] .kp-checklist__detail {
+        max-inline-size: 11rem;
+        overflow-wrap: anywhere;
+        white-space: normal;
+    }
+
+    /* A table in a phone-wide box keeps its last column inside the box: tighter cells, so the words never touch the edge. */
+    @media (max-width: 30rem) {
+        [data-theme='solstice'] .kp-datatable .kp-table :is(th, td) {
+            padding-inline: 0.5rem;
+        }
+    }
+
+    /* The code box's tools wrap under the title when the line is short, instead of pushing Copy past the box's edge. */
+    [data-theme='solstice'] .kp-code__tools {
+        flex-wrap: wrap;
+    }
+    [data-theme='solstice'] .kp-code__head {
+        min-inline-size: 0;
     }
 }
 
