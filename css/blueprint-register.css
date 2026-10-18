@@ -6120,3 +6120,108 @@
         letter-spacing: 0.04em;
     }
 }
+
+/* ── A failed area is flagged, never filled [G13, t56-eye-1018] ──
+   Blueprint's own (themes/blueprint/CHARACTER.md, G5 and G13): a statuses only flag. A failed part carries the drafting flag
+   before its title (a filled ▲ in the tone's lit ink with the word FAILED in the lettering), stands on the sheet's two axes
+   drawn in that ink, and is on no plate and in no frame all round. The package's flat `--destructive` fill (a salmon slab)
+   is no part of the sheet, so every destructive alert and the empty plate a failure borrows are this one drawing. */
+@layer kp.signature {
+    [data-theme='blueprint'] {
+        --kp-bp-fail-ink: hsl(from var(--destructive) h s 70%);
+    }
+
+    [data-theme='blueprint'] .kp-alert--destructive {
+        --kp-bp-axes-img:
+            linear-gradient(var(--kp-bp-fail-ink), var(--kp-bp-fail-ink)), linear-gradient(var(--kp-bp-fail-ink), var(--kp-bp-fail-ink)),
+            repeating-linear-gradient(90deg, var(--kp-bp-fail-ink) 0 1px, transparent 1px 8px),
+            repeating-linear-gradient(0deg, var(--kp-bp-fail-ink) 0 1px, transparent 1px 8px),
+            repeating-linear-gradient(90deg, var(--kp-bp-fail-ink) 0 1px, transparent 1px 40px),
+            repeating-linear-gradient(0deg, var(--kp-bp-fail-ink) 0 1px, transparent 1px 40px);
+        background-color: transparent;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+        background-repeat: no-repeat;
+        border-color: transparent;
+        box-shadow: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='blueprint'] .kp-alert--destructive:is(.kp-stateplate, .kp-runs__failure, .kp-dated__failure, .kp-transfer__failure)::before,
+    [data-theme='blueprint'] .kp-empty[data-kp-tone='error']::before {
+        content: '\25B2\00a0' 'FAILED';
+        display: block;
+        inline-size: auto;
+        block-size: auto;
+        margin: 0 auto 0.25rem;
+        background: none;
+        color: var(--kp-bp-fail-ink);
+        font-family: var(--theme-font-mono);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-style: oblique 15deg;
+        letter-spacing: 0.12em;
+        text-align: center;
+    }
+
+    [data-theme='blueprint'] .kp-empty[data-kp-tone='error'] {
+        border-color: transparent;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='blueprint'] .kp-alert--destructive :is(.kp-stateplate__title, .kp-runs__failure-title, strong) {
+        color: var(--foreground);
+    }
+}
+
+/* ── The time field's waiting place is a traced frame [t56-eye-1018] ──
+   The field is waiting at its own final width and height (a 36 px box), not a line of text, so it is the sheet's block
+   place: the pen traces the four sides, as it does round every other block. The line's two ticks and one baseline, drawn
+   on a box this size, read as two stray strokes. */
+@layer kp.signature {
+    [data-theme='blueprint'] .kp-time__skeleton:not(.kp-skeleton--block)::before {
+        content: none;
+    }
+
+    [data-theme='blueprint'] .kp-time__skeleton:not(.kp-skeleton--block) {
+        --kp-bp-r: 4;
+        position: absolute;
+        block-size: var(--kp-control-height, 2.25rem);
+        margin: 0;
+    }
+
+    [data-theme='blueprint'] .kp-time--inline .kp-time__skeleton:not(.kp-skeleton--block) {
+        block-size: 1.5em;
+    }
+
+    [data-theme='blueprint'] .kp-time__skeleton:not(.kp-skeleton--block)::after {
+        --kp-bp-px: calc(clamp(0, var(--kp-bp-r), 1) - clamp(0, var(--kp-bp-r) - 2, 1));
+        --kp-bp-py: calc(clamp(0, var(--kp-bp-r) - 1, 1) - clamp(0, var(--kp-bp-r) - 3, 1));
+        inset: -8px;
+        background-image:
+            var(--kp-bp-pen-img), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)),
+            linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)),
+            linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace));
+        background-size:
+            var(--kp-bp-pen-size),
+            calc(clamp(0, var(--kp-bp-r), 1) * (100% - 16px)) 1px,
+            1px calc(clamp(0, var(--kp-bp-r) - 1, 1) * (100% - 16px)),
+            calc(clamp(0, var(--kp-bp-r) - 2, 1) * (100% - 16px)) 1px,
+            1px calc(clamp(0, var(--kp-bp-r) - 3, 1) * (100% - 16px));
+        background-position:
+            var(--kp-bp-pen-pos),
+            8px 8px,
+            right 8px top 8px,
+            right 8px bottom 8px,
+            left 8px bottom 8px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-time__skeleton:not(.kp-skeleton--block) {
+            animation: kp-sig-blueprint-frame var(--kp-sig-bp-loop) linear infinite;
+        }
+    }
+}
