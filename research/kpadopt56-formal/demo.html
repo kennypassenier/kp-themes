@@ -44,7 +44,7 @@
                 <h1>Approved in formal, changed since: judge it again</h1>
                 <p class="cat-intro">
                     You approved these components in formal. The shared package code changed after that, so formal looks different here and needs your
-                    eye again: 21 sections, one step in the review dialog. Each section says under <b>What changed since you approved it</b> what is
+                    eye again: 22 sections, one step in the review dialog. Each section says under <b>What changed since you approved it</b> what is
                     different, and under <b>Expected</b> what to check; where it helps, a <b>Width</b> switch in the dialog shows the section at 1280
                     and at 390 (a phone).
                 </p>
@@ -130,7 +130,7 @@
                     <div class="ko-stack">
                         <div>
                             <p class="ko-label">A menu button</p>
-                            <div data-kp-refresh="0" data-ko-refresh="menu"></div>
+                            <div data-kp-refresh="0" data-kp-look="menu" data-ko-refresh="menu"></div>
                         </div>
                         <div>
                             <p class="ko-label">Segments</p>
@@ -1369,8 +1369,9 @@
                     <p>
                         <b>What changed since you approved it:</b> Two changes. The first and the last date label under the chart used to stick out of
                         the plot (the last one by about 26 px on the right, the first by about 6 px on the left); now both are anchored inside the
-                        plot. And a chart that could not be read used to show only a red dot and one small sentence with nothing to press; now it is a
-                        tinted, bordered plate over the height of the plot, the sentence at heading size and a normal-size <b>Retry</b> under it.
+                        plot. And a chart that could not be read used to show only a red dot and one small sentence with nothing to press; now it is
+                        formal&rsquo;s own failed alert (a red bar on its left edge, not a tinted rectangle with a dot) over the height of the plot,
+                        the sentence at heading size and a normal-size <b>Retry</b> under it.
                     </p>
                 </div>
                 <div class="kp5-expect">
@@ -1523,7 +1524,9 @@
                 <div class="k56f-changed">
                     <p>
                         <b>What changed since you approved it:</b> On a phone, the row with your own answer put the answer buttons beside your name
-                        and squeezed the name to a few pixels. Now the answers stand under the name.
+                        and squeezed the name to a few pixels. Now the answers stand under the name. Also, in the 390 px frame with "A list per
+                        column", pressing <b>Loading</b> used to show an empty frame; now the waiting grid fills the frame the list had, with the busy
+                        card centred over it.
                     </p>
                 </div>
                 <div class="ks-expected">
@@ -1561,7 +1564,8 @@
                         </li>
                         <li class="k56f-expect-changed">
                             <b>Changed, in the 390 px frames:</b> in your own row the name <b>Kenny (you)</b> has the full width of the row and the
-                            answer buttons are on a line under it. At desktop width the grid is as approved.
+                            answer buttons are on a line under it. Choose <b>A list per column</b> and press <b>Loading</b>: the frame is not empty,
+                            the busy card is centred over the waiting grid. At desktop width the grid is as approved.
                         </li>
                     </ul>
                 </div>
@@ -2877,7 +2881,8 @@
                         <b>What changed since you approved it:</b> The notification centre now holds the height it had when it was loaded: Loading,
                         Nothing waiting and Failed used to be about 460 px high where the loaded page is about 1040 px, so the page below jumped. They
                         now keep a taller footprint (capped at 48rem, about 768 px, because a plate in the middle of more than that is out of sight),
-                        and the Retry in the failed plate is a normal button.
+                        and the Retry in the failed plate is a normal button. In a state the page now fills that whole 768 px (before, the plate
+                        stopped about 184 px short of the bottom).
                     </p>
                 </div>
                 <div class="ko-expected">
@@ -3176,7 +3181,8 @@
                     <p>
                         <b>What changed since you approved it:</b> The button inside every empty or failed plate (<b>Retry</b>, <b>Add</b>) used to
                         inherit the plate&rsquo;s heading size: its text was about 24 px in a 36 px button. Now the button is a normal control:
-                        body-size text, the same size as any other button.
+                        body-size text, the same size as any other button. The usual picker&rsquo;s loading case also grows to 448 px, and its busy
+                        card stays inside it.
                     </p>
                 </div>
                 <div class="kc-expected">
@@ -3475,6 +3481,114 @@
                                 <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="kc-sec"
+                id="focus-states"
+                data-review-item="focus-states"
+                data-review-topic="focus"
+                data-review-topic-title="Questions, one per screen"
+                data-review-components="focus-steps"
+                data-review-title="Questions, one per screen: states, resume and a long text"
+                aria-labelledby="h-focus-states"
+            >
+                <div class="kc-sec__head">
+                    <h2 id="h-focus-states">Questions, one per screen: states, resume and a long text</h2>
+                    <p>
+                        Questions that are being read, a day with none, questions that could not be read, answers that could not be saved, a check-in
+                        left half way, and a question with long words.
+                    </p>
+                </div>
+                <div class="k56f-changed">
+                    <p>
+                        <b>What changed since you approved it:</b> The case with a long question and long answers was too short: its body scrolled and
+                        the last answer (<b>Hard to say</b>) sat hidden under the Back and Done buttons. The case is now 864 px high, with no
+                        scrollbar, and every answer is in view.
+                    </p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Loading</b>: the theme&rsquo;s loading card, moving, centred over the question area; the count, bar, Back and Next keep
+                            their places. <b>No questions</b>: one plate, centred at heading size, <b>No questions today</b> over
+                            <b>That is fine, nothing is waiting</b>. <b>Could not read</b>: the red-edged plate with
+                            <b>Could not read the questions</b> and a normal-size <b>Retry</b>. <b>Could not save</b>: after the last answer press
+                            Done on the first view then this button: <b>Could not save your answers</b> with <b>Try again</b>; the answers are kept
+                            (the grey box lists them). The view keeps its height in every state.
+                        </li>
+                        <li>
+                            <b>Resume</b> (second view, kept in this browser): answer two questions, then press <b>Phone rings: load again</b>. The
+                            view asks <b>Continue where you stopped?</b> with <b>Continue</b> and <b>Start over</b>; Continue puts back your answers
+                            and the question you were on. With <b>Resume: auto</b> it continues without asking; with <b>off</b> it starts at question
+                            1. Progress older than midnight (Brussels) is not offered.
+                        </li>
+                        <li>
+                            <b>Long text and a disabled answer</b> (third view): a long question and long answers wrap and never touch the edge; the
+                            answer that cannot be picked is dimmed and says why in words under its label (<b>Not while the moves are paused</b>), not
+                            in a tooltip.
+                        </li>
+                        <li class="k56f-expect-changed">
+                            <b>Changed:</b> in the long-text case every answer, <b>Hard to say</b> included, is in view above the Back and Done
+                            buttons, and the body has no scrollbar.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">The long-text case is 864 px high with no scrollbar; the last answer is whole and clear of the footer.</p>
+                </div>
+                <div data-review-controls>
+                    <div role="group" aria-label="State of the first view" class="kc-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-kc-focus-state="ready">Ready</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-focus-state="loading">Loading</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-focus-state="empty">No questions</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-focus-state="error">Could not read</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-focus-state="save-error">Could not save</button>
+                    </div>
+                    <div role="group" aria-label="Resume" class="kc-actions">
+                        <b>Resume:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-kc-focus-resume="ask">Ask</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-focus-resume="auto">Auto</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-focus-resume="off">Off</button>
+                        <button type="button" class="kp-button" data-kc-focus-reload>Phone rings: load again</button>
+                    </div>
+                </div>
+                <div class="kc-pair">
+                    <div class="kc-case">
+                        <p class="kc-label">Driven by the buttons above</p>
+                        <div
+                            class="kp-focus-steps kc-focus"
+                            data-kp-focus-steps
+                            data-kp-focus-mode="answer"
+                            id="kc-focus-s"
+                            aria-label="Daily check-in"
+                        ></div>
+                        <pre class="kc-log" id="kc-focus-s-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="kc-case">
+                        <p class="kc-label">Resume: left half way</p>
+                        <div
+                            class="kp-focus-steps kc-focus"
+                            data-kp-focus-steps
+                            data-kp-focus-mode="answer"
+                            data-kp-remember="kc-checkin"
+                            data-kp-resume="ask"
+                            id="kc-focus-r"
+                            aria-label="Daily check-in"
+                        ></div>
+                    </div>
+                    <div class="kc-case">
+                        <p class="kc-label">A long question, long answers, an answer that cannot be picked</p>
+                        <div
+                            class="kp-focus-steps kc-focus"
+                            data-kp-focus-steps
+                            data-kp-focus-mode="answer"
+                            id="kc-focus-l"
+                            aria-label="Daily check-in"
+                        ></div>
                     </div>
                 </div>
             </section>
@@ -8723,103 +8837,6 @@ Draft kept for later.</textarea>
                                     aria-label="Daily check-in"
                                 ></div>
                             </div>
-                        </div>
-                    </div>
-                </section>
-                <section
-                    class="kc-sec"
-                    id="focus-states"
-                    data-kpadopt56-item="focus-states"
-                    data-kpadopt56-components="focus-steps"
-                    data-kpadopt56-topic="focus"
-                    data-kpadopt56-title="Questions, one per screen: states, resume and a long text"
-                    aria-labelledby="h-focus-states"
-                >
-                    <div class="kc-sec__head">
-                        <h2 id="h-focus-states">Questions, one per screen: states, resume and a long text</h2>
-                        <p>
-                            Questions that are being read, a day with none, questions that could not be read, answers that could not be saved, a
-                            check-in left half way, and a question with long words.
-                        </p>
-                    </div>
-                    <div class="kc-expected">
-                        <p><b>Expected:</b></p>
-                        <ul>
-                            <li>
-                                <b>Loading</b>: the theme&rsquo;s loading card, moving, centred over the question area; the count, bar, Back and Next
-                                keep their places. <b>No questions</b>: one plate, centred at heading size, <b>No questions today</b> over
-                                <b>That is fine, nothing is waiting</b>. <b>Could not read</b>: the red-edged plate with
-                                <b>Could not read the questions</b> and a normal-size <b>Retry</b>. <b>Could not save</b>: after the last answer press
-                                Done on the first view then this button: <b>Could not save your answers</b> with <b>Try again</b>; the answers are
-                                kept (the grey box lists them). The view keeps its height in every state.
-                            </li>
-                            <li>
-                                <b>Resume</b> (second view, kept in this browser): answer two questions, then press <b>Phone rings: load again</b>.
-                                The view asks <b>Continue where you stopped?</b> with <b>Continue</b> and <b>Start over</b>; Continue puts back your
-                                answers and the question you were on. With <b>Resume: auto</b> it continues without asking; with <b>off</b> it starts
-                                at question 1. Progress older than midnight (Brussels) is not offered.
-                            </li>
-                            <li>
-                                <b>Long text and a disabled answer</b> (third view): a long question and long answers wrap and never touch the edge;
-                                the answer that cannot be picked is dimmed and says why in words under its label (<b>Not while the moves are paused</b
-                                >), not in a tooltip.
-                            </li>
-                        </ul>
-                    </div>
-                    <div data-review-look>
-                        <p data-for="formal">
-                            The plates are formal&rsquo;s empty plate and destructive alert; the loading card is the one that rules the busy table.
-                        </p>
-                    </div>
-                    <div data-review-controls>
-                        <div role="group" aria-label="State of the first view" class="kc-actions">
-                            <button type="button" class="kp-button" aria-pressed="true" data-kc-focus-state="ready">Ready</button>
-                            <button type="button" class="kp-button" aria-pressed="false" data-kc-focus-state="loading">Loading</button>
-                            <button type="button" class="kp-button" aria-pressed="false" data-kc-focus-state="empty">No questions</button>
-                            <button type="button" class="kp-button" aria-pressed="false" data-kc-focus-state="error">Could not read</button>
-                            <button type="button" class="kp-button" aria-pressed="false" data-kc-focus-state="save-error">Could not save</button>
-                        </div>
-                        <div role="group" aria-label="Resume" class="kc-actions">
-                            <b>Resume:</b>
-                            <button type="button" class="kp-button" aria-pressed="true" data-kc-focus-resume="ask">Ask</button>
-                            <button type="button" class="kp-button" aria-pressed="false" data-kc-focus-resume="auto">Auto</button>
-                            <button type="button" class="kp-button" aria-pressed="false" data-kc-focus-resume="off">Off</button>
-                            <button type="button" class="kp-button" data-kc-focus-reload>Phone rings: load again</button>
-                        </div>
-                    </div>
-                    <div class="kc-pair">
-                        <div class="kc-case">
-                            <p class="kc-label">Driven by the buttons above</p>
-                            <div
-                                class="kp-focus-steps kc-focus"
-                                data-kp-focus-steps
-                                data-kp-focus-mode="answer"
-                                id="kc-focus-s"
-                                aria-label="Daily check-in"
-                            ></div>
-                            <pre class="kc-log" id="kc-focus-s-log" aria-live="polite"></pre>
-                        </div>
-                        <div class="kc-case">
-                            <p class="kc-label">Resume: left half way</p>
-                            <div
-                                class="kp-focus-steps kc-focus"
-                                data-kp-focus-steps
-                                data-kp-focus-mode="answer"
-                                data-kp-remember="kc-checkin"
-                                data-kp-resume="ask"
-                                id="kc-focus-r"
-                                aria-label="Daily check-in"
-                            ></div>
-                        </div>
-                        <div class="kc-case">
-                            <p class="kc-label">A long question, long answers, an answer that cannot be picked</p>
-                            <div
-                                class="kp-focus-steps kc-focus"
-                                data-kp-focus-steps
-                                data-kp-focus-mode="answer"
-                                id="kc-focus-l"
-                                aria-label="Daily check-in"
-                            ></div>
                         </div>
                     </div>
                 </section>
