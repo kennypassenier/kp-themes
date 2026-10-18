@@ -5649,6 +5649,17 @@
         border-color: var(--destructive);
     }
 
+    /* A destructive action on a destructive plate (Stop on an urgent or a refused question, a failed plate's action) is an outlined key: its
+     * own destructive fill with the plate's ink as its edge and a hairline of the plate's colour outside that, so it is never red on red,
+     * and on a light or dark card the same edge still reads as the button's own [t56-shared3-1018]. */
+    .kp-alert--destructive .kp-button--destructive,
+    .kp-alert--destructive .kp-button--destructive:hover:not(:disabled),
+    .kp-alert--destructive .kp-button--destructive:active:not(:disabled),
+    .kp-alert--destructive .kp-button--destructive:disabled {
+        border-color: var(--destructive-foreground);
+        box-shadow: 0 0 0 1px var(--destructive);
+    }
+
     /* The flavour is named in text as well as coloured [DI4]: four coloured
  * plates are four colours to someone who sees them all as one. */
     .kp-alert__label {
