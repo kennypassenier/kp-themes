@@ -5929,8 +5929,59 @@
             letter-spacing: 0;
         }
 
-        [data-theme='blueprint'] .kp-segmented[data-kp-segmented='single'] > .kp-segmented__item {
+        [data-theme='blueprint'] .kp-segmented[data-kp-segmented='single']:not(.kp-inspector__filter) > .kp-segmented__item {
             padding-inline: 0.5rem;
+        }
+    }
+
+    /* The request inspector's status filter is five segments (a label and its exact count each) and stood in one row wider than
+       a phone: the bar stuck out 91 to 93 px past its section (kpadopt5-rows/request-inspector, 390 px). Wrapping them breaks the
+       package's sliding plate, so on a phone the five share the width, with less padding, and nothing is cut. */
+    @media (max-width: 30rem) {
+        [data-theme='blueprint'] .kp-inspector__filter {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            max-inline-size: 100%;
+        }
+
+        [data-theme='blueprint'] .kp-inspector__filter > .kp-segmented__item {
+            padding-inline: 0.25rem;
+            gap: 0.3125rem;
+            min-inline-size: 0;
+            font-size: 0.8125rem;
+        }
+
+        [data-theme='blueprint'] .kp-inspector__filter .kp-segmented__label {
+            font-size: 0.6875rem;
+            letter-spacing: 0;
+            overflow: visible;
+            text-overflow: clip;
+        }
+
+        [data-theme='blueprint'] .kp-inspector__filter .kp-segmented__count {
+            min-inline-size: 0;
+            padding-inline: 0.25rem;
+            font-size: 0.6875rem;
+            letter-spacing: 0;
+        }
+    }
+
+    /* In a narrow inspector (a phone) the badges of this theme are wider than the package's, so the one flexible column, the
+       source, was left 0 px and its word ("test") stood in a column one letter wide. Under 24rem of its own width the
+       summary stands in three short lines (method and status, source and time, path), so the source keeps its word whole and
+       the time its 4 px from the edge. */
+    @container kp-inspector (max-width: 24rem) {
+        [data-theme='blueprint'] .kp-inspector__row {
+            grid-template-columns: auto minmax(0, 1fr);
+            grid-template-areas:
+                'method status'
+                'source time'
+                'path path';
+        }
+
+        [data-theme='blueprint'] .kp-inspector__source {
+            justify-self: start;
+            white-space: nowrap;
+            overflow-wrap: normal;
         }
     }
 }
