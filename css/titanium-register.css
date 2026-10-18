@@ -988,6 +988,12 @@
         border: 1px solid var(--border-strong);
     }
 
+    /* A badge is a straight plate under its chamfer: the shared pill radius drew an arc inside the straight cut
+       (Kenny, 2026-10-18 04:03, titanium-badge: "Aanpassen in titanium"). */
+    [data-theme='titanium'] .kp-badge {
+        border-radius: 0;
+    }
+
     [data-theme='titanium'] .kp-skeleton {
         background: var(--accent);
     }
