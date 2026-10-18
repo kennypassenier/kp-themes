@@ -5188,6 +5188,7 @@
         "pastel||||.kp-button.kp-alarm__ack.kp-alarm__ack": "d28edc68eb4bb96d",
         "pastel||||.kp-button.kp-alarm__ack.kp-alarm__ack:not()": "d28edc68eb4bb96d",
         "pastel||||.kp-button.kp-alarm__keep.kp-alarm__keep": "3efe867789095347",
+        "pastel||||.kp-button.kp-button--sm": "b1a20bb6ad01a809",
         "pastel||||.kp-button:not(.kp-button--sm):not(.kp-button--lg)": "6025dc2504be0b1a",
         "pastel||||.kp-calendar__busy": "c4e471cae4da8feb",
         "pastel||||.kp-calendar__busy)": "026fbe26e35f1754",

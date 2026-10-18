@@ -62420,6 +62420,17 @@
 }
 /* ── end t56-q ── */
 
+/* ── t56-q2 people: the fold keeps off a small button's label ── */
+@layer kp.signature {
+    /* The curl of a pointed small button (15 px) lay over the last letter of its 9 px side margin ("Failed" read "Failec").
+       A small button curls a smaller corner, inside its own margin. */
+    [data-theme='pastel'] .kp-button.kp-button--sm::after {
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+    }
+}
+/* ── end t56-q2 people ── */
+
 /* The busy progress bar's breath, 0 (bare ground) to 1 (the full row),
    registered so the keyframes interpolate it; at the top level because
    Firefox does not register an @property inside a layer. */
