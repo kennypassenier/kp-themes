@@ -2634,6 +2634,7 @@
         "dark||||[data-kp-divider]": "c00499fd95416602",
         "dark||||[data-kp-hero-grid]": "9c34fb3c863025df",
         "dark||||[data-kp-reveal='rule']": "9b497c4324867b86",
+        "dark||||[data-kp-roving]-visible):not(.kp-card)": "4ec55269d789f1b5",
         "dark||||[data-kp-surface='hero']": "08bdeab949f109cc",
         "dark||||[data-kp-tick]": "96700261b0deb97e",
         "dark||||[data-kp-tone='destructive'])": "16dac0bbaffcb182",

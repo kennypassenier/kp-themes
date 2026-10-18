@@ -317,6 +317,11 @@ const CHANGED = {
             'In your last review (18/10) the menu of the package&rsquo;s own <b>More</b> button (under the cards, opened by <b>Open the package&rsquo;s menu</b>) did not open at that button. The button&rsquo;s wrapper was stretched over the whole width of the section, and the package places its menu against the wrapper&rsquo;s end, so the menu stood at the far right, 1174 px away from the button at 1920 wide. The package&rsquo;s menu button now hugs its button wherever it stands, so the menu opens right under <b>More</b>. The menus of a card&rsquo;s More and of the +N were already at their buttons and are unchanged.',
         expect: '<b>Open the package&rsquo;s menu</b> opens the menu directly under the <b>More</b> button below the cards, its left edge at the button&rsquo;s left edge.',
     },
+    'lists/row-keyboard-select': {
+        changed:
+            'Your last review (18/10) rejected this in dark without a note, so I looked at it myself, against its Expected and dark&rsquo;s character. Two things were wrong. First, the keys: dark was the first step, and the <b>x</b> that should tick the row was taken by the review dialog as its own <b>X</b> (toggle Not approved), so the row was never ticked and the section was marked not approved by the key itself. A key pressed while the focus is in the component now goes to the component first; the dialog takes it only when the component does not use it (<b>C</b>, <b>S</b>, <b>Q</b> still work from the table). Second, the look: the cursor ring was a plain white box, the one ring on the page without dark&rsquo;s film (dark&rsquo;s rule: the film is every edge that matters, the ring included). The ring is now the cyan-to-magenta film, 2 px just inside the row, and it moves with the key at once.',
+        expect: 'Click a row&rsquo;s words, press <b>x</b>: the row is ticked and the readout says <b>1 selected</b> (the Not approved box is not touched). Press <b>j</b>: the cursor ring, now the film (cyan along the top, magenta and green at the ends), steps down one row; the ticked row keeps its light plate.',
+    },
 };
 
 const read = (/** @type {string} */ path) => readFileSync(fileURLToPath(new URL(path, here)), 'utf8');

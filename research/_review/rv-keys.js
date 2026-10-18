@@ -545,6 +545,12 @@ export function mountKeys(api) {
     }
     // Window capture: before the dialog's own listener on the document, so Escape closes an open overlay first and a
     // key handled here never reaches the demo.
+    // A key pressed while the focus is in a component on stage (a table row walked with j / k and ticked with x) is the
+    // component's first; the dialog takes it in the bubble phase, only when the component left it alone (no
+    // preventDefault). X toggled "Not approved" instead of ticking the row (row-keyboard-select, 2026-10-18 19:08).
+    const deferred = new WeakSet();
+    const ownedByComponent = (/** @type {HTMLElement} */ from) =>
+        api.stage.contains(from) && Boolean(from.closest?.('[data-review-item]')) && !from.closest('[data-review-controls]');
     addEventListener(
         'keydown',
         (event) => {
@@ -552,10 +558,18 @@ export function mountKeys(api) {
             const from = /** @type {HTMLElement} */ (event.target);
             if (from.matches?.(TYPING) && event.code !== 'Escape') return;
             if (event.repeat && event.code !== KEYS.next && event.code !== KEYS.prev) return;
+            if (event.code !== 'Escape' && ownedByComponent(from)) {
+                deferred.add(event);
+                return;
+            }
             run(event.code, { fromStage: api.stage.contains(from), key: event.key, event });
         },
         true,
     );
+    addEventListener('keydown', (event) => {
+        if (!deferred.has(event) || event.defaultPrevented || !api.dialog.open) return;
+        run(event.code, { fromStage: true, key: event.key, event });
+    });
     // A key pressed inside a lane's frame (review.js lane() hands it up).
     function fromFrame(code) {
         if (api.dialog.open) run(code, { fromStage: true });

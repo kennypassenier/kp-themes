@@ -67,6 +67,18 @@
                         <code>="false"</code> off).
                     </p>
                 </div>
+                <div class="k56-changed">
+                    <p>
+                        <b>What changed since your last review:</b> Your last review (18/10) rejected this in dark without a note, so I looked at it
+                        myself, against its Expected and dark&rsquo;s character. Two things were wrong. First, the keys: dark was the first step, and
+                        the <b>x</b> that should tick the row was taken by the review dialog as its own <b>X</b> (toggle Not approved), so the row was
+                        never ticked and the section was marked not approved by the key itself. A key pressed while the focus is in the component now
+                        goes to the component first; the dialog takes it only when the component does not use it (<b>C</b>, <b>S</b>, <b>Q</b> still
+                        work from the table). Second, the look: the cursor ring was a plain white box, the one ring on the page without dark&rsquo;s
+                        film (dark&rsquo;s rule: the film is every edge that matters, the ring included). The ring is now the cyan-to-magenta film, 2
+                        px just inside the row, and it moves with the key at once.
+                    </p>
+                </div>
                 <div class="k5-expected">
                     <p><b>Expected:</b></p>
                     <ul>
@@ -91,6 +103,11 @@
                         <li>
                             The 390 px column is the same list as cards: no keys there; <b>press and hold a card</b> (a long press on a phone) starts
                             selection mode, then a tap ticks the next one.
+                        </li>
+                        <li>
+                            <b>Changed:</b> Click a row&rsquo;s words, press <b>x</b>: the row is ticked and the readout says <b>1 selected</b> (the
+                            Not approved box is not touched). Press <b>j</b>: the cursor ring, now the film (cyan along the top, magenta and green at
+                            the ends), steps down one row; the ticked row keeps its light plate.
                         </li>
                     </ul>
                 </div>

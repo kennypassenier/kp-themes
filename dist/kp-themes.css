@@ -88879,6 +88879,38 @@
         background: var(--card);
     }
 
+    /* ── The keyboard cursor on a row is the film's ring [G5, mlp-r2-1018] ──
+       js/row-select.js rings the cursor row (and the row that holds the
+       focus while j / k walk). The base draws it as an outline in --ring,
+       which in dark is plain ink: a white box round the row, the one ring
+       on the page without the film (G5: "the film is every edge that
+       matters, the line, the fill, the ring"), and on a table row the
+       void channel of DI2's ring (a box-shadow) is not painted, so only
+       the white line was left. Here the ring is the film itself, 2 px just
+       inside the row, cut out of an --kp-iris plate with a mask, so the
+       ticked row's light plate and the cursor's film read apart. It moves
+       with the key at once: nothing fades or slides. An entity card keeps
+       its own cursor (its ::after is the card's plate). */
+    [data-theme='dark'] :is([data-kp-cursor-visible] .is-cursor, [data-kp-roving]:focus-visible):not(.kp-card) {
+        position: relative;
+        outline: 0;
+        box-shadow: none;
+    }
+
+    [data-theme='dark'] :is([data-kp-cursor-visible] .is-cursor, [data-kp-roving]:focus-visible):not(.kp-card)::after {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        box-sizing: border-box;
+        padding: 2px;
+        background: var(--kp-iris);
+        pointer-events: none;
+        mask:
+            linear-gradient(var(--foreground) 0 0) content-box exclude,
+            linear-gradient(var(--foreground) 0 0);
+    }
+
     [data-theme='dark'] .kp-datatable {
         border: 1px solid var(--border-strong);
         background: var(--card);

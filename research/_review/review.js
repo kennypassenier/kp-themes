@@ -184,6 +184,13 @@ function lane() {
     addEventListener('storage', (event) => event.key === STORAGE_KEY && event.stopImmediatePropagation(), true);
     const TYPING = 'textarea, select, input:not([type="checkbox"], [type="radio"], [type="button"])';
     const OPEN = 'dialog[open], [popover]:popover-open, .kp-datepicker__panel:not([hidden]), [aria-expanded="true"]';
+    /** Keys pressed in the component itself: the component answers them first, the dialog only if it did not. */
+    const deferred = new WeakSet();
+    const handUp = (/** @type {KeyboardEvent} */ event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        parent.postMessage({ type: 'rv-lane-key', key: event.key, code: event.code }, location.origin);
+    };
     addEventListener(
         'keydown',
         (event) => {
@@ -191,12 +198,22 @@ function lane() {
             if (/** @type {Element} */ (event.target).matches?.(TYPING)) return;
             if (event.key === 'Escape' ? document.querySelector(OPEN) : event.code !== 'KeyV' && event.code !== 'KeyL' && !FRAME_KEYS.has(event.code))
                 return; // [kit-keys] FRAME_KEYS
-            event.preventDefault();
-            event.stopPropagation();
-            parent.postMessage({ type: 'rv-lane-key', key: event.key, code: event.code }, location.origin);
+            // A key pressed while the focus is in the component (a table row walked with j / k and ticked with x) is the
+            // component's first: X toggled "Not approved" instead of ticking the row (Kenny's dark verdict on
+            // row-keyboard-select, 2026-10-18 19:08, carried no note). The dialog takes it only when the component left
+            // it alone (no preventDefault); from the controls or the page it is the dialog's at once.
+            const from = /** @type {Element} */ (event.target);
+            if (event.key !== 'Escape' && from.closest?.('[data-review-item]') && !from.closest('[data-review-controls]')) {
+                deferred.add(event);
+                return;
+            }
+            handUp(event);
         },
         true,
     );
+    addEventListener('keydown', (event) => {
+        if (deferred.has(event) && !event.defaultPrevented) handUp(event);
+    });
 }
 
 /** Runs one demo as a frame of research/families/ (see above). @param {string} aspect */
