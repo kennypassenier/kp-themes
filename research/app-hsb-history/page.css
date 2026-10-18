@@ -1,0 +1,265 @@
+/* research/app-hsb-history: the page's own frame. Everything with a kp- class is the package; these hh- rules only lay the
+   sections out and draw the sample lists. */
+
+.hh-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.hh-intro,
+.hh-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.hh-intro :is(h1, p),
+.hh-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.hh-intro p,
+.hh-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.hh-new {
+    max-inline-size: 80ch;
+}
+
+.hh-new p {
+    margin: 0;
+}
+
+.hh-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.hh-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.hh-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.hh-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+[data-review-look] p {
+    margin: 0;
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.hh-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    align-items: center;
+}
+
+.hh-controls [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    align-items: center;
+}
+
+.hh-readout {
+    margin: 0;
+    padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    background: var(--muted);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* The card keeps one footprint in every state: the stage is as tall as the loaded data. */
+.hh-card {
+    --kp-card-stage-min: 22rem;
+}
+
+.hh-figures {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    align-content: start;
+}
+
+/* Latest deliveries: one grid, so a time, an outcome and a duration line up in every row. */
+.hh-recent {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.hh-recent__title {
+    margin: 0;
+}
+
+.hh-recent__list {
+    display: grid;
+    grid-auto-rows: 3.25rem;
+    align-content: start;
+    min-block-size: calc(4 * 3.25rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.hh-row {
+    display: grid;
+    grid-template-columns: 10.5rem 7rem 5rem minmax(0, 1fr);
+    grid-template-areas:
+        'time outcome ms name'
+        'why  why     why why';
+    align-items: center;
+    gap: 0 var(--kp-space-sm, 0.5rem);
+    padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.hh-row > time {
+    grid-area: time;
+    font-variant-numeric: tabular-nums;
+}
+
+.hh-row > .kp-badge {
+    grid-area: outcome;
+    justify-self: start;
+}
+
+.hh-row > .hh-row__ms {
+    grid-area: ms;
+    font-variant-numeric: tabular-nums;
+    text-align: end;
+}
+
+.hh-row > .hh-row__name {
+    grid-area: name;
+    min-inline-size: 0;
+}
+
+.hh-row > .hh-row__why {
+    grid-area: why;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+@media (max-width: 40rem) {
+    .hh-row {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            'time ms'
+            'name name'
+            'outcome why';
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    }
+
+    .hh-row > .hh-row__why {
+        justify-self: start;
+    }
+
+    .hh-recent__list {
+        grid-auto-rows: auto;
+        min-block-size: calc(4 * 7rem);
+    }
+}
+
+.hh-row__name {
+    overflow-wrap: anywhere;
+}
+
+.hh-strips {
+    display: grid;
+    gap: var(--kp-space-lg, 1.5rem);
+}
+
+/* Staying current: the bar keeps its height whichever way the page stays current. */
+.hh-live {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-content: start;
+}
+
+.hh-live__bar {
+    display: grid;
+    align-items: center;
+    min-block-size: 4.5rem;
+}
+
+.hh-live__bar > * {
+    grid-area: 1 / 1;
+    margin: 0;
+}
+
+.hh-feed {
+    block-size: 15rem;
+    margin: 0;
+    padding: 0;
+    overflow: auto;
+    list-style: none;
+    border: 1px solid var(--border);
+}
+
+.hh-feed > li:not(.kp-newpill__since) {
+    display: grid;
+    grid-template-columns: 10.5rem 7rem 5rem minmax(0, 1fr);
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-block-size: 2.5rem;
+    padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.hh-feed time {
+    font-variant-numeric: tabular-nums;
+}
+
+.hh-feed .hh-row__ms {
+    text-align: end;
+    font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 40rem) {
+    .hh-feed > li:not(.kp-newpill__since) {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            'time ms'
+            'name name'
+            'outcome outcome';
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    }
+
+    .hh-feed time {
+        grid-area: time;
+    }
+
+    .hh-feed .kp-badge {
+        grid-area: outcome;
+        justify-self: start;
+    }
+
+    .hh-feed .hh-row__ms {
+        grid-area: ms;
+    }
+
+    .hh-feed .hh-row__name {
+        grid-area: name;
+    }
+}

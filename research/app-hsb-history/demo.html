@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en-GB" data-theme="formal" data-review="app-hsb-history" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>HTTPSwitchboard: figures and history · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main hh-page">
+            <header class="hh-intro">
+                <h1>HTTPSwitchboard: figures and history</h1>
+                <p class="cat-intro">
+                    HTTPSwitchboard accepts a message in one shape and delivers it in another. This page shows how its status page could show
+                    what happened over the last 24 hours: four key figures with their trend, one strip of hour cells per profile, and the ways the
+                    page can stay current.
+                </p>
+                <div class="kp-alert kp-alert--info hh-new" role="note">
+                    <span class="kp-alert__icon" aria-hidden="true"></span>
+                    <div class="kp-alert__body">
+                        <p class="kp-alert__label">New capability needed</p>
+                        <p>
+                            Today the service keeps counters only, so none of the history below exists yet. It needs a small per-hour record per
+                            profile: for each of the last 24 hours how many messages were received, delivered and failed, the total delivery time,
+                            and how long the profile was not working. Hours before the service started recording show as &ldquo;no data&rdquo;.
+                        </p>
+                    </div>
+                </div>
+                <p>
+                    Real profile: <b>alertmanager</b> (kyu topic <code>alerts.raw</code> to Home Assistant). Mock profile:
+                    <b>uptime-kuma</b> (<code>POST /uptime-kuma</code>), invented here to show a second row. The clock is fixed at 19/10/2026 14:40
+                    so every figure agrees with every other. Judge in the review dialog; nothing moves until you press something.
+                </p>
+            </header>
+
+            <!-- ====================================================== 1 · key figures -->
+            <section
+                class="hh-sec"
+                id="hh-figures"
+                data-review-item="figures"
+                data-review-components="kpi kpis"
+                data-review-topic="figures"
+                data-review-topic-title="Key figures"
+                data-review-title="Key figures: received, delivered, failed, average duration"
+                data-review-choices='[{ "id": "tiles", "label": "How the four figures look", "once": true, "default": "trend", "options": [
+                    { "value": "trend", "label": "A trend in every tile", "hint": "Each tile opens its hourly chart; a pointer reads one hour. The default." },
+                    { "value": "spark", "label": "Quiet sparklines, Failed as a filter", "hint": "Small lines without reading; the Failed tile becomes a button that lists only the failures." }]}]'
+                aria-labelledby="hh-figures-h"
+            >
+                <div class="hh-sec__head">
+                    <h2 id="hh-figures-h">Key figures: received, delivered, failed, average duration</h2>
+                    <p>Four numbers for the last 24 hours of one profile, each with its trend by the hour; a number counts up or down when it changes.</p>
+                </div>
+                <div class="hh-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Four tiles in one row (two on a tablet, one on a phone), all the same height. The numbers are real counts, written in
+                            full: <b>31 alerts</b> received, <b>29</b> delivered (93.5% of received), <b>2</b> failed, <b>149 ms</b> average. The figures add up:
+                            received equals delivered plus failed, and the same totals feed the strips and the list in the other sections.
+                        </li>
+                        <li>
+                            <b>A message arrives</b> and <b>A delivery fails</b> change the numbers: they count from the old value to the new one
+                            and land on it exactly, and the trend gets a new last point. <b>Profile</b> swaps in the mock uptime-kuma figures.
+                        </li>
+                        <li>
+                            <b>Trend tiles</b> (default): point at a trend or use the arrow keys to read one hour, as
+                            <i>19/10/2026 11:00 &middot; 5 alerts</i>. <b>Sparklines</b>: quiet lines; press <b>Failed</b> to list only the
+                            failures with their reason, press again to see the latest deliveries.
+                        </li>
+                        <li>
+                            <b>Loading</b> lays the busy card over the whole card; <b>Empty</b> says history is not recorded yet;
+                            <b>Error</b> says it could not be read and <b>Try again</b> works. The card keeps its size in every state.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal sets the numbers in its serif figures with the ruled tile edge. Check that a unit (<i>alerts</i>, <i>ms</i>) stays
+                        clear of its number, that the trend ends at the right edge, that nothing jumps when you press a state, and that no label
+                        is cut with an ellipsis at 390 px.
+                    </p>
+                </div>
+                <div class="hh-controls" data-review-controls data-review-controls-for="hh-figures-card">
+                    <div role="group" aria-label="Profile">
+                        <b>Profile:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-profile="alertmanager" aria-pressed="true">alertmanager</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-profile="uptime-kuma" aria-pressed="false">uptime-kuma (mock)</button>
+                    </div>
+                    <div role="group" aria-label="Tiles">
+                        <b>Tiles:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-tiles="trend" aria-pressed="true">Trend</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-tiles="spark" aria-pressed="false">Sparklines</button>
+                    </div>
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-fstate="ready" aria-pressed="true">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-fstate="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-fstate="empty" aria-pressed="false">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-fstate="error" aria-pressed="false">Error</button>
+                    </div>
+                    <div role="group" aria-label="Try" data-review-latent>
+                        <b>Try:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-send="ok">A message arrives</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-send="fail">A delivery fails</button>
+                    </div>
+                </div>
+                <template data-hh-tile="trend">
+                    <div class="kp-kpi kp-kpi--trend" data-hh-metric="{{key}}">
+                        <span class="kp-kpi__label">{{label}}</span>
+                        <a class="kp-kpi__link" href="#hh-uptime" title="Open {{label}} by the hour"><span class="kp-kpi__link-word">Hourly</span> ↗</a>
+                        <span class="kp-kpi__value" data-kp-tick data-hh-value="{{key}}">{{value}}<small>{{unit}}</small></span>
+                        <span class="kp-kpi__trend" data-hh-words="{{key}}">{{words}}</span>
+                        <figure class="kp-kpi__chart" data-kp-chart="spark" data-kp-spark-head="none" data-kp-spark-axis="relative" data-kp-spark-readout="float" aria-label="{{label}}, last 24 hours" style="--kp-chart-series: var(--chart-{{n}})"></figure>
+                    </div>
+                </template>
+                <template data-hh-tile="plain">
+                    <div class="kp-kpi" data-hh-metric="{{key}}">
+                        <span class="kp-kpi__label">{{label}}</span>
+                        <span class="kp-kpi__value" data-kp-tick data-hh-value="{{key}}">{{value}}<small>{{unit}}</small></span>
+                        <span class="kp-kpi__trend" data-hh-words="{{key}}">{{words}}</span>
+                        <svg class="kp-kpi__spark" data-kp-spark="{{spark}}" aria-hidden="true"></svg>
+                    </div>
+                </template>
+                <template data-hh-tile="toggle">
+                    <button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="{{pressed}}" data-kp-tone="destructive" data-hh-metric="{{key}}">
+                        <span class="kp-kpi__label">{{label}}</span>
+                        <span class="kp-kpi__hint" aria-hidden="true"><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering ×</span></span>
+                        <span class="kp-kpi__value" data-kp-tick data-hh-value="{{key}}">{{value}}<small>{{unit}}</small></span>
+                        <span class="kp-kpi__trend" data-hh-words="{{key}}">{{words}}</span>
+                    </button>
+                </template>
+                <section class="kp-card hh-card" id="hh-figures-card" data-kp-state="loading" aria-labelledby="hh-figures-t" data-kp-loading-words="Reading the last 24 hours">
+                    <div class="kp-card__header">
+                        <h3 class="kp-card__title" id="hh-figures-t" data-hh-figures-title>Last 24 hours of alertmanager</h3>
+                        <div class="kp-card__actions"><span class="kp-timestamp" data-hh-figures-read>read 19/10/2026 14:40</span></div>
+                    </div>
+                    <p class="kp-card__body" data-hh-figures-body>Counted per hour since the service began recording on 18/10/2026 19:00.</p>
+                    <div class="kp-card__stage">
+                        <div class="kp-card__data hh-figures">
+                            <div class="kp-kpis" data-kp-kpis-columns="4 2 1" role="group" aria-label="Key figures" data-hh-strip></div>
+                            <div class="hh-recent">
+                                <h4 class="hh-recent__title" data-hh-recent-title>Latest deliveries</h4>
+                                <ul class="hh-recent__list" aria-label="Deliveries" data-hh-recent></ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <p class="hh-readout" role="status" aria-live="polite" data-hh-figures-out>No tile opened yet.</p>
+            </section>
+
+            <!-- ====================================================== 2 · uptime strips -->
+            <section
+                class="hh-sec"
+                id="hh-uptime"
+                data-review-item="uptime"
+                data-review-components="uptime"
+                data-review-topic="uptime"
+                data-review-topic-title="Uptime strip"
+                data-review-title="Uptime by the hour, per profile"
+                data-review-choices='[{ "id": "press", "label": "What pressing an hour does", "once": true, "default": "info", "options": [
+                    { "value": "info", "label": "Opens the hour&#39;s quick info", "hint": "Works with a finger too: the plate under the cell lists what happened and for how long. The default." },
+                    { "value": "hover", "label": "Only the hover card", "hint": "Pointing or focusing shows the card; pressing does nothing more." }]}]'
+                aria-labelledby="hh-uptime-h"
+            >
+                <div class="hh-sec__head">
+                    <h2 id="hh-uptime-h">Uptime by the hour, per profile</h2>
+                    <p>One strip per profile: each cell is an hour of the last 24, coloured by how that hour went, with the share of working time on top.</p>
+                </div>
+                <div class="hh-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Two strips of 24 cells: <b>alertmanager</b> and <b>uptime-kuma (mock)</b>. The first four cells of each are grey
+                            (<i>no data</i>: recording began at 19:00); then green (up), amber (degraded) and red (down) cells. The line above each
+                            strip gives the share and the incidents in exact figures, for alertmanager <b>91.7% &middot; 5 incidents</b>; the share is cut,
+                            never rounded up, so any time down never reads 100%.
+                        </li>
+                        <li>
+                            Point at a cell or Tab to the strip and use the arrows: a hover card names the hour (<i>19/10/2026 02:00</i>) and says why,
+                            for example <i>Denied: the hub refused the credentials</i>. Press it (default): the quick info lists the lines of what
+                            happened. Escape closes it and returns to the cell.
+                        </li>
+                        <li>
+                            <b>Right now: Hub down</b> turns the current hour red and the summary adds an incident at once; <b>Working</b>
+                            restores it. <b>Loading</b>, <b>Empty</b> and <b>Error</b> keep the strips the same size; Loading lays the busy card.
+                        </li>
+                        <li>
+                            The tones are the package&rsquo;s plain ones on purpose: a calm palette would soften a red hour, which this page must not.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal draws thin square cells in its muted green, amber and its destructive red with the same hairline gap. Look for a
+                        clear gap between the strip and its title and summary, for the pointed cell lifting a few pixels, and for the quick info
+                        plate being opaque and readable over the next strip.
+                    </p>
+                </div>
+                <div class="hh-controls" data-review-controls data-review-controls-for="hh-uptime-strips">
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-ustate="ready" aria-pressed="true">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-ustate="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-ustate="empty" aria-pressed="false">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-ustate="error" aria-pressed="false">Error</button>
+                    </div>
+                    <div role="group" aria-label="Press">
+                        <b>Press a cell:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-press="info" aria-pressed="true">Quick info</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-press="hover" aria-pressed="false">Hover card only</button>
+                    </div>
+                    <div role="group" aria-label="Open" data-review-latent>
+                        <b>Open:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-open="info">The 02:00 hour&rsquo;s quick info</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-open="card">The 11:00 hour&rsquo;s hover card</button>
+                    </div>
+                    <div role="group" aria-label="Right now">
+                        <b>Right now:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-now="working" aria-pressed="true">Working</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-now="down" aria-pressed="false">Hub down</button>
+                    </div>
+                </div>
+                <div class="hh-strips" id="hh-uptime-strips">
+                    <div class="kp-uptime" data-kp-uptime data-kp-uptime-count="24" data-kp-uptime-label="alertmanager" data-hh-strip="alertmanager"></div>
+                    <div class="kp-uptime" data-kp-uptime data-kp-uptime-count="24" data-kp-uptime-label="uptime-kuma (mock)" data-hh-strip="uptime-kuma"></div>
+                </div>
+                <p class="hh-readout" role="status" aria-live="polite" data-hh-uptime-out>No hour pressed yet.</p>
+            </section>
+
+            <!-- ====================================================== 3 · staying current -->
+            <section
+                class="hh-sec"
+                id="hh-live"
+                data-review-item="live"
+                data-review-components="refresh newpill"
+                data-review-topic="live"
+                data-review-topic-title="Staying current"
+                data-review-title="Staying current: refresh chooser or live push"
+                data-review-choices='[{ "id": "mode", "label": "How the page stays current", "once": true, "default": "refresh", "options": [
+                    { "value": "refresh", "label": "Refresh chooser", "hint": "The reader sets how often the page reads again (off, 15 s, 30 s, 1 min, 5 min or any number). The default." },
+                    { "value": "push", "label": "Live push", "hint": "The service sends each alert as it is delivered; no chooser, nothing to set." }]},
+                  { "id": "look", "label": "How the chooser looks", "once": true, "default": "segmented", "options": [
+                    { "value": "segmented", "label": "Segments", "hint": "Every interval one press away. The default." },
+                    { "value": "menu", "label": "A menu button", "hint": "One compact button that opens the list of intervals." }]}]'
+                aria-labelledby="hh-live-h"
+            >
+                <div class="hh-sec__head">
+                    <h2 id="hh-live-h">Staying current: refresh chooser or live push</h2>
+                    <p>A list of delivered alerts that keeps itself up to date, either on a timer the reader sets or by the service pushing each alert, with a count of what came in while the reader looked elsewhere.</p>
+                </div>
+                <div class="hh-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Refresh chooser</b> (default): opens at <i>Every 5 min</i> (a slow thin rule counts down to the next read). <b>Start at 30 s</b> sets the default
+                            interval; the line says <i>updated N s ago</i>, a thin rule counts down to the next read, <b>Refresh now</b> (or the
+                            R key) reads at once. <b>Fail the next refresh</b> makes the following read fail: the list stays, the line says the
+                            refresh failed and when it retries, with <b>Retry now</b>.
+                        </li>
+                        <li>
+                            <b>Live push</b> replaces the chooser with a <i>Live</i> mark. <b>Alerts arrive (6 over 12 s)</b> plays six alerts one by
+                            one once, then stops.
+                        </li>
+                        <li>
+                            <b>The count of new alerts:</b> scroll the list down with <b>Scroll down</b>, then let alerts arrive (<b>Refresh now</b>
+                            adds three; push adds six): a pill at the top says <b>3 new alerts &middot; back to the top</b> with the exact number,
+                            and a divider marks where the new ones start. Press the pill (or Home) and the list jumps up and follows again.
+                            While the list is at the top, new alerts just appear and there is no pill.
+                        </li>
+                        <li>
+                            <b>Loading</b>, <b>Empty</b> (no alerts yet) and <b>Error</b> (the list could not be read, <b>Try again</b>) fill the
+                            same card; the toolbar above the list keeps its place.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The pill is formal&rsquo;s opaque plate with its ink outline, over the rows and never through the text. Check that the
+                        count does not shift the words when it grows from 9 to 10, that the rows keep their columns while new ones arrive, and that the
+                        chooser&rsquo;s buttons are the same segmented control used elsewhere.
+                    </p>
+                </div>
+                <div class="hh-controls" data-review-controls data-review-controls-for="hh-live-card">
+                    <div role="group" aria-label="How it stays current">
+                        <b>Stays current by:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-mode="refresh" aria-pressed="true">Refresh chooser</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-mode="push" aria-pressed="false">Live push</button>
+                    </div>
+                    <div role="group" aria-label="Chooser look">
+                        <b>Chooser:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-look="segmented" aria-pressed="true">Segments</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-look="menu" aria-pressed="false">Menu</button>
+                    </div>
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-lstate="ready" aria-pressed="true">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-lstate="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-lstate="empty" aria-pressed="false">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-lstate="error" aria-pressed="false">Error</button>
+                    </div>
+                    <div role="group" aria-label="Try" data-review-latent>
+                        <b>Try:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-try="start">Start at 30 s</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-try="scroll">Scroll down</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-try="burst">Alerts arrive (6 over 12 s)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-try="menu">Open the chooser menu</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hh-try="fail" aria-pressed="false">Fail the next refresh</button>
+                    </div>
+                </div>
+                <section class="kp-card hh-card" id="hh-live-card" data-kp-state="loading" aria-labelledby="hh-live-t" data-kp-loading-words="Reading the latest alerts">
+                    <div class="kp-card__header">
+                        <h3 class="kp-card__title" id="hh-live-t">Alerts delivered to Home Assistant</h3>
+                        <div class="kp-card__actions"><span class="kp-timestamp" data-hh-live-count>31 alerts in 24 hours</span></div>
+                    </div>
+                    <p class="kp-card__body">Newest first, from the alertmanager profile.</p>
+                    <div class="kp-card__stage">
+                        <div class="kp-card__data hh-live">
+                            <div class="hh-live__bar">
+                                <div class="hh-live__chooser" data-hh-chooser-host></div>
+                                <p class="hh-live__push" data-hh-push hidden><span class="kp-badge kp-badge--success">Live</span> Each alert appears as it is delivered.</p>
+                            </div>
+                            <div data-kp-newpill-host>
+                                <ul class="hh-feed" aria-label="Delivered alerts" data-kp-follow="head" data-kp-pill-unit="alert,alerts" data-hh-feed></ul>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <p class="hh-readout" role="status" aria-live="polite" data-hh-live-out>Reading every 5 min: nothing has been read yet.</p>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "app-hsb-history-1019-6d3f0a52-7c1e-4b5a-9f0e-2a8c1d4b7e90", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
