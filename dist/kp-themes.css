@@ -54588,10 +54588,13 @@
     }
 
     /* ── A card in four data states ── */
+    /* The state names itself at heading size, in the display face the empty plate's own title uses (DEMO_RULES 3):
+       it was 13 px engraved mono, smaller than formal's 16. */
     [data-theme='titanium'] .kp-card__state-title {
-        font-family: var(--theme-font-mono);
-        font-size: 0.8125rem;
-        letter-spacing: 0.01em;
+        font-family: var(--theme-font-display);
+        font-size: clamp(1.125rem, 1rem + 0.45vw, 1.3125rem);
+        letter-spacing: -0.01em;
+        line-height: 1.3;
     }
 
     /* ── Pipeline: plates in a rack, the stage an oxide strip along the head ── */
