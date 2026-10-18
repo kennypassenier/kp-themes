@@ -366,7 +366,12 @@ async function checkPresses(where) {
                         return `${Math.round(b.width)}x${Math.round(b.height)}`;
                     })
                     .join(',');
-                return `${Math.round(r.width)}x${Math.round(r.height)}|${target.outerHTML}|${sizes}`;
+                // Where its scrolling boxes stand: a control may scroll the component (the header scrolled away).
+                const scrolls = [target, ...target.querySelectorAll('*')]
+                    .filter((el) => el.scrollTop || el.scrollLeft)
+                    .map((el) => `${Math.round(el.scrollTop)},${Math.round(el.scrollLeft)}`)
+                    .join(';');
+                return `${Math.round(r.width)}x${Math.round(r.height)}|${target.outerHTML}|${sizes}|${scrolls}`;
             }, forId);
         const buttons = await frame.$$('[data-review-item] [data-review-controls][data-review-controls-for] [role="group"] button[aria-pressed]');
         /** @type {Map<string, import('playwright-core').ElementHandle>} */
