@@ -105,9 +105,12 @@ import {
 import { early, isolate, mountBlockTools } from './block-tools.js';
 import { FRAME_KEYS, mountKeys } from './rv-keys.js'; // [kit-keys] key legend, focus, undo, rejected so far, bulk
 import { mountProgress } from './rv-progress.js'; // [kit-strip-1018] remaining line + resume
+import * as flow from './flow.js'; // kit-flow hook: what follows the last open step, and the reason chips
+import { attachReasons } from './reasons.js'; // kit-flow hook
 
 const root = document.documentElement;
 const DEMO = root.dataset.review;
+flow.init(DEMO); // kit-flow hook
 const STORE = storeKey(DEMO);
 const params = new URLSearchParams(location.search);
 /** Where to go once the demo is judged: the hub, on this site only. */
@@ -888,6 +891,8 @@ const changedFrom = (pair, choice) => {
 };
 const optionLabel = (choice, value) => choice.options.find((o) => o.value === value)?.label || value;
 const isOpen = (pair) => !verdictOf(pair);
+/** kit-flow hook: the theme a step asks, also on a topic step. */
+const stepTheme = (step) => step.theme || step.laneTheme || step.pairs[0]?.theme;
 /** An aspect step is answered once its option is picked, or "None of these" is noted. */
 const aspectDone = (pair, aspect) => Boolean(state[pair.key]?.choices?.[aspect] || state[pair.key]?.redo?.[aspect]);
 const stepOpen = (step) => (step.aspect ? step.pairs.some((p) => isOpen(p) && !aspectDone(p, step.aspect)) : step.pairs.some(isOpen));
@@ -1023,6 +1028,9 @@ function render() {
  */
 function finished() {
     dialog.close();
+    // kit-flow hook: a Tonight run or the option "next part" goes on to the next part (journal written first); else as before.
+    flushNotes();
+    if (flow.leave()) return;
     say(`Everything is judged. This answer waits in the prompt on ${DONE_NAME}; going there now.`);
     location.assign(DONE_HREF);
 }
@@ -2058,6 +2066,7 @@ function rowFor(pair, only = null, name = '') {
         render();
     });
     note.addEventListener('blur', () => pendingNotes.get(pair.key)?.write());
+    attachReasons(li, box, note); // kit-flow hook: optional reason chips
     li.querySelector('[data-rv-jump]').addEventListener('click', () => {
         stage.querySelector(`[data-rv-pair="${CSS.escape(pair.key)}"]`)?.scrollIntoView({ block: 'start', behavior: 'smooth' });
     });
@@ -2269,7 +2278,7 @@ async function show(at) {
 function nextOpenStep(from) {
     for (let step = 1; step <= steps.length; step++) {
         const at = (from + step) % steps.length;
-        if (stepOpen(steps[at])) return at;
+        if (stepOpen(steps[at]) && flow.inScope(stepTheme(steps[at]))) return at; // kit-flow hook: a Tonight run by theme asks one theme
     }
     return -1;
 }
@@ -2540,4 +2549,9 @@ render();
 // [kit-strip-1018] rv-progress.js: the remaining line and resume (the hook is this one call).
 mountProgress({ demo: DEMO, dialog, steps, getIndex: () => index, stepOpen, show, stage, openFirst: () => bar.querySelector('[data-rv-open]').click() });
 // From the hub, the dialog opens at the first open step by itself.
-if (NEXT && params.get('review') === 'open' && pairs.some(isOpen)) bar.querySelector('[data-rv-open]').click();
+// kit-flow hook: a stop with nothing open left is passed at once.
+const flowLeaving = flow.arrive({
+    anyOpen: pairs.some(isOpen),
+    themeOpen: (theme) => steps.some((s) => stepTheme(s) === theme && stepOpen(s)),
+});
+if (!flowLeaving && NEXT && params.get('review') === 'open' && pairs.some(isOpen)) bar.querySelector('[data-rv-open]').click();

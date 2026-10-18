@@ -1,0 +1,147 @@
+/* The flow's parts (flow.js, reasons.js, the Agenda's flow panel). Tokens only. */
+
+.kf-leave {
+    position: fixed;
+    inset-block-end: var(--kp-space-lg, 1.5rem);
+    inset-inline: var(--kp-space-md, 1rem);
+    margin-inline: auto;
+    max-inline-size: 40rem;
+    z-index: 2147483000;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.75rem);
+    padding: var(--kp-space-md, 1rem);
+    overflow: hidden;
+    background: var(--popover, var(--card, Canvas));
+    color: var(--popover-foreground, var(--foreground, CanvasText));
+    border: 1px solid var(--border);
+    border-radius: var(--kp-radius-md, 0.5rem);
+    box-shadow: 0 0.5rem 1.5rem color-mix(in srgb, var(--foreground, black) 25%, transparent);
+}
+
+.kf-leave__text {
+    margin: 0;
+}
+
+.kf-leave__esc {
+    color: var(--muted-foreground);
+    white-space: nowrap;
+}
+
+.kf-leave__bar {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-end: 0;
+    block-size: 0.25rem;
+    background: var(--primary, currentColor);
+    transform-origin: left center;
+    animation: kf-count 2s linear forwards;
+}
+
+@keyframes kf-count {
+    from {
+        transform: scaleX(1);
+    }
+    to {
+        transform: scaleX(0);
+    }
+}
+
+@media (max-width: 40rem) {
+    .kf-leave {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* Reason chips on a reject (reasons.js): beside the note, one row that wraps. */
+.kf-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin-block-start: 0.4rem;
+}
+
+.kf-chips[hidden] {
+    display: none;
+}
+
+.kf-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.6rem;
+    font: inherit;
+    font-size: 0.8125rem;
+    color: var(--foreground);
+    background: var(--muted, transparent);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    cursor: pointer;
+}
+
+.kf-chip kbd {
+    font: inherit;
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+}
+
+.kf-chip[aria-pressed='true'] {
+    background: var(--primary);
+    color: var(--primary-foreground);
+    border-color: var(--primary);
+}
+
+.kf-chip[aria-pressed='true'] kbd {
+    color: inherit;
+}
+
+.kf-chip:focus-visible {
+    outline: 2px solid var(--ring, currentColor);
+    outline-offset: 2px;
+}
+
+/* The Agenda's flow panel (flow-agenda.js). */
+.kf-panel {
+    display: grid;
+    gap: var(--kp-space-sm, 0.75rem);
+    margin-block-start: var(--kp-space-md, 1rem);
+}
+
+.kf-panel__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: var(--kp-space-md, 1rem);
+    align-items: start;
+}
+
+.kf-panel__tonight {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.kf-panel__tonight[hidden] {
+    display: none;
+}
+
+.kf-panel__tonight p {
+    margin: 0;
+}
+
+@media (max-width: 40rem) {
+    .kf-panel__tonight {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .kf-leave__bar {
+        animation: none;
+    }
+}
+
+.kf-panel__tonight {
+    margin-block: var(--kp-space-sm, 0.75rem) var(--kp-space-md, 1rem);
+}
