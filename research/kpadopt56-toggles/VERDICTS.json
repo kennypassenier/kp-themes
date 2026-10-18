@@ -483,6 +483,24 @@
                     "reason": "Formal was approved in earlier rounds; the package fix of round 2 changes formal's toggle (size 61 px instead of 46, words and tick centred, no growth on press) and the shortcut chord cap position, and Kenny asked (2026-10-18 18:42) to judge it in formal too."
                 }
             ]
+        },
+        {
+            "round": "3",
+            "page": "toggles-9ab317af-e373-428b-866a-8e0cefcb025c",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 19:53: 2 of 2 approved (toggle in formal and dark).",
+            "approved": [
+                {
+                    "item": "toggle",
+                    "theme": "formal"
+                },
+                {
+                    "item": "toggle",
+                    "theme": "dark"
+                }
+            ],
+            "notApproved": [],
+            "choices": []
         }
     ]
 }

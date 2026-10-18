@@ -120,11 +120,6 @@ export const PAGES = [
                 about: 'Picking from a list: the usual on top, with its band and its states, and words in any order. 5 sections (55 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
             },
             {
-                href: 'research/kpadopt56-toggles/demo.html',
-                label: 'Fifth and sixth adoption rounds in the other themes, part 3 of 14: Dated options, toggles and keys',
-                about: 'Options with a date, a button that stays pressed, and keys that know their own list. 5 sections (55 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
-            },
-            {
                 href: 'research/kpadopt56-fields/demo.html',
                 label: 'Fifth and sixth adoption rounds in the other themes, part 4 of 14: Fields and inputs',
                 about: 'Entering a value: a slider with a typed value beside it, a time of day, a text box that grows, a JSON box that checks what you type, and a star rating. 9 sections (99 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
@@ -166,6 +161,12 @@ export const PAGES = [
         // Decided demos stay reachable from the Agenda's Done list, not from the side navigation (Kenny, 2026-10-13).
         nav: false,
         pages: [
+            // Decided 2026-10-18 19:53: Kenny approved every toggles pair over three rounds (research/kpadopt56-toggles/decided.json).
+            {
+                href: 'research/kpadopt56-toggles/demo.html',
+                label: 'Fifth and sixth adoption rounds in the other themes, part 3 of 14: Dated options, toggles and keys',
+                about: 'Options with a date, a button that stays pressed, and keys that know their own list. 5 sections (55 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+            },
             // Decided 2026-10-18 19:08: Kenny approved every pages pair in the eleven themes (research/kpadopt56-pages/decided.json).
             {
                 href: 'research/kpadopt56-pages/demo.html',
