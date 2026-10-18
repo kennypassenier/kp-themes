@@ -18356,6 +18356,8 @@
         --kp-checklist-body-min: calc(var(--kp-checklist-min-rows, 10) * (var(--kp-checklist-row, 2.75rem) + 1px));
         display: grid;
         grid-template-columns: minmax(0, 1fr);
+        /* The bar is one line; the body takes what the host is held at while a state shows (js/footprint.js). */
+        grid-template-rows: auto minmax(0, 1fr);
         gap: var(--kp-space-sm, 0.5rem);
         min-inline-size: 0;
     }
@@ -18514,6 +18516,17 @@
         border-style: solid;
         border-color: var(--destructive);
         color: var(--foreground);
+    }
+
+    /* A failed list shows the failed plate and nothing else: the rows it had are not the truth any more, and they stay in the
+       list's memory for the next ready. The plate fills the body, which fills the footprint the list had [t56-statefix-1018]. */
+    .kp-checklist[data-kp-checklist-error] .kp-checklist__group {
+        display: none;
+    }
+
+    .kp-checklist[data-kp-checklist-error] .kp-checklist__body,
+    .kp-checklist[data-kp-state='empty'] .kp-checklist__body {
+        align-content: stretch;
     }
 
     @media (pointer: coarse) {

@@ -159,6 +159,7 @@ export const FILES = [
     'js/calm.js',
     'js/shortcuts.js',
     'js/lede.js',
+    'js/footprint.js',
     'js/problems.js',
     'js/flash.js',
     'js/reason.js',

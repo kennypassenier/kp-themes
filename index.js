@@ -656,6 +656,7 @@ export {
     renderShortcutSheet,
 } from './js/shortcuts.js';
 export { LEDE, attachLedes, missingLedes } from './js/lede.js';
+export { FOOTPRINT_HOSTS, FOOTPRINT_MAX, attachFootprints, holdFootprint } from './js/footprint.js';
 export { PROBLEMS, PROBLEM_DISMISS_EVENT, PROBLEM_MODES, PROBLEM_SEVERITIES, attachProblems, setProblems } from './js/problems.js';
 export { FLASH_BUTTON, FLASH_ERROR_MS, FLASH_EVENT, FLASH_MS, FLASH_RELOAD_EVENT, attachFlashButtons, runFlashButton } from './js/flash.js';
 export { DISABLED_REASON, attachDisabledReasons } from './js/reason.js';

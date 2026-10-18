@@ -274,23 +274,32 @@ function render(list) {
     // The bar.
     const total = items.length;
     const done = items.filter((i) => i.checked).length;
+    // The rows are hidden while the list has failed (css/components.css); the buttons that act on them rest too.
+    const rest = list.hasAttribute('aria-busy') || list.hasAttribute('data-kp-checklist-error');
     const bar = part(list, 'bar');
     const said = /** @type {HTMLElement} */ (bar.querySelector('.kp-checklist__said'));
     if (!UNDO.has(list)) said.textContent = total ? strings.checklistSummary(done, total) : '';
     const all = /** @type {HTMLButtonElement} */ (bar.querySelector('.kp-checklist__all'));
     all.textContent = strings.checklistCheckAll;
-    all.disabled = total === 0 || done === total || list.hasAttribute('aria-busy');
+    all.disabled = total === 0 || done === total || rest;
     const none = /** @type {HTMLButtonElement} */ (bar.querySelector('.kp-checklist__none'));
     none.textContent = strings.checklistUncheckAll;
-    none.disabled = done === 0 || list.hasAttribute('aria-busy');
+    none.disabled = done === 0 || rest;
     const clear = /** @type {HTMLButtonElement} */ (bar.querySelector('.kp-checklist__clear'));
     clear.textContent = strings.checklistClear;
-    clear.disabled = done === 0 || list.hasAttribute('aria-busy');
+    clear.disabled = done === 0 || rest;
     const undo = /** @type {HTMLButtonElement} */ (bar.querySelector('.kp-checklist__undo'));
     undo.textContent = strings.checklistUndo;
     // The empty line: an error's message, else the empty sentence when there is nothing.
     const empty = part(list, 'empty');
     const error = list.getAttribute('data-kp-checklist-error');
+    // A list without items is the state `empty`, written like every other data component's, so the footprint (js/footprint.js)
+    // holds the height the list had [t56-statefix-1018]; `loading` and `error` are the page's to set and stay as they are.
+    const shown = list.getAttribute('data-kp-state');
+    if (shown === null || shown === 'ready' || shown === 'empty') {
+        if (total === 0) list.setAttribute('data-kp-state', 'empty');
+        else if (shown === 'empty') list.setAttribute('data-kp-state', 'ready');
+    }
     empty.textContent = error ?? list.getAttribute('data-kp-checklist-empty') ?? strings.checklistEmpty;
     empty.hidden = !(error !== null || (total === 0 && !list.hasAttribute('aria-busy')));
     empty.toggleAttribute('data-kp-checklist-failed', error !== null);
