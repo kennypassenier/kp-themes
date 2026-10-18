@@ -25389,6 +25389,9 @@
 
     .kp-formrow__label {
         display: grid;
+        /* One track the width of the label: without it the track is as wide as the longest unbroken piece and that piece
+         * ran out of the label's box instead of breaking [t56-words-1018]. */
+        grid-template-columns: minmax(0, 1fr);
         gap: 0.125rem;
         min-inline-size: 0;
         padding-block-start: calc((var(--kp-control-height, 2.25rem) - 1.5em) / 2);
