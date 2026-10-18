@@ -5762,4 +5762,37 @@
         border-radius: var(--kp-sig-pa-r-plate);
         box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
     }
+
+    /* The next-times list keeps the height of three rows in every state; pastel's empty plate (a 52 px halftone disc, 1.25 rem and
+       1.6 rem of padding) needed 183 px against the 134 px footprint, so Empty pushed the page down by 17 px
+       (kpadopt5-time/runs-states). In this footprint the disc is 2 rem and the padding 0.5 rem. */
+    [data-theme='pastel'] .kp-runs__empty {
+        --kp-sig-pa-lip: 1.25rem;
+        padding: 0.5rem 1rem 0.75rem;
+        gap: 0.25rem;
+    }
+
+    [data-theme='pastel'] .kp-runs__empty::before {
+        inline-size: 2rem;
+        block-size: 2rem;
+        margin: 0 auto;
+    }
+
+    [data-theme='pastel'] .kp-runs__empty-title {
+        margin: 0;
+    }
+
+    /* A waiting map line (`.kp-uses__card.kp-skeleton`) is a row of pom-poms the height of one skeleton line; the package gives
+       the card 4.25 rem, which drew a caterpillar 68 px tall with a 0.45 rem margin each side and made Loading 100 px taller
+       than Ready (kpadopt6-media/uses-states). The node is the 3.5 rem of a ready card, as in formal, and the line stands in the middle of it. */
+    [data-theme='pastel'] .kp-uses__node:has(> .kp-uses__card.kp-skeleton) {
+        align-items: center;
+        min-block-size: 3.5rem;
+    }
+
+    [data-theme='pastel'] .kp-uses__card.kp-skeleton {
+        block-size: 0.7rem;
+        min-block-size: 0;
+        margin-block: 0;
+    }
 }
