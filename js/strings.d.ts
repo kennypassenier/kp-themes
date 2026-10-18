@@ -2300,6 +2300,10 @@ export type Strings = {
      */
     chartEmpty: string;
     /**
+     * The Retry under a failed chart's sentence [t56-statefix-1018]
+     */
+    chartRetry: string;
+    /**
      * Under a chart whose every source has one reading (with `onePointNote`) [scope-143]
      */
     chartOnePoint: string;
@@ -5983,6 +5987,7 @@ export type Strings = {
  * @property {string} chartSame  No change, as the readout says it [scope-143]
  * @property {string} chartNow  A spark line's value when no time is under the crosshair [scope-143]
  * @property {string} chartEmpty  A time chart with no readings in its window, in the plot at its height [scope-143]
+ * @property {string} chartRetry  The Retry under a failed chart's sentence [t56-statefix-1018]
  * @property {string} chartOnePoint  Under a chart whose every source has one reading (with `onePointNote`) [scope-143]
  * @property {string} chartLoading  A loading chart (`data-kp-chart-loading`), for a screen reader [scope-143]
  * @property {string} chartPinnedOutside  A pinned tooltip's head once a live update moved the window past the pin [scope-143]

@@ -829,6 +829,7 @@ var init_strings = __esm({
       chartSame: "unchanged",
       chartNow: "now",
       chartEmpty: "No readings in this window yet.",
+      chartRetry: "Retry",
       chartOnePoint: "Only one reading so far: the line grows as more readings arrive.",
       chartLoading: "Loading the readings\u2026",
       chartPinnedOutside: "(pinned, outside the window)",
@@ -22690,6 +22691,7 @@ __export(chart_exports, {
   CHART: () => CHART,
   CHART_GROUP: () => CHART_GROUP,
   CHART_RANGE_EVENT: () => CHART_RANGE_EVENT,
+  CHART_RETRY_EVENT: () => CHART_RETRY_EVENT,
   CHART_SELECT_EVENT: () => CHART_SELECT_EVENT,
   CHART_TIME_ZONE: () => CHART_TIME_ZONE,
   CHART_ZOOM_EVENT: () => CHART_ZOOM_EVENT,
@@ -22748,6 +22750,7 @@ function chartWords(overrides) {
     same: s2.chartSame,
     now: s2.chartNow,
     empty: s2.chartEmpty,
+    retry: s2.chartRetry,
     onePoint: s2.chartOnePoint,
     loading: s2.chartLoading,
     pinnedOutside: s2.chartPinnedOutside,
@@ -23413,7 +23416,12 @@ function plotChart(host, group, locale, ctx) {
     box.style.blockSize = `${H}px`;
     const words = kind === "loading" ? strings.loading : kind === "error" ? data.error ?? "" : strings.empty;
     if (kind === "loading") box.append(h(doc, "span", { class: "kp-sr-only" }, words));
-    else if (kind === "error")
+    else if (kind === "error") {
+      const retry = h(doc, "button", { type: "button", class: "kp-button kp-button--sm kp-chart__retry" }, strings.retry);
+      retry.addEventListener("click", () => {
+        plot.focus({ preventScroll: true });
+        host.dispatchEvent(new CustomEvent(CHART_RETRY_EVENT, { bubbles: true }));
+      });
       box.append(
         h(
           doc,
@@ -23421,9 +23429,10 @@ function plotChart(host, group, locale, ctx) {
           { class: "kp-chart__state-text" },
           h(doc, "i", { class: "kp-chart__dot", "data-kp-tone": "critical", "aria-hidden": "true" }),
           words
-        )
+        ),
+        retry
       );
-    else box.append(h(doc, "div", { class: "kp-chart__state-text" }, words));
+    } else box.append(h(doc, "div", { class: "kp-chart__state-text" }, words));
     plot.replaceChildren(box);
     if (shown4 !== `${kind} ${words}`) {
       shown4 = `${kind} ${words}`;
@@ -24288,7 +24297,7 @@ function trendChart(host, group, locale, ctx) {
   };
   return state2;
 }
-var CHART, CHART_GROUP, CHART_SELECT_EVENT, CHART_ZOOM_EVENT, CHART_RANGE_EVENT, CHART_TIME_ZONE, TREND_CHART, dashOf, BYTE_UNITS, isBytes, NUMBERS, MINUTE, HOUR, DAY, WALL, toMinute, two, BLANK, dayKeyOf, SUB_DAY_STRIDES, DAY_STRIDES, DATA, CHARTS, GROUPS, LOOSE, CHIPS, PAGES, SVGNS, clipIds, ChartGroup;
+var CHART, CHART_GROUP, CHART_SELECT_EVENT, CHART_ZOOM_EVENT, CHART_RANGE_EVENT, CHART_RETRY_EVENT, CHART_TIME_ZONE, TREND_CHART, dashOf, BYTE_UNITS, isBytes, NUMBERS, MINUTE, HOUR, DAY, WALL, toMinute, two, BLANK, dayKeyOf, SUB_DAY_STRIDES, DAY_STRIDES, DATA, CHARTS, GROUPS, LOOSE, CHIPS, PAGES, SVGNS, clipIds, ChartGroup;
 var init_chart = __esm({
   "js/chart.js"() {
     "use strict";
@@ -24300,6 +24309,7 @@ var init_chart = __esm({
     CHART_SELECT_EVENT = "kp-chart-select";
     CHART_ZOOM_EVENT = "kp-chart-zoom";
     CHART_RANGE_EVENT = "kp-chart-range";
+    CHART_RETRY_EVENT = "kp-chart-retry";
     CHART_TIME_ZONE = "Europe/Brussels";
     TREND_CHART = '[data-kp-chart="spark"][data-kp-spark-head="none"]';
     dashOf = (i) => (
@@ -58438,6 +58448,7 @@ export {
   CHART,
   CHART_GROUP,
   CHART_RANGE_EVENT,
+  CHART_RETRY_EVENT,
   CHART_SELECT_EVENT,
   CHART_TIME_ZONE,
   CHART_ZOOM_EVENT,

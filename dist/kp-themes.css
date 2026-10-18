@@ -5551,8 +5551,26 @@
         margin: 0;
     }
 
+    /* A failed chart is a plate over the plot's height: tinted and bordered in the destructive tone, the sentence at heading size
+ * (`--kp-stateplate-text`, as every other failed area) with a normal Retry under it [t56-statefix-1018]. */
     .kp-chart__state[data-kp-state='error'] {
+        align-content: center;
+        gap: var(--kp-space-md, 0.75rem);
+        padding: var(--kp-space-lg, 1.5rem);
+        border: 1px solid hsl(from var(--destructive) h s l / 0.55);
+        background: hsl(from var(--destructive) h s l / 0.08);
         color: var(--foreground);
+        font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem));
+        font-weight: 600;
+        line-height: 1.35;
+    }
+
+    .kp-chart__state[data-kp-state='error'] .kp-chart__state-text {
+        max-inline-size: 36ch;
+    }
+
+    .kp-chart__retry {
+        min-block-size: 2.25rem;
     }
 
     .kp-chart__state-text > .kp-chart__dot {

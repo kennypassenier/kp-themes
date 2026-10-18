@@ -1504,7 +1504,10 @@ its readings arrive. `data-kp-chart-loading` makes the plot pulse (it stands sti
 under reduced motion) and keeps the legend row for
 `data-kp-chart-sources="N"` sources; `setChartData()` ends it. No readings
 show the `chartEmpty` words in the middle; `{ error: '…' }` shows the
-page's sentence with a red dot; a single reading is a dot, with
+page's sentence with a red dot on a tinted, bordered plate at heading size
+(`--kp-stateplate-text`) with a Retry under it that fires `kp-chart-retry` on
+the chart (`CHART_RETRY_EVENT`; the page reads again and calls `setChartData()`;
+the words are `chartRetry`); a single reading is a dot, with
 `onePointNote` the `chartOnePoint` words under it.
 
 `setChartData()` on an attached chart is a live update: the crosshair stays

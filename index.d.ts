@@ -172,7 +172,7 @@ export { FLASH_BUTTON, FLASH_ERROR_MS, FLASH_EVENT, FLASH_MS, FLASH_RELOAD_EVENT
 export { DISABLED_REASON, attachDisabledReasons } from './js/reason.js';
 export { TILES_SET, TILE_ROW_MIN, attachTileSets, evenTileSet, tileSets } from './js/tiles.js';
 export { AGO, FRESHNESS_TIME_ZONE, agoMoment, agoText, attachAgo, humanDuration, momentOf, setAgo } from './js/freshness.js';
-export { CHART, CHART_GROUP, CHART_RANGE_EVENT, CHART_SELECT_EVENT, CHART_TIME_ZONE, CHART_ZOOM_EVENT, TREND_CHART, attachCharts, attachTrendCharts, chartMedian, chartRuns, chartSelect, chartWords, chartZoom, detachChart, formatChartValue, numericTime, setChartData, setTrendData, timeTicks, trendAxis, } from './js/chart.js';
+export { CHART, CHART_GROUP, CHART_RANGE_EVENT, CHART_RETRY_EVENT, CHART_SELECT_EVENT, CHART_TIME_ZONE, CHART_ZOOM_EVENT, TREND_CHART, attachCharts, attachTrendCharts, chartMedian, chartRuns, chartSelect, chartWords, chartZoom, detachChart, formatChartValue, numericTime, setChartData, setTrendData, timeTicks, trendAxis, } from './js/chart.js';
 export type ChartData = import('./js/chart.js').ChartData;
 /** @typedef {import('./js/chart.js').ChartData} ChartData */
 export { MENU_BUTTON, MENU_CLOSE_EVENT, MENU_COUNT_PROPERTY, MENU_GUTTER, MENU_OPEN_EVENT, MENU_SELECT_EVENT, attachMenuButtons, closeMenu, menuKeyTarget, menuLineCount, menuPlacement, menuSignature, openMenu, setMenu, } from './js/menu-button.js';
