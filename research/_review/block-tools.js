@@ -494,7 +494,10 @@ export async function isolate(frame, item, theme) {
     const ownPanelShown = () => {
         const id = focusedOpener()?.getAttribute('aria-controls');
         const panel = id ? doc.getElementById(id) : null;
-        return Boolean(panel && !panel.hidden && panel.getBoundingClientRect().height > 0);
+        // Still growing (forest grows its list out of the field): its box is not its size yet, so the room stays until the
+        // motion ends; dropped earlier, the frame shrank to the half-grown list and the list flipped above the field.
+        const growing = panel?.getAnimations({ subtree: true }).some((a) => a.playState === 'running');
+        return Boolean(panel && !panel.hidden && panel.getBoundingClientRect().height > 0 && !growing);
     };
     /** Something of the section is about to open: an opener holds the focus. */
     const inUse = () => Boolean(focusedOpener());
@@ -521,6 +524,8 @@ export async function isolate(frame, item, theme) {
         frame.style.blockSize = `${next}px`;
     };
     new ResizeObserver(fit).observe(doc.body);
+    // The end of a panel's motion changes no box the observers see: fit again then.
+    for (const type of ['animationend', 'transitionend']) section.addEventListener(type, () => requestAnimationFrame(fit), true);
     // A panel that opens over what follows (a picker's list) changes no box the observer sees: the frame follows the
     // section's changes too, once a frame, so it grows while the panel is open and shrinks after.
     let queued = false;

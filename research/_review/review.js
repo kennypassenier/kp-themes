@@ -1981,6 +1981,8 @@ function layoutSection(section) {
     const view = section.ownerDocument.defaultView;
     const onToggle = () => view?.requestAnimationFrame(fitRooms);
     section.addEventListener('toggle', onToggle, true);
+    // A list that grows open (forest) is measured again once its motion ends, at its full size.
+    section.addEventListener('animationend', onToggle, true);
     view?.requestAnimationFrame(fitRooms);
     // Panels the demo opened while it booted were placed before the lane was laid out: a resize places them again.
     const later = view?.setTimeout(() => {
@@ -1990,6 +1992,7 @@ function layoutSection(section) {
     undo.push(() => {
         view?.clearTimeout(later);
         section.removeEventListener('toggle', onToggle, true);
+        section.removeEventListener('animationend', onToggle, true);
         for (const room of /** @type {NodeListOf<HTMLElement>} */ (section.querySelectorAll(ROOMS))) room.style.removeProperty('min-block-size');
     });
     return () => {
