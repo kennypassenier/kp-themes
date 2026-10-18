@@ -221,20 +221,42 @@ function lane() {
         }
     });
     if (parent !== window) parent.postMessage({ type: 'rv-lane-hello' }, location.origin);
+    /** Keys pressed in the component itself: the component answers them first, the dialog only if it did not. */
+    const deferred = new WeakSet();
+    const handUp = (/** @type {KeyboardEvent} */ event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        parent.postMessage({ type: 'rv-lane-key', key: event.key, code: event.code }, location.origin);
+    };
     addEventListener(
         'keydown',
         (event) => {
             if (parent === window || forwarding || event.altKey || event.ctrlKey || event.metaKey) return;
             if (/** @type {Element} */ (event.target).matches?.(TYPING)) return;
+            // One key path, in this order (README "Key ownership"):
+            // 1. [lane-keys] a key the demo registered (js/shortcuts.js) stays in the lane, whatever the dialog uses it for;
             if (claims(event)) return; // [lane-keys] the demo's own key (Escape only while its chord waits)
+            // 2. a key the dialog does not use stays in the lane;
             if (event.key === 'Escape' ? document.querySelector(OPEN) : event.code !== 'KeyV' && event.code !== 'KeyL' && !FRAME_KEYS.has(event.code))
                 return; // [kit-keys] FRAME_KEYS
-            event.preventDefault();
-            event.stopPropagation();
-            parent.postMessage({ type: 'rv-lane-key', key: event.key, code: event.code }, location.origin);
+            // 3. [mlp-r2-1018] a dialog key pressed while the focus is in the component (a table row walked with j / k and
+            // ticked with x) is the component's first, also when the component did not register it with js/shortcuts.js:
+            // X toggled "Not approved" instead of ticking the row (Kenny's dark verdict on row-keyboard-select,
+            // 2026-10-18 19:08, carried no note). The dialog takes it in the bubble phase only when the component left it
+            // alone (no preventDefault);
+            // 4. from the section's controls or the page around it, and Escape, the dialog key is handed up at once.
+            const from = /** @type {Element} */ (event.target);
+            if (event.key !== 'Escape' && from.closest?.('[data-review-item]') && !from.closest('[data-review-controls]')) {
+                deferred.add(event);
+                return;
+            }
+            handUp(event);
         },
         true,
     );
+    addEventListener('keydown', (event) => {
+        if (deferred.has(event) && !event.defaultPrevented) handUp(event);
+    });
 }
 
 /** Runs one demo as a frame of research/families/ (see above). @param {string} aspect */
@@ -657,9 +679,10 @@ const pairOf = (item, theme) => ({ key: `${theme}|${item.id}`, label: `${item.id
  */
 // A one-theme round whose sections name two or more topics walks them topic by topic too (2026-10-16, the one
 // kpadopt4 page: 51 formal sections in nine topics would otherwise be one endless step).
-const TOPIC_MODE =
-    !ASPECT_MODE &&
-    (new Set(items.flatMap(askedThemes)).size > 1 || new Set(items.map((item) => item.section.dataset.reviewTopic).filter(Boolean)).size > 1);
+// A page whose sections name a topic is always laid out as topic lanes, also when a later round asks one section in one
+// theme (round 2 of kpadopt56-lists: row-keyboard-select in dark only): the dialog has ONE layout (DEMO_RULES ch. 7), and
+// the in-page theme layout moved the section into the dialog, where check-kit found no lane to measure.
+const TOPIC_MODE = !ASPECT_MODE && (new Set(items.flatMap(askedThemes)).size > 1 || items.some((item) => Boolean(item.section.dataset.reviewTopic)));
 
 /** @type {Step[]} */
 const steps = TOPIC_MODE ? topicSteps() : themeSteps();
@@ -1024,12 +1047,15 @@ function answer() {
     const grouped = new Set();
     const groupLines = [];
     for (const source of rejected.filter((p) => state[p.key]?.everyTheme && !state[p.key]?.copiedFrom)) {
-        const copies = rejected.filter((p) => p !== source && p.item === source.item && state[p.key]?.copiedFrom === source.theme && noteOf(p) === noteOf(source));
+        const copies = rejected.filter(
+            (p) => p !== source && p.item === source.item && state[p.key]?.copiedFrom === source.theme && noteOf(p) === noteOf(source),
+        );
         if (!copies.length) continue;
         for (const p of [source, ...copies]) grouped.add(p);
         groupLines.push(`- ${source.item.id} · every theme: ${noteOf(source)}`);
     }
-    if (rejected.length) lines.push('', 'Not approved:', ...groupLines, ...rejected.filter((p) => !grouped.has(p)).map((p) => `- ${p.label}: ${noteOf(p)}`));
+    if (rejected.length)
+        lines.push('', 'Not approved:', ...groupLines, ...rejected.filter((p) => !grouped.has(p)).map((p) => `- ${p.label}: ${noteOf(p)}`));
     const notes = pairs.filter((p) => verdictOf(p) === 'approved' && noteOf(p));
     if (notes.length) lines.push('', 'Approved, with a note:', ...notes.map((p) => `- ${p.label}: ${noteOf(p)}`));
     lines.push(...kk.answerLines()); // [kit-keys] pairs approved unseen by G
@@ -1981,6 +2007,8 @@ function layoutSection(section) {
     const view = section.ownerDocument.defaultView;
     const onToggle = () => view?.requestAnimationFrame(fitRooms);
     section.addEventListener('toggle', onToggle, true);
+    // A list that grows open (forest) is measured again once its motion ends, at its full size.
+    section.addEventListener('animationend', onToggle, true);
     view?.requestAnimationFrame(fitRooms);
     // Panels the demo opened while it booted were placed before the lane was laid out: a resize places them again.
     const later = view?.setTimeout(() => {
@@ -1990,6 +2018,7 @@ function layoutSection(section) {
     undo.push(() => {
         view?.clearTimeout(later);
         section.removeEventListener('toggle', onToggle, true);
+        section.removeEventListener('animationend', onToggle, true);
         for (const room of /** @type {NodeListOf<HTMLElement>} */ (section.querySelectorAll(ROOMS))) room.style.removeProperty('min-block-size');
     });
     return () => {
@@ -2153,8 +2182,10 @@ const laneOf = (/** @type {MessageEventSource | null} */ source) => lanes.find((
  * [lane-keys] A demo's shortcuts work in the dialog after a click anywhere (Kenny, 2026-10-18 18:42: "het niet meer
  * werkt vanaf ik ergens op klik"). Who owns a key:
  * - focus in a lane (a click on the component): the demo's registered keys (js/shortcuts.js `shortcutClaims`) stay in
- *   the lane, also where the dialog uses the same letter (G bulk, X Not approved, C reject); every other dialog key is
- *   handed up as before (FRAME_KEYS, V, L, Escape);
+ *   the lane, also where the dialog uses the same letter (G bulk, X Not approved, C reject); every other dialog key
+ *   pressed in the component itself waits for the bubble phase and is handed up only when the component did not take it
+ *   (no preventDefault: a table's j / k / x stay the table's) [mlp-r2-1018]; from the section's controls, and Escape,
+ *   it is handed up at once (FRAME_KEYS, V, L, Escape);
  * - focus on the dialog (its header, the verdict panel, the stage around the frames): the dialog's keys act as always,
  *   and a printable key the dialog did not use is played in the lane most in view, so "g i" or "j" reach the demo;
  * - while a demo's chord waits for its second key (the lane says so, `rv-lane-chord`), that key goes to the lane whatever
@@ -2891,7 +2922,9 @@ function approveStep() {
     save();
     render();
     if (everyTargets.length)
-        kk.say(`Every theme: ${everyTargets.length} other theme${everyTargets.length === 1 ? '' : 's'} got the same verdict and note and are skipped. W undoes all of it.`);
+        kk.say(
+            `Every theme: ${everyTargets.length} other theme${everyTargets.length === 1 ? '' : 's'} got the same verdict and note and are skipped. W undoes all of it.`,
+        );
     const next = nextOpenStep(index);
     if (next < 0) finished();
     else show(next);
@@ -2908,7 +2941,7 @@ function everyThemeTargets(rowOf) {
     for (const source of shownPairs) {
         const row = rowOf(source);
         const tick = /** @type {HTMLInputElement | null} */ (row.querySelector('[data-rv-every]'));
-        if (!tick?.checked || !/** @type {HTMLInputElement} */ (row.querySelector('[data-rv-reject]')).checked) continue;
+        if (!tick?.checked || !(/** @type {HTMLInputElement} */ (row.querySelector('[data-rv-reject]')).checked)) continue;
         const note = /** @type {HTMLTextAreaElement} */ (row.querySelector('[data-rv-row-note]')).value.trim();
         for (const target of otherThemePairs(source)) {
             if (shownPairs.includes(target)) continue;

@@ -1,0 +1,1743 @@
+<!doctype html>
+<html
+    lang="en"
+    data-theme="formal"
+    data-review="kpadopt56-choose"
+    data-review-themes="dark,cyberpunk,synthwave,pastel,forest,blueprint,solstice,brutalism,deco,nostromo,titanium"
+>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kpadopt5 and 6 in the other themes, part 2 of 14: Pickers and palettes</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="../kpadopt56/part.css" />
+        <link rel="stylesheet" href="../kpadopt56/src/kpadopt6-calm/page.css" />
+        <link rel="stylesheet" href="../kpadopt56/src/kpadopt6-ops/page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k56-page">
+            <header class="k56-intro">
+                <h1>The fifth and sixth adoption rounds, part 2 of 14: Pickers and palettes</h1>
+                <p class="cat-intro">
+                    Formal is approved. Picking from a list: the usual on top, with its band and its states, and words in any order. This part asks
+                    the eleven other themes for 5 sections (55 pairs), one theme per step in the review dialog. The sections were approved in formal
+                    in several rounds; each is shown here in its latest version, with the defaults you chose.
+                </p>
+                <p>
+                    Every section says under <b>Expected</b> what you should see and what each control does (written for formal; the line under
+                    &ldquo;What to look at&rdquo; says what is the theme&rsquo;s own).
+                </p>
+            </header>
+
+            <section
+                class="kc-sec"
+                id="usual"
+                data-review-item="usual"
+                data-review-components="combobox usual"
+                data-review-topic="usual"
+                data-review-topic-title="Picker with the usual on top"
+                data-review-title="Picker with the usual on top: the list"
+                aria-labelledby="h-usual"
+            >
+                <div class="kc-sec__head">
+                    <h2 id="h-usual">Picker with the usual on top: the list</h2>
+                    <p>
+                        The combobox (<code>data-kp-combobox</code>) with <code>data-kp-usual</code>: the choices you use most stand first, the rest
+                        alphabetical below, and a name typed with a slip is not added a second time. Nothing re-sorts per tap: the band is given by
+                        the app and changes slowly. This section shows how the list behaves.
+                    </p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Symptoms</b> (38 items): click into the field. The list opens with <b>Nothing to log</b> (italic, always first, never
+                            usual), a small <b>Usual</b> heading over five choices (Headache, Fatigue, Nausea, Neck pain, Anxiety), then
+                            <b>All</b> over nothing yet and one row <b>Show all 38</b> (the exact number). The status line says
+                            <b>5 usual, 33 more</b>. Press <b>Show all 38</b>: the rest appears alphabetical and the row becomes <b>Show fewer</b>.
+                            Each row is at least 48 px and long words wrap.
+                        </li>
+                        <li>
+                            <b>Pick</b> Headache and Fatigue: they become tags with a small <b>Not today</b> button each; press it on Fatigue: the tag
+                            turns dashed and the button filled (not the same as unticked). The grey box shows <code>kp-usual-pick</code> with where
+                            the choice came from (usual, all, pinned or typed).
+                        </li>
+                        <li>
+                            <b>Type</b> <code>hoofdpjn</code>-style slips with a real one: type <b>Headach</b> then Enter: identical after case and
+                            spaces means it selects <b>Headache</b>, it never makes a second one (type <b>headache</b> in small letters). Type
+                            <b>Neksteun</b> (new) and press Enter: it is added at once, a toast says <b>Added &lsquo;Neksteun&rsquo;</b> with Undo.
+                            Type <b>Fatigu</b>, which is close to a name you have: <b>Did you mean Fatigue?</b> stands first, then
+                            <b>Add &lsquo;Fatigu&rsquo; as new</b>, which always works.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="dark">
+                        Dark is a spectral instrument: near-black with a faint grid, chamfered corners and one film of cyan-to-magenta light along the
+                        edges that matter. Check that this part wears that film on its frames and focus, that anything opening or arriving is swept in
+                        from the left over its own box and never just faded, and that text keeps clear of every edge.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Cyberpunk is a netrunner’s HUD: signal yellow on a near-black ground with scanlines, cyan read-outs, blood red where something
+                        is wrong, and plates with a cut corner. Check the part reads as a holo card, that things appear in hard glitch ticks (never an
+                        ease or a glide), and that no text sits against a cut corner or the rim.
+                    </p>
+                    <p data-for="synthwave">
+                        Synthwave is the drive into the sunset, 1984: a neon horizon, the grid floor, the striped sun and tubes with a soft bloom.
+                        Check the part sits on its floor with neon-tube edges, that things rise over the horizon or switch on like a tube (nothing
+                        tears or runs diagonal), and that text keeps clear of the glow and the edge.
+                    </p>
+                    <p data-for="pastel">
+                        Pastel is a risograph sticker sheet in a planner: lavender milk paper, plum ink, a second ink that never quite lines up,
+                        stickers and taped-in notes. Check the part looks printed in two passes and stuck on, soft and never sharp, and that text
+                        keeps clear of the sticker edge and the tape.
+                    </p>
+                    <p data-for="forest">
+                        Forest is a ranger’s field kit: a map on kraft paper with contour lines and trail blazes, and wood that grows on it. Check the
+                        part has the leaf corners (top-right and bottom-left rounded), that things grow out of their anchor rather than pop, and that
+                        text keeps clear of the corners and the blazes.
+                    </p>
+                    <p data-for="blueprint">
+                        Blueprint is the working drawing: a Prussian-blue sheet, a cyan pen line, white lettering and an amber checker’s pencil. Check
+                        the part is drawn by the pen (outline first, then inked), that corner brackets and dimension lines sit where they say, and
+                        that no lettering touches a line or a bracket.
+                    </p>
+                    <p data-for="solstice">
+                        Solstice is the low sun on warm charcoal: light comes from below and catches the foot of every plate, the voice is a serif,
+                        and everything is slow. Check the warm light rises from the foot of the part, that things are kindled or eclipsed rather than
+                        faded, and that text keeps clear of the lit edge.
+                    </p>
+                    <p data-for="brutalism">
+                        Brutalism is the slab: one hard ink line, a hard offset shadow where the part would fall, flat paint and controls that name
+                        what they are. Check the part stands on its own shadow, that things drop onto their footprint and stop dead (no ease, no
+                        glow), and that text keeps clear of the line and the shadow.
+                    </p>
+                    <p data-for="deco">
+                        Deco is the grand lobby of 1925: deep blue lacquer with a chevron wallpaper, gold hairlines and small jewels, ivory type,
+                        symmetry and slow motion. Check the part has its gold inlay (a hairline, not a flat fill), that it draws itself on and is
+                        covered by a great fan when it leaves, and that text keeps clear of the inlay.
+                    </p>
+                    <p data-for="nostromo">
+                        Nostromo is the ship’s console, 1979: a moulded beige case with label tape, screws, vents and a lamp on every switch, and
+                        amber CRT screens set into it. Check the part reads as plastic case or as screen (not a mix), that things switch on or are
+                        struck on the tube in whole frames, and that no label touches the case edge or a vent.
+                    </p>
+                    <p data-for="titanium">
+                        Titanium is a material: bare machined titanium over a carbon twill with an anodised oxide film, cut, milled, indexed and
+                        stamped. Check the part looks machined (crisp edges, the film only where it carries meaning), that nothing breathes, bounces
+                        or swells, and that text keeps clear of the milled edge.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="usual-component">
+                    <div role="group" aria-label="While typing" class="kc-actions">
+                        <b>While typing, the usual:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-kc-usual-opt="usual-while-typing" data-value="first">
+                            Lead (default)
+                        </button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="usual-while-typing" data-value="hide">
+                            Step aside
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Near names" class="kc-actions">
+                        <b>Near name:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-kc-usual-opt="near" data-value="ask">Ask (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="near" data-value="select">
+                            Take closest
+                        </button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="near" data-value="off">Off</button>
+                    </div>
+                    <div role="group" aria-label="The full list" class="kc-actions">
+                        <b>Full list:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-kc-usual-opt="all" data-value="fold">
+                            Behind Show all N (default)
+                        </button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="all" data-value="open">Fully shown</button>
+                    </div>
+                    <div role="group" aria-label="Order of the rest" class="kc-actions">
+                        <b>Rest of the list:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-kc-usual-opt="order" data-value="alphabetical">
+                            Alphabetical (default)
+                        </button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="order" data-value="given">As given</button>
+                    </div>
+                </div>
+                <div id="usual-component" class="kc-pair kc-pair--tall">
+                    <div class="kc-case kc-case--room">
+                        <p class="kc-label">Symptoms: many, with the usual on top</p>
+                        <div
+                            class="kp-combobox"
+                            data-kp-combobox
+                            id="kc-usual-a"
+                            data-kc-usual-target
+                            data-kp-usual='["headache","fatigue","nausea","neck","anxiety","brainfog"]'
+                            data-kp-multiple
+                            data-kp-add="inline"
+                            data-kp-not-today
+                            data-kp-pinned='[{"value":"none","label":"Nothing to log"}]'
+                            data-kp-hint="Last time you wrote: tired and a stiff neck"
+                        >
+                            <label class="kp-field__label" for="kc-usual-a-input">Symptoms today</label>
+                            <div data-kp-tag-list hidden></div>
+                            <input
+                                class="kp-combobox__input kp-field__input"
+                                id="kc-usual-a-input"
+                                type="text"
+                                role="combobox"
+                                aria-expanded="false"
+                                aria-controls="kc-usual-a-list"
+                                autocomplete="off"
+                            />
+                            <ul class="kp-combobox__list" id="kc-usual-a-list" role="listbox" hidden>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="fatigue">Fatigue</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="nausea">Nausea</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="dizziness">Dizziness</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="neck">Neck pain</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="back">Back pain</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="stomach">Stomach ache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="cramps">Cramps</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="anxiety">Anxiety</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="restless">Restless legs</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="palpitations">Palpitations</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="brainfog">Brain fog</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="cough">Cough</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="sore">Sore throat</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="congestion">Congestion</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="chills">Chills</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="sweats">Night sweats</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="rash">Rash</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="itch">Itching</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="joint">Joint pain</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="muscle">Muscle ache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="numb">Numbness</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="tingling">Tingling</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="vision">Blurred vision</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="light">Light sensitivity</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="noise">Noise sensitivity</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="appetite">Low appetite</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="thirst">Thirst</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="heartburn">Heartburn</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="bloating">Bloating</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="constipation">Constipation</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="diarrhoea">Diarrhoea</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="insomnia">Insomnia</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="earache">Earache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="toothache">Toothache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="hay">Hay fever</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="wheeze">Wheezing</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="swelling">Swollen ankles</li>
+                            </ul>
+                            <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                        </div>
+                        <pre class="kc-log" id="kc-usual-log" aria-live="polite"></pre>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="kc-sec"
+                id="usual-band"
+                data-review-item="usual-band"
+                data-review-components="combobox usual"
+                data-review-topic="usual"
+                data-review-title="Picker with the usual on top: band, Not today and adding"
+                aria-labelledby="h-usual-band"
+            >
+                <div class="kc-sec__head">
+                    <h2 id="h-usual-band">Picker with the usual on top: band, Not today and adding</h2>
+                    <p>
+                        The combobox (<code>data-kp-combobox</code>) with <code>data-kp-usual</code>: the choices you use most stand first, the rest
+                        alphabetical below, and a name typed with a slip is not added a second time. Nothing re-sorts per tap: the band is given by
+                        the app and changes slowly. This section shows the band, the Not today button and adding a name, and a single-choice picker
+                        ranked by use.
+                    </p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Band size</b> 3, 5 (default) or 7 sets how many usual choices stand first; <b>Not today</b> <b>Off</b> removes the
+                            small button from each tag; <b>Add a new name</b> <b>Off</b> makes a new name impossible (Enter only picks what exists,
+                            and the &ldquo;Add &hellip; as new&rdquo; row is gone). <b>Pick</b> Headache and Fatigue first: they become tags with a
+                            small <b>Not today</b> button each.
+                        </li>
+                        <li>
+                            <b>Alt U</b> with the field empty jumps to the first usual choice (a bare <b>u</b> would eat the first letter of a name);
+                            it is on the <b>?</b> sheet.
+                        </li>
+                        <li>
+                            <b>Meal</b> (single): the band is ranked by how often each was used (the counts are in the markup), no folding, because
+                            the list is short.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="dark">
+                        Dark is a spectral instrument: near-black with a faint grid, chamfered corners and one film of cyan-to-magenta light along the
+                        edges that matter. Check that this part wears that film on its frames and focus, that anything opening or arriving is swept in
+                        from the left over its own box and never just faded, and that text keeps clear of every edge.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Cyberpunk is a netrunner’s HUD: signal yellow on a near-black ground with scanlines, cyan read-outs, blood red where something
+                        is wrong, and plates with a cut corner. Check the part reads as a holo card, that things appear in hard glitch ticks (never an
+                        ease or a glide), and that no text sits against a cut corner or the rim.
+                    </p>
+                    <p data-for="synthwave">
+                        Synthwave is the drive into the sunset, 1984: a neon horizon, the grid floor, the striped sun and tubes with a soft bloom.
+                        Check the part sits on its floor with neon-tube edges, that things rise over the horizon or switch on like a tube (nothing
+                        tears or runs diagonal), and that text keeps clear of the glow and the edge.
+                    </p>
+                    <p data-for="pastel">
+                        Pastel is a risograph sticker sheet in a planner: lavender milk paper, plum ink, a second ink that never quite lines up,
+                        stickers and taped-in notes. Check the part looks printed in two passes and stuck on, soft and never sharp, and that text
+                        keeps clear of the sticker edge and the tape.
+                    </p>
+                    <p data-for="forest">
+                        Forest is a ranger’s field kit: a map on kraft paper with contour lines and trail blazes, and wood that grows on it. Check the
+                        part has the leaf corners (top-right and bottom-left rounded), that things grow out of their anchor rather than pop, and that
+                        text keeps clear of the corners and the blazes.
+                    </p>
+                    <p data-for="blueprint">
+                        Blueprint is the working drawing: a Prussian-blue sheet, a cyan pen line, white lettering and an amber checker’s pencil. Check
+                        the part is drawn by the pen (outline first, then inked), that corner brackets and dimension lines sit where they say, and
+                        that no lettering touches a line or a bracket.
+                    </p>
+                    <p data-for="solstice">
+                        Solstice is the low sun on warm charcoal: light comes from below and catches the foot of every plate, the voice is a serif,
+                        and everything is slow. Check the warm light rises from the foot of the part, that things are kindled or eclipsed rather than
+                        faded, and that text keeps clear of the lit edge.
+                    </p>
+                    <p data-for="brutalism">
+                        Brutalism is the slab: one hard ink line, a hard offset shadow where the part would fall, flat paint and controls that name
+                        what they are. Check the part stands on its own shadow, that things drop onto their footprint and stop dead (no ease, no
+                        glow), and that text keeps clear of the line and the shadow.
+                    </p>
+                    <p data-for="deco">
+                        Deco is the grand lobby of 1925: deep blue lacquer with a chevron wallpaper, gold hairlines and small jewels, ivory type,
+                        symmetry and slow motion. Check the part has its gold inlay (a hairline, not a flat fill), that it draws itself on and is
+                        covered by a great fan when it leaves, and that text keeps clear of the inlay.
+                    </p>
+                    <p data-for="nostromo">
+                        Nostromo is the ship’s console, 1979: a moulded beige case with label tape, screws, vents and a lamp on every switch, and
+                        amber CRT screens set into it. Check the part reads as plastic case or as screen (not a mix), that things switch on or are
+                        struck on the tube in whole frames, and that no label touches the case edge or a vent.
+                    </p>
+                    <p data-for="titanium">
+                        Titanium is a material: bare machined titanium over a carbon twill with an anodised oxide film, cut, milled, indexed and
+                        stamped. Check the part looks machined (crisp edges, the film only where it carries meaning), that nothing breathes, bounces
+                        or swells, and that text keeps clear of the milled edge.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="usual-band-component">
+                    <div role="group" aria-label="Band size" class="kc-actions">
+                        <b>Band size:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-kc-usual-opt="usual-max" data-value="5">5 (default)</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="usual-max" data-value="3">3</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="usual-max" data-value="7">7</button>
+                    </div>
+                    <div role="group" aria-label="Not today button" class="kc-actions">
+                        <b>Not today:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-kc-usual-opt="not-today" data-value="on">
+                            On (default)
+                        </button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="not-today" data-value="off">Off</button>
+                    </div>
+                    <div role="group" aria-label="Add a new name" class="kc-actions">
+                        <b>Add a new name:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-kc-usual-opt="add" data-value="inline">
+                            Inline (default)
+                        </button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="add" data-value="off">Off</button>
+                    </div>
+                </div>
+                <div id="usual-band-component" class="kc-pair kc-pair--tall">
+                    <div class="kc-case kc-case--room">
+                        <p class="kc-label">Symptoms: the band, Not today and adding</p>
+                        <div
+                            class="kp-combobox"
+                            data-kp-combobox
+                            id="kc-usual-m"
+                            data-kc-usual-target
+                            data-kp-usual='["headache","fatigue","nausea","neck","anxiety","brainfog"]'
+                            data-kp-multiple
+                            data-kp-add="inline"
+                            data-kp-not-today
+                            data-kp-pinned='[{"value":"none","label":"Nothing to log"}]'
+                            data-kp-hint="Last time you wrote: tired and a stiff neck"
+                        >
+                            <label class="kp-field__label" for="kc-usual-m-input">Symptoms today</label>
+                            <div data-kp-tag-list hidden></div>
+                            <input
+                                class="kp-combobox__input kp-field__input"
+                                id="kc-usual-m-input"
+                                type="text"
+                                role="combobox"
+                                aria-expanded="false"
+                                aria-controls="kc-usual-m-list"
+                                autocomplete="off"
+                            />
+                            <ul class="kp-combobox__list" id="kc-usual-m-list" role="listbox" hidden>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="fatigue">Fatigue</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="nausea">Nausea</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="dizziness">Dizziness</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="neck">Neck pain</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="back">Back pain</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="stomach">Stomach ache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="cramps">Cramps</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="anxiety">Anxiety</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="restless">Restless legs</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="palpitations">Palpitations</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="brainfog">Brain fog</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="cough">Cough</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="sore">Sore throat</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="congestion">Congestion</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="chills">Chills</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="sweats">Night sweats</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="rash">Rash</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="itch">Itching</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="joint">Joint pain</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="muscle">Muscle ache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="numb">Numbness</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="tingling">Tingling</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="vision">Blurred vision</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="light">Light sensitivity</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="noise">Noise sensitivity</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="appetite">Low appetite</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="thirst">Thirst</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="heartburn">Heartburn</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="bloating">Bloating</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="constipation">Constipation</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="diarrhoea">Diarrhoea</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="insomnia">Insomnia</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="earache">Earache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="toothache">Toothache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="hay">Hay fever</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="wheeze">Wheezing</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="swelling">Swollen ankles</li>
+                            </ul>
+                            <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                        </div>
+                        <pre class="kc-log" id="kc-usual-m-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="kc-case kc-case--room">
+                        <p class="kc-label">Meal: one, ranked by how often</p>
+                        <div
+                            class="kp-combobox"
+                            data-kp-combobox
+                            id="kc-usual-b"
+                            data-kp-usual='[{"value":"oats","uses":14},{"value":"soup","uses":9},{"value":"pasta","uses":9},{"value":"salad","uses":3}]'
+                            data-kp-usual-source="counts"
+                            data-kp-usual-max="4"
+                            data-kp-add="inline"
+                        >
+                            <label class="kp-field__label" for="kc-usual-b-input">Last meal</label>
+                            <div data-kp-tag-list hidden></div>
+                            <input
+                                class="kp-combobox__input kp-field__input"
+                                id="kc-usual-b-input"
+                                type="text"
+                                role="combobox"
+                                aria-expanded="false"
+                                aria-controls="kc-usual-b-list"
+                                autocomplete="off"
+                            />
+                            <ul class="kp-combobox__list" id="kc-usual-b-list" role="listbox" hidden>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="oats">Oatmeal</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="eggs">Eggs on toast</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="soup">Vegetable soup</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="pasta">Pasta with tomato</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="rice">Rice and curry</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="salad">Chicken salad</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="stew">Stoofvlees with fries</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="fish">Baked fish</li>
+                            </ul>
+                            <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="kc-sec"
+                id="usual-states"
+                data-review-item="usual-states"
+                data-review-components="combobox usual"
+                data-review-topic="usual"
+                data-review-title="Picker with the usual on top: states, opened, disabled and phone width"
+                aria-labelledby="h-usual-states"
+            >
+                <div class="kc-sec__head">
+                    <h2 id="h-usual-states">Picker with the usual on top: states, opened, disabled and phone width</h2>
+                    <p>
+                        A list that is being read, a list with nothing in it, one that could not be read, one that is off with its reason, the list
+                        shown opened, and the picker in a 390 px box.
+                    </p>
+                </div>
+                <div class="kc-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Loading</b>, <b>Empty</b>, <b>Could not read</b> and <b>Ready</b> (buttons above the first picker): the picker keeps
+                            its place and a panel the height of an open list stands under the input. <b>Loading</b>: the theme&rsquo;s loading card,
+                            moving, the input waiting. <b>Empty</b>: one plate, centred, <b>Nothing here yet</b> over
+                            <b>Type a name to add the first one</b> and a normal-size <b>Add</b>. <b>Could not read</b>: the red-edged plate
+                            <b>Could not read the list</b> with a normal-size <b>Retry</b>; the last good list stays pickable.
+                        </li>
+                        <li>
+                            <b>Off with a reason</b> (second picker): the input is dimmed and <b>Pick symptoms after the sync</b> is its reason (hover
+                            or focus it). <b>Shown opened</b> (third picker): the list is open on the page so you can judge it without clicking: the
+                            band, a long label that wraps, and an item that cannot be picked, dimmed with <b>Needs a doctor&rsquo;s note</b> written
+                            under its label.
+                        </li>
+                        <li>
+                            <b>No match</b>: type <b>zzzz</b> in the first picker: one plate in the list, <b>No match</b> large and centred with
+                            <b>Pick a close name, or add it as new</b> and the <b>Add &lsquo;zzzz&rsquo; as new</b> row. <b>Phone width</b> (390 px
+                            box): the list opens full width under the input with the band first, rows 48 px, <b>Show all 38</b> a full-width row.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="dark">
+                        In dark, waiting is a comet with a film tail over the whole component; empty and failed are one centred plate at normal size
+                        with a normal-size button. Check each sample keeps the component’s footprint, the chamfered corners hold, and at phone width
+                        nothing is cut or touches an edge.
+                    </p>
+                    <p data-for="cyberpunk">
+                        In cyberpunk, waiting is signal loss: the word and the plate glitch while the whole component stays in place. Check loading,
+                        empty and failed keep the full footprint, the red is used only for a real failure, and at phone width the cut corners clip no
+                        text.
+                    </p>
+                    <p data-for="synthwave">
+                        In synthwave, waiting is the marquee chasing along the whole component. Check loading, empty and failed keep the full
+                        footprint, the chase is visible and moving, and at phone width the bloom clips nothing.
+                    </p>
+                    <p data-for="pastel">
+                        In pastel, waiting is washi tape fluttering over the whole component. Check loading, empty and failed keep the full footprint,
+                        the misregistered second ink is visible but readable, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="forest">
+                        In forest, waiting is the row of planted trees along the whole component. Check loading, empty and failed keep the full
+                        footprint, the trees stand and grow as the bar fills, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="blueprint">
+                        In blueprint, waiting is the section hatched across the whole component. Check loading, empty and failed keep the full
+                        footprint, the hatching moves, a failure is flagged in amber or red and not just a colour change, and at phone width nothing
+                        is cut.
+                    </p>
+                    <p data-for="solstice">
+                        In solstice, waiting is the sun crossing the whole component and a warning reddens the sky. Check loading, empty and failed
+                        keep the full footprint, the crossing is visible and calm, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="brutalism">
+                        In brutalism, waiting is a lintel hoisted across the whole component and a warning is taped off. Check loading, empty and
+                        failed keep the full footprint, the hard steps are visible, and at phone width the shadow clips nothing.
+                    </p>
+                    <p data-for="deco">
+                        In deco, waiting is lift doors over the whole component. Check loading, empty and failed keep the full footprint, the doors
+                        and the inlay move slowly and cleanly, and at phone width the gold edge cuts no text.
+                    </p>
+                    <p data-for="nostromo">
+                        In nostromo, waiting is the raster building up on the screen across the whole component. Check loading, empty and failed keep
+                        the full footprint, the lamps tell the state, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="titanium">
+                        In titanium, waiting is the machined film sweeping the whole component. Check loading, empty and failed keep the full
+                        footprint, the sweep is visible, and at phone width nothing is cut.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="usual-states-component">
+                    <div role="group" aria-label="State of the first picker" class="kc-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-kc-usual-state="ready">Ready</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-state="loading">Loading</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-state="empty">Empty</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-state="error">Could not read</button>
+                    </div>
+                </div>
+                <div id="usual-states-component" class="kc-pair kc-pair--tall">
+                    <div class="kc-case kc-case--room">
+                        <p class="kc-label">Driven by the buttons above</p>
+                        <div
+                            class="kp-combobox"
+                            data-kp-combobox
+                            id="kc-usual-s"
+                            data-kp-usual='["headache","fatigue","nausea","neck","anxiety","brainfog"]'
+                            data-kp-add="inline"
+                        >
+                            <label class="kp-field__label" for="kc-usual-s-input">Symptoms</label>
+                            <div data-kp-tag-list hidden></div>
+                            <input
+                                class="kp-combobox__input kp-field__input"
+                                id="kc-usual-s-input"
+                                type="text"
+                                role="combobox"
+                                aria-expanded="false"
+                                aria-controls="kc-usual-s-list"
+                                autocomplete="off"
+                            />
+                            <ul class="kp-combobox__list" id="kc-usual-s-list" role="listbox" hidden>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="fatigue">Fatigue</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="nausea">Nausea</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="dizziness">Dizziness</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="neck">Neck pain</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="back">Back pain</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="stomach">Stomach ache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="cramps">Cramps</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="anxiety">Anxiety</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="restless">Restless legs</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="palpitations">Palpitations</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="brainfog">Brain fog</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="cough">Cough</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="sore">Sore throat</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="congestion">Congestion</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="chills">Chills</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="sweats">Night sweats</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="rash">Rash</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="itch">Itching</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="joint">Joint pain</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="muscle">Muscle ache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="numb">Numbness</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="tingling">Tingling</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="vision">Blurred vision</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="light">Light sensitivity</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="noise">Noise sensitivity</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="appetite">Low appetite</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="thirst">Thirst</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="heartburn">Heartburn</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="bloating">Bloating</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="constipation">Constipation</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="diarrhoea">Diarrhoea</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="insomnia">Insomnia</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="earache">Earache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="toothache">Toothache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="hay">Hay fever</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="wheeze">Wheezing</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="swelling">Swollen ankles</li>
+                            </ul>
+                            <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                        </div>
+                    </div>
+                    <div class="kc-case kc-case--room">
+                        <p class="kc-label">Off, with its reason</p>
+                        <div
+                            class="kp-combobox"
+                            data-kp-combobox
+                            id="kc-usual-d"
+                            data-kp-usual='["headache","fatigue","nausea","neck","anxiety","brainfog"]'
+                        >
+                            <label class="kp-field__label" for="kc-usual-d-input">Symptoms</label>
+                            <div data-kp-tag-list hidden></div>
+                            <input
+                                class="kp-combobox__input kp-field__input"
+                                id="kc-usual-d-input"
+                                type="text"
+                                role="combobox"
+                                aria-expanded="false"
+                                aria-controls="kc-usual-d-list"
+                                autocomplete="off"
+                                disabled
+                                data-kp-disabled-reason="Pick symptoms after the sync"
+                            />
+                            <ul class="kp-combobox__list" id="kc-usual-d-list" role="listbox" hidden>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="fatigue">Fatigue</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="nausea">Nausea</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="dizziness">Dizziness</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="neck">Neck pain</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="back">Back pain</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="stomach">Stomach ache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="cramps">Cramps</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="anxiety">Anxiety</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="restless">Restless legs</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="palpitations">Palpitations</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="brainfog">Brain fog</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="cough">Cough</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="sore">Sore throat</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="congestion">Congestion</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="chills">Chills</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="sweats">Night sweats</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="rash">Rash</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="itch">Itching</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="joint">Joint pain</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="muscle">Muscle ache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="numb">Numbness</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="tingling">Tingling</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="vision">Blurred vision</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="light">Light sensitivity</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="noise">Noise sensitivity</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="appetite">Low appetite</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="thirst">Thirst</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="heartburn">Heartburn</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="bloating">Bloating</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="constipation">Constipation</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="diarrhoea">Diarrhoea</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="insomnia">Insomnia</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="earache">Earache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="toothache">Toothache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="hay">Hay fever</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="wheeze">Wheezing</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="swelling">Swollen ankles</li>
+                            </ul>
+                            <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                        </div>
+                    </div>
+                    <div class="kc-case kc-case--room">
+                        <p class="kc-label">Shown opened: a long label and an item that cannot be picked</p>
+                        <div
+                            class="kp-combobox"
+                            data-kp-combobox
+                            id="kc-usual-o"
+                            data-kp-usual='["headache","long"]'
+                            data-kp-close-on-blur="false"
+                            data-kp-all="open"
+                        >
+                            <label class="kp-field__label" for="kc-usual-o-input">Symptoms</label>
+                            <div data-kp-tag-list hidden></div>
+                            <input
+                                class="kp-combobox__input kp-field__input"
+                                id="kc-usual-o-input"
+                                type="text"
+                                role="combobox"
+                                aria-expanded="false"
+                                aria-controls="kc-usual-o-list"
+                                autocomplete="off"
+                            />
+                            <ul class="kp-combobox__list" id="kc-usual-o-list" role="listbox" hidden>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="long">
+                                    A pressure behind both eyes that comes on after reading for an hour and does not go away with rest
+                                </li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="fatigue">Fatigue</li>
+                                <li
+                                    class="kp-combobox__option"
+                                    role="option"
+                                    data-kp-option
+                                    data-value="dizzy"
+                                    data-kp-reason="Needs a doctor&rsquo;s note"
+                                >
+                                    Dizziness
+                                </li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="note">Fainting</li>
+                            </ul>
+                            <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                        </div>
+                    </div>
+                    <div class="kc-case kc-case--room">
+                        <p class="kc-label">The plain combobox beside it, opened, to compare the plate</p>
+                        <div class="kp-combobox" data-kp-combobox id="kc-usual-c" data-kp-close-on-blur="false">
+                            <label class="kp-field__label" for="kc-usual-c-input">Symptoms</label>
+                            <input
+                                class="kp-combobox__input kp-field__input"
+                                id="kc-usual-c-input"
+                                type="text"
+                                role="combobox"
+                                aria-expanded="false"
+                                aria-controls="kc-usual-c-list"
+                                autocomplete="off"
+                            />
+                            <ul class="kp-combobox__list" id="kc-usual-c-list" role="listbox" hidden>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="fatigue">Fatigue</li>
+                                <li class="kp-combobox__option" role="option" data-kp-option data-value="nausea">Nausea</li>
+                            </ul>
+                            <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                        </div>
+                    </div>
+                    <div class="kc-case kc-case--room">
+                        <p class="kc-label">Phone width (390 px)</p>
+                        <div class="kc-frame kc-frame--phone kc-frame--menu">
+                            <div
+                                class="kp-combobox"
+                                data-kp-combobox
+                                id="kc-usual-p"
+                                data-kp-usual='["headache","fatigue","nausea","neck","anxiety","brainfog"]'
+                                data-kp-add="inline"
+                                data-kp-pinned='[{"value":"none","label":"Nothing to log"}]'
+                            >
+                                <label class="kp-field__label" for="kc-usual-p-input">Symptoms</label>
+                                <div data-kp-tag-list hidden></div>
+                                <input
+                                    class="kp-combobox__input kp-field__input"
+                                    id="kc-usual-p-input"
+                                    type="text"
+                                    role="combobox"
+                                    aria-expanded="false"
+                                    aria-controls="kc-usual-p-list"
+                                    autocomplete="off"
+                                />
+                                <ul class="kp-combobox__list" id="kc-usual-p-list" role="listbox" hidden>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="headache">Headache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="fatigue">Fatigue</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="nausea">Nausea</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="dizziness">Dizziness</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="neck">Neck pain</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="back">Back pain</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="stomach">Stomach ache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="cramps">Cramps</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="anxiety">Anxiety</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="restless">Restless legs</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="palpitations">Palpitations</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="brainfog">Brain fog</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="cough">Cough</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="sore">Sore throat</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="congestion">Congestion</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="chills">Chills</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="sweats">Night sweats</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="rash">Rash</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="itch">Itching</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="joint">Joint pain</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="muscle">Muscle ache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="numb">Numbness</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="tingling">Tingling</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="vision">Blurred vision</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="light">Light sensitivity</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="noise">Noise sensitivity</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="appetite">Low appetite</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="thirst">Thirst</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="heartburn">Heartburn</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="bloating">Bloating</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="constipation">Constipation</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="diarrhoea">Diarrhoea</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="insomnia">Insomnia</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="earache">Earache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="toothache">Toothache</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="hay">Hay fever</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="wheeze">Wheezing</li>
+                                    <li class="kp-combobox__option" role="option" data-kp-option data-value="swelling">Swollen ankles</li>
+                                </ul>
+                                <p class="kp-combobox__status" data-kp-combobox-status role="status" aria-live="polite"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="kv-sec"
+                id="intent"
+                data-review-item="intent"
+                data-review-components="palette"
+                data-review-topic="intent"
+                data-review-topic-title="Palette that finds words in any order"
+                data-review-title="Palette: words in any order, best answer first"
+                aria-labelledby="h-intent"
+            >
+                <div class="kv-sec__head">
+                    <h2 id="h-intent">Palette: words in any order, best answer first</h2>
+                    <p>
+                        <code>&lt;dialog class="kp-palette" data-kp-palette&gt;</code> (js/palette.js with js/intent.js): the default match of every
+                        palette now. Every typed word has to start a word of the command, in any order. The palette is shown open in place; type in it
+                        or press a query below.
+                    </p>
+                </div>
+                <div class="kv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Nothing typed:</b> not the whole list but a short start: the two Inbox items, what is featured (<b
+                                >Deploy all changes</b
+                            >, <b>New stack</b>, <b>Overview</b>, <b>Backups</b>) and what is about the stack that is open, <b>jellyfin</b> (its
+                            Update, Restart and logs first in <b>Do</b>). The status line says how many commands are shown (9).
+                        </li>
+                        <li>
+                            <b>jellyfin upd</b>, <b>upd jellyfin</b> and <b>update jelly</b> all show <b>Update jellyfin</b> first, the typed words
+                            ruled under. <b>logs gateway</b> and <b>gateway logs</b> find <b>Show the logs of gateway</b>. <b>reboot gate</b> finds
+                            <b>Restart gateway</b> by a hidden word (it is never shown). <b>cafe</b> finds the stack <b>café-kiosk</b> (accents do not
+                            matter) and <b>kiosk</b> too (a hyphenated name is found by its parts).
+                        </li>
+                        <li>
+                            A word has to <b>start</b> a word: <b>read</b> does not find <b>Restart</b>, <b>ate</b> finds nothing. The matches in the
+                            description count less than the ones in the label (<b>newest</b> finds the commands that say it in their description,
+                            after any whose name says it).
+                        </li>
+                        <li>
+                            <b>Always the same list:</b> typing <b>newest</b> by hand, fast or slowly, pressing <b>newest</b> or
+                            <b>newest, letter by letter</b> (it types a letter every 0.15 s) and opening the palette with it all list the same twelve
+                            commands, in the same order, with the same status line. Before, letters typed one by one could end in an empty list,
+                            because the mark on the half-typed word split it in two; the marks now come off before the words are read.
+                        </li>
+                        <li>
+                            <b>Enter</b> runs the first row (the readout under the palette says which); the arrow keys walk the rows in the order they
+                            stand in; the commands stay in their groups, the groups in the order <b>Inbox, Do, Go to</b>.
+                        </li>
+                        <li><b>The choice</b> (tick it in the dialog): how the matched words are marked. The buttons below flip it too.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="dark">
+                        Dark is a spectral instrument: near-black with a faint grid, chamfered corners and one film of cyan-to-magenta light along the
+                        edges that matter. Check that this part wears that film on its frames and focus, that anything opening or arriving is swept in
+                        from the left over its own box and never just faded, and that text keeps clear of every edge.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Cyberpunk is a netrunner’s HUD: signal yellow on a near-black ground with scanlines, cyan read-outs, blood red where something
+                        is wrong, and plates with a cut corner. Check the part reads as a holo card, that things appear in hard glitch ticks (never an
+                        ease or a glide), and that no text sits against a cut corner or the rim.
+                    </p>
+                    <p data-for="synthwave">
+                        Synthwave is the drive into the sunset, 1984: a neon horizon, the grid floor, the striped sun and tubes with a soft bloom.
+                        Check the part sits on its floor with neon-tube edges, that things rise over the horizon or switch on like a tube (nothing
+                        tears or runs diagonal), and that text keeps clear of the glow and the edge.
+                    </p>
+                    <p data-for="pastel">
+                        Pastel is a risograph sticker sheet in a planner: lavender milk paper, plum ink, a second ink that never quite lines up,
+                        stickers and taped-in notes. Check the part looks printed in two passes and stuck on, soft and never sharp, and that text
+                        keeps clear of the sticker edge and the tape.
+                    </p>
+                    <p data-for="forest">
+                        Forest is a ranger’s field kit: a map on kraft paper with contour lines and trail blazes, and wood that grows on it. Check the
+                        part has the leaf corners (top-right and bottom-left rounded), that things grow out of their anchor rather than pop, and that
+                        text keeps clear of the corners and the blazes.
+                    </p>
+                    <p data-for="blueprint">
+                        Blueprint is the working drawing: a Prussian-blue sheet, a cyan pen line, white lettering and an amber checker’s pencil. Check
+                        the part is drawn by the pen (outline first, then inked), that corner brackets and dimension lines sit where they say, and
+                        that no lettering touches a line or a bracket.
+                    </p>
+                    <p data-for="solstice">
+                        Solstice is the low sun on warm charcoal: light comes from below and catches the foot of every plate, the voice is a serif,
+                        and everything is slow. Check the warm light rises from the foot of the part, that things are kindled or eclipsed rather than
+                        faded, and that text keeps clear of the lit edge.
+                    </p>
+                    <p data-for="brutalism">
+                        Brutalism is the slab: one hard ink line, a hard offset shadow where the part would fall, flat paint and controls that name
+                        what they are. Check the part stands on its own shadow, that things drop onto their footprint and stop dead (no ease, no
+                        glow), and that text keeps clear of the line and the shadow.
+                    </p>
+                    <p data-for="deco">
+                        Deco is the grand lobby of 1925: deep blue lacquer with a chevron wallpaper, gold hairlines and small jewels, ivory type,
+                        symmetry and slow motion. Check the part has its gold inlay (a hairline, not a flat fill), that it draws itself on and is
+                        covered by a great fan when it leaves, and that text keeps clear of the inlay.
+                    </p>
+                    <p data-for="nostromo">
+                        Nostromo is the ship’s console, 1979: a moulded beige case with label tape, screws, vents and a lamp on every switch, and
+                        amber CRT screens set into it. Check the part reads as plastic case or as screen (not a mix), that things switch on or are
+                        struck on the tube in whole frames, and that no label touches the case edge or a vent.
+                    </p>
+                    <p data-for="titanium">
+                        Titanium is a material: bare machined titanium over a carbon twill with an anodised oxide film, cut, milled, indexed and
+                        stamped. Check the part looks machined (crisp edges, the film only where it carries meaning), that nothing breathes, bounces
+                        or swells, and that text keeps clear of the milled edge.
+                    </p>
+                </div>
+                <div class="kv-controls" data-review-controls data-review-controls-for="intent-component">
+                    <div role="group" aria-label="Queries">
+                        <b>Type for me:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-query="">Nothing</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-query="jellyfin upd">jellyfin upd</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-query="logs gateway">logs gateway</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-query="reboot gate">reboot gate</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-query="cafe">cafe</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-query="newest">newest</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-typed="newest">newest, letter by letter</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-query="read">read</button>
+                    </div>
+                    <div role="group" aria-label="The mark">
+                        <b>Mark:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-mark-look="rule" aria-pressed="true">Ruled under</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-mark-look="wash" aria-pressed="false">Washed</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-mark-look="none" aria-pressed="false">Not marked</button>
+                    </div>
+                </div>
+                <div id="intent-component" class="kv-stage kv-stage--palette">
+                    <dialog
+                        class="kp-palette"
+                        id="kv-intent-pal"
+                        data-kp-palette
+                        data-kp-nomatch="plate"
+                        data-kp-hotkey="none"
+                        data-kp-close-on-run="false"
+                        data-kp-context="jellyfin"
+                        data-kp-subject-name="stack"
+                        data-kp-group-order="Inbox, Do, Go to"
+                        aria-label="Commands"
+                        open
+                    >
+                        <input
+                            class="kp-palette__input"
+                            type="text"
+                            role="combobox"
+                            aria-label="Commands"
+                            aria-expanded="true"
+                            aria-controls="kv-intent-pal-list"
+                            autocomplete="off"
+                            placeholder="Type a command or a page…"
+                        />
+                        <ul class="kp-palette__list" id="kv-intent-pal-list" role="listbox" aria-label="Commands">
+                            <li role="presentation" class="kp-palette__group" data-kp-group>
+                                <span class="kp-palette__group-label">Inbox</span>
+                                <ul role="group" aria-label="Inbox">
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="inbox-immich" data-kp-featured>
+                                        Update available for immich<span class="kp-palette__description">Release 1.118 to 1.119, a minor update</span>
+                                    </li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="inbox-vault" data-kp-featured>
+                                        vault has not been backed up for 3 days<span class="kp-palette__description">The nightly backup failed</span>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li role="presentation" class="kp-palette__group" data-kp-group>
+                                <span class="kp-palette__group-label">Do</span>
+                                <ul role="group" aria-label="Do">
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="deploy-all" data-kp-featured>
+                                        Deploy all changes<span class="kp-palette__description">Write every staged change to the stacks</span>
+                                    </li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="new-stack" data-kp-featured>
+                                        New stack<span class="kp-palette__description">Create a stack from a template</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="update-jellyfin"
+                                        data-kp-verb="Update"
+                                        data-kp-context-of="jellyfin"
+                                        data-kp-words="upgrade pull"
+                                    >
+                                        Update jellyfin<span class="kp-palette__description">Pull the newest images</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="restart-jellyfin"
+                                        data-kp-verb="Restart"
+                                        data-kp-context-of="jellyfin"
+                                        data-kp-words="reboot bounce"
+                                    >
+                                        Restart jellyfin<span class="kp-palette__description">Stop and start every container</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="logs-jellyfin"
+                                        data-kp-verb="Show"
+                                        data-kp-context-of="jellyfin"
+                                    >
+                                        Show the logs of jellyfin<span class="kp-palette__description">The last hour, newest first</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="update-gateway"
+                                        data-kp-verb="Update"
+                                        data-kp-context-of="gateway"
+                                        data-kp-words="upgrade pull"
+                                    >
+                                        Update gateway<span class="kp-palette__description">Pull the newest images</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="restart-gateway"
+                                        data-kp-verb="Restart"
+                                        data-kp-context-of="gateway"
+                                        data-kp-words="reboot bounce"
+                                    >
+                                        Restart gateway<span class="kp-palette__description">Stop and start every container</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="logs-gateway"
+                                        data-kp-verb="Show"
+                                        data-kp-context-of="gateway"
+                                    >
+                                        Show the logs of gateway<span class="kp-palette__description">The last hour, newest first</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="update-paperless"
+                                        data-kp-verb="Update"
+                                        data-kp-context-of="paperless"
+                                        data-kp-words="upgrade pull"
+                                    >
+                                        Update paperless<span class="kp-palette__description">Pull the newest images</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="restart-paperless"
+                                        data-kp-verb="Restart"
+                                        data-kp-context-of="paperless"
+                                        data-kp-words="reboot bounce"
+                                    >
+                                        Restart paperless<span class="kp-palette__description">Stop and start every container</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="logs-paperless"
+                                        data-kp-verb="Show"
+                                        data-kp-context-of="paperless"
+                                    >
+                                        Show the logs of paperless<span class="kp-palette__description">The last hour, newest first</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="update-immich"
+                                        data-kp-verb="Update"
+                                        data-kp-context-of="immich"
+                                        data-kp-words="upgrade pull"
+                                    >
+                                        Update immich<span class="kp-palette__description">Pull the newest images</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="restart-immich"
+                                        data-kp-verb="Restart"
+                                        data-kp-context-of="immich"
+                                        data-kp-words="reboot bounce"
+                                    >
+                                        Restart immich<span class="kp-palette__description">Stop and start every container</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="logs-immich"
+                                        data-kp-verb="Show"
+                                        data-kp-context-of="immich"
+                                    >
+                                        Show the logs of immich<span class="kp-palette__description">The last hour, newest first</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="update-vault"
+                                        data-kp-verb="Update"
+                                        data-kp-context-of="vault"
+                                        data-kp-words="upgrade pull"
+                                    >
+                                        Update vault<span class="kp-palette__description">Pull the newest images</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="restart-vault"
+                                        data-kp-verb="Restart"
+                                        data-kp-context-of="vault"
+                                        data-kp-words="reboot bounce"
+                                    >
+                                        Restart vault<span class="kp-palette__description">Stop and start every container</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="logs-vault"
+                                        data-kp-verb="Show"
+                                        data-kp-context-of="vault"
+                                    >
+                                        Show the logs of vault<span class="kp-palette__description">The last hour, newest first</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="update-café-kiosk"
+                                        data-kp-verb="Update"
+                                        data-kp-context-of="café-kiosk"
+                                        data-kp-words="upgrade pull"
+                                    >
+                                        Update café-kiosk<span class="kp-palette__description">Pull the newest images</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="restart-café-kiosk"
+                                        data-kp-verb="Restart"
+                                        data-kp-context-of="café-kiosk"
+                                        data-kp-words="reboot bounce"
+                                    >
+                                        Restart café-kiosk<span class="kp-palette__description">Stop and start every container</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="logs-café-kiosk"
+                                        data-kp-verb="Show"
+                                        data-kp-context-of="café-kiosk"
+                                    >
+                                        Show the logs of café-kiosk<span class="kp-palette__description">The last hour, newest first</span>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li role="presentation" class="kp-palette__group" data-kp-group>
+                                <span class="kp-palette__group-label">Go to</span>
+                                <ul role="group" aria-label="Go to">
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="go-overview"
+                                        data-kp-featured
+                                        data-kp-static
+                                    >
+                                        Overview
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="go-backups"
+                                        data-kp-featured
+                                        data-kp-static
+                                    >
+                                        Backups
+                                    </li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="go-host" data-kp-static>Host</li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="go-firewall" data-kp-static>
+                                        Firewall<span class="kp-palette__description">Who may reach whom</span>
+                                    </li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="go-settings" data-kp-static>Settings</li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="go-log" data-kp-static>
+                                        Log<span class="kp-palette__description">Every line the host wrote</span>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <p class="kp-palette__status" role="status" aria-live="polite"></p>
+                    </dialog>
+                </div>
+                <pre class="kv-log" id="kv-intent-log" aria-live="polite"></pre>
+            </section>
+
+            <section
+                class="kv-sec"
+                id="intent-states"
+                data-review-item="intent-states"
+                data-review-components="palette"
+                data-review-topic="intent"
+                data-review-title="Palette: no match, a cap, loading, failed and phone width"
+                aria-labelledby="h-intent-states"
+            >
+                <div class="kv-sec__head">
+                    <h2 id="h-intent-states">Palette: no match, a cap, loading, failed and phone width</h2>
+                    <p>
+                        The same palette when nothing answers, when more match than are shown, while its commands are still arriving and when they
+                        could not be read; and a palette at the width of a phone.
+                    </p>
+                </div>
+                <div class="kv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>No match</b> (<b>zzz</b>): the list gives way to the package&rsquo;s empty plate, as high as the list was, the words
+                            <b>Nothing matches</b> centred at heading size and a hint under them. <b>update zzz</b> knows its verb:
+                            <i
+                                >There is no stack called &ldquo;zzz&rdquo;. Update works on: jellyfin, gateway, paperless, immich, vault,
+                                café-kiosk.</i
+                            >
+                            The status line says <b>No commands</b>.
+                        </li>
+                        <li>
+                            <b>Cap at 5</b> with <b>e</b> typed: five rows show and the status line says <b>5 of N shown, type more words</b> (the
+                            real number, never &ldquo;many&rdquo;); one more letter narrows it.
+                        </li>
+                        <li>
+                            <b>Loading</b>: the theme&rsquo;s busy card (spinner and words) sits in the middle of the list, which keeps its size; the
+                            input stays usable. <b>Failed</b>: a red plate &ldquo;The commands could not be read&rdquo; with a normal-size
+                            <b>Retry</b> above the places (<b>Overview</b>, <b>Backups</b>, <b>Host</b> and the rest of <b>Go to</b>), which still
+                            work; Retry puts the palette back to ready.
+                        </li>
+                        <li><b>Phone width</b>: the same palette in a 390 px box; long commands wrap and nothing is cut, no word touches an edge.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="dark">
+                        In dark, waiting is a comet with a film tail over the whole component; empty and failed are one centred plate at normal size
+                        with a normal-size button. Check each sample keeps the component’s footprint, the chamfered corners hold, and at phone width
+                        nothing is cut or touches an edge.
+                    </p>
+                    <p data-for="cyberpunk">
+                        In cyberpunk, waiting is signal loss: the word and the plate glitch while the whole component stays in place. Check loading,
+                        empty and failed keep the full footprint, the red is used only for a real failure, and at phone width the cut corners clip no
+                        text.
+                    </p>
+                    <p data-for="synthwave">
+                        In synthwave, waiting is the marquee chasing along the whole component. Check loading, empty and failed keep the full
+                        footprint, the chase is visible and moving, and at phone width the bloom clips nothing.
+                    </p>
+                    <p data-for="pastel">
+                        In pastel, waiting is washi tape fluttering over the whole component. Check loading, empty and failed keep the full footprint,
+                        the misregistered second ink is visible but readable, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="forest">
+                        In forest, waiting is the row of planted trees along the whole component. Check loading, empty and failed keep the full
+                        footprint, the trees stand and grow as the bar fills, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="blueprint">
+                        In blueprint, waiting is the section hatched across the whole component. Check loading, empty and failed keep the full
+                        footprint, the hatching moves, a failure is flagged in amber or red and not just a colour change, and at phone width nothing
+                        is cut.
+                    </p>
+                    <p data-for="solstice">
+                        In solstice, waiting is the sun crossing the whole component and a warning reddens the sky. Check loading, empty and failed
+                        keep the full footprint, the crossing is visible and calm, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="brutalism">
+                        In brutalism, waiting is a lintel hoisted across the whole component and a warning is taped off. Check loading, empty and
+                        failed keep the full footprint, the hard steps are visible, and at phone width the shadow clips nothing.
+                    </p>
+                    <p data-for="deco">
+                        In deco, waiting is lift doors over the whole component. Check loading, empty and failed keep the full footprint, the doors
+                        and the inlay move slowly and cleanly, and at phone width the gold edge cuts no text.
+                    </p>
+                    <p data-for="nostromo">
+                        In nostromo, waiting is the raster building up on the screen across the whole component. Check loading, empty and failed keep
+                        the full footprint, the lamps tell the state, and at phone width nothing is cut.
+                    </p>
+                    <p data-for="titanium">
+                        In titanium, waiting is the machined film sweeping the whole component. Check loading, empty and failed keep the full
+                        footprint, the sweep is visible, and at phone width nothing is cut.
+                    </p>
+                </div>
+                <div class="kv-controls" data-review-controls data-review-controls-for="intent-states-component">
+                    <div role="group" aria-label="States">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-intent-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-intent-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-intent-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Queries">
+                        <b>Type for me:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-query2="zzz">zzz</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-query2="update zzz">update zzz</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-query2="e">e (with the cap at 5)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-query2="">Nothing</button>
+                    </div>
+                    <div role="group" aria-label="The cap">
+                        <b>Cap:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-cap="40" aria-pressed="true">40 (default)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-cap="5" aria-pressed="false">5</button>
+                    </div>
+                </div>
+                <div id="intent-states-component" class="kv-pair">
+                    <div class="kv-case">
+                        <p class="kv-label">The palette above, in its states</p>
+                        <div class="kv-stage kv-stage--palette">
+                            <dialog
+                                class="kp-palette"
+                                id="kv-intent-states"
+                                data-kp-palette
+                                data-kp-nomatch="plate"
+                                data-kp-hotkey="none"
+                                data-kp-close-on-run="false"
+                                data-kp-context="jellyfin"
+                                data-kp-subject-name="stack"
+                                data-kp-group-order="Inbox, Do, Go to"
+                                aria-label="Commands"
+                                open
+                            >
+                                <input
+                                    class="kp-palette__input"
+                                    type="text"
+                                    role="combobox"
+                                    aria-label="Commands"
+                                    aria-expanded="true"
+                                    aria-controls="kv-intent-states-list"
+                                    autocomplete="off"
+                                    placeholder="Type a command or a page…"
+                                />
+                                <ul class="kp-palette__list" id="kv-intent-states-list" role="listbox" aria-label="Commands">
+                                    <li role="presentation" class="kp-palette__group" data-kp-group>
+                                        <span class="kp-palette__group-label">Inbox</span>
+                                        <ul role="group" aria-label="Inbox">
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-inbox-immich" data-kp-featured>
+                                                Update available for immich<span class="kp-palette__description"
+                                                    >Release 1.118 to 1.119, a minor update</span
+                                                >
+                                            </li>
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-inbox-vault" data-kp-featured>
+                                                vault has not been backed up for 3 days<span class="kp-palette__description"
+                                                    >The nightly backup failed</span
+                                                >
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li role="presentation" class="kp-palette__group" data-kp-group>
+                                        <span class="kp-palette__group-label">Do</span>
+                                        <ul role="group" aria-label="Do">
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-deploy-all" data-kp-featured>
+                                                Deploy all changes<span class="kp-palette__description">Write every staged change to the stacks</span>
+                                            </li>
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-new-stack" data-kp-featured>
+                                                New stack<span class="kp-palette__description">Create a stack from a template</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-update-jellyfin"
+                                                data-kp-verb="Update"
+                                                data-kp-context-of="jellyfin"
+                                                data-kp-words="upgrade pull"
+                                            >
+                                                Update jellyfin<span class="kp-palette__description">Pull the newest images</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-restart-jellyfin"
+                                                data-kp-verb="Restart"
+                                                data-kp-context-of="jellyfin"
+                                                data-kp-words="reboot bounce"
+                                            >
+                                                Restart jellyfin<span class="kp-palette__description">Stop and start every container</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-logs-jellyfin"
+                                                data-kp-verb="Show"
+                                                data-kp-context-of="jellyfin"
+                                            >
+                                                Show the logs of jellyfin<span class="kp-palette__description">The last hour, newest first</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-update-gateway"
+                                                data-kp-verb="Update"
+                                                data-kp-context-of="gateway"
+                                                data-kp-words="upgrade pull"
+                                            >
+                                                Update gateway<span class="kp-palette__description">Pull the newest images</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-restart-gateway"
+                                                data-kp-verb="Restart"
+                                                data-kp-context-of="gateway"
+                                                data-kp-words="reboot bounce"
+                                            >
+                                                Restart gateway<span class="kp-palette__description">Stop and start every container</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-logs-gateway"
+                                                data-kp-verb="Show"
+                                                data-kp-context-of="gateway"
+                                            >
+                                                Show the logs of gateway<span class="kp-palette__description">The last hour, newest first</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-update-paperless"
+                                                data-kp-verb="Update"
+                                                data-kp-context-of="paperless"
+                                                data-kp-words="upgrade pull"
+                                            >
+                                                Update paperless<span class="kp-palette__description">Pull the newest images</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-restart-paperless"
+                                                data-kp-verb="Restart"
+                                                data-kp-context-of="paperless"
+                                                data-kp-words="reboot bounce"
+                                            >
+                                                Restart paperless<span class="kp-palette__description">Stop and start every container</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-logs-paperless"
+                                                data-kp-verb="Show"
+                                                data-kp-context-of="paperless"
+                                            >
+                                                Show the logs of paperless<span class="kp-palette__description">The last hour, newest first</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-update-immich"
+                                                data-kp-verb="Update"
+                                                data-kp-context-of="immich"
+                                                data-kp-words="upgrade pull"
+                                            >
+                                                Update immich<span class="kp-palette__description">Pull the newest images</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-restart-immich"
+                                                data-kp-verb="Restart"
+                                                data-kp-context-of="immich"
+                                                data-kp-words="reboot bounce"
+                                            >
+                                                Restart immich<span class="kp-palette__description">Stop and start every container</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-logs-immich"
+                                                data-kp-verb="Show"
+                                                data-kp-context-of="immich"
+                                            >
+                                                Show the logs of immich<span class="kp-palette__description">The last hour, newest first</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-update-vault"
+                                                data-kp-verb="Update"
+                                                data-kp-context-of="vault"
+                                                data-kp-words="upgrade pull"
+                                            >
+                                                Update vault<span class="kp-palette__description">Pull the newest images</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-restart-vault"
+                                                data-kp-verb="Restart"
+                                                data-kp-context-of="vault"
+                                                data-kp-words="reboot bounce"
+                                            >
+                                                Restart vault<span class="kp-palette__description">Stop and start every container</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-logs-vault"
+                                                data-kp-verb="Show"
+                                                data-kp-context-of="vault"
+                                            >
+                                                Show the logs of vault<span class="kp-palette__description">The last hour, newest first</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-update-café-kiosk"
+                                                data-kp-verb="Update"
+                                                data-kp-context-of="café-kiosk"
+                                                data-kp-words="upgrade pull"
+                                            >
+                                                Update café-kiosk<span class="kp-palette__description">Pull the newest images</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-restart-café-kiosk"
+                                                data-kp-verb="Restart"
+                                                data-kp-context-of="café-kiosk"
+                                                data-kp-words="reboot bounce"
+                                            >
+                                                Restart café-kiosk<span class="kp-palette__description">Stop and start every container</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-logs-café-kiosk"
+                                                data-kp-verb="Show"
+                                                data-kp-context-of="café-kiosk"
+                                            >
+                                                Show the logs of café-kiosk<span class="kp-palette__description">The last hour, newest first</span>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li role="presentation" class="kp-palette__group" data-kp-group>
+                                        <span class="kp-palette__group-label">Go to</span>
+                                        <ul role="group" aria-label="Go to">
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-go-overview"
+                                                data-kp-featured
+                                                data-kp-static
+                                            >
+                                                Overview
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-go-backups"
+                                                data-kp-featured
+                                                data-kp-static
+                                            >
+                                                Backups
+                                            </li>
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-go-host" data-kp-static>
+                                                Host
+                                            </li>
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-go-firewall" data-kp-static>
+                                                Firewall<span class="kp-palette__description">Who may reach whom</span>
+                                            </li>
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-go-settings" data-kp-static>
+                                                Settings
+                                            </li>
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-go-log" data-kp-static>
+                                                Log<span class="kp-palette__description">Every line the host wrote</span>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <p class="kp-palette__status" role="status" aria-live="polite"></p>
+                            </dialog>
+                        </div>
+                    </div>
+                    <div class="kv-case">
+                        <p class="kv-label">Phone width</p>
+                        <div class="kv-frame kv-frame--phone">
+                            <div class="kv-stage kv-stage--palette kv-stage--phone">
+                                <dialog
+                                    class="kp-palette"
+                                    id="kv-intent-phone"
+                                    data-kp-palette
+                                    data-kp-nomatch="plate"
+                                    data-kp-hotkey="none"
+                                    data-kp-close-on-run="false"
+                                    data-kp-subject-name="stack"
+                                    aria-label="Commands on a phone"
+                                    open
+                                >
+                                    <input
+                                        class="kp-palette__input"
+                                        type="text"
+                                        role="combobox"
+                                        aria-label="Commands on a phone"
+                                        aria-expanded="true"
+                                        aria-controls="kv-intent-phone-list"
+                                        autocomplete="off"
+                                        placeholder="Type a command or a page…"
+                                    />
+                                    <ul class="kp-palette__list" id="kv-intent-phone-list" role="listbox" aria-label="Commands on a phone">
+                                        <li role="presentation" class="kp-palette__group" data-kp-group>
+                                            <span class="kp-palette__group-label">Do</span>
+                                            <ul role="group" aria-label="Do">
+                                                <li
+                                                    class="kp-palette__option"
+                                                    role="option"
+                                                    data-kp-option
+                                                    data-value="ph-update-jellyfin"
+                                                    data-kp-verb="Update"
+                                                    data-kp-context-of="jellyfin"
+                                                    data-kp-words="upgrade pull"
+                                                >
+                                                    Update jellyfin<span class="kp-palette__description">Pull the newest images</span>
+                                                </li>
+                                                <li
+                                                    class="kp-palette__option"
+                                                    role="option"
+                                                    data-kp-option
+                                                    data-value="ph-restart-jellyfin"
+                                                    data-kp-verb="Restart"
+                                                    data-kp-context-of="jellyfin"
+                                                    data-kp-words="reboot bounce"
+                                                >
+                                                    Restart jellyfin<span class="kp-palette__description">Stop and start every container</span>
+                                                </li>
+                                                <li
+                                                    class="kp-palette__option"
+                                                    role="option"
+                                                    data-kp-option
+                                                    data-value="ph-update-gateway"
+                                                    data-kp-verb="Update"
+                                                    data-kp-context-of="gateway"
+                                                    data-kp-words="upgrade pull"
+                                                >
+                                                    Update gateway<span class="kp-palette__description">Pull the newest images</span>
+                                                </li>
+                                                <li
+                                                    class="kp-palette__option"
+                                                    role="option"
+                                                    data-kp-option
+                                                    data-value="ph-logs-gateway"
+                                                    data-kp-verb="Show"
+                                                    data-kp-context-of="gateway"
+                                                >
+                                                    Show the logs of gateway<span class="kp-palette__description">The last hour, newest first</span>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li role="presentation" class="kp-palette__group" data-kp-group>
+                                            <span class="kp-palette__group-label">Go to</span>
+                                            <ul role="group" aria-label="Go to">
+                                                <li class="kp-palette__option" role="option" data-kp-option data-value="ph-go-backups" data-kp-static>
+                                                    Backups
+                                                </li>
+                                                <li class="kp-palette__option" role="option" data-kp-option data-value="ph-go-host" data-kp-static>
+                                                    Host
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                    <p class="kp-palette__status" role="status" aria-live="polite"></p>
+                                </dialog>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "choose-5ad8857b-836f-4d3d-8819-d8cfc810e668", "received": [] }
+        </script>
+        <script type="module" src="../kpadopt56/src/kpadopt6-calm/demo.js"></script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../kpadopt56/src/kpadopt6-ops/demo.js"></script>
+        </body>
+</html>

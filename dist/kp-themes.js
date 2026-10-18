@@ -14080,6 +14080,10 @@ function attachComboboxes(root = document, {
       /** @type {HTMLElement} */
       t.dataset.value ?? (t.textContent ?? "").trim()
     )) : [];
+    const tagsHidden = tagList?.hidden ?? false;
+    const showTags = () => {
+      if (tagList !== null && tagsHidden) tagList.hidden = chosen.length === 0;
+    };
     const before = {
       expanded: input.getAttribute("aria-expanded"),
       listHidden: list.hidden,
@@ -14172,6 +14176,7 @@ function attachComboboxes(root = document, {
       if (duplicates || !chosen.includes(value)) {
         chosen.push(value);
         if (tagList !== null) tagList.append(tagElement(value, label));
+        showTags();
       }
       input.value = "";
       filter();
@@ -14215,6 +14220,7 @@ function attachComboboxes(root = document, {
       );
       const label = tag?.querySelector("span")?.textContent ?? value;
       tag?.remove();
+      showTags();
       filter();
       announce3(value, label, "remove");
     };
@@ -14281,6 +14287,7 @@ function attachComboboxes(root = document, {
     box.addEventListener("focusout", onFocusOut);
     list.addEventListener("mousedown", onListMouseDown);
     tagList?.addEventListener("click", onTagClick);
+    showTags();
     filter();
     list.hidden = true;
     input.setAttribute("aria-expanded", "false");
@@ -14297,6 +14304,7 @@ function attachComboboxes(root = document, {
             const option = optionFor(value);
             tagList?.append(tagElement(value, labelOf2(option, value)));
           }
+          showTags();
           filter();
           announce3(values[values.length - 1] ?? "", "", "set");
         } else {
@@ -14336,7 +14344,10 @@ function attachComboboxes(root = document, {
       [...list.querySelectorAll(OPTION_SELECTOR)].forEach((o, i) => {
         o.hidden = before.hidden[i] ?? false;
       });
-      if (tagList) tagList.replaceChildren(...before.tags);
+      if (tagList) {
+        tagList.replaceChildren(...before.tags);
+        tagList.hidden = tagsHidden;
+      }
       if (status) status.textContent = before.status;
       if (empty !== null && empty !== serverEmpty) empty.remove();
       if (serverEmpty !== null) serverEmpty.hidden = emptyWasHidden;

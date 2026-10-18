@@ -18,6 +18,7 @@
 //    dan is het ook een indicator dat er teveel items op die pagina staan"): more means the section is split; and a
 //    control group outside every section, or in a section that is not shown, is shown nowhere.
 //    Every toggle of every control group, pressed in its lane, changes the component it drives (checkPresses).
+//    Every picker keeps what is picked in sight, and every sample shown opened stays open half in view (checkPickers).
 // 2. A "Not approved" with a note on the first and the last row of the first step, the page reloaded: both still there.
 // 3. The page republished with a new round id that lists the old one as received (the page is intercepted, nothing
 //    on disk changes): the journal still holds both notes, and the Agenda says the answer was received.
@@ -335,7 +336,169 @@ async function checkStep() {
     await checkPresses(where).catch((error) => {
         if (!/context was destroyed|detached|navigat/i.test(String(error))) throw error;
     });
+    await checkPickers(where).catch((error) => {
+        if (!/context was destroyed|detached|navigat/i.test(String(error))) throw error;
+    });
     return step;
+}
+
+/**
+ * 6 · Pickers keep what is picked and opened samples stay open (Kenny, 2026-10-18 18:42 on kpadopt56-choose: "MIJN SELECTIES
+ * KOMEN NIET IN DE LIJST TEVOORSCHIJN", and "de twee laatste die open zijn ... zitten die heel de tijd te openen/sluiten. Dit
+ * gedrag is enkel als het geopende menu niet volledig in beeld is"). In every lane of the step, in every theme:
+ * - every combobox shown opened is scrolled so that only the top half of it (its input down to the foot of its open list)
+ *   is on screen, and its list must stay open, without one close, for 2 s;
+ * - every enabled combobox is used with the mouse: a click in its field, then a click on two options; each pick must appear,
+ *   as a visible tag (a tag input, the usual picker's symptoms) or as the field's text (a single choice).
+ * @param {string} where
+ */
+async function checkPickers(where) {
+    const lanes = await page.$$('dialog.rv-dialog .rv-lane');
+    for (const lane of lanes) {
+        const key = (await lane.getAttribute('data-rv-pair')) || '';
+        const frame = await (await lane.$('iframe'))?.contentFrame();
+        if (!frame || frame.isDetached()) continue;
+        const boxes = await frame.evaluate(() =>
+            [...document.querySelectorAll('[data-review-item] [data-kp-combobox]')]
+                .filter((box) => box.getClientRects().length > 0 && box.closest('[data-review-item]')?.getClientRects().length)
+                .map((box) => {
+                    const input = /** @type {HTMLInputElement | null} */ (box.querySelector('input[role="combobox"]'));
+                    const list = box.querySelector('[role="listbox"]');
+                    return {
+                        id: box.id,
+                        input: input?.id || '',
+                        disabled: !input || input.disabled,
+                        opened: Boolean(list && !(/** @type {HTMLElement} */ (list).hidden) && list.getClientRects().length),
+                    };
+                })
+                .filter((b) => b.id && b.input),
+        );
+        /** Scrolls the dialog so that `y` (in the frame) stands at `at` (in the window). @param {number} y @param {number} at */
+        const bring = (y, at) =>
+            page.evaluate(
+                ({ pair, y, at }) => {
+                    const card = document.querySelector(`dialog.rv-dialog .rv-lane[data-rv-pair="${CSS.escape(pair)}"]`);
+                    const frameTop = card?.querySelector('iframe')?.getBoundingClientRect().top ?? 0;
+                    const stage = /** @type {HTMLElement} */ (document.querySelector('dialog.rv-dialog [data-rv-stage]'));
+                    const view = /** @type {HTMLElement | null} */ (stage.closest('.rv-dialog__view'));
+                    const scroller = stage.scrollHeight > stage.clientHeight + 1 ? stage : (view ?? stage);
+                    scroller.scrollTop += frameTop + y - at;
+                },
+                { pair: key, y, at },
+            );
+        // A sample a demo opens only once it is on screen: each picker is brought to the middle of the window first.
+        for (const box of boxes.filter((b) => !b.opened)) {
+            const middle = await frame.evaluate((id) => {
+                const r = /** @type {HTMLElement} */ (document.getElementById(id)).getBoundingClientRect();
+                return (r.top + r.bottom) / 2;
+            }, box.id);
+            await bring(middle, (page.viewportSize()?.height ?? 900) / 2);
+            await page.waitForTimeout(700);
+            box.opened = await frame.evaluate((id) => {
+                const list = /** @type {HTMLElement | null} */ (document.getElementById(id)?.querySelector('[role="listbox"]'));
+                return Boolean(list && !list.hidden && list.getClientRects().length);
+            }, box.id);
+        }
+        // Opened samples first: the picks below may close a single-choice list.
+        for (const box of boxes.filter((b) => b.opened)) {
+            const span = await frame.evaluate((id) => {
+                const el = /** @type {HTMLElement} */ (document.getElementById(id));
+                const input = /** @type {HTMLElement} */ (el.querySelector('input[role="combobox"]'));
+                const list = /** @type {HTMLElement} */ (el.querySelector('[role="listbox"]'));
+                return {
+                    top: input.getBoundingClientRect().top,
+                    bottom: Math.max(list.getBoundingClientRect().bottom, input.getBoundingClientRect().bottom),
+                };
+            }, box.id);
+            // The window's bottom edge through the middle of the sample: its top half on screen, its lower half below.
+            await bring((span.top + span.bottom) / 2, page.viewportSize()?.height ?? 900);
+            await page.waitForTimeout(300);
+            const watched = await frame.evaluate(
+                (id) =>
+                    new Promise((resolve) => {
+                        const list = /** @type {HTMLElement} */ (document.getElementById(id)?.querySelector('[role="listbox"]'));
+                        let closes = 0;
+                        const watch = new MutationObserver(() => {
+                            if (list.hidden) closes++;
+                        });
+                        watch.observe(list, { attributes: true, attributeFilter: ['hidden'] });
+                        setTimeout(() => {
+                            watch.disconnect();
+                            resolve({ closes, open: !list.hidden && list.getClientRects().length > 0 });
+                        }, 2000);
+                    }),
+                box.id,
+            );
+            if (watched.closes || !watched.open)
+                fault(
+                    `${where}: ${key}: the sample #${box.id} shown opened closed ${watched.closes} time(s) in 2 s while only its top half was on screen${watched.open ? '' : ', and ended closed'}; an opened sample stays open wherever the lane is scrolled`,
+                );
+        }
+        for (const box of boxes.filter((b) => !b.disabled)) {
+            const input = frame.locator(`#${box.input}`);
+            /** @type {string[]} */
+            const picked = [];
+            for (let n = 0; n < 2; n++) {
+                await input.click({ timeout: 4000 }).catch(() => {});
+                // A first click into a frame can focus only the frame's document (Firefox under automation): click again.
+                if ((await input.getAttribute('aria-expanded')) !== 'true') await input.click({ timeout: 4000 }).catch(() => {});
+                await page.waitForTimeout(250);
+                // The option itself, never by its id: a list's closing copy (js/motion.js) can carry the same ids for a moment.
+                const option = await frame.evaluateHandle((id) => {
+                    const list = document.getElementById(id)?.querySelector('[role="listbox"]');
+                    if (!list || /** @type {HTMLElement} */ (list).hidden) return null;
+                    const options = /** @type {HTMLElement[]} */ ([...list.querySelectorAll('[data-kp-option][data-value]')]).filter(
+                        (o) =>
+                            !o.hidden &&
+                            o.getClientRects().length &&
+                            o.getAttribute('aria-disabled') !== 'true' &&
+                            !o.hasAttribute('data-kp-disabled'),
+                    );
+                    return (
+                        options.find((o) => o.hasAttribute('data-kp-band')) ?? options.find((o) => o.dataset.value !== 'none') ?? options[0] ?? null
+                    );
+                }, box.id);
+                const element = option.asElement();
+                if (!element) {
+                    if (n === 0) fault(`${where}: ${key}: the picker #${box.id} shows no option to pick after a click in its field`);
+                    break;
+                }
+                const choice = {
+                    label: await element.evaluate((o) => (o.firstChild?.textContent || o.textContent || '').replace(/\s+/g, ' ').trim()),
+                };
+                await element.click({ timeout: 4000 }).catch((error) =>
+                    fault(
+                        `${where}: ${key}: the option "${choice.label}" of #${box.id} cannot be clicked (${String(error)
+                            .split('\n')
+                            .filter((l) => /element|waiting|intercept/.test(l))
+                            .slice(-2)
+                            .join('; ')
+                            .trim()})`,
+                    ),
+                );
+                await page.waitForTimeout(300);
+                picked.push(choice.label);
+                const shown = await frame.evaluate(
+                    ({ id, label }) => {
+                        const el = /** @type {HTMLElement} */ (document.getElementById(id));
+                        const field = /** @type {HTMLInputElement} */ (el.querySelector('input[role="combobox"]'));
+                        const tags = [...el.querySelectorAll('.kp-tag')].filter(
+                            (t) => t.getClientRects().length > 0 && t.getBoundingClientRect().height > 0,
+                        );
+                        return tags.some((t) => (t.textContent || '').includes(label)) || field.value.trim() === label;
+                    },
+                    { id: box.id, label: choice.label },
+                );
+                if (!shown)
+                    fault(
+                        `${where}: ${key}: "${choice.label}" picked in #${box.id} appears nowhere (no visible tag, not in the field); what is picked must show`,
+                    );
+            }
+            // Closed by leaving the field, never by Escape: an Escape with nothing open in a frame closes the dialog.
+            await input.evaluate((el) => /** @type {HTMLElement} */ (el).blur()).catch(() => {});
+            await page.waitForTimeout(100);
+        }
+    }
 }
 
 /** The sections whose control buttons were pressed already: the wiring is the page's, the same in every theme. */
@@ -465,7 +628,8 @@ async function checkEveryTheme() {
             lone: lone
                 ? {
                       item: /** @type {HTMLElement} */ (lone).dataset.reviewItem,
-                      title: /** @type {HTMLElement} */ (lone).dataset.reviewTopicTitle || /** @type {HTMLElement} */ (lone).dataset.reviewTitle || '',
+                      title:
+                          /** @type {HTMLElement} */ (lone).dataset.reviewTopicTitle || /** @type {HTMLElement} */ (lone).dataset.reviewTitle || '',
                   }
                 : null,
         };
@@ -481,7 +645,9 @@ async function checkEveryTheme() {
             if (title.includes(sections.lone.title)) break;
             const was = await page.evaluate(() => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent);
             await page.click('dialog.rv-dialog [data-rv-go="1"]');
-            await page.waitForFunction((w) => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent !== w, was, { timeout: 15000 });
+            await page.waitForFunction((w) => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent !== w, was, {
+                timeout: 15000,
+            });
             await page.waitForTimeout(250);
         }
     }
@@ -502,8 +668,17 @@ async function checkEveryTheme() {
     await everyBox.check();
     const before = await page.evaluate(() => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent);
     await page.click('dialog.rv-dialog [data-rv-approve]');
-    await page.waitForFunction((w) => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent !== w, before, { timeout: 15000 }).catch(() => {});
+    await page
+        .waitForFunction((w) => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent !== w, before, { timeout: 15000 })
+        .catch(() => {});
     await page.waitForTimeout(900);
+    // A page whose open pairs are all in the group (one section asked again, as in a later round): the copies judge the
+    // last open pair and the kit leaves for the Agenda by itself; the demo is opened again to look at what was kept.
+    const ended = await page.evaluate(() => !document.querySelector('dialog.rv-dialog[open]')).catch(() => true);
+    if (ended) {
+        await page.waitForLoadState('load').catch(() => {});
+        await openDialog();
+    }
     const read = () =>
         page.evaluate(
             ({ id, it }) => {
@@ -511,8 +686,12 @@ async function checkEveryTheme() {
                 const journal = JSON.parse(localStorage.getItem(`kp-demo-review:${id}:journal`) || '[]');
                 const keys = Object.keys(state).filter((k) => k.endsWith(`|${it}`));
                 return {
-                    state: Object.fromEntries(keys.map((k) => [k, { verdict: state[k].verdict, note: state[k].note, copiedFrom: state[k].copiedFrom }])),
-                    journal: journal.filter((/** @type {any} */ e) => e.pair.endsWith(`|${it}`)).map((/** @type {any} */ e) => ({ pair: e.pair, verdict: e.verdict, note: e.note, kind: e.kind, source: e.source })),
+                    state: Object.fromEntries(
+                        keys.map((k) => [k, { verdict: state[k].verdict, note: state[k].note, copiedFrom: state[k].copiedFrom }]),
+                    ),
+                    journal: journal
+                        .filter((/** @type {any} */ e) => e.pair.endsWith(`|${it}`))
+                        .map((/** @type {any} */ e) => ({ pair: e.pair, verdict: e.verdict, note: e.note, kind: e.kind, source: e.source })),
                     answer: document.querySelector('[data-rv-answer]')?.textContent || '',
                     position: document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent || '',
                     title: document.querySelector('dialog.rv-dialog [data-rv-title]')?.textContent || '',
@@ -522,29 +701,47 @@ async function checkEveryTheme() {
         );
     let now = await read();
     const themesOfItem = Object.keys(now.state).map((k) => k.split('|')[0]);
-    if (themesOfItem.length !== sections.themes) fault(`every theme: ${item} has ${themesOfItem.length} verdicts, the page asks ${sections.themes} themes`);
+    if (themesOfItem.length !== sections.themes)
+        fault(`every theme: ${item} has ${themesOfItem.length} verdicts, the page asks ${sections.themes} themes`);
     for (const [k, v] of Object.entries(now.state)) {
-        if (v.verdict !== 'rejected' || v.note !== NOTE_EVERY) fault(`every theme: ${k} reads "${v.verdict}: ${v.note}", not the source's verdict and note`);
-        if (k.split('|')[0] !== sourceTheme && v.copiedFrom !== sourceTheme) fault(`every theme: ${k} does not say it was copied from ${sourceTheme}`);
+        if (v.verdict !== 'rejected' || v.note !== NOTE_EVERY)
+            fault(`every theme: ${k} reads "${v.verdict}: ${v.note}", not the source's verdict and note`);
+        if (k.split('|')[0] !== sourceTheme && v.copiedFrom !== sourceTheme)
+            fault(`every theme: ${k} does not say it was copied from ${sourceTheme}`);
     }
     const copies = now.journal.filter((e) => e.kind === 'all-themes');
     if (copies.length !== sections.themes - 1 || copies.some((e) => e.source !== sourceTheme || e.verdict !== 'rejected' || e.note !== NOTE_EVERY))
-        fault(`every theme: the journal holds ${copies.length} entries of kind "all-themes" for ${item}, expected ${sections.themes - 1} from ${sourceTheme}`);
+        fault(
+            `every theme: the journal holds ${copies.length} entries of kind "all-themes" for ${item}, expected ${sections.themes - 1} from ${sourceTheme}`,
+        );
     const lines = now.answer.split('\n').filter((l) => l.includes(`${item} · every theme: ${NOTE_EVERY}`));
     if (lines.length !== 1) fault(`every theme: the answer names the group ${lines.length} times, not once`);
     if (now.answer.split('\n').some((l) => l.startsWith(`- ${item} · `) && !l.includes('every theme') && l.includes(NOTE_EVERY)))
         fault(`every theme: the answer still lists ${item} per theme`);
-    if (sections.lone && stepTitle.includes(sections.lone.title) && now.title.includes(sections.lone.title))
+    if (!ended && sections.lone && stepTitle.includes(sections.lone.title) && now.title.includes(sections.lone.title))
         fault(`every theme: the steps of ${item}'s topic in the other themes were not skipped (still on "${now.title}")`);
     // A copied row opened again shows the copy and can be changed on its own.
     const target = Object.keys(now.state).find((k) => k.split('|')[0] !== sourceTheme) || '';
     const pairRow = `dialog.rv-dialog [data-rv-list] .rv-row[data-rv-key="${target}"]`;
-    for (let i = 0; i < 200 && !(await page.locator(pairRow).count()); i++) {
-        const was = await page.evaluate(() => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent);
-        await page.click('dialog.rv-dialog [data-rv-go="-1"]');
-        await page.waitForFunction((w) => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent !== w, was, { timeout: 15000 });
-        await page.waitForTimeout(250);
-    }
+    // Previous first (the copies are behind the step on screen); on a page opened again, also Next.
+    for (const dir of ended ? ['-1', '1'] : ['-1'])
+        for (let i = 0; i < 200 && !(await page.locator(pairRow).count()); i++) {
+            const was = await page.evaluate(() => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent);
+            const button = page.locator(`dialog.rv-dialog [data-rv-go="${dir}"]`);
+            if (!(await button.isEnabled().catch(() => false))) break;
+            await button.click();
+            const moved = await page
+                .waitForFunction((w) => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent !== w, was, {
+                    timeout: ended ? 3000 : 15000,
+                })
+                .then(() => true)
+                .catch(() => false);
+            if (!moved) {
+                if (!ended) throw new Error('every theme: Previous did not move');
+                break;
+            }
+            await page.waitForTimeout(250);
+        }
     const copyRow = page.locator(pairRow);
     if (!(await copyRow.count())) fault(`every theme: the copy ${target} cannot be opened again with Previous`);
     else {
@@ -555,8 +752,10 @@ async function checkEveryTheme() {
         await copyRow.locator('[data-rv-row-note]').dispatchEvent('input');
         await page.waitForTimeout(900);
         now = await read();
-        if (now.state[target]?.note !== `${NOTE_EVERY} own` || now.state[target]?.copiedFrom) fault(`every theme: the copy ${target} cannot be changed on its own`);
-        if (!now.answer.includes(`- ${item} · ${target.split('|')[0]}: ${NOTE_EVERY} own`)) fault(`every theme: the answer lacks the changed copy ${target} as its own line`);
+        if (now.state[target]?.note !== `${NOTE_EVERY} own` || now.state[target]?.copiedFrom)
+            fault(`every theme: the copy ${target} cannot be changed on its own`);
+        if (!now.answer.includes(`- ${item} · ${target.split('|')[0]}: ${NOTE_EVERY} own`))
+            fault(`every theme: the answer lacks the changed copy ${target} as its own line`);
     }
     // W (AZERTY) undoes the whole group.
     await page.locator('dialog.rv-dialog [data-rv-approve]').focus();
@@ -565,7 +764,8 @@ async function checkEveryTheme() {
     now = await read();
     const left = Object.entries(now.state).filter(([, v]) => v.verdict);
     if (left.length) fault(`every theme: after W ${left.length} of the group's pairs still have a verdict (${left.map(([k]) => k).join(', ')})`);
-    if (now.journal.filter((e) => e.kind === 'undo').length < sections.themes - 1) fault(`every theme: W did not journal an undo for each pair of the group`);
+    if (now.journal.filter((e) => e.kind === 'undo').length < sections.themes - 1)
+        fault(`every theme: W did not journal an undo for each pair of the group`);
     console.log(`  every theme: ${item} from ${sourceTheme}, ${sections.themes - 1} copies${sections.lone ? ', topic skipped' : ''}, undone`);
 }
 if (ONLY_EVERY) {

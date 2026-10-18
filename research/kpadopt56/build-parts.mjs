@@ -350,9 +350,24 @@ function lookBlock(id, themes) {
 /**
  * What a later round of a part says it changed in a section, for the lane's head (the kit reads a `…-changed` block):
  * keyed `<topic>/<section id>`, the round's own words about Kenny's verdict. A section without an entry shows none.
- * @type {Record<string, string>}
+ * An entry is either the words alone, or `{ changed, expect }`: the words plus one more bullet for the Expected block
+ * (`<b>Changed:</b> …`), what Kenny should now see.
+ * @type {Record<string, string | { changed: string, expect: string }>}
  */
 const CHANGED = {
+    'choose/usual':
+        'In your last review (18/10) the choices you picked did not show up. They were added, but into a row of tags the page had ' +
+        'written as hidden, and nothing ever showed it. The picker now shows that row as soon as it holds a pick, in every theme: ' +
+        'pick Headache and Fatigue and both stand as tags above the field, each with its <b>Not today</b> button.',
+    'choose/usual-band':
+        'In your last review (18/10) the choices you picked did not show up. They were added, but into a row of tags the page had ' +
+        'written as hidden, and nothing ever showed it. The picker now shows that row as soon as it holds a pick: pick Headache ' +
+        'and Fatigue and both stand as tags above the field, each with its <b>Not today</b> button.',
+    'choose/usual-states':
+        'In your last review (18/10) the two samples shown opened kept opening and closing when only part of them was in view. The ' +
+        'page closed them whenever less than 90% was on screen, and opening them made their box taller, so half in view they ' +
+        'closed, shrank, were in view again and reopened, several times a second. They now open once, the first time they come ' +
+        'on screen, and stay open wherever you scroll.',
     'fields/time-field':
         'You opened the top <b>Backup time</b> and its list seemed to open down at <b>Backup time, its list shown open</b>. It ' +
         'did open under its own field, but the shown-open list lay right under the top field, in the room its list opens ' +
@@ -396,6 +411,21 @@ const CHANGED = {
         '<b>Bottom centre</b>. ' +
         'In formal this is asked again too, because the cap&rsquo;s position changed there as well: the chord cap now stands in the ' +
         'middle of the view, with bottom centre as the other option.',
+    'media/docpreview-open': {
+        changed:
+            'In your last review (18/10) the preview that opens was far too low and showed almost nothing of the file. Two causes. The review dialog shows each section in a frame as tall as the section (219 px here), and the preview takes 90% of the window it stands in, so it was 197 px high with a stage of 58 px. Now, while a preview (or any dialog of a section) is open, the frame is as tall as the review dialog has room for and the section is brought to the top, so the preview is 779 px high with a stage of 640 px at 1920 by 965, as it would be in an app; it shrinks back when you close it. And a tall picture was cut at the foot of the stage; the stage now holds the whole picture, scaled to fit.',
+        expect: '<b>Preview the CV</b> opens a preview of about 90% of the dialog&rsquo;s height, its stage showing the file at full size; <kbd class="kp-kbd">&rarr;</kbd> shows the whole cover letter and then the whole photo (sky to the foot of the mountains), nothing cut; <kbd class="kp-kbd">Esc</kbd> closes it and the frame returns to the three files.',
+    },
+    'people/entity-behaviour': {
+        changed:
+            'In your last review (18/10) the menu of the package&rsquo;s own <b>More</b> button (under the cards, opened by <b>Open the package&rsquo;s menu</b>) did not open at that button. The button&rsquo;s wrapper was stretched over the whole width of the section, and the package places its menu against the wrapper&rsquo;s end, so the menu stood at the far right, 1174 px away from the button at 1920 wide. The package&rsquo;s menu button now hugs its button wherever it stands, so the menu opens right under <b>More</b>. The menus of a card&rsquo;s More and of the +N were already at their buttons and are unchanged.',
+        expect: '<b>Open the package&rsquo;s menu</b> opens the menu directly under the <b>More</b> button below the cards, its left edge at the button&rsquo;s left edge.',
+    },
+    'lists/row-keyboard-select': {
+        changed:
+            'Your last review (18/10) rejected this in dark without a note, so I looked at it myself, against its Expected and dark&rsquo;s character. Two things were wrong. First, the keys: dark was the first step, and the <b>x</b> that should tick the row was taken by the review dialog as its own <b>X</b> (toggle Not approved), so the row was never ticked and the section was marked not approved by the key itself. A key pressed while the focus is in the component now goes to the component first; the dialog takes it only when the component does not use it (<b>C</b>, <b>S</b>, <b>Q</b> still work from the table). Second, the look: the cursor ring was a plain white box, the one ring on the page without dark&rsquo;s film (dark&rsquo;s rule: the film is every edge that matters, the ring included). The ring is now the cyan-to-magenta film, 2 px just inside the row, and it moves with the key at once.',
+        expect: 'Click a row&rsquo;s words, press <b>x</b>: the row is ticked and the readout says <b>1 selected</b> (the Not approved box is not touched). Press <b>j</b>: the cursor ring, now the film (cyan along the top, magenta and green at the ends), steps down one row; the ticked row keeps its light plate.',
+    },
 };
 
 /**
@@ -409,12 +439,21 @@ function ready(text, id, topic, themes, pageThemes = THEMES) {
     let out = text.replace(looks[0], lookBlock(id, themes));
     // A section asked in fewer themes than the part names them (a later round: the approved themes left the page).
     if (themes.join() !== pageThemes.join()) out = out.replace(/<section\b/, `<section data-review-themes="${themes.join(',')}"`);
-    const changed = CHANGED[`${topic}/${id}`];
+    const entry = CHANGED[`${topic}/${id}`];
+    const changed = typeof entry === 'string' ? entry : entry?.changed;
     if (changed)
         out = out.replace(
             /<section\b[^>]*>/,
             (open) => `${open}\n<div class="k56-changed"><p><b>What changed since your last review:</b> ${changed}</p></div>`,
         );
+    if (typeof entry === 'object') {
+        // The change as one more Expected bullet.
+        const expected = /<div class="[a-z0-9]+-expect(?:ed)?">/.exec(out);
+        if (!expected) throw new Error(`${id}: no Expected block`);
+        const close = out.indexOf('</ul>', expected.index);
+        if (close < 0) throw new Error(`${id}: Expected block has no list`);
+        out = `${out.slice(0, close)}<li><b>Changed:</b> ${entry.expect}</li>\n${out.slice(close)}`;
+    }
     // Every control group names the component it drives and stands at it in the dialog (Kenny, 2026-10-18 07:09).
     return declareControls(out, id);
 }
@@ -504,7 +543,8 @@ for (const [i, part] of PARTS.entries()) {
         console.log(`${id}: every pair approved, the page is left as it is (Decided)`);
         continue;
     }
-    const pageThemes = [...(asked.some(([, itemId]) => (open.get(itemId) ?? []).includes('formal')) ? ['formal'] : []), ...THEMES];
+    // The page walks only the themes some section is still asked in (the kit and check-kit read the page's list).
+    const pageThemes = ['formal', ...THEMES].filter((t) => asked.some(([, itemId]) => (open.get(itemId) ?? []).includes(t)));
     const demos = [...new Set(asked.map(([d]) => d))];
     /** A topic's title rides on its first section shown, also when the section that carried it was approved and left. */
     const topicTitles = new Map();

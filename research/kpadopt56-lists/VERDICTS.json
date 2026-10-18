@@ -1,4 +1,281 @@
 {
     "demo": "kpadopt56-lists",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "lists-fd0135f1-5f88-417b-9f1e-2f26abb4c594",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 19:08: 66 of 66 judged, 65 approved, 1 not approved.",
+            "approved": [
+                {
+                    "item": "row-keyboard-select",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "row-keyboard-select",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "row-keyboard-select",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "row-keyboard-select",
+                    "theme": "forest"
+                },
+                {
+                    "item": "row-keyboard-select",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "row-keyboard-select",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "row-keyboard-select",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "row-keyboard-select",
+                    "theme": "deco"
+                },
+                {
+                    "item": "row-keyboard-select",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "row-keyboard-select",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "claim-row-states",
+                    "theme": "dark"
+                },
+                {
+                    "item": "claim-row-states",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "claim-row-states",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "claim-row-states",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "claim-row-states",
+                    "theme": "forest"
+                },
+                {
+                    "item": "claim-row-states",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "claim-row-states",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "claim-row-states",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "claim-row-states",
+                    "theme": "deco"
+                },
+                {
+                    "item": "claim-row-states",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "claim-row-states",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "claim-row",
+                    "theme": "dark"
+                },
+                {
+                    "item": "claim-row",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "claim-row",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "claim-row",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "claim-row",
+                    "theme": "forest"
+                },
+                {
+                    "item": "claim-row",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "claim-row",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "claim-row",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "claim-row",
+                    "theme": "deco"
+                },
+                {
+                    "item": "claim-row",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "claim-row",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "master-detail",
+                    "theme": "dark"
+                },
+                {
+                    "item": "master-detail",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "master-detail",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "master-detail",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "master-detail",
+                    "theme": "forest"
+                },
+                {
+                    "item": "master-detail",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "master-detail",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "master-detail",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "master-detail",
+                    "theme": "deco"
+                },
+                {
+                    "item": "master-detail",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "master-detail",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "new-items-pill",
+                    "theme": "dark"
+                },
+                {
+                    "item": "new-items-pill",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "new-items-pill",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "new-items-pill",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "new-items-pill",
+                    "theme": "forest"
+                },
+                {
+                    "item": "new-items-pill",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "new-items-pill",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "new-items-pill",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "new-items-pill",
+                    "theme": "deco"
+                },
+                {
+                    "item": "new-items-pill",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "new-items-pill",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "payload-cell",
+                    "theme": "dark"
+                },
+                {
+                    "item": "payload-cell",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "payload-cell",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "payload-cell",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "payload-cell",
+                    "theme": "forest"
+                },
+                {
+                    "item": "payload-cell",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "payload-cell",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "payload-cell",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "payload-cell",
+                    "theme": "deco"
+                },
+                {
+                    "item": "payload-cell",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "payload-cell",
+                    "theme": "titanium"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "row-keyboard-select",
+                    "theme": "dark",
+                    "note": ""
+                }
+            ],
+            "choices": []
+        }
+    ]
 }

@@ -225,10 +225,21 @@ now (review.js, the block marked `[lane-keys]`):
 | Focus                                                   | Key                                                         | Goes to                                                          |
 | ------------------------------------------------------- | ----------------------------------------------------------- | ---------------------------------------------------------------- |
 | in a lane (a click on the component)                    | a key the demo registered (`js/shortcuts.js`)               | the demo, also G, X, C and `?`: the dialog's letter yields there |
-| in a lane                                               | any other dialog key (FRAME_KEYS, V, L, Escape)             | the dialog, as before                                            |
+| in a lane, in the component itself                      | any other dialog key (FRAME_KEYS, V, L)                     | the component first; the dialog only if it did not take it       |
+| in a lane, on the section's controls; or Escape         | any other dialog key (FRAME_KEYS, V, L, Escape)             | the dialog, at once                                              |
+| one theme on stage (no lanes), in the component itself  | a dialog key (not Escape)                                   | the component first; the dialog only if it did not take it       |
 | on the dialog (header, verdict panel, the lane's head)  | a dialog key (arrows, Enter, Escape, `?`, Q S X C W B, V L) | the dialog                                                       |
 | on the dialog                                           | a printable key the dialog did not use                      | the lane most in view, played on its body                        |
 | anywhere, while a demo's chord waits for its second key | the next key                                                | that lane (so the "c" of "g c" never rejects a section)          |
+
+"Did not take it" is the bubble rule [mlp-r2-1018] (Kenny's dark verdict on row-keyboard-select, 2026-10-18 19:08: X
+toggled Not approved instead of ticking the row): the key is held in the capture phase, the component hears it, and in the
+window's bubble phase the dialog acts on it only when `event.defaultPrevented` is false. So a component keeps its own keys
+(a table's j, k, x) without registering them in `js/shortcuts.js`, and a key it ignores (C, S, Q from a table row) still
+judges. In a lane frame this is review.js `lane()` (step 3 of its key path, after the `shortcutClaims` check and the
+"not a dialog key" check); on a one-theme page it is rv-keys.js (`ownedByComponent`). A component that stops a key's
+propagation keeps it too. The two rules stack: a registered key never reaches the dialog, an unregistered one only when the
+component let it pass.
 
 The lane asks the engine `shortcutClaims(event)` and hears `kp-shortcut-pending`; the dialog tells each lane which part of
 it is in view (`rv-lane-view`, set as `--kp-shortcuts-view-top/-height`), so the chord's cap stands where Kenny looks.

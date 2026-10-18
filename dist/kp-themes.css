@@ -16634,9 +16634,14 @@
  * (19rem) and --kp-menu-rich-max (min(26rem, 100vw - 2rem)), the menu's
  * width; --kp-menu-max-height (calc(100dvh - 12rem)), past which it
  * scrolls inside itself. */
+    /* The wrapper hugs its button, also as a grid or flex item that would stretch it: the menu is placed against the
+       wrapper's end, so a wrapper stretched over a whole grid column put the menu 1174 px from its button (Kenny,
+       2026-10-18 19:08: "menu opent niet aan de more knop"). */
     .kp-menu-button {
         position: relative;
         display: inline-flex;
+        inline-size: fit-content;
+        max-inline-size: 100%;
     }
 
     .kp-menu-button[hidden] {
@@ -27628,9 +27633,13 @@
         white-space: nowrap;
     }
 
+    /* The stage and its content are one definite cell, so a picture's max-block-size: 100% resolves against the stage and the
+       whole picture shows; an auto row made the percentage cyclic and a tall picture was cut at the stage's foot
+       (Kenny, 2026-10-18 19:08: "het toont niet alle content"). */
     .kp-viewer__stage {
         position: relative;
         display: grid;
+        grid-template: minmax(0, 1fr) / minmax(0, 1fr);
         min-block-size: 0;
         min-inline-size: 0;
         overflow: hidden;
@@ -27638,6 +27647,7 @@
 
     .kp-viewer__content {
         display: grid;
+        grid-template: minmax(0, 1fr) / minmax(0, 1fr);
         min-block-size: 0;
         min-inline-size: 0;
     }
@@ -88971,6 +88981,38 @@
 
     [data-theme='dark'] .kp-table tbody tr:hover {
         background: var(--card);
+    }
+
+    /* ── The keyboard cursor on a row is the film's ring [G5, mlp-r2-1018] ──
+       js/row-select.js rings the cursor row (and the row that holds the
+       focus while j / k walk). The base draws it as an outline in --ring,
+       which in dark is plain ink: a white box round the row, the one ring
+       on the page without the film (G5: "the film is every edge that
+       matters, the line, the fill, the ring"), and on a table row the
+       void channel of DI2's ring (a box-shadow) is not painted, so only
+       the white line was left. Here the ring is the film itself, 2 px just
+       inside the row, cut out of an --kp-iris plate with a mask, so the
+       ticked row's light plate and the cursor's film read apart. It moves
+       with the key at once: nothing fades or slides. An entity card keeps
+       its own cursor (its ::after is the card's plate). */
+    [data-theme='dark'] :is([data-kp-cursor-visible] .is-cursor, [data-kp-roving]:focus-visible):not(.kp-card) {
+        position: relative;
+        outline: 0;
+        box-shadow: none;
+    }
+
+    [data-theme='dark'] :is([data-kp-cursor-visible] .is-cursor, [data-kp-roving]:focus-visible):not(.kp-card)::after {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        box-sizing: border-box;
+        padding: 2px;
+        background: var(--kp-iris);
+        pointer-events: none;
+        mask:
+            linear-gradient(var(--foreground) 0 0) content-box exclude,
+            linear-gradient(var(--foreground) 0 0);
     }
 
     [data-theme='dark'] .kp-datatable {

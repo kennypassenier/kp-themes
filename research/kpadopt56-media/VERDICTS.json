@@ -1,4 +1,423 @@
 {
     "demo": "kpadopt56-media",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "media-5e5eef79-9b69-4ee0-b349-5d10362231cd",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 19:08: 99 of 99 judged, 88 approved, 11 not approved.",
+            "approved": [
+                {
+                    "item": "gallery-grid",
+                    "theme": "dark"
+                },
+                {
+                    "item": "gallery-grid",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "gallery-grid",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "gallery-grid",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "gallery-grid",
+                    "theme": "forest"
+                },
+                {
+                    "item": "gallery-grid",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "gallery-grid",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "gallery-grid",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "gallery-grid",
+                    "theme": "deco"
+                },
+                {
+                    "item": "gallery-grid",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "gallery-grid",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "gallery-states",
+                    "theme": "dark"
+                },
+                {
+                    "item": "gallery-states",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "gallery-states",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "gallery-states",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "gallery-states",
+                    "theme": "forest"
+                },
+                {
+                    "item": "gallery-states",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "gallery-states",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "gallery-states",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "gallery-states",
+                    "theme": "deco"
+                },
+                {
+                    "item": "gallery-states",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "gallery-states",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "docpreview-states",
+                    "theme": "dark"
+                },
+                {
+                    "item": "docpreview-states",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "docpreview-states",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "docpreview-states",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "docpreview-states",
+                    "theme": "forest"
+                },
+                {
+                    "item": "docpreview-states",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "docpreview-states",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "docpreview-states",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "docpreview-states",
+                    "theme": "deco"
+                },
+                {
+                    "item": "docpreview-states",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "docpreview-states",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "anchors-headings",
+                    "theme": "dark"
+                },
+                {
+                    "item": "anchors-headings",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "anchors-headings",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "anchors-headings",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "anchors-headings",
+                    "theme": "forest"
+                },
+                {
+                    "item": "anchors-headings",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "anchors-headings",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "anchors-headings",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "anchors-headings",
+                    "theme": "deco"
+                },
+                {
+                    "item": "anchors-headings",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "anchors-headings",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "anchors-rows",
+                    "theme": "dark"
+                },
+                {
+                    "item": "anchors-rows",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "anchors-rows",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "anchors-rows",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "anchors-rows",
+                    "theme": "forest"
+                },
+                {
+                    "item": "anchors-rows",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "anchors-rows",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "anchors-rows",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "anchors-rows",
+                    "theme": "deco"
+                },
+                {
+                    "item": "anchors-rows",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "anchors-rows",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "print-checklist",
+                    "theme": "dark"
+                },
+                {
+                    "item": "print-checklist",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "print-checklist",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "print-checklist",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "print-checklist",
+                    "theme": "forest"
+                },
+                {
+                    "item": "print-checklist",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "print-checklist",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "print-checklist",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "print-checklist",
+                    "theme": "deco"
+                },
+                {
+                    "item": "print-checklist",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "print-checklist",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "qr-code-states",
+                    "theme": "dark"
+                },
+                {
+                    "item": "qr-code-states",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "qr-code-states",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "qr-code-states",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "qr-code-states",
+                    "theme": "forest"
+                },
+                {
+                    "item": "qr-code-states",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "qr-code-states",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "qr-code-states",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "qr-code-states",
+                    "theme": "deco"
+                },
+                {
+                    "item": "qr-code-states",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "qr-code-states",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "qr-code",
+                    "theme": "dark"
+                },
+                {
+                    "item": "qr-code",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "qr-code",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "qr-code",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "qr-code",
+                    "theme": "forest"
+                },
+                {
+                    "item": "qr-code",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "qr-code",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "qr-code",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "qr-code",
+                    "theme": "deco"
+                },
+                {
+                    "item": "qr-code",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "qr-code",
+                    "theme": "titanium"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "docpreview-open",
+                    "theme": "dark",
+                    "note": "de dialog die opent is veel te nauw (verticaal) het toont niet alle content"
+                },
+                {
+                    "item": "docpreview-open",
+                    "theme": "cyberpunk",
+                    "note": "de dialog die opent is veel te nauw (verticaal) het toont niet alle content"
+                },
+                {
+                    "item": "docpreview-open",
+                    "theme": "synthwave",
+                    "note": "de dialog die opent is veel te nauw (verticaal) het toont niet alle content"
+                },
+                {
+                    "item": "docpreview-open",
+                    "theme": "pastel",
+                    "note": "de dialog die opent is veel te nauw (verticaal) het toont niet alle content"
+                },
+                {
+                    "item": "docpreview-open",
+                    "theme": "forest",
+                    "note": "de dialog die opent is veel te nauw (verticaal) het toont niet alle content"
+                },
+                {
+                    "item": "docpreview-open",
+                    "theme": "blueprint",
+                    "note": "de dialog die opent is veel te nauw (verticaal) het toont niet alle content"
+                },
+                {
+                    "item": "docpreview-open",
+                    "theme": "solstice",
+                    "note": "de dialog die opent is veel te nauw (verticaal) het toont niet alle content"
+                },
+                {
+                    "item": "docpreview-open",
+                    "theme": "brutalism",
+                    "note": "de dialog die opent is veel te nauw (verticaal) het toont niet alle content"
+                },
+                {
+                    "item": "docpreview-open",
+                    "theme": "deco",
+                    "note": "de dialog die opent is veel te nauw (verticaal) het toont niet alle content"
+                },
+                {
+                    "item": "docpreview-open",
+                    "theme": "nostromo",
+                    "note": "de dialog die opent is veel te nauw (verticaal) het toont niet alle content"
+                },
+                {
+                    "item": "docpreview-open",
+                    "theme": "titanium",
+                    "note": "de dialog die opent is veel te nauw (verticaal) het toont niet alle content"
+                }
+            ],
+            "choices": []
+        }
+    ]
 }

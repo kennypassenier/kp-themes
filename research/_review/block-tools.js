@@ -483,9 +483,24 @@ export async function isolate(frame, item, theme) {
         granted = performance.now();
         fit();
     };
-    /** Something of the section is open or about to open: an opener holds the focus, or a panel is shown. */
-    const inUse = () =>
-        Boolean(doc.activeElement?.closest?.(OPENERS) && section.contains(doc.activeElement)) || panels().some((el) => !el.closest('[data-rv-off]'));
+    // Only the opener being used holds the room: a sample the demo shows opened all the time is a panel too, and counting it
+    // kept the 448 px under the section for good once any picker had been clicked (2026-10-18, kpadopt56-choose round 2).
+    /** The opener of the section that holds the focus, if any. */
+    const focusedOpener = () => {
+        const el = /** @type {Element | null} */ (doc.activeElement?.closest?.(OPENERS) ?? null);
+        return el && section.contains(el) ? el : null;
+    };
+    /** Whether the focused opener's own panel is shown: then it stands in the section's height (the lane's room for it). */
+    const ownPanelShown = () => {
+        const id = focusedOpener()?.getAttribute('aria-controls');
+        const panel = id ? doc.getElementById(id) : null;
+        // Still growing (forest grows its list out of the field): its box is not its size yet, so the room stays until the
+        // motion ends; dropped earlier, the frame shrank to the half-grown list and the list flipped above the field.
+        const growing = panel?.getAnimations({ subtree: true }).some((a) => a.playState === 'running');
+        return Boolean(panel && !panel.hidden && panel.getBoundingClientRect().height > 0 && !growing);
+    };
+    /** Something of the section is about to open: an opener holds the focus. */
+    const inUse = () => Boolean(focusedOpener());
     section.addEventListener('pointerdown', opening, true);
     section.addEventListener('focusin', opening, true);
     const settleRoom = () => {
@@ -496,10 +511,35 @@ export async function isolate(frame, item, theme) {
     };
     section.addEventListener('focusout', () => setTimeout(settleRoom, 300));
     setInterval(() => frame.isConnected && settleRoom(), 1000);
+    // A modal dialog the section opens (the document preview, a confirm) takes its size from the viewport, and the viewport
+    // of a lane is the frame, sized to the section: a viewer of "90% of the window" was 90% of a 219 px frame, its stage
+    // 58 px, and showed nothing of the file (Kenny, 2026-10-18 19:08: "de dialog die opent is veel te nauw (verticaal) het
+    // toont niet alle content"). While a modal is open the frame is as tall as the dialog's view has room under the lane's
+    // head, so the modal gets the window it would get in an app, and the lane is brought to the top of the view; it
+    // shrinks back when the modal closes.
+    const outerView = /** @type {HTMLElement | null} */ (frame.closest('.rv-dialog__view'));
+    const modalOpen = () => [...doc.querySelectorAll('dialog[open]')].some((el) => el.matches(':modal'));
+    let modalShown = false;
+    const modalRoom = () => {
+        if (!outerView || !modalOpen()) {
+            modalShown = false;
+            return 0;
+        }
+        const card = /** @type {HTMLElement} */ (frame.parentElement);
+        const head = frame.getBoundingClientRect().top - card.getBoundingClientRect().top;
+        if (!modalShown) {
+            modalShown = true;
+            const view = outerView.getBoundingClientRect();
+            const top = card.getBoundingClientRect().top;
+            if (Math.abs(top - view.top) > 1) outerView.scrollTop += top - view.top;
+        }
+        return Math.max(0, outerView.clientHeight - head - 8);
+    };
     const fit = () => {
         const content = Math.max(doc.body.scrollHeight, doc.body.getBoundingClientRect().height);
         const panelBottom = Math.max(0, ...panels().map((el) => el.getBoundingClientRect().bottom + 16));
-        const next = Math.ceil(Math.max(content + room, panelBottom));
+        // The room waits for the panel; once the panel is shown, its own bottom (and the lane's fitted room) is what counts.
+        const next = Math.ceil(Math.max(content + (ownPanelShown() ? 0 : room), panelBottom, modalRoom()));
         const grew = next - last;
         echoes = grew > 0 && grew === step ? echoes + 1 : 0;
         step = grew;
@@ -508,6 +548,8 @@ export async function isolate(frame, item, theme) {
         frame.style.blockSize = `${next}px`;
     };
     new ResizeObserver(fit).observe(doc.body);
+    // The end of a panel's motion changes no box the observers see: fit again then.
+    for (const type of ['animationend', 'transitionend']) section.addEventListener(type, () => requestAnimationFrame(fit), true);
     // A panel that opens over what follows (a picker's list) changes no box the observer sees: the frame follows the
     // section's changes too, once a frame, so it grows while the panel is open and shrinks after.
     let queued = false;
@@ -519,5 +561,11 @@ export async function isolate(frame, item, theme) {
             fit();
         });
     }).observe(section, { subtree: true, childList: true, attributes: true, attributeFilter: ['class', 'hidden', 'open', 'aria-expanded', 'style'] });
+    // A modal is appended to the body, outside the section, and showModal() and close() change no box: the frame follows
+    // a dialog that opens or closes anywhere in the document.
+    const followModal = () => requestAnimationFrame(fit);
+    new MutationObserver(followModal).observe(doc.body, { subtree: true, attributes: true, attributeFilter: ['open'] });
+    new MutationObserver(followModal).observe(doc.body, { childList: true });
+    doc.addEventListener('close', followModal, true);
     fit();
 }

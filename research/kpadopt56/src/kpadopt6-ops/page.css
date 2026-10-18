@@ -289,7 +289,9 @@
     }
 }
 
-/* The package's own menu button beside the card's, for comparing the plates. */
+/* The package's own menu button beside the card's, for comparing the plates. No room is held for its menu: a band of
+   14rem stood empty under the button while the menu was closed (DEMO_RULES ch. 7, room only while open); the review lane
+   grows to an open menu by itself (research/_review/block-tools.js). */
 .kv-compare {
-    min-block-size: 14rem;
+    min-block-size: 0;
 }
