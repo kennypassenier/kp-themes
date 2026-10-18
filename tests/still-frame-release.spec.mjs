@@ -35,7 +35,7 @@ import { expect, test } from '@playwright/test';
 
 // Motion stays on here: this file reads animations or transitions, and the
 // suite runs with reduced motion otherwise (playwright.config.mjs).
-test.use({ reducedMotion: 'no-preference' });
+test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 
 const PAGE = '/tests/fixtures/still-frame.html';
 const TRACK = '[data-test="band"] [data-kp-marquee-track]';

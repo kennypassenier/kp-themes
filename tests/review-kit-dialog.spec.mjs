@@ -317,7 +317,7 @@ test(
 // kit plays an aspect's own autoplay (Closed on Shape and on Hover, focus,
 // press) only then, and that autoplay is what used to close the menu.
 test.describe('a state the reviewer set', () => {
-    test.use({ reducedMotion: 'no-preference' });
+    test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 
     test(
         'a menu opened on the first page is still open on eight pages, each flipped [fix-112]',
@@ -358,7 +358,7 @@ test.describe('a state the reviewer set', () => {
 // a finding for Kenny, not a loosened test: this test fails on blueprint until
 // it is fixed or decided.
 test.describe('the menu demo close', () => {
-    test.use({ reducedMotion: 'no-preference' });
+    test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 
     test(
         'Close plays the open backwards before the menu hides, in every theme of the menu demo [fix-114]',

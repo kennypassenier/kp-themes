@@ -23,11 +23,11 @@ import { HASH_VERSION } from '../catalogue/block-hash.js';
 // A register of the test's own in place of catalogue/verdicts.json, so the
 // verdicts recorded in the repository do not decide what these tests can press.
 import { useEmptyRegister, useRegister } from './helpers/empty-register.mjs';
-import { waitForJudging } from './helpers/catalogue.mjs';
+import { CHECKING, waitForJudging } from './helpers/catalogue.mjs';
 
 // Motion stays on here: this file reads animations or transitions, and the
 // suite runs with reduced motion otherwise (playwright.config.mjs).
-test.use({ reducedMotion: 'no-preference' });
+test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 
 test.describe.configure({ timeout: 180_000 });
 
@@ -773,6 +773,11 @@ test(
         const panel = columns.b.locator('[data-cat-block="switch--states"]');
         const columnReject = panel.locator('[data-cat-verdict="rejected"]');
         await expect(columnReject).toBeEnabled({ timeout: 60_000 });
+        // The button is enabled before the column has read its block: the click
+        // handler returns early while the block has no hash yet (judging.js), so
+        // a click then does nothing at all. The badge leaving "Checking" is the
+        // page's own signal that the reading is done.
+        await expect(panel.locator('[data-cat-approval-state]')).not.toContainText(CHECKING, { timeout: 60_000 });
         await columnReject.click();
         await expect(panel.locator('[data-cat-reject-refused]')).toBeVisible();
         await expect(panel.locator('[data-cat-approval-state]')).toContainText('Not yet judged');

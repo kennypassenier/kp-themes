@@ -48,8 +48,10 @@ export default defineConfig({
         // Reduced motion unless a file reads motion itself (Kenny, 2026-10-03,
         // the speed plan): no test waits for an entrance it does not look
         // at. A file that reads animations or transitions says
-        // `test.use({ reducedMotion: 'no-preference' })`.
-        reducedMotion: 'reduce',
+        // `test.use({ contextOptions: { reducedMotion: 'no-preference' } })`.
+        // It sits under contextOptions because Playwright's test options have
+        // no top-level `reducedMotion`: as a `use` key it is silently ignored.
+        contextOptions: { reducedMotion: 'reduce' },
     },
     // AR15's baseline is modern Chrome AND Firefox. Testing only one of
     // them makes "green" evidence about that one — standing rule 35.

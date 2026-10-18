@@ -12,7 +12,7 @@ import { readFileSync } from 'node:fs';
 
 // Motion stays on here: this file reads animations or transitions, and the
 // suite runs with reduced motion otherwise (playwright.config.mjs).
-test.use({ reducedMotion: 'no-preference' });
+test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 
 const LOOSE = '/tests/fixtures/bundle-loose.html';
 const BUNDLED = '/tests/fixtures/bundle-bundled.html';
