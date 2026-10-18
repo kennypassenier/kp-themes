@@ -59,7 +59,9 @@
 }
 
 .rk2-preview__view {
-    inline-size: 100%;
+    /* As wide as the window it shows, scaled, and centred in the section (the component stands in the middle of the stage). */
+    inline-size: min(100%, calc(var(--rk2-w) * var(--rk2-scale) * 1px));
+    margin-inline: auto;
     block-size: calc(var(--rk2-h) * var(--rk2-scale) * 1px);
     overflow: hidden;
     border: 1px solid var(--border);

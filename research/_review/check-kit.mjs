@@ -419,6 +419,9 @@ const NOTE = (/** @type {number} */ i) => `check-kit note ${i + 1} ${Date.now() 
 const written = {};
 for (const [i, id] of ends.entries()) {
     const row = page.locator(`dialog.rv-dialog [data-rv-list] .rv-row:has(#rv-${id})`);
+    // Like a reader, scroll the row into the middle of its column first: at the very end of a scrolled column Firefox moves it by
+    // a few px when the focus changes, and the press then misses.
+    await row.evaluate((el) => el.scrollIntoView({ block: 'center' }));
     await row.locator('[data-rv-reject]').check();
     const note = row.locator('[data-rv-row-note]');
     await note.click();

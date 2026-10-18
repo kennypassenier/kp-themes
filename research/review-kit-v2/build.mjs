@@ -43,7 +43,7 @@ const sections = registry.options.map((/** @type {any} */ o, /** @type {number} 
             ],
         },
     ];
-    const pressed = o.default === 'on';
+    const pressed = true; // the preview starts with the option on so what it does is on screen; the default is the choice below
     return `
             <section
                 class="rk2-sec"
@@ -79,7 +79,7 @@ const sections = registry.options.map((/** @type {any} */ o, /** @type {number} 
                 </div>
                 <div class="rk2-preview" id="${o.id}-preview" data-rk2-option="${o.id}" data-rk2-default="${o.default === 'on' ? 'on' : 'off'}">
                     <div class="rk2-preview__view">
-                        <iframe class="rk2-preview__frame" title="The review dialog with “${esc(o.title)}”, live" tabindex="-1"></iframe>
+                        <iframe class="rk2-preview__frame" title="The review dialog with “${esc(o.title)}”, live" tabindex="-1" inert></iframe>
                     </div>
                 </div>
                 <div class="rk2-expected">
@@ -124,7 +124,7 @@ const html = `<!doctype html>
     <body>
         <a class="kp-skip-link" href="#main">Skip to content</a>
 
-        <main id="main" class="cat-main rk2-page" data-rk2-page="${registry.previewPage}">
+        <main id="main" class="cat-main rk2-page" data-rk2-page="${registry.previewPage}" data-rk2-registry='${JSON.stringify(Object.fromEntries(registry.options.map((/** @type {any} */ o) => [o.id, { kind: o.kind ?? 'ui', store: o.store, page: o.page, open: o.open, actions: o.actions, seed: o.seed, reveal: o.reveal }]))).replace(/'/g, "&#39;")}'>
             <header class="rk2-intro">
                 <h1>The review dialog, v2: the component first</h1>
                 <p class="cat-intro">

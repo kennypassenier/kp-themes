@@ -241,6 +241,9 @@
 
 .rv-row {
     padding-block: 0.5rem;
+    /* The same start for every row: the rule that marks a rejected, focused or current row (box-shadow) never moves its box,
+       so the boxes of the rows stand in one column in every state. */
+    padding-inline-start: 0.6rem;
     border-block-end: 1px solid var(--border);
 }
 
@@ -957,6 +960,18 @@
     padding-block: 0.25rem;
 }
 
+/* The lines other modules put in the head (the key legend and the remaining line) share one row, so the head stays two rows. */
+.rv-dialog[data-rvui-fill='on'] .rvk-bar {
+    flex: 1 1 40rem;
+    order: 7;
+}
+
+.rv-dialog[data-rvui-fill='on'] .rv-remaining {
+    flex: 1 1 22rem;
+    order: 8;
+    text-align: end;
+}
+
 /* titles: each once */
 [data-rvui-titles='on'] [data-rv-dup-title] {
     display: none !important;
@@ -1047,7 +1062,9 @@
     min-block-size: 0;
     overflow: auto;
     overscroll-behavior: contain;
-    padding: 0.625rem 0.75rem;
+    /* Room to scroll past the last row (as an editor does): at the very end of the column Firefox moves a pressed row by a few px when the focus changes, and the
+       press was lost (a note typed, then the last row's box pressed). The last row can now stand mid-column. */
+    padding: 0.625rem 0.75rem 40dvh;
 }
 
 .rv-dialog[data-rvui-rail='on'] .rv-dialog__foot {
@@ -1092,10 +1109,6 @@
     outline-offset: 1px;
 }
 
-.rv-dialog[data-rvui-jump='on'] .rv-row {
-    padding-inline-start: 0.6rem;
-}
-
 .rv-row[data-rv-current] {
     /* A rule only: the row's box must not move, the boxes of the rows stand in one column. */
     box-shadow: inset 3px 0 0 var(--primary, var(--foreground));
@@ -1119,6 +1132,15 @@
 @media (max-width: 48rem) {
     .rv-dialog[data-rvui-rail='on'] .rv-dialog__side {
         max-block-size: 32dvh;
+    }
+
+    /* Keys mean nothing on a phone: the legend leaves the head there, the buttons and the remaining line stay. */
+    .rv-dialog[data-rvui-fill='on'] .rvk-legend {
+        display: none;
+    }
+
+    .rv-dialog[data-rvui-fill='on'] .rv-remaining {
+        text-align: start;
     }
 
     .rv-dialog[data-rvui-fill='on'] .rv-dialog__position {
