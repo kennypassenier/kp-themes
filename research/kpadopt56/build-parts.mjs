@@ -17,8 +17,9 @@
 //
 // What the builder does to a section: swaps its look-at lines for one line per theme asked (written from
 // themes/<theme>/CHARACTER.md, see LOOK below), and checks the page (no id twice, every hook the section uses is wired
-// by a script that is on the page). The sections of a demo that are not in a part stay on its page, laid aside and no
-// longer review items, because that demo's script wires its sections by id (the precedent: research/kpadopt4/build-parts.mjs).
+// by a script that is on the page). A page holds ONLY the sections of its part (Kenny, 2026-10-18 07:11): the sections of
+// a demo that are not in the part are not on the page, neither hidden nor laid aside, and the demo's script tolerates
+// their absence (a section that is not there is skipped), so no foreign control group or content reaches the dialog.
 // Idempotent: run it after every change to src/ or to the lists below; a part keeps its round id until Kenny's answer
 // to it is recorded in its VERDICTS.json, then takes a fresh one.
 //
@@ -27,6 +28,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import prettier from 'prettier';
+import { declareControls } from './controls-for.mjs';
 
 const here = new URL('./', import.meta.url);
 const THEMES = ['dark', 'cyberpunk', 'synthwave', 'pastel', 'forest', 'blueprint', 'solstice', 'brutalism', 'deco', 'nostromo', 'titanium'];
@@ -297,11 +299,9 @@ function ready(text, id) {
     const looks = text.match(/<div data-review-look>[\s\S]*?<\/div>/g) ?? [];
     if (looks.length !== 1) throw new Error(`${id}: ${looks.length} look-at blocks`);
     if (/<div[\s\S]*<div data-review-look>/.test(looks[0])) throw new Error(`${id}: look-at block is nested`);
-    return text.replace(looks[0], lookBlock(id));
+    // Every control group names the component it drives and stands at it in the dialog (Kenny, 2026-10-18 07:09).
+    return declareControls(text.replace(looks[0], lookBlock(id)), id);
 }
-
-/** Lays a section aside: it is no longer a review item. @param {string} text */
-const aside = (text) => text.replace(/\bdata-review-(item|topic|topic-title|title|components|themes|choices|motion)=/g, 'data-kpadopt56-$1=');
 
 const TEMPLATE_HEAD = (/** @type {string} */ id, /** @type {string} */ title, /** @type {string[]} */ styles) => `<!doctype html>
 <html lang="en" data-theme="formal" data-review="${id}" data-review-themes="${THEMES.join(',')}">
@@ -351,13 +351,12 @@ for (const [i, part] of PARTS.entries()) {
 
     const demos = [...new Set(part.items.map(([d]) => d))];
     const body = part.items.map(([d, itemId]) => ready(/** @type {{ text: string }} */ (sections.get(d)?.find((s) => s.id === itemId)).text, itemId)).join('\n\n');
-    const others = demos
-        .flatMap((d) => (sections.get(d) ?? []).filter((s) => !part.items.some(([pd, pi]) => pd === d && pi === s.id)))
-        .map((s) => aside(s.text))
-        .join('\n');
+    // A part page holds ONLY the sections it asks (Kenny, 2026-10-18 07:11): no laid-aside sections of the other
+    // components of its demos, so no foreign control group or content can reach the review dialog. The demos' scripts
+    // tolerate a section that is not on the page.
 
-    // Checks on the page: no id twice (a hidden section of one demo against a shown one of another), every hook wired.
-    const whole = `${body}\n${others}`;
+    // Checks on the page: no id twice (two demos' sections), every hook wired.
+    const whole = body;
     const seen = new Map();
     for (const m of whole.matchAll(/\sid="([^"]+)"/g)) seen.set(m[1], (seen.get(m[1]) ?? 0) + 1);
     for (const [k, n] of seen) if (n > 1) problems.push(`${id}: the id "${k}" stands ${n} times`);
@@ -390,10 +389,6 @@ for (const [i, part] of PARTS.entries()) {
         <main id="main" class="cat-main k56-page">
 ${intro}
 ${body}
-
-            <div hidden style="display: none" data-kpadopt56-other>
-${others}
-            </div>
         </main>
         <script type="application/json" data-review-round>
             ${JSON.stringify({ round: roundId, received })}

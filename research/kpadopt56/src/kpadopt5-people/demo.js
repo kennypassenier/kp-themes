@@ -14,6 +14,7 @@ const sleep = (/** @type {number} */ ms) => new Promise((resolve) => setTimeout(
 
 /** Press one button of a group (aria-pressed), the others off. @param {HTMLElement} button */
 function pressOnly(button) {
+    if (!button) return; // its section is not on this page
     const group = button.closest('[role="group"]');
     for (const other of all('button[aria-pressed]', group ?? document)) other.setAttribute('aria-pressed', String(other === button));
 }

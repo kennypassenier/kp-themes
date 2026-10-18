@@ -145,52 +145,34 @@
     overscroll-behavior: contain;
 }
 
-/* The demo's own buttons (states, variants, speed), mirrored by review.js;
-   the demo's copy inside a section is hidden in the stage. One line: every
-   group (State, Replay, Speed) side by side, wrapping only when the window
-   is too narrow, so the option under it gets the height (Kenny, 2026-10-08). */
-.rv-controls {
-    position: sticky;
-    inset-block-start: 0;
-    z-index: 2;
+/* A component's own controls (states, variants, tones), shown by review.js directly above the component they drive
+   (data-review-controls-for), inside the section: the demo's own container, never a copy, never a bar on top
+   (Kenny, 2026-10-18 07:09). One plate: its title, then one row per group, name first, buttons after it. */
+.rv-ctl {
     display: grid;
     gap: var(--kp-space-xs, 0.25rem);
-    padding: var(--kp-space-xs, 0.25rem) 1.25rem;
-    border-block-end: 1px solid var(--border);
+    margin-block: var(--kp-space-sm, 0.5rem);
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    border-inline-start-width: 3px;
+    border-radius: var(--radius, 6px);
     background: var(--muted);
-}
-
-.rv-controls[hidden],
-.rv-dialog__stage [data-review-controls] {
-    display: none;
-}
-
-.rv-controls__hint {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--muted-foreground);
-    cursor: pointer;
-}
-
-.rv-controls__body,
-.rv-controls__set,
-.rv-controls__set > div,
-.rv-controls__set > div > * {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
+    color: var(--foreground);
     min-inline-size: 0;
 }
 
-.rv-controls__title {
-    margin: 0;
-    font-size: 0.8125rem;
-    font-weight: 600;
+.rv-ctl[data-rv-orphan] {
+    display: none;
 }
 
-/* One row per group: its name, then its buttons, wrapping on a phone. */
-.rv-controls [role='group'] {
+.rv-ctl::before {
+    content: attr(data-rv-ctl-title);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+}
+
+.rv-ctl [role='group'] {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -199,7 +181,7 @@
     min-inline-size: 0;
 }
 
-.rv-controls [role='group'] > b {
+.rv-ctl [role='group'] > b {
     font-size: 0.8125rem;
 }
 
@@ -353,10 +335,6 @@
 
     .rv-dialog__stage {
         padding: 0.75rem 16px;
-    }
-
-    .rv-controls {
-        padding-inline: 16px;
     }
 
     .rv-dialog__side {
@@ -757,7 +735,7 @@
 
 .rv-lane__head {
     position: sticky;
-    inset-block-start: var(--rv-controls-block, 0);
+    inset-block-start: 0;
     z-index: 3;
     display: flex;
     flex-wrap: wrap;

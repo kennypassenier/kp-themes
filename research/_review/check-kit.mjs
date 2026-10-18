@@ -9,6 +9,14 @@
 //    "Not approved" box and its note, and its choice ticks when the section asks a choice; the kit's own integrity
 //    banner stays hidden.
 //    The tools bar (previous version, play open and close) is absent, taking no space, when nothing in it applies.
+//    Controls stand AT their component (Kenny, 2026-10-18 07:09: "Die controls moeten niet gewoon meer boven staan, maar
+//    enkel de geschikte control per component zoals die tevoorschijn komt"): there is no controls bar on top; every
+//    control group the dialog shows belongs to a shown section and names the component of that section it drives
+//    (`data-review-controls-for`); it stands directly above that component (a gap of at most 48 px, the same
+//    column), and the component starts within 480 px of the section's top, so the component is the first thing on
+//    screen; a component has at most MAX_GROUPS control groups (Kenny, 2026-10-18 07:11: "als er zoveel rijen zijn,
+//    dan is het ook een indicator dat er teveel items op die pagina staan"): more means the section is split; and a
+//    control group outside every section, or in a section that is not shown, is shown nowhere.
 // 2. A "Not approved" with a note on the first and the last row of the first step, the page reloaded: both still there.
 // 3. The page republished with a new round id that lists the old one as received (the page is intercepted, nothing
 //    on disk changes): the journal still holds both notes, and the Agenda says the answer was received.
@@ -24,11 +32,23 @@ if (!port || !path) {
     console.error('usage: node research/_review/check-kit.mjs <port> <research/topic/demo.html>');
     process.exit(2);
 }
+/** The most control groups one component may carry in the dialog (Kenny, 2026-10-18 07:11); more means split the section. */
+const MAX_GROUPS = 4;
+/** How far under its section's top the component may start, and how far under its controls (px). */
+const MAX_COMPONENT_TOP = 480;
+const MAX_CONTROLS_GAP = 48;
 const ORIGIN = `http://127.0.0.1:${port}`;
 const URL_ = `${ORIGIN}/${path}`;
 /** @type {string[]} */
 const faults = [];
 const fault = (/** @type {string} */ line) => faults.push(line);
+/** A fault of a section's own markup is the same in every theme: said once, under the section's id. */
+const onceKeys = new Set();
+const faultOnce = (/** @type {string} */ key, /** @type {string} */ line) => {
+    if (onceKeys.has(key)) return;
+    onceKeys.add(key);
+    fault(line);
+};
 
 const browser = await firefox.launch({ executablePath: `${process.env.HOME}/.cache/ms-playwright/firefox-1538/firefox/firefox` });
 const context = await browser.newContext({ viewport: { width: 1600, height: 950 } });
@@ -130,6 +150,78 @@ const readStep = () =>
         };
     });
 
+/**
+ * The control groups the step shows and where they stand: every shown section (a frame of a topic step, or a section on
+ * the stage), its control containers, the component each names, their boxes in the section's own document.
+ */
+async function readControls() {
+    // The frames of a topic step load as they come near the view: walk the step once so every one has its section.
+    const lanes = await page.evaluate(() => document.querySelectorAll('dialog.rv-dialog .rv-lane').length);
+    for (let i = 0; i < lanes; i++) {
+        await page.evaluate((n) => document.querySelectorAll('dialog.rv-dialog .rv-lane')[n]?.scrollIntoView({ block: 'start' }), i);
+        await page
+            .waitForFunction(
+                (n) => {
+                    const lane = document.querySelectorAll('dialog.rv-dialog .rv-lane')[n];
+                    const doc = /** @type {HTMLIFrameElement | null} */ (lane?.querySelector('iframe'))?.contentDocument;
+                    return Boolean(doc?.querySelector('[data-review-item]') && lane?.querySelector('.rv-tools, .rv-lane__head'));
+                },
+                i,
+                { timeout: 8000 },
+            )
+            .catch(() => {});
+        await page.waitForTimeout(350);
+    }
+    return page.evaluate(
+        ({ max }) => {
+            const dialog = /** @type {HTMLDialogElement} */ (document.querySelector('dialog.rv-dialog'));
+            /** @type {{ doc: Document, section: HTMLElement | null, key: string }[]} */
+            const units = [];
+            for (const lane of dialog.querySelectorAll('.rv-lane')) {
+                const key = /** @type {HTMLElement} */ (lane).dataset.rvPair || '';
+                const item = key.split('|')[1] ?? '';
+                const doc = /** @type {HTMLIFrameElement | null} */ (lane.querySelector('iframe'))?.contentDocument;
+                if (doc) units.push({ doc, key, section: doc.querySelector(`[data-review-item="${CSS.escape(item)}"]`) });
+                else units.push({ doc: document, key, section: null });
+            }
+            for (const el of dialog.querySelectorAll('[data-rv-stage] > [data-review-item]'))
+                units.push({ doc: document, key: /** @type {HTMLElement} */ (el).dataset.rvPair || '', section: /** @type {HTMLElement} */ (el) });
+            const shown = (/** @type {Element} */ el) => el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden';
+            const out = {
+                bar: Boolean(dialog.querySelector('[data-rv-controls], .rv-controls')),
+                sections: /** @type {any[]} */ ([]),
+            };
+            for (const { doc, section, key } of units) {
+                if (!section) {
+                    out.sections.push({ key, missing: true, containers: [], foreign: 0 });
+                    continue;
+                }
+                const top = section.getBoundingClientRect().top;
+                const containers = [...section.querySelectorAll('[data-review-controls]')].filter(shown).map((box) => {
+                    const forId = box.getAttribute('data-review-controls-for') || '';
+                    const target = forId ? section.querySelector(`#${CSS.escape(forId)}`) : null;
+                    const b = box.getBoundingClientRect();
+                    const t = target?.getBoundingClientRect();
+                    return {
+                        forId,
+                        hasTarget: Boolean(target),
+                        targetShown: Boolean(target && shown(target)),
+                        groups: [...box.querySelectorAll('[role="group"]')].filter(shown).length,
+                        gap: t ? Math.round(t.top - b.bottom) : null,
+                        overlapX: t ? Math.min(b.right, t.right) - Math.max(b.left, t.left) : 0,
+                        targetTop: t ? Math.round(t.top - top) : null,
+                    };
+                });
+                // A control container visible in the frame that is not this section's.
+                const foreign = [...doc.querySelectorAll('[data-review-controls]')].filter((box) => shown(box) && !section.contains(box)).length;
+                out.sections.push({ key, missing: false, containers, foreign });
+            }
+            return out;
+        },
+        { max: MAX_GROUPS },
+    );
+}
+
 /** Every fault of the step on screen. */
 async function checkStep() {
     const step = await readStep();
@@ -170,6 +262,39 @@ async function checkStep() {
         if (bar.hidden && bar.height > 0) fault(`${where}: the hidden tools bar "${bar.label}" still takes ${bar.height} px`);
         if (!bar.hidden && bar.parts === 0) fault(`${where}: the tools bar "${bar.label}" is shown with nothing in it`);
     }
+    const controls = await readControls();
+    if (controls.bar) fault(`${where}: the dialog still carries a controls bar on top; controls stand at their component`);
+    for (const section of controls.sections) {
+        const name = section.key;
+        if (section.missing) {
+            fault(`${where}: the frame of ${name} has no section, so its controls cannot be checked`);
+            continue;
+        }
+        if (section.foreign) fault(`${where}: ${name} shows ${section.foreign} control container(s) that are not its own`);
+        /** @type {Map<string, number>} */
+        const perComponent = new Map();
+        for (const c of section.containers) {
+            if (!c.forId) {
+                fault(`${where}: ${name} shows a control group that names no component (data-review-controls-for)`);
+                continue;
+            }
+            if (!c.hasTarget) fault(`${where}: ${name} shows controls for #${c.forId}, which is not in that section`);
+            else if (!c.targetShown) fault(`${where}: ${name} shows controls for #${c.forId}, which is not visible in this step`);
+            else {
+                if (c.overlapX <= 0 || c.gap === null || c.gap < -4 || c.gap > MAX_CONTROLS_GAP)
+                    fault(`${where}: the controls of ${name} are not at their component #${c.forId} (gap ${c.gap} px, overlap ${c.overlapX} px; at most ${MAX_CONTROLS_GAP} px, directly above)`);
+                if (c.targetTop !== null && c.targetTop > MAX_COMPONENT_TOP)
+                    fault(`${where}: in ${name} the component #${c.forId} starts ${c.targetTop} px under the section's top (at most ${MAX_COMPONENT_TOP}): the component is not first on screen`);
+            }
+            perComponent.set(c.forId, (perComponent.get(c.forId) ?? 0) + c.groups);
+        }
+        for (const [id, groups] of perComponent)
+            if (groups > MAX_GROUPS)
+                faultOnce(
+                    `groups|${name.split('|')[1]}|${id}`,
+                    `${name.split('|')[1]}: the component #${id} carries ${groups} control groups (at most ${MAX_GROUPS}); too many rows means too many things in one section, so split it into smaller sections (first seen: ${where})`,
+                );
+    }
     if (step.banner) fault(`${where}: the dialog's integrity banner says: ${step.banner}`);
     return step;
 }
@@ -177,6 +302,9 @@ async function checkStep() {
 // ---------------------------------------------------------------- 1 · every step
 await openDialog();
 const demo = await page.evaluate(() => document.documentElement.dataset.review || '');
+// A control container outside every section drives no component the dialog could show it at.
+const stray = await page.evaluate(() => [...document.querySelectorAll('[data-review-controls]')].filter((el) => !el.closest('[data-review-item]')).length);
+if (stray) fault(`the page holds ${stray} control container(s) outside every judged section; they drive no component and the dialog shows them nowhere`);
 const total = Number((await readStep()).position.match(/Step \d+\/(\d+)/)?.[1] || 1);
 for (let at = 0; at < total; at++) {
     const before = (await readStep()).position;
