@@ -5798,4 +5798,10 @@
     [data-theme='forest'] .kp-runs__empty-title {
         margin: 0;
     }
+
+    /* The busy table's panel is a card with the planting row along its foot; its words ("Reading...") ended 2 px inside the
+       row's 1 rem, so the trees stood on the letters. The panel's foot padding clears the row by 6 px. */
+    [data-theme='forest'] .kp-datatable__busy-panel {
+        padding-block-end: calc(var(--kp-fo-h, 1rem) + 0.375rem);
+    }
 }
