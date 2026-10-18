@@ -180,6 +180,25 @@ out of the copy, so it never reads or writes verdicts; the fonts come from the l
 new round. One snapshot per demo (about 4.5 MB): the next round's run replaces it, and archiving the demo removes it.
 Without a snapshot, or for a section new in this round, the button is not shown (Kenny, 2026-10-18 00:28: the bar shows only what is relevant).
 
+## Key helpers: legend, focus, undo, rejected so far, bulk
+
+`rv-keys.js` (with `rv-keys.css`) adds four helpers to the dialog, each a per-viewer option (localStorage
+`kp-review-keys`, switched at runtime from the **Keys** button in the dialog's head or with
+`kpReviewKeys.set('<option>', true)`). The keys are physical key codes (`event.code`), listed in `KEYS` in the module. All are left-hand AZERTY keys (DEMO_RULES 7): Q S X C W B G; labels are AZERTY, the codes `KeyA KeyS KeyX KeyC KeyZ KeyB KeyG`.
+
+| Option     | Default | What                                                                                                                                                                       |
+| ---------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `legend`   | on      | one always-visible line of the keys, under the dialog's head                                                                                                               |
+| `undo`     | on      | **W** undoes the last approve or reject and returns to that step with its boxes; the journal gets an entry `kind: "undo"`, nothing is deleted                              |
+| `rejected` | on      | **B** (or the button) opens "Rejected so far", an overlay on the stage: rejections with notes, changed defaults, removed options; each line jumps to its pair; Esc closes it |
+| `bulk`     | off     | **G** approves the rest of a theme, offered only after 3 approvals in a row in it; a confirm line gives the pair count; journal and answer say "approved unseen, N pairs"; 10 s undo |
+
+On a topic step, **Down** or **C** rejects the focused section (before: aspect pages only; **C** also means "none of these" on an
+aspect page), **Q** / **S** move the focus (a subtle rule at the left of the section and its row) and **X** toggles "Not approved" on it; none of them opens the
+note, so the keys keep working. Keys pressed inside a lane frame are handed up like V and L (`FRAME_KEYS`). review.js
+carries six lines marked `[kit-keys]`; the entries `kind: "undo" | "bulk"` are read by `progress.js` (`rebuildAnswer`)
+and the Agenda's "Saved verdicts".
+
 ## Play open and close, slowly
 
 A section that opens and closes something also has **Play open and close (L)** and a speed, **1×** or **¼×**. The kit presses the
@@ -430,6 +449,40 @@ label, about, default })` adds a switch to the View menu (kept per viewer, and a
 options; `rvKit.ui[id]` is its value) and `rv:open`, `rv:step` (`{ index, step, pairs }`), `rv:verdict` (`{ pair, change }`) and `rv:ui` (`{ id, on }`)
 fire on `window`. A module's own entry in research/review-kit-v2/options.json gives it a section in the demo.
 
+**Previews.** A page opened as a preview inside another page (`?rv-preview=1`, `rv-preview.js`, imported first by review.js and loaded first on the
+Agenda) keeps the kit's own storage keys (`kp-demo-review:*`, `kp-review-*`, `kp-flow-*`) in memory: it shows no verdict or setting the viewer has kept,
+writes none, and starts from `?rvopt=<JSON of storage key to value>`, which is how research/review-kit-v2 shows an option on or off or a part half
+judged. It takes no focus from the page around it and ignores the theme that page changes.
+
 `check-kit.mjs <port> <page> --rvui all` adds the layout checks: the dialog fills at least 97% of the viewport at 1920x1080, 1280x800 and 390x844, no
 look-at paragraph repeats in a step, the first component starts within the first 40% of the dialog's height at 1920x1080, nothing scrolls
 sideways at any of the three widths, the component's frame is the largest area of the dialog, centred in the stage, and uncovered.
+## Progress options: the remaining line and Continue
+
+Two options of the kit, both per viewer (localStorage `kp-review-option:<name>`, `on` or `off`), both **on** by default, switchable at run time
+(the Agenda's "Review options", or the attribute `data-rv-<name>="on|off"` on `<html>`), all in `rv-progress.js` and `rv-progress.css`:
+
+- `remaining`: one plain line in the dialog's head, "Step n of N here · this part: X of Y pairs left · all open reviews: A of B left · about
+  H:MM left at your pace", and the same counts on every Agenda row. Counts are the current round's, from `progress.js` `progressOf` over each
+  demo's markup and the stored verdicts, the Agenda's own data. The pace is the median of the last 20 step durations (dialog open, tab visible,
+  in use), shown once five exist (`kp-review-pace`).
+- `resume`: per part the step, the scroll and (kept by the kit, `:kept`) the pressed states (`kp-demo-review:<demo>:resume`); the Agenda shows one
+  "Continue: <part>, <theme>, step n" button at the top, opening `?rv-resume=1`.
+
+The module writes no verdict and nothing to the journal. Hooks: one `mountProgress()` call in review.js, one `paintAgenda()` call in agenda.js.
+
+## Review flow options (kit-flow-1018)
+
+Per-viewer options, kept in `localStorage` (`kp-flow-options-v1`) and switched at runtime in the Agenda's "Review flow
+options" panel. They never touch a verdict or the journal. Code: `flow.js` (options, run, chain), `reasons.js` (chips),
+`flow.css`, `catalogue/flow-agenda.js` (the panel).
+
+| Option    | Values            | Default  | What it does                                                                                          |
+| --------- | ----------------- | -------- | ----------------------------------------------------------------------------------------------------- |
+| `after`   | `agenda` / `next` | `agenda` | After the last open step: back to the Agenda, or on to the next part with open pairs (2 s line, Esc). |
+| `tonight` | boolean           | `false`  | Shows the "Start Tonight" entry on the Agenda: a playlist over the existing part pages.               |
+| `order`   | `part` / `theme`  | `part`   | Tonight order: part by part, or theme by theme (each part page asks only that theme in that visit).   |
+| `chips`   | boolean           | `true`   | Reason chips under "Not approved"; a click or keys 1 to 6 adds or removes the tag in the note.        |
+
+Hooks in shared files are marked `kit-flow hook`: `review.js` (imports, `flow.init`, `finished()`, `nextOpenStep`,
+`attachReasons`, the arrival line), `agenda.js` (`publishFlow`), `agenda.html` (`data-flow-slot`).

@@ -37,6 +37,9 @@
                 <p class="agenda__status-line" role="status" aria-live="polite" data-agenda-status>Reading what waits for a verdict…</p>
             </div>
 
+            <!-- kit-flow hook: the review flow options and the Tonight entry (flow-agenda.js) -->
+            <div data-flow-slot></div>
+
             <div class="kp-alert kp-alert--info agenda__answers" role="status" data-agenda-answers hidden>
                 <span class="kp-alert__icon" aria-hidden="true">✎</span>
                 <span class="kp-alert__body"
@@ -85,6 +88,7 @@
             </details>
         </main>
 
+        <script type="module" src="../research/_review/rv-preview.js"></script>
         <script type="module" src="../js/auto.js"></script>
         <script src="./boot-check.js"></script>
         <script type="module" src="./catalogue.js"></script>

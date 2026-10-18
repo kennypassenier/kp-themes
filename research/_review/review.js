@@ -87,6 +87,7 @@
 // closes on the answer: one button copies it and returns to the hub. Nothing
 // opens the next item by itself (Kenny, 2026-10-14: the Agenda reopened the
 // same demo and its answer lost his two notes).
+import './rv-preview.js'; // a framed preview keeps its storage in memory (first, before every module that reads it)
 import { STORAGE_KEY, THEMES } from '../../js/theme-registry.js';
 import { applyTheme, currentTheme } from '../../js/theme-core.js';
 import {
@@ -103,9 +104,14 @@ import {
     storeKey,
 } from './progress.js';
 import { early, isolate, mountBlockTools } from './block-tools.js';
+import { FRAME_KEYS, mountKeys } from './rv-keys.js'; // [kit-keys] key legend, focus, undo, rejected so far, bulk
+import { mountProgress } from './rv-progress.js'; // [kit-strip-1018] remaining line + resume
+import * as flow from './flow.js'; // kit-flow hook: what follows the last open step, and the reason chips
+import { attachReasons } from './reasons.js'; // kit-flow hook
 
 const root = document.documentElement;
 const DEMO = root.dataset.review;
+flow.init(DEMO); // kit-flow hook
 const STORE = storeKey(DEMO);
 const params = new URLSearchParams(location.search);
 /** Where to go once the demo is judged: the hub, on this site only. */
@@ -254,7 +260,7 @@ function lane() {
         (event) => {
             if (parent === window || event.altKey || event.ctrlKey || event.metaKey) return;
             if (/** @type {Element} */ (event.target).matches?.(TYPING)) return;
-            if (event.key === 'Escape' ? document.querySelector(OPEN) : event.code !== 'KeyV' && event.code !== 'KeyL') return;
+            if (event.key === 'Escape' ? document.querySelector(OPEN) : event.code !== 'KeyV' && event.code !== 'KeyL' && !FRAME_KEYS.has(event.code)) return; // [kit-keys] FRAME_KEYS
             event.preventDefault();
             event.stopPropagation();
             parent.postMessage({ type: 'rv-lane-key', key: event.key, code: event.code }, location.origin);
@@ -961,6 +967,8 @@ const changedFrom = (pair, choice) => {
 };
 const optionLabel = (choice, value) => choice.options.find((o) => o.value === value)?.label || value;
 const isOpen = (pair) => !verdictOf(pair);
+/** kit-flow hook: the theme a step asks, also on a topic step. */
+const stepTheme = (step) => step.theme || step.laneTheme || step.pairs[0]?.theme;
 /** An aspect step is answered once its option is picked, or "None of these" is noted. */
 const aspectDone = (pair, aspect) => Boolean(state[pair.key]?.choices?.[aspect] || state[pair.key]?.redo?.[aspect]);
 const stepOpen = (step) => (step.aspect ? step.pairs.some((p) => isOpen(p) && !aspectDone(p, step.aspect)) : step.pairs.some(isOpen));
@@ -1046,6 +1054,7 @@ function answer() {
     if (rejected.length) lines.push('', 'Not approved:', ...rejected.map((p) => `- ${p.label}: ${noteOf(p)}`));
     const notes = pairs.filter((p) => verdictOf(p) === 'approved' && noteOf(p));
     if (notes.length) lines.push('', 'Approved, with a note:', ...notes.map((p) => `- ${p.label}: ${noteOf(p)}`));
+    lines.push(...kk.answerLines()); // [kit-keys] pairs approved unseen by G
     const picked = pairs.flatMap((p) =>
         (p.item?.choices || [])
             .filter((c) => !c.once && !fixedFor(p, c) && changedFrom(p, c))
@@ -1095,6 +1104,9 @@ function render() {
  */
 function finished() {
     dialog.close();
+    // kit-flow hook: a Tonight run or the option "next part" goes on to the next part (journal written first); else as before.
+    flushNotes();
+    if (flow.leave()) return;
     say(`Everything is judged. This answer waits in the prompt on ${DONE_NAME}; going there now.`);
     location.assign(DONE_HREF);
 }
@@ -1209,6 +1221,8 @@ dialog.innerHTML = `
 document.body.append(dialog);
 const $ = (selector) => /** @type {HTMLElement} */ (dialog.querySelector(selector));
 paintUi(dialog);
+// A preview is looked at, never used: its dialog is inert, so opening it never moves the focus out of the page around it.
+if (params.has('rv-preview')) dialog.inert = true;
 const stage = $('[data-rv-stage]');
 const list = $('[data-rv-list]');
 const refused = $('[data-rv-refused]');
@@ -1846,6 +1860,7 @@ addEventListener('message', (event) => {
     if (event.origin !== location.origin || data.type !== 'rv-lane-key' || !dialog.open) return;
     if (data.key === 'Escape') return dialog.close();
     laneOf(event.source)?.tool.key(data.code);
+    kk.fromFrame(data.code); // [kit-keys]
 });
 
 /** One section in one theme, in a frame of its own, under a head naming the theme. @param {Pair} pair */
@@ -2111,6 +2126,7 @@ function rowFor(pair, only = null, name = '', shared = new Set()) {
         stage.querySelector(`.rv-lane[data-rv-pair="${CSS.escape(pair.key)}"]`)?.classList.toggle('rv-lane--rejected', box.checked);
         if (box.checked) note.focus();
         if (!only) {
+            kk.snap([pair.key], `${box.checked ? 'not approved' : 'approved'} ${pair.label}`); // [kit-keys]
             state[pair.key] = {
                 ...state[pair.key],
                 verdict: box.checked ? 'rejected' : 'approved',
@@ -2144,6 +2160,7 @@ function rowFor(pair, only = null, name = '', shared = new Set()) {
         render();
     });
     note.addEventListener('blur', () => pendingNotes.get(pair.key)?.write());
+    attachReasons(li, box, note); // kit-flow hook: optional reason chips
     li.querySelector('[data-rv-jump]').addEventListener('click', () => {
         stage.querySelector(`[data-rv-pair="${CSS.escape(pair.key)}"]`)?.scrollIntoView({ block: 'start', behavior: 'smooth' });
     });
@@ -2523,6 +2540,7 @@ async function show(at) {
         checkIntegrity();
         // A preview inside another page never takes the focus from it (a note typed there lost its keys).
         if (!params.has('rv-preview')) approveButton.focus({ preventScroll: true });
+        kk.shown(step, shownPairs); // [kit-keys]
         // Every page starts at its top, the demo on the left and the rows on the right (Kenny, 2026-10-13: "als ik van
         // één dialog pagina naar de andere ga, scroll dan naar boven en doe hetzelfde voor de items rechts").
         for (const box of [stage, stage.closest('.rv-dialog__view'), dialog.querySelector('.rv-dialog__side')]) if (box) box.scrollTop = 0;
@@ -2550,7 +2568,7 @@ async function show(at) {
 function nextOpenStep(from) {
     for (let step = 1; step <= steps.length; step++) {
         const at = (from + step) % steps.length;
-        if (stepOpen(steps[at])) return at;
+        if (stepOpen(steps[at]) && flow.inScope(stepTheme(steps[at]))) return at; // kit-flow hook: a Tonight run by theme asks one theme
     }
     return -1;
 }
@@ -2581,6 +2599,7 @@ function approveStep() {
         refused.hidden = false;
         return;
     }
+    kk.snap(shownPairs.map((p) => p.key), `approved ${current.title}`); // [kit-keys]
     const at = new Date().toISOString();
     for (const pair of shownPairs) {
         const row = rowOf(pair);
@@ -2612,6 +2631,7 @@ function answerAspect(step) {
         refused.hidden = false;
         return;
     }
+    kk.snap([pair.key], `${none ? 'none of these' : 'picked'} in ${step.title}`); // [kit-keys]
     const entry = { ...state[pair.key] };
     entry.choices = { ...entry.choices };
     entry.redo = { ...entry.redo };
@@ -2733,7 +2753,7 @@ document.addEventListener(
             // link keeps its own Enter.
             event.preventDefault();
             approveStep();
-        } else if (step?.aspect && (event.key === 'ArrowDown' || event.key.toLowerCase() === 'n')) {
+        } else if (step?.aspect && (event.key === 'ArrowDown' || event.code === 'KeyC')) {
             event.preventDefault();
             const box = /** @type {HTMLInputElement} */ (list.querySelector('[data-rv-reject]'));
             if (box && !box.checked) {
@@ -2790,6 +2810,39 @@ window.addEventListener('storage', (event) => {
     }
 });
 
+// [kit-keys] The key helpers get closures over the kit's own state; everything else is in rv-keys.js.
+const kk = mountKeys({
+    demo: DEMO,
+    dialog,
+    stage,
+    list,
+    approveButton,
+    steps,
+    pairs,
+    index: () => index,
+    round: () => round?.round || '',
+    state: () => state,
+    save,
+    render,
+    show,
+    isOpen,
+    verdictOf,
+    noteOf,
+    changedFrom,
+    defaultOf,
+    choiceOf,
+    removedOf,
+    optionLabel,
+    onceKey,
+    label: (theme) => LABEL[theme] || theme,
+});
 render();
+// [kit-strip-1018] rv-progress.js: the remaining line and resume (the hook is this one call).
+mountProgress({ demo: DEMO, dialog, steps, getIndex: () => index, stepOpen, show, stage, openFirst: () => bar.querySelector('[data-rv-open]').click() });
 // From the hub, the dialog opens at the first open step by itself.
-if (NEXT && params.get('review') === 'open' && pairs.some(isOpen)) bar.querySelector('[data-rv-open]').click();
+// kit-flow hook: a stop with nothing open left is passed at once.
+const flowLeaving = flow.arrive({
+    anyOpen: pairs.some(isOpen),
+    themeOpen: (theme) => steps.some((s) => stepTheme(s) === theme && stepOpen(s)),
+});
+if (!flowLeaving && NEXT && params.get('review') === 'open' && pairs.some(isOpen)) bar.querySelector('[data-rv-open]').click();

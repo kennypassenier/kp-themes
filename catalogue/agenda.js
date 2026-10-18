@@ -26,8 +26,12 @@ import {
     dropReceivedAnswer,
     journalDemos,
     journalOf,
+    progressOf,
     rebuildAnswer,
+    storedFor,
 } from '../research/_review/progress.js';
+import { paintAgenda } from '../research/_review/rv-progress.js'; // [kit-strip-1018]
+import { updateFlow } from './flow-agenda.js'; // kit-flow hook
 import { composeBlocks, counted, demoStatus, dependentsOf, inOrder, labelOf, readDecided, readDemo, researchPages, reviewUrl } from './waiting.js';
 
 const ROOT = new URL('../', import.meta.url);
@@ -428,6 +432,9 @@ function render() {
     renderStart(open, reading);
     renderAnswers();
     renderSaved();
+    // [kit-strip-1018] rv-progress.js: remaining line on each row, Continue, Review options.
+    paintAgenda(demos.map((demo) => ({ href: demo.page.href, label: demo.page.label, shape: demo.shape })));
+    publishFlow(reading); // kit-flow hook
     document.title = `${reading ? '…' : open.length} waiting · Agenda · kp-themes catalogue`;
 }
 
@@ -486,6 +493,23 @@ function openItem(/** @type {View} */ view) {
     else view.press?.();
 }
 
+/** kit-flow hook: the open demos in Agenda order, with the themes that still have a pair open, for flow-agenda.js. */
+function publishFlow(/** @type {boolean} */ reading) {
+    const entries = demos
+        .filter((demo) => demo.shape && demoStatus(demo.shape).progress.pairsLeft > 0)
+        .map((demo) => {
+            const shape = /** @type {NonNullable<typeof demo.shape>} */ (demo.shape);
+            const stored = storedFor(shape.id);
+            return {
+                id: shape.id,
+                label: demo.page.label,
+                href: reviewUrl(demo.page.href, SELF),
+                themes: shape.themes.filter((theme) => progressOf({ ...shape, themes: [theme], extras: [] }, stored).pairsLeft > 0),
+            };
+        });
+    updateFlow(entries, reading);
+}
+
 /* ---------------------------------------------------------------- answers */
 
 /** The demos whose answer changed since it was last copied. */
@@ -518,7 +542,10 @@ const entryWords = (e) => {
     if (e.pair === ANSWER_PAIR) return `the whole answer, kept when it was set aside as received:\n${e.note}`;
     const label = e.label || e.pair;
     const parts = [label];
-    if (e.verdict) parts.push(e.verdict === 'rejected' ? 'Not approved' : 'Approved');
+    // [kit-keys] Undo (U) and bulk approval (G) entries say what they are.
+    if (e.kind === 'undo') parts.push(e.verdict ? `Undone, back to ${e.verdict === 'rejected' ? 'not approved' : 'approved'}` : 'Undone, open again');
+    else if (e.kind === 'bulk') parts.push(`Approved unseen (bulk, ${e.unseen || 1} pairs)`);
+    else if (e.verdict) parts.push(e.verdict === 'rejected' ? 'Not approved' : 'Approved');
     if (e.choice) parts.push(`ticked ${e.choice.id} = ${e.choice.label || e.choice.value}`);
     const head = parts.join(' · ');
     return e.note ? `${head}: ${e.note}` : head;
