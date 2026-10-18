@@ -528,8 +528,9 @@
 
     /* A failed area is the red sky (G13, the busy failure decided as r2-so-failure-1): the dark card plate, the wash rising
        from its foot, the foot edge and a 1 px ring in the red, the words in the lifted red ink. The package's flat
-       `--destructive` fill (a salmon block over the whole component) is no part of solstice's light. */
-    [data-theme='solstice'] .kp-alert--destructive:is(.kp-stateplate, .kp-rating__failure) {
+       `--destructive` fill (a salmon block over the whole component) is no part of solstice's light, so EVERY destructive
+       alert is the red sky, whichever part draws it (stateplate, runs, dated, card, transfer, rating) [t56-eye-1018]. */
+    [data-theme='solstice'] .kp-alert--destructive {
         background:
             linear-gradient(to top, hsl(from var(--destructive) h s l / 0.3), transparent 75%),
             var(--card);
@@ -538,9 +539,17 @@
         box-shadow: inset 0 -2px 0 hsl(from var(--destructive) h s 50%);
     }
 
-    [data-theme='solstice'] .kp-alert--destructive:is(.kp-stateplate, .kp-rating__failure) .kp-stateplate__title,
+    [data-theme='solstice'] .kp-alert--destructive:is(.kp-stateplate, .kp-runs__failure, .kp-dated__failure, .kp-transfer__failure) :is(.kp-stateplate__title, strong),
     [data-theme='solstice'] .kp-alert--destructive.kp-rating__failure .kp-rating__failure-text {
         color: hsl(from var(--destructive) h s 68%);
+    }
+
+    /* The failure sentence is set in the display serif at heading size, like the stateplate's, whichever part draws it. */
+    [data-theme='solstice'] .kp-alert--destructive:is(.kp-runs__failure, .kp-dated__failure, .kp-transfer__failure) strong {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        font-size: calc(var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem)) * 1.15);
+        line-height: 1.25;
     }
 
     [data-theme='solstice'] .kp-grid {
