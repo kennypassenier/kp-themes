@@ -29825,6 +29825,8 @@
         align-items: baseline;
         column-gap: var(--kp-version-gap, 0.4em);
         row-gap: 0;
+        max-inline-size: 100%;
+        box-sizing: border-box;
         font-variant-numeric: tabular-nums;
         /* A version breaks only where it was given a place to (after a dot, a hyphen, an underscore or a colon), never in a number. */
         overflow-wrap: normal;
@@ -29832,6 +29834,13 @@
 
     .kp-badge--version[data-kp-size='md'] {
         font-size: var(--kp-text-md, 1rem);
+    }
+
+    /* A part wider than the chip breaks inside the word rather than past the chip's edge; a normal version never gets there. */
+    .kp-version__from,
+    .kp-version__to {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
     }
 
     .kp-version__from {
