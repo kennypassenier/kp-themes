@@ -21991,6 +21991,9 @@
         background: color-mix(in oklab, currentColor 10%, transparent);
         font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
         font-size: var(--kp-text-sm, 0.8125rem);
+        /* A command that does not fit on one line balances over its lines, so the break lands between words and not after the
+         * "--" of a flag [t56-words-1018]. */
+        text-wrap: balance;
         overflow-wrap: anywhere;
     }
 
