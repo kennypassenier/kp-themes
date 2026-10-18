@@ -120,6 +120,12 @@ export const PAGES = [
                 label: 'HTTPSwitchboard: profile settings and recheck',
                 about: 'Whether a profile\'s settings read at a glance, with its retry budget against its lease as a bar, and whether the Recheck button, its toasts and the per-profile recheck feel right, in formal.',
             },
+            // Kenny, 2026-10-19 (kp-themes 11.0.0 adoption, HTTPSwitchboard): the profiles view of the service dashboard (map or cards as the main view, the path of one profile, the card on a profile name), formal only; plan rows 1, 2, 3 and 15 of http-switchboard/docs/KP_THEMES_11_ADOPTION.md.
+            {
+                href: 'research/app-hsb-profiles/demo.html',
+                label: 'HTTPSwitchboard: the profiles view',
+                about: 'How HTTPSwitchboard would show its profiles with kp-themes 11.0.0: a map or cards as the main view (you set the default), the path of one profile and where it stops, and the card that opens on a profile name.',
+            },
         ],
     },
     {
