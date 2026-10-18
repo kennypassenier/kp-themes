@@ -27690,3 +27690,54 @@
         pointer-events: none;
     }
 }
+
+/* --- State plates in the last layer [t56-statefix-1018] ---------------------------------------------------------------
+ * Kenny's rule (2026-10-17 15:37, docs/RULES.md): an empty or failed area is prominent, centred in the component, at heading
+ * size, with a normal-size action, and fills the footprint. A register sets the title of a card's note by its own selector
+ * (solstice 20 px, titanium 18 px, nostromo 16 px, brutalism and deco their capitals) and a register beats kp.components, so
+ * the plate is stated here, in the last layer, as the tour's dim and the side navigation's variants are; a utility still wins.
+ * Every rule hangs on the plate's own class, so nothing here touches a card that does not fail.
+ *
+ * A card's failure: the destructive alert turned into the state plate. Its words are centred in the stage, its title at
+ * `--kp-stateplate-text` (heading size, the same knob the empty plate and the picker's plates read), its sentence at body size,
+ * and its Try again is a normal button (2.25rem) under them. The card grows to hold it: a heading, a sentence and a button need
+ * more room than one alert row did. */
+@layer kp.layout {
+    .kp-card__state:has(> .kp-card__failure) {
+        align-content: stretch;
+    }
+
+    .kp-card__state > .kp-card__failure {
+        display: grid;
+        place-content: center;
+        justify-items: center;
+        gap: var(--kp-space-sm, 0.5rem);
+        box-sizing: border-box;
+        inline-size: 100%;
+        block-size: 100%;
+        padding: var(--kp-space-lg, 1.5rem);
+        font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem));
+        line-height: 1.35;
+        text-align: center;
+        text-wrap: balance;
+    }
+
+    .kp-card__failure > .kp-alert__body {
+        justify-items: center;
+        flex: none;
+    }
+
+    .kp-card__state > .kp-card__failure .kp-card__state-title {
+        font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem));
+        font-weight: 600;
+        line-height: 1.35;
+    }
+
+    .kp-card__failure .kp-card__state-text {
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    .kp-card__failure > .kp-card__retry {
+        min-block-size: 2.25rem;
+    }
+}

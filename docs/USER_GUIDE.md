@@ -1863,8 +1863,10 @@ theme's spinner and plate, `js/busy-card.js`); data already there stays
 under it, dimmed and inert, so a refresh never blanks the card, and a
 first load has `--kp-card-stage-min` (7.5rem) of room. Empty fills the
 stage with the package's empty state (title, sentence, optional action);
-error is the destructive alert with Try again, which fires `kp-card-retry`
-on the card. In both the data keeps its room, hidden, with the note
+error is the destructive alert turned into a state plate (centred in the
+stage, its title at heading size, `--kp-stateplate-text`, a normal 2.25rem
+Try again under the sentence), which fires `kp-card-retry` on the card; the
+card is as high as the plate needs, more than one alert row. In both the data keeps its room, hidden, with the note
 centred in it, so a failed refresh of a full card does not collapse it;
 clear the data when it no longer holds and the stage falls back to its
 least height. When the focused Try again goes with its state, the focus moves to
