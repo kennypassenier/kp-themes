@@ -67877,20 +67877,6 @@
 /* ── The kpadopt5 and kpadopt6 components in forest [t56-forest-1018] ────────────────────────────────────────────────
    What the review of the seventy-nine new sections found off in this theme, one rule per fault; each says what it was. */
 @layer kp.signature {
-    /* The version badge (`.kp-badge--version`): a raw version such as a 64-character digest has no place to break, so the badge
-       grew past its section (19 px at 1280 and 182 px at 390 in forest, 53 and 216 px in blueprint). The badge may now be as wide
-       as its place and a part longer than that breaks inside its word; a version that fits is never broken. */
-    [data-theme='forest'] .kp-badge--version {
-        max-inline-size: 100%;
-        white-space: normal;
-    }
-
-    [data-theme='forest'] .kp-badge--version > * {
-        min-inline-size: 0;
-        max-inline-size: 100%;
-        overflow-wrap: break-word;
-    }
-
     /* The request inspector's status filter is five segments (a label and its exact count each) and stood in one row wider than
        a phone: the bar stuck out 91 to 93 px past its section (kpadopt5-rows/request-inspector, 390 px). Wrapping them breaks the
        package's sliding plate, so on a phone the five share the width, with less padding, and nothing is cut. */
@@ -67915,40 +67901,6 @@
         }
     }
 
-    /* In a narrow inspector (a phone) the badges of this theme are wider than the package's, so the one flexible column, the
-       source, was left 0 px and its word ("test") stood in a column one letter wide. Under 24rem of its own width the
-       summary stands in three short lines (method and status, source and time, path), so the source keeps its word whole and
-       the time its 4 px from the edge. */
-    @container kp-inspector (max-width: 24rem) {
-        [data-theme='forest'] .kp-inspector__row {
-            grid-template-columns: auto minmax(0, 1fr);
-            grid-template-areas:
-                'method status'
-                'source time'
-                'path path';
-        }
-
-        [data-theme='forest'] .kp-inspector__source {
-            justify-self: start;
-            white-space: nowrap;
-            overflow-wrap: normal;
-        }
-    }
-
-    /* The refresh chooser's six segments are one nowrap row; the bar took their full width and stuck out of a phone-wide section
-       (kpadopt5-ops/auto-refresh, 390 px: 186 to 268 px). The chooser is now at most as wide as its place and its segments
-       scroll inside it, as the package's own segmented control does. */
-    [data-theme='forest'] .kp-refresh {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    [data-theme='forest'] .kp-refresh__chooser {
-        min-inline-size: 0;
-        max-inline-size: 100%;
-        overflow-x: auto;
-        padding-block: 0.25rem;
-    }
-
     /* On a phone the six segments share the chooser's width and their words wrap ("Every" over "15 s") instead of running out of
        the section; no label is cut. */
     @media (max-width: 30rem) {
@@ -67971,19 +67923,6 @@
             white-space: normal;
             letter-spacing: 0;
         }
-    }
-
-    /* A checklist row's detail ("check-in after 15:00, reference 8841-KP") is kept on one line by the package; a long one took the
-       whole row and left its label 0 to 8 px wide (kpadopt6-media/print-checklist, 390 px). The label keeps at least 6rem and the
-       detail wraps in what is left. */
-    [data-theme='forest'] .kp-checklist__row {
-        grid-template-columns: auto minmax(6rem, 1fr) minmax(0, auto);
-    }
-
-    [data-theme='forest'] .kp-checklist__detail {
-        min-inline-size: 0;
-        white-space: normal;
-        overflow-wrap: anywhere;
     }
 
     /* The next-times list keeps the height of three rows in every state; forest's empty plate (a 52 px clearing, 1.25 rem and
