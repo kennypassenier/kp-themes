@@ -95,6 +95,12 @@ export const PAGES = [
         pages: [
             // Kenny, 2026-10-19 (almanac on kp-themes 11.0.0), formal only.
             {
+                href: 'research/almanac-journal/demo.html',
+                label: 'Almanac: Journal and Sources on the Status page',
+                about: 'What Almanac shows on its Status page: the journal at a glance, the recent deliveries table with filters, live refresh and connection, and the sources with a reload that stays on the page. 4 sections, formal only, sample data.',
+            },
+            // Kenny, 2026-10-19 (almanac on kp-themes 11.0.0), formal only.
+            {
                 href: 'research/almanac-delivery-chain/demo.html',
                 label: 'Almanac: the delivery chain and the retry schedule',
                 about: 'How an event travels from the call to Google Calendar, with live counts per stage and the failing stage lit; when each waiting event is tried next; and an event Almanac gave up on, with what to do. 3 sections, formal only, sample data.',

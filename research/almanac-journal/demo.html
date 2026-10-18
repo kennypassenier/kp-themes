@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="almanac-journal" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Almanac status page: the Journal and Sources sections on kp-themes 11.0.0</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main aj-page">
+            <header class="aj-intro">
+                <h1>Almanac status page: the Journal and Sources sections</h1>
+                <p class="cat-intro">
+                    The two sections Almanac builds itself on the status page, drawn with kp-themes 11.0.0 parts. Four sections, formal only.
+                    The numbers on the first card start from the live service on 19/10/2026 (version 4.1.7, up 10 days 3 h, 3 events accepted, 3
+                    delivered, 0 failed, nothing pending). Anything beyond that is <b>sample data</b> and says so on the page.
+                </p>
+            </header>
+
+            <!-- 1. Journal at a glance -->
+            <section
+                class="aj-sec"
+                id="journal-glance"
+                data-review-item="journal-glance"
+                data-review-topic="journal"
+                data-review-topic-title="Journal section"
+                data-review-components="kpi health stackbar"
+                data-review-title="Journal at a glance"
+                data-review-choices='[{ "id": "outcome-bar", "label": "How the outcome bar reads", "once": true, "default": "legend", "options": [
+                    { "value": "legend", "label": "Bar with a legend of counts", "hint": "A 12 px bar and, under it, one row per outcome with its exact count. Reads without hovering; takes two more lines (recommended)." },
+                    { "value": "compact", "label": "Slim bar, summary only", "hint": "An 8 px bar with the sentence &#39;3 delivered&#39; at its head and no legend; the counts sit in the hover card. One line, but a count needs a pointer." }]}]'
+                aria-labelledby="h-journal-glance"
+            >
+                <div class="aj-sec__head">
+                    <h2 id="h-journal-glance">Journal at a glance</h2>
+                    <p>
+                        The one number that matters (events waiting to be delivered), whether the journal and the store are healthy, and how the
+                        events since the service started ended.
+                    </p>
+                </div>
+                <div class="aj-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Four key figures of one height: <b>Waiting to be delivered 0</b>, <b>Delivered since start 3</b>, <b>Failed since start 0</b>
+                            and a trend tile <b>Deliveries per hour</b> with its 24-hour line (sample data). Press <b>Delivered</b> or <b>Failed</b>: they are toggles, and the bar below shows only that outcome (press again to leave it). Press <b>An event arrives</b>: the waiting figure counts up to 1 (it ticks, it does not
+                            jump), the tile turns to the warning tone and the journal dot turns amber with its reason.
+                        </li>
+                        <li>
+                            <b>It is delivered</b> counts the waiting figure back down and the delivered figure up; <b>A delivery fails</b> puts one in
+                            the red part of the bar. Every figure is the exact number.
+                        </li>
+                        <li>
+                            Loading shows the busy card over the whole card, failed shows one plate with a normal Retry; both keep the filled height.
+                            The <b>How the outcome bar reads</b> set in the dialog switches the bar between its two looks.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The waiting figure ticks when it changes, the two dots say in words what they mean, and the bar and the figures agree. The
+                        created / updated split of the bar is sample data, as the note under the card says.
+                    </p>
+                </div>
+                <div class="aj-controls" data-review-controls data-review-controls-for="journal-glance-component">
+                    <div role="group" aria-label="State of the card">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-aj-glance-state="ready" aria-pressed="true">Filled</button>
+                        <button type="button" class="kp-button kp-button--sm" data-aj-glance-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-aj-glance-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Simulate the journal">
+                        <b>Simulate:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-aj-glance-do="arrive">An event arrives</button>
+                        <button type="button" class="kp-button kp-button--sm" data-aj-glance-do="deliver">It is delivered</button>
+                        <button type="button" class="kp-button kp-button--sm" data-aj-glance-do="fail">A delivery fails</button>
+                    </div>
+                </div>
+                <section
+                    class="kp-card aj-card"
+                    id="journal-glance-component"
+                    data-kp-state="ready"
+                    data-kp-loading-words="Reading the journal"
+                    aria-labelledby="aj-glance-title"
+                >
+                    <div class="kp-card__header">
+                        <h3 class="kp-card__title" id="aj-glance-title">Journal</h3>
+                    </div>
+                    <p class="kp-card__body">What is waiting and what happened since the service started.</p>
+                    <div class="kp-card__stage">
+                        <div class="kp-card__data aj-glance">
+                            <div class="kp-kpis" role="group" aria-label="Journal figures">
+                                <div class="kp-kpi" id="aj-kpi-waiting">
+                                    <span class="kp-kpi__label">Waiting to be delivered</span>
+                                    <span class="kp-kpi__value"><span id="aj-waiting" data-kp-tick>0</span><small>events</small></span>
+                                    <span class="kp-kpi__trend" id="aj-waiting-note">Nothing is waiting</span>
+                                </div>
+                                <button type="button" class="kp-kpi kp-kpi--toggle" id="aj-kpi-delivered" data-aj-outcome="delivered" aria-pressed="false">
+                                    <span class="kp-kpi__label">Delivered since start</span>
+                                    <span class="kp-kpi__hint" aria-hidden="true"><span data-kp-when="off">Show in the bar</span><span data-kp-when="on">Showing only this ×</span></span>
+                                    <span class="kp-kpi__value"><span id="aj-delivered" data-kp-tick>3</span><small>events</small></span>
+                                    <span class="kp-kpi__trend">3 accepted in all</span>
+                                </button>
+                                <button type="button" class="kp-kpi kp-kpi--toggle" id="aj-kpi-failed" data-aj-outcome="failed" aria-pressed="false">
+                                    <span class="kp-kpi__label">Failed since start</span>
+                                    <span class="kp-kpi__hint" aria-hidden="true"><span data-kp-when="off">Show in the bar</span><span data-kp-when="on">Showing only this ×</span></span>
+                                    <span class="kp-kpi__value"><span id="aj-failed" data-kp-tick>0</span><small>events</small></span>
+                                    <span class="kp-kpi__trend" id="aj-failed-note">None gave up</span>
+                                </button>
+                                <div class="kp-kpi kp-kpi--trend">
+                                    <span class="kp-kpi__label">Deliveries per hour <span class="kp-kpi__label-note">sample data</span></span>
+                                    <a class="kp-kpi__link" href="#journal-deliveries" title="Open the recent deliveries"><span class="kp-kpi__link-word">Deliveries</span> ↗</a>
+                                    <span class="kp-kpi__value">1<small>per hour</small></span>
+                                    <span class="kp-kpi__trend">Last 24 hours, sample data</span>
+                                    <figure class="kp-kpi__chart" data-kp-chart="spark" data-kp-spark-head="none" data-kp-spark-axis="relative" aria-label="Deliveries per hour, last 24 hours, sample data">
+                                        <script type="application/json" data-kp-chart-data>{"unit":"events","digits":0,"series":[{"label":"Deliveries","start":1792360800000,"step":3600000,"values":[0,0,1,0,0,0,0,1,2,1,0,1,0,0,1,1,0,2,1,0,0,1,0,1,1]}]}</script>
+                                    </figure>
+                                </div>
+                            </div>
+                            <div class="aj-health" role="group" aria-label="Subsystems">
+                                <div class="aj-health__item">
+                                    <span class="aj-health__name">Journal</span>
+                                    <span class="kp-health" data-state="ok" id="aj-health-journal"
+                                        ><span class="kp-health__dot" aria-hidden="true"></span> <span data-aj-health-text>Readable, nothing pending</span></span
+                                    >
+                                </div>
+                                <div class="aj-health__item">
+                                    <span class="aj-health__name">Store</span>
+                                    <span class="kp-health" data-state="ok" id="aj-health-store"
+                                        ><span class="kp-health__dot" aria-hidden="true"></span> <span data-aj-health-text>Writable</span></span
+                                    >
+                                </div>
+                            </div>
+                            <figure class="kp-stackbar" id="aj-outcomes"></figure>
+                        </div>
+                    </div>
+                </section>
+                <p class="aj-mock"><span class="kp-badge">Sample data</span> The figures start from the live service on 19/10/2026. The split into created and updated, and everything the Simulate buttons do, are sample data.</p>
+            </section>
+
+            <!-- 2. Recent deliveries -->
+            <section
+                class="aj-sec"
+                id="journal-deliveries"
+                data-review-item="journal-deliveries"
+                data-review-topic="journal"
+                data-review-components="datatable segmented badge"
+                data-review-title="Recent deliveries"
+                data-review-choices='[{ "id": "rows-open", "label": "How rows open", "once": true, "default": "one", "options": [
+                    { "value": "one", "label": "One row at a time", "hint": "Opening a row closes the one that was open, so the table never grows past one open error (recommended)." },
+                    { "value": "many", "label": "As many as you open", "hint": "Rows stay open until you close them; you can compare two errors, and the table grows." }]}]'
+                aria-labelledby="h-journal-deliveries"
+            >
+                <div class="aj-sec__head">
+                    <h2 id="h-journal-deliveries">Recent deliveries</h2>
+                    <p>
+                        What Almanac wrote to the calendars lately: when, from which source and how it ended. Filter by result; open a row to read
+                        what went wrong.
+                    </p>
+                </div>
+                <div class="aj-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Three columns, <b>When</b> (relative: <i>4 min ago</i>), <b>Source</b> (a tag) and <b>Result</b> (<b>Created</b> green,
+                            <b>Updated</b> blue, <b>Retrying</b> amber, <b>Failed</b> red), sortable, with the toggle in its own column. The chips above show exact counts:
+                            <b>All 13</b>, <b>Created 6</b>, <b>Updated 4</b>, <b>Retrying 1</b>, <b>Failed 2</b>.
+                        </li>
+                        <li>
+                            Press <b>Failed</b>: two rows stay and the chip is the only one on. Open one: a plain sentence and the error as a code
+                            block. A row that went well says where it was written.
+                        </li>
+                        <li>
+                            <b>Loading</b> shows the busy card over the whole table, <b>Empty</b> the plate <b>Nothing delivered yet this run</b>,
+                            <b>Failed</b> one plate with Retry. All three keep the filled height. A filter that matches nothing shows the table&rsquo;s
+                            own &ldquo;nothing matches&rdquo; plate.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The counts on the chips add up to the rows, a failed row opens onto its error in a code block, and the three states are a
+                        plate each in the card&rsquo;s footprint with a normal-size Retry.
+                    </p>
+                </div>
+                <div class="aj-controls" data-review-controls data-review-controls-for="journal-deliveries-component">
+                    <div role="group" aria-label="State of the table">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-aj-table-state="ready" aria-pressed="true">Filled</button>
+                        <button type="button" class="kp-button kp-button--sm" data-aj-table-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-aj-table-state="empty" aria-pressed="false">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" data-aj-table-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                </div>
+                <section
+                    class="kp-card aj-card"
+                    id="journal-deliveries-component"
+                    data-kp-state="ready"
+                    data-kp-loading-words="Reading the deliveries"
+                    aria-labelledby="aj-deliveries-title"
+                >
+                    <div class="kp-card__header">
+                        <h3 class="kp-card__title" id="aj-deliveries-title">Recent deliveries</h3>
+                    </div>
+                    <p class="kp-card__body">The newest first. <span class="kp-badge">Sample data</span> Only three real deliveries exist so far.</p>
+                    <p class="kp-card__body aj-key">Result key: <span class="kp-badge kp-badge--success" data-kp-semantic>Created</span> a new calendar entry <span class="kp-badge kp-badge--info" data-kp-semantic>Updated</span> an entry changed <span class="kp-badge kp-badge--warning" data-kp-semantic>Retrying</span> Google asked to wait <span class="kp-badge kp-badge--destructive" data-kp-semantic>Failed</span> gave up</p>
+                    <div class="kp-card__stage">
+                        <div class="kp-card__data" data-aj-deliveries="static"></div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- 3. Live -->
+            <section
+                class="aj-sec"
+                id="journal-live"
+                data-review-item="journal-live"
+                data-review-topic="journal"
+                data-review-components="refresh freshness connection"
+                data-review-title="Staying live"
+                data-review-choices='[{ "id": "refresh-look", "label": "How the refresh interval is chosen", "once": true, "default": "menu", "options": [
+                    { "value": "menu", "label": "A menu button", "hint": "One small button that names the interval and opens the list; keeps the header to one row (recommended)." },
+                    { "value": "segmented", "label": "A segmented control", "hint": "Every interval visible at once, one press to change; wider, and it scrolls inside the card on a phone." }]}]'
+                aria-labelledby="h-journal-live"
+            >
+                <div class="aj-sec__head">
+                    <h2 id="h-journal-live">Staying live</h2>
+                    <p>
+                        The deliveries table keeps itself current: you choose how often, a line says how fresh it is, a banner appears when the service
+                        cannot be reached, and a new delivery arrives in its place.
+                    </p>
+                </div>
+                <div class="aj-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The header is one row: the title <b>Journal</b>, then the refresh control with its freshness line (<i>updated 20 s ago</i>)
+                            and <b>Refresh now</b>. It opens paused; pick <b>15 s</b> and a thin rule runs down to the next refresh.
+                        </li>
+                        <li>
+                            <b>Simulate a delivery</b>: a new row is added at the top of the table without the table redrawing, the chip counts change
+                            by one, and nothing else moves. Sorting, an open row and a chip you pressed all survive it.
+                        </li>
+                        <li>
+                            <b>Reconnecting</b> or <b>Refused</b> shows the banner above the card with the reason and a Retry; while it shows,
+                            <b>Refresh now</b> fails with its own warning, and <b>Online</b> brings the table back with <i>Connected again</i>.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The freshness line sits right after the title, a simulated delivery lands in place with its count, and the banner reads at a
+                        glance without covering the table.
+                    </p>
+                </div>
+                <div class="aj-controls" data-review-controls data-review-controls-for="journal-live-component">
+                    <div role="group" aria-label="State of the card">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-aj-live-state="ready" aria-pressed="true">Filled</button>
+                        <button type="button" class="kp-button kp-button--sm" data-aj-live-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-aj-live-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Connection to the service">
+                        <b>Connection:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-aj-connection="online" aria-pressed="true">Online</button>
+                        <button type="button" class="kp-button kp-button--sm" data-aj-connection="reconnecting" aria-pressed="false">Reconnecting</button>
+                        <button type="button" class="kp-button kp-button--sm" data-aj-connection="refused" aria-pressed="false">Refused</button>
+                    </div>
+                    <div role="group" aria-label="Simulate a delivery">
+                        <b>Simulate:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-aj-live-do="delivery">Simulate a delivery</button>
+                        <button type="button" class="kp-button kp-button--sm" data-aj-live-do="failure">Simulate a failed delivery</button>
+                    </div>
+                </div>
+                <div class="aj-live" id="journal-live-component">
+                    <div class="aj-live__head">
+                        <h3 class="aj-live__title">Journal</h3>
+                        <div class="kp-refresh" id="aj-refresh" data-kp-refresh="0" data-kp-refresh-choices="0,15,30,60" data-kp-look="menu"></div>
+                    </div>
+                    <div class="kp-connection" id="aj-connection" data-kp-connection data-kp-connection-source="app" data-kp-placement="top" data-kp-retry-delays="off"></div>
+                    <section
+                        class="kp-card aj-card"
+                        id="aj-live-card"
+                        data-kp-state="ready"
+                        data-kp-loading-words="Reading the deliveries"
+                        aria-label="Recent deliveries, live"
+                    >
+                        <div class="kp-card__stage">
+                            <div class="kp-card__data" data-aj-deliveries="live"></div>
+                        </div>
+                    </section>
+                </div>
+                <p class="aj-mock"><span class="kp-badge">Sample data</span> The rows, the connection and the deliveries the buttons add are simulated; the interval, the freshness line and the banner are the real parts.</p>
+            </section>
+
+            <!-- 4. Sources -->
+            <section
+                class="aj-sec"
+                id="sources"
+                data-review-item="sources"
+                data-review-topic="sources"
+                data-review-topic-title="Sources section"
+                data-review-components="statuslist entity-card flash"
+                data-review-title="Sources"
+                data-review-choices='[{ "id": "sources-view", "label": "How the sources are listed", "once": true, "default": "rows", "options": [
+                    { "value": "rows", "label": "A status list, one row per source", "hint": "Source, the calendar it writes to and a health mark on one line each; scans at a glance and stays short with many sources (recommended)." },
+                    { "value": "cards", "label": "Cards, one per source", "hint": "More at once per source (time zone, default length, the calendar) in a grid of equal cards; taller, and best with a handful of sources." }]}]'
+                aria-labelledby="h-sources"
+            >
+                <div class="aj-sec__head">
+                    <h2 id="h-sources">Sources</h2>
+                    <p>
+                        Which source writes to which calendar, and whether its profile file is being served. Reloading re-reads the files from disk
+                        without leaving the page.
+                    </p>
+                </div>
+                <div class="aj-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Four sources: <b>home-assistant</b>, <b>homelab</b>, <b>kyu</b>, <b>claude-sessions</b>, each with its calendar and a health
+                            mark; one source warns and says what to do about it. Rows and cards show the same four sources.
+                        </li>
+                        <li>
+                            Press <b>Reload profiles from disk</b>: the button shows it is busy, says <b>Done</b> and goes back to its words; a toast
+                            says <b>4 profiles reloaded from disk</b>, the warning row turns healthy, and the page does not jump or scroll.
+                        </li>
+                        <li>
+                            Loading shows the busy card over the list, empty a plate with <b>No profile files on disk</b>, failed one plate with Retry;
+                            all keep the filled height.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Rows and cards show the same data; the reload button flashes busy then done, the toast carries the number, and the list
+                        updates in place.
+                    </p>
+                </div>
+                <div class="aj-controls" data-review-controls data-review-controls-for="sources-component">
+                    <div role="group" aria-label="State of the list">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-aj-sources-state="ready" aria-pressed="true">Filled</button>
+                        <button type="button" class="kp-button kp-button--sm" data-aj-sources-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-aj-sources-state="empty" aria-pressed="false">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" data-aj-sources-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                </div>
+                <section
+                    class="kp-card aj-card"
+                    id="sources-component"
+                    data-kp-state="ready"
+                    data-kp-loading-words="Reading the profile files"
+                    aria-labelledby="aj-sources-title"
+                >
+                    <div class="kp-card__header">
+                        <h3 class="kp-card__title" id="aj-sources-title">Sources</h3>
+                        <div class="kp-card__actions">
+                            <button
+                                type="button"
+                                class="kp-button"
+                                id="aj-reload"
+                                data-kp-flash-button
+                                data-kp-post="/sources/reload"
+                                data-kp-flash-word="Done"
+                                data-kp-busy-label="Reloading"
+                            >
+                                Reload profiles from disk
+                            </button>
+                        </div>
+                    </div>
+                    <p class="kp-card__body">Profile files, schema version 2. <span class="kp-badge">Sample data</span> Only home-assistant is a real name; the other three are stand-ins.</p>
+                    <div class="kp-card__stage">
+                        <div class="kp-card__data" data-aj-sources></div>
+                    </div>
+                </section>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "almanac-journal-23240916-d0a7-493b-a552-79217885746f", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

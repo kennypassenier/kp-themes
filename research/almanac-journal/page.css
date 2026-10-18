@@ -1,0 +1,133 @@
+/* research/almanac-journal: the frame of the Almanac status page demo. Everything with a kp- class is the package; the aj- rules
+   lay out what only this page adds: the section frame, the control rows, the health pair and the live header. Tokens only. */
+
+.aj-page {
+    display: grid;
+    gap: var(--kp-space-xl, 2rem);
+    min-inline-size: 0;
+}
+
+.aj-intro :is(h1, p) {
+    margin: 0;
+}
+
+.aj-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+.aj-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.aj-sec__head :is(h2, p),
+.aj-expected :is(p, ul) {
+    margin: 0;
+}
+
+.aj-expected ul {
+    padding-inline-start: 1.25rem;
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.aj-controls,
+.aj-controls > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.aj-mock {
+    margin: 0;
+    color: var(--muted-foreground);
+}
+
+/* A card in this page fills its section and stays one width in every state. */
+.aj-card {
+    min-inline-size: 0;
+}
+
+/* The glance card: figures, the two dots, the bar, on one grid. */
+.aj-glance {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.aj-health {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+}
+
+.aj-health__item {
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.aj-health__name {
+    color: var(--muted-foreground);
+}
+
+/* The table card: the chips and the search share one bar. */
+.aj-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.aj-table .kp-table-wrap {
+    min-block-size: 20rem;
+}
+
+.aj-live .aj-table .kp-table-wrap {
+    min-block-size: 14rem;
+}
+
+.aj-detail {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    padding-block: var(--kp-space-xs, 0.25rem);
+}
+
+.aj-detail p {
+    margin: 0;
+}
+
+.aj-detail .kp-code-block {
+    margin: 0;
+}
+
+/* The live panel: header row, banner, card. */
+.aj-live {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+.aj-live__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+}
+
+.aj-live__title {
+    margin: 0;
+}
+
+.aj-live__head .kp-refresh {
+    flex: 1 1 24rem;
+    min-inline-size: 0;
+}
+
+/* Sources: the list or the grid fills the card. */
+.aj-sources {
+    min-inline-size: 0;
+}
