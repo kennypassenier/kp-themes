@@ -1,0 +1,228 @@
+/* research/app-hsb-health: the page's own frame. Everything with a kp- class is the package; these hs- rules only lay the
+   sections out, frame the widths and draw the mock pages the connection banner stands in. */
+
+.hs-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.hs-intro,
+.hs-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.hs-intro :is(h1, p),
+.hs-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.hs-intro p,
+.hs-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.hs-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+/* The "Expected:" block: what to see and what each control does. */
+.hs-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.hs-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.hs-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.hs-label {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 600;
+}
+
+/* A stack of labelled cases, one under the other, each at the full width. */
+.hs-stack {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-lg, 1.5rem);
+    min-inline-size: 0;
+}
+
+.hs-case {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 0;
+}
+
+/* A frame of a fixed width: what the component does at a phone's width, whatever the page's. */
+.hs-frame {
+    box-sizing: border-box;
+    max-inline-size: 100%;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px dashed var(--border-strong, var(--border));
+    border-radius: var(--radius, 0.5rem);
+}
+
+.hs-frame--phone {
+    inline-size: min(390px, 100%);
+}
+
+/* What the page heard from the component, in one line under it. */
+.hs-readout {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* The band's "all clear" drawing keeps the band's place, so the page does not jump when the last problem goes. */
+.hs-clear[hidden] {
+    display: none;
+}
+
+/* ── the profiles: one row per profile, on one grid in every state ── */
+
+.hs-profiles {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.hs-profile {
+    display: grid;
+    grid-template-columns: minmax(9rem, 12rem) minmax(0, 1fr) minmax(12rem, auto);
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
+    padding: var(--kp-space-sm, 0.5rem);
+    border-block-start: 1px solid var(--border);
+}
+
+.hs-profile:first-child {
+    border-block-start: 0;
+}
+
+.hs-profile__name {
+    display: grid;
+    gap: var(--kp-space-2xs, 0.125rem);
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+}
+
+.hs-profile__route,
+.hs-profile__sub {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    overflow-wrap: anywhere;
+}
+
+.hs-profile__figures {
+    display: grid;
+    gap: var(--kp-space-2xs, 0.125rem);
+    min-inline-size: 0;
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-variant-numeric: tabular-nums;
+}
+
+.hs-profile__fresh {
+    display: grid;
+    justify-items: start;
+    gap: var(--kp-space-2xs, 0.125rem);
+    min-inline-size: 0;
+}
+
+.hs-card {
+    --kp-card-stage-min: 18rem;
+}
+
+/* On a phone the three columns stack. */
+.hs-frame--phone .hs-profile,
+.hs-profile--stack {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+@media (max-width: 40rem) {
+    .hs-profile {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* ── a mock page the connection banner stands in ── */
+
+.hs-mock {
+    position: relative;
+    display: grid;
+    align-content: start;
+    min-block-size: 15rem;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+}
+
+.hs-mock--phone {
+    min-block-size: 17rem;
+}
+
+.hs-mock__bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    border-block-end: 1px solid var(--border);
+    background: var(--card);
+}
+
+.hs-mock__bar span {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.hs-mock__body {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    padding: var(--kp-space-md, 1rem);
+}
+
+.hs-mock__body p {
+    margin: 0;
+}
+
+.hs-profile__fresh .kp-ago,
+.hs-profile__fresh .hs-profile__sub {
+    padding-inline: var(--kp-space-xs, 0.25rem);
+}
+
+/* At a phone's width the rows stack and are taller than the empty and failed notes, so the card's least height covers the
+   tallest of the four states: the card keeps its height whichever one it shows. */
+.hs-frame--phone .hs-card {
+    --kp-card-stage-min: 22rem;
+}

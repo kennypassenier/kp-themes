@@ -1,0 +1,562 @@
+<!doctype html>
+<html lang="en-GB" data-theme="formal" data-review="app-hsb-health" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>HTTPSwitchboard: health and problems · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main hs-page">
+            <header class="hs-intro">
+                <h1>HTTPSwitchboard: health and problems</h1>
+                <p class="cat-intro">
+                    HTTPSwitchboard accepts a message in one shape and delivers it in another. Its status page shows one row per profile. The real
+                    profile is <b>alertmanager</b>: it reads the topic <code>alerts.raw</code> from the kyu hub (subscription
+                    <code>switchboard</code>) and delivers to a Home Assistant webhook on <code>homeassistant.lan:8123</code> (the webhook&rsquo;s
+                    path is a credential and is never shown). The second profile, <b>uptime-kuma</b>, is a <b>mock</b>: it takes
+                    <code>POST /uptime-kuma</code> and exists only to show two profiles side by side.
+                </p>
+                <p>
+                    Judge in the review dialog (&ldquo;Review in a dialog&rdquo; at the top): five sections, one step in formal. A profile is
+                    <b>starting</b> (nothing tried since the service started or since the last recheck), <b>working</b>, <b>failing</b> (deliveries
+                    fail and messages wait on the hub), <b>denied</b> (the hub refused the switchboard&rsquo;s credentials) or <b>hub-down</b> (the
+                    hub cannot be reached). Everything with a <code>kp-</code> class is the package; the sample data and the buttons that drive a
+                    state are this page&rsquo;s. Nothing moves until you press a button, except the freshness lines, which tick by design.
+                </p>
+            </header>
+
+            <!-- ================================================================ 1 · attention band -->
+            <section
+                class="hs-sec"
+                id="attention"
+                data-review-item="attention"
+                data-review-topic="attention"
+                data-review-topic-title="Attention band"
+                data-review-components="attention"
+                data-review-title="Attention band: the profiles that need a person, worst first"
+                aria-labelledby="h-attention"
+            >
+                <div class="hs-sec__head">
+                    <h2 id="h-attention">Attention band: the profiles that need a person, worst first</h2>
+                    <p>
+                        <code>.kp-attention</code> with <code>setAttention()</code> (js/attention.js): one alert per profile that is not well, the worst
+                        on top, each with the button that goes to its fix. When every profile works the band takes no room and a calm note stands
+                        in its place.
+                    </p>
+                </div>
+                <div class="hs-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            On load: <b>alertmanager</b> is <b>denied</b> and <b>uptime-kuma</b> is <b>starting</b>. The band shows two alerts, the red
+                            one first (denied is critical), the note about the other under it, although the page handed them over the other way round.
+                        </li>
+                        <li>
+                            Press other states for either profile. <b>Failing</b> is a warning, <b>starting</b> a note, <b>denied</b> and
+                            <b>hub-down</b> are critical. An alert that is still true stays the same element (it is not announced again, and a focused
+                            button keeps its focus); a profile that turns <b>working</b> leaves the band in the theme&rsquo;s way and the rest close up.
+                        </li>
+                        <li>
+                            When both work, the band is gone and the drawing <b>All profiles are working</b> stands in its place. The same band is
+                            shown again at 390 px under the first, driven by the same buttons.
+                        </li>
+                        <li>
+                            A button in the band (<b>See the fix</b>) says in the grey line under the band what it would open; the real page scrolls to
+                            the problem alert of that profile (next section).
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal is a ledger: navy rules and red ink for what needs the eye. Look at the critical alerts wearing red ink along their
+                        start edge, at the order (red before amber before note, whatever the order given), at the words keeping clear of the edge
+                        and of the button, and at the band closing up without a gap when an alert leaves.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="attention-component">
+                    <div role="group" aria-label="Health of alertmanager">
+                        <b>alertmanager is:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-att-a="working" aria-pressed="false">Working</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-att-a="starting" aria-pressed="false">Starting</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-att-a="failing" aria-pressed="false">Failing</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-att-a="denied" aria-pressed="true">Denied</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-att-a="hub-down" aria-pressed="false">Hub down</button>
+                    </div>
+                    <div role="group" aria-label="Health of uptime-kuma (mock)">
+                        <b>uptime-kuma (mock) is:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-att-k="working" aria-pressed="false">Working</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-att-k="starting" aria-pressed="true">Starting</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-att-k="failing" aria-pressed="false">Failing</button>
+                    </div>
+                </div>
+                <div id="attention-component" class="hs-stack">
+                    <div class="hs-case">
+                        <p class="hs-label">Full width</p>
+                        <div class="kp-attention" id="hs-band" role="region" aria-label="Profiles that need attention"></div>
+                        <div class="kp-empty hs-clear" id="hs-clear" data-kp-art="done" data-kp-art-size="sm" hidden>
+                            <p class="kp-empty__title">All profiles are working</p>
+                            <p class="kp-empty__body">alertmanager and uptime-kuma delivered their last message.</p>
+                        </div>
+                    </div>
+                    <div class="hs-case">
+                        <p class="hs-label">Phone width (390 px)</p>
+                        <div class="hs-frame hs-frame--phone">
+                            <div class="kp-attention" id="hs-band-phone" role="region" aria-label="Profiles that need attention, phone width"></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="hs-readout" id="hs-att-readout" aria-live="polite">Nothing pressed yet.</p>
+            </section>
+
+            <!-- ================================================================ 2 · problem alert -->
+            <section
+                class="hs-sec"
+                id="problem"
+                data-review-item="problem"
+                data-review-topic="problem"
+                data-review-topic-title="Problem alert"
+                data-review-components="problems"
+                data-review-title="Problem alert: what happened, why, and what to do now"
+                data-review-choices='[{ "id": "hs-problem-mode", "label": "How several problems are laid out", "once": true, "default": "each", "options": [
+                    { "value": "each", "label": "One alert each", "hint": "Recommended. Every problem is its own alert with its own fix and its own Copy; the worst is on top. Nothing is hidden." },
+                    { "value": "list", "label": "One alert, a list", "hint": "All problems as rows of one alert in the tone of the worst. Shorter, but one fix button per row sits closer together." },
+                    { "value": "fold", "label": "Folded from five", "hint": "One alert per problem until five; from five the worst stay open and the rest sit behind Show the other N." }] }]'
+                aria-labelledby="h-problem"
+            >
+                <div class="hs-sec__head">
+                    <h2 id="h-problem">Problem alert: what happened, why, and what to do now</h2>
+                    <p>
+                        <code>.kp-alert</code> parts with <code>setProblems()</code> (js/problems.js): for each unhealthy profile one alert that says what is
+                        wrong, why, and what to do, with a fix button and, where a command helps, the command with a Copy button.
+                    </p>
+                </div>
+                <div class="hs-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            On load: both profiles at once, as two alerts. <b>alertmanager</b> (denied, red) says the hub refused our credentials, why,
+                            and <b>What now</b>: re-issue the switchboard&rsquo;s kyu token. <b>uptime-kuma</b> (failing, amber) says deliveries to Home
+                            Assistant fail and gives <code>journalctl -u http-switchboard</code> with a <b>Copy</b> button.
+                        </li>
+                        <li>
+                            <b>Copy</b> puts exactly the command on the clipboard and the button says so for a moment. <b>Hub down</b> carries
+                            <code>systemctl status kyu</code> (check kyu on CT 109). The webhook&rsquo;s path never appears; only the host does.
+                        </li>
+                        <li>
+                            <b>Starting</b> is a note you may close (it is not a fault, so it is the only dismissible one). <b>All four kinds</b>
+                            shows one of each kind at once, as a sample, for judging the layouts.
+                        </li>
+                        <li>
+                            <b>Layout</b> switches <code>data-kp-problems-mode</code> at once: <b>Each</b>, <b>List</b>, <b>Folded</b>. With Folded, the
+                            alert folds once as many problems are there as <b>Fold from</b> says (2 to 5; 5 is the default). <b>Run on</b> sets
+                            <code>data-kp-problem-layout="inline"</code>. The choice in the dialog only sets which layout is the default.
+                        </li>
+                        <li>
+                            Pressing a fix button says in the grey line what the real page does; the problem stays until the profile really recovers.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        A problem is a ledger entry: red ink along the start edge for critical, the three parts one under the other with their
+                        words aligned, the command in code on its own line with Copy at the end, and the fix button in the fixed place at the end of
+                        the alert. Look at the text keeping clear of the edge and of Copy, at the folded alert, and at the phone frame.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="problem-component">
+                    <div role="group" aria-label="Which problems">
+                        <b>Show:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-prob="denied" aria-pressed="false">Denied</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-prob="hub-down" aria-pressed="false">Hub down</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-prob="failing" aria-pressed="false">Failing</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-prob="starting" aria-pressed="false">Starting</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-prob="both" aria-pressed="true">Both profiles</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-prob="all" aria-pressed="false">All four kinds</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-prob="none" aria-pressed="false">None</button>
+                    </div>
+                    <div role="group" aria-label="Layout of several problems">
+                        <b>Layout:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-mode="each" aria-pressed="true">Each</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-mode="list" aria-pressed="false">List</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-mode="fold" aria-pressed="false">Folded</button>
+                    </div>
+                    <div role="group" aria-label="Fold from">
+                        <b>Fold from:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-fold="2" aria-pressed="false">2</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-fold="3" aria-pressed="false">3</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-fold="4" aria-pressed="false">4</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-fold="5" aria-pressed="true">5</button>
+                    </div>
+                    <div role="group" aria-label="Look of one problem">
+                        <b>Look:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-look="stacked" aria-pressed="true">Stacked</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-look="inline" aria-pressed="false">Run on</button>
+                    </div>
+                </div>
+                <div id="problem-component" class="hs-stack">
+                    <div class="hs-case">
+                        <div class="kp-problems" id="hs-problems" data-kp-problems data-kp-problems-mode="each"></div>
+                    </div>
+                    <div class="hs-case">
+                        <p class="hs-label">Phone width (390 px)</p>
+                        <div class="hs-frame hs-frame--phone">
+                            <div class="kp-problems" id="hs-problems-phone" data-kp-problems data-kp-problems-mode="each"></div>
+                        </div>
+                    </div>
+                </div>
+                <p class="hs-readout" id="hs-prob-readout" aria-live="polite">Nothing pressed yet.</p>
+            </section>
+
+            <!-- ================================================================ 3 · freshness -->
+            <section
+                class="hs-sec"
+                id="freshness"
+                data-review-item="freshness"
+                data-review-topic="freshness"
+                data-review-topic-title="Last delivery"
+                data-review-components="freshness"
+                data-review-title="Last delivery: how long ago, and when it is too long"
+                aria-labelledby="h-freshness"
+            >
+                <div class="hs-sec__head">
+                    <h2 id="h-freshness">Last delivery: how long ago, and when it is too long</h2>
+                    <p>
+                        <code>data-kp-ago</code> (js/freshness.js): the words &ldquo;last delivery 3 min ago&rdquo; tick by themselves, and turn into a
+                        warning plate once the profile has been quiet longer than it is expected to be.
+                    </p>
+                </div>
+                <div class="hs-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            On load: <b>alertmanager</b> says <b>last delivery 3 min ago</b> with a quiet time of 1 h, so it is fresh. <b>uptime-kuma</b>
+                            (mock) says <b>no delivery yet</b>. The seconds tick; the line keeps the width of the longest text of its unit, so the words
+                            beside it never move when it goes from <i>59 s</i> to <i>1 min</i>.
+                        </li>
+                        <li>
+                            Point at a line (or focus it): the moment shows as <b>dd/mm/yyyy HH:mm</b> in Brussels time. The exact counts beside it
+                            (received, delivered, failed) are the real numbers.
+                        </li>
+                        <li>
+                            <b>Last delivery</b> moves the moment: <b>Now</b>, <b>3 min ago</b>, <b>40 min ago</b>, <b>2 days ago</b>, or
+                            <b>Never</b>. <b>Quiet time</b> is <code>data-kp-stale-after</code>: when the line is older than that it gets the
+                            warning plate with no other thing moving, and says so once to a screen reader (<code>data-kp-ago-announce="state"</code>).
+                            Example: 40 min ago with 15 min allowed is stale; with 1 h it is not.
+                        </li>
+                        <li>
+                            <b>Deliver now</b> sets the moment to now for both profiles and the plate goes away. The sentence under each line
+                            says the quiet time in words.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        A stale line turns into formal's warning plate, the way the ledger marks an entry that needs the eye; nothing around it moves
+                        when it turns. Look at the words keeping clear of the plate&rsquo;s edge, at the figures lining up in their own column in both rows,
+                        and at the three columns holding their places when the line gets longer.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="freshness-component">
+                    <div role="group" aria-label="Last delivery of alertmanager">
+                        <b>Last delivery:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-last="0" aria-pressed="false">Now</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-last="180" aria-pressed="true">3 min ago</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-last="2400" aria-pressed="false">40 min ago</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-last="172800" aria-pressed="false">2 days ago</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-last="never" aria-pressed="false">Never</button>
+                    </div>
+                    <div role="group" aria-label="Quiet time allowed for alertmanager">
+                        <b>Quiet time:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-quiet="60" aria-pressed="false">1 min</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-quiet="900" aria-pressed="false">15 min</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-quiet="3600" aria-pressed="true">1 h</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-quiet="21600" aria-pressed="false">6 h</button>
+                    </div>
+                    <div role="group" aria-label="Deliver now">
+                        <b>Now:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-arrive>Deliver now</button>
+                    </div>
+                </div>
+                <div id="freshness-component" class="hs-stack">
+                    <section class="kp-card hs-card" aria-labelledby="hs-fresh-t">
+                        <div class="kp-card__header"><h3 class="kp-card__title" id="hs-fresh-t">Profiles</h3></div>
+                        <ul class="hs-profiles" aria-label="Profiles and their last delivery">
+                            <li class="hs-profile">
+                                <span class="hs-profile__name"
+                                    ><b>alertmanager</b><span class="hs-profile__route">kyu alerts.raw → Home Assistant</span></span
+                                >
+                                <span class="hs-profile__figures"><span>received 1284 · delivered 1281 · failed 3</span></span>
+                                <span class="hs-profile__fresh"
+                                    ><time
+                                        class="kp-ago"
+                                        id="hs-ago-a"
+                                        data-kp-ago
+                                        data-kp-ago-verb="last delivery"
+                                        data-kp-stale-after="3600"
+                                        data-kp-ago-announce="state"
+                                        >last delivery 3 min ago</time
+                                    ><span class="hs-profile__sub" id="hs-quiet-a">Quiet time allowed: 1 h</span></span
+                                >
+                            </li>
+                            <li class="hs-profile">
+                                <span class="hs-profile__name"
+                                    ><b>uptime-kuma</b><span class="hs-profile__route">POST /uptime-kuma → Home Assistant (mock)</span></span
+                                >
+                                <span class="hs-profile__figures"><span>received 0 · delivered 0 · failed 0</span></span>
+                                <span class="hs-profile__fresh"
+                                    ><time
+                                        class="kp-ago"
+                                        id="hs-ago-k"
+                                        data-kp-ago
+                                        data-kp-ago-verb="last delivery"
+                                        data-kp-stale-after="300"
+                                        data-kp-ago-announce="state"
+                                        >no delivery yet</time
+                                    ><span class="hs-profile__sub">Quiet time allowed: 5 min</span></span
+                                >
+                            </li>
+                        </ul>
+                    </section>
+                </div>
+            </section>
+
+            <!-- ================================================================ 4 · connection banner -->
+            <section
+                class="hs-sec"
+                id="connection"
+                data-review-item="connection"
+                data-review-topic="connection"
+                data-review-topic-title="Hub connection banner"
+                data-review-components="connection"
+                data-review-title="Connection banner: the link to the kyu hub"
+                data-review-choices='[{ "id": "hs-connection-placement", "label": "Where the banner stands", "once": true, "default": "top", "options": [
+                    { "value": "top", "label": "Under the navigation bar", "hint": "Recommended for the status page. The banner is in the flow under the bar and pushes the profiles down, so it never covers a row or a button." },
+                    { "value": "bottom", "label": "At the foot of the window", "hint": "The package default. The banner is fixed to the bottom edge and always in view, over the last lines of the page." }] }]'
+                aria-labelledby="h-connection"
+            >
+                <div class="hs-sec__head">
+                    <h2 id="h-connection">Connection banner: the link to the kyu hub</h2>
+                    <p>
+                        <code>data-kp-connection</code> (js/connection.js): a band that says the switchboard has lost its hub, is trying again, was
+                        refused, or is back. It takes no room while the hub answers.
+                    </p>
+                </div>
+                <div class="hs-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Online, the banner takes no room in either page. <b>Unreachable</b> (after 1.5 s of grace): <b>The kyu hub is
+                            unreachable</b>, why, the exact count of waiting messages, &ldquo;next try in 3 s&rdquo; and <b>Retry now</b>; the
+                            countdown runs.
+                        </li>
+                        <li>
+                            <b>Retry now</b> (or the countdown reaching zero) says <b>Reaching the kyu hub…</b> with the attempt number, then the mock
+                            hub answers: <b>Connected to the kyu hub again</b> in green for 3 s, then the band leaves. <b>Refused</b> is the
+                            red plate <b>The kyu hub refused our credentials</b> with the hub&rsquo;s own sentence; retrying it is refused again.
+                            <b>Back</b> brings it back at once. <b>1 s drop</b> shows nothing at all (the grace). <b>Retrying</b> shows the attempt under way.
+                        </li>
+                        <li>
+                            <b>Waiting</b> sets <code>data-kp-pending</code> (0, 3, 128 or 1204; the exact number, never &ldquo;99+&rdquo;).
+                            At 0 the count line is left out. The page below the bar says what the profiles do meanwhile.
+                        </li>
+                        <li>
+                            The dialog&rsquo;s choice sets whether the banner stands under the bar (<code>data-kp-placement="top"</code>) or at the
+                            foot; both pages follow it at once. The phone page shows the one-line form with Retry now.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The offline plate is a warning entry with its red rule along the start edge, the refused plate the destructive one, the
+                        back plate green; the plates arrive as a rule ruled across and leave the same way backwards. Look at the words keeping clear
+                        of Retry now and of the edge, at the count staying exact, and at the page below moving down (top) or being covered (foot) and
+                        coming back without a jump.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="connection-component">
+                    <div role="group" aria-label="Hub link">
+                        <b>Hub:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-conn="offline">Unreachable</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-conn="reconnecting">Retrying</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-conn="refused">Refused</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-conn="online">Back</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-conn="blip">1 s drop</button>
+                    </div>
+                    <div role="group" aria-label="Messages waiting">
+                        <b>Waiting:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-pending="0" aria-pressed="false">0</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-pending="3" aria-pressed="true">3</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-pending="128" aria-pressed="false">128</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-pending="1204" aria-pressed="false">1204</button>
+                    </div>
+                    <div role="group" aria-label="Where the banner stands">
+                        <b>Stands:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-place="top" aria-pressed="true">Under the bar</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-place="bottom" aria-pressed="false">At the foot</button>
+                    </div>
+                </div>
+                <div id="connection-component" class="hs-stack">
+                    <div class="hs-case">
+                        <p class="hs-label">Full width</p>
+                        <div class="hs-mock">
+                            <div class="hs-mock__bar"><b>HTTPSwitchboard</b><span>Profiles · Senders · Passkeys</span></div>
+                            <div
+                                data-kp-connection
+                                data-kp-connection-source="app"
+                                data-kp-connection-grace="1500"
+                                data-kp-pending="3"
+                                data-kp-placement="top"
+                                data-hs-banner
+                            ></div>
+                            <div class="hs-mock__body">
+                                <p><b>alertmanager</b> · reads alerts.raw from the kyu hub · last delivery 3 min ago</p>
+                                <p><b>uptime-kuma</b> (mock) · takes POST /uptime-kuma · no delivery yet</p>
+                                <p>Messages already fetched stay on this page; nothing is lost while the hub is away.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hs-case">
+                        <p class="hs-label">Phone width (390 px)</p>
+                        <div class="hs-frame hs-frame--phone">
+                            <div class="hs-mock hs-mock--phone">
+                                <div class="hs-mock__bar"><b>HTTPSwitchboard</b></div>
+                                <div
+                                    data-kp-connection
+                                    data-kp-connection-source="app"
+                                    data-kp-connection-grace="1500"
+                                    data-kp-pending="3"
+                                    data-kp-placement="top"
+                                    data-hs-banner
+                                ></div>
+                                <div class="hs-mock__body">
+                                    <p><b>alertmanager</b> · last delivery 3 min ago</p>
+                                    <p><b>uptime-kuma</b> (mock) · no delivery yet</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="hs-readout" id="hs-conn-readout" aria-live="polite">The hub answers.</p>
+            </section>
+
+            <!-- ================================================================ 5 · profiles area states -->
+            <section
+                class="hs-sec"
+                id="states"
+                data-review-item="states"
+                data-review-topic="states"
+                data-review-topic-title="Profiles card states"
+                data-review-components="card-state art busy-card"
+                data-review-title="Profiles area: loading, empty and could not be read"
+                data-review-choices='[{ "id": "hs-error-look", "label": "How the card says the profiles could not be read", "once": true, "default": "drawing", "options": [
+                    { "value": "drawing", "label": "Drawing and Try again", "hint": "Recommended. The empty plate with the theme&rsquo;s error drawing, the title at heading size and a normal Try again; as prominent as the empty state." },
+                    { "value": "alert", "label": "Red alert and Try again", "hint": "The package card&rsquo;s own failure: a destructive alert with what could not be read, why, and Try again. Smaller than the drawing." }] }]'
+                aria-labelledby="h-states"
+            >
+                <div class="hs-sec__head">
+                    <h2 id="h-states">Profiles area: loading, empty and could not be read</h2>
+                    <p>
+                        <code>.kp-card[data-kp-state]</code> (js/card-state.js) with the busy card (js/busy-card.js) and <code>data-kp-art</code>
+                        (js/art.js): the card that lists the profiles keeps its place and its size whether it is reading, empty, failed or full.
+                    </p>
+                </div>
+                <div class="hs-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Ready</b>: two profile rows on one grid (name and route, the three exact counts, the health badge). <b>Loading</b>: the
+                            data table&rsquo;s own busy card in the middle of the card, animated, saying <b>Reading the profiles…</b>; the rows stay
+                            under it, dimmed and inert.
+                        </li>
+                        <li>
+                            <b>No profiles</b>: the empty plate with the <b>none</b> drawing, <b>No profiles are configured</b>, one sentence and the
+                            button <b>Show how to add one</b>. <b>Could not be read</b>: the profiles file could not be read, as the dialog&rsquo;s
+                            choice sets (error drawing, or the card&rsquo;s red alert), with <b>Try again</b>: it goes to loading for a moment and back
+                            to ready.
+                        </li>
+                        <li>
+                            All four states fill the same footprint: the card does not change height, and the header and the card under it do not move.
+                            The phone card below follows the same buttons at 390 px; its rows stack but keep the order name, counts, badge.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Loading is the seal being pressed on the ledger, centred over the whole card; empty and failed are the ledger&rsquo;s own
+                        drawings with ruled strokes, centred, the title at heading size. Look at the card keeping its height in all four states, at the
+                        words keeping clear of the plate&rsquo;s edge, and at Try again and the add button being normal-sized buttons.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="states-component">
+                    <div role="group" aria-label="State of the profiles card">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-state="empty" aria-pressed="false">No profiles</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-state="error" aria-pressed="false">Could not be read</button>
+                    </div>
+                    <div role="group" aria-label="Look of the failed state">
+                        <b>Could not be read as:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-errlook="drawing" aria-pressed="true">Drawing</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-errlook="alert" aria-pressed="false">Red alert</button>
+                    </div>
+                </div>
+                <div id="states-component" class="hs-stack">
+                    <section class="kp-card hs-card" id="hs-card" data-kp-state="ready" data-kp-loading-words="Reading the profiles…" aria-labelledby="hs-card-t">
+                        <div class="kp-card__header"><h3 class="kp-card__title" id="hs-card-t">Profiles</h3></div>
+                        <p class="kp-card__body">One row per profile: where its messages come from, where they go, and whether they get there.</p>
+                        <div class="kp-card__stage">
+                            <div class="kp-card__data" data-hs-rows></div>
+                            <div class="kp-card__state" hidden></div>
+                        </div>
+                    </section>
+                    <div class="hs-case">
+                        <p class="hs-label">Phone width (390 px)</p>
+                        <div class="hs-frame hs-frame--phone">
+                            <section class="kp-card hs-card" id="hs-card-phone" data-kp-state="ready" data-kp-loading-words="Reading the profiles…" aria-labelledby="hs-card-phone-t">
+                                <div class="kp-card__header"><h3 class="kp-card__title" id="hs-card-phone-t">Profiles</h3></div>
+                                <div class="kp-card__stage">
+                                    <div class="kp-card__data" data-hs-rows></div>
+                                    <div class="kp-card__state" hidden></div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+                <p class="hs-readout" id="hs-states-readout" aria-live="polite">Nothing pressed yet.</p>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "app-hsb-health-7c1e5a52-2d47-4b0e-9a54-1f6b63d09a31" }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
