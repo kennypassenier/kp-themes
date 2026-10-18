@@ -116,19 +116,16 @@ export const PAGES = [
             },
             {
                 href: 'research/kpadopt56-choose/demo.html',
-                rework: 'by-eye findings of 2026-10-18 being fixed (research/kpadopt56/EYE_FINDINGS.md); it joins the Agenda as soon as its part is done',
                 label: 'Fifth and sixth adoption rounds in the other themes, part 2 of 14: Pickers and palettes',
                 about: 'Picking from a list: the usual on top, with its band and its states, and words in any order. 5 sections (55 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
             },
             {
                 href: 'research/kpadopt56-toggles/demo.html',
-                rework: 'by-eye findings of 2026-10-18 being fixed (research/kpadopt56/EYE_FINDINGS.md); it joins the Agenda as soon as its part is done',
                 label: 'Fifth and sixth adoption rounds in the other themes, part 3 of 14: Dated options, toggles and keys',
                 about: 'Options with a date, a button that stays pressed, and keys that know their own list. 5 sections (55 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
             },
             {
                 href: 'research/kpadopt56-fields/demo.html',
-                rework: 'by-eye findings of 2026-10-18 being fixed (research/kpadopt56/EYE_FINDINGS.md); it joins the Agenda as soon as its part is done',
                 label: 'Fifth and sixth adoption rounds in the other themes, part 4 of 14: Fields and inputs',
                 about: 'Entering a value: a slider with a typed value beside it, a time of day, a text box that grows, a JSON box that checks what you type, and a star rating. 9 sections (99 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
             },
@@ -140,7 +137,6 @@ export const PAGES = [
             },
             {
                 href: 'research/kpadopt56-confirm/demo.html',
-                rework: 'by-eye findings of 2026-10-18 being fixed (research/kpadopt56/EYE_FINDINGS.md); it joins the Agenda as soon as its part is done',
                 label: 'Fifth and sixth adoption rounds in the other themes, part 6 of 14: Saving, undoing and answering',
                 about: 'What happens after you act: the unsaved-changes bar, a toast with Undo, a button that shows its result, a question that waits for your answer, and the bar over a selection. 8 sections (88 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
             },
@@ -162,19 +158,16 @@ export const PAGES = [
             },
             {
                 href: 'research/kpadopt56-calm/demo.html',
-                rework: 'by-eye findings of 2026-10-18 being fixed (research/kpadopt56/EYE_FINDINGS.md); it joins the Agenda as soon as its part is done',
                 label: 'Fifth and sixth adoption rounds in the other themes, part 10 of 14: Calm screens',
                 about: 'A quiet daily check-in: calm mode, calm days, the quote card and questions one per screen. 8 sections (88 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
             },
             {
                 href: 'research/kpadopt56-charts/demo.html',
-                rework: 'by-eye findings of 2026-10-18 being fixed (research/kpadopt56/EYE_FINDINGS.md); it joins the Agenda as soon as its part is done',
                 label: 'Fifth and sixth adoption rounds in the other themes, part 11 of 14: Charts and maps',
                 about: 'Drawings of data: chart markers and a median line, what uses what, and the path of a connection. 7 sections (77 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
             },
             {
                 href: 'research/kpadopt56-availability/demo.html',
-                rework: 'by-eye findings of 2026-10-18 being fixed (research/kpadopt56/EYE_FINDINGS.md); it joins the Agenda as soon as its part is done',
                 label: 'Fifth and sixth adoption rounds in the other themes, part 12 of 14: Who can come',
                 about: 'People over days or periods, in five sections of the same grid: its states, how people answer, the best column, the rows and the summary, and the phone and density. 5 sections (55 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
             },
@@ -185,7 +178,6 @@ export const PAGES = [
             },
             {
                 href: 'research/kpadopt56-people/demo.html',
-                rework: 'by-eye findings of 2026-10-18 being fixed (research/kpadopt56/EYE_FINDINGS.md); it joins the Agenda as soon as its part is done',
                 label: 'Fifth and sixth adoption rounds in the other themes, part 14 of 14: People and cards',
                 about: 'Who is who: the avatar, the list of ways to sign in, the conversation in bubbles, and the entity card. 8 sections (88 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
             },
