@@ -1448,7 +1448,7 @@ var init_strings = __esm({
       availabilitySummaryLabel: "Who can",
       availabilityYou: (name) => `${name} (you)`,
       availabilityBestWord: "Best choice",
-      availabilityCell: (name, column, answer) => `${name}, ${column}${answer ? `: ${answer}` : ""}`,
+      availabilityCell: (name, column, answer2) => `${name}, ${column}${answer2 ? `: ${answer2}` : ""}`,
       availabilityNotSaved: (label) => `Not saved: ${label}`,
       availabilityEveryone: (label) => `${label}: everyone can`,
       availabilityYourAnswers: (yes, maybe, no) => `Your answers: ${yes} can, ${maybe} maybe, ${no} cannot`,
@@ -1699,7 +1699,22 @@ var init_strings = __esm({
       usualNotTodayName: (label) => `${label}: not today`,
       usualNotTodayAnnounce: (label) => `${label}: not today`,
       usualNotTodayMark: "not today",
-      usualJump: "Jump to the usual choices"
+      usualJump: "Jump to the usual choices",
+      usualAlreadyPicked: (label) => `${label} is already picked`,
+      usualPicked: (label) => `${label}: had it`,
+      usualTookClosest: (typed, label) => `${typed}: took ${label}`,
+      usualAsk: (label) => `Did you mean ${label}? Enter picks it`,
+      usualAddedNote: (label) => `Added '${label}' as new`,
+      usualUndo: "Undo",
+      usualUndoName: (label) => `Undo adding ${label}`,
+      usualAddUndone: (label) => `${label} taken out again`,
+      usualCheckTitle: "Your usual today",
+      usualCheckWhat: "Not today says it did not happen today. A row left blank is not answered yet.",
+      usualCheckWhatChips: "Tap once: had it. Twice: not today, it did not happen. Three times: not answered.",
+      usualHadIt: "Had it",
+      usualHadItWord: "had it",
+      usualUnanswered: (label) => `${label}: not answered`,
+      usualUnansweredWord: "not answered"
     });
     current = DEFAULT_STRINGS;
     CIPHER = "#&$?%@/";
@@ -9989,6 +10004,18 @@ function roving(group) {
   for (const item of items) item.tabIndex = item === stop ? 0 : -1;
   if (stop) STOP.set(group, stop);
 }
+function triWords(item) {
+  const strings = getStrings();
+  const words = { any: strings.triAny, include: strings.triInclude, exclude: strings.triExclude };
+  const raw = item.parentElement?.closest(SEGMENTED)?.getAttribute("data-kp-segmented-words");
+  if (!raw) return words;
+  try {
+    const own = JSON.parse(raw);
+    for (const state2 of TRI_STATES) if (typeof own?.[state2] === "string") words[state2] = own[state2];
+  } catch {
+  }
+  return words;
+}
 function writeTri(item, state2) {
   if (state2 === "any") item.removeAttribute(TRI_ATTRIBUTE);
   else item.setAttribute(TRI_ATTRIBUTE, state2);
@@ -10005,8 +10032,7 @@ function writeTri(item, state2) {
     word.className = "kp-sr-only kp-segmented__state";
     item.append(word);
   }
-  const strings = getStrings();
-  word.textContent = `, ${state2 === "include" ? strings.triInclude : state2 === "exclude" ? strings.triExclude : strings.triAny}`;
+  word.textContent = `, ${triWords(item)[state2]}`;
 }
 function paintTri(group) {
   const { include, exclude } = getSegmentedTri(group);
@@ -10153,7 +10179,7 @@ function turnTri(group, item, state2) {
   paintTri(group);
   const strings = getStrings();
   const label = (item.querySelector(".kp-segmented__label") ?? item).textContent?.trim() ?? "";
-  sayTri(group, strings.triAnnounce(label, state2 === "include" ? strings.triInclude : state2 === "exclude" ? strings.triExclude : strings.triAny));
+  sayTri(group, strings.triAnnounce(label, triWords(item)[state2]));
   const { include, exclude } = getSegmentedTri(group);
   group.dispatchEvent(
     new CustomEvent(SEGMENTED_EVENT, { bubbles: true, detail: { value: valueOf(item), values: include, include, exclude, state: state2, item } })
@@ -14052,17 +14078,17 @@ function attachComboboxes(root = document, {
       box.querySelector(TAGS)
     );
     const isTags = box.dataset.kpTags !== void 0;
-    const flag2 = (name, fallback2) => box.dataset[name] === void 0 ? fallback2 : box.dataset[name] !== "false";
-    const opens = flag2("kpOpenOnFocus", openOnFocus);
-    const closes = flag2("kpCloseOnBlur", closeOnBlur);
-    const backspaces = flag2("kpBackspaceRemoves", backspaceRemoves);
-    const stays = flag2("kpStayOpen", stayOpen);
-    const duplicates = flag2("kpDuplicates", allowDuplicates);
+    const flag = (name, fallback2) => box.dataset[name] === void 0 ? fallback2 : box.dataset[name] !== "false";
+    const opens = flag("kpOpenOnFocus", openOnFocus);
+    const closes = flag("kpCloseOnBlur", closeOnBlur);
+    const backspaces = flag("kpBackspaceRemoves", backspaceRemoves);
+    const stays = flag("kpStayOpen", stayOpen);
+    const duplicates = flag("kpDuplicates", allowDuplicates);
     const cap = Number.parseInt(box.dataset.kpMaxTags ?? "", 10) || maxTags;
     const debounce = Number.parseInt(box.dataset.kpDebounce ?? "", 10) || debounceMs;
     const matcher = typeof match === "function" ? match : MATCHERS[box.dataset.kpMatch ?? match] ?? MATCHERS.substring;
-    const showsEmpty = flag2("kpEmptyRow", emptyRow);
-    const creates = flag2("kpCreatable", creatable);
+    const showsEmpty = flag("kpEmptyRow", emptyRow);
+    const creates = flag("kpCreatable", creatable);
     const serverEmpty = (
       /** @type {HTMLElement | null} */
       list.querySelector(EMPTY)
@@ -14227,7 +14253,7 @@ function attachComboboxes(root = document, {
     const listbox = createListbox({
       input,
       list,
-      loop: flag2("kpLoop", loop),
+      loop: flag("kpLoop", loop),
       onChoose: (_, option) => take(option),
       onDismiss: close
     });
@@ -18538,7 +18564,7 @@ function attachDataTables(root = document, {
       });
       return row;
     };
-    const applyAnswer = (answer) => {
+    const applyAnswer = (answer2) => {
       for (const row of all) {
         const box = (
           /** @type {HTMLInputElement | null} */
@@ -18550,7 +18576,7 @@ function attachDataTables(root = document, {
         }
       }
       if (editing !== null) closeEditor();
-      const next2 = answer.rows.map(rowFrom);
+      const next2 = answer2.rows.map(rowFrom);
       for (const row of [...body.rows]) if (!next2.includes(row)) row.remove();
       details.clear();
       for (const row of next2) {
@@ -18565,7 +18591,7 @@ function attachDataTables(root = document, {
       }
       all = next2;
       shownRows = [...next2];
-      total = Number(answer.total) || 0;
+      total = Number(answer2.total) || 0;
       state2 = "ready";
       syncColumns();
       render6();
@@ -18591,11 +18617,11 @@ function attachDataTables(root = document, {
       state2 = "loading";
       render6();
       let settled = false;
-      const respond = (answer) => {
+      const respond = (answer2) => {
         if (settled) return;
         settled = true;
         if (requestId !== latest) return;
-        applyAnswer(answer);
+        applyAnswer(answer2);
       };
       const fail = (error) => {
         if (settled) return;
@@ -19096,9 +19122,9 @@ function attachDataTables(root = document, {
       if (onEdit !== void 0) waits.push(Promise.resolve().then(() => onEdit(detail)));
       if (refused === null && waits.length > 0) {
         try {
-          for (const answer of await Promise.all(waits)) {
-            if (typeof answer === "string") refused = answer;
-            else if (answer === false) refused = s2.tableEditInvalid;
+          for (const answer2 of await Promise.all(waits)) {
+            if (typeof answer2 === "string") refused = answer2;
+            else if (answer2 === false) refused = s2.tableEditInvalid;
           }
         } catch (error) {
           refused = error instanceof Error && error.message !== "" ? error.message : s2.tableEditInvalid;
@@ -32763,23 +32789,23 @@ ${strings.focusStopReading}`);
 function answering(root) {
   return root.getAttribute("data-kp-focus-mode") === "answer" || stateOf3(root).steps.some((step) => step.answer);
 }
-function wordsOf2(answer, value) {
+function wordsOf2(answer2, value) {
   if (value === null || value === void 0) return "";
-  const label = (v) => answer.choices?.find((c) => c.value === v)?.label ?? v;
+  const label = (v) => answer2.choices?.find((c) => c.value === v)?.label ?? v;
   return Array.isArray(value) ? value.map(label).join(", ") : label(value);
 }
-function currentValue(root, answer) {
+function currentValue(root, answer2) {
   const state2 = stateOf3(root);
-  const draft = state2.draft[answer.id];
+  const draft = state2.draft[answer2.id];
   if (draft !== void 0) return draft;
-  const given2 = state2.answers[answer.id];
+  const given2 = state2.answers[answer2.id];
   if (given2 && given2.source !== "skip") return given2.value;
-  return answer.kind === "multi" ? [] : "";
+  return answer2.kind === "multi" ? [] : "";
 }
-function answerReady(root, answer) {
+function answerReady(root, answer2) {
   const state2 = stateOf3(root);
-  if (state2.answers[answer.id]) return true;
-  const draft = state2.draft[answer.id];
+  if (state2.answers[answer2.id]) return true;
+  const draft = state2.draft[answer2.id];
   return Array.isArray(draft) ? draft.length > 0 : typeof draft === "string" && draft.trim() !== "";
 }
 function remember2(root) {
@@ -32831,26 +32857,26 @@ function startResume(root) {
 function takeAnswer(root, value, source, extra = {}) {
   const state2 = stateOf3(root);
   const step = state2.steps[state2.index];
-  const answer = step?.answer;
-  if (!answer) return false;
+  const answer2 = step?.answer;
+  if (!answer2) return false;
   const before = new CustomEvent(FOCUS_STEPS_BEFORE_ANSWER_EVENT, {
     bubbles: true,
     cancelable: true,
-    detail: { index: state2.index, id: answer.id, value, source }
+    detail: { index: state2.index, id: answer2.id, value, source }
   });
   if (!root.dispatchEvent(before)) return false;
   if (!state2.startedAt) state2.startedAt = Date.now();
-  state2.answers[answer.id] = { value, source };
-  delete state2.draft[answer.id];
+  state2.answers[answer2.id] = { value, source };
+  delete state2.draft[answer2.id];
   remember2(root);
   root.dispatchEvent(
     new CustomEvent(FOCUS_STEPS_ANSWER_EVENT, {
       bubbles: true,
-      detail: { index: state2.index, id: answer.id, value, source, previous: answer.previous ?? null, ...extra }
+      detail: { index: state2.index, id: answer2.id, value, source, previous: answer2.previous ?? null, ...extra }
     })
   );
   const strings = getStrings();
-  const said = source === "skip" ? strings.focusSkipped : wordsOf2(answer, value);
+  const said = source === "skip" ? strings.focusSkipped : wordsOf2(answer2, value);
   say7(root, strings.focusAnswered(said, state2.index + 1, state2.steps.length));
   return true;
 }
@@ -32880,22 +32906,22 @@ function goNext(root) {
 }
 function pressAnswer(root, button) {
   const state2 = stateOf3(root);
-  const answer = state2.steps[state2.index]?.answer;
-  if (!answer) return false;
+  const answer2 = state2.steps[state2.index]?.answer;
+  if (!answer2) return false;
   if (button.classList.contains("kp-focus-steps__choice")) {
     if (button.getAttribute("aria-disabled") === "true") return true;
     const value = button.dataset.kpValue ?? "";
-    if (answer.kind === "multi") {
+    if (answer2.kind === "multi") {
       const held2 = (
         /** @type {string[]} */
         [.../** @type {string[]} */
-        currentValue(root, answer) ?? []]
+        currentValue(root, answer2) ?? []]
       );
       const at = held2.indexOf(value);
       if (at >= 0) held2.splice(at, 1);
       else held2.push(value);
-      state2.draft[answer.id] = held2;
-      delete state2.answers[answer.id];
+      state2.draft[answer2.id] = held2;
+      delete state2.answers[answer2.id];
       paintAnswerState(root);
     } else if (takeAnswer(root, value, "tap")) {
       paintAnswerState(root);
@@ -32905,11 +32931,11 @@ function pressAnswer(root, button) {
   }
   if (button.classList.contains("kp-focus-steps__same")) {
     const which = button.dataset.kpSame === "usual" ? "usual" : "yesterday";
-    const value = which === "usual" ? answer.usual : answer.previous;
+    const value = which === "usual" ? answer2.usual : answer2.previous;
     if (value === void 0) return true;
     if (takeAnswer(root, value, "same", { same: which })) {
       paintAnswerState(root);
-      if (answer.kind === "choice" && (opt(root, "advance", "auto") ?? "auto") === "auto") scheduleAdvance(root);
+      if (answer2.kind === "choice" && (opt(root, "advance", "auto") ?? "auto") === "auto") scheduleAdvance(root);
     }
     return true;
   }
@@ -32924,10 +32950,10 @@ function pressAnswer(root, button) {
 }
 function paintAnswerState(root) {
   const state2 = stateOf3(root);
-  const answer = state2.steps[state2.index]?.answer;
-  if (!answer) return;
-  const value = currentValue(root, answer);
-  const given2 = state2.answers[answer.id];
+  const answer2 = state2.steps[state2.index]?.answer;
+  if (!answer2) return;
+  const value = currentValue(root, answer2);
+  const given2 = state2.answers[answer2.id];
   for (
     const button of
     /** @type {HTMLElement[]} */
@@ -32943,12 +32969,12 @@ function paintAnswerState(root) {
     /** @type {HTMLElement} */
     part3(root, "next")
   );
-  if (answerReady(root, answer)) next2.removeAttribute("aria-disabled");
+  if (answerReady(root, answer2)) next2.removeAttribute("aria-disabled");
   else next2.setAttribute("aria-disabled", "true");
 }
 function buildAnswer(root, holder, step, text) {
   const strings = getStrings();
-  const answer = (
+  const answer2 = (
     /** @type {FocusAnswer} */
     step.answer
   );
@@ -32956,7 +32982,7 @@ function buildAnswer(root, holder, step, text) {
   const wrap = el7("kp-focus-steps__answer");
   serial6 += 1;
   text.id = `kp-focus-steps-${serial6}-question`;
-  if (answer.kind === "text") {
+  if (answer2.kind === "text") {
     const label = el7("kp-sr-only", "label");
     label.textContent = strings.focusTextLabel;
     const box = (
@@ -32969,11 +32995,11 @@ function buildAnswer(root, holder, step, text) {
     box.setAttribute("aria-labelledby", text.id);
     box.setAttribute("autocomplete", "off");
     box.setAttribute("inputmode", "text");
-    if (answer.placeholder) box.placeholder = answer.placeholder;
-    box.value = String(currentValue(root, answer) ?? "");
+    if (answer2.placeholder) box.placeholder = answer2.placeholder;
+    box.value = String(currentValue(root, answer2) ?? "");
     box.addEventListener("input", () => {
-      state2.draft[answer.id] = box.value;
-      if (state2.answers[answer.id]) delete state2.answers[answer.id];
+      state2.draft[answer2.id] = box.value;
+      if (state2.answers[answer2.id]) delete state2.answers[answer2.id];
       paintAnswerState(root);
     });
     wrap.append(label, box);
@@ -32992,14 +33018,14 @@ function buildAnswer(root, holder, step, text) {
         );
       }
     })();
-    const choices = [...pinned.map((c) => ({ ...c, pinned: true })), ...answer.choices ?? []];
+    const choices = [...pinned.map((c) => ({ ...c, pinned: true })), ...answer2.choices ?? []];
     const group = el7("kp-focus-steps__choices");
     group.setAttribute("role", "group");
     group.setAttribute("aria-labelledby", text.id);
     const wanted = opt(root, "choice-layout", "auto");
     const short = choices.length <= 3 && choices.every((c) => c.label.length <= 14);
     group.setAttribute("data-kp-layout", wanted === "row" || wanted === "stack" ? wanted : short ? "row" : "stack");
-    if (answer.kind === "multi") {
+    if (answer2.kind === "multi") {
       const hint2 = el7("kp-focus-steps__hint", "p");
       hint2.textContent = strings.focusMultiHint;
       wrap.append(hint2);
@@ -33038,8 +33064,8 @@ function buildAnswer(root, holder, step, text) {
     if (sameMode !== "off") {
       const same = el7("kp-focus-steps__sames");
       const kinds = [
-        ["yesterday", sameMode === "usual" ? void 0 : answer.previous],
-        ["usual", sameMode === "yesterday" ? void 0 : answer.usual]
+        ["yesterday", sameMode === "usual" ? void 0 : answer2.previous],
+        ["usual", sameMode === "yesterday" ? void 0 : answer2.usual]
       ];
       for (const [which, value] of kinds) {
         if (value === void 0 || Array.isArray(value) && value.length === 0) continue;
@@ -33049,7 +33075,7 @@ function buildAnswer(root, holder, step, text) {
         );
         button.type = "button";
         button.dataset.kpSame = which;
-        const words = wordsOf2(answer, value);
+        const words = wordsOf2(answer2, value);
         button.textContent = which === "usual" ? strings.focusSameUsual(words) : strings.focusSameYesterday(words);
         same.append(button);
       }
@@ -33394,10 +33420,10 @@ function attachFocusSteps(scope = document) {
     void holdScreen(root);
     const state2 = stateOf3(root);
     const next2 = () => {
-      const answer = state2.steps[state2.index]?.answer;
-      if (answering(root) && answer && !state2.answers[answer.id]) {
-        if (!answerReady(root, answer)) return;
-        const held2 = state2.draft[answer.id];
+      const answer2 = state2.steps[state2.index]?.answer;
+      if (answering(root) && answer2 && !state2.answers[answer2.id]) {
+        if (!answerReady(root, answer2)) return;
+        const held2 = state2.draft[answer2.id];
         if (!takeAnswer(root, typeof held2 === "string" ? held2.trim() : held2 ?? "", "tap")) return;
       }
       goNext(root);
@@ -41169,15 +41195,15 @@ async function runFlashButton(button, work, options = {}) {
   let word = "";
   let line = "";
   try {
-    const answer = await work();
-    if (answer && typeof answer === "object" && "error" in answer) {
+    const answer2 = await work();
+    if (answer2 && typeof answer2 === "object" && "error" in answer2) {
       ok = false;
-      word = answer.word ?? attr3(button, "data-kp-refused-word", s2.flashRefused);
-      line = [answer.error, answer.remedy].filter(Boolean).join(" ");
-    } else if (answer && typeof answer === "object") {
-      word = answer.word ?? attr3(button, "data-kp-flash-word", s2.flashDone);
-      line = answer.line ?? "";
-    } else word = typeof answer === "string" && answer !== "" ? answer : attr3(button, "data-kp-flash-word", s2.flashDone);
+      word = answer2.word ?? attr3(button, "data-kp-refused-word", s2.flashRefused);
+      line = [answer2.error, answer2.remedy].filter(Boolean).join(" ");
+    } else if (answer2 && typeof answer2 === "object") {
+      word = answer2.word ?? attr3(button, "data-kp-flash-word", s2.flashDone);
+      line = answer2.line ?? "";
+    } else word = typeof answer2 === "string" && answer2 !== "" ? answer2 : attr3(button, "data-kp-flash-word", s2.flashDone);
   } catch (error) {
     ok = false;
     word = attr3(button, "data-kp-failed-word", s2.flashFailed);
@@ -44111,52 +44137,53 @@ function arrange(m) {
   m.list.append(...order2);
   if (empty) m.list.append(empty);
 }
-function paintTail(m, typed, realVisible) {
+function paintTail(m, typed) {
   const s2 = getStrings();
   for (const node of m.list.querySelectorAll(".kp-usual__tail")) node.remove();
   if (typed === "") return;
   const empty = m.list.querySelector("[data-kp-combobox-empty]");
-  const exact = attr6(m, "near", "ask") !== "off" ? exactItem(m, typed) : void 0;
-  if (exact) return;
+  const picked = new Set(pickedValues(m));
+  const exact = exactItem(m, typed);
+  const row = (cls, text, option) => {
+    const li = make18("li", `kp-usual__tail ${cls}`, text);
+    li.setAttribute("data-kp-synth", "");
+    if (option) {
+      li.className = `kp-combobox__option ${li.className}`;
+      li.setAttribute("role", "option");
+      li.setAttribute("data-kp-option", "");
+    } else li.setAttribute("role", "presentation");
+    return li;
+  };
+  const head = [];
+  if (exact) {
+    if (picked.has(exact.value)) head.push(row("kp-usual__already", s2.usualAlreadyPicked(exact.label), false));
+    if (head.length) m.list.prepend(...head);
+    return;
+  }
+  const near2 = nearOf(m, typed);
+  const already = near2.find((item) => picked.has(item.value));
+  if (already) head.push(row("kp-usual__already", s2.usualAlreadyPicked(already.label), false));
+  for (const item of near2.filter((one) => !picked.has(one.value) && !one.el.hasAttribute("aria-disabled"))) {
+    const ask = row("kp-usual__near", s2.usualDidYouMean(item.label), true);
+    ask.dataset.kpNearValue = item.value;
+    head.push(ask);
+    item.el.hidden = true;
+  }
+  if (head.length) m.list.prepend(...head);
+  const realVisible = realOptions(m.list).filter((o) => !o.hidden).length;
   const addOn = attr6(m, "add", "off") === "inline";
-  const near2 = attr6(m, "near", "ask") === "off" ? [] : nearNames(
-    typed,
-    m.items,
-    clamp2(Number(attr6(m, "near-threshold")) || 0.8, 0.5, 1),
-    clamp2(Number(attr6(m, "near-max")) || 3, 1, 5)
-  ).filter((i) => i.el.hidden);
-  const rows = [];
-  if (realVisible === 0 || near2.length > 0) {
-    const plate = make18("li", "kp-usual__tail kp-usual__plate");
-    plate.setAttribute("role", "presentation");
-    plate.setAttribute("data-kp-synth", "");
-    const title = make18(
-      "strong",
-      "kp-usual__plate-title",
-      realVisible === 0 ? s2.usualNoMatchTitle : near2[0] ? s2.usualDidYouMean(near2[0].label) : ""
+  const foot = [];
+  if (realVisible === 0 && head.length === 0) {
+    const plate = row("kp-usual__plate", "", false);
+    plate.append(
+      make18("strong", "kp-usual__plate-title", s2.usualNoMatchTitle),
+      make18("span", "kp-usual__plate-text", addOn ? s2.usualNoMatchText : s2.usualNoMatchTextFixed)
     );
-    const text = make18("span", "kp-usual__plate-text", addOn || near2.length > 0 ? s2.usualNoMatchText : s2.usualNoMatchTextFixed);
-    plate.append(title);
-    if (realVisible === 0) plate.append(text);
-    rows.push(plate);
+    foot.push(plate);
   }
-  for (const item of near2) {
-    const row = make18("li", "kp-combobox__option kp-usual__tail kp-usual__near", s2.usualDidYouMean(item.label));
-    row.setAttribute("role", "option");
-    row.setAttribute("data-kp-option", "");
-    row.setAttribute("data-kp-synth", "");
-    row.dataset.kpNearValue = item.value;
-    rows.push(row);
-  }
-  if (addOn) {
-    const row = make18("li", "kp-combobox__option kp-usual__tail kp-usual__add", s2.usualAdd(typed));
-    row.setAttribute("role", "option");
-    row.setAttribute("data-kp-option", "");
-    row.setAttribute("data-kp-synth", "");
-    rows.push(row);
-  }
-  if (empty) empty.before(...rows);
-  else m.list.append(...rows);
+  if (addOn) foot.push(row("kp-usual__add", s2.usualAdd(typed), true));
+  if (empty) empty.before(...foot);
+  else m.list.append(...foot);
 }
 function paintHeaders(m) {
   const children = (
@@ -44170,6 +44197,7 @@ function paintHeaders(m) {
     for (let j = i + 1; j < children.length; j += 1) {
       const next2 = children[j];
       if (!next2 || next2.classList.contains("kp-usual__group")) break;
+      if (next2.classList.contains("kp-usual__tail")) continue;
       if (next2.hasAttribute("data-kp-option") && !next2.hidden && !next2.hasAttribute("data-kp-more")) any = true;
     }
     node.hidden = !any;
@@ -44183,13 +44211,39 @@ function originOf(m, value) {
   if (row?.hasAttribute("data-kp-pinned")) return "pinned";
   return row?.hasAttribute("data-kp-band") ? "usual" : "all";
 }
+function flashTag(m, value) {
+  const tag = (
+    /** @type {HTMLElement | null} */
+    m.box.querySelector(`.kp-tag[data-value="${CSS.escape(value)}"]`)
+  );
+  if (!tag) return;
+  tag.removeAttribute("data-kp-usual-flash");
+  void tag.offsetWidth;
+  tag.setAttribute("data-kp-usual-flash", "");
+  window.setTimeout(() => tag.removeAttribute("data-kp-usual-flash"), 1300);
+}
 function pick2(m, value, from) {
   m.nextFrom = from;
-  if (m.box.hasAttribute("data-kp-tags")) m.handle.set([...m.handle.values().filter((v) => v !== value), value]);
+  const tags = m.box.hasAttribute("data-kp-tags");
+  if (tags) m.input.value = "";
+  if (tags) m.handle.set([...m.handle.values().filter((v) => v !== value), value]);
   else m.handle.set([value]);
   m.handle.close();
-  m.input.value = m.box.hasAttribute("data-kp-tags") ? "" : m.items.find((i) => i.value === value)?.label ?? m.input.value;
+  m.input.value = tags ? "" : m.items.find((i) => i.value === value)?.label ?? m.input.value;
   m.handle.refresh();
+  flashTag(m, value);
+}
+function unpick(m, value) {
+  m.silent = true;
+  try {
+    m.handle.set(m.handle.values().filter((v) => v !== value));
+  } finally {
+    m.silent = false;
+  }
+}
+function clearNote(m) {
+  m.noteEl.hidden = true;
+  m.noteEl.replaceChildren();
 }
 function addName(m, label, nearTo) {
   const s2 = getStrings();
@@ -44204,19 +44258,185 @@ function addName(m, label, nearTo) {
   pick2(m, label, "typed");
   arrange(m);
   m.handle.refresh();
-  say11(m, s2.usualAdded(label));
-  const ms = m.box.hasAttribute("data-kp-undo-ms") ? Number(m.box.getAttribute("data-kp-undo-ms")) : 6e3;
-  if (ms > 0)
-    undoToast(s2.usualAddedToast(label), {
-      mode: "revert",
-      ms,
-      undo: () => {
-        row.remove();
-        m.handle.set(m.handle.values().filter((v) => v !== label));
-        if (!m.box.hasAttribute("data-kp-tags")) m.input.value = "";
-        render3(m);
+  const undo = () => {
+    row.remove();
+    m.handle.set(m.handle.values().filter((v) => v !== label));
+    if (!m.box.hasAttribute("data-kp-tags")) m.input.value = "";
+    clearNote(m);
+    render3(m);
+    sayAfter(m, s2.usualAddUndone(label));
+  };
+  if (attr6(m, "usual-undo", "field") === "toast") {
+    sayAfter(m, s2.usualAdded(label));
+    const ms = m.box.hasAttribute("data-kp-undo-ms") ? Number(m.box.getAttribute("data-kp-undo-ms")) : 6e3;
+    if (ms > 0) undoToast(s2.usualAddedToast(label), { mode: "revert", ms, undo });
+    return;
+  }
+  const words = make18("span", "kp-usual__note-text", s2.usualAddedNote(label));
+  const button = make18("button", "kp-button kp-button--ghost kp-button--sm kp-usual__undo", s2.usualUndo);
+  button.type = "button";
+  button.setAttribute("aria-label", s2.usualUndoName(label));
+  button.addEventListener("click", () => {
+    undo();
+    m.input.focus();
+  });
+  m.noteEl.replaceChildren(words, button);
+  m.noteEl.hidden = false;
+}
+function checkLook(m) {
+  if (!m.box.hasAttribute("data-kp-tags") || !m.box.hasAttribute("data-kp-not-today")) return null;
+  const look = m.box.getAttribute("data-kp-not-today") ?? "";
+  if (look === "off" || look === "false") return null;
+  return look === "chips" ? "chips" : "rows";
+}
+function answerOf(m, value) {
+  if (m.handle.values().includes(value)) return "had";
+  return m.notToday.has(value) ? "not" : "none";
+}
+function answer(m, value, next2) {
+  const was = answerOf(m, value);
+  if (was === next2) return;
+  const s2 = getStrings();
+  const label = m.items.find((i) => i.value === value)?.label ?? value;
+  const wasNot = m.notToday.has(value);
+  if (next2 === "not") m.notToday.add(value);
+  else m.notToday.delete(value);
+  if (next2 === "had") pick2(m, value, "usual");
+  else if (was === "had") unpick(m, value);
+  if (wasNot !== (next2 === "not"))
+    m.box.dispatchEvent(new CustomEvent(USUAL_NOT_TODAY_EVENT, { bubbles: true, detail: { value, on: next2 === "not" } }));
+  syncCheck(m);
+  syncHint(m);
+  sayAfter(m, next2 === "had" ? s2.usualPicked(label) : next2 === "not" ? s2.usualNotTodayAnnounce(label) : s2.usualUnanswered(label));
+}
+function syncCheck(m) {
+  const look = checkLook(m);
+  const band = look ? bandValues(m) : [];
+  for (const v of [...m.notToday]) if (!band.includes(v)) m.notToday.delete(v);
+  if (!look || band.length === 0) {
+    m.checkOff();
+    m.check?.remove();
+    m.check = null;
+    m.checkKey = "";
+    return;
+  }
+  const s2 = getStrings();
+  const key = `${look}|${band.join("")}`;
+  if (!m.check || m.checkKey !== key) {
+    m.check?.remove();
+    serial9 += 1;
+    const id = `kp-usual-${serial9}-check`;
+    const check = make18("div", `kp-usual__check kp-usual__check--${look}`);
+    check.setAttribute("role", "group");
+    check.setAttribute("aria-labelledby", `${id}-title`);
+    check.setAttribute("aria-describedby", `${id}-what`);
+    const title = make18("p", "kp-usual__check-title", attr6(m, "not-today-label") ?? s2.usualCheckTitle);
+    title.id = `${id}-title`;
+    const what = make18("p", "kp-usual__check-what", look === "rows" ? s2.usualCheckWhat : s2.usualCheckWhatChips);
+    what.id = `${id}-what`;
+    check.append(title, what);
+    if (look === "rows") {
+      const grid2 = make18("div", "kp-usual__check-rows");
+      for (const [n, value] of band.entries()) {
+        const label = m.items.find((i) => i.value === value)?.label ?? value;
+        const name = make18("span", "kp-usual__check-name", label);
+        name.id = `${id}-${n}`;
+        const pair = make18("div", "kp-segmented kp-usual__check-pair");
+        pair.setAttribute("role", "group");
+        pair.setAttribute("aria-labelledby", name.id);
+        pair.dataset.value = value;
+        for (
+          const [kind, words] of
+          /** @type {const} */
+          [
+            ["had", s2.usualHadIt],
+            ["not", s2.usualNotToday]
+          ]
+        ) {
+          const button = make18("button", "kp-segmented__item", words);
+          button.type = "button";
+          button.dataset.value = kind;
+          button.setAttribute("aria-pressed", "false");
+          pair.append(button);
+        }
+        grid2.append(name, pair);
       }
+      check.append(grid2);
+    } else {
+      const chips = make18("div", "kp-segmented kp-segmented--chips kp-usual__check-chips");
+      chips.setAttribute("data-kp-segmented", "tri");
+      chips.setAttribute("role", "group");
+      chips.setAttribute("aria-labelledby", `${id}-title`);
+      chips.setAttribute(
+        "data-kp-segmented-words",
+        JSON.stringify({ include: s2.usualHadItWord, exclude: s2.usualNotTodayMark, any: s2.usualUnansweredWord })
+      );
+      for (const value of band) {
+        const label = m.items.find((i) => i.value === value)?.label ?? value;
+        const chip = make18("button", "kp-segmented__item");
+        chip.type = "button";
+        chip.dataset.value = value;
+        chip.append(make18("span", "kp-segmented__label", label));
+        chips.append(chip);
+      }
+      check.append(chips);
+    }
+    m.checkOff();
+    (m.status ?? m.noteEl).after(check);
+    m.check = check;
+    m.checkKey = key;
+    if (look === "chips") {
+      const group = (
+        /** @type {HTMLElement} */
+        check.querySelector(".kp-usual__check-chips")
+      );
+      const off2 = attachSegmented(group);
+      const onTri = (event) => {
+        const { value, state: state2 } = (
+          /** @type {CustomEvent} */
+          event.detail ?? {}
+        );
+        if (typeof value !== "string") return;
+        answer(m, value, state2 === "include" ? "had" : state2 === "exclude" ? "not" : "none");
+      };
+      group.addEventListener(SEGMENTED_EVENT, onTri);
+      m.checkOff = () => {
+        group.removeEventListener(SEGMENTED_EVENT, onTri);
+        off2();
+        m.checkOff = () => {
+        };
+      };
+    } else m.checkOff = () => {
+    };
+  }
+  const off = m.input.disabled;
+  if (look === "rows") {
+    for (const pair of m.check.querySelectorAll(".kp-usual__check-pair")) {
+      const value = (
+        /** @type {HTMLElement} */
+        pair.dataset.value ?? ""
+      );
+      const state2 = answerOf(m, value);
+      for (const button of pair.querySelectorAll("button")) {
+        button.setAttribute("aria-pressed", String(
+          /** @type {HTMLElement} */
+          button.dataset.value === state2
+        ));
+        button.disabled = off;
+      }
+    }
+  } else {
+    const group = (
+      /** @type {HTMLElement} */
+      m.check.querySelector(".kp-usual__check-chips")
+    );
+    setSegmentedTri(group, {
+      include: band.filter((v) => answerOf(m, v) === "had"),
+      exclude: band.filter((v) => answerOf(m, v) === "not")
     });
+    if (off) group.setAttribute("aria-disabled", "true");
+    else group.removeAttribute("aria-disabled");
+  }
 }
 function syncPanel(m) {
   const s2 = getStrings();
@@ -44273,27 +44493,7 @@ function render3(m) {
   m.handle.refresh();
   syncPanel(m);
   syncHint(m);
-}
-function dressTag(m, tag) {
-  if (!flag(m, "not-today") || tag.querySelector(".kp-usual__nt")) return;
-  const s2 = getStrings();
-  const value = tag.dataset.value ?? "";
-  const label = tag.querySelector("span")?.textContent ?? value;
-  const button = make18("button", "kp-usual__nt", s2.usualNotToday);
-  button.type = "button";
-  button.setAttribute("aria-pressed", String(m.notToday.has(value)));
-  button.setAttribute("aria-label", s2.usualNotTodayName(label));
-  tag.toggleAttribute("data-kp-not-today", m.notToday.has(value));
-  tag.querySelector(".kp-tag__remove")?.before(button);
-}
-function dressTags(m) {
-  for (const tag of m.box.querySelectorAll(".kp-tag")) dressTag(
-    m,
-    /** @type {HTMLElement} */
-    tag
-  );
-  const have = new Set(m.handle.values());
-  for (const v of [...m.notToday]) if (!have.has(v)) m.notToday.delete(v);
+  syncCheck(m);
 }
 function prepare(box) {
   if (box.hasAttribute("data-kp-multiple") && !box.hasAttribute("data-kp-tags")) {
@@ -44333,6 +44533,10 @@ function wire14(box) {
   const hintEl = make18("p", "kp-usual__hint");
   hintEl.hidden = true;
   input.after(hintEl);
+  const noteEl = make18("p", "kp-usual__note");
+  noteEl.setAttribute("aria-live", "polite");
+  noteEl.hidden = true;
+  hintEl.after(noteEl);
   box.append(panel);
   const m = {
     box,
@@ -44347,7 +44551,13 @@ function wire14(box) {
     notToday: /* @__PURE__ */ new Set(),
     panel,
     busy: null,
-    hintEl
+    hintEl,
+    noteEl,
+    check: null,
+    checkKey: "",
+    checkOff: () => {
+    },
+    silent: false
   };
   models3.set(box, m);
   const memory = box.hasAttribute("data-kp-remember") ? memoryFor(box, "picker") : null;
@@ -44363,13 +44573,16 @@ function wire14(box) {
       return matched;
     },
     after: (query, visible3) => {
+      void query;
       void visible3;
+      paintTail(m, m.input.value.trim());
       paintHeaders(m);
-      const realVisible = realOptions(list).filter((o) => !o.hidden).length;
-      paintTail(m, m.input.value.trim(), realVisible);
     },
     status: (query) => {
-      if (query !== "") return null;
+      if (query !== "") {
+        const same = exactItem(m, query);
+        return same && pickedValues(m).includes(same.value) ? getStrings().usualAlreadyPicked(same.label) : null;
+      }
       const band = bandValues(m).length;
       return band > 0 ? getStrings().usualStatus(band, m.items.length - band) : null;
     },
@@ -44386,7 +44599,9 @@ function wire14(box) {
         return true;
       }
       if (option.classList.contains("kp-usual__near")) {
-        pick2(m, option.dataset.kpNearValue ?? "", "typed");
+        const value = option.dataset.kpNearValue ?? "";
+        pick2(m, value, "typed");
+        sayAfter(m, getStrings().usualSelectedExisting(m.items.find((i) => i.value === value)?.label ?? value));
         return true;
       }
       if (option.hasAttribute("data-kp-pinned")) {
@@ -44405,22 +44620,32 @@ function wire14(box) {
       event.detail
     );
     if (action === "add" && typedAtEnter !== "" && normaliseName(typedAtEnter) === normaliseName(String(label ?? ""))) {
-      const said = getStrings().usualSelectedExisting(String(label));
-      window.setTimeout(() => say11(m, said), 0);
+      sayAfter(m, getStrings().usualSelectedExisting(String(label)));
+      flashTag(m, String(value));
     }
     typedAtEnter = "";
-    if (action === "remove") {
-      dressTags(m);
+    clearNote(m);
+    for (const v of handle.values()) {
+      if (!m.notToday.delete(v)) continue;
+      box.dispatchEvent(new CustomEvent(USUAL_NOT_TODAY_EVENT, { bubbles: true, detail: { value: v, on: false } }));
+    }
+    if (m.silent || action === "remove") {
+      syncCheck(m);
       syncHint(m);
       return;
     }
     const from = m.nextFrom ?? originOf(m, String(value));
     m.nextFrom = null;
     box.dispatchEvent(new CustomEvent(USUAL_PICK_EVENT, { bubbles: true, detail: { value, from } }));
-    dressTags(m);
+    syncCheck(m);
     syncHint(m);
   };
   box.addEventListener(CHANGE_EVENT, onChange);
+  const already = (item) => {
+    handle.open();
+    flashTag(m, item.value);
+    sayAfter(m, getStrings().usualAlreadyPicked(item.label));
+  };
   const onKey3 = (event) => {
     if (event.key === "Enter") typedAtEnter = input.value.trim();
     if (event.altKey && (event.code === "KeyU" || event.key.toLowerCase() === "u") && input.value === "") {
@@ -44433,24 +44658,44 @@ function wire14(box) {
     if (event.key !== "Enter" || event.defaultPrevented || event.isComposing) return;
     const typed = input.value.trim();
     if (typed === "") return;
+    if (!list.hidden && input.getAttribute("aria-activedescendant")) return;
+    const s2 = getStrings();
+    const picked = new Set(pickedValues(m));
+    const exact = exactItem(m, typed);
+    if (exact) {
+      event.preventDefault();
+      if (picked.has(exact.value)) return already(exact);
+      pick2(m, exact.value, "typed");
+      sayAfter(m, s2.usualSelectedExisting(exact.label));
+      return;
+    }
     const near2 = attr6(m, "near", "ask") ?? "ask";
     if (near2 !== "off") {
-      const exact = exactItem(m, typed);
-      if (exact) {
+      const close = nearOf(m, typed);
+      const free = close.filter((item) => !picked.has(item.value) && !item.el.hasAttribute("aria-disabled"));
+      if (free[0]) {
         event.preventDefault();
-        pick2(m, exact.value, "typed");
-        handle.refresh();
-        say11(m, getStrings().usualSelectedExisting(exact.label));
+        if (near2 === "select") {
+          pick2(m, free[0].value, "typed");
+          sayAfter(m, s2.usualTookClosest(typed, free[0].label));
+        } else {
+          event.stopImmediatePropagation();
+          handle.open();
+          input.dispatchEvent(new KeyboardEvent("keydown", { key: "ArrowDown", bubbles: true }));
+          sayAfter(m, s2.usualAsk(free[0].label));
+        }
         return;
+      }
+      if (close[0]) {
+        event.preventDefault();
+        return already(close[0]);
       }
     }
     if (attr6(m, "add", "off") !== "inline") return;
     event.preventDefault();
-    const close = near2 === "off" ? [] : nearNames(typed, m.items, clamp2(Number(attr6(m, "near-threshold")) || 0.8, 0.5, 1), clamp2(Number(attr6(m, "near-max")) || 3, 1, 5));
-    if (close[0] && near2 === "select") pick2(m, close[0].value, "typed");
-    else if (close[0]) handle.open();
-    else addName(m, typed, null);
+    addName(m, typed, close0(near2, typed));
   };
+  const close0 = (near2, typed) => near2 === "off" ? null : nearOf(m, typed)[0]?.label ?? null;
   input.addEventListener("keydown", onKey3, { capture: true });
   const onClick = (event) => {
     const target = event.target instanceof Element ? event.target : null;
@@ -44460,23 +44705,20 @@ function wire14(box) {
       if (typed) addName(m, typed, null);
       else input.focus();
     } else {
-      const nt = target?.closest(".kp-usual__nt");
-      const tag = nt?.closest(".kp-tag");
-      if (nt && tag instanceof HTMLElement) {
-        const value = tag.dataset.value ?? "";
-        const on = !m.notToday.has(value);
-        if (on) m.notToday.add(value);
-        else m.notToday.delete(value);
-        nt.setAttribute("aria-pressed", String(on));
-        tag.toggleAttribute("data-kp-not-today", on);
-        const label = tag.querySelector("span")?.textContent ?? value;
-        say11(m, on ? getStrings().usualNotTodayAnnounce(label) : "");
-        box.dispatchEvent(new CustomEvent(USUAL_NOT_TODAY_EVENT, { bubbles: true, detail: { value, on } }));
-      }
+      const button = (
+        /** @type {HTMLButtonElement | null} */
+        target?.closest(".kp-usual__check-pair button") ?? null
+      );
+      const pair = button?.closest(".kp-usual__check-pair");
+      if (!button || button.disabled || !(pair instanceof HTMLElement)) return;
+      const kind = button.dataset.value === "not" ? "not" : "had";
+      const value = pair.dataset.value ?? "";
+      answer(m, value, answerOf(m, value) === kind ? "none" : kind);
     }
   };
   box.addEventListener("click", onClick);
   const onInput = () => {
+    clearNote(m);
     if (attr6(m, "usual-while-typing") === "hide") {
       arrange(m);
       handle.refresh();
@@ -44487,13 +44729,7 @@ function wire14(box) {
   const unkey = registerShortcuts(box, [
     { keys: "Alt U", what: getStrings().usualJump, group: "Picker", when: () => bandValues(m).length > 0, run: () => false }
   ]);
-  const tags = box.querySelector("[data-kp-tag-list]");
-  const tagWatch = tags ? new MutationObserver(() => dressTags(m)) : null;
-  if (tags) tagWatch?.observe(tags, { childList: true });
-  const watch2 = new MutationObserver(() => {
-    dressTags(m);
-    render3(m);
-  });
+  const watch2 = new MutationObserver(() => render3(m));
   watch2.observe(box, {
     attributes: true,
     attributeFilter: [
@@ -44510,18 +44746,19 @@ function wire14(box) {
       "data-kp-near-threshold",
       "data-kp-near-max",
       "data-kp-not-today",
+      "data-kp-not-today-label",
+      "data-kp-usual-undo",
       "data-kp-hint",
       "data-kp-state"
     ]
   });
   if (attr6(m, "preselect") === "usual" && box.hasAttribute("data-kp-tags") && handle.values().length === 0) {
     handle.set(bandValues(m));
-    dressTags(m);
   }
   syncHint(m);
+  syncCheck(m);
   return () => {
     watch2.disconnect();
-    tagWatch?.disconnect();
     unkey();
     box.removeEventListener(CHANGE_EVENT, onChange);
     box.removeEventListener("click", onClick);
@@ -44531,6 +44768,9 @@ function wire14(box) {
     m.busy?.remove();
     panel.remove();
     hintEl.remove();
+    noteEl.remove();
+    m.checkOff();
+    m.check?.remove();
     for (const node of list.querySelectorAll("[data-kp-synth], .kp-usual__tail")) node.remove();
     models3.delete(box);
     delete box.dataset.kpUsualReady;
@@ -44579,7 +44819,7 @@ function setUsualState(element, state2) {
 function usualNotToday(element) {
   return [...models3.get(element)?.notToday ?? []];
 }
-var USUAL, USUAL_PICK_EVENT, USUAL_ADD_EVENT, USUAL_NOT_TODAY_EVENT, USUAL_RETRY_EVENT, USUAL_STATES, USUAL_FOLD_ABOVE, models3, serial9, make18, attr6, flag, clamp2, realOptions, exactItem;
+var USUAL, USUAL_PICK_EVENT, USUAL_ADD_EVENT, USUAL_NOT_TODAY_EVENT, USUAL_RETRY_EVENT, USUAL_STATES, USUAL_FOLD_ABOVE, models3, serial9, make18, attr6, clamp2, realOptions, exactItem, pickedValues, nearOf, sayAfter;
 var init_usual_picker = __esm({
   "js/usual-picker.js"() {
     "use strict";
@@ -44591,6 +44831,7 @@ var init_usual_picker = __esm({
     init_state_plate();
     init_busy_card();
     init_listbox();
+    init_segmented();
     USUAL = "[data-kp-usual]";
     USUAL_PICK_EVENT = "kp-usual-pick";
     USUAL_ADD_EVENT = "kp-usual-add";
@@ -44608,7 +44849,6 @@ var init_usual_picker = __esm({
       return node;
     };
     attr6 = (m, name, fallback2) => m.box.getAttribute(`data-kp-${name}`) ?? fallback2;
-    flag = (m, name) => m.box.hasAttribute(`data-kp-${name}`) && m.box.getAttribute(`data-kp-${name}`) !== "off";
     clamp2 = (n, lo, hi) => Math.min(hi, Math.max(lo, n));
     realOptions = (list) => (
       /** @type {HTMLElement[]} */
@@ -44617,6 +44857,9 @@ var init_usual_picker = __esm({
       )
     );
     exactItem = (m, typed) => m.items.find((i) => normaliseName(i.label) === normaliseName(typed));
+    pickedValues = (m) => m.box.hasAttribute("data-kp-tags") ? m.handle.values() : [];
+    nearOf = (m, typed) => attr6(m, "near", "ask") === "off" ? [] : nearNames(typed, m.items, clamp2(Number(attr6(m, "near-threshold")) || 0.8, 0.5, 1), clamp2(Number(attr6(m, "near-max")) || 3, 1, 5));
+    sayAfter = (m, text) => window.setTimeout(() => say11(m, text), 0);
   }
 });
 
@@ -46207,9 +46450,9 @@ function setEntity(card, data) {
   const flagsMax = Math.min(flagsAsked, Number(card.dataset.kpFlagsFit ?? flagsAsked));
   slot("flags", { fl: data.flags, flagsMax }, (el14) => {
     const all = data.flags ?? [];
-    for (const flag2 of all.slice(0, flagsMax)) {
-      const chip = made5(doc, "span", `kp-badge kp-entity__flag${flag2.tone ? ` kp-badge--${flag2.tone}` : ""}`);
-      chip.textContent = flag2.label;
+    for (const flag of all.slice(0, flagsMax)) {
+      const chip = made5(doc, "span", `kp-badge kp-entity__flag${flag.tone ? ` kp-badge--${flag.tone}` : ""}`);
+      chip.textContent = flag.label;
       el14.append(chip);
     }
     const rest = all.slice(flagsMax);
@@ -50651,10 +50894,10 @@ function attachRuns(root = document, { now: nowOption } = {}) {
         if (shift !== 0) marks.push(s2.runsClockChange(shift));
         if (run.conflict) marks.push(run.conflict);
         if (marks.length) {
-          const flag2 = doc.createElement("span");
-          flag2.className = "kp-badge kp-badge--warning kp-runs__flag";
-          flag2.textContent = marks.join(" \xB7 ");
-          li.append(flag2);
+          const flag = doc.createElement("span");
+          flag.className = "kp-badge kp-badge--warning kp-runs__flag";
+          flag.textContent = marks.join(" \xB7 ");
+          li.append(flag);
         }
       }
       if (index === 0) li.dataset.kpRunsNext = "";
@@ -52501,7 +52744,7 @@ function decorate(list) {
     );
     if (actions) {
       for (
-        const [flag2, cls, text] of
+        const [flag, cls, text] of
         /** @type {const} */
         [
           ["take-all", "kp-claim__take-all", s2.claimTakeAll],
@@ -52512,7 +52755,7 @@ function decorate(list) {
           /** @type {HTMLButtonElement | null} */
           actions.querySelector(`.${cls}`)
         );
-        const wanted = list.hasAttribute(`data-kp-claim-${flag2}`);
+        const wanted = list.hasAttribute(`data-kp-claim-${flag}`);
         if (wanted && !b) {
           b = /** @type {HTMLButtonElement} */
           el9(`kp-button kp-button--ghost kp-button--sm ${cls}`, "button");
@@ -52524,9 +52767,9 @@ function decorate(list) {
         }
         if (b) {
           b.textContent = text;
-          b.disabled = gaps === 0 || loading || flag2 === "take-all" && (!st.viewer || list.hasAttribute("data-kp-claim-disabled"));
+          b.disabled = gaps === 0 || loading || flag === "take-all" && (!st.viewer || list.hasAttribute("data-kp-claim-disabled"));
           if (b.disabled && gaps === 0) b.setAttribute("data-kp-disabled-reason", s2.claimNothingOpen);
-          else if (b.disabled && flag2 === "take-all") b.setAttribute("data-kp-disabled-reason", s2.claimNoViewer);
+          else if (b.disabled && flag === "take-all") b.setAttribute("data-kp-disabled-reason", s2.claimNoViewer);
           else b.removeAttribute("data-kp-disabled-reason");
         }
       }
@@ -52595,7 +52838,7 @@ async function request(list, id, action, person, { undo = true } = {}) {
   const by = joining ? person && !among(person, previousBy) ? [...previousBy, person] : previousBy : previousBy.filter((p) => p.id !== person?.id);
   if (by.length === previousBy.length && by.every((p, i) => p.id === previousBy[i]?.id)) return;
   let waiting = null;
-  const detail = { id, action, person, by, previousBy, items: getChecklistItems(list), settle: (answer) => void (waiting = answer) };
+  const detail = { id, action, person, by, previousBy, items: getChecklistItems(list), settle: (answer2) => void (waiting = answer2) };
   const go = list.dispatchEvent(new CustomEvent(CLAIM_EVENT, { bubbles: true, cancelable: true, detail }));
   if (!go) {
     refuse(list, item, previousBy, s2.claimNotSaved);
@@ -52604,24 +52847,24 @@ async function request(list, id, action, person, { undo = true } = {}) {
   if (waiting) {
     st.busy.add(id);
     decorate(list);
-    let answer;
+    let answer2;
     try {
-      answer = await waiting;
+      answer2 = await waiting;
     } catch {
-      answer = false;
+      answer2 = false;
     }
     st.busy.delete(id);
-    const refused = answer === false || typeof answer === "object" && answer !== null && /** @type {any} */
-    answer.refused === true;
+    const refused = answer2 === false || typeof answer2 === "object" && answer2 !== null && /** @type {any} */
+    answer2.refused === true;
     if (refused) {
-      const winners = typeof answer === "object" && answer !== null && /** @type {any} */
-      answer.by ? claimPeople(
+      const winners = typeof answer2 === "object" && answer2 !== null && /** @type {any} */
+      answer2.by ? claimPeople(
         /** @type {any} */
-        answer.by
+        answer2.by
       ) : previousBy;
-      const error = typeof answer === "object" && answer !== null ? (
+      const error = typeof answer2 === "object" && answer2 !== null ? (
         /** @type {any} */
-        answer.error
+        answer2.error
       ) : void 0;
       const other = winners.find((p) => !among(person, [p]));
       refuse(list, item, winners, error ?? (joining && other ? s2.claimLost(other.name, item.label) : s2.claimNotSaved));
@@ -53353,7 +53596,7 @@ function columnsList(root, people, waiting = false) {
         const group = el10("kp-availability__column-answers");
         group.setAttribute("role", "group");
         group.setAttribute("aria-label", s2.availabilityCell(p.name, c.label, ""));
-        for (const answer of allowed(root)) {
+        for (const answer2 of allowed(root)) {
           const b = (
             /** @type {HTMLButtonElement} */
             el10("kp-button kp-button--sm kp-availability__pick", "button")
@@ -53361,9 +53604,9 @@ function columnsList(root, people, waiting = false) {
           b.type = "button";
           b.setAttribute("data-person", p.id);
           b.setAttribute("data-column", c.key);
-          b.setAttribute("data-answer", answer);
-          b.setAttribute("aria-pressed", String(a === answer));
-          b.textContent = `${glyphOf(answer)} ${wordOf(answer)}`;
+          b.setAttribute("data-answer", answer2);
+          b.setAttribute("aria-pressed", String(a === answer2));
+          b.textContent = `${glyphOf(answer2)} ${wordOf(answer2)}`;
           group.append(b);
         }
         li.append(group);
@@ -53402,11 +53645,11 @@ function setAvailability(root, spec) {
 function availabilityAnswers(root) {
   return structuredClone(STATE5.get(root)?.set.answers ?? {});
 }
-function setAvailabilityAnswer(root, person, column, answer) {
+function setAvailabilityAnswer(root, person, column, answer2) {
   const st = STATE5.get(root);
   if (!st) return;
   const row = st.set.answers[person] ??= {};
-  if (answer) row[column] = answer;
+  if (answer2) row[column] = answer2;
   else delete row[column];
   if (st.spec.sets) {
     const target = st.spec.sets[st.unit];
@@ -53472,25 +53715,25 @@ function paintKeys(root, person, keys) {
   }
   paintSummary(root);
 }
-async function request2(root, person, keys, answer, { stroke = false } = {}) {
+async function request2(root, person, keys, answer2, { stroke = false } = {}) {
   const st = stateOf6(root);
   const s2 = getStrings();
   const row = st.set.answers[person] ?? {};
   const previous = {};
-  const changing = keys.filter((k) => editable(root, person, k) && row[k] !== (answer ?? void 0));
+  const changing = keys.filter((k) => editable(root, person, k) && row[k] !== (answer2 ?? void 0));
   if (changing.length === 0) return;
   for (const k of changing) previous[k] = row[k];
   let waiting = null;
   const nextAnswers = structuredClone(st.set.answers);
   for (const k of changing) {
     const r = nextAnswers[person] ??= {};
-    if (answer) r[k] = answer;
+    if (answer2) r[k] = answer2;
     else delete r[k];
   }
   const detail = {
     person,
     keys: changing,
-    answer,
+    answer: answer2,
     previous,
     answers: nextAnswers,
     settle: (p) => void (waiting = p)
@@ -53548,7 +53791,7 @@ async function request2(root, person, keys, answer, { stroke = false } = {}) {
       return f.total > 0 && f.yes === f.total;
     }).map((c) => c.key)
   );
-  for (const k of changing) setAvailabilityAnswerQuiet(st, person, k, answer);
+  for (const k of changing) setAvailabilityAnswerQuiet(st, person, k, answer2);
   render4(root);
   const nowComplete = st.set.columns.filter((c) => {
     const f = columnFacts(root, c.key);
@@ -53591,16 +53834,16 @@ async function request2(root, person, keys, answer, { stroke = false } = {}) {
     }
   } else if (nowComplete.length) say13(root, s2.availabilityEveryone(nowComplete[0].label));
   else
-    say13(root, s2.availabilityCellSaid(st.spec.people?.find((p) => p.id === person)?.name ?? person, label(changing), wordOf(answer ?? void 0)));
+    say13(root, s2.availabilityCellSaid(st.spec.people?.find((p) => p.id === person)?.name ?? person, label(changing), wordOf(answer2 ?? void 0)));
   const again2 = (
     /** @type {HTMLElement | null} */
     root.querySelector(`.kp-heat__cell[data-row-key="${CSS.escape(person)}"][data-col-key="${CSS.escape(changing[0])}"]`)
   );
   if (again2 && !stroke && document.activeElement === document.body) again2.focus({ preventScroll: true });
 }
-function setAvailabilityAnswerQuiet(st, person, key, answer) {
+function setAvailabilityAnswerQuiet(st, person, key, answer2) {
   const row = st.set.answers[person] ??= {};
-  if (answer) row[key] = answer;
+  if (answer2) row[key] = answer2;
   else delete row[key];
   const target = st.spec.sets?.[st.unit];
   if (target) target.answers = structuredClone(st.set.answers);
@@ -53634,7 +53877,7 @@ function openMenu2(root, cell) {
     )
   );
   const now = st.set.answers[person]?.[column];
-  for (const answer of [...allowed(root), null]) {
+  for (const answer2 of [...allowed(root), null]) {
     const li = el10("", "li");
     li.setAttribute("role", "none");
     const b = (
@@ -53643,11 +53886,11 @@ function openMenu2(root, cell) {
     );
     b.type = "button";
     b.setAttribute("role", "menuitemradio");
-    b.setAttribute("aria-checked", String(answer === (now ?? null)));
-    b.textContent = answer ? `${glyphOf(answer)} ${wordOf(answer)}` : s2.availabilityClear;
+    b.setAttribute("aria-checked", String(answer2 === (now ?? null)));
+    b.textContent = answer2 ? `${glyphOf(answer2)} ${wordOf(answer2)}` : s2.availabilityClear;
     b.addEventListener("click", () => {
       closeMenu2(root);
-      void request2(root, person, [column], answer);
+      void request2(root, person, [column], answer2);
     });
     li.append(b);
     list.append(li);
@@ -53760,12 +54003,12 @@ function attachAvailability(root = document) {
       }
       const pick4 = target.closest(".kp-availability__pick");
       if (pick4 instanceof HTMLElement) {
-        const answer = (
+        const answer2 = (
           /** @type {AvailabilityAnswer} */
           pick4.getAttribute("data-answer")
         );
         const was = stateOf6(el_).set.answers[pick4.getAttribute("data-person") ?? ""]?.[pick4.getAttribute("data-column") ?? ""];
-        void request2(el_, pick4.getAttribute("data-person") ?? "", [pick4.getAttribute("data-column") ?? ""], was === answer ? null : answer);
+        void request2(el_, pick4.getAttribute("data-person") ?? "", [pick4.getAttribute("data-column") ?? ""], was === answer2 ? null : answer2);
         return;
       }
       const colHead = target.closest(".kp-availability__grid .kp-heat__col");
@@ -53847,9 +54090,9 @@ function attachAvailability(root = document) {
         const c = focused();
         return c !== null && el_.contains(c) && editable(el_, c.getAttribute("data-row-key") ?? "", c.getAttribute("data-col-key") ?? "");
       };
-      const set = (answer) => () => {
+      const set = (answer2) => () => {
         const c = focused();
-        if (c) void request2(el_, c.getAttribute("data-row-key") ?? "", [c.getAttribute("data-col-key") ?? ""], answer);
+        if (c) void request2(el_, c.getAttribute("data-row-key") ?? "", [c.getAttribute("data-col-key") ?? ""], answer2);
       };
       stopKeys = registerShortcuts(
         el_,
@@ -55424,7 +55667,7 @@ function entries2(root) {
   }
   return out;
 }
-function nearOf(root, value) {
+function nearOf2(root, value) {
   const list = (root.getAttribute("data-kp-time-near") ?? "").split(",").map((x) => x.trim()).filter(Boolean);
   if (!list.length) return null;
   const width = Number(root.getAttribute("data-kp-time-near-width") ?? "60") || 60;
@@ -55509,7 +55752,7 @@ function drawPopup(root) {
       o.append(n);
     }
     if (item.kind === "time") {
-      const near2 = nearOf(root, item.value);
+      const near2 = nearOf2(root, item.value);
       if (near2) {
         o.setAttribute("data-kp-time-near-mark", "");
         const n = el12("kp-time__option-note", "span");

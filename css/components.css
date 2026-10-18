@@ -24292,31 +24292,115 @@
         box-sizing: border-box;
     }
 
-    /* "Not today" on a ticked item: a small button inside the tag, and a dashed plate, so it is never the same as unset. */
-    .kp-usual__nt {
-        padding: 0 0.375rem;
-        border: 1px solid var(--border-strong);
-        border-radius: var(--kp-radius-pill, 999px);
-        background: transparent;
-        color: inherit;
-        font: inherit;
-        font-size: var(--kp-text-xs, 0.75rem);
-        cursor: pointer;
+    /* The answers to what was typed, where the eyes are [Kenny, 2026-10-18 21:37]. "Did you mean Fatigue?" stands first in
+     * the list and reads as a question (its name in the option's own weight); "Headache is already picked" is a quiet line
+     * over the list, never an option; after an add, the line under the field says so with its Undo. */
+    .kp-usual .kp-usual__near {
+        font-weight: 600;
     }
 
-    .kp-usual__nt[aria-pressed='true'] {
-        background: var(--foreground);
-        color: var(--background);
+    .kp-usual__already {
+        padding: var(--kp-space-sm, 0.5rem) 0.625rem;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
     }
 
-    .kp-tag[data-kp-not-today] {
-        border-style: dashed;
-        background: transparent;
+    .kp-usual__note {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+        margin: var(--kp-space-xs, 0.25rem) 0 0;
+        font-size: var(--kp-text-sm, 0.8125rem);
     }
 
-    .kp-usual__nt:focus-visible {
-        outline: 2px solid var(--ring);
+    .kp-usual__note[hidden] {
+        display: none;
+    }
+
+    .kp-usual__note-text {
+        overflow-wrap: anywhere;
+    }
+
+    /* A tag answers a pick, an add, or a name typed that is already picked: a ring in the theme's focus colour, switched on
+     * and off twice, never eased (it is a signal, not a motion); held still under reduced motion. */
+    .kp-usual .kp-tag[data-kp-usual-flash] {
+        outline: 2px solid transparent;
         outline-offset: 2px;
+        animation: kp-usual-flash 1.2s steps(1, end) 1;
+    }
+
+    @keyframes kp-usual-flash {
+        0%,
+        50% {
+            outline-color: var(--ring);
+        }
+
+        25%,
+        75%,
+        100% {
+            outline-color: transparent;
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kp-usual .kp-tag[data-kp-usual-flash] {
+            animation: none;
+            outline-color: var(--ring);
+        }
+    }
+
+    /* "Not today" [kpadopt6; redesigned 2026-10-18]: the usual choices' own check under the field, a heading and one line
+     * saying what Not today means, never a pill inside a tag. `rows`: one line per usual choice, the names in one column as
+     * wide as the longest, the package's segmented pair "Had it" / "Not today" beside each (neither pressed: not answered).
+     * `chips`: one row of the package's three-way chips (✓ had it, ✕ and struck through not today). Knob: --kp-usual-check-gap. */
+    .kp-usual__check {
+        display: grid;
+        gap: var(--kp-space-xs, 0.25rem);
+        margin-block-start: var(--kp-space-md, 0.75rem);
+        padding-block-start: var(--kp-space-sm, 0.5rem);
+        /* A rule over the check, not a plate around it: drawn as a line, so the names stand on the page as the field does. */
+        background: linear-gradient(var(--border), var(--border)) top / 100% 1px no-repeat;
+    }
+
+    .kp-usual__check-title {
+        margin: 0;
+        font-weight: 600;
+    }
+
+    .kp-usual__check-what {
+        margin: 0 0 var(--kp-space-xs, 0.25rem);
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+        overflow-wrap: anywhere;
+    }
+
+    .kp-usual__check-rows {
+        display: grid;
+        grid-template-columns: minmax(0, max-content) max-content;
+        align-items: center;
+        justify-content: start;
+        gap: var(--kp-usual-check-gap, var(--kp-space-xs, 0.25rem)) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-usual__check-name {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-usual__check-chips {
+        justify-content: start;
+    }
+
+    .kp-usual__check-chips > .kp-segmented__item {
+        gap: var(--kp-tri-gap, 0.4em);
+        padding-inline-start: var(--kp-tri-pad-start, var(--kp-space-sm, 0.5rem));
+    }
+
+    .kp-usual__check :is(.kp-segmented__item):disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
     }
 }
 

@@ -37,6 +37,26 @@ export type UsualModel = {
     panel: HTMLElement;
     busy: import('./busy-card.js').BusyCard | null;
     hintEl: HTMLElement;
+    /**
+     * the line under the field after an add, with its Undo
+     */
+    noteEl: HTMLElement;
+    /**
+     * the usual choices' own check (Not today), when the picker has one
+     */
+    check: HTMLElement | null;
+    /**
+     * what the check was drawn for (its look and the band), so a sync redraws only on a change
+     */
+    checkKey: string;
+    /**
+     * detaches the three-way chips of the check
+     */
+    checkOff: () => void;
+    /**
+     * a change made by the check itself: no pick event
+     */
+    silent: boolean;
 };
 /** A name as the guard compares it: case, accents and spacing ignored. Pure. @param {string} text */
 export declare function normaliseName(text: string): string;

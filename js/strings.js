@@ -1460,11 +1460,26 @@
  * @property {string} usualFailedText  Its sentence [kpadopt6]
  * @property {string} usualRetry  Its button [kpadopt6]
  * @property {string} usualLoading  The words under the loading card of a picker [kpadopt6]
- * @property {string} usualNotToday  The small button on a ticked item that says it is not for today [kpadopt6]
- * @property {(label: string) => string} usualNotTodayName  That button's accessible name: "Hoofdpijn: not today" [kpadopt6]
+ * @property {string} usualNotToday  The check's button that says a usual choice did not happen today [kpadopt6]
+ * @property {(label: string) => string} usualNotTodayName  Kept for consumers: a not-today button's accessible name, "Hoofdpijn: not today" [kpadopt6]
  * @property {(label: string) => string} usualNotTodayAnnounce  What is said when it is set: "Hoofdpijn: not today" [kpadopt6]
- * @property {string} usualNotTodayMark  The word a not-today item carries beside its name [kpadopt6]
+ * @property {string} usualNotTodayMark  The word a screen reader hears after a chip that is not today [kpadopt6]
  * @property {string} usualJump  The `?` sheet's words for Alt U: "Jump to the usual choices" [kpadopt6]
+ * @property {(label: string) => string} usualAlreadyPicked  The list's line, and what is said, when a name typed is already picked: "Headache is already picked" [kpadopt6]
+ * @property {(label: string) => string} usualPicked  What is said when the check's "Had it" picks a choice: "Headache: had it" [kpadopt6]
+ * @property {(typed: string, label: string) => string} usualTookClosest  What is said when Enter took the closest name: "Fatigu: took Fatigue" [kpadopt6]
+ * @property {(label: string) => string} usualAsk  What is said when Enter lit the first "Did you mean" row: "Did you mean Fatigue? Enter picks it" [kpadopt6]
+ * @property {(label: string) => string} usualAddedNote  The line under the field after an add: "Added 'Neksteun' as new" [kpadopt6]
+ * @property {string} usualUndo  Its button [kpadopt6]
+ * @property {(label: string) => string} usualUndoName  That button's accessible name: "Undo adding Neksteun" [kpadopt6]
+ * @property {(label: string) => string} usualAddUndone  What is said after that Undo: "Neksteun taken out again" [kpadopt6]
+ * @property {string} usualCheckTitle  The heading over the check of the usual choices [kpadopt6]
+ * @property {string} usualCheckWhat  The line under it in the rows look: what Not today means [kpadopt6]
+ * @property {string} usualCheckWhatChips  The line under it in the chips look: what a press does and what Not today means [kpadopt6]
+ * @property {string} usualHadIt  The check's button that says the choice happened today (it picks it) [kpadopt6]
+ * @property {string} usualHadItWord  The word a screen reader hears after a chip that is had it [kpadopt6]
+ * @property {(label: string) => string} usualUnanswered  What is said when an answer is taken back: "Headache: not answered" [kpadopt6]
+ * @property {string} usualUnansweredWord  The word a screen reader hears after a chip with no answer [kpadopt6]
  */
 
 /**
@@ -3150,6 +3165,21 @@ export const DEFAULT_STRINGS = Object.freeze({
     usualNotTodayAnnounce: (label) => `${label}: not today`,
     usualNotTodayMark: 'not today',
     usualJump: 'Jump to the usual choices',
+    usualAlreadyPicked: (label) => `${label} is already picked`,
+    usualPicked: (label) => `${label}: had it`,
+    usualTookClosest: (typed, label) => `${typed}: took ${label}`,
+    usualAsk: (label) => `Did you mean ${label}? Enter picks it`,
+    usualAddedNote: (label) => `Added '${label}' as new`,
+    usualUndo: 'Undo',
+    usualUndoName: (label) => `Undo adding ${label}`,
+    usualAddUndone: (label) => `${label} taken out again`,
+    usualCheckTitle: 'Your usual today',
+    usualCheckWhat: 'Not today says it did not happen today. A row left blank is not answered yet.',
+    usualCheckWhatChips: 'Tap once: had it. Twice: not today, it did not happen. Three times: not answered.',
+    usualHadIt: 'Had it',
+    usualHadItWord: 'had it',
+    usualUnanswered: (label) => `${label}: not answered`,
+    usualUnansweredWord: 'not answered',
 });
 
 // STRINGS_NL was removed in 4.0.0 [D3]. Kenny decided that on

@@ -5316,11 +5316,11 @@ export type Strings = {
      */
     usualLoading: string;
     /**
-     * The small button on a ticked item that says it is not for today [kpadopt6]
+     * The check's button that says a usual choice did not happen today [kpadopt6]
      */
     usualNotToday: string;
     /**
-     * That button's accessible name: "Hoofdpijn: not today" [kpadopt6]
+     * Kept for consumers: a not-today button's accessible name, "Hoofdpijn: not today" [kpadopt6]
      */
     usualNotTodayName: (label: string) => string;
     /**
@@ -5328,13 +5328,73 @@ export type Strings = {
      */
     usualNotTodayAnnounce: (label: string) => string;
     /**
-     * The word a not-today item carries beside its name [kpadopt6]
+     * The word a screen reader hears after a chip that is not today [kpadopt6]
      */
     usualNotTodayMark: string;
     /**
      * The `?` sheet's words for Alt U: "Jump to the usual choices" [kpadopt6]
      */
     usualJump: string;
+    /**
+     * The list's line, and what is said, when a name typed is already picked: "Headache is already picked" [kpadopt6]
+     */
+    usualAlreadyPicked: (label: string) => string;
+    /**
+     * What is said when the check's "Had it" picks a choice: "Headache: had it" [kpadopt6]
+     */
+    usualPicked: (label: string) => string;
+    /**
+     * What is said when Enter took the closest name: "Fatigu: took Fatigue" [kpadopt6]
+     */
+    usualTookClosest: (typed: string, label: string) => string;
+    /**
+     * What is said when Enter lit the first "Did you mean" row: "Did you mean Fatigue? Enter picks it" [kpadopt6]
+     */
+    usualAsk: (label: string) => string;
+    /**
+     * The line under the field after an add: "Added 'Neksteun' as new" [kpadopt6]
+     */
+    usualAddedNote: (label: string) => string;
+    /**
+     * Its button [kpadopt6]
+     */
+    usualUndo: string;
+    /**
+     * That button's accessible name: "Undo adding Neksteun" [kpadopt6]
+     */
+    usualUndoName: (label: string) => string;
+    /**
+     * What is said after that Undo: "Neksteun taken out again" [kpadopt6]
+     */
+    usualAddUndone: (label: string) => string;
+    /**
+     * The heading over the check of the usual choices [kpadopt6]
+     */
+    usualCheckTitle: string;
+    /**
+     * The line under it in the rows look: what Not today means [kpadopt6]
+     */
+    usualCheckWhat: string;
+    /**
+     * The line under it in the chips look: what a press does and what Not today means [kpadopt6]
+     */
+    usualCheckWhatChips: string;
+    /**
+     * The check's button that says the choice happened today (it picks it) [kpadopt6]
+     */
+    usualHadIt: string;
+    /**
+     * The word a screen reader hears after a chip that is had it [kpadopt6]
+     */
+    usualHadItWord: string;
+    /**
+     * What is said when an answer is taken back: "Headache: not answered" [kpadopt6]
+     */
+    usualUnanswered: (label: string) => string;
+    /**
+     * The word a screen reader hears after a chip with no answer [kpadopt6]
+     */
+    usualUnansweredWord: string;
 };
 /**
  * @typedef {object} Strings
@@ -6760,11 +6820,26 @@ export type Strings = {
  * @property {string} usualFailedText  Its sentence [kpadopt6]
  * @property {string} usualRetry  Its button [kpadopt6]
  * @property {string} usualLoading  The words under the loading card of a picker [kpadopt6]
- * @property {string} usualNotToday  The small button on a ticked item that says it is not for today [kpadopt6]
- * @property {(label: string) => string} usualNotTodayName  That button's accessible name: "Hoofdpijn: not today" [kpadopt6]
+ * @property {string} usualNotToday  The check's button that says a usual choice did not happen today [kpadopt6]
+ * @property {(label: string) => string} usualNotTodayName  Kept for consumers: a not-today button's accessible name, "Hoofdpijn: not today" [kpadopt6]
  * @property {(label: string) => string} usualNotTodayAnnounce  What is said when it is set: "Hoofdpijn: not today" [kpadopt6]
- * @property {string} usualNotTodayMark  The word a not-today item carries beside its name [kpadopt6]
+ * @property {string} usualNotTodayMark  The word a screen reader hears after a chip that is not today [kpadopt6]
  * @property {string} usualJump  The `?` sheet's words for Alt U: "Jump to the usual choices" [kpadopt6]
+ * @property {(label: string) => string} usualAlreadyPicked  The list's line, and what is said, when a name typed is already picked: "Headache is already picked" [kpadopt6]
+ * @property {(label: string) => string} usualPicked  What is said when the check's "Had it" picks a choice: "Headache: had it" [kpadopt6]
+ * @property {(typed: string, label: string) => string} usualTookClosest  What is said when Enter took the closest name: "Fatigu: took Fatigue" [kpadopt6]
+ * @property {(label: string) => string} usualAsk  What is said when Enter lit the first "Did you mean" row: "Did you mean Fatigue? Enter picks it" [kpadopt6]
+ * @property {(label: string) => string} usualAddedNote  The line under the field after an add: "Added 'Neksteun' as new" [kpadopt6]
+ * @property {string} usualUndo  Its button [kpadopt6]
+ * @property {(label: string) => string} usualUndoName  That button's accessible name: "Undo adding Neksteun" [kpadopt6]
+ * @property {(label: string) => string} usualAddUndone  What is said after that Undo: "Neksteun taken out again" [kpadopt6]
+ * @property {string} usualCheckTitle  The heading over the check of the usual choices [kpadopt6]
+ * @property {string} usualCheckWhat  The line under it in the rows look: what Not today means [kpadopt6]
+ * @property {string} usualCheckWhatChips  The line under it in the chips look: what a press does and what Not today means [kpadopt6]
+ * @property {string} usualHadIt  The check's button that says the choice happened today (it picks it) [kpadopt6]
+ * @property {string} usualHadItWord  The word a screen reader hears after a chip that is had it [kpadopt6]
+ * @property {(label: string) => string} usualUnanswered  What is said when an answer is taken back: "Headache: not answered" [kpadopt6]
+ * @property {string} usualUnansweredWord  The word a screen reader hears after a chip with no answer [kpadopt6]
  */
 /**
  * The defaults. English, by Kenny's decision of 2026-09-04 — the package

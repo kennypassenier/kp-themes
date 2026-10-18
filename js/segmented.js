@@ -44,7 +44,11 @@
 // item marked `data-kp-segmented-all` is Clear all here, dimmed while nothing
 // is chosen. `data-kp-segmented-summary` on the group keeps one line after it:
 // how to use it while nothing is chosen, what is chosen once something is.
-// Use it with the chip look (`kp-segmented--chips`).
+// Use it with the chip look (`kp-segmented--chips`). A group whose three states
+// mean something else than required / left out / either way names its own
+// words, `data-kp-segmented-words='{"include":"had it","exclude":"not today",
+// "any":"not answered"}'`: what a screen reader hears after a chip and what a
+// press announces (the usual picker's Not today, js/usual-picker.js).
 //
 // Events (bubbling, on the group):
 //   kp-segmented-change   { value: string | null, values: string[], item }
@@ -218,6 +222,25 @@ function roving(group) {
 }
 
 /**
+ * The words of a three-way group's states: its own `data-kp-segmented-words`, else the dictionary's.
+ * @param {Element} item
+ * @returns {Record<'any' | 'include' | 'exclude', string>}
+ */
+function triWords(item) {
+    const strings = getStrings();
+    const words = { any: strings.triAny, include: strings.triInclude, exclude: strings.triExclude };
+    const raw = item.parentElement?.closest(SEGMENTED)?.getAttribute('data-kp-segmented-words');
+    if (!raw) return words;
+    try {
+        const own = JSON.parse(raw);
+        for (const state of TRI_STATES) if (typeof own?.[state] === 'string') words[state] = own[state];
+    } catch {
+        // Words that do not read as JSON leave the dictionary's.
+    }
+    return words;
+}
+
+/**
  * Write one three-way chip's state: the attribute, the word a screen reader
  * hears after its name, and the mark (drawn by the stylesheet from the
  * attribute). The parts are made when the markup left them out.
@@ -240,8 +263,7 @@ function writeTri(item, state) {
         word.className = 'kp-sr-only kp-segmented__state';
         item.append(word);
     }
-    const strings = getStrings();
-    word.textContent = `, ${state === 'include' ? strings.triInclude : state === 'exclude' ? strings.triExclude : strings.triAny}`;
+    word.textContent = `, ${triWords(item)[state]}`;
 }
 
 /**
@@ -464,7 +486,7 @@ function turnTri(group, item, state) {
     paintTri(group);
     const strings = getStrings();
     const label = (item.querySelector('.kp-segmented__label') ?? item).textContent?.trim() ?? '';
-    sayTri(group, strings.triAnnounce(label, state === 'include' ? strings.triInclude : state === 'exclude' ? strings.triExclude : strings.triAny));
+    sayTri(group, strings.triAnnounce(label, triWords(item)[state]));
     const { include, exclude } = getSegmentedTri(group);
     group.dispatchEvent(
         new CustomEvent(SEGMENTED_EVENT, { bubbles: true, detail: { value: valueOf(item), values: include, include, exclude, state, item } }),
