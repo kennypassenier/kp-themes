@@ -25799,6 +25799,11 @@
         min-block-size: 2.75rem;
     }
 
+    /* The row that carries answers puts them under the name, so the name keeps the whole line. */
+    .kp-availability__column-row:has(> .kp-availability__column-answers) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
     .kp-availability__column-answers {
         display: flex;
         flex-wrap: wrap;
