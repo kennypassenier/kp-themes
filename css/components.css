@@ -14159,6 +14159,44 @@
         overflow-x: auto;
         overscroll-behavior-x: contain;
         scrollbar-width: none;
+        /* It says it scrolls and never leaves a label hard against a cut edge [t56-scrolledge-1018]: a resting scroll
+         * lands on a whole segment (a snap, never an animation), the side that has more fades out over
+         * --kp-seg-fade (a mask: only its alpha counts; js/segmented.js writes data-kp-segmented-more), and a segment the keyboard or the snap
+         * brings in stands clear of that fade (scroll-padding). The side with nothing beyond it is not faded. */
+        --kp-seg-fade: 1.5rem;
+        --kp-seg-fade-start: 0px;
+        --kp-seg-fade-end: 0px;
+        scroll-snap-type: x proximity;
+        scroll-padding-inline: var(--kp-seg-fade);
+        mask-image: linear-gradient(
+            to right,
+            transparent 0,
+            var(--foreground) var(--kp-seg-fade-start),
+            var(--foreground) calc(100% - var(--kp-seg-fade-end)),
+            transparent 100%
+        );
+    }
+
+    .kp-segmented[data-kp-segmented-overflow]:dir(rtl) {
+        mask-image: linear-gradient(
+            to left,
+            transparent 0,
+            var(--foreground) var(--kp-seg-fade-start),
+            var(--foreground) calc(100% - var(--kp-seg-fade-end)),
+            transparent 100%
+        );
+    }
+
+    .kp-segmented[data-kp-segmented-more~='start'] {
+        --kp-seg-fade-start: var(--kp-seg-fade);
+    }
+
+    .kp-segmented[data-kp-segmented-more~='end'] {
+        --kp-seg-fade-end: var(--kp-seg-fade);
+    }
+
+    .kp-segmented[data-kp-segmented-overflow] > .kp-segmented__item {
+        scroll-snap-align: start;
     }
 
     .kp-segmented[data-kp-segmented-overflow] > .kp-segmented__item:focus-visible {

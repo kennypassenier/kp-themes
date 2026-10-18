@@ -45,6 +45,8 @@ export type TriValues = {
      */
     exclude: string[];
 };
+/** Set on a scrolling track to name the sides that have more segments out of sight: `start`, `end`, or both. */
+export declare const MORE_ATTRIBUTE = "data-kp-segmented-more";
 /** @param {Element} group @returns {HTMLElement[]} */
 export declare function itemsOf(group: Element): HTMLElement[];
 /** @param {Element} item */

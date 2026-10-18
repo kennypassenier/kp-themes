@@ -45,7 +45,12 @@ function measure(min) {
                     if (getComputedStyle(a).overflowX === 'visible') continue;
                     const ar = a.getBoundingClientRect();
                     clip = clip
-                        ? { left: Math.max(clip.left, ar.left), right: Math.min(clip.right, ar.right), top: Math.max(clip.top, ar.top), bottom: Math.min(clip.bottom, ar.bottom) }
+                        ? {
+                              left: Math.max(clip.left, ar.left),
+                              right: Math.min(clip.right, ar.right),
+                              top: Math.max(clip.top, ar.top),
+                              bottom: Math.min(clip.bottom, ar.bottom),
+                          }
                         : { left: ar.left, right: ar.right, top: ar.top, bottom: ar.bottom };
                 }
                 for (const raw of [...range.getClientRects()].filter(visible)) {
@@ -100,7 +105,15 @@ function measure(min) {
             const bottom = pr.bottom - parseFloat(cs.borderBottomWidth) - t.rect.bottom;
             // Side edges: a line of text sits on its plate's padding left and right; above and below, line height and a
             // badge's own small padding are the design.
-            const edge = Math.min(l, r);
+            // A scrolling track fades the side that has more segments out of sight (data-kp-segmented-more, a mask on the
+            // track): a label there dissolves into the edge, so only the side with nothing beyond it is held to the rule
+            // [t56-scrolledge-1018].
+            const more = (p.getAttribute('data-kp-segmented-more') || '').split(' ');
+            const faded = getComputedStyle(p).maskImage !== 'none' && getComputedStyle(p).maskImage !== '';
+            const rtl = getComputedStyle(p).direction === 'rtl';
+            const leftMore = faded && more.includes(rtl ? 'end' : 'start');
+            const rightMore = faded && more.includes(rtl ? 'start' : 'end');
+            const edge = Math.min(leftMore ? Infinity : l, rightMore ? Infinity : r);
             void top;
             void bottom;
             if (edge < min - 0.05 && pr.width > t.rect.width + 1)

@@ -9466,13 +9466,13 @@ function coveredEdges(view, wrapper, skip) {
     }
     return null;
   };
-  const stacked = (size2, at, reach) => {
+  const stacked = (size2, at, reach2) => {
     let inset = 0;
     let first = null;
     for (const start of [0.5, 8.5, 16.5, 32.5]) if (first = at(start)) break;
     for (let bar = first, n = 0; bar && n < 4; n += 1) {
-      if (reach(bar) <= inset + 0.5) break;
-      inset = reach(bar);
+      if (reach2(bar) <= inset + 0.5) break;
+      inset = reach2(bar);
       bar = inset < size2 ? at(inset + 0.5) : null;
     }
     return inset;
@@ -9877,6 +9877,7 @@ var init_menu_button = __esm({
 var segmented_exports = {};
 __export(segmented_exports, {
   GLIDE_ATTRIBUTE: () => GLIDE_ATTRIBUTE,
+  MORE_ATTRIBUTE: () => MORE_ATTRIBUTE,
   OVERFLOW_ATTRIBUTE: () => OVERFLOW_ATTRIBUTE,
   SEGMENTED: () => SEGMENTED,
   SEGMENTED_EVENT: () => SEGMENTED_EVENT,
@@ -10030,10 +10031,21 @@ function setSegmentedTri(group, { include = [], exclude = [] }) {
   }
   paintTri(group);
 }
+function reach(group) {
+  const sides = [];
+  if (group.hasAttribute(OVERFLOW_ATTRIBUTE)) {
+    const from = Math.abs(group.scrollLeft);
+    if (from > 1) sides.push("start");
+    if (from + group.clientWidth < group.scrollWidth - 1) sides.push("end");
+  }
+  if (sides.length) group.setAttribute(MORE_ATTRIBUTE, sides.join(" "));
+  else group.removeAttribute(MORE_ATTRIBUTE);
+}
 function layout(group) {
   if (!(group instanceof HTMLElement)) return;
   const chips = group.classList.contains("kp-segmented--chips");
   group.toggleAttribute(OVERFLOW_ATTRIBUTE, !chips && group.scrollWidth > group.clientWidth + 1);
+  reach(group);
   const chosen = isMulti(group) || chips ? void 0 : itemsOf(group).find((item) => isOn(group, item));
   if (!chosen || chosen.offsetWidth === 0) {
     group.removeAttribute(THUMB_ATTRIBUTE);
@@ -10056,6 +10068,11 @@ function enhance(group) {
       const observer2 = new ResizeObserver(() => layout(group));
       observer2.observe(group);
       WATCH.set(group, observer2);
+    }
+    if (group instanceof HTMLElement) {
+      const onScroll = () => reach(group);
+      group.addEventListener("scroll", onScroll, { passive: true });
+      REACH.set(group, onScroll);
     }
     if (typeof document !== "undefined" && document.fonts?.ready) document.fonts.ready.then(() => layout(group));
   }
@@ -10290,11 +10307,14 @@ function attachSegmented(root = document) {
     for (const group of groups) {
       WATCH.get(group)?.disconnect();
       WATCH.delete(group);
+      const onScroll = REACH.get(group);
+      if (onScroll) group.removeEventListener("scroll", onScroll);
+      REACH.delete(group);
       ENHANCED.delete(group);
     }
   };
 }
-var SEGMENTED, SEGMENTED_EVENT, SEGMENTED_ITEM, THUMB_ATTRIBUTE, GLIDE_ATTRIBUTE, TRI_ATTRIBUTE, TRI_STATES, OVERFLOW_ATTRIBUTE, ENHANCED, STOP, WATCH, HANDLED, isMulti, isTri, triOf, isAll, isOn, groupDisabled, itemDisabled;
+var SEGMENTED, SEGMENTED_EVENT, SEGMENTED_ITEM, THUMB_ATTRIBUTE, GLIDE_ATTRIBUTE, TRI_ATTRIBUTE, TRI_STATES, OVERFLOW_ATTRIBUTE, ENHANCED, STOP, MORE_ATTRIBUTE, WATCH, REACH, HANDLED, isMulti, isTri, triOf, isAll, isOn, groupDisabled, itemDisabled;
 var init_segmented = __esm({
   "js/segmented.js"() {
     "use strict";
@@ -10310,7 +10330,9 @@ var init_segmented = __esm({
     OVERFLOW_ATTRIBUTE = "data-kp-segmented-overflow";
     ENHANCED = /* @__PURE__ */ new WeakSet();
     STOP = /* @__PURE__ */ new WeakMap();
+    MORE_ATTRIBUTE = "data-kp-segmented-more";
     WATCH = /* @__PURE__ */ new WeakMap();
+    REACH = /* @__PURE__ */ new WeakMap();
     HANDLED = /* @__PURE__ */ new WeakSet();
     isMulti = (group) => group.getAttribute("data-kp-segmented") === "multi";
     isTri = (group) => group.getAttribute("data-kp-segmented") === "tri";
@@ -23733,8 +23755,8 @@ function plotChart(host, group, locale, ctx) {
   }).sort((a, b) => b.v - a.v);
   const eventsNear = (t) => {
     if (!geo) return [];
-    const reach = (geo.to - geo.from) / 30;
-    return shownEvents().filter((ev) => ev.until != null && ev.until > ev.at ? t >= ev.at - reach && t <= ev.until + reach : Math.abs(ev.at - t) < reach);
+    const reach2 = (geo.to - geo.from) / 30;
+    return shownEvents().filter((ev) => ev.until != null && ev.until > ev.at ? t >= ev.at - reach2 && t <= ev.until + reach2 : Math.abs(ev.at - t) < reach2);
   };
   const change2 = (d) => d === 0 ? "\xB10" : `${d > 0 ? "\u25B2" : "\u25BC"} ${fmt(Math.abs(d), "delta")}`;
   function paintTip() {
@@ -37949,9 +37971,9 @@ function reachableLanes(c) {
 }
 function syncTabStops2(c) {
   const all = [...c.bars.values(), ...c.pointEls.values()];
-  const reach = reachableLanes(c).flat();
+  const reach2 = reachableLanes(c).flat();
   let target = c.active ? c.bars.get(c.active) ?? c.pointEls.get(c.active) : void 0;
-  if (!target || !reach.includes(target)) target = reach[0];
+  if (!target || !reach2.includes(target)) target = reach2[0];
   for (const el14 of all) el14.tabIndex = el14 === target ? 0 : -1;
 }
 function focusBar(c, to) {
@@ -51786,11 +51808,11 @@ function caterpillar(el14, kind) {
     return { html: html2, q };
   }
   const r = cornerOf(el14);
-  const reach = W - 2 * r;
-  const n = Math.max(3, Math.floor(reach / (q * 3.4)));
+  const reach2 = W - 2 * r;
+  const n = Math.max(3, Math.floor(reach2 / (q * 3.4)));
   let html = "";
   for (let k = 0; k < n; k++)
-    html += `<i class="kp-pieces__leg" style="left: ${px3(at(r + (k + 0.5) * reach / n))}; top: ${px3(foot)}; --k: ${k}"></i>`;
+    html += `<i class="kp-pieces__leg" style="left: ${px3(at(r + (k + 0.5) * reach2 / n))}; top: ${px3(foot)}; --k: ${k}"></i>`;
   html += `<i class="kp-pieces__head kp-pieces__head--lead" style="left: ${px3(rtl ? r * 0.29 : W - r * 0.29)}; top: ${px3(r * 0.29)}"></i>`;
   return { html, q };
 }
@@ -58519,6 +58541,7 @@ export {
   METER,
   MOD_CAP,
   MONTH_EVENT,
+  MORE_ATTRIBUTE,
   NAMES_PROPERTY,
   NAV_COMPACT_EVENT,
   NAV_FOLD,

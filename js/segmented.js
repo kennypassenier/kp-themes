@@ -106,8 +106,13 @@ export const OVERFLOW_ATTRIBUTE = 'data-kp-segmented-overflow';
 const ENHANCED = new WeakSet();
 /** The item the roving tab stop sits on, per group. @type {WeakMap<Element, Element>} */
 const STOP = new WeakMap();
+/** Set on a scrolling track to name the sides that have more segments out of sight: `start`, `end`, or both. */
+export const MORE_ATTRIBUTE = 'data-kp-segmented-more';
+
 /** Observers, per group, so a detach can let go. @type {WeakMap<Element, ResizeObserver>} */
 const WATCH = new WeakMap();
+/** The scroll listener of a scrolling track, per group, so a detach can let go. @type {WeakMap<Element, () => void>} */
+const REACH = new WeakMap();
 /** Events already handled, for a group under two attached roots. @type {WeakSet<Event>} */
 const HANDLED = new WeakSet();
 
@@ -343,6 +348,23 @@ export function setSegmentedTri(group, { include = [], exclude = [] }) {
 }
 
 /**
+ * Note which sides of a scrolling track have more segments out of sight, so the
+ * stylesheet fades only those edges (a label at a side with nothing beyond it
+ * stays whole).
+ * @param {HTMLElement} group
+ */
+function reach(group) {
+    const sides = [];
+    if (group.hasAttribute(OVERFLOW_ATTRIBUTE)) {
+        const from = Math.abs(group.scrollLeft);
+        if (from > 1) sides.push('start');
+        if (from + group.clientWidth < group.scrollWidth - 1) sides.push('end');
+    }
+    if (sides.length) group.setAttribute(MORE_ATTRIBUTE, sides.join(' '));
+    else group.removeAttribute(MORE_ATTRIBUTE);
+}
+
+/**
  * Place the plate under the chosen segment (single, segmented look) and note
  * whether the segments overflow the group.
  * @param {Element} group
@@ -352,6 +374,7 @@ export function layout(group) {
     const chips = group.classList.contains('kp-segmented--chips');
     // Chips wrap (or sit in a scrolling filter row); only a track scrolls itself.
     group.toggleAttribute(OVERFLOW_ATTRIBUTE, !chips && group.scrollWidth > group.clientWidth + 1);
+    reach(group);
     const chosen = isMulti(group) || chips ? undefined : itemsOf(group).find((item) => isOn(group, item));
     if (!chosen || chosen.offsetWidth === 0) {
         group.removeAttribute(THUMB_ATTRIBUTE);
@@ -381,6 +404,11 @@ function enhance(group) {
             const observer = new ResizeObserver(() => layout(group));
             observer.observe(group);
             WATCH.set(group, observer);
+        }
+        if (group instanceof HTMLElement) {
+            const onScroll = () => reach(group);
+            group.addEventListener('scroll', onScroll, { passive: true });
+            REACH.set(group, onScroll);
         }
         if (typeof document !== 'undefined' && document.fonts?.ready) document.fonts.ready.then(() => layout(group));
     }
@@ -659,6 +687,9 @@ export function attachSegmented(root = document) {
         for (const group of groups) {
             WATCH.get(group)?.disconnect();
             WATCH.delete(group);
+            const onScroll = REACH.get(group);
+            if (onScroll) group.removeEventListener('scroll', onScroll);
+            REACH.delete(group);
             ENHANCED.delete(group);
         }
     };
