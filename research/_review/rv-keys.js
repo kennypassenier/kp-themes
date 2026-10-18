@@ -2,10 +2,10 @@
 // popover and a bulk approval. They live in this module so the dialog's layout (review.js / review.css) stays
 // another owner's; review.js calls five hooks, each marked `[kit-keys]`.
 //
-// Every helper is a per-viewer OPTION (localStorage `kp-review-keys`, switched at runtime from the "Keys" button in the
-// dialog's head, or `window.kpReviewKeys.set('bulk', true)`):
+// Every helper is a per-viewer OPTION (localStorage `kp-review-keys`, switched at runtime in the dialog's help popover
+// (the ? button in its header row), or `window.kpReviewKeys.set('bulk', true)`):
 //
-//   legend    default ON   the one compact line that lists the keys
+//   legend    default ON   the list of keys in the help popover
 //   undo      default ON   W undoes the last approve or reject
 //   rejected  default ON   B (or the button) opens "Rejected so far", an overlay on the stage
 //   bulk      default OFF  G approves the rest of a theme after 3 approvals in a row there, with a 10 s undo
@@ -35,7 +35,7 @@ export const FRAME_KEYS = new Set([KEYS.next, KEYS.prev, KEYS.toggle, KEYS.rejec
 const SETTINGS_KEY = 'kp-review-keys';
 const DEFAULTS = { legend: true, undo: true, rejected: true, bulk: false };
 const OPTION_TEXT = {
-    legend: ['Key legend', 'One line that lists the keys.'],
+    legend: ['Key legend', 'The list of keys above, in this help.'],
     undo: ['Undo (W)', 'Takes back the last approve or reject.'],
     rejected: ['Rejected so far (B)', 'An overlay with your rejections, changed defaults and removed options.'],
     bulk: ['Approve the rest of a theme (G)', 'Offered after 3 approvals in a row in a theme; recorded as approved unseen.'],
@@ -85,30 +85,36 @@ export function mountKeys(api) {
     const reduced = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     /* ------------------------------------------------------------ chrome */
+    // The dialog's shell hands three slots (review.js): `tools` in the header row (the "Rejected so far" button), `help` in
+    // the help popover (the key legend and the switches of these helpers) and `status` in the verdict panel's foot (what a
+    // key just did). Without slots everything goes at the end of the dialog's head, as before.
     const head = api.dialog.querySelector('.rv-dialog__head');
-    const barEl = el('div', 'rvk-bar');
-    const legendEl = el('p', 'rvk-legend');
+    const slots = api.slots || {};
+    const legendEl = el('ul', 'rvk-legend');
     legendEl.id = 'rvk-legend';
-    const said = el('span', 'rvk-said');
+    legendEl.setAttribute('aria-label', 'Keys');
+    const said = el('p', 'rvk-said');
     said.setAttribute('role', 'status');
     said.setAttribute('aria-live', 'polite');
-    const rejectedButton = el('button', 'kp-button kp-button--sm kp-button--ghost rvk-button', 'Rejected so far');
+    said.hidden = true;
+    const rejectedButton = el('button', 'kp-button kp-button--sm kp-button--ghost rvk-button rv-icon');
     rejectedButton.type = 'button';
+    rejectedButton.innerHTML =
+        '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3 14V2.5h8.5l-1.5 3 1.5 3H3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg><span class="rvk-count" data-rvk-count>0</span>';
     rejectedButton.setAttribute('aria-expanded', 'false');
     rejectedButton.setAttribute('aria-controls', 'rvk-pop');
-    const gear = el('button', 'kp-button kp-button--sm kp-button--ghost rvk-button', 'Keys');
-    gear.type = 'button';
-    gear.title = 'Switch the key helpers on or off';
-    gear.setAttribute('aria-expanded', 'false');
-    gear.setAttribute('aria-controls', 'rvk-panel');
-    barEl.append(legendEl, said, rejectedButton, gear);
-    head.append(barEl);
-
+    rejectedButton.setAttribute('aria-label', 'Rejected so far (B)');
+    rejectedButton.title = 'Rejected so far (B): your rejections, changed defaults and removed options';
     const panel = el('div', 'rvk-panel');
     panel.id = 'rvk-panel';
-    panel.hidden = true;
     panel.setAttribute('role', 'group');
     panel.setAttribute('aria-label', 'Key helpers');
+    if (slots.tools) slots.tools.prepend(rejectedButton);
+    else head?.append(rejectedButton);
+    if (slots.help) slots.help.append(legendEl, el('p', 'rv-help__sub', 'Key helpers, kept for you in this browser'), panel);
+    else head?.append(legendEl);
+    if (slots.status) slots.status.append(said);
+    else head?.append(said);
     for (const [name, [title, hint]] of Object.entries(OPTION_TEXT)) {
         const row = el('label', 'rvk-panel__row');
         const box = document.createElement('input');
@@ -137,7 +143,7 @@ export function mountKeys(api) {
     const toast = el('div', 'rvk-toast');
     toast.hidden = true;
     toast.setAttribute('role', 'status');
-    api.dialog.append(panel, pop, toast);
+    api.dialog.append(pop, toast);
 
     /* ------------------------------------------------------------- state */
     let focusKey = null;
@@ -165,8 +171,12 @@ export function mountKeys(api) {
     const pairByKey = (key) => api.pairs.find((p) => p.key === key);
     const say = (message) => {
         said.textContent = message;
+        said.hidden = !message;
         clearTimeout(saidTimer);
-        saidTimer = setTimeout(() => (said.textContent = ''), 7000);
+        saidTimer = setTimeout(() => {
+            said.textContent = '';
+            said.hidden = true;
+        }, 7000);
     };
     const scrollTo = (node, block) => node?.scrollIntoView({ block, behavior: reduced() ? 'auto' : 'smooth' });
 
@@ -183,21 +193,16 @@ export function mountKeys(api) {
     }
     window.kpReviewKeys = { options: () => ({ ...options }), set };
 
-    function togglePanel(open = panel.hidden) {
-        panel.hidden = !open;
-        gear.setAttribute('aria-expanded', String(open));
-    }
-    gear.addEventListener('click', () => togglePanel());
-
     /* ------------------------------------------------------------- legend */
     function paintLegend() {
         legendEl.hidden = !options.legend;
         rejectedButton.hidden = !options.rejected;
         legendEl.replaceChildren();
         const add = (keys, text, title) => {
-            const item = el('span', 'rvk-legend__item');
-            keys.forEach((key, at) => item.append(...(at ? [document.createTextNode(' '), kbd(key)] : [kbd(key)])));
-            item.append(document.createTextNode(` ${text}`));
+            const item = el('li', 'rvk-legend__item');
+            const caps = el('span', 'rvk-legend__keys');
+            keys.forEach((key) => caps.append(kbd(key)));
+            item.append(caps, el('span', 'rvk-legend__what', text));
             if (title) item.title = title;
             legendEl.append(item);
         };
@@ -216,8 +221,16 @@ export function mountKeys(api) {
         if (options.rejected) add(['B'], 'rejected so far');
         if (options.bulk) {
             const offer = bulkOffer();
-            if (offer) add(['G'], `approve the rest of ${api.label(offer.theme)} (${offer.keys.length})`, 'Approves every open pair of this theme without showing it');
+            if (offer)
+                add(
+                    ['G'],
+                    `approve the rest of ${api.label(offer.theme)} (${offer.keys.length})`,
+                    'Approves every open pair of this theme without showing it',
+                );
         }
+        add(['V'], 'previous version of the section in view');
+        add(['L'], 'play its open and close');
+        add(['?'], 'this help');
         add(['Esc'], 'close');
         rejectedButton.setAttribute('aria-keyshortcuts', 'B');
     }
@@ -326,11 +339,7 @@ export function mountKeys(api) {
         await api.show(Math.min(top.index, api.steps.length - 1));
         const first = top.keys.find((key) => rowKeys().includes(key)) || rowKeys()[0];
         if (first) setFocus(first, { scroll: true });
-        say(
-            top.kind === 'bulk'
-                ? `Undone: ${top.keys.length} pairs are open again.`
-                : `Undone: ${top.label}. You are back on that step.`,
-        );
+        say(top.kind === 'bulk' ? `Undone: ${top.keys.length} pairs are open again.` : `Undone: ${top.label}. You are back on that step.`);
     }
 
     /* ------------------------------------------------------ rejected so far */
@@ -359,8 +368,10 @@ export function mountKeys(api) {
         return out;
     }
     function paintPop() {
-        if (pop.hidden) return;
         const groups = rejectedLines();
+        /** @type {HTMLElement} */ (rejectedButton.querySelector('[data-rvk-count]')).textContent = String(groups.length);
+        rejectedButton.toggleAttribute('data-rvk-some', groups.length > 0);
+        if (pop.hidden) return;
         popList.replaceChildren();
         if (!groups.length) popList.append(el('li', 'rvk-pop__empty', 'Nothing rejected, changed or removed yet.'));
         for (const { pair, lines } of groups) {
@@ -446,7 +457,9 @@ export function mountKeys(api) {
             const text = el('p', 'rvk-toast__text');
             text.append(
                 el('b', '', `Approve ${offer.keys.length} pair${offer.keys.length === 1 ? '' : 's'} of ${api.label(offer.theme)} without looking?`),
-                document.createTextNode(` They are approved as not seen, across ${topics.size} topic${topics.size === 1 ? '' : 's'}, and recorded as "approved unseen, ${offer.keys.length} pairs". You can undo it for 10 s.`),
+                document.createTextNode(
+                    ` They are approved as not seen, across ${topics.size} topic${topics.size === 1 ? '' : 's'}, and recorded as "approved unseen, ${offer.keys.length} pairs". You can undo it for 10 s.`,
+                ),
             );
             const yes = el('button', 'kp-button kp-button--primary kp-button--sm', `Approve ${offer.keys.length} unseen (G)`);
             yes.type = 'button';
@@ -473,14 +486,26 @@ export function mountKeys(api) {
         persist();
         for (const key of offer.keys) {
             state[key] = { ...state[key], verdict: 'approved', note: state[key]?.note || '', at, unseen: n };
-            journal(api.demo, { round: api.round(), pair: key, verdict: 'approved', note: '', choice: null, label: pairByKey(key)?.label, kind: 'bulk', unseen: n });
+            journal(api.demo, {
+                round: api.round(),
+                pair: key,
+                verdict: 'approved',
+                note: '',
+                choice: null,
+                label: pairByKey(key)?.label,
+                kind: 'bulk',
+                unseen: n,
+            });
         }
         api.save();
         api.render();
         showToast(
             (box) => {
                 const text = el('p', 'rvk-toast__text');
-                text.append(el('b', '', `Approved unseen: ${n} pair${n === 1 ? '' : 's'} of ${api.label(offer.theme)}.`), document.createTextNode(' Undo within 10 s.'));
+                text.append(
+                    el('b', '', `Approved unseen: ${n} pair${n === 1 ? '' : 's'} of ${api.label(offer.theme)}.`),
+                    document.createTextNode(' Undo within 10 s.'),
+                );
                 const back = el('button', 'kp-button kp-button--sm', 'Undo (W)');
                 back.type = 'button';
                 back.addEventListener('click', undo);
@@ -500,23 +525,22 @@ export function mountKeys(api) {
             return true;
         };
         if (code === 'Escape') {
-            if (confirming) return cancelConfirm(), stop();
-            if (!panel.hidden) return togglePanel(false), stop();
-            if (!pop.hidden) return closePop(), stop();
+            if (confirming) return (cancelConfirm(), stop());
+            if (!pop.hidden) return (closePop(), stop());
             return false;
         }
-        if (confirming && (code === KEYS.bulk || code === 'Enter' || code === 'NumpadEnter')) return doBulk(), stop();
-        if (code === KEYS.undo && options.undo) return undo(), stop();
-        if (code === KEYS.rejected && options.rejected) return openPop(), stop();
-        if (code === KEYS.bulk && options.bulk && !isAspect()) return askBulk(), stop();
+        if (confirming && (code === KEYS.bulk || code === 'Enter' || code === 'NumpadEnter')) return (doBulk(), stop());
+        if (code === KEYS.undo && options.undo) return (undo(), stop());
+        if (code === KEYS.rejected && options.rejected) return (openPop(), stop());
+        if (code === KEYS.bulk && options.bulk && !isAspect()) return (askBulk(), stop());
         if (isAspect()) return false;
-        if (code === KEYS.next) return moveFocus(1), stop();
-        if (code === KEYS.prev) return moveFocus(-1), stop();
+        if (code === KEYS.next) return (moveFocus(1), stop());
+        if (code === KEYS.prev) return (moveFocus(-1), stop());
         if (code === KEYS.toggle) {
             const box = focusKey && api.list.querySelector(`.rv-row[data-rv-key="${CSS.escape(focusKey)}"] [data-rv-reject]`);
-            return setReject(focusKey, !box?.checked), stop();
+            return (setReject(focusKey, !box?.checked), stop());
         }
-        if (code === KEYS.reject || (code === 'ArrowDown' && !fromStage)) return setReject(focusKey, true), stop();
+        if (code === KEYS.reject || (code === 'ArrowDown' && !fromStage)) return (setReject(focusKey, true), stop());
         return false;
     }
     // Window capture: before the dialog's own listener on the document, so Escape closes an open overlay first and a
@@ -553,7 +577,7 @@ export function mountKeys(api) {
     api.dialog.addEventListener('change', () => queueMicrotask(refresh));
     api.dialog.addEventListener('close', () => {
         cancelConfirm();
-        togglePanel(false);
+        closePop();
     });
     /** review.js answer(): the pairs approved unseen get their own lines. */
     function answerLines() {
@@ -563,5 +587,6 @@ export function mountKeys(api) {
     }
 
     paintLegend();
+    paintPop();
     return { snap, shown, answerLines, fromFrame };
 }

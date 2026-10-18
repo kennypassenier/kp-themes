@@ -73,7 +73,7 @@
 // top) directly above that component, so the controls arrive with it as the
 // reviewer walks to it, and it moves the section's Expected block under the
 // component. A container that names no component of its section, or sits
-// outside every section, is not shown (placeControls); research/_review/
+// outside every section, is not shown (layoutSection); research/_review/
 // check-kit.mjs fails such a page, and fails a component with more than
 // four groups (too many rows means too many things in one section: split it).
 //
@@ -87,7 +87,6 @@
 // closes on the answer: one button copies it and returns to the hub. Nothing
 // opens the next item by itself (Kenny, 2026-10-14: the Agenda reopened the
 // same demo and its answer lost his two notes).
-import './rv-preview.js'; // a framed preview keeps its storage in memory (first, before every module that reads it)
 import { STORAGE_KEY, THEMES } from '../../js/theme-registry.js';
 import { applyTheme, currentTheme } from '../../js/theme-core.js';
 import {
@@ -129,83 +128,10 @@ const HUB_NAME = NEXT && /\/agenda\.html$/.test(new URL(NEXT).pathname) ? 'the A
  * Where the end of a review goes by itself: the hub the demo was opened from, else the Agenda, the one page Kenny
  * starts from (Kenny, 2026-10-16: straight back to agenda.html, no end dialog).
  */
-/*
- * A preview of this dialog inside another page (research/review-kit-v2 shows the real dialog in a frame, `?rv-preview`) keeps
- * its own theme: it does not read a change of the shared theme the page around it, or its own frames, store. The frames put
- * the stored theme back themselves (restoreTheme), so nothing is changed for the viewer.
- */
-if (params.has('rv-preview')) addEventListener('storage', (event) => event.key === STORAGE_KEY && event.stopImmediatePropagation(), true);
 const AGENDA = new URL('../../catalogue/agenda.html', import.meta.url).href;
 const DONE_HREF = NEXT || AGENDA;
 const DONE_NAME = NEXT ? HUB_NAME : 'the Agenda';
 
-/*
- * The dialog's layout options (Kenny, 2026-10-18 15:15 and 15:17: "maximum coverage and use of the screen" and
- * "make proposals yourself"). Every improvement is an option of the kit, switchable at runtime from the dialog's
- * "View" menu and kept per viewer (localStorage `kp-review-ui`); each is off by default, so a live part looks as it
- * did until Kenny picks the defaults in research/review-kit-v2. The link may force the options for one visit only,
- * without keeping them: `?rvui=all`, `?rvui=none`, `?rvui=fill,look` or `?rvui=all,-jump`.
- * The options are attributes on the dialog (`data-rvui-<id>="on"`) and on the document of every frame, so the CSS in
- * review.css reads them in both places.
- */
-const UI_OPTIONS = [
-    {
-        id: 'fill',
-        label: 'Near-fullscreen dialog',
-        about: 'The dialog takes 99% of the window and its header, margins and gaps are tighter, so the component gets the room.',
-    },
-    {
-        id: 'titles',
-        label: 'Each title once',
-        about: 'The section title stands once per frame, in the frame head; the topic heading and the section’s own heading are not repeated.',
-    },
-    {
-        id: 'look',
-        label: 'What to look at, once per step',
-        about: 'A look-at paragraph that is the same in several sections of the step is shown once under the theme’s name, not under each section.',
-    },
-    {
-        id: 'controls',
-        label: 'Compact controls',
-        about: 'The controls of a component flow side by side across the full width, label and buttons on one line, in the package’s small button size.',
-    },
-    {
-        id: 'intro',
-        label: 'Full-width text',
-        about: 'The section’s intro and Expected text run the whole width of the frame instead of a narrow column, with a tighter frame margin.',
-    },
-    {
-        id: 'rail',
-        label: 'Slim side column',
-        about: 'The side column is narrower and Previous, Next and Approve stay pinned at its foot, in one row, whatever the number of rows.',
-    },
-    {
-        id: 'jump',
-        label: 'Jump list of sections',
-        about: 'One chip per section of the step in the header: a press scrolls to it, and the one in view is marked.',
-    },
-];
-const UI_KEY = 'kp-review-ui';
-/** @type {Record<string, boolean>} */
-const ui = Object.fromEntries(UI_OPTIONS.map((o) => [o.id, false]));
-/** What this viewer switched by hand and kept; a link's `rvui` forces options for one visit and is never kept. */
-/** @type {Record<string, boolean>} */
-let keptUi = {};
-try {
-    keptUi = JSON.parse(localStorage.getItem(UI_KEY) || '{}') || {};
-} catch {
-    /* a private window or an unreadable value keeps the defaults */
-}
-for (const o of UI_OPTIONS) if (typeof keptUi[o.id] === 'boolean') ui[o.id] = keptUi[o.id];
-for (const part of (params.get('rvui') || '').split(',').map((x) => x.trim()).filter(Boolean)) {
-    if (part === 'all' || part === 'none') for (const o of UI_OPTIONS) ui[o.id] = part === 'all';
-    else if (part.startsWith('-') && part.slice(1) in ui) ui[part.slice(1)] = false;
-    else if (part in ui) ui[part] = true;
-}
-/** Writes the options as attributes on an element (the dialog, or the root of a frame's document). */
-const paintUi = (/** @type {Element} */ el) => {
-    for (const o of UI_OPTIONS) el.setAttribute(`data-rvui-${o.id}`, ui[o.id] ? 'on' : 'off');
-};
 /*
  * Embed mode (Kenny, 2026-10-06 23:52: "Misschien helpt het om alle bestaande
  * laadschermen per thema te tonen, zodat ik dan bij andere thema's ook kan
@@ -250,6 +176,9 @@ if (params.has('rv-lane')) {
 
 /** Hands the review dialog's own keys from a lane frame to the page around it. */
 function lane() {
+    // The frame's document is styled by the dialog (review.css, injected once the frame has loaded): the section is laid
+    // out as a lane, its toolbar on the frame's top edge and the component under it.
+    root.setAttribute('data-rv-lane', '');
     // Every frame of a topic step keeps its own theme: the theme another frame stores (its head keeps `?theme=`) is
     // not taken over here, as js/theme-core.js would take a choice made in another tab. Capture listeners run first.
     addEventListener('storage', (event) => event.key === STORAGE_KEY && event.stopImmediatePropagation(), true);
@@ -260,7 +189,8 @@ function lane() {
         (event) => {
             if (parent === window || event.altKey || event.ctrlKey || event.metaKey) return;
             if (/** @type {Element} */ (event.target).matches?.(TYPING)) return;
-            if (event.key === 'Escape' ? document.querySelector(OPEN) : event.code !== 'KeyV' && event.code !== 'KeyL' && !FRAME_KEYS.has(event.code)) return; // [kit-keys] FRAME_KEYS
+            if (event.key === 'Escape' ? document.querySelector(OPEN) : event.code !== 'KeyV' && event.code !== 'KeyL' && !FRAME_KEYS.has(event.code))
+                return; // [kit-keys] FRAME_KEYS
             event.preventDefault();
             event.stopPropagation();
             parent.postMessage({ type: 'rv-lane-key', key: event.key, code: event.code }, location.origin);
@@ -1164,23 +1094,54 @@ foot.querySelector('[data-rv-clear]').addEventListener('click', () => {
 });
 
 /* -------------------------------------------------------------- dialog */
-
+/*
+ * The dialog's one layout (Kenny, 2026-10-18 15:15, 15:18, 15:26 and 16:27: "Ik verwacht een rewrite van deze demo van
+ * scratch"). It fills the window (4 px from each edge on a desktop, edge to edge on a phone) and has three parts:
+ *
+ * - ONE header row: the step, the theme, the topic's title (once), what is shown, the counts left, and four icon buttons
+ *   (rejected so far, help with every key, the verdict panel, close). The key legend lives in the help popover.
+ * - The stage, the largest part, at the left: per section one lane, a slim head (the section's own title, its intro on one
+ *   line with More, the previous version and play tools) and under it the component in its frame with exactly one inline
+ *   toolbar on the frame's top edge; the section's Expected text stands under the component, at the frame's full width.
+ * - The verdict panel at the right (at most 320 px): what to look at in this theme once, one compact row per section
+ *   (title, Not approved, reason chips and note once rejected, the default sets), Previous, Next and Approve pinned at its
+ *   foot. On a phone it is a bottom sheet: closed it is one bar with Approve under the stage, opened it rises over it.
+ *
+ * Nothing is a layout option: this is the dialog.
+ */
+const ICON = {
+    help: '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><circle cx="8" cy="8" r="6.25" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M6.2 6.3a1.9 1.9 0 1 1 2.6 1.75c-.5.2-.8.6-.8 1.15v.4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="8" cy="11.6" r=".9" fill="currentColor"/></svg>',
+    panel: '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><rect x="1.75" y="2.75" width="12.5" height="10.5" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M10 3v10" stroke="currentColor" stroke-width="1.5"/></svg>',
+    close: '<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="M3.5 3.5l9 9M12.5 3.5l-9 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>',
+};
 const dialog = document.createElement('dialog');
 dialog.className = 'kp-dialog rv-dialog';
 dialog.setAttribute('aria-labelledby', 'rv-dialog-title');
 dialog.innerHTML = `
-    <div class="rv-dialog__head">
-        <p class="rv-dialog__position" data-rv-position></p>
-        <h2 class="kp-dialog__title" id="rv-dialog-title" data-rv-title></h2>
-        <nav class="rv-jump" aria-label="Sections of this step" data-rv-jumps hidden></nav>
-        <span class="kp-badge" data-rv-state></span>
-        <button type="button" class="kp-button kp-button--sm rv-dialog__view-menu" popovertarget="rv-ui-menu" data-rv-ui-open>View</button>
-        <div class="rv-ui" id="rv-ui-menu" popover data-rv-ui-menu>
-            <p class="rv-ui__title">How this dialog looks</p>
-            <p class="rv-ui__note">Each setting applies at once and is kept for you in this browser.</p>
-            <div class="rv-ui__list" data-rv-ui-list></div>
-        </div>
-        <button type="button" class="kp-button kp-button--ghost rv-dialog__close" aria-label="Close (Escape)" data-rv-close>✕</button>
+    <header class="rv-dialog__head">
+        <p class="rv-head__pos" data-rv-position></p>
+        <p class="rv-head__theme" data-rv-theme hidden></p>
+        <h2 class="rv-head__title" id="rv-dialog-title" data-rv-title></h2>
+        <p class="rv-head__meta" data-rv-meta></p>
+        <span class="kp-badge rv-head__state" data-rv-state></span>
+        <span class="rv-head__counts" data-rv-counts></span>
+        <span class="rv-head__mini" role="group" aria-label="Step" data-rv-mini hidden>
+            <button type="button" class="kp-button kp-button--sm" data-rv-go="-1" aria-label="Previous step (←)" title="Previous step (←)">←</button>
+            <button type="button" class="kp-button kp-button--sm" data-rv-go="1" aria-label="Next step (→)" title="Next step (→)">→</button>
+            <button type="button" class="kp-button kp-button--sm kp-button--primary" data-rv-mini-approve>↑ Approve</button>
+        </span>
+        <span class="rv-head__tools" data-rv-tools>
+            <button type="button" class="kp-button kp-button--sm kp-button--ghost rv-icon" popovertarget="rv-help" aria-label="Help and keys (?)" title="Help and keys (?)" data-rv-help-open>${ICON.help}</button>
+            <button type="button" class="kp-button kp-button--sm kp-button--ghost rv-icon" aria-pressed="true" aria-controls="rv-side" data-rv-panel-toggle>${ICON.panel}</button>
+            <button type="button" class="kp-button kp-button--sm kp-button--ghost rv-icon" aria-label="Close (Escape)" title="Close (Escape)" data-rv-close>${ICON.close}</button>
+        </span>
+    </header>
+    <div class="rv-help" id="rv-help" popover data-rv-help>
+        <p class="rv-help__title">How this dialog works</p>
+        <p class="rv-help__text" data-rv-intro></p>
+        <p class="rv-help__text" id="rv-keys"></p>
+        <p class="rv-help__sub">Keys</p>
+        <div class="rv-help__keys" data-rv-help-keys></div>
     </div>
     <div class="rv-dialog__grid">
         <div class="rv-dialog__view">
@@ -1200,34 +1161,39 @@ dialog.innerHTML = `
                 </div>
             </div>
         </div>
-        <div class="rv-dialog__side">
-            <div class="rv-dialog__scroll">
-                <p class="rv-meta" data-rv-intro>Everything on the left is approved together. Tick only what is wrong, and say why.</p>
-                <div class="rv-update" data-rv-update></div>
+        <aside class="rv-dialog__side" id="rv-side" aria-label="Your verdicts on this step">
+            <button type="button" class="rv-sheet" aria-expanded="false" aria-controls="rv-side-scroll" data-rv-sheet>
+                <span class="rv-sheet__grip" aria-hidden="true"></span>
+                <span class="rv-sheet__text" data-rv-sheet-text></span>
+            </button>
+            <div class="rv-dialog__scroll" id="rv-side-scroll">
+                <section class="rv-look" aria-labelledby="rv-look-title" data-rv-look hidden>
+                    <h3 class="rv-look__title" id="rv-look-title" data-rv-look-title></h3>
+                    <div class="rv-look__text" data-rv-look-text></div>
+                </section>
+                <div class="rv-update" data-rv-update hidden></div>
                 <p class="kp-alert kp-alert--destructive rv-integrity" role="alert" data-rv-integrity hidden></p>
                 <ol class="rv-dialog__list" data-rv-list></ol>
                 <p class="kp-field__error" role="alert" data-rv-refused hidden></p>
             </div>
             <div class="rv-dialog__foot">
+                <div class="rv-foot__status" data-rv-foot-status></div>
                 <div class="rv-dialog__actions">
-                    <button type="button" class="kp-button" data-rv-go="-1">← Previous</button>
-                    <button type="button" class="kp-button" data-rv-go="1">Next →</button>
+                    <button type="button" class="kp-button kp-button--sm" data-rv-go="-1">← Previous</button>
+                    <button type="button" class="kp-button kp-button--sm" data-rv-go="1">Next →</button>
                     <button type="button" class="kp-button kp-button--primary rv-dialog__wide" data-rv-approve>↑ Approve this theme</button>
                 </div>
-                <p class="rv-meta" id="rv-keys">Up approves the step, Left/Right move between steps, Escape closes. The theme switches by itself.</p>
             </div>
-        </div>
+        </aside>
     </div>`;
 document.body.append(dialog);
 const $ = (selector) => /** @type {HTMLElement} */ (dialog.querySelector(selector));
-paintUi(dialog);
-// A preview is looked at, never used: its dialog is inert, so opening it never moves the focus out of the page around it.
-if (params.has('rv-preview')) dialog.inert = true;
 const stage = $('[data-rv-stage]');
 const list = $('[data-rv-list]');
 const refused = $('[data-rv-refused]');
 const approveButton = $('[data-rv-approve]');
 const integrityBox = $('[data-rv-integrity]');
+const helpPop = $('[data-rv-help]');
 const flipWrap = $('[data-rv-flip]');
 const flipPrev = $('[data-rv-flip-prev]');
 const flipNext = $('[data-rv-flip-next]');
@@ -1236,6 +1202,62 @@ const flipDots = $('[data-rv-flip-dots]');
 const flipLabel = $('[data-rv-flip-label]');
 const flipPauseBtn = $('[data-rv-flip-pause]');
 const flipSpeedBtn = $('[data-rv-flip-speed]');
+
+/*
+ * The verdict panel: shown or folded away (the header's panel button), kept per viewer, so a wide component can take the
+ * whole width; folded, the header row carries Previous, Next and Approve. On a phone the same button opens the bottom sheet.
+ */
+const PANEL_KEY = 'kp-review-panel';
+const phone = () => matchMedia('(max-width: 48rem)').matches;
+let panelOpen = (() => {
+    try {
+        return localStorage.getItem(PANEL_KEY) !== 'closed';
+    } catch {
+        return true;
+    }
+})();
+let sheetOpen = false;
+const panelButton = $('[data-rv-panel-toggle]');
+const sheetButton = $('[data-rv-sheet]');
+function paintPanel() {
+    const onPhone = phone();
+    dialog.setAttribute('data-rv-panel', onPhone || panelOpen ? 'open' : 'closed');
+    dialog.setAttribute('data-rv-sheet', onPhone && sheetOpen ? 'open' : 'closed');
+    $('[data-rv-mini]').hidden = onPhone || panelOpen;
+    const shown = onPhone ? sheetOpen : panelOpen;
+    panelButton.setAttribute('aria-pressed', String(shown));
+    const words = onPhone
+        ? sheetOpen
+            ? 'Close the verdicts'
+            : 'Open the verdicts'
+        : panelOpen
+          ? 'Fold the verdict panel away'
+          : 'Show the verdict panel';
+    panelButton.setAttribute('aria-label', words);
+    panelButton.title = words;
+    sheetButton.setAttribute('aria-expanded', String(onPhone && sheetOpen));
+}
+function togglePanel() {
+    if (phone()) sheetOpen = !sheetOpen;
+    else {
+        panelOpen = !panelOpen;
+        try {
+            localStorage.setItem(PANEL_KEY, panelOpen ? 'open' : 'closed');
+        } catch {
+            /* a private window: for this visit */
+        }
+    }
+    paintPanel();
+}
+panelButton.addEventListener('click', togglePanel);
+sheetButton.addEventListener('click', togglePanel);
+$('[data-rv-mini-approve]').addEventListener('click', () => approveStep());
+matchMedia('(max-width: 48rem)').addEventListener('change', paintPanel);
+paintPanel();
+/** The header's height, for the overlays that open under it (rv-keys.css). */
+new ResizeObserver(([entry]) => dialog.style.setProperty('--rv-head-h', `${Math.round(entry.borderBoxSize?.[0]?.blockSize ?? 44)}px`)).observe(
+    $('.rv-dialog__head'),
+);
 const prefersReducedMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 let index = 0;
@@ -1348,7 +1370,9 @@ function restoreKept(section, aspectId) {
 function keepLanePress(/** @type {string} */ item, /** @type {Element | null | undefined} */ button) {
     const group = button?.closest('[role="group"]');
     if (!group || !button?.hasAttribute('aria-pressed') || !group.closest('[data-review-controls]') || /speed/i.test(groupName(group))) return;
-    (kept[DEMO] ??= {})[`${item}\u241f${groupName(group)}`] = [...group.querySelectorAll('button')].indexOf(/** @type {HTMLButtonElement} */ (button));
+    (kept[DEMO] ??= {})[`${item}\u241f${groupName(group)}`] = [...group.querySelectorAll('button')].indexOf(
+        /** @type {HTMLButtonElement} */ (button),
+    );
     try {
         localStorage.setItem(KEPT_STORE, JSON.stringify(kept));
     } catch {
@@ -1620,11 +1644,7 @@ function controlGroups() {
     const section = flipPair?.item?.section;
     if (!section) return [];
     return [...section.querySelectorAll('[data-review-controls] [role="group"]')]
-        .filter(
-            (g) =>
-                !/speed/i.test(g.getAttribute('aria-label') || '') &&
-                !g.querySelector('[data-cc-speed], [data-ct-speed], [data-tl-speed]'),
-        )
+        .filter((g) => !/speed/i.test(g.getAttribute('aria-label') || '') && !g.querySelector('[data-cc-speed], [data-ct-speed], [data-tl-speed]'))
         .map((g) => {
             const all = /** @type {HTMLElement[]} */ (
                 [...g.querySelectorAll('button')].filter((b) => !/speed/i.test(Object.keys(b.dataset).join(' ')))
@@ -1679,7 +1699,7 @@ function liveUpdate() {
     const section = flipPair?.item?.section;
     if (!section) return;
     const live = [...section.querySelectorAll('[data-review-controls] button')].find(
-        (b) => (Object.keys(b.dataset).some((k) => /live$/i.test(k)) || /^\s*live update/i.test(b.textContent || '')),
+        (b) => Object.keys(b.dataset).some((k) => /live$/i.test(k)) || /^\s*live update/i.test(b.textContent || ''),
     );
     if (live) return live.click();
     // A demo without a live update (busy, drawer, header …) says so instead
@@ -1763,6 +1783,8 @@ function focusAspect(section, aspect) {
 
 /** The tools over each section on stage (block-tools.js): previous version, play open and close, speed. */
 let tools = [];
+/** What laying a section out in the page itself changed, undone when the step leaves (a lane's frame is thrown away). @type {(() => void)[]} */
+let undoLayout = [];
 
 function putBack() {
     for (const tool of tools) tool.teardown();
@@ -1770,6 +1792,8 @@ function putBack() {
     markTarget(undefined);
     stopTour();
     teardownFlip();
+    for (const undo of undoLayout.reverse()) undo();
+    undoLayout = [];
     for (const [, section] of moved) focusAspect(section, null);
     for (const [placeholder, section] of moved) placeholder.replaceWith(section);
     moved = [];
@@ -1779,14 +1803,18 @@ function putBack() {
     stage.replaceChildren();
 }
 
-/* ------------------------------------------------------------ controls */
-/*
- * A component's controls stand AT the component (Kenny, 2026-10-18 07:09: "Die controls moeten niet gewoon meer boven
- * staan, maar enkel de geschikte control per component zoals die tevoorschijn komt"). A demo declares which
- * component a group of buttons drives, `data-review-controls-for="<id of the component>"`; the dialog shows the
- * demo's own container, never a copy, directly above the component it drives, inside the section that holds both,
- * so the controls arrive with the component as the reviewer walks to it. There is no bar on top, and a container
- * outside every section (or one that names no component of its section) is not shown at all.
+/* ------------------------------------------------------- a section as a lane ---
+ * Every section on stage is laid out the same way, in its frame (a topic step) or in the page (a theme step):
+ *
+ * - its heading, intro and "what changed" leave the section for the lane's head in the dialog (shellOf): the title once,
+ *   the words on one line with More, so they never push the component down (Kenny, 2026-10-18 16:27);
+ * - each container of controls stands directly above the component it drives (`data-review-controls-for`), as ONE
+ *   inline toolbar on the frame's top edge: a group's label and its buttons side by side, its state buttons as the
+ *   package's segmented control, in one row (toolbar);
+ * - the Expected block stands under the component, at the full width.
+ *
+ * A container outside every section, or one that names no component of its section, is shown nowhere. In the page
+ * itself every change is undone when the step leaves.
  */
 /** The block of the section that holds `target`, a direct child of the section. */
 function blockOf(/** @type {HTMLElement} */ section, /** @type {Element} */ target) {
@@ -1794,35 +1822,200 @@ function blockOf(/** @type {HTMLElement} */ section, /** @type {Element} */ targ
     while (top.parentElement && top.parentElement !== section) top = top.parentElement;
     return top.parentElement === section ? top : null;
 }
-/** Puts every container of the section's own controls directly above the component it drives; the Expected block goes under the component. */
-function placeControls(/** @type {HTMLElement} */ section) {
+const isExpected = (/** @type {Element} */ el) => /(^|\s)\S*-expect(ed)?(\s|$)/.test(el.className || '');
+/**
+ * What of a section goes to the lane's head: its heading, the paragraphs of its intro, and a "what changed" block. Read
+ * from the section's own markup, so the head is filled before its frame has loaded.
+ * @param {HTMLElement} section @returns {{ hide: Element[], changed: string[], intro: string[] }}
+ */
+function shellOf(section) {
+    /** @type {{ hide: Element[], changed: string[], intro: string[] }} */
+    const out = { hide: [], changed: [], intro: [] };
+    const paragraphs = (/** @type {Element} */ el) =>
+        (el.matches('p') ? [el] : [...el.querySelectorAll('p')]).map((p) => p.innerHTML.trim()).filter(Boolean);
+    for (const el of section.children) {
+        if (el.matches('script, style, template, [data-review-look], [data-review-controls]') || isExpected(el)) continue;
+        if (el.matches('header, [class*="sec__head"]')) {
+            out.hide.push(el);
+            out.intro.push(...paragraphs(el));
+        } else if (el.matches('h1, h2, h3, h4')) out.hide.push(el);
+        else if (/(^|\s)\S*-changed(\s|$)/.test(el.className)) {
+            out.hide.push(el);
+            out.changed.push(...paragraphs(el));
+        } else if (out.hide.length && el.matches('p') && !/(label|readout|note|log|status)/.test(el.className)) {
+            out.hide.push(el);
+            out.intro.push(el.innerHTML.trim());
+        } else break;
+    }
+    return out;
+}
+
+/**
+ * Lays one section out as a lane (see above), in whichever document it lives. Returns the undo.
+ * @param {HTMLElement} section
+ */
+function layoutSection(section) {
+    /** @type {(() => void)[]} */
+    const undo = [];
+    const mark = (/** @type {Element} */ el, /** @type {string} */ name, value = '') => {
+        const had = el.getAttribute(name);
+        el.setAttribute(name, value);
+        undo.push(() => (had === null ? el.removeAttribute(name) : el.setAttribute(name, had)));
+    };
+    const put = (/** @type {Element} */ el, /** @type {Element} */ parent, /** @type {Node | null} */ before) => {
+        const from = el.parentNode;
+        const next = el.nextSibling;
+        parent.insertBefore(el, before);
+        undo.push(() => from?.insertBefore(el, next && next.parentNode === from ? next : null));
+    };
+    mark(section, 'data-rv-compact');
+    for (const el of shellOf(section).hide) mark(el, 'data-rv-shell');
     for (const box of /** @type {NodeListOf<HTMLElement>} */ (section.querySelectorAll('[data-review-controls]'))) {
         const id = box.getAttribute('data-review-controls-for');
-        // A page that names no component (an older demo) still shows its controls: at the stage that follows them.
+        // A page that names no component (an older demo) still shows its controls: at the block that follows them.
         let target = id ? section.querySelector(`#${CSS.escape(id)}`) : null;
         if (!id)
             for (let el = box.nextElementSibling; el && !target; el = el.nextElementSibling)
-                if (/^(div|section|form|figure|ul|ol|table|article|dl)$/i.test(el.tagName) && !el.matches('[data-review-look], .cat-judge') && !/(readout|label|note|log|-expect(ed)?)\b/.test(el.className)) target = el;
+                if (
+                    /^(div|section|form|figure|ul|ol|table|article|dl)$/i.test(el.tagName) &&
+                    !el.matches('[data-review-look], .cat-judge') &&
+                    !isExpected(el) &&
+                    !/(readout|label|note|log)\b/.test(el.className)
+                )
+                    target = el;
         const block = target && !box.contains(target) ? blockOf(section, target) : null;
-        box.classList.add('rv-ctl');
-        box.toggleAttribute('data-rv-orphan', !block);
-        if (!block) continue;
-        if (box.nextElementSibling !== block) block.before(box);
-        box.setAttribute('data-rv-ctl-title', 'Controls of this component');
+        mark(box, 'data-rv-ctl');
+        if (!block) {
+            mark(box, 'data-rv-orphan');
+            continue;
+        }
+        if (box.nextElementSibling !== block) put(box, section, block);
+        if (target) mark(target, 'data-rv-component');
+        toolbar(box, mark, undo);
     }
-    // The component first: what the reviewer should see under the heading is the component with its controls, then the
-    // Expected block (a demo's own `*-expect`/`*-expected` box that sits directly in the section).
-    const expected = /** @type {HTMLElement | null} */ ([...section.children].find((el) => /-expect(ed)?$/.test(el.className)));
-    if (expected) section.insertBefore(expected, [...section.children].find((el) => el.matches('.cat-judge')) ?? null);
+    // The Expected block under the component (before the catalogue's own judge panel, which the dialog hides).
+    const expected = [...section.children].find(isExpected);
+    if (expected) {
+        put(expected, section, [...section.children].find((el) => el.matches('.cat-judge')) ?? null);
+        mark(expected, 'data-rv-expected');
+    }
+    return () => {
+        for (const step of undo.reverse()) step();
+    };
+}
+
+/**
+ * One container of a component's controls as one inline toolbar: every group keeps its label and its buttons on one
+ * line; a group's state buttons (two or more with aria-pressed) become the package's segmented control, its other
+ * buttons take the package's small size. The demo's own buttons stay (never a copy), only their look changes.
+ * @param {HTMLElement} box @param {(el: Element, name: string, value?: string) => void} mark @param {(() => void)[]} undo
+ */
+function toolbar(box, mark, undo) {
+    for (const group of box.querySelectorAll('[role="group"]')) {
+        if (group.closest('.kp-segmented') || group.matches('.kp-segmented')) continue;
+        const own = /** @type {HTMLButtonElement[]} */ (
+            [...group.querySelectorAll('button')].filter((b) => b.closest('[role="group"]') === group && !b.closest('.kp-segmented'))
+        );
+        const states = own.filter((b) => b.hasAttribute('aria-pressed'));
+        const doc = box.ownerDocument;
+        if (states.length > 1) {
+            const track = doc.createElement('span');
+            track.className = 'kp-segmented rv-seg';
+            states[0].before(track);
+            undo.push(() => track.remove());
+            for (const button of states) {
+                const parent = button.parentNode;
+                const next = button.nextSibling;
+                const cls = button.className;
+                track.append(button);
+                button.className = 'kp-segmented__item';
+                undo.push(() => {
+                    button.className = cls;
+                    parent?.insertBefore(button, next && next.parentNode === parent ? next : null);
+                });
+            }
+        }
+        for (const button of own)
+            if (!states.includes(button) || states.length < 2)
+                if (button.classList.contains('kp-button') && !button.classList.contains('kp-button--sm')) {
+                    button.classList.add('kp-button--sm');
+                    undo.push(() => button.classList.remove('kp-button--sm'));
+                }
+    }
+    // A row that is wider than the frame scrolls along its own line, with a fade at the side that has more.
+    const more = () => {
+        const left = box.scrollLeft > 1;
+        const right = box.scrollLeft + box.clientWidth < box.scrollWidth - 1;
+        box.setAttribute('data-rv-more', `${left ? 'start' : ''} ${right ? 'end' : ''}`.trim());
+    };
+    box.addEventListener('scroll', more, { passive: true });
+    const view = box.ownerDocument.defaultView;
+    if (view) new view.ResizeObserver(more).observe(box);
+    undo.push(() => box.removeAttribute('data-rv-more'));
+    more();
+}
+
+/** A section's title without the topic's own words in front: "Picker with the usual on top: the list" reads "The list". */
+function partTitle(/** @type {Pair} */ pair, /** @type {Step | undefined} */ step) {
+    const title = pair.title;
+    const topic = step?.topicTitle;
+    if (!topic || topic === title || !title.startsWith(topic)) return title;
+    const rest = title.slice(topic.length);
+    if (!/^\s*[:·–—-]/.test(rest)) return title;
+    const words = rest.replace(/^\s*[:·–—-]\s*/, '');
+    return words ? words[0].toUpperCase() + words.slice(1) : title;
+}
+
+/**
+ * A lane: its head (the section's title, its words on one line with More, the tools) and its body (a frame, or the
+ * section itself on a theme step). @param {Pair} pair @param {Step} step @param {'frame' | 'page'} kind
+ */
+function laneShell(pair, step, kind) {
+    const card = document.createElement('article');
+    card.className = `rv-lane rv-lane--${kind}`;
+    card.dataset.rvPair = pair.key;
+    card.classList.toggle('rv-lane--rejected', verdictOf(pair) === 'rejected');
+    const label = LABEL[pair.theme] || pair.theme;
+    card.setAttribute('aria-label', `${pair.title}, in ${label}`);
+    card.innerHTML = `
+        <header class="rv-lane__head">
+            <h3 class="rv-lane__title"></h3>
+            <p class="rv-lane__intro" data-rv-lane-intro hidden></p>
+            <button type="button" class="kp-button kp-button--sm kp-button--ghost rv-lane__more" aria-expanded="false" data-rv-lane-more hidden>More</button>
+        </header>`;
+    /** @type {HTMLElement} */ (card.querySelector('.rv-lane__title')).textContent = partTitle(pair, step);
+    const shell = pair.item ? shellOf(pair.item.section) : { changed: [], intro: [] };
+    const intro = /** @type {HTMLElement} */ (card.querySelector('[data-rv-lane-intro]'));
+    const more = /** @type {HTMLButtonElement} */ (card.querySelector('[data-rv-lane-more]'));
+    if (shell.changed.length || shell.intro.length) {
+        intro.hidden = false;
+        intro.innerHTML = [
+            ...shell.changed.map((html) => `<span class="rv-lane__changed">${html}</span>`),
+            ...shell.intro.map((html) => `<span>${html}</span>`),
+        ].join(' ');
+        // More only while the words do not fit on their line; open, they take the lane's whole width.
+        const fits = () => {
+            if (card.hasAttribute('data-rv-open')) return;
+            more.hidden = intro.scrollWidth <= intro.clientWidth + 1;
+        };
+        new ResizeObserver(fits).observe(intro);
+        more.addEventListener('click', () => {
+            const open = !card.hasAttribute('data-rv-open');
+            card.toggleAttribute('data-rv-open', open);
+            more.setAttribute('aria-expanded', String(open));
+            more.textContent = open ? 'Less' : 'More';
+            if (!open) fits();
+        });
+    }
+    return card;
 }
 
 /* ---------------------------------------------------------- topic steps ---
  * A topic step shows each of its sections in the step's one theme, one frame per pair (the demo itself in lane mode,
  * at `?theme=<theme>&rv-lane=<item>`, isolated to that one section the way the previous version is): the heat grid in
- * cyberpunk, then the matrix in cyberpunk. The frames load as they come near the view. The demo's controls are
- * mirrored once on top, as on a theme step, and a press acts on the page's own control and on the same control in
- * every frame; a frame that loads later replays the presses made before it. V and L act on the frame most in view, or
- * the one the key was pressed in.
+ * cyberpunk, then the matrix in cyberpunk. The frames load as they come near the view. Each section's controls stand in
+ * its own frame, as the toolbar of its component; a pressed state is kept per section and pressed again when that
+ * section loads in the next theme. V and L act on the frame most in view, or the one the key was pressed in.
  */
 /** @type {{ pair: Pair, frame: HTMLIFrameElement, section: HTMLElement, tool: ReturnType<typeof mountBlockTools> }[]} */
 let lanes = [];
@@ -1863,23 +2056,14 @@ addEventListener('message', (event) => {
     kk.fromFrame(data.code); // [kit-keys]
 });
 
-/** One section in one theme, in a frame of its own, under a head naming the theme. @param {Pair} pair */
-function laneFor(pair) {
+/** One section in one theme, in a frame of its own, under the lane's head. @param {Pair} pair @param {Step} step */
+function laneFor(pair, step) {
     const label = LABEL[pair.theme] || pair.theme;
-    const card = document.createElement('article');
-    card.className = 'rv-lane';
-    card.dataset.rvPair = pair.key;
-    card.classList.toggle('rv-lane--rejected', verdictOf(pair) === 'rejected');
-    card.setAttribute('aria-label', `${pair.title}, in ${label}`);
-    card.innerHTML = `
-        <header class="rv-lane__head">
-            <p class="rv-lane__name"><b class="rv-lane__theme"></b><span class="rv-lane__section"></span></p>
-        </header>
-        <iframe class="rv-lane__frame"></iframe>`;
-    /** @type {HTMLElement} */ (card.querySelector('.rv-lane__theme')).textContent = label;
-    /** @type {HTMLElement} */ (card.querySelector('.rv-lane__section')).textContent = pair.title;
-    const frame = /** @type {HTMLIFrameElement} */ (card.querySelector('iframe'));
+    const card = laneShell(pair, step, 'frame');
+    const frame = document.createElement('iframe');
+    frame.className = 'rv-lane__frame';
     frame.title = `${pair.title}, in ${label}`;
+    card.append(frame);
     const src = new URL(location.pathname, location.href);
     src.search = new URLSearchParams({ theme: pair.theme, 'rv-lane': pair.item.id }).toString();
     /** @type {any} */ (card).rvLoad = () => {
@@ -1896,30 +2080,31 @@ function laneFor(pair) {
                 sheet.href = new URL('review.css', import.meta.url).href;
                 doc.head.append(sheet);
                 const own = doc.createElement('style');
-                // The section's own controls stay in the frame, at their component (placeControls); the page's judge panel does not.
+                // The page's judge panel stays out of the frame; the dialog's panel holds the verdict.
                 own.textContent = '.cat-judge { display: none !important; } body { background: var(--background); }';
                 doc.head.append(own);
                 const section = /** @type {HTMLElement | null} */ (doc.querySelector(`[data-review-item="${CSS.escape(pair.item.id)}"]`));
                 if (!section || !card.isConnected) return;
-                paintUi(doc.documentElement);
-                markDup(section, pair.title);
+                doc.documentElement.setAttribute('data-rv-lane', '');
+                layoutSection(section);
                 const tool = mountBlockTools({ section, item: pair.item.id, theme: pair.theme, themeLabel: label, title: pair.title });
                 card.querySelector('.rv-lane__head')?.append(tool.bar);
                 tools.push(tool);
                 lanes.push({ pair, frame, section, tool });
-                placeControls(section);
-                sizeControls(section);
                 restoreLanePresses(section, pair.item.id);
-                doc.addEventListener('click', (event) => event.isTrusted && keepLanePress(pair.item.id, /** @type {Element} */ (event.target).closest?.('button')), true);
+                doc.addEventListener(
+                    'click',
+                    (event) => event.isTrusted && keepLanePress(pair.item.id, /** @type {Element} */ (event.target).closest?.('button')),
+                    true,
+                );
                 const View = doc.defaultView?.CustomEvent ?? CustomEvent;
                 section.dispatchEvent(new View('review:show', { bubbles: true }));
                 for (const choice of pair.item.choices) {
                     const value = choiceOf(pair, choice);
                     if (value) section.dispatchEvent(new View('review:choice', { bubbles: true, detail: { id: choice.id, value } }));
                 }
-                // The other frames of this section take its height until they load, so the page does not jump.
-                const group = card.closest('.rv-topic');
-                if (group && !group.style.getPropertyValue('--rv-lane-guess')) group.style.setProperty('--rv-lane-guess', frame.style.blockSize);
+                // The other frames take this height until they load, so the page does not jump.
+                if (!stage.style.getPropertyValue('--rv-lane-guess')) stage.style.setProperty('--rv-lane-guess', frame.style.blockSize);
                 // A frame that loads does not move the view: the step keeps its top until the reviewer scrolls.
                 if (!laneMoved) for (const box of [stage, stage.closest('.rv-dialog__view')]) if (box) box.scrollTop = 0;
             },
@@ -1931,11 +2116,12 @@ function laneFor(pair) {
     return card;
 }
 
-/** The stage of a topic step: per section a heading and its frame, in the step's one theme. @param {Pair[]} shown */
-function paintTopic(shown) {
+/** The stage of a topic step: one lane per section, in the step's one theme. @param {Pair[]} shown @param {Step} step */
+function paintTopic(shown, step) {
     if (keptTheme === undefined) keptTheme = storedTheme();
     const view = /** @type {HTMLElement} */ (stage.closest('.rv-dialog__view'));
     laneMoved = false;
+    stage.style.removeProperty('--rv-lane-guess');
     const moved = () => {
         laneMoved = true;
     };
@@ -1950,19 +2136,10 @@ function paintTopic(shown) {
         },
         { root: view, rootMargin: '150% 0px' },
     );
-    for (const item of [...new Set(shown.map((pair) => pair.item))]) {
-        const own = shown.filter((pair) => pair.item === item);
-        const group = document.createElement('section');
-        group.className = 'rv-topic';
-        group.innerHTML = `<h3 class="rv-topic__title"></h3><div class="rv-topic__lanes"></div>`;
-        /** @type {HTMLElement} */ (group.querySelector('.rv-topic__title')).textContent = item.title;
-        const box = /** @type {HTMLElement} */ (group.querySelector('.rv-topic__lanes'));
-        for (const pair of own) {
-            const card = laneFor(pair);
-            box.append(card);
-            laneWatch.observe(card);
-        }
-        stage.append(group);
+    for (const pair of shown) {
+        const card = laneFor(pair, step);
+        stage.append(card);
+        laneWatch.observe(card);
     }
 }
 
@@ -2007,12 +2184,12 @@ function rowFor(pair, only = null, name = '', shared = new Set()) {
             </span>
         </div>
         <p class="rv-row__look" data-rv-row-look></p>
-        <div class="rv-row__choices" data-rv-choices></div>
-        <textarea class="kp-field__input kp-field__input--multiline rv-row__note" rows="2" placeholder="What should change" data-rv-row-note hidden></textarea>`;
+        <textarea class="kp-field__input kp-field__input--multiline rv-row__note" rows="2" placeholder="What should change" data-rv-row-note hidden></textarea>
+        <div class="rv-row__choices" data-rv-choices></div>`;
     li.querySelector('[data-rv-jump]').textContent = name || pair.title;
     const look = pair.item ? lookFor(pair.item.section, pair.theme) : pair.look;
     const lookBox = li.querySelector('[data-rv-row-look]');
-    // A look-at paragraph the step shows once under the theme (option `look`) is not repeated in the row.
+    // The look-at paragraph the panel shows once for the step is not repeated in the row; a different one stays here.
     if (look && !only && !shared.has(look)) lookBox.innerHTML = look;
     else lookBox.remove();
     const choiceBox = li.querySelector('[data-rv-choices]');
@@ -2028,10 +2205,7 @@ function rowFor(pair, only = null, name = '', shared = new Set()) {
         legend.textContent = choice.once ? `${choice.label} (once, for every theme)` : choice.label;
         set.append(legend);
         // Only the default is asked: it is already set, the others are switches to look at (defaults-1017).
-        const intro = document.createElement('p');
-        intro.className = 'rv-choice__intro';
-        intro.textContent = 'The default is set, nothing to tick. Press another option to see it live; it then becomes the default.';
-        set.append(intro);
+        set.title = 'The default is set, nothing to tick. Press another option to see it live; it then becomes the default.';
         for (const option of choice.options) {
             const label = document.createElement('label');
             label.className = 'rv-choice__option';
@@ -2062,8 +2236,7 @@ function rowFor(pair, only = null, name = '', shared = new Set()) {
             text.append(name);
             const tag = document.createElement('span');
             tag.className = 'rv-choice__tag';
-
-            text.append(tag);
+            name.append(tag);
             const hint = option.hints?.[pair.theme] || option.hint;
             if (hint) {
                 const small = document.createElement('span');
@@ -2083,13 +2256,16 @@ function rowFor(pair, only = null, name = '', shared = new Set()) {
             dropBox.setAttribute('data-rv-remove', `${choice.id}:${option.value}`);
             dropBox.checked = removedOf(pair, choice).includes(option.value);
             const dropText = document.createElement('span');
-            dropText.textContent = 'Remove this option (otherwise kept)';
+            dropText.textContent = 'Remove';
+            drop.title = `Remove “${option.label}” from the component; without a tick it stays an option`;
+            dropBox.setAttribute('aria-label', `Remove the option ${option.label} (otherwise kept)`);
             drop.append(dropBox, dropText);
             const syncRemove = () => {
                 const current = choiceOf(pair, choice) === option.value;
                 dropBox.disabled = current;
                 drop.hidden = current;
-                tag.textContent = current ? 'The default' : 'Also available, switch to see it';
+                tag.textContent = current ? 'default' : '';
+                tag.hidden = !current;
             };
             syncRemove();
             set.addEventListener('change', syncRemove);
@@ -2162,202 +2338,46 @@ function rowFor(pair, only = null, name = '', shared = new Set()) {
     note.addEventListener('blur', () => pendingNotes.get(pair.key)?.write());
     attachReasons(li, box, note); // kit-flow hook: optional reason chips
     li.querySelector('[data-rv-jump]').addEventListener('click', () => {
-        stage.querySelector(`[data-rv-pair="${CSS.escape(pair.key)}"]`)?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+        stage
+            .querySelector(`[data-rv-pair="${CSS.escape(pair.key)}"]`)
+            ?.scrollIntoView({ block: 'start', behavior: prefersReducedMotion() ? 'auto' : 'smooth' });
+        if (phone()) {
+            sheetOpen = false;
+            paintPanel();
+        }
     });
     return li;
 }
 
-/** Marks the section's own heading when it only repeats the title the frame head or the dialog already carries. */
-function markDup(/** @type {HTMLElement} */ section, /** @type {string} */ title) {
-    const norm = (/** @type {string} */ t) => t.replace(/\s+/g, ' ').trim().toLowerCase();
-    const labelled = section.getAttribute('aria-labelledby');
-    const heading = (labelled && section.ownerDocument.getElementById(labelled)) || section.querySelector('h1, h2, h3');
-    if (heading && norm(heading.textContent || '') === norm(title)) heading.setAttribute('data-rv-dup-title', '');
-}
-
-/** Option `controls`: the demo's own buttons take the package's small size; switched off, only what this added goes. */
-function sizeControls(/** @type {HTMLElement} */ section) {
-    for (const button of section.querySelectorAll('[data-review-controls] .kp-button')) {
-        if (ui.controls) {
-            if (button.classList.contains('kp-button--sm')) continue;
-            button.classList.add('kp-button--sm');
-            button.setAttribute('data-rv-sm', '');
-        } else if (button.hasAttribute('data-rv-sm')) {
-            button.classList.remove('kp-button--sm');
-            button.removeAttribute('data-rv-sm');
-        }
-    }
-}
-
-/** Option `jump`: one chip per section of the step in the header, the one in view marked (also its row). */
-function paintJumps() {
-    const nav = $('[data-rv-jumps]');
-    nav.replaceChildren();
-    const step = steps[index];
-    const items = [...new Map(shownPairs.filter((p) => p.item).map((p) => [p.key, p])).values()];
-    nav.hidden = !(ui.jump && items.length > 1 && step && !step.aspect);
-    if (nav.hidden) return;
-    items.forEach((pair, at) => {
-        const chip = document.createElement('button');
-        chip.type = 'button';
-        chip.className = 'kp-button kp-button--sm rv-jump__chip';
-        chip.dataset.rvJumpKey = pair.key;
-        chip.title = pair.title;
-        chip.textContent = `${at + 1} · ${pair.title.includes(': ') ? pair.title.split(': ').slice(1).join(': ') : pair.title}`;
-        chip.addEventListener('click', () => {
-            stage.querySelector(`[data-rv-pair="${CSS.escape(pair.key)}"]`)?.scrollIntoView({ block: 'start', behavior: 'smooth' });
-        });
-        nav.append(chip);
-    });
-    markJump();
-}
-function markJump() {
-    const view = stage.closest('.rv-dialog__view');
-    if (!view) return;
-    const top = view.getBoundingClientRect().top + 120;
-    /** @type {HTMLElement | null} */
-    let current = null;
-    for (const el of /** @type {NodeListOf<HTMLElement>} */ (stage.querySelectorAll('[data-rv-pair]')))
-        if (!el.parentElement?.closest('[data-rv-pair]') && el.getBoundingClientRect().top <= top) current = el;
-    const key = (view.scrollTop < 8 ? null : current?.dataset.rvPair) ?? shownPairs[0]?.key ?? '';
-    for (const chip of dialog.querySelectorAll('[data-rv-jump-key]'))
-        chip.toggleAttribute('aria-current', /** @type {HTMLElement} */ (chip).dataset.rvJumpKey === key);
-    for (const row of /** @type {NodeListOf<HTMLElement>} */ (list.querySelectorAll('.rv-row')))
-        row.toggleAttribute('data-rv-current', ui.jump && row.dataset.rvKey === key);
-}
-{
-    new ResizeObserver(() => ui.jump && markJump()).observe(stage);
-    let queued = false;
-    $('.rv-dialog__view').addEventListener(
-        'scroll',
-        () => {
-            if (queued || !ui.jump) return;
-            queued = true;
-            requestAnimationFrame(() => {
-                queued = false;
-                markJump();
-            });
-        },
-        { passive: true },
-    );
-}
-
-/** Switches one layout option: kept for this viewer, shown at once in the dialog, in every frame, and in the rows. */
-function setUi(/** @type {string} */ id, /** @type {boolean} */ on) {
-    ui[id] = on;
-    keptUi[id] = on;
-    try {
-        localStorage.setItem(UI_KEY, JSON.stringify(keptUi));
-    } catch {
-        /* a private window: the option holds for this visit */
-    }
-    paintUi(dialog);
-    emit('ui', { id, on });
-    for (const lane of lanes) {
-        paintUi(lane.section.ownerDocument.documentElement);
-        sizeControls(lane.section);
-    }
-    for (const pair of shownPairs) if (pair.item && !steps[index]?.topic) sizeControls(pair.item.section);
-    if (!dialog.open || !steps[index]) return;
-    flushNotes();
-    list.replaceChildren(...stepRows(steps[index], shownPairs));
-    paintJumps();
-    checkIntegrity();
-}
-/** Adds the View menu's switch for one option, with what it does in a sentence. */
-function addMenuRow(/** @type {{ id: string, label: string, about: string }} */ option) {
-    const box = $('[data-rv-ui-list]');
-    const wrap = document.createElement('div');
-    wrap.className = 'rv-ui__option';
-    const check = document.createElement('span');
-    check.className = 'kp-field kp-field--check';
-    const input = document.createElement('input');
-    input.type = 'checkbox';
-    input.className = 'kp-field__check';
-    input.id = `rv-ui-${option.id}`;
-    input.checked = ui[option.id];
-    input.addEventListener('change', () => setUi(option.id, input.checked));
-    const label = document.createElement('label');
-    label.className = 'kp-field__label';
-    label.htmlFor = input.id;
-    label.textContent = option.label;
-    check.append(input, label);
-    const about = document.createElement('p');
-    about.className = 'rv-ui__about';
-    about.textContent = option.about;
-    wrap.append(check, about);
-    box.append(wrap);
-}
-for (const option of UI_OPTIONS) addMenuRow(option);
-
-/*
- * Extension points for modules that add to the dialog (a bar, a key, a chip row). A module is a separate file that
- * the page loads after review.js; it needs no edit of this file beyond what is here:
- * - `window.rvKit.registerUiOption({ id, label, about, default })` adds a switch to the View menu, kept per viewer like
- *   the layout options; the option is an attribute `data-rvui-<id>="on|off"` on the dialog and on every frame's root,
- *   and `rvKit.ui[id]` is its value.
- * - events on `window`: `rv:open` (the dialog opened), `rv:step` ({ index, step, pairs }: a step was shown),
- *   `rv:verdict` ({ pair, verdict, note }: a verdict or note was filed), `rv:ui` ({ id, on }: an option was switched).
- */
-/** @type {any} */ (window).rvKit = {
-    ui,
-    dialog,
-    setUi,
-    registerUiOption(/** @type {{ id: string, label: string, about: string, default?: boolean }} */ option) {
-        if (option.id in ui) return;
-        UI_OPTIONS.push(/** @type {any} */ (option));
-        ui[option.id] = typeof keptUi[option.id] === 'boolean' ? keptUi[option.id] : Boolean(option.default);
-        for (const part of (params.get('rvui') || '').split(',').map((x) => x.trim())) {
-            if (part === 'all') ui[option.id] = true;
-            else if (part === 'none' || part === `-${option.id}`) ui[option.id] = false;
-            else if (part === option.id) ui[option.id] = true;
-        }
-        paintUi(dialog);
-        for (const lane of lanes) paintUi(lane.section.ownerDocument.documentElement);
-        addMenuRow(option);
-    },
-};
-/** Tells the modules something happened. @param {string} name @param {any} detail */
+/** Tells the modules something happened (`rv:open`, `rv:step`, `rv:verdict` on `window`). @param {string} name @param {any} detail */
 const emit = (name, detail = {}) => window.dispatchEvent(new CustomEvent(`rv:${name}`, { detail }));
+/** @type {any} */ (window).rvKit = { dialog };
 
-/** The rows of a topic step: under the step's theme, one row per section, in the order of the frames. */
-function topicRows(/** @type {Pair[]} */ shown) {
-    const head = document.createElement('li');
-    head.className = 'rv-list__group';
-    head.textContent = LABEL[shown[0]?.theme] || shown[0]?.theme || '';
-    const shared = sharedLooks(shown);
-    return [head, ...sharedLookRows(shared), ...shown.map((pair) => rowFor(pair, null, pair.title, shared))];
-}
-
-/** The look-at texts that more than one section of the step carries: shown once for the step when option `look` is on. */
-function sharedLooks(/** @type {Pair[]} */ shown) {
+/**
+ * What to look at in this theme, ONCE per step at the top of the panel (Kenny, 2026-10-18 15:15: "sections to the right
+ * with the exact same text"): the paragraph most sections of the step share; a section whose paragraph differs keeps its
+ * own in its row. @param {Step} step @param {Pair[]} shown @returns {Set<string>} the paragraph shown on top
+ */
+function paintLook(step, shown) {
+    const box = $('[data-rv-look]');
     /** @type {Map<string, number>} */
     const count = new Map();
-    if (ui.look)
+    if (!step.aspect)
         for (const pair of shown) {
-            const look = pair.item ? lookFor(pair.item.section, pair.theme) : pair.look;
+            const look = pair.item ? lookFor(pair.item.section, pair.theme) : '';
             if (look) count.set(look, (count.get(look) ?? 0) + 1);
         }
-    return new Set([...count].filter(([, n]) => n > 1).map(([text]) => text));
-}
-/** The one row of each shared look-at text, `.rv-list__look`, under the theme's name. */
-function sharedLookRows(/** @type {Set<string>} */ shared) {
-    return [...shared].map((text) => {
-        const li = document.createElement('li');
-        li.className = 'rv-list__look';
-        const p = document.createElement('p');
-        p.className = 'rv-row__look';
-        p.innerHTML = text;
-        li.append(p);
-        return li;
-    });
+    const top = [...count].sort((a, b) => b[1] - a[1])[0]?.[0] || '';
+    box.hidden = !top;
+    $('[data-rv-look-title]').textContent = `What to look at in ${LABEL[stepTheme(step)] || stepTheme(step) || 'this theme'}`;
+    $('[data-rv-look-text]').innerHTML = top;
+    return new Set(top ? [top] : []);
 }
 
-/** The rows of the step on screen, built again when an option that changes them is switched. */
-function stepRows(/** @type {any} */ step, /** @type {Pair[]} */ pairsShown) {
-    if (step.topic) return topicRows(pairsShown);
-    const shared = step.aspect ? new Set() : sharedLooks(pairsShown);
-    return [...sharedLookRows(shared), ...pairsShown.map((pair) => rowFor(pair, step.aspect ?? null, '', shared))];
+/** The rows of the step on screen: one per section, in the order of the stage. */
+function stepRows(/** @type {Step} */ step, /** @type {Pair[]} */ pairsShown) {
+    const shared = paintLook(step, pairsShown);
+    return pairsShown.map((pair) => rowFor(pair, step.aspect ?? null, step.aspect ? '' : partTitle(pair, step), shared));
 }
 
 /*
@@ -2446,6 +2466,7 @@ function paintUpdate(step) {
     const asked = step.aspect && pair ? UPDATE?.questions?.[pair.theme]?.[step.aspect] : null;
     const earlier = step.aspect && pair ? state[pair.key]?.earlier?.[step.aspect] : '';
     box.replaceChildren();
+    box.hidden = !asked && !earlier;
     if (!asked && !earlier) return;
     const head = document.createElement('p');
     head.className = 'rv-update__head';
@@ -2475,44 +2496,41 @@ async function show(at) {
         // note, until a new round reopens it (kpadopt-nav, 2026-10-16: "option 2 disappeared from the list when I reopened
         // the page" was the pair he had rejected, dropped because it was no longer 'open').
         shownPairs = stepOpen(step) ? step.pairs.filter((p) => isOpen(p) || verdictOf(p) === 'rejected') : step.pairs;
-        if (step.topic) paintTopic(shownPairs);
+        if (step.topic) paintTopic(shownPairs, step);
         for (const pair of step.topic ? [] : shownPairs) {
             if (pair.item) {
+                // A theme step lays the page's own section out as a lane in the stage, and puts it back as it was after.
+                const section = pair.item.section;
                 const placeholder = document.createComment('review');
-                pair.item.section.replaceWith(placeholder);
-                pair.item.section.dataset.rvPair = pair.key;
-                moved.push([placeholder, pair.item.section]);
+                section.replaceWith(placeholder);
+                moved.push([placeholder, section]);
+                const card = laneShell(pair, step, 'page');
                 const tool = mountBlockTools({
-                    section: pair.item.section,
+                    section,
                     item: pair.item.id,
                     theme: pair.theme,
                     themeLabel: LABEL[pair.theme] || pair.theme,
                     title: pair.item.title,
                 });
                 tools.push(tool);
-                stage.append(tool.bar, pair.item.section);
+                card.querySelector('.rv-lane__head')?.append(tool.bar);
+                card.append(section);
+                stage.append(card);
+                undoLayout.push(layoutSection(section));
             } else {
                 stage.append(frameFor(pair));
             }
         }
         stage.scrollTop = 0;
-        if (!step.topic)
-            for (const pair of shownPairs)
-                if (pair.item) {
-                    placeControls(pair.item.section);
-                    sizeControls(pair.item.section);
-                    markDup(pair.item.section, pair.item.title);
-                }
         list.replaceChildren(...stepRows(step, shownPairs));
-        paintJumps();
         paintUpdate(step);
         $('[data-rv-intro]').textContent = step.topic
-            ? "One topic, one theme per step: the topic's sections in this theme, then the same topic in the next theme. Everything on the left is approved together. Tick only what is wrong, and say why."
+            ? "One topic, one theme per step: the topic's sections in this theme, then the same topic in the next theme. Everything in the stage is approved together: tick only what is wrong in the panel at the right, and say why if you like."
             : step.aspect
               ? 'One option at a time, large, its motion already playing. ←/→ flips, ↑ picks it and goes on, ↓ is None of these. Left hand (AZERTY): Q/S step the state, D the tone, F the next set, Z a live update, R replays, E speed, A tours the states by itself, Space pauses.'
-              : 'Everything on the left is approved together. Tick only what is wrong, and say why.';
+              : 'Everything in the stage is approved together: tick only what is wrong in the panel at the right, and say why if you like.';
         $('#rv-keys').textContent = step.topic
-            ? 'Up approves this theme for the topic and goes on to the next open theme, Left/Right move between steps, V the previous version and L open and close of the section most in view, Escape closes. The controls of each component stand right above it.'
+            ? 'Up approves this theme for the topic and goes on to the next open theme, Left/Right move between steps, V the previous version and L open and close of the section most in view, Escape closes. Each component carries its own toolbar on its top edge; its words open with More.'
             : step.aspect
               ? 'Right hand: ←/→ flip · ↑ pick · ↓ none of these. Left hand (AZERTY home row): Q/S state back/on · D tone · F next set · Z live update · R replay · E speed · A tour · Space pause. PageUp/PageDown move between pages · Escape closes.'
               : 'Up approves the step and goes on to the next open one, Left/Right move between steps, V the previous version, L plays open and close, Escape closes. The theme switches by itself.';
@@ -2520,26 +2538,40 @@ async function show(at) {
         if (step.aspect) setupFlip(step, shownPairs[0]);
         const judgedHere = step.pairs.filter((p) => verdictOf(p) === 'approved' && !shownPairs.includes(p)).length;
         const shownSections = new Set(shownPairs.map((p) => p.item)).size;
-        $('[data-rv-position]').textContent =
-            `Step ${index + 1}/${steps.length} · ` +
-            (step.topic
-                ? `${step.topicAt} of ${step.topicThemes} themes · ${shownSections} section(s)`
-                : `${shownPairs.length} ${step.theme ? 'section(s)' : 'block(s)'}`) +
-            (judgedHere ? ` · ${judgedHere} already approved, not shown` : '');
+        const count = (/** @type {number} */ n, /** @type {string} */ one) => `${n} ${one}${n === 1 ? '' : 's'}`;
+        $('[data-rv-position]').textContent = `Step ${index + 1}/${steps.length}`;
         writeFlipPosition();
-        $('[data-rv-title]').textContent = step.title;
+        // The header row says each thing once: the theme, the topic's title (the sections' own titles stand on their lanes).
+        const theme = step.extra ? '' : stepTheme(step);
+        const themeBox = $('[data-rv-theme]');
+        themeBox.hidden = !theme || !step.pairs.every((p) => !p.extra);
+        themeBox.textContent = LABEL[theme] || theme || '';
+        $('[data-rv-title]').textContent = step.topic
+            ? step.topicTitle || step.title
+            : step.aspect
+              ? step.pairs[0]?.item?.choices.find((c) => c.id === step.aspect)?.label || step.title
+              : step.theme
+                ? document.querySelector('main h1, h1')?.textContent?.replace(/\s+/g, ' ').trim() || document.title
+                : step.title;
+        $('[data-rv-meta]').textContent = [
+            step.topic ? `theme ${step.topicAt} of ${step.topicThemes}` : '',
+            step.aspect ? '' : count(step.topic || step.theme ? shownSections : shownPairs.length, step.topic || step.theme ? 'section' : 'block'),
+            judgedHere ? `${judgedHere} approved, not shown` : '',
+        ]
+            .filter(Boolean)
+            .join(' · ');
+        $('[data-rv-sheet-text]').textContent = `Verdicts · ${count(shownPairs.length, 'row')}`;
         const badge = $('[data-rv-state]');
         const rejected = step.pairs.filter((p) => verdictOf(p) === 'rejected').length;
         badge.textContent = stepOpen(step) ? 'Open' : rejected ? `${rejected} not approved` : 'Approved';
-        badge.className = `kp-badge${stepOpen(step) ? '' : rejected ? ' kp-badge--destructive' : ' kp-badge--success'}`;
+        badge.className = `kp-badge rv-head__state${stepOpen(step) ? '' : rejected ? ' kp-badge--destructive' : ' kp-badge--success'}`;
         refused.hidden = true;
         updateApprove();
         const wasOpen = dialog.open;
         if (!dialog.open) dialog.showModal();
         if (!wasOpen) emit('open');
         checkIntegrity();
-        // A preview inside another page never takes the focus from it (a note typed there lost its keys).
-        if (!params.has('rv-preview')) approveButton.focus({ preventScroll: true });
+        approveButton.focus({ preventScroll: true });
         kk.shown(step, shownPairs); // [kit-keys]
         // Every page starts at its top, the demo on the left and the rows on the right (Kenny, 2026-10-13: "als ik van
         // één dialog pagina naar de andere ga, scroll dan naar boven en doe hetzelfde voor de items rechts").
@@ -2599,7 +2631,10 @@ function approveStep() {
         refused.hidden = false;
         return;
     }
-    kk.snap(shownPairs.map((p) => p.key), `approved ${current.title}`); // [kit-keys]
+    kk.snap(
+        shownPairs.map((p) => p.key),
+        `approved ${current.title}`,
+    ); // [kit-keys]
     const at = new Date().toISOString();
     for (const pair of shownPairs) {
         const row = rowOf(pair);
@@ -2692,6 +2727,16 @@ document.addEventListener(
         if (!dialog.open || event.altKey || event.ctrlKey || event.metaKey) return;
         // Closed here rather than by the browser's own cancel: Chromium dropped
         // the Escape after the dialog had switched the theme a few times.
+        if (event.key === 'Escape' && helpPop.matches(':popover-open')) {
+            event.preventDefault();
+            helpPop.hidePopover();
+            return;
+        }
+        if (event.key === 'Escape' && phone() && sheetOpen) {
+            event.preventDefault();
+            togglePanel();
+            return;
+        }
         if (event.key === 'Escape') {
             // A part the demo opened on stage (a dialog, the palette, a popover, a picker, the tour, an open side
             // navigation, the phone bar) takes its own Escape first (Kenny, 2026-10-13: Escape on the palette closed the
@@ -2711,8 +2756,14 @@ document.addEventListener(
         // the step keys stay off, so a key meant for the demo never approves or
         // switches the theme [fix-103].
         const from = /** @type {HTMLElement} */ (event.target);
-        if (from.closest?.('[data-rv-ui-menu]')) return;
         if (from.matches('textarea, input:not([type="checkbox"]):not([type="radio"]):not([type="button"])')) return;
+        // ? opens and closes the help with every key.
+        if (event.key === '?') {
+            event.preventDefault();
+            helpPop.togglePopover();
+            return;
+        }
+        if (from.closest?.('[data-rv-help]')) return;
         // V and L act on the section most in view: its previous version, its open and close on a loop.
         if ((event.code === 'KeyV' || event.code === 'KeyL') && tools.length) {
             const view = stage.closest('.rv-dialog__view')?.getBoundingClientRect();
@@ -2814,6 +2865,7 @@ window.addEventListener('storage', (event) => {
 const kk = mountKeys({
     demo: DEMO,
     dialog,
+    slots: { tools: $('[data-rv-tools]'), help: $('[data-rv-help-keys]'), status: $('[data-rv-foot-status]') },
     stage,
     list,
     approveButton,
@@ -2838,7 +2890,17 @@ const kk = mountKeys({
 });
 render();
 // [kit-strip-1018] rv-progress.js: the remaining line and resume (the hook is this one call).
-mountProgress({ demo: DEMO, dialog, steps, getIndex: () => index, stepOpen, show, stage, openFirst: () => bar.querySelector('[data-rv-open]').click() });
+mountProgress({
+    demo: DEMO,
+    dialog,
+    steps,
+    getIndex: () => index,
+    stepOpen,
+    show,
+    stage,
+    slot: $('[data-rv-counts]'),
+    openFirst: () => bar.querySelector('[data-rv-open]').click(),
+});
 // From the hub, the dialog opens at the first open step by itself.
 // kit-flow hook: a stop with nothing open left is passed at once.
 const flowLeaving = flow.arrive({

@@ -1,15 +1,27 @@
 /* The progress options of the review kit (rv-progress.js): the remaining line in the dialog's head, the remaining
    line on an Agenda row, the Continue button and the Review options fold. Tokens only; the theme on screen paints it. */
 
-/* One thin line of plain text on its own row of the dialog's head: no pills, no controls. */
+/* The counts in the dialog's header row (review.js hands the slot): plain text, no pills, the parts separated by a thin dot. */
 .rv-remaining {
-    flex: 1 0 100%;
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0 0.5rem;
     margin: 0;
     font-size: 0.8125rem;
     line-height: 1.4;
+    white-space: nowrap;
     color: var(--muted-foreground);
     font-variant-numeric: tabular-nums;
-    overflow-wrap: anywhere;
+}
+
+.rv-remaining > span + span::before {
+    content: '·';
+    margin-inline-end: 0.5rem;
+}
+
+.rv-remaining__part {
+    color: var(--foreground);
+    font-weight: 600;
 }
 
 .rv-remaining[hidden],

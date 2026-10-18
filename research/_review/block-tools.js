@@ -461,8 +461,10 @@ export async function isolate(frame, item, theme) {
     let last = 0;
     let step = 0;
     let echoes = 0;
+    // The body's own height and overflow, never the document's scroll height: that is at least the frame's own height,
+    // so a section that got shorter (the dialog lays it out once it has loaded) left a blank band under it.
     const fit = () => {
-        const next = Math.ceil(doc.documentElement.scrollHeight);
+        const next = Math.ceil(Math.max(doc.body.scrollHeight, doc.body.getBoundingClientRect().height));
         const grew = next - last;
         echoes = grew > 0 && grew === step ? echoes + 1 : 0;
         step = grew;

@@ -42,9 +42,7 @@
 
             <div class="kp-alert kp-alert--info agenda__answers" role="status" data-agenda-answers hidden>
                 <span class="kp-alert__icon" aria-hidden="true">✎</span>
-                <span class="kp-alert__body"
-                    ><span class="kp-alert__label">Answers to paste: </span><span data-agenda-answers-text></span
-                ></span>
+                <span class="kp-alert__body"><span class="kp-alert__label">Answers to paste: </span><span data-agenda-answers-text></span></span>
                 <button type="button" class="kp-button kp-button--sm agenda__answers-copy" data-agenda-answers-copy>Copy the answers</button>
             </div>
 
@@ -59,10 +57,12 @@
             </section>
 
             <details class="agenda__blocks" id="agenda-blocks" data-agenda-blocks-part hidden>
-                <summary class="agenda__fold-summary">The open catalogue blocks, laid out <span class="agenda__fold-count" data-agenda-blocks-count></span></summary>
+                <summary class="agenda__fold-summary">
+                    The open catalogue blocks, laid out <span class="agenda__fold-count" data-agenda-blocks-count></span>
+                </summary>
                 <p class="cat-intro">
-                    What the catalogue row opens, with each block's verdict panel, so a block can be judged here as well. A block shows in the
-                    themes where it is open; the dialog walks them theme by theme and switches the theme by itself.
+                    What the catalogue row opens, with each block's verdict panel, so a block can be judged here as well. A block shows in the themes
+                    where it is open; the dialog walks them theme by theme and switches the theme by itself.
                 </p>
                 <div data-cat-compose="agenda"></div>
             </details>
@@ -70,9 +70,9 @@
             <details class="agenda__saved" data-agenda-saved>
                 <summary class="agenda__fold-summary">Saved verdicts <span class="agenda__fold-count" data-agenda-saved-count></span></summary>
                 <p class="cat-intro">
-                    Every verdict, note and tick you set in a demo's dialog, in this browser, newest first. Nothing removes them: not a new
-                    round, not Clear all verdicts, not an answer Claude already received. Pick a round and copy its answer, rebuilt from
-                    what you set, to paste it again.
+                    Every verdict, note and tick you set in a demo's dialog, in this browser, newest first. Nothing removes them: not a new round, not
+                    Clear all verdicts, not an answer Claude already received. Pick a round and copy its answer, rebuilt from what you set, to paste
+                    it again.
                 </p>
                 <p class="cat-note" data-agenda-saved-empty>No verdict saved in this browser yet.</p>
                 <div class="agenda__saved-list" data-agenda-saved-list></div>
@@ -88,7 +88,6 @@
             </details>
         </main>
 
-        <script type="module" src="../research/_review/rv-preview.js"></script>
         <script type="module" src="../js/auto.js"></script>
         <script src="./boot-check.js"></script>
         <script type="module" src="./catalogue.js"></script>

@@ -1,7 +1,11 @@
-/* The demo review kit's chrome (research/_review/review.js). Colours come from
-   the theme's own tokens, so the bar and the dialog follow the theme under
-   review. Narrow windows (a phone) get the dialog full-screen, the section
-   on top and the buttons under it. */
+/* The demo review kit's chrome (research/_review/review.js). Colours come from the theme's own tokens, so the bar and the
+   dialog follow the theme under review; sizes are the kit's own, the same in every theme, so the header row stays one row.
+
+   The dialog has ONE layout (Kenny, 2026-10-18 16:27: "Ik verwacht een rewrite van deze demo van scratch"): it fills the
+   window, one header row, the stage with one lane per section (the component in its frame, its one toolbar on the frame's
+   top edge), and a slim verdict panel at the right that becomes a bottom sheet on a phone. Nothing here is an option. */
+
+/* ------------------------------------------------------------------ page */
 
 .rv-bar {
     position: sticky;
@@ -58,14 +62,26 @@
     gap: 0.5rem;
 }
 
-/* One fixed size whatever the section holds, as the catalogue's dialog. */
-.rv-dialog {
+/* ---------------------------------------------------------------- dialog */
+
+/* The window, 4 px from every edge on a desktop and edge to edge on a phone. Unlayered, so it wins over the package's
+   layered `.kp-dialog` sizes in every theme; the theme still paints the plate, its border and its ornaments. */
+dialog.rv-dialog.kp-dialog {
+    --rv-panel-w: clamp(17.5rem, 16.5vw, 20rem);
+    --rv-gap: 0.5rem;
+    position: fixed;
+    inset: 4px;
     box-sizing: border-box;
-    inline-size: 94vw;
-    block-size: 92vh;
+    inline-size: auto;
+    block-size: auto;
     max-inline-size: none;
     max-block-size: none;
+    margin: 0;
     padding: 0;
+    overflow: hidden;
+}
+
+:root:has(dialog.rv-dialog[open]) {
     overflow: hidden;
 }
 
@@ -75,11 +91,8 @@
     grid-template-rows: auto auto minmax(0, 1fr) auto;
 }
 
-/* A theme may draw its dialog's ornament as an in-flow ::before or ::after
-   (deco and sepia since 9.0.0; Lapis too until its removal). Each gets a row of its own, so the
-   ornament never takes the head's row and pushes the body into a row the
-   dialog clips (Kenny, 2026-10-04, review-ornament-M1). An empty row is
-   zero tall; an absolutely positioned ornament takes no row at all. */
+/* A theme may draw its dialog's ornament as an in-flow ::before or ::after (deco since 9.0.0). Each gets a row of its own,
+   so the ornament never takes the head's row (Kenny, 2026-10-04, review-ornament-M1). An empty row is zero tall. */
 .rv-dialog::before {
     grid-row: 1;
 }
@@ -96,49 +109,193 @@
     grid-row: 4;
 }
 
+.rv-dialog__head [hidden],
+.rv-dialog__side [hidden],
+.rv-lane__head [hidden],
+.rv-help [hidden] {
+    display: none !important;
+}
+
+/* --- The header row: step, theme, title, what is shown, the counts, the icon buttons. One row, at most 44 px. */
 .rv-dialog__head {
-    position: relative;
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
-    gap: 0.5rem 0.75rem;
-    padding: 0.75rem 3.5rem 0.75rem 1rem;
+    gap: 0.25rem 0.75rem;
+    box-sizing: border-box;
+    min-block-size: 2.75rem;
+    padding: 0.25rem 0.375rem 0.25rem 0.75rem;
     border-block-end: 1px solid var(--border);
+    font-size: 0.875rem;
+    line-height: 1.25;
 }
 
-.rv-dialog__head > h2 {
+.rv-dialog__head > * {
     margin: 0;
-    flex: 1 1 12rem;
-    min-inline-size: 0;
 }
 
-.rv-dialog__position {
-    margin: 0;
+.rv-head__pos {
+    flex: none;
+    padding: 0.0625rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
     font-family: var(--theme-font-mono, monospace);
-    font-size: 0.85rem;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    color: var(--muted-foreground);
+    font-variant-numeric: tabular-nums;
+}
+
+.rv-head__theme {
+    flex: none;
+    font-weight: 700;
+    white-space: nowrap;
+    color: var(--foreground);
+}
+
+.rv-head__theme + .rv-head__title::before {
+    content: '/';
+    margin-inline-end: 0.75rem;
+    font-weight: 400;
     color: var(--muted-foreground);
 }
 
-.rv-dialog__close {
-    position: absolute;
-    inset-block-start: 0.5rem;
-    inset-inline-end: 0.5rem;
+.rv-head__title {
+    flex: 0 1 auto;
+    min-inline-size: 0;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: normal;
+    text-transform: none;
+    overflow-wrap: anywhere;
+    color: var(--foreground);
 }
 
-.rv-dialog__grid {
+.rv-head__meta {
+    flex: none;
+    font-size: 0.8125rem;
+    white-space: nowrap;
+    color: var(--muted-foreground);
+}
+
+.rv-head__meta:empty {
+    display: none;
+}
+
+.rv-head__state {
+    flex: none;
+}
+
+.rv-head__counts {
+    flex: none;
+    margin-inline-start: auto;
+    display: inline-flex;
+}
+
+.rv-head__mini,
+.rv-head__tools {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.rv-dialog .rv-head__mini .kp-button,
+.rv-dialog .rv-icon {
+    box-sizing: border-box;
+    min-block-size: 0;
+    block-size: 2rem;
+}
+
+.rv-dialog .rv-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    min-inline-size: 2rem;
+    padding: 0 0.375rem;
+}
+
+.rv-icon svg {
+    flex: none;
+}
+
+/* --- The help popover: what this step asks, every key, the key helpers. Opaque and readable in every theme. */
+.rv-help {
+    position: fixed;
+    inset: auto;
+    inset-block-start: calc(4px + var(--rv-head-h, 44px) + 0.375rem);
+    inset-inline-end: 0.75rem;
+    box-sizing: border-box;
+    margin: 0;
+    inline-size: min(28rem, calc(100vw - 1.5rem));
+    max-block-size: calc(100dvh - var(--rv-head-h, 44px) - 2rem);
+    overflow: auto;
+    padding: 0.875rem 1rem 1rem;
+    background: var(--popover, var(--background));
+    color: var(--popover-foreground, var(--foreground));
+    border: 1px solid var(--border-strong, var(--border));
+    border-radius: var(--radius, 6px);
+    box-shadow: 0 0.75rem 2rem color-mix(in srgb, var(--foreground) 24%, transparent);
+}
+
+.rv-help:popover-open {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) var(--rv-rail, 22rem);
+    gap: 0.5rem;
+}
+
+.rv-help:not(:popover-open) {
+    display: none;
+}
+
+.rv-help > p {
+    margin: 0;
+}
+
+.rv-help__title {
+    font-weight: 700;
+}
+
+.rv-help__text {
+    font-size: 0.8125rem;
+    color: var(--muted-foreground);
+}
+
+.rv-help__sub {
+    margin-block-start: 0.375rem !important;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+}
+
+.rv-help__keys {
+    display: grid;
+    gap: 0.5rem;
+}
+
+/* --- The body: the stage at the left, the verdict panel at the right. */
+.rv-dialog__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) var(--rv-panel-w);
     min-block-size: 0;
 }
 
-/* The left column: the demo's controls on top, the sections under them.
-   The COLUMN scrolls, not the stage inside it: the option shown is always
-   whole, and the words under it are read by scrolling the column (Kenny,
-   2026-10-08: "zie dat de content zelf altijd helemaal zichtbaar is, en
-   maak het hele gedeelte scrollbaar"). The controls stay pinned on top. */
+.rv-dialog[data-rv-panel='closed'] .rv-dialog__grid {
+    grid-template-columns: minmax(0, 1fr);
+}
+
+.rv-dialog[data-rv-panel='closed'] .rv-dialog__side {
+    display: none;
+}
+
+/* The stage's column scrolls, never the stage: a lane is always whole and is read by scrolling the column (Kenny,
+   2026-10-08). */
 .rv-dialog__view {
     display: grid;
-    grid-template-rows: auto auto auto;
+    grid-template-rows: auto auto;
     align-content: start;
     min-block-size: 0;
     min-inline-size: 0;
@@ -146,120 +303,376 @@
     overscroll-behavior: contain;
 }
 
-/* A component's own controls (states, variants, tones), shown by review.js directly above the component they drive
-   (data-review-controls-for), inside the section: the demo's own container, never a copy, never a bar on top
-   (Kenny, 2026-10-18 07:09). One plate: its title, then one row per group, name first, buttons after it. */
-.rv-ctl {
-    display: grid;
-    gap: var(--kp-space-xs, 0.25rem);
-    margin-block: var(--kp-space-sm, 0.5rem);
-    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
-    border: 1px solid var(--border);
-    border-inline-start-width: 3px;
-    border-radius: var(--radius, 6px);
-    background: var(--muted);
-    color: var(--foreground);
-    min-inline-size: 0;
-}
-
-.rv-ctl[data-rv-orphan] {
-    display: none;
-}
-
-.rv-ctl::before {
-    content: attr(data-rv-ctl-title);
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--muted-foreground);
-}
-
-.rv-ctl [role='group'] {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
-    margin: 0;
-    min-inline-size: 0;
-}
-
-.rv-ctl [role='group'] > b {
-    font-size: 0.8125rem;
-}
-
 .rv-dialog__stage {
-    /* No size containment and no scrollbar of its own: the stage is as tall
-       as the section it holds, and the view column scrolls (above). */
     contain: layout style;
-    overflow: visible;
-    padding: 1rem 1.25rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: 0.625rem;
+    padding: 0.375rem var(--rv-gap) var(--rv-gap);
+    min-inline-size: 0;
 }
 
 .rv-dialog__stage > * {
     margin: 0;
 }
 
-/* The look-at lines are shown at the side, one per section. */
-.rv-dialog__stage [data-review-look] {
-    display: none;
-}
-
-/* The catalogue's own judging panel under a row (catalogue/judging.js:
-   Approve, Not approved, the note) travels into the stage with the row;
-   the dialog's side already holds that verdict, so the panel is hidden
-   here and the option keeps the height (Kenny, 2026-10-08). */
+/* The look-at lines are in the panel, once; the catalogue's own judging panel is the dialog's panel here. */
+.rv-dialog__stage [data-review-look],
 .rv-dialog__stage .cat-judge {
     display: none !important;
 }
 
-/* Sections stacked as on "Every component, one page". */
-.rv-dialog__stage > * + * {
-    margin-block-start: 1.5rem;
+/* --- A lane: the section's head in the dialog's own type, then the component's frame (or the section itself). */
+.rv-lane {
+    min-inline-size: 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm, 4px);
+    background: var(--background);
 }
 
+.rv-lane--rejected {
+    border-color: var(--destructive);
+    box-shadow: inset 3px 0 0 var(--destructive);
+}
+
+.rv-lane__head {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 3;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.125rem 0.75rem;
+    box-sizing: border-box;
+    min-block-size: 2.25rem;
+    padding: 0.1875rem 0.375rem 0.1875rem 0.75rem;
+    border-block-end: 1px solid var(--border);
+    border-start-start-radius: inherit;
+    border-start-end-radius: inherit;
+    background: var(--background);
+}
+
+.rv-lane__title {
+    flex: 0 1 auto;
+    min-inline-size: 0;
+    margin: 0;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: normal;
+    text-transform: none;
+    line-height: 1.3;
+    color: var(--foreground);
+}
+
+/* The section's words on one line; More opens them at the lane's full width. A line that does not fit fades out at its
+   end instead of being cut with an ellipsis. */
+.rv-lane__intro {
+    flex: 1 1 12rem;
+    min-inline-size: 0;
+    margin: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--muted-foreground);
+}
+
+.rv-lane__head:has(> .rv-lane__more:not([hidden])) .rv-lane__intro {
+    mask-image: linear-gradient(to right, #000 calc(100% - 3rem), transparent);
+}
+
+.rv-lane[data-rv-open] .rv-lane__intro {
+    order: 9;
+    flex-basis: 100%;
+    padding-block-end: 0.25rem;
+    white-space: normal;
+    mask-image: none;
+}
+
+.rv-lane__intro > span + span {
+    margin-inline-start: 0.25rem;
+}
+
+.rv-lane__changed {
+    color: var(--foreground);
+}
+
+.rv-lane__intro code {
+    font-size: 0.95em;
+}
+
+.rv-dialog .rv-lane__more {
+    flex: none;
+    min-block-size: 0;
+    block-size: 1.75rem;
+    padding-inline: 0.5rem;
+}
+
+.rv-lane__head > .rv-tools {
+    flex: none;
+    margin-inline-start: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.rv-tools[hidden],
+.rv-tools [hidden] {
+    display: none !important;
+}
+
+.rv-tools__motion,
+.rv-tools__speed {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.rv-dialog .rv-tools .kp-button {
+    min-block-size: 0;
+    block-size: 1.75rem;
+    white-space: nowrap;
+}
+
+.rv-tools__note {
+    font-size: 0.75rem;
+}
+
+.rv-tools__note:empty {
+    display: none;
+}
+
+.rv-lane__frame {
+    display: block;
+    inline-size: 100%;
+    block-size: var(--rv-lane-guess, 24rem);
+    border: 0;
+}
+
+/* A theme step: the section itself sits in the lane, below its head. */
+.rv-lane--page > [data-review-item] {
+    margin: 0;
+}
+
+/* --- A section laid out as a lane (review.js layoutSection), in a frame's document or in the page itself. */
+html[data-rv-lane],
+html[data-rv-lane] body {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+html[data-rv-lane] body {
+    display: block !important;
+}
+
+html[data-rv-lane] main,
+html[data-rv-lane] .cat-main {
+    display: block !important;
+    max-inline-size: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+[data-rv-compact] {
+    box-sizing: border-box;
+    max-inline-size: none !important;
+    margin: 0 !important;
+    padding: 0 0.75rem 0.75rem !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    background: none !important;
+}
+
+[data-rv-compact] [data-rv-shell],
+[data-rv-compact] [data-review-look],
+[data-rv-ctl][data-rv-orphan] {
+    display: none !important;
+}
+
+/* The component's one toolbar: a strip on the frame's top edge, every group's label and its buttons side by side, all in
+   one row; a row wider than the frame scrolls along its line with a fade at the side that has more. Never a box. */
+[data-rv-compact] > [data-rv-ctl] {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center;
+    gap: 0 0.875rem !important;
+    box-sizing: border-box;
+    min-block-size: 2.5rem;
+    margin: 0 -0.75rem 0.75rem !important;
+    padding: 0.25rem 0.75rem !important;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scrollbar-width: thin;
+    border: 0 !important;
+    border-block-end: 1px solid var(--border) !important;
+    border-radius: 0 !important;
+    background: var(--muted) !important;
+    color: var(--foreground);
+    max-inline-size: none !important;
+}
+
+[data-rv-ctl][data-rv-more='end'] {
+    mask-image: linear-gradient(to right, #000 calc(100% - 3rem), transparent);
+}
+
+[data-rv-ctl][data-rv-more='start'] {
+    mask-image: linear-gradient(to left, #000 calc(100% - 3rem), transparent);
+}
+
+[data-rv-ctl][data-rv-more='start end'] {
+    mask-image: linear-gradient(to right, transparent, #000 3rem, #000 calc(100% - 3rem), transparent);
+}
+
+[data-rv-ctl] [role='group'] {
+    display: flex !important;
+    flex: none !important;
+    flex-wrap: nowrap !important;
+    align-items: center;
+    gap: 0.375rem !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    background: none !important;
+    min-inline-size: 0;
+}
+
+[data-rv-ctl] [role='group'] + [role='group'] {
+    padding-inline-start: 0.875rem !important;
+    border-inline-start: 1px solid var(--border) !important;
+}
+
+[data-rv-ctl] [role='group'] > :is(b, strong, label, .kc-label, span:not(.kp-segmented)) {
+    flex: none;
+    margin: 0;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--muted-foreground);
+}
+
+[data-rv-ctl] .kp-button {
+    flex: none;
+    white-space: nowrap;
+}
+
+[data-rv-ctl] .rv-seg {
+    flex: none;
+    /* Each segment as wide as its own words: the package's equal columns would stretch a short one to the longest. */
+    grid-auto-columns: max-content;
+    --kp-control-height: 1.875rem;
+    --kp-seg-item-pad-inline: 0.5rem;
+    --kp-seg-size: 0.75rem;
+}
+
+/* The Expected block, under the component, at the frame's full width. */
+[data-rv-compact] > [data-rv-expected] {
+    max-inline-size: none !important;
+    margin: 0.75rem 0 0 !important;
+    padding: 0.5rem 0.75rem !important;
+    border: 0 !important;
+    border-inline-start: 3px solid var(--border) !important;
+    border-radius: 0 !important;
+    background: none !important;
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--muted-foreground);
+}
+
+[data-rv-expected] :is(p, ul, ol) {
+    max-inline-size: none !important;
+    margin-block: 0.25rem;
+}
+
+[data-rv-expected] b {
+    color: var(--foreground);
+}
+
+/* --- The verdict panel: what to look at once, one compact row per section, Previous / Next / Approve pinned at its foot. */
 .rv-dialog__side {
     display: grid;
-    /* The rows always show whole and the side scrolls when they do not fit:
-       a long update note once squeezed "None of these" to nothing (Kenny,
-       2026-10-07: "maak het rechterdeel scrollbaar"). */
-    grid-template-rows: auto auto minmax(min-content, 1fr) auto auto auto;
-    gap: 0.75rem;
+    grid-template-rows: minmax(0, 1fr) auto;
+    min-block-size: 0;
+    min-inline-size: 0;
+    border-inline-start: 1px solid var(--border);
+    background: var(--background);
+}
+
+.rv-sheet {
+    display: none;
+}
+
+.rv-dialog__scroll {
+    display: grid;
+    align-content: start;
+    gap: 0.625rem;
     min-block-size: 0;
     overflow: auto;
     overscroll-behavior: contain;
-    padding: 1rem;
-    border-inline-start: 1px solid var(--border);
+    /* Room to scroll the last row to mid-column (as an editor does): at the very end of a column Firefox moves a pressed
+       row by a few px when the focus changes, and the press was lost. */
+    padding: 0.625rem 0.75rem 30dvh;
+}
+
+.rv-look {
+    padding: 0.5rem 0.625rem;
+    border-radius: var(--radius-sm, 4px);
+    background: var(--muted);
+}
+
+.rv-look__title {
+    margin: 0 0 0.25rem;
+    font-family: inherit;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+}
+
+.rv-look__text {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--foreground);
+}
+
+.rv-look__text p {
+    margin: 0;
 }
 
 .rv-dialog__list {
     margin: 0;
     padding: 0;
     list-style: none;
-    /* No scroller of its own: the list grows with its rows (the side's grid row is min-content) and the side scrolls.
-       A list with `overscroll-behavior: contain` and nothing to scroll swallowed the wheel over the rows, so only the
-       side's own scrollbar scrolled (Kenny, 2026-10-13). */
 }
 
+/* A row: the section's name, its "Not approved" box always on the line under it at the same start (lost-answer-1017), the
+   note and reason chips once it is rejected, then its default sets. The rule that marks a state (box-shadow) never moves
+   the box, so the boxes of the rows stand in one column. */
 .rv-row {
+    display: grid;
+    gap: 0.3125rem;
     padding-block: 0.5rem;
-    /* The same start for every row: the rule that marks a rejected, focused or current row (box-shadow) never moves its box,
-       so the boxes of the rows stand in one column in every state. */
-    padding-inline-start: 0.6rem;
+    padding-inline-start: 0.625rem;
     border-block-end: 1px solid var(--border);
+}
+
+.rv-row:first-child {
+    border-block-start: 1px solid var(--border);
 }
 
 .rv-row--rejected {
     box-shadow: inset 3px 0 0 var(--destructive);
-    padding-inline-start: 0.6rem;
 }
 
-/* The section's name on its own line, its "Not approved" box always on the line under it, at the start: the box sat
-   beside a short name and under a long one, so the boxes of neighbouring rows read as one row's (lost-answer-1017,
-   kpadopt4-cooking: a note meant for the timers was typed in the checklist's row). */
 .rv-row__head {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     justify-items: start;
-    gap: 0.25rem;
+    gap: 0.125rem;
 }
 
 .rv-row__jump {
@@ -268,7 +681,9 @@
     background: none;
     color: var(--foreground);
     font: inherit;
+    font-size: 0.875rem;
     font-weight: 600;
+    line-height: 1.3;
     text-align: start;
     cursor: pointer;
 }
@@ -279,34 +694,133 @@
 
 .rv-row__check {
     margin: 0;
+    font-size: 0.875rem;
 }
 
 .rv-row__look {
-    margin: 0.25rem 0 0;
-    font-size: 0.8125rem;
+    margin: 0;
+    font-size: 0.75rem;
+    line-height: 1.45;
     color: var(--muted-foreground);
 }
 
 .rv-row__note {
-    margin-block-start: 0.4rem;
     inline-size: 100%;
     box-sizing: border-box;
+    min-block-size: 3.5rem;
     resize: vertical;
+    font-size: 0.8125rem;
 }
 
-/* A step whose rows do not match its sections: it blocks the step (review.js, checkIntegrity). */
-.rv-integrity {
+.rv-row .kf-chips {
     margin: 0;
 }
 
-.rv-dialog__side > .kp-field__error {
+.rv-row .kf-chip {
+    padding: 0.125rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+/* A default set (defaults-1017): the label, then one line per option, the chosen one marked "default"; every other option
+   carries its own small Remove at the line's end. */
+.rv-row__choices {
+    display: grid;
+    gap: 0.375rem;
+}
+
+.rv-choice {
+    display: grid;
+    gap: 0.125rem;
     margin: 0;
+    padding: 0.25rem 0.5rem 0.375rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm, 4px);
+    min-inline-size: 0;
+}
+
+.rv-choice legend {
+    padding-inline: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--muted-foreground);
+}
+
+.rv-choice__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 0.5rem;
+}
+
+.rv-choice__option {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    gap: 0.375rem;
+    font-size: 0.8125rem;
+    cursor: pointer;
+}
+
+.rv-choice__option input {
+    margin: 0.2em 0 0;
+}
+
+.rv-choice__option b {
+    font-weight: 600;
+}
+
+.rv-choice__tag {
+    margin-inline-start: 0.375rem;
+    padding: 0 0.375rem;
+    border-radius: 999px;
+    background: var(--muted);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--muted-foreground);
+}
+
+.rv-choice__hint {
+    display: block;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--muted-foreground);
+}
+
+.rv-choice__remove {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding-block-start: 0.1em;
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    cursor: pointer;
+}
+
+.rv-integrity,
+.rv-dialog__side .kp-field__error {
+    margin: 0;
+}
+
+.rv-dialog__foot {
+    display: grid;
+    gap: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    border-block-start: 1px solid var(--border);
+    background: var(--background);
+}
+
+.rv-foot__status:not(:has(> :not([hidden]))) {
+    display: none;
 }
 
 .rv-dialog__actions {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
+    gap: 0.375rem;
+}
+
+.rv-dialog__actions .kp-button {
+    white-space: nowrap;
 }
 
 .rv-dialog__wide {
@@ -326,10 +840,73 @@
     border: 1px solid var(--border);
 }
 
+/* block.html: one catalogue block, nothing around it. */
+.rv-block {
+    margin: 0;
+    padding: 1rem;
+}
+
+.rv-previous__label {
+    margin: 0 0 0.5rem;
+    padding: 0.375rem 0.625rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    background: var(--info);
+    color: var(--info-foreground);
+}
+
+.rv-previous__frame {
+    display: block;
+    inline-size: 100%;
+    min-block-size: 12rem;
+    border: 1px dashed var(--border);
+}
+
+/* --- A phone: edge to edge, the header wraps under its title, the panel is a bottom sheet. Closed, the sheet is one bar
+   with Previous, Next and Approve under the stage, so it never covers the component; opened, it rises over the stage. */
 @media (max-width: 48rem) {
-    .rv-dialog {
-        inline-size: 100vw;
-        block-size: 100dvh;
+    dialog.rv-dialog.kp-dialog {
+        inset: 0;
+        border-width: 0;
+        border-radius: 0;
+    }
+
+    .rv-dialog__head {
+        flex-wrap: wrap;
+        padding: 0.25rem 0.25rem 0.375rem 0.5rem;
+        gap: 0.125rem 0.375rem;
+    }
+
+    .rv-head__pos {
+        padding-inline: 0.375rem;
+        font-size: 0.6875rem;
+    }
+
+    .rv-head__tools {
+        gap: 0.125rem;
+    }
+
+    .rv-dialog .rv-icon {
+        min-inline-size: 1.875rem;
+        block-size: 1.875rem;
+        padding-inline: 0.25rem;
+    }
+
+    .rv-head__title {
+        order: 10;
+        flex: 1 1 100%;
+        font-size: 0.9375rem;
+    }
+
+    .rv-head__theme + .rv-head__title::before {
+        content: none;
+    }
+
+    .rv-head__meta,
+    .rv-head__state,
+    .rv-remaining__all,
+    .rv-remaining__eta {
+        display: none !important;
     }
 
     .rv-dialog__grid {
@@ -338,83 +915,83 @@
     }
 
     .rv-dialog__stage {
-        padding: 0.75rem 16px;
+        padding: 0.25rem;
+        gap: 0.5rem;
+    }
+
+    .rv-lane__head {
+        padding-inline-start: 0.5rem;
     }
 
     .rv-dialog__side {
-        grid-template-rows: auto auto minmax(min-content, 1fr) auto auto;
-        max-block-size: 50dvh;
-        overflow: auto;
-        padding: 0.75rem 16px;
+        grid-template-rows: auto auto;
         border-inline-start: 0;
         border-block-start: 1px solid var(--border);
     }
 
-    #rv-keys {
+    .rv-sheet {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        inline-size: 100%;
+        padding: 0.25rem 0.75rem 0;
+        border: 0;
+        background: none;
+        color: var(--muted-foreground);
+        font: inherit;
+        font-size: 0.75rem;
+        cursor: pointer;
+    }
+
+    .rv-sheet__grip {
+        inline-size: 2.25rem;
+        block-size: 0.25rem;
+        border-radius: 999px;
+        background: var(--border-strong, var(--border));
+    }
+
+    .rv-dialog[data-rv-sheet='closed'] .rv-dialog__scroll {
         display: none;
+    }
+
+    .rv-dialog[data-rv-sheet='open'] .rv-dialog__side {
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: 0;
+        z-index: 10;
+        max-block-size: 85%;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        border-start-start-radius: 0.75rem;
+        border-start-end-radius: 0.75rem;
+        box-shadow: 0 -0.5rem 1.5rem color-mix(in srgb, var(--foreground) 22%, transparent);
+    }
+
+    .rv-dialog__scroll {
+        padding-block-end: 1rem;
+    }
+
+    .rv-dialog__foot {
+        border-block-start: 0;
+        padding: 0.375rem 0.5rem 0.5rem;
+    }
+
+    .rv-dialog__actions {
+        grid-template-columns: auto auto minmax(0, 1fr);
+    }
+
+    .rv-dialog__wide {
+        grid-column: auto;
+        white-space: normal !important;
+    }
+
+    .rvk-pop {
+        inset-inline: 0.5rem;
+        inline-size: auto;
     }
 }
 
-/* block.html: one catalogue block, nothing around it. */
-.rv-block {
-    margin: 0;
-    padding: 1rem;
-}
-
-.rv-row__choices {
-    display: grid;
-    gap: var(--kp-space-sm, 0.5rem);
-}
-
-.rv-choice {
-    margin: 0;
-    padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
-    border: 1px solid var(--border);
-    border-radius: var(--radius, 0.375rem);
-    display: grid;
-    gap: var(--kp-space-sm, 0.5rem);
-}
-
-.rv-choice legend {
-    padding-inline: var(--kp-space-xs, 0.25rem);
-    font-weight: 600;
-}
-
-.rv-choice__option {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: start;
-    gap: var(--kp-space-sm, 0.5rem);
-    cursor: pointer;
-}
-
-.rv-choice__option input {
-    margin-top: 0.2em;
-}
-
-.rv-choice__hint {
-    display: block;
-    font-size: 0.875em;
-    color: var(--muted-foreground);
-}
-
-/* A default set (defaults-1017): the default is set, the rest are switches. */
-.rv-choice__intro {
-    margin: 0;
-    font-size: 0.875em;
-    color: var(--muted-foreground);
-}
-
-.rv-choice__tag {
-    display: block;
-    font-size: 0.75em;
-    font-weight: 600;
-    color: var(--muted-foreground);
-}
-
-.rv-choice__option:has(input:checked) .rv-choice__tag {
-    color: var(--foreground);
-}
+/* ------------------------------------------------------------ aspect pages */
 
 /* One aspect per page (aspect mode): what is set aside stays out of view. */
 [data-review-off] {
@@ -605,30 +1182,25 @@
     font-weight: 600;
 }
 
-/* Beside a question an update opened again: the comment and the reply. */
+/* Beside a question an update opened again: the reply. A long one scrolls inside the box, so the pick and "None of these"
+   below it stay in reach (Kenny, 2026-10-07, terminal). Absent when there is none. */
 .rv-update {
     display: grid;
     gap: 0.35rem;
-    padding: 0.75rem;
+    padding: 0.625rem;
     border: 1px solid var(--border);
     border-inline-start-width: 4px;
     border-radius: var(--radius-sm, 4px);
-    background: var(--surface-2, var(--surface));
-    /* A long comment and reply scroll inside the box, so the pick and "None
-       of these" below it stay in reach (Kenny, 2026-10-07, terminal). */
+    background: var(--surface-2, var(--surface, var(--muted)));
     max-block-size: 30dvh;
     overflow: auto;
     overscroll-behavior: contain;
+    font-size: 0.8125rem;
 }
 
-.rv-update:not(:empty) {
-    min-block-size: min(7rem, max-content);
-}
-
+.rv-update[hidden],
 .rv-update:empty {
-    /* Keeps its row in the side's grid with nothing to show. */
-    padding: 0;
-    border: 0;
+    display: none;
 }
 
 .rv-update p {
@@ -647,532 +1219,4 @@
 
 [data-review-item][hidden] {
     display: none !important;
-}
-
-/* The tools over each section on stage (block-tools.js): one row above the section, the same place in every
-   section and every theme, so V, L and the speed sit where the eye expects them. */
-.rv-dialog__stage > .rv-tools {
-    position: sticky;
-    inset-block-start: 0;
-    z-index: 5;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-    margin-block: 0 0.75rem;
-    padding: 0.5rem 0;
-    background: var(--background);
-    border-block-end: 1px solid var(--border);
-}
-
-.rv-dialog__stage > section + .rv-tools,
-.rv-dialog__stage > .rv-previous + .rv-tools {
-    margin-block-start: 2rem;
-}
-
-.rv-tools[hidden],
-.rv-tools [hidden] {
-    display: none !important;
-}
-
-.rv-tools__motion {
-    display: inline-flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.rv-tools__speed {
-    display: inline-flex;
-    gap: 0.25rem;
-}
-
-.rv-tools__note {
-    flex: 1 1 12rem;
-}
-
-.rv-previous__label {
-    margin: 0 0 0.5rem;
-    padding: 0.375rem 0.625rem;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    background: var(--info);
-    color: var(--info-foreground);
-}
-
-.rv-previous__frame {
-    display: block;
-    inline-size: 100%;
-    min-block-size: 12rem;
-    border: 1px dashed var(--border);
-}
-
-/* A topic step (review.js, "Topic steps"): one theme of one topic, per section a heading and the section in that theme
-   in a frame at the full width of the stage. Each frame's head names its theme in the dialog's own type and sticks
-   under the mirrored controls while its section scrolls past, so the theme on screen is never in doubt. */
-.rv-topic + .rv-topic {
-    margin-block-start: 2.5rem;
-}
-
-.rv-topic__title {
-    margin: 0 0 0.75rem;
-    font-size: 1.125rem;
-}
-
-.rv-topic__lanes {
-    display: grid;
-    /* One theme per row at the full width of the stage (Kenny, 2026-10-16 17:06). */
-    grid-template-columns: minmax(0, 1fr);
-    gap: 1.25rem;
-    align-items: start;
-}
-
-.rv-lane {
-    min-inline-size: 0;
-    border: 1px solid var(--border);
-}
-
-.rv-lane--rejected {
-    border-color: var(--destructive);
-    box-shadow: inset 3px 0 0 var(--destructive);
-}
-
-.rv-lane__head {
-    position: sticky;
-    inset-block-start: 0;
-    z-index: 3;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.25rem 0.75rem;
-    padding: 0.375rem 0.625rem;
-    background: var(--muted);
-    border-block-end: 1px solid var(--border);
-}
-
-.rv-lane__name {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0 0.5rem;
-    margin: 0;
-    flex: 1 1 12rem;
-    min-inline-size: 0;
-}
-
-.rv-lane__theme {
-    font-size: 1rem;
-}
-
-.rv-lane__section {
-    font-size: 0.8125rem;
-    color: var(--muted-foreground);
-}
-
-.rv-lane__head > .rv-tools {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.25rem;
-}
-
-.rv-lane__head > .rv-tools .rv-tools__note:empty {
-    display: none;
-}
-
-.rv-lane__frame {
-    display: block;
-    inline-size: 100%;
-    block-size: var(--rv-lane-guess, 12rem);
-    border: 0;
-}
-
-.rv-dialog__list > .rv-list__group {
-    margin-block-start: 0.75rem;
-    padding-block: 0.25rem;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    text-transform: none;
-    color: var(--muted-foreground);
-    border-block-end: 1px solid var(--border);
-}
-
-.rv-dialog__list > .rv-list__group:first-child {
-    margin-block-start: 0;
-}
-
-/* On a phone the frame gets the height: the tools stay on one line beside the theme's name, scrolling sideways when
-   they do not fit. */
-@media (max-width: 48rem) {
-    .rv-topic__title {
-        margin-block-end: 0.5rem;
-    }
-
-    .rv-lane__head {
-        flex-wrap: nowrap;
-        padding: 0.25rem 0.5rem;
-    }
-
-    .rv-lane__name {
-        flex: 0 0 auto;
-    }
-
-    .rv-lane__section {
-        display: none;
-    }
-
-    .rv-lane__head > .rv-tools {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        min-inline-size: 0;
-    }
-
-    .rv-lane__head > .rv-tools > * {
-        flex: 0 0 auto;
-    }
-}
-
-.rv-choice__row {
-    display: grid;
-    gap: var(--kp-space-xs, 0.25rem);
-}
-
-.rv-choice__remove {
-    display: flex;
-    gap: var(--kp-space-xs, 0.25rem);
-    align-items: center;
-    padding-inline-start: 1.6em;
-    font-size: 0.8125em;
-    color: var(--muted-foreground);
-}
-
-/* ------------------------------------------------------------------------------------------------------------
-   Layout options (review.js, UI_OPTIONS; Kenny, 2026-10-18 15:15 and 15:17). Each is off by default, so a live part
-   looks as it did; every rule below applies only where its attribute is "on", on the dialog or on a frame's document. */
-
-/* The side's two wrappers take no box of their own until the slim column is on. */
-.rv-dialog__scroll,
-.rv-dialog__foot {
-    display: contents;
-}
-
-.rv-list__look {
-    list-style: none;
-    padding-block: 0.5rem;
-    border-block-end: 1px solid var(--border);
-}
-
-.rv-list__look .rv-row__look {
-    margin: 0;
-}
-
-.rv-jump,
-.rv-ui,
-.rv-dialog__view-menu {
-    font-size: 0.8125rem;
-}
-
-.rv-dialog__view-menu {
-    margin-inline-start: auto;
-}
-
-.rv-jump[hidden] {
-    display: none;
-}
-
-/* The View menu: the popover stays opaque and readable in every theme (the raised-plate rule). */
-.rv-ui {
-    position: fixed;
-    inset: auto;
-    inset-block-start: 3rem;
-    inset-inline-end: 0.75rem;
-    margin: 0;
-    inline-size: min(26rem, calc(100vw - 1.5rem));
-    max-block-size: calc(100dvh - 4rem);
-    overflow: auto;
-    padding: var(--kp-space-md, 1rem);
-    background: var(--background);
-    color: var(--foreground);
-    border: 1px solid var(--border);
-    border-radius: var(--radius, 6px);
-    box-shadow: 0 8px 24px rgb(0 0 0 / 0.25);
-}
-
-.rv-ui:not(:popover-open) {
-    display: none;
-}
-
-.rv-ui__title {
-    margin: 0;
-    font-weight: 600;
-}
-
-.rv-ui__note {
-    margin: 0.25rem 0 0.75rem;
-    color: var(--muted-foreground);
-}
-
-.rv-ui__list {
-    display: grid;
-    gap: 0.625rem;
-}
-
-.rv-ui__about {
-    margin: 0.125rem 0 0;
-    padding-inline-start: 1.6rem;
-    color: var(--muted-foreground);
-}
-
-/* fill: near-fullscreen, tight chrome */
-.rv-dialog[data-rvui-fill='on'] {
-    inline-size: 99vw;
-    block-size: 98.5dvh;
-}
-
-.rv-dialog[data-rvui-fill='on'] .rv-dialog__head {
-    padding: 0.375rem 3.25rem 0.375rem 0.75rem;
-    gap: 0.25rem 0.75rem;
-}
-
-.rv-dialog[data-rvui-fill='on'] .rv-dialog__head > h2 {
-    flex: 1 1 auto;
-    font-size: 1.0625rem;
-}
-
-.rv-dialog[data-rvui-fill='on'] .rv-dialog__close {
-    inset-block-start: 0.25rem;
-    inset-inline-end: 0.375rem;
-}
-
-.rv-dialog[data-rvui-fill='on'] .rv-dialog__stage {
-    padding: 0.5rem 0.625rem;
-}
-
-.rv-dialog[data-rvui-fill='on'] .rv-dialog__stage > * + * {
-    margin-block-start: 0.75rem;
-}
-
-.rv-dialog[data-rvui-fill='on'] .rv-topic__lanes {
-    gap: 0.625rem;
-}
-
-.rv-dialog[data-rvui-fill='on'] .rv-lane__head {
-    padding-block: 0.25rem;
-}
-
-/* The lines other modules put in the head (the key legend and the remaining line) share one row, so the head stays two rows. */
-.rv-dialog[data-rvui-fill='on'] .rvk-bar {
-    flex: 1 1 40rem;
-    order: 7;
-}
-
-.rv-dialog[data-rvui-fill='on'] .rv-remaining {
-    flex: 1 1 22rem;
-    order: 8;
-    text-align: end;
-}
-
-/* titles: each once */
-[data-rvui-titles='on'] [data-rv-dup-title] {
-    display: none !important;
-}
-
-.rv-dialog[data-rvui-titles='on'] .rv-topic__title {
-    position: absolute;
-    inline-size: 1px;
-    block-size: 1px;
-    margin: -1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-}
-
-.rv-dialog[data-rvui-titles='on'] .rv-lane__theme {
-    position: absolute;
-    inline-size: 1px;
-    block-size: 1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-}
-
-.rv-dialog[data-rvui-titles='on'] .rv-lane__section {
-    display: inline;
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--foreground);
-}
-
-/* controls: compact, flowing, label and buttons on one line */
-[data-rvui-controls='on'] .rv-ctl {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.25rem 1.25rem;
-    margin-block: 0.25rem;
-    padding: 0.25rem 0.625rem;
-}
-
-[data-rvui-controls='on'] .rv-ctl::before {
-    content: 'Controls';
-    flex: 0 0 auto;
-}
-
-[data-rvui-controls='on'] .rv-ctl [role='group'] {
-    flex: 0 1 auto;
-    gap: 0.25rem 0.375rem;
-}
-
-[data-rvui-controls='on'] .rv-ctl [role='group'] > b {
-    flex: 0 0 auto;
-}
-
-/* intro: the section's text and the frame run the full width */
-[data-rvui-intro='on'] .cat-main {
-    max-inline-size: none !important;
-    padding-block: 0.5rem !important;
-    padding-inline: 0.75rem !important;
-}
-
-[data-rvui-intro='on'] [data-review-item] :is(p, li, ul, ol, .kc-sec__head, [class*='-expect']) {
-    max-inline-size: none !important;
-}
-
-[data-rvui-intro='on'] [data-review-item] {
-    gap: var(--kp-space-sm, 0.5rem) !important;
-}
-
-/* rail: slimmer, with the step's actions pinned at its foot */
-.rv-dialog[data-rvui-rail='on'] {
-    --rv-rail: clamp(16rem, 17vw, 20rem);
-}
-
-.rv-dialog[data-rvui-rail='on'] .rv-dialog__side {
-    display: grid;
-    grid-template-rows: minmax(0, 1fr) auto;
-    gap: 0;
-    padding: 0;
-    overflow: hidden;
-}
-
-.rv-dialog[data-rvui-rail='on'] .rv-dialog__scroll {
-    display: grid;
-    align-content: start;
-    gap: 0.5rem;
-    min-block-size: 0;
-    overflow: auto;
-    overscroll-behavior: contain;
-    /* Room to scroll past the last row (as an editor does): at the very end of the column Firefox moves a pressed row by a few px when the focus changes, and the
-       press was lost (a note typed, then the last row's box pressed). The last row can now stand mid-column. */
-    padding: 0.625rem 0.75rem 40dvh;
-}
-
-.rv-dialog[data-rvui-rail='on'] .rv-dialog__foot {
-    display: grid;
-    gap: 0.375rem;
-    padding: 0.5rem 0.75rem;
-    border-block-start: 1px solid var(--border);
-    background: var(--background);
-}
-
-.rv-dialog[data-rvui-rail='on'] .rv-dialog__actions {
-    gap: 0.375rem;
-}
-
-.rv-dialog[data-rvui-rail='on'] .rv-dialog__actions .kp-button {
-    white-space: nowrap;
-}
-
-.rv-dialog[data-rvui-rail='on'] #rv-keys {
-    font-size: 0.75rem;
-}
-
-.rv-dialog[data-rvui-rail='on'] .rv-row {
-    padding-block: 0.375rem;
-}
-
-/* jump: chips in the header, the section in view marked */
-.rv-jump {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem;
-    min-inline-size: 0;
-}
-
-.rv-jump__chip {
-    white-space: normal;
-    text-align: start;
-}
-
-.rv-jump__chip[aria-current] {
-    outline: 2px solid var(--primary, var(--foreground));
-    outline-offset: 1px;
-}
-
-.rv-row[data-rv-current] {
-    /* A rule only: the row's box must not move, the boxes of the rows stand in one column. */
-    box-shadow: inset 3px 0 0 var(--primary, var(--foreground));
-}
-
-/* Under 1600 px the chips take a row of their own under the header, so the title and the buttons keep theirs. */
-@media (max-width: 100rem) {
-    .rv-jump {
-        flex: 1 1 100%;
-        order: 9;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-    }
-
-    .rv-jump__chip {
-        flex: 0 0 auto;
-        white-space: nowrap;
-    }
-}
-
-@media (max-width: 48rem) {
-    .rv-dialog[data-rvui-rail='on'] .rv-dialog__side {
-        max-block-size: 32dvh;
-    }
-
-    /* Keys mean nothing on a phone: the legend leaves the head there, the buttons and the remaining line stay. */
-    .rv-dialog[data-rvui-fill='on'] .rvk-legend {
-        display: none;
-    }
-
-    .rv-dialog[data-rvui-fill='on'] .rv-remaining {
-        text-align: start;
-    }
-
-    .rv-dialog[data-rvui-fill='on'] .rv-dialog__position {
-        font-size: 0.6875rem;
-        flex: 1 1 100%;
-    }
-
-    .rv-dialog[data-rvui-fill='on'] .rv-dialog__head > h2 {
-        flex: 1 1 8rem;
-    }
-
-    .rv-dialog[data-rvui-rail='on'] [data-rv-intro] {
-        display: none;
-    }
-
-    .rv-dialog[data-rvui-fill='on'] .rv-dialog__head > h2 {
-        font-size: 0.9375rem;
-    }
-
-    .rv-dialog[data-rvui-titles='on'] .rv-lane__section {
-        display: inline;
-    }
-
-    .rv-jump {
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        flex: 1 1 100%;
-        order: 9;
-    }
-
-    .rv-jump__chip {
-        flex: 0 0 auto;
-        white-space: nowrap;
-    }
 }

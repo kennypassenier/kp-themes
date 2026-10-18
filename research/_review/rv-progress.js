@@ -148,7 +148,8 @@ export function clock(seconds) {
 function stepsOf(doc, shape) {
     const sections = [...doc.querySelectorAll('[data-review-item]')];
     if (sections.length && sections.every((s) => s.getAttribute('data-review-mode') === 'aspects')) return null;
-    const asked = (/** @type {string} */ item, /** @type {string} */ theme) => !shape.itemThemes?.[item] || Boolean(shape.itemThemes[item]?.includes(theme));
+    const asked = (/** @type {string} */ item, /** @type {string} */ theme) =>
+        !shape.itemThemes?.[item] || Boolean(shape.itemThemes[item]?.includes(theme));
     const sub = (/** @type {string[]} */ themes, /** @type {string[]} */ items) => ({ ...shape, themes, items, extras: [] });
     const topicIds = new Set(sections.map((s) => s.getAttribute('data-review-topic')).filter(Boolean));
     const themesUsed = new Set(shape.items.flatMap((item) => shape.themes.filter((theme) => asked(item, theme))));
@@ -316,13 +317,14 @@ function keepResume(/** @type {string} */ id, /** @type {Resume} */ data) {
  *   openFirst: () => void,
  * }} kit
  */
-export function mountProgress({ demo, dialog, steps, getIndex, stepOpen, show, stage, openFirst }) {
+export function mountProgress({ demo, dialog, steps, getIndex, stepOpen, show, stage, openFirst, slot }) {
     ensureSheet();
     followOptions();
     const here = new URL(location.href);
     here.search = here.hash = '';
     const view = /** @type {HTMLElement} */ (stage.closest('.rv-dialog__view') ?? stage);
-    const head = /** @type {HTMLElement} */ (dialog.querySelector('.rv-dialog__head'));
+    // The dialog's header row hands a slot for the counts (review.js); without one the line goes at the end of the head.
+    const head = /** @type {HTMLElement} */ (slot ?? dialog.querySelector('.rv-dialog__head'));
     const line = document.createElement('p');
     line.className = 'rv-remaining';
     line.setAttribute('data-rv-remaining', '');
@@ -345,11 +347,25 @@ export function mountProgress({ demo, dialog, steps, getIndex, stepOpen, show, s
         const on = readOption('remaining');
         line.hidden = !on;
         if (!on) return;
+        // Compact in the header row (the step itself stands in the step chip beside it); the full sentence is the title and
+        // the accessible name, so nothing is lost.
         const step = `Step ${getIndex() + 1} of ${steps.length} here`;
         const part = counts.part ? `this part: ${counts.part.pairsLeft} of ${counts.part.pairs} pairs left` : 'this part: counting…';
         const all = counts.all ? `all open reviews: ${counts.all.pairsLeft} of ${counts.all.pairs} left` : 'all open reviews: counting…';
         const eta = counts.all ? etaWords(counts.all.stepsOpen) : '';
-        line.textContent = [step, part, all, eta].filter(Boolean).join(' · ');
+        const full = [step, part, all, eta].filter(Boolean).join(' · ');
+        line.replaceChildren();
+        const piece = (/** @type {string} */ text, /** @type {string} */ cls) => {
+            const span = document.createElement('span');
+            span.className = cls;
+            span.textContent = text;
+            line.append(span);
+        };
+        piece(counts.part ? `${counts.part.pairsLeft}/${counts.part.pairs} left here` : 'counting…', 'rv-remaining__part');
+        if (counts.all) piece(`${counts.all.pairsLeft}/${counts.all.pairs} in all reviews`, 'rv-remaining__all');
+        if (eta) piece(`~${clock((counts.all?.stepsOpen ?? 0) * (medianPace() ?? 0))}`, 'rv-remaining__eta');
+        line.title = full;
+        line.setAttribute('aria-label', full);
     }
 
     /* Step durations: seconds the dialog was open, visible and in use while a step was shown. */
