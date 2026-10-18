@@ -114,6 +114,12 @@ export const PAGES = [
             // Kenny, 2026-10-16 (kp-adopt-rest, round 2): eight things the admin dashboard still draws itself (action tiles, status rows, the facet list, the coverage heat grid, the reachability matrix, bars in table cells with data-kp-sort-value, the week agenda, the run timeline), built in the package first as ONE demo, formal only until Kenny approves it.
             // Kenny, 2026-10-16 (kp-adopt-rest, round 3): six things the dashboard still drew itself, each an opt-in option of an approved component (nav separator, choice-filter value, timeline day buttons and series legend, the week's next-N phone list, facet identity patterns, the heat grid's jump to the latest), formal only.
             // Kenny, 2026-10-18 (kpadopt5/6, other themes): the 79 sections of the fifth and sixth adoption rounds that he approved in formal, now asked in the eleven other themes (dark, cyberpunk, synthwave, pastel, forest, blueprint, solstice, brutalism, deco, nostromo, titanium), grouped by kind of component into eleven reviews of at most 99 pairs each, generated from research/kpadopt56/src by research/kpadopt56/build-parts.mjs.
+            // Kenny, 2026-10-19 (kp-themes 11.0.0 adoption, HTTPSwitchboard rows 8 and 10): one profile's settings as a key-value list with the retry budget against the lease as a meter, and the Recheck profiles flash button, its toasts and the per-profile recheck, formal only.
+            {
+                href: 'research/app-hsb-settings/demo.html',
+                label: 'HTTPSwitchboard: profile settings and recheck',
+                about: 'Whether a profile\'s settings read at a glance, with its retry budget against its lease as a bar, and whether the Recheck button, its toasts and the per-profile recheck feel right, in formal.',
+            },
         ],
     },
     {
