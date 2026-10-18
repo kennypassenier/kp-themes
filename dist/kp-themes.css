@@ -100765,14 +100765,8 @@
     }
 }
 
-/* ── The new adoption parts in solstice [t56-solstice-1018] ──
-   A full digest is one unbroken run of hex: in the serif-set badge it ran 3 px past the badge's own edge, so it is allowed
-   to break anywhere (a version number still breaks only where it was given a place to). */
+/* ── The new adoption parts in solstice [t56-solstice-1018] ── */
 @layer kp.signature {
-    [data-theme='solstice'] .kp-badge--version[data-kp-version-digest='full'] :is(.kp-version__from, .kp-version__to) {
-        overflow-wrap: anywhere;
-    }
-
     /* A bubble is a plate lit from below (G7): the foot edge catching the low light and a faint rust wash rising from it;
        the sender's own bubble is lit warmer (the amber wash), the words stand above the wash. */
     [data-theme='solstice'] .kp-thread__bubble {
@@ -100792,14 +100786,6 @@
         --kp-so-foot: var(--destructive);
     }
 
-
-    /* A checklist row's detail wraps in a narrow row instead of crowding the label out (print checklist at 390 px: the label
-       was 0 to 25 px wide). */
-    [data-theme='solstice'] .kp-checklist__detail {
-        max-inline-size: 11rem;
-        overflow-wrap: anywhere;
-        white-space: normal;
-    }
 
     /* A table in a phone-wide box keeps its last column inside the box: tighter cells, so the words never touch the edge. */
     @media (max-width: 30rem) {
