@@ -23077,6 +23077,18 @@ function s(doc, tag, attrs = {}) {
   for (const [k, v] of Object.entries(attrs)) if (v != null) el14.setAttribute(k, String(v));
   return el14;
 }
+function keepEndsInside(labels, width, inset = 4) {
+  if (labels.length === 0) return;
+  const first = labels[0];
+  const last = labels[labels.length - 1];
+  try {
+    const a = first.getBBox();
+    if (a.width > 0 && a.x < inset) first.setAttribute("text-anchor", "start");
+    const b = last.getBBox();
+    if (b.width > 0 && b.x + b.width > width - inset) last.setAttribute("text-anchor", "end");
+  } catch {
+  }
+}
 function decorateWith(decorate2, part7, info) {
   if (!decorate2) return;
   const clean = {};
@@ -23483,10 +23495,15 @@ function plotChart(host, group, locale, ctx) {
     const axisKey = `${from} ${to} ${most} ${ctx.timeZone}`;
     if (axisKey !== axisMemo.key) axisMemo = { key: axisKey, axis: timeTicks(from, to, most, ctx.timeZone) };
     const { axis } = axisMemo;
+    const axisLabels = [];
     for (const t2 of axis.ticks) {
-      const tick6 = s(doc, "text", { class: "kp-chart__tick", x: x(t2), y: H - 6, "text-anchor": "middle" });
+      const tick6 = (
+        /** @type {SVGTextElement} */
+        s(doc, "text", { class: "kp-chart__tick", x: x(t2), y: H - 6, "text-anchor": "middle" })
+      );
       tick6.textContent = time(t2, "tick", { stride: axis.stride });
       svg2.append(tick6);
+      axisLabels.push(tick6);
     }
     const g = s(doc, "g", { "clip-path": `url(#${clip})` });
     svg2.append(g);
@@ -23664,6 +23681,7 @@ function plotChart(host, group, locale, ctx) {
       });
     }
     plot.replaceChildren(svg2);
+    keepEndsInside(axisLabels, W);
     geo = { x, inv: (px4) => from + (px4 - P.l) / (W - P.l - P.r) * (to - from), W, P, from, to, svg: svg2 };
     paintKey(opt3);
     const aria = [strings.plot(label())];

@@ -903,6 +903,28 @@ function s(doc, tag, attrs = {}) {
 }
 
 /**
+ * The axis labels are centred on their ticks, which puts half of the first and of the last one outside the drawing when a tick
+ * stands near an edge. Those two are anchored to their tick instead (the first starts at it, the last ends at it), so no label
+ * crosses the edge and the plot keeps its width. Needs the labels laid out; a hidden chart keeps them centred.
+ * @param {readonly SVGTextElement[]} labels the axis labels, left to right, already in the document
+ * @param {number} width the drawing's width
+ * @param {number} [inset] the least room kept between a label and the edge
+ */
+function keepEndsInside(labels, width, inset = 4) {
+    if (labels.length === 0) return;
+    const first = labels[0];
+    const last = labels[labels.length - 1];
+    try {
+        const a = first.getBBox();
+        if (a.width > 0 && a.x < inset) first.setAttribute('text-anchor', 'start');
+        const b = last.getBBox();
+        if (b.width > 0 && b.x + b.width > width - inset) last.setAttribute('text-anchor', 'end');
+    } catch {
+        // not laid out (display: none): nothing to measure, the labels stay centred
+    }
+}
+
+/**
  * Hand a control to the page's `decorate`, the info without its empty
  * fields. A throwing decorate is the page's fault and must not stop the
  * chart drawing.
@@ -1594,10 +1616,13 @@ function plotChart(host, group, locale, ctx) {
         const axisKey = `${from} ${to} ${most} ${ctx.timeZone}`;
         if (axisKey !== axisMemo.key) axisMemo = { key: axisKey, axis: timeTicks(from, to, most, ctx.timeZone) };
         const { axis } = axisMemo;
+        /** @type {SVGTextElement[]} */
+        const axisLabels = [];
         for (const t of axis.ticks) {
-            const tick = s(doc, 'text', { class: 'kp-chart__tick', x: x(t), y: H - 6, 'text-anchor': 'middle' });
+            const tick = /** @type {SVGTextElement} */ (s(doc, 'text', { class: 'kp-chart__tick', x: x(t), y: H - 6, 'text-anchor': 'middle' }));
             tick.textContent = time(t, 'tick', { stride: axis.stride });
             svg.append(tick);
+            axisLabels.push(tick);
         }
         const g = s(doc, 'g', { 'clip-path': `url(#${clip})` });
         svg.append(g);
@@ -1785,6 +1810,7 @@ function plotChart(host, group, locale, ctx) {
             });
         }
         plot.replaceChildren(svg);
+        keepEndsInside(axisLabels, W);
         geo = { x, inv: (px) => from + ((px - P.l) / (W - P.l - P.r)) * (to - from), W, P, from, to, svg };
         paintKey(opt);
         const aria = [strings.plot(label())];
