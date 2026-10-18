@@ -433,6 +433,17 @@
         padding-inline: 0.9rem;
     }
 
+    /* "Mark unread" is 133 px wide with the capitals and the 0.08em tracking: the package's 7.5rem read column cut it by 6 px
+       behind the button's own clip. */
+    [data-theme='deco'] .kp-notices {
+        --kp-notices-read-col: 9rem;
+    }
+
+    /* The code box's "Show all N lines" took the width its words wrapped to and the clip cut 5 to 9 px of them at 390 px. */
+    [data-theme='deco'] .kp-code__foot .kp-button {
+        min-inline-size: max-content;
+    }
+
     [data-theme='deco'] .kp-button--lg {
         font-size: 0.95rem;
         padding-inline: 1.7rem;
