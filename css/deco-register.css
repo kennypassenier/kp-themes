@@ -2695,6 +2695,9 @@
     /* The empty state: no crest (Q19), its title in capitals. */
     [data-theme='deco'] .kp-empty {
         display: grid;
+        /* The grid's rows stretched over a tall plate (dated-states: the title at the top, the button at the foot);
+           the package's own empty plates are flex columns centred in the middle. */
+        align-content: center;
         justify-items: center;
         gap: 0.3rem;
         padding: 1.2rem 1.1rem;
@@ -2708,6 +2711,12 @@
     [data-theme='deco'] .kp-empty__title {
         font-size: 1.05rem;
         letter-spacing: var(--kp-sig-deco-title-track);
+    }
+
+    /* An empty plate that fills its whole component is set at heading size (the package's 1.125rem; the rule above made it
+       1.05rem, a small line in a large plate). */
+    [data-theme='deco'] .kp-empty__title:is(.kp-dated__empty-title, .kp-runs__empty-title, .kp-passkeys__note-title, .kp-thread__note-title) {
+        font-size: 1.375rem;
     }
 
     /* The dialog: lacquer, the double rule under its title (the dialog is
