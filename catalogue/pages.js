@@ -93,6 +93,12 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
+            // Kenny, 2026-10-19 (synth-alert-1019): two rulings disagree about the buttons on a synthwave red alert (scope-94 "Alleen Try again", 2026-09-15; round t56 dark keys, approved 2026-10-18). One section, five red-alert contexts, one option at the component to flip between the rulings. Hand-written page: research/synth-alert-buttons.
+            {
+                href: 'research/synth-alert-buttons/demo.html',
+                label: 'Synthwave: buttons on a red alert, dark keys everywhere or only on the named plates',
+                about: 'Your September ruling (only the data table\'s Try again takes the alert\'s ink, every other button keeps its pink frame) and the dark keys you approved on 18/10 disagree for the plain Try again and any plain red alert. 1 section (1 pair, synthwave): five red alerts one under the other, and an option to see each ruling.',
+            },
             // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
             // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             // Kenny, 2026-10-08 (update 1): deco's grammar did not convince him ("fancy, distinguished … lots of gold accents and fancy blue backgrounds … elegance without being too in your face"); thirteen questions redrawn as thin gold on lacquer with the wallpaper, his six picks kept.
