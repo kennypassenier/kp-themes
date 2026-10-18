@@ -130,7 +130,12 @@ export function extractKnobs(source = readFileSync(FILE, 'utf8')) {
     // AR26: the universe is every `--kp-*` the file contains, comments
     // included — a knob mentioned only in a comment is still a knob
     // somebody wrote down, and it has to be accounted for by name.
-    for (const match of source.matchAll(/--kp-[a-z0-9-]+/g)) knob(match[0]);
+    // A wildcard fragment in prose (`--kp-seg-*`, `--kp-toolbar-{a,b}`) is a
+    // family reference, not a knob: a name ending in `-` or followed by `*`.
+    for (const match of source.matchAll(/--kp-[a-z0-9-]+/g)) {
+        if (match[0].endsWith('-') || source[(match.index ?? 0) + match[0].length] === '*') continue;
+        knob(match[0]);
+    }
 
     const all = [...knobs.values()].sort((a, b) => a.name.localeCompare(b.name));
     return {

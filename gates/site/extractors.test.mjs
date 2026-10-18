@@ -293,7 +293,9 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // The peek strip's two, --kp-sidenav-peek (the strip's width) and --kp-sidenav-peek-surface, both read through var(): 354 + 2.
     // The action slot's two, its gap and its width, both read through var(): 356 + 2.
     // The resize handle's width, --kp-sidenav-resizer-size (the behaviour options, merged): 358 + 1.
-    assert.equal(result.expected, 359, 'AR21 counted the --kp-* properties in css/components.css');
+    // Re-pinned 2026-10-18 [gatefaults-1018]: the file had grown to 944 distinct names (the pin stopped at 359 after
+    // the sidenav rows). Comment wildcards such as `--kp-seg-*` are no longer counted, so every name is a real knob.
+    assert.equal(result.expected, 944, 'AR21 counted the --kp-* properties in css/components.css');
     // Every one of them is read through var(). The single exception used
     // to be --kp-breakpoint-narrow, which a media query cannot read, so
     // its value was repeated in the query [TH26]; R3 replaced that query
@@ -354,11 +356,22 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // And the peek strip's two: 349 + 2.
     // And the action slot's two: 351 + 2.
     // And the resize handle's width, --kp-sidenav-resizer-size, read through var(): 353 + 1.
-    assert.equal(result.readCount, 354);
+    assert.equal(result.readCount, 936);
     // `--kp-chart-height` is read by js/chart.js (the plot's height when the
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).
-    assert.deepEqual(result.unread, ['--kp-busy-opacity', '--kp-chart-height', '--kp-sidenav-lead', '--kp-sidenav-room', '--kp-steps']);
+    // The four that no rule and no script reads yet stay listed: --kp-busy-opacity, --kp-inspector-min, --kp-week-mode and
+    // --kp-wheel-ease; --kp-steps is declared on the progress stripe and only named in a comment.
+    assert.deepEqual(result.unread, [
+        '--kp-busy-opacity',
+        '--kp-chart-height',
+        '--kp-inspector-min',
+        '--kp-sidenav-lead',
+        '--kp-sidenav-room',
+        '--kp-steps',
+        '--kp-week-mode',
+        '--kp-wheel-ease',
+    ]);
 });
 
 test('AR21: a knob read in a nested rule is placed by the rule, not by its name', () => {
