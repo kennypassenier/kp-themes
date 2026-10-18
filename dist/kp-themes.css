@@ -26057,6 +26057,9 @@
         container: kp-inspector / inline-size;
         display: grid;
         grid-template-columns: minmax(0, 1fr);
+        /* The toolbar keeps its own height and the stage takes whatever the footprint hold (js/footprint.js) adds: with two
+         * auto rows the held minimum was shared between them and the toolbar floated in a tall band. */
+        grid-template-rows: auto minmax(0, 1fr);
         gap: var(--kp-space-sm, 0.5rem);
         min-inline-size: 0;
     }

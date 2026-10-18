@@ -186,6 +186,18 @@ const shows = (item) => {
     const stack = live?.querySelector('[name="stack"]')?.closest('.kp-sentence__field');
     const apply = (/** @type {string} */ state) => {
         if (!live || !stack) return;
+        // Paused: the fieldset, its reason line and the save button go off together; any other state turns them back on.
+        const paused = state === 'paused';
+        live.toggleAttribute('disabled', paused);
+        document.getElementById('kt-sentence-live-save')?.toggleAttribute('disabled', paused);
+        let why = live.querySelector('.kp-sentence__reason');
+        if (paused && !why) {
+            why = document.createElement('p');
+            why.className = 'kp-sentence__reason';
+            why.textContent = 'The schedule is paused';
+            live.append(why);
+        }
+        if (why) /** @type {HTMLElement} */ (why).hidden = !paused;
         setSentenceFieldState(stack, state === 'loading' ? 'loading' : 'ready');
         setSentenceInvalid(live, 'at', state === 'invalid' ? 'Type a time of day, 00:00 to 23:59.' : null);
     };
