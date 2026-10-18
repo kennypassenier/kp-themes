@@ -1,4 +1,379 @@
 {
     "demo": "kpadopt56-confirm",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "confirm-af597796-60dd-47c5-bc90-c61a153958ac",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 19:08: 88 of 88 judged, 88 approved, 0 not approved. undo-toast-clock dark: in the not-approved list but marked \"toch goedgekeurd\" (approved anyway); recorded as approved with his note.",
+            "approved": [
+                {
+                    "item": "unsaved",
+                    "theme": "dark"
+                },
+                {
+                    "item": "unsaved",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "unsaved",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "unsaved",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "unsaved",
+                    "theme": "forest"
+                },
+                {
+                    "item": "unsaved",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "unsaved",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "unsaved",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "unsaved",
+                    "theme": "deco"
+                },
+                {
+                    "item": "unsaved",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "unsaved",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "unsaved-states",
+                    "theme": "dark"
+                },
+                {
+                    "item": "unsaved-states",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "unsaved-states",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "unsaved-states",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "unsaved-states",
+                    "theme": "forest"
+                },
+                {
+                    "item": "unsaved-states",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "unsaved-states",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "unsaved-states",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "unsaved-states",
+                    "theme": "deco"
+                },
+                {
+                    "item": "unsaved-states",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "unsaved-states",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "undo-toast",
+                    "theme": "dark"
+                },
+                {
+                    "item": "undo-toast",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "undo-toast",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "undo-toast",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "undo-toast",
+                    "theme": "forest"
+                },
+                {
+                    "item": "undo-toast",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "undo-toast",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "undo-toast",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "undo-toast",
+                    "theme": "deco"
+                },
+                {
+                    "item": "undo-toast",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "undo-toast",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "undo-toast-clock",
+                    "theme": "dark"
+                },
+                {
+                    "item": "undo-toast-clock",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "undo-toast-clock",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "undo-toast-clock",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "undo-toast-clock",
+                    "theme": "forest"
+                },
+                {
+                    "item": "undo-toast-clock",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "undo-toast-clock",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "undo-toast-clock",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "undo-toast-clock",
+                    "theme": "deco"
+                },
+                {
+                    "item": "undo-toast-clock",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "undo-toast-clock",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "result-flash-button",
+                    "theme": "dark"
+                },
+                {
+                    "item": "result-flash-button",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "result-flash-button",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "result-flash-button",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "result-flash-button",
+                    "theme": "forest"
+                },
+                {
+                    "item": "result-flash-button",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "result-flash-button",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "result-flash-button",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "result-flash-button",
+                    "theme": "deco"
+                },
+                {
+                    "item": "result-flash-button",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "result-flash-button",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "question",
+                    "theme": "dark"
+                },
+                {
+                    "item": "question",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "question",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "question",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "question",
+                    "theme": "forest"
+                },
+                {
+                    "item": "question",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "question",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "question",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "question",
+                    "theme": "deco"
+                },
+                {
+                    "item": "question",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "question",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "selection-bar",
+                    "theme": "dark"
+                },
+                {
+                    "item": "selection-bar",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "selection-bar",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "selection-bar",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "selection-bar",
+                    "theme": "forest"
+                },
+                {
+                    "item": "selection-bar",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "selection-bar",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "selection-bar",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "selection-bar",
+                    "theme": "deco"
+                },
+                {
+                    "item": "selection-bar",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "selection-bar",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "selection-bar-place",
+                    "theme": "dark"
+                },
+                {
+                    "item": "selection-bar-place",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "selection-bar-place",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "selection-bar-place",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "selection-bar-place",
+                    "theme": "forest"
+                },
+                {
+                    "item": "selection-bar-place",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "selection-bar-place",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "selection-bar-place",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "selection-bar-place",
+                    "theme": "deco"
+                },
+                {
+                    "item": "selection-bar-place",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "selection-bar-place",
+                    "theme": "titanium"
+                }
+            ],
+            "notApproved": [],
+            "choices": [],
+            "approvedWithNote": [
+                {
+                    "item": "undo-toast-clock",
+                    "theme": "dark",
+                    "note": "compare the four clocks liet ze allemaal verschijnen, maar ook heel snel weer verdwijnen, maar is niet super belangrijk, toch goedgekeurd"
+                },
+                {
+                    "item": "selection-bar-place",
+                    "theme": "dark",
+                    "note": "floating at the foot, ik zie de balk nergens?"
+                }
+            ]
+        }
+    ]
 }

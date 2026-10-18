@@ -136,40 +136,15 @@ export const PAGES = [
                 about: 'What an update list needs: the size of a version jump, a tick before it may start, what needs what, and how often the list refreshes. 7 sections (77 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
             },
             {
-                href: 'research/kpadopt56-confirm/demo.html',
-                label: 'Fifth and sixth adoption rounds in the other themes, part 6 of 14: Saving, undoing and answering',
-                about: 'What happens after you act: the unsaved-changes bar, a toast with Undo, a button that shows its result, a question that waits for your answer, and the bar over a selection. 8 sections (88 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
-            },
-            {
                 href: 'research/kpadopt56-lists/demo.html',
                 label: 'Fifth and sixth adoption rounds in the other themes, part 7 of 14: Lists, records and pages',
                 about: 'Rows and what sits in them: ticking with the keyboard, who brings what, a list with its detail, new lines on a live list, payloads, requests, a console, and the frame of a dashboard page. 8 sections (88 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
-            },
-            {
-                href: 'research/kpadopt56-pages/demo.html',
-                label: 'Fifth and sixth adoption rounds in the other themes, part 8 of 14: Requests, consoles and pages',
-                about: 'Looking into a request, a console with a prompt and a block per command, and the frame of a dashboard page. 5 sections (55 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
             },
             {
                 href: 'research/kpadopt56-status/demo.html',
                 rework: 'by-eye findings of 2026-10-18 being fixed (research/kpadopt56/EYE_FINDINGS.md); it joins the Agenda as soon as its part is done',
                 label: 'Fifth and sixth adoption rounds in the other themes, part 9 of 14: Messages and status',
                 about: 'Telling the reader what is going on: a problem with its reason and its remedy, the offline banner, a transfer with its time left, the notification centre, the line under a heading, and the today card. 7 sections (77 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
-            },
-            {
-                href: 'research/kpadopt56-calm/demo.html',
-                label: 'Fifth and sixth adoption rounds in the other themes, part 10 of 14: Calm screens',
-                about: 'A quiet daily check-in: calm mode, calm days, the quote card and questions one per screen. 8 sections (88 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
-            },
-            {
-                href: 'research/kpadopt56-charts/demo.html',
-                label: 'Fifth and sixth adoption rounds in the other themes, part 11 of 14: Charts and maps',
-                about: 'Drawings of data: chart markers and a median line, what uses what, and the path of a connection. 7 sections (77 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
-            },
-            {
-                href: 'research/kpadopt56-availability/demo.html',
-                label: 'Fifth and sixth adoption rounds in the other themes, part 12 of 14: Who can come',
-                about: 'People over days or periods, in five sections of the same grid: its states, how people answer, the best column, the rows and the summary, and the phone and density. 5 sections (55 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
             },
             {
                 href: 'research/kpadopt56-media/demo.html',
@@ -181,12 +156,6 @@ export const PAGES = [
                 label: 'Fifth and sixth adoption rounds in the other themes, part 14 of 14: People and cards',
                 about: 'Who is who: the avatar, the list of ways to sign in, the conversation in bubbles, and the entity card. 8 sections (88 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
             },
-            // Kenny, 2026-10-18 (formal again): components he approved in formal whose shared package code changed afterwards (the refresh bar and request filter stay in their card, a scrolling segmented bar snaps and fades, the version badge and checklist detail wrap, entity actions fold into More, the chart's end labels stay inside the plot, the availability answers stand under the name), judged again in formal alone, generated from research/kpadopt56/src by research/kpadopt56-formal/build.mjs.
-            {
-                href: 'research/kpadopt56-formal/demo.html',
-                label: 'Approved in formal, changed since: judge it again',
-                about: 'Eleven components you approved in formal that look different now because the shared package code changed: bars that scroll sideways at phone width, version badges, checklist detail, entity card actions, chart labels and the availability grid. Each says what changed and what to check; a width switch shows 1280 and 390.',
-            },
         ],
     },
     {
@@ -197,6 +166,42 @@ export const PAGES = [
         // Decided demos stay reachable from the Agenda's Done list, not from the side navigation (Kenny, 2026-10-13).
         nav: false,
         pages: [
+            // Decided 2026-10-18 19:08: Kenny approved every pages pair in the eleven themes (research/kpadopt56-pages/decided.json).
+            {
+                href: 'research/kpadopt56-pages/demo.html',
+                label: 'Fifth and sixth adoption rounds in the other themes, part 8 of 14: Requests, consoles and pages',
+                about: 'Looking into a request, a console with a prompt and a block per command, and the frame of a dashboard page. 5 sections (55 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+            },
+            // Decided 2026-10-18 19:08: Kenny approved every charts pair in the eleven themes (research/kpadopt56-charts/decided.json).
+            {
+                href: 'research/kpadopt56-charts/demo.html',
+                label: 'Fifth and sixth adoption rounds in the other themes, part 11 of 14: Charts and maps',
+                about: 'Drawings of data: chart markers and a median line, what uses what, and the path of a connection. 7 sections (77 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+            },
+            // Decided 2026-10-18 19:08: Kenny approved every calm pair in the eleven themes (research/kpadopt56-calm/decided.json).
+            {
+                href: 'research/kpadopt56-calm/demo.html',
+                label: 'Fifth and sixth adoption rounds in the other themes, part 10 of 14: Calm screens',
+                about: 'A quiet daily check-in: calm mode, calm days, the quote card and questions one per screen. 8 sections (88 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+            },
+            // Decided 2026-10-18 19:08: Kenny approved every availability pair in the eleven themes (research/kpadopt56-availability/decided.json).
+            {
+                href: 'research/kpadopt56-availability/demo.html',
+                label: 'Fifth and sixth adoption rounds in the other themes, part 12 of 14: Who can come',
+                about: 'People over days or periods, in five sections of the same grid: its states, how people answer, the best column, the rows and the summary, and the phone and density. 5 sections (55 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+            },
+            // Decided 2026-10-18 19:08: Kenny approved every confirm pair in the eleven themes (research/kpadopt56-confirm/decided.json).
+            {
+                href: 'research/kpadopt56-confirm/demo.html',
+                label: 'Fifth and sixth adoption rounds in the other themes, part 6 of 14: Saving, undoing and answering',
+                about: 'What happens after you act: the unsaved-changes bar, a toast with Undo, a button that shows its result, a question that waits for your answer, and the bar over a selection. 8 sections (88 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+            },
+            // Decided 2026-10-18 18:42: Kenny approved every formal re-review section over two rounds (research/kpadopt56-formal/decided.json).
+            {
+                href: 'research/kpadopt56-formal/demo.html',
+                label: 'Approved in formal, changed since: judge it again',
+                about: 'Eleven components you approved in formal that look different now because the shared package code changed: bars that scroll sideways at phone width, version badges, checklist detail, entity card actions, chart labels and the availability grid. Each says what changed and what to check; a width switch shows 1280 and 390.',
+            },
             // Decided 2026-10-18 01:21: Kenny approved every kpadopt6 ops part in formal, defaults kept (research/kpadopt6-ops/decided.json).
             {
                 href: 'research/kpadopt6-ops/demo.html',
