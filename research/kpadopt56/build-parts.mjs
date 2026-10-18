@@ -121,9 +121,11 @@ const PARTS = [
             ['kpadopt5-time', 'unsaved'],
             ['kpadopt5-time', 'unsaved-states'],
             ['kpadopt5-rows', 'undo-toast'],
+            ['kpadopt5-rows', 'undo-toast-clock'],
             ['kpadopt5-basics', 'result-flash-button'],
             ['kpadopt5-ops', 'question'],
             ['kpadopt5-rows', 'selection-bar'],
+            ['kpadopt5-rows', 'selection-bar-place'],
         ],
     },
     {

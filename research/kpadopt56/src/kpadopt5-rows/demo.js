@@ -174,8 +174,7 @@ const STACKS = [
 const PINNED = new Set(STACKS.filter((s) => s[3]).map((s) => String(s[0])));
 
 function renderStacks() {
-    const body = $('[data-k5-stacks]');
-    if (body)
+    for (const body of $$('[data-k5-stacks]'))
         for (const [name, host, status, pinned] of STACKS) {
             const row = make('tr', '');
             row.dataset.kpRowKey = String(name);
@@ -186,8 +185,7 @@ function renderStacks() {
                 <td data-label="Status">${status}</td>`;
             body.append(row);
         }
-    const cards = $('[data-k5-stacks-cards]');
-    if (cards)
+    for (const cards of $$('[data-k5-stacks-cards]'))
         for (const [name, host, status, pinned] of STACKS.slice(0, 6)) {
             const li = make('li', '');
             li.dataset.kpRowKey = String(name);
@@ -199,12 +197,12 @@ function renderStacks() {
         }
 }
 
-function wireStacks() {
-    const bar = $('#k5-bar');
-    const phoneBar = $('#k5-bar-phone');
-    if (!bar) return;
+/** Wires one selection-bar section: its bar, its phone bar, its toast bed and its buttons (a section that is not on the page is skipped). @param {HTMLElement} bar */
+function wireStacks(bar) {
+    const section = bar.closest('section') ?? document.body;
+    const phoneBar = $('[data-k5-bar-phone]', section);
     const state = { outcome: 'ok' };
-    const bed = () => $('[data-k5-bed="selection"]');
+    const bed = () => $('[data-k5-bed="selection"]', section);
     onReady(() => {
         for (const b of [bar, phoneBar]) {
             if (!b) continue;
@@ -219,9 +217,10 @@ function wireStacks() {
     document.addEventListener('kp-selection-action', (event) => {
         const e = /** @type {CustomEvent<{ action: string, keys: string[], undoMs: number }>} */ (event);
         const target = /** @type {HTMLElement} */ (e.target);
+        if (!section.contains(target)) return;
         const { action, keys, undoMs } = e.detail;
         if (action === 'delete') {
-            const rows = keys.flatMap((k) => $$(`[data-kp-row-key="${k}"]`));
+            const rows = keys.flatMap((k) => $$(`[data-kp-row-key="${k}"]`, section));
             for (const row of rows) {
                 const box = /** @type {HTMLInputElement | null} */ ($('[data-kp-select-row]', row));
                 if (box?.checked) {
@@ -249,7 +248,7 @@ function wireStacks() {
         }, 1600);
     });
     document.addEventListener('click', (event) => {
-        const target = event.target instanceof Element ? event.target : null;
+        const target = event.target instanceof Element && section.contains(event.target) ? event.target : null;
         const placement = target?.closest('[data-k5-placement]');
         if (placement) {
             pick(/** @type {HTMLElement} */ (placement));
@@ -271,7 +270,7 @@ function wireStacks() {
             state.outcome = outcome.getAttribute('data-k5-outcome') ?? 'ok';
         }
         if (target?.closest('[data-k5-stacks-reset]'))
-            for (const row of $$('[data-kp-row-key]', document)) if (row.closest('#k5-stacks, #k5-stacks-cards')) row.hidden = false;
+            for (const row of $$('[data-kp-row-key]', section)) if (row.closest('[data-kp-datatable], [data-k5-stacks-cards]')) row.hidden = false;
     });
 }
 
@@ -285,13 +284,13 @@ const SCHEDULES = [
     ['Cache cleanup', 'every 6 hours'],
 ];
 
-function wireSchedules() {
-    const list = $('[data-k5-schedules]');
-    if (!list) return;
+/** Wires one schedules list with its own buttons, log and toast beds. @param {HTMLElement} list */
+function wireSchedules(list) {
+    const section = list.closest('section') ?? document.body;
     const state = { clock: 'ring', ms: 6000, mode: 'defer', server: 'ok' };
-    const log = $('[data-k5-server-log]');
+    const log = $('[data-k5-server-log]', section);
     const say = (/** @type {string} */ text) => log && (log.textContent = `${clock(new Date())} ${text}`);
-    const bed = () => $('[data-k5-bed="undo"]');
+    const bed = () => $('[data-k5-bed="undo"]', section);
     for (const [name, when] of SCHEDULES) {
         const li = make('li', '');
         li.innerHTML = `<span></span><span><span class="k5-cards__title"></span><span class="k5-cards__meta"></span></span><button type="button" class="kp-button kp-button--sm kp-button--destructive">Delete</button>`;
@@ -331,7 +330,7 @@ function wireSchedules() {
         );
     });
     document.addEventListener('click', (event) => {
-        const target = event.target instanceof Element ? event.target : null;
+        const target = event.target instanceof Element && section.contains(event.target) ? event.target : null;
         for (const [attr, key] of /** @type {const} */ ([
             ['data-k5-clock', 'clock'],
             ['data-k5-ms', 'ms'],
@@ -349,7 +348,7 @@ function wireSchedules() {
             for (const kind of /** @type {const} */ (['ring', 'bar', 'text', 'none'])) {
                 undoToast(`Compare: the ${kind === 'bar' ? 'rule' : kind} clock`, { region: bed(), clock: kind, ms: state.ms, max: 4 });
             }
-            undoToast('Nightly backup deleted', { region: $('[data-k5-bed="undo-phone"]'), clock: 'ring', ms: state.ms, max: 2 });
+            undoToast('Nightly backup deleted', { region: $('[data-k5-bed="undo-phone"]', section), clock: 'ring', ms: state.ms, max: 2 });
         }
     });
 }
@@ -811,8 +810,8 @@ renderOrders();
 renderStacks();
 renderPayloads();
 wireOrders();
-wireStacks();
-wireSchedules();
+for (const bar of $$('[data-k5-bar]')) wireStacks(bar);
+for (const list of $$('[data-k5-schedules]')) wireSchedules(list);
 wireLogs();
 wirePayloads();
 wireJson();

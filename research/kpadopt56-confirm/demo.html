@@ -8,7 +8,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>kpadopt5 and 6 in the other themes, part 5 of 11: Saving, undoing and answering</title>
+        <title>kpadopt5 and 6 in the other themes, part 5 of 12: Saving, undoing and answering</title>
         <link rel="stylesheet" href="../../css/fonts.css" />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
@@ -41,10 +41,10 @@
 
         <main id="main" class="cat-main k56-page">
             <header class="k56-intro">
-                <h1>The fifth and sixth adoption rounds, part 5 of 11: Saving, undoing and answering</h1>
+                <h1>The fifth and sixth adoption rounds, part 5 of 12: Saving, undoing and answering</h1>
                 <p class="cat-intro">
                     Formal is approved. What happens after you act: the unsaved-changes bar, a toast with Undo, a button that shows its result, a
-                    question that waits for your answer, and the bar over a selection. This part asks the eleven other themes for 6 sections (66
+                    question that waits for your answer, and the bar over a selection. This part asks the eleven other themes for 8 sections (88
                     pairs), one theme per step in the review dialog. The sections were approved in formal in several rounds; each is shown here in its
                     latest version, with the defaults you chose.
                 </p>
@@ -760,15 +760,15 @@
                 data-review-topic="undo-toast"
                 data-review-topic-title="The toast with Undo and a clock"
                 data-review-components="undo"
-                data-review-title="The toast with Undo and a visible clock"
+                data-review-title="The toast with Undo: delete, undo and the server"
                 aria-labelledby="h-undo-toast"
             >
                 <div class="k5-sec__head">
-                    <h2 id="h-undo-toast">The toast with Undo and a visible clock</h2>
+                    <h2 id="h-undo-toast">The toast with Undo: delete, undo and the server</h2>
                     <p>
-                        After an action, say what happened and offer Undo for a few seconds, instead of asking "are you sure?" before. The clock shows
-                        how long is left. In the default mode nothing reaches the server until the window closes. The toast travels with you across
-                        in-app pages, and commits on a full page load.
+                        After an action, say what happened and offer Undo for a few seconds, instead of asking "are you sure?" before. In the default
+                        mode nothing reaches the server until the window closes. The toast travels with you across in-app pages, and commits on a full
+                        page load.
                     </p>
                 </div>
                 <div class="k5-expected">
@@ -791,8 +791,6 @@
                             With "Server: refuses" the commit fails: the toast turns into <b>Not done: …</b> with a Dismiss button and the row is
                             back.
                         </li>
-                        <li><b>Compare the four clocks</b> plays one toast per clock side by side, all starting together.</li>
-                        <li>The 390 px column: the toast takes the whole width and Undo is a normal-size button.</li>
                     </ul>
                 </div>
                 <div data-review-look>
@@ -853,19 +851,6 @@
                     </p>
                 </div>
                 <div class="k5-controls" data-review-controls data-review-controls-for="undo-toast-component">
-                    <div role="group" aria-label="Clock">
-                        <b>Clock:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-clock="ring" aria-pressed="true">Ring</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-clock="bar" aria-pressed="false">Rule</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-clock="text" aria-pressed="false">Seconds in words</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-clock="none" aria-pressed="false">None</button>
-                    </div>
-                    <div role="group" aria-label="Window">
-                        <b>Undo is offered for:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-ms="3000" aria-pressed="false">3 s</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-ms="6000" aria-pressed="true">6 s</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-ms="10000" aria-pressed="false">10 s</button>
-                    </div>
                     <div role="group" aria-label="Mode">
                         <b>Mode:</b>
                         <button type="button" class="kp-button kp-button--sm" data-k5-mode="defer" aria-pressed="true">
@@ -880,13 +865,127 @@
                         <button type="button" class="kp-button kp-button--sm" data-k5-server="ok" aria-pressed="true">Accepts</button>
                         <button type="button" class="kp-button kp-button--sm" data-k5-server="refuse" aria-pressed="false">Refuses</button>
                     </div>
+                    <div role="group" aria-label="Schedules">
+                        <b>The schedules:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-schedules-reset>Put every schedule back</button>
+                    </div>
+                </div>
+                <div id="undo-toast-component" class="k5-pair">
+                    <div class="k5-stack">
+                        <p class="k5-label">Schedules (Delete shows the toast in the bed under the list)</p>
+                        <ul class="k5-cards" aria-label="Schedules" data-k5-schedules></ul>
+                        <p class="k5-readout" role="status" data-k5-server-log>The server has not been called yet.</p>
+                        <div class="k5-toastbed" data-k5-bed="undo" aria-label="Toasts of this section">
+                            <p class="k5-toastbed__empty">Toasts show here.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="k5-sec"
+                id="undo-toast-clock"
+                data-review-item="undo-toast-clock"
+                data-review-topic="undo-toast"
+                data-review-components="undo"
+                data-review-title="The toast with Undo: the clock, the window and a comparison"
+                aria-labelledby="h-undo-toast-clock"
+            >
+                <div class="k5-sec__head">
+                    <h2 id="h-undo-toast-clock">The toast with Undo: the clock, the window and a comparison</h2>
+                    <p>
+                        The clock shows how long is left to undo. Choose the clock and how long Undo is offered, or play all four clocks side by side.
+                    </p>
+                </div>
+                <div class="k5-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Compare the four clocks</b> plays one toast per clock side by side, all starting together.</li>
+                        <li>The 390 px column: the toast takes the whole width and Undo is a normal-size button.</li>
+                        <li>
+                            <b>Clock</b> is the ring (default), the rule along the foot, the seconds in words, or none; <b>Undo is offered for</b> 3,
+                            6 (default) or 10 seconds. The next toast uses the new choice.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="dark">
+                        Dark is a spectral instrument: near-black with a faint grid, chamfered corners and one film of cyan-to-magenta light along the
+                        edges that matter. Check that this part wears that film on its frames and focus, that anything opening or arriving is swept in
+                        from the left over its own box and never just faded, and that text keeps clear of every edge.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Cyberpunk is a netrunner’s HUD: signal yellow on a near-black ground with scanlines, cyan read-outs, blood red where something
+                        is wrong, and plates with a cut corner. Check the part reads as a holo card, that things appear in hard glitch ticks (never an
+                        ease or a glide), and that no text sits against a cut corner or the rim.
+                    </p>
+                    <p data-for="synthwave">
+                        Synthwave is the drive into the sunset, 1984: a neon horizon, the grid floor, the striped sun and tubes with a soft bloom.
+                        Check the part sits on its floor with neon-tube edges, that things rise over the horizon or switch on like a tube (nothing
+                        tears or runs diagonal), and that text keeps clear of the glow and the edge.
+                    </p>
+                    <p data-for="pastel">
+                        Pastel is a risograph sticker sheet in a planner: lavender milk paper, plum ink, a second ink that never quite lines up,
+                        stickers and taped-in notes. Check the part looks printed in two passes and stuck on, soft and never sharp, and that text
+                        keeps clear of the sticker edge and the tape.
+                    </p>
+                    <p data-for="forest">
+                        Forest is a ranger’s field kit: a map on kraft paper with contour lines and trail blazes, and wood that grows on it. Check the
+                        part has the leaf corners (top-right and bottom-left rounded), that things grow out of their anchor rather than pop, and that
+                        text keeps clear of the corners and the blazes.
+                    </p>
+                    <p data-for="blueprint">
+                        Blueprint is the working drawing: a Prussian-blue sheet, a cyan pen line, white lettering and an amber checker’s pencil. Check
+                        the part is drawn by the pen (outline first, then inked), that corner brackets and dimension lines sit where they say, and
+                        that no lettering touches a line or a bracket.
+                    </p>
+                    <p data-for="solstice">
+                        Solstice is the low sun on warm charcoal: light comes from below and catches the foot of every plate, the voice is a serif,
+                        and everything is slow. Check the warm light rises from the foot of the part, that things are kindled or eclipsed rather than
+                        faded, and that text keeps clear of the lit edge.
+                    </p>
+                    <p data-for="brutalism">
+                        Brutalism is the slab: one hard ink line, a hard offset shadow where the part would fall, flat paint and controls that name
+                        what they are. Check the part stands on its own shadow, that things drop onto their footprint and stop dead (no ease, no
+                        glow), and that text keeps clear of the line and the shadow.
+                    </p>
+                    <p data-for="deco">
+                        Deco is the grand lobby of 1925: deep blue lacquer with a chevron wallpaper, gold hairlines and small jewels, ivory type,
+                        symmetry and slow motion. Check the part has its gold inlay (a hairline, not a flat fill), that it draws itself on and is
+                        covered by a great fan when it leaves, and that text keeps clear of the inlay.
+                    </p>
+                    <p data-for="nostromo">
+                        Nostromo is the ship’s console, 1979: a moulded beige case with label tape, screws, vents and a lamp on every switch, and
+                        amber CRT screens set into it. Check the part reads as plastic case or as screen (not a mix), that things switch on or are
+                        struck on the tube in whole frames, and that no label touches the case edge or a vent.
+                    </p>
+                    <p data-for="titanium">
+                        Titanium is a material: bare machined titanium over a carbon twill with an anodised oxide film, cut, milled, indexed and
+                        stamped. Check the part looks machined (crisp edges, the film only where it carries meaning), that nothing breathes, bounces
+                        or swells, and that text keeps clear of the milled edge.
+                    </p>
+                </div>
+                <div class="k5-controls" data-review-controls data-review-controls-for="undo-toast-clock-component">
+                    <div role="group" aria-label="Clock">
+                        <b>Clock:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-clock="ring" aria-pressed="true">Ring</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-clock="bar" aria-pressed="false">Rule</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-clock="text" aria-pressed="false">Seconds in words</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-clock="none" aria-pressed="false">None</button>
+                    </div>
+                    <div role="group" aria-label="Window">
+                        <b>Undo is offered for:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-ms="3000" aria-pressed="false">3 s</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-ms="6000" aria-pressed="true">6 s</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-ms="10000" aria-pressed="false">10 s</button>
+                    </div>
                     <div role="group" aria-label="Compare">
                         <b>Compare:</b>
                         <button type="button" class="kp-button kp-button--sm kp-button--primary" data-k5-compare>Compare the four clocks</button>
                         <button type="button" class="kp-button kp-button--sm" data-k5-schedules-reset>Put every schedule back</button>
                     </div>
                 </div>
-                <div id="undo-toast-component" class="k5-pair">
+                <div id="undo-toast-clock-component" class="k5-pair">
                     <div class="k5-stack">
                         <p class="k5-label">Schedules (Delete shows the toast in the bed under the list)</p>
                         <ul class="k5-cards" aria-label="Schedules" data-k5-schedules></ul>
@@ -1264,15 +1363,15 @@
                 data-review-topic="selection-bar"
                 data-review-topic-title="The selection bar"
                 data-review-components="selection"
-                data-review-title="The selection bar over a table or a list"
+                data-review-title="The selection bar over a table or a list: actions and the phone"
                 aria-labelledby="h-selection-bar"
             >
                 <div class="k5-sec__head">
-                    <h2 id="h-selection-bar">The selection bar over a table or a list</h2>
+                    <h2 id="h-selection-bar">The selection bar over a table or a list: actions and the phone</h2>
                     <p>
                         A bar that is there as soon as rows are ticked: how many, which, the page's actions for them, and a way to untick all. It
-                        serves the table and the card list of the same rows (<code>data-kp-selection-for</code>), shows what you see, and offers the
-                        rest ("Select all 312 that match").
+                        serves the table and the card list of the same rows (<code>data-kp-selection-for</code>). This section shows what the actions
+                        do.
                     </p>
                 </div>
                 <div class="k5-expected">
@@ -1284,10 +1383,6 @@
                             <b>Untick all</b>. Untick them: it is ruled shut the same way back.
                         </li>
                         <li>
-                            Tick six or more: the names wrap and the rest is an exact <b>+N more</b>, never an ellipsis; press it to list them all.
-                            The count keeps the room of the next digit.
-                        </li>
-                        <li>
                             <b>Update</b> is off when a pinned stack is ticked, and the line says why ("2 of 3 can be updated"). The 3 pinned ones are
                             marked in the table.
                         </li>
@@ -1295,10 +1390,6 @@
                             <b>Back up</b>: the count gives way to a spinner and "Backing up 3…", the buttons stop answering, then it ends. With "Next
                             action: some refused" it ends with <b>2 done, 1 refused: disk full</b> and a rule plus the reason on the refused row.
                             <b>Delete</b> hides the rows and offers Undo (the toast bed below).
-                        </li>
-                        <li>
-                            Tick every row shown: <b>Select all 312 that match</b> is offered; taking it says
-                            <b>All 312 that match are selected</b> with a button to go back to the 8 shown. <b>Esc</b> or <b>Untick all</b> clears.
                         </li>
                         <li>The 390 px column: the count and an <b>Actions</b> button; the names fold into the count, the actions open under it.</li>
                     </ul>
@@ -1361,26 +1452,6 @@
                     </p>
                 </div>
                 <div class="k5-controls" data-review-controls data-review-controls-for="selection-bar-component">
-                    <div role="group" aria-label="Where the bar stands">
-                        <b>Place:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-placement="sticky-top" aria-pressed="true">
-                            Stuck to the top
-                        </button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-placement="inline" aria-pressed="false">In the flow</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-placement="floating-bottom" aria-pressed="false">
-                            Floating at the foot
-                        </button>
-                    </div>
-                    <div role="group" aria-label="What the bar says">
-                        <b>The bar says:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-names="names" aria-pressed="true">The names</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-names="count" aria-pressed="false">Only the count</button>
-                    </div>
-                    <div role="group" aria-label="The offer for the rest">
-                        <b>The rest (312 match):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-matching="312" aria-pressed="true">Offered</button>
-                        <button type="button" class="kp-button kp-button--sm" data-k5-matching="0" aria-pressed="false">Not offered</button>
-                    </div>
                     <div role="group" aria-label="Next action">
                         <b>Next action:</b>
                         <button type="button" class="kp-button kp-button--sm" data-k5-outcome="ok" aria-pressed="true">Works for all</button>
@@ -1403,6 +1474,7 @@
                                 data-kp-select-matching="312"
                                 data-kp-undo-ms="6000"
                                 id="k5-bar"
+                                data-k5-bar
                                 aria-label="Selected stacks"
                             >
                                 <div class="kp-selection__actions">
@@ -1450,6 +1522,7 @@
                                 data-kp-selection-for="k5-stacks-cards"
                                 data-kp-placement="inline"
                                 id="k5-bar-phone"
+                                data-k5-bar-phone
                                 aria-label="Selected stacks on a phone"
                             >
                                 <div class="kp-selection__actions">
@@ -1459,6 +1532,169 @@
                             </div>
                             <ul class="k5-cards" aria-label="Stacks as cards" id="k5-stacks-cards" data-k5-stacks-cards></ul>
                         </div>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="k5-sec"
+                id="selection-bar-place"
+                data-review-item="selection-bar-place"
+                data-review-topic="selection-bar"
+                data-review-components="selection"
+                data-review-title="The selection bar over a table or a list: place, wording and the rest"
+                aria-labelledby="h-selection-bar-place"
+            >
+                <div class="k5-sec__head">
+                    <h2 id="h-selection-bar-place">The selection bar over a table or a list: place, wording and the rest</h2>
+                    <p>
+                        The same bar over a table of its own, with the settings that decide where it stands, what it says and whether it offers the
+                        rest of the rows that match.
+                    </p>
+                </div>
+                <div class="k5-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Tick six or more: the names wrap and the rest is an exact <b>+N more</b>, never an ellipsis; press it to list them all.
+                            The count keeps the room of the next digit.
+                        </li>
+                        <li>
+                            Tick every row shown: <b>Select all 312 that match</b> is offered; taking it says
+                            <b>All 312 that match are selected</b> with a button to go back to the 8 shown. <b>Esc</b> or <b>Untick all</b> clears.
+                        </li>
+                        <li>
+                            <b>The bar stands</b> stuck to the top (default), in the flow, or floating at the foot; <b>The bar says</b> the names or
+                            only the count; <b>The rest</b> offers &ldquo;Select all 312 that match&rdquo; or not.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="dark">
+                        Dark is a spectral instrument: near-black with a faint grid, chamfered corners and one film of cyan-to-magenta light along the
+                        edges that matter. Check that this part wears that film on its frames and focus, that anything opening or arriving is swept in
+                        from the left over its own box and never just faded, and that text keeps clear of every edge.
+                    </p>
+                    <p data-for="cyberpunk">
+                        Cyberpunk is a netrunner’s HUD: signal yellow on a near-black ground with scanlines, cyan read-outs, blood red where something
+                        is wrong, and plates with a cut corner. Check the part reads as a holo card, that things appear in hard glitch ticks (never an
+                        ease or a glide), and that no text sits against a cut corner or the rim.
+                    </p>
+                    <p data-for="synthwave">
+                        Synthwave is the drive into the sunset, 1984: a neon horizon, the grid floor, the striped sun and tubes with a soft bloom.
+                        Check the part sits on its floor with neon-tube edges, that things rise over the horizon or switch on like a tube (nothing
+                        tears or runs diagonal), and that text keeps clear of the glow and the edge.
+                    </p>
+                    <p data-for="pastel">
+                        Pastel is a risograph sticker sheet in a planner: lavender milk paper, plum ink, a second ink that never quite lines up,
+                        stickers and taped-in notes. Check the part looks printed in two passes and stuck on, soft and never sharp, and that text
+                        keeps clear of the sticker edge and the tape.
+                    </p>
+                    <p data-for="forest">
+                        Forest is a ranger’s field kit: a map on kraft paper with contour lines and trail blazes, and wood that grows on it. Check the
+                        part has the leaf corners (top-right and bottom-left rounded), that things grow out of their anchor rather than pop, and that
+                        text keeps clear of the corners and the blazes.
+                    </p>
+                    <p data-for="blueprint">
+                        Blueprint is the working drawing: a Prussian-blue sheet, a cyan pen line, white lettering and an amber checker’s pencil. Check
+                        the part is drawn by the pen (outline first, then inked), that corner brackets and dimension lines sit where they say, and
+                        that no lettering touches a line or a bracket.
+                    </p>
+                    <p data-for="solstice">
+                        Solstice is the low sun on warm charcoal: light comes from below and catches the foot of every plate, the voice is a serif,
+                        and everything is slow. Check the warm light rises from the foot of the part, that things are kindled or eclipsed rather than
+                        faded, and that text keeps clear of the lit edge.
+                    </p>
+                    <p data-for="brutalism">
+                        Brutalism is the slab: one hard ink line, a hard offset shadow where the part would fall, flat paint and controls that name
+                        what they are. Check the part stands on its own shadow, that things drop onto their footprint and stop dead (no ease, no
+                        glow), and that text keeps clear of the line and the shadow.
+                    </p>
+                    <p data-for="deco">
+                        Deco is the grand lobby of 1925: deep blue lacquer with a chevron wallpaper, gold hairlines and small jewels, ivory type,
+                        symmetry and slow motion. Check the part has its gold inlay (a hairline, not a flat fill), that it draws itself on and is
+                        covered by a great fan when it leaves, and that text keeps clear of the inlay.
+                    </p>
+                    <p data-for="nostromo">
+                        Nostromo is the ship’s console, 1979: a moulded beige case with label tape, screws, vents and a lamp on every switch, and
+                        amber CRT screens set into it. Check the part reads as plastic case or as screen (not a mix), that things switch on or are
+                        struck on the tube in whole frames, and that no label touches the case edge or a vent.
+                    </p>
+                    <p data-for="titanium">
+                        Titanium is a material: bare machined titanium over a carbon twill with an anodised oxide film, cut, milled, indexed and
+                        stamped. Check the part looks machined (crisp edges, the film only where it carries meaning), that nothing breathes, bounces
+                        or swells, and that text keeps clear of the milled edge.
+                    </p>
+                </div>
+                <div class="k5-controls" data-review-controls data-review-controls-for="selection-bar-place-component">
+                    <div role="group" aria-label="Where the bar stands">
+                        <b>Place:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-placement="sticky-top" aria-pressed="true">
+                            Stuck to the top
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-placement="inline" aria-pressed="false">In the flow</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-placement="floating-bottom" aria-pressed="false">
+                            Floating at the foot
+                        </button>
+                    </div>
+                    <div role="group" aria-label="What the bar says">
+                        <b>The bar says:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-names="names" aria-pressed="true">The names</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-names="count" aria-pressed="false">Only the count</button>
+                    </div>
+                    <div role="group" aria-label="The offer for the rest">
+                        <b>The rest (312 match):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-matching="312" aria-pressed="true">Offered</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-matching="0" aria-pressed="false">Not offered</button>
+                    </div>
+                    <div role="group" aria-label="Rows">
+                        <b>The rows:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k5-stacks-reset>Put every stack back</button>
+                    </div>
+                </div>
+                <div id="selection-bar-place-component" class="k5-stack">
+                    <p class="k5-label">The stacks table with its bar, full width (scroll the list inside the frame)</p>
+                    <div class="k5-scroll" data-k5-scroll>
+                        <div
+                            class="kp-selection"
+                            data-kp-selection
+                            data-kp-selection-for="k5-stacks-b"
+                            data-kp-placement="sticky-top"
+                            data-kp-select-matching="312"
+                            data-kp-undo-ms="6000"
+                            id="k5-bar-b"
+                            data-k5-bar
+                            aria-label="Selected stacks"
+                        >
+                            <div class="kp-selection__actions">
+                                <button type="button" class="kp-button" data-kp-selection-action="backup">Back up</button>
+                                <button type="button" class="kp-button" data-kp-selection-action="update">Update</button>
+                                <button type="button" class="kp-button kp-button--destructive" data-kp-selection-action="delete">Delete</button>
+                            </div>
+                        </div>
+                        <div class="kp-datatable" data-kp-datatable id="k5-stacks-b">
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <caption class="kp-sr-only">
+                                        Stacks
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" class="k5-col-select">
+                                                <input class="kp-field__check" type="checkbox" data-kp-select-all aria-label="Select all stacks" />
+                                            </th>
+                                            <th scope="col">Stack</th>
+                                            <th scope="col">Host</th>
+                                            <th scope="col">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-k5-stacks></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="k5-toastbed" data-k5-bed="selection" aria-label="Toasts of this section">
+                        <p class="k5-toastbed__empty">A toast with Undo shows here after Delete.</p>
                     </div>
                 </div>
             </section>

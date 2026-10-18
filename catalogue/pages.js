@@ -136,7 +136,7 @@ export const PAGES = [
                 href: 'research/kpadopt56-confirm/demo.html',
                 rework: 'by-eye findings of 2026-10-18 being fixed (research/kpadopt56/EYE_FINDINGS.md); it joins the Agenda as soon as its part is done',
                 label: 'Fifth and sixth adoption rounds in the other themes, part 5 of 11: Saving, undoing and answering',
-                about: 'What happens after you act: the unsaved-changes bar, a toast with Undo, a button that shows its result, a question that waits for your answer, and the bar over a selection. 6 sections (66 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+                about: 'What happens after you act: the unsaved-changes bar, a toast with Undo, a button that shows its result, a question that waits for your answer, and the bar over a selection. 8 sections (88 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
             },
             {
                 href: 'research/kpadopt56-lists/demo.html',
