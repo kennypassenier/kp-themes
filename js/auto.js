@@ -20,7 +20,8 @@
 // modules' own, untouched; what changes is when their module arrives, so
 // `attachAll()` is asynchronous: the detach it returns carries `ready`, a
 // promise that resolves once every needed module has attached, and
-// `modules`, the names fetched.
+// `modules`, the names fetched (complete once `ready` resolves: a `late`
+// module the others gave work to is asked for after they attached).
 //
 // Four modules are not asked about, because what they do does not depend on
 // markup a load-time check can see (measured over every attach function,
@@ -50,6 +51,7 @@ import { applyStoredCalm } from './calm.js';
  * @property {string} when every selector through which the module's attach functions act
  * @property {() => Promise<any>} load
  * @property {(module: any, root: ParentNode) => unknown[]} attach
+ * @property {boolean} [late] attaches after every other module the same attachAll() fetched, and is asked for then
  */
 
 /** @type {Need[]} */
@@ -174,10 +176,20 @@ export const NEEDS = [
         load: () => import('./row-select.js'),
         attach: (m, root) => [m.attachRowSelect(root)],
     },
-    { name: 'selection-bar', when: '[data-kp-selection]', load: () => import('./selection-bar.js'), attach: (m, root) => [m.attachSelectionBars(root)] },
+    {
+        name: 'selection-bar',
+        when: '[data-kp-selection]',
+        load: () => import('./selection-bar.js'),
+        attach: (m, root) => [m.attachSelectionBars(root)],
+    },
     { name: 'newpill', when: '[data-kp-follow]', load: () => import('./newpill.js'), attach: (m, root) => [m.attachNewPills(root)] },
     { name: 'json-field', when: 'textarea[data-kp-json]', load: () => import('./json-field.js'), attach: (m, root) => [m.attachJsonFields(root)] },
-    { name: 'request-inspector', when: '[data-kp-requests]', load: () => import('./request-inspector.js'), attach: (m, root) => [m.attachRequestInspectors(root)] },
+    {
+        name: 'request-inspector',
+        when: '[data-kp-requests]',
+        load: () => import('./request-inspector.js'),
+        attach: (m, root) => [m.attachRequestInspectors(root)],
+    },
     { name: 'tick', when: '[data-kp-tick]', load: () => import('./tick.js'), attach: (m, root) => [m.attachTicks(root)] },
     { name: 'wheel', when: '[data-kp-wheel]', load: () => import('./wheel.js'), attach: (m, root) => [m.attachWheels(root)] },
     { name: 'focus-steps', when: '[data-kp-focus-steps]', load: () => import('./focus-steps.js'), attach: (m, root) => [m.attachFocusSteps(root)] },
@@ -222,8 +234,12 @@ export const NEEDS = [
     },
     { name: 'lede', when: '.kp-lede', load: () => import('./lede.js'), attach: (m, root) => [m.attachLedes(root)] },
     { name: 'problems', when: '[data-kp-problems]', load: () => import('./problems.js'), attach: (m, root) => [m.attachProblems(root)] },
-    { name: 'flash', when: '[data-kp-flash-button], [data-kp-post]', load: () => import('./flash.js'), attach: (m, root) => [m.attachFlashButtons(root)] },
-    { name: 'reason', when: '[data-kp-disabled-reason]', load: () => import('./reason.js'), attach: (m, root) => [m.attachDisabledReasons(root)] },
+    {
+        name: 'flash',
+        when: '[data-kp-flash-button], [data-kp-post]',
+        load: () => import('./flash.js'),
+        attach: (m, root) => [m.attachFlashButtons(root)],
+    },
     // A list and its detail that folds on a phone [kpadopt5-ops].
     {
         name: 'master-detail',
@@ -246,7 +262,12 @@ export const NEEDS = [
     { name: 'quote', when: '[data-kp-quote], [data-kp-quote-list]', load: () => import('./quote.js'), attach: (m, root) => [m.attachQuotes(root)] },
     { name: 'usual-picker', when: '[data-kp-usual]', load: () => import('./usual-picker.js'), attach: (m, root) => [m.attachUsualPickers(root)] },
     { name: 'toggle', when: '[data-kp-toggle]', load: () => import('./toggle.js'), attach: (m, root) => [m.attachToggles(root)] },
-    { name: 'version-delta', when: '[data-kp-version-to], [data-kp-version-from], .kp-badge--version[data-kp-state]', load: () => import('./version-delta.js'), attach: (m, root) => [m.attachVersionDeltas(root)] },
+    {
+        name: 'version-delta',
+        when: '[data-kp-version-to], [data-kp-version-from], .kp-badge--version[data-kp-state]',
+        load: () => import('./version-delta.js'),
+        attach: (m, root) => [m.attachVersionDeltas(root)],
+    },
     { name: 'ack-gate', when: '[data-kp-ack]', load: () => import('./ack-gate.js'), attach: (m, root) => [m.attachAckGates(root)] },
     { name: 'deplist', when: '[data-kp-deplist]', load: () => import('./deplist.js'), attach: (m, root) => [m.attachDeplists(root)] },
     { name: 'path-trace', when: '[data-kp-trace]', load: () => import('./path-trace.js'), attach: (m, root) => [m.attachTraces(root)] },
@@ -261,7 +282,12 @@ export const NEEDS = [
         load: () => import('./print.js'),
         attach: (m, root) => [m.attachPrint(root)],
     },
-    { name: 'docpreview', when: '[data-kp-preview], .kp-docglyph', load: () => import('./docpreview.js'), attach: (m, root) => [m.attachDocPreviews(root)] },
+    {
+        name: 'docpreview',
+        when: '[data-kp-preview], .kp-docglyph',
+        load: () => import('./docpreview.js'),
+        attach: (m, root) => [m.attachDocPreviews(root)],
+    },
     { name: 'gallery', when: '[data-kp-gallery]', load: () => import('./gallery.js'), attach: (m, root) => [m.attachGalleries(root)] },
     { name: 'slider', when: '[data-kp-slider]', load: () => import('./slider.js'), attach: (m, root) => [m.attachSliders(root)] },
     { name: 'sentence', when: '[data-kp-sentence]', load: () => import('./sentence.js'), attach: (m, root) => [m.attachSentences(root)] },
@@ -294,7 +320,12 @@ export const NEEDS = [
         attach: (m, root) => [m.attachMotion(root)],
     },
     { name: 'claim', when: '[data-kp-checklist-claim]', load: () => import('./claim.js'), attach: (m, root) => [m.attachClaims(root)] },
-    { name: 'availability', when: '[data-kp-availability]', load: () => import('./availability.js'), attach: (m, root) => [m.attachAvailability(root)] },
+    {
+        name: 'availability',
+        when: '[data-kp-availability]',
+        load: () => import('./availability.js'),
+        attach: (m, root) => [m.attachAvailability(root)],
+    },
     { name: 'qr', when: '[data-kp-qr]', load: () => import('./qr.js'), attach: (m, root) => [m.attachQr(root)] },
     { name: 'timefield', when: '[data-kp-time]', load: () => import('./timefield.js'), attach: (m, root) => [m.attachTimes(root)] },
     {
@@ -307,6 +338,22 @@ export const NEEDS = [
         attach: (m, root) => [m.attachFootprints(root)],
     },
     { name: 'console', when: '[data-kp-console]', load: () => import('./console.js'), attach: (m, root) => [m.attachConsoles(root)] },
+    {
+        // The reason of a disabled control [kpadopt5], last and late: a dozen
+        // modules mark the controls they draw or own disabled with a reason as
+        // they attach (calm mode's switch when the system asks for less motion,
+        // the document preview, the QR code, the gallery, …), so the page at
+        // load can carry none and still need it. With every module attached in
+        // one pass it was the order that made that work; fetched on demand,
+        // the module is asked for once the others have attached, and attaches
+        // after them whenever it arrived. Last here too, so an entry that
+        // attaches in this order (tests/auto-lazy.spec.mjs) attaches it last.
+        name: 'reason',
+        when: '[data-kp-disabled-reason]',
+        load: () => import('./reason.js'),
+        attach: (m, root) => [m.attachDisabledReasons(root)],
+        late: true,
+    },
 ];
 
 /** Set on <html> once the boot's `attachAll()` has attached everything the page needed: the names fetched, space-separated. */
@@ -314,6 +361,35 @@ export const READY_ATTRIBUTE = 'data-kp-auto-ready';
 
 /** @param {ParentNode} root @param {string} selector */
 const carries = (root, selector) => (root instanceof Element && root.matches(selector)) || root.querySelector(selector) !== null;
+
+/** @param {ParentNode} root @returns {Element[]} `root` itself when it is an element, and everything under it */
+const everyUnder = (root) => [...(root instanceof Element ? [root] : []), ...root.querySelectorAll('*')];
+
+/**
+ * Run `attach`, and add to `drawn` every element it put under `root` while it
+ * ran. The records are taken before the observer could deliver them, so what
+ * counts is exactly what the attach itself drew, never what a framework
+ * rendered while the module was on its way.
+ *
+ * @template T
+ * @param {ParentNode} root
+ * @param {WeakSet<Element>} drawn
+ * @param {() => T} attach
+ * @returns {T}
+ */
+const drawing = (root, drawn, attach) => {
+    if (typeof MutationObserver !== 'function') return attach();
+    const watch = new MutationObserver(() => undefined);
+    watch.observe(root, { childList: true, subtree: true });
+    try {
+        return attach();
+    } finally {
+        for (const record of watch.takeRecords()) {
+            for (const node of record.addedNodes) if (node instanceof Element) for (const element of everyUnder(node)) drawn.add(element);
+        }
+        watch.disconnect();
+    }
+};
 
 /**
  * Attach every behaviour under `root`, fetching only the modules it needs.
@@ -347,20 +423,47 @@ export function attachAll(root = document) {
     let detached = false;
     /** @type {string[]} */
     const modules = [];
+    /** What the fetched modules drew while they attached. @type {WeakSet<Element>} */
+    const drawn = new WeakSet();
+    /** @param {Need} need @param {Promise<any>} loading @param {WeakSet<Element>} asked the elements it attaches against */
+    const attachOnce = (need, loading, asked) =>
+        loading.then((module) => {
+            // Detached before the module arrived: attach nothing.
+            if (detached) return;
+            detaches.push(...drawing(root, drawn, () => asOf(root, asked, () => need.attach(module, root))));
+        });
+    /** @type {Map<Need, Promise<any>>} a late module the page carries at load is fetched at once and attached later */
+    const prefetched = new Map();
     /** @type {Promise<void>[]} */
     const pending = [];
     for (const need of NEEDS) {
         if (!carries(root, need.when)) continue;
         modules.push(need.name);
-        pending.push(
-            need.load().then((module) => {
-                // Detached before the module arrived: attach nothing.
-                if (detached) return;
-                detaches.push(...asOf(root, present, () => need.attach(module, root)));
-            }),
-        );
+        if (need.late) prefetched.set(need, need.load());
+        else pending.push(attachOnce(need, need.load(), present));
     }
-    const ready = Promise.all(pending).then(() => undefined);
+    // The late modules, once the others have attached: asked for against what
+    // was there at the start and what those modules drew or marked, and never
+    // what a framework rendered since (js/as-of.js).
+    const ready = Promise.all(pending).then(() => {
+        const late = NEEDS.filter((need) => need.late && (prefetched.has(need) || carries(root, need.when)));
+        if (detached || !late.length) return undefined;
+        const asked = new WeakSet(everyUnder(root).filter((element) => present.has(element) || drawn.has(element)));
+        /** @param {string} selector */
+        const askedFor = (selector) =>
+            [...(root instanceof Element && root.matches(selector) ? [root] : []), ...root.querySelectorAll(selector)].some((element) =>
+                asked.has(element),
+            );
+        return Promise.all(
+            late.map((need) => {
+                const loading = prefetched.get(need);
+                if (loading) return attachOnce(need, loading, asked);
+                if (!askedFor(need.when)) return undefined;
+                modules.push(need.name);
+                return attachOnce(need, need.load(), asked);
+            }),
+        ).then(() => undefined);
+    });
     // What the modules draw now is the page's first render, not news: the
     // root settles until they have all attached and two frames are painted,
     // and js/motion.js lets nothing arrive or glide under it meanwhile

@@ -29113,14 +29113,15 @@ function attachOne2(el14, options = {}) {
     live4.textContent = "";
     el14.ownerDocument.defaultView?.requestAnimationFrame(() => live4.textContent = text);
   };
-  const rows = () => {
+  const allRows = () => {
     const out = [];
     for (const box of boxesOf(el14)) {
       const row = rowOf(box);
-      if (row && !out.includes(row) && shown2(row)) out.push(row);
+      if (row && !out.includes(row)) out.push(row);
     }
     return out;
   };
+  const rows = () => allRows().filter(shown2);
   const boxOf = (row) => (
     /** @type {HTMLInputElement | null} */
     row.querySelector(SELECT_BOX)
@@ -29131,12 +29132,13 @@ function attachOne2(el14, options = {}) {
   const keys = () => boxesOf(el14).filter((b) => b.checked).map((b, i) => keyOfRow(rowOf(b) ?? el14, i));
   const count = () => boxesOf(el14).filter((b) => b.checked).length;
   const settle = () => {
-    const list = rows();
+    const every = allRows();
     const current2 = rowByKey(cursorKey);
-    for (const row of list) {
+    const stop = current2 ?? every.find(shown2) ?? every[0];
+    for (const row of every) {
       if (!row.hasAttribute("tabindex") || row.hasAttribute("data-kp-roving")) {
         row.setAttribute("data-kp-roving", "");
-        row.tabIndex = row === (current2 ?? list[0]) ? 0 : -1;
+        row.tabIndex = row === stop ? 0 : -1;
       }
       row.classList.toggle(CURSOR_CLASS, row === current2);
       if (row === current2) row.setAttribute("aria-current", "true");
@@ -29146,7 +29148,7 @@ function attachOne2(el14, options = {}) {
   const place2 = (row, { focus = true } = {}) => {
     const list = rows();
     cursorKey = row ? keyOfRow(row, list.indexOf(row)) : null;
-    for (const r of list) {
+    for (const r of allRows()) {
       if (r.hasAttribute("data-kp-roving")) r.tabIndex = r === row ? 0 : -1;
       r.classList.toggle(CURSOR_CLASS, r === row);
       if (r === row) r.setAttribute("aria-current", "true");
@@ -40570,7 +40572,7 @@ function headingOf(lede) {
   while (prev) {
     if (prev.matches(HEADINGS)) return prev;
     const inner = prev.querySelector(HEADINGS);
-    if (inner && prev.matches("header, .kp-card__header, .kp-page-header, div")) return inner;
+    if (inner && prev.matches(HOLDERS)) return inner;
     if (!prev.matches(".kp-lede, p, div")) return null;
     prev = prev.previousElementSibling;
   }
@@ -40667,7 +40669,7 @@ function attachLedes(root = document) {
     for (const clean of cleanups) clean();
   };
 }
-var LEDE, counter4, HEADINGS;
+var LEDE, counter4, HEADINGS, HOLDERS;
 var init_lede = __esm({
   "js/lede.js"() {
     "use strict";
@@ -40675,6 +40677,7 @@ var init_lede = __esm({
     LEDE = ".kp-lede";
     counter4 = 0;
     HEADINGS = "h1, h2, h3, h4, h5, h6, .kp-card__title, .kp-page-header__title";
+    HOLDERS = "header, .kp-card__header, .kp-page-header, div, [data-kp-measured]";
   }
 });
 
@@ -57647,10 +57650,20 @@ var NEEDS = [
     load: () => Promise.resolve().then(() => (init_row_select(), row_select_exports)),
     attach: (m, root) => [m.attachRowSelect(root)]
   },
-  { name: "selection-bar", when: "[data-kp-selection]", load: () => Promise.resolve().then(() => (init_selection_bar(), selection_bar_exports)), attach: (m, root) => [m.attachSelectionBars(root)] },
+  {
+    name: "selection-bar",
+    when: "[data-kp-selection]",
+    load: () => Promise.resolve().then(() => (init_selection_bar(), selection_bar_exports)),
+    attach: (m, root) => [m.attachSelectionBars(root)]
+  },
   { name: "newpill", when: "[data-kp-follow]", load: () => Promise.resolve().then(() => (init_newpill(), newpill_exports)), attach: (m, root) => [m.attachNewPills(root)] },
   { name: "json-field", when: "textarea[data-kp-json]", load: () => Promise.resolve().then(() => (init_json_field(), json_field_exports)), attach: (m, root) => [m.attachJsonFields(root)] },
-  { name: "request-inspector", when: "[data-kp-requests]", load: () => Promise.resolve().then(() => (init_request_inspector(), request_inspector_exports)), attach: (m, root) => [m.attachRequestInspectors(root)] },
+  {
+    name: "request-inspector",
+    when: "[data-kp-requests]",
+    load: () => Promise.resolve().then(() => (init_request_inspector(), request_inspector_exports)),
+    attach: (m, root) => [m.attachRequestInspectors(root)]
+  },
   { name: "tick", when: "[data-kp-tick]", load: () => Promise.resolve().then(() => (init_tick(), tick_exports)), attach: (m, root) => [m.attachTicks(root)] },
   { name: "wheel", when: "[data-kp-wheel]", load: () => Promise.resolve().then(() => (init_wheel(), wheel_exports)), attach: (m, root) => [m.attachWheels(root)] },
   { name: "focus-steps", when: "[data-kp-focus-steps]", load: () => Promise.resolve().then(() => (init_focus_steps(), focus_steps_exports)), attach: (m, root) => [m.attachFocusSteps(root)] },
@@ -57695,8 +57708,12 @@ var NEEDS = [
   },
   { name: "lede", when: ".kp-lede", load: () => Promise.resolve().then(() => (init_lede(), lede_exports)), attach: (m, root) => [m.attachLedes(root)] },
   { name: "problems", when: "[data-kp-problems]", load: () => Promise.resolve().then(() => (init_problems(), problems_exports)), attach: (m, root) => [m.attachProblems(root)] },
-  { name: "flash", when: "[data-kp-flash-button], [data-kp-post]", load: () => Promise.resolve().then(() => (init_flash(), flash_exports)), attach: (m, root) => [m.attachFlashButtons(root)] },
-  { name: "reason", when: "[data-kp-disabled-reason]", load: () => Promise.resolve().then(() => (init_reason(), reason_exports)), attach: (m, root) => [m.attachDisabledReasons(root)] },
+  {
+    name: "flash",
+    when: "[data-kp-flash-button], [data-kp-post]",
+    load: () => Promise.resolve().then(() => (init_flash(), flash_exports)),
+    attach: (m, root) => [m.attachFlashButtons(root)]
+  },
   // A list and its detail that folds on a phone [kpadopt5-ops].
   {
     name: "master-detail",
@@ -57719,7 +57736,12 @@ var NEEDS = [
   { name: "quote", when: "[data-kp-quote], [data-kp-quote-list]", load: () => Promise.resolve().then(() => (init_quote(), quote_exports)), attach: (m, root) => [m.attachQuotes(root)] },
   { name: "usual-picker", when: "[data-kp-usual]", load: () => Promise.resolve().then(() => (init_usual_picker(), usual_picker_exports)), attach: (m, root) => [m.attachUsualPickers(root)] },
   { name: "toggle", when: "[data-kp-toggle]", load: () => Promise.resolve().then(() => (init_toggle(), toggle_exports)), attach: (m, root) => [m.attachToggles(root)] },
-  { name: "version-delta", when: "[data-kp-version-to], [data-kp-version-from], .kp-badge--version[data-kp-state]", load: () => Promise.resolve().then(() => (init_version_delta(), version_delta_exports)), attach: (m, root) => [m.attachVersionDeltas(root)] },
+  {
+    name: "version-delta",
+    when: "[data-kp-version-to], [data-kp-version-from], .kp-badge--version[data-kp-state]",
+    load: () => Promise.resolve().then(() => (init_version_delta(), version_delta_exports)),
+    attach: (m, root) => [m.attachVersionDeltas(root)]
+  },
   { name: "ack-gate", when: "[data-kp-ack]", load: () => Promise.resolve().then(() => (init_ack_gate(), ack_gate_exports)), attach: (m, root) => [m.attachAckGates(root)] },
   { name: "deplist", when: "[data-kp-deplist]", load: () => Promise.resolve().then(() => (init_deplist(), deplist_exports)), attach: (m, root) => [m.attachDeplists(root)] },
   { name: "path-trace", when: "[data-kp-trace]", load: () => Promise.resolve().then(() => (init_path_trace(), path_trace_exports)), attach: (m, root) => [m.attachTraces(root)] },
@@ -57734,7 +57756,12 @@ var NEEDS = [
     load: () => Promise.resolve().then(() => (init_print(), print_exports)),
     attach: (m, root) => [m.attachPrint(root)]
   },
-  { name: "docpreview", when: "[data-kp-preview], .kp-docglyph", load: () => Promise.resolve().then(() => (init_docpreview(), docpreview_exports)), attach: (m, root) => [m.attachDocPreviews(root)] },
+  {
+    name: "docpreview",
+    when: "[data-kp-preview], .kp-docglyph",
+    load: () => Promise.resolve().then(() => (init_docpreview(), docpreview_exports)),
+    attach: (m, root) => [m.attachDocPreviews(root)]
+  },
   { name: "gallery", when: "[data-kp-gallery]", load: () => Promise.resolve().then(() => (init_gallery(), gallery_exports)), attach: (m, root) => [m.attachGalleries(root)] },
   { name: "slider", when: "[data-kp-slider]", load: () => Promise.resolve().then(() => (init_slider(), slider_exports)), attach: (m, root) => [m.attachSliders(root)] },
   { name: "sentence", when: "[data-kp-sentence]", load: () => Promise.resolve().then(() => (init_sentence(), sentence_exports)), attach: (m, root) => [m.attachSentences(root)] },
@@ -57767,7 +57794,12 @@ var NEEDS = [
     attach: (m, root) => [m.attachMotion(root)]
   },
   { name: "claim", when: "[data-kp-checklist-claim]", load: () => Promise.resolve().then(() => (init_claim(), claim_exports)), attach: (m, root) => [m.attachClaims(root)] },
-  { name: "availability", when: "[data-kp-availability]", load: () => Promise.resolve().then(() => (init_availability(), availability_exports)), attach: (m, root) => [m.attachAvailability(root)] },
+  {
+    name: "availability",
+    when: "[data-kp-availability]",
+    load: () => Promise.resolve().then(() => (init_availability(), availability_exports)),
+    attach: (m, root) => [m.attachAvailability(root)]
+  },
   { name: "qr", when: "[data-kp-qr]", load: () => Promise.resolve().then(() => (init_qr(), qr_exports)), attach: (m, root) => [m.attachQr(root)] },
   { name: "timefield", when: "[data-kp-time]", load: () => Promise.resolve().then(() => (init_timefield(), timefield_exports)), attach: (m, root) => [m.attachTimes(root)] },
   {
@@ -57779,10 +57811,40 @@ var NEEDS = [
     load: () => Promise.resolve().then(() => (init_footprint(), footprint_exports)),
     attach: (m, root) => [m.attachFootprints(root)]
   },
-  { name: "console", when: "[data-kp-console]", load: () => Promise.resolve().then(() => (init_console(), console_exports)), attach: (m, root) => [m.attachConsoles(root)] }
+  { name: "console", when: "[data-kp-console]", load: () => Promise.resolve().then(() => (init_console(), console_exports)), attach: (m, root) => [m.attachConsoles(root)] },
+  {
+    // The reason of a disabled control [kpadopt5], last and late: a dozen
+    // modules mark the controls they draw or own disabled with a reason as
+    // they attach (calm mode's switch when the system asks for less motion,
+    // the document preview, the QR code, the gallery, …), so the page at
+    // load can carry none and still need it. With every module attached in
+    // one pass it was the order that made that work; fetched on demand,
+    // the module is asked for once the others have attached, and attaches
+    // after them whenever it arrived. Last here too, so an entry that
+    // attaches in this order (tests/auto-lazy.spec.mjs) attaches it last.
+    name: "reason",
+    when: "[data-kp-disabled-reason]",
+    load: () => Promise.resolve().then(() => (init_reason(), reason_exports)),
+    attach: (m, root) => [m.attachDisabledReasons(root)],
+    late: true
+  }
 ];
 var READY_ATTRIBUTE = "data-kp-auto-ready";
 var carries = (root, selector) => root instanceof Element && root.matches(selector) || root.querySelector(selector) !== null;
+var everyUnder = (root) => [...root instanceof Element ? [root] : [], ...root.querySelectorAll("*")];
+var drawing = (root, drawn2, attach) => {
+  if (typeof MutationObserver !== "function") return attach();
+  const watch2 = new MutationObserver(() => void 0);
+  watch2.observe(root, { childList: true, subtree: true });
+  try {
+    return attach();
+  } finally {
+    for (const record of watch2.takeRecords()) {
+      for (const node of record.addedNodes) if (node instanceof Element) for (const element of everyUnder(node)) drawn2.add(element);
+    }
+    watch2.disconnect();
+  }
+};
 function attachAll(root = document) {
   restoreRemembered(root);
   const detaches = [
@@ -57801,18 +57863,36 @@ function attachAll(root = document) {
   const present = presentUnder(root);
   let detached = false;
   const modules = [];
+  const drawn2 = /* @__PURE__ */ new WeakSet();
+  const attachOnce = (need, loading, asked) => loading.then((module) => {
+    if (detached) return;
+    detaches.push(...drawing(root, drawn2, () => asOf(root, asked, () => need.attach(module, root))));
+  });
+  const prefetched = /* @__PURE__ */ new Map();
   const pending5 = [];
   for (const need of NEEDS) {
     if (!carries(root, need.when)) continue;
     modules.push(need.name);
-    pending5.push(
-      need.load().then((module) => {
-        if (detached) return;
-        detaches.push(...asOf(root, present, () => need.attach(module, root)));
-      })
-    );
+    if (need.late) prefetched.set(need, need.load());
+    else pending5.push(attachOnce(need, need.load(), present));
   }
-  const ready = Promise.all(pending5).then(() => void 0);
+  const ready = Promise.all(pending5).then(() => {
+    const late = NEEDS.filter((need) => need.late && (prefetched.has(need) || carries(root, need.when)));
+    if (detached || !late.length) return void 0;
+    const asked = new WeakSet(everyUnder(root).filter((element) => present.has(element) || drawn2.has(element)));
+    const askedFor = (selector) => [...root instanceof Element && root.matches(selector) ? [root] : [], ...root.querySelectorAll(selector)].some(
+      (element) => asked.has(element)
+    );
+    return Promise.all(
+      late.map((need) => {
+        const loading = prefetched.get(need);
+        if (loading) return attachOnce(need, loading, asked);
+        if (!askedFor(need.when)) return void 0;
+        modules.push(need.name);
+        return attachOnce(need, need.load(), asked);
+      })
+    ).then(() => void 0);
+  });
   const mark = root instanceof Document ? root.documentElement : root instanceof Element ? root : null;
   const settled = mark ? settleAfter(mark, ready) : () => void 0;
   const detach = () => {

@@ -149,16 +149,18 @@ function attachOne(el, options = {}) {
         el.ownerDocument.defaultView?.requestAnimationFrame(() => (live.textContent = text));
     };
 
-    /** The rows the walk may land on, in the order they are drawn. @returns {HTMLElement[]} */
-    const rows = () => {
+    /** Every row with a box, shown or not, in the order they are drawn. @returns {HTMLElement[]} */
+    const allRows = () => {
         /** @type {HTMLElement[]} */
         const out = [];
         for (const box of boxesOf(el)) {
             const row = rowOf(box);
-            if (row && !out.includes(row) && shown(row)) out.push(row);
+            if (row && !out.includes(row)) out.push(row);
         }
         return out;
     };
+    /** The rows the walk may land on, in the order they are drawn. @returns {HTMLElement[]} */
+    const rows = () => allRows().filter(shown);
     /** @param {HTMLElement} row @returns {HTMLInputElement | null} */
     const boxOf = (row) => /** @type {HTMLInputElement | null} */ (row.querySelector(SELECT_BOX));
     /** @type {string | null} */
@@ -174,14 +176,22 @@ function attachOne(el, options = {}) {
             .map((b, i) => keyOfRow(rowOf(b) ?? el, i));
     const count = () => boxesOf(el).filter((b) => b.checked).length;
 
-    /** Rows are focusable, one of them in the tab order. */
+    /**
+     * Rows are focusable, one of them in the tab order. Every row, hidden or not: the walk skips a hidden row, the
+     * roving tabindex does not. Only shown rows were made roving until 11.0.0, and nothing settles again when a row
+     * or a section around the element is shown later (a `hidden` flip is not a child added), so a row a data table's
+     * page or a hidden section kept out at attach stayed out of the walk once shown, and the markup depended on which
+     * of the two modules attached first (tests/auto-lazy.spec.mjs: the catalogue's tables, the fixture's paged row).
+     * The tab stop is the cursor row, else the first shown row, else the first row.
+     */
     const settle = () => {
-        const list = rows();
+        const every = allRows();
         const current = rowByKey(cursorKey);
-        for (const row of list) {
+        const stop = current ?? every.find(shown) ?? every[0];
+        for (const row of every) {
             if (!row.hasAttribute('tabindex') || row.hasAttribute('data-kp-roving')) {
                 row.setAttribute('data-kp-roving', '');
-                row.tabIndex = row === (current ?? list[0]) ? 0 : -1;
+                row.tabIndex = row === stop ? 0 : -1;
             }
             row.classList.toggle(CURSOR_CLASS, row === current);
             if (row === current) row.setAttribute('aria-current', 'true');
@@ -193,7 +203,8 @@ function attachOne(el, options = {}) {
     const place = (row, { focus = true } = {}) => {
         const list = rows();
         cursorKey = row ? keyOfRow(row, list.indexOf(row)) : null;
-        for (const r of list) {
+        // Every row, so a hidden one keeps no tab stop of its own.
+        for (const r of allRows()) {
             if (r.hasAttribute('data-kp-roving')) r.tabIndex = r === row ? 0 : -1;
             r.classList.toggle(CURSOR_CLASS, r === row);
             if (r === row) r.setAttribute('aria-current', 'true');

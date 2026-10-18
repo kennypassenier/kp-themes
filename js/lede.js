@@ -22,13 +22,20 @@ export const LEDE = '.kp-lede';
 let counter = 0;
 const HEADINGS = 'h1, h2, h3, h4, h5, h6, .kp-card__title, .kp-page-header__title';
 
+/**
+ * What may hold the heading a lede follows. `[data-kp-measured]` is the span js/effects/measure.js wraps a headline in
+ * (blueprint's measurement frame): whether the frame went up before this module attached depends on which of the two
+ * arrived first, and under js/auto.js the effects attach first, so a wrapped headline read as no heading at all.
+ */
+const HOLDERS = 'header, .kp-card__header, .kp-page-header, div, [data-kp-measured]';
+
 /** The heading a lede belongs to: the nearest heading before it in its container. @param {Element} lede */
 function headingOf(lede) {
     let prev = lede.previousElementSibling;
     while (prev) {
         if (prev.matches(HEADINGS)) return prev;
         const inner = prev.querySelector(HEADINGS);
-        if (inner && prev.matches('header, .kp-card__header, .kp-page-header, div')) return inner;
+        if (inner && prev.matches(HOLDERS)) return inner;
         if (!prev.matches('.kp-lede, p, div')) return null;
         prev = prev.previousElementSibling;
     }

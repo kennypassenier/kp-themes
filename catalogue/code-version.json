@@ -57,7 +57,7 @@
         "js/json-field.js": { "digest": "4adfa29e9000431c", "when": "textarea[data-kp-json]" },
         "js/keys.js": { "digest": "2e44ce22f8dd8260", "when": ".kp-kbd[data-kp-key]" },
         "js/kpi.js": { "digest": "303b7fb0c6477d3f", "when": "svg[data-kp-spark], button.kp-kpi--toggle, .kp-kpis[data-kp-kpis-columns]" },
-        "js/lede.js": { "digest": "09feb82cdfec3a8a", "when": ".kp-lede" },
+        "js/lede.js": { "digest": "1cd491dd055de38b", "when": ".kp-lede" },
         "js/loading-pieces.js": {
             "digest": "50d7cde51e8410d8",
             "when": ".kp-skeleton, .kp-progressbar, .kp-meter, .kp-kpi, .kp-card, .kp-spinner, [data-kp-datatable], [data-kp-calendar], [data-kp-menu-button]"
@@ -88,7 +88,7 @@
         "js/rating.js": { "digest": "6b7dc7c2d535d9aa", "when": "[data-kp-rating]" },
         "js/reason.js": { "digest": "8c3a1030e2a661cc", "when": "[data-kp-disabled-reason]" },
         "js/request-inspector.js": { "digest": "bad69c26fc325a7f", "when": "[data-kp-requests]" },
-        "js/row-select.js": { "digest": "e2bd1f6d115e99e5", "when": "[data-kp-select-keys], [data-kp-datatable]:has([data-kp-select-row])" },
+        "js/row-select.js": { "digest": "32a882863433b369", "when": "[data-kp-select-keys], [data-kp-datatable]:has([data-kp-select-row])" },
         "js/runs.js": { "digest": "fe331025f405e87f", "when": "[data-kp-runs]" },
         "js/segmented.js": { "digest": "7dc6410a6d12b788", "when": "[data-kp-segmented]" },
         "js/selection-bar.js": { "digest": "d70024c1bae04626", "when": "[data-kp-selection]" },
@@ -12180,6 +12180,7 @@
                 "data-kp-lede-collapsible",
                 "data-kp-lede-link",
                 "data-kp-lede-required",
+                "data-kp-measured",
                 "data-kp-palette",
                 "data-kp-shortcuts",
                 "data-kp-shortcuts-body",
