@@ -4354,6 +4354,13 @@
         font-size: var(--kp-text-md, 1rem);
     }
 
+    /* The picked row of the master-detail list is marked by its plate and bar; the 600 weight of the shared rule is wider
+       in Be Vietnam Pro and wrapped a long name to a fourth line, so picking a row (or the detail failing on it) moved
+       the list 24 px. The row keeps its weight. */
+    [data-theme='titanium'] .kp-pane__list > [data-kp-pane-key][aria-selected='true'] {
+        font-weight: inherit;
+    }
+
     /* ── Pipeline: plates in a rack, the stage an oxide strip along the head ── */
     [data-theme='titanium'] .kp-pipeline__lane {
         --kp-sig-ti-c: 0.75rem;
