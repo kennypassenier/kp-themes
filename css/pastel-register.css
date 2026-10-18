@@ -2262,7 +2262,8 @@
             .kp-tour,
             .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
             .kp-datatable__busy-panel,
-            .kp-calendar__busy
+            .kp-calendar__busy,
+            .kp-chart__state[data-kp-state='error']
         ) {
         isolation: isolate;
         border-color: transparent;
@@ -2279,7 +2280,7 @@
         --kp-sig-pa-edge: var(--border-strong);
     }
 
-    [data-theme='pastel'] :is(.kp-toast, .kp-alert, .kp-datatable__busy-panel) {
+    [data-theme='pastel'] :is(.kp-toast, .kp-alert, .kp-datatable__busy-panel, .kp-chart__state[data-kp-state='error']) {
         position: relative;
         border-radius: var(--kp-sig-pa-r-plate);
     }
@@ -2304,7 +2305,8 @@
             .kp-tour,
             .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
             .kp-datatable__busy-panel,
-            .kp-calendar__busy
+            .kp-calendar__busy,
+            .kp-chart__state[data-kp-state='error']
         )::before {
         content: '';
         position: absolute;
@@ -2330,7 +2332,8 @@
             .kp-tour,
             .kp-sidenav:is([data-kp-sidenav-mode='over'], [data-kp-sidenav-mode='push']),
             .kp-datatable__busy-panel,
-            .kp-calendar__busy
+            .kp-calendar__busy,
+            .kp-chart__state[data-kp-state='error']
         )::after {
         content: '';
         position: absolute;
@@ -2389,7 +2392,7 @@
         --kp-sig-pa-edge: var(--warning);
     }
 
-    [data-theme='pastel'] :is(.kp-toast--destructive, .kp-toast--error, .kp-alert--destructive) {
+    [data-theme='pastel'] :is(.kp-toast--destructive, .kp-toast--error, .kp-alert--destructive, .kp-chart__state[data-kp-state='error']) {
         --kp-sig-pa-plate: var(--destructive);
         --kp-sig-pa-edge: var(--destructive);
     }
@@ -5839,3 +5842,71 @@
         padding-inline: 1rem;
     }
 }
+
+/* ── t56-q: the failed chart is the failed plate ── */
+@layer kp.signature {
+    /* A failed chart was a pale tint with a dot beside the first line. It is the red sticker every failed area here is (the
+       pass and the paper from the alert's own rules above), the sentence in the sticker's ink, no dot. */
+    [data-theme='pastel'] .kp-chart__state[data-kp-state='error'] {
+        color: var(--destructive-foreground);
+        border-color: transparent;
+        background: transparent;
+    }
+    [data-theme='pastel'] .kp-chart__state[data-kp-state='error'] .kp-chart__dot {
+        display: none;
+    }
+}
+/* ── end t56-q ── */
+
+/* ── t56-q: the too-early plate stays off the axis ── */
+@layer kp.signature {
+    /* The note of a chart with too few readings filled the plot down to its date labels and covered them. The plot keeps the band of
+       its axis free and the plate is a compact one (a smaller picture, less air) so it fits above it. */
+    [data-theme='pastel'] .kp-chart__few {
+        padding-block-end: 2rem;
+    }
+    [data-theme='pastel'] .kp-chart__few .kp-chart__few-plate {
+        --kp-sig-pa-lip: 1.4rem;
+        max-block-size: 100%;
+        padding: 0.6rem 1.25rem 0.85rem;
+    }
+    [data-theme='pastel'] .kp-chart__few .kp-chart__few-plate::before {
+        inline-size: 2.5rem;
+        block-size: 2.25rem;
+        margin-block-end: 0.35rem;
+    }
+}
+/* ── end t56-q ── */
+
+/* ── t56-q2 people: the fold keeps off a small button's label ── */
+@layer kp.signature {
+    /* The curl of a pointed small button (15 px) lay over the last letter of its 9 px side margin ("Failed" read "Failec").
+       A small button curls a smaller corner, inside its own margin. */
+    [data-theme='pastel'] .kp-button.kp-button--sm::after {
+        inline-size: 0.5rem;
+        block-size: 0.5rem;
+    }
+}
+/* ── end t56-q2 people ── */
+
+/* ── t56-q2 fields: the time in a sentence fits its box ── */
+@layer kp.signature {
+    /* The pill of a time in a sentence was 5.5 characters wide including its 12 px padding, so the last digits were cut (now five characters content-box). */
+    [data-theme='pastel'] .kp-time--inline .kp-time__input.kp-field__input {
+        box-sizing: content-box;
+        inline-size: calc(5ch + 0.3em);
+    }
+}
+/* ── end t56-q2 fields ── */
+
+/* ── t56-q2 confirm: Stop keeps its plate on the red card ── */
+@layer kp.signature {
+    /* The Stop of an urgent or refused question is the same red as the card it stands on, so its plate vanished and it read as plain
+       text. On the red card it is the deep red with the card's pale ink as its edge. */
+    [data-theme='pastel'] .kp-question.kp-alert--destructive .kp-button--destructive {
+        background: hsl(from var(--destructive) h s calc(l * 0.55));
+        color: var(--destructive-foreground);
+        border-color: var(--destructive-foreground);
+    }
+}
+/* ── end t56-q2 confirm ── */

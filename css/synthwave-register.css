@@ -6152,3 +6152,151 @@
     }
 }
 /* ── end t56 ── */
+
+/* ── t56-q: the failed plate is a tube on the floor ── */
+@layer kp.signature {
+    /* A failed area (the state plate) and an urgent or refused question stood as a flat coral slab with a black square above the
+       heading. Synthwave's failure is the VCR stop in a neon tube: the tape plate (card ground, the stripe along its top, the sides
+       falling from it, the grid floor under the words) in the failure's coral, a hollow stop square lit like a tube (near-white
+       core, coral bloom) above a coral heading, the sentence in the plain ink. The same look in every part that fails. */
+    [data-theme='synthwave'] :is(:is(.kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure), .kp-chart__state[data-kp-state='error']), .kp-question.kp-alert--destructive) {
+        --kp-stripe-from: var(--destructive);
+        --kp-stripe-to: var(--destructive);
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+        color: var(--foreground);
+        background:
+            linear-gradient(to right, var(--destructive), var(--destructive)) 0 0 / 100% var(--kp-sw-side) no-repeat,
+            linear-gradient(hsl(from var(--kp-core) h s l / 0.22) 0 0) 0 var(--kp-sw-side) / 100% 1px no-repeat,
+            linear-gradient(to bottom, var(--destructive), hsl(from var(--destructive) h s l / 0.5) 50%, transparent) 0 0 / var(--kp-sw-side) 100% no-repeat,
+            linear-gradient(to bottom, var(--destructive), hsl(from var(--destructive) h s l / 0.5) 50%, transparent) 100% 0 / var(--kp-sw-side) 100% no-repeat,
+            var(--card);
+        border: 0;
+        border-radius: 0;
+        box-shadow:
+            inset 0 -2px 0 0 hsl(from var(--sidebar-background) h s l / 0.7),
+            0 0 24px hsl(from var(--destructive) h s l / 0.22);
+    }
+    /* The floor, in the failure's colour, under the plate's foot. */
+    [data-theme='synthwave'] :is(:is(.kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure), .kp-chart__state[data-kp-state='error']), .kp-question.kp-alert--destructive)::after {
+        content: '';
+        position: absolute;
+        inset: auto 0 0;
+        z-index: -1;
+        block-size: clamp(2.5rem, 22%, 5rem);
+        border-block-start: 1px solid hsl(from var(--destructive) h s l / 0.7);
+        background:
+            linear-gradient(hsl(from var(--destructive) h s l / 0.3) 0 0) 0 30% / 100% 1px no-repeat,
+            linear-gradient(hsl(from var(--destructive) h s l / 0.34) 0 0) 0 62% / 100% 1px no-repeat,
+            repeating-conic-gradient(from 180deg at 50% -40%, hsl(from var(--destructive) h s l / 0.4) 0 0.7deg, transparent 0.7deg 9deg);
+        box-shadow: 0 -2px 12px hsl(from var(--destructive) h s l / 0.3);
+        pointer-events: none;
+    }
+    /* The stop: a hollow square tube. */
+    [data-theme='synthwave'] :is(.kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure), .kp-chart__state[data-kp-state='error'])::before {
+        content: '';
+        inline-size: 1.75rem;
+        block-size: 1.75rem;
+        box-sizing: border-box;
+        border: 3px solid var(--kp-core);
+        background: transparent;
+        filter: none;
+        box-shadow:
+            0 0 6px var(--destructive),
+            0 0 14px hsl(from var(--destructive) h s l / 0.7),
+            inset 0 0 6px hsl(from var(--destructive) h s l / 0.8);
+        font-size: inherit;
+    }
+    [data-theme='synthwave'] .kp-question.kp-alert--destructive::before {
+        background: transparent;
+        box-sizing: border-box;
+        border: 2px solid var(--kp-core);
+        inline-size: 1.1rem;
+        block-size: 1.1rem;
+        filter: none;
+        box-shadow:
+            0 0 5px var(--destructive),
+            0 0 12px hsl(from var(--destructive) h s l / 0.7);
+    }
+    [data-theme='synthwave'] :is(.kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure), .kp-chart__state[data-kp-state='error']) :is(.kp-stateplate__title, .kp-runs__failure-title, .kp-dated__failure-title, .kp-card__state-title, .kp-chart__state-text) {
+        color: var(--destructive);
+        text-shadow:
+            0 0 2px var(--sidebar-background),
+            0 0 8px hsl(from var(--destructive) h s l / 0.6);
+    }
+    [data-theme='synthwave'] :is(.kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure), .kp-chart__state[data-kp-state='error']) :is(.kp-stateplate__text, .kp-card__state-text) {
+        color: var(--foreground);
+    }
+    /* Its buttons are the theme's own framed keys, the frame in the failure's coral. */
+    [data-theme='synthwave']
+        :is(:is(.kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure), .kp-chart__state[data-kp-state='error']), .kp-question.kp-alert--destructive)
+        .kp-button:not(.kp-icon-button) {
+        --kp-frame: var(--destructive);
+        --kp-glow: hsl(from var(--destructive) h s l / 0.5);
+        --kp-sw-cut-ink: var(--card);
+        background: var(--card);
+        color: var(--foreground);
+        text-shadow: none;
+    }
+    [data-theme='synthwave']
+        :is(:is(.kp-alert--destructive:is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure, .kp-card__failure), .kp-chart__state[data-kp-state='error']), .kp-question.kp-alert--destructive)
+        .kp-button:not(.kp-icon-button):hover {
+        --kp-frame: var(--kp-core);
+        background: hsl(from var(--destructive) h s l / 0.18);
+    }
+}
+@layer kp.signature {
+    /* The chart's own dot sits beside the sentence; the stop tube above it says the same, so the dot leaves. */
+    [data-theme='synthwave'] .kp-chart__state[data-kp-state='error'] .kp-chart__dot {
+        display: none;
+    }
+}
+/* ── end t56-q ── */
+
+/* ── t56-q2 fields: the loading slider is the marquee ── */
+@layer kp.signature {
+    /* A slider that loads was dimmed with only a faint gradient. Waiting is the marquee bulbs (G16): a row along its foot, one bulb
+       in four lit, the light chasing start to end. */
+    [data-theme='synthwave'] .kp-slider__bar.kp-skeleton--block {
+        background:
+            radial-gradient(circle at 4px 50%, var(--kp-core) 0 1.5px, hsl(from var(--primary) h s l / 0.9) 2.5px, transparent 5px) 0 100% / 32px 14px repeat-x,
+            radial-gradient(circle at 4px 50%, hsl(from var(--primary) h s l / 0.3) 0 2px, transparent 2.5px) 0 100% / 8px 14px repeat-x;
+    }
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='synthwave'] .kp-slider__bar.kp-skeleton--block {
+            animation: kp-sig-synthwave-slider-chase calc(4 * var(--kp-sw-beat)) steps(4, end) infinite;
+        }
+        @keyframes kp-sig-synthwave-slider-chase {
+            to {
+                background-position:
+                    32px 100%,
+                    0 100%;
+            }
+        }
+    }
+}
+/* ── end t56-q2 fields ── */
+
+/* ── t56-q2 fields: the time in a sentence fits its box ── */
+@layer kp.signature {
+    /* The box of a time in a sentence was 5.5 characters wide including its 14 px padding and frame, so it showed "03". */
+    [data-theme='synthwave'] .kp-time--inline .kp-time__input.kp-field__input {
+        box-sizing: content-box;
+        inline-size: calc(5ch + 0.3em);
+    }
+}
+/* ── end t56-q2 fields ── */
+
+/* ── t56-q2 confirm: the floor stays under the question's words ── */
+@layer kp.signature {
+    /* The grid floor of an urgent or refused question was 22% of a tall card and its lines ran through the last button, its
+       consequence and the refusal. The card keeps a band under its words and the floor is that band only. */
+    [data-theme='synthwave'] .kp-question.kp-alert--destructive {
+        padding-block-end: 2.75rem;
+    }
+    [data-theme='synthwave'] .kp-question.kp-alert--destructive::after {
+        block-size: 1.75rem;
+    }
+}
+/* ── end t56-q2 confirm ── */
