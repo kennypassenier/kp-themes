@@ -7725,3 +7725,16 @@
     }
 }
 /* ── end t56-q ── */
+
+/* ── t56-q2 fields: the loading time field reads ── */
+@layer kp.signature {
+    /* The word of an inline skeleton was 8 px in a box that is as dark as the page: it barely read as the glitch anchor. In the time
+       field's own skeleton (the size of the field) the word is 12 px and the box shows its frame. */
+    [data-theme='cyberpunk'] .kp-time__skeleton.kp-skeleton--block {
+        box-shadow: inset 0 0 0 1px var(--border-strong);
+    }
+    [data-theme='cyberpunk'] .kp-time__skeleton.kp-skeleton--block::before {
+        font-size: 0.75rem;
+    }
+}
+/* ── end t56-q2 fields ── */
