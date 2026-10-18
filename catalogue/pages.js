@@ -144,6 +144,27 @@ export const PAGES = [
                 label: 'HTTPSwitchboard: health and problems',
                 about: 'How the status page tells a person that a profile needs them: the attention band and the problem alert (what, why, what now, with a Copy command), the "last delivery" freshness line, the kyu hub connection banner, and the profiles card loading, empty and failed. 5 sections (5 pairs, formal), with the defaults for you to confirm.',
             },
+            // Kenny, 2026-10-19 (kp-themes 11.0.0 adoption, kyu): kyu's dashboard with every component that fits used to the full, formal only, five parts; map in kyu docs/KP_THEMES_11_ADOPTION.md.
+            {
+                href: 'research/kyu-11-overview/demo.html',
+                label: 'kyu, part 1 of 5: across every page',
+                about: 'The command palette, keyboard shortcuts and their help sheet, a first-visit tour, links to a heading or a row, and two overviews of which app reads which topic. Formal only.',
+            },
+            {
+                href: 'research/kyu-11-topic-subs/demo.html',
+                label: 'kyu, part 3 of 5: the Topic page, sending and subscriptions',
+                about: 'The topic header, the four commands to send and receive with the token kept hidden, the warning when no app token exists yet, and the subscriptions table with its filter, row menu, archive with undo and delete by typing the name. Formal only.',
+            },
+            {
+                href: 'research/kyu-11-topic-messages/demo.html',
+                label: 'kyu, part 4 of 5: the Topic page, dead letters and messages',
+                about: 'Dead letters with their reason and remedy, readable payloads, requeue or delete many at once, recent messages beside their payload, new arrivals, replay, and the publish box that checks its JSON. Formal only; items marked New need kyu backend work.',
+            },
+            {
+                href: 'research/kyu-11-subscription/demo.html',
+                label: 'kyu, part 5 of 5: the Subscription page',
+                about: 'One subscription: its header, its policy, gauges against the lease and the attempts, the backlog with bulk delete, and three new views of delivery attempts and 90 days of history. Formal only; items marked New need kyu backend work.',
+            },
         ],
     },
     {

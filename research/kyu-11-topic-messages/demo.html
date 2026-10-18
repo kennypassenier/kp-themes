@@ -1,0 +1,924 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="kyu-11-topic-messages" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kyu on kp-themes 11.0.0: the Topic page, dead letters and messages</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k11-page">
+            <header class="k11-intro">
+                <h1>kyu, the Topic page: dead letters and messages</h1>
+                <p class="cat-intro">
+                    The lower half of kyu&rsquo;s Topic page (<code>notify.kenny</code>) on kp-themes 11.0.0, in formal. Dead letters first: what died, why, and
+                    what to do now. Then the recent messages, a message opened large, and the box that publishes a test message. All data on this page
+                    is mock. Two sections are <b>new use cases</b> that need kyu backend work; they say so in their first sentence.
+                </p>
+            </header>
+
+            <!-- ============================================================ 1 · problems -->
+            <section
+                class="k11-sec"
+                id="dead-problems"
+                data-review-item="dead-problems"
+                data-review-topic="dead-problems"
+                data-review-topic-title="What died, why, and what now"
+                data-review-components="problems"
+                data-review-title="Dead letters: what died, why and what now"
+                data-review-choices='[
+                    { "id": "problems-mode", "label": "How several problems are laid out", "once": true, "default": "each", "options": [
+                        { "value": "each", "label": "One alert per problem", "hint": "Recommended. Every subscription that lost messages is its own alert with its own Requeue button; the worst stands first." },
+                        { "value": "list", "label": "One alert, a list inside", "hint": "A single alert with one row per problem and the tone of the worst; quieter, but the Requeue buttons stand in the rows." },
+                        { "value": "fold", "label": "One alert, the rest folded", "hint": "The worst problems open and &ldquo;Show the other N&rdquo; for the rest; useful when a topic has many subscriptions." }] },
+                    { "id": "problems-fold-from", "label": "With the fold: from how many problems it folds", "once": true, "default": "5", "options": [
+                        { "value": "5", "label": "From 5 problems", "hint": "The package default." },
+                        { "value": "3", "label": "From 3 problems", "hint": "Folds early; only the worst stay open." },
+                        { "value": "7", "label": "From 7 problems", "hint": "Folds late; almost always every problem is open." }] }]'
+                aria-labelledby="h-dead-problems"
+            >
+                <div class="k11-sec__head">
+                    <h2 id="h-dead-problems">Dead letters: what died, why and what now</h2>
+                    <p>
+                        <code>.kp-alert</code> with <code>setProblems()</code> (js/problems.js) above the dead-letter table: one alert for each
+                        subscription that lost messages, saying what died, why, and the remedy, with <b>Requeue</b> beside it. kyu has this data now.
+                    </p>
+                </div>
+                <div class="k11-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            On load: <b>3 problems</b>, the worst first (<b>3 messages died on desktop</b>, then two warnings), each with <b>What
+                            now</b> and a Requeue button. <b>6 problems</b> adds an almanac alert whose remedy is a command with Copy, an archive alert
+                            with <b>104</b> messages (110 dead letters in all), and a note about the oldest dead letter.
+                        </li>
+                        <li>
+                            Press a <b>Requeue</b> button: it says Requeued for a moment, then that problem leaves and the rest close up; the others do
+                            not move or lose focus. <b>Bring them back</b> returns all of them. The layout is an option below (each, list, fold) and so
+                            is the number where the fold starts.
+                        </li>
+                        <li>
+                            <b>None</b> shows the empty plate (<b>Nothing has died</b>), <b>Loading</b> lays the busy card over the region and
+                            <b>Failed</b> a failed plate with Retry. All three fill the same box as the filled region, so the page does not jump.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Each alert is a paper plate in a strong hairline with the 3 px navy rule on its start edge; the three lines (what, why, what
+                        now) share one column and the Requeue buttons stand in one column at the end. Nothing fades or slides.
+                    </p>
+                </div>
+                <div class="k11-controls" data-review-controls data-review-controls-for="k11-problems-comp">
+                    <div role="group" aria-label="How many have died">
+                        <b>Dead:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-problems="1" aria-pressed="false">1</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-problems="3" aria-pressed="true">3</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-problems="6" aria-pressed="false">6</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-problems="none" aria-pressed="false">None</button>
+                    </div>
+                    <div role="group" aria-label="The region">
+                        <b>Region:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-problems-region="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-problems-region="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-problems-region="failed" aria-pressed="false">Failed</button>
+                    </div>
+                </div>
+                <div id="k11-problems-comp" class="k11-stack">
+                    <div class="k11-stage" data-k11-stage style="--k11-stage-min: 21rem">
+                        <div data-k11-filled>
+                            <div class="kp-problems" id="k11-problems-live" data-kp-problems data-kp-problems-mode="each"></div>
+                        </div>
+                        <div data-k11-plate hidden></div>
+                    </div>
+                    <p class="k11-readout" role="status" data-k11-problems-readout>Nothing pressed yet.</p>
+                </div>
+            </section>
+
+            <!-- ============================================================ 2 · the table -->
+            <section
+                class="k11-sec"
+                id="dead-table"
+                data-review-item="dead-table"
+                data-review-topic="dead-table"
+                data-review-topic-title="The dead letters table"
+                data-review-components="datatable code anchors actions"
+                data-review-title="Dead letters: payloads you can read, and a link to each"
+                data-review-choices='[
+                    { "id": "dead-code-open", "label": "Where the rest of a long payload opens", "once": true, "default": "inline", "options": [
+                        { "value": "inline", "label": "In place, in the row", "hint": "Recommended. &ldquo;Show all 38 lines&rdquo; unfolds the payload in its cell; the row grows, the other columns stay put." },
+                        { "value": "dialog", "label": "In a dialog", "hint": "The whole payload opens large in a dialog; the table never changes height." }] },
+                    { "id": "dead-anchor-show", "label": "When the # link beside a row shows", "once": true, "default": "hover", "options": [
+                        { "value": "hover", "label": "On hover and keyboard focus", "hint": "Recommended. Quiet rows; the mark appears under the pointer, with the keyboard, and always on a phone." },
+                        { "value": "always", "label": "Always", "hint": "Every row shows its # link all the time; louder, but nothing has to be discovered." }] },
+                    { "id": "dead-anchor-copy", "label": "What the # link copies", "once": true, "default": "url", "options": [
+                        { "value": "url", "label": "The full address", "hint": "Recommended. Paste it in a chat and it opens this page on that dead letter." },
+                        { "value": "hash", "label": "Only the #id", "hint": "Just the short reference, for notes inside kyu." }] }]'
+                aria-labelledby="h-dead-table"
+            >
+                <div class="k11-sec__head">
+                    <h2 id="h-dead-table">Dead letters: payloads you can read, and a link to each</h2>
+                    <p>
+                        <code>.kp-datatable</code> with the payload as <code>.kp-code--cell</code> and <code>data-kp-anchors="rows"</code>: sort,
+                        search and filter the dead letters, read each payload as JSON, and point a chat at one failed message. All of it works on data
+                        kyu already holds.
+                    </p>
+                </div>
+                <div class="k11-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Twelve dead letters. The first is the real one: <code>{"title":"eerste echte bericht","body":"hello from HA"}</code> on
+                            notify.kenny / desktop. A payload shows keys in the key colour with <b>Pretty</b> and <b>Raw</b>; the 38-line one folds to
+                            three lines with <b>Show all 38 lines</b>; the camera one says <b>binary, 2.1 kB</b> with Download; one says <b>only the
+                            first 1 kB of 4 kB was kept</b>; one says <b>empty payload</b>. <b>Copy</b> copies the whole payload, folded or not.
+                        </li>
+                        <li>
+                            Sort a header; Shift+click a second header for a second sort key; pick a subscription in the filter; search a word. The
+                            sort is remembered. The <b>Requeue</b> and <b>Delete</b> buttons stand in one fixed column on every row. Requeue says
+                            Requeued and the row leaves; Delete hides the row and offers Undo below.
+                        </li>
+                        <li>
+                            A <b>#</b> sits before each row. Press it: <b>Copied</b>. <b>Open a link that is here</b> lands on the row and marks it
+                            for two seconds; <b>a link to a requeued one</b> says <b>That item is no longer here</b> with a button to clear it.
+                        </li>
+                        <li>
+                            <b>Loading</b> lays the busy card over the rows, <b>Empty</b> shows the empty plate (<b>Nothing is dead</b>), <b>Failed</b>
+                            the failed plate with Try again. The first payload can also be loading or failed on its own.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The payload cell is the code block on the package&rsquo;s muted ground in the mono face, keys in the primary navy, punctuation
+                        quiet, a hairline above its tools. The # mark is a small ruled link in the first cell. The table is the ledger: hairline
+                        rules, tabular figures, headers that say how they are sorted.
+                    </p>
+                </div>
+                <div class="k11-controls" data-review-controls data-review-controls-for="k11-dead-comp">
+                    <div role="group" aria-label="The table">
+                        <b>Table:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-dead-state="ready" aria-pressed="true">Filled</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-dead-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-dead-state="empty" aria-pressed="false">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-dead-state="failed" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="The first payload">
+                        <b>First payload:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-dead-first="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-dead-first="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-dead-first="error" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Open a link">
+                        <b>Open a link:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-dead-link="here">That is here</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-dead-link="gone">Requeued one</button>
+                    </div>
+                </div>
+                <div id="k11-dead-comp" class="k11-stack">
+                    <div data-kp-anchors="rows" data-kp-anchor-show="hover" data-kp-anchor-copy="url" data-kp-anchor-target="highlight">
+                        <div
+                            class="kp-datatable"
+                            id="k11-dead"
+                            data-kp-datatable
+                            data-kp-cards
+                            data-kp-sort-multi
+                            data-kp-column-menu
+                            data-kp-remember="kyu-topic-dead"
+                            data-kp-page-size="25"
+                        >
+                            <div class="kp-datatable__bar">
+                                <input
+                                    class="kp-datatable__search"
+                                    type="search"
+                                    data-kp-datatable-search
+                                    aria-label="Search dead letters"
+                                    placeholder="Search dead letters"
+                                />
+                            </div>
+                            <div class="kp-table-wrap">
+                                <table class="kp-table">
+                                    <caption class="kp-sr-only">
+                                        Dead letters of notify.kenny
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" data-kp-sort="date">Died</th>
+                                            <th scope="col" data-kp-sort="text" data-kp-filter="choice">Subscription</th>
+                                            <th scope="col" data-kp-sort="number" class="kp-text-end">Tries</th>
+                                            <th scope="col" data-kp-sort="text">Why it died</th>
+                                            <th scope="col" class="k11-col-payload">Payload</th>
+                                            <th scope="col">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody data-k11-dead-body></tbody>
+                                </table>
+                            </div>
+                            <div class="kp-empty" data-kp-datatable-empty hidden>
+                                <div class="kp-empty" data-kp-art="done" data-kp-datatable-empty-none>
+                                    <p class="kp-empty__title">Nothing is dead</p>
+                                    <p class="kp-empty__body">Every message on notify.kenny was delivered or is still waiting.</p>
+                                </div>
+                                <div class="kp-empty" data-kp-art="nomatch" data-kp-datatable-empty-nomatch hidden>
+                                    <p class="kp-empty__title">No dead letter matches</p>
+                                    <p class="kp-empty__body">Loosen the search or the filter.</p>
+                                    <button type="button" class="kp-button" data-kp-datatable-clear>Clear the filter</button>
+                                </div>
+                            </div>
+                            <div class="kp-datatable__bar">
+                                <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                                <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="k11-readout">Mock data: the twelve newest of 110 dead letters on notify.kenny.</p>
+                    <div class="k11-toastbed" data-k11-bed="dead" aria-label="Toasts of this section">
+                        <p class="k11-toastbed__empty">A toast with Undo shows here after Delete.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ 3 · bulk [server] -->
+            <section
+                class="k11-sec"
+                id="dead-bulk"
+                data-review-item="dead-bulk"
+                data-review-topic="dead-bulk"
+                data-review-topic-title="Requeue or delete many dead letters"
+                data-review-components="row-select selection-bar"
+                data-review-title="Dead letters: requeue or delete many at once"
+                data-review-choices='[
+                    { "id": "bulk-placement", "label": "Where the selection bar stands", "once": true, "default": "sticky-top", "options": [
+                        { "value": "sticky-top", "label": "Stuck to the top of the table", "hint": "Recommended. It keeps its place above the rows and stays in view while you scroll them." },
+                        { "value": "inline", "label": "Inline, above the table", "hint": "A bar in the page flow; it scrolls away with the table." },
+                        { "value": "floating-bottom", "label": "Floating at the foot", "hint": "Rises from the bottom edge of the window like a toolbar of a mail app." }] },
+                    { "id": "bulk-names", "label": "What the bar says about the rows", "once": true, "default": "names", "options": [
+                        { "value": "names", "label": "The names of the dead letters", "hint": "Recommended. &ldquo;4f2a, 4f29, 4f21 and 4 more&rdquo; so you see what you are about to move." },
+                        { "value": "count", "label": "Only the count", "hint": "Just &ldquo;7 selected&rdquo;; the bar stays one short line." }] },
+                    { "id": "bulk-max", "label": "How many names before &ldquo;and N more&rdquo;", "once": true, "default": "6", "options": [
+                        { "value": "6", "label": "Six names", "hint": "The package default." },
+                        { "value": "3", "label": "Three names", "hint": "A shorter bar on a narrow window." },
+                        { "value": "10", "label": "Ten names", "hint": "More of the selection spelled out; the bar wraps to two lines." }] },
+                    { "id": "bulk-range", "label": "Ticking a range", "once": true, "default": "shift", "options": [
+                        { "value": "shift", "label": "Shift-click and Shift+x tick a range", "hint": "Recommended. A plain click still toggles one row." },
+                        { "value": "off", "label": "No range ticking", "hint": "One row at a time; Ctrl+A still ticks the shown rows." }] },
+                    { "id": "bulk-arrows", "label": "Arrow keys walk the rows", "once": true, "default": "on", "options": [
+                        { "value": "on", "label": "Arrow keys and j/k walk the rows", "hint": "Recommended. A ring moves down the rows; x ticks." },
+                        { "value": "false", "label": "Only j and k", "hint": "The arrows keep scrolling the page." }] },
+                    { "id": "bulk-allkey", "label": "Ctrl+A", "once": true, "default": "on", "options": [
+                        { "value": "on", "label": "Ctrl+A ticks every row shown", "hint": "Recommended. Ctrl+Shift+A unticks them." },
+                        { "value": "false", "label": "Ctrl+A does nothing", "hint": "The browser keeps its own select-all." }] }]'
+                aria-labelledby="h-dead-bulk"
+            >
+                <div class="k11-sec__head">
+                    <h2 id="h-dead-bulk"><span class="k11-new">New</span>Dead letters: requeue or delete many at once</h2>
+                    <p>
+                        <b>New: kyu would need a bulk endpoint for this</b> (<code>POST /t/{topic}/dead/requeue</code> and <code>/delete</code>
+                        taking a list of ids, answering which were done and which refused). <code>row-select</code> and <code>.kp-selection</code>
+                        (js/row-select.js, js/selection-bar.js) let you tick dead letters with the mouse or the keyboard and move them together.
+                        On the real page this is the same table as the one above.
+                    </p>
+                </div>
+                <div class="k11-expected">
+                    <p><b>New: kyu would need a bulk requeue and a bulk delete endpoint for this.</b> <b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Nothing ticked: the bar keeps its place, empty. Tick two rows: it opens with <b>2 selected</b>, their ids, <b>Requeue</b>,
+                            <b>Delete</b> and <b>Untick all</b>. Click a row, press <b>j</b>/<b>k</b> to walk, <b>x</b> to tick, <b>Shift+x</b> for a
+                            range, <b>Esc</b> to untick. Tick the header box: <b>Select all 110 that match</b> is offered (the total of all dead letters, of which twelve are listed).
+                        </li>
+                        <li>
+                            <b>Requeue</b> is off when an archive row is ticked, and says why (<b>archive is archived: unarchive it first</b>). Requeue
+                            shows <b>Requeueing 3…</b>; with &ldquo;Some refused&rdquo; it ends <b>2 done, 1 refused: desktop is still down</b> with the
+                            reason on the refused row. <b>Delete</b> hides the rows and offers Undo in the bed below.
+                        </li>
+                        <li>The 390 px column is the same list as cards; its bar is one count and an <b>Actions</b> button. Press and hold a card to start selecting.</li>
+                        <li><b>Loading</b>, <b>Empty</b> and <b>Failed</b> fill the table&rsquo;s box; the bar does not move.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The cursor is a 2 px navy ring inside the row, a ticked row the selected tint; the bar is an opaque paper plate in a hairline
+                        with the navy rule on its start edge, ruled open from that edge. The two actions stand in one column in every state.
+                    </p>
+                </div>
+                <div class="k11-controls" data-review-controls data-review-controls-for="k11-bulk-comp">
+                    <div role="group" aria-label="Next action">
+                        <b>Next action:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-bulk-outcome="ok" aria-pressed="true">Works for all</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-bulk-outcome="refuse" aria-pressed="false">Some refused</button>
+                    </div>
+                    <div role="group" aria-label="The table">
+                        <b>Table:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-bulk-state="ready" aria-pressed="true">Filled</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-bulk-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-bulk-state="empty" aria-pressed="false">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-bulk-state="failed" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="The rows">
+                        <b>Rows:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-bulk-reset>Put them all back</button>
+                    </div>
+                </div>
+                <div id="k11-bulk-comp" class="k11-pair">
+                    <div class="k11-stack">
+                        <p class="k11-label">The dead letters of notify.kenny, full width (scroll the list inside the frame)</p>
+                        <div class="k11-scroll" data-k11-scroll>
+                            <div
+                                class="kp-selection"
+                                data-kp-selection
+                                data-kp-selection-for="k11-bulk"
+                                data-kp-placement="sticky-top"
+                                data-kp-selection-names="names"
+                                data-kp-selection-max="6"
+                                data-kp-select-matching="110"
+                                data-kp-undo-ms="6000"
+                                id="k11-bulk-bar"
+                                aria-label="Selected dead letters"
+                            >
+                                <div class="kp-selection__actions">
+                                    <button type="button" class="kp-button" data-kp-selection-action="requeue">Requeue</button>
+                                    <button type="button" class="kp-button kp-button--destructive" data-kp-selection-action="delete">Delete</button>
+                                </div>
+                            </div>
+                            <div class="kp-datatable" id="k11-bulk" data-kp-datatable data-kp-cards data-kp-select-range="shift">
+                                <div class="kp-table-wrap">
+                                    <table class="kp-table">
+                                        <caption class="kp-sr-only">
+                                            Dead letters to move
+                                        </caption>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" class="k11-col-select">
+                                                    <input class="kp-field__check" type="checkbox" data-kp-select-all aria-label="Select all shown dead letters" />
+                                                </th>
+                                                <th scope="col" data-kp-sort="text">Dead letter</th>
+                                                <th scope="col" data-kp-sort="text">Subscription</th>
+                                                <th scope="col">Why it died</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody data-k11-bulk-body></tbody>
+                                    </table>
+                                </div>
+                                <div class="kp-empty" data-kp-datatable-empty hidden>
+                                    <div class="kp-empty" data-kp-art="done" data-kp-datatable-empty-none>
+                                        <p class="kp-empty__title">Nothing is dead</p>
+                                        <p class="kp-empty__body">Every dead letter was requeued or deleted.</p>
+                                        <button type="button" class="kp-button" data-k11-bulk-reset>Put them all back</button>
+                                    </div>
+                                    <div class="kp-empty" data-kp-art="nomatch" data-kp-datatable-empty-nomatch hidden>
+                                        <p class="kp-empty__title">No dead letter matches</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="k11-toastbed" data-k11-bed="bulk" aria-label="Toasts of this section">
+                            <p class="k11-toastbed__empty">A toast with Undo shows here after Delete.</p>
+                        </div>
+                        <div data-kp-select-hint="k11-bulk"></div>
+                        <p class="k11-readout" role="status" data-k11-bulk-readout>Next action: the server does it for every row.</p>
+                    </div>
+                    <div class="k11-stack">
+                        <p class="k11-label">390 px, the same dead letters as cards, with their own bar</p>
+                        <div class="k11-frame k11-frame--phone">
+                            <div
+                                class="kp-selection"
+                                data-kp-selection
+                                data-kp-selection-for="k11-bulk-cards"
+                                data-kp-placement="inline"
+                                id="k11-bulk-bar-phone"
+                                aria-label="Selected dead letters on a phone"
+                            >
+                                <div class="kp-selection__actions">
+                                    <button type="button" class="kp-button" data-kp-selection-action="requeue">Requeue</button>
+                                    <button type="button" class="kp-button kp-button--destructive" data-kp-selection-action="delete">Delete</button>
+                                </div>
+                            </div>
+                            <ul class="k11-cards" id="k11-bulk-cards" aria-label="Dead letters as cards" data-kp-select-keys data-k11-bulk-cards></ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ 4 · master-detail -->
+            <section
+                class="k11-sec"
+                id="recent"
+                data-review-item="recent"
+                data-review-topic="recent"
+                data-review-topic-title="Recent messages, list and payload"
+                data-review-components="master-detail code"
+                data-review-title="Recent messages: the list on the left, the payload on the right"
+                data-review-choices='[
+                    { "id": "recent-narrow", "label": "What a phone shows", "once": true, "default": "sheet", "options": [
+                        { "value": "sheet", "label": "The payload slides up as a sheet", "hint": "Recommended. The list stays under it; Back or a swipe down returns, and the list keeps its place." },
+                        { "value": "one-pane", "label": "The payload replaces the list", "hint": "One pane at a time with a Back button at the top of the payload." },
+                        { "value": "stack", "label": "The payload under the list", "hint": "Both panes in one column; no navigation, a longer page." }] }]'
+                aria-labelledby="h-recent"
+            >
+                <div class="k11-sec__head">
+                    <h2 id="h-recent">Recent messages: the list on the left, the payload on the right</h2>
+                    <p>
+                        <code>.kp-split--panes</code> with <code>data-kp-master-detail</code> (js/master-detail.js): pick a message in the list and its
+                        payload (<code>.kp-code</code>) stands beside it, with the divider you can drag. The width you choose is remembered. Works on
+                        data kyu already holds.
+                    </p>
+                </div>
+                <div class="k11-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Twelve messages, the newest first, each with its number, subscription, time and the first characters of its payload. The
+                            first is selected and its payload shows in full on the right with the facts above it. Arrow keys, Home and End change the
+                            selection without the focus leaving the list. <b>Drag the divider</b>: the list and payload resize; reload and the width is
+                            kept.
+                        </li>
+                        <li>
+                            <b>Open large</b> opens the payload in the viewer (next section). Detail <b>Empty</b> shows <b>Pick a message on the
+                            left</b>, <b>Loading</b> lays the busy card over the detail only (the list stays usable), <b>Failed</b> fills the pane with
+                            Retry. List <b>Empty</b> and <b>Failed</b> do the same for the list.
+                        </li>
+                        <li>
+                            The 390 px frame is the same layout folded: the list alone; a tap opens the payload the way the option below says. A
+                            sheet comes up from the foot and keeps focus; Back returns to the row.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Two ruled panes on paper with a hairline divider; the selected message has the navy rule on its start edge; the payload is the
+                        code block on the muted ground. The detail arrives without sliding or fading.
+                    </p>
+                </div>
+                <div class="k11-controls" data-review-controls data-review-controls-for="k11-md-comp">
+                    <div role="group" aria-label="The payload pane">
+                        <b>Payload pane:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-md-detail="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-md-detail="empty" aria-pressed="false">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-md-detail="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-md-detail="error" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="The list">
+                        <b>List:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-md-list="ready" aria-pressed="true">Filled</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-md-list="empty" aria-pressed="false">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-md-list="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-md-list="error" aria-pressed="false">Failed</button>
+                    </div>
+                </div>
+                <div id="k11-md-comp" class="k11-pair">
+                    <div class="k11-stack">
+                        <p class="k11-label">Wide, with the divider you can drag</p>
+                        <div
+                            class="kp-split kp-split--panes k11-md"
+                            data-kp-master-detail
+                            data-kp-resizable
+                            data-kp-remember="kyu-topic-recent"
+                            data-kp-narrow="sheet"
+                            data-kp-pane-widths="20rem 1fr"
+                            data-k11-md="wide"
+                        >
+                            <section data-kp-pane="list" aria-label="Recent messages">
+                                <ul class="kp-pane__list" role="listbox" aria-label="Recent messages" data-k11-md-items></ul>
+                            </section>
+                            <section data-kp-pane="detail" aria-label="Message">
+                                <h3 data-kp-pane-heading tabindex="-1"></h3>
+                                <div class="kp-pane__body" data-k11-md-body></div>
+                            </section>
+                        </div>
+                    </div>
+                    <div class="k11-stack">
+                        <p class="k11-label">390 px, folded</p>
+                        <div class="k11-frame k11-frame--phone">
+                            <div class="kp-split kp-split--panes k11-md" data-kp-master-detail data-kp-narrow="sheet" data-kp-pane-widths="12rem 1fr" data-k11-md="phone">
+                                <section data-kp-pane="list" aria-label="Recent messages">
+                                    <ul class="kp-pane__list" role="listbox" aria-label="Recent messages" data-k11-md-items></ul>
+                                </section>
+                                <section data-kp-pane="detail" aria-label="Message">
+                                    <h3 data-kp-pane-heading tabindex="-1"></h3>
+                                    <div class="kp-pane__body" data-k11-md-body></div>
+                                </section>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============================================================ 5 · live list -->
+            <section
+                class="k11-sec"
+                id="live"
+                data-review-item="live"
+                data-review-topic="live"
+                data-review-topic-title="New messages while you read"
+                data-review-components="newpill refresh freshness"
+                data-review-title="New messages while you read: the pill and the refresh"
+                data-review-choices='[
+                    { "id": "live-since", "label": "A divider where you left off", "once": true, "default": "on", "options": [
+                        { "value": "on", "label": "&ldquo;New since 14:32&rdquo; divider", "hint": "Recommended. When you come back to the tab, a rule marks the first message that arrived while you were away." },
+                        { "value": "off", "label": "No divider", "hint": "The pill alone says how many are new." }] },
+                    { "id": "live-interval", "label": "How often the list asks kyu", "once": true, "default": "30", "options": [
+                        { "value": "30", "label": "Every 30 s", "hint": "Recommended, the package default. Calm enough to read in, fresh enough to trust." },
+                        { "value": "15", "label": "Every 15 s", "hint": "For a busy topic." },
+                        { "value": "60", "label": "Every minute", "hint": "For a quiet topic." }] }]'
+                aria-labelledby="h-live"
+            >
+                <div class="k11-sec__head">
+                    <h2 id="h-live">New messages while you read: the pill and the refresh</h2>
+                    <p>
+                        <code>data-kp-follow="head"</code> with <code>data-kp-newpill-host</code> (js/newpill.js) and <code>.kp-refresh</code>
+                        (js/auto-refresh.js): the message list asks kyu again by itself, new messages arrive at the top, and when you have scrolled
+                        down they are counted in a pill instead of pushing the list. Works with kyu as it is.
+                    </p>
+                </div>
+                <div class="k11-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The control says <b>Every 30 s</b> with <b>updated … ago</b>. <b>Refresh now</b> asks at once: the line says
+                            <b>updating…</b> in the same width and then the new time. The list is read from the top: <b>1 new</b> prepends one message
+                            with a quiet tint that fades.
+                        </li>
+                        <li>
+                            Scroll the list down, then refresh with <b>3 new</b>: the list does not move; a pill <b>3 new messages · back to the
+                            top</b> appears and jumps up when pressed. With <b>120 new</b> the pill says <b>120</b>, the exact number. Leave the tab
+                            and come back: the divider marks where you left off.
+                        </li>
+                        <li>
+                            <b>Server fails</b> keeps the list and says <b>Last refresh failed, retrying in 30 s</b> with Retry now. While you hover
+                            the list or a field has focus, the refresh waits. The list <b>Empty</b>, <b>Loading</b> and <b>Failed</b> fill the same box.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The pill is a small ruled plate with the navy rule, set on the list&rsquo;s top edge; the refresh line is plain grey figures;
+                        the new-message tint is the paper&rsquo;s selected tint and fades without moving anything.
+                    </p>
+                </div>
+                <div class="k11-controls" data-review-controls data-review-controls-for="k11-live-comp">
+                    <div role="group" aria-label="The next refresh brings">
+                        <b>Next refresh:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-live-bring="0" aria-pressed="true">Nothing</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-live-bring="1" aria-pressed="false">1 new</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-live-bring="3" aria-pressed="false">3 new</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-live-bring="120" aria-pressed="false">120 new</button>
+                    </div>
+                    <div role="group" aria-label="The server">
+                        <b>Server:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-live-server="ok" aria-pressed="true">Answers</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-live-server="fail" aria-pressed="false">Fails</button>
+                    </div>
+                    <div role="group" aria-label="The list">
+                        <b>List:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-live-list="ready" aria-pressed="true">Filled</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-live-list="empty" aria-pressed="false">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-live-list="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-live-list="error" aria-pressed="false">Failed</button>
+                    </div>
+                </div>
+                <div id="k11-live-comp" class="k11-stack">
+                    <div class="k11-live-head">
+                        <p class="k11-label" id="k11-live-count">Messages on notify.kenny: 12,408</p>
+                        <div class="kp-refresh" id="k11-live-refresh" data-kp-refresh="30" data-kp-refresh-mode="event"></div>
+                    </div>
+                    <div class="k11-stage" data-k11-stage style="--k11-stage-min: 20rem">
+                        <div data-k11-filled>
+                            <div data-kp-newpill-host>
+                                <ul
+                                    class="k11-live"
+                                    id="k11-live-list"
+                                    tabindex="0"
+                                    aria-label="Live messages"
+                                    data-kp-follow="head"
+                                    data-kp-pill-unit="new message,new messages"
+                                    data-kp-since-left="on"
+                                ></ul>
+                            </div>
+                        </div>
+                        <div data-k11-plate hidden></div>
+                    </div>
+                    <p class="k11-readout" role="status" data-k11-live-readout>Following the newest message.</p>
+                </div>
+            </section>
+
+            <!-- ============================================================ 6 · viewer -->
+            <section
+                class="k11-sec"
+                id="viewer"
+                data-review-item="viewer"
+                data-review-topic="viewer"
+                data-review-topic-title="A payload opened large"
+                data-review-components="viewer code"
+                data-review-title="A payload opened large, to read, copy or download"
+                data-review-choices='[
+                    { "id": "viewer-size", "label": "How large the viewer opens", "once": true, "default": "wide", "options": [
+                        { "value": "wide", "label": "Wide: most of the window", "hint": "Recommended. About 70 % of the width and 90 % of the height; the page behind stays in sight." },
+                        { "value": "full", "label": "The whole window", "hint": "For a very long payload; nothing of the page remains." }] }]'
+                aria-labelledby="h-viewer"
+            >
+                <div class="k11-sec__head">
+                    <h2 id="h-viewer">A payload opened large, to read, copy or download</h2>
+                    <p>
+                        <code>openViewer()</code> (js/viewer.js) with the payload in a <code>.kp-code</code>: a long message opens in a window of its
+                        own with its facts, a Copy button and a Download link. Works with kyu as it is (the payload is already on the page).
+                    </p>
+                </div>
+                <div class="k11-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Press <b>Open the viewer</b>: a modal window with the title (<b>Message #12,408</b>), the facts line (<b>JSON · 1.2 kB ·
+                            17/10/2026 20:14</b>), the payload with line numbers, and a foot with <b>Copy payload</b> and <b>Download</b>. Escape, the
+                            close button or a click on the dim behind closes it and the focus returns to the button.
+                        </li>
+                        <li>
+                            <b>Copy payload</b> shows a spinner, then <b>Copied</b> for a moment in the same width. <b>Download</b> saves
+                            <code>message-12408.json</code>. The buttons below set how the next opening looks (the line under them says it); press <b>Open the viewer</b> after each. <b>Loading</b> lays the busy
+                            card over the stage, <b>Failed</b> fills it with Retry, <b>Cannot show</b> (the binary payload) says so and keeps Download
+                            in the plate and in the foot.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The viewer is a paper plate in a strong hairline over the dimmed page; the head is ruled off from the stage by a hairline, the
+                        foot likewise; Copy and Download are ordinary buttons of one size.
+                    </p>
+                </div>
+                <div class="k11-controls" data-review-controls data-review-controls-for="k11-viewer-comp">
+                    <div role="group" aria-label="The payload">
+                        <b>Payload:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-viewer-payload="short" aria-pressed="false">Short</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-viewer-payload="long" aria-pressed="true">38 lines</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-viewer-payload="binary" aria-pressed="false">Binary</button>
+                    </div>
+                    <div role="group" aria-label="The viewer opens">
+                        <b>Opens:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-viewer-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-viewer-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-viewer-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                </div>
+                <div id="k11-viewer-comp" class="k11-stack">
+                    <p class="k11-label">Message #12,408 on notify.kenny / desktop</p>
+                    <div class="k11-openers">
+                        <button type="button" class="kp-button kp-button--primary" data-review-replay data-k11-viewer-open>Open the viewer</button>
+                    </div>
+                    <p class="k11-readout" role="status" data-k11-viewer-readout>Next open: the 38-line payload, ready.</p>
+                </div>
+            </section>
+
+            <!-- ============================================================ 7 · replay [server] -->
+            <section
+                class="k11-sec"
+                id="replay"
+                data-review-item="replay"
+                data-review-topic="replay"
+                data-review-topic-title="Replay a message"
+                data-review-components="flash"
+                data-review-title="Replay this message"
+                data-review-choices='[
+                    { "id": "replay-refusal", "label": "Where a refusal is explained", "once": true, "default": "line", "options": [
+                        { "value": "line", "label": "A line under the button", "hint": "Recommended. The button says &ldquo;Refused&rdquo; in its own width; the reason and what to do stand right under it until the next press." },
+                        { "value": "button", "label": "On the button itself", "hint": "The button grows to hold the sentence; one place to look, but the row moves." },
+                        { "value": "toast", "label": "In a toast", "hint": "The sentence appears in a toast; the page is left as it was." }] },
+                    { "id": "replay-width", "label": "The button&#39;s width", "once": true, "default": "keep", "options": [
+                        { "value": "keep", "label": "Always the same width", "hint": "Recommended. Every word the button may say shares one cell, so nothing beside it moves." },
+                        { "value": "grow", "label": "As wide as its word", "hint": "The button follows its word; the row beside it may shift." }] }]'
+                aria-labelledby="h-replay"
+            >
+                <div class="k11-sec__head">
+                    <h2 id="h-replay"><span class="k11-new">New</span>Replay this message</h2>
+                    <p>
+                        <b>New: kyu would need an endpoint for this</b> (<code>POST /t/{topic}/messages/{id}/replay</code>, which publishes the stored
+                        payload again as a new message and answers its number, or a refusal with a reason). A <code>data-kp-flash-button</code>
+                        (js/flash.js) on a recent message publishes it again, for example to test a subscription that was fixed.
+                    </p>
+                </div>
+                <div class="k11-expected">
+                    <p><b>New: kyu would need a replay endpoint for this.</b> <b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Press <b>Replay this message</b>: the button shows a spinner (no width change), then <b>✓ Replayed</b> for 1.5 s, and a line
+                            under it: <b>Published again as #12,409. Every active subscription will receive it.</b>
+                        </li>
+                        <li>
+                            <b>Refused</b>: the button says <b>✕ Refused</b> for 3 s and the sentence <b>notify.kenny is archived. Unarchive the
+                            topic, then replay again.</b> stands under it until the next press (or on the button or in a toast, with the option
+                            below). <b>No answer</b> says <b>Failed</b> and <b>kyu did not answer.</b> A second press while busy does nothing.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The refusal line is plain destructive ink with the field&rsquo;s red edge, never a tinted plate; the success line is quiet
+                        grey with a navy tick. The button keeps its place and size in every state.
+                    </p>
+                </div>
+                <div class="k11-controls" data-review-controls data-review-controls-for="k11-replay-comp">
+                    <div role="group" aria-label="What the server answers">
+                        <b>Server:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-replay-outcome="ok" aria-pressed="true">Accepts</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-replay-outcome="refuse" aria-pressed="false">Refuses</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-replay-outcome="down" aria-pressed="false">No answer</button>
+                    </div>
+                    <div role="group" aria-label="The message">
+                        <b>Message:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-replay-message="json" aria-pressed="true">JSON</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-replay-message="binary" aria-pressed="false">Binary</button>
+                    </div>
+                </div>
+                <div id="k11-replay-comp" class="k11-stack">
+                    <dl class="k11-facts" data-k11-replay-facts></dl>
+                    <figure class="kp-code" id="k11-replay-code" data-kp-code data-kp-code-title="Payload" data-kp-code-language="JSON" data-kp-code-max="8">
+                        <pre class="kp-code__body"><code>{"title":"eerste echte bericht","body":"hello from HA"}</code></pre>
+                    </figure>
+                    <div class="k11-detail-actions">
+                        <button type="button" class="kp-button kp-button--primary" id="k11-replay-button" data-kp-flash-button data-kp-flash-words="Replayed,Refused,Failed" data-kp-flash-word="Replayed" data-kp-refusal="line" data-kp-width="keep">Replay this message</button>
+                    </div>
+                    <p class="k11-readout" role="status" data-k11-replay-readout>Next replay: kyu accepts it.</p>
+                </div>
+            </section>
+
+            <!-- ============================================================ 8 · publish -->
+            <section
+                class="k11-sec"
+                id="publish"
+                data-review-item="publish"
+                data-review-topic="publish"
+                data-review-topic-title="Publish a test message"
+                data-review-components="json-field autosize forms flash"
+                data-review-title="Publish a test message"
+                data-review-choices='[
+                    { "id": "publish-json", "label": "Text that is not JSON", "once": true, "default": "strict", "options": [
+                        { "value": "strict", "label": "Blocked: the message must be JSON", "hint": "Recommended for a topic of JSON messages. Broken text holds the Publish button back and says where." },
+                        { "value": "allow-text", "label": "Allowed, and the line says it is text", "hint": "For a topic whose messages are plain sentences; JSON is still checked and laid out when it is JSON." }] },
+                    { "id": "publish-format", "label": "Laying the JSON out", "once": true, "default": "button", "options": [
+                        { "value": "button", "label": "Format and Minify buttons", "hint": "Recommended. You decide when the text is rewritten." },
+                        { "value": "on-blur", "label": "Laid out when you leave the box", "hint": "Valid JSON is formatted by itself on leaving; no buttons." },
+                        { "value": "off", "label": "Not at all", "hint": "The text stays exactly as typed." }] },
+                    { "id": "publish-check", "label": "When the JSON is checked", "once": true, "default": "input", "options": [
+                        { "value": "input", "label": "While typing, after a short pause", "hint": "Recommended. The line under the box follows you." },
+                        { "value": "blur", "label": "When you leave the box", "hint": "Nothing is said until you move on." }] },
+                    { "id": "publish-indent", "label": "Indent of the formatted JSON", "once": true, "default": "2", "options": [
+                        { "value": "2", "label": "Two spaces", "hint": "The package default." },
+                        { "value": "4", "label": "Four spaces", "hint": "Wider, for those who read deep structures." },
+                        { "value": "tab", "label": "A tab", "hint": "A tab character per level." }] },
+                    { "id": "publish-gutter", "label": "Line numbers beside the box", "once": true, "default": "on", "options": [
+                        { "value": "on", "label": "Shown", "hint": "Recommended. The broken line is marked in the gutter." },
+                        { "value": "false", "label": "Hidden", "hint": "A plainer box; the error still says line and column." }] },
+                    { "id": "publish-counter", "label": "The counter under the box", "once": true, "default": "chars", "options": [
+                        { "value": "chars", "label": "Characters", "hint": "Recommended. &ldquo;1 204 of 4 000&rdquo;, warning tone from 90 %." },
+                        { "value": "lines", "label": "Lines", "hint": "Counts lines." },
+                        { "value": "both", "label": "Characters and lines", "hint": "Both numbers." },
+                        { "value": "off", "label": "No counter", "hint": "The limit is only enforced." }] }]'
+                aria-labelledby="h-publish"
+            >
+                <div class="k11-sec__head">
+                    <h2 id="h-publish">Publish a test message</h2>
+                    <p>
+                        <code>data-kp-json</code> (js/json-field.js), <code>data-kp-autosize</code> (js/autosize.js), <code>data-kp-form</code>
+                        (js/forms.js) and a <code>data-kp-flash-button</code> (js/flash.js): a box that checks JSON as you type and says line and
+                        column, grows with the text, remembers an unsent draft, and a Publish button that says what the server answered. Works with
+                        kyu as it is.
+                    </p>
+                </div>
+                <div class="k11-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The box opens with a draft kept from last time if you left one. <b>Valid JSON · 2 keys</b> stands under it quietly. Type a
+                            broken text (or press <b>Broken</b> below): the line number is marked in the gutter and the line says <b>Line 3, column
+                            12: expected &lsquo;,&rsquo;</b>. <b>Format</b> lays it out, <b>Minify</b> packs it. The box grows to 20 lines and then
+                            scrolls inside; the counter reads <b>1 204 of 4 000</b> and turns to the warning tone from 90 %.
+                        </li>
+                        <li>
+                            <b>Ctrl+Enter</b> in the box submits. Publish with a broken body or a delay above 86 400 s: a summary names the fields,
+                            each field shows its own message, and the focus goes to the summary. Leave the delay with a letter in it: its message
+                            appears on leaving the field.
+                        </li>
+                        <li>
+                            A valid Publish shows a spinner, then <b>✓ Published</b> and the line <b>Published as #12,409.</b> A refusal says <b>✕
+                            Refused</b> and under the button <b>notify.kenny is archived. Unarchive the topic, then publish again.</b>
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The box is the package&rsquo;s field in the mono face, the gutter a muted column with tabular numbers; an error is destructive
+                        ink with the field&rsquo;s edge turned red, never a tinted plate; valid is quiet grey. The Publish button keeps its width in
+                        every state.
+                    </p>
+                </div>
+                <div class="k11-controls" data-review-controls data-review-controls-for="k11-publish-comp">
+                    <div role="group" aria-label="Put in the box">
+                        <b>Box:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-publish-sample="valid" aria-pressed="false">Valid</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-publish-sample="broken" aria-pressed="false">Broken</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-publish-sample="long" aria-pressed="false">Long</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-publish-sample="empty" aria-pressed="true">Empty</button>
+                    </div>
+                    <div role="group" aria-label="What the server answers">
+                        <b>Server:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-publish-outcome="ok" aria-pressed="true">Accepts</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-publish-outcome="refuse" aria-pressed="false">Refuses</button>
+                        <button type="button" class="kp-button kp-button--sm" data-k11-publish-outcome="down" aria-pressed="false">No answer</button>
+                    </div>
+                </div>
+                <div id="k11-publish-comp" class="k11-stack">
+                    <form class="k11-form kp-form" id="k11-publish-form" data-kp-form novalidate>
+                        <div class="kp-form__summary" data-kp-form-summary tabindex="-1" hidden></div>
+                        <div class="k11-form__row">
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="k11-publish-body">
+                                    Message to notify.kenny <span class="kp-field__required">required</span>
+                                </label>
+                                <textarea
+                                    class="kp-field__input kp-field__input--multiline"
+                                    id="k11-publish-body"
+                                    name="body"
+                                    required
+                                    rows="6"
+                                    maxlength="4000"
+                                    placeholder='{"title":"hello","body":"world"}'
+                                    data-kp-json="strict"
+                                    data-kp-json-check="input"
+                                    data-kp-json-format="button"
+                                    data-kp-json-indent="2"
+                                    data-kp-autosize
+                                    data-kp-autosize-engine="js"
+                                    data-kp-autosize-max="20"
+                                    data-kp-counter="chars"
+                                    data-kp-submit-key="mod-enter"
+                                    data-kp-remember="kyu-topic-publish-draft"
+                                ></textarea>
+                                <span class="kp-field__error" data-kp-field-error hidden></span>
+                            </div>
+                            <div class="kp-field">
+                                <label class="kp-field__label" for="k11-publish-delay">Deliver after (seconds)</label>
+                                <input
+                                    class="kp-field__input"
+                                    id="k11-publish-delay"
+                                    name="delay"
+                                    type="number"
+                                    inputmode="numeric"
+                                    min="0"
+                                    max="86400"
+                                    step="1"
+                                    placeholder="0"
+                                />
+                                <span class="kp-field__error" data-kp-field-error hidden></span>
+                            </div>
+                        </div>
+                        <div class="k11-submit">
+                            <button
+                                type="submit"
+                                class="kp-button kp-button--primary"
+                                id="k11-publish-send"
+                                data-kp-flash-button
+                                data-kp-flash-words="Published,Refused,Failed"
+                                data-kp-flash-word="Published"
+                                data-kp-refusal="line"
+                            >
+                                Publish test message
+                            </button>
+                        </div>
+                    </form>
+                    <p class="k11-readout" role="status" data-k11-publish-readout>Next publish: kyu accepts it.</p>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "kyu11messages-3c1a9d54-7b2e-4f61-a8d3-5e0b6f9c2a17" }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="kyu-11-topic-subs" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kyu on kp-themes 11: the Topic page, top half · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="demo.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main ks-page">
+            <header class="ks-intro">
+                <h1>kyu on kp-themes 11: the Topic page, top half</h1>
+                <p class="cat-intro">
+                    How the top of kyu&rsquo;s Topic page (<code>/t/notify.kenny/dashboard</code>) looks when it uses the new components to the
+                    full: the page header, the commands to send and receive, the warning for a topic nobody reads yet, and the table of
+                    subscriptions with its menu, Archive and Delete. Everything here is <b>mock data</b> in kyu&rsquo;s real shape (the topics
+                    notify.kenny, ha.events, almanac.sync, jobtracker.mail and newsflash.items; the subscriptions desktop, phone, kyu-runner,
+                    almanac and archive); nothing is sent to a server and the token is made up.
+                </p>
+                <p>
+                    Seven sections, formal only. Each says under <b>Expected</b> what to see and what each control does. Every setting a
+                    component offers is a button above it and a choice in the dialog that only asks for the default.
+                </p>
+            </header>
+
+            <!-- 1 · the page header ------------------------------------------------------------------------------------------ -->
+            <section
+                class="ks-sec"
+                id="topic-header"
+                data-review-item="topic-header"
+                data-review-topic="topic-top"
+                data-review-topic-title="Topic page, top half"
+                data-review-components="page-header idmark freshness lede"
+                data-review-title="Page header: mark, title, freshness and one sentence"
+                data-review-choices='{{choices:header}}'
+                aria-labelledby="h-topic-header"
+            >
+                <div class="ks-sec__head">
+                    <h2 id="h-topic-header">Page header: mark, title, freshness and one sentence</h2>
+                    <p>
+                        Says which topic this is and how fresh it is: a coloured mark that is the same wherever the topic appears, the name, a
+                        badge for the dead letters, a line that ticks (&ldquo;updated 12 s ago&rdquo;) and one sentence on what the page is for.
+                    </p>
+                </div>
+                <div class="ks-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Filled</b>: the mark <b>NK</b> in front of <b>notify.kenny</b>, a red <b>1 dead</b> badge, and
+                            <b>updated 12 s ago</b> that counts on by itself without moving anything beside it. Point at it: the title shows
+                            <b>19/10/2026 14:00</b>-style time (dd/mm/yyyy HH:mm). Under the title the sentence, then
+                            <b>1,284 messages retained · backlog 112 · 5 subscriptions</b> (exact numbers).
+                        </li>
+                        <li>
+                            <b>Quiet topic</b> turns the line into <b>last message 3 days ago</b> on a warning plate, without shifting the
+                            title. <b>Loading</b> shows the same header as grey shapes of the same size, animated, and nothing jumps back when
+                            it fills.
+                        </li>
+                        <li>
+                            <b>Topic mark</b>: Letters, Pattern (a 5 by 5 picture made from the name) or Glyph (a small corner shape).
+                            <b>Sentence under the title</b>: Whole, or Folded after the first sentence with a More button that opens it.
+                            <b>Copy address</b> says Copied for a moment.
+                        </li>
+                        <li>At 390 px the actions go under the sentence and the title wraps under its mark.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal is the reference look: white plates, hairline borders, a quiet blue and gentle 180 ms motion. Check that the mark,
+                        title, badge and freshness sit on one line and wrap together, that the freshness line keeps its width while it ticks, and
+                        that nothing moves between Filled, Quiet and Loading.
+                    </p>
+                </div>
+                <div class="ks-controls" data-review-controls data-review-controls-for="ks-header-component">
+{{controls:header}}
+                </div>
+                <div id="ks-header-component" class="ks-stage" data-ks-header data-ks-state="filled">
+                    <header class="kp-page-header" data-kp-idmark-set>
+                        <div class="kp-page-header__inner">
+                            <div class="ks-header__main">
+                                <div class="kp-page-header__heading" data-ks-live>
+                                    <span class="kp-page-header__lead"
+                                        ><span class="kp-idmark kp-idmark--lg" data-kp-idmark="notify.kenny" aria-hidden="true" data-ks-mark></span
+                                    ></span>
+                                    <div class="kp-page-header__line">
+                                        <h2 class="kp-page-header__title" data-kp-reveal="headline">notify.kenny</h2>
+                                        <span class="kp-badge kp-badge--destructive">1 dead</span>
+                                        <time
+                                            class="kp-ago kp-page-header__meta"
+                                            data-kp-ago
+                                            data-kp-ago-verb="updated"
+                                            data-kp-stale-after="86400"
+                                            data-ks-ago
+                                            datetime="2026-10-19T14:00:00Z"
+                                            >updated 12 s ago</time
+                                        >
+                                    </div>
+                                </div>
+                                <div class="ks-skel" data-ks-skeleton hidden aria-hidden="true">
+                                    <span class="kp-idmark kp-idmark--lg kp-skeleton"></span>
+                                    <span class="ks-skel__line">
+                                        <span class="kp-skeleton ks-skel__title"></span>
+                                        <span class="kp-skeleton ks-skel__badge"></span>
+                                        <span class="kp-skeleton ks-skel__ago"></span>
+                                    </span>
+                                </div>
+                                <div data-ks-live>
+                                    <p class="kp-lede" data-ks-lede>
+                                        Publishers send messages to this topic and every subscription reads its own copy. Here you copy the commands
+                                        that publish, receive and acknowledge, see who reads the topic and how far behind they are, and archive or
+                                        delete a subscription you no longer use.
+                                    </p>
+                                    <p class="kp-page-header__meta ks-facts">1,284 messages retained · backlog 112 · 5 subscriptions</p>
+                                </div>
+                                <div class="ks-skel ks-skel--text" data-ks-skeleton hidden aria-hidden="true">
+                                    <span class="kp-skeleton ks-skel__lede"></span>
+                                    <span class="kp-skeleton ks-skel__lede"></span>
+                                    <span class="kp-skeleton ks-skel__facts"></span>
+                                </div>
+                            </div>
+                            <div class="kp-page-header__actions">
+                                <code id="ks-topic-url" class="kp-sr-only">https://kyu.example/t/notify.kenny</code>
+                                <button type="button" class="kp-button kp-copyable__button ks-copy" data-kp-copy="ks-topic-url">Copy address</button>
+                            </div>
+                        </div>
+                    </header>
+                </div>
+            </section>
+
+            <!-- 2 · send and receive ----------------------------------------------------------------------------------------- -->
+            <section
+                class="ks-sec"
+                id="send"
+                data-review-item="send"
+                data-review-topic="topic-top"
+                data-review-components="steplist command secret"
+                data-review-title="Send and receive: three steps, four commands, a hidden token"
+                data-review-choices='{{choices:send}}'
+                aria-labelledby="h-send"
+            >
+                <div class="ks-sec__head">
+                    <h2 id="h-send">Send and receive: three steps, four commands, a hidden token</h2>
+                    <p>
+                        Publish a message, receive it, acknowledge it: each command is shown to read, and the token that makes it work stays
+                        hidden until you ask. Copy puts the whole working command on your clipboard without ever showing it.
+                    </p>
+                </div>
+                <div class="ks-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            A path of three steps, <b>1. Publish</b>, <b>2. Receive</b>, <b>3. Acknowledge</b>, and under each its command(s) with
+                            the terminal&rsquo;s prompt and its own <b>Copy</b>. Receive has two: the raw payload and the JSON envelope. The token
+                            appears in them only as <code>$KYU_TOKEN</code>.
+                        </li>
+                        <li>
+                            Under each command a field <b>Working command with the token</b> shows ●●●● dots. <b>Reveal</b> shows the whole
+                            command for the chosen time with a draining rule and the seconds left (it pauses while you select the text);
+                            <b>Copy</b> there copies the working command and never shows it.
+                        </li>
+                        <li>
+                            Copy a command and its step turns green with the time; the next step becomes the current one. <b>Start over</b> resets
+                            the path.
+                        </li>
+                        <li>
+                            <b>Token</b>: Being read (a spinner with &ldquo;Reading the token&rdquo;), Cannot be read (the reason and a Try again
+                            in the Reveal button), Locked (both buttons off, the sentence under them says why), Hidden (back to normal).
+                            <b>Section</b>: Loading shows the shared loading card over the dimmed commands; Failed the red alert with a normal
+                            Try again. <b>Reveal shows for</b> and <b>Reveal works by</b> change the next Reveal.
+                        </li>
+                        <li>At 390 px the steps stack, the path becomes a column, and nothing scrolls sideways.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Check that the three steps read as one path with the commands under their own step, that the prompt is muted and never
+                        copied, that Reveal and Copy are the same size in every command, and that the countdown rule drains without moving the
+                        buttons.
+                    </p>
+                </div>
+                <div class="ks-controls" data-review-controls data-review-controls-for="ks-send-component">
+{{controls:send}}
+                </div>
+                <section id="ks-send-component" class="kp-card ks-card" data-kp-state="ready" aria-labelledby="ks-send-title" data-kp-loading-words="Building the commands" data-ks-send>
+                    <div class="kp-card__header">
+                        <h3 class="kp-card__title" id="ks-send-title">Commands for notify.kenny</h3>
+                        <div class="kp-card__actions">
+                            <button type="button" class="kp-button kp-button--sm" data-ks-start-over>Start over</button>
+                        </div>
+                    </div>
+                    <p class="kp-card__body">
+                        The commands carry this hub&rsquo;s login token (mock), hidden. Reveal shows it for
+                        <b data-ks-ttl-words>10 seconds</b>. A command with an app&rsquo;s own token is on the Apps page.
+                    </p>
+                    <div class="kp-card__stage">
+                        <div class="kp-card__data">
+                            <ol class="kp-steplist kp-steplist--journey ks-journey" aria-label="From publishing to acknowledging" data-ks-journey>
+                                <li class="kp-steplist__item" data-state="current" data-kp-step-id="publish" data-kp-tone="1">
+                                    <span class="kp-steplist__mark" aria-hidden="true"></span>
+                                    <span class="kp-steplist__body">
+                                        <span class="kp-steplist__title">1. Publish</span>
+                                        <span class="kp-steplist__note">Send a message to the topic</span>
+                                    </span>
+                                    <time class="kp-steplist__time"></time>
+                                </li>
+                                <li class="kp-steplist__item" data-state="pending" data-kp-step-id="receive" data-kp-tone="2">
+                                    <span class="kp-steplist__mark" aria-hidden="true"></span>
+                                    <span class="kp-steplist__body">
+                                        <span class="kp-steplist__title">2. Receive</span>
+                                        <span class="kp-steplist__note">Ask for the next message</span>
+                                    </span>
+                                    <time class="kp-steplist__time"></time>
+                                </li>
+                                <li class="kp-steplist__item" data-state="pending" data-kp-step-id="ack" data-kp-tone="3">
+                                    <span class="kp-steplist__mark" aria-hidden="true"></span>
+                                    <span class="kp-steplist__body">
+                                        <span class="kp-steplist__title">3. Acknowledge</span>
+                                        <span class="kp-steplist__note">Say it arrived, so it is not sent again</span>
+                                    </span>
+                                    <time class="kp-steplist__time"></time>
+                                </li>
+                            </ol>
+                            <div class="ks-steps">
+                                <div class="ks-step" data-ks-step="publish">
+                                    <p class="ks-caption">Publish a message:</p>
+                                    <div class="kp-command" data-kp-command="bash" data-kp-command-where="the machine that publishes" data-ks-command="publish">
+                                        <pre><code>curl -s -H "authorization: Bearer $KYU_TOKEN" \
+     -H 'content-type: application/json' \
+     -d '{"title":"eerste echte bericht","body":"hello from HA"}' \
+     https://kyu.example/t/notify.kenny</code></pre>
+                                    </div>
+                                    <div class="kp-secret" data-kp-secret-ttl="10" data-kp-secret-mask="24" data-kp-secret-wrap="wrap" data-kp-secret-lines="3" data-kp-secret-label="Working command with the token: publish" data-ks-secret="publish"></div>
+                                </div>
+                                <div class="ks-step" data-ks-step="receive">
+                                    <p class="ks-caption">Receive it: the payload is the body, the id comes back in a header:</p>
+                                    <div class="kp-command" data-kp-command="bash" data-kp-command-where="the machine that reads" data-ks-command="receive">
+                                        <pre><code>curl -s -H "authorization: Bearer $KYU_TOKEN" -D- -o message.body "https://kyu.example/t/notify.kenny/next?as=desktop"</code></pre>
+                                    </div>
+                                    <div class="kp-secret" data-kp-secret-ttl="10" data-kp-secret-mask="24" data-kp-secret-wrap="wrap" data-kp-secret-lines="3" data-kp-secret-label="Working command with the token: receive the raw payload" data-ks-secret="receive-raw"></div>
+                                    <p class="ks-caption">Or ask for one JSON document instead:</p>
+                                    <div class="kp-command" data-kp-command="bash" data-kp-command-where="the machine that reads" data-ks-command="receive">
+                                        <pre><code>curl -s -H "authorization: Bearer $KYU_TOKEN" "https://kyu.example/t/notify.kenny/next?as=desktop&amp;envelope=json"</code></pre>
+                                    </div>
+                                    <div class="kp-secret" data-kp-secret-ttl="10" data-kp-secret-mask="24" data-kp-secret-wrap="wrap" data-kp-secret-lines="3" data-kp-secret-label="Working command with the token: receive the envelope" data-ks-secret="receive-envelope"></div>
+                                </div>
+                                <div class="ks-step" data-ks-step="ack">
+                                    <p class="ks-caption">Then acknowledge it, so it is not delivered again:</p>
+                                    <div class="kp-command" data-kp-command="bash" data-kp-command-where="the machine that reads" data-ks-command="ack">
+                                        <pre><code>curl -s -X POST -H "authorization: Bearer $KYU_TOKEN" "https://kyu.example/t/notify.kenny/ack/&lt;id&gt;?as=desktop"</code></pre>
+                                    </div>
+                                    <div class="kp-secret" data-kp-secret-ttl="10" data-kp-secret-mask="24" data-kp-secret-wrap="wrap" data-kp-secret-lines="3" data-kp-secret-label="Working command with the token: acknowledge" data-ks-secret="ack"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- 3 · the bootstrap warning ------------------------------------------------------------------------------------ -->
+            <section
+                class="ks-sec"
+                id="bootstrap"
+                data-review-item="bootstrap"
+                data-review-topic="topic-top"
+                data-review-components="problems"
+                data-review-title="Warning: nobody has polled this topic yet"
+                aria-labelledby="h-bootstrap"
+            >
+                <div class="ks-sec__head">
+                    <h2 id="h-bootstrap">Warning: nobody has polled this topic yet</h2>
+                    <p>
+                        A subscription only exists once it has polled, so on a brand-new topic (here newsflash.items) the page warns that a
+                        message published now will not be seen, and says what to do first.
+                    </p>
+                </div>
+                <div class="ks-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Shown</b>: the theme's warning plate with three lines: what is wrong (<b>Nobody has polled newsflash.items yet</b>), why,
+                            and <b>What now</b> with the command to run once, in code, with its own <b>Copy</b>.
+                        </li>
+                        <li>
+                            <b>Loading</b>: the shared loading card over the dimmed warning. <b>Failed</b>: the red alert &ldquo;Could not check
+                            who reads this topic&rdquo; with a normal Try again. <b>A reader exists</b>: the warning is gone and the card says so,
+                            at the same size, so the page below does not jump.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Check that the warning is the theme&rsquo;s warning plate, that what / why / what now read as three lines, and that the
+                        card keeps its height in all four states.
+                    </p>
+                </div>
+                <div class="ks-controls" data-review-controls data-review-controls-for="ks-bootstrap-component">
+{{controls:bootstrap}}
+                </div>
+                <section id="ks-bootstrap-component" class="kp-card ks-card" data-kp-state="ready" aria-labelledby="ks-bootstrap-title" data-kp-loading-words="Checking who reads the topic" data-ks-bootstrap>
+                    <div class="kp-card__header">
+                        <h3 class="kp-card__title" id="ks-bootstrap-title">Readers of newsflash.items</h3>
+                    </div>
+                    <p class="kp-card__body">Nothing is delivered to a reader that does not exist yet.</p>
+                    <div class="kp-card__stage">
+                        <div class="kp-card__data">
+                            <div class="kp-problems" data-kp-problems data-ks-problems></div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- 4 · the subscriptions table ---------------------------------------------------------------------------------- -->
+            <section
+                class="ks-sec"
+                id="subs"
+                data-review-item="subs"
+                data-review-topic="topic-subs"
+                data-review-topic-title="Subscriptions"
+                data-review-components="datatable segmented actions idmark"
+                data-review-title="Subscriptions: filter, sort, Archive and Delete"
+                data-review-choices='{{choices:subs}}'
+                aria-labelledby="h-subs"
+            >
+                <div class="ks-sec__head">
+                    <h2 id="h-subs">Subscriptions: filter, sort, Archive and Delete</h2>
+                    <p>
+                        Every reader of notify.kenny in one table: narrow it by state with the filter above it, sort by any column, and archive or
+                        delete a reader on the row, with the same buttons in the same place on every row.
+                    </p>
+                </div>
+                <div class="ks-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Above the table <b>All 5 · active 3 · flagged 1 · archived 1</b> with the exact numbers. A plain click turns a state on
+                            or off (active and flagged together is allowed); nothing on, or <b>All</b>, shows everything. A pill under the bar
+                            names the filter and removes it. The table&rsquo;s own line says how many rows are shown.
+                        </li>
+                        <li>
+                            Each row: the name with its mark, a state badge (<b>desktop</b> is flagged because a message died on it), backlog (<b>112</b>
+                            on kyu-runner), in flight, dead, lapsed, the oldest unacked message, and the policy with <b>(default)</b> muted.
+                            Click a header to sort; Shift-click adds a second sort key and the headers number the keys.
+                        </li>
+                        <li>
+                            The buttons stand in fixed columns: <b>Archive</b>, <b>Delete</b> and <b>More</b>. Delete is off until a subscription is
+                            archived; point at it for why. Archive on <b>almanac</b> turns the row to archived at once, the counts follow, Delete
+                            on that row turns on, and a toast offers Undo. Delete on <b>archive</b> asks for the name; with the server set to
+                            Refuses (section 7) the row stays and the refusal is said.
+                        </li>
+                        <li>
+                            <b>Filled / Loading / Empty / Failed</b> keep the table&rsquo;s footprint: the loading card over the dimmed rows, the
+                            empty note &ldquo;Nothing has polled this topic yet&rdquo;, the alert with Try again. <b>Rows</b>, <b>Filter look</b> and
+                            <b>Filter picks</b> are the table&rsquo;s and the filter&rsquo;s own options. At 390 px every row is a card and the
+                            buttons keep their order.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Check that the action buttons line up in three columns through all five rows (a row without Archive or Delete still leaves
+                        its slot), that numbers are right-aligned and exact, and that the filter counts change when a row is archived or deleted.
+                    </p>
+                </div>
+                <div class="ks-controls" data-review-controls data-review-controls-for="ks-subs-component">
+{{controls:subs}}
+                </div>
+                <section id="ks-subs-component" class="kp-card ks-card" data-kp-state="ready" aria-labelledby="ks-subs-title" data-kp-loading-words="Reading the subscriptions" data-ks-subs>
+                    <div class="kp-card__header">
+                        <h3 class="kp-card__title" id="ks-subs-title">Subscriptions of notify.kenny</h3>
+                        <div class="kp-card__actions"><span class="kp-timestamp" data-ks-sub-total>5 subscriptions</span></div>
+                    </div>
+                    <p class="kp-card__body">One row per reader. A subscription starts existing when it first polls.</p>
+                    <div class="kp-card__stage">
+                        <div class="kp-card__data">
+                            <div class="ks-filterbar">
+                                <div class="kp-segmented" data-kp-segmented="multi" role="group" aria-label="Show subscriptions in state" data-ks-filter>
+                                    <button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="true">
+                                        <span class="kp-segmented__label">All</span><span class="kp-segmented__count">5</span>
+                                    </button>
+                                    <button type="button" class="kp-segmented__item" data-value="active" aria-pressed="false">
+                                        <span class="kp-segmented__label">Active</span><span class="kp-segmented__count">3</span>
+                                    </button>
+                                    <button type="button" class="kp-segmented__item" data-value="flagged" aria-pressed="false">
+                                        <span class="kp-segmented__label">Flagged</span><span class="kp-segmented__count">1</span>
+                                    </button>
+                                    <button type="button" class="kp-segmented__item" data-value="archived" aria-pressed="false">
+                                        <span class="kp-segmented__label">Archived</span><span class="kp-segmented__count">1</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="kp-datatable ks-table-sticky" data-kp-datatable data-kp-cards data-kp-key="kyu-topic-subs" data-kp-page-sizes="none" data-kp-sort-multi data-kp-fixed-columns="1" data-ks-table>
+                                <div class="kp-table-wrap">
+                                    <table class="kp-table">
+                                        <caption class="kp-sr-only">
+                                            Subscriptions of notify.kenny
+                                        </caption>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" data-kp-sort="text">Name</th>
+                                                <th scope="col" data-kp-sort="text" data-kp-filter="choice">State</th>
+                                                <th scope="col" data-kp-sort="number" data-kp-filter="range" class="kp-text-end">Backlog</th>
+                                                <th scope="col" data-kp-sort="number" class="kp-text-end">In flight</th>
+                                                <th scope="col" data-kp-sort="number" class="kp-text-end">Dead</th>
+                                                <th scope="col" data-kp-sort="number" class="kp-text-end">Lapsed</th>
+                                                <th scope="col" data-kp-sort="date">Oldest unacked</th>
+                                                <th scope="col">Policy</th>
+                                                <th scope="col" class="ks-col-actions"><span class="kp-sr-only">Actions</span></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody data-ks-rows></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="ks-toastbed" data-ks-bed="subs" aria-label="Toasts of this section"><p class="ks-toastbed__empty">Toasts show here.</p></div>
+                            <div class="ks-foot">
+                                <p class="ks-readout" role="status" data-ks-subs-log>Mock data. Nothing has been pressed yet.</p>
+                                <button type="button" class="kp-button kp-button--sm" data-ks-subs-reset>Put the mock rows back</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+            <!-- 5 · the row menu --------------------------------------------------------------------------------------------- -->
+            <section
+                class="ks-sec"
+                id="row-menu"
+                data-review-item="row-menu"
+                data-review-topic="topic-subs"
+                data-review-components="menu-button reason"
+                data-review-title="The More menu on a row, with reasons"
+                aria-labelledby="h-row-menu"
+            >
+                <div class="ks-sec__head">
+                    <h2 id="h-row-menu">The More menu on a row, with reasons</h2>
+                    <p>
+                        What does not fit in the row sits behind More. An entry that cannot be used right now stays in the list and says under it
+                        why, instead of vanishing.
+                    </p>
+                </div>
+                <div class="ks-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Two rows side by side in one card: <b>desktop</b> (a message died, three wait) and <b>phone</b> (nothing waiting). Menu
+                            <b>Open</b> shows both menus open at once; each has two groups, <b>Look</b> and <b>Use</b>, entries with a one-line hint.
+                        </li>
+                        <li>
+                            On <b>phone</b> the entries <b>Dead letters</b> and <b>Oldest unacked message</b> are dimmed with their reason under them
+                            (&ldquo;Nothing died on phone&rdquo;, &ldquo;Nothing is waiting on phone&rdquo;); you can still reach them with the arrow
+                            keys and hear the reason. Pressing one does nothing.
+                        </li>
+                        <li>
+                            Keys: Down or Up on the button opens it, arrows and Home/End move, a letter jumps, Esc closes and returns to the
+                            button. <b>Entries</b>: Loading shows one disabled &ldquo;Loading&rdquo; entry; Nothing to offer shows the empty line.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Check that the open menu stands on an opaque white plate right under its button, that the reason text is muted and fully
+                        readable, and that a dimmed entry is clearly different from an enabled one without being hidden.
+                    </p>
+                </div>
+                <div class="ks-controls" data-review-controls data-review-controls-for="ks-menu-component">
+{{controls:rowmenu}}
+                </div>
+                <div id="ks-menu-component" class="ks-menucard ks-menu-room" data-ks-menus>
+                    <div class="ks-menucard__row" data-ks-menu-row="desktop">
+                        <span class="ks-name"><span class="kp-idmark kp-idmark--sm" data-kp-idmark="desktop" aria-hidden="true"></span><b>desktop</b></span>
+                        <span class="ks-menucard__facts">flagged · 3 waiting · 1 dead</span>
+                        <div class="kp-menu-button" data-kp-menu-button data-ks-menu="desktop">
+                            <button type="button" class="kp-button kp-button--sm" aria-label="More for desktop">More ▾</button>
+                            <div class="kp-menu kp-menu--rich" role="menu" aria-label="More for desktop"></div>
+                        </div>
+                    </div>
+                    <div class="ks-menucard__row" data-ks-menu-row="phone">
+                        <span class="ks-name"><span class="kp-idmark kp-idmark--sm" data-kp-idmark="phone" aria-hidden="true"></span><b>phone</b></span>
+                        <span class="ks-menucard__facts">active · nothing waiting</span>
+                        <div class="kp-menu-button" data-kp-menu-button data-ks-menu="phone">
+                            <button type="button" class="kp-button kp-button--sm" aria-label="More for phone">More ▾</button>
+                            <div class="kp-menu kp-menu--rich" role="menu" aria-label="More for phone"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6 · archive with undo ---------------------------------------------------------------------------------------- -->
+            <section
+                class="ks-sec"
+                id="archive"
+                data-review-item="archive"
+                data-review-topic="topic-subs"
+                data-review-components="undo-toast"
+                data-review-title="Archive without asking, with Undo and a clock"
+                data-review-choices='{{choices:archive}}'
+                aria-labelledby="h-archive"
+            >
+                <div class="ks-sec__head">
+                    <h2 id="h-archive">Archive without asking, with Undo and a clock</h2>
+                    <p>
+                        Archiving stops delivery but keeps the history, so kyu does not ask first: it does it, says so, and offers Undo for a few
+                        seconds with a visible clock.
+                    </p>
+                </div>
+                <div class="ks-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Press <b>Archive</b> on a row: the row turns to <b>archived</b> at once and a toast <b>almanac archived</b> appears
+                            in the box under the list with <b>Undo</b> and the clock (a ring by default). The toast stops its clock while the
+                            pointer is on it. <b>Undo</b>, or Ctrl+Z, puts the row back and the toast says Restored.
+                        </li>
+                        <li>
+                            Let the clock run out: the toast leaves and the archive is committed. With the server on <b>Refuses</b> the toast
+                            turns into &ldquo;Not done: &hellip;&rdquo; and the row comes back by itself.
+                        </li>
+                        <li>
+                            <b>Clock</b> (ring, rule, seconds in words, none), <b>Undo is offered for</b> (3, 6, 10 s) and <b>The archive
+                            happens</b> (after the window, or at once with Undo reversing it) apply to the next toast. Put back returns the rows.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Check that the toast is the theme&rsquo;s plate, that the clock empties smoothly without moving Undo, and that the row
+                        and the toast agree at every moment (archived while counting, back after Undo).
+                    </p>
+                </div>
+                <div class="ks-controls" data-review-controls data-review-controls-for="ks-archive-component">
+{{controls:archive}}
+                </div>
+                <div id="ks-archive-component" class="ks-archive" data-ks-archive-demo data-ks-clock="ring" data-ks-ms="6000" data-ks-mode="defer">
+                    <p class="ks-settings" data-ks-settings>The next toast: a ring clock, Undo for 6 s, the archive after the window.</p>
+                    <ul class="kp-action-list ks-archive__list" aria-label="Subscriptions to archive" data-ks-archive-list>
+                        <li data-ks-item="almanac" data-state="active">
+                            <div class="ks-archive__what">
+                                <span class="ks-name"><span class="kp-idmark kp-idmark--sm" data-kp-idmark="almanac" aria-hidden="true"></span><b>almanac</b></span>
+                                <span class="kp-badge kp-badge--success" data-ks-badge>active</span>
+                            </div>
+                            <div class="kp-row-actions"><button type="button" class="kp-button kp-button--sm" data-kp-action="archive" data-ks-archive-item>Archive</button></div>
+                        </li>
+                        <li data-ks-item="kyu-runner" data-state="active">
+                            <div class="ks-archive__what">
+                                <span class="ks-name"><span class="kp-idmark kp-idmark--sm" data-kp-idmark="kyu-runner" aria-hidden="true"></span><b>kyu-runner</b></span>
+                                <span class="kp-badge kp-badge--success" data-ks-badge>active</span>
+                            </div>
+                            <div class="kp-row-actions"><button type="button" class="kp-button kp-button--sm" data-kp-action="archive" data-ks-archive-item>Archive</button></div>
+                        </li>
+                        <li data-ks-item="phone" data-state="active">
+                            <div class="ks-archive__what">
+                                <span class="ks-name"><span class="kp-idmark kp-idmark--sm" data-kp-idmark="phone" aria-hidden="true"></span><b>phone</b></span>
+                                <span class="kp-badge kp-badge--success" data-ks-badge>active</span>
+                            </div>
+                            <div class="kp-row-actions"><button type="button" class="kp-button kp-button--sm" data-kp-action="archive" data-ks-archive-item>Archive</button></div>
+                        </li>
+                    </ul>
+                    <div class="ks-toastbed" data-ks-bed="archive" aria-label="Toasts of this section"><p class="ks-toastbed__empty">Toasts show here.</p></div>
+                    <div class="ks-archive__foot">
+                        <p class="ks-readout" role="status" data-ks-archive-log>The server has not been called yet.</p>
+                        <button type="button" class="kp-button kp-button--sm" data-ks-archive-reset>Put every subscription back</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7 · delete with a typed name ---------------------------------------------------------------------------------- -->
+            <section
+                class="ks-sec"
+                id="delete"
+                data-review-item="delete"
+                data-review-topic="topic-subs"
+                data-review-components="confirm type-confirm"
+                data-review-title="Delete: type the name first"
+                data-review-choices='{{choices:delete}}'
+                aria-labelledby="h-delete"
+            >
+                <div class="ks-sec__head">
+                    <h2 id="h-delete">Delete: type the name first</h2>
+                    <p>
+                        Deleting an archived subscription removes its delivery history for good, so the button stays off until its exact name is
+                        typed, and the server can still refuse.
+                    </p>
+                </div>
+                <div class="ks-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The card names what will be lost (history of <b>archive</b>), has a field and a line that says whether the name
+                            matches; <b>Delete subscription</b> stays off until you type <b>archive</b>. A wrong name (&ldquo;Archive&rdquo;)
+                            keeps it off and says why; <b>Any capitals</b> lets it pass.
+                        </li>
+                        <li>
+                            Press Delete with the right name: the subscription disappears from the list at once and the toast says so. With the
+                            server on <b>Refuses</b> the list keeps it and a red toast and the line under the card give the reason in plain words.
+                        </li>
+                        <li>
+                            <b>As a dialog: Shown</b> opens the same question the table&rsquo;s Delete button opens, in a dialog whose field has the
+                            focus; Cancel or Esc closes it.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Check that the match line changes the moment the typed text equals the name, that the off button is plainly off with the
+                        reason in reach, and that the dialog stands on an opaque plate.
+                    </p>
+                </div>
+                <div class="ks-controls" data-review-controls data-review-controls-for="ks-delete-component">
+{{controls:delete}}
+                </div>
+                <div id="ks-delete-component" class="ks-delete" data-ks-delete-demo data-ks-dialog="hidden">
+                    <section class="kp-card ks-card" aria-labelledby="ks-delete-title">
+                        <div class="kp-card__header"><h3 class="kp-card__title" id="ks-delete-title">Delete the subscription archive</h3></div>
+                        <p class="kp-card__body">This cannot be undone. The subscription stops existing and so does everything kyu remembers about it.</p>
+                        <div class="kp-card__stage">
+                            <div class="kp-card__data ks-delete__data">
+                                <ul id="ks-delete-loses" class="ks-loses" hidden>
+                                    <li>The delivery history of <b>archive</b> (3 messages)</li>
+                                    <li>Its policy: lease 30 s, 5 attempts</li>
+                                </ul>
+                                <div data-kp-type-confirm="archive" data-kp-type-confirm-for="ks-delete-button" data-kp-type-confirm-loses="ks-delete-loses" data-ks-typed></div>
+                                <div class="ks-delete__actions">
+                                    <button type="button" class="kp-button kp-button--destructive" id="ks-delete-button" data-ks-delete-subscription>Delete subscription</button>
+                                    <button type="button" class="kp-button kp-button--sm" data-ks-delete-reset>Put it back</button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <p class="ks-readout" role="status" data-ks-delete-log>The server has not been called yet.</p>
+                    <div class="ks-toastbed" data-ks-bed="delete" aria-label="Toasts of this section"><p class="ks-toastbed__empty">Toasts show here.</p></div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "kyu-11-topic-subs-342b7b62-ba0d-4d5d-be99-a95470e468c1" }
+        </script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

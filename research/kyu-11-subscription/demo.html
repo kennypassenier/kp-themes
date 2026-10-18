@@ -1,0 +1,662 @@
+<!doctype html>
+<html
+    lang="en"
+    data-theme="formal"
+    data-review="kyu-11-subscription"
+    data-review-themes="formal"
+>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>kyu on kp-themes 11.0.0: the Subscription page</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main ky-page">
+            <header class="ky-intro">
+                <h1>kyu on kp-themes 11.0.0: the Subscription page</h1>
+                <p class="cat-intro">
+                    How kyu&rsquo;s page for one subscription (<code>/t/notify.kenny/dashboard/subs/desktop</code>) looks when it uses the new
+                    components to the full: a header with a mark, a state and a freshness line, the policy as a grid, two gauges and a progress bar,
+                    the backlog as a data table with bulk delete and Undo, and three new use cases that need kyu backend work.
+                </p>
+                <p class="ky-mock">
+                    Everything here is mock data in kyu&rsquo;s real shape (topic <code>notify.kenny</code>, subscription <code>desktop</code>);
+                    nothing is read from a server. Sections marked <b>New:</b> are use cases kyu does not have yet.
+                </p>
+            </header>
+
+            <!-- ================================================================ header -->
+            <section
+                class="ky-sec"
+                id="sub-header"
+                data-review-item="sub-header" data-review-topic="header" data-review-topic-title="The page header"
+                data-review-title="The page header"
+                data-review-choices='[{ "id": "mark-style", "label": "The mark", "once": true, "default": "plate", "options": [
+                    { "value": "plate", "label": "Plate", "hint": "Default. Letters on the colour of the name." },
+                    { "value": "glyph", "label": "Glyph", "hint": "The corner shape of the name, without letters." },
+                    { "value": "pattern", "label": "Pattern", "hint": "The name&rsquo;s own 5 by 5 pattern." }]}]'
+                aria-labelledby="h-sub-header"
+             data-review-components="page-header idmark">
+                <div class="ky-sec__head">
+                    <h2 id="h-sub-header">The page header: who this is, how it is, how fresh</h2>
+                    <p>
+                        The title, the subscription&rsquo;s coloured mark (the same mark as everywhere in kyu), its state as a badge and how long ago
+                        it last read a message. <code>.kp-page-header</code> with its heading line, <code>idmark</code>, <code>freshness</code>, the
+                        lede and the breadcrumb.
+                    </p>
+                </div>
+                <div class="ky-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The mark beside the title is built from the name &ldquo;desktop&rdquo;; the small mark in the breadcrumb for
+                            &ldquo;notify.kenny&rdquo; has a different colour (the two never collide). The badge says <b>active</b> in the success
+                            tone; the line &ldquo;last read &hellip; ago&rdquo; ticks by itself and shows dd/mm/yyyy HH:mm when you hover it.
+                        </li>
+                        <li>
+                            <b>State</b> changes the badge: flagged is warning, archived is plain. <b>Last read</b> &ldquo;Quiet for 3 days&rdquo; turns the
+                            line into a warning plate without moving anything beside it. <b>Dead letters</b> adds the destructive <b>1 dead</b>
+                            badge to the counts line.
+                        </li>
+                        <li>
+                            The choice &ldquo;The mark&rdquo; shows the same mark as a plate (default), a glyph or a pattern. 390 px: the title,
+                            badge and freshness wrap under the mark, never under the title&rsquo;s own words.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal is a ledger: ruled lines and navy ink. Check the mark sits on the title&rsquo;s line, the badge and the freshness line
+                        keep their place when the state changes, and no text touches the mark or the edge.
+                    </p>
+                </div>
+                <div class="ky-controls" data-review-controls data-review-controls-for="ky-header">
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-state="active" aria-pressed="true">Active</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-state="flagged" aria-pressed="false">Flagged</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-state="archived" aria-pressed="false">Archived</button>
+                    </div>
+                    <div role="group" aria-label="Last read">
+                        <b>Last read:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-read="fresh" aria-pressed="true">2 min ago</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-read="stale" aria-pressed="false">Quiet for 3 days</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-read="never" aria-pressed="false">Never</button>
+                    </div>
+                    <div role="group" aria-label="Dead letters">
+                        <b>Dead letters:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-dead="0" aria-pressed="false">None</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-dead="1" aria-pressed="true">1 dead</button>
+                    </div>
+                </div>
+                <div id="ky-header" class="ky-comp">
+                    <header class="kp-page-header">
+                        <nav class="ky-crumbs" aria-label="Breadcrumb">
+                            <a href="#sub-header" class="kp-link"
+                                ><span class="kp-idmark kp-idmark--xs" data-kp-idmark="notify.kenny" data-ky-mark-topic aria-hidden="true"></span>
+                                notify.kenny</a
+                            >
+                            <span aria-hidden="true">/</span>
+                            <span>Subscriptions</span>
+                        </nav>
+                        <div class="kp-page-header__inner">
+                            <div>
+                                <div class="kp-page-header__heading">
+                                    <span class="kp-page-header__lead"
+                                        ><span class="kp-idmark kp-idmark--lg" data-kp-idmark="desktop" data-ky-mark aria-hidden="true"></span
+                                    ></span>
+                                    <div class="kp-page-header__line">
+                                        <h1 class="kp-page-header__title">desktop</h1>
+                                        <span class="kp-badge kp-badge--success" data-ky-badge>active</span>
+                                        <time
+                                            class="kp-ago kp-page-header__meta"
+                                            data-kp-ago
+                                            data-kp-ago-verb="last read"
+                                            data-kp-stale-after="86400"
+                                            data-ky-ago
+                                        ></time>
+                                    </div>
+                                </div>
+                                <p class="kp-lede kp-page-header__description">
+                                    What the desktop app on Kenny&rsquo;s PC reads from <b>notify.kenny</b>. It holds a message for 30 seconds while
+                                    it shows it, and gives up on a message after 5 attempts.
+                                </p>
+                                <p class="ky-counts" data-ky-counts></p>
+                            </div>
+                        </div>
+                    </header>
+                </div>
+            </section>
+
+            <!-- ================================================================ policy -->
+            <section class="ky-sec" id="sub-policy" data-review-item="sub-policy" data-review-topic="policy" data-review-topic-title="The policy as a grid" data-review-title="The policy as a grid" data-review-choices='[{ "id": "kv-layout", "label": "Grid layout of the policy", "once": true, "default": "lines", "options": [
+                        { "value": "lines", "label": "Ruled lines", "hint": "Default. One hairline between rows." },
+                        { "value": "stack", "label": "Label over value", "hint": "Each label sits over its value; for narrow places." },
+                        { "value": "columns", "label": "Two columns", "hint": "Rows lie in two lists side by side where the box is wide." }]}]'
+                aria-labelledby="h-sub-policy" data-review-components="kv">
+                <div class="ky-sec__head">
+                    <h2 id="h-sub-policy">The policy: how this subscription treats a message</h2>
+                    <p>
+                        Label and value in one grid, with a quiet &ldquo;(default)&rdquo; beside every value kyu chose itself.
+                        <code>.kp-kv</code> in a <code>.kp-card</code> with its four states.
+                    </p>
+                </div>
+                <div class="ky-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Five rows. The labels share one column as wide as the longest label; the values start in the same place. Defaults say
+                            <span class="kp-text-muted">(default)</span> in the muted ink; a value somebody set has no aside.
+                        </li>
+                        <li>
+                            <b>Policy</b> &ldquo;Customised&rdquo;: lease 60 s and time to live 7 days lose their aside, the others keep it.
+                            <b>State</b> Loading: the card&rsquo;s busy card stands over the grid; Failed: one destructive plate fills the same
+                            height with Try again. There is no Empty: every subscription has a policy, even if all of it is default.
+                        </li>
+                        <li>The choice &ldquo;Grid layout&rdquo; sets the lines (default), the stacked or the two-column form.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Check the rule lines between rows are the ledger&rsquo;s hairlines, the labels are muted and the values navy, and the card
+                        keeps its height in all three states.
+                    </p>
+                </div>
+                <div
+                    class="ky-controls"
+                    data-review-controls
+                    data-review-controls-for="ky-policy"
+                >
+                    <div role="group" aria-label="Policy">
+                        <b>Policy:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-policy="defaults" aria-pressed="true">All default</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-policy="custom" aria-pressed="false">Customised</button>
+                    </div>
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-policy-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-policy-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-policy-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                </div>
+                <div
+                    id="ky-policy"
+                    class="kp-card"
+                    data-kp-state="ready"
+                    aria-labelledby="h-ky-policy"
+                >
+                    <div class="kp-card__header">
+                        <h3 class="kp-card__title" id="h-ky-policy">Policy of desktop</h3>
+                    </div>
+                    <div class="kp-card__stage">
+                        <div class="kp-card__data">
+                            <dl class="kp-kv kp-kv--lines" data-ky-kv></dl>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ gauges -->
+            <section class="ky-sec" id="sub-gauges" data-review-item="sub-gauges" data-review-topic="gauges" data-review-topic-title="Two gauges and a progress bar" data-review-title="Two gauges and a progress bar" data-review-choices='[
+                        { "id": "bar-size", "label": "Size of the progress bar", "once": true, "default": "md", "options": [
+                            { "value": "sm", "label": "Small", "hint": "The bar as it was; a line of text high." },
+                            { "value": "md", "label": "Middle", "hint": "Default. One and a half times the small bar." },
+                            { "value": "lg", "label": "Large", "hint": "Twice the small bar, for a page whose main fact is the backlog." }]},
+                        { "id": "bullet-order", "label": "Order of the rows in a bullet list", "once": true, "default": "worst", "options": [
+                            { "value": "worst", "label": "Worst first", "hint": "Default. The message closest to dying stands on top." },
+                            { "value": "none", "label": "As given", "hint": "Oldest first, the order kyu hands them over." }]}]'
+                aria-labelledby="h-sub-gauges" data-review-components="bullets progressbar">
+                <div class="ky-sec__head">
+                    <h2 id="h-sub-gauges">Is it keeping up? Age against the lease, attempts against the limit, the backlog draining</h2>
+                    <p>
+                        Two lists of bars with a tick at the limit (<code>bullets</code>) and one progress bar (<code>progressbar</code>), so a
+                        glance says which message waits too long, which ones are close to dying and how fast the backlog goes down.
+                    </p>
+                </div>
+                <div class="ky-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Oldest unacked message</b>: one bar against the 30 s lease. Healthy is 6 s (no tone); &ldquo;Over the lease&rdquo; is 41 s
+                            (warning, the figure on the warning plate); &ldquo;Stuck&rdquo; is 95 s (destructive, and the ▸ says the bar ran past its
+                            end). <b>Attempts</b>: one bar per message against the 5 allowed; the one at 5 of 5 is destructive.
+                        </li>
+                        <li>
+                            <b>List</b> Loading shows the waiting rows under the busy card; Empty says nothing is held; Failed fills the list&rsquo;s
+                            height with Retry. <b>Backlog</b> &ldquo;Draining&rdquo; counts the bar down from 312 to 0 once (press it again to restart);
+                            &ldquo;Counting&rdquo; is the unknown-amount stripe; &ldquo;Empty&rdquo; is a full bar with 312 of 312.
+                        </li>
+                        <li>Choices: the size of the bar (default middle), and whether the rows are sorted worst first (default) or as given.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Check every bar begins and ends in the same place, the tick stands at the limit, tones are never the only carrier (the figure
+                        changes plate too) and the progress bar&rsquo;s head is the double rule&rsquo;s navy.
+                    </p>
+                </div>
+                <div class="ky-controls" data-review-controls data-review-controls-for="ky-gauges">
+                    <div role="group" aria-label="Situation">
+                        <b>Situation:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-age="healthy" aria-pressed="true">Healthy</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-age="over" aria-pressed="false">Over the lease</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-age="stuck" aria-pressed="false">Stuck</button>
+                    </div>
+                    <div role="group" aria-label="List">
+                        <b>List:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-bullets="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-bullets="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-bullets="empty" aria-pressed="false">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-bullets="error" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Backlog">
+                        <b>Backlog:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-drain="drain" aria-pressed="true">Draining</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-drain="count" aria-pressed="false">Counting</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-drain="done" aria-pressed="false">Empty</button>
+                    </div>
+                </div>
+                <div
+                    id="ky-gauges"
+                    class="ky-comp ky-gauges"
+                >
+                    <div class="ky-gauge">
+                        <h3 class="ky-gauge__title" id="h-ky-age">Oldest unacked message, against the 30 s lease</h3>
+                        <div class="kp-bullets" data-kp-bullets id="ky-bullets-age" aria-labelledby="h-ky-age"></div>
+                    </div>
+                    <div class="ky-gauge">
+                        <h3 class="ky-gauge__title" id="h-ky-attempts">Attempts, against the 5 a message gets</h3>
+                        <div class="kp-bullets" data-kp-bullets id="ky-bullets-attempts" aria-labelledby="h-ky-attempts"></div>
+                    </div>
+                    <div class="ky-gauge">
+                        <h3 class="ky-gauge__title" id="h-ky-drain">The backlog draining</h3>
+                        <div class="kp-progress__wrap">
+                            <div
+                                id="ky-drain"
+                                class="kp-progressbar kp-progressbar--md" data-size-options="kp-progressbar--sm kp-progressbar--md kp-progressbar--lg"
+                                role="progressbar"
+                                aria-label="Backlog delivered"
+                                aria-valuemin="0"
+                                aria-valuemax="312"
+                                aria-valuenow="0"
+                                style="--kp-value: 0"
+                            >
+                                <span class="kp-progressbar__track" aria-hidden="true"
+                                    ><span class="kp-progressbar__fill"></span><span class="kp-progressbar__head"></span
+                                ></span>
+                            </div>
+                        </div>
+                        <p class="ky-readout" id="ky-drain-readout" aria-live="polite"></p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ backlog -->
+            <section class="ky-sec" id="sub-backlog" data-review-item="sub-backlog" data-review-topic="backlog" data-review-topic-title="The backlog with bulk delete" data-review-title="The backlog with bulk delete" data-review-choices='[
+                        { "id": "bar-place", "label": "Where the selection bar stands", "once": true, "default": "sticky-top", "options": [
+                            { "value": "sticky-top", "label": "Stuck to the top", "hint": "Default. The bar stays at the top of the table while the rows scroll." },
+                            { "value": "inline", "label": "In the flow", "hint": "The bar sits above the table and scrolls away with the page." },
+                            { "value": "floating-bottom", "label": "Floating at the foot", "hint": "The bar floats up from the foot of the table." }]},
+                        { "id": "bar-names", "label": "What the selection bar says", "once": true, "default": "names", "options": [
+                            { "value": "names", "label": "The ids", "hint": "Default. The ticked ids wrap, then an exact +N more." },
+                            { "value": "count", "label": "Only the count", "hint": "Just the number selected." }]},
+                        { "id": "undo-clock", "label": "The clock on the Undo toast", "once": true, "default": "ring", "options": [
+                            { "value": "ring", "label": "Ring", "hint": "Default. A ring that runs down with the seconds in it." },
+                            { "value": "bar", "label": "Rule", "hint": "A rule that shortens under the words." },
+                            { "value": "text", "label": "Words", "hint": "&ldquo;6 s&rdquo; counting down." },
+                            { "value": "none", "label": "None", "hint": "Undo with no clock." }]}]'
+                aria-labelledby="h-sub-backlog" data-review-components="datatable code selection-bar">
+                <div class="ky-sec__head">
+                    <h2 id="h-sub-backlog">The backlog: what this subscription still holds, with bulk delete and Undo</h2>
+                    <p>
+                        <span class="kp-badge kp-badge--info ky-new">New</span>
+                        <b>New: kyu would need a bulk delete endpoint for this</b> (today a message is deleted one at a time). The kp data table
+                        with a tick column, a selection bar, a payload cell that lays JSON out, state badges and a toast with Undo.
+                    </p>
+                </div>
+                <div class="ky-expected">
+                    <p><b>Expected:</b> New: kyu would need one endpoint that deletes many deliveries of one subscription in one call.</p>
+                    <ul>
+                        <li>
+                            Twelve of 312 messages are shown. Payloads are code cells: JSON gets <b>Pretty</b> and <b>Raw</b>, the long one is folded to
+                            three lines with <b>Show all 38 lines</b>, binary data says <b>binary, 2.1 kB</b>, a cut one says how much was kept.
+                            States are <b>pending</b> (plain) or <b>claimed</b> (warning). Sort by a header; Shift-click adds a second sort.
+                        </li>
+                        <li>
+                            Tick rows (or <b>j</b>/<b>k</b> to move, <b>x</b> to tick, Shift-click for a range): the bar says &ldquo;3 selected&rdquo; and
+                            offers <b>Select all 312 that match</b> once every row shown is ticked. <b>Delete</b> removes the rows at once and a toast
+                            offers <b>Undo</b> for 6 s with a clock; Undo puts them back. &ldquo;The server&rdquo; Refuses: the toast turns into the
+                            reason and the rows come back by themselves.
+                        </li>
+                        <li>
+                            The row&rsquo;s own <b>Delete</b> button stands in the last column of every row and does the same for one message. 390 px:
+                            the table becomes cards.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Check the payload cell reads as set type in the mono face on the muted ground, keys in navy; the selection bar is a ruled slab
+                        that keeps its place whether or not a row is ticked; the table&rsquo;s states fill the table&rsquo;s height.
+                    </p>
+                </div>
+                <div class="ky-controls" data-review-controls data-review-controls-for="ky-backlog">
+                    <div role="group" aria-label="Table">
+                        <b>Table:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-table="ready" aria-pressed="true">Filled</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-table="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-table="empty" aria-pressed="false">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-table="failed" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="The server" data-review-latent>
+                        <b>The server:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-server="ok" aria-pressed="true">Accepts</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-server="refuse" aria-pressed="false">Refuses</button>
+                    </div>
+                    <div role="group" aria-label="Rows">
+                        <b>Rows:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-rows-reset>Put every row back</button>
+                    </div>
+                </div>
+                <div
+                    id="ky-backlog"
+                    class="ky-comp"
+                >
+                    <div
+                        class="kp-selection"
+                        data-kp-selection
+                        data-kp-selection-for="ky-backlog-table"
+                        data-kp-placement="sticky-top"
+                        data-kp-selection-names="names"
+                        data-kp-select-matching="312"
+                        data-kp-undo-ms="6000"
+                        id="ky-bar"
+                        aria-label="Selected messages"
+                    >
+                        <div class="kp-selection__actions">
+                            <button type="button" class="kp-button kp-button--destructive" data-kp-selection-action="delete">Delete from desktop</button>
+                        </div>
+                    </div>
+                    <div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-sort-multi data-kp-column-menu id="ky-backlog-table" data-kp-key="kyu-backlog">
+                        <div class="kp-datatable__bar">
+                            <input class="kp-datatable__search kp-field__input" data-kp-datatable-search type="search" aria-label="Search the backlog" placeholder="Search the backlog" />
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">
+                                    Backlog of desktop
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="ky-col-select">
+                                            <input class="kp-field__check" type="checkbox" data-kp-select-all aria-label="Select all messages shown" />
+                                        </th>
+                                        <th scope="col" data-kp-sort="text">Id</th>
+                                        <th scope="col" data-kp-sort="text" data-kp-filter="choice">State</th>
+                                        <th scope="col" data-kp-sort="date">Published</th>
+                                        <th scope="col" data-kp-sort="number" class="kp-text-end">Attempts</th>
+                                        <th scope="col" class="ky-col-payload">Payload</th>
+                                        <th scope="col" class="ky-col-actions">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody data-ky-backlog-rows></tbody>
+                            </table>
+                        </div>
+                        <div class="kp-empty" data-kp-datatable-empty data-kp-art="done" hidden>
+                            <div data-kp-datatable-empty-none>
+                                <p class="kp-empty__title">Nothing pending or claimed</p>
+                                <p>desktop has read and acknowledged everything. A new message appears here the moment it is published.</p>
+                            </div>
+                            <div data-kp-datatable-empty-nomatch hidden>
+                                <p class="kp-empty__title">No message matches</p>
+                                <button type="button" class="kp-button kp-button--secondary" data-kp-datatable-clear>Clear the search and filters</button>
+                            </div>
+                        </div>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status" aria-live="polite"></p>
+                            <div class="kp-datatable__pager" data-kp-datatable-pager></div>
+                        </div>
+                    </div>
+                    <div class="ky-toastbed" data-ky-bed aria-label="Toasts of this section">
+                        <p class="ky-toastbed__empty">A toast with Undo shows here after Delete.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ================================================================ attempts gantt -->
+            <section class="ky-sec" id="sub-attempts" data-review-item="sub-attempts" data-review-topic="attempts" data-review-topic-title="Delivery attempts of one message" data-review-title="Delivery attempts on a timeline" data-review-choices='[{ "id": "lease-band", "label": "The lease band under each claim", "once": true, "default": "shown", "options": [
+                        { "value": "shown", "label": "Shown", "hint": "Default. A thin band: how long the app had to answer." },
+                        { "value": "hidden", "label": "Left out", "hint": "Only the bars and the marks." }]}]'
+                aria-labelledby="h-sub-attempts" data-review-components="gantt">
+                <div class="ky-sec__head">
+                    <h2 id="h-sub-attempts">Why did this message die? Its delivery attempts on a timeline</h2>
+                    <p>
+                        <span class="kp-badge kp-badge--info ky-new">New</span>
+                        <b>New: kyu would need to keep an attempt history for this</b> (today it keeps only the count). One lane per attempt: the bar
+                        is the time the message was claimed, the mark at its end says how it ended: lease expired, nack, dead or acked.
+                        <code>gantt</code> with runs, points and zones.
+                    </p>
+                </div>
+                <div class="ky-expected">
+                    <p><b>Expected:</b> New: kyu would need to store, per attempt, when it was claimed, by which app, and how it ended.</p>
+                    <ul>
+                        <li>
+                            <b>Dead after 5 attempts</b> (the default): five lanes; attempts 1 and 4 end in a ring (<b>lease expired</b>, after 30 s,
+                            with the lease drawn as a thin band under the bar), attempts 2, 3 and 5 in a triangle (<b>nack</b>), and a square
+                            <b>dead</b> closes attempt 5. <b>Recovered</b> ends in a diamond (acked); <b>In flight</b> has a striped bar still growing;
+                            <b>Not tried yet</b> is the empty state with its own sentence.
+                        </li>
+                        <li>
+                            Hover or focus a bar for its times and reason. The range buttons (2 min, 5 min by default, 15 min), Live, and dragging across the
+                            plot to zoom all work. Loading shows the lanes as waiting under the busy card; Failed fills the same height with the
+                            sentence.
+                        </li>
+                        <li>The choice &ldquo;The lease band&rdquo; shows the band under each claim (default) or leaves it out.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Check a failed bar is taller and capped (shape, not only colour), the marks at the bar ends keep clear of the cap, lane names
+                        sit in one column and the frame keeps its height from loading to loaded.
+                    </p>
+                </div>
+                <div class="ky-controls" data-review-controls data-review-controls-for="ky-attempts">
+                    <div role="group" aria-label="Message">
+                        <b>Message:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-msg="dead" aria-pressed="true">Dead after 5</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-msg="recovered" aria-pressed="false">Recovered</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-msg="flight" aria-pressed="false">In flight</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-msg="new" aria-pressed="false">Not tried yet</button>
+                    </div>
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-gantt="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-gantt="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-gantt="error" aria-pressed="false">Failed</button>
+                    </div>
+                </div>
+                <div
+                    id="ky-attempts"
+                    class="ky-comp"
+                >
+                    <p class="ky-label" id="ky-attempts-title"></p>
+                    <section
+                        class="kp-gantt ky-gantt-host"
+                        data-kp-gantt
+                        data-kp-gantt-ranges="2m 5m 15m"
+                        data-kp-gantt-range="5m"
+                        data-kp-gantt-ghosts="1 1 1 1 1"
+                        aria-label="Delivery attempts of one message"
+                        id="ky-gantt"
+                    ></section>
+                </div>
+            </section>
+
+            <!-- ================================================================ attempts inspector -->
+            <section class="ky-sec" id="sub-inspector" data-review-item="sub-inspector" data-review-topic="attempts" data-review-title="Delivery attempts as requests" data-review-choices='[
+                        { "id": "inspector-open", "label": "Which attempts start open", "once": true, "default": "failed", "options": [
+                            { "value": "failed", "label": "The failed ones", "hint": "Default. Every attempt that did not end in an ack." },
+                            { "value": "none", "label": "None", "hint": "Everything folded." },
+                            { "value": "first", "label": "The newest", "hint": "Only the newest attempt." }]},
+                        { "id": "inspector-secrets", "label": "What a copy carries of the token", "once": true, "default": "masked", "options": [
+                            { "value": "masked", "label": "Masked, with a second button for the real one", "hint": "Default. Copy carries ********; &ldquo;Copy curl with secrets&rdquo; carries the token." },
+                            { "value": "masked-only", "label": "Masked only", "hint": "No button that copies the token." },
+                            { "value": "real", "label": "Real", "hint": "Every copy carries the token." }]}]'
+                aria-labelledby="h-sub-inspector" data-review-components="request-inspector">
+                <div class="ky-sec__head">
+                    <h2 id="h-sub-inspector">The same attempts as a list you can open: what the app said to kyu</h2>
+                    <p>
+                        <span class="kp-badge kp-badge--info ky-new">New</span>
+                        <b>New: kyu would need the same attempt history, with the app&rsquo;s reason</b> (the text it sent with a nack). One foldable
+                        block per attempt; the failed ones are open. <code>request-inspector</code>.
+                    </p>
+                </div>
+                <div class="ky-expected">
+                    <p>
+                        <b>Expected:</b> New: kyu would need to store each attempt with the app that took it and the nack reason. The status is the
+                        outcome written as the HTTP answer kyu would give a late ack: 200 acked, 409 lease expired, 422 nacked, 410 dead-lettered
+                        (mock mapping).
+                    </p>
+                    <ul>
+                        <li>
+                            <b>Dead after 5</b>: five blocks, newest first; every one is a failure and starts open (the default <b>failed</b>), with
+                            headers (the app&rsquo;s token masked), the attempt as JSON and <b>Copy</b> as curl, JSON or body. <b>Recovered</b> has one
+                            closed block (200) and one open (409).
+                        </li>
+                        <li>
+                            The choices: which blocks start open (failed by default, none, or the first), and whether a copy carries the token masked
+                            (default, with a separate &ldquo;Copy curl with secrets&rdquo;), masked only, or real. Empty has Send test left out; Failed
+                            fills the same height with Try again.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Check each block is a ledger line (method, path, status in words, time) that opens to ruled rows, the masked token reads
+                        ********, and the open and closed blocks align their columns.
+                    </p>
+                </div>
+                <div class="ky-controls" data-review-controls data-review-controls-for="ky-inspector">
+                    <div role="group" aria-label="Message">
+                        <b>Message:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-imsg="dead" aria-pressed="true">Dead after 5</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-imsg="recovered" aria-pressed="false">Recovered</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-imsg="new" aria-pressed="false">Not tried yet</button>
+                    </div>
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-inspector="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-inspector="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-inspector="error" aria-pressed="false">Failed</button>
+                    </div>
+                </div>
+                <div
+                    id="ky-inspector"
+                    class="ky-comp"
+                >
+                    <div
+                        class="kp-card kp-inspector ky-inspector-host"
+                        data-kp-requests
+                        data-kp-requests-open="failed"
+                        data-kp-secrets-in-copy="masked"
+                        id="ky-requests"
+                        aria-label="Delivery attempts of one message"
+                    ></div>
+                </div>
+            </section>
+
+            <!-- ================================================================ uptime -->
+            <section class="ky-sec" id="sub-uptime" data-review-item="sub-uptime" data-review-topic="uptime" data-review-topic-title="90 days delivered against dead" data-review-title="90 days delivered against dead" data-review-choices='[
+                        { "id": "uptime-open", "label": "What a press on a day does", "once": true, "default": "info", "options": [
+                            { "value": "info", "label": "Quick info", "hint": "Default. A small plate under the day with its numbers and a link." },
+                            { "value": "link", "label": "Goes to the day", "hint": "A press follows the day&rsquo;s link at once." }]},
+                        { "id": "uptime-fit", "label": "When the strip is narrow", "once": true, "default": "fit", "options": [
+                            { "value": "fit", "label": "Latest days that fit", "hint": "Default. Says how many of the 90 it shows." },
+                            { "value": "scroll", "label": "Scroll sideways", "hint": "Keeps all 90, scrolled to the latest." }]}]'
+                aria-labelledby="h-sub-uptime" data-review-components="uptime">
+                <div class="ky-sec__head">
+                    <h2 id="h-sub-uptime">The last 90 days: delivered against dead</h2>
+                    <p>
+                        <span class="kp-badge kp-badge--info ky-new">New</span>
+                        <b>New: kyu would need daily statistics for this</b> (a count per subscription per day of messages delivered and
+                        dead-lettered; today it keeps neither). One cell per day, toned by how the day went. <code>uptime</code>.
+                    </p>
+                </div>
+                <div class="ky-expected">
+                    <p><b>Expected:</b> New: kyu would need to keep two numbers per subscription per day.</p>
+                    <ul>
+                        <li>
+                            90 cells, oldest left. A day is <b>up</b> (everything delivered), <b>degraded</b> (some dead letters) or <b>down</b>
+                            (most died); a day with no messages is empty. The title carries the window&rsquo;s summary in exact figures (for example
+                            &ldquo;99.4% delivered, 11 dead&rdquo;); the first and the last day are named under the strip.
+                        </li>
+                        <li>
+                            Hover or focus a cell for the day&rsquo;s figures; press it (or Enter) to open the quick info with that day&rsquo;s numbers and
+                            a link to the day. The arrows, Home and End move along the strip. 390 px: the latest days that fit, and it says
+                            &ldquo;55 of 90 shown&rdquo;; the choice &ldquo;When the strip is narrow&rdquo; can scroll instead.
+                        </li>
+                        <li>Loading, Empty and Failed keep the strip&rsquo;s height; <b>History</b> &ldquo;New subscription&rdquo; has only 40 days of data.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Check the three tones differ by more than colour (the cell&rsquo;s height or fill), the summary uses a cut, never rounded-up,
+                        percentage, and the first and last day are readable at both ends.
+                    </p>
+                </div>
+                <div class="ky-controls" data-review-controls data-review-controls-for="ky-uptime">
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-uptime="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-uptime="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-uptime="empty" aria-pressed="false">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-uptime="error" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="History">
+                        <b>History:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-history="full" aria-pressed="true">90 days</button>
+                        <button type="button" class="kp-button kp-button--sm" data-ky-history="young" aria-pressed="false">New subscription</button>
+                    </div>
+                </div>
+                <div
+                    id="ky-uptime"
+                    class="ky-comp"
+                >
+                    <div class="kp-uptime" data-kp-uptime data-kp-uptime-label="desktop" data-kp-uptime-count="90" data-kp-uptime-open="info" id="ky-uptime-strip"></div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "kyu-11-subscription-6e33a5a0-bada-42ab-a760-76fdfc00cc3d", "received": [] }
+        </script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

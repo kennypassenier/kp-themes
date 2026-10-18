@@ -1,0 +1,432 @@
+/* research/kyu-11-topic-subs: the page's own frame. Everything with a kp- class is the package; these ks- rules only lay the sections
+   out, frame the widths and draw the readouts. Tokens only. */
+
+.ks-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.ks-intro,
+.ks-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.ks-intro :is(h1, p),
+.ks-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.ks-intro p,
+.ks-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.ks-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+/* The "Expected:" block. */
+.ks-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.ks-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.ks-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+[data-review-look] p {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* The control groups above a component: one label column, buttons side by side. */
+.ks-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+    align-items: center;
+}
+
+.ks-controls > [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    align-items: center;
+}
+
+.ks-controls b {
+    font-weight: 600;
+}
+
+/* The component stage: the frame every sample stands in. */
+.ks-stage {
+    min-inline-size: 0;
+}
+
+.ks-readout {
+    margin: 0;
+    padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.ks-foot {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-items: center;
+}
+
+@media (max-width: 36rem) {
+    .ks-foot {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.ks-quiet {
+    color: var(--muted-foreground);
+    font-style: italic;
+}
+
+.ks-policy i {
+    color: var(--muted-foreground);
+    font-style: normal;
+}
+
+.ks-name {
+    display: inline-flex;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-items: center;
+    min-inline-size: 0;
+}
+
+/* 1 · the header --------------------------------------------------------------------------------------------------- */
+
+.ks-header__main {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.ks-header__main > div[data-ks-live]:not(.kp-page-header__heading) {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.ks-facts {
+    margin: 0;
+}
+
+.ks-copy {
+    min-inline-size: 8.5rem;
+}
+
+/* The loading header: the same shapes, the same sizes. */
+.ks-skel {
+    display: flex;
+    gap: var(--kp-space-md, 0.75rem);
+    align-items: center;
+}
+
+.ks-skel[hidden] {
+    display: none;
+}
+
+.ks-skel .kp-idmark {
+    flex: none;
+}
+
+.ks-skel__line {
+    display: flex;
+    flex: 1 1 auto;
+    flex-wrap: wrap;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+    align-items: center;
+}
+
+.ks-skel__title {
+    inline-size: 11rem;
+    block-size: 1.75rem;
+}
+
+.ks-skel__badge {
+    inline-size: 4.5rem;
+    block-size: 1.25rem;
+}
+
+.ks-skel__ago {
+    inline-size: 9rem;
+    block-size: 1rem;
+}
+
+.ks-skel--text {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    align-items: start;
+}
+
+.ks-skel__lede {
+    inline-size: min(100%, 70ch);
+    block-size: 1.4rem;
+}
+
+.ks-skel__facts {
+    inline-size: 22rem;
+    max-inline-size: 100%;
+    block-size: 1rem;
+}
+
+/* 2 · send and receive ---------------------------------------------------------------------------------------------- */
+
+.ks-card .kp-card__data {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.ks-steps {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.ks-step {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.ks-caption {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.ks-step .ks-caption:not(:first-child) {
+    margin-block-start: var(--kp-space-sm, 0.5rem);
+}
+
+@media (max-width: 64rem) {
+    .ks-steps {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* 4 · the table ------------------------------------------------------------------------------------------------------ */
+
+.ks-filterbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-items: center;
+}
+
+.ks-col-actions {
+    inline-size: 1%;
+    white-space: nowrap;
+}
+
+/* The toast beds: where a toast of this section stands, in the frame and not at the screen's edge. */
+.ks-toastbed {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-items: stretch;
+    min-block-size: 5.5rem;
+    padding: var(--kp-space-sm, 0.5rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.ks-toastbed > .kp-toast {
+    inline-size: 100%;
+    max-inline-size: none;
+}
+
+.ks-toastbed__empty {
+    margin: auto;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.ks-toastbed:not(:has(> .kp-toast)) > .ks-toastbed__empty {
+    display: block;
+}
+
+.ks-toastbed:has(> .kp-toast) > .ks-toastbed__empty {
+    display: none;
+}
+
+/* 5 · the menu card -------------------------------------------------------------------------------------------------- */
+
+.ks-menucard {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+    padding: var(--kp-space-md, 0.75rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+}
+
+/* Room for the open menu, so it opens under its button in the frame; given only while a menu is open. */
+.ks-menu-room:has([data-kp-menu-button] [role='menu']:not([hidden])) {
+    min-block-size: 24rem;
+}
+
+.ks-menucard__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+    align-items: center;
+}
+
+.ks-menucard__facts {
+    grid-column: 1;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.ks-menucard__row > .kp-menu-button {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+}
+
+@media (max-width: 40rem) {
+    .ks-menucard {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* 6 · archive --------------------------------------------------------------------------------------------------------- */
+
+.ks-archive {
+    display: grid;
+    gap: var(--kp-space-md, 0.75rem);
+}
+
+.ks-archive__list {
+    margin: 0;
+}
+
+.ks-archive__list > li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--kp-space-md, 0.75rem);
+    align-items: center;
+}
+
+.ks-archive__what {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-items: center;
+}
+
+.ks-archive__foot {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-items: center;
+}
+
+@media (max-width: 36rem) {
+    .ks-archive__foot {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* 7 · delete ---------------------------------------------------------------------------------------------------------- */
+
+.ks-delete {
+    display: grid;
+    gap: var(--kp-space-md, 0.75rem);
+}
+
+.ks-delete__data {
+    display: grid;
+    gap: var(--kp-space-md, 0.75rem);
+}
+
+.ks-delete__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-items: center;
+}
+
+.ks-loses {
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.ks-policy {
+    overflow-wrap: anywhere;
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* The action columns stay at the table's end while the other columns scroll under them, so Archive, Delete and More are always in reach. */
+.ks-table-sticky .ks-col-actions {
+    position: sticky;
+    inset-inline-end: 0;
+    z-index: 1;
+    background: var(--card);
+    box-shadow: -1px 0 0 var(--border);
+}
+
+/* Tighter cells, so the whole row fits a page of about 56rem: the table is wide by nature (nine columns). */
+.ks-table-sticky :is(th, td) {
+    padding-inline: var(--kp-space-sm, 0.5rem);
+}
+
+@media (min-width: 48rem) {
+    .ks-table-sticky td.ks-policy {
+        min-inline-size: 8rem;
+    }
+}
+
+/* On a phone the filter's four states stand two by two instead of running past the edge. */
+.ks-filterbar {
+    min-inline-size: 0;
+}
+
+@media (max-width: 36rem) {
+    .ks-filterbar > .kp-segmented {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        inline-size: 100%;
+    }
+}
+
+/* The undo settings the next toast will use, and the dialog state, as words. */
+.ks-settings {
+    margin: 0;
+    padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}

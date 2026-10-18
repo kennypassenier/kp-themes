@@ -1,0 +1,214 @@
+/* research/kyu-11-subscription: layout glue of the page. Everything with a kp- class is the package; ky- rules only lay out the
+   sections, the controls and the toast bed. */
+
+.ky-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.ky-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.ky-intro :is(h1, p) {
+    margin: 0;
+}
+
+.ky-intro p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.ky-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 0.75rem);
+}
+
+.ky-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.ky-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.ky-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.ky-expected {
+    max-inline-size: 80ch;
+    color: var(--foreground);
+}
+
+.ky-expected :is(p, ul) {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.ky-expected ul {
+    padding-inline-start: 1.25rem;
+}
+
+.ky-new {
+    display: inline-block;
+    margin-inline-end: var(--kp-space-xs, 0.25rem);
+}
+
+.ky-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1rem);
+}
+
+.ky-controls > [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+}
+
+/* One frame per component: the component takes the whole width. */
+.ky-comp {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 0.75rem);
+    min-inline-size: 0;
+}
+
+.ky-label {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.ky-mock {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* The page header: the counts line under the description. */
+.ky-counts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    margin: var(--kp-space-xs, 0.25rem) 0 0;
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.ky-crumbs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    margin: 0 0 var(--kp-space-sm, 0.5rem);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* The backlog table: the payload column has room, the id wraps whole. */
+.ky-col-select {
+    inline-size: 2.5rem;
+}
+
+.ky-col-payload {
+    min-inline-size: 18rem;
+}
+
+.ky-col-actions {
+    inline-size: 7rem;
+    text-align: end;
+}
+
+.ky-cell-when {
+    display: grid;
+    gap: 0;
+}
+
+.ky-cell-when > span {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-xs, 0.75rem);
+}
+
+.ky-toastbed {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-items: stretch;
+    min-block-size: 8rem;
+    padding: var(--kp-space-md, 0.75rem);
+    border: 1px dashed var(--border-strong, var(--border));
+    border-radius: var(--radius, 0.5rem);
+}
+
+.ky-toastbed > .kp-toast {
+    inline-size: 100%;
+    max-inline-size: none;
+}
+
+.ky-toastbed__empty {
+    margin: auto;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.ky-toastbed:not(:empty) > .ky-toastbed__empty {
+    display: none;
+}
+
+.ky-gauges {
+    display: grid;
+    gap: var(--kp-space-lg, 1rem);
+}
+
+.ky-gauge {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.ky-gauge__title {
+    margin: 0;
+    font-size: var(--kp-text-base, 1rem);
+}
+
+.ky-readout {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-variant-numeric: tabular-nums;
+}
+
+.ky-inspector-host {
+    min-block-size: 24rem;
+}
+
+.ky-gantt-host {
+    min-inline-size: 0;
+}
+
+/* A message id is one unbroken line of 26 characters. */
+.ky-comp .kp-table .kp-id {
+    white-space: nowrap;
+}
+
+.ky-gauge {
+    grid-template-columns: minmax(0, 1fr);
+    min-inline-size: 0;
+}
+
+.ky-gauge .kp-progress__wrap {
+    display: block;
+    min-inline-size: 0;
+}
+
+.ky-gauge .kp-progress__wrap > .kp-progressbar {
+    inline-size: 100%;
+    max-inline-size: var(--kp-progressbar-max-width, 48rem);
+}

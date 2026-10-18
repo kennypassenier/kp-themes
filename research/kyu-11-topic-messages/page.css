@@ -1,0 +1,415 @@
+/* research/kyu-11-topic-messages: the page's own frame. Everything with a kp- class is the package; these k11- rules only lay the
+   sections out, frame the widths, hold the states at one footprint and draw the readouts. Tokens only. */
+
+.k11-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.k11-intro :is(h1, p) {
+    margin: 0;
+}
+
+.k11-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.k11-sec {
+    container: k11-sec / inline-size;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.k11-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.k11-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.k11-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.k11-new {
+    display: inline-block;
+    margin-inline-end: var(--kp-space-xs, 0.25rem);
+    padding: 0 var(--kp-space-xs, 0.25rem);
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 700;
+}
+
+.k11-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.k11-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.k11-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.k11-label {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 600;
+}
+
+.k11-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-lg, 1.5rem);
+}
+
+.k11-controls [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+}
+
+.k11-controls [role='group'] > b {
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.k11-readout {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-variant-numeric: tabular-nums;
+}
+
+.k11-stack {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.k11-pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) min(390px, 100%);
+    gap: var(--kp-space-xl, 2rem);
+    align-items: start;
+}
+
+.k11-pair > * {
+    min-inline-size: 0;
+}
+
+@container k11-sec (max-width: 64rem) {
+    .k11-pair {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.k11-frame {
+    box-sizing: border-box;
+    min-inline-size: 0;
+    padding: var(--kp-space-sm, 0.5rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.k11-frame--phone {
+    inline-size: 390px;
+    max-inline-size: 100%;
+}
+
+/* One footprint for every state of a region: the filled content keeps its place, a plate or the busy card fills the same box. */
+.k11-stage {
+    position: relative;
+    min-block-size: var(--k11-stage-min, 16rem);
+}
+
+.k11-stage > [data-k11-plate] {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: stretch;
+}
+
+.k11-stage > [data-k11-plate][hidden] {
+    display: none;
+}
+
+.k11-stage > [data-k11-plate] > * {
+    inline-size: 100%;
+    block-size: 100%;
+    box-sizing: border-box;
+    justify-content: center;
+    align-items: center;
+}
+
+.k11-stage[data-k11-state='plate'] > [data-k11-filled],
+.k11-stage[data-k11-state='loading'] > [data-k11-filled] {
+    visibility: hidden;
+}
+
+/* The tables. */
+.k11-col-select {
+    inline-size: 3rem;
+}
+
+.k11-col-payload {
+    inline-size: 24rem;
+}
+
+.k11-when {
+    display: grid;
+    gap: 0.125rem;
+}
+
+.k11-when small,
+.k11-sub small,
+.k11-muted {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.k11-sub {
+    display: grid;
+    gap: 0.125rem;
+}
+
+.k11-toastbed {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kp-space-sm, 0.5rem);
+    align-items: stretch;
+    min-block-size: 7rem;
+    padding: var(--kp-space-md, 0.75rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.k11-toastbed > .kp-toast {
+    inline-size: 100%;
+    max-inline-size: none;
+}
+
+.k11-toastbed__empty {
+    margin: auto;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.k11-toastbed:not(:empty) > .k11-toastbed__empty {
+    display: none;
+}
+
+.k11-scroll {
+    max-block-size: 24rem;
+    overflow: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+}
+
+/* Cards of the phone list. */
+.k11-cards {
+    display: grid;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.k11-cards > li {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+    gap: var(--kp-space-md, 0.75rem);
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.k11-cards > li:last-child {
+    border-block-end: 0;
+}
+
+/* The recent messages list (master) and the live list. */
+.k11-msg {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.125rem var(--kp-space-sm, 0.5rem);
+    align-items: baseline;
+}
+
+.k11-msg b {
+    font-variant-numeric: tabular-nums;
+}
+
+.k11-msg small {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-variant-numeric: tabular-nums;
+}
+
+.k11-msg code {
+    grid-column: 1 / -1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: clip;
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.k11-facts {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 0.75rem);
+    margin: 0 0 var(--kp-space-md, 0.75rem);
+}
+
+.k11-facts dt {
+    color: var(--muted-foreground);
+}
+
+.k11-facts dd {
+    margin: 0;
+    overflow-wrap: anywhere;
+}
+
+.k11-detail-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem);
+    margin-block-start: var(--kp-space-md, 0.75rem);
+}
+
+.k11-md {
+    min-block-size: 26rem;
+}
+
+.k11-md [data-kp-pane='list'] {
+    max-block-size: 26rem;
+    overflow: auto;
+}
+
+.k11-live {
+    block-size: 20rem;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    list-style: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+}
+
+.k11-live > li {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-block-end: 1px solid var(--border);
+}
+
+.k11-live > li[data-new] {
+    background: var(--muted);
+}
+
+.k11-live-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* The publish form. */
+.k11-form {
+    display: grid;
+    gap: var(--kp-space-md, 0.75rem);
+    max-inline-size: 52rem;
+}
+
+.k11-form__row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 14rem);
+    gap: var(--kp-space-md, 0.75rem);
+    align-items: start;
+}
+
+@container k11-sec (max-width: 40rem) {
+    .k11-form__row {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.k11-submit {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    justify-items: start;
+}
+
+.k11-sent {
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    overflow-wrap: anywhere;
+}
+
+.k11-sent[hidden] {
+    display: none;
+}
+
+.k11-openers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.k11-log {
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--muted);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+[data-k11-listplate] {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: stretch;
+    background: var(--background);
+}
+
+[data-k11-listplate] > * {
+    box-sizing: border-box;
+    inline-size: 100%;
+    block-size: 100%;
+    justify-content: center;
+    align-items: center;
+}
