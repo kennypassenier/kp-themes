@@ -5628,3 +5628,16 @@
         }
     }
 }
+
+/* ── The kpadopt5 and kpadopt6 components in pastel [t56-pastel-1018] ──────────────────────────────────────────────
+   What the review of the seventy-nine new sections found off in this theme, one rule per fault; each says what it was. */
+@layer kp.signature {
+    /* A problem alert (kp-alert.kp-problem) is a soft tint of its tone on paper, with the page's ink: the package reads it so
+       (`.kp-problems > .kp-problem`). Pastel drew it on the tone's solid plate (`--kp-sig-pa-plate: var(--destructive)`) and kept
+       the page's plum ink, so a critical problem was plum on a red plate. The plate is now the tone at 14 % in paper, the pass
+       and the tone's edge stay. */
+    [data-theme='pastel'] .kp-alert.kp-problem {
+        --kp-sig-pa-plate: color-mix(in oklab, var(--kp-problem-tone, var(--muted)) 14%, var(--card));
+        color: var(--foreground);
+    }
+}

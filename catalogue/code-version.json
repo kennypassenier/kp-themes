@@ -5017,6 +5017,7 @@
         "pastel||||.kp-alert--success:not(.kp-attention__item)": "5cb9e3bcc788f833",
         "pastel||||.kp-alert--warning)": "e8dce7352ab8d98c",
         "pastel||||.kp-alert--warning:not(.kp-attention__item)": "d5ef8bc83ad95a80",
+        "pastel||||.kp-alert.kp-problem": "e4ac95d1b619ee4e",
         "pastel||||.kp-alert:not([class*='kp-alert--'])": "cbf6ecf213848893",
         "pastel||||.kp-art": "47d9693f14498ede",
         "pastel||||.kp-art__ink": "b8cbd58879cda8bf",
