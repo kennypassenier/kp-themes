@@ -23,8 +23,8 @@ import { expect, test } from '@playwright/test';
 import { measured } from './paint.mjs';
 
 const CHANNELS = [
-    ['framework-free', '/examples/concept-light.html'],
-    ['React', '/tests/fixtures/examples.html?example=concept&copy=light'],
+    ['framework-free', '/examples/concept-formal.html'],
+    ['React', '/tests/fixtures/examples.html?example=concept&copy=formal'],
 ];
 
 for (const [channel, url] of CHANNELS) {
@@ -78,7 +78,7 @@ for (const [channel, url] of CHANNELS) {
             await page.goto(url);
             const button = page.locator('.kp-button').first();
             await button.scrollIntoViewIfNeeded();
-            // Light styles neither surface. The edge must therefore paint
+            // Formal styles neither surface. The edge must therefore paint
             // nothing at all — no ground, no border, no shadow.
             await measured(
                 button.locator('.kp-button__edge'),
@@ -171,7 +171,7 @@ test(
 
         // And a theme that does not style it renders nothing at all, rather
         // than an empty element nobody can see.
-        await page.goto('/examples/concept-light.html');
+        await page.goto('/examples/concept-formal.html');
         expect(await page.locator('.kp-button__readout').count(), 'light styles no readout and renders none').toBe(0);
     },
 );

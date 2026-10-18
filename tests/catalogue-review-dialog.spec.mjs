@@ -370,7 +370,7 @@ const SHORT_NOTE = { rejected: 'The last row is cut off.', change: 'The scroll r
 
 /** Review notes for two blocks of the tables page: a short one (in four themes) and one long enough to fill the side. */
 const NOTES = {
-    'table--long': { formal: SHORT_NOTE, dark: SHORT_NOTE, nostromo: SHORT_NOTE, light: SHORT_NOTE },
+    'table--long': { formal: SHORT_NOTE, dark: SHORT_NOTE, nostromo: SHORT_NOTE, pastel: SHORT_NOTE },
     'table--datatable-sticky': {
         formal: {
             rejected: 'Slivers of row text show above the header row while scrolling. '.repeat(12),

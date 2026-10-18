@@ -7,9 +7,13 @@
 // review.js: the dialog opened non-modal (the catalogue shell had moved it
 // into its column), focus fell to the body and the first Up approved nothing.
 
+import { readFileSync } from 'node:fs';
 import { expect, test } from '@playwright/test';
 
 test.describe.configure({ timeout: 120_000 });
+
+/** Every theme there is, from the order file, so the walks below follow the registry [fix-102]. */
+const THEME_NAMES = JSON.parse(readFileSync(new URL('../themes/order.json', import.meta.url), 'utf8'));
 
 const DIALOG = '.rv-dialog';
 
@@ -32,6 +36,7 @@ const readDialog = (page) =>
             top: dialog.getBoundingClientRect().top,
             position: dialog.querySelector('[data-rv-position]').textContent,
             theme: document.documentElement.dataset.theme,
+            lane: dialog.querySelector('[data-rv-theme]').textContent.trim(),
         };
     }, DIALOG);
 
@@ -56,10 +61,13 @@ for (const demo of ['character-meter', 'character-graph']) {
                 await expect(page.locator(`${DIALOG} [data-rv-position]`)).toHaveText(new RegExp(`^Step ${step}/`));
                 seen.push(await readDialog(page));
             }
-            expect(new Set(seen.map((s) => s.theme)).size, 'ten approvals walked eleven themes').toBe(11);
+            // A round asked in several themes walks topic by topic, every theme in its own lane (Kenny, 2026-10-16:
+            // "per group, maar dan 1 item per thema per approval"): a topic step carries no theme of its own, so the
+            // document stays in formal and the lane's theme is read from the dialog's theme line.
+            expect(new Set(seen.map((s) => s.lane)).size, 'ten approvals walked eleven themes').toBe(11);
             for (const shot of seen) {
-                expect(shot.modal, `modal in ${shot.theme}`).toBe(true);
-                expect(Math.abs(shot.top - first.top), `top in ${shot.theme} (${shot.top} vs ${first.top})`).toBeLessThanOrEqual(1);
+                expect(shot.modal, `modal in ${shot.lane}`).toBe(true);
+                expect(Math.abs(shot.top - first.top), `top in ${shot.lane} (${shot.top} vs ${first.top})`).toBeLessThanOrEqual(1);
             }
             expect(errors).toEqual([]);
         },
@@ -68,7 +76,7 @@ for (const demo of ['character-meter', 'character-graph']) {
 
 // The review dialog's aspect pages, the keys on them and the header demo's
 // menu, measured the way Kenny judges: one dialog, the keyboard, the demo's
-// own controls mirrored (fix-106 to fix-114, queued as fix-106-M1 to
+// own controls at the component (fix-106 to fix-114, queued as fix-106-M1 to
 // fix-114-M1, written for the 10.1.0 release suite). Every behaviour below was
 // fixed on 2026-10-06; each test was proven to bite by undoing the fix's lines
 // in research/_review/review.js, research/_review/review.css or the demo and
@@ -81,7 +89,10 @@ for (const demo of ['character-meter', 'character-graph']) {
 
 const HEADER = '/research/character-header/demo.html?next=/catalogue/changed.html&review=open';
 const STAGE = `${DIALOG} [data-rv-stage]`;
-const MIRROR = `${DIALOG} .rv-controls`;
+// The demo's own controls stand directly above their component, inside the stage (Kenny, 2026-10-18 07:09:
+// "Die controls moeten niet gewoon meer boven staan, maar enkel de geschikte control per component zoals die
+// tevoorschijn komt"); the dialog no longer copies them into a bar of its own.
+const CONTROLS = `${STAGE} [data-review-controls]`;
 
 /** Opens the page header demo's review dialog at its first aspect page (formal, Shape). */
 const openHeader = async (page) => {
@@ -89,10 +100,11 @@ const openHeader = async (page) => {
     await page.goto(HEADER);
     await expect(page.locator(`${DIALOG}[open]`)).toBeVisible();
     await expect(page.locator(`${DIALOG} [data-rv-approve]`)).toBeFocused();
-    await expect(page.locator(`${DIALOG} [data-rv-position]`)).toHaveText(/^Step 1\/48 .*option 1\/3$/);
+    // Three aspect pages (Shape, the overflow menu, Hover/focus/press) per theme, so the total follows the registry.
+    await expect(page.locator(`${DIALOG} [data-rv-position]`)).toHaveText(new RegExp(`^Step 1/${3 * THEME_NAMES.length} .*option 1/3$`));
 };
 
-/** "Step n/48 … option k/m" as numbers. */
+/** "Step n/total … option k/m" as numbers. */
 const where = async (page) => {
     const text = await page.locator(`${DIALOG} [data-rv-position]`).textContent();
     const [, step, steps, option, options] = text.match(/^Step (\d+)\/(\d+).*option (\d+)\/(\d+)/) ?? [];
@@ -105,45 +117,45 @@ const settle = async (page, from) => {
     await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve))));
 };
 
-const mirrored = (page, name) => page.locator(`${MIRROR} button`, { hasText: name });
+/** One of the demo's own buttons, at the component. */
+const control = (page, name) => page.locator(`${CONTROLS} button`, { hasText: name });
 
-// fix-106-M1: the controls that help judge are in the dialog on every page.
+// fix-106-M1: the controls that help judge are in the dialog on every page. Since 2026-10-18 they are the
+// demo's own, at the component, and there is no mirror bar on top.
 test(
-    'the dialog shows a visible mirror of every control of the demo on every aspect page [fix-106]',
+    "the demo's own controls stand at the component on every aspect page, with no mirror bar [fix-106]",
     { tag: ['@component:catalogue'] },
     async ({ page }) => {
         await openHeader(page);
         const seen = [];
         for (let at = 0; at < 6; at += 1) {
             const read = await page.evaluate(
-                ({ mirror, dialog }) => {
-                    const own = [...document.querySelectorAll('[data-review-controls] button')].filter((b) => !b.closest('.rv-controls'));
-                    const copies = [...document.querySelectorAll(`${mirror} button`)];
+                ({ controls, dialog }) => {
                     const box = document.querySelector(dialog).getBoundingClientRect();
+                    const own = [...document.querySelectorAll(`${controls} button`)];
                     const showing = (b) => {
                         const r = b.getBoundingClientRect();
                         return b.checkVisibility() && r.width > 0 && r.height > 0 && r.top >= box.top && r.bottom <= box.bottom;
                     };
                     return {
+                        position: document.querySelector('[data-rv-position]').textContent,
                         title: document.querySelector('[data-rv-title]').textContent,
                         own: own.map((b) => b.textContent.trim()),
-                        missing: own
-                            .map((b) => b.textContent.trim())
-                            .filter((name) => !copies.some((c) => c.textContent.trim() === name && showing(c))),
-                        open: document.querySelector('[data-rv-controls]').open,
+                        hidden: own.filter((b) => !showing(b)).map((b) => b.textContent.trim()),
+                        bars: document.querySelectorAll(`${dialog} .rv-controls`).length,
                     };
                 },
-                { mirror: MIRROR, dialog: DIALOG },
+                { controls: CONTROLS, dialog: DIALOG },
             );
             expect(read.own.length, `the demo has controls on ${read.title}`).toBeGreaterThan(5);
-            expect(read.missing, `controls with no visible mirror on ${read.title}`).toEqual([]);
-            expect(read.open, `the controls panel stands open on ${read.title}`).toBe(true);
-            seen.push(read.title);
+            expect(read.hidden, `controls not visible inside the dialog on ${read.title}`).toEqual([]);
+            expect(read.bars, `no copied controls bar on ${read.title}`).toBe(0);
+            seen.push(read.position.split(' · ')[0]);
             const before = (await where(page)).text;
             await page.keyboard.press('PageDown');
             await settle(page, before);
         }
-        expect(new Set(seen).size, 'six different aspect pages (formal and light, three each)').toBe(6);
+        expect(new Set(seen).size, 'six different aspect pages (formal and the next theme, three each)').toBe(6);
     },
 );
 
@@ -165,11 +177,11 @@ test(
         };
         // The approve button holds the focus after every page change.
         await spaceHere('approve focused on arrival');
-        // After a mirror click the focus sits on the mirrored button, and also back on approve.
-        await mirrored(page, 'Open').click();
-        await spaceHere('after a mirror click, focus on the mirror');
+        // After a click on the demo's own control the focus sits on that button, and also back on approve.
+        await control(page, 'Open').click();
+        await spaceHere('after a click on the control, focus on it');
         await approve.focus();
-        await spaceHere('after a mirror click, approve focused');
+        await spaceHere('after a click on the control, approve focused');
         // After Replay.
         await page.locator(`${DIALOG} [data-rv-flip-replay]`).click();
         await spaceHere('after Replay, focus on Replay');
@@ -203,7 +215,7 @@ test(
         for (const [label, focus] of [
             ['a button inside the shown option focused', () => card.focus()],
             ['the shown option clicked', () => card.click()],
-            ['a mirrored control focused', () => mirrored(page, 'Narrow').focus()],
+            ['a control of the demo focused', () => control(page, 'Narrow').focus()],
             ['the focus on the page body', () => page.evaluate(() => document.activeElement?.blur())],
         ]) {
             for (const key of ['ArrowRight', 'ArrowLeft']) {
@@ -252,7 +264,7 @@ test('the flip draws the whole shown card, with nothing clipped inside it [fix-1
 // fix-110-M1: a popup of the demo has room inside the shown card.
 test('the header More menu hangs inside the shown card, in every option [fix-110]', { tag: ['@component:catalogue'] }, async ({ page }) => {
     await openHeader(page);
-    await mirrored(page, 'Open').click();
+    await control(page, 'Open').click();
     for (let option = 1; option <= 3; option += 1) {
         await expect
             .poll(() =>
@@ -282,9 +294,9 @@ test(
     { tag: ['@component:catalogue'] },
     async ({ page }) => {
         await openHeader(page);
-        await mirrored(page, 'Open').click();
+        await control(page, 'Open').click();
         for (const width of ['Desktop', 'Narrow']) {
-            await mirrored(page, width).click();
+            await control(page, width).click();
             for (let option = 1; option <= 3; option += 1) {
                 // The panel follows a reflow of the actions row, so wait for it to settle.
                 await expect
@@ -324,19 +336,20 @@ test.describe('a state the reviewer set', () => {
         { tag: ['@component:catalogue'] },
         async ({ page }) => {
             await openHeader(page);
-            await mirrored(page, 'Open').click();
+            await control(page, 'Open').click();
             const menuIsOpen = () =>
                 page.evaluate(() => {
                     const card = [...document.querySelectorAll('.rv-dialog__stage .ph-col')].find(
                         (c) => !c.hidden && c.getBoundingClientRect().width > 0,
                     );
                     const panel = [...(card?.querySelectorAll('[data-ph-panel]') ?? [])].find((p) => !p.hidden);
-                    const open = [...document.querySelectorAll('.rv-controls button')].find((b) => b.textContent.trim() === 'Open');
+                    const open = [...document.querySelectorAll('.rv-dialog__stage [data-review-controls] button')].find((b) => b.textContent.trim() === 'Open');
                     return Boolean(panel && panel.getBoundingClientRect().height > 0) && open?.getAttribute('aria-pressed') === 'true';
                 });
             const titles = [];
             for (let at = 0; at < 8; at += 1) {
-                titles.push(await page.locator(`${DIALOG} [data-rv-title]`).textContent());
+                // Aspect titles repeat from theme to theme, so a page is told apart by its step number.
+                titles.push(`${(await where(page)).step} ${await page.locator(`${DIALOG} [data-rv-title]`).textContent()}`);
                 await page.keyboard.press('ArrowRight');
                 // Long enough for an autoplay or a redraw after the theme change to have closed it.
                 await page.waitForTimeout(400);
@@ -374,7 +387,7 @@ test.describe('the menu demo close', () => {
             for (let at = 0; at < stepsTotal; at += 1) {
                 const theme = await page.evaluate(() => document.documentElement.dataset.theme);
                 themes.push(theme);
-                await mirrored(page, 'Open').first().click();
+                await control(page, 'Open').first().click();
                 await expect
                     .poll(() => page.locator(`${STAGE} .kp-menu:not([hidden])`).count(), { message: `${theme}: Open shows the menus` })
                     .toBeGreaterThan(0);
@@ -400,8 +413,8 @@ test.describe('the menu demo close', () => {
                     };
                     requestAnimationFrame(tick);
                 });
-                // The open menus can lie over the mirrored button, so the click is dispatched on it.
-                await mirrored(page, 'Close').first().dispatchEvent('click');
+                // The open menus can lie over the control, so the click is dispatched on it.
+                await control(page, 'Close').first().dispatchEvent('click');
                 await expect
                     .poll(() => page.locator(`${STAGE} .kp-menu:not([hidden])`).count(), {
                         message: `${theme}: the menus hide after Close`,
@@ -426,30 +439,32 @@ test.describe('the menu demo close', () => {
     );
 });
 
-// fix-113-M1: the flip counts only the options the theme has.
-test('the flip reads n/7 in a theme with seven options and n/8 in one with eight [fix-113]', { tag: ['@component:catalogue'] }, async ({ page }) => {
+// fix-113-M1: the flip counts only the options the theme has. A round asked in several themes walks topic by
+// topic (Kenny, 2026-10-16), so a step's theme is the document's theme while an aspect page of it shows.
+test('the flip reads n/7 in a theme with seven options and n/8 in one with eight [fix-113]', { tag: ['@component:catalogue', '@sweep'] }, async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/research/families/demo.html?next=/catalogue/changed.html&review=open');
     await expect(page.locator(`${DIALOG}[open]`)).toBeVisible();
-    // "A live update" has eight components in formal and seven in light.
+    // "A live update" has more components in some themes than in others; read which from the demo's own hints.
     const counts = {};
-    for (let guard = 0; guard < 14 && Object.keys(counts).length < 2; guard += 1) {
+    for (let guard = 0; guard < 3 * THEME_NAMES.length && new Set(Object.values(counts)).size < 2; guard += 1) {
         const title = await page.locator(`${DIALOG} [data-rv-title]`).textContent();
-        if (/^(Formal|Light) · A live update$/.test(title)) {
-            const theme = title.split(' ')[0].toLowerCase();
-            const expected = await page.evaluate((name) => {
+        if (title === 'A live update') {
+            const read = await page.evaluate(() => {
+                const theme = document.documentElement.dataset.theme;
                 const choices = JSON.parse(document.querySelector('[data-review-item]').dataset.reviewChoices);
-                return choices.find((c) => c.id === 'live' || /live update/i.test(c.label)).options.filter((o) => o.hints?.[name]).length;
-            }, theme);
+                const live = choices.find((c) => c.id === 'live' || /live update/i.test(c.label));
+                return { theme, expected: live.options.filter((o) => o.hints?.[theme]).length };
+            });
             const label = await page.locator(`${DIALOG} .rv-flip__label b`).textContent();
             const dots = await page.locator(`${DIALOG} .rv-flip__dots span`).count();
-            expect(label, `${theme}: the label counts the options the theme has`).toMatch(new RegExp(`^1/${expected} `));
-            expect(dots, `${theme}: one dot per option the theme has`).toBe(expected);
-            counts[theme] = expected;
+            expect(label, `${read.theme}: the label counts the options the theme has`).toMatch(new RegExp(`^1/${read.expected} `));
+            expect(dots, `${read.theme}: one dot per option the theme has`).toBe(read.expected);
+            counts[read.theme] = read.expected;
         }
         const before = (await where(page)).text;
         await page.keyboard.press('PageDown');
         await settle(page, before);
     }
-    expect(counts.formal, 'formal has more live-update options than light').toBeGreaterThan(counts.light);
+    expect(new Set(Object.values(counts)).size, `two themes with different live-update counts were read (${JSON.stringify(counts)})`).toBe(2);
 });
