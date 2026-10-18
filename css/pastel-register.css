@@ -5925,3 +5925,13 @@
     }
 }
 /* ── end t56-q2 calm ── */
+
+/* ── t56-q2 updates: a version that wraps stays a sticker ── */
+@layer kp.signature {
+    /* A version chip that wraps onto five lines had the full-pill radius of its one-line sibling and became a blob. The radius is
+       the pill's up to a height of two lines and a sticker's round corner past it. */
+    [data-theme='pastel'] .kp-badge--version {
+        border-radius: min(999px, 1.1rem);
+    }
+}
+/* ── end t56-q2 updates ── */

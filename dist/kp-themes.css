@@ -44850,6 +44850,16 @@
 }
 /* ── end t56-q2 confirm ── */
 
+/* ── t56-q2 updates: the floor stays under a failed plate's button ── */
+@layer kp.signature {
+    /* The floor of a failed plate (a fifth of its height) ran behind the foot of Retry. The words and the button keep a band above
+       the floor, so the floor is only ever the ground under them. */
+    [data-theme='synthwave'] :is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure).kp-alert--destructive {
+        padding-block-end: 3.25rem;
+    }
+}
+/* ── end t56-q2 updates ── */
+
 /* A share, 0 to 1 (a progress bar's, a meter's), is walked to its value on
    two registered copies, one on each mirror of the motion, so that a rise is
    the picture's fall and a fall is that fall turned around; registered so
@@ -62527,6 +62537,16 @@
     }
 }
 /* ── end t56-q2 calm ── */
+
+/* ── t56-q2 updates: a version that wraps stays a sticker ── */
+@layer kp.signature {
+    /* A version chip that wraps onto five lines had the full-pill radius of its one-line sibling and became a blob. The radius is
+       the pill's up to a height of two lines and a sticker's round corner past it. */
+    [data-theme='pastel'] .kp-badge--version {
+        border-radius: min(999px, 1.1rem);
+    }
+}
+/* ── end t56-q2 updates ── */
 
 /* The busy progress bar's breath, 0 (bare ground) to 1 (the full row),
    registered so the keyframes interpolate it; at the top level because

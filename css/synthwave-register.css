@@ -6300,3 +6300,13 @@
     }
 }
 /* ── end t56-q2 confirm ── */
+
+/* ── t56-q2 updates: the floor stays under a failed plate's button ── */
+@layer kp.signature {
+    /* The floor of a failed plate (a fifth of its height) ran behind the foot of Retry. The words and the button keep a band above
+       the floor, so the floor is only ever the ground under them. */
+    [data-theme='synthwave'] :is(.kp-stateplate--error, .kp-runs__failure, .kp-dated__failure).kp-alert--destructive {
+        padding-block-end: 3.25rem;
+    }
+}
+/* ── end t56-q2 updates ── */
