@@ -101,6 +101,15 @@ if (document.getElementById('kb-keys-log')) {
             say(log, `development error: ${/** @type {Error} */ (error).message}`);
         }
     });
+    // Where the chord's cap stands: an option of the component, switched at runtime on the page's root (centre is the
+    // default; bottom-centre is the foot of what is in view) [toggles-r2-1018].
+    const places = /** @type {HTMLButtonElement[]} */ ([...document.querySelectorAll('[data-kb-hint-place]')]);
+    for (const button of places)
+        button.addEventListener('click', () => {
+            const place = button.getAttribute('data-kb-hint-place') ?? 'centre';
+            document.documentElement.setAttribute('data-kp-shortcuts-hint', place);
+            for (const other of places) other.setAttribute('aria-pressed', String(other === button));
+        });
     byId('kb-keys-hint').addEventListener('change', (event) => {
         // The optional "No shortcut on g x" line.
         import('../../../../js/shortcuts.js').then((m) => m.configureShortcuts({ unknownHint: /** @type {HTMLInputElement} */ (event.target).checked }));

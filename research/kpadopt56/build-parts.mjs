@@ -90,6 +90,8 @@ const PARTS = [
             ['kpadopt6-ops', 'toggle-states'],
             ['kpadopt5-basics', 'shortcut-engine'],
         ],
+        // Sections this round asks in formal too: the package change alters approved work there (Kenny, 2026-10-18 18:42).
+        formal: ['toggle', 'toggle-states', 'shortcut-engine'],
     },
     {
         topic: 'fields',
@@ -255,6 +257,10 @@ const PARTS = [
  * @type {Record<string, { main: string, states: string }>}
  */
 const LOOK = {
+    formal: {
+        main: 'Formal is a ledger: navy rules on paper, plates that keep their small corner, a rule drawn 2 px inside a control when you point at it, and a press that doubles that rule and nothing else. Check that the pressed face still reads as pressed with the second rule, that the button’s words (and tick) stand in the middle and the button does not grow when pressed, and that nothing sits against a rule.',
+        states: 'In formal, waiting is the ledger’s lines ruled one after the other; empty and failed are one centred plate at normal size with a normal-size button. Check each sample keeps the component’s footprint, the rules stay square, and at phone width nothing is cut or touches an edge.',
+    },
     dark: {
         main: 'Dark is a spectral instrument: near-black with a faint grid, chamfered corners and one film of cyan-to-magenta light along the edges that matter. Check that this part wears that film on its frames and focus, that anything opening or arriving is swept in from the left over its own box and never just faded, and that text keeps clear of every edge.',
         states: 'In dark, waiting is a comet with a film tail over the whole component; empty and failed are one centred plate at normal size with a normal-size button. Check each sample keeps the component’s footprint, the chamfered corners hold, and at phone width nothing is cut or touches an edge.',
@@ -323,27 +329,88 @@ for (const part of PARTS) {
         if (!sections.get(demo)?.some((s) => s.id === id)) throw new Error(`${part.topic}: ${demo}/${id} has no source`);
         placed.set(`${demo}/${id}`, (placed.get(`${demo}/${id}`) ?? 0) + 1);
     }
-    if (part.items.length * THEMES.length > MAX_PAIRS) throw new Error(`${part.topic}: ${part.items.length * THEMES.length} pairs, more than ${MAX_PAIRS}`);
+    if (part.items.length * THEMES.length + (part.formal?.length ?? 0) > MAX_PAIRS) throw new Error(`${part.topic}: more than ${MAX_PAIRS} pairs`);
 }
 for (const [key, n] of placed) if (n !== 1) throw new Error(`${key} is in ${n} parts`);
 
-/** The look-at block of a section: one line per theme asked. @param {string} id */
-function lookBlock(id) {
+/** The look-at block of a section: one line per theme asked. @param {string} id @param {string[]} themes */
+function lookBlock(id, themes) {
     const kind = id.endsWith('-states') ? 'states' : 'main';
-    return `<div data-review-look>\n${THEMES.map((t) => `<p data-for="${t}">${escapeHtml(LOOK[t][kind])}</p>`).join('\n')}\n</div>`;
+    return `<div data-review-look>\n${themes.map((t) => `<p data-for="${t}">${escapeHtml(LOOK[t][kind])}</p>`).join('\n')}\n</div>`;
 }
 
-/** @param {string} text a section @param {string} id */
-function ready(text, id) {
+/**
+ * What a later round of a part says it changed in a section, for the lane's head (the kit reads a `…-changed` block):
+ * keyed `<topic>/<section id>`, the round's own words about Kenny's verdict. A section without an entry shows none.
+ * @type {Record<string, string>}
+ */
+const CHANGED = {
+    'toggles/toggle':
+        'You saw no tick on <b>Only errors</b> and its words sat above the middle. Two faults in the package, found and fixed at ' +
+        'their cause. First, in nine of the twelve themes a pressed toggle looked exactly like a released one (the theme&rsquo;s ' +
+        'own button paint won over the pressed face), so with <b>Tick</b> on, <b>All</b> and <b>Week</b>, which start pressed, ' +
+        'showed their tick while <b>Only errors</b> showed nothing you could see change. Now every theme turns the face round ' +
+        'when it is pressed (formal, pastel and solstice already did). Second, the line under the words was empty while the ' +
+        'button was off, so the words stood in the top half; now the same room is kept over them, so the words and the tick are ' +
+        'in the middle of the button in both states, and the button is as wide as its longest line from the start, so pressing ' +
+        'moves nothing beside it. The tick stays an option: <b>Tick: On</b> above the component; off by default, as approved in formal. ' +
+        'In formal this is asked again too, because the same change alters what you approved there: <b>Only errors</b> is now 61 px ' +
+        'tall instead of 46, its words and tick stand in the middle, and pressing it does not make it grow.',
+    'toggles/toggle-states':
+        'You approved this section, and it is asked again because the package fix changes it. A pressed toggle now shows its pressed ' +
+        'face in every theme (in nine of the twelve it looked like a released one before), its words and tick stand in the middle, ' +
+        'and the button is as wide as its longest line from the start. In formal the toggle is 61 px tall instead of 46, its words ' +
+        'and tick are centred, and it does not grow when pressed, so formal is asked again too.',
+    'toggles/shortcut-engine':
+        'You typed <b>g</b> and nothing happened, and the keys stopped after a click. The review dialog took them: <b>g</b> is ' +
+        'also the dialog&rsquo;s own key, so the demo never heard it, and with the focus on the dialog no key reached the demo at ' +
+        'all. Now the demo&rsquo;s own keys work wherever you clicked: on the component they are the demo&rsquo;s (the dialog&rsquo;s ' +
+        '<b>G</b>, <b>X</b> and <b>C</b> give way there), and on the dialog&rsquo;s header or panel every key the dialog does not use ' +
+        'goes to the demo; the second key of a chord always goes to the demo. The cap <b>g …</b> stood at the top; where it stands is ' +
+        'now an option of the component, <b>Chord cap</b> above it: <b>Centre</b> (the default, in the middle of what you see) or ' +
+        '<b>Bottom centre</b>. ' +
+        'In formal this is asked again too, because the cap&rsquo;s position changed there as well: the chord cap now stands in the ' +
+        'middle of the view, with bottom centre as the other option.',
+};
+
+/**
+ * @param {string} text a section @param {string} id @param {string} topic the part
+ * @param {string[]} themes the themes this round asks it in
+ */
+function ready(text, id, topic, themes, pageThemes = THEMES) {
     const looks = text.match(/<div data-review-look>[\s\S]*?<\/div>/g) ?? [];
     if (looks.length !== 1) throw new Error(`${id}: ${looks.length} look-at blocks`);
     if (/<div[\s\S]*<div data-review-look>/.test(looks[0])) throw new Error(`${id}: look-at block is nested`);
+    let out = text.replace(looks[0], lookBlock(id, themes));
+    // A section asked in fewer themes than the part names them (a later round: the approved themes left the page).
+    if (themes.join() !== pageThemes.join()) out = out.replace(/<section\b/, `<section data-review-themes="${themes.join(',')}"`);
+    const changed = CHANGED[`${topic}/${id}`];
+    if (changed) out = out.replace(/<section\b[^>]*>/, (open) => `${open}\n<div class="k56-changed"><p><b>What changed since your last review:</b> ${changed}</p></div>`);
     // Every control group names the component it drives and stands at it in the dialog (Kenny, 2026-10-18 07:09).
-    return declareControls(text.replace(looks[0], lookBlock(id)), id);
+    return declareControls(out, id);
 }
 
-const TEMPLATE_HEAD = (/** @type {string} */ id, /** @type {string} */ title, /** @type {string[]} */ styles) => `<!doctype html>
-<html lang="en" data-theme="formal" data-review="${id}" data-review-themes="${THEMES.join(',')}">
+/**
+ * Which themes a round still asks each section in: a later round shows only the pairs Kenny has not approved (DEMO_RULES
+ * ch. 6, gates/check-rereview.mjs). The latest round naming a pair wins; an `allJudged` round approved every pair of its
+ * page it does not list as not approved; a `reopened` pair is asked again.
+ * @param {any} verdicts @param {string[]} items
+ * @returns {Map<string, string[]>} section id → open themes, in the part's order
+ */
+function openThemes(verdicts, items, formal = /** @type {string[]} */ ([])) {
+    /** @type {Map<string, string>} */
+    const latest = new Map();
+    for (const round of verdicts.rounds ?? []) {
+        if (round.allJudged) for (const item of items) for (const theme of THEMES) latest.set(`${theme}|${item}`, 'approved');
+        for (const p of round.approved ?? []) latest.set(`${p.theme}|${p.item}`, 'approved');
+        for (const p of round.notApproved ?? []) latest.set(`${p.theme}|${p.item}`, 'not approved');
+    }
+    for (const r of verdicts.reopened ?? []) if (String(r.reason ?? '').trim()) latest.delete(`${r.theme}|${r.item}`);
+    return new Map(items.map((item) => [item, [...(formal.includes(item) ? ['formal'] : []), ...THEMES].filter((theme) => latest.get(`${theme}|${item}`) !== 'approved')]));
+}
+
+const TEMPLATE_HEAD = (/** @type {string} */ id, /** @type {string} */ title, /** @type {string[]} */ styles, /** @type {string[]} */ themes) => `<!doctype html>
+<html lang="en" data-theme="formal" data-review="${id}" data-review-themes="${themes.join(',')}">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -388,8 +455,37 @@ for (const [i, part] of PARTS.entries()) {
     const current = existsSync(out) ? /"round":\s*"([^"]+)"/.exec(readFileSync(out, 'utf8'))?.[1] : undefined;
     const roundId = current && !received.includes(current) && /[0-9a-f]{8}-[0-9a-f]{4}-/.test(current) ? current : `${part.topic}-${randomUUID()}`;
 
-    const demos = [...new Set(part.items.map(([d]) => d))];
-    const body = part.items.map(([d, itemId]) => ready(/** @type {{ text: string }} */ (sections.get(d)?.find((s) => s.id === itemId)).text, itemId)).join('\n\n');
+    const open = openThemes(
+        verdicts,
+        part.items.map(([, itemId]) => itemId),
+        part.formal,
+    );
+    const asked = part.items.filter(([, itemId]) => (open.get(itemId) ?? []).length > 0);
+    if (!asked.length) {
+        console.log(`${id}: every pair approved, the page is left as it is (Decided)`);
+        continue;
+    }
+    const pageThemes = [...(asked.some(([, itemId]) => (open.get(itemId) ?? []).includes('formal')) ? ['formal'] : []), ...THEMES];
+    const demos = [...new Set(asked.map(([d]) => d))];
+    /** A topic's title rides on its first section shown, also when the section that carried it was approved and left. */
+    const topicTitles = new Map();
+    for (const [d, itemId] of part.items) {
+        const text = /** @type {{ text: string }} */ (sections.get(d)?.find((s) => s.id === itemId)).text;
+        const topic = /data-review-topic="([^"]+)"/.exec(text)?.[1];
+        const title = /data-review-topic-title="([^"]+)"/.exec(text)?.[1];
+        if (topic && title && !topicTitles.has(topic)) topicTitles.set(topic, title);
+    }
+    const body = asked
+        .map(([d, itemId]) => {
+            let text = ready(/** @type {{ text: string }} */ (sections.get(d)?.find((s) => s.id === itemId)).text, itemId, part.topic, open.get(itemId) ?? [], pageThemes);
+            const topic = /data-review-topic="([^"]+)"/.exec(text)?.[1];
+            if (topic && topicTitles.has(topic) && !/data-review-topic-title="/.test(text))
+                text = text.replace(/data-review-topic="[^"]+"/, (m) => `${m} data-review-topic-title="${topicTitles.get(topic)}"`);
+            if (topic) topicTitles.delete(topic);
+            return text;
+        })
+        .join('\n\n');
+    const pairs = asked.reduce((n, [, itemId]) => n + (open.get(itemId) ?? []).length, 0);
     // A part page holds ONLY the sections it asks (Kenny, 2026-10-18 07:11): no laid-aside sections of the other
     // components of its demos, so no foreign control group or content can reach the review dialog. The demos' scripts
     // tolerate a section that is not on the page.
@@ -412,9 +508,13 @@ for (const [i, part] of PARTS.entries()) {
     const intro = `            <header class="k56-intro">
                 <h1>The fifth and sixth adoption rounds, part ${i + 1} of ${PARTS.length}: ${escapeHtml(part.title)}</h1>
                 <p class="cat-intro">
-                    Formal is approved. ${escapeHtml(part.summary)} This part asks the eleven other themes for ${part.items.length} sections (${part.items.length * THEMES.length}
+                    ${pageThemes.includes('formal') ? 'Formal is approved, except where the package change below alters what you approved there.' : 'Formal is approved.'} ${escapeHtml(part.summary)} ${
+                        received.length
+                            ? `This round asks only what you did not approve in your last review: ${asked.length} section${asked.length === 1 ? '' : 's'} (${pairs} pairs), one theme per step in the review dialog; each says under <b>What changed since your last review</b> what was done about your words.`
+                            : `This part asks the eleven other themes for ${part.items.length} sections (${part.items.length * THEMES.length}
                     pairs), one theme per step in the review dialog. The sections were approved in formal in several rounds; each is shown here in
-                    its latest version, with the defaults you chose.
+                    its latest version, with the defaults you chose.`
+                    }
                 </p>
                 <p>
                     Every section says under <b>Expected</b> what you should see and what each control does (written for formal; the line under
@@ -422,7 +522,7 @@ for (const [i, part] of PARTS.entries()) {
                 </p>
             </header>
 `;
-    const page = `${TEMPLATE_HEAD(id, title, styles)}    <body>
+    const page = `${TEMPLATE_HEAD(id, title, styles, pageThemes)}    <body>
         <a class="kp-skip-link" href="#main">Skip to content</a>
 
         <main id="main" class="cat-main k56-page">
@@ -459,7 +559,7 @@ ${autoFirst.map(script).join('\n')}${autoFirst.length ? '\n' : ''}        <scrip
                 `of the formal reviews are not asked again, because a default belongs to the component, not to a theme. Split off on Kenny's ` +
                 `rule of 2026-10-17: a review asks at most 100 pairs, so the 79 sections are grouped by kind of component.\n`,
         );
-    console.log(`${id}: ${part.items.length} sections, ${part.items.length * THEMES.length} pairs, round ${roundId}`);
+    console.log(`${id}: ${asked.length} sections, ${pairs} pairs, round ${roundId}`);
 }
 if (problems.length) {
     console.error(`build-parts: ${problems.length} problem(s)\n  ${problems.join('\n  ')}`);

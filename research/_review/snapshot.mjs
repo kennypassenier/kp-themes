@@ -68,6 +68,35 @@ for (const path of demoFiles) {
     if (/\.(html|js|mjs)$/.test(path)) for (const spec of specifiers(body.toString())) imports.add(posix.join(posix.dirname(path), spec));
 }
 
+// Files of another research folder the demo loads (a generated part page reads its sections' scripts and styles from
+// research/kpadopt56/src/ and research/kpadopt56/part.css): copied in the same layout, their own imports followed, so the
+// previous version runs with the scripts and styles it had then instead of none [toggles-r2-1018].
+const sharedQueue = [];
+for (const path of demoFiles.filter((p) => p.endsWith('.html')))
+    for (const m of show(path).toString().matchAll(/<(?:link\b[^>]*\bhref|script\b[^>]*\bsrc)="(\.{1,2}\/[^"]+\.(?:css|m?js))"/g)) {
+        const next = posix.normalize(posix.join(posix.dirname(path), m[1]));
+        if (next.startsWith('research/') && !next.startsWith('research/_review/') && !next.startsWith(`${demoDir}/`)) sharedQueue.push(next);
+    }
+const sharedSeen = new Set();
+while (sharedQueue.length) {
+    const path = /** @type {string} */ (sharedQueue.pop());
+    if (sharedSeen.has(path)) continue;
+    sharedSeen.add(path);
+    let body;
+    try {
+        body = show(path);
+    } catch {
+        continue;
+    }
+    write(path, body);
+    if (/\.m?js$/.test(path))
+        for (const spec of specifiers(body.toString())) {
+            const next = posix.normalize(posix.join(posix.dirname(path), spec));
+            if (next.startsWith('js/')) imports.add(next);
+            else if (next.startsWith('research/') && !next.startsWith('research/_review/')) sharedQueue.push(next);
+        }
+}
+
 // Every stylesheet of the package root; fonts.css pointed at the live fonts.
 for (const path of listAt('css/').filter((p) => /^css\/[^/]+\.css$/.test(p))) {
     let body = show(path);
@@ -98,7 +127,7 @@ while (queue.length) {
 
 const round = option('--round', roundOf(show(`${demoDir}/demo.html`).toString()));
 write('previous.json', `${JSON.stringify({ round, from: ref, commit, made: new Date().toISOString() }, null, 4)}\n`);
-console.log(`research/${topic}/_previous: ${demoFiles.length} demo file(s) and ${seen.size} module(s) at ${commit.slice(0, 8)}${round ? `, round ${round}` : ''}`);
+console.log(`research/${topic}/_previous: ${demoFiles.length} demo file(s), ${sharedSeen.size} shared research file(s) and ${seen.size} module(s) at ${commit.slice(0, 8)}${round ? `, round ${round}` : ''}`);
 
 /** The relative module specifiers in a source: static imports, re-exports and dynamic imports. */
 function specifiers(text) {

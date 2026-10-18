@@ -184,11 +184,49 @@ function lane() {
     addEventListener('storage', (event) => event.key === STORAGE_KEY && event.stopImmediatePropagation(), true);
     const TYPING = 'textarea, select, input:not([type="checkbox"], [type="radio"], [type="button"])';
     const OPEN = 'dialog[open], [popover]:popover-open, .kp-datepicker__panel:not([hidden]), [aria-expanded="true"]';
+    // [lane-keys] The demo's own shortcuts (js/shortcuts.js) keep their keys inside a focused lane, where a dialog key
+    // with the same letter yields (Kenny, 2026-10-18 18:42: "er gebeurt niks als ik g typ": the chords' g is the
+    // dialog's bulk key, so the frame handed every g up and the demo never heard one). The engine is the demo's own
+    // module instance (same address), loaded here only to ask it; it registers nothing.
+    /** @type {(event: KeyboardEvent) => boolean} */
+    let claims = () => false;
+    void import('../../js/shortcuts.js')
+        .then((engine) => {
+            claims = engine.shortcutClaims;
+            // While a chord waits, the page around this frame sends the next key here, wherever the focus is.
+            document.addEventListener(engine.SHORTCUT_PENDING_EVENT, (event) => {
+                const { waiting, ms } = /** @type {CustomEvent} */ (event).detail;
+                if (parent !== window) parent.postMessage({ type: 'rv-lane-chord', waiting, ms }, location.origin);
+            });
+        })
+        .catch(() => undefined);
+    // A key the dialog did not use, pressed with the focus outside this frame, is played here (see "lane-keys" below).
+    let forwarding = false;
+    addEventListener('message', (event) => {
+        const data = event.data || {};
+        if (event.origin !== location.origin || event.source !== parent) return;
+        if (data.type === 'rv-stage-key') {
+            forwarding = true;
+            try {
+                document.body.dispatchEvent(
+                    new KeyboardEvent('keydown', { key: data.key, code: data.code, shiftKey: data.shiftKey, bubbles: true, cancelable: true }),
+                );
+            } finally {
+                forwarding = false;
+            }
+        } else if (data.type === 'rv-lane-view') {
+            // The part of this frame in the dialog's view, so what the demo pins to the window (the chord's cap) stands in it.
+            root.style.setProperty('--kp-shortcuts-view-top', `${Math.round(data.top)}px`);
+            root.style.setProperty('--kp-shortcuts-view-height', `${Math.round(data.height)}px`);
+        }
+    });
+    if (parent !== window) parent.postMessage({ type: 'rv-lane-hello' }, location.origin);
     addEventListener(
         'keydown',
         (event) => {
-            if (parent === window || event.altKey || event.ctrlKey || event.metaKey) return;
+            if (parent === window || forwarding || event.altKey || event.ctrlKey || event.metaKey) return;
             if (/** @type {Element} */ (event.target).matches?.(TYPING)) return;
+            if (claims(event)) return; // [lane-keys] the demo's own key (Escape only while its chord waits)
             if (event.key === 'Escape' ? document.querySelector(OPEN) : event.code !== 'KeyV' && event.code !== 'KeyL' && !FRAME_KEYS.has(event.code))
                 return; // [kit-keys] FRAME_KEYS
             event.preventDefault();
@@ -2110,6 +2148,102 @@ addEventListener('storage', (event) => event.key === STORAGE_KEY && laneWatch !=
 
 /** The lane frame a message came from, by its window. */
 const laneOf = (/** @type {MessageEventSource | null} */ source) => lanes.find((lane) => lane.frame.contentWindow === source);
+
+/*
+ * [lane-keys] A demo's shortcuts work in the dialog after a click anywhere (Kenny, 2026-10-18 18:42: "het niet meer
+ * werkt vanaf ik ergens op klik"). Who owns a key:
+ * - focus in a lane (a click on the component): the demo's registered keys (js/shortcuts.js `shortcutClaims`) stay in
+ *   the lane, also where the dialog uses the same letter (G bulk, X Not approved, C reject); every other dialog key is
+ *   handed up as before (FRAME_KEYS, V, L, Escape);
+ * - focus on the dialog (its header, the verdict panel, the stage around the frames): the dialog's keys act as always,
+ *   and a printable key the dialog did not use is played in the lane most in view, so "g i" or "j" reach the demo;
+ * - while a demo's chord waits for its second key (the lane says so, `rv-lane-chord`), that key goes to the lane whatever
+ *   has the focus, so the "c" of "g c" never rejects a section.
+ * A lane also learns which part of it is in the dialog's view (`rv-lane-view`), so the chord's cap stands where Kenny
+ * looks and not at the frame's top or bottom far out of view.
+ */
+/** @type {{ lane: any, until: number } | null} */
+let laneChord = null;
+const LANE_TYPING = 'textarea, select, [contenteditable], input:not([type="checkbox"]):not([type="radio"]):not([type="button"])';
+/** @param {any} lane @param {KeyboardEvent} event */
+const playInLane = (lane, event) =>
+    lane.frame.contentWindow?.postMessage({ type: 'rv-stage-key', key: event.key, code: event.code, shiftKey: event.shiftKey }, location.origin);
+const laneView = () => (stage.closest('.rv-dialog__view') ?? stage).getBoundingClientRect();
+/** The lane most in the dialog's view. */
+function laneInView() {
+    const view = laneView();
+    let best = null;
+    let most = 0;
+    for (const lane of lanes) {
+        if (!lane.frame.isConnected) continue;
+        const r = lane.frame.getBoundingClientRect();
+        const seen = Math.max(0, Math.min(view.bottom, r.bottom) - Math.max(view.top, r.top));
+        if (seen > most) [best, most] = [lane, seen];
+    }
+    return best;
+}
+/** Tells each lane which part of it is in view. */
+function sendLaneViews() {
+    const view = laneView();
+    for (const lane of lanes) {
+        if (!lane.frame.isConnected) continue;
+        const r = lane.frame.getBoundingClientRect();
+        const top = Math.max(view.top, r.top) - r.top;
+        const bottom = Math.min(view.bottom, r.bottom, innerHeight) - r.top;
+        if (bottom > top) lane.frame.contentWindow?.postMessage({ type: 'rv-lane-view', top, height: bottom - top }, location.origin);
+    }
+}
+let viewQueued = false;
+const queueLaneViews = () => {
+    if (viewQueued) return;
+    viewQueued = true;
+    requestAnimationFrame(() => {
+        viewQueued = false;
+        if (dialog.open) sendLaneViews();
+    });
+};
+addEventListener('scroll', queueLaneViews, true);
+addEventListener('resize', queueLaneViews);
+addEventListener('message', (event) => {
+    const data = event.data || {};
+    if (event.origin !== location.origin) return;
+    const lane = laneOf(event.source);
+    if (!lane) return;
+    if (data.type === 'rv-lane-hello') queueLaneViews();
+    else if (data.type === 'rv-lane-chord') {
+        laneChord = data.waiting ? { lane, until: Date.now() + (Number(data.ms) || 1500) } : laneChord?.lane === lane ? null : laneChord;
+        if (data.waiting) queueLaneViews();
+    }
+});
+// Window capture, before the key helpers (rv-keys.js, also window capture, mounted further down): a waiting chord's
+// next key belongs to its lane.
+addEventListener(
+    'keydown',
+    (event) => {
+        if (!dialog.open || !laneChord || event.altKey || event.ctrlKey || event.metaKey) return;
+        if (Date.now() > laneChord.until || !laneChord.lane.frame.isConnected) {
+            laneChord = null;
+            return;
+        }
+        if (['Shift', 'Control', 'Alt', 'Meta', 'AltGraph', 'CapsLock'].includes(event.key)) return;
+        if (/** @type {Element} */ (event.target).matches?.(LANE_TYPING)) return;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        playInLane(laneChord.lane, event);
+        laneChord = null;
+    },
+    true,
+);
+// Window bubble, after every listener of the dialog: a printable key nobody used goes to the lane in view.
+addEventListener('keydown', (event) => {
+    if (!dialog.open || event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (event.key.length !== 1 || event.key === ' ') return;
+    const from = /** @type {Element} */ (event.target);
+    if (from.matches?.(LANE_TYPING) || from.closest?.('[popover]:popover-open, [data-rv-help]')) return;
+    const lane = laneInView();
+    if (lane) playInLane(lane, event);
+});
+
 addEventListener('message', (event) => {
     const data = event.data || {};
     if (event.origin !== location.origin || data.type !== 'rv-lane-key' || !dialog.open) return;
