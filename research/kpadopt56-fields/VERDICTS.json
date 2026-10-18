@@ -419,6 +419,76 @@
                 }
             ],
             "choices": []
+        },
+        {
+            "round": "2",
+            "page": "fields-ed220403-0d3a-4007-a0e6-0ae6fa0ae4a3",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 19:53: 12 of 12 judged, 1 approved, 11 not approved (time-field, every theme, one note).",
+            "approved": [
+                {
+                    "item": "autosize-grow",
+                    "theme": "dark"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "time-field",
+                    "theme": "dark",
+                    "note": "Als ik de bovenste \"backup time\" open, dna opent die onderaan bij \"backup time, its list shown open\", als ik op het klopje van die laatste duw, dan onderlijnt die het element ook, maar die lijn gaat te ver, zie screenshot"
+                },
+                {
+                    "item": "time-field",
+                    "theme": "cyberpunk",
+                    "note": "Als ik de bovenste \"backup time\" open, dna opent die onderaan bij \"backup time, its list shown open\", als ik op het klopje van die laatste duw, dan onderlijnt die het element ook, maar die lijn gaat te ver, zie screenshot"
+                },
+                {
+                    "item": "time-field",
+                    "theme": "synthwave",
+                    "note": "Als ik de bovenste \"backup time\" open, dna opent die onderaan bij \"backup time, its list shown open\", als ik op het klopje van die laatste duw, dan onderlijnt die het element ook, maar die lijn gaat te ver, zie screenshot"
+                },
+                {
+                    "item": "time-field",
+                    "theme": "pastel",
+                    "note": "Als ik de bovenste \"backup time\" open, dna opent die onderaan bij \"backup time, its list shown open\", als ik op het klopje van die laatste duw, dan onderlijnt die het element ook, maar die lijn gaat te ver, zie screenshot"
+                },
+                {
+                    "item": "time-field",
+                    "theme": "forest",
+                    "note": "Als ik de bovenste \"backup time\" open, dna opent die onderaan bij \"backup time, its list shown open\", als ik op het klopje van die laatste duw, dan onderlijnt die het element ook, maar die lijn gaat te ver, zie screenshot"
+                },
+                {
+                    "item": "time-field",
+                    "theme": "blueprint",
+                    "note": "Als ik de bovenste \"backup time\" open, dna opent die onderaan bij \"backup time, its list shown open\", als ik op het klopje van die laatste duw, dan onderlijnt die het element ook, maar die lijn gaat te ver, zie screenshot"
+                },
+                {
+                    "item": "time-field",
+                    "theme": "solstice",
+                    "note": "Als ik de bovenste \"backup time\" open, dna opent die onderaan bij \"backup time, its list shown open\", als ik op het klopje van die laatste duw, dan onderlijnt die het element ook, maar die lijn gaat te ver, zie screenshot"
+                },
+                {
+                    "item": "time-field",
+                    "theme": "brutalism",
+                    "note": "Als ik de bovenste \"backup time\" open, dna opent die onderaan bij \"backup time, its list shown open\", als ik op het klopje van die laatste duw, dan onderlijnt die het element ook, maar die lijn gaat te ver, zie screenshot"
+                },
+                {
+                    "item": "time-field",
+                    "theme": "deco",
+                    "note": "Als ik de bovenste \"backup time\" open, dna opent die onderaan bij \"backup time, its list shown open\", als ik op het klopje van die laatste duw, dan onderlijnt die het element ook, maar die lijn gaat te ver, zie screenshot"
+                },
+                {
+                    "item": "time-field",
+                    "theme": "nostromo",
+                    "note": "Als ik de bovenste \"backup time\" open, dna opent die onderaan bij \"backup time, its list shown open\", als ik op het klopje van die laatste duw, dan onderlijnt die het element ook, maar die lijn gaat te ver, zie screenshot"
+                },
+                {
+                    "item": "time-field",
+                    "theme": "titanium",
+                    "note": "Als ik de bovenste \"backup time\" open, dna opent die onderaan bij \"backup time, its list shown open\", als ik op het klopje van die laatste duw, dan onderlijnt die het element ook, maar die lijn gaat te ver, zie screenshot"
+                }
+            ],
+            "choices": []
         }
     ]
 }
