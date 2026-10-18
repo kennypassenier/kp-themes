@@ -254,78 +254,235 @@
             ],
             "choices": [],
             "generalNote": "General (18:42): toggle: \"Dit is mogelijk ook een fout in Formeel dus ik wil dat item terug evalueren nadat je de fouten overal hersteld hebt\". shortcut-engine: \"het probleem dat ik heb, en dat is in alle thema's precies, is dat het niet meer werkt vanaf ik ergens op klik\"."
-        }
-    ],
-    "reopened": [
-        {
-            "item": "toggle-states",
-            "theme": "dark",
-            "reason": "Approved in round 1 (Kenny, 2026-10-18 18:42); the package fix of round 2 makes a pressed toggle show in every theme, so its pressed faces look different in nine themes and are judged again."
         },
         {
-            "item": "toggle-states",
-            "theme": "cyberpunk",
-            "reason": "Approved in round 1 (Kenny, 2026-10-18 18:42); the package fix of round 2 makes a pressed toggle show in every theme, so its pressed faces look different in nine themes and are judged again."
-        },
-        {
-            "item": "toggle-states",
-            "theme": "synthwave",
-            "reason": "Approved in round 1 (Kenny, 2026-10-18 18:42); the package fix of round 2 makes a pressed toggle show in every theme, so its pressed faces look different in nine themes and are judged again."
-        },
-        {
-            "item": "toggle-states",
-            "theme": "pastel",
-            "reason": "Approved in round 1 (Kenny, 2026-10-18 18:42); the package fix of round 2 makes a pressed toggle show in every theme, so its pressed faces look different in nine themes and are judged again."
-        },
-        {
-            "item": "toggle-states",
-            "theme": "forest",
-            "reason": "Approved in round 1 (Kenny, 2026-10-18 18:42); the package fix of round 2 makes a pressed toggle show in every theme, so its pressed faces look different in nine themes and are judged again."
-        },
-        {
-            "item": "toggle-states",
-            "theme": "blueprint",
-            "reason": "Approved in round 1 (Kenny, 2026-10-18 18:42); the package fix of round 2 makes a pressed toggle show in every theme, so its pressed faces look different in nine themes and are judged again."
-        },
-        {
-            "item": "toggle-states",
-            "theme": "solstice",
-            "reason": "Approved in round 1 (Kenny, 2026-10-18 18:42); the package fix of round 2 makes a pressed toggle show in every theme, so its pressed faces look different in nine themes and are judged again."
-        },
-        {
-            "item": "toggle-states",
-            "theme": "brutalism",
-            "reason": "Approved in round 1 (Kenny, 2026-10-18 18:42); the package fix of round 2 makes a pressed toggle show in every theme, so its pressed faces look different in nine themes and are judged again."
-        },
-        {
-            "item": "toggle-states",
-            "theme": "deco",
-            "reason": "Approved in round 1 (Kenny, 2026-10-18 18:42); the package fix of round 2 makes a pressed toggle show in every theme, so its pressed faces look different in nine themes and are judged again."
-        },
-        {
-            "item": "toggle-states",
-            "theme": "nostromo",
-            "reason": "Approved in round 1 (Kenny, 2026-10-18 18:42); the package fix of round 2 makes a pressed toggle show in every theme, so its pressed faces look different in nine themes and are judged again."
-        },
-        {
-            "item": "toggle-states",
-            "theme": "titanium",
-            "reason": "Approved in round 1 (Kenny, 2026-10-18 18:42); the package fix of round 2 makes a pressed toggle show in every theme, so its pressed faces look different in nine themes and are judged again."
-        },
-        {
-            "item": "toggle",
-            "theme": "formal",
-            "reason": "Formal was approved in earlier rounds; the package fix of round 2 changes formal's toggle (size 61 px instead of 46, words and tick centred, no growth on press) and the shortcut chord cap position, and Kenny asked (2026-10-18 18:42) to judge it in formal too."
-        },
-        {
-            "item": "toggle-states",
-            "theme": "formal",
-            "reason": "Formal was approved in earlier rounds; the package fix of round 2 changes formal's toggle (size 61 px instead of 46, words and tick centred, no growth on press) and the shortcut chord cap position, and Kenny asked (2026-10-18 18:42) to judge it in formal too."
-        },
-        {
-            "item": "shortcut-engine",
-            "theme": "formal",
-            "reason": "Formal was approved in earlier rounds; the package fix of round 2 changes formal's toggle (size 61 px instead of 46, words and tick centred, no growth on press) and the shortcut chord cap position, and Kenny asked (2026-10-18 18:42) to judge it in formal too."
+            "round": "2",
+            "page": "toggles-b460e963-8760-4ee0-81ed-4635f4c3abee",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 19:24: 36 of 36 judged, 34 approved, 2 not approved.",
+            "approved": [
+                {
+                    "item": "toggle",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "toggle",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "toggle",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "toggle",
+                    "theme": "forest"
+                },
+                {
+                    "item": "toggle",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "toggle",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "toggle",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "toggle",
+                    "theme": "deco"
+                },
+                {
+                    "item": "toggle",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "toggle",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "toggle-states",
+                    "theme": "formal"
+                },
+                {
+                    "item": "toggle-states",
+                    "theme": "dark"
+                },
+                {
+                    "item": "toggle-states",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "toggle-states",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "toggle-states",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "toggle-states",
+                    "theme": "forest"
+                },
+                {
+                    "item": "toggle-states",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "toggle-states",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "toggle-states",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "toggle-states",
+                    "theme": "deco"
+                },
+                {
+                    "item": "toggle-states",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "toggle-states",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "shortcut-engine",
+                    "theme": "formal"
+                },
+                {
+                    "item": "shortcut-engine",
+                    "theme": "dark"
+                },
+                {
+                    "item": "shortcut-engine",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "shortcut-engine",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "shortcut-engine",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "shortcut-engine",
+                    "theme": "forest"
+                },
+                {
+                    "item": "shortcut-engine",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "shortcut-engine",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "shortcut-engine",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "shortcut-engine",
+                    "theme": "deco"
+                },
+                {
+                    "item": "shortcut-engine",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "shortcut-engine",
+                    "theme": "titanium"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "toggle",
+                    "theme": "formal",
+                    "note": "Only errors, die tekst is nu verticaal gecentreerd, maar als ik erop klik zegt die ook \"showing errors only\" en dan is het niet meer gecentreerd"
+                },
+                {
+                    "item": "toggle",
+                    "theme": "dark",
+                    "note": "hier is dat minder een probleem, want die tekst past nog altijd mooi in het kader en heeft de onderlijning van Formeel niet"
+                }
+            ],
+            "choices": [],
+            "reopenedForThisRound": [
+                {
+                    "item": "toggle-states",
+                    "theme": "dark",
+                    "reason": "Approved in round 1 (Kenny, 2026-10-18 18:42); the package fix of round 2 makes a pressed toggle show in every theme, so its pressed faces look different in nine themes and are judged again."
+                },
+                {
+                    "item": "toggle-states",
+                    "theme": "cyberpunk",
+                    "reason": "Approved in round 1 (Kenny, 2026-10-18 18:42); the package fix of round 2 makes a pressed toggle show in every theme, so its pressed faces look different in nine themes and are judged again."
+                },
+                {
+                    "item": "toggle-states",
+                    "theme": "synthwave",
+                    "reason": "Approved in round 1 (Kenny, 2026-10-18 18:42); the package fix of round 2 makes a pressed toggle show in every theme, so its pressed faces look different in nine themes and are judged again."
+                },
+                {
+                    "item": "toggle-states",
+                    "theme": "pastel",
+                    "reason": "Approved in round 1 (Kenny, 2026-10-18 18:42); the package fix of round 2 makes a pressed toggle show in every theme, so its pressed faces look different in nine themes and are judged again."
+                },
+                {
+                    "item": "toggle-states",
+                    "theme": "forest",
+                    "reason": "Approved in round 1 (Kenny, 2026-10-18 18:42); the package fix of round 2 makes a pressed toggle show in every theme, so its pressed faces look different in nine themes and are judged again."
+                },
+                {
+                    "item": "toggle-states",
+                    "theme": "blueprint",
+                    "reason": "Approved in round 1 (Kenny, 2026-10-18 18:42); the package fix of round 2 makes a pressed toggle show in every theme, so its pressed faces look different in nine themes and are judged again."
+                },
+                {
+                    "item": "toggle-states",
+                    "theme": "solstice",
+                    "reason": "Approved in round 1 (Kenny, 2026-10-18 18:42); the package fix of round 2 makes a pressed toggle show in every theme, so its pressed faces look different in nine themes and are judged again."
+                },
+                {
+                    "item": "toggle-states",
+                    "theme": "brutalism",
+                    "reason": "Approved in round 1 (Kenny, 2026-10-18 18:42); the package fix of round 2 makes a pressed toggle show in every theme, so its pressed faces look different in nine themes and are judged again."
+                },
+                {
+                    "item": "toggle-states",
+                    "theme": "deco",
+                    "reason": "Approved in round 1 (Kenny, 2026-10-18 18:42); the package fix of round 2 makes a pressed toggle show in every theme, so its pressed faces look different in nine themes and are judged again."
+                },
+                {
+                    "item": "toggle-states",
+                    "theme": "nostromo",
+                    "reason": "Approved in round 1 (Kenny, 2026-10-18 18:42); the package fix of round 2 makes a pressed toggle show in every theme, so its pressed faces look different in nine themes and are judged again."
+                },
+                {
+                    "item": "toggle-states",
+                    "theme": "titanium",
+                    "reason": "Approved in round 1 (Kenny, 2026-10-18 18:42); the package fix of round 2 makes a pressed toggle show in every theme, so its pressed faces look different in nine themes and are judged again."
+                },
+                {
+                    "item": "toggle",
+                    "theme": "formal",
+                    "reason": "Formal was approved in earlier rounds; the package fix of round 2 changes formal's toggle (size 61 px instead of 46, words and tick centred, no growth on press) and the shortcut chord cap position, and Kenny asked (2026-10-18 18:42) to judge it in formal too."
+                },
+                {
+                    "item": "toggle-states",
+                    "theme": "formal",
+                    "reason": "Formal was approved in earlier rounds; the package fix of round 2 changes formal's toggle (size 61 px instead of 46, words and tick centred, no growth on press) and the shortcut chord cap position, and Kenny asked (2026-10-18 18:42) to judge it in formal too."
+                },
+                {
+                    "item": "shortcut-engine",
+                    "theme": "formal",
+                    "reason": "Formal was approved in earlier rounds; the package fix of round 2 changes formal's toggle (size 61 px instead of 46, words and tick centred, no growth on press) and the shortcut chord cap position, and Kenny asked (2026-10-18 18:42) to judge it in formal too."
+                }
+            ]
         }
     ]
 }

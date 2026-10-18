@@ -254,7 +254,8 @@ function attachOne(button, options) {
     }
     const writeHint = () => {
         if (!hint) return;
-        hint.textContent = stateOf(button) === 'true' ? (button.getAttribute('data-kp-pressed-hint') ?? '') : '';
+        // The words stay in while it is off (unseen, css/components.css), so the button keeps the width of its longest line.
+        hint.textContent = button.getAttribute('data-kp-pressed-hint') ?? '';
     };
     writeHint();
     // A member changed by another member's press (a single group, the All chip) redraws its own hint.

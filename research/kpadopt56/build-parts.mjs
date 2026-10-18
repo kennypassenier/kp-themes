@@ -96,7 +96,8 @@ const PARTS = [
     {
         topic: 'fields',
         title: 'Fields and inputs',
-        summary: 'Entering a value: a slider with a typed value beside it, a time of day, a text box that grows, a JSON box that checks what you type, and a star rating.',
+        summary:
+            'Entering a value: a slider with a typed value beside it, a time of day, a text box that grows, a JSON box that checks what you type, and a star rating.',
         items: [
             ['kpadopt5-time', 'slider'],
             ['kpadopt5-time', 'slider-states'],
@@ -112,7 +113,8 @@ const PARTS = [
     {
         topic: 'updates',
         title: 'Updating safely',
-        summary: 'What an update list needs: the size of a version jump, a tick before it may start, what needs what, and how often the list refreshes.',
+        summary:
+            'What an update list needs: the size of a version jump, a tick before it may start, what needs what, and how often the list refreshes.',
         items: [
             ['kpadopt6-ops', 'version'],
             ['kpadopt6-ops', 'version-states'],
@@ -126,7 +128,8 @@ const PARTS = [
     {
         topic: 'confirm',
         title: 'Saving, undoing and answering',
-        summary: 'What happens after you act: the unsaved-changes bar, a toast with Undo, a button that shows its result, a question that waits for your answer, and the bar over a selection.',
+        summary:
+            'What happens after you act: the unsaved-changes bar, a toast with Undo, a button that shows its result, a question that waits for your answer, and the bar over a selection.',
         items: [
             ['kpadopt5-time', 'unsaved'],
             ['kpadopt5-time', 'unsaved-states'],
@@ -141,7 +144,8 @@ const PARTS = [
     {
         topic: 'lists',
         title: 'Lists, records and pages',
-        summary: 'Rows and what sits in them: ticking with the keyboard, who brings what, a list with its detail, new lines on a live list and payloads.',
+        summary:
+            'Rows and what sits in them: ticking with the keyboard, who brings what, a list with its detail, new lines on a live list and payloads.',
         items: [
             ['kpadopt5-rows', 'row-keyboard-select'],
             ['kpadopt6-social', 'claim-row-states'],
@@ -166,7 +170,8 @@ const PARTS = [
     {
         topic: 'status',
         title: 'Messages and status',
-        summary: 'Telling the reader what is going on: a problem with its reason and its remedy, the offline banner, a transfer with its time left, the notification centre, the line under a heading, and the today card.',
+        summary:
+            'Telling the reader what is going on: a problem with its reason and its remedy, the offline banner, a transfer with its time left, the notification centre, the line under a heading, and the today card.',
         items: [
             ['kpadopt5-basics', 'problem-alert'],
             ['kpadopt5-ops', 'connection'],
@@ -209,7 +214,8 @@ const PARTS = [
     {
         topic: 'availability',
         title: 'Who can come',
-        summary: 'People over days or periods, in five sections of the same grid: its states, how people answer, the best column, the rows and the summary, and the phone and density.',
+        summary:
+            'People over days or periods, in five sections of the same grid: its states, how people answer, the best column, the rows and the summary, and the phone and density.',
         items: [
             ['kpadopt6-social', 'availability-grid-states'],
             ['kpadopt6-social', 'availability-grid-answering'],
@@ -221,7 +227,8 @@ const PARTS = [
     {
         topic: 'media',
         title: 'Pictures, documents and printing',
-        summary: 'Things you look at or take away: the picture gallery, the document preview, anchors on headings and rows, a QR code, and a printed checklist.',
+        summary:
+            'Things you look at or take away: the picture gallery, the document preview, anchors on headings and rows, a QR code, and a printed checklist.',
         items: [
             ['kpadopt6-media', 'gallery-grid'],
             ['kpadopt6-media', 'gallery-states'],
@@ -317,7 +324,8 @@ for (const demo of Object.keys(DEMOS)) {
     const html = read(`src/${demo}/sections.html`);
     /** @type {{ id: string, text: string }[]} */
     const list = [];
-    for (const m of html.matchAll(/<!-- ===== item: (\S+) \(from [^)]*\) -->\n([\s\S]*?)\n\n(?=<!-- ===== item: |$)/g)) list.push({ id: m[1], text: m[2] });
+    for (const m of html.matchAll(/<!-- ===== item: (\S+) \(from [^)]*\) -->\n([\s\S]*?)\n\n(?=<!-- ===== item: |$)/g))
+        list.push({ id: m[1], text: m[2] });
     sections.set(demo, list);
 }
 
@@ -346,16 +354,14 @@ function lookBlock(id, themes) {
  */
 const CHANGED = {
     'toggles/toggle':
-        'You saw no tick on <b>Only errors</b> and its words sat above the middle. Two faults in the package, found and fixed at ' +
-        'their cause. First, in nine of the twelve themes a pressed toggle looked exactly like a released one (the theme&rsquo;s ' +
-        'own button paint won over the pressed face), so with <b>Tick</b> on, <b>All</b> and <b>Week</b>, which start pressed, ' +
-        'showed their tick while <b>Only errors</b> showed nothing you could see change. Now every theme turns the face round ' +
-        'when it is pressed (formal, pastel and solstice already did). Second, the line under the words was empty while the ' +
-        'button was off, so the words stood in the top half; now the same room is kept over them, so the words and the tick are ' +
-        'in the middle of the button in both states, and the button is as wide as its longest line from the start, so pressing ' +
-        'moves nothing beside it. The tick stays an option: <b>Tick: On</b> above the component; off by default, as approved in formal. ' +
-        'In formal this is asked again too, because the same change alters what you approved there: <b>Only errors</b> is now 61 px ' +
-        'tall instead of 46, its words and tick stand in the middle, and pressing it does not make it grow.',
+        'You saw <b>Only errors</b> centred while it was off, but pressed, with <b>Showing errors only</b> under it, the pair sat ' +
+        'low in the button. The room that centres the words while the button is off stayed over them when the hint appeared. Now a ' +
+        'press splits that room in two, half over the pair and half under it, so the words and the hint stand in the middle as one ' +
+        'group, and the button keeps its height and width to the pixel (measured in all twelve themes, with the tick off and on: ' +
+        'the middle of what you see is within 1 px of the middle of the button, pressed and released). In formal the rule under ' +
+        'the words also ran under the hint and sat on its capitals; now only <b>Only errors</b> is ruled, a small gap keeps the rule ' +
+        'off the hint, and the hint stays clear of the double rule along the edge. Released, nothing changed, and the other ten ' +
+        'themes keep what you approved: only the pressed button with its hint moved to the middle.',
     'toggles/toggle-states':
         'You approved this section, and it is asked again because the package fix changes it. A pressed toggle now shows its pressed ' +
         'face in every theme (in nine of the twelve it looked like a released one before), its words and tick stand in the middle, ' +
@@ -385,7 +391,11 @@ function ready(text, id, topic, themes, pageThemes = THEMES) {
     // A section asked in fewer themes than the part names them (a later round: the approved themes left the page).
     if (themes.join() !== pageThemes.join()) out = out.replace(/<section\b/, `<section data-review-themes="${themes.join(',')}"`);
     const changed = CHANGED[`${topic}/${id}`];
-    if (changed) out = out.replace(/<section\b[^>]*>/, (open) => `${open}\n<div class="k56-changed"><p><b>What changed since your last review:</b> ${changed}</p></div>`);
+    if (changed)
+        out = out.replace(
+            /<section\b[^>]*>/,
+            (open) => `${open}\n<div class="k56-changed"><p><b>What changed since your last review:</b> ${changed}</p></div>`,
+        );
     // Every control group names the component it drives and stands at it in the dialog (Kenny, 2026-10-18 07:09).
     return declareControls(out, id);
 }
@@ -406,10 +416,20 @@ function openThemes(verdicts, items, formal = /** @type {string[]} */ ([])) {
         for (const p of round.notApproved ?? []) latest.set(`${p.theme}|${p.item}`, 'not approved');
     }
     for (const r of verdicts.reopened ?? []) if (String(r.reason ?? '').trim()) latest.delete(`${r.theme}|${r.item}`);
-    return new Map(items.map((item) => [item, [...(formal.includes(item) ? ['formal'] : []), ...THEMES].filter((theme) => latest.get(`${theme}|${item}`) !== 'approved')]));
+    return new Map(
+        items.map((item) => [
+            item,
+            [...(formal.includes(item) ? ['formal'] : []), ...THEMES].filter((theme) => latest.get(`${theme}|${item}`) !== 'approved'),
+        ]),
+    );
 }
 
-const TEMPLATE_HEAD = (/** @type {string} */ id, /** @type {string} */ title, /** @type {string[]} */ styles, /** @type {string[]} */ themes) => `<!doctype html>
+const TEMPLATE_HEAD = (
+    /** @type {string} */ id,
+    /** @type {string} */ title,
+    /** @type {string[]} */ styles,
+    /** @type {string[]} */ themes,
+) => `<!doctype html>
 <html lang="en" data-theme="formal" data-review="${id}" data-review-themes="${themes.join(',')}">
     <head>
         <meta charset="utf-8" />
@@ -477,7 +497,13 @@ for (const [i, part] of PARTS.entries()) {
     }
     const body = asked
         .map(([d, itemId]) => {
-            let text = ready(/** @type {{ text: string }} */ (sections.get(d)?.find((s) => s.id === itemId)).text, itemId, part.topic, open.get(itemId) ?? [], pageThemes);
+            let text = ready(
+                /** @type {{ text: string }} */ (sections.get(d)?.find((s) => s.id === itemId)).text,
+                itemId,
+                part.topic,
+                open.get(itemId) ?? [],
+                pageThemes,
+            );
             const topic = /data-review-topic="([^"]+)"/.exec(text)?.[1];
             if (topic && topicTitles.has(topic) && !/data-review-topic-title="/.test(text))
                 text = text.replace(/data-review-topic="[^"]+"/, (m) => `${m} data-review-topic-title="${topicTitles.get(topic)}"`);
@@ -497,7 +523,8 @@ for (const [i, part] of PARTS.entries()) {
     for (const [k, n] of seen) if (n > 1) problems.push(`${id}: the id "${k}" stands ${n} times`);
     for (const topic of new Set([...body.matchAll(/data-review-topic="([^"]+)"/g)].map((m) => m[1]))) {
         const first = body.split(/(?=<section\b)/).find((s) => s.includes(`data-review-topic="${topic}"`)) ?? '';
-        if (!/data-review-topic-title="/.test(first)) problems.push(`${id}: the first section of topic "${topic}" carries no data-review-topic-title`);
+        if (!/data-review-topic-title="/.test(first))
+            problems.push(`${id}: the first section of topic "${topic}" carries no data-review-topic-title`);
     }
 
     const styles = ['../kpadopt56/part.css', ...demos.map((d) => `../kpadopt56/src/${d}/page.css`)];

@@ -252,3 +252,20 @@
 .kb-fold-from .kp-field__input {
     inline-size: 6rem;
 }
+
+/* The buttons that set a section's options (they stand in the review dialog's toolbar above the component). */
+.kb-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.kb-controls > [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.kb-controls > [role='group'] > b {
+    min-inline-size: 7rem;
+}

@@ -26809,7 +26809,8 @@
  * state does. Looks: `data-kp-look` `button` (default), `chip` (a pill) and `icon` (a square). Busy lays the theme's
  * spinner over the words, which keep their room; a refusal lays its word over them for a moment.
  * Knobs [KT6]: --kp-toggle-on, --kp-toggle-on-ink, --kp-toggle-mixed (the half wash), --kp-toggle-gap,
- * --kp-toggle-count-size (--kp-text-xs), --kp-toggle-hit (the least height on a phone, 2.75rem). */
+ * --kp-toggle-hint-gap (between the words and the hint while it shows, 0), --kp-toggle-count-size (--kp-text-xs),
+ * --kp-toggle-hit (the least height on a phone, 2.75rem). */
     .kp-button[data-kp-toggle] {
         flex-wrap: nowrap;
         column-gap: var(--kp-toggle-gap, 0.4em);
@@ -26973,6 +26974,17 @@
         --kp-toggle-hint-line: calc(var(--kp-text-xs, 0.75rem) * 1.3);
         padding-block: calc(var(--kp-space-xs, 0.25rem) + var(--kp-toggle-hint-line)) var(--kp-space-xs, 0.25rem) !important;
         min-block-size: 0 !important;
+    }
+
+    /* Pressed, the hint shows, and the words with the hint under them are the group in the middle (Kenny, 2026-10-18
+     * 19:24: "als ik erop klik zegt die ook 'showing errors only' en dan is het niet meer gecentreerd") [toggles-r3-1018].
+     * The room kept over the words while off is split in two halves, one over the group and one under it: the box keeps
+     * its height and width to the pixel, the group's centre is the box's centre, and the hint keeps clear of the bottom
+     * edge (in formal, of the double rule drawn there). A theme that rules its label opens a gap between the words and
+     * the hint with `--kp-toggle-hint-gap` (0 by default); the gap comes out of those two halves, so nothing else moves. */
+    .kp-button[data-kp-toggle][aria-pressed='true']:has(> .kp-toggle__hint) {
+        row-gap: var(--kp-toggle-hint-gap, 0px);
+        padding-block: calc(var(--kp-space-xs, 0.25rem) + (var(--kp-toggle-hint-line) - var(--kp-toggle-hint-gap, 0px)) / 2) !important;
     }
 
     .kp-button[data-kp-toggle][data-kp-busy] > :not(.kp-button__busy),
