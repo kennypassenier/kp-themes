@@ -242,3 +242,24 @@
         row-gap: var(--kp-space-xs, 0.25rem);
     }
 }
+
+/* What to type and where the answer shows, at the picker itself (Kenny, 2026-10-18 21:37: "waar zou ik het moeten zien?"). */
+.kc-try {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--ring);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.kc-try__title {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+    font-weight: 600;
+}
+
+.kc-try ol {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}

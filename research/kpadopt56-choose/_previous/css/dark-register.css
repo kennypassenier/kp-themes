@@ -495,6 +495,35 @@
         }
     }
 
+    /* A time field's line spans the time field, not the field around it [fields-r3-1018]. The box is 8.5rem
+       wide and does not stretch, while the .kp-field holding it does (288 px in a column of 18rem, 371 px in a flex
+       row), so the field's line ran past the box to the right, twice its width (Kenny, 2026-10-18 19:53). */
+    [data-theme='dark'] .kp-field:has(.kp-time:not(.kp-time--inline))::after {
+        content: none;
+    }
+
+    [data-theme='dark'] .kp-time:not(.kp-time--inline) > .kp-time__control::after {
+        content: '';
+        position: absolute;
+        inset-inline: 0;
+        inset-block-end: -1px;
+        block-size: 1px;
+        background: var(--kp-iris);
+        scale: 0 1;
+        transform-origin: left center;
+        pointer-events: none;
+    }
+
+    [data-theme='dark'] .kp-time:not(.kp-time--inline) > .kp-time__control:focus-within::after {
+        scale: 1 1;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='dark'] .kp-time:not(.kp-time--inline) > .kp-time__control::after {
+            transition: scale calc(var(--fx-duration) * 1.5) var(--fx-ease);
+        }
+    }
+
     /* ── The ring, reversed from the base default [DI2, AR30, S49] ────────
        The base layer puts the theme's foreground on the inner ring and its
        background on the outer one; the approved demo's own :focus-visible
@@ -1344,6 +1373,38 @@
 
     [data-theme='dark'] .kp-table tbody tr:hover {
         background: var(--card);
+    }
+
+    /* ── The keyboard cursor on a row is the film's ring [G5, mlp-r2-1018] ──
+       js/row-select.js rings the cursor row (and the row that holds the
+       focus while j / k walk). The base draws it as an outline in --ring,
+       which in dark is plain ink: a white box round the row, the one ring
+       on the page without the film (G5: "the film is every edge that
+       matters, the line, the fill, the ring"), and on a table row the
+       void channel of DI2's ring (a box-shadow) is not painted, so only
+       the white line was left. Here the ring is the film itself, 2 px just
+       inside the row, cut out of an --kp-iris plate with a mask, so the
+       ticked row's light plate and the cursor's film read apart. It moves
+       with the key at once: nothing fades or slides. An entity card keeps
+       its own cursor (its ::after is the card's plate). */
+    [data-theme='dark'] :is([data-kp-cursor-visible] .is-cursor, [data-kp-roving]:focus-visible):not(.kp-card) {
+        position: relative;
+        outline: 0;
+        box-shadow: none;
+    }
+
+    [data-theme='dark'] :is([data-kp-cursor-visible] .is-cursor, [data-kp-roving]:focus-visible):not(.kp-card)::after {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        box-sizing: border-box;
+        padding: 2px;
+        background: var(--kp-iris);
+        pointer-events: none;
+        mask:
+            linear-gradient(var(--foreground) 0 0) content-box exclude,
+            linear-gradient(var(--foreground) 0 0);
     }
 
     [data-theme='dark'] .kp-datatable {

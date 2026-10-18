@@ -12,7 +12,7 @@
                 <div class="kc-sec__head">
                     <h2 id="h-usual">Picker with the usual on top: the list</h2>
                     <p>
-                        The combobox (<code>data-kp-combobox</code>) with <code>data-kp-usual</code>: the choices you use most stand first, the rest alphabetical below, and a name typed with a slip is not added a second time. Nothing re-sorts per tap: the band is given by the app and changes slowly. This section shows how the list behaves.
+                        Type a name in the field and press Enter: the answer shows in the list right under the field, and what you picked or added shows as a tag above it. The choices you use most stand first in the list, the rest alphabetical below, and a name typed with a slip is never added a second time.
                     </p>
                 </div>
                 <div class="kc-expected">
@@ -26,16 +26,23 @@
                             Each row is at least 48 px and long words wrap.
                         </li>
                         <li>
-                            <b>Pick</b> Headache and Fatigue: they become tags with a small <b>Not today</b> button each; press it on Fatigue: the tag
-                            turns dashed and the button filled (not the same as unticked). The grey box shows <code>kp-usual-pick</code> with where
-                            the choice came from (usual, all, pinned or typed).
+                            <b>Pick</b> Headache and Fatigue in the list: each becomes one clean tag above the field, its name and a remove
+                            <b>&times;</b>, and lights up for a moment. Under the field, <b>Your usual today</b> now says <b>Had it</b> on both rows.
+                            The grey box shows <code>kp-usual-pick</code> with where the choice came from (usual, all, pinned or typed).
                         </li>
                         <li>
-                            <b>Type</b> <code>hoofdpjn</code>-style slips with a real one: type <b>Headach</b> then Enter: identical after case and
-                            spaces means it selects <b>Headache</b>, it never makes a second one (type <b>headache</b> in small letters). Type
-                            <b>Neksteun</b> (new) and press Enter: it is added at once, a toast says <b>Added &lsquo;Neksteun&rsquo;</b> with Undo.
-                            Type <b>Fatigu</b>, which is close to a name you have: <b>Did you mean Fatigue?</b> stands first, then
-                            <b>Add &lsquo;Fatigu&rsquo; as new</b>, which always works.
+                            <b>Type</b> <b>headache</b> (any case) and press Enter: it is the same name, so it picks <b>Headache</b> and never makes
+                            a second one; the tag appears and lights up. Type <b>Headache</b> again: the list says <b>Headache is already picked</b>
+                            and Enter lights the existing tag.
+                        </li>
+                        <li>
+                            Type <b>Fatigu</b>, close to a name you have: <b>Did you mean Fatigue?</b> stands first in the list and
+                            <b>Add &lsquo;Fatigu&rsquo; as new</b> last. Enter lights the question, a second Enter picks Fatigue. With <b>Close name:
+                            Take the closest</b>, the first Enter picks Fatigue at once; with <b>Off</b>, Enter adds &lsquo;Fatigu&rsquo; as typed.
+                        </li>
+                        <li>
+                            Type <b>Neksteun</b> (new) and press Enter: it is added as a tag at once, and the line under the field says
+                            <b>Added &lsquo;Neksteun&rsquo; as new</b> with <b>Undo</b>.
                         </li>
                     </ul>
                 </div>
@@ -54,11 +61,11 @@
                             Step aside
                         </button>
                     </div>
-                    <div role="group" aria-label="Near names" class="kc-actions">
-                        <b>Near name:</b>
+                    <div role="group" aria-label="A name close to one you have" class="kc-actions">
+                        <b>Close name:</b>
                         <button type="button" class="kp-button" aria-pressed="true" data-kc-usual-opt="near" data-value="ask">Ask (default)</button>
                         <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="near" data-value="select">
-                            Take closest
+                            Take the closest
                         </button>
                         <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="near" data-value="off">Off</button>
                     </div>
@@ -79,7 +86,14 @@
                 </div>
                 <div class="kc-pair kc-pair--tall">
                     <div class="kc-case kc-case--room">
-                        <p class="kc-label">Symptoms: many, with the usual on top</p>
+                        <div class="kc-try" id="kc-usual-a-try">
+                            <p class="kc-try__title">Try it: type in the field, then press <kbd class="kp-kbd">Enter</kbd></p>
+                            <ol>
+                                <li><b>Headache</b>: picked; its tag appears above the field and lights up. Type it again: the list says it is already picked.</li>
+                                <li><b>Fatigu</b>: the list asks <b>Did you mean Fatigue?</b> first; <kbd class="kp-kbd">Enter</kbd> lights it, again picks it.</li>
+                                <li><b>Neksteun</b>: added as a new tag; the line under the field offers <b>Undo</b>.</li>
+                            </ol>
+                        </div>
                         <div
                             class="kp-combobox"
                             data-kp-combobox
@@ -163,14 +177,30 @@
                 <div class="kc-sec__head">
                     <h2 id="h-usual-band">Picker with the usual on top: band, Not today and adding</h2>
                     <p>
-                        The combobox (<code>data-kp-combobox</code>) with <code>data-kp-usual</code>: the choices you use most stand first, the rest alphabetical below, and a name typed with a slip is not added a second time. Nothing re-sorts per tap: the band is given by the app and changes slowly. This section shows the band, the Not today button and adding a name, and a single-choice picker ranked by use.
+                        Not today is for a choice you log nearly every day, such as a usual symptom: it records that it did not happen today, which is different from leaving it blank because you have not answered yet. The usual choices get their own check under the field for that, and the tags above the field stay one clean pill each.
                     </p>
                 </div>
                 <div class="kc-expected">
                     <p><b>Expected:</b></p>
                     <ul>
                         <li>
-                            <b>Band size</b> 3, 5 (default) or 7 sets how many usual choices stand first; <b>Not today</b> <b>Off</b> removes the small button from each tag; <b>Add a new name</b> <b>Off</b> makes a new name impossible (Enter only picks what exists, and the &ldquo;Add &hellip; as new&rdquo; row is gone). <b>Pick</b> Headache and Fatigue first: they become tags with a small <b>Not today</b> button each.
+                            Under the field, <b>Your usual today</b> lists the usual symptoms, one row each, with the line <b>Not today says it did not
+                            happen today. A row left blank is not answered yet.</b> Press <b>Had it</b> on Headache: its tag appears above the field
+                            (the same as picking it in the list). Press <b>Not today</b> on Fatigue: no tag, the row keeps <b>Not today</b> pressed,
+                            and the grey box shows <code>kp-usual-not-today</code>. Press a pressed button again: the row is blank, not answered.
+                            Pick Fatigue in the list afterwards: its row moves to <b>Had it</b>.
+                        </li>
+                        <li>
+                            <b>Not today</b> sets the look of that check: <b>Rows</b> (default, the words on every row) or <b>Chips</b> (one row of the
+                            package&rsquo;s three-way chips: one press had it, a tick; two presses not today, a cross and the name struck through; three
+                            presses blank), or <b>Off</b> (no check). <b>Band size</b> 3, 5 (default) or 7 sets how many usual choices stand first, in
+                            the list and in the check.
+                        </li>
+                        <li>
+                            <b>Add a new name</b> <b>Off</b> makes a new name impossible (Enter only picks what exists, and the &ldquo;Add &hellip; as
+                            new&rdquo; row is gone). <b>Undo after adding</b>: type <b>Neksteun</b> and Enter; <b>Under the field</b> (default) shows
+                            <b>Added &lsquo;Neksteun&rsquo; as new</b> with <b>Undo</b> right under the field, <b>In a toast</b> shows the
+                            package&rsquo;s undo toast with its countdown at the foot of the window instead.
                         </li>
                         <li>
                             <b>Alt U</b> with the field empty jumps to the first usual choice (a bare <b>u</b> would eat the first letter of a name); it is on the <b>?</b> sheet.
@@ -192,24 +222,40 @@
                         <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="usual-max" data-value="3">3</button>
                         <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="usual-max" data-value="7">7</button>
                     </div>
-                    <div role="group" aria-label="Not today button" class="kc-actions">
+                    <div role="group" aria-label="Not today: the check of the usual choices" class="kc-actions">
                         <b>Not today:</b>
-                        <button type="button" class="kp-button" aria-pressed="true" data-kc-usual-opt="not-today" data-value="on">
-                            On (default)
+                        <button type="button" class="kp-button" aria-pressed="true" data-kc-usual-opt="not-today" data-value="rows">
+                            Rows (default)
                         </button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="not-today" data-value="chips">Chips</button>
                         <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="not-today" data-value="off">Off</button>
                     </div>
                     <div role="group" aria-label="Add a new name" class="kc-actions">
                         <b>Add a new name:</b>
                         <button type="button" class="kp-button" aria-pressed="true" data-kc-usual-opt="add" data-value="inline">
-                            Inline (default)
+                            On (default)
                         </button>
                         <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="add" data-value="off">Off</button>
+                    </div>
+                    <div role="group" aria-label="Undo after adding" class="kc-actions">
+                        <b>Undo after adding:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-kc-usual-opt="usual-undo" data-value="field">
+                            Under the field (default)
+                        </button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kc-usual-opt="usual-undo" data-value="toast">
+                            In a toast
+                        </button>
                     </div>
                 </div>
                 <div class="kc-pair kc-pair--tall">
                     <div class="kc-case kc-case--room">
-                        <p class="kc-label">Symptoms: the band, Not today and adding</p>
+                        <div class="kc-try" id="kc-usual-m-try">
+                            <p class="kc-try__title">Try it: the check under the field</p>
+                            <ol>
+                                <li><b>Had it</b> on Headache: its tag appears above the field.</li>
+                                <li><b>Not today</b> on Fatigue: it did not happen today; no tag. A blank row is not answered yet.</li>
+                            </ol>
+                        </div>
                         <div
                             class="kp-combobox"
                             data-kp-combobox

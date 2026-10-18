@@ -264,6 +264,171 @@
                 }
             ],
             "choices": []
+        },
+        {
+            "round": "2",
+            "page": "choose-3ea3603b-911d-4ef1-b750-f9510f39173a",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-18 21:37: 33 of 33 judged, 11 approved, 22 not approved; each note given once for every theme.",
+            "approved": [
+                {
+                    "item": "usual-states",
+                    "theme": "dark"
+                },
+                {
+                    "item": "usual-states",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "usual-states",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "usual-states",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "usual-states",
+                    "theme": "forest"
+                },
+                {
+                    "item": "usual-states",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "usual-states",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "usual-states",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "usual-states",
+                    "theme": "deco"
+                },
+                {
+                    "item": "usual-states",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "usual-states",
+                    "theme": "titanium"
+                }
+            ],
+            "notApproved": [
+                {
+                    "item": "usual",
+                    "theme": "dark",
+                    "note": "Ik zie hem niet take closest pakken of vragen naar een name zelfs als ik helemaal Headache intyp? doe ik iets mis? waar zou ik het moeten zien? ps elke optie die ik kies heeft de pill of keuze, dus dat werkt, maar in die pill zit nog een pill met \"Not today\" in? lijkt me niet wenselijk"
+                },
+                {
+                    "item": "usual",
+                    "theme": "cyberpunk",
+                    "note": "Ik zie hem niet take closest pakken of vragen naar een name zelfs als ik helemaal Headache intyp? doe ik iets mis? waar zou ik het moeten zien? ps elke optie die ik kies heeft de pill of keuze, dus dat werkt, maar in die pill zit nog een pill met \"Not today\" in? lijkt me niet wenselijk"
+                },
+                {
+                    "item": "usual",
+                    "theme": "synthwave",
+                    "note": "Ik zie hem niet take closest pakken of vragen naar een name zelfs als ik helemaal Headache intyp? doe ik iets mis? waar zou ik het moeten zien? ps elke optie die ik kies heeft de pill of keuze, dus dat werkt, maar in die pill zit nog een pill met \"Not today\" in? lijkt me niet wenselijk"
+                },
+                {
+                    "item": "usual",
+                    "theme": "pastel",
+                    "note": "Ik zie hem niet take closest pakken of vragen naar een name zelfs als ik helemaal Headache intyp? doe ik iets mis? waar zou ik het moeten zien? ps elke optie die ik kies heeft de pill of keuze, dus dat werkt, maar in die pill zit nog een pill met \"Not today\" in? lijkt me niet wenselijk"
+                },
+                {
+                    "item": "usual",
+                    "theme": "forest",
+                    "note": "Ik zie hem niet take closest pakken of vragen naar een name zelfs als ik helemaal Headache intyp? doe ik iets mis? waar zou ik het moeten zien? ps elke optie die ik kies heeft de pill of keuze, dus dat werkt, maar in die pill zit nog een pill met \"Not today\" in? lijkt me niet wenselijk"
+                },
+                {
+                    "item": "usual",
+                    "theme": "blueprint",
+                    "note": "Ik zie hem niet take closest pakken of vragen naar een name zelfs als ik helemaal Headache intyp? doe ik iets mis? waar zou ik het moeten zien? ps elke optie die ik kies heeft de pill of keuze, dus dat werkt, maar in die pill zit nog een pill met \"Not today\" in? lijkt me niet wenselijk"
+                },
+                {
+                    "item": "usual",
+                    "theme": "solstice",
+                    "note": "Ik zie hem niet take closest pakken of vragen naar een name zelfs als ik helemaal Headache intyp? doe ik iets mis? waar zou ik het moeten zien? ps elke optie die ik kies heeft de pill of keuze, dus dat werkt, maar in die pill zit nog een pill met \"Not today\" in? lijkt me niet wenselijk"
+                },
+                {
+                    "item": "usual",
+                    "theme": "brutalism",
+                    "note": "Ik zie hem niet take closest pakken of vragen naar een name zelfs als ik helemaal Headache intyp? doe ik iets mis? waar zou ik het moeten zien? ps elke optie die ik kies heeft de pill of keuze, dus dat werkt, maar in die pill zit nog een pill met \"Not today\" in? lijkt me niet wenselijk"
+                },
+                {
+                    "item": "usual",
+                    "theme": "deco",
+                    "note": "Ik zie hem niet take closest pakken of vragen naar een name zelfs als ik helemaal Headache intyp? doe ik iets mis? waar zou ik het moeten zien? ps elke optie die ik kies heeft de pill of keuze, dus dat werkt, maar in die pill zit nog een pill met \"Not today\" in? lijkt me niet wenselijk"
+                },
+                {
+                    "item": "usual",
+                    "theme": "nostromo",
+                    "note": "Ik zie hem niet take closest pakken of vragen naar een name zelfs als ik helemaal Headache intyp? doe ik iets mis? waar zou ik het moeten zien? ps elke optie die ik kies heeft de pill of keuze, dus dat werkt, maar in die pill zit nog een pill met \"Not today\" in? lijkt me niet wenselijk"
+                },
+                {
+                    "item": "usual",
+                    "theme": "titanium",
+                    "note": "Ik zie hem niet take closest pakken of vragen naar een name zelfs als ik helemaal Headache intyp? doe ik iets mis? waar zou ik het moeten zien? ps elke optie die ik kies heeft de pill of keuze, dus dat werkt, maar in die pill zit nog een pill met \"Not today\" in? lijkt me niet wenselijk"
+                },
+                {
+                    "item": "usual-band",
+                    "theme": "dark",
+                    "note": "Ook hier snap ik niet wat ik moet doen? als ik hier \"not today\" uitzet staat die pill wel niet in mijn andere keuze pills, maar wat is de bedoeling van die \"not today\" pill?"
+                },
+                {
+                    "item": "usual-band",
+                    "theme": "cyberpunk",
+                    "note": "Ook hier snap ik niet wat ik moet doen? als ik hier \"not today\" uitzet staat die pill wel niet in mijn andere keuze pills, maar wat is de bedoeling van die \"not today\" pill?"
+                },
+                {
+                    "item": "usual-band",
+                    "theme": "synthwave",
+                    "note": "Ook hier snap ik niet wat ik moet doen? als ik hier \"not today\" uitzet staat die pill wel niet in mijn andere keuze pills, maar wat is de bedoeling van die \"not today\" pill?"
+                },
+                {
+                    "item": "usual-band",
+                    "theme": "pastel",
+                    "note": "Ook hier snap ik niet wat ik moet doen? als ik hier \"not today\" uitzet staat die pill wel niet in mijn andere keuze pills, maar wat is de bedoeling van die \"not today\" pill?"
+                },
+                {
+                    "item": "usual-band",
+                    "theme": "forest",
+                    "note": "Ook hier snap ik niet wat ik moet doen? als ik hier \"not today\" uitzet staat die pill wel niet in mijn andere keuze pills, maar wat is de bedoeling van die \"not today\" pill?"
+                },
+                {
+                    "item": "usual-band",
+                    "theme": "blueprint",
+                    "note": "Ook hier snap ik niet wat ik moet doen? als ik hier \"not today\" uitzet staat die pill wel niet in mijn andere keuze pills, maar wat is de bedoeling van die \"not today\" pill?"
+                },
+                {
+                    "item": "usual-band",
+                    "theme": "solstice",
+                    "note": "Ook hier snap ik niet wat ik moet doen? als ik hier \"not today\" uitzet staat die pill wel niet in mijn andere keuze pills, maar wat is de bedoeling van die \"not today\" pill?"
+                },
+                {
+                    "item": "usual-band",
+                    "theme": "brutalism",
+                    "note": "Ook hier snap ik niet wat ik moet doen? als ik hier \"not today\" uitzet staat die pill wel niet in mijn andere keuze pills, maar wat is de bedoeling van die \"not today\" pill?"
+                },
+                {
+                    "item": "usual-band",
+                    "theme": "deco",
+                    "note": "Ook hier snap ik niet wat ik moet doen? als ik hier \"not today\" uitzet staat die pill wel niet in mijn andere keuze pills, maar wat is de bedoeling van die \"not today\" pill?"
+                },
+                {
+                    "item": "usual-band",
+                    "theme": "nostromo",
+                    "note": "Ook hier snap ik niet wat ik moet doen? als ik hier \"not today\" uitzet staat die pill wel niet in mijn andere keuze pills, maar wat is de bedoeling van die \"not today\" pill?"
+                },
+                {
+                    "item": "usual-band",
+                    "theme": "titanium",
+                    "note": "Ook hier snap ik niet wat ik moet doen? als ik hier \"not today\" uitzet staat die pill wel niet in mijn andere keuze pills, maar wat is de bedoeling van die \"not today\" pill?"
+                }
+            ],
+            "choices": []
         }
     ]
 }

@@ -356,13 +356,26 @@ function lookBlock(id, themes) {
  */
 const CHANGED = {
     'choose/usual':
-        'In your last review (18/10) the choices you picked did not show up. They were added, but into a row of tags the page had ' +
-        'written as hidden, and nothing ever showed it. The picker now shows that row as soon as it holds a pick, in every theme: ' +
-        'pick Headache and Fatigue and both stand as tags above the field, each with its <b>Not today</b> button.',
+        'You typed the whole name <b>Headache</b> and saw it neither take the closest nor ask, and asked where you should see it. ' +
+        'You did nothing wrong; three things were wrong in the picker. (1) A whole name that matches is meant to be picked without ' +
+        'a question, but the only sign was a small line of grey text under the field. Now its tag appears above the field and lights ' +
+        'up, and if Headache is already picked the list says <b>Headache is already picked</b> and Enter lights the existing tag. ' +
+        '(2) The question <b>Did you mean Fatigue?</b> was only asked for a name whose own row had gone from the list, so the start ' +
+        'of a name (<b>Fatigu</b>) never got it, and Enter did nothing at all. Now the question stands first in the list for every ' +
+        'close name, <b>Add &lsquo;Fatigu&rsquo; as new</b> stands last, the first Enter lights the question and a second Enter picks ' +
+        'it (<b>Take the closest</b> picks at once). (3) The Undo after adding a new name was a toast at the far corner of the ' +
+        'window, cut off in the review dialog. It is now a line right under the field, <b>Added &lsquo;Neksteun&rsquo; as new</b> with ' +
+        '<b>Undo</b>; the toast stays an option in the next section. A box above the field now says what to type and where the ' +
+        'answer shows. You also found a pill inside each tag: the tags are now one pill each, a name and a remove &times;; Not ' +
+        'today moved to its own check under the field (next section).',
     'choose/usual-band':
-        'In your last review (18/10) the choices you picked did not show up. They were added, but into a row of tags the page had ' +
-        'written as hidden, and nothing ever showed it. The picker now shows that row as soon as it holds a pick: pick Headache ' +
-        'and Fatigue and both stand as tags above the field, each with its <b>Not today</b> button.',
+        'You did not see what <b>Not today</b> was for, and the pill inside each tag was not wanted. Not today is for a choice you ' +
+        'log nearly every day: it records that it did not happen today, which is different from leaving it blank. It is no longer ' +
+        'in the tags. The usual choices now have their own check under the field, <b>Your usual today</b>, with one line saying ' +
+        'what Not today means, and each usual choice answered there as <b>Had it</b> (the same as picking it: its tag appears) or ' +
+        '<b>Not today</b>, or left blank. That check has two looks, both options of the component: <b>Rows</b> (the default, the ' +
+        'words on every row) and <b>Chips</b> (the package&rsquo;s three-way chips: a tick for had it, a cross and the name struck ' +
+        'through for not today). <b>Undo after adding</b> is a new option: under the field (default) or in a toast.',
     'choose/usual-states':
         'In your last review (18/10) the two samples shown opened kept opening and closing when only part of them was in view. The ' +
         'page closed them whenever less than 90% was on screen, and opening them made their box taller, so half in view they ' +
