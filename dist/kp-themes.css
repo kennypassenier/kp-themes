@@ -80297,21 +80297,6 @@
 /* ── The kpadopt5 and kpadopt6 components in blueprint [t56-blueprint-1018] ────────────────────────────────────────────────
    What the review of the seventy-nine new sections found off in this theme, one rule per fault; each says what it was. */
 @layer kp.signature {
-    /* The version badge (`.kp-badge--version`): a raw version such as a 64-character digest has no place to break, so the badge
-       grew past its section (19 px at 1280 and 182 px at 390 in forest, 53 and 216 px in blueprint). The badge may now be as wide
-       as its place and a part longer than that breaks inside its word; a version that fits is never broken. */
-    [data-theme='blueprint'] .kp-badge--version {
-        max-inline-size: 100%;
-        box-sizing: border-box;
-        white-space: normal;
-    }
-
-    [data-theme='blueprint'] .kp-badge--version > * {
-        min-inline-size: 0;
-        max-inline-size: 100%;
-        overflow-wrap: break-word;
-    }
-
     /* The lettering of a segment is tracked 0.08 em, which on a phone left "Last" 2.9 px (1.1 px in the frozen states) and the
        weekday and month cells 4 px or less from their own edges, and pushed the calm switch's three segments 45 px past
        their section (kpadopt5-time/weekdays, kpadopt5-basics/calm-mode, 390 px). On a phone the tracking is a quarter of that
@@ -80365,40 +80350,6 @@
         }
     }
 
-    /* In a narrow inspector (a phone) the badges of this theme are wider than the package's, so the one flexible column, the
-       source, was left 0 px and its word ("test") stood in a column one letter wide. Under 24rem of its own width the
-       summary stands in three short lines (method and status, source and time, path), so the source keeps its word whole and
-       the time its 4 px from the edge. */
-    @container kp-inspector (max-width: 24rem) {
-        [data-theme='blueprint'] .kp-inspector__row {
-            grid-template-columns: auto minmax(0, 1fr);
-            grid-template-areas:
-                'method status'
-                'source time'
-                'path path';
-        }
-
-        [data-theme='blueprint'] .kp-inspector__source {
-            justify-self: start;
-            white-space: nowrap;
-            overflow-wrap: normal;
-        }
-    }
-
-    /* The refresh chooser's six segments are one nowrap row; the bar took their full width and stuck out of a phone-wide section
-       (kpadopt5-ops/auto-refresh, 390 px: 186 to 268 px). The chooser is now at most as wide as its place and its segments
-       scroll inside it, as the package's own segmented control does. */
-    [data-theme='blueprint'] .kp-refresh {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    [data-theme='blueprint'] .kp-refresh__chooser {
-        min-inline-size: 0;
-        max-inline-size: 100%;
-        overflow-x: auto;
-        padding-block: 0.25rem;
-    }
-
     /* On a phone the six segments share the chooser's width and their words wrap ("Every" over "15 s") instead of running out of
        the section; no label is cut. */
     @media (max-width: 30rem) {
@@ -80423,19 +80374,6 @@
             font-size: 0.625rem;
             line-height: 1.25;
         }
-    }
-
-    /* A checklist row's detail is lettering in capitals (mono, tracked) and the package keeps it on one line; a long one
-       ("check-in after 15:00, reference 8841") took the whole row and left its label one letter wide, and the group stuck out
-       32 px (kpadopt6-media/print-checklist, 390 px). The label keeps at least 6rem and the detail wraps in what is left. */
-    [data-theme='blueprint'] .kp-checklist__row {
-        grid-template-columns: auto minmax(6rem, 1fr) minmax(0, auto);
-    }
-
-    [data-theme='blueprint'] .kp-checklist__detail {
-        min-inline-size: 0;
-        white-space: normal;
-        overflow-wrap: anywhere;
     }
 
     /* A question card stands on a tone's plate (amber, red or green). Its destructive button is the same red as the urgent and
