@@ -192,6 +192,15 @@ const shows = (item) => {
     stateButtons('data-kt-sentence-state', apply);
     // The look and the size are options of the component (attributes): the sentence follows an attribute change.
     const first = document.getElementById('kt-sentence-a');
+    // Paused / resumed: the fieldset, its reason line and the save button go off and on together.
+    const off = document.getElementById('kt-sentence-off');
+    const offSave = document.getElementById('kt-sentence-off-save');
+    stateButtons('data-kt-pause-state', (value) => {
+        const paused = value === 'paused';
+        off?.toggleAttribute('disabled', paused);
+        offSave?.toggleAttribute('disabled', paused);
+        for (const line of off?.querySelectorAll('.kp-sentence__reason') ?? []) line.hidden = !paused;
+    });
     stateButtons('data-kt-sentence-look', (value) => first?.setAttribute('data-kp-look', value));
     stateButtons('data-kt-sentence-size', (value) => first?.setAttribute('data-kp-sentence-size', value));
 }

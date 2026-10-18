@@ -1022,7 +1022,8 @@
                         </li>
                         <li>
                             <b>Disabled</b>: the words are muted, the fields dashed and dimmed, the reason <b>The schedule is paused</b> stands under
-                            them.
+                            them, and <b>Save schedule</b> is dimmed and cannot be pressed. <b>Resumed</b> (in the box above that sentence) turns the
+                            sentence and the button back on and takes the reason away; <b>Paused</b> puts them back.
                         </li>
                         <li>
                             <b>A long stack name</b> (home-automation-gateway-stack): the field is too wide to share the line, so it takes a line of
@@ -1148,7 +1149,13 @@
                     <div class="kt-pair">
                         <div class="kt-case">
                             <p class="kt-label">Disabled, with its reason</p>
-                            <form class="kt-form" action="#" data-kt-form>
+                            <div data-review-controls data-review-controls-for="sentence-states-component-2">
+                                <div role="group" aria-label="State of the paused sentence" class="kt-actions">
+                                    <button type="button" class="kp-button" aria-pressed="true" data-kt-pause-state="paused">Paused</button>
+                                    <button type="button" class="kp-button" aria-pressed="false" data-kt-pause-state="resumed">Resumed</button>
+                                </div>
+                            </div>
+                            <form id="sentence-states-component-2" class="kt-form" action="#" data-kt-form>
                                 <fieldset
                                     class="kp-sentence"
                                     data-kp-sentence
@@ -1196,7 +1203,11 @@
                                         >.
                                     </p>
                                 </fieldset>
-                                <div class="kt-actions"><button type="submit" class="kp-button kp-button--primary">Save schedule</button></div>
+                                <div class="kt-actions">
+                                    <button type="submit" class="kp-button kp-button--primary" id="kt-sentence-off-save" disabled>
+                                        Save schedule
+                                    </button>
+                                </div>
                             </form>
                         </div>
                         <div class="kt-case">
