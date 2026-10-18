@@ -62513,6 +62513,21 @@
 }
 /* ── end t56-q2 confirm ── */
 
+/* ── t56-q2 calm: the calendar's caterpillar stays in the card and the box ── */
+@layer kp.signature {
+    /* A calendar that waits as a whole stands under one busy card; the legs under every day and the big head after the last day of
+       every week were a second caterpillar per row, and the heads stood outside the calendar's box (over the neighbour's Sunday
+       column). The days keep their mint rim and their hump; the caterpillar is the card's. A calendar that waits per day keeps its
+       legs, and its heads stay inside the box. */
+    [data-theme='pastel'] .kp-calendar--busy-whole .kp-pieces--day {
+        display: none;
+    }
+    [data-theme='pastel'] .kp-calendar .kp-pieces--day .kp-pieces__head--day {
+        display: none;
+    }
+}
+/* ── end t56-q2 calm ── */
+
 /* The busy progress bar's breath, 0 (bare ground) to 1 (the full row),
    registered so the keyframes interpolate it; at the top level because
    Firefox does not register an @property inside a layer. */
@@ -89188,8 +89203,7 @@
             .kp-tiles[aria-busy='true'] > .kp-card,
             .kp-chart__state[data-kp-state='loading'],
             .kp-calendar--busy-whole > .kp-calendar__busy,
-            .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'],
-            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']
+            .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading']
         ) {
         position: relative;
         animation: none;
@@ -89204,8 +89218,7 @@
             .kp-tiles[aria-busy='true'] > .kp-card,
             .kp-chart__state[data-kp-state='loading'],
             .kp-calendar--busy-whole > .kp-calendar__busy,
-            .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'],
-            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']
+            .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading']
         )::before {
         content: '';
         position: absolute;
@@ -89284,8 +89297,7 @@
                 .kp-tiles[aria-busy='true'] > .kp-card,
                 .kp-chart__state[data-kp-state='loading'],
                 .kp-calendar--busy-whole > .kp-calendar__busy,
-                .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'],
-                .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']
+                .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading']
             )::before {
             animation: kp-sig-dark-comet var(--kp-sig-dk-loop) linear infinite;
         }
