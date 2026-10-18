@@ -6374,3 +6374,13 @@
         inline-size: calc(4.8ch + 1.75em);
     }
 }
+
+/* ── The whole grid loading: one lintel, not one per day [t56-eye-1018] ──
+   While the whole calendar waits, the busy card over the grid carries the hoisted lintel; a day under it is only the paper,
+   its number readable. The lintel in every day's well struck through the numbers and said "hoisted" 31 times. A day that
+   loads on its own (the month grid, one day) keeps its own well. */
+@layer kp.signature {
+    [data-theme='brutalism'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']::after {
+        content: none;
+    }
+}

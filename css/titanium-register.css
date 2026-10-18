@@ -1914,9 +1914,11 @@
         --kp-switch-thumb-radius: 0;
     }
 
+    /* The off track is the plain machined groove: the 2 px / 6 px twill at 45 degrees drawn on a 40 px track aliased into a
+       checkerboard and read as a broken control [t56-eye-1018]. The twill stays on the plates, where it has room. */
     [data-theme='titanium'] .kp-switch__input {
         border: 1px solid var(--border-strong);
-        background: var(--kp-sig-ti-weave), var(--background);
+        background: var(--background);
     }
 
     [data-theme='titanium'] .kp-switch__input:not(:focus-visible) {
@@ -5435,4 +5437,20 @@
         box-shadow: inset 3px 0 0 var(--destructive);
     }
 
+}
+
+/* ── A failed area is the alarm plate with its machined ring and the film at its foot [t56-eye-1018] ──
+   Titanium's own (themes/titanium/CHARACTER.md, busy failure "the alarm lamp", F1 and F2): the lamp lights at once, in the
+   destructive plate, with its inner ring cut 2 px into the metal in the plate's ink and the anodised film running along the
+   foot, the one place the film carries a meaning (this part failed). A flat orange slab was the lamp without the metal. */
+@layer kp.signature {
+    [data-theme='titanium'] .kp-alert--destructive:is(.kp-stateplate, .kp-runs__failure, .kp-dated__failure, .kp-transfer__failure, .kp-card__failure, .kp-rating__failure),
+    [data-theme='titanium'] .kp-empty[data-kp-tone='error'] {
+        outline: 2px solid hsl(from var(--destructive-foreground) h s l / 0.5);
+        outline-offset: -12px;
+        background-image: var(--kp-iris);
+        background-repeat: no-repeat;
+        background-position: 0 100%;
+        background-size: 100% 4px;
+    }
 }

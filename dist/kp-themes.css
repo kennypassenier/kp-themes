@@ -51244,6 +51244,16 @@
     }
 }
 
+/* ── The whole grid loading: one lintel, not one per day [t56-eye-1018] ──
+   While the whole calendar waits, the busy card over the grid carries the hoisted lintel; a day under it is only the paper,
+   its number readable. The lintel in every day's well struck through the numbers and said "hoisted" 31 times. A day that
+   loads on its own (the month grid, one day) keeps its own well. */
+@layer kp.signature {
+    [data-theme='brutalism'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']::after {
+        content: none;
+    }
+}
+
 /* The header's mega menu is held on screen while a transition on its panel runs
    (js/components.js settleClosing): this number is that transition, 1 open and 0
    shut, run over the panel's cut. At the top level because Firefox does not
@@ -53160,9 +53170,11 @@
         --kp-switch-thumb-radius: 0;
     }
 
+    /* The off track is the plain machined groove: the 2 px / 6 px twill at 45 degrees drawn on a 40 px track aliased into a
+       checkerboard and read as a broken control [t56-eye-1018]. The twill stays on the plates, where it has room. */
     [data-theme='titanium'] .kp-switch__input {
         border: 1px solid var(--border-strong);
-        background: var(--kp-sig-ti-weave), var(--background);
+        background: var(--background);
     }
 
     [data-theme='titanium'] .kp-switch__input:not(:focus-visible) {
@@ -56681,6 +56693,22 @@
         box-shadow: inset 3px 0 0 var(--destructive);
     }
 
+}
+
+/* ── A failed area is the alarm plate with its machined ring and the film at its foot [t56-eye-1018] ──
+   Titanium's own (themes/titanium/CHARACTER.md, busy failure "the alarm lamp", F1 and F2): the lamp lights at once, in the
+   destructive plate, with its inner ring cut 2 px into the metal in the plate's ink and the anodised film running along the
+   foot, the one place the film carries a meaning (this part failed). A flat orange slab was the lamp without the metal. */
+@layer kp.signature {
+    [data-theme='titanium'] .kp-alert--destructive:is(.kp-stateplate, .kp-runs__failure, .kp-dated__failure, .kp-transfer__failure, .kp-card__failure, .kp-rating__failure),
+    [data-theme='titanium'] .kp-empty[data-kp-tone='error'] {
+        outline: 2px solid hsl(from var(--destructive-foreground) h s l / 0.5);
+        outline-offset: -12px;
+        background-image: var(--kp-iris);
+        background-repeat: no-repeat;
+        background-position: 0 100%;
+        background-size: 100% 4px;
+    }
 }
 
 /* The redaction plate's alpha, registered so it can be transitioned: an
@@ -74855,6 +74883,29 @@
     }
 }
 
+/* ── The whole grid loading: one pair of doors over it, not one pair in every day [t56-eye-1018] ──
+   The busy card over the grid is the lift doors; a day under it stands as lacquer with its number, so the seams and the
+   lozenges no longer cross the figures and the doors do not appear 36 times. A day that loads on its own keeps its doors. */
+@layer kp.signature {
+    [data-theme='deco'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading'] {
+        translate: none;
+        animation: none;
+    }
+
+    [data-theme='deco'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']::before,
+    [data-theme='deco'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']::after {
+        content: none;
+    }
+}
+
+/* A long answer in tight capitals needs air from the gold inlay above and below it: three lines at 12 px of padding put the
+   letters on the inlay [t56-eye-1018]. A one-line answer keeps its 56 px height; only a wrapped label grows. */
+@layer kp.signature {
+    [data-theme='deco'] .kp-focus-steps__choice {
+        padding-block: 0.75rem;
+    }
+}
+
 /* The pen's numbers [scope-143, Kenny 2026-10-07 23:41: the tracing pen is the
    anchor of the theme]. Registered at the top level because Firefox does not
    register an @property inside a cascade layer; with no registration every
@@ -76509,9 +76560,10 @@
     [data-theme='blueprint'] .kp-switch__input::before {
         border: 1px solid var(--foreground);
         background:
-            linear-gradient(hsl(from var(--foreground) h s l / 0.6), hsl(from var(--foreground) h s l / 0.6)) 50% 50% / 1px 100% no-repeat,
-            linear-gradient(hsl(from var(--foreground) h s l / 0.6), hsl(from var(--foreground) h s l / 0.6)) 50% 50% / 100% 1px no-repeat,
-            var(--background);
+            /* One upright tick, the witness line of a handle: the crossed square (a window pane) read as a checkbox
+               [t56-eye-1018]. */
+            linear-gradient(hsl(from var(--foreground) h s l / 0.6), hsl(from var(--foreground) h s l / 0.6)) 50% 50% / 1px 60% no-repeat,
+            hsl(from var(--foreground) h s l / 0.12);
         box-sizing: border-box;
     }
 
@@ -81080,6 +81132,51 @@
         [data-theme='blueprint'] .kp-time__skeleton:not(.kp-skeleton--block) {
             animation: kp-sig-blueprint-frame var(--kp-sig-bp-loop) linear infinite;
         }
+    }
+}
+
+/* ── The calendar's busy card is a section ── [G16, t56-eye-1018]
+   The hatch is a section (waiting, leaving): the card that waits over the whole grid wears it as a band along its foot,
+   under the compass, never behind the words; its words are at reading size, not the tiny line they were. */
+@layer kp.signature {
+    [data-theme='blueprint'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+        padding-block-end: calc(var(--kp-space-md, 1rem) + 0.5rem);
+        background:
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / 0.55) 0 1px, transparent 1px 5px) 0 100% / 100% 0.5rem no-repeat,
+            var(--card);
+        box-shadow: 0 0 0 1px var(--border-strong);
+    }
+
+    [data-theme='blueprint'] .kp-calendar__busy-text {
+        font-size: var(--kp-text-md, 1rem);
+    }
+}
+
+/* ── The acknowledge gate is flagged, not filled [G13, t56-eye-1018] ──
+   A warning on the sheet is the outlined triangle in the lit amber before its title on the two axes drawn in that ink, on no
+   plate: the flat brown block carried no mark of the sheet. */
+@layer kp.signature {
+    [data-theme='blueprint'] .kp-ack.kp-alert--warning {
+        --kp-bp-warn-ink: hsl(from var(--warning) h s 62%);
+        --kp-bp-axes-img:
+            linear-gradient(var(--kp-bp-warn-ink), var(--kp-bp-warn-ink)), linear-gradient(var(--kp-bp-warn-ink), var(--kp-bp-warn-ink)),
+            repeating-linear-gradient(90deg, var(--kp-bp-warn-ink) 0 1px, transparent 1px 8px),
+            repeating-linear-gradient(0deg, var(--kp-bp-warn-ink) 0 1px, transparent 1px 8px),
+            repeating-linear-gradient(90deg, var(--kp-bp-warn-ink) 0 1px, transparent 1px 40px),
+            repeating-linear-gradient(0deg, var(--kp-bp-warn-ink) 0 1px, transparent 1px 40px);
+        background-color: transparent;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+        background-repeat: no-repeat;
+        border-color: transparent;
+        box-shadow: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='blueprint'] .kp-ack.kp-alert--warning .kp-alert__body > strong::before {
+        content: '\25B3\00a0';
+        color: var(--kp-bp-warn-ink);
     }
 }
 
@@ -87183,6 +87280,34 @@
         box-shadow: inset 4px 0 0 var(--destructive);
     }
 
+}
+
+/* ── A failed area is a screen with its fault lamp lit [t56-eye-1018] ──
+   Nostromo's own (themes/nostromo/CHARACTER.md, the raster and the lamps): the lamps tell the state. A failed part is the
+   raster over the destructive plate and an amber lamp with FAULT in the mono lettering over its title, not a flat slab. */
+@layer kp.signature {
+    [data-theme='nostromo'] .kp-alert--destructive:is(.kp-stateplate, .kp-runs__failure, .kp-dated__failure, .kp-transfer__failure, .kp-card__failure),
+    [data-theme='nostromo'] .kp-empty[data-kp-tone='error'] {
+        background-image: var(--kp-sig-no-scan);
+    }
+
+    [data-theme='nostromo'] .kp-alert--destructive:is(.kp-stateplate, .kp-runs__failure, .kp-dated__failure, .kp-transfer__failure)::before,
+    [data-theme='nostromo'] .kp-empty[data-kp-tone='error']::before {
+        content: '\25CF\00a0' 'FAULT';
+        display: block;
+        inline-size: auto;
+        block-size: auto;
+        margin: 0 auto 0.25rem;
+        background: none;
+        border: 0;
+        color: var(--sidebar-primary);
+        font-family: var(--theme-font-mono);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-weight: 600;
+        letter-spacing: 0.18em;
+        text-align: center;
+        text-shadow: 0 0 4px hsl(from var(--sidebar-primary) h s l / 0.7);
+    }
 }
 
 /* The numbers dark's motion is made of, registered at the top level because

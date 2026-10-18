@@ -1652,9 +1652,10 @@
     [data-theme='blueprint'] .kp-switch__input::before {
         border: 1px solid var(--foreground);
         background:
-            linear-gradient(hsl(from var(--foreground) h s l / 0.6), hsl(from var(--foreground) h s l / 0.6)) 50% 50% / 1px 100% no-repeat,
-            linear-gradient(hsl(from var(--foreground) h s l / 0.6), hsl(from var(--foreground) h s l / 0.6)) 50% 50% / 100% 1px no-repeat,
-            var(--background);
+            /* One upright tick, the witness line of a handle: the crossed square (a window pane) read as a checkbox
+               [t56-eye-1018]. */
+            linear-gradient(hsl(from var(--foreground) h s l / 0.6), hsl(from var(--foreground) h s l / 0.6)) 50% 50% / 1px 60% no-repeat,
+            hsl(from var(--foreground) h s l / 0.12);
         box-sizing: border-box;
     }
 
@@ -6223,5 +6224,50 @@
         [data-theme='blueprint'] .kp-time__skeleton:not(.kp-skeleton--block) {
             animation: kp-sig-blueprint-frame var(--kp-sig-bp-loop) linear infinite;
         }
+    }
+}
+
+/* ── The calendar's busy card is a section ── [G16, t56-eye-1018]
+   The hatch is a section (waiting, leaving): the card that waits over the whole grid wears it as a band along its foot,
+   under the compass, never behind the words; its words are at reading size, not the tiny line they were. */
+@layer kp.signature {
+    [data-theme='blueprint'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+        padding-block-end: calc(var(--kp-space-md, 1rem) + 0.5rem);
+        background:
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / 0.55) 0 1px, transparent 1px 5px) 0 100% / 100% 0.5rem no-repeat,
+            var(--card);
+        box-shadow: 0 0 0 1px var(--border-strong);
+    }
+
+    [data-theme='blueprint'] .kp-calendar__busy-text {
+        font-size: var(--kp-text-md, 1rem);
+    }
+}
+
+/* ── The acknowledge gate is flagged, not filled [G13, t56-eye-1018] ──
+   A warning on the sheet is the outlined triangle in the lit amber before its title on the two axes drawn in that ink, on no
+   plate: the flat brown block carried no mark of the sheet. */
+@layer kp.signature {
+    [data-theme='blueprint'] .kp-ack.kp-alert--warning {
+        --kp-bp-warn-ink: hsl(from var(--warning) h s 62%);
+        --kp-bp-axes-img:
+            linear-gradient(var(--kp-bp-warn-ink), var(--kp-bp-warn-ink)), linear-gradient(var(--kp-bp-warn-ink), var(--kp-bp-warn-ink)),
+            repeating-linear-gradient(90deg, var(--kp-bp-warn-ink) 0 1px, transparent 1px 8px),
+            repeating-linear-gradient(0deg, var(--kp-bp-warn-ink) 0 1px, transparent 1px 8px),
+            repeating-linear-gradient(90deg, var(--kp-bp-warn-ink) 0 1px, transparent 1px 40px),
+            repeating-linear-gradient(0deg, var(--kp-bp-warn-ink) 0 1px, transparent 1px 40px);
+        background-color: transparent;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+        background-repeat: no-repeat;
+        border-color: transparent;
+        box-shadow: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='blueprint'] .kp-ack.kp-alert--warning .kp-alert__body > strong::before {
+        content: '\25B3\00a0';
+        color: var(--kp-bp-warn-ink);
     }
 }
