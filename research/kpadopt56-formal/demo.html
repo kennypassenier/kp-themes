@@ -909,15 +909,15 @@
 
             <section
                 class="ks-sec"
-                id="claim-row"
-                data-review-item="claim-row"
+                id="claim-row-states"
+                data-review-item="claim-row-states"
                 data-review-topic="checklist"
                 data-review-components="claim"
-                data-review-title="Who brings it: a claim on every row of a packing list"
-                aria-labelledby="h-claim-row"
+                data-review-title="Who brings it: a claim on every row of a packing list: states"
+                aria-labelledby="h-claim-row-states"
             >
                 <div class="ks-sec__head">
-                    <h2 id="h-claim-row">Who brings it</h2>
+                    <h2 id="h-claim-row-states">Who brings it: states</h2>
                     <p>
                         A packing list where each item shows who brings it, and an item nobody brings is loud. Several people may bring one item (a
                         pot for the stove, two people for the tent). It is the package's checklist with
@@ -940,12 +940,13 @@
                             brings have a red edge, a <b>!</b> and the words <b>Nobody yet</b>; the bar says how many.
                         </li>
                         <li>
-                            Press <b>I'll bring it</b> on Gas stove: the button shows the spinner for a moment (the row does not move), then your name
-                            joins and the button says <b>I'm bringing it</b>. Press it again to let go: a toast offers Undo for 6 seconds.
+                            Press <b>I&rsquo;ll bring it</b> on Gas stove: the button shows the spinner for a moment (the row does not move), then
+                            your name joins and the button says <b>I&rsquo;m bringing it</b>. Press it again to let go: a toast offers Undo for 6
+                            seconds.
                         </li>
                         <li>
-                            Press <b>I'll bring it</b> on Tent: the pretend server answers that Tom took it first. The row gets a red outline for 3
-                            seconds, says so in words and goes back to what Tom's claim makes of it. Nothing you typed or ticked is lost.
+                            Press <b>I&rsquo;ll bring it</b> on Tent: the pretend server answers that Tom took it first. The row gets a red outline
+                            for 3 seconds, says so in words and goes back to what Tom&rsquo;s claim makes of it. Nothing you typed or ticked is lost.
                         </li>
                         <li>
                             The chips <b>All, Nobody yet, Mine</b> carry exact counts. <b>Nobody yet</b> shows only the rows nobody brings; when none
@@ -953,13 +954,10 @@
                             lets go; <b>Shift C</b> toggles the gaps (press <b>?</b> for the list).
                         </li>
                         <li>
-                            Not signed in, the buttons are off and say why on hover or focus. The state buttons below show loading (the busy card over
-                            the list), empty and failed (with Retry), each at the list's full height. At 390 px the claim cell moves under the label
-                            and the button fills the line, 44 px high.
-                        </li>
-                        <li>
-                            The groups marked <b>(live option)</b> change one setting of the main component while it runs and it redraws at once,
-                            nothing reloads: every choice you are asked about is a real option with a default.
+                            Not signed in, the buttons are off and say why on hover or focus. The state buttons show loading (the busy card over the
+                            list), empty and failed (with Retry), each at the list&rsquo;s full height. <b>Another person acts</b> lets Anna take the
+                            first free item and the list follows. At 390 px the claim cell moves under the label and the button fills the line, 44 px
+                            high.
                         </li>
                         <li class="k56f-expect-changed">
                             <b>Changed:</b> press <b>Failed</b> and then <b>Empty</b> after <b>Ready</b>: the box keeps the height of the loaded list,
@@ -973,7 +971,7 @@
                         that height too.
                     </p>
                 </div>
-                <div class="ks-controls" data-review-controls data-review-controls-for="claim-row-component">
+                <div class="ks-controls" data-review-controls data-review-controls-for="claim-row-states-component">
                     <div role="group" aria-label="List state">
                         <b>List state:</b>
                         <button type="button" class="kp-button kp-button--sm" data-ks-claim-state="ready" aria-pressed="true">Ready</button>
@@ -993,63 +991,9 @@
                         <b>Another person acts:</b>
                         <button type="button" class="kp-button kp-button--sm" data-ks-claim-push="">Anna takes the first free item</button>
                     </div>
-                    <div role="group" aria-label="Gap (live option)">
-                        <b>Gap (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-claim|data-kp-claim-gap|loud" aria-pressed="true">
-                            Loud
-                        </button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-claim|data-kp-claim-gap|quiet" aria-pressed="false">
-                            Quiet
-                        </button>
-                    </div>
-                    <div role="group" aria-label="People shown (live option)">
-                        <b>People shown (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-claim|data-kp-claim-person|both" aria-pressed="true">
-                            Mark and name
-                        </button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-claim|data-kp-claim-person|name" aria-pressed="false">
-                            Name only
-                        </button>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-claim|data-kp-claim-person|idmark"
-                            aria-pressed="false"
-                        >
-                            Mark only
-                        </button>
-                    </div>
-                    <div role="group" aria-label="Gaps first (live option)">
-                        <b>Gaps first (live option):</b>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-claim|data-kp-claim-gap-sort|keep"
-                            aria-pressed="true"
-                        >
-                            Keep order
-                        </button>
-                        <button
-                            type="button"
-                            class="kp-button kp-button--sm"
-                            data-ks-attr="#ks-claim|data-kp-claim-gap-sort|top"
-                            aria-pressed="false"
-                        >
-                            Gaps first
-                        </button>
-                    </div>
-                    <div role="group" aria-label="Mode (live option)">
-                        <b>Mode (live option):</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-claim|data-kp-claim-mode|claim" aria-pressed="true">
-                            A button on each row
-                        </button>
-                        <button type="button" class="kp-button kp-button--sm" data-ks-attr="#ks-claim|data-kp-claim-mode|assign" aria-pressed="false">
-                            A person menu
-                        </button>
-                    </div>
                 </div>
                 <p class="ks-readout" role="status" data-ks-claim-readout>Nothing pressed yet.</p>
-                <div id="claim-row-component" class="ks-pair">
+                <div id="claim-row-states-component" class="ks-pair">
                     <div class="ks-stack">
                         <p class="ks-label">The packing list, full width (inside a flex row too)</p>
                         <div class="ks-flexrow">
@@ -1083,55 +1027,6 @@
                                 aria-label="Packing list, phone"
                             ></div>
                         </div>
-                    </div>
-                </div>
-                <p class="ks-label">The same list with each choice, side by side</p>
-                <div class="ks-trio">
-                    <div class="ks-stack">
-                        <p class="ks-note"><b>Quiet gap, names only</b></p>
-                        <div
-                            class="kp-checklist"
-                            data-kp-checklist
-                            data-kp-checklist-claim
-                            data-kp-claim-gap="quiet"
-                            data-kp-claim-person="name"
-                            data-kp-claim-keys="false"
-                            data-kp-claim-viewer="kenny"
-                            data-kp-claim-viewer-name="Kenny"
-                            style="--kp-checklist-min-rows: 5"
-                            id="ks-claim-quiet"
-                            aria-label="Packing list, quiet"
-                        ></div>
-                    </div>
-                    <div class="ks-stack">
-                        <p class="ks-note"><b>Gaps first in each group</b></p>
-                        <div
-                            class="kp-checklist"
-                            data-kp-checklist
-                            data-kp-checklist-claim
-                            data-kp-claim-gap-sort="top"
-                            data-kp-claim-keys="false"
-                            data-kp-claim-viewer="kenny"
-                            data-kp-claim-viewer-name="Kenny"
-                            style="--kp-checklist-min-rows: 5"
-                            id="ks-claim-top"
-                            aria-label="Packing list, gaps first"
-                        ></div>
-                    </div>
-                    <div class="ks-stack">
-                        <p class="ks-note"><b>Assign mode: one person hands out the jobs</b></p>
-                        <div
-                            class="kp-checklist"
-                            data-kp-checklist
-                            data-kp-checklist-claim
-                            data-kp-claim-mode="assign"
-                            data-kp-claim-keys="false"
-                            data-kp-claim-viewer="kenny"
-                            data-kp-claim-viewer-name="Kenny"
-                            style="--kp-checklist-min-rows: 5"
-                            id="ks-claim-assign"
-                            aria-label="Chores, assigned"
-                        ></div>
                     </div>
                 </div>
             </section>
@@ -2461,17 +2356,17 @@
 
             <section
                 class="ko-sec"
-                id="ops-page"
-                data-review-item="ops-page"
+                id="ops-page-states"
+                data-review-item="ops-page-states"
                 data-review-topic="ops-page"
                 data-review-topic-title="Operations page"
                 data-review-choices='[{"id":"ops-failed","label":"A failed operations page","default":"plate","options":[{"value":"plate","label":"Plate","hint":"One alert plate takes the whole body of the page, centred, at the height the page had."},{"value":"keep","label":"Keep the cards","hint":"The earlier behaviour: the cards and their data stay, one red band sits on top."}]}]'
                 data-review-components="ops"
-                data-review-title="The page frame of a dashboard"
-                aria-labelledby="h-ops-page"
+                data-review-title="The page frame of a dashboard: states"
+                aria-labelledby="h-ops-page-states"
             >
                 <div class="ko-sec__head">
-                    <h2 id="h-ops-page">The page frame of a dashboard</h2>
+                    <h2 id="h-ops-page-states">The page frame of a dashboard: states</h2>
                     <p>
                         <code>.kp-ops</code>, CSS only: the header, the key figures, the attention band, the toolbar and a grid of cards in one fixed
                         order, with the spacing and the 12-column spans written once.
@@ -2488,25 +2383,19 @@
                     <p><b>Expected:</b></p>
                     <ul>
                         <li>
-                            One whole page in a frame: the header (the title <b>Pump houses</b>, the freshness line “updated … ago” right after it, a
-                            one-sentence description, the buttons at the right), a strip of four key figures of one height, one warning in the
-                            attention band, the toolbar (search and filter chips) and a grid of cards: 8 + 4, 6 + 6, 4 + 4 + 4 and 3 + 3 + 3 + 3.
+                            One whole page in a frame: the header (the title <b>Pump houses</b>, the freshness line &ldquo;updated … ago&rdquo; right
+                            after it, a one-sentence description, the buttons at the right), a strip of four key figures of one height, one warning in
+                            the attention band, the toolbar (search and filter chips) and a grid of cards: 8 + 4, 6 + 6, 4 + 4 + 4 and 3 + 3 + 3 + 3.
                             Cards in a row share one height; the gaps are the same everywhere.
                         </li>
                         <li>
-                            Scroll the window past the page: the <b>toolbar</b> stays under the top edge (the default). <b>Sticky part</b> moves that
-                            to the header or turns it off. <b>Attention band</b> shows the warning or takes it away: with none, the band takes no room
-                            at all, no “all well” line.
+                            <b>Attention band</b> shows the warning or takes it away: with none, the band takes no room at all, no &ldquo;all
+                            well&rdquo; line.
                         </li>
                         <li>
                             <b>Loading</b> shows the whole page waiting at its final size from the first frame: the key figures as ruled lines, every
-                            card with formal’s busy card in its middle. <b>Page failed</b> puts one red entry in the attention band with
+                            card with formal&rsquo;s busy card in its middle. <b>Page failed</b> puts one red entry in the attention band with
                             <b>Retry</b> and the cards keep their place and their data. <b>Ready</b> brings it all back.
-                        </li>
-                        <li>
-                            <b>Page width</b> switches the rule between 80 % of the window (never under 64 rem, the default), the whole width and a
-                            reading measure (64 rem). The frame is narrower than every one of them, so the readout beside the buttons says the widest
-                            the page may be at this window. <b>Density</b> tightens the gaps.
                         </li>
                         <li>
                             The phone frame (390 px) is the same page folded: every card on its own row, the key figures two to a row, only the
@@ -2525,7 +2414,7 @@
                         keep option brings the earlier band over the cards back.
                     </p>
                 </div>
-                <div class="ko-controls" data-review-controls data-review-controls-for="ops-page-component">
+                <div class="ko-controls" data-review-controls data-review-controls-for="ops-page-states-component">
                     <div role="group" aria-label="State of the page">
                         <b>State of the page:</b>
                         <button type="button" class="kp-button kp-button--sm" data-ko-ops-state="ready" aria-pressed="true">Ready</button>
@@ -2539,30 +2428,8 @@
                             Nothing needs attention
                         </button>
                     </div>
-                    <div role="group" aria-label="Sticky part">
-                        <b>Sticky part:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-sticky="toolbar" aria-pressed="true">Toolbar</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-sticky="head" aria-pressed="false">Header</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-sticky="none" aria-pressed="false">Nothing</button>
-                    </div>
-                    <div role="group" aria-label="Page width">
-                        <b>Page width:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-width="80vw" aria-pressed="true">80 % of the window</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-width="full" aria-pressed="false">The whole width</button>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-width="measure" aria-pressed="false">
-                            A reading measure
-                        </button>
-                        <span class="ko-readout" data-ko-ops-readout aria-live="polite"></span>
-                    </div>
-                    <div role="group" aria-label="Density">
-                        <b>Density:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-density="comfortable" aria-pressed="true">
-                            Comfortable
-                        </button>
-                        <button type="button" class="kp-button kp-button--sm" data-ko-ops-density="compact" aria-pressed="false">Compact</button>
-                    </div>
                 </div>
-                <div id="ops-page-component" class="ko-stack">
+                <div id="ops-page-states-component" class="ko-stack">
                     <div>
                         <p class="ko-label">The whole page</p>
                         <div class="ko-pageframe" data-ko-pageframe>
