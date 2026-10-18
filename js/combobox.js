@@ -189,6 +189,14 @@ export function attachComboboxes(
         const chosen = tagList
             ? [...tagList.querySelectorAll('.kp-tag')].map((t) => /** @type {HTMLElement} */ (t).dataset.value ?? (t.textContent ?? '').trim())
             : [];
+        // A tag list written `hidden` is hidden while it holds no tag, and shown the moment one is added: the package
+        // never un-hid it, so every pick of the usual picker's symptoms went into a list nobody could see (Kenny,
+        // 2026-10-18 18:42: "MIJN SELECTIES KOMEN NIET IN DE LIJST TEVOORSCHIJN"). A list written without `hidden` is
+        // left as it is.
+        const tagsHidden = tagList?.hidden ?? false;
+        const showTags = () => {
+            if (tagList !== null && tagsHidden) tagList.hidden = chosen.length === 0;
+        };
         const before = {
             expanded: input.getAttribute('aria-expanded'),
             listHidden: list.hidden,
@@ -292,6 +300,7 @@ export function attachComboboxes(
             if (duplicates || !chosen.includes(value)) {
                 chosen.push(value);
                 if (tagList !== null) tagList.append(tagElement(value, label));
+                showTags();
             }
             input.value = '';
             filter();
@@ -355,6 +364,7 @@ export function attachComboboxes(
             const tag = /** @type {HTMLElement | null} */ (tagList?.querySelector(`.kp-tag[data-value="${CSS.escape(value)}"]`) ?? null);
             const label = tag?.querySelector('span')?.textContent ?? value;
             tag?.remove();
+            showTags();
             filter();
             announce(value, label, 'remove');
         };
@@ -444,6 +454,7 @@ export function attachComboboxes(
         box.addEventListener('focusout', onFocusOut);
         list.addEventListener('mousedown', onListMouseDown);
         tagList?.addEventListener('click', onTagClick);
+        showTags();
         filter();
         list.hidden = true;
         input.setAttribute('aria-expanded', 'false');
@@ -462,6 +473,7 @@ export function attachComboboxes(
                         const option = optionFor(value);
                         tagList?.append(tagElement(value, labelOf(option, value)));
                     }
+                    showTags();
                     filter();
                     announce(values[values.length - 1] ?? '', '', 'set');
                 } else {
@@ -502,7 +514,10 @@ export function attachComboboxes(
             [...list.querySelectorAll(OPTION_SELECTOR)].forEach((o, i) => {
                 /** @type {HTMLElement} */ (o).hidden = before.hidden[i] ?? false;
             });
-            if (tagList) tagList.replaceChildren(...before.tags);
+            if (tagList) {
+                tagList.replaceChildren(...before.tags);
+                tagList.hidden = tagsHidden;
+            }
             if (status) status.textContent = before.status;
             if (empty !== null && empty !== serverEmpty) empty.remove();
             if (serverEmpty !== null) serverEmpty.hidden = emptyWasHidden;

@@ -483,9 +483,21 @@ export async function isolate(frame, item, theme) {
         granted = performance.now();
         fit();
     };
-    /** Something of the section is open or about to open: an opener holds the focus, or a panel is shown. */
-    const inUse = () =>
-        Boolean(doc.activeElement?.closest?.(OPENERS) && section.contains(doc.activeElement)) || panels().some((el) => !el.closest('[data-rv-off]'));
+    // Only the opener being used holds the room: a sample the demo shows opened all the time is a panel too, and counting it
+    // kept the 448 px under the section for good once any picker had been clicked (2026-10-18, kpadopt56-choose round 2).
+    /** The opener of the section that holds the focus, if any. */
+    const focusedOpener = () => {
+        const el = /** @type {Element | null} */ (doc.activeElement?.closest?.(OPENERS) ?? null);
+        return el && section.contains(el) ? el : null;
+    };
+    /** Whether the focused opener's own panel is shown: then it stands in the section's height (the lane's room for it). */
+    const ownPanelShown = () => {
+        const id = focusedOpener()?.getAttribute('aria-controls');
+        const panel = id ? doc.getElementById(id) : null;
+        return Boolean(panel && !panel.hidden && panel.getBoundingClientRect().height > 0);
+    };
+    /** Something of the section is about to open: an opener holds the focus. */
+    const inUse = () => Boolean(focusedOpener());
     section.addEventListener('pointerdown', opening, true);
     section.addEventListener('focusin', opening, true);
     const settleRoom = () => {
@@ -499,7 +511,8 @@ export async function isolate(frame, item, theme) {
     const fit = () => {
         const content = Math.max(doc.body.scrollHeight, doc.body.getBoundingClientRect().height);
         const panelBottom = Math.max(0, ...panels().map((el) => el.getBoundingClientRect().bottom + 16));
-        const next = Math.ceil(Math.max(content + room, panelBottom));
+        // The room waits for the panel; once the panel is shown, its own bottom (and the lane's fitted room) is what counts.
+        const next = Math.ceil(Math.max(content + (ownPanelShown() ? 0 : room), panelBottom));
         const grew = next - last;
         echoes = grew > 0 && grew === step ? echoes + 1 : 0;
         step = grew;
