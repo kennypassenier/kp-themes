@@ -247,6 +247,7 @@
         "blueprint||||.kp-alert:not([class*='kp-alert--'])": "cb5ca47164452d08",
         "blueprint||||.kp-art": "2f13b38b42bfbbfc",
         "blueprint||||.kp-badge": "0c5c5f655262f88f",
+        "blueprint||||.kp-badge--version": "22acf1c07e1c4127",
         "blueprint||||.kp-bar-cell": "1b857d18dd853cb4",
         "blueprint||||.kp-breadcrumb": "193d2835d1210945",
         "blueprint||||.kp-bullets__detail": "cc09edb1c1063a85",

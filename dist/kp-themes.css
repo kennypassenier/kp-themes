@@ -78925,6 +78925,25 @@
     }
 }
 
+/* ── The kpadopt5 and kpadopt6 components in blueprint [t56-blueprint-1018] ────────────────────────────────────────────────
+   What the review of the seventy-nine new sections found off in this theme, one rule per fault; each says what it was. */
+@layer kp.signature {
+    /* The version badge (`.kp-badge--version`): a raw version such as a 64-character digest has no place to break, so the badge
+       grew past its section (19 px at 1280 and 182 px at 390 in forest, 53 and 216 px in blueprint). The badge may now be as wide
+       as its place and a part longer than that breaks inside its word; a version that fits is never broken. */
+    [data-theme='blueprint'] .kp-badge--version {
+        max-inline-size: 100%;
+        box-sizing: border-box;
+        white-space: normal;
+    }
+
+    [data-theme='blueprint'] .kp-badge--version > * {
+        min-inline-size: 0;
+        max-inline-size: 100%;
+        overflow-wrap: break-word;
+    }
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/nostromo-register.css
    The nostromo register, 5.0.0 [S48, LIFT_PLAN nostromo row]: cassette
