@@ -56450,6 +56450,22 @@
     }
 }
 
+/* A destructive button that stands on a destructive plate (the urgent and the refused question card, a failed plate with its
+   action) is drawn like the card's other button: a destructive fill on a destructive plate, or red ink on orange, left it
+   without a plate [t56-eye-1018]. */
+@layer kp.signature {
+    [data-theme='titanium'] .kp-alert--destructive .kp-button--destructive:not(:disabled) {
+        background: var(--card);
+        border-color: var(--border-strong);
+        color: var(--foreground);
+        box-shadow: inset 3px 0 0 var(--destructive);
+    }
+
+    [data-theme='titanium'] .kp-alert--destructive .kp-button--destructive:hover:not(:disabled) {
+        background: color-mix(in oklab, var(--card) 82%, var(--destructive));
+    }
+}
+
 /* The redaction plate's alpha, registered so it can be transitioned: an
    unregistered custom property flips at the end of its transition instead
    of passing through values, and the plate's background reads it through
@@ -86807,6 +86823,22 @@
     }
 }
 
+/* A destructive button that stands on a destructive plate (the urgent and the refused question card, a failed plate with its
+   action) is drawn like the card's other button: a destructive fill on a destructive plate, or red ink on orange, left it
+   without a plate [t56-eye-1018]. */
+@layer kp.signature {
+    [data-theme='nostromo'] .kp-alert--destructive .kp-button--destructive:not(:disabled) {
+        background: var(--card);
+        border-color: var(--border-strong);
+        color: var(--foreground);
+        box-shadow: inset 4px 0 0 var(--destructive);
+    }
+
+    [data-theme='nostromo'] .kp-alert--destructive .kp-button--destructive:hover:not(:disabled) {
+        background: color-mix(in oklab, var(--card) 82%, var(--destructive));
+    }
+}
+
 /* The numbers dark's motion is made of, registered at the top level because
    Firefox does not register an @property inside a cascade layer; with no
    registration every keyframe that moves one would flip between its two poses
@@ -101654,6 +101686,17 @@
     }
     [data-theme='solstice'] .kp-code__head {
         min-inline-size: 0;
+    }
+}
+
+/* A destructive button on a destructive plate (the urgent and the refused question card) stands on the dark card with the
+   red as its foot edge, like the card's other button, not red ink on a red sky [t56-eye-1018]. */
+@layer kp.signature {
+    [data-theme='solstice'] .kp-alert--destructive .kp-button--destructive:not(:disabled) {
+        background: var(--card);
+        border-color: var(--border-strong);
+        color: var(--foreground);
+        box-shadow: inset 0 -2px 0 hsl(from var(--destructive) h s 50%);
     }
 }
 
