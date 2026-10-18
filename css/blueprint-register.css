@@ -1920,9 +1920,10 @@
         margin: 0 0 0.3rem;
         color: var(--foreground);
         font-family: var(--theme-font-mono);
-        font-size: 0.85rem;
+        font-size: var(--kp-text-lg, 1.125rem);
         letter-spacing: 0.08em;
         text-transform: uppercase;
+        text-wrap: balance;
     }
 
     [data-theme='blueprint'] .kp-empty__body {
