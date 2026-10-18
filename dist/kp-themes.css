@@ -61193,6 +61193,44 @@
             overflow-wrap: normal;
         }
     }
+
+    /* The refresh chooser's six segments are one nowrap row; the bar took their full width and stuck out of a phone-wide section
+       (kpadopt5-ops/auto-refresh, 390 px: 186 to 268 px). The chooser is now at most as wide as its place and its segments
+       scroll inside it, as the package's own segmented control does. */
+    [data-theme='pastel'] .kp-refresh {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    [data-theme='pastel'] .kp-refresh__chooser {
+        min-inline-size: 0;
+        max-inline-size: 100%;
+        overflow-x: auto;
+        padding-block: 0.25rem;
+    }
+
+    /* On a phone the six segments share the chooser's width and their words wrap ("Every" over "15 s") instead of running out of
+       the section; no label is cut. */
+    @media (max-width: 30rem) {
+        [data-theme='pastel'] .kp-refresh__segments {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            inline-size: 100%;
+        }
+
+        [data-theme='pastel'] .kp-refresh__segments > .kp-segmented__item {
+            padding-inline: 0.25rem;
+            min-inline-size: 0;
+            white-space: normal;
+            text-align: center;
+        }
+
+        [data-theme='pastel'] .kp-refresh__segments .kp-segmented__label {
+            overflow: visible;
+            text-overflow: clip;
+            white-space: normal;
+            letter-spacing: 0;
+        }
+    }
 }
 
 /* The busy progress bar's breath, 0 (bare ground) to 1 (the full row),
@@ -66915,6 +66953,44 @@
             justify-self: start;
             white-space: nowrap;
             overflow-wrap: normal;
+        }
+    }
+
+    /* The refresh chooser's six segments are one nowrap row; the bar took their full width and stuck out of a phone-wide section
+       (kpadopt5-ops/auto-refresh, 390 px: 186 to 268 px). The chooser is now at most as wide as its place and its segments
+       scroll inside it, as the package's own segmented control does. */
+    [data-theme='forest'] .kp-refresh {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    [data-theme='forest'] .kp-refresh__chooser {
+        min-inline-size: 0;
+        max-inline-size: 100%;
+        overflow-x: auto;
+        padding-block: 0.25rem;
+    }
+
+    /* On a phone the six segments share the chooser's width and their words wrap ("Every" over "15 s") instead of running out of
+       the section; no label is cut. */
+    @media (max-width: 30rem) {
+        [data-theme='forest'] .kp-refresh__segments {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            inline-size: 100%;
+        }
+
+        [data-theme='forest'] .kp-refresh__segments > .kp-segmented__item {
+            padding-inline: 0.25rem;
+            min-inline-size: 0;
+            white-space: normal;
+            text-align: center;
+        }
+
+        [data-theme='forest'] .kp-refresh__segments .kp-segmented__label {
+            overflow: visible;
+            text-overflow: clip;
+            white-space: normal;
+            letter-spacing: 0;
         }
     }
 }
@@ -79107,6 +79183,46 @@
             justify-self: start;
             white-space: nowrap;
             overflow-wrap: normal;
+        }
+    }
+
+    /* The refresh chooser's six segments are one nowrap row; the bar took their full width and stuck out of a phone-wide section
+       (kpadopt5-ops/auto-refresh, 390 px: 186 to 268 px). The chooser is now at most as wide as its place and its segments
+       scroll inside it, as the package's own segmented control does. */
+    [data-theme='blueprint'] .kp-refresh {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    [data-theme='blueprint'] .kp-refresh__chooser {
+        min-inline-size: 0;
+        max-inline-size: 100%;
+        overflow-x: auto;
+        padding-block: 0.25rem;
+    }
+
+    /* On a phone the six segments share the chooser's width and their words wrap ("Every" over "15 s") instead of running out of
+       the section; no label is cut. */
+    @media (max-width: 30rem) {
+        [data-theme='blueprint'] .kp-refresh__segments {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            inline-size: 100%;
+        }
+
+        [data-theme='blueprint'] .kp-refresh__segments > .kp-segmented__item {
+            padding-inline: 0.375rem;
+            min-inline-size: 0;
+            white-space: normal;
+            text-align: center;
+        }
+
+        [data-theme='blueprint'] .kp-refresh__segments .kp-segmented__label {
+            overflow: visible;
+            text-overflow: clip;
+            white-space: normal;
+            letter-spacing: 0;
+            font-size: 0.625rem;
+            line-height: 1.25;
         }
     }
 }
