@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 11.0.0 — 2026-10-18
+
+Released on Kenny's go (2026-10-18 22:40, form release-11 "Uitbrengen na de componentenpagina"): a major release because four themes are removed (`terminal`, `phantom`, `light` and `grotesk`; twelve remain) and the `max` option of `setTabbarBadge` is gone. MIGRATION.md has the section "Coming from 10.x to 11.0.0". Everything else is added or fixed: the kpadopt4 to kpadopt6 component rounds, the shared state fixes measured in all twelve themes, and the components pages.
 
 - **Fixed: a failed rating's plate fills the rating** [t56-statefix-1018; found by the pastel, forest and blueprint states round]. The plate was laid over the rating's body, which is only as wide as the stars, so a failed input row showed a small patch in a wide box; it is now laid over the rating's whole box (the input's full width), the stars and words still keeping their room under it.
 - **Fixed: the Retry of a failed checklist is a normal button in the middle** [t56-statefix-1018; found by the pastel, forest and blueprint states round]. The failed (and empty) box of `.kp-checklist` is a grid whose items stretched, so Retry was a strip across the box; the box now centres its items and Retry is 2.25rem high, at the control size (with the state plate's action size). The box keeps its dashed or solid frame and its minimum rows.

@@ -5,7 +5,7 @@ a consumer does about it. A minor release that needs no action has no
 section. The break into v1 itself, the five numbered sections, is at the
 end.
 
-## Coming from 10.x to the next release: four more themes are gone (breaking)
+## Coming from 10.x to 11.0.0: four more themes are gone (breaking)
 
 `terminal`, `phantom`, `light` and `grotesk` are no longer in the package
 (Kenny, 2026-10-16). This is a breaking change: a consumer that names one
@@ -40,6 +40,10 @@ and titanium. What a consumer notices:
   -ha, -jellyfin, -tui) are pinned to an earlier `tokens.tar` by checksum
   and keep their copies of the four until they move to the new tarball;
   a generator there that lists the four by name fails on the new tarball.
+- **`setTabbarBadge(tab, count)` has no `max` option.** It no longer caps
+  at `99+`: 12 is 12 and 1534 is 1534, and `data-kp-count` carries the same
+  whole number. Drop the option from calls; TypeScript refuses it now
+  (js/tabbar.d.ts).
 
 ## Coming from 9.x to 10.x: six themes are gone
 
