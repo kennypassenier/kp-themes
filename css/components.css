@@ -17249,7 +17249,9 @@
         outline-offset: var(--kp-weekdays-invalid-offset, 0.375rem);
     }
 
+    /* The quick picks are dimmed like the chips beside them (a segmented control's disabled 0.45) and unreachable [t56-shared3-1018]. */
     .kp-weekdays[data-kp-disabled] .kp-weekdays__presets {
+        opacity: 0.45;
         pointer-events: none;
     }
 
