@@ -14,6 +14,10 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { bucketsOf, codeVersion, familiesIn, NOT_A_BLOCK_INPUT, withoutTheVersion } from './generate-code-version.mjs';
+import { THEMES } from '../js/theme-registry.js';
+
+// The shipped theme count comes from the registry, never a literal.
+const SHIPPED = THEMES.length;
 
 test('a version is read as <version>, in every shape the artefacts carry it [scope-114]', () => {
     assert.equal(withoutTheVersion('/* @kp-soft/themes v6.0.0 — css/themes.css'), '/* @kp-soft/themes <version> — css/themes.css');
@@ -61,16 +65,16 @@ test('a CSS line lands with the family its innermost rule names, and a comment l
 test('the digests are there: a base, one per theme, one per rule and per module, and no loader [scope-116, scope-137]', () => {
     const version = codeVersion();
     assert.match(version.base, /^[0-9a-f]{16}$/);
-    assert.equal(Object.keys(version.themes).length, 16);
-    assert.equal(new Set(Object.values(version.themes)).size, 16, 'two themes do not share a digest');
+    assert.equal(Object.keys(version.themes).length, SHIPPED);
+    assert.equal(new Set(Object.values(version.themes)).size, SHIPPED, 'two themes do not share a digest');
     // One bucket per rule, keyed theme || condition || the compound the
     // selector ends on [scope-137]. The button has one in the shared sheets
     // and one in every register.
     assert.match(version.rules['||||.kp-button'], /^[0-9a-f]{16}$/);
     assert.equal(
         Object.keys(version.rules).filter((key) => key.endsWith('||||.kp-button')).length,
-        17,
-        'the shared sheets and all 16 registers style the button',
+        SHIPPED + 1,
+        `the shared sheets and all ${SHIPPED} registers style the button`,
     );
     assert.match(version.modules['js/datatable.js'].digest, /^[0-9a-f]{16}$/);
     assert.equal(version.modules['js/datatable.js'].when, '[data-kp-datatable]');
