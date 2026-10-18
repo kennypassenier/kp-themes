@@ -232,7 +232,7 @@ const PARTS = [
             ['kpadopt5-people', 'conversation-thread-look'],
             ['kpadopt5-people', 'conversation-thread-fold'],
             ['kpadopt6-ops', 'entity'],
-            ['kpadopt6-ops', 'entity-menus'],
+            ['kpadopt6-ops', 'entity-behaviour'],
             ['kpadopt6-ops', 'entity-states'],
         ],
     },

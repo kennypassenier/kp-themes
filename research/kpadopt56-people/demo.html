@@ -8,7 +8,7 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>kpadopt5 and 6 in the other themes, part 12 of 12: People and cards</title>
+        <title>kpadopt5 and 6 in the other themes, part 13 of 13: People and cards</title>
         <link rel="stylesheet" href="../../css/fonts.css" />
         <link rel="stylesheet" href="../../css/themes.css" />
         <link rel="stylesheet" href="../../css/components.css" />
@@ -39,7 +39,7 @@
 
         <main id="main" class="cat-main k56-page">
             <header class="k56-intro">
-                <h1>The fifth and sixth adoption rounds, part 12 of 12: People and cards</h1>
+                <h1>The fifth and sixth adoption rounds, part 13 of 13: People and cards</h1>
                 <p class="cat-intro">
                     Formal is approved. Who is who: the avatar, the list of ways to sign in, the conversation in bubbles, and the entity card. This
                     part asks the eleven other themes for 8 sections (88 pairs), one theme per step in the review dialog. The sections were approved
@@ -735,11 +735,8 @@
                             gap (<b>Meters 1, 2 and 3</b>): the buttons never touch the line above them.
                         </li>
                         <li>
-                            <b>Selectable</b> adds a tick on each card: tick one (or press <b>j</b> to move the ring, <b>x</b> to tick) and its edge
-                            doubles; the readout says which are ticked. <b>Meters</b> (1, 2 or 3 rows), <b>Actions in the data</b> (none, two, four or
-                            a mix), <b>One flag</b>, <b>Compact</b> (the figures go),
-                            <b>Names are links</b>
-                            and the choice (three or two buttons) each draw every card again at the same height.
+                            <b>Meters</b> (1, 2 or 3 rows), <b>Actions in the data</b> (none, two, four or a mix) and the choice of buttons in a row
+                            (three or two) each draw every card again at the same height.
                         </li>
                     </ul>
                 </div>
@@ -801,13 +798,6 @@
                     </p>
                 </div>
                 <div class="kv-controls" data-review-controls data-review-controls-for="kv-entity-grid">
-                    <div role="group" aria-label="Options">
-                        <b>Options:</b>
-                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-opt="selectable" aria-pressed="false">Selectable</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-opt="flags" aria-pressed="false">One flag</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-opt="compact" aria-pressed="false">Compact</button>
-                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-opt="link" aria-pressed="false">Names are links</button>
-                    </div>
                     <div role="group" aria-label="Meters">
                         <b>Meters:</b>
                         <button type="button" class="kp-button kp-button--sm" data-kv-entity-meters="1" aria-pressed="false">1</button>
@@ -833,20 +823,28 @@
 
             <section
                 class="kv-sec"
-                id="entity-menus"
-                data-review-item="entity-menus"
+                id="entity-behaviour"
+                data-review-item="entity-behaviour"
                 data-review-components="entity-grid entity"
                 data-review-topic="entity"
-                data-review-title="Entity card: menus and a live refresh"
-                aria-labelledby="h-entity-menus"
+                data-review-title="Entity card: ticking, flags, menus and a live refresh"
+                aria-labelledby="h-entity-behaviour"
             >
                 <div class="kv-sec__head">
-                    <h2 id="h-entity-menus">Entity card: menus and a live refresh</h2>
-                    <p>The same grid, with the package&rsquo;s menus opened from outside and a refresh that changes the numbers in place.</p>
+                    <h2 id="h-entity-behaviour">Entity card: ticking, flags, menus and a live refresh</h2>
+                    <p>
+                        The same grid, with ticking, one flag, the compact card, names as links, the package&rsquo;s menus opened from outside and a
+                        refresh that changes the numbers in place.
+                    </p>
                 </div>
                 <div class="kv-expected">
                     <p><b>Expected:</b></p>
                     <ul>
+                        <li>
+                            <b>Selectable</b> adds a tick on each card: tick one (or press <b>j</b> to move the ring, <b>x</b> to tick) and its edge
+                            doubles; the readout says which are ticked. <b>One flag</b>, <b>Compact</b> (the figures go) and
+                            <b>Names are links</b> each draw every card again at the same height.
+                        </li>
                         <li>
                             <b>More</b> and <b>+2</b> open the package&rsquo;s own menu (the buttons above open them one at a time, each beside the
                             package&rsquo;s own menu button under the cards, so the plates can be compared); the arrow keys move in it and Esc closes
@@ -912,7 +910,14 @@
                         or swells, and that text keeps clear of the milled edge.
                     </p>
                 </div>
-                <div class="kv-controls" data-review-controls data-review-controls-for="kv-entity-try-grid">
+                <div class="kv-controls" data-review-controls data-review-controls-for="kv-entity-behaviour-grid">
+                    <div role="group" aria-label="Options">
+                        <b>Options:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-opt="selectable" aria-pressed="false">Selectable</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-opt="flags" aria-pressed="false">One flag</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-opt="compact" aria-pressed="false">Compact</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-opt="link" aria-pressed="false">Names are links</button>
+                    </div>
                     <div role="group" aria-label="Try">
                         <b>Try:</b>
                         <button type="button" class="kp-button kp-button--sm" data-kv-entity-refresh>A live refresh</button>
@@ -922,15 +927,15 @@
                         <button type="button" class="kp-button kp-button--sm" data-kv-entity-menu="close">Close menus</button>
                     </div>
                 </div>
-                <div class="kp-entity-grid" data-kp-entity-grid id="kv-entity-try-grid" data-kp-entity-min="22rem"></div>
+                <div class="kp-entity-grid" data-kp-entity-grid id="kv-entity-behaviour-grid" data-kp-entity-min="22rem"></div>
                 <div class="kv-case kv-compare">
                     <p class="kv-label">For comparison: the package&rsquo;s own menu button (not part of the card), opened by the same button</p>
-                    <div class="kp-menu-button" data-kp-menu-button data-kp-key="kv-compare-menu-try" id="kv-entity-try-compare">
+                    <div class="kp-menu-button" data-kp-menu-button data-kp-key="kv-compare-menu-behaviour" id="kv-entity-behaviour-compare">
                         <button type="button" class="kp-button kp-button--sm">More</button>
                         <div class="kp-menu kp-menu--rich" role="menu" aria-label="Every other action" hidden></div>
                     </div>
                 </div>
-                <pre class="kv-log" id="kv-entity-try-log" aria-live="polite"></pre>
+                <pre class="kv-log" id="kv-entity-behaviour-log" aria-live="polite"></pre>
             </section>
 
             <section

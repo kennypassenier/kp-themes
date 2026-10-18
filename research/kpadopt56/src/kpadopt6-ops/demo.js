@@ -562,7 +562,7 @@ if (document.getElementById('kv-entity-grid')) {
     ];
     const grid = document.getElementById('kv-entity-grid');
     // The menus-and-refresh section has a grid of its own (a part holds one section per concern), wired the same way.
-    const tryGrid = document.getElementById('kv-entity-try-grid');
+    const tryGrid = document.getElementById('kv-entity-behaviour-grid');
     /** The log line of the section a grid or a button stands in. @param {Element | null} from @param {string} text */
     const sayIn = (from, text) => {
         const log = from?.closest('section')?.querySelector('.kv-log');
@@ -586,17 +586,15 @@ if (document.getElementById('kv-entity-grid')) {
             const on = b.getAttribute('aria-pressed') !== 'true';
             b.setAttribute('aria-pressed', String(on));
             const kind = b.getAttribute('data-kv-entity-opt');
-            if (!grid) return;
+            const target = b.closest('section')?.querySelector('[data-kp-entity-grid]');
+            if (!target) return;
             if (kind === 'selectable') {
-                grid.toggleAttribute('data-kp-selectable', on);
-                grid.toggleAttribute('data-kp-select-keys', on);
-            } else if (kind === 'flags') grid.setAttribute('data-kp-entity-flags-max', on ? '1' : '3');
-            else if (kind === 'compact') grid.setAttribute('data-kp-density', on ? 'compact' : 'comfortable');
-            else grid.toggleAttribute('data-kp-entity-link', on) || null;
-            if (kind === 'link') {
-                if (on) grid.setAttribute('data-kp-entity-link', '#stack-{key}');
-                else grid.removeAttribute('data-kp-entity-link');
-            }
+                target.toggleAttribute('data-kp-selectable', on);
+                target.toggleAttribute('data-kp-select-keys', on);
+            } else if (kind === 'flags') target.setAttribute('data-kp-entity-flags-max', on ? '1' : '3');
+            else if (kind === 'compact') target.setAttribute('data-kp-density', on ? 'compact' : 'comfortable');
+            else if (on) target.setAttribute('data-kp-entity-link', '#stack-{key}');
+            else target.removeAttribute('data-kp-entity-link');
         });
     /** @param {string} n */
     const setMeters = (n) => {
