@@ -8,6 +8,8 @@ export declare const ENTITY_ACTION_EVENT = "kp-entity-action";
 export declare const ENTITY_FLAG_EVENT = "kp-entity-flag";
 /** Fired on the card when its tick changes: `{ key, ticked }`. */
 export declare const ENTITY_TICK_EVENT = "kp-entity-tick";
+/** Fired on the card when its star is pressed: `{ key, starred }`. */
+export declare const ENTITY_STAR_EVENT = "kp-entity-star";
 /** Fired on the card when its Retry is pressed: `{ key }`. */
 export declare const ENTITY_RETRY_EVENT = "kp-entity-retry";
 /** Fired on the grid when its action is pressed. */
@@ -49,6 +51,38 @@ export type EntityData = {
         danger?: boolean;
         disabled?: string;
     }[];
+    /**
+     * the readings of the trend row, oldest first (a 24-hour CPU line); fewer than two say "no line yet"
+     */
+    trend?: number[];
+    /**
+     * the trend row's label ("CPU 24 h"); the package's word "Trend" when absent
+     */
+    trendLabel?: string;
+    /**
+     * the current value beside the line ("34%"); the last reading when absent
+     */
+    trendText?: string;
+    /**
+     * a tile's link: the whole card opens it
+     */
+    href?: string;
+    /**
+     * the link opens a new tab (a glyph shows, and a screen reader is told)
+     */
+    external?: boolean;
+    /**
+     * a tile's description; it wraps whole
+     */
+    description?: string;
+    /**
+     * a tile's small facts, one per line, at the foot
+     */
+    lines?: string[];
+    /**
+     * the favourite star is on; a refill with it changes the star in place
+     */
+    starred?: boolean;
     status?: 'ready' | 'loading' | 'empty' | 'error';
     /**
      * why a card in `error` failed
@@ -69,16 +103,17 @@ export declare function setEntity(card: HTMLElement, data: EntityData): void;
 export declare function setEntityGrid(grid: HTMLElement, list: readonly EntityData[]): void;
 /**
  * Put the whole grid in a state: `loading` (skeleton cards, as many as `options.count` or the cards it had, 6 at first, and the
- * busy card over them), `empty` ("No stacks yet" with its action) or `error` (the failed plate with Retry).
+ * busy card over them), `empty` ("No stacks yet" with its action) or `error` (the failed plate with Retry); a tile grid says "apps".
  * @param {HTMLElement} grid
  * @param {'loading' | 'empty' | 'error'} state
- * @param {{ count?: number, message?: string, title?: string, actionLabel?: string }} [options]
+ * @param {{ count?: number, message?: string, title?: string, actionLabel?: string, words?: string }} [options] `words` is the busy card's line
  */
 export declare function setEntityGridState(grid: HTMLElement, state: 'loading' | 'empty' | 'error', options?: {
     count?: number;
     message?: string;
     title?: string;
     actionLabel?: string;
+    words?: string;
 }): void;
 /**
  * Give every grid its options (the least card width) and keep the cards in step with them: a changed attribute draws every card again.

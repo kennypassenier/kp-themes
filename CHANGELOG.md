@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- **Added: the entity card has a trend line and an app tile** [gap-entity-tiles-1019; research/gap-entity-tiles; draft, not yet judged]. The admin dashboard still drew both by hand. Two options of the existing card, nothing else changed for a card that uses neither:
+  `trend: number[]` (with `trendLabel` and `trendText`) adds one row to the meters block, a 24-hour line drawn with `drawSparkline` from js/kpi.js and the current value, on the meters' columns; `data-kp-entity-trend` is `auto` (default: every card of the grid has the row once one card has a trend, so the cards stay level), `on` or `off`, and a card with fewer than two readings keeps the row and says "no line yet".
+  `data-kp-entity-kind="tile"` makes the card an app or link tile (data `href`, `external`, `description`, `lines`, `starred`): the name is the real anchor stretched over the whole card, with the mark, the state as the package's health dot and word, a description that wraps whole and the lines at the foot of every tile alike, and no actions row.
+  The favourite star (`data-kp-entity-star`, on by default on a tile and off on a stack card) is a real toggle button (js/toggle.js) above the link, so pressing it, or the key `s` (`data-kp-entity-star-key`) while the card has the focus, never follows the link; it fires the new `kp-entity-star` `{ key, starred }` (`ENTITY_STAR_EVENT`), and a refill with `starred` puts it back.
+  A tile in `loading` is bones in the same rows, `empty` says "not measured", `error` says "reading failed" with a Retry of normal size. New strings `entityStar`, `entityOpensNew`, `entityTrend`, `entityTrendNone`, `entityTrendName`, `entityTileFailed`; knobs `--kp-entity-spark`, `--kp-entity-tile-body`. Demoed in formal only.
+
 ## 11.0.0 — 2026-10-18
 
 Released on Kenny's go (2026-10-18 22:40, form release-11 "Uitbrengen na de componentenpagina"): a major release because four themes are removed (`terminal`, `phantom`, `light` and `grotesk`; twelve remain) and the `max` option of `setTabbarBadge` is gone. MIGRATION.md has the section "Coming from 10.x to 11.0.0". Everything else is added or fixed: the kpadopt4 to kpadopt6 component rounds, the shared state fixes measured in all twelve themes, and the components pages.

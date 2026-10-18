@@ -27796,7 +27796,14 @@
  * Under 30rem of the grid's own width the inline actions fold into "More". Selected is `is-ticked`, the cursor `is-cursor`.
  * Knobs [KT6]: --kp-entity-min (the least card width, 22rem), --kp-entity-row (the row's height, 1.5rem), --kp-entity-gap,
  * --kp-entity-actions-gap (the air between the last meter and the actions, --kp-space-md). The buttons come only from the data:
- * no action, no row. */
+ * no action, no row.
+ * The trend row [gap-entity-tiles-1019] is one more row of the meters block (label, a 24-hour line, the current value, on the
+ * meters' own columns); `--kp-entity-meters` counts it, so the card's rows need no new template. The line is the KPI tile's
+ * sparkline (js/kpi.js drawSparkline) with its own parts, `.kp-entity__spark-line` and `-area`; knob --kp-entity-spark (the line's colour, --chart-1).
+ * The tile [gap-entity-tiles-1019] (`.kp-card--entity[data-kp-entity-tile]`, js/entity-card.js `data-kp-entity-kind="tile"`) is the
+ * same card with four rows (identity, state, description, lines) and no actions: the name's link covers the whole card, the star
+ * and the Retry stand above it, the description takes what room is left and the lines sit at the foot of every tile alike.
+ * Knobs: --kp-entity-tile-body (the least height of the description, 2.75rem), --kp-entity-min (16rem on a tile grid). */
     .kp-entity-grid {
         position: relative;
         display: grid;
@@ -27976,6 +27983,8 @@
 
     .kp-entity__actions > :is(.kp-button, .kp-menu-button, .kp-reason),
     .kp-entity__tick,
+    .kp-entity__star,
+    .kp-entity__description > .kp-entity__retry,
     .kp-entity__more-flags {
         position: relative;
         z-index: 1;
@@ -28002,6 +28011,141 @@
 
     .kp-card--ghost {
         pointer-events: none;
+    }
+
+    /* --- The trend row: a line over the meters' columns --- */
+    .kp-entity__trend-line {
+        display: flex;
+        align-items: center;
+        min-inline-size: 0;
+    }
+
+    .kp-entity__trend-line > .kp-entity__none {
+        font-size: var(--kp-text-xs, 0.75rem);
+    }
+
+    .kp-entity__spark {
+        display: block;
+        inline-size: 100%;
+        block-size: calc(var(--kp-entity-row, 1.5rem) - 0.25rem);
+        overflow: visible;
+        color: var(--kp-entity-spark, var(--chart-1));
+    }
+
+    .kp-entity__spark-line {
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.6;
+        stroke-linejoin: round;
+        vector-effect: non-scaling-stroke;
+    }
+
+    .kp-entity__spark-area {
+        fill: currentColor;
+        opacity: 0.12;
+    }
+
+    /* --- The favourite star: a small square toggle at the end of the identity row, above the card's link --- */
+    .kp-card--entity .kp-button.kp-entity__star[data-kp-toggle] {
+        flex: none;
+        inline-size: 1.75rem;
+        block-size: 1.75rem;
+        min-block-size: 0;
+        padding: 0 !important;
+        color: var(--muted-foreground);
+    }
+
+    .kp-card--entity .kp-button.kp-entity__star[data-kp-toggle][aria-pressed='true'] {
+        color: var(--kp-toggle-on-ink, var(--background)) !important;
+    }
+
+    .kp-entity__star-glyph {
+        inline-size: 1.0625rem;
+        block-size: 1.0625rem;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.75;
+        stroke-linejoin: round;
+    }
+
+    .kp-entity__star[aria-pressed='true'] .kp-entity__star-glyph {
+        fill: currentColor;
+    }
+
+    /* --- The tile: four rows, one link over all of them --- */
+    .kp-entity-grid[data-kp-entity-kind='tile'] {
+        --kp-entity-min: 16rem;
+    }
+
+    .kp-card--entity[data-kp-entity-tile][data-kp-entity-tile] {
+        grid-template-rows: minmax(1.75rem, auto) auto minmax(var(--kp-entity-tile-body, 2.75rem), 1fr);
+        grid-auto-rows: auto;
+        align-content: stretch;
+    }
+
+    .kp-card--entity[data-kp-entity-tile]:has(a.kp-entity__name):hover {
+        border-color: var(--ring);
+    }
+
+    .kp-card--entity[data-kp-entity-tile]:has(a.kp-entity__name:focus-visible) {
+        outline: var(--focus-ring-width, 2px) solid var(--focus-ring-contrast, var(--focus-ring));
+        outline-offset: 2px;
+    }
+
+    .kp-card--entity[data-kp-entity-tile] a.kp-entity__name:focus-visible {
+        outline: none;
+    }
+
+    .kp-entity__external {
+        flex: none;
+        color: var(--muted-foreground);
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-entity__tile-state {
+        font-size: var(--kp-text-sm, 0.8125rem);
+        color: var(--muted-foreground);
+    }
+
+    .kp-card--entity > .kp-entity__description,
+    .kp-card--entity > .kp-entity__lines {
+        align-items: flex-start;
+    }
+
+    .kp-entity__description {
+        font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-entity__description > .kp-entity__retry {
+        flex: none;
+    }
+
+    .kp-entity__description:has(> .kp-entity__retry) {
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+    }
+
+    .kp-entity__tile-failed {
+        font-weight: 600;
+        overflow-wrap: anywhere;
+    }
+
+    .kp-card--entity > .kp-entity__lines {
+        flex-direction: column;
+        gap: var(--kp-space-xs, 0.25rem);
+        min-block-size: 1lh;
+        font-size: var(--kp-text-xs, 0.75rem);
+        color: var(--muted-foreground);
+        font-variant-numeric: tabular-nums;
+    }
+
+    .kp-card--entity > .kp-entity__lines[hidden] {
+        display: none !important;
+    }
+
+    .kp-entity__line {
+        overflow-wrap: anywhere;
     }
 }
 
