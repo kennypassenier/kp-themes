@@ -6001,3 +6001,29 @@
     }
 }
 /* ── end t56 ── */
+
+/* ── t56: the attention band keeps its grid ── */
+@layer kp.signature {
+    /* The VCR symbol of a warning or failure (a pause, a stop) is the alert's ::before and so a grid item of its own: in the
+       band's three column row it took the icon's column and pushed the icon, the text and the actions one column on, the
+       actions under the text. The row gets a column for it. */
+    [data-theme='synthwave'] .kp-attention__item:is(.kp-alert--warning, .kp-alert--destructive) {
+        grid-template-columns: auto auto minmax(0, 1fr) auto;
+    }
+    @container kp-attention (max-width: 34rem) {
+        [data-theme='synthwave'] .kp-attention__item:is(.kp-alert--warning, .kp-alert--destructive) {
+            grid-template-columns: auto auto minmax(0, 1fr);
+        }
+    }
+    /* The question card is a column of rows: the symbol would be a row of its own above the title. It stands in the card's
+       top corner instead, where the title's line leaves room for it. */
+    [data-theme='synthwave'] .kp-question:is(.kp-alert--warning, .kp-alert--destructive) {
+        position: relative;
+    }
+    [data-theme='synthwave'] .kp-question:is(.kp-alert--warning, .kp-alert--destructive)::before {
+        position: absolute;
+        inset-block-start: 0.875rem;
+        inset-inline-end: 0.875rem;
+    }
+}
+/* ── end t56 ── */
