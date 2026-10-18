@@ -49,7 +49,9 @@ if (document.querySelector('[data-kc-usual-target]')) {
             box.textContent = `${box.textContent ? `${box.textContent}\n` : ''}${text}`.split('\n').slice(-5).join('\n');
         };
         for (const kind of ['pick', 'add', 'not-today']) {
-            picker.addEventListener(`kp-usual-${kind}`, (event) => write(`kp-usual-${kind} ${JSON.stringify(/** @type {CustomEvent} */ (event).detail)}`));
+            picker.addEventListener(`kp-usual-${kind}`, (event) =>
+                write(`kp-usual-${kind} ${JSON.stringify(/** @type {CustomEvent} */ (event).detail)}`),
+            );
         }
         for (const button of all('[data-kc-usual-opt]', section)) {
             button.addEventListener('click', () => {
@@ -57,11 +59,16 @@ if (document.querySelector('[data-kc-usual-target]')) {
                 const name = button.getAttribute('data-kc-usual-opt') ?? '';
                 const value = button.dataset.value ?? '';
                 // The options are real attributes: changing one redraws the picker (the states section's pickers follow too).
-                for (const target of [picker, document.getElementById('kc-usual-s'), document.getElementById('kc-usual-p')]) target?.setAttribute(`data-kp-${name}`, value);
+                for (const target of [picker, document.getElementById('kc-usual-s'), document.getElementById('kc-usual-p')])
+                    target?.setAttribute(`data-kp-${name}`, value);
             });
         }
     }
-    const driven = document.getElementById('kc-usual-s');
+}
+// A section is wired by its own elements, never by a sibling's: a part page holds only the sections it asks, and the
+// states section of the picker was left dead on a page without the options section (Kenny, 2026-10-18 17:45).
+if (document.getElementById('kc-usual-s')) {
+    const driven = /** @type {HTMLElement} */ (document.getElementById('kc-usual-s'));
     driven?.addEventListener('kp-usual-retry', () => {
         setUsualState(driven, 'loading');
         void sleep(1000).then(() => setUsualState(driven, 'ready'));
@@ -80,33 +87,107 @@ if (document.querySelector('[data-kc-usual-target]')) {
         // After a change of the options the picker reads them again.
         driven.setAttribute('data-kp-add', 'inline');
     });
+}
+{
     // The opened list is shown open on the page: opened once its case is on screen, so it is placed where there is room.
     for (const openedId of ['kc-usual-o', 'kc-usual-c']) {
         const opened = document.getElementById(openedId);
         if (!opened || !('IntersectionObserver' in window)) continue;
-        new IntersectionObserver((entries) => {
-            for (const entry of entries) {
-                const handle = combobox(opened);
-                if (!handle) continue;
-                if (entry.isIntersecting) {
-                    handle.close();
-                    handle.open();
-                } else handle.close();
-            }
-        }, { threshold: 0.9 }).observe(opened.closest('.kc-case') ?? opened);
+        new IntersectionObserver(
+            (entries) => {
+                for (const entry of entries) {
+                    const handle = combobox(opened);
+                    if (!handle) continue;
+                    if (entry.isIntersecting) {
+                        handle.close();
+                        handle.open();
+                    } else handle.close();
+                }
+            },
+            { threshold: 0.9 },
+        ).observe(opened.closest('.kc-case') ?? opened);
     }
 }
 
 // ---- 2 · questions, one per screen ----------------------------------------------------------------
-if (document.querySelector('[data-kc-focus-main]')) {
+{
     /** The check-in: yesterday's and the usual answers come from the app. @returns {import('../../../../js/focus-steps.js').FocusStep[]} */
     const checkin = () => [
-        { text: 'How is your mood today?', answer: { id: 'mood', kind: 'choice', previous: 'matig', usual: 'good', choices: [{ value: 'rough', label: 'Rough' }, { value: 'matig', label: 'Matig' }, { value: 'good', label: 'Good' }, { value: 'great', label: 'Great' }] } },
-        { text: 'And your energy?', answer: { id: 'energy', kind: 'choice', previous: 'okay', usual: 'okay', choices: [{ value: 'low', label: 'Low' }, { value: 'okay', label: 'Okay' }, { value: 'high', label: 'High' }] } },
-        { text: 'Did anything feel like too much?', answer: { id: 'overload', kind: 'choice', previous: 'abit', choices: [{ value: 'none', label: 'Nothing' }, { value: 'abit', label: 'A bit' }, { value: 'alot', label: 'A lot' }] } },
-        { text: 'What got in the way of sleep?', answer: { id: 'sleep', kind: 'multi', previous: ['noise'], choices: [{ value: 'noise', label: 'Noise' }, { value: 'thoughts', label: 'Thoughts' }, { value: 'pain', label: 'Pain' }, { value: 'heat', label: 'Heat' }, { value: 'nothing', label: 'Nothing' }] } },
-        { text: 'How much did you move?', answer: { id: 'move', kind: 'choice', usual: 'short', choices: [{ value: 'none', label: 'Not at all' }, { value: 'short', label: 'A short walk' }, { value: 'long', label: 'A long walk' }, { value: 'sport', label: 'Sport', disabled: true, reason: 'Not while the moves are paused' }] } },
-        { text: 'One sentence about today, if you like.', answer: { id: 'line', kind: 'text', placeholder: 'Write what you want, or press Not today' } },
+        {
+            text: 'How is your mood today?',
+            answer: {
+                id: 'mood',
+                kind: 'choice',
+                previous: 'matig',
+                usual: 'good',
+                choices: [
+                    { value: 'rough', label: 'Rough' },
+                    { value: 'matig', label: 'Matig' },
+                    { value: 'good', label: 'Good' },
+                    { value: 'great', label: 'Great' },
+                ],
+            },
+        },
+        {
+            text: 'And your energy?',
+            answer: {
+                id: 'energy',
+                kind: 'choice',
+                previous: 'okay',
+                usual: 'okay',
+                choices: [
+                    { value: 'low', label: 'Low' },
+                    { value: 'okay', label: 'Okay' },
+                    { value: 'high', label: 'High' },
+                ],
+            },
+        },
+        {
+            text: 'Did anything feel like too much?',
+            answer: {
+                id: 'overload',
+                kind: 'choice',
+                previous: 'abit',
+                choices: [
+                    { value: 'none', label: 'Nothing' },
+                    { value: 'abit', label: 'A bit' },
+                    { value: 'alot', label: 'A lot' },
+                ],
+            },
+        },
+        {
+            text: 'What got in the way of sleep?',
+            answer: {
+                id: 'sleep',
+                kind: 'multi',
+                previous: ['noise'],
+                choices: [
+                    { value: 'noise', label: 'Noise' },
+                    { value: 'thoughts', label: 'Thoughts' },
+                    { value: 'pain', label: 'Pain' },
+                    { value: 'heat', label: 'Heat' },
+                    { value: 'nothing', label: 'Nothing' },
+                ],
+            },
+        },
+        {
+            text: 'How much did you move?',
+            answer: {
+                id: 'move',
+                kind: 'choice',
+                usual: 'short',
+                choices: [
+                    { value: 'none', label: 'Not at all' },
+                    { value: 'short', label: 'A short walk' },
+                    { value: 'long', label: 'A long walk' },
+                    { value: 'sport', label: 'Sport', disabled: true, reason: 'Not while the moves are paused' },
+                ],
+            },
+        },
+        {
+            text: 'One sentence about today, if you like.',
+            answer: { id: 'line', kind: 'text', placeholder: 'Write what you want, or press Not today' },
+        },
     ];
     // Every check-in section (a part holds only the sections it asks) is wired alone: its views, its log and its buttons.
     for (const root of all('[data-kc-focus-main]')) {
@@ -143,42 +224,69 @@ if (document.querySelector('[data-kc-focus-main]')) {
             log(logBox, '');
         });
     }
-    // states
-    const driven = /** @type {HTMLElement} */ (document.getElementById('kc-focus-s'));
-    const sLog = document.getElementById('kc-focus-s-log');
-    setFocusSteps(driven, checkin());
-    driven.addEventListener('kp-focus-steps-done', (event) => {
-        const answers = /** @type {CustomEvent} */ (event).detail.answers ?? {};
-        log(sLog, `done: ${Object.keys(answers).length} answers kept in the page`);
-        setFocusStepsState(driven, 'save-error');
-    });
-    driven.addEventListener('kp-focus-steps-retry', () => {
-        setFocusStepsState(driven, 'loading');
-        void sleep(1000).then(() => setFocusStepsState(driven, 'ready'));
-    });
-    driven.addEventListener('kp-focus-steps-save-retry', () => log(sLog, 'kp-focus-steps-save-retry: the page tries to save again'));
-    onButtons('data-kc-focus-state', (value) => {
-        if (value === 'empty') {
-            setFocusSteps(driven, []);
-            setFocusStepsState(driven, 'ready');
-        } else {
-            if (!driven.querySelector('.kp-focus-steps__choices, .kp-focus-steps__input, .kp-focus-steps__text')) setFocusSteps(driven, checkin());
-            setFocusStepsState(driven, /** @type {'ready' | 'loading' | 'error' | 'save-error'} */ (value));
-        }
-    });
-    const resume = /** @type {HTMLElement} */ (document.getElementById('kc-focus-r'));
-    try {
-        localStorage.removeItem('kp-remember:focus-steps:kc-checkin:progress');
-    } catch {
-        // No storage: the demo shows the question only.
+    // states (wired by its own view: the states section can stand on a page without the main check-in)
+    const driven = /** @type {HTMLElement | null} */ (document.getElementById('kc-focus-s'));
+    if (driven) wireFocusStates(driven);
+    const resume = /** @type {HTMLElement | null} */ (document.getElementById('kc-focus-r'));
+    if (resume) wireFocusResume(resume);
+    const long = /** @type {HTMLElement | null} */ (document.getElementById('kc-focus-l'));
+    if (long) setFocusSteps(long, longCase());
+
+    /** @param {HTMLElement} driven */
+    function wireFocusStates(driven) {
+        const sLog = document.getElementById('kc-focus-s-log');
+        setFocusSteps(driven, checkin());
+        driven.addEventListener('kp-focus-steps-done', (event) => {
+            const answers = /** @type {CustomEvent} */ (event).detail.answers ?? {};
+            log(sLog, `done: ${Object.keys(answers).length} answers kept in the page`);
+            setFocusStepsState(driven, 'save-error');
+        });
+        driven.addEventListener('kp-focus-steps-retry', () => {
+            setFocusStepsState(driven, 'loading');
+            void sleep(1000).then(() => setFocusStepsState(driven, 'ready'));
+        });
+        driven.addEventListener('kp-focus-steps-save-retry', () => log(sLog, 'kp-focus-steps-save-retry: the page tries to save again'));
+        onButtons('data-kc-focus-state', (value) => {
+            if (value === 'empty') {
+                setFocusSteps(driven, []);
+                setFocusStepsState(driven, 'ready');
+            } else {
+                if (!driven.querySelector('.kp-focus-steps__choices, .kp-focus-steps__input, .kp-focus-steps__text'))
+                    setFocusSteps(driven, checkin());
+                setFocusStepsState(driven, /** @type {'ready' | 'loading' | 'error' | 'save-error'} */ (value));
+            }
+        });
     }
-    setFocusSteps(resume, checkin());
-    onButtons('data-kc-focus-resume', (value) => resume.setAttribute('data-kp-resume', value));
-    document.querySelector('[data-kc-focus-reload]')?.addEventListener('click', () => setFocusSteps(resume, checkin()));
-    const long = /** @type {HTMLElement} */ (document.getElementById('kc-focus-l'));
-    setFocusSteps(long, [
-        { text: 'Thinking about the whole of this week, including the evenings you spent on the phone with your family and the mornings that started too early, how would you describe the way you have been feeling in general?', answer: { id: 'week', kind: 'choice', choices: [{ value: 'a', label: 'Mostly calm, with a few hard moments that passed on their own' }, { value: 'b', label: 'Tired in a way that sleep did not fix, and short with the people around me' }, { value: 'c', label: 'Hard to say', disabled: true, reason: 'Not while the moves are paused' }] } },
-    ]);
+
+    /** @param {HTMLElement} resume */
+    function wireFocusResume(resume) {
+        try {
+            localStorage.removeItem('kp-remember:focus-steps:kc-checkin:progress');
+        } catch {
+            // No storage: the demo shows the question only.
+        }
+        setFocusSteps(resume, checkin());
+        onButtons('data-kc-focus-resume', (value) => resume.setAttribute('data-kp-resume', value));
+        document.querySelector('[data-kc-focus-reload]')?.addEventListener('click', () => setFocusSteps(resume, checkin()));
+    }
+
+    /** The case with one long question and long answers. @returns {import('../../../../js/focus-steps.js').FocusStep[]} */
+    function longCase() {
+        return [
+            {
+                text: 'Thinking about the whole of this week, including the evenings you spent on the phone with your family and the mornings that started too early, how would you describe the way you have been feeling in general?',
+                answer: {
+                    id: 'week',
+                    kind: 'choice',
+                    choices: [
+                        { value: 'a', label: 'Mostly calm, with a few hard moments that passed on their own' },
+                        { value: 'b', label: 'Tired in a way that sleep did not fix, and short with the people around me' },
+                        { value: 'c', label: 'Hard to say', disabled: true, reason: 'Not while the moves are paused' },
+                    ],
+                },
+            },
+        ];
+    }
 }
 
 // ---- 4 · quote options ----------------------------------------------------------------------------
@@ -205,7 +313,10 @@ if (document.getElementById('kc-today-log')) {
             log(document.getElementById('kc-today-log'), `kp-status-resume { id: '${/** @type {CustomEvent} */ (event).detail.id}' }`);
         });
         listOf(id).addEventListener('kp-status-undo', (event) => {
-            log(document.getElementById('kc-today-log'), `kp-status-undo { id: '${/** @type {CustomEvent} */ (event).detail.id}', action: '${/** @type {CustomEvent} */ (event).detail.action}' }`);
+            log(
+                document.getElementById('kc-today-log'),
+                `kp-status-undo { id: '${/** @type {CustomEvent} */ (event).detail.id}', action: '${/** @type {CustomEvent} */ (event).detail.action}' }`,
+            );
         });
     }
     onButtons('data-kc-today-since', (value) => {
@@ -294,7 +405,11 @@ if (document.getElementById('kc-cal-b')) {
         apply();
         setCalendarCaption(calmSet[1], 'Trends count the days that were logged');
         const b = document.getElementById('kc-cal-b');
-        if (b) setCalendarLegend(b, [{ tone: 'ok', label: 'Done' }, { tone: 'bad', label: 'Missed' }]);
+        if (b)
+            setCalendarLegend(b, [
+                { tone: 'ok', label: 'Done' },
+                { tone: 'bad', label: 'Missed' },
+            ]);
     };
     void wait();
     calmSet[0]?.addEventListener('kp-calendar-pick', (event) => {
@@ -337,7 +452,9 @@ if (document.getElementById('kc-cal-b')) {
         setUptime(up, { label: 'Zamioculcas Raven: water', periods, from: '30 days ago', to: 'Today' });
     }
     onButtons('data-kc-calm-fill', (value) => {
-        for (const el of document.querySelectorAll('.kp-calendar[data-kp-tones="calm"], .kp-heat[data-kp-tones="calm"], .kp-uptime[data-kp-tones="calm"]')) {
+        for (const el of document.querySelectorAll(
+            '.kp-calendar[data-kp-tones="calm"], .kp-heat[data-kp-tones="calm"], .kp-uptime[data-kp-tones="calm"]',
+        )) {
             if (value === 'success') el.setAttribute('data-kp-logged-fill', 'success');
             else el.removeAttribute('data-kp-logged-fill');
         }
@@ -374,6 +491,10 @@ if (document.getElementById('kc-rate-a')) {
         const { value, previous, source } = /** @type {CustomEvent} */ (event).detail;
         log(document.getElementById('kc-rate-log'), `kp-rating-change { value: ${value}, previous: ${previous}, source: '${source}' }`);
     });
+}
+// The states case is wired by its own rating: the states section stands on pages without the first rating (Kenny,
+// 2026-10-18 17:45: "state knoppen werken niet", formal star rating step 12/14).
+if (document.getElementById('kc-rate-state')) {
     const driven = document.getElementById('kc-rate-state');
     let refuse = false;
     driven?.addEventListener('kp-rating-change', (event) => {

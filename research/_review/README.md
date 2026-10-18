@@ -419,7 +419,15 @@ component's frame, directly above the component, every group's label and buttons
 as the package's segmented control, other buttons small), scrolling along its line when it is wider than the frame
 (`layoutSection` and `toolbar` in review.js, `[data-rv-ctl]` in review.css). A container outside every section, or one
 naming no component of its section, is shown nowhere. A component carries at most four control groups; more means the
-section is split (Kenny, 2026-10-18 07:11). `check-kit.mjs` fails a page that breaks any of it. The part builders
+section is split (Kenny, 2026-10-18 07:11). `check-kit.mjs` fails a page that breaks any of it.
+
+Every toggle (`aria-pressed`) of a control group must change the component it names (Kenny, 2026-10-18 17:45: "bij sommige
+stappen werkte de states knoppen niet"): `check-kit.mjs` presses each one in its lane, once per section, and fails a press
+that changes nothing in the component (its markup, an attribute such as `data-kp-state`, or its size), also when pressed
+from each other state of its group. The cause it was written for: a demo script that wired a section only when a sibling
+section of its source demo was on the page, so a part page holding the section alone had dead buttons; a demo script wires
+each section by its own elements. A toggle whose effect shows only after a further action (the next save is refused) sits in
+a group marked `data-review-latent`: it is pressed, not measured. The part builders
 (research/kpadopt56/build-parts.mjs, research/kpadopt56-formal/build.mjs) write the attribute with
 `research/kpadopt56/controls-for.mjs` and emit only the sections a page asks.
 

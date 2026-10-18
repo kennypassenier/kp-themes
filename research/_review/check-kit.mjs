@@ -17,6 +17,7 @@
 //    screen; a component has at most MAX_GROUPS control groups (Kenny, 2026-10-18 07:11: "als er zoveel rijen zijn,
 //    dan is het ook een indicator dat er teveel items op die pagina staan"): more means the section is split; and a
 //    control group outside every section, or in a section that is not shown, is shown nowhere.
+//    Every toggle of every control group, pressed in its lane, changes the component it drives (checkPresses).
 // 2. A "Not approved" with a note on the first and the last row of the first step, the page reloaded: both still there.
 // 3. The page republished with a new round id that lists the old one as received (the page is intercepted, nothing
 //    on disk changes): the journal still holds both notes, and the Agenda says the answer was received.
@@ -323,7 +324,113 @@ async function checkStep() {
                 );
     }
     if (step.banner) fault(`${where}: the dialog's integrity banner says: ${step.banner}`);
+    // A press that navigates a frame away ends the walk of that step; what was measured before it stands.
+    await checkPresses(where).catch((error) => {
+        if (!/context was destroyed|detached|navigat/i.test(String(error))) throw error;
+    });
     return step;
+}
+
+/** The sections whose control buttons were pressed already: the wiring is the page's, the same in every theme. */
+const pressedItems = new Set();
+
+/**
+ * 5 · Every control button does something (Kenny, 2026-10-18 17:45: "bij sommige stappen werkte de states knoppen niet, bv
+ * in formal star rating step 12/14"): in each lane of the step, every toggle (aria-pressed) of every control group is
+ * pressed in the frame, as a reader presses it, and the component it drives (`data-review-controls-for`) must change: its
+ * markup, a `data-kp-state`, an attribute or its size. A demo script that wired a section only when a sibling section of
+ * its source demo was on the page (`if (document.getElementById('kc-rate-a'))`) left every button of a part page that
+ * holds the section alone dead; this finds it on every page. A toggle whose effect shows only after a further action
+ * (the next save is refused) carries `data-review-latent` and is pressed but not measured. Once per section.
+ * @param {string} where
+ */
+async function checkPresses(where) {
+    const lanes = await page.$$('dialog.rv-dialog .rv-lane');
+    for (const lane of lanes) {
+        const key = (await lane.getAttribute('data-rv-pair')) || '';
+        const item = key.split('|')[1] ?? '';
+        if (!item || pressedItems.has(item)) continue;
+        const frame = await (await lane.$('iframe'))?.contentFrame();
+        if (!frame) continue;
+        pressedItems.add(item);
+        /** The component's state as a reader would see it: its markup with every attribute, and its size. */
+        const signature = (/** @type {string} */ forId) =>
+            frame.evaluate((id) => {
+                const target = document.getElementById(id);
+                if (!target) return '';
+                const r = target.getBoundingClientRect();
+                const sizes = [...target.querySelectorAll('*')]
+                    .slice(0, 400)
+                    .map((el) => {
+                        const b = el.getBoundingClientRect();
+                        return `${Math.round(b.width)}x${Math.round(b.height)}`;
+                    })
+                    .join(',');
+                return `${Math.round(r.width)}x${Math.round(r.height)}|${target.outerHTML}|${sizes}`;
+            }, forId);
+        const buttons = await frame.$$('[data-review-item] [data-review-controls][data-review-controls-for] [role="group"] button[aria-pressed]');
+        /** @type {Map<string, import('playwright-core').ElementHandle>} */
+        const restore = new Map();
+        for (const button of buttons) {
+            // A press that loads the frame again (a demo's own reload) ends this lane's walk: the press did change it.
+            if (frame.isDetached()) break;
+            const info = await button.evaluate((b) => {
+                const group = b.closest('[role="group"]');
+                return {
+                    forId: b.closest('[data-review-controls]')?.getAttribute('data-review-controls-for') || '',
+                    group: group?.getAttribute('aria-label') || group?.textContent?.trim().slice(0, 30) || '',
+                    label: (b.textContent || '').replace(/\s+/g, ' ').trim(),
+                    pressed: b.getAttribute('aria-pressed') === 'true',
+                    latent: Boolean(b.closest('[data-review-latent]')),
+                    shown: b.getClientRects().length > 0,
+                };
+            });
+            if (!info.shown) continue;
+            if (info.pressed) {
+                if (!restore.has(info.group)) restore.set(info.group, button);
+                continue;
+            }
+            const before = await signature(info.forId);
+            await button
+                .click({ timeout: 4000 })
+                .catch(() => fault(`${where}: ${item}: the button "${info.label}" (${info.group}) cannot be pressed`));
+            if (info.latent) continue;
+            if (frame.isDetached()) break;
+            /** Waits up to 1.2 s for the component to differ from `from`. @param {string} from */
+            const changed = async (from) => {
+                for (let wait = 0; wait < 8; wait++) {
+                    await page.waitForTimeout(150);
+                    if ((await signature(info.forId)) !== from) return true;
+                }
+                return false;
+            };
+            let moved = await changed(before);
+            // A state can equal the one the section opened in (a console with nothing run is already empty): then the button
+            // is pressed again from each other state of its group, and it is wired when it changes the component from one.
+            if (!moved) {
+                const others = await button.evaluate((b) => {
+                    const group = b.closest('[role="group"]');
+                    return [...(group?.querySelectorAll('button[aria-pressed]') ?? [])].map((o, i) => (o === b ? -1 : i)).filter((i) => i >= 0);
+                });
+                const group = await button.evaluateHandle((b) => b.closest('[role="group"]'));
+                for (const i of others.slice(0, 4)) {
+                    const other = (await /** @type {any} */ (group).$$('button[aria-pressed]'))[i];
+                    await other?.click({ timeout: 4000 }).catch(() => {});
+                    await page.waitForTimeout(500);
+                    const from = await signature(info.forId);
+                    await button.click({ timeout: 4000 }).catch(() => {});
+                    if ((moved = await changed(from))) break;
+                }
+            }
+            if (!moved)
+                fault(
+                    `${where}: ${item}: pressing "${info.label}" (${info.group}) changes nothing in its component #${info.forId}; the button is not wired, or it drives another component and belongs in that component's own toolbar`,
+                );
+        }
+        // Put every group back on the button it started on, so the step is judged as it opened.
+        for (const button of restore.values()) await button.click({ timeout: 4000 }).catch(() => {});
+        await page.waitForTimeout(300);
+    }
 }
 
 // ---------------------------------------------------------------- 1 · every step
