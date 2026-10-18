@@ -33,30 +33,24 @@ import { expect, test } from '@playwright/test';
 import { NEEDS } from '../js/auto.js';
 
 const ROOT = new URL('../', import.meta.url);
-// A module born after 6.1.0 that writes markup is attached on the eager side
-// too, or the comparison would read its own additions as a missing `when`:
-// js/progressbar.js writes the track, fill and head into a one-line bar
-// [scope-140]; the dashboard components [scope-143] write shared action
-// columns, sparklines, KPI toggles and strips, the attention band's order,
-// the chart's drawing and the "updated ago" labels; the graph writes its kind
-// bar and the menu button its aria wiring. (js/log.js, also later, writes only
-// `style`, which is volatile.) They are static imports run inside `attachAll()`,
-// not calls appended at load, so a page that composes itself later and calls
-// `attachAll(host)` (the catalogue index) gets them on the eager side too.
-const EXTRA = [
-    ['./progressbar.js', 'attachProgressbars'],
-    ['./actions.js', 'attachActionColumns'],
-    ['./kpi.js', 'attachSparklines'],
-    ['./kpi.js', 'attachKpiToggles'],
-    ['./kpi.js', 'attachKpiStrips'],
-    ['./attention.js', 'attachAttention'],
-    ['./tiles.js', 'attachTileSets'],
-    ['./freshness.js', 'attachAgo'],
-    ['./chart.js', 'attachCharts'],
-    ['./graph.js', 'attachGraphs'],
-    ['./menu-button.js', 'attachMenuButtons'],
-];
-const EAGER = readFileSync(new URL('fixtures/auto-eager.txt', import.meta.url), 'utf8')
+// Every module born after 6.1.0 is attached on the eager side too, or the
+// comparison would read its own additions as a missing `when`. The list is
+// computed from `NEEDS` in js/auto.js, the single source: every attach call a
+// `NEEDS` entry makes (`m.attachX(root)`, in the module its `load()` imports)
+// that the 6.1.0 entry does not already make is appended to the eager entry's
+// attach list, so a module born later can never turn this test red by being
+// born [SUITE_11_0_0_TRIAGE group 1]. They are static imports run inside
+// `attachAll()`, not calls appended at load, so a page that composes itself
+// later and calls `attachAll(host)` (the catalogue index) gets them too.
+const EAGER_6_1_0 = readFileSync(new URL('fixtures/auto-eager.txt', import.meta.url), 'utf8');
+const EXTRA = NEEDS.flatMap((need) => {
+    const from = /import\(\s*'([^']+)'\s*\)/.exec(need.load.toString())?.[1];
+    if (!from) throw new Error(`NEEDS entry ${need.name}: its load() names no module`);
+    const names = [...need.attach.toString().matchAll(/\bm\.(\w+)\(root\)/g)].map((m) => m[1]);
+    if (!names.length) throw new Error(`NEEDS entry ${need.name}: its attach() calls nothing as m.name(root)`);
+    return names.filter((name) => !new RegExp(`\\b${name}\\b`).test(EAGER_6_1_0)).map((name) => [from, name]);
+});
+const EAGER = EAGER_6_1_0
     .replace(/^/, EXTRA.map(([from, name], i) => `import { ${name} as extra${i} } from '${from}';\n`).join(''))
     .replace('        attachGrids(root),\n    ];', `        attachGrids(root),\n${EXTRA.map((_, i) => `        extra${i}(root),\n`).join('')}    ];`);
 if (!EAGER.includes('extra0(root)')) throw new Error('the eager entry no longer ends its attach list with attachGrids(root)');
@@ -179,6 +173,19 @@ const markup = (page) =>
     );
 
 /**
+ * A value a module draws from the clock or a random source differs between any
+ * two loads, with or without the entry under test: read it by its shape.
+ * @param {string} line
+ */
+const unclocked = (line) =>
+    line
+        .replace(/\d{4}-\d\d-\d\dT[\d:.]+Z/g, 'TIME')
+        .replace(/\b1\d{12}\b/g, 'EPOCH')
+        .replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/g, 'UUID')
+        .replace(/\btm[a-z0-9]{8,}\b/g, 'TIMER-ID')
+        .replace(/(kp-selection-)[A-Za-z0-9]{3,8}-/g, '$1RAND-');
+
+/**
  * The markup once it has stopped moving: read until two readings 300ms apart
  * agree. The catalogue's own pages compose their sections from fetched pages
  * after load, so a single reading caught one side mid-composition.
@@ -189,11 +196,11 @@ const markup = (page) =>
  */
 const stable = async (page, quiet = 1) => {
     await settle(page);
-    let before = await markup(page);
+    let before = (await markup(page)).map(unclocked);
     let agreed = 0;
     for (let i = 0; i < 60; i++) {
         await page.waitForTimeout(300);
-        const now = await markup(page);
+        const now = (await markup(page)).map(unclocked);
         if (now.join('\n') === before.join('\n')) {
             agreed += 1;
             if (agreed >= quiet) return now;
@@ -230,6 +237,14 @@ for (const path of PAGES) {
             await eager.waitForLoadState('load');
             const whole = await stable(eager, quiet);
             await context.close();
+            // The hover card is one hidden element written the moment the module
+            // attaches, whether or not an anchor exists, and a page's own script
+            // may attach it too. With no `[data-kp-hovercard]` on the page it
+            // is no sign of a missing `when`, on either side.
+            const dropCard = (await page.locator('[data-kp-hovercard]').count()) === 0;
+            const withoutCard = (/** @type {string[]} */ lines) => (dropCard ? lines.filter((line) => !line.includes('data-kp-hovercard-card')) : lines);
+            const eagerLines = withoutCard(whole);
+            const lazyLines = withoutCard(lazy);
 
             /** Lines as counts, so a duplicate on one side is a difference too. @param {string[]} a @param {string[]} b */
             const beyond = (a, b) => {
@@ -242,8 +257,8 @@ for (const path of PAGES) {
                     return false;
                 });
             };
-            expect(beyond(lazy, whole), 'only in the lazy page').toEqual([]);
-            expect(beyond(whole, lazy), 'only with every module attached').toEqual([]);
+            expect.soft(beyond(lazyLines, eagerLines), 'only in the lazy page').toEqual([]);
+            expect(beyond(eagerLines, lazyLines), 'only with every module attached').toEqual([]);
         },
     );
 }
