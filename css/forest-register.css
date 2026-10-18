@@ -2155,51 +2155,66 @@
        the survey's trig point in clay at the plot's corner. One ink, one clay;
        drawn at 1 px = 1/16 rem so the dashes stay crisp. The seedling grows
        once, 1000 ms on the growth curve; reduced motion shows it grown. */
-    [data-theme='forest'] .kp-empty {
+    /* The clearing, its seedling and the trig point are ONE picture on the `::before` (three masks, three inks), so they stay
+       together wherever the plate puts it: in a plate that centres its words the clearing sits in the middle and the seedling
+       used to stay at the plate's top (absolute `::after`). The seedling's ink is a layer that rises from the foot of its
+       box (`--kp-fo-sprout-rise`, 1000 ms on the growth curve; reduced motion shows it grown). The checklist's "nothing
+       yet" box is the same plate. */
+    @property --kp-fo-sprout-rise {
+        syntax: '<percentage>';
+        inherits: false;
+        initial-value: 100%;
+    }
+
+    [data-theme='forest'] :is(.kp-empty, :where(.kp-checklist__empty:not([data-kp-checklist-failed]))) {
         --kp-fo-clearing: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 52'%3E%3Cpath d='M2 2H56A14 14 0 0 1 70 16V50H16A14 14 0 0 1 2 36Z' fill='none' stroke='%23000' stroke-width='1.25' stroke-dasharray='4 3'/%3E%3Cellipse cx='36' cy='43' rx='8' ry='2'/%3E%3C/svg%3E");
         --kp-fo-sprout: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 72 52'%3E%3Crect x='35.4' y='27' width='1.2' height='16'/%3E%3Cellipse cx='31.8' cy='27.5' rx='5.2' ry='2.4' transform='rotate(-48 31.8 27.5)'/%3E%3Cellipse cx='40.2' cy='27.5' rx='5.2' ry='2.4' transform='rotate(48 40.2 27.5)'/%3E%3C/svg%3E");
+        --kp-fo-trig: radial-gradient(circle, var(--foreground) 0 1.5px, transparent 2px 4px, var(--foreground) 4px 5px, transparent 5.5px);
         position: relative;
         padding: 1.25rem 1rem 1.4rem;
         border: 1px solid var(--border);
-        background:
-            radial-gradient(circle, var(--accent-foreground) 0 1.5px, transparent 2px 4px, var(--accent-foreground) 4px 5px, transparent 5.5px)
-                calc(50% + 1.375rem) 1.75rem / 0.75rem 0.75rem no-repeat,
-            var(--card);
+        background: var(--card);
     }
 
-    [data-theme='forest'] .kp-empty::before,
-    [data-theme='forest'] .kp-empty::after {
+    [data-theme='forest'] .kp-checklist__empty:not([data-kp-checklist-failed]) {
+        border-radius: var(--kp-sig-fo-plate);
+    }
+
+    [data-theme='forest'] :is(.kp-empty, :where(.kp-checklist__empty:not([data-kp-checklist-failed])))::before {
         content: '';
         display: block;
         inline-size: 4.5rem;
         block-size: 3.25rem;
-        pointer-events: none;
-        background: var(--border-strong);
-        mask: var(--kp-fo-clearing) 50% 50% / 100% 100% no-repeat;
-    }
-
-    [data-theme='forest'] .kp-empty::before {
         margin: 0 auto 0.6rem;
-    }
-
-    [data-theme='forest'] .kp-empty::after {
-        position: absolute;
-        inset-block-start: 1.25rem;
-        inset-inline-start: calc(50% - 2.25rem);
-        background: var(--primary);
-        mask-image: var(--kp-fo-sprout);
+        pointer-events: none;
+        background:
+            linear-gradient(to top, var(--primary) var(--kp-fo-sprout-rise), transparent 0) 50% 70% / 30% 42% no-repeat,
+            linear-gradient(var(--accent-foreground), var(--accent-foreground)) 87% 0.125rem / 0.75rem 0.75rem no-repeat,
+            var(--border-strong);
+        mask-image: var(--kp-fo-clearing), var(--kp-fo-sprout), var(--kp-fo-trig);
+        mask-position: 50% 50%, 50% 50%, 87% 0.125rem;
+        mask-size: 100% 100%, 100% 100%, 0.75rem 0.75rem;
+        mask-repeat: no-repeat;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='forest'] .kp-empty::after {
+        [data-theme='forest'] :is(.kp-empty, :where(.kp-checklist__empty:not([data-kp-checklist-failed])))::before {
             animation: kp-sig-forest-sprout var(--kp-sig-fo-time) var(--kp-sig-fo-grow) backwards;
         }
     }
 
     @keyframes kp-sig-forest-sprout {
         from {
-            clip-path: inset(100% 0 0);
+            --kp-fo-sprout-rise: 0%;
         }
+    }
+
+    /* The failed checklist box is the package's destructive alert plate (leaf corners, the destructive ground). */
+    [data-theme='forest'] .kp-checklist__empty[data-kp-checklist-failed] {
+        border-radius: var(--kp-sig-fo-plate);
+        border-color: var(--destructive);
+        background: var(--destructive);
+        color: var(--destructive-foreground);
     }
 
     [data-theme='forest'] .kp-empty__title {
@@ -5657,5 +5672,154 @@
         [data-theme='forest'] .kp-compare[data-kp-compare-glide] :is(.kp-compare__pane, .kp-compare__divider) {
             transition-timing-function: var(--kp-sig-fo-grow);
         }
+    }
+}
+
+/* ── The kpadopt5 and kpadopt6 components in forest [t56-forest-1018] ────────────────────────────────────────────────
+   What the review of the seventy-nine new sections found off in this theme, one rule per fault; each says what it was. */
+@layer kp.signature {
+    /* The request inspector's status filter is five segments (a label and its exact count each) and stood in one row wider than
+       a phone: the bar stuck out 91 to 93 px past its section (kpadopt5-rows/request-inspector, 390 px). Wrapping them breaks the
+       package's sliding plate, so on a phone the five share the width, with less padding, and nothing is cut. */
+    @media (max-width: 30rem) {
+        [data-theme='forest'] .kp-inspector__filter {
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            max-inline-size: 100%;
+        }
+
+        [data-theme='forest'] .kp-inspector__filter > .kp-segmented__item {
+            padding-inline: 0.125rem;
+            gap: 0.1875rem;
+            min-inline-size: 0;
+            font-size: 0.8125rem;
+        }
+
+        [data-theme='forest'] .kp-inspector__filter .kp-segmented__count {
+            min-inline-size: 0;
+            padding-inline: 0.25rem;
+            font-size: 0.6875rem;
+            letter-spacing: 0;
+        }
+    }
+
+    /* On a phone the six segments share the chooser's width and their words wrap ("Every" over "15 s") instead of running out of
+       the section; no label is cut. */
+    @media (max-width: 30rem) {
+        [data-theme='forest'] .kp-refresh__segments {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            inline-size: 100%;
+        }
+
+        [data-theme='forest'] .kp-refresh__segments > .kp-segmented__item {
+            padding-inline: 0.25rem;
+            min-inline-size: 0;
+            white-space: normal;
+            text-align: center;
+        }
+
+        [data-theme='forest'] .kp-refresh__segments .kp-segmented__label {
+            overflow: visible;
+            text-overflow: clip;
+            white-space: normal;
+            letter-spacing: 0;
+        }
+    }
+
+    /* The next-times list keeps the height of three rows in every state; forest's empty plate (a 52 px clearing, 1.25 rem and
+       1.4 rem of padding) needed 177 px against the 134 px footprint (kpadopt5-time/runs-states). In this footprint the clearing
+       is 2.25 rem high and the padding 0.5 rem. */
+    [data-theme='forest'] .kp-runs__empty {
+        padding: 0.5rem 1rem;
+        gap: 0.25rem;
+    }
+
+    [data-theme='forest'] .kp-runs__empty::before {
+        inline-size: 3.1rem;
+        block-size: 2.25rem;
+        margin: 0 auto;
+    }
+
+    [data-theme='forest'] .kp-runs__empty-title {
+        margin: 0;
+    }
+
+    /* The busy table's panel is a card with the planting row along its foot; its words ("Reading...") ended 2 px inside the
+       row's 1 rem, so the trees stood on the letters. The panel's foot padding clears the row by 6 px. */
+    [data-theme='forest'] .kp-datatable__busy-panel {
+        padding-block-end: calc(var(--kp-fo-h, 1rem) + 0.375rem);
+    }
+
+    /* The plate of an empty or failed area is set at heading size (`.kp-stateplate`, 1.125 to 1.5 rem), and its action inherited
+       that size: Retry was 23.7 px high text in a 36 px button. The action is a normal button, the size of every other one. */
+    [data-theme='forest'] .kp-stateplate__action {
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    /* Retry in the checklist's failed box is a normal button in the middle, not a strip across the box (the grid stretched it). */
+    [data-theme='forest'] .kp-checklist__empty .kp-claim__retry {
+        justify-self: center;
+        font-size: var(--kp-text-md, 1rem);
+    }
+
+    /* A quote card holds the height of its quote (176 px at desktop width); forest's empty plate (a 52 px clearing, 1.25 and 1.4 rem
+       of padding) plus the card's own padding made Empty 20 px taller than Ready (kpadopt6-calm/quote-states). In this footprint
+       the clearing is 2.5 rem high and the padding smaller. */
+    [data-theme='forest'] .kp-quote .kp-card__empty {
+        padding: 0.5rem 1rem 0.75rem;
+    }
+
+    [data-theme='forest'] .kp-quote .kp-card__empty::before {
+        inline-size: 3.5rem;
+        block-size: 2.5rem;
+        margin-block-end: 0.4rem;
+    }
+
+    /* A waiting gallery tile has the final tile's shape (the package says so), but this theme's skeleton line gives every
+       skeleton a fixed block size and margins, so the tiles collapsed to a strip and Loading drew 70 px in a 456 px footprint
+       (kpadopt6-media/gallery-states). The tile is square again, as the picture it waits for. */
+    [data-theme='forest'] .kp-gallery__tile.kp-skeleton {
+        block-size: auto;
+        min-block-size: 0;
+        margin-block: 0;
+        aspect-ratio: var(--kp-gallery-ratio, 1);
+    }
+
+    /* A card in a state (js/card-state.js): the note fills the stage (the plate was as high as its words, in the middle of a tall
+       stage), and a failed card says it at the heading size in the middle with its Retry under it, as an empty one does
+       (kpadopt4-rows/today-states, kpadopt6-calm/quote-states, kpadopt5-lists/request-inspector). */
+    [data-theme='forest'] .kp-card__state {
+        align-content: stretch;
+        grid-template-rows: minmax(0, 1fr);
+    }
+
+    [data-theme='forest'] .kp-card__state > .kp-card__failure {
+        box-sizing: border-box;
+        block-size: 100%;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+    }
+
+    [data-theme='forest'] .kp-card__failure > .kp-alert__body {
+        flex: none;
+        justify-items: center;
+        max-inline-size: 100%;
+    }
+
+    [data-theme='forest'] :is(.kp-card__state-title, .kp-card__failure .kp-alert__what) {
+        font-size: var(--kp-text-lg, 1.125rem);
+    }
+
+    /* The failed title is the alert's own ink (the page's ink was dark plum on the red plate). */
+    [data-theme='forest'] .kp-card__failure :is(.kp-card__state-title, .kp-alert__what) {
+        color: inherit;
+    }
+
+    /* The card's Retry is the package's small button (28 px, 13 px text); a state's action is a normal-size one. */
+    [data-theme='forest'] .kp-card__failure > .kp-card__retry.kp-button--sm {
+        font-size: var(--kp-text-md, 1rem);
+        min-block-size: 2.25rem;
+        padding-inline: 1rem;
     }
 }
