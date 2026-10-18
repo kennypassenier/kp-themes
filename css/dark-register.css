@@ -5399,6 +5399,7 @@
        (border box) and the digest is set at 12 px, which leaves it 8 px clear of the cut edge at the widest row. */
     [data-theme='dark'] .kp-badge--version {
         box-sizing: border-box;
+        border-radius: 0;
         font-size: 0.75rem;
     }
 }

@@ -36,7 +36,7 @@ the selectors and their order are identical, which is what
 | `dist/kp-themes.css` | 3844.2 kB | 2074.5 kB | 46% |
 | `dist/kp-themes.js` | 2294.6 kB | 1299.4 kB | 43% |
 
-The loose stylesheets together weigh **3897.3 kB** authored and
+The loose stylesheets together weigh **3897.4 kB** authored and
 **2106.3 kB** minified, 46% less. A page loading one theme's
 register rather than the whole bundle carries only that register's row.
 
