@@ -607,8 +607,11 @@ const keptOf = (/** @type {string} */ theme, /** @type {Aspect} */ aspect) => PI
 // An aspect takes the newest round's options it has (round 4's, else round
 // 3's), whether open or settled: a settled number counts in that list.
 for (const file of [R2A, R2B, R2C, R2D, R2E, R2F, R3A, R3B, R3C, R4A, R4B])
-    for (const [t, aspects] of Object.entries(file))
+    for (const [t, aspects] of Object.entries(file)) {
+        // The round files still name themes the registry no longer has.
+        if (!IDEAS[t]) continue;
         for (const [id, options] of Object.entries(aspects)) if (options.length >= 3) IDEAS[t][id] = options;
+    }
 /** The attribute value of option n of an aspect in a theme. */
 const keyOf = (/** @type {string} */ t, /** @type {Aspect} */ id, /** @type {string} */ n) => IDEAS[t]?.[id]?.[Number(n) - 1]?.[2] ?? n;
 /** The most options any row shows. */

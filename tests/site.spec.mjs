@@ -32,6 +32,9 @@ const SECTIONS = ['when', 'example', 'markup', 'react', 'props', 'events', 'knob
  * other 404 — a stylesheet, a module, a second picture — is a fault.
  */
 const READERS_OWN = ['/hero.jpg'];
+// Addresses an example fails on purpose: compare's "A picture that fails, and
+// Retry" and idmark's "the photo is gone, the letters stay".
+const FAILS_ON_PURPOSE = ['/site/components/missing/before.png', '/site/components/missing-photo.jpg'];
 
 for (const descriptor of DESCRIPTORS) {
     // Drill: emptying `examples` for one descriptor and regenerating
@@ -47,7 +50,7 @@ for (const descriptor of DESCRIPTORS) {
         page.on('console', (m) => m.type() === 'error' && !m.text().startsWith('Failed to load resource') && errors.push(m.text()));
         page.on('response', (r) => {
             const path = new URL(r.url()).pathname;
-            if (r.status() >= 400 && !READERS_OWN.includes(path)) errors.push(`${r.status()} ${path}`);
+            if (r.status() >= 400 && !READERS_OWN.includes(path) && !FAILS_ON_PURPOSE.includes(path)) errors.push(`${r.status()} ${path}`);
         });
 
         await page.goto(`/site/components/${descriptor.id}.html`);

@@ -4575,7 +4575,7 @@ document.getElementById('doc-range-week').addEventListener('click', () => {
                 title: 'A chart before and after',
                 why: 'Each pane is marked with its side; the script adds the divider, the labels and the waiting state.',
                 markup: `
-<div class="kp-compare" data-kp-compare aria-label="Pressure chart, before and after"><div data-kp-compare-pane="before"><img src="before.png" width="1200" height="675" alt="The chart before" /></div><div data-kp-compare-pane="after"><img src="after.png" width="1200" height="675" alt="The chart after" /></div></div>
+<div class="kp-compare" data-kp-compare aria-label="Pressure chart, before and after"><div data-kp-compare-pane="before"><img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 160'><rect width='280' height='160' fill='%23f4f4f0'/><polyline points='0,150 40,148 80,140 120,145 160,130 200,135 240,125 280,128' fill='none' stroke='%23b0442f' stroke-width='4'/><text x='8' y='18' font-size='14' font-family='sans-serif' fill='%23333'>Before</text></svg>" width="1200" height="675" alt="The chart before" /></div><div data-kp-compare-pane="after"><img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 280 160'><rect width='280' height='160' fill='%23f4f4f0'/><polyline points='0,150 40,140 80,120 120,125 160,90 200,80 240,60 280,50' fill='none' stroke='%232a7a4b' stroke-width='4'/><text x='8' y='18' font-size='14' font-family='sans-serif' fill='%23333'>After</text></svg>" width="1200" height="675" alt="The chart after" /></div></div>
 `,
             },
             {
@@ -5107,7 +5107,7 @@ document.getElementById('doc-slider-reset').addEventListener('click', () => setS
     {
         id: 'toggle',
         title: 'Toggle button',
-        group: 'Buttons',
+        group: 'Forms',
         classes: ['kp-toggle', 'kp-toggles'],
         exports: [],
         intro: 'A button that stays pressed until it is pressed again: “Only errors”, “Pin”, “Follow”. It keeps its words, shows the state by shape and weight as well as colour, can carry an exact count and a short hint, and a group of them can behave as filters, as a one-of switch or as an “All” chip.',
@@ -6732,7 +6732,7 @@ setKeys(document.getElementById('doc-keys-set'), [
     {
         id: 'action-tile',
         title: 'Action tile',
-        group: 'Buttons',
+        group: 'Forms',
         classes: ['kp-actions', 'kp-action'],
         exports: [],
         intro: 'A button or a link drawn as a tile: a title and the one sentence that says what it does, in a grid whose tiles on one row are all as tall as the tallest. A button tile does something, a link tile goes somewhere (its mark is a chevron). The tile has a mark column that is always there, so a spinner arriving moves nothing. js/action-tiles.js (`attachActionTiles`, `setActionBusy`) stops a press on a busy or disabled tile and puts the theme’s own spinner in the mark while `aria-busy="true"`.',
@@ -10262,7 +10262,7 @@ setRefreshInterval(control, 15);
     {
         id: 'flash',
         title: 'Flash button',
-        group: 'Buttons',
+        group: 'Forms',
         classes: ['kp-flash'],
         exports: [],
         aliases: ['failed-word', 'method', 'post', 'post-body', 'refusal', 'refused-word', 'reload', 'reload-target', 'width'],
