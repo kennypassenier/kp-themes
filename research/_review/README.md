@@ -401,3 +401,17 @@ Expected block under the component, so the component is the first thing on scree
 nowhere. A component carries at most four control groups; more means the section is split (Kenny, 2026-10-18 07:11).
 `check-kit.mjs` fails a page that breaks any of it. The part builders (research/kpadopt56/build-parts.mjs, research/kpadopt56-formal/build.mjs)
 write the attribute with `research/kpadopt56/controls-for.mjs` and emit only the sections a page asks.
+
+## Progress options: the remaining line and Continue
+
+Two options of the kit, both per viewer (localStorage `kp-review-option:<name>`, `on` or `off`), both **on** by default, switchable at run time
+(the Agenda's "Review options", or the attribute `data-rv-<name>="on|off"` on `<html>`), all in `rv-progress.js` and `rv-progress.css`:
+
+- `remaining`: one plain line in the dialog's head, "Step n of N here · this part: X of Y pairs left · all open reviews: A of B left · about
+  H:MM left at your pace", and the same counts on every Agenda row. Counts are the current round's, from `progress.js` `progressOf` over each
+  demo's markup and the stored verdicts, the Agenda's own data. The pace is the median of the last 20 step durations (dialog open, tab visible,
+  in use), shown once five exist (`kp-review-pace`).
+- `resume`: per part the step, the scroll and (kept by the kit, `:kept`) the pressed states (`kp-demo-review:<demo>:resume`); the Agenda shows one
+  "Continue: <part>, <theme>, step n" button at the top, opening `?rv-resume=1`.
+
+The module writes no verdict and nothing to the journal. Hooks: one `mountProgress()` call in review.js, one `paintAgenda()` call in agenda.js.

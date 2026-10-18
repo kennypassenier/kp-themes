@@ -103,6 +103,7 @@ import {
     storeKey,
 } from './progress.js';
 import { early, isolate, mountBlockTools } from './block-tools.js';
+import { mountProgress } from './rv-progress.js'; // [kit-strip-1018] remaining line + resume
 
 const root = document.documentElement;
 const DEMO = root.dataset.review;
@@ -2503,5 +2504,7 @@ window.addEventListener('storage', (event) => {
 });
 
 render();
+// [kit-strip-1018] rv-progress.js: the remaining line and resume (the hook is this one call).
+mountProgress({ demo: DEMO, dialog, steps, getIndex: () => index, stepOpen, show, stage, openFirst: () => bar.querySelector('[data-rv-open]').click() });
 // From the hub, the dialog opens at the first open step by itself.
 if (NEXT && params.get('review') === 'open' && pairs.some(isOpen)) bar.querySelector('[data-rv-open]').click();
