@@ -5489,3 +5489,15 @@
     }
 }
 /* ── end t56 ── */
+
+/* ── t56: a long detail in a checklist row ── */
+@layer kp.signature {
+    /* A detail that cannot wrap ("check-in after 15:00, reference 8841-KP") left the label 22 px, which broke it in the
+       middle of its words. The detail wraps inside ten rem and the label keeps the rest of the row. */
+    [data-theme='dark'] .kp-checklist__detail {
+        max-inline-size: 10rem;
+        white-space: normal;
+        overflow-wrap: break-word;
+    }
+}
+/* ── end t56 ── */

@@ -7684,3 +7684,25 @@
     }
 }
 /* ── end t56 ── */
+
+/* ── t56: a long detail in a checklist row ── */
+@layer kp.signature {
+    /* A detail that cannot wrap ("check-in after 15:00, reference 8841-KP") left the label 22 px, which broke it in the
+       middle of its words. The detail wraps inside ten rem and the label keeps the rest of the row. */
+    [data-theme='cyberpunk'] .kp-checklist__detail {
+        max-inline-size: 10rem;
+        white-space: normal;
+        overflow-wrap: break-word;
+    }
+}
+/* ── end t56 ── */
+
+/* ── t56: the trace's rule tag ── */
+@layer kp.signature {
+    /* The tag's "// " lead is a flex item of the badge, so a rule name that did not fit its column wrapped under it and the
+       lead stood alone on the first line. As a block the lead is part of the text and the tag wraps like words do. */
+    [data-theme='cyberpunk'] .kp-trace__rule {
+        display: block;
+    }
+}
+/* ── end t56 ── */
