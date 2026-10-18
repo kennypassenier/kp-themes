@@ -55498,20 +55498,64 @@
     }
 }
 
-/* ── kpadopt5/6 fit: a segmented track that is wider than a phone [t56-titanium-1018] ── */
+/* ── kpadopt5/6 fit: a segmented track that is wider than its room [t56-titanium-1018] ── */
 @layer kp.signature {
-    /* In this theme's wide mono capitals the track outgrows 390 px and scrolled, its last label clipped at the edge of
-       the track. Under 34rem the segments share the track and a long label wraps between words instead. */
+    /* In this theme's wide mono capitals a track outgrows a phone, scrolled, and its last label was clipped at the track's
+       edge. Under 34rem the segments take less padding and tracking. A track of up to three also shares its width and a
+       long label wraps between words. A track of four or more takes rows instead of scrolling (the segments of a row share
+       it); the sliding plate cannot follow a second row, so the chosen segment carries its own plate there. A label is
+       never cut by an ellipsis. The inspector's filter does the same whenever its card is narrower than 34rem. */
     @media (max-width: 34rem) {
         [data-theme='titanium'] .kp-segmented:not(.kp-segmented--chips) {
             --kp-seg-item-pad-inline: 0.5rem;
+            letter-spacing: 0.02em;
+        }
+        [data-theme='titanium'] .kp-segmented:not(.kp-segmented--chips, :has(> :nth-child(4))) {
             grid-auto-columns: minmax(0, 1fr);
             letter-spacing: 0.04em;
         }
-        [data-theme='titanium'] .kp-segmented:not(.kp-segmented--chips) > .kp-segmented__item {
+        [data-theme='titanium'] .kp-segmented:not(.kp-segmented--chips, :has(> :nth-child(4))) > .kp-segmented__item {
             white-space: normal;
             overflow-wrap: normal;
             line-height: 1.25;
+        }
+        [data-theme='titanium'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(4)) {
+            display: flex;
+            flex-wrap: wrap;
+            inline-size: 100%;
+        }
+        [data-theme='titanium'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item {
+            flex: 1 1 auto;
+        }
+        [data-theme='titanium'] .kp-segmented[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4))::before {
+            display: none;
+        }
+        [data-theme='titanium'] .kp-segmented[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item[aria-checked='true'] {
+            background: var(--kp-seg-thumb, var(--card));
+            box-shadow: var(--kp-seg-thumb-edge, 0 0 0 1px var(--border-strong)), var(--kp-seg-thumb-lift, 0 0 0 0 transparent);
+        }
+        [data-theme='titanium'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item[aria-checked='true'] {
+            clip-path: polygon(var(--kp-chamfer, 0.4rem) 0, 100% 0, 100% calc(100% - var(--kp-chamfer, 0.4rem)), calc(100% - var(--kp-chamfer, 0.4rem)) 100%, 0 100%, 0 var(--kp-chamfer, 0.4rem));
+        }
+    }
+    @container kp-inspector (max-width: 34rem) {
+        [data-theme='titanium'] .kp-inspector__filter:not(.kp-segmented--chips):has(> :nth-child(4)) {
+            display: flex;
+            flex-wrap: wrap;
+            inline-size: 100%;
+        }
+        [data-theme='titanium'] .kp-inspector__filter:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item {
+            flex: 1 1 auto;
+        }
+        [data-theme='titanium'] .kp-inspector__filter[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4))::before {
+            display: none;
+        }
+        [data-theme='titanium'] .kp-inspector__filter[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item[aria-checked='true'] {
+            background: var(--kp-seg-thumb, var(--card));
+            box-shadow: var(--kp-seg-thumb-edge, 0 0 0 1px var(--border-strong)), var(--kp-seg-thumb-lift, 0 0 0 0 transparent);
+        }
+        [data-theme='titanium'] .kp-inspector__filter:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item[aria-checked='true'] {
+            clip-path: polygon(var(--kp-chamfer, 0.4rem) 0, 100% 0, 100% calc(100% - var(--kp-chamfer, 0.4rem)), calc(100% - var(--kp-chamfer, 0.4rem)) 100%, 0 100%, 0 var(--kp-chamfer, 0.4rem));
         }
     }
 }
@@ -55619,6 +55663,46 @@
         border-color: var(--background);
         background: var(--muted);
         box-shadow: inset 0 1px 0 hsl(from var(--background) h s l / 0.8), 0 1px 0 hsl(from var(--foreground) h s l / 0.1);
+    }
+}
+
+/* ── kpadopt5/6 fit: the version chip with a long unbroken version [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* A 64-character hash has no place to break; in this theme's wide mono it ran out of its box. Only when no break
+       place is left on the line may it break inside the string. */
+    [data-theme='titanium'] .kp-badge--version {
+        max-inline-size: 100%;
+    }
+    [data-theme='titanium'] :is(.kp-version__from, .kp-version__to) {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+}
+
+/* ── kpadopt5/6 fit: bars of controls in a card on a phone [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* The card is a grid whose one track took the width of its widest unbreakable line, so a bar of segments or buttons
+       pushed the card's content out of the card. The track is the card's width; the bar's own wrapping and the track's
+       scrolling then do their work. */
+    [data-theme='titanium'] :is(.kp-inspector, .kp-refresh) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    [data-theme='titanium'] :is(.kp-inspector__bar, .kp-refresh__bar, .kp-refresh__chooser) {
+        min-inline-size: 0;
+        max-inline-size: 100%;
+    }
+}
+
+/* ── kpadopt5/6 fit: the code box's tools [t56-titanium-1018] ── */
+@layer kp.signature {
+    /* Pretty/Raw, Wrap and Copy in one nowrap row: the Pretty/Raw track was squeezed to a 30 px sliver. The tools take a
+       second row when they do not fit, and the track keeps its width. */
+    [data-theme='titanium'] .kp-code__tools {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+    [data-theme='titanium'] .kp-code__tools > .kp-segmented {
+        flex: none;
     }
 }
 
@@ -84883,20 +84967,58 @@
     }
 }
 
-/* ── kpadopt5/6 fit: a segmented track that is wider than a phone [t56-nostromo-1018] ── */
+/* ── kpadopt5/6 fit: a segmented track that is wider than its room [t56-nostromo-1018] ── */
 @layer kp.signature {
-    /* In this theme's wide mono capitals the track outgrows 390 px and scrolled, its last label clipped at the edge of
-       the track. Under 34rem the segments share the track and a long label wraps between words instead. */
+    /* In this theme's wide mono capitals a track outgrows a phone, scrolled, and its last label was clipped at the track's
+       edge. Under 34rem the segments take less padding and tracking. A track of up to three also shares its width and a
+       long label wraps between words. A track of four or more takes rows instead of scrolling (the segments of a row share
+       it); the sliding plate cannot follow a second row, so the chosen segment carries its own plate there. A label is
+       never cut by an ellipsis. The inspector's filter does the same whenever its card is narrower than 34rem. */
     @media (max-width: 34rem) {
         [data-theme='nostromo'] .kp-segmented:not(.kp-segmented--chips) {
             --kp-seg-item-pad-inline: 0.5rem;
+            letter-spacing: 0.02em;
+        }
+        [data-theme='nostromo'] .kp-segmented:not(.kp-segmented--chips, :has(> :nth-child(4))) {
             grid-auto-columns: minmax(0, 1fr);
             letter-spacing: 0.04em;
         }
-        [data-theme='nostromo'] .kp-segmented:not(.kp-segmented--chips) > .kp-segmented__item {
+        [data-theme='nostromo'] .kp-segmented:not(.kp-segmented--chips, :has(> :nth-child(4))) > .kp-segmented__item {
             white-space: normal;
             overflow-wrap: normal;
             line-height: 1.25;
+        }
+        [data-theme='nostromo'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(4)) {
+            display: flex;
+            flex-wrap: wrap;
+            inline-size: 100%;
+        }
+        [data-theme='nostromo'] .kp-segmented:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item {
+            flex: 1 1 auto;
+        }
+        [data-theme='nostromo'] .kp-segmented[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4))::before {
+            display: none;
+        }
+        [data-theme='nostromo'] .kp-segmented[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item[aria-checked='true'] {
+            background: var(--kp-seg-thumb, var(--card));
+            box-shadow: var(--kp-seg-thumb-edge, 0 0 0 1px var(--border-strong)), var(--kp-seg-thumb-lift, 0 0 0 0 transparent);
+        }
+    }
+    @container kp-inspector (max-width: 34rem) {
+        [data-theme='nostromo'] .kp-inspector__filter:not(.kp-segmented--chips):has(> :nth-child(4)) {
+            display: flex;
+            flex-wrap: wrap;
+            inline-size: 100%;
+        }
+        [data-theme='nostromo'] .kp-inspector__filter:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item {
+            flex: 1 1 auto;
+        }
+        [data-theme='nostromo'] .kp-inspector__filter[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4))::before {
+            display: none;
+        }
+        [data-theme='nostromo'] .kp-inspector__filter[data-kp-segmented-thumb]:not(.kp-segmented--chips):has(> :nth-child(4)) > .kp-segmented__item[aria-checked='true'] {
+            background: var(--kp-seg-thumb, var(--card));
+            box-shadow: var(--kp-seg-thumb-edge, 0 0 0 1px var(--border-strong)), var(--kp-seg-thumb-lift, 0 0 0 0 transparent);
         }
     }
 }
@@ -84990,6 +85112,46 @@
             white-space: normal;
             overflow-wrap: anywhere;
         }
+    }
+}
+
+/* ── kpadopt5/6 fit: the version chip with a long unbroken version [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* A 64-character hash has no place to break; in this theme's wide mono it ran out of its box. Only when no break
+       place is left on the line may it break inside the string. */
+    [data-theme='nostromo'] .kp-badge--version {
+        max-inline-size: 100%;
+    }
+    [data-theme='nostromo'] :is(.kp-version__from, .kp-version__to) {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
+    }
+}
+
+/* ── kpadopt5/6 fit: bars of controls in a card on a phone [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* The card is a grid whose one track took the width of its widest unbreakable line, so a bar of segments or buttons
+       pushed the card's content out of the card. The track is the card's width; the bar's own wrapping and the track's
+       scrolling then do their work. */
+    [data-theme='nostromo'] :is(.kp-inspector, .kp-refresh) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    [data-theme='nostromo'] :is(.kp-inspector__bar, .kp-refresh__bar, .kp-refresh__chooser) {
+        min-inline-size: 0;
+        max-inline-size: 100%;
+    }
+}
+
+/* ── kpadopt5/6 fit: the code box's tools [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* Pretty/Raw, Wrap and Copy in one nowrap row: the Pretty/Raw track was squeezed to a 30 px sliver. The tools take a
+       second row when they do not fit, and the track keeps its width. */
+    [data-theme='nostromo'] .kp-code__tools {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+    [data-theme='nostromo'] .kp-code__tools > .kp-segmented {
+        flex: none;
     }
 }
 
