@@ -44389,44 +44389,6 @@
     [data-theme='synthwave'] .kp-code__tools {
         flex-wrap: wrap;
     }
-    /* A digest (64 characters, no place to break) breaks at the badge's edge rather than leaving it. */
-    [data-theme='synthwave'] .kp-badge--version,
-    [data-theme='synthwave'] .kp-badge--version > :is(.kp-version__from, .kp-version__to) {
-        min-inline-size: 0;
-        overflow-wrap: break-word;
-    }
-}
-/* ── end t56 ── */
-
-/* ── t56: the inspector row on a phone ── */
-@layer kp.signature {
-    /* The status tag with its tracking, the time and the source tag are wider together than a phone row: the source tag
-       got no column (a sliver, its letters standing on top of each other) and the time ran out of the row. On a phone the
-       row is three lines: method and status, the path, then the time with the source at the end. */
-    @container kp-inspector (max-width: 26rem) {
-        [data-theme='synthwave'] .kp-inspector__row {
-            grid-template-columns: auto minmax(0, 1fr) auto;
-            grid-template-areas:
-                'method status status'
-                'path path path'
-                'time time source';
-        }
-        [data-theme='synthwave'] .kp-inspector__row :is(.kp-badge, .kp-inspector__time) {
-            white-space: nowrap;
-        }
-    }
-}
-/* ── end t56 ── */
-
-/* ── t56: a long detail in a checklist row ── */
-@layer kp.signature {
-    /* A detail that cannot wrap ("check-in after 15:00, reference 8841-KP") left the label 22 px, which broke it in the
-       middle of its words. The detail wraps inside ten rem and the label keeps the rest of the row. */
-    [data-theme='synthwave'] .kp-checklist__detail {
-        max-inline-size: 10rem;
-        white-space: normal;
-        overflow-wrap: break-word;
-    }
 }
 /* ── end t56 ── */
 
