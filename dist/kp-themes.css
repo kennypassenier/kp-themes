@@ -16634,9 +16634,14 @@
  * (19rem) and --kp-menu-rich-max (min(26rem, 100vw - 2rem)), the menu's
  * width; --kp-menu-max-height (calc(100dvh - 12rem)), past which it
  * scrolls inside itself. */
+    /* The wrapper hugs its button, also as a grid or flex item that would stretch it: the menu is placed against the
+       wrapper's end, so a wrapper stretched over a whole grid column put the menu 1174 px from its button (Kenny,
+       2026-10-18 19:08: "menu opent niet aan de more knop"). */
     .kp-menu-button {
         position: relative;
         display: inline-flex;
+        inline-size: fit-content;
+        max-inline-size: 100%;
     }
 
     .kp-menu-button[hidden] {

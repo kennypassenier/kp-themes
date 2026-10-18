@@ -312,6 +312,11 @@ const CHANGED = {
             'In your last review (18/10) the preview that opens was far too low and showed almost nothing of the file. Two causes. The review dialog shows each section in a frame as tall as the section (219 px here), and the preview takes 90% of the window it stands in, so it was 197 px high with a stage of 58 px. Now, while a preview (or any dialog of a section) is open, the frame is as tall as the review dialog has room for and the section is brought to the top, so the preview is 779 px high with a stage of 640 px at 1920 by 965, as it would be in an app; it shrinks back when you close it. And a tall picture was cut at the foot of the stage; the stage now holds the whole picture, scaled to fit.',
         expect: '<b>Preview the CV</b> opens a preview of about 90% of the dialog&rsquo;s height, its stage showing the file at full size; <kbd class="kp-kbd">&rarr;</kbd> shows the whole cover letter and then the whole photo (sky to the foot of the mountains), nothing cut; <kbd class="kp-kbd">Esc</kbd> closes it and the frame returns to the three files.',
     },
+    'people/entity-behaviour': {
+        changed:
+            'In your last review (18/10) the menu of the package&rsquo;s own <b>More</b> button (under the cards, opened by <b>Open the package&rsquo;s menu</b>) did not open at that button. The button&rsquo;s wrapper was stretched over the whole width of the section, and the package places its menu against the wrapper&rsquo;s end, so the menu stood at the far right, 1174 px away from the button at 1920 wide. The package&rsquo;s menu button now hugs its button wherever it stands, so the menu opens right under <b>More</b>. The menus of a card&rsquo;s More and of the +N were already at their buttons and are unchanged.',
+        expect: '<b>Open the package&rsquo;s menu</b> opens the menu directly under the <b>More</b> button below the cards, its left edge at the button&rsquo;s left edge.',
+    },
 };
 
 const read = (/** @type {string} */ path) => readFileSync(fileURLToPath(new URL(path, here)), 'utf8');

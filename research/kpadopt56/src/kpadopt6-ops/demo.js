@@ -446,7 +446,10 @@ if (document.getElementById('kv-trace')) {
 }
 
 // ── entity card ──
-if (document.getElementById('kv-entity-grid')) {
+// Wired by any of its sections' own grids, never by one sibling's: a page that holds only the menus section (round 2 of
+// the people part) had no #kv-entity-grid, so nothing was wired and the cards and every menu stayed empty
+// (DEMO_RULES ch. 2, 2026-10-18 17:45).
+if (document.querySelector('#kv-entity-grid, #kv-entity-behaviour-grid, #kv-entity-cards, #kv-entity-gstates, #kv-entity-phone')) {
     const { setEntityGrid, setEntityGridState } = await import('../../../../js/entity-card.js');
     const { openMenu, closeMenu, setMenu } = await import('../../../../js/menu-button.js');
     const acts = [
