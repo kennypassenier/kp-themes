@@ -12259,7 +12259,10 @@
     .kp-calendar__nav {
         container: kp-calendar-nav / inline-size;
         display: grid;
-        grid-template-columns: auto max-content auto auto;
+        /* max-content, not auto: an auto track let the grid squeeze "Prev" and "Today" in a nav a few pixels narrower than
+         * its title, and their words ran out of the plate by 2 to 3 px [t56-words-1018]. justify-content: start never
+         * stretched them, so a roomy nav is laid out as before. */
+        grid-template-columns: repeat(4, max-content);
         justify-content: start;
         align-items: center;
         gap: var(--kp-space-sm, 0.5rem);
