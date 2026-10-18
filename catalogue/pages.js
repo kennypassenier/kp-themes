@@ -110,7 +110,6 @@ export const PAGES = [
             // Kenny, 2026-10-18 (kpadopt5/6, other themes): the 79 sections of the fifth and sixth adoption rounds that he approved in formal, now asked in the eleven other themes (dark, cyberpunk, synthwave, pastel, forest, blueprint, solstice, brutalism, deco, nostromo, titanium), grouped by kind of component into eleven reviews of at most 99 pairs each, generated from research/kpadopt56/src by research/kpadopt56/build-parts.mjs.
             {
                 href: 'research/kpadopt56-schedule/demo.html',
-                rework: 'by-eye findings of 2026-10-18 being fixed (research/kpadopt56/EYE_FINDINGS.md); it joins the Agenda as soon as its part is done',
                 label: 'Fifth and sixth adoption rounds in the other themes, part 1 of 14: Schedules and reminders',
                 about: 'Choosing weekdays, seeing the next times a schedule runs, snoozing, and a schedule written as a sentence. 8 sections (88 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
             },
@@ -131,7 +130,6 @@ export const PAGES = [
             },
             {
                 href: 'research/kpadopt56-updates/demo.html',
-                rework: 'by-eye findings of 2026-10-18 being fixed (research/kpadopt56/EYE_FINDINGS.md); it joins the Agenda as soon as its part is done',
                 label: 'Fifth and sixth adoption rounds in the other themes, part 5 of 14: Updating safely',
                 about: 'What an update list needs: the size of a version jump, a tick before it may start, what needs what, and how often the list refreshes. 7 sections (77 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
             },
@@ -142,7 +140,6 @@ export const PAGES = [
             },
             {
                 href: 'research/kpadopt56-status/demo.html',
-                rework: 'by-eye findings of 2026-10-18 being fixed (research/kpadopt56/EYE_FINDINGS.md); it joins the Agenda as soon as its part is done',
                 label: 'Fifth and sixth adoption rounds in the other themes, part 9 of 14: Messages and status',
                 about: 'Telling the reader what is going on: a problem with its reason and its remedy, the offline banner, a transfer with its time left, the notification centre, the line under a heading, and the today card. 7 sections (77 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
             },
