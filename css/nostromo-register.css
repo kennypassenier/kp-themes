@@ -6053,3 +6053,70 @@
         flex: none;
     }
 }
+
+/* ── kpadopt5/6 parts: nostromo's own corners and chart kinds [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* Label tape is cut square (G6): a key chip, a count, a map chip and the slider's groove are tape or vent, not pills.
+       Lamps, reels and rings stay round. */
+    [data-theme='nostromo'] :is(.kp-chart__annkey-item, .kp-segmented__count, .kp-uses__chip, .kp-slider__rail) {
+        border-radius: 2px;
+    }
+
+    /* The chart's event kinds on the case: the package paints them in the tones' ink, which in this theme is cream (made
+       for text on a coloured plate), so on the beige plot an operation, an update and a window were three pale dots no
+       one could tell apart. On the case a kind takes the tone's own colour, as the tape does. */
+    [data-theme='nostromo'] .kp-chart:has(.kp-chart__annkey) {
+        --kp-nostromo-kind-info: var(--info);
+        --kp-nostromo-kind-warning: var(--warning);
+    }
+    [data-theme='nostromo'] .kp-chart:has(.kp-chart__annkey) :is(.kp-chart__mark, .kp-chart__band, .kp-chart__annkey-item, pattern) {
+        --kp-chart-tone: var(--kp-nostromo-kind-info);
+    }
+    [data-theme='nostromo'] .kp-chart:has(.kp-chart__annkey) [data-kp-tone='warning'] {
+        --kp-chart-tone: var(--kp-nostromo-kind-warning);
+    }
+    [data-theme='nostromo'] .kp-chart:has(.kp-chart__annkey) [data-kp-tone='critical'] {
+        --kp-chart-tone: var(--destructive);
+    }
+}
+
+/* ── kpadopt5/6 parts: nostromo's slider is a fader [t56-nostromo-1018] ── */
+@layer kp.signature {
+    /* A fader on the console (G6, G14): the groove is a vent slot, the thumb a moulded key cap in the case's plastic with
+       an ink rim and a printed index line; focus lights the cap's lamp in the register's ring; the cap does not move
+       when pressed, it goes in (a well). The 2.75rem box stays the touch target. */
+    [data-theme='nostromo'] .kp-slider__input {
+        --kp-slider-thumb-art:
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 2px 0.875rem no-repeat,
+            repeating-linear-gradient(0deg, hsl(from var(--foreground) h s l / 0.09) 0 1px, transparent 1px 3px) 50% 50% / 1rem 1.5rem no-repeat,
+            linear-gradient(var(--secondary), var(--secondary)) 50% 50% / 1rem 1.5rem no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 1.25rem 1.75rem no-repeat;
+    }
+    [data-theme='nostromo'] .kp-slider__input:focus-visible {
+        --kp-slider-thumb-art:
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 2px 0.875rem no-repeat,
+            radial-gradient(circle at 50% calc(50% - 0.5625rem), var(--sidebar-primary) 0 2px, transparent 2.5px),
+            linear-gradient(var(--secondary), var(--secondary)) 50% 50% / 1rem 1.5rem no-repeat,
+            linear-gradient(var(--focus-ring), var(--focus-ring)) 50% 50% / 1.25rem 1.75rem no-repeat;
+    }
+    [data-theme='nostromo'] .kp-slider__input:active {
+        --kp-slider-thumb-art:
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 2px 0.875rem no-repeat,
+            linear-gradient(color-mix(in oklab, var(--secondary) 82%, var(--foreground)), color-mix(in oklab, var(--secondary) 82%, var(--foreground))) 50% 50% / 1rem 1.5rem no-repeat,
+            linear-gradient(var(--primary), var(--primary)) 50% 50% / 1.25rem 1.75rem no-repeat;
+    }
+    [data-theme='nostromo'] .kp-slider__input:disabled {
+        --kp-slider-thumb-art:
+            linear-gradient(var(--muted), var(--muted)) 50% 50% / 1rem 1.5rem no-repeat,
+            linear-gradient(var(--border-strong), var(--border-strong)) 50% 50% / 1.25rem 1.75rem no-repeat;
+    }
+    [data-theme='nostromo'] .kp-slider__input::-moz-range-thumb,
+    [data-theme='nostromo'] .kp-slider__input::-webkit-slider-thumb {
+        clip-path: inset(calc(50% - 0.875rem) calc(50% - 0.625rem) round 0.3rem);
+    }
+    [data-theme='nostromo'] .kp-slider__rail {
+        border-color: var(--border-strong);
+        background: var(--kp-no-seam, var(--muted));
+        box-shadow: var(--kp-sig-no-well, inset 0 1px 2px hsl(from var(--foreground) h s l / 0.3));
+    }
+}
