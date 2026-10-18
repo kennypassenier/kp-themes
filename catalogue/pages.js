@@ -117,8 +117,14 @@ export const PAGES = [
             {
                 href: 'research/kpadopt56-choose/demo.html',
                 rework: 'by-eye findings of 2026-10-18 being fixed (research/kpadopt56/EYE_FINDINGS.md); it joins the Agenda as soon as its part is done',
-                label: 'Fifth and sixth adoption rounds in the other themes, part 2 of 11: Pickers, palettes and toggles',
-                about: 'Picking from a list: the usual on top, words in any order, options with a date, a button that stays pressed, and keys that know their own list. 9 sections (99 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+                label: 'Fifth and sixth adoption rounds in the other themes, part 2 of 13: Pickers and palettes',
+                about: 'Picking from a list: the usual on top, with its band and its states, and words in any order. 5 sections (55 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+            },
+            {
+                href: 'research/kpadopt56-toggles/demo.html',
+                rework: 'by-eye findings of 2026-10-18 being fixed (research/kpadopt56/EYE_FINDINGS.md); it joins the Agenda as soon as its part is done',
+                label: 'Fifth and sixth adoption rounds in the other themes, part 3 of 13: Dated options, toggles and keys',
+                about: 'Options with a date, a button that stays pressed, and keys that know their own list. 5 sections (55 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
             },
             {
                 href: 'research/kpadopt56-fields/demo.html',

@@ -69,13 +69,21 @@ const PARTS = [
     },
     {
         topic: 'choose',
-        title: 'Pickers, palettes and toggles',
-        summary: 'Picking from a list: the usual on top, words in any order, options with a date, a button that stays pressed, and keys that know their own list.',
+        title: 'Pickers and palettes',
+        summary: 'Picking from a list: the usual on top, with its band and its states, and words in any order.',
         items: [
             ['kpadopt6-calm', 'usual'],
+            ['kpadopt6-calm', 'usual-band'],
             ['kpadopt6-calm', 'usual-states'],
             ['kpadopt6-ops', 'intent'],
             ['kpadopt6-ops', 'intent-states'],
+        ],
+    },
+    {
+        topic: 'toggles',
+        title: 'Dated options, toggles and keys',
+        summary: 'Options with a date, a button that stays pressed, and keys that know their own list.',
+        items: [
             ['kpadopt5-time', 'dated'],
             ['kpadopt5-time', 'dated-states'],
             ['kpadopt6-ops', 'toggle'],

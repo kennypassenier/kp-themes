@@ -39,21 +39,28 @@ const log = (box, text) => {
 };
 
 // ---- 1 · picker with the usual on top -------------------------------------------------------------
-if (document.getElementById('kc-usual-a')) {
-    const a = document.getElementById('kc-usual-a');
-    const write = (/** @type {string} */ text) => {
-        const box = document.getElementById('kc-usual-log');
-        if (!box) return;
-        box.textContent = `${box.textContent ? `${box.textContent}\n` : ''}${text}`.split('\n').slice(-5).join('\n');
-    };
-    for (const kind of ['pick', 'add', 'not-today']) {
-        a?.addEventListener(`kp-usual-${kind}`, (event) => write(`kp-usual-${kind} ${JSON.stringify(/** @type {CustomEvent} */ (event).detail)}`));
+if (document.querySelector('[data-kc-usual-target]')) {
+    // Every symptom picker marked `data-kc-usual-target` is wired with the buttons and the log of its own section.
+    for (const picker of all('[data-kc-usual-target]')) {
+        const section = picker.closest('section') ?? document.body;
+        const write = (/** @type {string} */ text) => {
+            const box = section.querySelector('.kc-log');
+            if (!box) return;
+            box.textContent = `${box.textContent ? `${box.textContent}\n` : ''}${text}`.split('\n').slice(-5).join('\n');
+        };
+        for (const kind of ['pick', 'add', 'not-today']) {
+            picker.addEventListener(`kp-usual-${kind}`, (event) => write(`kp-usual-${kind} ${JSON.stringify(/** @type {CustomEvent} */ (event).detail)}`));
+        }
+        for (const button of all('[data-kc-usual-opt]', section)) {
+            button.addEventListener('click', () => {
+                pressOnly(button);
+                const name = button.getAttribute('data-kc-usual-opt') ?? '';
+                const value = button.dataset.value ?? '';
+                // The options are real attributes: changing one redraws the picker (the states section's pickers follow too).
+                for (const target of [picker, document.getElementById('kc-usual-s'), document.getElementById('kc-usual-p')]) target?.setAttribute(`data-kp-${name}`, value);
+            });
+        }
     }
-    onButtons('data-kc-usual-opt', (name, button) => {
-        const value = button.dataset.value ?? '';
-        // The options are real attributes: changing one redraws the picker.
-        for (const id of ['kc-usual-a', 'kc-usual-s', 'kc-usual-p']) document.getElementById(id)?.setAttribute(`data-kp-${name}`, value);
-    });
     const driven = document.getElementById('kc-usual-s');
     driven?.addEventListener('kp-usual-retry', () => {
         setUsualState(driven, 'loading');
