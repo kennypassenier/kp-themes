@@ -2138,6 +2138,15 @@
         text-align: start;
     }
 
+    /* The "too few days" sentence on a chart is a machined plate with its words centred on a plain card: the twill stays on the
+       edge only, never behind the words [t56-eye-1018]. */
+    [data-theme='titanium'] .kp-chart__few-plate {
+        background:
+            linear-gradient(var(--card), var(--card)) top / 100% calc(100% - 2px) no-repeat,
+            var(--kp-iris);
+        text-align: center;
+    }
+
     [data-theme='titanium'] .kp-empty__title {
         font-family: var(--theme-font-display);
         letter-spacing: -0.01em;
