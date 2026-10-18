@@ -5835,4 +5835,14 @@
         block-size: 2.5rem;
         margin-block-end: 0.4rem;
     }
+
+    /* A waiting gallery tile has the final tile's shape (the package says so), but this theme's skeleton line gives every
+       skeleton a fixed block size and margins, so the tiles collapsed to a strip and Loading drew 70 px in a 456 px footprint
+       (kpadopt6-media/gallery-states). The tile is square again, as the picture it waits for. */
+    [data-theme='forest'] .kp-gallery__tile.kp-skeleton {
+        block-size: auto;
+        min-block-size: 0;
+        margin-block: 0;
+        aspect-ratio: var(--kp-gallery-ratio, 1);
+    }
 }

@@ -61326,6 +61326,30 @@
     [data-theme='pastel'] .kp-badge > .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
         margin-block: 0.26rem;
     }
+
+    /* A waiting gallery tile has the final tile's shape (the package says so), but this theme's skeleton line gives every
+       skeleton a fixed block size and margins, so the tiles collapsed to a strip and Loading drew 70 px in a 456 px footprint
+       (kpadopt6-media/gallery-states). The tile is square again, as the picture it waits for. */
+    [data-theme='pastel'] .kp-gallery__tile.kp-skeleton {
+        block-size: auto;
+        min-block-size: 0;
+        margin-block: 0;
+        aspect-ratio: var(--kp-gallery-ratio, 1);
+    }
+
+    /* The pom-poms of a waiting line are sized from the element they wait in (147 px beads in a tile). A waiting tile is a plain
+       paper tile with the pass, as the heat cells are; the busy card over the grid is what moves. */
+    [data-theme='pastel'] .kp-gallery__tile.kp-skeleton {
+        border: 1px solid var(--border-strong);
+        border-radius: var(--kp-sig-pa-r-plate);
+        background: var(--card);
+        box-shadow: calc(var(--kp-sig-pa-off) * var(--kp-sig-pa-dir)) var(--kp-sig-pa-off) 0 var(--kp-sig-pa-pass-c);
+        overflow: visible;
+    }
+
+    [data-theme='pastel'] .kp-gallery__tile.kp-skeleton > .kp-pieces {
+        display: none;
+    }
 }
 
 /* The busy progress bar's breath, 0 (bare ground) to 1 (the full row),
@@ -67164,6 +67188,16 @@
         inline-size: 3.5rem;
         block-size: 2.5rem;
         margin-block-end: 0.4rem;
+    }
+
+    /* A waiting gallery tile has the final tile's shape (the package says so), but this theme's skeleton line gives every
+       skeleton a fixed block size and margins, so the tiles collapsed to a strip and Loading drew 70 px in a 456 px footprint
+       (kpadopt6-media/gallery-states). The tile is square again, as the picture it waits for. */
+    [data-theme='forest'] .kp-gallery__tile.kp-skeleton {
+        block-size: auto;
+        min-block-size: 0;
+        margin-block: 0;
+        aspect-ratio: var(--kp-gallery-ratio, 1);
     }
 }
 
@@ -79477,6 +79511,16 @@
         inline-size: 2.25rem;
         block-size: 2.25rem;
         margin-block-end: 0.4rem;
+    }
+
+    /* A waiting gallery tile has the final tile's shape (the package says so), but this theme's skeleton line gives every
+       skeleton a fixed block size and margins, so the tiles collapsed to a strip and Loading drew 70 px in a 456 px footprint
+       (kpadopt6-media/gallery-states). The tile is square again, as the picture it waits for. */
+    [data-theme='blueprint'] .kp-gallery__tile.kp-skeleton {
+        block-size: auto;
+        min-block-size: 0;
+        margin-block: 0;
+        aspect-ratio: var(--kp-gallery-ratio, 1);
     }
 }
 
