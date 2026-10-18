@@ -228,6 +228,28 @@ function lane() {
         event.stopPropagation();
         parent.postMessage({ type: 'rv-lane-key', key: event.key, code: event.code }, location.origin);
     };
+    // [lane-click-1018] The first click into a frame can move only the page's focus to the frame and leave the frame's own
+    // document on <body> (Firefox, measured: a bare frame with a bare table does it as well). A click on the component
+    // then focuses what a click would, the nearest focusable ancestor (a table row of row-select.js), and notes that the
+    // pointer last went into the component, so a key pressed with the focus still on <body> counts as pressed in it.
+    const FOCUSABLE = 'a[href], button, input, select, textarea, summary, [tabindex], [contenteditable]:not([contenteditable="false"])';
+    const inComponent = (/** @type {Element | null | undefined} */ el) =>
+        Boolean(el?.closest?.('[data-review-item]')) && !el?.closest('[data-review-controls]');
+    let pointerInComponent = false;
+    addEventListener(
+        'pointerdown',
+        (event) => {
+            pointerInComponent = inComponent(/** @type {Element} */ (event.target));
+        },
+        true,
+    );
+    addEventListener('click', (event) => {
+        if (!event.isTrusted || !pointerInComponent || event.defaultPrevented) return;
+        const active = document.activeElement;
+        if (active && active !== document.body && active !== root) return;
+        const target = /** @type {Element} */ (event.target).closest?.(FOCUSABLE);
+        if (target instanceof HTMLElement && !target.matches(':disabled') && inComponent(target)) target.focus({ preventScroll: true });
+    });
     addEventListener(
         'keydown',
         (event) => {
@@ -246,7 +268,8 @@ function lane() {
             // alone (no preventDefault);
             // 4. from the section's controls or the page around it, and Escape, the dialog key is handed up at once.
             const from = /** @type {Element} */ (event.target);
-            if (event.key !== 'Escape' && from.closest?.('[data-review-item]') && !from.closest('[data-review-controls]')) {
+            const onBody = from === document.body || from === root;
+            if (event.key !== 'Escape' && (inComponent(from) || (onBody && pointerInComponent))) {
                 deferred.add(event);
                 return;
             }
