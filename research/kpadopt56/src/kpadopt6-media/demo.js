@@ -58,7 +58,7 @@ function onChoice(id, apply) {
 await ready;
 
 // ── what uses what ──────────────────────────────────────────────────────────────────────────────────────────────
-{
+if (document.getElementById('km-uses')) {
     const { setMatrix } = await import('../../../../js/heat.js');
     const { rememberedView } = await import('../../../../js/uses-map.js');
     /** @type {import('../../../../js/uses-map.js').UsesNode[]} */
@@ -135,7 +135,7 @@ await ready;
 }
 
 // ── the gallery ─────────────────────────────────────────────────────────────────────────────────────────────────
-{
+if (document.getElementById('km-gal')) {
     const { setGallery, setGalleryUploading, galleryItems } = await import('../../../../js/gallery.js');
     const at = (/** @type {string} */ v) => Date.parse(v);
     const names = ['Mila', 'Jonas', 'Noor', 'Lars', 'Fien'];
@@ -282,7 +282,7 @@ await ready;
 }
 
 // ── the growing text box ────────────────────────────────────────────────────────────────────────────────────────
-{
+if (document.getElementById('km-auto-mail')) {
     const { setAutosizeState } = await import('../../../../js/autosize.js');
     const mail = /** @type {HTMLTextAreaElement} */ (document.getElementById('km-auto-mail'));
     const line = (/** @type {number} */ n) => `Line ${n} of the mail: the dispatch dashboard is slower on Mondays, can you look at the first query?`;
@@ -330,7 +330,7 @@ await ready;
 }
 
 // ── link anchors ────────────────────────────────────────────────────────────────────────────────────────────────
-{
+if (document.getElementById('km-anchors-doc')) {
     const { refreshAnchors } = await import('../../../../js/anchors.js');
     for (const button of document.querySelectorAll('[data-km-go]')) {
         button.addEventListener('click', () => {
@@ -351,7 +351,7 @@ await ready;
 }
 
 // ── printing a list ─────────────────────────────────────────────────────────────────────────────────────────────
-{
+if (document.getElementById('km-print-list')) {
     const { setChecklistItems } = await import('../../../../js/checklist.js');
     const { preparePrint } = await import('../../../../js/print.js');
     /** @type {import('../../../../js/checklist.js').ChecklistItem[]} */

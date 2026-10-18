@@ -39,7 +39,7 @@ const log = (box, text) => {
 };
 
 // ---- 1 · picker with the usual on top -------------------------------------------------------------
-{
+if (document.getElementById('kc-usual-a')) {
     const a = document.getElementById('kc-usual-a');
     const write = (/** @type {string} */ text) => {
         const box = document.getElementById('kc-usual-log');
@@ -91,7 +91,7 @@ const log = (box, text) => {
 }
 
 // ---- 2 · questions, one per screen ----------------------------------------------------------------
-{
+if (document.getElementById('kc-focus-a')) {
     /** The check-in: yesterday's and the usual answers come from the app. @returns {import('../../../../js/focus-steps.js').FocusStep[]} */
     const checkin = () => [
         { text: 'How is your mood today?', answer: { id: 'mood', kind: 'choice', previous: 'matig', usual: 'good', choices: [{ value: 'rough', label: 'Rough' }, { value: 'matig', label: 'Matig' }, { value: 'good', label: 'Good' }, { value: 'great', label: 'Great' }] } },
@@ -183,7 +183,7 @@ const log = (box, text) => {
 }
 
 // ---- 3 · today card ------------------------------------------------------------------------------
-{
+if (document.getElementById('kc-today-log')) {
     const listOf = (/** @type {string} */ id) => /** @type {HTMLElement} */ (document.querySelector(`#${id} .kp-statuslist`));
     const a = listOf('kc-today-a');
     for (const id of ['kc-today-a', 'kc-today-b']) {
@@ -223,7 +223,7 @@ const log = (box, text) => {
 }
 
 // ---- 4 · quote card ------------------------------------------------------------------------------
-{
+if (document.getElementById('kc-quote-a')) {
     const first = document.getElementById('kc-quote-a');
     first?.addEventListener('kp-quote-hide', (event) => {
         log(document.getElementById('kc-quote-log'), 'kp-quote-hide: the page was told, after the Undo window');
@@ -252,7 +252,7 @@ const log = (box, text) => {
 }
 
 // ---- 5 · calm days -------------------------------------------------------------------------------
-{
+if (document.getElementById('kc-cal-b')) {
     const LOGGED = [1, 2, 7, 8, 9, 12, 13, 14, 15];
     const MINUTES = { 1: 20, 2: 35, 7: 15, 8: 40, 9: 25, 12: 30, 13: 45, 14: 20, 15: 10 };
     const iso = (/** @type {number} */ d) => `2026-10-${String(d).padStart(2, '0')}`;
@@ -346,7 +346,7 @@ const log = (box, text) => {
 }
 
 // ---- 6 · star rating -----------------------------------------------------------------------------
-{
+if (document.getElementById('kc-rate-a')) {
     onButtons('data-kc-rating-opt', (name, button) => {
         const first = document.getElementById('kc-rate-a');
         const value = button.dataset.value ?? '';
@@ -354,7 +354,7 @@ const log = (box, text) => {
         first?.setAttribute(`data-kp-rating-${name}`, value);
     });
 }
-{
+if (document.getElementById('kc-rate-a')) {
     const first = document.getElementById('kc-rate-a');
     first?.addEventListener('kp-rating-change', (event) => {
         const { value, previous, source } = /** @type {CustomEvent} */ (event).detail;

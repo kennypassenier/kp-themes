@@ -111,8 +111,9 @@ near the view.
 - At the side, under the theme's name, one row per section with its look-at line and its "Not approved" box: the
   verdict stays one per section × theme pair, and a pair ticked "Not approved" marks its frame too. Up approves this
   theme for the topic and goes on to the next open step, the next theme of the same topic.
-- The demo's controls are mirrored once on top; a press acts on every frame of the step (a frame that loads later
-  replays the presses made before it).
+- The controls of a section stand in its own frame, directly above the component they drive (Kenny, 2026-10-18 07:09);
+  there is no controls bar on top, and a press happens in the frame it is made in. A pressed state is kept per section
+  and group and pressed again when that section loads in the next theme.
 - V and L (previous version, play open and close) act on the frame most in view, or on the frame the key was pressed
   in; each frame's head carries its own buttons.
 - Only open pairs are shown and a step whose pairs are all approved is skipped; the counters count steps and pairs as
@@ -389,3 +390,14 @@ node research/_review/measure-motion.mjs research/nostromo-character [--aspect o
 
 No gate runs it. Imported, it lends `table`, `timing` and `reversed` to a
 script that measures other motion the same way.
+
+## Controls at the component
+
+A demo marks every container of the buttons that drive ONE component with
+`data-review-controls data-review-controls-for="<id of the component>"`, inside the judged section that holds the
+component. The dialog shows that container itself (never a copy) directly above the component, and puts the section's
+Expected block under the component, so the component is the first thing on screen (`placeControls` in review.js,
+`.rv-ctl` in review.css). A container outside every section, or one naming no component of its section, is shown
+nowhere. A component carries at most four control groups; more means the section is split (Kenny, 2026-10-18 07:11).
+`check-kit.mjs` fails a page that breaks any of it. The part builders (research/kpadopt56/build-parts.mjs, research/kpadopt56-formal/build.mjs)
+write the attribute with `research/kpadopt56/controls-for.mjs` and emit only the sections a page asks.

@@ -52,7 +52,7 @@ export function onChoice(id, apply) {
 await ready;
 
 // ── toggle button ──
-{
+if (document.getElementById('kv-toggle-filters-shown')) {
     const { attachToggles, toggle, togglePressedKeys } = await import('../../../../js/toggle.js');
     const word = (/** @type {any} */ d) =>
         `${d.button.textContent.trim().replace(/\s+/g, ' ')} ${d.pressed ? 'on' : 'off'}${d.group ? `; on in ${d.group}: ${d.pressedKeys.join(', ') || 'none'}` : ''}`;
@@ -120,7 +120,7 @@ await ready;
 }
 
 // ── the palette that finds words in any order ──
-{
+if (document.getElementById('kv-intent-pal')) {
     const { palette } = await import('../../../../js/palette.js');
     const main = document.getElementById('kv-intent-pal');
     const states = document.getElementById('kv-intent-states');
@@ -185,7 +185,7 @@ await ready;
 }
 
 // ── version jump chip ──
-{
+if (document.getElementById('kv-version-table')) {
     const { setVersionDelta, summarizeDeltas } = await import('../../../../js/version-delta.js');
     const table = document.getElementById('kv-version-table');
     const chips = () => /** @type {HTMLElement[]} */ ([...document.querySelectorAll('#kv-version-table .kp-badge--version')]);
@@ -246,7 +246,7 @@ await ready;
 }
 
 // ── acknowledge gate ──
-{
+if (document.getElementById('kv-ack-log')) {
     const { ackGate } = await import('../../../../js/ack-gate.js');
     const log = document.getElementById('kv-ack-log');
     document.getElementById('kv-ack-grid')?.addEventListener('kp-ack-change', (event) => {
@@ -293,7 +293,7 @@ await ready;
 }
 
 // ── dependency list ──
-{
+if (document.getElementById('kv-deplist')) {
     const { setDeplist, deplist } = await import('../../../../js/deplist.js');
     const rows = [
         { from: 'immich', to: 'paperless' },
@@ -365,7 +365,7 @@ await ready;
 }
 
 // ── path of a connection ──
-{
+if (document.getElementById('kv-trace')) {
     const { setTrace, trace } = await import('../../../../js/path-trace.js');
     const scenes = {
         blocked: [
@@ -446,7 +446,7 @@ await ready;
 }
 
 // ── entity card ──
-{
+if (document.getElementById('kv-entity-grid')) {
     const { setEntityGrid, setEntityGridState } = await import('../../../../js/entity-card.js');
     const { openMenu, closeMenu, setMenu } = await import('../../../../js/menu-button.js');
     const acts = [

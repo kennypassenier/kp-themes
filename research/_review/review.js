@@ -58,22 +58,24 @@
 // `data-review-topic="<id>"` (title: `data-review-topic-title`).
 //
 // Controls (Kenny, 2026-10-05: "Als je knoppen zet die bv loading state
-// weergeven, of andere dingen zoals animation, zet die dan ook in de dialog!").
-// A demo marks every container of its own buttons (states, data variants,
-// tones, speed, play) with one attribute:
+// weergeven, of andere dingen zoals animation, zet die dan ook in de dialog!";
+// 2026-10-18 07:09: "Die controls moeten niet gewoon meer boven staan, maar
+// enkel de geschikte control per component zoals die tevoorschijn komt").
+// A demo marks every container of the buttons that drive ONE component, and
+// says which component that is:
 //
-//   <div data-review-controls> <div role="group" aria-label="…">…buttons…</div> … </div>
+//   <div data-review-controls data-review-controls-for="<id of the component>">
+//       <div role="group" aria-label="…">…buttons…</div> …
+//   </div>
 //
-// A container inside a judged section belongs to that section; one outside
-// every section (in the page's header) belongs to every step. When the dialog
-// shows a step, each of those containers is mirrored into the controls bar
-// above the stage, with the hint "Try every state and the speed before you
-// judge". The demo's own buttons stay the only truth: a click on a mirrored
-// button clicks the demo's button (so the demo's listeners act on the
-// sections shown), and every change the demo makes to its buttons
-// (aria-pressed, disabled, hidden, text) is copied back into the mirror. The
-// demo's copy inside a shown section is hidden in the stage, so nothing is
-// there twice. A demo needs no code of its own for this.
+// The container lives inside the judged section that holds the component.
+// The dialog shows the demo's own container (not a copy: no mirror, no bar on
+// top) directly above that component, so the controls arrive with it as the
+// reviewer walks to it, and it moves the section's Expected block under the
+// component. A container that names no component of its section, or sits
+// outside every section, is not shown (placeControls); research/_review/
+// check-kit.mjs fails such a page, and fails a component with more than
+// four groups (too many rows means too many things in one section: split it).
 //
 // Verdicts and notes live in this browser only (localStorage, per demo id,
 // under progress.js storeKey(), which the hub reads too); the answer at the
@@ -1088,10 +1090,6 @@ dialog.innerHTML = `
     </div>
     <div class="rv-dialog__grid">
         <div class="rv-dialog__view">
-            <details class="rv-controls" open data-rv-controls hidden>
-                <summary class="rv-controls__hint">Try every state and the speed before you judge</summary>
-                <div class="rv-controls__body" data-rv-controls-body></div>
-            </details>
             <div class="rv-flip" data-rv-flip>
                 <button type="button" class="rv-flip__arrow rv-flip__arrow--left" data-rv-flip-prev aria-label="Previous option (←)" hidden>←</button>
                 <div class="rv-dialog__stage" data-rv-stage></div>
@@ -1180,7 +1178,7 @@ const cellsOf = (row) =>
 function playAspect(section, aspectId) {
     const mine = kept[DEMO] || {};
     for (const b of section.querySelectorAll('[data-review-plays]')) {
-        if (b.closest('.rv-controls') || !b.getAttribute('data-review-plays').split(/\s+/).includes(aspectId)) continue;
+        if (!b.getAttribute('data-review-plays').split(/\s+/).includes(aspectId)) continue;
         // A state the reviewer set in this group stands; the autoplay leaves
         // it, unless the aspect is that state itself (data-review-forces):
         // the failed state is judged failed, the loading picture loading.
@@ -1214,7 +1212,7 @@ const groupName = (/** @type {Element} */ group) => group.getAttribute('aria-lab
 function keepPress(/** @type {Element | null | undefined} */ button) {
     const step = steps[index];
     const group = button?.closest('[role="group"]');
-    if (!step?.aspect || !group || !button?.hasAttribute('aria-pressed') || group.closest('.rv-controls')) return;
+    if (!step?.aspect || !group || !button?.hasAttribute('aria-pressed')) return;
     if (!group.closest('[data-review-controls]') || /speed/i.test(groupName(group))) return;
     if (Object.keys(/** @type {HTMLElement} */ (button).dataset).some((k) => /speed$/i.test(k))) return;
     (kept[DEMO] ??= {})[groupName(group)] = [...group.querySelectorAll('button')].indexOf(/** @type {HTMLButtonElement} */ (button));
@@ -1229,7 +1227,7 @@ function restoreKept(section, aspectId) {
     const mine = kept[DEMO];
     if (!mine || !aspectId) return;
     for (const group of section.querySelectorAll('[data-review-controls] [role="group"]')) {
-        if (group.closest('.rv-controls') || !(groupName(group) in mine)) continue;
+        if (!(groupName(group) in mine)) continue;
         // The aspect's own state wins on its own page (see playAspect).
         if ([...group.querySelectorAll('button')].some((b) => forces(b, aspectId))) continue;
         const button = /** @type {HTMLElement | undefined} */ ([...group.querySelectorAll('button')][mine[groupName(group)]]);
@@ -1239,6 +1237,30 @@ function restoreKept(section, aspectId) {
         // lone toggle is only pressed when it reads as off, or it would flip.
         const radio = group.querySelectorAll('button[aria-pressed]').length > 1;
         if (button && (radio || button.getAttribute('aria-pressed') !== 'true')) button.click();
+    }
+}
+
+/**
+ * A state pressed in a topic step's frame stays across themes and visits (DEMO_RULES ch. 7, fix-112, fix-115): the group's
+ * name and the button's place in it are kept per section, and pressed again when that section's frame loads in the next theme.
+ */
+function keepLanePress(/** @type {string} */ item, /** @type {Element | null | undefined} */ button) {
+    const group = button?.closest('[role="group"]');
+    if (!group || !button?.hasAttribute('aria-pressed') || !group.closest('[data-review-controls]') || /speed/i.test(groupName(group))) return;
+    (kept[DEMO] ??= {})[`${item}\u241f${groupName(group)}`] = [...group.querySelectorAll('button')].indexOf(/** @type {HTMLButtonElement} */ (button));
+    try {
+        localStorage.setItem(KEPT_STORE, JSON.stringify(kept));
+    } catch {
+        // No storage: kept for this visit only.
+    }
+}
+function restoreLanePresses(/** @type {HTMLElement} */ section, /** @type {string} */ item) {
+    const mine = kept[DEMO];
+    if (!mine) return;
+    for (const group of section.querySelectorAll('[data-review-controls] [role="group"]')) {
+        const at = mine[`${item}\u241f${groupName(group)}`];
+        const button = /** @type {HTMLElement | undefined} */ ([...group.querySelectorAll('button')][at]);
+        if (button && button.getAttribute('aria-pressed') !== 'true') button.click();
     }
 }
 
@@ -1253,7 +1275,6 @@ function restartMotion(root) {
 /** Finds the demo's own speed button (its attribute ends in "-speed") carrying this value, and clicks it. */
 function pressSpeed(value) {
     for (const el of document.querySelectorAll('button')) {
-        if (el.closest('.rv-controls')) continue; // the mirrored copy; its click only forwards to this one anyway
         for (const attr of el.attributes)
             if (/-speed$/.test(attr.name) && attr.value === value) {
                 /** @type {HTMLElement} */ (el).click();
@@ -1500,7 +1521,6 @@ function controlGroups() {
     return [...section.querySelectorAll('[data-review-controls] [role="group"]')]
         .filter(
             (g) =>
-                !g.closest('.rv-controls') &&
                 !/speed/i.test(g.getAttribute('aria-label') || '') &&
                 !g.querySelector('[data-cc-speed], [data-ct-speed], [data-tl-speed]'),
         )
@@ -1558,7 +1578,7 @@ function liveUpdate() {
     const section = flipPair?.item?.section;
     if (!section) return;
     const live = [...section.querySelectorAll('[data-review-controls] button')].find(
-        (b) => !b.closest('.rv-controls') && (Object.keys(b.dataset).some((k) => /live$/i.test(k)) || /^\s*live update/i.test(b.textContent || '')),
+        (b) => (Object.keys(b.dataset).some((k) => /live$/i.test(k)) || /^\s*live update/i.test(b.textContent || '')),
     );
     if (live) return live.click();
     // A demo without a live update (busy, drawer, header …) says so instead
@@ -1650,113 +1670,49 @@ function putBack() {
     stopTour();
     teardownFlip();
     for (const [, section] of moved) focusAspect(section, null);
-    unmirror();
     for (const [placeholder, section] of moved) placeholder.replaceWith(section);
     moved = [];
     laneWatch?.disconnect();
     laneWatch = null;
     lanes = [];
-    pressedLog = [];
     stage.replaceChildren();
 }
 
 /* ------------------------------------------------------------ controls */
-
-const controlsBox = $('[data-rv-controls]');
-const controlsBody = $('[data-rv-controls-body]');
-// The frames' heads on a topic step stick under the mirrored controls, whatever their height.
-new ResizeObserver(() => {
-    stage.closest('.rv-dialog__view')?.style.setProperty('--rv-controls-block', `${controlsBox.hidden ? 0 : controlsBox.offsetHeight}px`);
-}).observe(controlsBox);
-/** @type {MutationObserver[]} */
-let mirrors = [];
-/** The demo's own controls, in document order, that the mirror can act on. */
-const actorsOf = (root) => /** @type {HTMLElement[]} */ ([...root.querySelectorAll('button, input, select, textarea, a[href], summary')]);
-
-function unmirror() {
-    for (const observer of mirrors) observer.disconnect();
-    mirrors = [];
-    controlsBody.replaceChildren();
-    controlsBox.hidden = true;
-}
-
-/**
- * Mirrors one container of the demo's controls into the bar: a copy without
- * ids, whose clicks and edits go to the demo's own elements, rebuilt whenever
- * the demo changes its own (a pressed state, a label, a hidden button).
- * @param {HTMLElement} source @param {string} heading
+/*
+ * A component's controls stand AT the component (Kenny, 2026-10-18 07:09: "Die controls moeten niet gewoon meer boven
+ * staan, maar enkel de geschikte control per component zoals die tevoorschijn komt"). A demo declares which
+ * component a group of buttons drives, `data-review-controls-for="<id of the component>"`; the dialog shows the
+ * demo's own container, never a copy, directly above the component it drives, inside the section that holds both,
+ * so the controls arrive with the component as the reviewer walks to it. There is no bar on top, and a container
+ * outside every section (or one that names no component of its section) is not shown at all.
  */
-function mirror(source, heading) {
-    const slot = document.createElement('div');
-    slot.className = 'rv-controls__set';
-    if (heading) {
-        const title = document.createElement('p');
-        title.className = 'rv-controls__title';
-        title.textContent = heading;
-        slot.append(title);
-    }
-    const holder = document.createElement('div');
-    // A rebuilt copy is a redraw, not an arrival: without this js/motion.js played the theme's arrival on every pressed
-    // control (Kenny, 2026-10-13: the bar "deformed to grow suddenly before moving to their usual size").
-    holder.dataset.kpArrive = 'none';
-    slot.append(holder);
-    const build = () => {
-        const focusAt = actorsOf(holder).indexOf(/** @type {HTMLElement} */ (document.activeElement));
-        const copy = /** @type {HTMLElement} */ (source.cloneNode(true));
-        copy.removeAttribute('data-review-controls');
-        copy.hidden = false;
-        for (const el of [copy, ...copy.querySelectorAll('[id]')]) el.removeAttribute('id');
-        const theirs = actorsOf(source);
-        actorsOf(copy).forEach((mine, i) => {
-            const own = theirs[i];
-            if (!own) return;
-            if (mine.matches('button, a[href], summary')) {
-                mine.addEventListener('click', (event) => {
-                    event.preventDefault();
-                    own.click();
-                    keepPress(own);
-                    pressInLanes(source, i, { type: 'click' });
-                });
-            } else {
-                const forward = (event) => {
-                    const from = /** @type {HTMLInputElement} */ (mine);
-                    const to = /** @type {HTMLInputElement} */ (own);
-                    const checks = 'checked' in from && (from.type === 'checkbox' || from.type === 'radio');
-                    if (checks) to.checked = from.checked;
-                    else to.value = from.value;
-                    to.dispatchEvent(new Event(event.type, { bubbles: true }));
-                    pressInLanes(source, i, { type: event.type, checked: checks ? from.checked : undefined, value: from.value });
-                };
-                mine.addEventListener('input', forward);
-                mine.addEventListener('change', forward);
-            }
-        });
-        holder.replaceChildren(copy);
-        if (focusAt >= 0) actorsOf(copy)[focusAt]?.focus();
-    };
-    build();
-    const observer = new MutationObserver(build);
-    observer.observe(source, {
-        subtree: true,
-        childList: true,
-        characterData: true,
-        attributes: true,
-        attributeFilter: ['aria-pressed', 'aria-checked', 'aria-disabled', 'disabled', 'hidden', 'class', 'value', 'checked'],
-    });
-    mirrors.push(observer);
-    controlsBody.append(slot);
+/** The block of the section that holds `target`, a direct child of the section. */
+function blockOf(/** @type {HTMLElement} */ section, /** @type {Element} */ target) {
+    let top = target;
+    while (top.parentElement && top.parentElement !== section) top = top.parentElement;
+    return top.parentElement === section ? top : null;
 }
-
-/** The controls of the sections on screen, and those of the whole page. */
-function mirrorControls(sections) {
-    unmirror();
-    const all = /** @type {HTMLElement[]} */ ([...document.querySelectorAll('[data-review-controls]')]);
-    const pageWide = all.filter((el) => !el.closest('[data-review-item]'));
-    const own = sections.map((section) => ({ section, sets: all.filter((el) => el.closest('[data-review-item]') === section) }));
-    const titled = own.filter((o) => o.sets.length).length > 1;
-    for (const el of pageWide) mirror(el, titled ? 'Every section' : '');
-    for (const { section, sets } of own) for (const el of sets) mirror(el, titled ? section.dataset.reviewTitle || section.dataset.reviewItem : '');
-    controlsBox.hidden = !controlsBody.childElementCount;
+/** Puts every container of the section's own controls directly above the component it drives; the Expected block goes under the component. */
+function placeControls(/** @type {HTMLElement} */ section) {
+    for (const box of /** @type {NodeListOf<HTMLElement>} */ (section.querySelectorAll('[data-review-controls]'))) {
+        const id = box.getAttribute('data-review-controls-for');
+        // A page that names no component (an older demo) still shows its controls: at the stage that follows them.
+        let target = id ? section.querySelector(`#${CSS.escape(id)}`) : null;
+        if (!id)
+            for (let el = box.nextElementSibling; el && !target; el = el.nextElementSibling)
+                if (/^(div|section|form|figure|ul|ol|table|article|dl)$/i.test(el.tagName) && !el.matches('[data-review-look], .cat-judge') && !/(readout|label|note|log|-expect(ed)?)\b/.test(el.className)) target = el;
+        const block = target && !box.contains(target) ? blockOf(section, target) : null;
+        box.classList.add('rv-ctl');
+        box.toggleAttribute('data-rv-orphan', !block);
+        if (!block) continue;
+        if (box.nextElementSibling !== block) block.before(box);
+        box.setAttribute('data-rv-ctl-title', 'Controls of this component');
+    }
+    // The component first: what the reviewer should see under the heading is the component with its controls, then the
+    // Expected block (a demo's own `*-expect`/`*-expected` box that sits directly in the section).
+    const expected = /** @type {HTMLElement | null} */ ([...section.children].find((el) => /-expect(ed)?$/.test(el.className)));
+    if (expected) section.insertBefore(expected, [...section.children].find((el) => el.matches('.cat-judge')) ?? null);
 }
 
 /* ---------------------------------------------------------- topic steps ---
@@ -1769,34 +1725,10 @@ function mirrorControls(sections) {
  */
 /** @type {{ pair: Pair, frame: HTMLIFrameElement, section: HTMLElement, tool: ReturnType<typeof mountBlockTools> }[]} */
 let lanes = [];
-/** The presses on the mirrored controls since the step was shown, replayed in a frame that loads later. */
-let pressedLog = [];
 /** @type {IntersectionObserver | null} */
 let laneWatch = null;
 /** Whether the reviewer moved the dialog's view since the topic step was shown; until then it stays at its top. */
 let laneMoved = false;
-
-/** The control `at` of the container that is the `which`-th `[data-review-controls]` of `doc`. */
-const controlIn = (doc, which, at) => actorsOf(doc.querySelectorAll('[data-review-controls]')[which] ?? doc.createElement('i'))[at];
-
-function applyPress(/** @type {Document} */ doc, press) {
-    const el = /** @type {HTMLInputElement | undefined} */ (controlIn(doc, press.which, press.at));
-    if (!el) return;
-    if (press.type === 'click') return el.click();
-    if (press.checked !== undefined) el.checked = press.checked;
-    else el.value = press.value;
-    el.dispatchEvent(new (doc.defaultView?.Event ?? Event)(press.type, { bubbles: true }));
-}
-
-/** A press on a mirrored control, played in every frame of the step. */
-function pressInLanes(/** @type {HTMLElement} */ source, /** @type {number} */ at, action) {
-    if (!steps[index]?.topic) return;
-    const which = [...document.querySelectorAll('[data-review-controls]')].indexOf(source);
-    if (which < 0) return;
-    const press = { which, at, ...action };
-    pressedLog.push(press);
-    for (const lane of lanes) if (lane.frame.contentDocument) applyPress(lane.frame.contentDocument, press);
-}
 
 /** The theme this browser keeps, read before the first frame stored its own (undefined: not read yet). */
 let keptTheme = /** @type {string | null | undefined} */ (undefined);
@@ -1862,9 +1794,8 @@ function laneFor(pair) {
                 sheet.href = new URL('review.css', import.meta.url).href;
                 doc.head.append(sheet);
                 const own = doc.createElement('style');
-                // The section's own controls are mirrored on top of the dialog, as on a theme step.
-                own.textContent =
-                    '[data-review-item] [data-review-controls], .cat-judge { display: none !important; } body { background: var(--background); }';
+                // The section's own controls stay in the frame, at their component (placeControls); the page's judge panel does not.
+                own.textContent = '.cat-judge { display: none !important; } body { background: var(--background); }';
                 doc.head.append(own);
                 const section = /** @type {HTMLElement | null} */ (doc.querySelector(`[data-review-item="${CSS.escape(pair.item.id)}"]`));
                 if (!section || !card.isConnected) return;
@@ -1872,7 +1803,9 @@ function laneFor(pair) {
                 card.querySelector('.rv-lane__head')?.append(tool.bar);
                 tools.push(tool);
                 lanes.push({ pair, frame, section, tool });
-                for (const press of pressedLog) applyPress(doc, press);
+                placeControls(section);
+                restoreLanePresses(section, pair.item.id);
+                doc.addEventListener('click', (event) => event.isTrusted && keepLanePress(pair.item.id, /** @type {Element} */ (event.target).closest?.('button')), true);
                 const View = doc.defaultView?.CustomEvent ?? CustomEvent;
                 section.dispatchEvent(new View('review:show', { bubbles: true }));
                 for (const choice of pair.item.choices) {
@@ -2270,20 +2203,16 @@ async function show(at) {
             }
         }
         stage.scrollTop = 0;
-        mirrorControls([...new Set(shownPairs.filter((pair) => pair.item).map((pair) => pair.item.section))]);
+        if (!step.topic) for (const pair of shownPairs) if (pair.item) placeControls(pair.item.section);
         list.replaceChildren(...(step.topic ? topicRows(shownPairs) : shownPairs.map((pair) => rowFor(pair, step.aspect ?? null))));
         paintUpdate(step);
-        // The demo's controls always stand open in the dialog: Kenny judges
-        // only there (2026-10-06 14:53: "alle knoppen die helpen om de demo te
-        // beoordelen ook in de dialog ... fix het"), never folded away.
-        controlsBox.open = true;
         $('[data-rv-intro]').textContent = step.topic
             ? "One topic, one theme per step: the topic's sections in this theme, then the same topic in the next theme. Everything on the left is approved together. Tick only what is wrong, and say why."
             : step.aspect
               ? 'One option at a time, large, its motion already playing. ←/→ flips, ↑ picks it and goes on, ↓ is None of these. Left hand (AZERTY): Q/S step the state, D the tone, F the next set, Z a live update, R replays, E speed, A tours the states by itself, Space pauses.'
               : 'Everything on the left is approved together. Tick only what is wrong, and say why.';
         $('#rv-keys').textContent = step.topic
-            ? 'Up approves this theme for the topic and goes on to the next open theme, Left/Right move between steps, V the previous version and L open and close of the section most in view, Escape closes. A state pressed on top plays in the frames below.'
+            ? 'Up approves this theme for the topic and goes on to the next open theme, Left/Right move between steps, V the previous version and L open and close of the section most in view, Escape closes. The controls of each component stand right above it.'
             : step.aspect
               ? 'Right hand: ←/→ flip · ↑ pick · ↓ none of these. Left hand (AZERTY home row): Q/S state back/on · D tone · F next set · Z live update · R replay · E speed · A tour · Space pause. PageUp/PageDown move between pages · Escape closes.'
               : 'Up approves the step and goes on to the next open one, Left/Right move between steps, V the previous version, L plays open and close, Escape closes. The theme switches by itself.';
@@ -2496,7 +2425,7 @@ document.addEventListener(
         // focused demo element can neither swallow it nor act on it as well.
         if (steps[index]?.aspect) {
             if (/^(Arrow(Left|Right|Up|Down)|Enter|NumpadEnter|Space|Page(Up|Down)|Key[A-Z])$/.test(event.code)) event.stopPropagation();
-        } else if (stage.contains(from) || controlsBox.contains(from)) {
+        } else if (stage.contains(from)) {
             // Off the aspect pages the demo keeps its own keys [fix-103].
             if (!/^Key[A-Z]$/.test(event.code)) return;
         }

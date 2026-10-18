@@ -17,6 +17,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import prettier from 'prettier';
+import { declareControls } from '../kpadopt56/controls-for.mjs';
 
 const here = new URL('./', import.meta.url);
 const root = new URL('../../', import.meta.url);
@@ -467,22 +468,19 @@ ${frame('Full width: room enough, no scrolling', 'k56f-seg-full', 'none', 'k56f-
 // Page assembly: all sections in the order of WANTED, with the new segmented section after the two bars it belongs to.
 const bodyParts = [];
 for (const spec of WANTED) {
-    bodyParts.push(section(spec));
-    if (spec.id === 'request-inspector') bodyParts.push(segmentedSection());
+    // Every control group names the component it drives and stands at it in the dialog (Kenny, 2026-10-18 07:09).
+    bodyParts.push(declareControls(section(spec), spec.id));
+    if (spec.id === 'request-inspector') bodyParts.push(declareControls(segmentedSection(), 'segmented-scroll'));
 }
 const body = bodyParts.join('\n\n');
-const shown = new Set(WANTED.map((s) => `${s.demo}/${s.id}`));
 const demos = Object.keys(DEMOS);
-/** Laid aside: the source demos' other sections stay on the page, hidden, because their scripts wire them by id. */
-const aside = demos
-    .flatMap((d) => (sources.get(d) ?? []).filter((s) => !shown.has(`${d}/${s.id}`)))
-    .map((s) => s.text.replace(/\bdata-review-(item|topic|topic-title|title|components|themes|choices|motion)=/g, 'data-kpadopt56-$1='))
-    .join('\n');
+// The page holds only its own sections (Kenny, 2026-10-18 07:11): no laid-aside sections of the source demos, so no foreign
+// control group or content reaches the review dialog; the demos' scripts skip a section that is not on the page.
 
 /** @type {string[]} */
 const problems = [];
 const seen = new Map();
-for (const m of `${body}\n${aside}`.matchAll(/\sid="([^"]+)"/g)) seen.set(m[1], (seen.get(m[1]) ?? 0) + 1);
+for (const m of body.matchAll(/\sid="([^"]+)"/g)) seen.set(m[1], (seen.get(m[1]) ?? 0) + 1);
 for (const [k, n] of seen) if (n > 1) problems.push(`the id "${k}" stands ${n} times`);
 
 // A page round id never collides and is never reused: keep the id while its answer is not received, else take a fresh one.
@@ -542,10 +540,6 @@ ${styles.map((s) => `        <link rel="stylesheet" href="${s}" />`).join('\n')}
                 </p>
             </header>
 ${body}
-
-            <div hidden style="display: none" data-kpadopt56-other>
-${aside}
-            </div>
         </main>
         <script type="application/json" data-review-round>
             ${JSON.stringify({ round: roundId, received })}

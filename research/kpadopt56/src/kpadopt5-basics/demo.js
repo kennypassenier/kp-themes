@@ -19,7 +19,7 @@ const say = (log, line) => {
 const wait = (/** @type {number} */ ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 /* ------------------------------------------------------------------ calm mode */
-{
+if (document.getElementById('kb-calm-readout')) {
     const readout = byId('kb-calm-readout');
     const scopeGroup = byId('kb-calm-scope');
     const show = () => {
@@ -47,7 +47,7 @@ const wait = (/** @type {number} */ ms) => new Promise((resolve) => setTimeout(r
 }
 
 /* ------------------------------------------------------------ shortcut engine */
-{
+if (document.getElementById('kb-keys-log')) {
     const log = byId('kb-keys-log');
     const list = byId('kb-keys-list');
     const rows = [...list.querySelectorAll('li')];
@@ -108,7 +108,7 @@ const wait = (/** @type {number} */ ms) => new Promise((resolve) => setTimeout(r
 }
 
 /* ------------------------------------------------------------------- the lede */
-{
+if (document.getElementById('kb-lede-card')) {
     const card = byId('kb-lede-card');
     const state = byId('kb-lede-states');
     const set = (/** @type {string} */ value) => {
@@ -126,7 +126,7 @@ const wait = (/** @type {number} */ ms) => new Promise((resolve) => setTimeout(r
 }
 
 /* ------------------------------------------------------------- problem alert */
-{
+if (document.getElementById('kb-problems-live')) {
     const fix = (/** @type {string} */ label, /** @type {string} */ key) => {
         const button = document.createElement('button');
         button.type = 'button';
@@ -238,7 +238,7 @@ const wait = (/** @type {number} */ ms) => new Promise((resolve) => setTimeout(r
 }
 
 /* -------------------------------------------------------------- flash button */
-{
+if (document.getElementById('kb-flash-ran')) {
     const sentence = {
         error: 'The client has no address on file.',
         remedy: 'Add one under Clients, then send the test again.',
