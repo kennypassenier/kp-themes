@@ -763,7 +763,7 @@ const keptOf = (/** @type {string} */ t, /** @type {Aspect} */ id) => PICKED[t]?
 // the attribute value its CSS answers to (round 1's are keyed 1, 2, 3).
 for (const file of [R2A, R2B, R2C, R3A])
     for (const [t, aspects] of Object.entries(file))
-        for (const [id, options] of Object.entries(aspects)) if (options.length >= 3) IDEAS[t][id] = options;
+        for (const [id, options] of Object.entries(aspects)) if (options.length >= 3 && IDEAS[t]) IDEAS[t][id] = options;
 const keyOf = (/** @type {string} */ t, /** @type {Aspect} */ id, /** @type {string} */ n) => IDEAS[t]?.[id]?.[Number(n) - 1]?.key ?? n;
 const MOST = 6;
 
