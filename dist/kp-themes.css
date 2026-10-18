@@ -18444,7 +18444,7 @@
 
     .kp-checklist__row {
         display: grid;
-        grid-template-columns: auto minmax(0, 1fr) auto;
+        grid-template-columns: auto minmax(0, 1fr) fit-content(50%);
         align-items: center;
         gap: var(--kp-space-md, 0.75rem);
         box-sizing: border-box;
@@ -18476,7 +18476,8 @@
         font-size: var(--kp-text-sm, 0.8125rem);
         font-variant-numeric: tabular-nums;
         text-align: end;
-        white-space: nowrap;
+        white-space: normal;
+        overflow-wrap: anywhere;
     }
 
     .kp-checklist__item[data-kp-checklist-checked] .kp-checklist__label {
