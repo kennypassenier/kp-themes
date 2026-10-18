@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3200 2133" width="3200" height="2133">
+<defs><linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f1530"/><stop offset="1" stop-color="#26346b"/></linearGradient></defs>
+<rect width="3200" height="2133" fill="url(#s)"/>
+<circle cx="1380" cy="508" r="177" fill="#fff" opacity=".7"/>
+<path d="M0 2133 L0 1437 L229 1345 L457 1348 L686 1238 L914 1174 L1143 1334 L1371 1390 L1600 1380 L1829 1437 L2057 1311 L2286 1180 L2514 1267 L2743 1298 L2971 1336 L3200 1473 L3200 2133Z" fill="#26346b" opacity="0.55"/><path d="M0 2133 L0 1674 L229 1586 L457 1567 L686 1516 L914 1381 L1143 1472 L1371 1600 L1600 1582 L1829 1639 L2057 1605 L2286 1422 L2514 1436 L2743 1510 L2971 1509 L3200 1639 L3200 2133Z" fill="#e2b04a" opacity="1"/><path d="M0 2133 L0 1709 L229 1698 L457 1844 L686 1870 L914 1832 L1143 1849 L1371 1741 L1600 1669 L1829 1774 L2057 1810 L2286 1831 L2514 1906 L2743 1811 L2971 1702 L3200 1744 L3200 2133Z" fill="#07091a" opacity="1"/>
+</svg>
