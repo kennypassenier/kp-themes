@@ -38547,6 +38547,16 @@
 }
 /* ── end t56-q2 fields ── */
 
+/* ── t56-q2 choose: the waiting picker's panel fits its room ── */
+@layer kp.signature {
+    /* The panel that stands for an open list (18 rem) reached 26 px past the 24 rem a picker's case keeps for it and covered the
+       next case's caption. 16 rem is still a list's height and ends inside the room. */
+    [data-theme='cyberpunk'] .kp-usual {
+        --kp-usual-panel-min: 16rem;
+    }
+}
+/* ── end t56-q2 choose ── */
+
 @layer kp.register {
     /* @kp-soft/themes — css/synthwave-register.css
    The synthwave register, 5.0.0 [S48, LIFT_PLAN row 1]: the horizon
@@ -44859,6 +44869,16 @@
     }
 }
 /* ── end t56-q2 updates ── */
+
+/* ── t56-q2 choose: the waiting picker's panel fits its room ── */
+@layer kp.signature {
+    /* The panel that stands for an open list (18 rem) reached 26 px past the 24 rem a picker's case keeps for it and covered the
+       next case's caption. 16 rem is still a list's height and ends inside the room. */
+    [data-theme='synthwave'] .kp-usual {
+        --kp-usual-panel-min: 16rem;
+    }
+}
+/* ── end t56-q2 choose ── */
 
 /* A share, 0 to 1 (a progress bar's, a meter's), is walked to its value on
    two registered copies, one on each mirror of the motion, so that a rise is
@@ -62548,6 +62568,16 @@
 }
 /* ── end t56-q2 updates ── */
 
+/* ── t56-q2 choose: the waiting picker's panel fits its room ── */
+@layer kp.signature {
+    /* The panel that stands for an open list (18 rem) reached 26 px past the 24 rem a picker's case keeps for it and covered the
+       next case's caption. 16 rem is still a list's height and ends inside the room. */
+    [data-theme='pastel'] .kp-usual {
+        --kp-usual-panel-min: 16rem;
+    }
+}
+/* ── end t56-q2 choose ── */
+
 /* The busy progress bar's breath, 0 (bare ground) to 1 (the full row),
    registered so the keyframes interpolate it; at the top level because
    Firefox does not register an @property inside a layer. */
@@ -68419,6 +68449,16 @@
     }
 }
 /* ── end t56-q2 confirm ── */
+
+/* ── t56-q2 choose: the waiting picker's panel fits its room ── */
+@layer kp.signature {
+    /* The panel that stands for an open list (18 rem) reached 26 px past the 24 rem a picker's case keeps for it and covered the
+       next case's caption. 16 rem is still a list's height and ends inside the room. */
+    [data-theme='forest'] .kp-usual {
+        --kp-usual-panel-min: 16rem;
+    }
+}
+/* ── end t56-q2 choose ── */
 
 /* The numbers deco's motion is made of, registered at the top level because
    Firefox does not register an @property inside a cascade layer; with no
@@ -92512,6 +92552,16 @@
     }
 }
 /* ── end t56-q2 fields ── */
+
+/* ── t56-q2 choose: the waiting picker's panel fits its room ── */
+@layer kp.signature {
+    /* The panel that stands for an open list (18 rem) reached 26 px past the 24 rem a picker's case keeps for it and covered the
+       next case's caption. 16 rem is still a list's height and ends inside the room. */
+    [data-theme='dark'] .kp-usual {
+        --kp-usual-panel-min: 16rem;
+    }
+}
+/* ── end t56-q2 choose ── */
 
 /* The numbers formal's motion is made of, registered at the top level
    because Firefox does not register an @property inside a cascade layer;
