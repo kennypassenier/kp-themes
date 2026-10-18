@@ -27,7 +27,7 @@ import { measured } from './paint.mjs';
 
 // Motion stays on here: this file reads animations or transitions, and the
 // suite runs with reduced motion otherwise (playwright.config.mjs).
-test.use({ reducedMotion: 'no-preference' });
+test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 
 const FIXTURE = '/tests/fixtures/remember.html';
 

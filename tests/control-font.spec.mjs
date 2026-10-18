@@ -65,14 +65,18 @@ test(
     },
 );
 
-test(
-    'no control on a review page takes the browser default font [fix-28]',
-    { tag: ['@sweep', '@component:catalogue'] },
-    async ({ page, baseURL }) => {
-        const root = new URL('../', import.meta.url).pathname;
-        await page.setViewportSize({ width: 1400, height: 1000 });
-        const unset = new Set();
-        for (const { href } of await blockPages(root)) {
+// One test per review page (as auto-lazy does): the single sweep walked all 144
+// pages in one 180 s budget and ran out at page 125 of 144 (SUITE_11_0_0_TRIAGE
+// row 75). The page list is read at load, so a new review page gets its test.
+const REVIEW_PAGES = await blockPages(new URL('../', import.meta.url).pathname);
+
+for (const { href } of REVIEW_PAGES) {
+    test(
+        `no control on ${href} takes the browser default font [fix-28]`,
+        { tag: ['@sweep', '@component:catalogue'] },
+        async ({ page, baseURL }) => {
+            await page.setViewportSize({ width: 1400, height: 1000 });
+            const unset = new Set();
             await page.goto(new URL(href, `${baseURL}/`).href, { waitUntil: 'load' });
             await forceDesktopFont(page);
             for (const theme of ['formal', 'nostromo']) {
@@ -103,7 +107,7 @@ test(
                 );
                 for (const control of found) unset.add(`${href} · ${theme} · ${control}`);
             }
-        }
-        expect([...unset]).toEqual([]);
-    },
-);
+            expect([...unset]).toEqual([]);
+        },
+    );
+}

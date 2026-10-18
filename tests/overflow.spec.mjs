@@ -55,7 +55,7 @@ import { BLOCK_CONTAINERS, audit, report } from './audit.mjs';
 
 // Motion stays on here: this file reads animations or transitions, and the
 // suite runs with reduced motion otherwise (playwright.config.mjs).
-test.use({ reducedMotion: 'no-preference' });
+test.use({ contextOptions: { reducedMotion: 'no-preference' } });
 
 /** @type {{overflow: {viewportWidths: number[], minBlockGap: number}}} */
 const CONFIG = JSON.parse(readFileSync(new URL('../gates/config.json', import.meta.url), 'utf8'));

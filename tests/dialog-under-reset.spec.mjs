@@ -14,7 +14,7 @@ import { expect, test } from '@playwright/test';
 const THEMES = /** @type {string[]} */ (JSON.parse(readFileSync(new URL('../themes/order.json', import.meta.url), 'utf8')));
 
 test.describe('a modal dialog opens centred under a reset [dialog-under-reset]', { tag: ['@component:overlays', '@sweep'] }, () => {
-    test.use({ reducedMotion: 'reduce' });
+    test.use({ contextOptions: { reducedMotion: 'reduce' } });
 
     test('in every theme, the dialog sits in the middle of the window', async ({ page }) => {
         await page.setViewportSize({ width: 1280, height: 800 });
