@@ -22130,12 +22130,18 @@
     }
 
     /* --- The shortcut engine's parts [kpadopt5] ---
- * The pending chord ("g …") near the bottom edge while the second key is awaited (js/shortcuts.js), the sheet's
- * dimmed row for a key that is not available now (with its reason), and the sheet's empty state at the sheet's own
- * footprint. Knobs [KT6]: `--kp-shortcuts-state-min` (14rem). */
+ * The pending chord ("g …") while the second key is awaited (js/shortcuts.js): in the middle of what is in view by
+ * default, or in the middle of its foot with `data-kp-shortcuts-place="bottom-centre"` (the engine's `hintPlace`, or the root's
+ * `data-kp-shortcuts-hint`), never at the top [toggles-r2-1018]. The sheet's dimmed row for a key that is not
+ * available now (with its reason), and the sheet's empty state at the sheet's own footprint.
+ * Knobs [KT6]: `--kp-shortcuts-state-min` (14rem); `--kp-shortcuts-view-top` (0px) and `--kp-shortcuts-view-height`
+ * (100dvh), the part of the page in view, for a page shown in a frame taller than its window. */
     .kp-shortcuts-pending {
+        --kp-shortcuts-hint-view-top: var(--kp-shortcuts-view-top, 0px);
+        --kp-shortcuts-hint-view-height: var(--kp-shortcuts-view-height, 100dvh);
         position: fixed;
-        inset-block-end: calc(var(--kp-space-lg, 1rem) + var(--kp-tabbar-rise, 0px));
+        inset-block-start: calc(var(--kp-shortcuts-hint-view-top) + var(--kp-shortcuts-hint-view-height) / 2);
+        translate: 0 -50%;
         inset-inline: 0;
         z-index: var(--kp-z-popover, 20);
         display: flex;
@@ -22150,6 +22156,13 @@
         background: var(--card);
         color: var(--card-foreground);
         font-size: var(--kp-text-sm, 0.8125rem);
+    }
+
+    .kp-shortcuts-pending[data-kp-shortcuts-place='bottom-centre'] {
+        inset-block-start: calc(
+            var(--kp-shortcuts-hint-view-top) + var(--kp-shortcuts-hint-view-height) - var(--kp-space-lg, 1rem) - var(--kp-tabbar-rise, 0px)
+        );
+        translate: 0 -100%;
     }
 
     .kp-shortcuts-pending[hidden] {
@@ -29744,25 +29757,34 @@
         flex-wrap: wrap;
     }
 
-    .kp-button[data-kp-toggle][aria-pressed='true'] {
-        background: var(--kp-toggle-on, var(--foreground));
-        border-color: var(--kp-toggle-on, var(--foreground));
-        color: var(--kp-toggle-on-ink, var(--background));
+    /* The state's paint is important on purpose [toggles-r2-1018]: every register paints `.kp-button` (its ground, its
+     * edge, its ink, often a gradient) in kp.register or kp.signature, and a later layer beats an earlier one whatever
+     * the selector, so in nine of the twelve themes a pressed toggle looked exactly like a released one (measured: the
+     * same background, colour, border and shadow in dark, cyberpunk, synthwave, forest, blueprint, brutalism, deco,
+     * nostromo and titanium). An important declaration of the earlier layer outranks a later layer's normal one, as the
+     * icon look's padding below. A theme still draws its own pressed face through the knobs (`--kp-toggle-on`,
+     * `--kp-toggle-on-ink`, `--kp-toggle-mixed`, as solstice does) and its own marks on top (formal's double rule). */
+    .kp-button[data-kp-toggle][aria-pressed='true'],
+    .kp-button[data-kp-toggle][data-kp-look][aria-pressed='true'] {
+        background: var(--kp-toggle-on, var(--foreground)) !important;
+        border-color: var(--kp-toggle-on, var(--foreground)) !important;
+        color: var(--kp-toggle-on-ink, var(--background)) !important;
     }
 
     .kp-button[data-kp-toggle][aria-pressed='true']:hover:not(:disabled, [aria-disabled='true']) {
-        background: color-mix(in oklab, var(--kp-toggle-on, var(--foreground)) 86%, var(--kp-toggle-on-ink, var(--background)));
+        background: color-mix(in oklab, var(--kp-toggle-on, var(--foreground)) 86%, var(--kp-toggle-on-ink, var(--background))) !important;
     }
 
     .kp-button[data-kp-toggle][aria-pressed='true']:active:not(:disabled, [aria-disabled='true']) {
-        background: color-mix(in oklab, var(--kp-toggle-on, var(--foreground)) 72%, var(--kp-toggle-on-ink, var(--background)));
+        background: color-mix(in oklab, var(--kp-toggle-on, var(--foreground)) 72%, var(--kp-toggle-on-ink, var(--background))) !important;
     }
 
-    .kp-button[data-kp-toggle][aria-pressed='mixed'] {
-        border-style: dashed;
-        border-color: var(--kp-toggle-on, var(--foreground));
-        background: var(--kp-toggle-mixed, color-mix(in oklab, var(--kp-toggle-on, var(--foreground)) 14%, var(--card)));
-        color: var(--foreground);
+    .kp-button[data-kp-toggle][aria-pressed='mixed'],
+    .kp-button[data-kp-toggle][data-kp-look][aria-pressed='mixed'] {
+        border-style: dashed !important;
+        border-color: var(--kp-toggle-on, var(--foreground)) !important;
+        background: var(--kp-toggle-mixed, color-mix(in oklab, var(--kp-toggle-on, var(--foreground)) 14%, var(--card))) !important;
+        color: var(--foreground) !important;
     }
 
     .kp-button[data-kp-toggle]:is(:disabled, [aria-disabled='true']) {
@@ -29863,7 +29885,9 @@
         content: '–';
     }
 
-    /* The hint row: always there, empty while the toggle is off. */
+    /* The hint row: always there and always holding its words, unseen while the toggle is off, so the button is as wide
+     * as its longest line from the start and pressing moves nothing beside it [toggles-r2-1018: the button grew from
+     * 120 to 232 px on the press and pushed the pin along]. */
     .kp-toggle__hint {
         flex: 1 0 100%;
         min-block-size: 1lh;
@@ -29872,8 +29896,18 @@
         text-align: center;
     }
 
+    .kp-button[data-kp-toggle]:not([aria-pressed='true']) > .kp-toggle__hint {
+        visibility: hidden;
+    }
+
+    /* The words in the middle of the button in both states (Kenny, 2026-10-18 18:42: "die tekst staat ook niet centraal
+     * (verticaal)"): the hint row under them is matched by the same room over them, so the words' centre is the box's
+     * centre whether the hint shows or not. Important for the same reason as the pressed face: registers set a button's
+     * block padding in a later layer. */
     .kp-button[data-kp-toggle]:has(> .kp-toggle__hint) {
-        padding-block: var(--kp-space-xs, 0.25rem);
+        --kp-toggle-hint-line: calc(var(--kp-text-xs, 0.75rem) * 1.3);
+        padding-block: calc(var(--kp-space-xs, 0.25rem) + var(--kp-toggle-hint-line)) var(--kp-space-xs, 0.25rem) !important;
+        min-block-size: 0 !important;
     }
 
     .kp-button[data-kp-toggle][data-kp-busy] > :not(.kp-button__busy),

@@ -18,6 +18,17 @@
 // is warned about at registration, not refused (`layoutGuard`, default `warn`). Two registrations of one key in one
 // scope are a fault: in development they throw and list both, elsewhere they log and the first one wins. Nothing runs on
 // import; the key listener is added with the first registration and removed with the last.
+//
+// The small cap a chord shows while it waits ("g …") stands in the middle of the screen by default; `bottom-centre`
+// puts it at the foot, as homelab had it (Kenny, 2026-10-18 18:42: "ik dacht dat die onderaan in het midden kwam, of
+// misschien moet die centraal in het midden komen te staan?"). The option is `data-kp-shortcuts-hint="centre |
+// bottom-centre"` on <html> or `configureShortcuts({ hintPlace })`, switched at runtime; never the top. A page that shows
+// only part of itself (a frame taller than what is in view) sets `--kp-shortcuts-view-top` and `--kp-shortcuts-view-height`
+// on the root, so the cap stands in what can be seen.
+//
+// A page embedded in another (a frame) can ask `shortcutClaims(event)` whether a key is the engine's before it hands the
+// key up, and hears `kp-shortcut-pending` on the document while a chord waits, so the page around it can send the next
+// key down (research/_review/review.js does both for the review dialog's lanes).
 
 import { getStrings } from './strings.js';
 
@@ -29,6 +40,10 @@ export const UNKNOWN_MS = 1500;
 export const SHORTCUTS_LIVE_SHEET = '[data-kp-shortcuts][data-kp-shortcuts-live]';
 /** Fired on the document, bubbling, when a registered shortcut ran: `{ keys, what }`. */
 export const SHORTCUT_EVENT = 'kp-shortcut-run';
+/** Fired on the document when a chord starts or stops waiting for its next key: `{ keys, waiting, ms }`. */
+export const SHORTCUT_PENDING_EVENT = 'kp-shortcut-pending';
+/** Where the chord's cap stands: the middle of the screen (default) or the middle of its foot. */
+export const SHORTCUT_HINT_PLACES = /** @type {const} */ (['centre', 'bottom-centre']);
 
 /** Keys that need AltGr on an AZERTY keyboard. */
 export const ALTGR_KEYS = Object.freeze(['[', ']', '{', '}', '@', '#', '\\', '|', '~', '€', '`', '^']);
@@ -57,6 +72,8 @@ const RESERVED = ['mod+k', '?'];
  * @property {boolean} [dev] throw on a conflict instead of logging it (default: on localhost)
  * @property {(message: string) => void} [onWarn] where warnings go (default the console)
  * @property {string[]} [groupOrder] the sheet's group order; others follow in registration order
+ * @property {'centre' | 'bottom-centre'} [hintPlace] where the chord's cap stands (default: the root's
+ *   `data-kp-shortcuts-hint`, else `centre`)
  */
 
 /** @type {Required<Pick<EngineOptions, 'chordMs' | 'layoutGuard' | 'typingSelector' | 'unknownHint'>> & EngineOptions} */
@@ -73,6 +90,7 @@ const config = {
  */
 export function configureShortcuts(next) {
     Object.assign(config, next);
+    placeHint();
     queueSheets();
 }
 
@@ -213,8 +231,40 @@ function showHint(text, role = 'status') {
     const modal = [...document.querySelectorAll('dialog')].filter((d) => d.matches(':modal')).pop();
     const home = modal ?? document.body;
     if (hint.parentElement !== home) home.append(hint);
+    placeHint();
     hint.textContent = text;
     hint.hidden = false;
+}
+
+/** The cap's place: the engine's option, else the root's attribute (read by the stylesheet as well), else centre. */
+function placeHint() {
+    if (!hint) return;
+    const wanted = config.hintPlace ?? document.documentElement.getAttribute('data-kp-shortcuts-hint') ?? 'centre';
+    hint.setAttribute('data-kp-shortcuts-place', SHORTCUT_HINT_PLACES.includes(/** @type {any} */ (wanted)) ? wanted : 'centre');
+}
+
+/** Tells the page whether a chord waits for its next key. */
+function announcePending() {
+    if (typeof document === 'undefined') return;
+    document.dispatchEvent(
+        new CustomEvent(SHORTCUT_PENDING_EVENT, { detail: { keys: pending?.shown ?? '', waiting: pending !== null, ms: pending ? config.chordMs : 0 } }),
+    );
+}
+
+/**
+ * Whether the engine would take this key: a chord waits for its next key, or a registered shortcut that is on screen
+ * starts with it (a letter not while a person types in a field). For a page embedded in another, which hands its
+ * keys up to the page around it unless they are its own.
+ * @param {KeyboardEvent} event
+ * @returns {boolean}
+ */
+export function shortcutClaims(event) {
+    if (!listening || event.isComposing) return false;
+    const now = event.timeStamp || Date.now();
+    if (pending && now - pending.at <= config.chordMs) return true;
+    const hits = [...entries].filter(scopeActive).filter((entry) => entry.steps[0] && matches(entry.steps[0], event));
+    if (hits.length === 0) return false;
+    return !typing(event.target) || hits.every((entry) => entry.steps[0].mods.includes('mod'));
 }
 
 function hideHint() {
@@ -226,6 +276,7 @@ function hideHint() {
 function chordHint(typed, unknown) {
     if (!hint) showHint('');
     if (!hint) return;
+    placeHint();
     hint.replaceChildren();
     for (const key of typed) {
         const cap = document.createElement('kbd');
@@ -251,6 +302,13 @@ function chordHint(typed, unknown) {
 
 /** @param {KeyboardEvent} event */
 function onKey(event) {
+    const before = pending;
+    handleKey(event);
+    if (pending !== before) announcePending();
+}
+
+/** @param {KeyboardEvent} event */
+function handleKey(event) {
     if (
         event.isComposing ||
         event.repeat ||
@@ -304,6 +362,7 @@ function onKey(event) {
         hintTimer = window.setTimeout(() => {
             pending = null;
             hideHint();
+            announcePending();
         }, config.chordMs);
         return;
     }
