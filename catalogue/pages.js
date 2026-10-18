@@ -184,7 +184,6 @@ export const PAGES = [
             // Kenny, 2026-10-18 (formal again): components he approved in formal whose shared package code changed afterwards (the refresh bar and request filter stay in their card, a scrolling segmented bar snaps and fades, the version badge and checklist detail wrap, entity actions fold into More, the chart's end labels stay inside the plot, the availability answers stand under the name), judged again in formal alone, generated from research/kpadopt56/src by research/kpadopt56-formal/build.mjs.
             {
                 href: 'research/kpadopt56-formal/demo.html',
-                rework: 'by-eye findings of 2026-10-18 being fixed (research/kpadopt56/EYE_FINDINGS.md); it joins the Agenda as soon as its part is done',
                 label: 'Approved in formal, changed since: judge it again',
                 about: 'Eleven components you approved in formal that look different now because the shared package code changed: bars that scroll sideways at phone width, version badges, checklist detail, entity card actions, chart labels and the availability grid. Each says what changed and what to check; a width switch shows 1280 and 390.',
             },
