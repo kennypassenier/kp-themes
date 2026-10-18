@@ -15509,7 +15509,7 @@
 
     .kp-checklist__row {
         display: grid;
-        grid-template-columns: auto minmax(0, 1fr) auto;
+        grid-template-columns: auto minmax(0, 1fr) fit-content(50%);
         align-items: center;
         gap: var(--kp-space-md, 0.75rem);
         box-sizing: border-box;
@@ -15541,7 +15541,8 @@
         font-size: var(--kp-text-sm, 0.8125rem);
         font-variant-numeric: tabular-nums;
         text-align: end;
-        white-space: nowrap;
+        white-space: normal;
+        overflow-wrap: anywhere;
     }
 
     .kp-checklist__item[data-kp-checklist-checked] .kp-checklist__label {
@@ -19720,8 +19721,16 @@
      * time to the next refresh), --kp-refresh-rule (the rule's thickness, 2px). */
     .kp-refresh {
         display: grid;
+        grid-template-columns: minmax(0, 1fr);
         gap: var(--kp-space-sm, 0.5rem);
         min-inline-size: 0;
+    }
+
+    /* The chooser may be narrower than its segments, so the track scrolls along its own line
+       (data-kp-segmented-overflow) and never pushes the card wider [t56-sharedfix-1018]. */
+    .kp-refresh__chooser {
+        min-inline-size: 0;
+        max-inline-size: 100%;
     }
 
     .kp-refresh__bar {
@@ -23001,6 +23010,7 @@
     .kp-inspector {
         container: kp-inspector / inline-size;
         display: grid;
+        grid-template-columns: minmax(0, 1fr);
         gap: var(--kp-space-sm, 0.5rem);
         min-inline-size: 0;
     }
@@ -23011,6 +23021,11 @@
         align-items: center;
         justify-content: space-between;
         gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-inspector__filter {
+        min-inline-size: 0;
+        max-inline-size: 100%;
     }
 
     .kp-inspector__count {
@@ -23145,6 +23160,24 @@
 
         .kp-inspector__time {
             min-inline-size: 0;
+        }
+    }
+
+    /* Narrower still, the row wraps whole items (a badge is never torn) and the path takes a line of its own. */
+    @container kp-inspector (max-width: 40rem) {
+        .kp-inspector__row {
+            display: inline-flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+        }
+
+        .kp-inspector__path {
+            order: 1;
+            flex: 1 0 100%;
+        }
+
+        .kp-inspector__time {
+            margin-inline-start: auto;
         }
     }
 
@@ -25766,6 +25799,11 @@
         min-block-size: 2.75rem;
     }
 
+    /* The row that carries answers puts them under the name, so the name keeps the whole line. */
+    .kp-availability__column-row:has(> .kp-availability__column-answers) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
     .kp-availability__column-answers {
         display: flex;
         flex-wrap: wrap;
@@ -26858,6 +26896,8 @@
         align-items: baseline;
         column-gap: var(--kp-version-gap, 0.4em);
         row-gap: 0;
+        max-inline-size: 100%;
+        box-sizing: border-box;
         font-variant-numeric: tabular-nums;
         /* A version breaks only where it was given a place to (after a dot, a hyphen, an underscore or a colon), never in a number. */
         overflow-wrap: normal;
@@ -26865,6 +26905,13 @@
 
     .kp-badge--version[data-kp-size='md'] {
         font-size: var(--kp-text-md, 1rem);
+    }
+
+    /* A part wider than the chip breaks inside the word rather than past the chip's edge; a normal version never gets there. */
+    .kp-version__from,
+    .kp-version__to {
+        min-inline-size: 0;
+        overflow-wrap: anywhere;
     }
 
     .kp-version__from {
@@ -27594,7 +27641,7 @@
 
     .kp-entity__actions {
         display: grid !important;
-        grid-template-columns: repeat(var(--kp-entity-cols, 4), minmax(0, 1fr));
+        grid-template-columns: repeat(var(--kp-entity-cols, 4), minmax(min-content, 1fr));
         gap: var(--kp-space-sm, 0.5rem);
         align-items: center;
         padding-block-start: var(--kp-entity-actions-gap, var(--kp-space-md, 0.75rem));
@@ -27610,6 +27657,10 @@
     .kp-entity__actions .kp-button,
     .kp-entity__actions .kp-menu-button {
         inline-size: 100%;
+    }
+
+    .kp-entity__actions .kp-button {
+        overflow-wrap: normal;
     }
 
     .kp-entity__actions > .kp-entity__retry {

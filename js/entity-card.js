@@ -18,7 +18,8 @@
 //   data-kp-entity-flags-max   how many flags show; the rest are an exact "+2" that opens the package's own menu (default 3)
 //   data-kp-entity-inline      the most actions that stand as buttons; the rest go in a "More" menu (default 3); a phone folds all.
 //                              The actions come only from the data: none means no actions row at all, and the columns are as
-//                              many as the grid's busiest card needs, the same for every card
+//                              many as the grid's busiest card needs, the same for every card; a button that does not fit the
+//                              card's width goes in "More" as well, for the whole grid, and comes back when the grid widens
 //   data-kp-entity-link        the name's link: a template with `{key}`; the whole card is its click target (one tab stop)
 //   data-kp-selectable         a tick at the start of the card (it is a row of a selection: `data-kp-row-key`, the keys j k x)
 //   data-kp-entity-mark        `idmark` (default, from the name), `icon` or `none`
@@ -144,6 +145,50 @@ function fitFlags(card, shown) {
             }
         }
     });
+}
+
+/** Grids (or lone cards) with a fit check already waiting for the next frame. @type {WeakSet<HTMLElement>} */
+const ACTIONS_QUEUED = new WeakSet();
+
+/**
+ * Move actions into "More" while a button of the grid does not fit its card, one button at a time, as soon as the cards are
+ * laid out: every column is at least as wide as its button (`minmax(min-content, 1fr)`), so a row that is too narrow runs past the
+ * card's edge, which is what is measured here. The count is the grid's, so the same action stands in the same column on every card.
+ * @param {HTMLElement} host the grid, or the card when it stands alone
+ * @param {number} inline how many actions stand as buttons now
+ */
+function fitActions(host, inline) {
+    if (inline <= 0 || ACTIONS_QUEUED.has(host)) return;
+    ACTIONS_QUEUED.add(host);
+    host.ownerDocument.defaultView?.requestAnimationFrame(() => {
+        ACTIONS_QUEUED.delete(host);
+        // Another pass has already taken a button out since this one was asked for.
+        if (!host.isConnected || Number(host.dataset.kpEntityFit ?? inline) < inline) return;
+        const cards = /** @type {HTMLElement[]} */ (host.matches(ENTITY_GRID) ? [...host.querySelectorAll(':scope > .kp-card--entity')] : [host]);
+        const tooWide = cards.some((card) => {
+            const row = slotOf(card, 'actions');
+            if (!row || row.hidden || row.clientWidth === 0 || card.dataset.kpState === 'error') return false;
+            const edge = row.getBoundingClientRect().right + 0.5;
+            return [...row.children].some((child) => child.getBoundingClientRect().right > edge);
+        });
+        if (!tooWide) return;
+        host.dataset.kpEntityFit = String(inline - 1);
+        redraw(cards);
+    });
+}
+
+/**
+ * Draw the given cards again from their last data, slot by slot as the signatures say.
+ * @param {readonly HTMLElement[]} cards
+ * @param {string[]} [slots] slots to draw anew whatever the signature says
+ */
+function redraw(cards, slots = ['actions']) {
+    for (const card of cards) {
+        const was = DRAWN.get(card);
+        if (!was) continue;
+        for (const name of slots) delete was.drawn[name];
+        setEntity(card, was.data);
+    }
 }
 
 /**
@@ -311,14 +356,17 @@ export function setEntity(card, data) {
 
     // 5. actions: at most a few inline, the rest in the package's menu; a failed card puts Retry here
     const narrow = card.closest(ENTITY_GRID)?.hasAttribute('data-kp-entity-narrow') ?? false;
-    const inline = narrow ? 0 : Math.max(0, Number(opt(card, 'data-kp-entity-inline') ?? 3));
+    const inlineAsked = narrow ? 0 : Math.max(0, Number(opt(card, 'data-kp-entity-inline') ?? 3));
+    // Fewer actions stand as buttons when they do not fit the card's width: the rest go in "More", so nothing is cut.
+    const fitHost = /** @type {HTMLElement} */ (card.closest(ENTITY_GRID) ?? card);
+    const inline = Math.min(inlineAsked, Number(fitHost.dataset.kpEntityFit ?? inlineAsked));
     // The buttons come only from the data: a card with no action has no actions row, and no space where it would be.
     const noActions = status !== 'error' && (data.actions ?? []).length === 0;
     if (noActions) card.setAttribute('data-kp-entity-actions', 'none');
     else card.removeAttribute('data-kp-entity-actions');
     slotOf(card, 'actions').hidden = noActions;
     // One set of columns for the whole grid, so the same action stands in the same column on every card.
-    const host = /** @type {HTMLElement} */ (card.closest(ENTITY_GRID) ?? card);
+    const host = fitHost;
     host.style.setProperty('--kp-entity-cols', String(columnsFor(host, inline)));
     slot('actions', { a: data.actions, inline, status }, (el) => {
         if (status === 'error') {
@@ -372,6 +420,8 @@ export function setEntity(card, data) {
             });
         }
     });
+
+    fitActions(host, inline);
 }
 
 /**
@@ -488,14 +538,10 @@ export function attachEntityCards(root = document) {
         const refit = () => {
             if (grid.clientWidth === lastWidth) return;
             lastWidth = grid.clientWidth;
-            for (const card of /** @type {HTMLElement[]} */ ([...grid.querySelectorAll(':scope > .kp-card--entity')])) {
-                delete card.dataset.kpFlagsFit;
-                const was = DRAWN.get(card);
-                if (was) {
-                    delete was.drawn.flags;
-                    setEntity(card, was.data);
-                }
-            }
+            delete grid.dataset.kpEntityFit;
+            const cards = /** @type {HTMLElement[]} */ ([...grid.querySelectorAll(':scope > .kp-card--entity')]);
+            for (const card of cards) delete card.dataset.kpFlagsFit;
+            redraw(cards, ['flags', 'actions']);
         };
         const fold = () => grid.toggleAttribute('data-kp-entity-narrow', grid.clientWidth > 0 && grid.clientWidth < 480);
         fold();
@@ -510,6 +556,7 @@ export function attachEntityCards(root = document) {
         undo.push(() => resize?.disconnect());
         const watch = new MutationObserver(() => {
             apply();
+            delete grid.dataset.kpEntityFit;
             for (const card of /** @type {HTMLElement[]} */ ([...grid.querySelectorAll(':scope > .kp-card--entity')])) {
                 const was = DRAWN.get(card);
                 if (!was) continue;
