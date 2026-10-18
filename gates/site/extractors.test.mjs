@@ -361,7 +361,7 @@ test('AR21: the knobs, their fallbacks and the families that read them', () => {
     // data names none), not by a stylesheet [scope-143]. --kp-sidenav-lead and --kp-sidenav-room are read by js/sidenav.js
     // (what the floating variant leaves beside the panel).
     // The four that no rule and no script reads yet stay listed: --kp-busy-opacity, --kp-inspector-min, --kp-week-mode and
-    // --kp-wheel-ease; --kp-steps is declared on the progress stripe and only named in a comment.
+    // --kp-wheel-ease; --kp-steps is declared on the progress stripe (css/components.css) and not read through var() there.
     assert.deepEqual(result.unread, [
         '--kp-busy-opacity',
         '--kp-chart-height',

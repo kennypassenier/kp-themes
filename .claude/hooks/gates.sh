@@ -122,6 +122,9 @@ gate verdicts node gates/check-verdicts.mjs || exit 1
 # a re-review shows only what is not approved yet, and the page's received rounds match the verdict register [KT7, lost-answer-1017]
 gate rereview node gates/check-rereview.mjs || exit 1
 
+# anything raised (menu, popover, hover card, drawer) keeps an opaque plate in every theme [states-1017]
+gate raised-plate node gates/check-raised-plate.mjs || exit 1
+
 # every theme answers every hook (S45, AR36)
 gate hooks node gates/check-hooks.mjs || exit 1
 
