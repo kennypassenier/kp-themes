@@ -1631,6 +1631,8 @@ registered custom property. light-breadcrumb "Ook weg". synthwave-reach
 retry button. laurels-badges "Met pictogram en Available on": the catalogue's
 platform badges carry a glyph and an "Available on" line. step-timing
 "Akkoord".
+*2026-10-19:* Kenny approved dark keys on every red alert in synthwave (page synth-alert-buttons, 00:50), superseding
+synthwave-reach's "Alleen Try again" part for buttons on a red alert.
 
 **scope-95 · The divider shapes go; a Look-at text no longer brings a block
 back.** Kenny, 2026-09-15, the dividers form, after asking why the dividers
