@@ -51024,6 +51024,16 @@
     }
 }
 
+/* ── The whole grid loading: one lintel, not one per day [t56-eye-1018] ──
+   While the whole calendar waits, the busy card over the grid carries the hoisted lintel; a day under it is only the paper,
+   its number readable. The lintel in every day's well struck through the numbers and said "hoisted" 31 times. A day that
+   loads on its own (the month grid, one day) keeps its own well. */
+@layer kp.signature {
+    [data-theme='brutalism'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']::after {
+        content: none;
+    }
+}
+
 /* The header's mega menu is held on screen while a transition on its panel runs
    (js/components.js settleClosing): this number is that transition, 1 open and 0
    shut, run over the panel's cut. At the top level because Firefox does not
@@ -74521,6 +74531,29 @@
     }
 }
 
+/* ── The whole grid loading: one pair of doors over it, not one pair in every day [t56-eye-1018] ──
+   The busy card over the grid is the lift doors; a day under it stands as lacquer with its number, so the seams and the
+   lozenges no longer cross the figures and the doors do not appear 36 times. A day that loads on its own keeps its doors. */
+@layer kp.signature {
+    [data-theme='deco'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading'] {
+        translate: none;
+        animation: none;
+    }
+
+    [data-theme='deco'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']::before,
+    [data-theme='deco'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']::after {
+        content: none;
+    }
+}
+
+/* A long answer in tight capitals needs air from the gold inlay above and below it: three lines at 12 px of padding put the
+   letters on the inlay [t56-eye-1018]. A one-line answer keeps its 56 px height; only a wrapped label grows. */
+@layer kp.signature {
+    [data-theme='deco'] .kp-focus-steps__choice {
+        padding-block: 0.75rem;
+    }
+}
+
 /* The pen's numbers [scope-143, Kenny 2026-10-07 23:41: the tracing pen is the
    anchor of the theme]. Registered at the top level because Firefox does not
    register an @property inside a cascade layer; with no registration every
@@ -80747,6 +80780,23 @@
         [data-theme='blueprint'] .kp-time__skeleton:not(.kp-skeleton--block) {
             animation: kp-sig-blueprint-frame var(--kp-sig-bp-loop) linear infinite;
         }
+    }
+}
+
+/* ── The calendar's busy card is a section ── [G16, t56-eye-1018]
+   The hatch is a section (waiting, leaving): the card that waits over the whole grid wears it as a band along its foot,
+   under the compass, never behind the words; its words are at reading size, not the tiny line they were. */
+@layer kp.signature {
+    [data-theme='blueprint'] .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) > .kp-calendar__busy {
+        padding-block-end: calc(var(--kp-space-md, 1rem) + 0.5rem);
+        background:
+            repeating-linear-gradient(45deg, hsl(from var(--primary) h s l / 0.55) 0 1px, transparent 1px 5px) 0 100% / 100% 0.5rem no-repeat,
+            var(--card);
+        box-shadow: 0 0 0 1px var(--border-strong);
+    }
+
+    [data-theme='blueprint'] .kp-calendar__busy-text {
+        font-size: var(--kp-text-md, 1rem);
     }
 }
 
