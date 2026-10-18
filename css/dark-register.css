@@ -2252,8 +2252,7 @@
             .kp-tiles[aria-busy='true'] > .kp-card,
             .kp-chart__state[data-kp-state='loading'],
             .kp-calendar--busy-whole > .kp-calendar__busy,
-            .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'],
-            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']
+            .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading']
         ) {
         position: relative;
         animation: none;
@@ -2268,8 +2267,7 @@
             .kp-tiles[aria-busy='true'] > .kp-card,
             .kp-chart__state[data-kp-state='loading'],
             .kp-calendar--busy-whole > .kp-calendar__busy,
-            .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'],
-            .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']
+            .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading']
         )::before {
         content: '';
         position: absolute;
@@ -2348,8 +2346,7 @@
                 .kp-tiles[aria-busy='true'] > .kp-card,
                 .kp-chart__state[data-kp-state='loading'],
                 .kp-calendar--busy-whole > .kp-calendar__busy,
-                .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading'],
-                .kp-calendar--busy-whole:has(> .kp-calendar__grid[aria-busy='true']) .kp-calendar__day[data-kp-tone='loading']
+                .kp-calendar:not(.kp-calendar--busy-days, .kp-calendar--busy-whole) .kp-calendar__day[data-kp-tone='loading']
             )::before {
             animation: kp-sig-dark-comet var(--kp-sig-dk-loop) linear infinite;
         }
