@@ -93,6 +93,7 @@
 import { resolveLocale } from './locale.js';
 import { DEFAULT_STRINGS, getStrings } from './strings.js';
 import { drawSparkline } from './kpi.js';
+import { statePlate } from './state-plate.js';
 
 /** A chart: `data-kp-chart` (a plot) or `data-kp-chart="spark"`. */
 export const CHART = '[data-kp-chart]';
@@ -1535,22 +1536,19 @@ function plotChart(host, group, locale, ctx) {
         const words = kind === 'loading' ? strings.loading : kind === 'error' ? (data.error ?? '') : strings.empty;
         if (kind === 'loading') box.append(h(doc, 'span', { class: 'kp-sr-only' }, words));
         else if (kind === 'error') {
-            // The failed plate: what failed, and a normal Retry under it (`kp-chart-retry`). The button goes with the state, so the
-            // focus moves to the plot first, as a card's Try again hands it to its stage.
-            const retry = h(doc, 'button', { type: 'button', class: 'kp-button kp-button--sm kp-chart__retry' }, strings.retry);
-            retry.addEventListener('click', () => {
-                plot.focus({ preventScroll: true });
-                host.dispatchEvent(new CustomEvent(CHART_RETRY_EVENT, { bubbles: true }));
-            });
+            // The failed plate is the package's own (`statePlate`: the destructive alert every other failed area uses, so each
+            // register dresses it): what failed, and a normal Retry under it (`kp-chart-retry`). The button goes with the state,
+            // so the focus moves to the plot first, as a card's Try again hands it to its stage.
             box.append(
-                h(
-                    doc,
-                    'div',
-                    { class: 'kp-chart__state-text' },
-                    h(doc, 'i', { class: 'kp-chart__dot', 'data-kp-tone': 'critical', 'aria-hidden': 'true' }),
-                    words,
-                ),
-                retry,
+                statePlate(doc, {
+                    kind: 'error',
+                    title: words,
+                    actionLabel: strings.retry,
+                    onAction: () => {
+                        plot.focus({ preventScroll: true });
+                        host.dispatchEvent(new CustomEvent(CHART_RETRY_EVENT, { bubbles: true }));
+                    },
+                }),
             );
         }
         else box.append(h(doc, 'div', { class: 'kp-chart__state-text' }, words));

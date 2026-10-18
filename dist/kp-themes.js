@@ -23460,20 +23460,16 @@ function plotChart(host, group, locale, ctx) {
     const words = kind === "loading" ? strings.loading : kind === "error" ? data.error ?? "" : strings.empty;
     if (kind === "loading") box.append(h(doc, "span", { class: "kp-sr-only" }, words));
     else if (kind === "error") {
-      const retry = h(doc, "button", { type: "button", class: "kp-button kp-button--sm kp-chart__retry" }, strings.retry);
-      retry.addEventListener("click", () => {
-        plot.focus({ preventScroll: true });
-        host.dispatchEvent(new CustomEvent(CHART_RETRY_EVENT, { bubbles: true }));
-      });
       box.append(
-        h(
-          doc,
-          "div",
-          { class: "kp-chart__state-text" },
-          h(doc, "i", { class: "kp-chart__dot", "data-kp-tone": "critical", "aria-hidden": "true" }),
-          words
-        ),
-        retry
+        statePlate(doc, {
+          kind: "error",
+          title: words,
+          actionLabel: strings.retry,
+          onAction: () => {
+            plot.focus({ preventScroll: true });
+            host.dispatchEvent(new CustomEvent(CHART_RETRY_EVENT, { bubbles: true }));
+          }
+        })
       );
     } else box.append(h(doc, "div", { class: "kp-chart__state-text" }, words));
     plot.replaceChildren(box);
@@ -24347,6 +24343,7 @@ var init_chart = __esm({
     init_locale();
     init_strings();
     init_kpi();
+    init_state_plate();
     CHART = "[data-kp-chart]";
     CHART_GROUP = "[data-kp-chart-group]";
     CHART_SELECT_EVENT = "kp-chart-select";
