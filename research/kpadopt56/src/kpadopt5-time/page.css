@@ -152,6 +152,26 @@
     gap: var(--kp-space-md, 1rem);
 }
 
+/* The opened list is placed against the window, so it opens downward or flips upward depending on where the reader has scrolled.
+   The frame keeps a list's height (15rem and its gap) of empty room on both sides of the field: either way the list stays inside
+   the frame and never covers the cases around it. */
+#dated .kt-frame--menu {
+    padding-block: 15.5rem;
+}
+
+/* The page opens still: the list that is already open at load shows its resting state, not the theme's arrival halfway through. */
+#kt-dated-open .kp-combobox__list {
+    animation: none;
+}
+
+/* A list cut through a row of text just above its field reads as clutter: in nostromo at phone width the first row wraps to
+   three lines, so the list ends after its third row instead of in the middle of the fourth. */
+@media (max-width: 600px) {
+    [data-theme='nostromo'] #kt-dated-open .kp-combobox__list {
+        --kp-combobox-list-max-height: 13rem;
+    }
+}
+
 /* A frame tall enough for an opened menu to stand in it. */
 .kt-frame--menu {
     min-block-size: 24rem;
