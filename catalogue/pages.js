@@ -95,6 +95,12 @@ export const PAGES = [
         pages: [
             // Kenny, 2026-10-19 (almanac on kp-themes 11.0.0), formal only.
             {
+                href: 'research/almanac-calendars/demo.html',
+                label: 'Almanac: the Calendars page',
+                about: 'The Calendars page rebuilt on the package: header with New calendar, counts that filter, the problems band, the calendars table with a typed delete, the new-calendar dialog, the profile files and a map of which source writes to which calendar. 7 sections, formal only, sample data.',
+            },
+            // Kenny, 2026-10-19 (almanac on kp-themes 11.0.0), formal only.
+            {
                 href: 'research/almanac-journal/demo.html',
                 label: 'Almanac: Journal and Sources on the Status page',
                 about: 'What Almanac shows on its Status page: the journal at a glance, the recent deliveries table with filters, live refresh and connection, and the sources with a reload that stays on the page. 4 sections, formal only, sample data.',

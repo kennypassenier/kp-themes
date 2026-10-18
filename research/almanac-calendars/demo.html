@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="almanac-calendars" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Almanac Calendars page on kp-themes 11.0.0: header, table, dialog, profile files and the uses map</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main ac-page">
+            <header class="ac-intro">
+                <h1>Almanac: the redesigned Calendars page</h1>
+                <p class="cat-intro">
+                    Almanac turns events from Home Assistant, the homelab, kyu and AI sessions into Google Calendar entries. This is its
+                    <b>Calendars</b> page rebuilt on kp-themes 11.0.0 in formal: the header and counts, the attention band, the calendars table with
+                    its typed delete, the new-calendar dialog, the profile files and the uses map (feat-ui-1). 7 sections, 7 pairs. The data is
+                    <b>sample data</b> apart from the version and the totals; each section says which parts are made up.
+                </p>
+            </header>
+
+            <section
+                class="ac-sec"
+                id="page-top"
+                data-review-item="page-top"
+                data-review-topic="page"
+                data-review-topic-title="Top of the Calendars page"
+                data-review-title="Calendars page: header and counts"
+                data-review-components="page-header kpi menu-button"
+                aria-labelledby="h-page-top"
+            >
+                <div class="ac-sec__head">
+                    <h2 id="h-page-top">Calendars page: header and counts</h2>
+                    <p>The page says what it is in one sentence, offers one main action (New calendar) and keeps the rare one (Reload profiles from disk) in an overflow menu; three counts under it each lead to the rows they count.</p>
+                </div>
+                <div class="ac-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Header:</b> the title <b>Calendars</b>, one sentence of what the page is for, the primary <b>New calendar</b> and a <b>More</b> menu holding <b>Reload profiles from disk</b> (with a line saying what it does). Nothing else competes with the primary button.</li>
+                        <li><b>Counts:</b> <b>Calendars 3</b>, <b>Sources 4</b>, <b>Profile files not served 1</b>, exact numbers, tiles of one height. Each count is a toggle that filters the rows it counts (press it: it reads <b>Filtering ×</b> and the line under the strip says which rows are shown; press again to clear); the not-served tile is the only warning tone. The fourth tile is a trend: events delivered per hour over 24 hours as a sample sparkline (sample data); point at it to read one hour. Press <b>Nothing yet</b> and all three read 0 with no warning.</li>
+                        <li><b>States:</b> <b>Loading</b> keeps the three tiles with a waiting value; <b>Failed</b> is one plate over the strip&rsquo;s whole footprint with a normal Retry (it reloads). <b>Menu: Open</b> shows the menu open at its button.</li>
+                        <li><b>Phone (390):</b> the actions move under the sentence, the tiles stack, nothing scrolls sideways and no label is cut.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">One header row, the primary button in formal&rsquo;s navy, the menu on an opaque plate at its button, three equal tiles with the number large and the words wrapping instead of cutting.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="page-top-component">
+                    <div role="group" aria-label="State of the counts"><button type="button" class="kp-button" aria-pressed="true" data-ac-ctl="page-top:state" data-ac-v="ready">Loaded</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="page-top:state" data-ac-v="loading">Loading</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="page-top:state" data-ac-v="empty">Nothing yet</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="page-top:state" data-ac-v="failed">Failed</button></div>
+                    <div role="group" aria-label="Overflow menu"><button type="button" class="kp-button" aria-pressed="true" data-ac-ctl="page-top:menu" data-ac-v="closed">Menu closed</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="page-top:menu" data-ac-v="open">Menu open</button></div>
+                    <div role="group" aria-label="Width"><button type="button" class="kp-button" aria-pressed="true" data-ac-ctl="page-top:width" data-ac-v="full">Full width (1280)</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="page-top:width" data-ac-v="phone">Phone (390)</button></div>
+                </div>
+                <div id="page-top-component" class="ac-stage" data-ac-width="full" data-ac-state="ready">
+                    <header class="kp-page-header">
+                        <div class="kp-page-header__inner">
+                            <div>
+                                <h1 class="kp-page-header__title">Calendars</h1>
+                                <p class="kp-page-header__description">
+                                    The Google calendars Almanac writes into, which source writes to which, and the profile files that make that so.
+                                </p>
+                            </div>
+                            <div class="kp-page-header__actions">
+                                <button type="button" class="kp-button kp-button--primary" data-ac-open-dialog>New calendar</button>
+                                <div class="kp-menu-button" data-kp-menu-button data-kp-key="ac-page-more">
+                                    <button type="button" class="kp-button">More ▾</button>
+                                    <div class="kp-menu kp-menu--rich" role="menu" aria-label="Other actions on this page" hidden>
+                                        <button type="button" role="menuitem" class="kp-menu__item" tabindex="-1" aria-labelledby="ac-mi-l1" aria-describedby="ac-mi-h1" data-kp-value="reload"><span class="kp-menu__label" id="ac-mi-l1">Reload profiles from disk</span><span class="kp-menu__hint" id="ac-mi-h1">Read every profile file again, without restarting the service</span></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                    <div class="kp-kpis" role="group" aria-label="Calendars at a glance" data-kp-kpis-columns="all 2 1" data-ac-kpis><button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="false" data-ac-kpi="calendars"><span class="kp-kpi__label">Calendars</span><span class="kp-kpi__hint" aria-hidden="true"><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering ×</span></span><span class="kp-kpi__value">3</span><span class="kp-kpi__trend">1 is used by no source</span></button><button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="false" data-ac-kpi="sources"><span class="kp-kpi__label">Sources</span><span class="kp-kpi__hint" aria-hidden="true"><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering ×</span></span><span class="kp-kpi__value">4</span><span class="kp-kpi__trend">1 token revoked</span></button><button type="button" class="kp-kpi kp-kpi--toggle" aria-pressed="false" data-ac-kpi="unserved" data-kp-tone="warning"><span class="kp-kpi__label">Profile files not served</span><span class="kp-kpi__hint" aria-hidden="true"><span data-kp-when="off">Filter</span><span data-kp-when="on">Filtering ×</span></span><span class="kp-kpi__value">1</span><span class="kp-kpi__trend">weekly-report.toml</span></button><div class="kp-kpi kp-kpi--trend"><span class="kp-kpi__label">Events delivered <span class="kp-kpi__label-note">per hour, sample data</span></span><span class="kp-kpi__value">38<small>today</small></span><span class="kp-kpi__trend">Busiest hour 7 events at 19:00</span><figure class="kp-kpi__chart" data-kp-chart="spark" data-kp-spark-head="none" data-kp-spark-axis="relative" aria-label="Events delivered, last 24 hours (sample data)"><script type="application/json" data-kp-chart-data>{"unit":"events","digits":0,"series":[{"label":"Events delivered","start":1792328400000,"step":3600000,"values":[0,1,0,0,2,3,1,0,0,4,6,3,2,1,0,0,2,5,7,4,2,1,1,0]}]}</script></figure></div></div>
+                    <p class="ac-filter-line kp-text-muted" role="status" data-ac-filter-line>Showing every row. Press a count to show only the rows it counts.</p>
+                    <p class="ac-sample kp-text-muted">Sample data: the calendar ids, the token and use figures and every source except home-assistant are made up.</p>
+                </div>
+            </section>
+
+            <section
+                class="ac-sec"
+                id="attention"
+                data-review-item="attention"
+                data-review-topic="page"
+                data-review-title="Attention band: what needs a person"
+                data-review-components="attention flash-button toast"
+                aria-labelledby="h-attention"
+            >
+                <div class="ac-sec__head">
+                    <h2 id="h-attention">Attention band: what needs a person</h2>
+                    <p>Standing problems sit in one band under the counts, worst first, each with the action that fixes it; an action Almanac refuses answers with a toast and leaves the problem where it is.</p>
+                </div>
+                <div class="ac-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Both:</b> <b>Google Calendar cannot be reached</b> (critical, destructive tone) first, then <b>1 profile file is not being served</b> (warning). Each has one fix button at its end: <b>Check again</b> and <b>Reload profiles from disk</b>.</li>
+                        <li><b>Press a fix button</b> with <b>Fix works</b> chosen: the button shows busy, then a short <b>Done</b>, and the problem leaves the band (the Problems row follows). Each answer raises its own toast flavour: <b>Fix works</b> a success toast, <b>Nothing changed</b> an info toast, <b>Partly done</b> a warning toast (the problem stays), <b>Fix is refused</b> an error toast saying why and what to do. A refused <b>Delete</b> in the Calendars table raises the destructive flavour.</li>
+                        <li><b>Google only / File only / None:</b> the band holds one problem or nothing; with none, the band takes no space and the line under it moves up.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal&rsquo;s alert plates: red for critical with its icon, amber for the warning; the button sits at the end of each plate and text keeps air from the plate&rsquo;s edge. The toast is an opaque plate.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="attention-component">
+                    <div role="group" aria-label="Problems"><button type="button" class="kp-button" aria-pressed="true" data-ac-ctl="attention:problems" data-ac-v="both">Both</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="attention:problems" data-ac-v="google">Google only</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="attention:problems" data-ac-v="file">File only</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="attention:problems" data-ac-v="none">None</button></div>
+                    <div role="group" aria-label="What the fix buttons get back" data-review-latent><button type="button" class="kp-button" aria-pressed="true" data-ac-ctl="attention:fix" data-ac-v="works">Fix works</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="attention:fix" data-ac-v="same">Nothing changed</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="attention:fix" data-ac-v="partly">Partly done</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="attention:fix" data-ac-v="refused">Fix is refused</button></div>
+                </div>
+                <div id="attention-component" class="ac-stage">
+                    <div class="kp-attention" role="region" aria-label="Needs attention" data-ac-attention></div>
+                    <p class="ac-below kp-text-muted">The calendars card follows here.</p>
+                    <template data-ac-toasts><div class="kp-toast kp-toast--success" data-ac-toast="success">Done.</div><div class="kp-toast kp-toast--info" data-ac-toast="info">Nothing changed.</div><div class="kp-toast kp-toast--warning" data-ac-toast="warning">Partly done.</div><div class="kp-toast kp-toast--error" data-ac-toast="error">It did not work.</div><div class="kp-toast kp-toast--destructive" data-ac-toast="destructive">A delete was refused.</div></template>
+                    <p class="ac-sample kp-text-muted">Sample data: the calendar ids, the token and use figures and every source except home-assistant are made up.</p>
+                </div>
+            </section>
+
+            <section
+                class="ac-sec"
+                id="calendars-table"
+                data-review-item="calendars-table"
+                data-review-topic="calendars"
+                data-review-topic-title="Calendars table and delete"
+                data-review-title="Calendars table"
+                data-review-components="datatable code hovercard disabled-reason"
+                aria-labelledby="h-calendars-table"
+            >
+                <div class="ac-sec__head">
+                    <h2 id="h-calendars-table">Calendars table</h2>
+                    <p>Every calendar the service account sees: its name, its id (one click copies it), the sources that write to it, and a delete that is only possible when nothing writes there.</p>
+                </div>
+                <div class="ac-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Filled:</b> three rows. The id is a code cell with a Copy button. <b>Used by</b> shows one tag per source; point at (or Tab to) a tag and a card says its token state, when it was last used and how many events it posted. <b>Delete</b> stands in the last column on every row: enabled for <b>almanac-test</b>, disabled for the two in use, and pointing at a disabled one says <b>Used by home-assistant…</b>.</li>
+                        <li><b>Delete almanac-test:</b> a dialog asks you to type the name, says what is lost (<b>every event on it</b>) and keeps Delete off until the name is exact. With <b>Server refuses</b> the row stays and a toast says why; with <b>Server accepts</b> the row leaves at once.</li>
+                        <li><b>Sorting:</b> a click on a header sorts, another header adds a key; the choice is remembered. <b>Phone (390):</b> the rows become cards, the Delete button keeps its place at the foot of each.</li>
+                        <li><b>States</b> fill the table&rsquo;s whole footprint: <b>Loading</b> the theme&rsquo;s busy card, <b>Empty</b> a plate with a drawing and <b>New calendar</b>, <b>Failed</b> a plate with a normal <b>Try again</b>.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">A hairline table on formal&rsquo;s white, the id in mono on a quiet ground, tags as hairline pills, the destructive button outlined in red. The states keep the loaded height.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="calendars-table-component">
+                    <div role="group" aria-label="State"><button type="button" class="kp-button" aria-pressed="true" data-ac-ctl="calendars-table:state" data-ac-v="ready">Filled</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="calendars-table:state" data-ac-v="loading">Loading</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="calendars-table:state" data-ac-v="empty">Empty</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="calendars-table:state" data-ac-v="failed">Failed</button></div>
+                    <div role="group" aria-label="What the server says to a delete" data-review-latent><button type="button" class="kp-button" aria-pressed="true" data-ac-ctl="calendars-table:server" data-ac-v="accepts">Server accepts</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="calendars-table:server" data-ac-v="refuses">Server refuses</button></div>
+                    <div role="group" aria-label="Hover card on home-assistant"><button type="button" class="kp-button" aria-pressed="true" data-ac-ctl="calendars-table:card" data-ac-v="closed">Closed</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="calendars-table:card" data-ac-v="open">Open</button></div>
+                    <div role="group" aria-label="Width"><button type="button" class="kp-button" aria-pressed="true" data-ac-ctl="calendars-table:width" data-ac-v="full">Full width (1280)</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="calendars-table:width" data-ac-v="phone">Phone (390)</button></div>
+                </div>
+                <section id="calendars-table-component" class="kp-card ac-card ac-stage" data-ac-width="full" aria-labelledby="ac-cal-title">
+                    <div class="kp-card__header"><h3 class="kp-card__title" id="ac-cal-title">Calendars</h3></div>
+                    <div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-remember="almanac-calendars" data-kp-sort-multi="click" data-kp-page-sizes="none" data-kp-busy-overlay data-ac-table>
+                        <div class="kp-datatable__bar">
+                            <p class="kp-datatable__status" data-kp-datatable-status role="status"></p>
+                            <button type="button" class="kp-button kp-button--ghost kp-button--sm" data-kp-datatable-sort-reset>Clear the sort</button>
+                        </div>
+                        <div class="kp-table-wrap">
+                            <table class="kp-table">
+                                <caption class="kp-sr-only">Calendars the service account can see</caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" data-kp-sort="text">Name</th>
+                                        <th scope="col">Calendar id</th>
+                                        <th scope="col" data-kp-sort="number">Used by</th>
+                                        <th scope="col"><span class="kp-sr-only">Actions</span></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+<tr data-kp-row-key="huishouden">
+<td data-label="Name" data-kp-sort-value="Almanac · Huishouden">Almanac · Huishouden</td>
+<td data-label="Calendar id"><figure class="kp-code kp-code--cell" data-kp-code aria-label="Calendar id of Almanac · Huishouden"><pre class="kp-code__body"><code>c_4d1f09b2a7e35c68@group.calendar.google.com</code></pre></figure></td>
+<td data-label="Used by" data-kp-sort-value="1"><ul class="kp-tag-list" aria-label="Sources that write to Almanac · Huishouden"><li class="kp-tag" tabindex="0" data-kp-hovercard="home-assistant: token active. Last used 19/10/2026 13:48. 128 events posted.">home-assistant</li></ul></td>
+<td data-label="Actions" class="kp-text-end"><span class="kp-row-actions"><button type="button" class="kp-button kp-button--destructive kp-button--sm" data-kp-destructive data-kp-confirm="Delete the calendar Almanac · Huishouden?" data-kp-confirm-type="Almanac · Huishouden" data-kp-confirm-loses="ac-lose-huishouden" data-kp-confirm-label="Delete calendar" data-ac-delete="huishouden" disabled data-kp-disabled-reason="Used by home-assistant. Delete that source first, on the Sources page.">Delete</button></span></td>
+</tr>
+<tr data-kp-row-key="infra">
+<td data-label="Name" data-kp-sort-value="Almanac · Infra">Almanac · Infra</td>
+<td data-label="Calendar id"><figure class="kp-code kp-code--cell" data-kp-code aria-label="Calendar id of Almanac · Infra"><pre class="kp-code__body"><code>c_91ab33e07f5d2c14@group.calendar.google.com</code></pre></figure></td>
+<td data-label="Used by" data-kp-sort-value="3"><ul class="kp-tag-list" aria-label="Sources that write to Almanac · Infra"><li class="kp-tag" tabindex="0" data-kp-hovercard="homelab: token active. Last used 18/10/2026 22:10. 41 events posted.">homelab</li><li class="kp-tag" tabindex="0" data-kp-hovercard="kyu: token active. Last used 19/10/2026 07:30. 17 events posted.">kyu</li><li class="kp-tag" tabindex="0" data-kp-hovercard="claude-sessions: token revoked, so posts are refused. Last used 02/10/2026 09:12. 9 events posted.">claude-sessions</li></ul></td>
+<td data-label="Actions" class="kp-text-end"><span class="kp-row-actions"><button type="button" class="kp-button kp-button--destructive kp-button--sm" data-kp-destructive data-kp-confirm="Delete the calendar Almanac · Infra?" data-kp-confirm-type="Almanac · Infra" data-kp-confirm-loses="ac-lose-infra" data-kp-confirm-label="Delete calendar" data-ac-delete="infra" disabled data-kp-disabled-reason="Used by homelab, kyu, claude-sessions. Delete those sources first, on the Sources page.">Delete</button></span></td>
+</tr>
+<tr data-kp-row-key="test">
+<td data-label="Name" data-kp-sort-value="almanac-test">almanac-test</td>
+<td data-label="Calendar id"><figure class="kp-code kp-code--cell" data-kp-code aria-label="Calendar id of almanac-test"><pre class="kp-code__body"><code>c_0e7b5a6c13d94f82@group.calendar.google.com</code></pre></figure></td>
+<td data-label="Used by" data-kp-sort-value="0"><span class="kp-text-muted">No source writes here</span></td>
+<td data-label="Actions" class="kp-text-end"><span class="kp-row-actions"><button type="button" class="kp-button kp-button--destructive kp-button--sm" data-kp-destructive data-kp-confirm="Delete the calendar almanac-test?" data-kp-confirm-type="almanac-test" data-kp-confirm-loses="ac-lose-test" data-kp-confirm-label="Delete calendar" data-ac-delete="test">Delete</button></span></td>
+</tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="kp-empty" data-kp-datatable-empty hidden></div>
+                    </div>
+<template id="ac-lose-huishouden"><ul class="kp-type-confirm__list"><li>Every event on it: 212 events</li><li>The calendar itself, for everyone it is shared with</li></ul></template>
+<template id="ac-lose-infra"><ul class="kp-type-confirm__list"><li>Every event on it: 87 events</li><li>The calendar itself, for everyone it is shared with</li></ul></template>
+<template id="ac-lose-test"><ul class="kp-type-confirm__list"><li>Every event on it: 3 events</li><li>The calendar itself, for everyone it is shared with</li></ul></template>
+                    <p class="ac-sample kp-text-muted">Sample data: the calendar ids, the token and use figures and every source except home-assistant are made up.</p>
+                </section>
+            </section>
+
+            <section
+                class="ac-sec"
+                id="calendar-delete"
+                data-review-item="calendar-delete"
+                data-review-topic="calendars"
+                data-review-title="Deleting a calendar: type its name"
+                data-review-components="type-confirm dialog"
+                aria-labelledby="h-calendar-delete"
+            >
+                <div class="ac-sec__head">
+                    <h2 id="h-calendar-delete">Deleting a calendar: type its name</h2>
+                    <p>Deleting a calendar removes every event on it, so the dialog says that and asks for the calendar&rsquo;s exact name; the server can still refuse, and then nothing changes.</p>
+                </div>
+                <div class="ac-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>The dialog</b> shows <b>What you lose</b> (<b>every event on it</b> with its count), the name to type in code, the rule (<b>capitals count</b>) and a status line that is always there, so nothing moves. <b>Delete calendar</b> is off until the name matches.</li>
+                        <li><b>Typed:</b> nothing typed leaves the status empty; <b>Wrong name</b> says it does not match (and still keeps Delete off); <b>Right name</b> shows a success badge and turns Delete on. A name with spaces and a middle dot (<b>Almanac · Huishouden</b>) must be typed exactly.</li>
+                        <li><b>Delete calendar</b> with <b>Server accepts</b>: busy, then the dialog says it is deleted. With <b>Server refuses</b>: a toast says a source started using the calendar a moment ago; the dialog stays so nothing is lost by accident.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal&rsquo;s dialog plate with a hairline, the typed name in mono, a quiet rule line and a red Delete that is clearly off until the match; no text touches the plate edge.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="calendar-delete-component">
+                    <div role="group" aria-label="Calendar to delete"><button type="button" class="kp-button" aria-pressed="true" data-ac-ctl="calendar-delete:calendar" data-ac-v="test">almanac-test</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="calendar-delete:calendar" data-ac-v="huishouden">Almanac · Huishouden</button></div>
+                    <div role="group" aria-label="What is typed"><button type="button" class="kp-button" aria-pressed="true" data-ac-ctl="calendar-delete:typed" data-ac-v="nothing">Nothing typed</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="calendar-delete:typed" data-ac-v="wrong">Wrong name</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="calendar-delete:typed" data-ac-v="right">Right name</button></div>
+                    <div role="group" aria-label="What the server says" data-review-latent><button type="button" class="kp-button" aria-pressed="true" data-ac-ctl="calendar-delete:server" data-ac-v="accepts">Server accepts</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="calendar-delete:server" data-ac-v="refuses">Server refuses</button></div>
+                </div>
+                <div id="calendar-delete-component" class="ac-stage">
+                    <dialog class="kp-dialog kp-confirm ac-inplace" open aria-labelledby="ac-del-title" aria-describedby="ac-del-desc" data-ac-delete-dialog>
+                        <h2 class="kp-dialog__title" id="ac-del-title">Delete the calendar almanac-test?</h2>
+                        <p class="kp-dialog__description" id="ac-del-desc">This cannot be undone. Cancel leaves everything as it is.</p>
+                        <div data-ac-type-block></div>
+                        <p class="ac-result kp-text-muted" role="status" data-ac-result></p>
+                        <div class="kp-dialog__actions">
+                            <button type="button" class="kp-button" data-ac-del-cancel>Cancel</button>
+                            <button type="button" class="kp-button kp-button--destructive" data-ac-del-go disabled data-kp-disabled-reason="Type the calendar name first.">Delete calendar</button>
+                        </div>
+                    </dialog>
+                    <p class="ac-sample kp-text-muted">Sample data: the calendar ids, the token and use figures and every source except home-assistant are made up.</p>
+                </div>
+            </section>
+
+            <section
+                class="ac-sec"
+                id="new-calendar"
+                data-review-item="new-calendar"
+                data-review-topic="dialog"
+                data-review-topic-title="New calendar dialog"
+                data-review-title="New calendar dialog"
+                data-review-components="dialog form"
+                aria-labelledby="h-new-calendar"
+            >
+                <div class="ac-sec__head">
+                    <h2 id="h-new-calendar">New calendar dialog</h2>
+                    <p>Making a calendar is rare, so it lives in a dialog opened from the header: a name, a note on who it is shared with, and a refusal for a blank name.</p>
+                </div>
+                <div class="ac-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Open:</b> a dialog with a title, one sentence, two sections (<b>Name</b> and <b>Sharing</b>), and the actions <b>Cancel</b> and <b>Make and share</b>. <b>Closed</b> shows the <b>New calendar</b> button, which opens the same dialog for real.</li>
+                        <li><b>Blank name refused:</b> pressing Make with an empty name does not go on; the field gets a red error, a summary names it and the focus lands on it. <b>Filled</b> has no error. <b>Making it</b> shows the busy button; <b>Refused by Google</b> answers with a toast and leaves the name typed.</li>
+                        <li><b>Owner not set:</b> Almanac cannot make calendars (nobody would see one); the form is off and the button says why when pointed at.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal&rsquo;s dialog: hairline plate, section headings in small caps weight, the required mark beside the label, the error in red under the field; no text against the edge.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="new-calendar-component">
+                    <div role="group" aria-label="Form"><button type="button" class="kp-button" aria-pressed="true" data-ac-ctl="new-calendar:form" data-ac-v="empty">Empty</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="new-calendar:form" data-ac-v="blank">Blank name refused</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="new-calendar:form" data-ac-v="filled">Filled</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="new-calendar:form" data-ac-v="making">Making it</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="new-calendar:form" data-ac-v="refused">Refused by Google</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="new-calendar:form" data-ac-v="owner">Owner not set</button></div>
+                    <div role="group" aria-label="Dialog"><button type="button" class="kp-button" aria-pressed="true" data-ac-ctl="new-calendar:dialog" data-ac-v="open">Open</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="new-calendar:dialog" data-ac-v="closed">Closed</button></div>
+                </div>
+                <div id="new-calendar-component" class="ac-stage" data-ac-dialog="open">
+                    <div class="ac-closed"><button type="button" class="kp-button kp-button--primary" data-ac-open-dialog>New calendar</button></div>
+                    <dialog class="kp-dialog ac-inplace" open aria-labelledby="ac-new-title" aria-describedby="ac-new-desc" data-ac-new-dialog>
+<h2 class="kp-dialog__title" id="ac-new-title">New calendar</h2>
+<p class="kp-dialog__description" id="ac-new-desc">Almanac makes the calendar in Google and shares it with you.</p>
+<form class="kp-form" data-kp-form novalidate data-ac-new-form>
+<div class="kp-form__summary" data-kp-form-summary tabindex="-1" hidden></div>
+<div class="kp-dialog__body">
+<section class="kp-dialog__section">
+<h3 class="kp-dialog__heading">Name</h3>
+<div class="kp-field">
+<label class="kp-field__label" for="ac-new-name">Calendar name <span class="kp-field__required">required</span></label>
+<input class="kp-field__input" id="ac-new-name" name="name" required autocomplete="off" aria-describedby="ac-new-help" placeholder="Household" />
+<span class="kp-field__help" id="ac-new-help">It shows in Google Calendar exactly as typed.</span>
+<span class="kp-field__error" data-kp-field-error hidden></span>
+</div>
+</section>
+<section class="kp-dialog__section">
+<h3 class="kp-dialog__heading">Sharing</h3>
+<p class="kp-dialog__note" data-ac-sharing>The calendar is shared with the owner Almanac is set up for, so it shows up in their Google Calendar at once.</p>
+</section>
+</div>
+<div class="kp-dialog__actions">
+<button type="button" class="kp-button" data-ac-new-cancel>Cancel</button>
+<button type="submit" class="kp-button kp-button--primary" data-kp-submit data-ac-new-go data-kp-disabled-reason="Almanac cannot make calendars: the owner is not set.">Make and share</button>
+</div>
+</form>
+                    </dialog>
+                    <p class="ac-sample kp-text-muted">Sample data: the calendar ids, the token and use figures and every source except home-assistant are made up.</p>
+                </div>
+            </section>
+
+            <section
+                class="ac-sec"
+                id="profile-files"
+                data-review-item="profile-files"
+                data-review-topic="profiles"
+                data-review-topic-title="Profile files"
+                data-review-title="Profile files: not served and served"
+                data-review-components="problems health datatable card-state"
+                aria-labelledby="h-profile-files"
+            >
+                <div class="ac-sec__head">
+                    <h2 id="h-profile-files">Profile files: not served and served</h2>
+                    <p>Each source has a mapping profile on disk; a file Almanac cannot use is a problem with its reason and fix, and the files it does serve show a health dot.</p>
+                </div>
+                <div class="ac-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Filled (1 file):</b> a problem plate <b>weekly-report.toml is not being served</b> with <b>Why</b> and <b>What now</b> in plain words and a <b>Delete the file…</b> button that asks for the file name. Under it, four served files with a dot: three green <b>Served</b>, one amber <b>Served, token revoked</b>.</li>
+                        <li><b>3 files</b> shows three problems, worst first, each with its own delete; <b>None</b> shows only the served files and a quiet line that every file is served.</li>
+                        <li><b>States:</b> <b>Loading</b> the busy card over the whole card, <b>Empty</b> a plate with a drawing (no profile files yet), <b>Failed</b> a plate with a normal Try again (the folder could not be read). Each keeps the loaded height.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Problem plates in formal&rsquo;s amber with the label words in bold; the health dot always beside its words, never colour alone; the table in hairlines under the problems.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="profile-files-component">
+                    <div role="group" aria-label="State"><button type="button" class="kp-button" aria-pressed="true" data-ac-ctl="profile-files:state" data-ac-v="ready">Filled</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="profile-files:state" data-ac-v="loading">Loading</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="profile-files:state" data-ac-v="empty">Empty</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="profile-files:state" data-ac-v="failed">Failed</button></div>
+                    <div role="group" aria-label="Files not served"><button type="button" class="kp-button" aria-pressed="true" data-ac-ctl="profile-files:unserved" data-ac-v="one">1 file</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="profile-files:unserved" data-ac-v="three">3 files</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="profile-files:unserved" data-ac-v="none">None</button></div>
+                </div>
+                <section id="profile-files-component" class="kp-card ac-card ac-stage" data-kp-state="ready" data-kp-loading-words="Reading the profile files" aria-labelledby="ac-prof-title">
+                    <div class="kp-card__header"><h3 class="kp-card__title" id="ac-prof-title">Profile files</h3></div>
+                    <p class="kp-card__body">Every source has a mapping profile in the profiles folder; a profile placed there by hand is picked up on reload.</p>
+                    <div class="kp-card__stage">
+                        <div class="kp-card__data">
+                            <div class="kp-problems" data-kp-problems data-ac-problems></div>
+                            <p class="kp-text-muted" data-ac-allserved hidden>Every profile file is served.</p>
+                            <div class="kp-datatable" data-kp-datatable data-kp-cards data-kp-page-sizes="none" data-ac-served>
+                                <div class="kp-table-wrap">
+                                    <table class="kp-table">
+                                        <caption class="kp-sr-only">Profile files that are served</caption>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col" data-kp-sort="text">File</th>
+                                                <th scope="col" data-kp-sort="text">Source</th>
+                                                <th scope="col" data-kp-sort="text">Calendar</th>
+                                                <th scope="col" data-kp-sort="number">Health</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+<tr data-kp-row-key="home-assistant.toml">
+<td data-label="File"><code class="kp-mono">home-assistant.toml</code></td>
+<td data-label="Source">home-assistant</td>
+<td data-label="Calendar">Almanac · Huishouden</td>
+<td data-label="Health" data-kp-sort-value="0"><span class="kp-health" data-state="ok"><span class="kp-health__dot" aria-hidden="true"></span> Served</span></td>
+</tr>
+<tr data-kp-row-key="homelab.toml">
+<td data-label="File"><code class="kp-mono">homelab.toml</code></td>
+<td data-label="Source">homelab</td>
+<td data-label="Calendar">Almanac · Infra</td>
+<td data-label="Health" data-kp-sort-value="0"><span class="kp-health" data-state="ok"><span class="kp-health__dot" aria-hidden="true"></span> Served</span></td>
+</tr>
+<tr data-kp-row-key="kyu.toml">
+<td data-label="File"><code class="kp-mono">kyu.toml</code></td>
+<td data-label="Source">kyu</td>
+<td data-label="Calendar">Almanac · Infra</td>
+<td data-label="Health" data-kp-sort-value="0"><span class="kp-health" data-state="ok"><span class="kp-health__dot" aria-hidden="true"></span> Served</span></td>
+</tr>
+<tr data-kp-row-key="claude-sessions.toml">
+<td data-label="File"><code class="kp-mono">claude-sessions.toml</code></td>
+<td data-label="Source">claude-sessions</td>
+<td data-label="Calendar">Almanac · Infra</td>
+<td data-label="Health" data-kp-sort-value="1"><span class="kp-health" data-state="warn"><span class="kp-health__dot" aria-hidden="true"></span> Served, token revoked</span></td>
+</tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="ac-sample kp-text-muted">Sample data: the calendar ids, the token and use figures and every source except home-assistant are made up.</p>
+                </section>
+            </section>
+
+            <section
+                class="ac-sec"
+                id="uses-map"
+                data-review-item="uses-map"
+                data-review-topic="uses"
+                data-review-topic-title="Uses map"
+                data-review-title="Uses map: which source writes to which calendar"
+                data-review-components="matrix graph segmented"
+                data-review-choices='[{ "id": "uses-view", "label": "Which view the uses map opens in", "once": true, "default": "lines", "options": [
+        { "value": "lines", "label": "Lines map (calendars | sources)", "hint": "Recommended. Two columns joined by lines: it reads left to right, shows a calendar nothing writes to as Not used, and stays a list of cards on a phone. Point at a card to light its lines." },
+        { "value": "graph", "label": "Network graph", "hint": "A hub with the others in a ring: it shows the shape of the set-up at a glance and has kinds to filter, but a calendar no source writes to floats alone and the ring needs more room." }] }]'
+                aria-labelledby="h-uses-map"
+            >
+                <div class="ac-sec__head">
+                    <h2 id="h-uses-map">Uses map: which source writes to which calendar</h2>
+                    <p>One picture of the whole set-up: calendars on the left, the sources that write to them on the right, a line for each. Switch between the lines map and a network graph; the dialog&rsquo;s choice sets which one opens first.</p>
+                </div>
+                <div class="ac-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Lines map:</b> three calendar cards on the left, four source cards on the right, one line per source. <b>Almanac · Infra</b> says <b>3 sources</b>, <b>Almanac · Huishouden</b> says <b>1 source</b>, <b>almanac-test</b> says <b>Not used</b> and has no line. Point at a card: its lines turn the primary colour, the rest dim. <b>Pinned</b> keeps <b>home-assistant</b> lit.</li>
+                        <li><b>Graph:</b> the same relation as nodes and links; <b>Almanac · Infra</b>, with the most links, is the hub. Pick a node to light its links.</li>
+                        <li><b>States</b> fill the picture&rsquo;s whole area: <b>Loading</b> the busy card, <b>Empty</b> and <b>Failed</b> a plate with a normal Retry on the lines map (the network graph in 11.0.0 shows only a one-line sentence there: see the report). <b>Phone (390):</b> the lines give way to cards with their sources as chips.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Formal&rsquo;s white cards with a hairline and its navy for a lit line; the segmented switch above the picture keeps its place when the view changes.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="uses-map-component">
+                    <div role="group" aria-label="State"><button type="button" class="kp-button" aria-pressed="true" data-ac-ctl="uses-map:state" data-ac-v="ready">Filled</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="uses-map:state" data-ac-v="loading">Loading</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="uses-map:state" data-ac-v="empty">Empty</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="uses-map:state" data-ac-v="failed">Failed</button></div>
+                    <div role="group" aria-label="Lit card"><button type="button" class="kp-button" aria-pressed="true" data-ac-ctl="uses-map:pin" data-ac-v="none">Nothing lit</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="uses-map:pin" data-ac-v="pinned">home-assistant pinned</button></div>
+                    <div role="group" aria-label="Width"><button type="button" class="kp-button" aria-pressed="true" data-ac-ctl="uses-map:width" data-ac-v="full">Full width (1280)</button><button type="button" class="kp-button" aria-pressed="false" data-ac-ctl="uses-map:width" data-ac-v="phone">Phone (390)</button></div>
+                </div>
+                <section id="uses-map-component" class="kp-card ac-card ac-stage" data-ac-width="full" data-ac-view="lines" aria-labelledby="ac-uses-title">
+                    <div class="kp-card__header">
+                        <h3 class="kp-card__title" id="ac-uses-title">Who writes where</h3>
+                        <div class="kp-card__actions">
+                            <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="View" data-ac-view-switch>
+                                <button type="button" class="kp-segmented__item" data-value="lines" role="radio" aria-checked="true"><span class="kp-segmented__label">Lines</span></button>
+                                <button type="button" class="kp-segmented__item" data-value="graph" role="radio" aria-checked="false"><span class="kp-segmented__label">Network</span></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ac-uses-body">
+                        <div class="kp-matrix" data-kp-matrix data-kp-view="lines" data-kp-matrix-owned aria-label="Which source writes to which calendar" data-ac-lines></div>
+                        <figure class="kp-graph" data-kp-graph aria-label="Which source writes to which calendar, as a network" data-ac-graph hidden></figure>
+                    </div>
+                    <p class="ac-sample kp-text-muted">Sample data: the calendar ids, the token and use figures and every source except home-assistant are made up.</p>
+                </section>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "almanac-calendars-3b1c7e52-6a0d-4c8e-9f21-2d5b8a4e7c10", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
