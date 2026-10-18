@@ -5861,4 +5861,35 @@
     [data-theme='pastel'] .kp-gallery__tile.kp-skeleton > .kp-pieces {
         display: none;
     }
+
+    /* A card in a state (js/card-state.js): the note fills the stage (the plate was as high as its words, in the middle of a tall
+       stage), and a failed card says it at the heading size in the middle with its Retry under it, as an empty one does
+       (kpadopt4-rows/today-states, kpadopt6-calm/quote-states, kpadopt5-lists/request-inspector). */
+    [data-theme='pastel'] .kp-card__state {
+        align-content: stretch;
+        grid-template-rows: minmax(0, 1fr);
+    }
+
+    [data-theme='pastel'] .kp-card__state > .kp-card__failure {
+        box-sizing: border-box;
+        block-size: 100%;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+    }
+
+    [data-theme='pastel'] .kp-card__failure > .kp-alert__body {
+        flex: none;
+        justify-items: center;
+        max-inline-size: 100%;
+    }
+
+    [data-theme='pastel'] :is(.kp-card__state-title, .kp-card__failure .kp-alert__what) {
+        font-size: var(--kp-text-lg, 1.125rem);
+    }
+
+    /* The failed title is the alert's own ink (the page's ink was dark plum on the red plate). */
+    [data-theme='pastel'] .kp-card__failure :is(.kp-card__state-title, .kp-alert__what) {
+        color: inherit;
+    }
 }
