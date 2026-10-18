@@ -1,0 +1,440 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="almanac-try-source" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Almanac: try a source, and read its profile</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="../kpadopt56/part.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main k56-page">
+            <header class="k56-intro">
+                <h1>Almanac: try a source before it writes</h1>
+                <p class="cat-intro">
+                    Two new Almanac pages in one demo: <b>Try a source</b> (paste an event call, see exactly what Almanac would put in the calendar,
+                    nothing is written) and the <b>source profile</b> view. The page is built from kp-themes 11.0.0 parts only, in formal. It never
+                    calls a server: the answers come from a small port of Almanac&rsquo;s own dry-run rules (<code>engine.js</code>), checked against
+                    the two pinned fixtures byte for byte. <b>Sample data:</b> only <code>home-assistant</code> is a real profile name; the other
+                    three sources, every calendar id and the event already in the calendar are made up. Today is 19/10/2026.
+                </p>
+            </header>
+
+            <!-- 1 · Source picker + profile -->
+            <section
+                class="ps-sec"
+                id="source-profile"
+                data-review-item="source-profile"
+                data-review-topic="source-profile"
+                data-review-topic-title="Source profile"
+                data-review-components="kv code segmented card"
+                data-review-title="Pick a source and read its profile"
+                data-review-choices='[
+                    { "id": "kv-layout", "label": "The summary of the profile", "once": true, "default": "columns", "options": [
+                        { "value": "columns", "label": "Columns", "hint": "As many columns as fit; the labels share one column. Short, scannable." },
+                        { "value": "lines", "label": "One column with lines", "hint": "Every fact on its own ruled line, the way the status page lists facts." },
+                        { "value": "stack", "label": "Label over value", "hint": "Each label above its value; the best fit for a narrow phone." }]},
+                    { "id": "toml-lines", "label": "Line numbers in the profile file", "once": true, "default": "on", "options": [
+                        { "value": "on", "label": "Shown", "hint": "Numbers beside every line, so a message can say line 4." },
+                        { "value": "off", "label": "Hidden", "hint": "Only the file, as you would copy it." }]}]'
+                aria-labelledby="h-source-profile"
+            >
+                <div class="ps-sec__head">
+                    <h2 id="h-source-profile">Pick a source and read its profile</h2>
+                    <p>
+                        Every source has one small profile file that says which calendar its events land on, in which time zone, and how long an event
+                        lasts when the call does not say; the summary and the file are shown together.
+                    </p>
+                </div>
+                <div class="ps-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Four sources in a segmented control. Pressing one changes the title, the badge, the facts and the file at once; the file is
+                            copied with its Copy button and wraps with Wrap.
+                        </li>
+                        <li>
+                            The facts stand in one grid (calendar, calendar id, time zone, default length, schema version, file); the three choices in the
+                            dialog change their layout live. <b>Sample data:</b> three of the four source names and all calendar ids are made up.
+                        </li>
+                        <li>
+                            <b>Loading</b> shows the busy card over the whole card, <b>Empty</b> and <b>Failed</b> fill the card&rsquo;s footprint with a
+                            normal button (Reload profiles, Try again).
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Press each source: facts and file change together and nothing jumps. Put the card in Loading, Empty and Failed: each fills the
+                        whole card, as high as the filled one, with a normal-size button.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="profile-component">
+                    <div role="group" aria-label="State of the profile card" class="ps-controls__group">
+                        <button type="button" class="kp-button" aria-pressed="true" data-ps-profile-state="ready">Ready</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-profile-state="loading">Loading</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-profile-state="empty">Empty</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-profile-state="error">Could not read</button>
+                    </div>
+                </div>
+                <div id="profile-component" class="ps-comp">
+                    <div class="ps-picker">
+                        <span class="ps-label" id="profile-picker-label">Source</span>
+                        <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-labelledby="profile-picker-label" id="profile-picker">
+                            <button type="button" class="kp-segmented__item" data-value="home-assistant" role="radio" aria-checked="true"><span class="kp-segmented__label">home-assistant</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="homelab" role="radio" aria-checked="false"><span class="kp-segmented__label">homelab</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="kyu" role="radio" aria-checked="false"><span class="kp-segmented__label">kyu</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="claude-sessions" role="radio" aria-checked="false"><span class="kp-segmented__label">claude-sessions</span></button>
+                        </div>
+                    </div>
+                    <section class="kp-card ps-card" id="profile-card" data-kp-state="ready" data-kp-loading-words="Reading the profile file" aria-labelledby="profile-title">
+                        <div class="kp-card__header ps-card__header">
+                            <h3 class="kp-card__title" id="profile-title">Profile of home-assistant</h3>
+                            <span class="kp-badge" id="profile-badge">Real source</span>
+                        </div>
+                        <div class="kp-card__stage">
+                            <div class="kp-card__data ps-stack">
+                                <dl class="kp-kv kp-kv--columns kp-kv--lines" id="profile-kv" aria-label="What the profile says"></dl>
+                                <figure class="kp-code" data-kp-code id="profile-toml" data-kp-code-title="Profile file" data-kp-code-language="TOML" data-kp-code-lines></figure>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </section>
+
+            <!-- 2 · Event editor -->
+            <section
+                class="ps-sec"
+                id="event-editor"
+                data-review-item="event-editor"
+                data-review-topic="event-editor"
+                data-review-topic-title="Event editor"
+                data-review-components="json-field segmented card"
+                data-review-title="Write the event call and check it before you send it"
+                data-review-choices='[
+                    { "id": "json-indent", "label": "Indent of Format", "once": true, "default": "2", "options": [
+                        { "value": "2", "label": "2 spaces", "hint": "The layout of every fixture file." },
+                        { "value": "4", "label": "4 spaces", "hint": "Deeper steps, easier to follow in nested reminders." },
+                        { "value": "tab", "label": "Tab", "hint": "One tab per level." }]},
+                    { "id": "json-format", "label": "When the call is laid out", "once": true, "default": "button", "options": [
+                        { "value": "button", "label": "Format and Minify buttons", "hint": "You decide when." },
+                        { "value": "on-blur", "label": "When you leave the field", "hint": "Valid JSON is laid out as you tab away." },
+                        { "value": "off", "label": "Never", "hint": "The text stays as pasted; the buttons go." }]},
+                    { "id": "json-check", "label": "When the call is checked", "once": true, "default": "input", "options": [
+                        { "value": "input", "label": "While you type", "hint": "A short pause after the last key." },
+                        { "value": "blur", "label": "When you leave the field", "hint": "Nothing is said until you tab away." }]},
+                    { "id": "json-gutter", "label": "Line numbers", "once": true, "default": "on", "options": [
+                        { "value": "on", "label": "Shown", "hint": "The wrong line is marked in the gutter." },
+                        { "value": "off", "label": "Hidden", "hint": "A plain text box." }]}]'
+                aria-labelledby="h-event-editor"
+            >
+                <div class="ps-sec__head">
+                    <h2 id="h-event-editor">Write the event call and check it before you send it</h2>
+                    <p>
+                        Paste or edit the JSON a source would send. The field marks the line that is wrong and refuses a call Almanac would refuse (an
+                        unknown field, a missing title); Try asks Almanac what it would put in the calendar and writes nothing.
+                    </p>
+                </div>
+                <div class="ps-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Home Assistant sample</b> and <b>Everything sample</b> are the real payloads from <code>fixtures/payloads</code>: valid,
+                            Try is enabled and answers <b>Accepted</b>. <b>Unknown field</b> (<code>allDay</code>) and <b>Missing title</b> are refused
+                            by the field itself, in Almanac&rsquo;s own words, and Try is disabled with its reason. <b>Broken JSON</b> marks line 4.
+                            <b>Empty</b> asks for a call.
+                        </li>
+                        <li>
+                            Format, Minify, Wrap and Copy sit above the field; Tab indents. The four choices in the dialog change the indent, when it
+                            is laid out, when it is checked and the line numbers, live.
+                        </li>
+                        <li>
+                            <b>Trying</b> puts the busy card over the whole card; <b>Almanac does not answer</b> fills it with a plate and a normal Retry.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Press each sample: the status line under the field says valid, or what is wrong and where, in the same words Almanac answers
+                        with. Press Try on a valid one: the answer appears under the button and nothing else moves.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="editor-component">
+                    <div role="group" aria-label="Sample event call" class="ps-controls__group">
+                        <button type="button" class="kp-button" aria-pressed="true" data-ps-sample="home">Home Assistant sample</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-sample="everything">Everything sample</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-sample="unknown">Unknown field</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-sample="notitle">Missing title</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-sample="broken">Broken JSON</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-sample="empty">Empty</button>
+                    </div>
+                    <div role="group" aria-label="State of the editor" class="ps-controls__group">
+                        <button type="button" class="kp-button" aria-pressed="true" data-ps-editor-state="ready">Ready</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-editor-state="loading">Trying</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-editor-state="error">Almanac does not answer</button>
+                    </div>
+                </div>
+                <div id="editor-component" class="ps-comp">
+                    <section class="kp-card ps-card" id="editor-card" data-kp-state="ready" data-kp-loading-words="Asking Almanac" aria-labelledby="editor-title">
+                        <div class="kp-card__header ps-card__header">
+                            <h3 class="kp-card__title" id="editor-title">Try an event call</h3>
+                        </div>
+                        <div class="kp-card__stage">
+                            <div class="kp-card__data">
+                                <form class="ps-stack" id="editor-form" novalidate>
+                    <div class="ps-picker">
+                        <span class="ps-label" id="editor-picker-label">Source</span>
+                        <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-labelledby="editor-picker-label" id="editor-picker">
+                            <button type="button" class="kp-segmented__item" data-value="home-assistant" role="radio" aria-checked="true"><span class="kp-segmented__label">home-assistant</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="homelab" role="radio" aria-checked="false"><span class="kp-segmented__label">homelab</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="kyu" role="radio" aria-checked="false"><span class="kp-segmented__label">kyu</span></button>
+                            <button type="button" class="kp-segmented__item" data-value="claude-sessions" role="radio" aria-checked="false"><span class="kp-segmented__label">claude-sessions</span></button>
+                        </div>
+                    </div>
+                                    <div class="kp-field">
+                                        <label class="kp-field__label" for="editor-body">Event call (the JSON body)</label>
+                                        <textarea
+                                            class="kp-field__input kp-field__input--multiline"
+                                            id="editor-body"
+                                            name="body"
+                                            rows="12"
+                                            data-kp-json="strict"
+                                            data-kp-json-indent="2"
+                                            data-kp-json-check="input"
+                                            data-kp-json-format="button"
+                                            data-kp-json-schema='{"title":"EventRequest","type":"object","additionalProperties":false,"required":["title","start"],"properties":{"title":{"type":"string"},"start":{"type":"string"},"external_id":{"type":["string","null"]},"description":{"type":["string","null"]},"location":{"type":["string","null"]},"end":{"type":["string","null"]},"duration_minutes":{"type":["integer","null"]},"all_day":{"type":"boolean"},"duration_days":{"type":["integer","null"]},"busy":{"type":["boolean","null"]},"color":{"type":["string","null"]},"status":{"enum":["confirmed","tentative","cancelled",null]},"reminders":{"type":["object","null"],"additionalProperties":false,"properties":{"popup_minutes_before":{"type":"array","items":{"type":"integer"}},"email_minutes_before":{"type":"array","items":{"type":"integer"}},"silent":{"type":"boolean"}}},"timezone":{"type":["string","null"]}}}'
+                                            placeholder='{"title": "Wasmachine klaar", "start": "2026-08-28T09:00:00+00:00"}'
+                                        ></textarea>
+                                    </div>
+                                    <div class="ps-actions">
+                                        <button type="submit" class="kp-button kp-button--primary" id="editor-try">Try it</button>
+                                        <span class="ps-actions__note">Nothing is written to the calendar.</span>
+                                    </div>
+                                    <div class="kp-alert kp-alert--info" id="editor-answer" role="status" data-kp-semantic>
+                                        <span><span class="kp-alert__label">Note: </span>Nothing tried yet. Press Try it.</span>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </section>
+
+            <!-- 3 · Path trace -->
+            <section
+                class="ps-sec"
+                id="path-trace"
+                data-review-item="path-trace"
+                data-review-topic="path-trace"
+                data-review-topic-title="Path of a call"
+                data-review-components="path-trace alert code"
+                data-review-title="See where a call stops"
+                data-review-choices='[
+                    { "id": "trace-stop", "label": "What happens after a refusal", "once": true, "default": "first-refusal", "options": [
+                        { "value": "first-refusal", "label": "The steps after it are not reached", "hint": "This is what Almanac does: the first refusal ends the call." },
+                        { "value": "all", "label": "Every step shown on its own", "hint": "A what-if: the steps after a refusal read Not measured." }]},
+                    { "id": "trace-verdict", "label": "How a verdict is shown", "once": true, "default": "both", "options": [
+                        { "value": "both", "label": "Mark and word", "hint": "A check or cross and the word Allowed or Refused." },
+                        { "value": "mark", "label": "Mark only", "hint": "A check or cross; the word is for screen readers." },
+                        { "value": "word", "label": "Word only", "hint": "Allowed or Refused, no icon." }]},
+                    { "id": "trace-rule", "label": "The rule that decided", "once": true, "default": "chip", "options": [
+                        { "value": "chip", "label": "A chip you can press", "hint": "Pressing it moves to the answer below." },
+                        { "value": "inline", "label": "Inside the step", "hint": "The rule is part of the step text." },
+                        { "value": "off", "label": "Not shown", "hint": "Only the summary line names the step." }]},
+                    { "id": "trace-layout", "label": "Direction of the steps", "once": true, "default": "auto", "options": [
+                        { "value": "auto", "label": "A row, a column on a narrow screen", "hint": "Follows the width of the trace." },
+                        { "value": "row", "label": "Always a row", "hint": "Four steps side by side." },
+                        { "value": "column", "label": "Always a column", "hint": "Four steps stacked, the notes beside them." }]}]'
+                aria-labelledby="h-path-trace"
+            >
+                <div class="ps-sec__head">
+                    <h2 id="h-path-trace">See where a call stops</h2>
+                    <p>
+                        A call goes through four steps: the call itself, the source&rsquo;s profile, the event and the calendar. The step that refuses
+                        it is lit, the steps after it are not reached, and the rule that decided is a chip.
+                    </p>
+                </div>
+                <div class="ps-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Accepted</b>: four checks and the summary says the call would be written. <b>Unknown field</b>, <b>Missing title</b> and
+                            <b>End before start</b> light <b>Event</b> (HTTP 422) with the rule as a chip; <b>Unknown source</b> lights <b>Profile</b>
+                            (404); <b>Client token</b> lights <b>Call</b> (403). Every refusal is the real check from <code>request.rs</code> or
+                            <code>admin.rs</code>.
+                        </li>
+                        <li>
+                            Under the trace, the answer Almanac gives (status, message, remedy) and its JSON body. <b>Copy</b> on the trace copies the
+                            path as text for a bug report.
+                        </li>
+                        <li>
+                            <b>Running</b> is the busy card over the placeholders, <b>Empty</b> says to pick a case, <b>Failed</b> has a Retry that runs
+                            the trace again.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Press each case: exactly one step is lit (or none), the ones after it are dimmed with Not reached, and the answer under the
+                        trace matches. The four choices change the trace live.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="trace-component">
+                    <div role="group" aria-label="Case" class="ps-controls__group">
+                        <button type="button" class="kp-button" aria-pressed="true" data-ps-case="accepted">Accepted</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-case="unknown">Unknown field</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-case="notitle">Missing title</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-case="endbefore">End before start</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-case="nosource">Unknown source</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-case="client">Client token</button>
+                    </div>
+                    <div role="group" aria-label="State of the trace" class="ps-controls__group">
+                        <button type="button" class="kp-button" aria-pressed="true" data-ps-trace-state="ready">Ready</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-trace-state="running">Running</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-trace-state="empty">Empty</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-trace-state="error">Failed</button>
+                    </div>
+                </div>
+                <div id="trace-component" class="ps-comp">
+                    <section class="kp-card ps-card" aria-labelledby="trace-title">
+                        <div class="kp-card__header ps-card__header">
+                            <h3 class="kp-card__title" id="trace-title">Path of the call</h3>
+                            <span class="kp-badge" id="trace-http">200</span>
+                        </div>
+                        <div class="ps-stack">
+                            <div class="kp-trace" data-kp-trace id="ps-trace" data-kp-trace-copy data-kp-trace-stop="first-refusal" data-kp-trace-verdict="both" data-kp-trace-rule="chip" data-kp-trace-layout="auto"></div>
+                            <div class="kp-alert kp-alert--info" role="status" data-kp-semantic><span><span class="kp-alert__label">Note: </span>This is a dry run: whatever the answer, nothing is written to Google.</span></div>
+                            <div class="kp-alert kp-alert--warning" role="status" data-kp-semantic><span><span class="kp-alert__label">Warning: </span>The dry run does not check the idempotency rule. A call with neither an external_id nor an Idempotency-Key header is refused when it is really sent, even if it is accepted here.</span></div>
+                            <div class="kp-alert kp-alert--destructive" role="alert" data-kp-semantic><span><span class="kp-alert__label">Error: </span>A refused call is answered with 422 and is not kept. Fix it and send it again.</span></div>
+                            <div class="kp-alert kp-alert--success" id="trace-answer" role="status" tabindex="-1" data-kp-semantic><span><span class="kp-alert__label">Accepted: </span>-</span></div>
+                            <figure class="kp-code" data-kp-code id="trace-body" data-kp-code-title="Answer" data-kp-code-language="JSON" data-kp-code-lines></figure>
+                        </div>
+                    </section>
+                </div>
+            </section>
+
+            <!-- 4 · Result -->
+            <section
+                class="ps-sec"
+                id="try-result"
+                data-review-item="try-result"
+                data-review-topic="try-result"
+                data-review-topic-title="Result"
+                data-review-components="kv diff command card"
+                data-review-title="The event Almanac would write"
+                data-review-choices='[
+                    { "id": "diff-context", "label": "Lines of the comparison", "once": true, "default": "all", "options": [
+                        { "value": "all", "label": "Every line", "hint": "The whole event, changed lines tinted: you see the event as the calendar will hold it." },
+                        { "value": "hunks", "label": "Only what changed", "hint": "Two lines around each change, with an @@ header: short for a long event." }]},
+                    { "id": "curl-jq", "label": "The curl command", "once": true, "default": "off", "options": [
+                        { "value": "off", "label": "Just the call", "hint": "The answer prints as one line." },
+                        { "value": "on", "label": "Piped through jq", "hint": "The answer prints laid out and coloured." }]}]'
+                aria-labelledby="h-try-result"
+            >
+                <div class="ps-sec__head">
+                    <h2 id="h-try-result">The event Almanac would write</h2>
+                    <p>
+                        The calendar event in plain words, a line-by-line comparison with the event already in the calendar (a new event or an update),
+                        and the curl command that repeats the call.
+                    </p>
+                </div>
+                <div class="ps-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>New event (all options)</b> is the Everything sample: every line of the comparison is added. <b>Existing event, changed</b>
+                            is the Home Assistant sample against the event already there: two lines are tinted, with + and - signs.
+                            <b>Existing event, same</b> says nothing would change. <b>Refused</b> shows Almanac&rsquo;s 422 answer instead of an event.
+                        </li>
+                        <li>
+                            Times read dd/mm/yyyy HH:MM in the event&rsquo;s time zone (09:00 UTC is 11:00 in Brussels). <b>Copy as curl</b> is a bash
+                            block that copies as written, with <code>$ALMANAC_URL</code> and <code>$ALMANAC_TOKEN</code> left for you to set.
+                        </li>
+                        <li>
+                            <b>Sample data:</b> the event already in the calendar is made up. Almanac&rsquo;s dry-run does not look it up yet (see the
+                            README), so the update/create verdict and the comparison are what this page would show once it does.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Press each outcome: the badge, the spec, the comparison and the curl command change together, the card keeps a steady height,
+                        and the changed lines carry a sign as well as a tint.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="result-component">
+                    <div role="group" aria-label="Outcome" class="ps-controls__group">
+                        <button type="button" class="kp-button" aria-pressed="true" data-ps-outcome="create">New event (all options)</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-outcome="update">Existing event, changed</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-outcome="same">Existing event, same</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-outcome="refused">Refused</button>
+                    </div>
+                    <div role="group" aria-label="State of the result" class="ps-controls__group">
+                        <button type="button" class="kp-button" aria-pressed="true" data-ps-result-state="ready">Ready</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-result-state="loading">Loading</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-result-state="empty">Nothing tried yet</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ps-result-state="error">Could not ask</button>
+                    </div>
+                </div>
+                <div id="result-component" class="ps-comp">
+                    <section class="kp-card ps-card" id="result-card" data-kp-state="ready" data-kp-loading-words="Asking Almanac" aria-labelledby="result-title">
+                        <div class="kp-card__header ps-card__header">
+                            <h3 class="kp-card__title" id="result-title">What Almanac would write</h3>
+                            <span class="kp-badge kp-badge--success" id="result-badge">Would create</span>
+                        </div>
+                        <div class="kp-card__stage">
+                            <div class="kp-card__data ps-stack">
+                                <div class="kp-alert kp-alert--info" id="result-note" role="status" data-kp-semantic><span><span class="kp-alert__label">Note: </span>-</span></div>
+                                <div class="ps-grid">
+                                    <div class="ps-block">
+                                        <h4 class="ps-h" id="result-spec-title">The event</h4>
+                                        <div id="result-spec-area"></div>
+                                    </div>
+                                    <div class="ps-block">
+                                        <h4 class="ps-h" id="result-diff-title">Against the calendar</h4>
+                                        <div id="result-diff-area"></div>
+                                    </div>
+                                </div>
+                                <div class="ps-block">
+                                    <h4 class="ps-h">Copy as curl</h4>
+                                    <div id="result-curl-area"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "formal-5f3a1c2e-7b44-4d0e-9a51-2c8d6e0b13f7" }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

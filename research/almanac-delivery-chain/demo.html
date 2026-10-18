@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="almanac-delivery-chain" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Almanac: the delivery chain, the retry schedule and a set-aside entry</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main ad-page">
+            <header class="ad-intro">
+                <h1>Almanac: delivery chain, retry schedule, set-aside entry</h1>
+                <p class="cat-intro">
+                    Three new pages for Almanac's Status area, built from kp-themes 11.0.0 parts and shown in formal only. The numbers of the
+                    healthy chain are the live service's on 19/10/2026 (version 4.1.7: 3 events accepted, 3 delivered, 0 failed, 0 dead). Every
+                    outage, every waiting entry and every time on the schedule is <b>sample data</b>, labelled as such under each part; the
+                    timing rules (15 s, 1 min, 5 min, 15 min, then every 30 min; set aside after the third permanent refusal) are Almanac's real
+                    ones from <code>src/core/pacing.rs</code> and <code>src/shell/worker.rs</code>.
+                </p>
+            </header>
+
+            <!-- 1 · Delivery chain -->
+            <section
+                class="ad-sec"
+                id="chain"
+                data-review-item="chain"
+                data-review-topic="chain"
+                data-review-topic-title="Delivery chain"
+                data-review-components="pipeline"
+                data-review-title="Delivery chain: where every event stands"
+                data-review-choices='[{ "id": "chain-share", "label": "Share of all events in each stage", "once": true, "default": "show", "options": [
+                    { "value": "show", "label": "Show each stage&#39;s share", "hint": "Each stage&#39;s plate also says what share of all events stands there (data-kp-pipeline-share, the default). In an outage the pile in the journal reads as a share at a glance." },
+                    { "value": "hide", "label": "Counts only", "hint": "Only the exact count in each plate; quieter when the chain is healthy and every share is 0 % or 100 %." }]}]'
+                aria-labelledby="h-chain"
+            >
+                <div class="ad-sec__head">
+                    <h2 id="h-chain">Delivery chain: where every event stands</h2>
+                    <p>
+                        An event passes four stages: received at the door, written to the journal, picked up by the worker and put in Google
+                        Calendar; the stage that is failing is lit red, and an event Almanac gave up on waits in the last lane.
+                    </p>
+                </div>
+                <div class="ad-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Healthy</b> (real totals): three events in <b>Google Calendar</b>, none anywhere else, the other stages say
+                            <i>none</i>; no stage is red.
+                        </li>
+                        <li>
+                            <b>Google refusing</b> (sample): the <b>Google Calendar</b> plate and its lane edge turn red with the reason in the
+                            plate's name, and the events that cannot get through stand in <b>Journal</b>, each with how often it was tried.
+                        </li>
+                        <li>
+                            <b>Token refresh failing</b> (sample): the red moves to <b>Worker</b>; the journal fills the same way, so you see
+                            which stage is at fault, not only that something is.
+                        </li>
+                        <li>
+                            <b>Loading</b> keeps the four lanes and lays the busy card over all of them; <b>Failed to load</b> is one plate with a
+                            normal Try again that loads and then fills. Counts are exact. At 390 px the lanes turn to rows.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Press each state: the lanes never move or change height between healthy, one lit stage, loading and failed; the red stage
+                        is the only one in colour; the line under the board names the data as real or sample.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="chain-component">
+                    <div role="group" aria-label="State of the chain" class="ad-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-ad-chain="healthy">All healthy</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ad-chain="google">Google refusing</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ad-chain="token">Token refresh failing</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ad-chain="loading">Loading</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ad-chain="error">Failed to load</button>
+                    </div>
+                </div>
+                <div id="chain-component" class="ad-block">
+                    <section class="kp-pipeline" data-kp-pipeline data-kp-pipeline-limit="4" id="ad-chain" aria-label="Delivery chain"></section>
+                    <p class="ad-meta" id="ad-chain-said" role="status"></p>
+                </div>
+            </section>
+
+            <!-- 2 · Retry schedule -->
+            <section
+                class="ad-sec"
+                id="schedule"
+                data-review-item="schedule"
+                data-review-topic="schedule"
+                data-review-topic-title="Retry schedule"
+                data-review-components="runs gantt"
+                data-review-title="Retry schedule: when the waiting entries are tried next"
+                data-review-choices='[{ "id": "schedule-shape", "label": "How the schedule is drawn", "once": true, "default": "runs", "options": [
+                    { "value": "runs", "label": "A list of the next tries", "hint": "The next four tries, each with its time and how far away it is (the default). Almanac tries every waiting entry together, so one list is the truth; the full empty, loading and failed plates with a Try again come with it." },
+                    { "value": "gantt", "label": "A timeline with a lane per entry", "hint": "One lane per waiting entry with its past tries and its coming ones, and how many tries it has left. Shows each entry&#39;s history; its empty and failed states are words over the plot, without a Try again button." }]}]'
+                aria-labelledby="h-schedule"
+            >
+                <div class="ad-sec__head">
+                    <h2 id="h-schedule">Retry schedule: when the waiting entries are tried next</h2>
+                    <p>
+                        While Google refuses, Almanac tries all waiting entries together after 15 s, 1 min, 5 min, 15 min and then every 30 min;
+                        this shows the coming tries and, per entry, how many tries it has left.
+                    </p>
+                </div>
+                <div class="ad-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>A list of the next tries</b> (default): four rows with weekday, dd/mm/yyyy HH:MM and "in 21 min", 51 min, 1 h 21 min
+                            and 1 h 51 min; the first row carries a mark saying the kyu entry is set aside on that try. Twice the same 30 minutes
+                            apart: that is the ladder's last rung repeating.
+                        </li>
+                        <li>
+                            <b>A timeline</b>: four lanes (home-assistant, homelab, claude-sessions, kyu). Red dots are tries that Google refused,
+                            hollow rings are coming tries, the triangle in the kyu lane is the third refusal after which Almanac sets it aside
+                            (tries left: 1). The other three have no limit, because a temporary refusal is retried for ever.
+                        </li>
+                        <li>
+                            <b>Nothing waiting</b> is a plate at the height of the list (or the timeline) with "Nothing is waiting" centred;
+                            <b>Loading</b> is the busy card over the same footprint; <b>Failed to load</b> says why. The list has a Try again; the
+                            timeline has only words (see the report).
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Press each state with the list and again with the timeline (Draw it as): the footprint stays as tall as the loaded one;
+                        switching between list and timeline never loses the state you pressed.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="schedule-component">
+                    <div role="group" aria-label="State of the schedule" class="ad-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-ad-sched="ready">Four entries waiting</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ad-sched="empty">Nothing waiting</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ad-sched="loading">Loading</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ad-sched="error">Failed to load</button>
+                    </div>
+                </div>
+                <div id="schedule-component" class="ad-block">
+                    <div class="kp-runs" data-kp-runs data-kp-runs-count="4" data-kp-runs-title="Next tries of the waiting entries" id="ad-runs"></div>
+                    <section
+                        class="kp-gantt"
+                        data-kp-gantt
+                        data-kp-gantt-points
+                        data-kp-gantt-ranges="3h"
+                        data-kp-gantt-range="3h"
+                        data-kp-gantt-ghosts="1 1 1 1"
+                        id="ad-gantt"
+                        aria-label="Tries per waiting entry"
+                        hidden
+                    ></section>
+                    <p class="ad-meta" id="ad-sched-said" role="status"></p>
+                </div>
+            </section>
+
+            <!-- 3 · A set-aside entry -->
+            <section
+                class="ad-sec"
+                id="aside"
+                data-review-item="aside"
+                data-review-topic="aside"
+                data-review-topic-title="Set-aside entry"
+                data-review-components="problems"
+                data-review-title="An entry Almanac gave up on"
+                aria-labelledby="h-aside"
+            >
+                <div class="ad-sec__head">
+                    <h2 id="h-aside">An entry Almanac gave up on</h2>
+                    <p>
+                        After the third permanent refusal Almanac sets an event aside and tells you what is wrong and what to do about it.
+                    </p>
+                </div>
+                <div class="ad-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Each set-aside entry is one red problem with three parts: what happened (source and title), why (Google's refusal and
+                            when) and <b>What now</b> (Almanac's own remedy line). Two entries stand as two problems, the newest first.
+                        </li>
+                        <li>
+                            <b>There is no Retry now button, on purpose.</b> In Almanac 4.1.7 a set-aside entry is kept in the journal and shown on
+                            the debug surface but is never tried again, and no route or command re-queues it
+                            (<code>src/shell/worker.rs</code>, <code>PERMANENT_FAILURES_BEFORE_DEAD</code>). A button here would promise something the
+                            service cannot do; the note under the problems says so. The remedy is to fix the cause and send the event again from its
+                            source.
+                        </li>
+                        <li><b>Nothing set aside</b> is a plate at the same height with "Nothing has been set aside".</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The problem reads in the order what, why, what now; the page never shows a Retry now button, and the note says why.
+                        Switching between one, two and none keeps the box the same height.
+                    </p>
+                </div>
+                <div data-review-controls data-review-controls-for="aside-component">
+                    <div role="group" aria-label="Entries set aside" class="ad-actions">
+                        <button type="button" class="kp-button" aria-pressed="true" data-ad-aside="1">One entry</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ad-aside="2">Two entries</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-ad-aside="0">Nothing set aside</button>
+                    </div>
+                </div>
+                <div id="aside-component" class="ad-block">
+                    <div class="ad-aside-frame">
+                        <div class="kp-problems" data-kp-problems data-kp-problems-mode="each" id="ad-aside" aria-label="Entries set aside"></div>
+                        <div class="kp-empty ad-aside-empty" data-kp-art="done" id="ad-aside-empty" hidden>
+                            <p class="kp-empty__title">Nothing has been set aside</p>
+                            <p class="kp-empty__body">Every event Almanac accepted is either delivered or still being tried.</p>
+                        </div>
+                    </div>
+                    <div class="kp-alert kp-alert--info" role="status">
+                        <strong class="kp-alert__what">A set-aside entry cannot be retried from here</strong>
+                        <span class="kp-alert__why">
+                            Almanac 4.1.7 keeps it in the journal for inspection and never tries it again; it has no re-queue action.
+                        </span>
+                        <span class="kp-alert__remedy">
+                            <span class="kp-alert__remedy-label">What now</span> Fix the cause, then send the event again from its source.
+                        </span>
+                    </div>
+                    <p class="ad-meta">Sample data: no entry has been set aside on the live service (0 dead since start).</p>
+                </div>
+            </section>
+        </main>
+
+        <script type="application/json" data-review-round>
+            { "round": "almanac-delivery-chain-5b0d0c3e-62a6-4a8e-9a2c-3c0f6b0e7d41" }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

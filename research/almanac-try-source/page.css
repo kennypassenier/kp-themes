@@ -1,0 +1,120 @@
+/* research/almanac-try-source: the frame of the Almanac demo. Everything with a kp- class is the package; these ps- rules lay
+   out what only this page adds: the section head, the Expected block, the source picker row and the grids of the cards. */
+
+.ps-sec {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+.ps-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.ps-sec__head :is(h2, p),
+.ps-expected :is(p, ul) {
+    margin: 0;
+}
+
+.ps-expected ul {
+    padding-inline-start: 1.25rem;
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.ps-comp {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+.ps-card {
+    min-inline-size: 0;
+}
+
+.ps-card__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.ps-stack {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+.ps-picker {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.ps-label {
+    color: var(--muted-foreground);
+}
+
+.ps-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+}
+
+.ps-actions__note {
+    color: var(--muted-foreground);
+}
+
+.ps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(24rem, 100%), 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+    min-block-size: 22rem;
+}
+
+.ps-block {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 0;
+    align-content: start;
+}
+
+.ps-h {
+    margin: 0;
+}
+
+.ps-diff {
+    max-block-size: 24rem;
+    overflow: auto;
+    margin: 0;
+}
+
+/* The four sources may be wider than a phone: the segmented track scrolls inside the row instead of widening the page. */
+.ps-picker {
+    min-inline-size: 0;
+}
+
+.ps-picker > .kp-segmented {
+    min-inline-size: 0;
+    max-inline-size: 100%;
+}
+
+/* The editor's field takes the whole card (the package's knob for a field's widest size). */
+.ps-stack .kp-field {
+    --kp-field-max-width: none;
+}
+
+/* A copy button inside a narrow value keeps its word whole and its size: the value wraps instead. */
+.ps-comp .kp-copyable__button {
+    flex: none;
+    white-space: nowrap;
+}
+
+.ps-comp .kp-copyable__value {
+    overflow-wrap: anywhere;
+}
