@@ -401,3 +401,35 @@ Expected block under the component, so the component is the first thing on scree
 nowhere. A component carries at most four control groups; more means the section is split (Kenny, 2026-10-18 07:11).
 `check-kit.mjs` fails a page that breaks any of it. The part builders (research/kpadopt56/build-parts.mjs, research/kpadopt56-formal/build.mjs)
 write the attribute with `research/kpadopt56/controls-for.mjs` and emit only the sections a page asks.
+
+## The dialog's layout options
+
+Kenny, 2026-10-18 15:15: "We should make it 99% fullscreen ... I want maximum coverage and use of the screen, quality of life for me as an
+approver and strong features", and 15:26: "the component itself is the most important part of the screen, so it must always be clearly visible
+and central". Every improvement is an option of the kit (`UI_OPTIONS` in review.js), off by default so a live part looks as it did, switched
+in the dialog's **View** menu, kept per viewer in localStorage `kp-review-ui`, or forced for one visit by the link: `?rvui=all`, `?rvui=none`,
+`?rvui=fill,look`, `?rvui=all,-jump`. An option is an attribute on the dialog and on every frame's root (`data-rvui-<id>="on|off"`), so
+review.css reads it in both places.
+
+| Option     | What it does                                                                                                              |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `fill`     | the dialog takes 99% of the window; header, margins and gaps tighter                                                      |
+| `titles`   | the section title once per frame: the topic heading is only read aloud, the section's own heading is not drawn           |
+| `look`     | a look-at paragraph that several sections of a step share is shown once under the theme's name                            |
+| `controls` | the controls of a component flow side by side, label and buttons on one line, in the package's `kp-button--sm`            |
+| `intro`    | the section's intro and Expected text at the frame's full width, a tighter frame margin                                   |
+| `rail`     | the side column about 17% wide, Previous, Next and Approve pinned at its foot                                             |
+| `jump`     | a chip per section in the header, the one in view marked (also its row)                                                   |
+
+The stage is never split horizontally between components or themes (Kenny, 2026-10-18 15:18). A frame preview of the dialog inside a page
+(`?rv-preview`) does not follow another window's theme change. **research/review-kit-v2** shows each option live, at 1920, 1280 or 390 px, and
+asks only the default.
+
+**Extension points** for modules that add to the dialog (a line, a key, a chip row), all without editing review.js: `window.rvKit.registerUiOption({ id,
+label, about, default })` adds a switch to the View menu (kept per viewer, and an attribute on the dialog and every frame like the layout
+options; `rvKit.ui[id]` is its value) and `rv:open`, `rv:step` (`{ index, step, pairs }`), `rv:verdict` (`{ pair, change }`) and `rv:ui` (`{ id, on }`)
+fire on `window`. A module's own entry in research/review-kit-v2/options.json gives it a section in the demo.
+
+`check-kit.mjs <port> <page> --rvui all` adds the layout checks: the dialog fills at least 97% of the viewport at 1920x1080, 1280x800 and 390x844, no
+look-at paragraph repeats in a step, the first component starts within the first 40% of the dialog's height at 1920x1080, nothing scrolls
+sideways at any of the three widths, the component's frame is the largest area of the dialog, centred in the stage, and uncovered.

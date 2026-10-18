@@ -71,6 +71,7 @@
 
 .rv-dialog[open] {
     display: grid;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto auto minmax(0, 1fr) auto;
 }
 
@@ -126,7 +127,7 @@
 
 .rv-dialog__grid {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 22rem;
+    grid-template-columns: minmax(0, 1fr) var(--rv-rail, 22rem);
     min-block-size: 0;
 }
 
@@ -840,4 +841,316 @@
     padding-inline-start: 1.6em;
     font-size: 0.8125em;
     color: var(--muted-foreground);
+}
+
+/* ------------------------------------------------------------------------------------------------------------
+   Layout options (review.js, UI_OPTIONS; Kenny, 2026-10-18 15:15 and 15:17). Each is off by default, so a live part
+   looks as it did; every rule below applies only where its attribute is "on", on the dialog or on a frame's document. */
+
+/* The side's two wrappers take no box of their own until the slim column is on. */
+.rv-dialog__scroll,
+.rv-dialog__foot {
+    display: contents;
+}
+
+.rv-list__look {
+    list-style: none;
+    padding-block: 0.5rem;
+    border-block-end: 1px solid var(--border);
+}
+
+.rv-list__look .rv-row__look {
+    margin: 0;
+}
+
+.rv-jump,
+.rv-ui,
+.rv-dialog__view-menu {
+    font-size: 0.8125rem;
+}
+
+.rv-dialog__view-menu {
+    margin-inline-start: auto;
+}
+
+.rv-jump[hidden] {
+    display: none;
+}
+
+/* The View menu: the popover stays opaque and readable in every theme (the raised-plate rule). */
+.rv-ui {
+    position: fixed;
+    inset: auto;
+    inset-block-start: 3rem;
+    inset-inline-end: 0.75rem;
+    margin: 0;
+    inline-size: min(26rem, calc(100vw - 1.5rem));
+    max-block-size: calc(100dvh - 4rem);
+    overflow: auto;
+    padding: var(--kp-space-md, 1rem);
+    background: var(--background);
+    color: var(--foreground);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 6px);
+    box-shadow: 0 8px 24px rgb(0 0 0 / 0.25);
+}
+
+.rv-ui:not(:popover-open) {
+    display: none;
+}
+
+.rv-ui__title {
+    margin: 0;
+    font-weight: 600;
+}
+
+.rv-ui__note {
+    margin: 0.25rem 0 0.75rem;
+    color: var(--muted-foreground);
+}
+
+.rv-ui__list {
+    display: grid;
+    gap: 0.625rem;
+}
+
+.rv-ui__about {
+    margin: 0.125rem 0 0;
+    padding-inline-start: 1.6rem;
+    color: var(--muted-foreground);
+}
+
+/* fill: near-fullscreen, tight chrome */
+.rv-dialog[data-rvui-fill='on'] {
+    inline-size: 99vw;
+    block-size: 98.5dvh;
+}
+
+.rv-dialog[data-rvui-fill='on'] .rv-dialog__head {
+    padding: 0.375rem 3.25rem 0.375rem 0.75rem;
+    gap: 0.25rem 0.75rem;
+}
+
+.rv-dialog[data-rvui-fill='on'] .rv-dialog__head > h2 {
+    flex: 1 1 auto;
+    font-size: 1.0625rem;
+}
+
+.rv-dialog[data-rvui-fill='on'] .rv-dialog__close {
+    inset-block-start: 0.25rem;
+    inset-inline-end: 0.375rem;
+}
+
+.rv-dialog[data-rvui-fill='on'] .rv-dialog__stage {
+    padding: 0.5rem 0.625rem;
+}
+
+.rv-dialog[data-rvui-fill='on'] .rv-dialog__stage > * + * {
+    margin-block-start: 0.75rem;
+}
+
+.rv-dialog[data-rvui-fill='on'] .rv-topic__lanes {
+    gap: 0.625rem;
+}
+
+.rv-dialog[data-rvui-fill='on'] .rv-lane__head {
+    padding-block: 0.25rem;
+}
+
+/* titles: each once */
+[data-rvui-titles='on'] [data-rv-dup-title] {
+    display: none !important;
+}
+
+.rv-dialog[data-rvui-titles='on'] .rv-topic__title {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.rv-dialog[data-rvui-titles='on'] .rv-lane__theme {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.rv-dialog[data-rvui-titles='on'] .rv-lane__section {
+    display: inline;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--foreground);
+}
+
+/* controls: compact, flowing, label and buttons on one line */
+[data-rvui-controls='on'] .rv-ctl {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 1.25rem;
+    margin-block: 0.25rem;
+    padding: 0.25rem 0.625rem;
+}
+
+[data-rvui-controls='on'] .rv-ctl::before {
+    content: 'Controls';
+    flex: 0 0 auto;
+}
+
+[data-rvui-controls='on'] .rv-ctl [role='group'] {
+    flex: 0 1 auto;
+    gap: 0.25rem 0.375rem;
+}
+
+[data-rvui-controls='on'] .rv-ctl [role='group'] > b {
+    flex: 0 0 auto;
+}
+
+/* intro: the section's text and the frame run the full width */
+[data-rvui-intro='on'] .cat-main {
+    max-inline-size: none !important;
+    padding-block: 0.5rem !important;
+    padding-inline: 0.75rem !important;
+}
+
+[data-rvui-intro='on'] [data-review-item] :is(p, li, ul, ol, .kc-sec__head, [class*='-expect']) {
+    max-inline-size: none !important;
+}
+
+[data-rvui-intro='on'] [data-review-item] {
+    gap: var(--kp-space-sm, 0.5rem) !important;
+}
+
+/* rail: slimmer, with the step's actions pinned at its foot */
+.rv-dialog[data-rvui-rail='on'] {
+    --rv-rail: clamp(16rem, 17vw, 20rem);
+}
+
+.rv-dialog[data-rvui-rail='on'] .rv-dialog__side {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.rv-dialog[data-rvui-rail='on'] .rv-dialog__scroll {
+    display: grid;
+    align-content: start;
+    gap: 0.5rem;
+    min-block-size: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    padding: 0.625rem 0.75rem;
+}
+
+.rv-dialog[data-rvui-rail='on'] .rv-dialog__foot {
+    display: grid;
+    gap: 0.375rem;
+    padding: 0.5rem 0.75rem;
+    border-block-start: 1px solid var(--border);
+    background: var(--background);
+}
+
+.rv-dialog[data-rvui-rail='on'] .rv-dialog__actions {
+    gap: 0.375rem;
+}
+
+.rv-dialog[data-rvui-rail='on'] .rv-dialog__actions .kp-button {
+    white-space: nowrap;
+}
+
+.rv-dialog[data-rvui-rail='on'] #rv-keys {
+    font-size: 0.75rem;
+}
+
+.rv-dialog[data-rvui-rail='on'] .rv-row {
+    padding-block: 0.375rem;
+}
+
+/* jump: chips in the header, the section in view marked */
+.rv-jump {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    min-inline-size: 0;
+}
+
+.rv-jump__chip {
+    white-space: normal;
+    text-align: start;
+}
+
+.rv-jump__chip[aria-current] {
+    outline: 2px solid var(--primary, var(--foreground));
+    outline-offset: 1px;
+}
+
+.rv-dialog[data-rvui-jump='on'] .rv-row {
+    padding-inline-start: 0.6rem;
+}
+
+.rv-row[data-rv-current] {
+    /* A rule only: the row's box must not move, the boxes of the rows stand in one column. */
+    box-shadow: inset 3px 0 0 var(--primary, var(--foreground));
+}
+
+/* Under 1600 px the chips take a row of their own under the header, so the title and the buttons keep theirs. */
+@media (max-width: 100rem) {
+    .rv-jump {
+        flex: 1 1 100%;
+        order: 9;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+    }
+
+    .rv-jump__chip {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 48rem) {
+    .rv-dialog[data-rvui-rail='on'] .rv-dialog__side {
+        max-block-size: 32dvh;
+    }
+
+    .rv-dialog[data-rvui-fill='on'] .rv-dialog__position {
+        font-size: 0.6875rem;
+        flex: 1 1 100%;
+    }
+
+    .rv-dialog[data-rvui-fill='on'] .rv-dialog__head > h2 {
+        flex: 1 1 8rem;
+    }
+
+    .rv-dialog[data-rvui-rail='on'] [data-rv-intro] {
+        display: none;
+    }
+
+    .rv-dialog[data-rvui-fill='on'] .rv-dialog__head > h2 {
+        font-size: 0.9375rem;
+    }
+
+    .rv-dialog[data-rvui-titles='on'] .rv-lane__section {
+        display: inline;
+    }
+
+    .rv-jump {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        flex: 1 1 100%;
+        order: 9;
+    }
+
+    .rv-jump__chip {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
 }

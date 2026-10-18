@@ -21,24 +21,39 @@
 // 3. The page republished with a new round id that lists the old one as received (the page is intercepted, nothing
 //    on disk changes): the journal still holds both notes, and the Agenda says the answer was received.
 //
+// 4. The dialog's layout (Kenny, 2026-10-18 15:15: "99% fullscreen ... maximum coverage and use of the screen"). At every
+//    width (1920x1080, 1280x800, 390x844) the dialog and the page have no horizontal scroll. With the layout options on
+//    (`--rvui all`, or a list such as `--rvui fill,look`; they are off by default, so a live part is judged as before):
+//    `fill`: the dialog uses at least 97% of the viewport's width and height; `look`: no look-at paragraph appears twice
+//    in a step's rows; and at 1920x1080 the component of the first section starts within the first 40% of the dialog's
+//    height, so the component is what the reviewer sees first.
+//
 // Run (a static server on the repository root first):
-//   node research/_review/check-kit.mjs <port> <research/topic/demo.html>
+//   node research/_review/check-kit.mjs <port> <research/topic/demo.html> [--rvui all|fill,look,...]
 import { createRequire } from 'node:module';
 
 const require = createRequire('/home/kenny/Projects/kp-themes/node_modules/');
 const { firefox } = require('playwright-core');
-const [port, path] = process.argv.slice(2);
+const args = process.argv.slice(2);
+const flagAt = args.indexOf('--rvui');
+const RVUI = flagAt >= 0 ? args.splice(flagAt, 2)[1] || '' : '';
+const [port, path] = args;
 if (!port || !path) {
-    console.error('usage: node research/_review/check-kit.mjs <port> <research/topic/demo.html>');
+    console.error('usage: node research/_review/check-kit.mjs <port> <research/topic/demo.html> [--rvui all|fill,look,...]');
     process.exit(2);
 }
+/** The layout options that are on for this run (the link forces them for the visit, the page keeps nothing). */
+const ON = new Set(RVUI.split(',').flatMap((part) => (part === 'all' ? ['fill', 'titles', 'look', 'controls', 'intro', 'rail', 'jump'] : [part.trim()])).filter(Boolean));
+/** The least share of the viewport the dialog uses with `fill` on, and how high the component starts (Kenny, 2026-10-18 15:15). */
+const MIN_FILL = 0.97;
+const MAX_COMPONENT_SHARE = 0.4;
 /** The most control groups one component may carry in the dialog (Kenny, 2026-10-18 07:11); more means split the section. */
 const MAX_GROUPS = 4;
 /** How far under its section's top the component may start, and how far under its controls (px). */
 const MAX_COMPONENT_TOP = 480;
 const MAX_CONTROLS_GAP = 48;
 const ORIGIN = `http://127.0.0.1:${port}`;
-const URL_ = `${ORIGIN}/${path}`;
+const URL_ = `${ORIGIN}/${path}${RVUI ? `${path.includes('?') ? '&' : '?'}rvui=${RVUI}` : ''}`;
 /** @type {string[]} */
 const faults = [];
 const fault = (/** @type {string} */ line) => faults.push(line);
@@ -316,6 +331,84 @@ for (let at = 0; at < total; at++) {
     });
     await page.waitForTimeout(700);
 }
+
+// ---------------------------------------------------------------- 4 · the layout at three widths
+for (const [width, height] of [
+    [1920, 1080],
+    [1280, 800],
+    [390, 844],
+]) {
+    await page.setViewportSize({ width, height });
+    await openDialog();
+    // The first section's frame must have loaded to measure its component.
+    await page.waitForFunction(() => document.querySelector('dialog.rv-dialog .rv-lane iframe')?.contentDocument?.querySelector('[data-review-item]'), null, { timeout: 15000 }).catch(() => {});
+    await page.waitForTimeout(1200);
+    const layout = await page.evaluate(() => {
+        const dialog = /** @type {HTMLDialogElement} */ (document.querySelector('dialog.rv-dialog'));
+        const box = dialog.getBoundingClientRect();
+        const norm = (/** @type {string} */ t) => t.replace(/\s+/g, ' ').trim();
+        const looks = [...dialog.querySelectorAll('[data-rv-list] .rv-row__look')].map((el) => norm(el.textContent || ''));
+        const lane = dialog.querySelector('.rv-lane iframe');
+        const doc = /** @type {HTMLIFrameElement | null} */ (lane)?.contentDocument;
+        const section = doc?.querySelector('[data-review-item]');
+        const forId = section?.querySelector('[data-review-controls]')?.getAttribute('data-review-controls-for');
+        const component = forId ? section?.querySelector(`#${CSS.escape(forId)}`) : null;
+        const top = component && lane ? lane.getBoundingClientRect().top + component.getBoundingClientRect().top - box.top : null;
+        // The component is the most important part of the screen (Kenny, 2026-10-18 15:26): its frame is the largest area of
+        // the dialog, it is centred in the stage, and no chrome of the kit lies over it.
+        const view = /** @type {HTMLElement} */ (dialog.querySelector('.rv-dialog__view')).getBoundingClientRect();
+        const clip = (/** @type {DOMRect} */ r) => ({
+            left: Math.max(r.left, view.left),
+            right: Math.min(r.right, view.right),
+            top: Math.max(r.top, view.top),
+            bottom: Math.min(r.bottom, view.bottom),
+        });
+        const frameBox = lane ? clip(lane.getBoundingClientRect()) : null;
+        const area = (/** @type {{ left: number, right: number, top: number, bottom: number } | null} */ r) => (r ? Math.max(0, r.right - r.left) * Math.max(0, r.bottom - r.top) : 0);
+        const chrome = ['.rv-dialog__head', '.rv-dialog__side'].map((sel) => {
+            const r = dialog.querySelector(sel)?.getBoundingClientRect();
+            return r ? r.width * r.height : 0;
+        });
+        let centred = null;
+        let covered = false;
+        if (component && lane) {
+            const c = component.getBoundingClientRect();
+            const l = lane.getBoundingClientRect();
+            const outer = { left: l.left + c.left, right: l.left + c.right, top: l.top + c.top, bottom: l.top + c.bottom };
+            const shown = clip(/** @type {DOMRect} */ (/** @type {unknown} */ (outer)));
+            centred = Math.abs((outer.left + outer.right) / 2 - (view.left + view.right) / 2) / view.width;
+            if (area(shown) > 0) {
+                const hit = document.elementFromPoint((shown.left + shown.right) / 2, (shown.top + shown.bottom) / 2);
+                covered = hit !== lane;
+            }
+        }
+        return {
+            frameArea: area(frameBox),
+            chromeArea: Math.max(...chrome),
+            centred,
+            covered,
+            width: box.width / innerWidth,
+            height: box.height / innerHeight,
+            dialogScroll: dialog.scrollWidth - dialog.clientWidth,
+            pageScroll: document.documentElement.scrollWidth - innerWidth,
+            duplicates: looks.length - new Set(looks).size,
+            componentShare: top === null ? null : top / box.height,
+            componentTop: top === null ? null : Math.round(top),
+        };
+    });
+    const at = `at ${width}x${height}`;
+    if (layout.dialogScroll > 1 || layout.pageScroll > 1) fault(`${at}: the dialog scrolls sideways (${layout.dialogScroll} px in the dialog, ${layout.pageScroll} px on the page)`);
+    if (ON.has('fill') && (layout.width < MIN_FILL || layout.height < MIN_FILL))
+        fault(`${at}: the dialog uses ${(layout.width * 100).toFixed(1)}% of the width and ${(layout.height * 100).toFixed(1)}% of the height (at least ${MIN_FILL * 100}%)`);
+    if (ON.has('look') && layout.duplicates > 0) fault(`${at}: ${layout.duplicates} look-at paragraph(s) repeat inside one step; it is shown once for the theme`);
+    if (RVUI && layout.frameArea < layout.chromeArea)
+        fault(`${at}: the component's frame shows ${Math.round(layout.frameArea)} px² and the kit's own chrome ${Math.round(layout.chromeArea)} px²; the component must be the largest area`);
+    if (layout.centred !== null && layout.centred > 0.05) fault(`${at}: the component is ${(layout.centred * 100).toFixed(1)}% of the stage's width off its centre`);
+    if (layout.covered) fault(`${at}: something of the kit's chrome lies over the component`);
+    if (width === 1920 && RVUI && layout.componentShare !== null && layout.componentShare > MAX_COMPONENT_SHARE)
+        fault(`${at}: the component of the first section starts ${layout.componentTop} px under the dialog's top (${(layout.componentShare * 100).toFixed(0)}% of its height, at most ${MAX_COMPONENT_SHARE * 100}%)`);
+}
+await page.setViewportSize({ width: 1600, height: 950 });
 
 // ---------------------------------------------------------------- 2 · a reload keeps a note on the first and last row
 await openDialog();

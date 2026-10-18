@@ -123,9 +123,83 @@ const HUB_NAME = NEXT && /\/agenda\.html$/.test(new URL(NEXT).pathname) ? 'the A
  * Where the end of a review goes by itself: the hub the demo was opened from, else the Agenda, the one page Kenny
  * starts from (Kenny, 2026-10-16: straight back to agenda.html, no end dialog).
  */
+/*
+ * A preview of this dialog inside another page (research/review-kit-v2 shows the real dialog in a frame, `?rv-preview`) keeps
+ * its own theme: it does not read a change of the shared theme the page around it, or its own frames, store. The frames put
+ * the stored theme back themselves (restoreTheme), so nothing is changed for the viewer.
+ */
+if (params.has('rv-preview')) addEventListener('storage', (event) => event.key === STORAGE_KEY && event.stopImmediatePropagation(), true);
 const AGENDA = new URL('../../catalogue/agenda.html', import.meta.url).href;
 const DONE_HREF = NEXT || AGENDA;
 const DONE_NAME = NEXT ? HUB_NAME : 'the Agenda';
+
+/*
+ * The dialog's layout options (Kenny, 2026-10-18 15:15 and 15:17: "maximum coverage and use of the screen" and
+ * "make proposals yourself"). Every improvement is an option of the kit, switchable at runtime from the dialog's
+ * "View" menu and kept per viewer (localStorage `kp-review-ui`); each is off by default, so a live part looks as it
+ * did until Kenny picks the defaults in research/review-kit-v2. The link may force the options for one visit only,
+ * without keeping them: `?rvui=all`, `?rvui=none`, `?rvui=fill,look` or `?rvui=all,-jump`.
+ * The options are attributes on the dialog (`data-rvui-<id>="on"`) and on the document of every frame, so the CSS in
+ * review.css reads them in both places.
+ */
+const UI_OPTIONS = [
+    {
+        id: 'fill',
+        label: 'Near-fullscreen dialog',
+        about: 'The dialog takes 99% of the window and its header, margins and gaps are tighter, so the component gets the room.',
+    },
+    {
+        id: 'titles',
+        label: 'Each title once',
+        about: 'The section title stands once per frame, in the frame head; the topic heading and the section’s own heading are not repeated.',
+    },
+    {
+        id: 'look',
+        label: 'What to look at, once per step',
+        about: 'A look-at paragraph that is the same in several sections of the step is shown once under the theme’s name, not under each section.',
+    },
+    {
+        id: 'controls',
+        label: 'Compact controls',
+        about: 'The controls of a component flow side by side across the full width, label and buttons on one line, in the package’s small button size.',
+    },
+    {
+        id: 'intro',
+        label: 'Full-width text',
+        about: 'The section’s intro and Expected text run the whole width of the frame instead of a narrow column, with a tighter frame margin.',
+    },
+    {
+        id: 'rail',
+        label: 'Slim side column',
+        about: 'The side column is narrower and Previous, Next and Approve stay pinned at its foot, in one row, whatever the number of rows.',
+    },
+    {
+        id: 'jump',
+        label: 'Jump list of sections',
+        about: 'One chip per section of the step in the header: a press scrolls to it, and the one in view is marked.',
+    },
+];
+const UI_KEY = 'kp-review-ui';
+/** @type {Record<string, boolean>} */
+const ui = Object.fromEntries(UI_OPTIONS.map((o) => [o.id, false]));
+/** What this viewer switched by hand and kept; a link's `rvui` forces options for one visit and is never kept. */
+/** @type {Record<string, boolean>} */
+let keptUi = {};
+try {
+    keptUi = JSON.parse(localStorage.getItem(UI_KEY) || '{}') || {};
+} catch {
+    /* a private window or an unreadable value keeps the defaults */
+}
+for (const o of UI_OPTIONS) if (typeof keptUi[o.id] === 'boolean') ui[o.id] = keptUi[o.id];
+for (const part of (params.get('rvui') || '').split(',').map((x) => x.trim()).filter(Boolean)) {
+    if (part === 'all' || part === 'none') for (const o of UI_OPTIONS) ui[o.id] = part === 'all';
+    else if (part.startsWith('-') && part.slice(1) in ui) ui[part.slice(1)] = false;
+    else if (part in ui) ui[part] = true;
+}
+/** Writes the options as attributes on an element (the dialog, or the root of a frame's document). */
+const paintUi = (/** @type {Element} */ el) => {
+    for (const o of UI_OPTIONS) el.setAttribute(`data-rvui-${o.id}`, ui[o.id] ? 'on' : 'off');
+};
 /*
  * Embed mode (Kenny, 2026-10-06 23:52: "Misschien helpt het om alle bestaande
  * laadschermen per thema te tonen, zodat ik dan bij andere thema's ook kan
@@ -838,6 +912,7 @@ function record(pair, change) {
         choice: change.choice ?? null,
         label: key === pair.key ? pair.label : undefined,
     });
+    emit('verdict', { pair, change });
 }
 /** A note being typed: into the journal after a pause. @param {Pair} pair @param {() => { verdict: string | null, note: string }} read */
 function recordSoon(pair, read) {
@@ -1085,7 +1160,14 @@ dialog.innerHTML = `
     <div class="rv-dialog__head">
         <p class="rv-dialog__position" data-rv-position></p>
         <h2 class="kp-dialog__title" id="rv-dialog-title" data-rv-title></h2>
+        <nav class="rv-jump" aria-label="Sections of this step" data-rv-jumps hidden></nav>
         <span class="kp-badge" data-rv-state></span>
+        <button type="button" class="kp-button kp-button--sm rv-dialog__view-menu" popovertarget="rv-ui-menu" data-rv-ui-open>View</button>
+        <div class="rv-ui" id="rv-ui-menu" popover data-rv-ui-menu>
+            <p class="rv-ui__title">How this dialog looks</p>
+            <p class="rv-ui__note">Each setting applies at once and is kept for you in this browser.</p>
+            <div class="rv-ui__list" data-rv-ui-list></div>
+        </div>
         <button type="button" class="kp-button kp-button--ghost rv-dialog__close" aria-label="Close (Escape)" data-rv-close>✕</button>
     </div>
     <div class="rv-dialog__grid">
@@ -1107,21 +1189,26 @@ dialog.innerHTML = `
             </div>
         </div>
         <div class="rv-dialog__side">
-            <p class="rv-meta" data-rv-intro>Everything on the left is approved together. Tick only what is wrong, and say why.</p>
-            <div class="rv-update" data-rv-update></div>
-            <p class="kp-alert kp-alert--destructive rv-integrity" role="alert" data-rv-integrity hidden></p>
-            <ol class="rv-dialog__list" data-rv-list></ol>
-            <p class="kp-field__error" role="alert" data-rv-refused hidden></p>
-            <div class="rv-dialog__actions">
-                <button type="button" class="kp-button" data-rv-go="-1">← Previous</button>
-                <button type="button" class="kp-button" data-rv-go="1">Next →</button>
-                <button type="button" class="kp-button kp-button--primary rv-dialog__wide" data-rv-approve>↑ Approve this theme</button>
+            <div class="rv-dialog__scroll">
+                <p class="rv-meta" data-rv-intro>Everything on the left is approved together. Tick only what is wrong, and say why.</p>
+                <div class="rv-update" data-rv-update></div>
+                <p class="kp-alert kp-alert--destructive rv-integrity" role="alert" data-rv-integrity hidden></p>
+                <ol class="rv-dialog__list" data-rv-list></ol>
+                <p class="kp-field__error" role="alert" data-rv-refused hidden></p>
             </div>
-            <p class="rv-meta" id="rv-keys">Up approves the step, Left/Right move between steps, Escape closes. The theme switches by itself.</p>
+            <div class="rv-dialog__foot">
+                <div class="rv-dialog__actions">
+                    <button type="button" class="kp-button" data-rv-go="-1">← Previous</button>
+                    <button type="button" class="kp-button" data-rv-go="1">Next →</button>
+                    <button type="button" class="kp-button kp-button--primary rv-dialog__wide" data-rv-approve>↑ Approve this theme</button>
+                </div>
+                <p class="rv-meta" id="rv-keys">Up approves the step, Left/Right move between steps, Escape closes. The theme switches by itself.</p>
+            </div>
         </div>
     </div>`;
 document.body.append(dialog);
 const $ = (selector) => /** @type {HTMLElement} */ (dialog.querySelector(selector));
+paintUi(dialog);
 const stage = $('[data-rv-stage]');
 const list = $('[data-rv-list]');
 const refused = $('[data-rv-refused]');
@@ -1799,11 +1886,14 @@ function laneFor(pair) {
                 doc.head.append(own);
                 const section = /** @type {HTMLElement | null} */ (doc.querySelector(`[data-review-item="${CSS.escape(pair.item.id)}"]`));
                 if (!section || !card.isConnected) return;
+                paintUi(doc.documentElement);
+                markDup(section, pair.title);
                 const tool = mountBlockTools({ section, item: pair.item.id, theme: pair.theme, themeLabel: label, title: pair.title });
                 card.querySelector('.rv-lane__head')?.append(tool.bar);
                 tools.push(tool);
                 lanes.push({ pair, frame, section, tool });
                 placeControls(section);
+                sizeControls(section);
                 restoreLanePresses(section, pair.item.id);
                 doc.addEventListener('click', (event) => event.isTrusted && keepLanePress(pair.item.id, /** @type {Element} */ (event.target).closest?.('button')), true);
                 const View = doc.defaultView?.CustomEvent ?? CustomEvent;
@@ -1887,7 +1977,7 @@ function frameFor(pair) {
     return box;
 }
 
-function rowFor(pair, only = null, name = '') {
+function rowFor(pair, only = null, name = '', shared = new Set()) {
     const li = document.createElement('li');
     li.className = 'rv-row';
     // The row's own pair: every verdict and note is filed by this key, never by the row's place in the list.
@@ -1907,7 +1997,8 @@ function rowFor(pair, only = null, name = '') {
     li.querySelector('[data-rv-jump]').textContent = name || pair.title;
     const look = pair.item ? lookFor(pair.item.section, pair.theme) : pair.look;
     const lookBox = li.querySelector('[data-rv-row-look]');
-    if (look && !only) lookBox.innerHTML = look;
+    // A look-at paragraph the step shows once under the theme (option `look`) is not repeated in the row.
+    if (look && !only && !shared.has(look)) lookBox.innerHTML = look;
     else lookBox.remove();
     const choiceBox = li.querySelector('[data-rv-choices]');
     // In aspect mode the option itself is picked by flipping it large in the stage
@@ -2059,12 +2150,197 @@ function rowFor(pair, only = null, name = '') {
     return li;
 }
 
+/** Marks the section's own heading when it only repeats the title the frame head or the dialog already carries. */
+function markDup(/** @type {HTMLElement} */ section, /** @type {string} */ title) {
+    const norm = (/** @type {string} */ t) => t.replace(/\s+/g, ' ').trim().toLowerCase();
+    const labelled = section.getAttribute('aria-labelledby');
+    const heading = (labelled && section.ownerDocument.getElementById(labelled)) || section.querySelector('h1, h2, h3');
+    if (heading && norm(heading.textContent || '') === norm(title)) heading.setAttribute('data-rv-dup-title', '');
+}
+
+/** Option `controls`: the demo's own buttons take the package's small size; switched off, only what this added goes. */
+function sizeControls(/** @type {HTMLElement} */ section) {
+    for (const button of section.querySelectorAll('[data-review-controls] .kp-button')) {
+        if (ui.controls) {
+            if (button.classList.contains('kp-button--sm')) continue;
+            button.classList.add('kp-button--sm');
+            button.setAttribute('data-rv-sm', '');
+        } else if (button.hasAttribute('data-rv-sm')) {
+            button.classList.remove('kp-button--sm');
+            button.removeAttribute('data-rv-sm');
+        }
+    }
+}
+
+/** Option `jump`: one chip per section of the step in the header, the one in view marked (also its row). */
+function paintJumps() {
+    const nav = $('[data-rv-jumps]');
+    nav.replaceChildren();
+    const step = steps[index];
+    const items = [...new Map(shownPairs.filter((p) => p.item).map((p) => [p.key, p])).values()];
+    nav.hidden = !(ui.jump && items.length > 1 && step && !step.aspect);
+    if (nav.hidden) return;
+    items.forEach((pair, at) => {
+        const chip = document.createElement('button');
+        chip.type = 'button';
+        chip.className = 'kp-button kp-button--sm rv-jump__chip';
+        chip.dataset.rvJumpKey = pair.key;
+        chip.title = pair.title;
+        chip.textContent = `${at + 1} · ${pair.title.includes(': ') ? pair.title.split(': ').slice(1).join(': ') : pair.title}`;
+        chip.addEventListener('click', () => {
+            stage.querySelector(`[data-rv-pair="${CSS.escape(pair.key)}"]`)?.scrollIntoView({ block: 'start', behavior: 'smooth' });
+        });
+        nav.append(chip);
+    });
+    markJump();
+}
+function markJump() {
+    const view = stage.closest('.rv-dialog__view');
+    if (!view) return;
+    const top = view.getBoundingClientRect().top + 120;
+    /** @type {HTMLElement | null} */
+    let current = null;
+    for (const el of /** @type {NodeListOf<HTMLElement>} */ (stage.querySelectorAll('[data-rv-pair]')))
+        if (!el.parentElement?.closest('[data-rv-pair]') && el.getBoundingClientRect().top <= top) current = el;
+    const key = (view.scrollTop < 8 ? null : current?.dataset.rvPair) ?? shownPairs[0]?.key ?? '';
+    for (const chip of dialog.querySelectorAll('[data-rv-jump-key]'))
+        chip.toggleAttribute('aria-current', /** @type {HTMLElement} */ (chip).dataset.rvJumpKey === key);
+    for (const row of /** @type {NodeListOf<HTMLElement>} */ (list.querySelectorAll('.rv-row')))
+        row.toggleAttribute('data-rv-current', ui.jump && row.dataset.rvKey === key);
+}
+{
+    new ResizeObserver(() => ui.jump && markJump()).observe(stage);
+    let queued = false;
+    $('.rv-dialog__view').addEventListener(
+        'scroll',
+        () => {
+            if (queued || !ui.jump) return;
+            queued = true;
+            requestAnimationFrame(() => {
+                queued = false;
+                markJump();
+            });
+        },
+        { passive: true },
+    );
+}
+
+/** Switches one layout option: kept for this viewer, shown at once in the dialog, in every frame, and in the rows. */
+function setUi(/** @type {string} */ id, /** @type {boolean} */ on) {
+    ui[id] = on;
+    keptUi[id] = on;
+    try {
+        localStorage.setItem(UI_KEY, JSON.stringify(keptUi));
+    } catch {
+        /* a private window: the option holds for this visit */
+    }
+    paintUi(dialog);
+    emit('ui', { id, on });
+    for (const lane of lanes) {
+        paintUi(lane.section.ownerDocument.documentElement);
+        sizeControls(lane.section);
+    }
+    for (const pair of shownPairs) if (pair.item && !steps[index]?.topic) sizeControls(pair.item.section);
+    if (!dialog.open || !steps[index]) return;
+    flushNotes();
+    list.replaceChildren(...stepRows(steps[index], shownPairs));
+    paintJumps();
+    checkIntegrity();
+}
+/** Adds the View menu's switch for one option, with what it does in a sentence. */
+function addMenuRow(/** @type {{ id: string, label: string, about: string }} */ option) {
+    const box = $('[data-rv-ui-list]');
+    const wrap = document.createElement('div');
+    wrap.className = 'rv-ui__option';
+    const check = document.createElement('span');
+    check.className = 'kp-field kp-field--check';
+    const input = document.createElement('input');
+    input.type = 'checkbox';
+    input.className = 'kp-field__check';
+    input.id = `rv-ui-${option.id}`;
+    input.checked = ui[option.id];
+    input.addEventListener('change', () => setUi(option.id, input.checked));
+    const label = document.createElement('label');
+    label.className = 'kp-field__label';
+    label.htmlFor = input.id;
+    label.textContent = option.label;
+    check.append(input, label);
+    const about = document.createElement('p');
+    about.className = 'rv-ui__about';
+    about.textContent = option.about;
+    wrap.append(check, about);
+    box.append(wrap);
+}
+for (const option of UI_OPTIONS) addMenuRow(option);
+
+/*
+ * Extension points for modules that add to the dialog (a bar, a key, a chip row). A module is a separate file that
+ * the page loads after review.js; it needs no edit of this file beyond what is here:
+ * - `window.rvKit.registerUiOption({ id, label, about, default })` adds a switch to the View menu, kept per viewer like
+ *   the layout options; the option is an attribute `data-rvui-<id>="on|off"` on the dialog and on every frame's root,
+ *   and `rvKit.ui[id]` is its value.
+ * - events on `window`: `rv:open` (the dialog opened), `rv:step` ({ index, step, pairs }: a step was shown),
+ *   `rv:verdict` ({ pair, verdict, note }: a verdict or note was filed), `rv:ui` ({ id, on }: an option was switched).
+ */
+/** @type {any} */ (window).rvKit = {
+    ui,
+    dialog,
+    setUi,
+    registerUiOption(/** @type {{ id: string, label: string, about: string, default?: boolean }} */ option) {
+        if (option.id in ui) return;
+        UI_OPTIONS.push(/** @type {any} */ (option));
+        ui[option.id] = typeof keptUi[option.id] === 'boolean' ? keptUi[option.id] : Boolean(option.default);
+        for (const part of (params.get('rvui') || '').split(',').map((x) => x.trim())) {
+            if (part === 'all') ui[option.id] = true;
+            else if (part === 'none' || part === `-${option.id}`) ui[option.id] = false;
+            else if (part === option.id) ui[option.id] = true;
+        }
+        paintUi(dialog);
+        for (const lane of lanes) paintUi(lane.section.ownerDocument.documentElement);
+        addMenuRow(option);
+    },
+};
+/** Tells the modules something happened. @param {string} name @param {any} detail */
+const emit = (name, detail = {}) => window.dispatchEvent(new CustomEvent(`rv:${name}`, { detail }));
+
 /** The rows of a topic step: under the step's theme, one row per section, in the order of the frames. */
 function topicRows(/** @type {Pair[]} */ shown) {
     const head = document.createElement('li');
     head.className = 'rv-list__group';
     head.textContent = LABEL[shown[0]?.theme] || shown[0]?.theme || '';
-    return [head, ...shown.map((pair) => rowFor(pair, null, pair.title))];
+    const shared = sharedLooks(shown);
+    return [head, ...sharedLookRows(shared), ...shown.map((pair) => rowFor(pair, null, pair.title, shared))];
+}
+
+/** The look-at texts that more than one section of the step carries: shown once for the step when option `look` is on. */
+function sharedLooks(/** @type {Pair[]} */ shown) {
+    /** @type {Map<string, number>} */
+    const count = new Map();
+    if (ui.look)
+        for (const pair of shown) {
+            const look = pair.item ? lookFor(pair.item.section, pair.theme) : pair.look;
+            if (look) count.set(look, (count.get(look) ?? 0) + 1);
+        }
+    return new Set([...count].filter(([, n]) => n > 1).map(([text]) => text));
+}
+/** The one row of each shared look-at text, `.rv-list__look`, under the theme's name. */
+function sharedLookRows(/** @type {Set<string>} */ shared) {
+    return [...shared].map((text) => {
+        const li = document.createElement('li');
+        li.className = 'rv-list__look';
+        const p = document.createElement('p');
+        p.className = 'rv-row__look';
+        p.innerHTML = text;
+        li.append(p);
+        return li;
+    });
+}
+
+/** The rows of the step on screen, built again when an option that changes them is switched. */
+function stepRows(/** @type {any} */ step, /** @type {Pair[]} */ pairsShown) {
+    if (step.topic) return topicRows(pairsShown);
+    const shared = step.aspect ? new Set() : sharedLooks(pairsShown);
+    return [...sharedLookRows(shared), ...pairsShown.map((pair) => rowFor(pair, step.aspect ?? null, '', shared))];
 }
 
 /*
@@ -2203,8 +2479,15 @@ async function show(at) {
             }
         }
         stage.scrollTop = 0;
-        if (!step.topic) for (const pair of shownPairs) if (pair.item) placeControls(pair.item.section);
-        list.replaceChildren(...(step.topic ? topicRows(shownPairs) : shownPairs.map((pair) => rowFor(pair, step.aspect ?? null))));
+        if (!step.topic)
+            for (const pair of shownPairs)
+                if (pair.item) {
+                    placeControls(pair.item.section);
+                    sizeControls(pair.item.section);
+                    markDup(pair.item.section, pair.item.title);
+                }
+        list.replaceChildren(...stepRows(step, shownPairs));
+        paintJumps();
         paintUpdate(step);
         $('[data-rv-intro]').textContent = step.topic
             ? "One topic, one theme per step: the topic's sections in this theme, then the same topic in the next theme. Everything on the left is approved together. Tick only what is wrong, and say why."
@@ -2234,9 +2517,12 @@ async function show(at) {
         badge.className = `kp-badge${stepOpen(step) ? '' : rejected ? ' kp-badge--destructive' : ' kp-badge--success'}`;
         refused.hidden = true;
         updateApprove();
+        const wasOpen = dialog.open;
         if (!dialog.open) dialog.showModal();
+        if (!wasOpen) emit('open');
         checkIntegrity();
-        approveButton.focus({ preventScroll: true });
+        // A preview inside another page never takes the focus from it (a note typed there lost its keys).
+        if (!params.has('rv-preview')) approveButton.focus({ preventScroll: true });
         // Every page starts at its top, the demo on the left and the rows on the right (Kenny, 2026-10-13: "als ik van
         // één dialog pagina naar de andere ga, scroll dan naar boven en doe hetzelfde voor de items rechts").
         for (const box of [stage, stage.closest('.rv-dialog__view'), dialog.querySelector('.rv-dialog__side')]) if (box) box.scrollTop = 0;
@@ -2255,6 +2541,7 @@ async function show(at) {
             }
         // The shown option's own motion plays at once: its controls are pressed for the reviewer.
         if (step.aspect) requestAnimationFrame(() => paintFlip(step));
+        emit('step', { index, step, pairs: shownPairs });
     } finally {
         busy = false;
     }
@@ -2404,6 +2691,7 @@ document.addEventListener(
         // the step keys stay off, so a key meant for the demo never approves or
         // switches the theme [fix-103].
         const from = /** @type {HTMLElement} */ (event.target);
+        if (from.closest?.('[data-rv-ui-menu]')) return;
         if (from.matches('textarea, input:not([type="checkbox"]):not([type="radio"]):not([type="button"])')) return;
         // V and L act on the section most in view: its previous version, its open and close on a loop.
         if ((event.code === 'KeyV' || event.code === 'KeyL') && tools.length) {

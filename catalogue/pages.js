@@ -187,6 +187,12 @@ export const PAGES = [
                 label: 'Approved in formal, changed since: judge it again',
                 about: 'Eleven components you approved in formal that look different now because the shared package code changed: bars that scroll sideways at phone width, version badges, checklist detail, entity card actions, chart labels and the availability grid. Each says what changed and what to check; a width switch shows 1280 and 390.',
             },
+            // Kenny, 2026-10-18 15:15 to 15:26: the review dialog wasted space; the component must be the main thing on screen, and every improvement is an option shown live (research/review-kit-v2, generated from options.json by build.mjs).
+            {
+                href: 'research/review-kit-v2/demo.html',
+                label: 'The review dialog, v2: the component first',
+                about: 'The dialog you judge in, made to give the component the whole screen: near-fullscreen, each title once, what to look at once per step, compact controls, full-width text, a slim side column and a jump list. Each option is shown live at a real window size and switches on and off; you only choose which ones the dialogs open with.',
+            },
         ],
     },
     {

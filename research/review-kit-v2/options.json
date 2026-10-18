@@ -1,0 +1,115 @@
+{
+    "_about": "The registry of the review dialog's layout options. build.mjs turns every entry into one section of demo.html. The id is the id the kit knows the option by (research/_review/review.js UI_OPTIONS or rvKit.registerUiOption), so the preview can switch it with ?rvui=<id>. Add an entry here when an option joins the kit, run `node research/review-kit-v2/build.mjs`, and the demo shows it.",
+    "previewPage": "research/kpadopt56-choose/demo.html",
+    "groups": [
+        { "id": "space", "title": "The component first: the dialog's space" },
+        { "id": "reading", "title": "Reading and moving through a step" }
+    ],
+    "options": [
+        {
+            "id": "fill",
+            "group": "space",
+            "title": "Near-fullscreen dialog",
+            "source": "Kenny, 2026-10-18 15:15: \"We should make it 99% fullscreen.\"",
+            "what": "The dialog takes 99% of the window instead of 94% by 92%, and its header, margins and gaps get tighter.",
+            "why": "Every pixel the chrome gives back goes to the component you are judging; on a 1920 by 1080 window the component gains about 120 px of width and 80 px of height.",
+            "expected": [
+                "<b>Off:</b> a wide grey margin around the dialog and a tall header with padding.",
+                "<b>On:</b> the dialog nearly touches the window edge, the header is one slim row, the frames sit closer together.",
+                "The close button, the step line and the title all stay in the header row."
+            ],
+            "look": "Compare the margin round the dialog and the height of the header with the option off and on; nothing may be cut at 1280 or at phone width.",
+            "default": "on"
+        },
+        {
+            "id": "titles",
+            "group": "space",
+            "title": "Each title once",
+            "source": "Kenny, 2026-10-18 15:15: \"the title seems to not even use the full horizontal space\" and the section title standing three times.",
+            "what": "The section title stands once per frame, in the frame's own head; the topic heading above it and the section's own heading inside it are not repeated.",
+            "why": "Three copies of one title cost two lines of height and make you read the same words three times before you reach the component.",
+            "expected": [
+                "<b>Off:</b> the section title above the frame, in the frame head and again inside the section.",
+                "<b>On:</b> one title, in the frame head, with the play and speed buttons beside it; the theme stays in the dialog header.",
+                "Screen readers still find the topic heading; it is only not drawn."
+            ],
+            "look": "Count the places the section title is written, with the option off and on.",
+            "default": "on"
+        },
+        {
+            "id": "look",
+            "group": "space",
+            "title": "What to look at, once per step",
+            "source": "Kenny, 2026-10-18 15:15: \"There are sections to the right with the exact same text\"; the same idea as the theme paragraph once per theme run.",
+            "what": "A look-at paragraph that is the same in several sections of one step is shown once under the theme's name in the side column, and only the lines that differ stay under their section.",
+            "why": "The theme's own paragraph was repeated under every section of the step, a screen of identical text in the column you use to judge.",
+            "expected": [
+                "<b>Off:</b> the same paragraph under each of the step's sections.",
+                "<b>On:</b> that paragraph once under the theme's name; a section with its own line keeps it.",
+                "Every section still has its row with Not approved, its note and its choices."
+            ],
+            "look": "In the side column, read how many times the same sentence appears with the option off and on.",
+            "default": "on"
+        },
+        {
+            "id": "controls",
+            "group": "space",
+            "title": "Compact controls",
+            "source": "Kenny, 2026-10-18 15:15: \"they can be much more inline to maximise space usage\".",
+            "what": "The controls of a component flow side by side across the full width, each group's label and buttons on one line, in the package's small button size.",
+            "why": "Four groups fit in two lines instead of a tall stack of left-aligned rows with huge buttons, so the component starts higher; the controls stay directly above their component.",
+            "expected": [
+                "<b>Off:</b> one group per row, large buttons, most of the width empty.",
+                "<b>On:</b> groups side by side that wrap at the window's edge, small package buttons, one word \"Controls\" as the plate's title.",
+                "Pressing a button still changes the component and the pressed one stays pressed."
+            ],
+            "look": "Look at the height of the controls plate and at whether any button is cut or touches the plate's edge.",
+            "default": "on"
+        },
+        {
+            "id": "intro",
+            "group": "space",
+            "title": "Full-width text",
+            "source": "Kenny, 2026-10-18 15:15: \"the demo's intro text is a narrow left column\" and the empty space beside it.",
+            "what": "The section's intro and Expected text run the whole width of the frame instead of a narrow column, and the page margin inside the frame gets tighter.",
+            "why": "A line that is 80 characters wide in a 1700 px frame leaves most of the frame empty and makes the paragraph tall; at full width it is two lines.",
+            "expected": [
+                "<b>Off:</b> the intro paragraph is a narrow column with empty space to its right.",
+                "<b>On:</b> the paragraph uses the frame's width and takes fewer lines.",
+                "On a phone nothing changes, the column was already the whole width."
+            ],
+            "look": "Compare the number of lines of the intro paragraph and the empty space to its right.",
+            "default": "on"
+        },
+        {
+            "id": "rail",
+            "group": "space",
+            "title": "Slim side column",
+            "source": "Claude's proposal, from Kenny's 2026-10-18 15:15 \"narrower or merged\" and \"reachable without scrolling\".",
+            "what": "The side column is narrower, and Previous, Next and Approve stay pinned at its foot while its rows scroll.",
+            "why": "The component gains the width and the buttons you press most are always under your thumb, however many sections the step has.",
+            "expected": [
+                "<b>Off:</b> a 22 rem column; the buttons sit at the end of the rows and scroll away on a long step.",
+                "<b>On:</b> a column of about 17% of the window; the rows scroll, the three buttons and the key line stay at the foot.",
+                "Approve, Previous and Next keep working with the keys Up, Left and Right."
+            ],
+            "look": "Scroll the side column on a step with several sections: the buttons must not move.",
+            "default": "on"
+        },
+        {
+            "id": "jump",
+            "group": "reading",
+            "title": "Jump list of sections",
+            "source": "Claude's proposal.",
+            "what": "One chip per section of the step in the header: a press scrolls to that section, and the section in view is marked in the chips and in its row.",
+            "why": "On a step with three or more tall sections you see at once where you are and can go to the one you want without scrolling past the others.",
+            "expected": [
+                "<b>Off:</b> no chips; the rows in the side column are the only way to jump.",
+                "<b>On:</b> numbered chips in the header; the marked one follows the scroll and its row gets a rule at the start.",
+                "At 1600 px and narrower the chips take their own row under the header and scroll sideways."
+            ],
+            "look": "Scroll the frames and watch the marked chip follow; press another chip.",
+            "default": "off"
+        }
+    ]
+}

@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en" data-theme="formal" data-review="review-kit-v2" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>The review dialog, v2: the component first</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main rk2-page" data-rk2-page="research/kpadopt56-choose/demo.html">
+            <header class="rk2-intro">
+                <h1>The review dialog, v2: the component first</h1>
+                <p class="cat-intro">
+                    Kenny, 2026-10-18 15:26: "the component itself is the most important part of the screen, so it must always be clearly
+                    visible and central." Each section below is one improvement to the dialog you judge in. It shows the real dialog, live, at a
+                    real window size; switch the option under <b>This option</b> to see it off and on, and under <b>The other options</b> to
+                    see it among the rest. The dialog's own <b>View</b> menu switches the same options in every review, and keeps them for you.
+                </p>
+                <p>
+                    The question under each preview is only which default the dialogs should open with; every option stays switchable, and
+                    nothing is asked that you must answer. Until you choose, all other reviews look as they did.
+                </p>
+            </header>
+
+            <section
+                class="rk2-sec"
+                id="fill"
+                data-review-item="fill"
+                data-review-components="review-dialog"
+                data-review-title="Near-fullscreen dialog"
+                data-review-topic="space"
+                data-review-topic-title="The component first: the dialog's space"
+                data-review-choices='[{"id":"default-fill","label":"Default for “Near-fullscreen dialog” in the dialogs you open","default":"on","options":[{"value":"on","label":"On","hint":"The dialog opens with this option switched on; you can still switch it off in the View menu."},{"value":"off","label":"Off, as it is today","hint":"The dialog opens as it does now; you can still switch it on in the View menu."}]}]'
+                aria-labelledby="h-fill"
+            >
+                <div class="rk2-sec__head">
+                    <h2 id="h-fill">Near-fullscreen dialog</h2>
+                    <p>The dialog takes 99% of the window instead of 94% by 92%, and its header, margins and gaps get tighter. <span class="rk2-sec__why">Every pixel the chrome gives back goes to the component you are judging; on a 1920 by 1080 window the component gains about 120 px of width and 80 px of height.</span></p>
+                    <p class="rk2-sec__source">Kenny, 2026-10-18 15:15: &quot;We should make it 99% fullscreen.&quot;</p>
+                </div>
+                <div data-review-controls data-review-controls-for="fill-preview">
+                    <div role="group" aria-label="This option" class="rk2-actions">
+                        <b>This option:</b>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-set="off">Off, as today</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rk2-set="on">On</button>
+                    </div>
+                    <div role="group" aria-label="Window size" class="rk2-actions">
+                        <b>Window:</b>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-size="desktop">1920 × 1080</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rk2-size="laptop">1280 × 800</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-size="phone">390 × 844</button>
+                    </div>
+                    <div role="group" aria-label="The other options" class="rk2-actions">
+                        <b>The other options:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rk2-others="none">Off</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-others="all">All on</button>
+                    </div>
+                </div>
+                <div class="rk2-preview" id="fill-preview" data-rk2-option="fill" data-rk2-default="on">
+                    <div class="rk2-preview__view">
+                        <iframe class="rk2-preview__frame" title="The review dialog with “Near-fullscreen dialog”, live" tabindex="-1"></iframe>
+                    </div>
+                </div>
+                <div class="rk2-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Off:</b> a wide grey margin around the dialog and a tall header with padding.</li>
+                        <li><b>On:</b> the dialog nearly touches the window edge, the header is one slim row, the frames sit closer together.</li>
+                        <li>The close button, the step line and the title all stay in the header row.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Compare the margin round the dialog and the height of the header with the option off and on; nothing may be cut at 1280 or at phone width.</p>
+                </div>
+            </section>
+
+            <section
+                class="rk2-sec"
+                id="titles"
+                data-review-item="titles"
+                data-review-components="review-dialog"
+                data-review-title="Each title once"
+                data-review-topic="space"
+                
+                data-review-choices='[{"id":"default-titles","label":"Default for “Each title once” in the dialogs you open","default":"on","options":[{"value":"on","label":"On","hint":"The dialog opens with this option switched on; you can still switch it off in the View menu."},{"value":"off","label":"Off, as it is today","hint":"The dialog opens as it does now; you can still switch it on in the View menu."}]}]'
+                aria-labelledby="h-titles"
+            >
+                <div class="rk2-sec__head">
+                    <h2 id="h-titles">Each title once</h2>
+                    <p>The section title stands once per frame, in the frame's own head; the topic heading above it and the section's own heading inside it are not repeated. <span class="rk2-sec__why">Three copies of one title cost two lines of height and make you read the same words three times before you reach the component.</span></p>
+                    <p class="rk2-sec__source">Kenny, 2026-10-18 15:15: &quot;the title seems to not even use the full horizontal space&quot; and the section title standing three times.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="titles-preview">
+                    <div role="group" aria-label="This option" class="rk2-actions">
+                        <b>This option:</b>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-set="off">Off, as today</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rk2-set="on">On</button>
+                    </div>
+                    <div role="group" aria-label="Window size" class="rk2-actions">
+                        <b>Window:</b>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-size="desktop">1920 × 1080</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rk2-size="laptop">1280 × 800</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-size="phone">390 × 844</button>
+                    </div>
+                    <div role="group" aria-label="The other options" class="rk2-actions">
+                        <b>The other options:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rk2-others="none">Off</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-others="all">All on</button>
+                    </div>
+                </div>
+                <div class="rk2-preview" id="titles-preview" data-rk2-option="titles" data-rk2-default="on">
+                    <div class="rk2-preview__view">
+                        <iframe class="rk2-preview__frame" title="The review dialog with “Each title once”, live" tabindex="-1"></iframe>
+                    </div>
+                </div>
+                <div class="rk2-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Off:</b> the section title above the frame, in the frame head and again inside the section.</li>
+                        <li><b>On:</b> one title, in the frame head, with the play and speed buttons beside it; the theme stays in the dialog header.</li>
+                        <li>Screen readers still find the topic heading; it is only not drawn.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Count the places the section title is written, with the option off and on.</p>
+                </div>
+            </section>
+
+            <section
+                class="rk2-sec"
+                id="look"
+                data-review-item="look"
+                data-review-components="review-dialog"
+                data-review-title="What to look at, once per step"
+                data-review-topic="space"
+                
+                data-review-choices='[{"id":"default-look","label":"Default for “What to look at, once per step” in the dialogs you open","default":"on","options":[{"value":"on","label":"On","hint":"The dialog opens with this option switched on; you can still switch it off in the View menu."},{"value":"off","label":"Off, as it is today","hint":"The dialog opens as it does now; you can still switch it on in the View menu."}]}]'
+                aria-labelledby="h-look"
+            >
+                <div class="rk2-sec__head">
+                    <h2 id="h-look">What to look at, once per step</h2>
+                    <p>A look-at paragraph that is the same in several sections of one step is shown once under the theme's name in the side column, and only the lines that differ stay under their section. <span class="rk2-sec__why">The theme's own paragraph was repeated under every section of the step, a screen of identical text in the column you use to judge.</span></p>
+                    <p class="rk2-sec__source">Kenny, 2026-10-18 15:15: &quot;There are sections to the right with the exact same text&quot;; the same idea as the theme paragraph once per theme run.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="look-preview">
+                    <div role="group" aria-label="This option" class="rk2-actions">
+                        <b>This option:</b>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-set="off">Off, as today</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rk2-set="on">On</button>
+                    </div>
+                    <div role="group" aria-label="Window size" class="rk2-actions">
+                        <b>Window:</b>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-size="desktop">1920 × 1080</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rk2-size="laptop">1280 × 800</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-size="phone">390 × 844</button>
+                    </div>
+                    <div role="group" aria-label="The other options" class="rk2-actions">
+                        <b>The other options:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rk2-others="none">Off</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-others="all">All on</button>
+                    </div>
+                </div>
+                <div class="rk2-preview" id="look-preview" data-rk2-option="look" data-rk2-default="on">
+                    <div class="rk2-preview__view">
+                        <iframe class="rk2-preview__frame" title="The review dialog with “What to look at, once per step”, live" tabindex="-1"></iframe>
+                    </div>
+                </div>
+                <div class="rk2-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Off:</b> the same paragraph under each of the step's sections.</li>
+                        <li><b>On:</b> that paragraph once under the theme's name; a section with its own line keeps it.</li>
+                        <li>Every section still has its row with Not approved, its note and its choices.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">In the side column, read how many times the same sentence appears with the option off and on.</p>
+                </div>
+            </section>
+
+            <section
+                class="rk2-sec"
+                id="controls"
+                data-review-item="controls"
+                data-review-components="review-dialog"
+                data-review-title="Compact controls"
+                data-review-topic="space"
+                
+                data-review-choices='[{"id":"default-controls","label":"Default for “Compact controls” in the dialogs you open","default":"on","options":[{"value":"on","label":"On","hint":"The dialog opens with this option switched on; you can still switch it off in the View menu."},{"value":"off","label":"Off, as it is today","hint":"The dialog opens as it does now; you can still switch it on in the View menu."}]}]'
+                aria-labelledby="h-controls"
+            >
+                <div class="rk2-sec__head">
+                    <h2 id="h-controls">Compact controls</h2>
+                    <p>The controls of a component flow side by side across the full width, each group's label and buttons on one line, in the package's small button size. <span class="rk2-sec__why">Four groups fit in two lines instead of a tall stack of left-aligned rows with huge buttons, so the component starts higher; the controls stay directly above their component.</span></p>
+                    <p class="rk2-sec__source">Kenny, 2026-10-18 15:15: &quot;they can be much more inline to maximise space usage&quot;.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="controls-preview">
+                    <div role="group" aria-label="This option" class="rk2-actions">
+                        <b>This option:</b>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-set="off">Off, as today</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rk2-set="on">On</button>
+                    </div>
+                    <div role="group" aria-label="Window size" class="rk2-actions">
+                        <b>Window:</b>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-size="desktop">1920 × 1080</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rk2-size="laptop">1280 × 800</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-size="phone">390 × 844</button>
+                    </div>
+                    <div role="group" aria-label="The other options" class="rk2-actions">
+                        <b>The other options:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rk2-others="none">Off</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-others="all">All on</button>
+                    </div>
+                </div>
+                <div class="rk2-preview" id="controls-preview" data-rk2-option="controls" data-rk2-default="on">
+                    <div class="rk2-preview__view">
+                        <iframe class="rk2-preview__frame" title="The review dialog with “Compact controls”, live" tabindex="-1"></iframe>
+                    </div>
+                </div>
+                <div class="rk2-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Off:</b> one group per row, large buttons, most of the width empty.</li>
+                        <li><b>On:</b> groups side by side that wrap at the window's edge, small package buttons, one word "Controls" as the plate's title.</li>
+                        <li>Pressing a button still changes the component and the pressed one stays pressed.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Look at the height of the controls plate and at whether any button is cut or touches the plate's edge.</p>
+                </div>
+            </section>
+
+            <section
+                class="rk2-sec"
+                id="intro"
+                data-review-item="intro"
+                data-review-components="review-dialog"
+                data-review-title="Full-width text"
+                data-review-topic="space"
+                
+                data-review-choices='[{"id":"default-intro","label":"Default for “Full-width text” in the dialogs you open","default":"on","options":[{"value":"on","label":"On","hint":"The dialog opens with this option switched on; you can still switch it off in the View menu."},{"value":"off","label":"Off, as it is today","hint":"The dialog opens as it does now; you can still switch it on in the View menu."}]}]'
+                aria-labelledby="h-intro"
+            >
+                <div class="rk2-sec__head">
+                    <h2 id="h-intro">Full-width text</h2>
+                    <p>The section's intro and Expected text run the whole width of the frame instead of a narrow column, and the page margin inside the frame gets tighter. <span class="rk2-sec__why">A line that is 80 characters wide in a 1700 px frame leaves most of the frame empty and makes the paragraph tall; at full width it is two lines.</span></p>
+                    <p class="rk2-sec__source">Kenny, 2026-10-18 15:15: &quot;the demo's intro text is a narrow left column&quot; and the empty space beside it.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="intro-preview">
+                    <div role="group" aria-label="This option" class="rk2-actions">
+                        <b>This option:</b>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-set="off">Off, as today</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rk2-set="on">On</button>
+                    </div>
+                    <div role="group" aria-label="Window size" class="rk2-actions">
+                        <b>Window:</b>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-size="desktop">1920 × 1080</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rk2-size="laptop">1280 × 800</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-size="phone">390 × 844</button>
+                    </div>
+                    <div role="group" aria-label="The other options" class="rk2-actions">
+                        <b>The other options:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rk2-others="none">Off</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-others="all">All on</button>
+                    </div>
+                </div>
+                <div class="rk2-preview" id="intro-preview" data-rk2-option="intro" data-rk2-default="on">
+                    <div class="rk2-preview__view">
+                        <iframe class="rk2-preview__frame" title="The review dialog with “Full-width text”, live" tabindex="-1"></iframe>
+                    </div>
+                </div>
+                <div class="rk2-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Off:</b> the intro paragraph is a narrow column with empty space to its right.</li>
+                        <li><b>On:</b> the paragraph uses the frame's width and takes fewer lines.</li>
+                        <li>On a phone nothing changes, the column was already the whole width.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Compare the number of lines of the intro paragraph and the empty space to its right.</p>
+                </div>
+            </section>
+
+            <section
+                class="rk2-sec"
+                id="rail"
+                data-review-item="rail"
+                data-review-components="review-dialog"
+                data-review-title="Slim side column"
+                data-review-topic="space"
+                
+                data-review-choices='[{"id":"default-rail","label":"Default for “Slim side column” in the dialogs you open","default":"on","options":[{"value":"on","label":"On","hint":"The dialog opens with this option switched on; you can still switch it off in the View menu."},{"value":"off","label":"Off, as it is today","hint":"The dialog opens as it does now; you can still switch it on in the View menu."}]}]'
+                aria-labelledby="h-rail"
+            >
+                <div class="rk2-sec__head">
+                    <h2 id="h-rail">Slim side column</h2>
+                    <p>The side column is narrower, and Previous, Next and Approve stay pinned at its foot while its rows scroll. <span class="rk2-sec__why">The component gains the width and the buttons you press most are always under your thumb, however many sections the step has.</span></p>
+                    <p class="rk2-sec__source">Claude's proposal, from Kenny's 2026-10-18 15:15 &quot;narrower or merged&quot; and &quot;reachable without scrolling&quot;.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="rail-preview">
+                    <div role="group" aria-label="This option" class="rk2-actions">
+                        <b>This option:</b>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-set="off">Off, as today</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rk2-set="on">On</button>
+                    </div>
+                    <div role="group" aria-label="Window size" class="rk2-actions">
+                        <b>Window:</b>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-size="desktop">1920 × 1080</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rk2-size="laptop">1280 × 800</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-size="phone">390 × 844</button>
+                    </div>
+                    <div role="group" aria-label="The other options" class="rk2-actions">
+                        <b>The other options:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rk2-others="none">Off</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-others="all">All on</button>
+                    </div>
+                </div>
+                <div class="rk2-preview" id="rail-preview" data-rk2-option="rail" data-rk2-default="on">
+                    <div class="rk2-preview__view">
+                        <iframe class="rk2-preview__frame" title="The review dialog with “Slim side column”, live" tabindex="-1"></iframe>
+                    </div>
+                </div>
+                <div class="rk2-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Off:</b> a 22 rem column; the buttons sit at the end of the rows and scroll away on a long step.</li>
+                        <li><b>On:</b> a column of about 17% of the window; the rows scroll, the three buttons and the key line stay at the foot.</li>
+                        <li>Approve, Previous and Next keep working with the keys Up, Left and Right.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Scroll the side column on a step with several sections: the buttons must not move.</p>
+                </div>
+            </section>
+
+            <section
+                class="rk2-sec"
+                id="jump"
+                data-review-item="jump"
+                data-review-components="review-dialog"
+                data-review-title="Jump list of sections"
+                data-review-topic="reading"
+                data-review-topic-title="Reading and moving through a step"
+                data-review-choices='[{"id":"default-jump","label":"Default for “Jump list of sections” in the dialogs you open","default":"off","options":[{"value":"on","label":"On","hint":"The dialog opens with this option switched on; you can still switch it off in the View menu."},{"value":"off","label":"Off, as it is today","hint":"The dialog opens as it does now; you can still switch it on in the View menu."}]}]'
+                aria-labelledby="h-jump"
+            >
+                <div class="rk2-sec__head">
+                    <h2 id="h-jump">Jump list of sections</h2>
+                    <p>One chip per section of the step in the header: a press scrolls to that section, and the section in view is marked in the chips and in its row. <span class="rk2-sec__why">On a step with three or more tall sections you see at once where you are and can go to the one you want without scrolling past the others.</span></p>
+                    <p class="rk2-sec__source">Claude's proposal.</p>
+                </div>
+                <div data-review-controls data-review-controls-for="jump-preview">
+                    <div role="group" aria-label="This option" class="rk2-actions">
+                        <b>This option:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rk2-set="off">Off, as today</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-set="on">On</button>
+                    </div>
+                    <div role="group" aria-label="Window size" class="rk2-actions">
+                        <b>Window:</b>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-size="desktop">1920 × 1080</button>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rk2-size="laptop">1280 × 800</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-size="phone">390 × 844</button>
+                    </div>
+                    <div role="group" aria-label="The other options" class="rk2-actions">
+                        <b>The other options:</b>
+                        <button type="button" class="kp-button" aria-pressed="true" data-rk2-others="none">Off</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-rk2-others="all">All on</button>
+                    </div>
+                </div>
+                <div class="rk2-preview" id="jump-preview" data-rk2-option="jump" data-rk2-default="off">
+                    <div class="rk2-preview__view">
+                        <iframe class="rk2-preview__frame" title="The review dialog with “Jump list of sections”, live" tabindex="-1"></iframe>
+                    </div>
+                </div>
+                <div class="rk2-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>Off:</b> no chips; the rows in the side column are the only way to jump.</li>
+                        <li><b>On:</b> numbered chips in the header; the marked one follows the scroll and its row gets a rule at the start.</li>
+                        <li>At 1600 px and narrower the chips take their own row under the header and scroll sideways.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">Scroll the frames and watch the marked chip follow; press another chip.</p>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "review-kit-v2-8aa1b678-11ea-47af-8dcd-5f838289a909", "received": [] }
+        </script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
