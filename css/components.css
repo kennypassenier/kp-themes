@@ -27798,3 +27798,13 @@
         justify-content: center;
     }
 }
+
+/* A waiting gallery tile keeps the final tile's square footprint [t56-statefix-1018]. `block-size: auto` on `.kp-gallery__tile.kp-skeleton`
+ * (kp.components) lets the tile's aspect ratio make it as tall as it is wide, but a register sets `.kp-skeleton` to a line of 1 to 1.5 rem
+ * and a register beats kp.components, so the tiles collapsed to 16 to 24 px (formal drew 24 px of a 146 px tile): restated in the last layer. */
+@layer kp.layout {
+    .kp-gallery__tile.kp-skeleton {
+        block-size: auto;
+        min-block-size: 0;
+    }
+}
