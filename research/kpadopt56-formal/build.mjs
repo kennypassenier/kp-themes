@@ -221,7 +221,7 @@ const STATE_FIXES = [
     },
     {
         demo: 'kpadopt5-ops',
-        id: 'ops-page',
+        id: 'ops-page-states',
         topic: 'ops-page',
         title: 'Operations page',
         changed:
@@ -296,7 +296,7 @@ const ADDED = [
     },
     {
         demo: 'kpadopt6-social',
-        id: 'claim-row',
+        id: 'claim-row-states',
         topic: 'checklist',
         changed:
             'The packing list (the checklist with who brings what) had a failed box whose Retry stretched across the whole box like a strip. Now the box centres its items and Retry is a normal button (about 71 by 36 px). A list that fails straight from loaded shows the failed plate alone, with no rows behind it, and the plate fills the height the list had; empty keeps that height too.',
