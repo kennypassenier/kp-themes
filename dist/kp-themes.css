@@ -73895,27 +73895,6 @@
             0 0 0 4px hsl(from var(--primary) h s l / 0.5);
     }
 
-    /* A full digest is one unbroken run of hex; it may break anywhere (a version number still breaks only after a dot). */
-    [data-theme='deco'] .kp-badge--version[data-kp-version-digest='full'] :is(.kp-version__from, .kp-version__to) {
-        overflow-wrap: anywhere;
-    }
-
-    /* A checklist row's detail wraps in a narrow row instead of crowding the label out (print checklist at 390 px: the label
-       was 0 to 25 px wide). */
-    [data-theme='deco'] .kp-checklist__detail {
-        max-inline-size: 11rem;
-        overflow-wrap: anywhere;
-        white-space: normal;
-    }
-
-    /* The answer buttons of a person's own row wrap inside part of the row, so the name keeps its room. */
-    [data-theme='deco'] .kp-availability__column-row {
-        grid-template-columns: minmax(6rem, 1fr) minmax(0, max-content);
-    }
-    [data-theme='deco'] .kp-availability__column-answers {
-        justify-content: flex-end;
-    }
-
     /* The code box's tools wrap under the title when the line is short, instead of pushing Copy past the box's edge. */
     [data-theme='deco'] .kp-code__tools {
         flex-wrap: wrap;
