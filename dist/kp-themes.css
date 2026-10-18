@@ -46673,6 +46673,19 @@
         rotate: -8deg;
     }
 
+    /* In the two short components (the quote card's 142 px, the runs list's 134 px) the 3 rem zero and its air made the plate
+       28 px and 20 px taller than the component: a smaller stamp, same slab, no growth between states. */
+    [data-theme='brutalism'] :is(.kp-card__empty, .kp-runs__empty) {
+        padding-block: 0.6rem;
+    }
+
+    [data-theme='brutalism'] :is(.kp-card__empty, .kp-runs__empty)::before {
+        inline-size: 2.25rem;
+        block-size: 2.25rem;
+        margin-block-end: 0.3rem;
+        font-size: 1.05rem;
+    }
+
     [data-theme='brutalism'] .kp-empty__title {
         margin: 0 0 0.3rem;
         color: var(--foreground);
