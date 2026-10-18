@@ -19720,8 +19720,16 @@
      * time to the next refresh), --kp-refresh-rule (the rule's thickness, 2px). */
     .kp-refresh {
         display: grid;
+        grid-template-columns: minmax(0, 1fr);
         gap: var(--kp-space-sm, 0.5rem);
         min-inline-size: 0;
+    }
+
+    /* The chooser may be narrower than its segments, so the track scrolls along its own line
+       (data-kp-segmented-overflow) and never pushes the card wider [t56-sharedfix-1018]. */
+    .kp-refresh__chooser {
+        min-inline-size: 0;
+        max-inline-size: 100%;
     }
 
     .kp-refresh__bar {
@@ -23001,6 +23009,7 @@
     .kp-inspector {
         container: kp-inspector / inline-size;
         display: grid;
+        grid-template-columns: minmax(0, 1fr);
         gap: var(--kp-space-sm, 0.5rem);
         min-inline-size: 0;
     }
@@ -23011,6 +23020,11 @@
         align-items: center;
         justify-content: space-between;
         gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    }
+
+    .kp-inspector__filter {
+        min-inline-size: 0;
+        max-inline-size: 100%;
     }
 
     .kp-inspector__count {
@@ -23145,6 +23159,24 @@
 
         .kp-inspector__time {
             min-inline-size: 0;
+        }
+    }
+
+    /* Narrower still, the row wraps whole items (a badge is never torn) and the path takes a line of its own. */
+    @container kp-inspector (max-width: 40rem) {
+        .kp-inspector__row {
+            display: inline-flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+        }
+
+        .kp-inspector__path {
+            order: 1;
+            flex: 1 0 100%;
+        }
+
+        .kp-inspector__time {
+            margin-inline-start: auto;
         }
     }
 
