@@ -524,7 +524,8 @@ for (const [i, part] of PARTS.entries()) {
         console.log(`${id}: every pair approved, the page is left as it is (Decided)`);
         continue;
     }
-    const pageThemes = [...(asked.some(([, itemId]) => (open.get(itemId) ?? []).includes('formal')) ? ['formal'] : []), ...THEMES];
+    // The page walks only the themes some section is still asked in (the kit and check-kit read the page's list).
+    const pageThemes = ['formal', ...THEMES].filter((t) => asked.some(([, itemId]) => (open.get(itemId) ?? []).includes(t)));
     const demos = [...new Set(asked.map(([d]) => d))];
     /** A topic's title rides on its first section shown, also when the section that carried it was approved and left. */
     const topicTitles = new Map();

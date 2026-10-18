@@ -465,7 +465,8 @@ async function checkEveryTheme() {
             lone: lone
                 ? {
                       item: /** @type {HTMLElement} */ (lone).dataset.reviewItem,
-                      title: /** @type {HTMLElement} */ (lone).dataset.reviewTopicTitle || /** @type {HTMLElement} */ (lone).dataset.reviewTitle || '',
+                      title:
+                          /** @type {HTMLElement} */ (lone).dataset.reviewTopicTitle || /** @type {HTMLElement} */ (lone).dataset.reviewTitle || '',
                   }
                 : null,
         };
@@ -481,7 +482,9 @@ async function checkEveryTheme() {
             if (title.includes(sections.lone.title)) break;
             const was = await page.evaluate(() => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent);
             await page.click('dialog.rv-dialog [data-rv-go="1"]');
-            await page.waitForFunction((w) => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent !== w, was, { timeout: 15000 });
+            await page.waitForFunction((w) => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent !== w, was, {
+                timeout: 15000,
+            });
             await page.waitForTimeout(250);
         }
     }
@@ -502,8 +505,17 @@ async function checkEveryTheme() {
     await everyBox.check();
     const before = await page.evaluate(() => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent);
     await page.click('dialog.rv-dialog [data-rv-approve]');
-    await page.waitForFunction((w) => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent !== w, before, { timeout: 15000 }).catch(() => {});
+    await page
+        .waitForFunction((w) => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent !== w, before, { timeout: 15000 })
+        .catch(() => {});
     await page.waitForTimeout(900);
+    // A page whose open pairs are all in the group (one section asked again, as in a later round): the copies judge the
+    // last open pair and the kit leaves for the Agenda by itself; the demo is opened again to look at what was kept.
+    const ended = await page.evaluate(() => !document.querySelector('dialog.rv-dialog[open]')).catch(() => true);
+    if (ended) {
+        await page.waitForLoadState('load').catch(() => {});
+        await openDialog();
+    }
     const read = () =>
         page.evaluate(
             ({ id, it }) => {
@@ -511,8 +523,12 @@ async function checkEveryTheme() {
                 const journal = JSON.parse(localStorage.getItem(`kp-demo-review:${id}:journal`) || '[]');
                 const keys = Object.keys(state).filter((k) => k.endsWith(`|${it}`));
                 return {
-                    state: Object.fromEntries(keys.map((k) => [k, { verdict: state[k].verdict, note: state[k].note, copiedFrom: state[k].copiedFrom }])),
-                    journal: journal.filter((/** @type {any} */ e) => e.pair.endsWith(`|${it}`)).map((/** @type {any} */ e) => ({ pair: e.pair, verdict: e.verdict, note: e.note, kind: e.kind, source: e.source })),
+                    state: Object.fromEntries(
+                        keys.map((k) => [k, { verdict: state[k].verdict, note: state[k].note, copiedFrom: state[k].copiedFrom }]),
+                    ),
+                    journal: journal
+                        .filter((/** @type {any} */ e) => e.pair.endsWith(`|${it}`))
+                        .map((/** @type {any} */ e) => ({ pair: e.pair, verdict: e.verdict, note: e.note, kind: e.kind, source: e.source })),
                     answer: document.querySelector('[data-rv-answer]')?.textContent || '',
                     position: document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent || '',
                     title: document.querySelector('dialog.rv-dialog [data-rv-title]')?.textContent || '',
@@ -522,29 +538,47 @@ async function checkEveryTheme() {
         );
     let now = await read();
     const themesOfItem = Object.keys(now.state).map((k) => k.split('|')[0]);
-    if (themesOfItem.length !== sections.themes) fault(`every theme: ${item} has ${themesOfItem.length} verdicts, the page asks ${sections.themes} themes`);
+    if (themesOfItem.length !== sections.themes)
+        fault(`every theme: ${item} has ${themesOfItem.length} verdicts, the page asks ${sections.themes} themes`);
     for (const [k, v] of Object.entries(now.state)) {
-        if (v.verdict !== 'rejected' || v.note !== NOTE_EVERY) fault(`every theme: ${k} reads "${v.verdict}: ${v.note}", not the source's verdict and note`);
-        if (k.split('|')[0] !== sourceTheme && v.copiedFrom !== sourceTheme) fault(`every theme: ${k} does not say it was copied from ${sourceTheme}`);
+        if (v.verdict !== 'rejected' || v.note !== NOTE_EVERY)
+            fault(`every theme: ${k} reads "${v.verdict}: ${v.note}", not the source's verdict and note`);
+        if (k.split('|')[0] !== sourceTheme && v.copiedFrom !== sourceTheme)
+            fault(`every theme: ${k} does not say it was copied from ${sourceTheme}`);
     }
     const copies = now.journal.filter((e) => e.kind === 'all-themes');
     if (copies.length !== sections.themes - 1 || copies.some((e) => e.source !== sourceTheme || e.verdict !== 'rejected' || e.note !== NOTE_EVERY))
-        fault(`every theme: the journal holds ${copies.length} entries of kind "all-themes" for ${item}, expected ${sections.themes - 1} from ${sourceTheme}`);
+        fault(
+            `every theme: the journal holds ${copies.length} entries of kind "all-themes" for ${item}, expected ${sections.themes - 1} from ${sourceTheme}`,
+        );
     const lines = now.answer.split('\n').filter((l) => l.includes(`${item} · every theme: ${NOTE_EVERY}`));
     if (lines.length !== 1) fault(`every theme: the answer names the group ${lines.length} times, not once`);
     if (now.answer.split('\n').some((l) => l.startsWith(`- ${item} · `) && !l.includes('every theme') && l.includes(NOTE_EVERY)))
         fault(`every theme: the answer still lists ${item} per theme`);
-    if (sections.lone && stepTitle.includes(sections.lone.title) && now.title.includes(sections.lone.title))
+    if (!ended && sections.lone && stepTitle.includes(sections.lone.title) && now.title.includes(sections.lone.title))
         fault(`every theme: the steps of ${item}'s topic in the other themes were not skipped (still on "${now.title}")`);
     // A copied row opened again shows the copy and can be changed on its own.
     const target = Object.keys(now.state).find((k) => k.split('|')[0] !== sourceTheme) || '';
     const pairRow = `dialog.rv-dialog [data-rv-list] .rv-row[data-rv-key="${target}"]`;
-    for (let i = 0; i < 200 && !(await page.locator(pairRow).count()); i++) {
-        const was = await page.evaluate(() => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent);
-        await page.click('dialog.rv-dialog [data-rv-go="-1"]');
-        await page.waitForFunction((w) => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent !== w, was, { timeout: 15000 });
-        await page.waitForTimeout(250);
-    }
+    // Previous first (the copies are behind the step on screen); on a page opened again, also Next.
+    for (const dir of ended ? ['-1', '1'] : ['-1'])
+        for (let i = 0; i < 200 && !(await page.locator(pairRow).count()); i++) {
+            const was = await page.evaluate(() => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent);
+            const button = page.locator(`dialog.rv-dialog [data-rv-go="${dir}"]`);
+            if (!(await button.isEnabled().catch(() => false))) break;
+            await button.click();
+            const moved = await page
+                .waitForFunction((w) => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent !== w, was, {
+                    timeout: ended ? 3000 : 15000,
+                })
+                .then(() => true)
+                .catch(() => false);
+            if (!moved) {
+                if (!ended) throw new Error('every theme: Previous did not move');
+                break;
+            }
+            await page.waitForTimeout(250);
+        }
     const copyRow = page.locator(pairRow);
     if (!(await copyRow.count())) fault(`every theme: the copy ${target} cannot be opened again with Previous`);
     else {
@@ -555,8 +589,10 @@ async function checkEveryTheme() {
         await copyRow.locator('[data-rv-row-note]').dispatchEvent('input');
         await page.waitForTimeout(900);
         now = await read();
-        if (now.state[target]?.note !== `${NOTE_EVERY} own` || now.state[target]?.copiedFrom) fault(`every theme: the copy ${target} cannot be changed on its own`);
-        if (!now.answer.includes(`- ${item} · ${target.split('|')[0]}: ${NOTE_EVERY} own`)) fault(`every theme: the answer lacks the changed copy ${target} as its own line`);
+        if (now.state[target]?.note !== `${NOTE_EVERY} own` || now.state[target]?.copiedFrom)
+            fault(`every theme: the copy ${target} cannot be changed on its own`);
+        if (!now.answer.includes(`- ${item} · ${target.split('|')[0]}: ${NOTE_EVERY} own`))
+            fault(`every theme: the answer lacks the changed copy ${target} as its own line`);
     }
     // W (AZERTY) undoes the whole group.
     await page.locator('dialog.rv-dialog [data-rv-approve]').focus();
@@ -565,7 +601,8 @@ async function checkEveryTheme() {
     now = await read();
     const left = Object.entries(now.state).filter(([, v]) => v.verdict);
     if (left.length) fault(`every theme: after W ${left.length} of the group's pairs still have a verdict (${left.map(([k]) => k).join(', ')})`);
-    if (now.journal.filter((e) => e.kind === 'undo').length < sections.themes - 1) fault(`every theme: W did not journal an undo for each pair of the group`);
+    if (now.journal.filter((e) => e.kind === 'undo').length < sections.themes - 1)
+        fault(`every theme: W did not journal an undo for each pair of the group`);
     console.log(`  every theme: ${item} from ${sourceTheme}, ${sections.themes - 1} copies${sections.lone ? ', topic skipped' : ''}, undone`);
 }
 if (ONLY_EVERY) {
