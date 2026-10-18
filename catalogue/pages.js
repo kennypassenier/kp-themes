@@ -107,6 +107,62 @@ export const PAGES = [
             // Kenny, 2026-10-12: "Cyberpunk lijkt af, zie dat dezelfde fouten nu niet terugkomen in andere thema's": every other theme mended so a close is its open backwards with the theme's own effect; only what changed, each block in the themes where it did (research/all-themes).
             // Kenny, 2026-10-16 (kp-adopt-rest, round 2): eight things the admin dashboard still draws itself (action tiles, status rows, the facet list, the coverage heat grid, the reachability matrix, bars in table cells with data-kp-sort-value, the week agenda, the run timeline), built in the package first as ONE demo, formal only until Kenny approves it.
             // Kenny, 2026-10-16 (kp-adopt-rest, round 3): six things the dashboard still drew itself, each an opt-in option of an approved component (nav separator, choice-filter value, timeline day buttons and series legend, the week's next-N phone list, facet identity patterns, the heat grid's jump to the latest), formal only.
+            // Kenny, 2026-10-18 (kpadopt5/6, other themes): the 79 sections of the fifth and sixth adoption rounds that he approved in formal, now asked in the eleven other themes (dark, cyberpunk, synthwave, pastel, forest, blueprint, solstice, brutalism, deco, nostromo, titanium), grouped by kind of component into eleven reviews of at most 99 pairs each, generated from research/kpadopt56/src by research/kpadopt56/build-parts.mjs.
+            {
+                href: 'research/kpadopt56-schedule/demo.html',
+                label: 'Fifth and sixth adoption rounds in the other themes, part 1 of 11: Schedules and reminders',
+                about: 'Choosing weekdays, seeing the next times a schedule runs, snoozing, and a schedule written as a sentence. 8 sections (88 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+            },
+            {
+                href: 'research/kpadopt56-choose/demo.html',
+                label: 'Fifth and sixth adoption rounds in the other themes, part 2 of 11: Pickers, palettes and toggles',
+                about: 'Picking from a list: the usual on top, words in any order, options with a date, a button that stays pressed, and keys that know their own list. 9 sections (99 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+            },
+            {
+                href: 'research/kpadopt56-fields/demo.html',
+                label: 'Fifth and sixth adoption rounds in the other themes, part 3 of 11: Fields and inputs',
+                about: 'Entering a value: a slider with a typed value beside it, a time of day, a text box that grows, a JSON box that checks what you type, and a star rating. 8 sections (88 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+            },
+            {
+                href: 'research/kpadopt56-updates/demo.html',
+                label: 'Fifth and sixth adoption rounds in the other themes, part 4 of 11: Updating safely',
+                about: 'What an update list needs: the size of a version jump, a tick before it may start, what needs what, and how often the list refreshes. 7 sections (77 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+            },
+            {
+                href: 'research/kpadopt56-confirm/demo.html',
+                label: 'Fifth and sixth adoption rounds in the other themes, part 5 of 11: Saving, undoing and answering',
+                about: 'What happens after you act: the unsaved-changes bar, a toast with Undo, a button that shows its result, a question that waits for your answer, and the bar over a selection. 6 sections (66 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+            },
+            {
+                href: 'research/kpadopt56-lists/demo.html',
+                label: 'Fifth and sixth adoption rounds in the other themes, part 6 of 11: Lists, records and pages',
+                about: 'Rows and what sits in them: ticking with the keyboard, who brings what, a list with its detail, new lines on a live list, payloads, requests, a console, and the frame of a dashboard page. 8 sections (88 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+            },
+            {
+                href: 'research/kpadopt56-status/demo.html',
+                label: 'Fifth and sixth adoption rounds in the other themes, part 7 of 11: Messages and status',
+                about: 'Telling the reader what is going on: a problem with its reason and its remedy, the offline banner, a transfer with its time left, the notification centre, the line under a heading, and the today card. 7 sections (77 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+            },
+            {
+                href: 'research/kpadopt56-calm/demo.html',
+                label: 'Fifth and sixth adoption rounds in the other themes, part 8 of 11: Calm screens',
+                about: 'A quiet daily check-in: calm mode, calm days, the quote card and questions one per screen. 7 sections (77 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+            },
+            {
+                href: 'research/kpadopt56-charts/demo.html',
+                label: 'Fifth and sixth adoption rounds in the other themes, part 9 of 11: Charts and maps',
+                about: 'Drawings of data: chart markers and a median line, what uses what, the path of a connection, and who can come when. 6 sections (66 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+            },
+            {
+                href: 'research/kpadopt56-media/demo.html',
+                label: 'Fifth and sixth adoption rounds in the other themes, part 10 of 11: Pictures, documents and printing',
+                about: 'Things you look at or take away: the picture gallery, the document preview, anchors on headings and rows, a QR code, and a printed checklist. 8 sections (88 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+            },
+            {
+                href: 'research/kpadopt56-people/demo.html',
+                label: 'Fifth and sixth adoption rounds in the other themes, part 11 of 11: People and cards',
+                about: 'Who is who: the avatar, the list of ways to sign in, the conversation in bubbles, and the entity card. 5 sections (55 pairs), asked in the eleven themes other than formal, one theme per step; formal is already approved.',
+            },
         ],
     },
     {
