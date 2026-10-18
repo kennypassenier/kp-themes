@@ -73314,7 +73314,7 @@
         border-block-start: 0;
     }
 
-    [data-theme='blueprint'] [data-kp-measure] {
+    [data-theme='blueprint'] [data-kp-measure]:not(.kp-question) {
         position: absolute;
         inset-inline-end: 0;
         inset-block-end: 0.2rem;
@@ -73327,12 +73327,12 @@
         opacity: 0;
     }
 
-    [data-theme='blueprint'] [data-kp-measured='live'] [data-kp-measure] {
+    [data-theme='blueprint'] [data-kp-measured='live'] [data-kp-measure]:not(.kp-question) {
         opacity: 1;
     }
 
     @media (prefers-reduced-motion: no-preference) {
-        [data-theme='blueprint'] [data-kp-measure] {
+        [data-theme='blueprint'] [data-kp-measure]:not(.kp-question) {
             transition: opacity var(--kp-measure-duration, 400ms) var(--fx-ease, ease);
         }
     }
@@ -74273,7 +74273,7 @@
             animation: kp-dim-label 300ms ease-out 1000ms both;
         }
 
-        [data-theme='blueprint'][data-kp-effects] [data-kp-measure] {
+        [data-theme='blueprint'][data-kp-effects] [data-kp-measure]:not(.kp-question) {
             animation: kp-dim-label 300ms ease-out 1300ms both;
         }
 
