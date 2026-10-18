@@ -6288,3 +6288,10 @@
         content: none;
     }
 }
+
+/* The quick picks of a disabled weekday picker are dimmed with its chips [t56-eye-1018]. */
+@layer kp.signature {
+    [data-theme='blueprint'] .kp-weekdays[data-kp-disabled] .kp-weekdays__presets {
+        opacity: 0.5;
+    }
+}

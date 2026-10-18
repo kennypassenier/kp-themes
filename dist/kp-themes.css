@@ -56504,6 +56504,14 @@
     }
 }
 
+/* A ghost that stands alone (End snooze, the weekday quick picks, the "+N" flags opener) has its machined edge at rest, so it
+   reads as a control and not as a label; the hover fills it as every ghost [t56-eye-1018]. */
+@layer kp.signature {
+    [data-theme='titanium'] :is(.kp-snooze__end, .kp-weekdays__preset, .kp-entity__plus).kp-button--ghost {
+        border-color: var(--border-strong);
+    }
+}
+
 /* The redaction plate's alpha, registered so it can be transitioned: an
    unregistered custom property flips at the end of its transition instead
    of passing through values, and the plate's background reads it through
@@ -74567,6 +74575,14 @@
     }
 }
 
+/* A ghost that stands alone (End snooze, the weekday quick picks, the "+N" flags opener) is drawn with its gold hairline at
+   rest, not only when it is disabled, so enabled and disabled read in one order [t56-eye-1018]. */
+@layer kp.signature {
+    [data-theme='deco'] :is(.kp-snooze__end, .kp-weekdays__preset, .kp-entity__plus).kp-button--ghost {
+        border-color: hsl(from var(--primary) h s l / 0.6);
+    }
+}
+
 /* The pen's numbers [scope-143, Kenny 2026-10-07 23:41: the tracing pen is the
    anchor of the theme]. Registered at the top level because Firefox does not
    register an @property inside a cascade layer; with no registration every
@@ -80855,6 +80871,13 @@
     [data-theme='blueprint'] .kp-skeleton.kp-toggle__bone::before,
     [data-theme='blueprint'] .kp-skeleton.kp-toggle__bone::after {
         content: none;
+    }
+}
+
+/* The quick picks of a disabled weekday picker are dimmed with its chips [t56-eye-1018]. */
+@layer kp.signature {
+    [data-theme='blueprint'] .kp-weekdays[data-kp-disabled] .kp-weekdays__presets {
+        opacity: 0.5;
     }
 }
 
@@ -101846,6 +101869,13 @@
         border-color: var(--border-strong);
         color: var(--foreground);
         box-shadow: inset 0 -2px 0 hsl(from var(--destructive) h s 50%);
+    }
+}
+
+/* The quick picks of a disabled weekday picker are dimmed with its chips [t56-eye-1018]. */
+@layer kp.signature {
+    [data-theme='solstice'] .kp-weekdays[data-kp-disabled] .kp-weekdays__presets {
+        opacity: 0.5;
     }
 }
 
