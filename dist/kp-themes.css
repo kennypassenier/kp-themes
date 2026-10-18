@@ -44837,6 +44837,19 @@
 }
 /* ── end t56-q2 fields ── */
 
+/* ── t56-q2 confirm: the floor stays under the question's words ── */
+@layer kp.signature {
+    /* The grid floor of an urgent or refused question was 22% of a tall card and its lines ran through the last button, its
+       consequence and the refusal. The card keeps a band under its words and the floor is that band only. */
+    [data-theme='synthwave'] .kp-question.kp-alert--destructive {
+        padding-block-end: 2.75rem;
+    }
+    [data-theme='synthwave'] .kp-question.kp-alert--destructive::after {
+        block-size: 1.75rem;
+    }
+}
+/* ── end t56-q2 confirm ── */
+
 /* A share, 0 to 1 (a progress bar's, a meter's), is walked to its value on
    two registered copies, one on each mirror of the motion, so that a rise is
    the picture's fall and a fall is that fall turned around; registered so
@@ -62488,6 +62501,18 @@
 }
 /* ── end t56-q2 fields ── */
 
+/* ── t56-q2 confirm: Stop keeps its plate on the red card ── */
+@layer kp.signature {
+    /* The Stop of an urgent or refused question is the same red as the card it stands on, so its plate vanished and it read as plain
+       text. On the red card it is the deep red with the card's pale ink as its edge. */
+    [data-theme='pastel'] .kp-question.kp-alert--destructive .kp-button--destructive {
+        background: hsl(from var(--destructive) h s calc(l * 0.55));
+        color: var(--destructive-foreground);
+        border-color: var(--destructive-foreground);
+    }
+}
+/* ── end t56-q2 confirm ── */
+
 /* The busy progress bar's breath, 0 (bare ground) to 1 (the full row),
    registered so the keyframes interpolate it; at the top level because
    Firefox does not register an @property inside a layer. */
@@ -68347,6 +68372,18 @@
     }
 }
 /* ── end t56-q ── */
+
+/* ── t56-q2 confirm: Stop keeps its plate on the red card ── */
+@layer kp.signature {
+    /* The Stop of an urgent or refused question is the same red as the card it stands on, so its plate vanished and it read as plain
+       text. On the red card it is the deep red with the card's pale ink as its edge. */
+    [data-theme='forest'] .kp-question.kp-alert--destructive .kp-button--destructive {
+        background: hsl(from var(--destructive) h s calc(l * 0.55));
+        color: var(--destructive-foreground);
+        border-color: var(--destructive-foreground);
+    }
+}
+/* ── end t56-q2 confirm ── */
 
 /* The numbers deco's motion is made of, registered at the top level because
    Firefox does not register an @property inside a cascade layer; with no

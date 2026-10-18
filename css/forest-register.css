@@ -5857,3 +5857,15 @@
     }
 }
 /* ── end t56-q ── */
+
+/* ── t56-q2 confirm: Stop keeps its plate on the red card ── */
+@layer kp.signature {
+    /* The Stop of an urgent or refused question is the same red as the card it stands on, so its plate vanished and it read as plain
+       text. On the red card it is the deep red with the card's pale ink as its edge. */
+    [data-theme='forest'] .kp-question.kp-alert--destructive .kp-button--destructive {
+        background: hsl(from var(--destructive) h s calc(l * 0.55));
+        color: var(--destructive-foreground);
+        border-color: var(--destructive-foreground);
+    }
+}
+/* ── end t56-q2 confirm ── */

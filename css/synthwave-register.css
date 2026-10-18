@@ -6287,3 +6287,16 @@
     }
 }
 /* ── end t56-q2 fields ── */
+
+/* ── t56-q2 confirm: the floor stays under the question's words ── */
+@layer kp.signature {
+    /* The grid floor of an urgent or refused question was 22% of a tall card and its lines ran through the last button, its
+       consequence and the refusal. The card keeps a band under its words and the floor is that band only. */
+    [data-theme='synthwave'] .kp-question.kp-alert--destructive {
+        padding-block-end: 2.75rem;
+    }
+    [data-theme='synthwave'] .kp-question.kp-alert--destructive::after {
+        block-size: 1.75rem;
+    }
+}
+/* ── end t56-q2 confirm ── */
