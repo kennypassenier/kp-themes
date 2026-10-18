@@ -1,0 +1,596 @@
+<!doctype html>
+<html lang="en-GB" data-theme="formal" data-review="app-hsb-translate" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>HTTPSwitchboard: try a translation and reloads · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main hs-page">
+            <header class="hs-intro">
+                <h1>HTTPSwitchboard: try a translation, and the history of reloads</h1>
+                <p class="cat-intro">
+                    HTTPSwitchboard accepts a message in one shape and delivers it in another; here the messages are Alertmanager alerts and the
+                    destination is Home Assistant. Two pages the service does not have yet, both
+                    <b>new use cases</b> found while planning its move to kp-themes 11.0.0: <b>Try a translation</b> (see what a profile makes of a
+                    message without sending anything to Home Assistant) and the <b>history of reloads</b> of the profile file (today a refused reload
+                    is only in the log and in a metric).
+                </p>
+                <p>
+                    Judge in the review dialog (&ldquo;Review in a dialog&rdquo; at the top), formal only. <b>Mock on this page:</b> the second
+                    profile <code>uptime-kuma</code>, every sample message, the template engine that renders the two templates, and the reload record.
+                    The Home Assistant address is a credential and is never shown. Every <code>kp-</code> class and every script under
+                    <code>js/</code> is the package; the <code>hs-</code> rules only lay the page out. Nothing moves until a button is pressed.
+                </p>
+            </header>
+
+            <!-- ================================================================ topic: try a translation -->
+            <h2 class="hs-topic">Try a translation</h2>
+
+            <section
+                class="hs-sec"
+                id="try"
+                data-review-item="try"
+                data-review-components="json-field code timeline"
+                data-review-topic="try"
+                data-review-topic-title="Try a translation"
+                data-review-title="Try a translation: the whole page"
+                aria-labelledby="h-try"
+            >
+                <div class="hs-sec__head">
+                    <h2 id="h-try">Try a translation: the whole page</h2>
+                    <p>
+                        Pick a profile, paste a sample message, and see the body that would be delivered, next to what changed. Nothing is delivered
+                        to Home Assistant; it is a preview.
+                    </p>
+                </div>
+                <div class="hs-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>New use case (row 9 of the plan):</b> today the only way to see what a template makes of a message is to send one
+                            through to Home Assistant.
+                        </li>
+                        <li>
+                            <b>Valid (the default):</b> the example Alertmanager message with 2 alerts is in the box, the body on the right reads
+                            <code>alert DiskAlmostFull</code>, <code>count 2</code> and both summaries joined with &ldquo;; &rdquo;, and the
+                            comparison underneath shows the received lines removed and the delivered lines added.
+                        </li>
+                        <li>
+                            <b>No severity or instance:</b> the body still renders, with &ldquo;warning&rdquo; and &ldquo;unknown&rdquo;, and a quiet
+                            note under the alert area says which defaults the template filled in.
+                        </li>
+                        <li>
+                            <b>No alerts (template error):</b> the box is valid JSON but <code>alerts.0</code> does not exist. An alert says what
+                            happened, why, and what to do now; its button puts the example message back. The body and the comparison say there is
+                            nothing to show.
+                        </li>
+                        <li>
+                            <b>Broken JSON:</b> the box names the line and column; the cards say the message is not JSON yet. <b>Empty box:</b> both
+                            cards ask for a message.
+                        </li>
+                        <li>
+                            <b>Loading:</b> the busy card sits over the body and the comparison, which keep their size.
+                            <b>Service did not answer:</b> both cards show the failure with Try again, which returns to the normal answer.
+                        </li>
+                        <li>
+                            Pressing the other profile (<code>uptime-kuma</code>, a mock) swaps the template and the example, and everything follows.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s double-ruled cards and its mono type in the code and the diff. Look at the three cards keeping one footprint in
+                        every state, the line number gutter of the box, the sign column of the diff (a + or - beside each line, not only a colour),
+                        and the quiet note for a default that was filled in.
+                    </p>
+                </div>
+                <div class="hs-controls" data-review-controls data-review-controls-for="try-component">
+                    <div role="group" aria-label="Sample message">
+                        <b>Message:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-sample="typical" aria-pressed="true">Typical, 2 alerts</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-sample="partial" aria-pressed="false">
+                            No severity or instance
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-sample="none" aria-pressed="false">No alerts</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-sample="broken" aria-pressed="false">Broken JSON</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-sample="empty" aria-pressed="false">Empty box</button>
+                    </div>
+                    <div role="group" aria-label="The service's answer">
+                        <b>Answer:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-answer="ready" aria-pressed="true">Normal</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-answer="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-answer="unreachable" aria-pressed="false">
+                            Did not answer
+                        </button>
+                    </div>
+                </div>
+                <div id="try-component" class="hs-try" data-hs-try>
+                    <div class="hs-try__profile">
+                        <div class="kp-segmented" data-kp-segmented="single" data-hs-profile role="radiogroup" aria-label="Profile to try">
+                            <button type="button" class="kp-segmented__item" data-value="alertmanager" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">alertmanager</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="uptime-kuma" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">uptime-kuma (mock)</span>
+                            </button>
+                        </div>
+                        <p class="hs-meta" data-hs-takes></p>
+                    </div>
+                    <div class="hs-try__input">
+                        <div class="kp-field">
+                            <label class="kp-field__label" for="hs-try-message">Sample message</label>
+                            <textarea
+                                class="kp-field__input kp-field__input--multiline"
+                                id="hs-try-message"
+                                rows="14"
+                                data-kp-json
+                                data-kp-json-wrap="false"
+                                spellcheck="false"
+                                aria-describedby="hs-try-message-hint"
+                            ></textarea>
+                            <p class="kp-field__hint" id="hs-try-message-hint">Paste the message as the sender posts it. Nothing is sent anywhere.</p>
+                        </div>
+                        <figure
+                            class="kp-code"
+                            data-kp-code
+                            data-hs-template
+                            data-kp-code-title="Template"
+                            data-kp-code-language="minijinja"
+                            data-kp-code-state="loading"
+                        >
+                            <pre class="kp-code__body"><code></code></pre>
+                        </figure>
+                    </div>
+                    <section class="kp-card hs-card hs-try__result" data-hs-result data-kp-state="loading" aria-labelledby="hs-try-result-t">
+                        <div class="kp-card__header">
+                            <h3 class="kp-card__title" id="hs-try-result-t">Translated body</h3>
+                        </div>
+                        <p class="kp-card__body">What Home Assistant would receive for this message.</p>
+                        <div class="kp-card__stage">
+                            <div class="kp-card__data hs-card__data">
+                                <div class="kp-problems" data-kp-problems data-kp-problems-mode="each"></div>
+                                <figure
+                                    class="kp-code"
+                                    data-kp-code
+                                    data-hs-body
+                                    data-kp-code-title="Translated body"
+                                    data-kp-code-language="JSON"
+                                    data-kp-code-state="loading"
+                                >
+                                    <pre class="kp-code__body"><code></code></pre>
+                                </figure>
+                            </div>
+                        </div>
+                    </section>
+                    <section
+                        class="kp-card hs-card hs-card--diff hs-try__diff"
+                        data-hs-diffcard
+                        data-kp-state="loading"
+                        aria-labelledby="hs-try-diff-t"
+                    >
+                        <div class="kp-card__header">
+                            <h3 class="kp-card__title" id="hs-try-diff-t">Before and after</h3>
+                            <p class="hs-counts" data-hs-diffcount></p>
+                        </div>
+                        <p class="kp-card__body">
+                            The message as it arrived against the body that is delivered. Indentation is ignored when lines are matched.
+                        </p>
+                        <div class="kp-card__stage">
+                            <div class="kp-card__data hs-card__data">
+                                <pre class="kp-diff hs-diff" tabindex="0"></pre>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </section>
+
+            <section
+                class="hs-sec"
+                id="box"
+                data-review-item="box"
+                data-review-components="json-field"
+                data-review-topic="try"
+                data-review-title="The sample box: every option of the JSON field"
+                aria-labelledby="h-box"
+            >
+                <div class="hs-sec__head">
+                    <h2 id="h-box">The sample box: every option of the JSON field</h2>
+                    <p>A text box that knows JSON: it checks while you type, says where the JSON is wrong, and can lay the text out.</p>
+                </div>
+                <div class="hs-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Valid:</b> the quiet line under the box reads &ldquo;Valid JSON&rdquo; with the number of keys. <b>Broken JSON:</b>
+                            the line names the line and column (&ldquo;Line 14, column 5: &hellip;&rdquo;) and that line is marked in the gutter.
+                            <b>Empty:</b> the line says Empty. <b>Not JSON:</b> a plain sentence is refused, because a translation needs JSON.
+                        </li>
+                        <li>
+                            <b>Checking:</b> <i>While typing</i> (default) checks 300 ms after the last key; <i>On leaving</i> waits until the box
+                            loses focus. Type a character into the box in each to compare.
+                        </li>
+                        <li>
+                            <b>Formatting:</b> <i>Button</i> (default) shows Format and Minify beside the box; <i>When leaving</i> lays valid JSON out
+                            as you leave the box and shows no buttons; <i>Off</i> takes the tools away.
+                        </li>
+                        <li>
+                            <b>Look:</b> line numbers (default on), wrapping long lines (default scroll inside the box), and a 4-space indent (default
+                            2) that shows when you press Format. The plain-text mode of the field is not offered: a translation of something that is
+                            not JSON means nothing.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s field plate with the gutter at its left: the numbers must stay clear of the text, the marked line must be
+                        readable, and the Format and Minify buttons must keep their place when the line under the box changes.
+                    </p>
+                </div>
+                <div class="hs-controls" data-review-controls data-review-controls-for="box-component">
+                    <div role="group" aria-label="Sample message">
+                        <b>Message:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-box-sample="typical" aria-pressed="true">Valid</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-box-sample="broken" aria-pressed="false">Broken JSON</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-box-sample="empty" aria-pressed="false">Empty</button>
+                    </div>
+                    <div role="group" aria-label="When it checks">
+                        <b>Checks:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-box-check="input" aria-pressed="true">While typing</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-box-check="blur" aria-pressed="false">On leaving</button>
+                    </div>
+                    <div role="group" aria-label="Formatting">
+                        <b>Formatting:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-box-format="button" aria-pressed="true">Buttons</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-box-format="on-blur" aria-pressed="false">When leaving</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-box-format="off" aria-pressed="false">Off</button>
+                    </div>
+                    <div role="group" aria-label="Look">
+                        <b>Look:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-box-look="gutter" aria-pressed="true">Line numbers</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-box-look="wrap" aria-pressed="false">Wrap long lines</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-box-look="indent" aria-pressed="false">4-space indent</button>
+                    </div>
+                </div>
+                <div id="box-component" data-hs-box>
+                    <div class="kp-field">
+                        <label class="kp-field__label" for="hs-box-message">Sample message</label>
+                        <textarea
+                            class="kp-field__input kp-field__input--multiline"
+                            id="hs-box-message"
+                            rows="12"
+                            data-kp-json="strict"
+                            spellcheck="false"
+                            aria-describedby="hs-box-message-hint"
+                        ></textarea>
+                        <p class="kp-field__hint" id="hs-box-message-hint">Paste the message as the sender posts it.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section
+                class="hs-sec"
+                id="code"
+                data-review-item="code"
+                data-review-components="code"
+                data-review-topic="try"
+                data-review-title="The translated body: every option of the code block"
+                aria-labelledby="h-code"
+            >
+                <div class="hs-sec__head">
+                    <h2 id="h-code">The translated body: every option of the code block</h2>
+                    <p>The body that would be delivered, set in code with a title, its size, and a Copy button.</p>
+                </div>
+                <div class="hs-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Ready:</b> the title <i>Translated body</i>, the language JSON and the size in the head; the body laid out with
+                            two-space indents (<i>Pretty</i>) and its keys in the key colour. The head also has Pretty and Raw (the compact line the
+                            service sends), Wrap, and Copy, whose word becomes &ldquo;Copied&rdquo; without moving anything.
+                        </li>
+                        <li>
+                            <b>Loading</b> puts the busy card over the block at its height; <b>Nothing yet</b> and <b>Failed</b> are one sentence at
+                            the same height, with the tools waiting.
+                        </li>
+                        <li>
+                            <b>Layout</b> starts the block as Pretty (default) or Raw; the line under the block says what is set. <b>Show</b> switches
+                            line numbers (default on), wrapping (default on: a long summary stays inside the block), folding after 5 lines (default
+                            off, then &ldquo;Show all 8 lines&rdquo; opens it) and the Copy button (default on).
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s mono type on its paper plate. Look at the head: title left, what it is and the tools right, with a gap between
+                        each; the line numbers outside the text; and the block keeping one height from Loading to Ready.
+                    </p>
+                </div>
+                <div class="hs-controls" data-review-controls data-review-controls-for="code-component">
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-code-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-code-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-code-state="empty" aria-pressed="false">Nothing yet</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-code-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Layout">
+                        <b>Layout:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-code-layout="pretty" aria-pressed="true">Pretty</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-code-layout="raw" aria-pressed="false">Raw</button>
+                    </div>
+                    <div role="group" aria-label="Show">
+                        <b>Show:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-code-show="lines" aria-pressed="true">Line numbers</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-code-show="wrap" aria-pressed="true">Wrap</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-code-show="fold" aria-pressed="false">
+                            Fold after 5 lines
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-code-show="copy" aria-pressed="true">Copy button</button>
+                    </div>
+                </div>
+                <div id="code-component" data-hs-codestage>
+                    <figure class="kp-code" data-kp-code data-hs-codeblock data-kp-code-state="loading">
+                        <pre class="kp-code__body"><code></code></pre>
+                    </figure>
+                    <p class="hs-meta" data-hs-code-options aria-live="polite"></p>
+                </div>
+            </section>
+
+            <section
+                class="hs-sec"
+                id="problem"
+                data-review-item="problem"
+                data-review-components="problem"
+                data-review-topic="try"
+                data-review-title="When the template fails: the problem alert"
+                aria-labelledby="h-problem"
+            >
+                <div class="hs-sec__head">
+                    <h2 id="h-problem">When the template fails: the problem alert</h2>
+                    <p>An alert with three fixed parts: what is wrong, why it is, and what to do now, with the fix beside them.</p>
+                </div>
+                <div class="hs-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Template error:</b> one alert, not closable (a real problem stays until it is mended), with <i>What</i>, <i>Why</i> and
+                            <i>What now</i>, and the button <b>Use the example message</b> beside them. Pressing it replaces the alert with the notes
+                            of that message.
+                        </li>
+                        <li>
+                            <b>Notes:</b> the quietest severity (info), each closable with its own close button: defaults the template filled in.
+                            Closing one leaves the other where it was.
+                        </li>
+                        <li>
+                            <b>Error and 3 notes</b> shows the worst first. <b>Layout</b> is the component&rsquo;s option: <i>One each</i> (default),
+                            <i>One list</i> in a single alert, and <i>Fold from 2</i>, one alert with the worst open and &ldquo;Show the other
+                            N&rdquo;.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s alert plates: the severity is a shape and a word as well as a colour. Look at the three parts lining up in one
+                        grid whatever their length, the fix button keeping its place, and the area keeping its height when the alerts are gone.
+                    </p>
+                </div>
+                <div class="hs-controls" data-review-controls data-review-controls-for="problem-component">
+                    <div role="group" aria-label="What is wrong">
+                        <b>Case:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-problem-case="error" aria-pressed="true">Template error</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-problem-case="notes" aria-pressed="false">2 notes</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-problem-case="both" aria-pressed="false">
+                            Error and 3 notes
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Layout of several problems">
+                        <b>Layout:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-problem-mode="each" aria-pressed="true">One each</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-problem-mode="list" aria-pressed="false">One list</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-problem-mode="fold" aria-pressed="false">Fold from 2</button>
+                    </div>
+                </div>
+                <div id="problem-component" class="hs-problem-stage" data-hs-problemstage>
+                    <div class="kp-problems" data-kp-problems data-hs-problems data-kp-problems-mode="each" data-kp-problems-fold-from="2"></div>
+                    <p class="hs-meta" data-hs-none hidden>Nothing to report.</p>
+                </div>
+            </section>
+
+            <section
+                class="hs-sec"
+                id="diff"
+                data-review-item="diff"
+                data-review-components="diff card"
+                data-review-topic="try"
+                data-review-title="Before and after: the diff"
+                aria-labelledby="h-diff"
+            >
+                <div class="hs-sec__head">
+                    <h2 id="h-diff">Before and after: the diff</h2>
+                    <p>The message as it arrived next to the body that is delivered: lines taken out, lines put in, and the lines that stayed.</p>
+                </div>
+                <div class="hs-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Ready:</b> a header such as <code>@@ -1,48 +1,8 @@ received &rarr; delivered</code>, then every line with its number
+                            and a sign column (- removed, + added, blank for a line that stayed), the removed in red and the added in green. The card
+                            says how many lines were removed and added.
+                        </li>
+                        <li>
+                            <b>Context</b> is <i>All lines</i> (default, one block) or <i>Changes only</i> (the unchanged lines between changes are
+                            dropped, so the changes stand in separate blocks, each with its own header). <b>Message</b> picks the typical message or
+                            the one without a severity or instance.
+                        </li>
+                        <li><b>Loading, Nothing yet and Failed</b> fill the card&rsquo;s footprint; Failed has Try again, which returns to Ready.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s hairline box with the mono face. Look at the sign column carrying the change when the colour does not, the hunk
+                        header as a band of its own, and the box scrolling inside itself rather than widening the page.
+                    </p>
+                </div>
+                <div class="hs-controls" data-review-controls data-review-controls-for="diff-component">
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-diff-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-diff-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-diff-state="empty" aria-pressed="false">Nothing yet</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-diff-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Lines around a change">
+                        <b>Context:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-diff-context="all" aria-pressed="true">All lines</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-diff-context="0" aria-pressed="false">Changes only</button>
+                    </div>
+                    <div role="group" aria-label="Message">
+                        <b>Message:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-diff-sample="typical" aria-pressed="true">
+                            Typical, 2 alerts
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-diff-sample="partial" aria-pressed="false">
+                            No severity or instance
+                        </button>
+                    </div>
+                </div>
+                <div id="diff-component" data-hs-diffstage>
+                    <section class="kp-card hs-card hs-card--diff" data-hs-diffcard data-kp-state="loading" aria-labelledby="hs-diff-t">
+                        <div class="kp-card__header">
+                            <h3 class="kp-card__title" id="hs-diff-t">Before and after</h3>
+                            <p class="hs-counts" data-hs-diffcount></p>
+                        </div>
+                        <div class="kp-card__stage">
+                            <div class="kp-card__data hs-card__data">
+                                <pre class="kp-diff hs-diff" tabindex="0"></pre>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </section>
+
+            <!-- ================================================================ topic: reloads -->
+            <h2 class="hs-topic">History of reloads</h2>
+
+            <section
+                class="hs-sec"
+                id="reloads"
+                data-review-item="reloads"
+                data-review-components="timeline newpill"
+                data-review-topic="reloads"
+                data-review-topic-title="History of reloads"
+                data-review-title="History of reloads of the profile file"
+                aria-labelledby="h-reloads"
+            >
+                <div class="hs-sec__head">
+                    <h2 id="h-reloads">History of reloads of the profile file</h2>
+                    <p>Every time the service read its profile file again, newest first: what changed, what needs a restart, and what was refused.</p>
+                </div>
+                <div class="hs-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li><b>New use case (row 11 of the plan):</b> a reload that was refused is only in the journal and in a metric today.</li>
+                        <li>
+                            <b>Ready:</b> the timeline lists 8 reloads with the newest at the top, each with its date (dd/mm/yyyy HH:MM) and an
+                            outcome in one column: <b>Applied</b> (names the profiles that changed), <b>Needs a restart</b> (says why) and
+                            <b>Invalid</b> (says where the file is wrong). The count line reads &ldquo;8 reloads &middot; 4 applied &middot; 2 need a
+                            restart &middot; 2 invalid&rdquo; and follows every arrival.
+                        </li>
+                        <li>
+                            <b>The alert:</b> the latest reload is invalid, so one alert says what is wrong, why, and what to do now, with the command
+                            to run (Copy beside it). It goes away by itself when a later reload is applied.
+                        </li>
+                        <li>
+                            <b>A reload arrives:</b> the row appears at the top and the count line moves. While you read the older reloads (press
+                            <b>Scroll to older</b> first), the row is counted in a pill, &ldquo;1 new reload &middot; back to the top&rdquo;; pressing
+                            the pill, or the Home key, jumps back to the top.
+                        </li>
+                        <li><b>Loading, Empty and Failed</b> keep the card&rsquo;s size; Failed has Try again.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s timeline: a solid ink dot and a hairline down the left. Look at the outcome words standing in one column for
+                        every row, the long text wrapping inside its own column, and the pill sitting at the top of the list without covering the
+                        first row&rsquo;s date.
+                    </p>
+                </div>
+                <div class="hs-controls" data-review-controls data-review-controls-for="reloads-component">
+                    <div role="group" aria-label="A reload arrives">
+                        <b>A reload arrives:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-arrive="applied">Applied</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-arrive="restart">Needs a restart</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-arrive="invalid">Invalid</button>
+                    </div>
+                    <div role="group" aria-label="Reading">
+                        <b>Reading:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-older>Scroll to older</button>
+                    </div>
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-history-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-history-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-history-state="empty" aria-pressed="false">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-history-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                </div>
+                <div id="reloads-component" data-hs-historystage>
+                    <section class="kp-card hs-card hs-card--history" data-hs-history data-kp-state="ready" aria-labelledby="hs-reloads-t">
+                        <div class="kp-card__header">
+                            <h3 class="kp-card__title" id="hs-reloads-t">Reloads</h3>
+                            <p class="hs-counts" data-hs-counts aria-live="polite"></p>
+                        </div>
+                        <div class="kp-card__stage">
+                            <div class="kp-card__data hs-history">
+                                <div class="kp-problems" data-kp-problems data-kp-problems-mode="each"></div>
+                                <div class="hs-history__host">
+                                    <ol
+                                        class="kp-timeline hs-history__list"
+                                        data-kp-follow="head"
+                                        data-kp-pill-unit="reload,reloads"
+                                        tabindex="0"
+                                        aria-label="Reloads of the profile file, newest first"
+                                    ></ol>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </section>
+        </main>
+
+        <script type="application/json" data-review-round>
+            { "round": "app-hsb-translate-3f6b2a1e-5c8d-4e0a-9b71-2d4f8a6c0e13" }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>

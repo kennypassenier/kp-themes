@@ -99,6 +99,12 @@ export const PAGES = [
                 label: 'Four faults found in the package: Copy, Back and Next, the flash button and the lede',
                 about: 'The Copy button of a command block and the Back and Next buttons of the check-in broke their words letter by letter on a phone, the flash button set to grow by hand was an empty button, and a lede asked to fold and carry a link never folded. 4 sections (48 pairs): each fault in the twelve themes, the first two in a phone-width frame. Each says what was wrong and what is different now.',
             },
+            // Kenny, 2026-10-19 (app-hsb-1019): two new use cases for HTTPSwitchboard from its kp-themes 11.0.0 adoption plan (rows 9 and 11), formal only: try a translation without delivering, and the history of reloads of the profile file. Hand-written page: research/app-hsb-translate.
+            {
+                href: 'research/app-hsb-translate/demo.html',
+                label: 'HTTPSwitchboard: try a translation and reloads',
+                about: 'Two pages HTTPSwitchboard does not have yet, in formal only: pick a profile, paste a sample message and see the translated body and a before and after diff without delivering anything; and a timeline of reloads of the profile file (applied, needs a restart, invalid) with an N new pill and an alert for the latest invalid reload. 6 sections in 2 topics.',
+            },
             // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
             // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             // Kenny, 2026-10-08 (update 1): deco's grammar did not convince him ("fancy, distinguished … lots of gold accents and fancy blue backgrounds … elegance without being too in your face"); thirteen questions redrawn as thin gold on lacquer with the wallpaper, his six picks kept.

@@ -1,0 +1,241 @@
+/* research/app-hsb-translate: the page's own frame. Everything with a kp- class is the package; these hs- rules only lay the
+   sections out on a grid and frame the sample data. Tokens only. */
+
+.hs-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.hs-intro,
+.hs-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.hs-intro :is(h1, p),
+.hs-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.hs-intro p,
+.hs-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.hs-topic {
+    margin: var(--kp-space-lg, 1.5rem) 0 0;
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 2px solid var(--border);
+}
+
+.hs-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.hs-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.hs-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.hs-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.hs-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.hs-controls > [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.hs-controls > [role='group'] > b {
+    min-inline-size: 7rem;
+}
+
+.hs-label {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 600;
+}
+
+.hs-meta {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* ---- the whole page of "Try a translation": a 12-column grid, one column on a phone ---- */
+
+.hs-try {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: var(--kp-space-md, 1rem) var(--kp-space-lg, 1.5rem);
+    align-items: stretch;
+}
+
+.hs-try__profile {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+}
+
+.hs-try__input {
+    grid-column: span 5;
+    display: grid;
+    align-content: start;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+.hs-try__result {
+    grid-column: span 7;
+    min-inline-size: 0;
+}
+
+.hs-try__diff {
+    grid-column: 1 / -1;
+    min-inline-size: 0;
+}
+
+@media (max-width: 60rem) {
+    .hs-try__input,
+    .hs-try__result {
+        grid-column: 1 / -1;
+    }
+
+    .hs-try__profile {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* A card that holds a data area keeps one least height in every state, so loading, empty and filled stand on the same footprint. */
+.hs-card {
+    --kp-card-stage-min: 22rem;
+    block-size: 100%;
+}
+
+.hs-card--diff {
+    --kp-card-stage-min: 18rem;
+}
+
+.hs-card--history {
+    --kp-card-stage-min: 24rem;
+}
+
+.hs-card__data {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+.hs-diff {
+    max-block-size: 24rem;
+    overflow: auto;
+}
+
+.hs-diff-wrap {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* The problem alert stage: a least height so an empty alert area does not collapse the frame. */
+.hs-problem-stage {
+    min-block-size: 16rem;
+    align-content: start;
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+}
+
+/* ---- the reload history ---- */
+
+.hs-history {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+.hs-history__host {
+    position: relative;
+    min-inline-size: 0;
+}
+
+.hs-history__list {
+    max-block-size: 19rem;
+    overflow: auto;
+    padding-inline-end: var(--kp-space-sm, 0.5rem);
+}
+
+/* One reload: its outcome in a column of its own, so the same word stands in the same place in every row. */
+.hs-reload {
+    display: grid;
+    grid-template-columns: 9.5rem minmax(0, 1fr);
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-md, 1rem);
+    align-items: start;
+    min-inline-size: 0;
+}
+
+.hs-reload > time {
+    grid-column: 1 / -1;
+}
+
+.hs-reload__outcome {
+    display: flex;
+}
+
+.hs-reload__what {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+}
+
+.hs-reload__what > span:first-child {
+    font-weight: 600;
+}
+
+.hs-reload__what > span:last-child {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+@media (max-width: 40rem) {
+    .hs-reload {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.hs-counts {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-variant-numeric: tabular-nums;
+}
