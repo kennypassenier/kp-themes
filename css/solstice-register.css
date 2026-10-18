@@ -1241,6 +1241,9 @@
 
     [data-theme='solstice'] .kp-spinner {
         --kp-sig-dur: 2400ms;
+        /* The arc and the sun scale with the spinner (0.5 rem and 0.4 rem at the default 1.25 rem), so the sun of a busy
+           card's 2.5 rem spinner is not a 6 px dot on a 30 px line [t56-eye-1018]. */
+        --kp-sig-so-r: calc(var(--kp-spinner-size, 1.25rem) * 0.4);
         position: relative;
         overflow: hidden;
         border: 0;
@@ -1251,7 +1254,7 @@
         background:
             linear-gradient(var(--border-strong), var(--border-strong)) 50% 80% / 100% 1.5px no-repeat,
             radial-gradient(
-                circle 0.5rem at 50% 80%,
+                circle var(--kp-sig-so-r) at 50% 80%,
                 transparent calc(100% - 1px),
                 hsl(from var(--primary) h s l / 0.3) calc(100% - 1px) 100%,
                 transparent 100%
@@ -1262,14 +1265,14 @@
     [data-theme='solstice'] .kp-spinner::after {
         content: '';
         position: absolute;
-        inset-inline-start: calc(50% - 0.2rem);
-        inset-block-start: calc(80% - 0.2rem);
-        inline-size: 0.4rem;
-        block-size: 0.4rem;
+        inset-inline-start: calc(50% - var(--kp-sig-so-r) * 0.4);
+        inset-block-start: calc(80% - var(--kp-sig-so-r) * 0.4);
+        inline-size: calc(var(--kp-sig-so-r) * 0.8);
+        block-size: calc(var(--kp-sig-so-r) * 0.8);
         border-radius: 50%;
         background: var(--primary);
         box-shadow: 0 0 0 2px hsl(from var(--primary) h s l / 0.25);
-        transform: translateY(-0.5rem);
+        transform: translateY(calc(var(--kp-sig-so-r) * -1));
     }
 
     [data-theme='solstice'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
@@ -1642,7 +1645,7 @@
     @keyframes kp-sig-solstice-solstice-arc {
         0% {
             opacity: 0;
-            transform: rotate(-100deg) translateY(-0.5rem);
+            transform: rotate(-100deg) translateY(calc(var(--kp-sig-so-r) * -1));
         }
 
         10%,
@@ -1653,7 +1656,7 @@
         90%,
         100% {
             opacity: 0;
-            transform: rotate(100deg) translateY(-0.5rem);
+            transform: rotate(100deg) translateY(calc(var(--kp-sig-so-r) * -1));
         }
     }
 
