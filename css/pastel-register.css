@@ -5824,4 +5824,17 @@
         block-size: 2.25rem;
         margin-block-end: 0.4rem;
     }
+
+    /* The rating's failed plate lies over the place of the stars (`position: absolute; inset: 0`); pastel's alert rule made every
+       alert `position: relative`, so the plate stood in the flow under the hidden stars and the rating grew from 80 to 158 px
+       (142 against 92 at 390; kpadopt6-fields/rating-states). */
+    [data-theme='pastel'] .kp-rating__failure {
+        position: absolute;
+    }
+
+    /* A waiting version badge holds a skeleton line with the 0.45 rem margins of a line in a list; inside a badge they made it
+       30 px high against 23 for its version (kpadopt5-ops/version-states). */
+    [data-theme='pastel'] .kp-badge > .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
+        margin-block: 0.26rem;
+    }
 }
