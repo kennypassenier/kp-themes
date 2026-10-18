@@ -180,6 +180,25 @@ out of the copy, so it never reads or writes verdicts; the fonts come from the l
 new round. One snapshot per demo (about 4.5 MB): the next round's run replaces it, and archiving the demo removes it.
 Without a snapshot, or for a section new in this round, the button is not shown (Kenny, 2026-10-18 00:28: the bar shows only what is relevant).
 
+## Key helpers: legend, focus, undo, rejected so far, bulk
+
+`rv-keys.js` (with `rv-keys.css`) adds four helpers to the dialog, each a per-viewer option (localStorage
+`kp-review-keys`, switched at runtime from the **Keys** button in the dialog's head or with
+`kpReviewKeys.set('<option>', true)`). The keys are physical key codes (`event.code`), listed in `KEYS` in the module.
+
+| Option     | Default | What                                                                                                                                                                       |
+| ---------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `legend`   | on      | one always-visible line of the keys, under the dialog's head                                                                                                               |
+| `undo`     | on      | **U** undoes the last approve or reject and returns to that step with its boxes; the journal gets an entry `kind: "undo"`, nothing is deleted                              |
+| `rejected` | on      | **Y** (or the button) opens "Rejected so far", an overlay on the stage: rejections with notes, changed defaults, removed options; each line jumps to its pair; Esc closes it |
+| `bulk`     | off     | **G** approves the rest of a theme, offered only after 3 approvals in a row in it; a confirm line gives the pair count; journal and answer say "approved unseen, N pairs"; 10 s undo |
+
+On a topic step, **Down** or **N** rejects the focused section (before: aspect pages only), **J** / **K** move the focus
+(a subtle rule at the left of the section and its row) and **X** toggles "Not approved" on it; none of them opens the
+note, so the keys keep working. Keys pressed inside a lane frame are handed up like V and L (`FRAME_KEYS`). review.js
+carries six lines marked `[kit-keys]`; the entries `kind: "undo" | "bulk"` are read by `progress.js` (`rebuildAnswer`)
+and the Agenda's "Saved verdicts".
+
 ## Play open and close, slowly
 
 A section that opens and closes something also has **Play open and close (L)** and a speed, **1×** or **¼×**. The kit presses the

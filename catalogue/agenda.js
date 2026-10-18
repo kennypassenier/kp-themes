@@ -518,7 +518,10 @@ const entryWords = (e) => {
     if (e.pair === ANSWER_PAIR) return `the whole answer, kept when it was set aside as received:\n${e.note}`;
     const label = e.label || e.pair;
     const parts = [label];
-    if (e.verdict) parts.push(e.verdict === 'rejected' ? 'Not approved' : 'Approved');
+    // [kit-keys] Undo (U) and bulk approval (G) entries say what they are.
+    if (e.kind === 'undo') parts.push(e.verdict ? `Undone, back to ${e.verdict === 'rejected' ? 'not approved' : 'approved'}` : 'Undone, open again');
+    else if (e.kind === 'bulk') parts.push(`Approved unseen (bulk, ${e.unseen || 1} pairs)`);
+    else if (e.verdict) parts.push(e.verdict === 'rejected' ? 'Not approved' : 'Approved');
     if (e.choice) parts.push(`ticked ${e.choice.id} = ${e.choice.label || e.choice.value}`);
     const head = parts.join(' · ');
     return e.note ? `${head}: ${e.note}` : head;

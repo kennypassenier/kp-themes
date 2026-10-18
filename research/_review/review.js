@@ -103,6 +103,7 @@ import {
     storeKey,
 } from './progress.js';
 import { early, isolate, mountBlockTools } from './block-tools.js';
+import { FRAME_KEYS, mountKeys } from './rv-keys.js'; // [kit-keys] key legend, focus, undo, rejected so far, bulk
 
 const root = document.documentElement;
 const DEMO = root.dataset.review;
@@ -180,7 +181,7 @@ function lane() {
         (event) => {
             if (parent === window || event.altKey || event.ctrlKey || event.metaKey) return;
             if (/** @type {Element} */ (event.target).matches?.(TYPING)) return;
-            if (event.key === 'Escape' ? document.querySelector(OPEN) : event.code !== 'KeyV' && event.code !== 'KeyL') return;
+            if (event.key === 'Escape' ? document.querySelector(OPEN) : event.code !== 'KeyV' && event.code !== 'KeyL' && !FRAME_KEYS.has(event.code)) return; // [kit-keys] FRAME_KEYS
             event.preventDefault();
             event.stopPropagation();
             parent.postMessage({ type: 'rv-lane-key', key: event.key, code: event.code }, location.origin);
@@ -971,6 +972,7 @@ function answer() {
     if (rejected.length) lines.push('', 'Not approved:', ...rejected.map((p) => `- ${p.label}: ${noteOf(p)}`));
     const notes = pairs.filter((p) => verdictOf(p) === 'approved' && noteOf(p));
     if (notes.length) lines.push('', 'Approved, with a note:', ...notes.map((p) => `- ${p.label}: ${noteOf(p)}`));
+    lines.push(...kk.answerLines()); // [kit-keys] pairs approved unseen by G
     const picked = pairs.flatMap((p) =>
         (p.item?.choices || [])
             .filter((c) => !c.once && !fixedFor(p, c) && changedFrom(p, c))
@@ -1759,6 +1761,7 @@ addEventListener('message', (event) => {
     if (event.origin !== location.origin || data.type !== 'rv-lane-key' || !dialog.open) return;
     if (data.key === 'Escape') return dialog.close();
     laneOf(event.source)?.tool.key(data.code);
+    kk.fromFrame(data.code); // [kit-keys]
 });
 
 /** One section in one theme, in a frame of its own, under a head naming the theme. @param {Pair} pair */
@@ -2020,6 +2023,7 @@ function rowFor(pair, only = null, name = '') {
         stage.querySelector(`.rv-lane[data-rv-pair="${CSS.escape(pair.key)}"]`)?.classList.toggle('rv-lane--rejected', box.checked);
         if (box.checked) note.focus();
         if (!only) {
+            kk.snap([pair.key], `${box.checked ? 'not approved' : 'approved'} ${pair.label}`); // [kit-keys]
             state[pair.key] = {
                 ...state[pair.key],
                 verdict: box.checked ? 'rejected' : 'approved',
@@ -2237,6 +2241,7 @@ async function show(at) {
         if (!dialog.open) dialog.showModal();
         checkIntegrity();
         approveButton.focus({ preventScroll: true });
+        kk.shown(step, shownPairs); // [kit-keys]
         // Every page starts at its top, the demo on the left and the rows on the right (Kenny, 2026-10-13: "als ik van
         // één dialog pagina naar de andere ga, scroll dan naar boven en doe hetzelfde voor de items rechts").
         for (const box of [stage, stage.closest('.rv-dialog__view'), dialog.querySelector('.rv-dialog__side')]) if (box) box.scrollTop = 0;
@@ -2294,6 +2299,7 @@ function approveStep() {
         refused.hidden = false;
         return;
     }
+    kk.snap(shownPairs.map((p) => p.key), `approved ${current.title}`); // [kit-keys]
     const at = new Date().toISOString();
     for (const pair of shownPairs) {
         const row = rowOf(pair);
@@ -2325,6 +2331,7 @@ function answerAspect(step) {
         refused.hidden = false;
         return;
     }
+    kk.snap([pair.key], `${none ? 'none of these' : 'picked'} in ${step.title}`); // [kit-keys]
     const entry = { ...state[pair.key] };
     entry.choices = { ...entry.choices };
     entry.redo = { ...entry.redo };
@@ -2502,6 +2509,32 @@ window.addEventListener('storage', (event) => {
     }
 });
 
+// [kit-keys] The key helpers get closures over the kit's own state; everything else is in rv-keys.js.
+const kk = mountKeys({
+    demo: DEMO,
+    dialog,
+    stage,
+    list,
+    approveButton,
+    steps,
+    pairs,
+    index: () => index,
+    round: () => round?.round || '',
+    state: () => state,
+    save,
+    render,
+    show,
+    isOpen,
+    verdictOf,
+    noteOf,
+    changedFrom,
+    defaultOf,
+    choiceOf,
+    removedOf,
+    optionLabel,
+    onceKey,
+    label: (theme) => LABEL[theme] || theme,
+});
 render();
 // From the hub, the dialog opens at the first open step by itself.
 if (NEXT && params.get('review') === 'open' && pairs.some(isOpen)) bar.querySelector('[data-rv-open]').click();

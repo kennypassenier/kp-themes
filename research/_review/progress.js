@@ -467,6 +467,9 @@ export const journalKey = (demo) => `${storeKey(demo)}:journal`;
  * @property {string} note
  * @property {{ id: string, value: string, label?: string, changed?: boolean, removed?: boolean } | null} choice  a choice ticked, with the option's label
  * @property {string} [label]  the pair as the answer names it (`<item> · <theme>`)
+ * @property {'undo' | 'bulk'} [kind]  [kit-keys] 'undo': an Undo (U) put the pair back, `verdict` is what it went back to
+ *   (null = open again); 'bulk': approved unseen by G, `unseen` is the pair count of that bulk approval
+ * @property {number} [unseen]
  */
 
 /** A demo's journal, oldest first. @returns {JournalEntry[]} */
@@ -490,10 +493,10 @@ export const JOURNAL_FAILED_EVENT = 'kp-demo-journal-failed';
  */
 export function journal(demo, entry) {
     const list = journalOf(demo);
-    const full = { at: entry.at || new Date().toISOString(), demo, round: entry.round || '', pair: entry.pair, verdict: entry.verdict ?? null, note: entry.note || '', choice: entry.choice ?? null, ...(entry.label ? { label: entry.label } : {}) };
+    const full = { at: entry.at || new Date().toISOString(), demo, round: entry.round || '', pair: entry.pair, verdict: entry.verdict ?? null, note: entry.note || '', choice: entry.choice ?? null, ...(entry.label ? { label: entry.label } : {}), ...(entry.kind ? { kind: entry.kind } : {}), ...(entry.unseen ? { unseen: entry.unseen } : {}) };
     const last = [...list].reverse().find((e) => e?.pair === full.pair && e?.round === full.round);
     const same = (/** @type {JournalEntry} */ e) =>
-        e.verdict === full.verdict && e.note === full.note && JSON.stringify(e.choice ?? null) === JSON.stringify(full.choice);
+        e.verdict === full.verdict && e.note === full.note && (e.kind || '') === (full.kind || '') && JSON.stringify(e.choice ?? null) === JSON.stringify(full.choice);
     if (last && same(last)) return true;
     try {
         localStorage.setItem(journalKey(demo), JSON.stringify([...list, full]));
@@ -542,8 +545,25 @@ export function rebuildAnswer(demo, round) {
     /** @type {Map<string, { verdict: string | null, note: string, label: string, choices: Map<string, string> }>} */
     const pairs = new Map();
     for (const e of entries) {
-        const now = pairs.get(e.pair) ?? { verdict: null, note: '', label: e.label || labelOfKey(e.pair), choices: new Map() };
-        if (e.verdict) now.verdict = e.verdict;
+        const now = pairs.get(e.pair) ?? { verdict: null, note: '', label: e.label || labelOfKey(e.pair), choices: new Map(), unseen: 0 };
+        // [kit-keys] An undo puts the pair back to what the entry says (null = open again); a bulk approval is "approved unseen".
+        if (e.kind === 'undo') {
+            now.verdict = e.verdict;
+            now.note = e.verdict ? e.note : '';
+            now.unseen = 0;
+            pairs.set(e.pair, now);
+            continue;
+        }
+        if (e.kind === 'bulk') {
+            now.verdict = 'approved';
+            now.unseen = e.unseen || 1;
+            pairs.set(e.pair, now);
+            continue;
+        }
+        if (e.verdict) {
+            now.verdict = e.verdict;
+            now.unseen = 0;
+        }
         if (e.verdict || e.note || !e.choice) now.note = e.note;
         // A choice set only asks for the default: pressing back to the default clears the change (defaults-1017).
         if (e.choice && typeof e.choice.removed === 'boolean') {
@@ -562,11 +582,13 @@ export function rebuildAnswer(demo, round) {
     const lines = [
         `Demo review · ${demo} · round ${round || '(no round id)'} · rebuilt from the saved verdicts · ${judged.length} judged, ${approved.length} approved, ${rejected.length} not approved`,
     ];
-    const plain = approved.filter(([, p]) => !p.note).map(([, p]) => p.label);
+    const plain = approved.filter(([, p]) => !p.note && !p.unseen).map(([, p]) => p.label);
     if (plain.length) lines.push('', 'Approved:', ...plain.map((label) => `- ${label}`));
     if (rejected.length) lines.push('', 'Not approved:', ...rejected.map(([, p]) => `- ${p.label}: ${p.note}`));
-    const noted = approved.filter(([, p]) => p.note);
+    const noted = approved.filter(([, p]) => p.note && !p.unseen);
     if (noted.length) lines.push('', 'Approved, with a note:', ...noted.map(([, p]) => `- ${p.label}: ${p.note}`));
+    const unseen = approved.filter(([, p]) => p.unseen);
+    if (unseen.length) lines.push('', `Approved unseen (bulk, ${unseen.length} pairs):`, ...unseen.map(([, p]) => `- ${p.label}`));
     const open = all.filter(([key, p]) => !key.startsWith('once|') && !p.verdict && p.note);
     if (open.length) lines.push('', 'A note without a verdict yet:', ...open.map(([, p]) => `- ${p.label}: ${p.note}`));
     const picked = all.filter(([key]) => !key.startsWith('once|')).flatMap(([, p]) => [...p.choices].map(([id, value]) => `- ${p.label}: ${id}${/^(default changed|remove option)/.test(value) ? ': ' : ' = '}${value}`));

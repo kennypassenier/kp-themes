@@ -1,0 +1,203 @@
+/* The review dialog's key helpers (rv-keys.js) [kit-keys-1018]. Only token variables; no layout of the dialog itself. */
+
+/* The one-line legend, a row of its own at the foot of the dialog's head. */
+.rvk-bar {
+    flex: 1 1 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.25rem 0.75rem;
+    min-inline-size: 0;
+}
+
+.rvk-legend {
+    margin: 0;
+    flex: 1 1 24rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.125rem 0.9rem;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: var(--muted-foreground);
+}
+
+.rvk-legend[hidden] {
+    display: none;
+}
+
+.rvk-legend__item {
+    white-space: nowrap;
+}
+
+.rvk-key {
+    display: inline-block;
+    min-inline-size: 1.4em;
+    padding: 0 0.35em;
+    border: 1px solid var(--border);
+    border-block-end-width: 2px;
+    font-family: var(--theme-font-mono, monospace);
+    font-size: 0.85em;
+    line-height: 1.4;
+    text-align: center;
+    color: var(--foreground);
+    background: var(--background);
+}
+
+.rvk-said {
+    flex: 0 1 auto;
+    min-inline-size: 0;
+    font-size: 0.8rem;
+    color: var(--foreground);
+}
+
+.rvk-button[hidden] {
+    display: none;
+}
+
+/* The focused section: a subtle rule on its left, on the section and on its row. */
+.rvk-focus {
+    box-shadow: inset 3px 0 0 var(--ring, var(--primary, currentColor));
+}
+
+.rv-lane--rejected.rvk-focus,
+.rv-row--rejected.rvk-focus {
+    box-shadow:
+        inset 3px 0 0 var(--destructive),
+        inset 6px 0 0 var(--ring, var(--primary, currentColor));
+}
+
+.rv-row.rvk-focus {
+    padding-inline-start: 0.6rem;
+}
+
+/* Overlays: they float over the dialog, are never docked and never take the focus away. */
+.rvk-panel,
+.rvk-pop,
+.rvk-toast {
+    position: absolute;
+    z-index: 20;
+    box-sizing: border-box;
+    border: 1px solid var(--border);
+    background: var(--background);
+    color: var(--foreground);
+    box-shadow: 0 0.5rem 1.5rem color-mix(in srgb, var(--foreground) 22%, transparent);
+}
+
+.rvk-panel[hidden],
+.rvk-pop[hidden],
+.rvk-toast[hidden] {
+    display: none;
+}
+
+.rvk-panel {
+    inset-block-start: 3.25rem;
+    inset-inline-end: 1rem;
+    inline-size: min(22rem, calc(100% - 2rem));
+    display: grid;
+    gap: 0.5rem;
+    padding: 0.75rem;
+}
+
+.rvk-panel__row {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.5rem;
+    align-items: start;
+    font-size: 0.85rem;
+}
+
+.rvk-panel__row > span {
+    display: grid;
+    gap: 0.125rem;
+}
+
+.rvk-panel__hint {
+    color: var(--muted-foreground);
+    font-size: 0.8rem;
+}
+
+.rvk-pop {
+    inset-block-start: 5rem;
+    inset-inline-start: 1rem;
+    inline-size: min(34rem, calc(100% - 24rem));
+    max-block-size: 55%;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+}
+
+.rvk-pop__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-block-end: 1px solid var(--border);
+}
+
+.rvk-pop__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow: auto;
+    overscroll-behavior: contain;
+}
+
+.rvk-pop__item,
+.rvk-pop__empty {
+    padding: 0.5rem 0.75rem;
+    border-block-end: 1px solid var(--border);
+    font-size: 0.85rem;
+}
+
+.rvk-pop__empty {
+    color: var(--muted-foreground);
+}
+
+.rvk-pop__jump {
+    display: block;
+    inline-size: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    font-weight: 700;
+    text-align: start;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+}
+
+.rvk-pop__jump:focus-visible {
+    outline: 2px solid var(--ring, currentColor);
+    outline-offset: 2px;
+}
+
+.rvk-pop__line {
+    margin: 0.25rem 0 0;
+    overflow-wrap: anywhere;
+}
+
+.rvk-toast {
+    inset-block-end: 1rem;
+    inset-inline-start: 50%;
+    transform: translateX(-50%);
+    inline-size: min(40rem, calc(100% - 2rem));
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.75rem;
+    padding: 0.625rem 0.75rem;
+    font-size: 0.85rem;
+}
+
+.rvk-toast__text {
+    flex: 1 1 18rem;
+    margin: 0;
+}
+
+@media (max-width: 760px) {
+    .rvk-pop {
+        inline-size: calc(100% - 2rem);
+    }
+}
