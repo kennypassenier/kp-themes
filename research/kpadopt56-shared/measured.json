@@ -2,20 +2,20 @@
  "formal": {
   "now": {
    "s1-refresh": {
-    "over": 203,
-    "scrolls": 0
+    "over": 0,
+    "scrolls": 203
    },
    "s1-inspector": {
-    "over": 99,
-    "cardClip": 93,
+    "over": 0,
+    "cardClip": 0,
     "broken": 0
    },
    "s2-version": {
-    "over": 228
+    "over": 0
    },
    "s3-checklist": {
-    "label": 8,
-    "broken": 2,
+    "label": 104,
+    "broken": 0,
     "over": 0
    },
    "s4-entity": {
@@ -23,11 +23,11 @@
     "over": 0
    },
    "s5-chart": {
-    "over": 26,
+    "over": 0,
     "label": 71
    },
    "s6-availability": {
-    "name": 76
+    "name": 290
    },
    "s7-shortcuts": {
     "over": 1816
@@ -83,20 +83,20 @@
  "dark": {
   "now": {
    "s1-refresh": {
-    "over": 278,
-    "scrolls": 0
+    "over": 0,
+    "scrolls": 278
    },
    "s1-inspector": {
-    "over": 111,
-    "cardClip": 106,
+    "over": 0,
+    "cardClip": 0,
     "broken": 0
    },
    "s2-version": {
-    "over": 178
+    "over": 0
    },
    "s3-checklist": {
-    "label": 22,
-    "broken": 2,
+    "label": 104,
+    "broken": 0,
     "over": 0
    },
    "s4-entity": {
@@ -104,11 +104,11 @@
     "over": 0
    },
    "s5-chart": {
-    "over": 19,
+    "over": 0,
     "label": 58
    },
    "s6-availability": {
-    "name": 5
+    "name": 290
    },
    "s7-shortcuts": {
     "over": 1792
@@ -164,32 +164,32 @@
  "cyberpunk": {
   "now": {
    "s1-refresh": {
-    "over": 266,
-    "scrolls": 0
+    "over": 0,
+    "scrolls": 266
    },
    "s1-inspector": {
-    "over": 113,
-    "cardClip": 89,
-    "broken": 1
+    "over": 0,
+    "cardClip": 0,
+    "broken": 0
    },
    "s2-version": {
-    "over": 266
+    "over": 0
    },
    "s3-checklist": {
-    "label": 49,
-    "broken": 1,
+    "label": 104,
+    "broken": 0,
     "over": 0
    },
    "s4-entity": {
-    "broken": 6,
+    "broken": 0,
     "over": 0
    },
    "s5-chart": {
-    "over": 15,
+    "over": 0,
     "label": 49
    },
    "s6-availability": {
-    "name": 0
+    "name": 290
    },
    "s7-shortcuts": {
     "over": 1138
@@ -218,7 +218,7 @@
    },
    "s4-entity": {
     "broken": 0,
-    "over": 1
+    "over": 0
    },
    "s5-chart": {
     "over": 0,
@@ -245,32 +245,32 @@
  "synthwave": {
   "now": {
    "s1-refresh": {
-    "over": 294,
-    "scrolls": 0
+    "over": 0,
+    "scrolls": 294
    },
    "s1-inspector": {
-    "over": 122,
-    "cardClip": 116,
+    "over": 0,
+    "cardClip": 0,
     "broken": 0
    },
    "s2-version": {
-    "over": 134
+    "over": 0
    },
    "s3-checklist": {
-    "label": 48,
-    "broken": 1,
+    "label": 104,
+    "broken": 0,
     "over": 0
    },
    "s4-entity": {
-    "broken": 6,
+    "broken": 0,
     "over": 0
    },
    "s5-chart": {
-    "over": 15,
+    "over": 0,
     "label": 49
    },
    "s6-availability": {
-    "name": 0
+    "name": 290
    },
    "s7-shortcuts": {
     "over": 1118
@@ -326,20 +326,20 @@
  "pastel": {
   "now": {
    "s1-refresh": {
-    "over": 205,
-    "scrolls": 0
+    "over": 0,
+    "scrolls": 205
    },
    "s1-inspector": {
-    "over": 101,
-    "cardClip": 95,
+    "over": 0,
+    "cardClip": 0,
     "broken": 0
    },
    "s2-version": {
-    "over": 182
+    "over": 0
    },
    "s3-checklist": {
-    "label": 8,
-    "broken": 2,
+    "label": 103,
+    "broken": 0,
     "over": 0
    },
    "s4-entity": {
@@ -347,11 +347,11 @@
     "over": 0
    },
    "s5-chart": {
-    "over": 23,
+    "over": 0,
     "label": 65
    },
    "s6-availability": {
-    "name": 76
+    "name": 290
    },
    "s7-shortcuts": {
     "over": 1816
@@ -407,32 +407,32 @@
  "forest": {
   "now": {
    "s1-refresh": {
-    "over": 203,
-    "scrolls": 0
+    "over": 0,
+    "scrolls": 203
    },
    "s1-inspector": {
-    "over": 99,
-    "cardClip": 93,
+    "over": 0,
+    "cardClip": 0,
     "broken": 0
    },
    "s2-version": {
-    "over": 199
+    "over": 0
    },
    "s3-checklist": {
-    "label": 0,
-    "broken": 2,
-    "over": 4
+    "label": 98,
+    "broken": 0,
+    "over": 0
    },
    "s4-entity": {
     "broken": 0,
     "over": 0
    },
    "s5-chart": {
-    "over": 23,
+    "over": 0,
     "label": 65
    },
    "s6-availability": {
-    "name": 79
+    "name": 290
    },
    "s7-shortcuts": {
     "over": 1816
@@ -488,32 +488,32 @@
  "blueprint": {
   "now": {
    "s1-refresh": {
-    "over": 285,
-    "scrolls": 0
+    "over": 0,
+    "scrolls": 285
    },
    "s1-inspector": {
-    "over": 101,
-    "cardClip": 93,
+    "over": 0,
+    "cardClip": 0,
     "broken": 0
    },
    "s2-version": {
-    "over": 233
+    "over": 0
    },
    "s3-checklist": {
-    "label": 0,
-    "broken": 2,
-    "over": 49
+    "label": 104,
+    "broken": 0,
+    "over": 0
    },
    "s4-entity": {
     "broken": 0,
     "over": 0
    },
    "s5-chart": {
-    "over": 23,
+    "over": 0,
     "label": 65
    },
    "s6-availability": {
-    "name": 76
+    "name": 290
    },
    "s7-shortcuts": {
     "over": 1816
@@ -569,20 +569,20 @@
  "solstice": {
   "now": {
    "s1-refresh": {
-    "over": 203,
-    "scrolls": 0
+    "over": 0,
+    "scrolls": 203
    },
    "s1-inspector": {
-    "over": 99,
-    "cardClip": 93,
+    "over": 0,
+    "cardClip": 0,
     "broken": 0
    },
    "s2-version": {
-    "over": 182
+    "over": 0
    },
    "s3-checklist": {
-    "label": 8,
-    "broken": 2,
+    "label": 104,
+    "broken": 0,
     "over": 0
    },
    "s4-entity": {
@@ -590,11 +590,11 @@
     "over": 0
    },
    "s5-chart": {
-    "over": 23,
+    "over": 0,
     "label": 65
    },
    "s6-availability": {
-    "name": 76
+    "name": 290
    },
    "s7-shortcuts": {
     "over": 1816
@@ -650,32 +650,32 @@
  "brutalism": {
   "now": {
    "s1-refresh": {
-    "over": 316,
-    "scrolls": 0
+    "over": 0,
+    "scrolls": 316
    },
    "s1-inspector": {
-    "over": 140,
-    "cardClip": 133,
+    "over": 0,
+    "cardClip": 0,
     "broken": 0
    },
    "s2-version": {
-    "over": 283
+    "over": 0
    },
    "s3-checklist": {
-    "label": 0,
-    "broken": 2,
-    "over": 56
+    "label": 102,
+    "broken": 0,
+    "over": 0
    },
    "s4-entity": {
-    "broken": 6,
+    "broken": 0,
     "over": 0
    },
    "s5-chart": {
-    "over": 23,
+    "over": 0,
     "label": 65
    },
    "s6-availability": {
-    "name": 0
+    "name": 290
    },
    "s7-shortcuts": {
     "over": 2057
@@ -731,32 +731,32 @@
  "deco": {
   "now": {
    "s1-refresh": {
-    "over": 327,
-    "scrolls": 0
+    "over": 0,
+    "scrolls": 327
    },
    "s1-inspector": {
-    "over": 134,
-    "cardClip": 128,
+    "over": 0,
+    "cardClip": 0,
     "broken": 0
    },
    "s2-version": {
-    "over": 254
+    "over": 0
    },
    "s3-checklist": {
-    "label": 25,
-    "broken": 2,
+    "label": 103,
+    "broken": 0,
     "over": 0
    },
    "s4-entity": {
-    "broken": 3,
+    "broken": 0,
     "over": 0
    },
    "s5-chart": {
-    "over": 17,
+    "over": 0,
     "label": 55
    },
    "s6-availability": {
-    "name": 7
+    "name": 290
    },
    "s7-shortcuts": {
     "over": 1795
@@ -812,32 +812,32 @@
  "nostromo": {
   "now": {
    "s1-refresh": {
-    "over": 320,
-    "scrolls": 0
+    "over": 0,
+    "scrolls": 320
    },
    "s1-inspector": {
-    "over": 116,
-    "cardClip": 110,
+    "over": 0,
+    "cardClip": 0,
     "broken": 0
    },
    "s2-version": {
-    "over": 250
+    "over": 0
    },
    "s3-checklist": {
-    "label": 0,
-    "broken": 2,
-    "over": 31
+    "label": 104,
+    "broken": 0,
+    "over": 0
    },
    "s4-entity": {
-    "broken": 6,
+    "broken": 0,
     "over": 0
    },
    "s5-chart": {
-    "over": 20,
+    "over": 0,
     "label": 60
    },
    "s6-availability": {
-    "name": 0
+    "name": 290
    },
    "s7-shortcuts": {
     "over": 1118
@@ -893,32 +893,32 @@
  "titanium": {
   "now": {
    "s1-refresh": {
-    "over": 346,
-    "scrolls": 0
+    "over": 0,
+    "scrolls": 346
    },
    "s1-inspector": {
-    "over": 123,
-    "cardClip": 117,
+    "over": 0,
+    "cardClip": 0,
     "broken": 0
    },
    "s2-version": {
-    "over": 226
+    "over": 0
    },
    "s3-checklist": {
-    "label": 0,
-    "broken": 2,
-    "over": 78
+    "label": 104,
+    "broken": 0,
+    "over": 0
    },
    "s4-entity": {
     "broken": 0,
     "over": 0
    },
    "s5-chart": {
-    "over": 22,
+    "over": 0,
     "label": 64
    },
    "s6-availability": {
-    "name": 68
+    "name": 290
    },
    "s7-shortcuts": {
     "over": 2032
