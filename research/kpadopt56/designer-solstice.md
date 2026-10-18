@@ -13,7 +13,7 @@ Measured first on the nine original demo pages (79 sections, every state button 
 | 7d4c9b7f `[t56-brutalism-1018]` | brutalism | text margins at 390 px (weekday chips, segments, small round identity mark, code cell's Show all, Back/Next, calendar day numbers, display rating); bubbles, gallery tiles and the QR plate are slabs (2 px / 3 px and 3 px / 6 px ink line on a hard shadow, the sender's bubble yellow) |
 | 31571539 `[t56-deco-1018]` | deco | text margins at 390 px (segments, weekday chips, Back/Next); the checklist's empty and failed plate is lacquer + wallpaper + double rule (was a bare dark void); waiting words stand over the lift doors; the quote mark is a gold lozenge; bubbles, gallery tiles and the QR plate carry the gold double rule |
 | 5c838dce `[t56-merge-1018]` | - | merge of theme/themes56 |
-| next `[t56-parts-1018]` | all three | print-checklist detail wraps (label was 0 to 25 px wide at 390 px); digest break in brutalism and deco; code-box tools wrap (brutalism, solstice, deco); availability person row keeps 6 rem for the name (brutalism, deco); small buttons tighter on a phone (brutalism); phone tables with 8 px cells (solstice) |
+| 92ac1453 `[t56-parts-1018]` | all three | print-checklist detail wraps (label was 0 to 25 px wide at 390 px); digest break in brutalism and deco; code-box tools wrap (brutalism, solstice, deco); availability person row keeps 6 rem for the name (brutalism, deco); small buttons tighter on a phone (brutalism); phone tables with 8 px cells (solstice) |
 
 ## Measured, before and after
 
