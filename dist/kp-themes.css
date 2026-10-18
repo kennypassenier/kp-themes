@@ -95752,6 +95752,23 @@
         border-radius: var(--radius);
     }
 
+    /* A failed area is the red sky (G13, the busy failure decided as r2-so-failure-1): the dark card plate, the wash rising
+       from its foot, the foot edge and a 1 px ring in the red, the words in the lifted red ink. The package's flat
+       `--destructive` fill (a salmon block over the whole component) is no part of solstice's light. */
+    [data-theme='solstice'] .kp-alert--destructive:is(.kp-stateplate, .kp-rating__failure) {
+        background:
+            linear-gradient(to top, hsl(from var(--destructive) h s l / 0.3), transparent 75%),
+            var(--card);
+        color: var(--foreground);
+        border-color: hsl(from var(--destructive) h s l / 0.55);
+        box-shadow: inset 0 -2px 0 hsl(from var(--destructive) h s 50%);
+    }
+
+    [data-theme='solstice'] .kp-alert--destructive:is(.kp-stateplate, .kp-rating__failure) .kp-stateplate__title,
+    [data-theme='solstice'] .kp-alert--destructive.kp-rating__failure .kp-rating__failure-text {
+        color: hsl(from var(--destructive) h s 68%);
+    }
+
     [data-theme='solstice'] .kp-grid {
         gap: var(--kp-space-lg);
     }
