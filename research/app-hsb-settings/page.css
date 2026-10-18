@@ -1,0 +1,200 @@
+/* research/app-hsb-settings: the page's own frame. Everything with a kp- class is the package; these hs- rules only lay
+   the sections out and size the stages. */
+
+.hs-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.hs-intro,
+.hs-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.hs-intro :is(h1, p),
+.hs-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.hs-intro p,
+.hs-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.hs-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+.hs-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.hs-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.hs-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.hs-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.hs-controls > [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.hs-controls > [role='group'] > b {
+    min-inline-size: 7rem;
+}
+
+.hs-quiet {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* --- Settings stage: two cards on one grid, one height --- */
+
+.hs-stage {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(28rem, 100%), 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: stretch;
+    min-inline-size: 0;
+}
+
+.hs-profile {
+    display: grid;
+    align-content: start;
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+}
+
+.hs-profile__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.hs-profile__head .kp-card__title {
+    margin: 0;
+    margin-inline-end: auto;
+}
+
+/* The budget row: words, then the bar across the whole value column, then how it adds up. */
+.hs-budget {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.hs-budget .kp-meter {
+    inline-size: 100%;
+    margin-block: var(--kp-space-xs, 0.25rem);
+    /* Room for the sign that spills past the end. */
+    max-inline-size: calc(100% - 1rem);
+}
+
+.hs-budget__sum {
+    overflow-wrap: anywhere;
+}
+
+/* --- Recheck stage: the toasts stand in this box (contain: layout), not on the whole window --- */
+
+.hs-stage--recheck {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: var(--kp-space-md, 1rem);
+    contain: layout;
+    min-block-size: 30rem;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.hs-bar {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    align-items: center;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.hs-line {
+    margin: 0;
+    color: var(--destructive);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* The error sentence is always in the page for a screen reader; it is drawn only when the line is the place for it. */
+[data-hs-error='toast'] .hs-line {
+    position: absolute;
+    inline-size: 1px;
+    block-size: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.hs-table .hs-col-act {
+    inline-size: 12rem;
+    text-align: end;
+    white-space: nowrap;
+}
+
+[data-hs-row='menu'] .hs-act-button,
+[data-hs-row='button'] .hs-act-menu {
+    display: none;
+}
+
+.hs-open {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    justify-items: start;
+    min-block-size: 11rem;
+}
+
+.hs-open p {
+    margin: 0;
+}
+
+/* The held-open sample: the button keeps its own height; the opened menu stands below it. */
+.hs-open > .kp-menu-button {
+    align-self: start;
+}
+
+.hs-open > .kp-menu-button > .kp-button {
+    block-size: auto;
+}
+
+/* Toasts keep to the stage's right side, so they do not cover the held-open menu on the left (a phone has no room for both). */
+.hs-stage--recheck > .kp-toasts {
+    inline-size: min(26rem, calc(100% - 2rem));
+    align-items: stretch;
+}

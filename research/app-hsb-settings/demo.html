@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en-GB" data-theme="formal" data-review="app-hsb-settings" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>HTTPSwitchboard: profile settings and recheck · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main hs-page">
+            <header class="hs-intro">
+                <h1>HTTPSwitchboard: profile settings and recheck</h1>
+                <p class="cat-intro">
+                    HTTPSwitchboard accepts a message in one shape and delivers it in another. Each profile says where a message comes from and
+                    where it goes. This page shows how one profile&rsquo;s settings are read, whether its retries fit inside its lease, and how
+                    a profile is put back to &ldquo;starting&rdquo; to be checked again. Judge it in the review dialog; formal only. The profile
+                    <b>alertmanager</b> is real (it carries Alertmanager alerts from the kyu topic <code>alerts.raw</code> to Home Assistant).
+                    <b>uptime-kuma</b> is a mock second profile. The destination&rsquo;s webhook path is a credential and is never shown. Every
+                    request here is faked on the page; nothing is sent.
+                </p>
+            </header>
+
+            <!-- ================================================================ settings -->
+            <section
+                class="hs-sec"
+                id="settings"
+                data-review-item="settings"
+                data-review-topic="settings"
+                data-review-topic-title="Profile settings and retry budget"
+                data-review-components="kv meter"
+                data-review-title="A profile's settings and its retry budget"
+                data-review-choices='[
+                    { "id": "hs-meter-over", "label": "The sign when the retries run past the lease", "once": true, "default": "spill", "options": [
+                        { "value": "arrow", "label": "A small arrow at the end", "hint": "Today&rsquo;s plain sign: a triangle on the last pixels of the full bar." },
+                        { "value": "hatch", "label": "The end hatched", "hint": "Stripes cut into the last rem of the bar, so it looks overfull." },
+                        { "value": "spill", "label": "A red piece past the end", "hint": "Recommended. The bar is full and a short red pill spills past its end." },
+                        { "value": "break", "label": "The bar runs past the end", "hint": "The fill itself runs half a rem past the track, with a cut where the track ends." } ] },
+                    { "id": "hs-kv-look", "label": "How the settings list is ruled", "once": true, "default": "lines", "options": [
+                        { "value": "lines", "label": "A line between rows", "hint": "Recommended. Each setting sits on its own ruled row, easy to follow across to its value." },
+                        { "value": "plain", "label": "No lines", "hint": "The quietest list: labels left, values right, only space between rows." },
+                        { "value": "stack", "label": "Label over value", "hint": "Each label sits small over its value; best on a narrow phone." },
+                        { "value": "columns", "label": "Two columns", "hint": "Two lists of settings side by side where the box is wide." } ] }]'
+                aria-labelledby="h-settings"
+            >
+                <div class="hs-sec__head">
+                    <h2 id="h-settings">A profile&rsquo;s settings and its retry budget</h2>
+                    <p>
+                        Lists what a profile does in plain rows, and shows with one bar how long its retries can take compared to the time the
+                        service holds a message for it (the lease).
+                    </p>
+                </div>
+                <div class="hs-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Two profile cards. Each lists <b>Source</b>, <b>Destination host</b>, <b>Content type</b>, <b>Timeout</b>,
+                            <b>Retries</b>, <b>Max attempts</b> and <b>Lease</b>, then <b>Retry budget</b>: a bar with the words
+                            &ldquo;27 s of 60 s lease (45 %)&rdquo;. The labels share one column as wide as the longest label; the values line up.
+                        </li>
+                        <li>
+                            The budget is the timeout for every try plus the pauses between tries (1 s, 2 s, 4 s, doubling). For alertmanager:
+                            4 tries of 5 s is 20 s, plus pauses of 1 s, 2 s and 4 s is 7 s: <b>27 s</b>. A tick sits at the end of the bar:
+                            that is 100 % of the lease.
+                        </li>
+                        <li>
+                            <b>uptime-kuma</b> (mock) is over budget: 5 tries of 10 s is 50 s, plus pauses of 1 s, 2 s, 4 s and 8 s is 15 s:
+                            <b>65 s</b> against 60 s, 108 %. Its bar is full, carries the sign you chose below, and its words say
+                            &ldquo;5 s over the lease&rdquo; with the Over budget badge. The destination shows the host and port only, never the path.
+                        </li>
+                        <li>
+                            <b>Retries</b> (alertmanager): 0 to 5. The Retries and Max attempts rows, the words and the bar follow at once; at 5
+                            retries alertmanager is 61 s of 60 s and goes over too. <b>Past the end</b> flips the sign live.
+                            <b>Settings list</b> flips the ruling. <b>Loading</b> pulses the bars and shows the waiting line in every value
+                            at the same row height.
+                        </li>
+                        <li>
+                            The settings list and the sign are options of the components; the dialog asks only which is the default (the first is
+                            preset).
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal draws the bar as a thin ink rule. Look at the tick at the end of the bar, at the over-budget sign not touching the
+                        words beside it, at the label column keeping one width in both cards, and at the line between rows in the theme&rsquo;s
+                        own hairline.
+                    </p>
+                </div>
+                <div class="hs-controls" data-review-controls data-review-controls-for="hs-settings-stage">
+                    <div role="group" aria-label="Retries of alertmanager">
+                        <b>Retries (alertmanager):</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-retries="0" aria-pressed="false">0</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-retries="1" aria-pressed="false">1</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-retries="2" aria-pressed="false">2</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-retries="3" aria-pressed="true">3</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-retries="4" aria-pressed="false">4</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-retries="5" aria-pressed="false">5</button>
+                    </div>
+                    <div role="group" aria-label="Past the end">
+                        <b>Past the end:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-over="arrow" data-hs-class="" aria-pressed="false">Arrow</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-over="hatch" data-hs-class="kp-meter--over-hatch" aria-pressed="false">Hatched</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-over="spill" data-hs-class="kp-meter--over-spill" aria-pressed="true">Red piece</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-over="break" data-hs-class="kp-meter--over-break" aria-pressed="false">Runs past</button>
+                    </div>
+                    <div role="group" aria-label="Settings list">
+                        <b>Settings list:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-kv="lines" data-hs-class="kp-kv--lines" aria-pressed="true">Lines</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-kv="plain" data-hs-class="" aria-pressed="false">Plain</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-kv="stack" data-hs-class="kp-kv--stack" aria-pressed="false">Stacked</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-kv="columns" data-hs-class="kp-kv--columns" aria-pressed="false">Two columns</button>
+                    </div>
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-state="loaded" aria-pressed="true">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-state="loading" aria-pressed="false">Loading</button>
+                    </div>
+                </div>
+                <div class="hs-stage" id="hs-settings-stage" data-hs-over="spill" data-hs-kv="lines">
+                    <article class="kp-card hs-profile" data-hs-profile="alertmanager" aria-labelledby="hs-p-alertmanager">
+                        <header class="hs-profile__head">
+                            <h3 class="kp-card__title" id="hs-p-alertmanager">alertmanager</h3>
+                            <span class="kp-badge kp-badge--success">Real profile</span>
+                            <span class="kp-meter kp-meter--inline" data-hs-meter-inline></span><span class="kp-badge" data-hs-budget-badge>Within the lease</span>
+                        </header>
+                        <dl class="kp-kv kp-kv--lines" data-hs-kv-list>
+                            <div class="kp-kv__row">
+                                <dt>Source</dt>
+                                <dd data-hs-static>kyu topic <code class="kp-id">alerts.raw</code></dd>
+                            </div>
+                            <div class="kp-kv__row">
+                                <dt>Destination host</dt>
+                                <dd data-hs-static><code class="kp-id">homeassistant.lan:8123</code> <span class="hs-quiet">(path hidden)</span></dd>
+                            </div>
+                            <div class="kp-kv__row">
+                                <dt>Content type</dt>
+                                <dd data-hs-static><code class="kp-id">application/json</code></dd>
+                            </div>
+                            <div class="kp-kv__row">
+                                <dt>Timeout</dt>
+                                <dd data-hs-static>5 s per try</dd>
+                            </div>
+                            <div class="kp-kv__row">
+                                <dt>Retries</dt>
+                                <dd data-hs-static data-hs-retries-value>3</dd>
+                            </div>
+                            <div class="kp-kv__row">
+                                <dt>Max attempts</dt>
+                                <dd data-hs-static data-hs-attempts-value>4 (the first try and 3 retries)</dd>
+                            </div>
+                            <div class="kp-kv__row">
+                                <dt>Lease</dt>
+                                <dd data-hs-static>60 s</dd>
+                            </div>
+                            <div class="kp-kv__row">
+                                <dt>Retry budget</dt>
+                                <dd class="hs-budget" data-hs-budget>
+                                    <span class="hs-budget__words" data-hs-budget-words>27 s of 60 s lease (45 %)</span>
+                                    <span class="kp-meter" data-hs-meter></span>
+                                    <span class="hs-quiet hs-budget__sum" data-hs-budget-sum>4 tries of 5 s is 20 s, plus pauses of 1 s, 2 s and 4 s is 7 s.</span>
+                                </dd>
+                            </div>
+                        </dl>
+                    </article>
+                    <article class="kp-card hs-profile" data-hs-profile="uptime-kuma" aria-labelledby="hs-p-kuma">
+                        <header class="hs-profile__head">
+                            <h3 class="kp-card__title" id="hs-p-kuma">uptime-kuma</h3>
+                            <span class="kp-badge kp-badge--info">Mock profile</span>
+                            <span class="kp-meter kp-meter--inline" data-hs-meter-inline></span><span class="kp-badge" data-hs-budget-badge>Within the lease</span>
+                        </header>
+                        <dl class="kp-kv kp-kv--lines" data-hs-kv-list>
+                            <div class="kp-kv__row">
+                                <dt>Source</dt>
+                                <dd data-hs-static>HTTP <code class="kp-id">POST /uptime-kuma</code></dd>
+                            </div>
+                            <div class="kp-kv__row">
+                                <dt>Destination host</dt>
+                                <dd data-hs-static><code class="kp-id">homeassistant.lan:8123</code> <span class="hs-quiet">(path hidden)</span></dd>
+                            </div>
+                            <div class="kp-kv__row">
+                                <dt>Content type</dt>
+                                <dd data-hs-static><code class="kp-id">application/json</code></dd>
+                            </div>
+                            <div class="kp-kv__row">
+                                <dt>Timeout</dt>
+                                <dd data-hs-static>10 s per try</dd>
+                            </div>
+                            <div class="kp-kv__row">
+                                <dt>Retries</dt>
+                                <dd data-hs-static>4</dd>
+                            </div>
+                            <div class="kp-kv__row">
+                                <dt>Max attempts</dt>
+                                <dd data-hs-static>5 (the first try and 4 retries)</dd>
+                            </div>
+                            <div class="kp-kv__row">
+                                <dt>Lease</dt>
+                                <dd data-hs-static>60 s</dd>
+                            </div>
+                            <div class="kp-kv__row">
+                                <dt>Retry budget</dt>
+                                <dd class="hs-budget" data-hs-budget>
+                                    <span class="hs-budget__words" data-hs-budget-words>65 s of 60 s lease (108 %)</span>
+                                    <span class="kp-meter" data-hs-meter></span>
+                                    <span class="hs-quiet hs-budget__sum" data-hs-budget-sum>5 tries of 10 s is 50 s, plus pauses of 1 s, 2 s, 4 s and 8 s is 15 s.</span>
+                                </dd>
+                            </div>
+                        </dl>
+                    </article>
+                </div>
+            </section>
+
+            <!-- ================================================================ recheck -->
+            <section
+                class="hs-sec"
+                id="recheck"
+                data-review-item="recheck"
+                data-review-topic="recheck"
+                data-review-topic-title="Recheck profiles"
+                data-review-components="flash menu-button"
+                data-review-title="Recheck profiles, all at once or one by one"
+                data-review-choices='[
+                    { "id": "hs-error-place", "label": "Where a failed recheck says so", "once": true, "default": "toast", "options": [
+                        { "value": "toast", "label": "A toast", "hint": "Recommended. A red toast that stays until closed, with Try again; the button says Refused for a moment." },
+                        { "value": "line", "label": "A line under the button", "hint": "The sentence stands right under the button until the next press; no toast." } ] },
+                    { "id": "hs-row-action", "label": "The recheck of one profile, in its row", "once": true, "default": "menu", "options": [
+                        { "value": "menu", "label": "In the row&rsquo;s menu", "hint": "Recommended. An Actions menu per row; an entry that cannot be used says why." },
+                        { "value": "button", "label": "A button in the row", "hint": "A Recheck this profile button in every row, with its own busy and done face." } ] }]'
+                aria-labelledby="h-recheck"
+            >
+                <div class="hs-sec__head">
+                    <h2 id="h-recheck">Recheck profiles, all at once or one by one</h2>
+                    <p>
+                        Puts every profile, or just one, back to &ldquo;starting&rdquo; so the service checks its destination again, and says
+                        what happened in a toast instead of a block of raw text.
+                    </p>
+                </div>
+                <div class="hs-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            A small table of the two profiles with their state (<b>Working</b>), their retry budget (a small bar and the percentage)
+                            and an actions column that keeps its place and width. Above it, the <b>Recheck profiles</b> button.
+                        </li>
+                        <li>
+                            Press <b>Recheck profiles</b>: the button shows the theme&rsquo;s spinner and <b>Rechecking&hellip;</b> without changing
+                            width, a second press does nothing; after about 1.5 s it says <b>Done</b> for a moment, both states turn to
+                            <b>Starting</b> and a green toast says <b>2 profiles back to starting</b> (with a close button; it waits while you
+                            point at it).
+                        </li>
+                        <li>
+                            Open <b>Actions</b> on a row and choose <b>Recheck this profile</b>: that row shows <b>Rechecking&hellip;</b> and then
+                            <b>Starting</b>, with a toast <b>alertmanager back to starting</b>. A row that is already starting keeps the entry in the
+                            menu, greyed, with the reason &ldquo;It is already starting.&rdquo; under it. The menu is shown opened below the table.
+                        </li>
+                        <li>
+                            Set <b>Request</b> to <b>Fails</b> and press either: the button shows <b>Refused</b> and a red toast stays until closed:
+                            &ldquo;Could not reach HTTPSwitchboard. Check that the service is running, then try again.&rdquo; with a <b>Try again</b>
+                            button. Rows stay as they were. <b>Reset profiles</b> puts both back to Working.
+                        </li>
+                        <li>
+                            <b>Error shows</b> and <b>Row action</b> are options: the toast or a line under the button; the menu or a button in each
+                            row. The dialog asks only which is the default.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Look at the button keeping its width through rest, busy and done, at the toast not covering the table&rsquo;s actions, at the
+                        menu&rsquo;s opaque paper plate and its greyed entry with its reason, and at the Actions column staying put in both row
+                        looks.
+                    </p>
+                </div>
+                <div class="hs-controls" data-review-controls data-review-controls-for="hs-recheck-stage">
+                    <div role="group" aria-label="Request" data-review-latent>
+                        <b>Request:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-outcome="ok" aria-pressed="true">Succeeds</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-outcome="fail" aria-pressed="false">Fails</button>
+                    </div>
+                    <div role="group" aria-label="Error shows">
+                        <b>Error shows:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-error="toast" aria-pressed="true">Toast</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-error="line" aria-pressed="false">Line</button>
+                    </div>
+                    <div role="group" aria-label="Row action">
+                        <b>Row action:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-row="menu" aria-pressed="true">Menu</button>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-row="button" aria-pressed="false">Button</button>
+                    </div>
+                    <div role="group" aria-label="Profiles">
+                        <b>Profiles:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-hs-reset>Reset profiles</button>
+                    </div>
+                </div>
+                <div class="hs-stage hs-stage--recheck" id="hs-recheck-stage" data-hs-error="toast" data-hs-row="menu">
+                    <div class="hs-bar">
+                        <button
+                            type="button"
+                            class="kp-button"
+                            id="hs-recheck-all"
+                            data-kp-flash-button
+                            data-kp-busy-label="Rechecking…"
+                            data-kp-flash-word="Done"
+                            data-kp-flash-words="Done,Refused"
+                            data-kp-refusal="line"
+                            data-kp-flash-line="#hs-line"
+                        >
+                            Recheck profiles
+                        </button>
+                        <p class="hs-line" id="hs-line" hidden></p>
+                    </div>
+                    <div class="kp-datatable" data-kp-datatable data-kp-key="hs-profiles">
+                        <div class="kp-table-wrap">
+                            <table class="kp-table hs-table">
+                                <caption class="kp-sr-only">
+                                    Profiles
+                                </caption>
+                                <thead>
+                                    <tr>
+                                        <th scope="col" data-kp-sort="text">Profile</th>
+                                        <th scope="col" data-kp-sort="text">State</th>
+                                        <th scope="col" data-kp-sort="number">Retry budget</th>
+                                        <th scope="col" class="hs-col-act">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr data-kp-row-key="alertmanager" data-hs-row-profile="alertmanager">
+                                        <td data-label="Profile"><b>alertmanager</b></td>
+                                        <td data-label="State"><span class="kp-badge kp-badge--success" data-hs-state-badge>Working</span></td>
+                                        <td data-label="Retry budget" data-kp-sort-value="45">
+                                            <span class="kp-meter kp-meter--inline" data-hs-row-meter="0.45"></span>45 % of the lease
+                                        </td>
+                                        <td data-label="Actions" class="hs-col-act">
+                                            <div class="kp-menu-button hs-act-menu" data-kp-menu-button data-kp-key="hs-menu-alertmanager">
+                                                <button type="button" class="kp-button kp-button--sm" aria-label="Actions for alertmanager">Actions</button>
+                                                <div class="kp-menu kp-menu--rich" role="menu" aria-label="Actions for alertmanager" hidden></div>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                class="kp-button kp-button--sm hs-act-button"
+                                                data-kp-flash-button
+                                                data-kp-busy-label="Rechecking…"
+                                                data-kp-flash-words="Starting,Refused"
+                                                data-kp-flash-word="Starting"
+                                                data-kp-refusal="line"
+                                                data-kp-flash-line="#hs-line"
+                                                data-hs-recheck-one="alertmanager"
+
+                                            >
+                                                Recheck this profile
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr data-kp-row-key="uptime-kuma" data-hs-row-profile="uptime-kuma">
+                                        <td data-label="Profile"><b>uptime-kuma</b> <span class="kp-badge kp-badge--info">Mock</span></td>
+                                        <td data-label="State"><span class="kp-badge kp-badge--success" data-hs-state-badge>Working</span></td>
+                                        <td data-label="Retry budget" data-kp-sort-value="108">
+                                            <span class="kp-meter kp-meter--inline" data-hs-row-meter="1.08"></span>108 % of the lease
+                                        </td>
+                                        <td data-label="Actions" class="hs-col-act">
+                                            <div class="kp-menu-button hs-act-menu" data-kp-menu-button data-kp-key="hs-menu-uptime-kuma">
+                                                <button type="button" class="kp-button kp-button--sm" aria-label="Actions for uptime-kuma">Actions</button>
+                                                <div class="kp-menu kp-menu--rich" role="menu" aria-label="Actions for uptime-kuma" hidden></div>
+                                            </div>
+                                            <button
+                                                type="button"
+                                                class="kp-button kp-button--sm hs-act-button"
+                                                data-kp-flash-button
+                                                data-kp-busy-label="Rechecking…"
+                                                data-kp-flash-words="Starting,Refused"
+                                                data-kp-flash-word="Starting"
+                                                data-kp-refusal="line"
+                                                data-kp-flash-line="#hs-line"
+                                                data-hs-recheck-one="uptime-kuma"
+
+                                            >
+                                                Recheck this profile
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="hs-open">
+                        <p class="hs-quiet">Shown opened: the same Actions menu, held open so its plate can be judged.</p>
+                        <div class="kp-menu-button" data-kp-menu-button data-kp-key="hs-menu-open" id="hs-menu-open">
+                            <button type="button" class="kp-button kp-button--sm">Actions</button>
+                            <div class="kp-menu kp-menu--rich" role="menu" aria-label="Actions for alertmanager (shown open)" hidden></div>
+                        </div>
+                    </div>
+                    <div class="kp-toasts" id="hs-toasts" role="status" aria-live="polite"></div>
+                </div>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "app-hsb-settings-6b0c8f5e-3d0e-4d55-9f55-1c2d7a1e4b90", "received": [] }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
