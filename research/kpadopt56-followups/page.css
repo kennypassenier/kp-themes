@@ -1,0 +1,7 @@
+/* research/kpadopt56-followups: the frame of the follow-up page. Everything with a kp- class is the package. */
+
+/* The toast bed of the selection bar's section is one line while nothing is deleted (no empty region held in reserve,
+   DEMO_RULES ch. 7); a toast that comes with Delete makes it taller, and the frame follows. */
+.k5-toastbed {
+    min-block-size: 0;
+}
