@@ -1,0 +1,2113 @@
+<!-- ===== item: toggle (from the last round) -->
+<section
+                class="kv-sec"
+                id="toggle"
+                data-review-item="toggle"
+                data-review-components="toggles toggle"
+                data-review-topic="toggle"
+                data-review-topic-title="Toggle button"
+                data-review-title="Toggle button: one, filters and a one-of switch"
+                aria-labelledby="h-toggle"
+            >
+                <div class="kv-sec__head">
+                    <h2 id="h-toggle">Toggle button: one, filters and a one-of switch</h2>
+                    <p>
+                        <code>&lt;button class="kp-button" data-kp-toggle&gt;</code> (js/toggle.js): a button that stays pressed until it is pressed
+                        again. The words never change; the state is <code>aria-pressed</code>. Press things; nothing here is stored.
+                    </p>
+                </div>
+                <div class="kv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>One toggle:</b> <b>Only errors</b> is a plain button. Press it: the face turns dark, the words stay the same, and the
+                            line <b>Showing errors only</b> appears under the words (the row is there all the time, so the button keeps its height).
+                            Press again: back to plain. The pin beside it is the icon look, a square.
+                        </li>
+                        <li>
+                            <b>Filters:</b> four pills <b>All 138</b>, <b>Error 12</b>, <b>Warning 31</b>, <b>Info 95</b>. <b>All</b> starts on. Press
+                            <b>Error</b>: All goes off and Error goes on; press <b>Warning</b> as well: both are on and the list below says what is
+                            shown. Press <b>All</b> (or <b>Clear filters (2)</b> at the end of the row): everything else goes off and All is on again.
+                            The Clear button keeps its place when nothing is pressed (it is only invisible), so the row never moves. The key
+                            <b>W</b> presses Warning when the focus is not in a field.
+                        </li>
+                        <li>
+                            <b>A one-of switch:</b> <b>Day</b>, <b>Week</b>, <b>Month</b>; exactly one is on, pressing the one that is on does
+                            nothing, and the arrow keys walk along the three (Tab enters the group once). <b>Single or none</b> lets the on one be
+                            pressed off.
+                        </li>
+                        <li>
+                            Every press says one polite line below the row (read by a screen reader, shown here in the grey box). The count is the
+                            real number, never &ldquo;9+&rdquo;; the next section feeds a count past 99 and a count that is still being counted.
+                        </li>
+                        <li>
+                            <b>Not new, and what is new:</b> the package already has the segmented control (<code>js/segmented.js</code>), shown under
+                            the three cases above with the same filters and the same one-of switch. A group of choices is that part&rsquo;s job, and a
+                            toggle group looks and answers the same way. What the toggle adds is what that part cannot do: a
+                            <b>single button that stays pressed</b> (a pin, &ldquo;Only errors&rdquo;; the segmented control is always a group), a
+                            <b>half-on</b> state, a <b>line under the words</b> and a <b>tick</b>, <b>Clear filters (N)</b>, a one-of switch that can
+                            be off, a key that presses it, and an app that answers <b>after a wait</b> (busy, then rolled back with a word if
+                            refused).
+                        </li>
+                        <li><b>The choice</b> (tick it in the dialog): whether a pressed toggle also shows a tick. The buttons below flip it too.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        A pressed toggle is formal&rsquo;s ink with the paper-coloured words and the double rule drawn inside, as a held press looks
+                        in formal; the pills are formal&rsquo;s own, with its soft corners, and the segmented chips beside them are the same pills.
+                        Look at the words next to the numbers (a gap of at least a few pixels), at the tick appearing without moving a word, and at
+                        the Clear button leaving no hole in the row.
+                    </p>
+                </div>
+                <div class="kv-controls" data-review-controls>
+                    <div role="group" aria-label="The tick">
+                        <b>Tick:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-mark="none" aria-pressed="true">Off</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-mark="check" aria-pressed="false">On</button>
+                    </div>
+                </div>
+                <div class="kv-pair">
+                    <div class="kv-case">
+                        <p class="kv-label">One toggle, with a hint, and an icon one</p>
+                        <div class="kv-row" data-kv-toggle-single>
+                            <button class="kp-button" type="button" data-kp-toggle aria-pressed="false" data-kp-pressed-hint="Showing errors only">
+                                Only errors
+                            </button>
+                            <button
+                                class="kp-button"
+                                type="button"
+                                data-kp-toggle
+                                data-kp-look="icon"
+                                aria-pressed="false"
+                                aria-label="Pin this panel"
+                            >
+                                &#128204;
+                            </button>
+                        </div>
+                        <pre class="kv-log" id="kv-toggle-single-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="kv-case">
+                        <p class="kv-label">Filters with exact counts, an All chip and Clear</p>
+                        <div
+                            class="kp-toggles"
+                            role="group"
+                            aria-label="Level"
+                            id="kv-toggle-filters"
+                            data-kp-toggle-group="level"
+                            data-kp-toggle-clear
+                        >
+                            <button
+                                class="kp-button"
+                                type="button"
+                                data-kp-toggle
+                                data-kp-toggle-all
+                                data-kp-look="chip"
+                                aria-pressed="true"
+                                data-kp-toggle-value="all"
+                                data-kp-count="138"
+                            >
+                                All
+                            </button>
+                            <button
+                                class="kp-button"
+                                type="button"
+                                data-kp-toggle
+                                data-kp-look="chip"
+                                data-kp-toggle-value="error"
+                                data-kp-count="12"
+                            >
+                                Error
+                            </button>
+                            <button
+                                class="kp-button"
+                                type="button"
+                                data-kp-toggle
+                                data-kp-look="chip"
+                                data-kp-toggle-value="warning"
+                                data-kp-toggle-key="w"
+                                data-kp-count="31"
+                            >
+                                Warning
+                            </button>
+                            <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-toggle-value="info" data-kp-count="95">
+                                Info
+                            </button>
+                        </div>
+                        <p class="kv-readout" id="kv-toggle-filters-shown" aria-live="polite">Showing 138 lines.</p>
+                        <pre class="kv-log" id="kv-toggle-filters-log"></pre>
+                    </div>
+                    <div class="kv-case">
+                        <p class="kv-label">A one-of switch, and one that can be off</p>
+                        <div
+                            class="kp-toggles"
+                            role="group"
+                            aria-label="Range"
+                            id="kv-toggle-single"
+                            data-kp-toggle-group="range"
+                            data-kp-toggle-mode="single"
+                        >
+                            <button class="kp-button" type="button" data-kp-toggle aria-pressed="false">Day</button>
+                            <button class="kp-button" type="button" data-kp-toggle aria-pressed="true">Week</button>
+                            <button class="kp-button" type="button" data-kp-toggle aria-pressed="false">Month</button>
+                        </div>
+                        <div
+                            class="kp-toggles"
+                            role="group"
+                            aria-label="Sort"
+                            id="kv-toggle-either"
+                            data-kp-toggle-group="sort"
+                            data-kp-toggle-mode="single-or-none"
+                        >
+                            <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" aria-pressed="false">Newest first</button>
+                            <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" aria-pressed="false">Oldest first</button>
+                        </div>
+                        <pre class="kv-log" id="kv-toggle-single-log2" aria-live="polite"></pre>
+                    </div>
+                </div>
+                <div class="kv-pair" data-kv-already>
+                    <div class="kv-case">
+                        <p class="kv-label">Already in the package: the segmented chips, the same filters</p>
+                        <div class="kp-segmented kp-segmented--chips" data-kp-segmented="multi" role="group" aria-label="Level, segmented chips">
+                            <button type="button" class="kp-segmented__item" data-value="all" data-kp-segmented-all aria-pressed="true">
+                                <span class="kp-segmented__label">All</span><span class="kp-segmented__count">138</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="error" aria-pressed="false">
+                                <span class="kp-segmented__label">Error</span><span class="kp-segmented__count">12</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="warning" aria-pressed="false">
+                                <span class="kp-segmented__label">Warning</span><span class="kp-segmented__count">31</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="info" aria-pressed="false">
+                                <span class="kp-segmented__label">Info</span><span class="kp-segmented__count">95</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="kv-case">
+                        <p class="kv-label">Already in the package: the segmented control, the same one-of switch</p>
+                        <div class="kp-segmented" data-kp-segmented="single" role="radiogroup" aria-label="Range, segmented control">
+                            <button type="button" class="kp-segmented__item" data-value="day" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Day</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="week" role="radio" aria-checked="true">
+                                <span class="kp-segmented__label">Week</span>
+                            </button>
+                            <button type="button" class="kp-segmented__item" data-value="month" role="radio" aria-checked="false">
+                                <span class="kp-segmented__label">Month</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+<!-- ===== item: toggle-states (from a3c71370) -->
+<section
+                class="kv-sec"
+                id="toggle-states"
+                data-review-item="toggle-states"
+                data-review-components="toggles toggle"
+                data-review-topic="toggle"
+                data-review-title="Toggle button: every state, a long label and phone width"
+                aria-labelledby="h-toggle-states"
+            >
+                <div class="kv-sec__head">
+                    <h2 id="h-toggle-states">Toggle button: every state, a long label and phone width</h2>
+                    <p>
+                        The same toggle while the app is slow, refuses, is still counting, or cannot be pressed; and the filters at the width of a
+                        phone. Use the buttons to put each one in its state.
+                    </p>
+                </div>
+                <div class="kv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>The app answers slowly:</b> <b>Pin to top</b> is pressed, the theme&rsquo;s spinner takes the place of the words for
+                            about a second (the words keep their room and the button keeps its size), then it stays on. With
+                            <b>The app will refuse</b> on, the same press goes busy, then the state goes back and the word <b>Refused</b> stands on
+                            the button for 3 s on a red plate; the line below says why.
+                        </li>
+                        <li>
+                            <b>Still counting:</b> <b>Error</b> shows a small pulsing block where the number goes (never 0).
+                            <b>The count arrives</b> writes 12; <b>A count past 99</b> writes 1534 and the room for the next digit is held, with the
+                            real number shown.
+                        </li>
+                        <li>
+                            <b>Mixed:</b> <b>All services</b> is a dashed pill on a half wash with a dash before the words (some of them are on);
+                            press it and it becomes plainly on. <b>Cannot be pressed:</b> <b>Follow</b> is dimmed; hover or focus it and the reason
+                            shows (&ldquo;Nothing is running&rdquo;).
+                        </li>
+                        <li>
+                            <b>A long label</b> wraps inside a narrow box and the button grows taller; it is never cut and never breaks inside a word.
+                            At <b>phone width</b> the pills wrap to the next row and every button is 44 px tall.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The spinner is formal&rsquo;s ruled ring; the refusal is a red plate with white words; the mixed pill keeps formal&rsquo;s
+                        double rule as a dashed one. Check that no word sits against the edge of its button and that nothing changes size when a state
+                        is switched.
+                    </p>
+                </div>
+                <div class="kv-controls" data-review-controls>
+                    <div role="group" aria-label="Async answer">
+                        <b>The app:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-refuse aria-pressed="false">The app will refuse</button>
+                    </div>
+                    <div role="group" aria-label="Count">
+                        <b>Count:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-count="loading">Still counting</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-count="12">The count arrives</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-count="1534">A count past 99</button>
+                    </div>
+                </div>
+                <div class="kv-pair">
+                    <div class="kv-case">
+                        <p class="kv-label">The app takes a second</p>
+                        <div class="kv-row">
+                            <button class="kp-button" type="button" id="kv-toggle-async" data-kp-toggle data-kp-toggle-async aria-pressed="false">
+                                Pin to top
+                            </button>
+                        </div>
+                        <pre class="kv-log" id="kv-toggle-async-log" aria-live="polite"></pre>
+                    </div>
+                    <div class="kv-case">
+                        <p class="kv-label">A count that is still being counted</p>
+                        <div class="kv-row">
+                            <button
+                                class="kp-button"
+                                type="button"
+                                id="kv-toggle-count"
+                                data-kp-toggle
+                                data-kp-look="chip"
+                                data-kp-count="loading"
+                                aria-pressed="false"
+                            >
+                                Error
+                            </button>
+                        </div>
+                    </div>
+                    <div class="kv-case">
+                        <p class="kv-label">Some on, and one that cannot be pressed</p>
+                        <div class="kv-row">
+                            <button
+                                class="kp-button"
+                                type="button"
+                                data-kp-toggle
+                                data-kp-look="chip"
+                                aria-pressed="mixed"
+                                data-kp-pressed-mark="check"
+                            >
+                                All services
+                            </button>
+                            <button
+                                class="kp-button"
+                                type="button"
+                                data-kp-toggle
+                                disabled
+                                aria-pressed="false"
+                                data-kp-disabled-reason="Nothing is running"
+                            >
+                                Follow
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="kv-pair">
+                    <div class="kv-case">
+                        <p class="kv-label">A long label in a narrow box</p>
+                        <div class="kv-frame kv-frame--narrow">
+                            <button class="kp-button" type="button" data-kp-toggle aria-pressed="false" data-kp-count="3">
+                                Show only the containers that restarted since the last backup
+                            </button>
+                        </div>
+                    </div>
+                    <div class="kv-case">
+                        <p class="kv-label">Phone width</p>
+                        <div class="kv-frame kv-frame--phone">
+                            <div
+                                class="kp-toggles"
+                                role="group"
+                                aria-label="Level, on a phone"
+                                data-kp-toggle-group="level-phone"
+                                data-kp-toggle-clear
+                            >
+                                <button
+                                    class="kp-button"
+                                    type="button"
+                                    data-kp-toggle
+                                    data-kp-toggle-all
+                                    data-kp-look="chip"
+                                    aria-pressed="true"
+                                    data-kp-count="138"
+                                >
+                                    All
+                                </button>
+                                <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="12">Error</button>
+                                <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="31">Warning</button>
+                                <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="95">Info</button>
+                                <button class="kp-button" type="button" data-kp-toggle data-kp-look="chip" data-kp-count="1534">Debug</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+<!-- ===== item: intent (from the last round) -->
+<section
+                class="kv-sec"
+                id="intent"
+                data-review-item="intent"
+                data-review-components="palette"
+                data-review-topic="intent"
+                data-review-topic-title="Palette that finds words in any order"
+                data-review-title="Palette: words in any order, best answer first"
+                aria-labelledby="h-intent"
+            >
+                <div class="kv-sec__head">
+                    <h2 id="h-intent">Palette: words in any order, best answer first</h2>
+                    <p>
+                        <code>&lt;dialog class="kp-palette" data-kp-palette&gt;</code> (js/palette.js with js/intent.js): the default match of every
+                        palette now. Every typed word has to start a word of the command, in any order. The palette is shown open in place; type in it
+                        or press a query below.
+                    </p>
+                </div>
+                <div class="kv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Nothing typed:</b> not the whole list but a short start: the two Inbox items, what is featured (<b
+                                >Deploy all changes</b
+                            >, <b>New stack</b>, <b>Overview</b>, <b>Backups</b>) and what is about the stack that is open, <b>jellyfin</b> (its
+                            Update, Restart and logs first in <b>Do</b>). The status line says how many commands are shown (9).
+                        </li>
+                        <li>
+                            <b>jellyfin upd</b>, <b>upd jellyfin</b> and <b>update jelly</b> all show <b>Update jellyfin</b> first, the typed words
+                            ruled under. <b>logs gateway</b> and <b>gateway logs</b> find <b>Show the logs of gateway</b>. <b>reboot gate</b> finds
+                            <b>Restart gateway</b> by a hidden word (it is never shown). <b>cafe</b> finds the stack <b>café-kiosk</b> (accents do not
+                            matter) and <b>kiosk</b> too (a hyphenated name is found by its parts).
+                        </li>
+                        <li>
+                            A word has to <b>start</b> a word: <b>read</b> does not find <b>Restart</b>, <b>ate</b> finds nothing. The matches in the
+                            description count less than the ones in the label (<b>newest</b> finds the commands that say it in their description,
+                            after any whose name says it).
+                        </li>
+                        <li>
+                            <b>Always the same list:</b> typing <b>newest</b> by hand, fast or slowly, pressing <b>newest</b> or
+                            <b>newest, letter by letter</b> (it types a letter every 0.15 s) and opening the palette with it all list the same twelve
+                            commands, in the same order, with the same status line. Before, letters typed one by one could end in an empty list,
+                            because the mark on the half-typed word split it in two; the marks now come off before the words are read.
+                        </li>
+                        <li>
+                            <b>Enter</b> runs the first row (the readout under the palette says which); the arrow keys walk the rows in the order they
+                            stand in; the commands stay in their groups, the groups in the order <b>Inbox, Do, Go to</b>.
+                        </li>
+                        <li><b>The choice</b> (tick it in the dialog): how the matched words are marked. The buttons below flip it too.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s palette is the card with a strong boundary; a matched word is ruled under in navy, as formal rules what it
+                        points at, and the active row is the soft wash of the ink. Look at the rule under the words (a little air under the letters),
+                        at the order of the rows changing as you type, and at the status line staying exact.
+                    </p>
+                </div>
+                <div class="kv-controls" data-review-controls>
+                    <div role="group" aria-label="Queries">
+                        <b>Type for me:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-query="">Nothing</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-query="jellyfin upd">jellyfin upd</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-query="logs gateway">logs gateway</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-query="reboot gate">reboot gate</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-query="cafe">cafe</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-query="newest">newest</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-typed="newest">newest, letter by letter</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-query="read">read</button>
+                    </div>
+                    <div role="group" aria-label="The mark">
+                        <b>Mark:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-mark-look="rule" aria-pressed="true">Ruled under</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-mark-look="wash" aria-pressed="false">Washed</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-mark-look="none" aria-pressed="false">Not marked</button>
+                    </div>
+                </div>
+                <div class="kv-stage kv-stage--palette">
+                    <dialog
+                        class="kp-palette"
+                        id="kv-intent-pal"
+                        data-kp-palette
+                        data-kp-nomatch="plate"
+                        data-kp-hotkey="none"
+                        data-kp-close-on-run="false"
+                        data-kp-context="jellyfin"
+                        data-kp-subject-name="stack"
+                        data-kp-group-order="Inbox, Do, Go to"
+                        aria-label="Commands"
+                        open
+                    >
+                        <input
+                            class="kp-palette__input"
+                            type="text"
+                            role="combobox"
+                            aria-label="Commands"
+                            aria-expanded="true"
+                            aria-controls="kv-intent-pal-list"
+                            autocomplete="off"
+                            placeholder="Type a command or a page…"
+                        />
+                        <ul class="kp-palette__list" id="kv-intent-pal-list" role="listbox" aria-label="Commands">
+                            <li role="presentation" class="kp-palette__group" data-kp-group>
+                                <span class="kp-palette__group-label">Inbox</span>
+                                <ul role="group" aria-label="Inbox">
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="inbox-immich" data-kp-featured>
+                                        Update available for immich<span class="kp-palette__description">Release 1.118 to 1.119, a minor update</span>
+                                    </li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="inbox-vault" data-kp-featured>
+                                        vault has not been backed up for 3 days<span class="kp-palette__description">The nightly backup failed</span>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li role="presentation" class="kp-palette__group" data-kp-group>
+                                <span class="kp-palette__group-label">Do</span>
+                                <ul role="group" aria-label="Do">
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="deploy-all" data-kp-featured>
+                                        Deploy all changes<span class="kp-palette__description">Write every staged change to the stacks</span>
+                                    </li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="new-stack" data-kp-featured>
+                                        New stack<span class="kp-palette__description">Create a stack from a template</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="update-jellyfin"
+                                        data-kp-verb="Update"
+                                        data-kp-context-of="jellyfin"
+                                        data-kp-words="upgrade pull"
+                                    >
+                                        Update jellyfin<span class="kp-palette__description">Pull the newest images</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="restart-jellyfin"
+                                        data-kp-verb="Restart"
+                                        data-kp-context-of="jellyfin"
+                                        data-kp-words="reboot bounce"
+                                    >
+                                        Restart jellyfin<span class="kp-palette__description">Stop and start every container</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="logs-jellyfin"
+                                        data-kp-verb="Show"
+                                        data-kp-context-of="jellyfin"
+                                    >
+                                        Show the logs of jellyfin<span class="kp-palette__description">The last hour, newest first</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="update-gateway"
+                                        data-kp-verb="Update"
+                                        data-kp-context-of="gateway"
+                                        data-kp-words="upgrade pull"
+                                    >
+                                        Update gateway<span class="kp-palette__description">Pull the newest images</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="restart-gateway"
+                                        data-kp-verb="Restart"
+                                        data-kp-context-of="gateway"
+                                        data-kp-words="reboot bounce"
+                                    >
+                                        Restart gateway<span class="kp-palette__description">Stop and start every container</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="logs-gateway"
+                                        data-kp-verb="Show"
+                                        data-kp-context-of="gateway"
+                                    >
+                                        Show the logs of gateway<span class="kp-palette__description">The last hour, newest first</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="update-paperless"
+                                        data-kp-verb="Update"
+                                        data-kp-context-of="paperless"
+                                        data-kp-words="upgrade pull"
+                                    >
+                                        Update paperless<span class="kp-palette__description">Pull the newest images</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="restart-paperless"
+                                        data-kp-verb="Restart"
+                                        data-kp-context-of="paperless"
+                                        data-kp-words="reboot bounce"
+                                    >
+                                        Restart paperless<span class="kp-palette__description">Stop and start every container</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="logs-paperless"
+                                        data-kp-verb="Show"
+                                        data-kp-context-of="paperless"
+                                    >
+                                        Show the logs of paperless<span class="kp-palette__description">The last hour, newest first</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="update-immich"
+                                        data-kp-verb="Update"
+                                        data-kp-context-of="immich"
+                                        data-kp-words="upgrade pull"
+                                    >
+                                        Update immich<span class="kp-palette__description">Pull the newest images</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="restart-immich"
+                                        data-kp-verb="Restart"
+                                        data-kp-context-of="immich"
+                                        data-kp-words="reboot bounce"
+                                    >
+                                        Restart immich<span class="kp-palette__description">Stop and start every container</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="logs-immich"
+                                        data-kp-verb="Show"
+                                        data-kp-context-of="immich"
+                                    >
+                                        Show the logs of immich<span class="kp-palette__description">The last hour, newest first</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="update-vault"
+                                        data-kp-verb="Update"
+                                        data-kp-context-of="vault"
+                                        data-kp-words="upgrade pull"
+                                    >
+                                        Update vault<span class="kp-palette__description">Pull the newest images</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="restart-vault"
+                                        data-kp-verb="Restart"
+                                        data-kp-context-of="vault"
+                                        data-kp-words="reboot bounce"
+                                    >
+                                        Restart vault<span class="kp-palette__description">Stop and start every container</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="logs-vault"
+                                        data-kp-verb="Show"
+                                        data-kp-context-of="vault"
+                                    >
+                                        Show the logs of vault<span class="kp-palette__description">The last hour, newest first</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="update-café-kiosk"
+                                        data-kp-verb="Update"
+                                        data-kp-context-of="café-kiosk"
+                                        data-kp-words="upgrade pull"
+                                    >
+                                        Update café-kiosk<span class="kp-palette__description">Pull the newest images</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="restart-café-kiosk"
+                                        data-kp-verb="Restart"
+                                        data-kp-context-of="café-kiosk"
+                                        data-kp-words="reboot bounce"
+                                    >
+                                        Restart café-kiosk<span class="kp-palette__description">Stop and start every container</span>
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="logs-café-kiosk"
+                                        data-kp-verb="Show"
+                                        data-kp-context-of="café-kiosk"
+                                    >
+                                        Show the logs of café-kiosk<span class="kp-palette__description">The last hour, newest first</span>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li role="presentation" class="kp-palette__group" data-kp-group>
+                                <span class="kp-palette__group-label">Go to</span>
+                                <ul role="group" aria-label="Go to">
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="go-overview"
+                                        data-kp-featured
+                                        data-kp-static
+                                    >
+                                        Overview
+                                    </li>
+                                    <li
+                                        class="kp-palette__option"
+                                        role="option"
+                                        data-kp-option
+                                        data-value="go-backups"
+                                        data-kp-featured
+                                        data-kp-static
+                                    >
+                                        Backups
+                                    </li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="go-host" data-kp-static>Host</li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="go-firewall" data-kp-static>
+                                        Firewall<span class="kp-palette__description">Who may reach whom</span>
+                                    </li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="go-settings" data-kp-static>Settings</li>
+                                    <li class="kp-palette__option" role="option" data-kp-option data-value="go-log" data-kp-static>
+                                        Log<span class="kp-palette__description">Every line the host wrote</span>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                        <p class="kp-palette__status" role="status" aria-live="polite"></p>
+                    </dialog>
+                </div>
+                <pre class="kv-log" id="kv-intent-log" aria-live="polite"></pre>
+            </section>
+
+<!-- ===== item: intent-states (from a3c71370) -->
+<section
+                class="kv-sec"
+                id="intent-states"
+                data-review-item="intent-states"
+                data-review-components="palette"
+                data-review-topic="intent"
+                data-review-title="Palette: no match, a cap, loading, failed and phone width"
+                aria-labelledby="h-intent-states"
+            >
+                <div class="kv-sec__head">
+                    <h2 id="h-intent-states">Palette: no match, a cap, loading, failed and phone width</h2>
+                    <p>
+                        The same palette when nothing answers, when more match than are shown, while its commands are still arriving and when they
+                        could not be read; and a palette at the width of a phone.
+                    </p>
+                </div>
+                <div class="kv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>No match</b> (<b>zzz</b>): the list gives way to the package&rsquo;s empty plate, as high as the list was, the words
+                            <b>Nothing matches</b> centred at heading size and a hint under them. <b>update zzz</b> knows its verb:
+                            <i
+                                >There is no stack called &ldquo;zzz&rdquo;. Update works on: jellyfin, gateway, paperless, immich, vault,
+                                café-kiosk.</i
+                            >
+                            The status line says <b>No commands</b>.
+                        </li>
+                        <li>
+                            <b>Cap at 5</b> with <b>e</b> typed: five rows show and the status line says <b>5 of N shown, type more words</b> (the
+                            real number, never &ldquo;many&rdquo;); one more letter narrows it.
+                        </li>
+                        <li>
+                            <b>Loading</b>: the theme&rsquo;s busy card (spinner and words) sits in the middle of the list, which keeps its size; the
+                            input stays usable. <b>Failed</b>: a red plate &ldquo;The commands could not be read&rdquo; with a normal-size
+                            <b>Retry</b> above the places (<b>Overview</b>, <b>Backups</b>, <b>Host</b> and the rest of <b>Go to</b>), which still
+                            work; Retry puts the palette back to ready.
+                        </li>
+                        <li><b>Phone width</b>: the same palette in a 390 px box; long commands wrap and nothing is cut, no word touches an edge.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The empty and the failed plate are formal&rsquo;s own (the dashed paper plate, the red plate with its rule); the busy card is
+                        formal&rsquo;s ruled ring. Check the text&rsquo;s centre against the plate&rsquo;s centre and that nothing changes the
+                        palette&rsquo;s height when a state is switched.
+                    </p>
+                </div>
+                <div class="kv-controls" data-review-controls>
+                    <div role="group" aria-label="States">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-intent-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-intent-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-intent-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Queries">
+                        <b>Type for me:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-query2="zzz">zzz</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-query2="update zzz">update zzz</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-query2="e">e (with the cap at 5)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-query2="">Nothing</button>
+                    </div>
+                    <div role="group" aria-label="The cap">
+                        <b>Cap:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-cap="40" aria-pressed="true">40 (default)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-cap="5" aria-pressed="false">5</button>
+                    </div>
+                </div>
+                <div class="kv-pair">
+                    <div class="kv-case">
+                        <p class="kv-label">The palette above, in its states</p>
+                        <div class="kv-stage kv-stage--palette">
+                            <dialog
+                                class="kp-palette"
+                                id="kv-intent-states"
+                                data-kp-palette
+                                data-kp-nomatch="plate"
+                                data-kp-hotkey="none"
+                                data-kp-close-on-run="false"
+                                data-kp-context="jellyfin"
+                                data-kp-subject-name="stack"
+                                data-kp-group-order="Inbox, Do, Go to"
+                                aria-label="Commands"
+                                open
+                            >
+                                <input
+                                    class="kp-palette__input"
+                                    type="text"
+                                    role="combobox"
+                                    aria-label="Commands"
+                                    aria-expanded="true"
+                                    aria-controls="kv-intent-states-list"
+                                    autocomplete="off"
+                                    placeholder="Type a command or a page…"
+                                />
+                                <ul class="kp-palette__list" id="kv-intent-states-list" role="listbox" aria-label="Commands">
+                                    <li role="presentation" class="kp-palette__group" data-kp-group>
+                                        <span class="kp-palette__group-label">Inbox</span>
+                                        <ul role="group" aria-label="Inbox">
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-inbox-immich" data-kp-featured>
+                                                Update available for immich<span class="kp-palette__description"
+                                                    >Release 1.118 to 1.119, a minor update</span
+                                                >
+                                            </li>
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-inbox-vault" data-kp-featured>
+                                                vault has not been backed up for 3 days<span class="kp-palette__description"
+                                                    >The nightly backup failed</span
+                                                >
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li role="presentation" class="kp-palette__group" data-kp-group>
+                                        <span class="kp-palette__group-label">Do</span>
+                                        <ul role="group" aria-label="Do">
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-deploy-all" data-kp-featured>
+                                                Deploy all changes<span class="kp-palette__description">Write every staged change to the stacks</span>
+                                            </li>
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-new-stack" data-kp-featured>
+                                                New stack<span class="kp-palette__description">Create a stack from a template</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-update-jellyfin"
+                                                data-kp-verb="Update"
+                                                data-kp-context-of="jellyfin"
+                                                data-kp-words="upgrade pull"
+                                            >
+                                                Update jellyfin<span class="kp-palette__description">Pull the newest images</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-restart-jellyfin"
+                                                data-kp-verb="Restart"
+                                                data-kp-context-of="jellyfin"
+                                                data-kp-words="reboot bounce"
+                                            >
+                                                Restart jellyfin<span class="kp-palette__description">Stop and start every container</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-logs-jellyfin"
+                                                data-kp-verb="Show"
+                                                data-kp-context-of="jellyfin"
+                                            >
+                                                Show the logs of jellyfin<span class="kp-palette__description">The last hour, newest first</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-update-gateway"
+                                                data-kp-verb="Update"
+                                                data-kp-context-of="gateway"
+                                                data-kp-words="upgrade pull"
+                                            >
+                                                Update gateway<span class="kp-palette__description">Pull the newest images</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-restart-gateway"
+                                                data-kp-verb="Restart"
+                                                data-kp-context-of="gateway"
+                                                data-kp-words="reboot bounce"
+                                            >
+                                                Restart gateway<span class="kp-palette__description">Stop and start every container</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-logs-gateway"
+                                                data-kp-verb="Show"
+                                                data-kp-context-of="gateway"
+                                            >
+                                                Show the logs of gateway<span class="kp-palette__description">The last hour, newest first</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-update-paperless"
+                                                data-kp-verb="Update"
+                                                data-kp-context-of="paperless"
+                                                data-kp-words="upgrade pull"
+                                            >
+                                                Update paperless<span class="kp-palette__description">Pull the newest images</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-restart-paperless"
+                                                data-kp-verb="Restart"
+                                                data-kp-context-of="paperless"
+                                                data-kp-words="reboot bounce"
+                                            >
+                                                Restart paperless<span class="kp-palette__description">Stop and start every container</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-logs-paperless"
+                                                data-kp-verb="Show"
+                                                data-kp-context-of="paperless"
+                                            >
+                                                Show the logs of paperless<span class="kp-palette__description">The last hour, newest first</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-update-immich"
+                                                data-kp-verb="Update"
+                                                data-kp-context-of="immich"
+                                                data-kp-words="upgrade pull"
+                                            >
+                                                Update immich<span class="kp-palette__description">Pull the newest images</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-restart-immich"
+                                                data-kp-verb="Restart"
+                                                data-kp-context-of="immich"
+                                                data-kp-words="reboot bounce"
+                                            >
+                                                Restart immich<span class="kp-palette__description">Stop and start every container</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-logs-immich"
+                                                data-kp-verb="Show"
+                                                data-kp-context-of="immich"
+                                            >
+                                                Show the logs of immich<span class="kp-palette__description">The last hour, newest first</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-update-vault"
+                                                data-kp-verb="Update"
+                                                data-kp-context-of="vault"
+                                                data-kp-words="upgrade pull"
+                                            >
+                                                Update vault<span class="kp-palette__description">Pull the newest images</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-restart-vault"
+                                                data-kp-verb="Restart"
+                                                data-kp-context-of="vault"
+                                                data-kp-words="reboot bounce"
+                                            >
+                                                Restart vault<span class="kp-palette__description">Stop and start every container</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-logs-vault"
+                                                data-kp-verb="Show"
+                                                data-kp-context-of="vault"
+                                            >
+                                                Show the logs of vault<span class="kp-palette__description">The last hour, newest first</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-update-café-kiosk"
+                                                data-kp-verb="Update"
+                                                data-kp-context-of="café-kiosk"
+                                                data-kp-words="upgrade pull"
+                                            >
+                                                Update café-kiosk<span class="kp-palette__description">Pull the newest images</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-restart-café-kiosk"
+                                                data-kp-verb="Restart"
+                                                data-kp-context-of="café-kiosk"
+                                                data-kp-words="reboot bounce"
+                                            >
+                                                Restart café-kiosk<span class="kp-palette__description">Stop and start every container</span>
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-logs-café-kiosk"
+                                                data-kp-verb="Show"
+                                                data-kp-context-of="café-kiosk"
+                                            >
+                                                Show the logs of café-kiosk<span class="kp-palette__description">The last hour, newest first</span>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li role="presentation" class="kp-palette__group" data-kp-group>
+                                        <span class="kp-palette__group-label">Go to</span>
+                                        <ul role="group" aria-label="Go to">
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-go-overview"
+                                                data-kp-featured
+                                                data-kp-static
+                                            >
+                                                Overview
+                                            </li>
+                                            <li
+                                                class="kp-palette__option"
+                                                role="option"
+                                                data-kp-option
+                                                data-value="s-go-backups"
+                                                data-kp-featured
+                                                data-kp-static
+                                            >
+                                                Backups
+                                            </li>
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-go-host" data-kp-static>
+                                                Host
+                                            </li>
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-go-firewall" data-kp-static>
+                                                Firewall<span class="kp-palette__description">Who may reach whom</span>
+                                            </li>
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-go-settings" data-kp-static>
+                                                Settings
+                                            </li>
+                                            <li class="kp-palette__option" role="option" data-kp-option data-value="s-go-log" data-kp-static>
+                                                Log<span class="kp-palette__description">Every line the host wrote</span>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                                <p class="kp-palette__status" role="status" aria-live="polite"></p>
+                            </dialog>
+                        </div>
+                    </div>
+                    <div class="kv-case">
+                        <p class="kv-label">Phone width</p>
+                        <div class="kv-frame kv-frame--phone">
+                            <div class="kv-stage kv-stage--palette kv-stage--phone">
+                                <dialog
+                                    class="kp-palette"
+                                    id="kv-intent-phone"
+                                    data-kp-palette
+                                    data-kp-nomatch="plate"
+                                    data-kp-hotkey="none"
+                                    data-kp-close-on-run="false"
+                                    data-kp-subject-name="stack"
+                                    aria-label="Commands on a phone"
+                                    open
+                                >
+                                    <input
+                                        class="kp-palette__input"
+                                        type="text"
+                                        role="combobox"
+                                        aria-label="Commands on a phone"
+                                        aria-expanded="true"
+                                        aria-controls="kv-intent-phone-list"
+                                        autocomplete="off"
+                                        placeholder="Type a command or a page…"
+                                    />
+                                    <ul class="kp-palette__list" id="kv-intent-phone-list" role="listbox" aria-label="Commands on a phone">
+                                        <li role="presentation" class="kp-palette__group" data-kp-group>
+                                            <span class="kp-palette__group-label">Do</span>
+                                            <ul role="group" aria-label="Do">
+                                                <li
+                                                    class="kp-palette__option"
+                                                    role="option"
+                                                    data-kp-option
+                                                    data-value="ph-update-jellyfin"
+                                                    data-kp-verb="Update"
+                                                    data-kp-context-of="jellyfin"
+                                                    data-kp-words="upgrade pull"
+                                                >
+                                                    Update jellyfin<span class="kp-palette__description">Pull the newest images</span>
+                                                </li>
+                                                <li
+                                                    class="kp-palette__option"
+                                                    role="option"
+                                                    data-kp-option
+                                                    data-value="ph-restart-jellyfin"
+                                                    data-kp-verb="Restart"
+                                                    data-kp-context-of="jellyfin"
+                                                    data-kp-words="reboot bounce"
+                                                >
+                                                    Restart jellyfin<span class="kp-palette__description">Stop and start every container</span>
+                                                </li>
+                                                <li
+                                                    class="kp-palette__option"
+                                                    role="option"
+                                                    data-kp-option
+                                                    data-value="ph-update-gateway"
+                                                    data-kp-verb="Update"
+                                                    data-kp-context-of="gateway"
+                                                    data-kp-words="upgrade pull"
+                                                >
+                                                    Update gateway<span class="kp-palette__description">Pull the newest images</span>
+                                                </li>
+                                                <li
+                                                    class="kp-palette__option"
+                                                    role="option"
+                                                    data-kp-option
+                                                    data-value="ph-logs-gateway"
+                                                    data-kp-verb="Show"
+                                                    data-kp-context-of="gateway"
+                                                >
+                                                    Show the logs of gateway<span class="kp-palette__description">The last hour, newest first</span>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li role="presentation" class="kp-palette__group" data-kp-group>
+                                            <span class="kp-palette__group-label">Go to</span>
+                                            <ul role="group" aria-label="Go to">
+                                                <li class="kp-palette__option" role="option" data-kp-option data-value="ph-go-backups" data-kp-static>
+                                                    Backups
+                                                </li>
+                                                <li class="kp-palette__option" role="option" data-kp-option data-value="ph-go-host" data-kp-static>
+                                                    Host
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                    <p class="kp-palette__status" role="status" aria-live="polite"></p>
+                                </dialog>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+<!-- ===== item: version (from a3c71370) -->
+<section
+                class="kv-sec"
+                id="version"
+                data-review-item="version"
+                data-review-components="version"
+                data-review-topic="version"
+                data-review-topic-title="Version jump chip"
+                data-review-title="Version jump chip: the levels in an update list"
+                aria-labelledby="h-version"
+            >
+                <div class="kv-sec__head">
+                    <h2 id="h-version">Version jump chip: the levels in an update list</h2>
+                    <p>
+                        <code>&lt;span class="kp-badge kp-badge--version" data-kp-version-from data-kp-version-to&gt;</code> (js/version-delta.js): a
+                        version moving, and how big the jump is. Shown in an update list (the package&rsquo;s data table) with its heading counted.
+                    </p>
+                </div>
+                <div class="kv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>The first number is what counts as big</b> (Kenny, 2026-10-17), plus a list of apps for which the second number counts
+                            too: here <b>immich</b>. So <b>jellyfin 10.11.11 → 12.1</b> and <b>immich 1.118.2 → 1.119.0</b> are the two loud chips:
+                            the warning plate, the word <b>major</b> with a <b>!</b> in a ring, the new version double-ruled. <b>jellyfin</b>&rsquo;s
+                            new version is a link to its release notes (new tab).
+                        </li>
+                        <li>
+                            The quiet ones stay plain: <b>paperless 2.12.0 → 2.12.1</b> (patch), <b>sonarr</b>&rsquo;s build number, <b>vault</b> (the
+                            same: the words <b>up to date</b>), <b>gateway</b> (a new digest, shown as its first 12 characters),
+                            <b>calendar</b> (dates as versions: nothing is major) and <b>scratch</b> (<b>latest → nightly</b>, no numbers: never
+                            called big, the raw words). <b>traefik 3.1.2 → 3.0.9</b> went back: destructive tone and the word <b>older</b>.
+                        </li>
+                        <li>
+                            The heading counts the list exactly: <b>2 major, 1 minor, 2 patch, 2 changed, 1 older</b> (the real numbers, from
+                            <code>summarizeDeltas</code>). Press the <b>Level</b> column&rsquo;s header: the list sorts risky first (older, major,
+                            minor, patch, the rest). <b>Shift+click</b> a chip copies <b>10.11.11 → 12.1</b>; the readout under the table says so.
+                        </li>
+                        <li>
+                            <b>Big minor list off</b> takes immich out of the list: its chip turns <b>minor</b> and quiet. <b>The choice</b> (tick it
+                            in the dialog): how a chip reads in a tight column, the three numbers or the word alone.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s badge is a small paper pill; the loud chip is on the warning plate with the new version ruled twice under it
+                        (formal&rsquo;s double rule), the old version struck in a lighter ink. Look at the gap between the old version, the arrow and
+                        the new one, at the <b>!</b> ring being a circle (so it is a shape, not only a colour), and at the chips lining up in one
+                        column.
+                    </p>
+                </div>
+                <div class="kv-controls" data-review-controls>
+                    <div role="group" aria-label="Chip content">
+                        <b>Show:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-version-show="both" aria-pressed="true">From, arrow, to</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-version-show="level" aria-pressed="false">
+                            The word alone
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Big minor list">
+                        <b>Big minor list:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-big-minor aria-pressed="true">
+                            immich counts the second number
+                        </button>
+                    </div>
+                </div>
+                <h3 class="kv-sub" id="kv-version-heading" aria-live="polite">Updates:</h3>
+                <div class="kp-datatable" data-kp-datatable data-kp-version-big-minor="immich" id="kv-version-table">
+                    <div class="kp-table-wrap">
+                        <table class="kp-table">
+                            <caption class="kp-sr-only">
+                                Updates available
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th scope="col" data-kp-sort="text">App</th>
+                                    <th scope="col" data-kp-sort="text">Kind</th>
+                                    <th scope="col" data-kp-sort="number">Version jump</th>
+                                    <th scope="col">What to know</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">jellyfin</th>
+                                    <td>media</td>
+                                    <td data-kv-chip-cell>
+                                        <span
+                                            class="kp-badge kp-badge--version"
+                                            data-kp-version-app="jellyfin"
+                                            data-kp-version-from="10.11.11"
+                                            data-kp-version-to="12.1"
+                                            data-kp-version-href="https://github.com/jellyfin/jellyfin/releases/tag/v{to}"
+                                        ></span>
+                                    </td>
+                                    <td>Moves its data format: read the notes first</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">immich</th>
+                                    <td>media</td>
+                                    <td data-kv-chip-cell>
+                                        <span
+                                            class="kp-badge kp-badge--version"
+                                            data-kp-version-app="immich"
+                                            data-kp-version-from="1.118.2"
+                                            data-kp-version-to="1.119.0"
+                                        ></span>
+                                    </td>
+                                    <td>Its second number is breaking for this app</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">paperless</th>
+                                    <td>documents</td>
+                                    <td data-kv-chip-cell>
+                                        <span
+                                            class="kp-badge kp-badge--version"
+                                            data-kp-version-app="paperless"
+                                            data-kp-version-from="2.12.0"
+                                            data-kp-version-to="2.12.1"
+                                        ></span>
+                                    </td>
+                                    <td>Bug fixes only</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">vault</th>
+                                    <td>secrets</td>
+                                    <td data-kv-chip-cell>
+                                        <span
+                                            class="kp-badge kp-badge--version"
+                                            data-kp-version-app="vault"
+                                            data-kp-version-from="1.17.4"
+                                            data-kp-version-to="1.17.4"
+                                        ></span>
+                                    </td>
+                                    <td>Nothing to do</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">traefik</th>
+                                    <td>edge</td>
+                                    <td data-kv-chip-cell>
+                                        <span
+                                            class="kp-badge kp-badge--version"
+                                            data-kp-version-app="traefik"
+                                            data-kp-version-from="3.1.2"
+                                            data-kp-version-to="3.0.9"
+                                        ></span>
+                                    </td>
+                                    <td>The tag moved back</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">sonarr</th>
+                                    <td>media</td>
+                                    <td data-kv-chip-cell>
+                                        <span
+                                            class="kp-badge kp-badge--version"
+                                            data-kp-version-app="sonarr"
+                                            data-kp-version-from="4.0.9.2244-ls289"
+                                            data-kp-version-to="4.0.9.2244-ls290"
+                                        ></span>
+                                    </td>
+                                    <td>A new build of the same release</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">gateway</th>
+                                    <td>edge</td>
+                                    <td data-kv-chip-cell>
+                                        <span
+                                            class="kp-badge kp-badge--version"
+                                            data-kp-version-app="gateway"
+                                            data-kp-version-from="sha256:3f9c1a2b7d4e8a6f0c5b9d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a"
+                                            data-kp-version-to="sha256:9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b"
+                                        ></span>
+                                    </td>
+                                    <td>A moving tag: a new image, no version</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">calendar</th>
+                                    <td>family</td>
+                                    <td data-kv-chip-cell>
+                                        <span
+                                            class="kp-badge kp-badge--version"
+                                            data-kp-version-app="calendar"
+                                            data-kp-version-from="2024.10.2"
+                                            data-kp-version-to="2025.1.0"
+                                            data-kp-version-scheme="calver"
+                                        ></span>
+                                    </td>
+                                    <td>Versions are dates: nothing is major</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">scratch</th>
+                                    <td>lab</td>
+                                    <td data-kv-chip-cell>
+                                        <span
+                                            class="kp-badge kp-badge--version"
+                                            data-kp-version-app="scratch"
+                                            data-kp-version-from="latest"
+                                            data-kp-version-to="nightly"
+                                        ></span>
+                                    </td>
+                                    <td>No numbers to compare</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <pre class="kv-log" id="kv-version-log" aria-live="polite"></pre>
+            </section>
+
+<!-- ===== item: version-states (from a3c71370) -->
+<section
+                class="kv-sec"
+                id="version-states"
+                data-review-item="version-states"
+                data-review-components="version"
+                data-review-topic="version"
+                data-review-title="Version jump chip: states, long versions and phone width"
+                aria-labelledby="h-version-states"
+            >
+                <div class="kv-sec__head">
+                    <h2 id="h-version-states">Version jump chip: states, long versions and phone width</h2>
+                    <p>
+                        The chip while the version is looked up, when the lookup failed and when nothing is tracked; a very long version; and the chip
+                        under a name on a phone.
+                    </p>
+                </div>
+                <div class="kv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Loading:</b> a pulsing ruled line where the versions will be, in a chip of the final height. <b>Could not check:</b> a
+                            dashed chip with those words and the reason in its tooltip; the list&rsquo;s own Retry (not a button inside a small chip)
+                            is where a retry belongs. <b>Not tracked:</b> the muted words, no chip plate.
+                        </li>
+                        <li>
+                            <b>A long version</b> (a build string and a digest) breaks after a dot, a hyphen or an underscore, never in the middle of
+                            a number, and the chip grows to hold it. At <b>phone width</b> the chip stays one unit and wraps under the name.
+                        </li>
+                        <li><b>Resolve</b> turns the loading chip into the real jump (10.11.11 → 12.1) and back.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The loading line is formal&rsquo;s ruled ledger line (navy over a faint hairline); the failed chip is a dashed paper pill.
+                        Check that the chip&rsquo;s height does not change between loading, failed and loaded.
+                    </p>
+                </div>
+                <div class="kv-controls" data-review-controls>
+                    <div role="group" aria-label="Lookup">
+                        <b>The lookup:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-version-state="loading" aria-pressed="true">
+                            Still looking
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-version-state="ready" aria-pressed="false">Resolve</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-version-state="error" aria-pressed="false">It failed</button>
+                    </div>
+                </div>
+                <div class="kv-pair">
+                    <div class="kv-case">
+                        <p class="kv-label">The lookup in three states</p>
+                        <div class="kv-row">
+                            <span>jellyfin</span>
+                            <span
+                                class="kp-badge kp-badge--version"
+                                id="kv-version-live"
+                                data-kp-state="loading"
+                                data-kp-version-from="10.11.11"
+                                data-kp-version-to="12.1"
+                                data-kp-version-error="The release server did not answer"
+                            ></span>
+                        </div>
+                        <div class="kv-row"><span>vault</span><span class="kp-badge kp-badge--version" data-kp-state="empty"></span></div>
+                    </div>
+                    <div class="kv-case">
+                        <p class="kv-label">Long versions</p>
+                        <div class="kv-row">
+                            <span
+                                class="kp-badge kp-badge--version"
+                                data-kp-version-from="4.0.9.2244-ls289-build-2026-10-02"
+                                data-kp-version-to="4.0.9.2244-ls290-build-2026-10-16"
+                            ></span>
+                        </div>
+                        <div class="kv-row">
+                            <span
+                                class="kp-badge kp-badge--version"
+                                data-kp-version-digest="full"
+                                data-kp-version-from="sha256:3f9c1a2b7d4e8a6f0c5b9d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a"
+                                data-kp-version-to="sha256:9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d3e2f1a0b9c8d7e6f5a4b3c2d1e0f9a8b"
+                            ></span>
+                        </div>
+                    </div>
+                    <div class="kv-case">
+                        <p class="kv-label">Phone width, under the name</p>
+                        <div class="kv-frame kv-frame--phone">
+                            <p class="kv-row">
+                                <b>paperless</b>
+                                <span class="kp-badge kp-badge--version" data-kp-version-from="2.12.0" data-kp-version-to="2.12.1"></span>
+                            </p>
+                            <p class="kv-row">
+                                <b>jellyfin</b>
+                                <span
+                                    class="kp-badge kp-badge--version"
+                                    data-kp-version-from="10.11.11"
+                                    data-kp-version-to="12.1"
+                                    data-kp-version-href="https://github.com/jellyfin/jellyfin/releases/tag/v12.1"
+                                ></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+<!-- ===== item: ack (from a3c71370) -->
+<section
+                class="kv-sec"
+                id="ack"
+                data-review-item="ack"
+                data-review-components="ack"
+                data-review-topic="ack"
+                data-review-topic-title="Acknowledge gate"
+                data-review-title="Acknowledge gate: a tick before the update may start"
+                aria-labelledby="h-ack"
+            >
+                <div class="kv-sec__head">
+                    <h2 id="h-ack">Acknowledge gate: a tick before the update may start</h2>
+                    <p>
+                        <code>&lt;div class="kp-alert" data-kp-ack data-kp-ack-for="#update"&gt;</code> (js/ack-gate.js): a warning that holds a
+                        button back until its box is ticked. A human guard, not a security control.
+                    </p>
+                </div>
+                <div class="kv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Two warnings, <b>jellyfin 10.11 → 12.1</b> and <b>immich 1.118 → 2.0</b>, each with the link
+                            <b>Read the release notes</b> (a new tab; opening it ticks nothing) and a box with its sentence. The button
+                            <b>Update 2 apps</b> in its own fixed column on the right is dimmed. Hover or focus it:
+                            <b>2 of 2 release notes still to read</b>. Press it anyway: the focus jumps to the first open box.
+                        </li>
+                        <li>
+                            Tick jellyfin&rsquo;s box: the reason becomes <b>1 of 2 release notes still to read</b>; tick immich&rsquo;s too: the
+                            button comes on. Untick one: it goes off again. Each change is said once in the grey line below (<b>Update enabled</b> /
+                            <b>Update disabled: 1 release note still to read</b>).
+                        </li>
+                        <li>
+                            <b>One tick for the lot</b> (the choice, or the button): ticking one box ticks both. <b>The item changes</b> (jellyfin
+                            goes to 12.2): its box clears, because a tick belongs to one version. <b>The update runs</b> locks the boxes with the
+                            reason.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The gate is formal&rsquo;s warning plate (gold wash, dark ink, hairline); a ticked gate gets the thin second rule along its
+                        foot. The boxes are formal&rsquo;s ruled squares. Look at the text never touching the plate&rsquo;s edge and at the Update
+                        buttons standing in one column.
+                    </p>
+                </div>
+                <div class="kv-controls" data-review-controls>
+                    <div role="group" aria-label="Mode">
+                        <b>Ticks:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-ack-mode="each" aria-pressed="true">One for each</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-ack-mode="all" aria-pressed="false">One for the lot</button>
+                    </div>
+                    <div role="group" aria-label="Item">
+                        <b>Try:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-ack-bump>The item changes (jellyfin 12.2)</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-ack-lock aria-pressed="false">The update runs</button>
+                    </div>
+                </div>
+                <div class="kv-ackgrid" id="kv-ack-grid">
+                    <div class="kv-ackgrid__gates">
+                        <div
+                            class="kp-alert kp-alert--warning"
+                            id="kv-ack-1"
+                            data-kp-ack
+                            data-kp-ack-for="#kv-ack-go"
+                            data-kp-ack-key="jellyfin"
+                            data-kp-ack-version="12.1"
+                            data-kp-ack-label="I read the release notes of 12.1"
+                            data-kp-ack-link="https://example.com/jellyfin/12.1"
+                        >
+                            <div class="kp-alert__body">
+                                <strong>jellyfin 10.11 → 12.1 is a major version.</strong> A major release can change its settings or move its data in
+                                a way the old version cannot read back. Restoring the backup is then the way back.
+                            </div>
+                        </div>
+                        <div
+                            class="kp-alert kp-alert--warning"
+                            id="kv-ack-2"
+                            data-kp-ack
+                            data-kp-ack-for="#kv-ack-go"
+                            data-kp-ack-key="immich"
+                            data-kp-ack-label="I read the release notes of 2.0"
+                            data-kp-ack-link="https://example.com/immich/2.0"
+                        >
+                            <div class="kp-alert__body">
+                                <strong>immich 1.118 → 2.0 is a major version.</strong> Its database is migrated on the first start and cannot be
+                                moved back.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kv-ackgrid__action">
+                        <button type="button" class="kp-button kp-button--primary" id="kv-ack-go">Update 2 apps</button>
+                    </div>
+                </div>
+                <pre class="kv-log" id="kv-ack-log" aria-live="polite"></pre>
+            </section>
+
+<!-- ===== item: ack-states (from a3c71370) -->
+<section
+                class="kv-sec"
+                id="ack-states"
+                data-review-item="ack-states"
+                data-review-components="ack"
+                data-review-topic="ack"
+                data-review-title="Acknowledge gate: loading, failed, empty and phone width"
+                aria-labelledby="h-ack-states"
+            >
+                <div class="kv-sec__head">
+                    <h2 id="h-ack-states">Acknowledge gate: loading, failed, empty and phone width</h2>
+                    <p>
+                        The same gate while its release notes are looked up, when none could be found, when there is no gate at all, and at the width
+                        of a phone.
+                    </p>
+                </div>
+                <div class="kv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Loading:</b> the warning keeps exactly its height, its words held and two ruled lines over them; the box is off and the
+                            button says <b>Looking up the release notes</b>. <b>Failed:</b> the line <b>No release notes link found</b> with a
+                            normal-size <b>Retry</b>; the box still works, so a missing link never traps the update. <b>Retry</b> puts it back to
+                            ready.
+                        </li>
+                        <li>
+                            <b>No gate:</b> the warning is gone and takes no room; <b>Update</b> is simply on. <b>Phone width</b>: the box goes under
+                            the words, the whole sentence is the hit area and 44 px tall; the Update button goes under it.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The two lines are formal&rsquo;s ruled ledger lines; the failed line is plain ink on the warning plate with a normal button.
+                        Check that the gate&rsquo;s height does not change between ready and loading.
+                    </p>
+                </div>
+                <div class="kv-controls" data-review-controls>
+                    <div role="group" aria-label="Lookup">
+                        <b>The notes:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-ack-state="ready" aria-pressed="true">Found</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-ack-state="loading" aria-pressed="false">Looking</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-ack-state="error" aria-pressed="false">Not found</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-ack-state="empty" aria-pressed="false">No gate</button>
+                    </div>
+                </div>
+                <div class="kv-pair">
+                    <div class="kv-case">
+                        <p class="kv-label">One gate, one button</p>
+                        <div class="kv-ackgrid kv-ackgrid--single">
+                            <div class="kv-ackgrid__gates">
+                                <div
+                                    class="kp-alert kp-alert--warning"
+                                    id="kv-ack-3"
+                                    data-kp-ack
+                                    data-kp-ack-for="#kv-ack-go3"
+                                    data-kp-ack-key="vault"
+                                    data-kp-ack-retry
+                                    data-kp-ack-label="I read the release notes of 2.0"
+                                    data-kp-ack-link="https://example.com/vault/2.0"
+                                >
+                                    <div class="kp-alert__body">
+                                        <strong>vault 1.17 → 2.0 is a major version.</strong> Its storage format changes.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="kv-ackgrid__action">
+                                <button type="button" class="kp-button kp-button--primary" id="kv-ack-go3">Update</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="kv-case">
+                        <p class="kv-label">Phone width</p>
+                        <div class="kv-frame kv-frame--phone">
+                            <div class="kv-ackgrid kv-ackgrid--single">
+                                <div class="kv-ackgrid__gates">
+                                    <div
+                                        class="kp-alert kp-alert--warning"
+                                        id="kv-ack-4"
+                                        data-kp-ack
+                                        data-kp-ack-for="#kv-ack-go4"
+                                        data-kp-ack-key="traefik"
+                                        data-kp-ack-label="I read the release notes of 4.0"
+                                        data-kp-ack-link="https://example.com/traefik/4.0"
+                                    >
+                                        <div class="kp-alert__body">
+                                            <strong>traefik 3.1 → 4.0 is a major version.</strong> Several settings were renamed.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="kv-ackgrid__action">
+                                    <button type="button" class="kp-button kp-button--primary" id="kv-ack-go4">Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+<!-- ===== item: deplist (from a3c71370) -->
+<section
+                class="kv-sec"
+                id="deplist"
+                data-review-item="deplist"
+                data-review-components="deplist"
+                data-review-topic="deplist"
+                data-review-topic-title="Dependency list"
+                data-review-title="Dependency list: what needs what, in the order things must go"
+                aria-labelledby="h-deplist"
+            >
+                <div class="kv-sec__head">
+                    <h2 id="h-deplist">Dependency list: what needs what, in the order things must go</h2>
+                    <p>
+                        <code>&lt;div class="kp-deplist" data-kp-deplist&gt;</code> (js/deplist.js): rows &ldquo;A → B&rdquo;, each a fixed grid, the
+                        names with their identity marks. Switch the options below; the list draws itself again.
+                    </p>
+                </div>
+                <div class="kv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            The heading says the exact count: <b>12 stacks reach these apps</b>. Rows are numbered <b>1</b> to <b>12</b> in the order
+                            things must go: <b>paperless → postgres</b> comes before <b>immich → paperless</b>, which needs paperless. Only the first
+                            eight show; <b>Show all 12</b> unfolds the rest and becomes <b>Show fewer</b>. Numbers, marks, arrows and needed names
+                            stand in the same columns in every row.
+                        </li>
+                        <li>
+                            <b>Not numbered</b> drops the number column; <b>Group by app</b> puts a heading per needed app;
+                            <b>Names are links</b> makes each name a link to its page; <b>Show state</b> adds running, stopped or unknown in words and
+                            a tone beside each needed app; <b>Copy as text</b> copies <i>paperless -&gt; postgres</i> per line and says
+                            <b>Copied</b> on its own button, which keeps its width.
+                        </li>
+                        <li>
+                            A <b>cycle</b> (paperless needs redis needs paperless) is never looped: it becomes one red row at the top, unnumbered.
+                        </li>
+                        <li><b>The choice</b> (tick it in the dialog): numbered, or grouped under the app that changes. The buttons flip it too.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Each row is a line of formal&rsquo;s ledger, a hairline under it; the identity marks are small squares in the theme&rsquo;s
+                        chart colours. Look at the arrows and the needed names standing in one column down the list, and at the numbers aligned on
+                        their right.
+                    </p>
+                </div>
+                <div class="kv-controls" data-review-controls>
+                    <div role="group" aria-label="Arrangement">
+                        <b>Rows:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-dep-arrange="numbers" aria-pressed="true">Numbered</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-dep-arrange="none" aria-pressed="false">Not numbered</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-dep-arrange="by-to" aria-pressed="false">Group by app</button>
+                    </div>
+                    <div role="group" aria-label="Extras">
+                        <b>Extras:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-dep-extra="link" aria-pressed="false">Names are links</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-dep-extra="states" aria-pressed="false">Show state</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-dep-extra="cycle" aria-pressed="false">Add a cycle</button>
+                    </div>
+                </div>
+                <div class="kp-deplist" data-kp-deplist id="kv-deplist" data-kp-dep-heading="{n} stacks reach these apps" data-kp-dep-copy></div>
+            </section>
+
+<!-- ===== item: deplist-states (from a3c71370) -->
+<section
+                class="kv-sec"
+                id="deplist-states"
+                data-review-item="deplist-states"
+                data-review-components="deplist"
+                data-review-topic="deplist"
+                data-review-title="Dependency list: loading, empty, failed and phone width"
+                aria-labelledby="h-deplist-states"
+            >
+                <div class="kv-sec__head">
+                    <h2 id="h-deplist-states">Dependency list: loading, empty, failed and phone width</h2>
+                    <p>The same list while its rows are being read, with nothing in it, when it could not be read, and at the width of a phone.</p>
+                </div>
+                <div class="kv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Loading:</b> three placeholder rows with the theme&rsquo;s busy card (spinner and words) in the middle of the list, the
+                            heading saying <b>Reading what depends on what</b>. <b>Empty:</b> the empty plate, <b>Nothing depends on these</b> at
+                            heading size, centred, no button (nothing is wrong). <b>Failed:</b> the red plate
+                            <b>The dependencies could not be read</b> with a normal-size <b>Retry</b>, which brings the rows back. Each state is as
+                            tall as the list was with its rows.
+                        </li>
+                        <li>
+                            <b>Phone width:</b> each row stacks, the number at the start, the name over &ldquo;→ the needed app&rdquo;; long names
+                            wrap and nothing is cut.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The plates are formal&rsquo;s own (the dashed paper plate, the red plate); the busy card is its ruled ring. Check the
+                        text&rsquo;s centre against the plate&rsquo;s centre and that the list keeps its height.
+                    </p>
+                </div>
+                <div class="kv-controls" data-review-controls>
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-dep-state="ready" aria-pressed="true">Rows</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-dep-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-dep-state="empty" aria-pressed="false">Nothing</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-dep-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                </div>
+                <div class="kv-pair">
+                    <div class="kv-case">
+                        <p class="kv-label">Four rows, in their states</p>
+                        <div class="kp-deplist" data-kp-deplist id="kv-deplist-states" data-kp-dep-heading="{n} stacks reach these apps"></div>
+                    </div>
+                    <div class="kv-case">
+                        <p class="kv-label">Phone width</p>
+                        <div class="kv-frame kv-frame--phone">
+                            <div class="kp-deplist" data-kp-deplist id="kv-deplist-phone" data-kp-dep-states></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+<!-- ===== item: trace (from a3c71370) -->
+<section
+                class="kv-sec"
+                id="trace"
+                data-review-item="trace"
+                data-review-components="trace steplist"
+                data-review-topic="trace"
+                data-review-topic-title="Path of a connection"
+                data-review-title="Path of a connection: hops, allowed or refused"
+                aria-labelledby="h-trace"
+            >
+                <div class="kv-sec__head">
+                    <h2 id="h-trace">Path of a connection: hops, allowed or refused</h2>
+                    <p>
+                        <code>&lt;div class="kp-trace" data-kp-trace&gt;</code> (js/path-trace.js, on the step list): the way one connection takes,
+                        stopping at the first refusal. The page gives the hops; nothing here is measured.
+                    </p>
+                </div>
+                <div class="kv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Blocked</b> (the first scene): the summary says <b>Blocked at rule &ldquo;IoT to media&rdquo;</b>; four hops stand side
+                            by side with an arrow between them: <b>tv</b> (allowed, a check), <b>Firewall</b> (refused, a cross, its title ruled
+                            twice, the chip <b>Rule IoT to media</b>), then <b>Jellyfin</b> and <b>Media network</b> dimmed and saying
+                            <b>not reached</b>. Press the chip (or Tab to it and press Enter): the readout says which rule.
+                        </li>
+                        <li>
+                            <b>Allowed</b> shows every hop with a check and the summary <b>Allowed</b>. <b>Not all measured</b> shows a hop that is
+                            <b>not measured</b> (an open ring) and says <b>Not every step could be measured</b>.
+                            <b>Every hop&rsquo;s own verdict</b> shows what each hop says alone, with no hop dimmed (a &ldquo;what if&rdquo;).
+                        </li>
+                        <li>
+                            <b>Copy as text</b> puts <i>tv allowed &gt; Firewall refused (Rule IoT to media) &gt; …</i> on the clipboard and says
+                            <b>Copied</b> on its own button. <b>Swap direction</b> (or the key S, outside a field) fires the swap event; the readout
+                            shows it. The layout switches (row, column) and the rule as chip, inline or off redraw the trace at once.
+                        </li>
+                        <li><b>The choice</b> (tick it in the dialog): mark and word, the mark alone, or the word alone. The buttons flip it too.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The marks are formal&rsquo;s own step marks (a navy-green check, a red cross); the refusing hop is ruled twice under its
+                        title, as formal rules what is read. Look at the hops sharing one height and one start line, the arrows centred in the gaps,
+                        and the words never touching a hop&rsquo;s edge.
+                    </p>
+                </div>
+                <div class="kv-controls" data-review-controls>
+                    <div role="group" aria-label="Scene">
+                        <b>The case:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-trace-scene="blocked" aria-pressed="true">Blocked</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-trace-scene="allowed" aria-pressed="false">Allowed</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-trace-scene="unknown" aria-pressed="false">
+                            Not all measured
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Look">
+                        <b>Verdict:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-trace-verdict="both" aria-pressed="true">Mark and word</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-trace-verdict="mark" aria-pressed="false">Mark</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-trace-verdict="word" aria-pressed="false">Word</button>
+                    </div>
+                    <div role="group" aria-label="Layout">
+                        <b>Layout:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-trace-layout="auto" aria-pressed="true">Automatic</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-trace-layout="row" aria-pressed="false">Row</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-trace-layout="column" aria-pressed="false">Column</button>
+                    </div>
+                    <div role="group" aria-label="Rule and stop">
+                        <b>Rule:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-trace-rule="chip" aria-pressed="true">Chip</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-trace-rule="inline" aria-pressed="false">In the note</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-trace-rule="off" aria-pressed="false">Off</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-trace-stop aria-pressed="false">
+                            Every hop&rsquo;s own verdict
+                        </button>
+                    </div>
+                </div>
+                <div class="kp-trace" data-kp-trace id="kv-trace" data-kp-trace-copy data-kp-trace-swap></div>
+                <pre class="kv-log" id="kv-trace-log" aria-live="polite"></pre>
+            </section>
+
+<!-- ===== item: trace-states (from a3c71370) -->
+<section
+                class="kv-sec"
+                id="trace-states"
+                data-review-item="trace-states"
+                data-review-components="trace steplist"
+                data-review-topic="trace"
+                data-review-title="Path of a connection: running, nothing chosen, failed and phone width"
+                aria-labelledby="h-trace-states"
+            >
+                <div class="kv-sec__head">
+                    <h2 id="h-trace-states">Path of a connection: running, nothing chosen, failed and phone width</h2>
+                    <p>
+                        The same trace while the question is in flight, before one was asked, when it could not be answered, and at the width of a
+                        phone.
+                    </p>
+                </div>
+                <div class="kv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Running:</b> three placeholder hops under the theme&rsquo;s busy card (spinner and <b>Checking the path…</b>), the
+                            summary saying the same. <b>Nothing chosen:</b> the empty plate <b>Pick a source and a target</b> at heading size,
+                            centred, no button. <b>Failed:</b> the red plate <b>The path could not be checked</b> with a normal <b>Retry</b>, which
+                            brings the hops back. Each state is as tall as the trace was.
+                        </li>
+                        <li>
+                            <b>Phone width:</b> the hops stand in a column, each hop a full-width row with its mark, its word and its words; long
+                            names wrap and nothing is cut.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The plates are formal&rsquo;s own; the busy card is its ruled ring. Check the plate&rsquo;s text against its centre and that
+                        the trace keeps its height.
+                    </p>
+                </div>
+                <div class="kv-controls" data-review-controls>
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-trace-state="ready" aria-pressed="true">Hops</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-trace-state="running" aria-pressed="false">Running</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-trace-state="empty" aria-pressed="false">Nothing chosen</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-trace-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                </div>
+                <div class="kv-pair">
+                    <div class="kv-case">
+                        <p class="kv-label">A trace in its states</p>
+                        <div class="kp-trace" data-kp-trace id="kv-trace-states"></div>
+                    </div>
+                    <div class="kv-case">
+                        <p class="kv-label">Phone width</p>
+                        <div class="kv-frame kv-frame--phone">
+                            <div class="kp-trace" data-kp-trace id="kv-trace-phone"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+<!-- ===== item: entity (from the last round) -->
+<section
+                class="kv-sec"
+                id="entity"
+                data-review-item="entity"
+                data-review-components="entity-grid entity"
+                data-review-topic="entity"
+                data-review-topic-title="Entity card"
+                data-review-title="Entity card: one fixed card per stack"
+                aria-labelledby="h-entity"
+            >
+                <div class="kv-sec__head">
+                    <h2 id="h-entity">Entity card: one fixed card per stack</h2>
+                    <p>
+                        <code>&lt;div class="kp-entity-grid" data-kp-entity-grid&gt;</code> (js/entity-card.js): the same five rows on every card,
+                        kept whether a row has anything or not. Switch the options below; the cards draw again.
+                    </p>
+                </div>
+                <div class="kv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Six cards in a grid (two columns here, one on a phone), every card exactly as high as the next: <b>media</b> has a flag,
+                            <b>vault</b> has none and keeps its flag row empty, <b>gateway</b> has five flags (three show and <b>+2</b> opens the rest
+                            in the package&rsquo;s menu). Each card: the mark made from the name, the name (the card&rsquo;s one link), the id, the
+                            state in words; the figures with exact numbers; two meters with their number always beside the bar (<b>CPU 34%</b>,
+                            <b>RAM 5.6 of 8 GB</b>; a full one turns warning or destructive); then, with the data below, <b>Restart</b>, <b>Logs</b>,
+                            <b>Update</b> in three fixed columns and <b>More</b> in the fourth.
+                        </li>
+                        <li>
+                            <b>The buttons come only from the data.</b> <b>Actions in the data: None</b> and the cards have no button row at all and
+                            no empty space where it was (they are shorter, still level with each other). <b>Two</b> shows two buttons,
+                            <b>Four</b> three buttons and More; <b>Mixed</b> gives each card its own number (one has none): the columns are the same
+                            on every card, so <b>Restart</b> stands in the first column everywhere, and a card with none leaves the room empty below
+                            its meters because the cards in a row share one height. Between the last meter and the buttons there is always one clear
+                            gap (<b>Meters 1, 2 and 3</b>): the buttons never touch the line above them.
+                        </li>
+                        <li>
+                            <b>More</b> and <b>+2</b> open the package&rsquo;s own menu (the buttons below open them one at a time, each beside the
+                            package&rsquo;s own menu button under the cards, so the plates can be compared); the arrow keys move in it and Esc closes
+                            it. <b>Remove</b> in More is destructive. <b>A live refresh</b> changes the numbers and a flag in place: the cards are the
+                            same elements, so nothing under the pointer moves.
+                        </li>
+                        <li>
+                            <b>Selectable</b> adds a tick on each card: tick one (or press <b>j</b> to move the ring, <b>x</b> to tick) and its edge
+                            doubles; the readout says which are ticked. <b>Meters</b> (1, 2 or 3 rows), <b>Actions in the data</b> (none, two, four or
+                            a mix), <b>One flag</b>, <b>Compact</b> (the figures go),
+                            <b>Names are links</b>
+                            and the choice (three or two buttons) each draw every card again at the same height.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s card is a page of the ledger: the identity row ruled off by a hairline, the ticked card ruled twice round. Look
+                        at the buttons standing in the same columns on every card, the meters starting at one point, and every card the same height.
+                    </p>
+                </div>
+                <div class="kv-controls" data-review-controls>
+                    <div role="group" aria-label="Options">
+                        <b>Options:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-opt="selectable" aria-pressed="false">Selectable</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-opt="flags" aria-pressed="false">One flag</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-opt="compact" aria-pressed="false">Compact</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-opt="link" aria-pressed="false">Names are links</button>
+                    </div>
+                    <div role="group" aria-label="Meters">
+                        <b>Meters:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-meters="1" aria-pressed="false">1</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-meters="2" aria-pressed="true">2</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-meters="3" aria-pressed="false">3</button>
+                    </div>
+                    <div role="group" aria-label="Actions in the data">
+                        <b>Actions in the data:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-actions="none" aria-pressed="false">None</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-actions="two" aria-pressed="false">Two</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-actions="four" aria-pressed="true">Four</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-actions="mixed" aria-pressed="false">Mixed</button>
+                    </div>
+                    <div role="group" aria-label="Buttons">
+                        <b>Buttons in a row:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-inline="3" aria-pressed="true">Three</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-inline="2" aria-pressed="false">Two</button>
+                    </div>
+                    <div role="group" aria-label="Try">
+                        <b>Try:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-refresh>A live refresh</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-menu="more">Open a card&rsquo;s More</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-menu="flags">Open the +N</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-menu="compare">Open the package&rsquo;s menu</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-menu="close">Close menus</button>
+                    </div>
+                </div>
+                <div class="kp-entity-grid" data-kp-entity-grid id="kv-entity-grid" data-kp-entity-min="22rem"></div>
+                <div class="kv-case kv-compare">
+                    <p class="kv-label">For comparison: the package&rsquo;s own menu button (not part of the card), opened by the same button</p>
+                    <div class="kp-menu-button" data-kp-menu-button data-kp-key="kv-compare-menu" id="kv-entity-compare">
+                        <button type="button" class="kp-button kp-button--sm">More</button>
+                        <div class="kp-menu kp-menu--rich" role="menu" aria-label="Every other action" hidden></div>
+                    </div>
+                </div>
+                <pre class="kv-log" id="kv-entity-log" aria-live="polite"></pre>
+            </section>
+
+<!-- ===== item: entity-states (from a3c71370) -->
+<section
+                class="kv-sec"
+                id="entity-states"
+                data-review-item="entity-states"
+                data-review-components="entity-grid entity"
+                data-review-topic="entity"
+                data-review-title="Entity card: loading, empty, failed and phone width"
+                aria-labelledby="h-entity-states"
+            >
+                <div class="kv-sec__head">
+                    <h2 id="h-entity-states">Entity card: loading, empty, failed and phone width</h2>
+                    <p>
+                        A card with nothing measured, a card that failed, the whole grid loading, empty and failed, and the grid at the width of a
+                        phone.
+                    </p>
+                </div>
+                <div class="kv-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Card states</b> (three cards side by side): the first is <b>loading</b> (the five rows as ruled bones, the card keeps
+                            its height), the second <b>empty</b> (its figures and meters say <b>not measured</b> at normal size), the third
+                            <b>failed</b> (its state word turns <b>failed</b> on a red plate and a normal-size <b>Retry</b> takes the buttons&rsquo;
+                            place). The other cards are unaffected.
+                        </li>
+                        <li>
+                            <b>The grid</b>: <b>Loading</b> shows six skeleton cards of the final height under the theme&rsquo;s busy card;
+                            <b>Nothing</b> the empty plate <b>No stacks yet</b> with <b>New stack</b>; <b>Failed</b> the red plate with <b>Retry</b>.
+                            Each fills the grid&rsquo;s height and its text is centred.
+                        </li>
+                        <li><b>Phone width</b>: one column; the buttons fold into <b>More</b> and the card keeps its height; long names wrap.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The plates are formal&rsquo;s own and the busy card its ruled ring. Check that no word touches an edge of its card and that
+                        the cards keep one height in every state.
+                    </p>
+                </div>
+                <div class="kv-controls" data-review-controls>
+                    <div role="group" aria-label="Cards">
+                        <b>The three cards:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-card="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-card="states" aria-pressed="false">
+                            Loading, empty, failed
+                        </button>
+                    </div>
+                    <div role="group" aria-label="Grid">
+                        <b>The grid:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-gstate="ready" aria-pressed="true">Cards</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-gstate="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-gstate="empty" aria-pressed="false">Nothing</button>
+                        <button type="button" class="kp-button kp-button--sm" data-kv-entity-gstate="error" aria-pressed="false">Failed</button>
+                    </div>
+                </div>
+                <p class="kv-label">Three cards in three states</p>
+                <div class="kp-entity-grid" data-kp-entity-grid id="kv-entity-cards" data-kp-entity-min="18rem"></div>
+                <div class="kv-pair">
+                    <div class="kv-case">
+                        <p class="kv-label">The grid in its states</p>
+                        <div class="kp-entity-grid" data-kp-entity-grid id="kv-entity-gstates" data-kp-entity-min="18rem"></div>
+                    </div>
+                    <div class="kv-case">
+                        <p class="kv-label">Phone width</p>
+                        <div class="kv-frame kv-frame--phone">
+                            <div class="kp-entity-grid" data-kp-entity-grid id="kv-entity-phone"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+

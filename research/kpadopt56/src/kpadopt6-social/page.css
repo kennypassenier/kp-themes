@@ -1,0 +1,181 @@
+/* research/kpadopt6-social: the page's own frame. Everything with a kp- class is the package; these ks- rules only lay the
+   sections out, frame the widths and draw the readouts. */
+
+.ks-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.ks-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.ks-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.ks-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.ks-sec {
+    container: ks-sec / inline-size;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+    color: var(--foreground);
+}
+
+.ks-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.ks-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.ks-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.ks-label {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 600;
+}
+
+.ks-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.ks-controls [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+}
+
+.ks-controls [role='group'] > b {
+    min-inline-size: 9rem;
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.ks-readout {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-variant-numeric: tabular-nums;
+}
+
+.ks-stack {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: var(--kp-space-sm, 0.5rem);
+    min-inline-size: 0;
+}
+
+.ks-pair {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) min(390px, 100%);
+    gap: var(--kp-space-xl, 2rem);
+    align-items: start;
+}
+
+.ks-pair > * {
+    min-inline-size: 0;
+}
+
+@container ks-sec (max-width: 64rem) {
+    .ks-pair {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.ks-frame {
+    box-sizing: border-box;
+    min-inline-size: 0;
+    padding: var(--kp-space-sm, 0.5rem);
+    border: 1px dashed var(--border-strong);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.ks-frame--phone {
+    inline-size: 390px;
+    max-inline-size: 100%;
+}
+
+/* A list that scrolls inside its frame, so a sticky bar has something to stick to. */
+.ks-scroll {
+    max-block-size: 22rem;
+    overflow: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+}
+
+/* A parked sentence under a control group. */
+.ks-note {
+    margin: 0;
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* Sample lists in a row of equal cards. */
+.ks-trio {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 22rem), 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.ks-trio > * {
+    min-inline-size: 0;
+}
+
+/* The flex parent every component is also tried in (a container-type element needs an inline size to survive a flex row). */
+.ks-flexrow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.ks-flexrow > * {
+    flex: 1 1 18rem;
+    min-inline-size: 0;
+}
+
+/* The page's own list the bar-only console hands its blocks to. */
+.ks-barlist {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.ks-barlist > li {
+    padding: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    overflow-wrap: anywhere;
+}

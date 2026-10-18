@@ -1,0 +1,71 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Count 3 /Kids [6 0 R 8 0 R 10 0 R] >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+5 0 obj
+<< /Length 452 >>
+stream
+BT /F2 24 Tf 56 780 Td (Curriculum vitae) Tj ET
+BT /F2 13 Tf 56 746 Td (Alex Verbeke  -  Frontend developer) Tj ET
+BT /F1 11 Tf 56 726 Td (Brussels  -  alex@example.test) Tj ET
+BT /F1 12 Tf 56 700 Td (Profile) Tj ET
+BT /F1 12 Tf 56 678 Td (Eight years building interfaces for logistics and healthcare teams.) Tj ET
+BT /F1 12 Tf 56 656 Td (I care about accessible forms, honest loading states and tables that stay readable with ten thousand rows.) Tj ET
+endstream
+endobj
+6 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 5 0 R >>
+endobj
+7 0 obj
+<< /Length 428 >>
+stream
+BT /F2 24 Tf 56 780 Td (Experience) Tj ET
+BT /F2 13 Tf 56 746 Td (Senior frontend developer, Harbour Systems (2021 - now)) Tj ET
+BT /F1 12 Tf 56 726 Td (Led the move of a dispatch dashboard to a shared component kit.) Tj ET
+BT /F1 12 Tf 56 704 Td (Cut the time to first row from 4.1 s to 1.2 s with streaming tables.) Tj ET
+BT /F1 12 Tf 56 682 Td (Coached four junior developers; wrote the team's accessibility checklist.) Tj ET
+endstream
+endobj
+8 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 7 0 R >>
+endobj
+9 0 obj
+<< /Length 329 >>
+stream
+BT /F2 24 Tf 56 780 Td (Skills and education) Tj ET
+BT /F2 13 Tf 56 746 Td (MSc Computer Science, KU Leuven) Tj ET
+BT /F1 12 Tf 56 726 Td (JavaScript and TypeScript, CSS architecture, design tokens) Tj ET
+BT /F1 12 Tf 56 704 Td (Rust for small services, SQL, Docker) Tj ET
+BT /F1 12 Tf 56 682 Td (Dutch, English and French) Tj ET
+endstream
+endobj
+10 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 9 0 R >>
+endobj
+xref
+0 11
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000128 00000 n 
+0000000198 00000 n 
+0000000273 00000 n 
+0000000776 00000 n 
+0000000912 00000 n 
+0000001391 00000 n 
+0000001527 00000 n 
+0000001907 00000 n 
+trailer
+<< /Size 11 /Root 1 0 R >>
+startxref
+2044
+%%EOF
