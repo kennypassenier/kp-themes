@@ -22621,7 +22621,9 @@
 
     .kp-code__tools {
         display: flex;
-        flex-wrap: nowrap;
+        /* The tools wrap onto a second line when the box is narrower than they are (a phone-wide inspector): each button keeps
+         * its label on one line, and none runs out of the box [t56-words-1018]. */
+        flex-wrap: wrap;
         align-items: center;
         gap: var(--kp-space-xs, 0.25rem);
     }
