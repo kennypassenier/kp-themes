@@ -21,39 +21,46 @@
 // 3. The page republished with a new round id that lists the old one as received (the page is intercepted, nothing
 //    on disk changes): the journal still holds both notes, and the Agenda says the answer was received.
 //
-// 4. The dialog's layout (Kenny, 2026-10-18 15:15: "99% fullscreen ... maximum coverage and use of the screen"). At every
-//    width (1920x1080, 1280x800, 390x844) the dialog and the page have no horizontal scroll. With the layout options on
-//    (`--rvui all`, or a list such as `--rvui fill,look`; they are off by default, so a live part is judged as before):
-//    `fill`: the dialog uses at least 97% of the viewport's width and height; `look`: no look-at paragraph appears twice
-//    in a step's rows; and at 1920x1080 the component of the first section starts within the first 40% of the dialog's
-//    height, so the component is what the reviewer sees first.
+// 4. The dialog's layout (Kenny, 2026-10-18 15:15 to 16:27: "Kijk naar de screenshot en zeg me dat dat 99% schermvullend
+//    is die dialoog?"), measured at 1920x965, 1280x800 and 390x844 on the first open step: the dialog is at most 6 px from
+//    every window edge on a desktop and 0 on a phone; it has ONE header row, at most 44 px on a desktop; the verdict panel
+//    is at most 320 px wide; the first lane's frame starts within 120 px of the dialog's top on a desktop; the components'
+//    frames on screen together are the largest area, each horizontally centred in the stage (within 8 px), and nothing of
+//    the kit lies over them; every component carries exactly ONE toolbar, its groups on one row, on the frame's top edge (within 8 px),
+//    and never a toolbar inside another box of controls; no region of 120 by 120 px or more is empty, in the dialog or in
+//    a frame; no dialog is shown inside the dialog (no nested preview); the look-at paragraph stands once per step; and
+//    nothing scrolls sideways.
 //
 // Run (a static server on the repository root first):
-//   node research/_review/check-kit.mjs <port> <research/topic/demo.html> [--rvui all|fill,look,...]
+//   node research/_review/check-kit.mjs <port> <research/topic/demo.html>
 import { createRequire } from 'node:module';
 
 const require = createRequire('/home/kenny/Projects/kp-themes/node_modules/');
 const { firefox } = require('playwright-core');
-const args = process.argv.slice(2);
-const flagAt = args.indexOf('--rvui');
-const RVUI = flagAt >= 0 ? args.splice(flagAt, 2)[1] || '' : '';
-const [port, path] = args;
+const [port, path] = process.argv.slice(2);
 if (!port || !path) {
-    console.error('usage: node research/_review/check-kit.mjs <port> <research/topic/demo.html> [--rvui all|fill,look,...]');
+    console.error('usage: node research/_review/check-kit.mjs <port> <research/topic/demo.html>');
     process.exit(2);
 }
-/** The layout options that are on for this run (the link forces them for the visit, the page keeps nothing). */
-const ON = new Set(RVUI.split(',').flatMap((part) => (part === 'all' ? ['fill', 'titles', 'look', 'controls', 'intro', 'rail', 'jump'] : [part.trim()])).filter(Boolean));
-/** The least share of the viewport the dialog uses with `fill` on, and how high the component starts (Kenny, 2026-10-18 15:15). */
-const MIN_FILL = 0.97;
-const MAX_COMPONENT_SHARE = 0.4;
+/** The dialog's measurable layout (Kenny, 2026-10-18 16:27; DEMO_RULES ch. 7). */
+const LAYOUT = {
+    insetDesktop: 6,
+    insetPhone: 0,
+    headerMax: 44,
+    panelMax: 320,
+    frameTopMax: 120,
+    centreMax: 8,
+    toolbarEdgeMax: 8,
+    rowSpreadMax: 4,
+    emptyMin: 120,
+};
 /** The most control groups one component may carry in the dialog (Kenny, 2026-10-18 07:11); more means split the section. */
 const MAX_GROUPS = 4;
 /** How far under its section's top the component may start, and how far under its controls (px). */
 const MAX_COMPONENT_TOP = 480;
 const MAX_CONTROLS_GAP = 48;
 const ORIGIN = `http://127.0.0.1:${port}`;
-const URL_ = `${ORIGIN}/${path}${RVUI ? `${path.includes('?') ? '&' : '?'}rvui=${RVUI}` : ''}`;
+const URL_ = `${ORIGIN}/${path}`;
 /** @type {string[]} */
 const faults = [];
 const fault = (/** @type {string} */ line) => faults.push(line);
@@ -93,7 +100,8 @@ async function openDialog() {
     await page.waitForSelector('[data-rv-open]');
     await page.waitForTimeout(800);
     await page.click('[data-rv-open]');
-    await page.waitForSelector('dialog.rv-dialog[open] [data-rv-list] .rv-row', { timeout: 15000 });
+    // Attached, not visible: on a phone the rows wait in the closed bottom sheet.
+    await page.waitForSelector('dialog.rv-dialog[open] [data-rv-list] .rv-row', { state: 'attached', timeout: 15000 });
     await page.waitForTimeout(800);
 }
 
@@ -199,7 +207,7 @@ async function readControls() {
                 if (doc) units.push({ doc, key, section: doc.querySelector(`[data-review-item="${CSS.escape(item)}"]`) });
                 else units.push({ doc: document, key, section: null });
             }
-            for (const el of dialog.querySelectorAll('[data-rv-stage] > [data-review-item]'))
+            for (const el of dialog.querySelectorAll('[data-rv-stage] .rv-lane > [data-review-item]'))
                 units.push({ doc: document, key: /** @type {HTMLElement} */ (el).dataset.rvPair || '', section: /** @type {HTMLElement} */ (el) });
             const shown = (/** @type {Element} */ el) => el.getClientRects().length > 0 && getComputedStyle(el).visibility !== 'hidden';
             const out = {
@@ -297,9 +305,13 @@ async function checkStep() {
             else if (!c.targetShown) fault(`${where}: ${name} shows controls for #${c.forId}, which is not visible in this step`);
             else {
                 if (c.overlapX <= 0 || c.gap === null || c.gap < -4 || c.gap > MAX_CONTROLS_GAP)
-                    fault(`${where}: the controls of ${name} are not at their component #${c.forId} (gap ${c.gap} px, overlap ${c.overlapX} px; at most ${MAX_CONTROLS_GAP} px, directly above)`);
+                    fault(
+                        `${where}: the controls of ${name} are not at their component #${c.forId} (gap ${c.gap} px, overlap ${c.overlapX} px; at most ${MAX_CONTROLS_GAP} px, directly above)`,
+                    );
                 if (c.targetTop !== null && c.targetTop > MAX_COMPONENT_TOP)
-                    fault(`${where}: in ${name} the component #${c.forId} starts ${c.targetTop} px under the section's top (at most ${MAX_COMPONENT_TOP}): the component is not first on screen`);
+                    fault(
+                        `${where}: in ${name} the component #${c.forId} starts ${c.targetTop} px under the section's top (at most ${MAX_COMPONENT_TOP}): the component is not first on screen`,
+                    );
             }
             perComponent.set(c.forId, (perComponent.get(c.forId) ?? 0) + c.groups);
         }
@@ -318,8 +330,11 @@ async function checkStep() {
 await openDialog();
 const demo = await page.evaluate(() => document.documentElement.dataset.review || '');
 // A control container outside every section drives no component the dialog could show it at.
-const stray = await page.evaluate(() => [...document.querySelectorAll('[data-review-controls]')].filter((el) => !el.closest('[data-review-item]')).length);
-if (stray) fault(`the page holds ${stray} control container(s) outside every judged section; they drive no component and the dialog shows them nowhere`);
+const stray = await page.evaluate(
+    () => [...document.querySelectorAll('[data-review-controls]')].filter((el) => !el.closest('[data-review-item]')).length,
+);
+if (stray)
+    fault(`the page holds ${stray} control container(s) outside every judged section; they drive no component and the dialog shows them nowhere`);
 const total = Number((await readStep()).position.match(/Step \d+\/(\d+)/)?.[1] || 1);
 for (let at = 0; at < total; at++) {
     const before = (await readStep()).position;
@@ -334,79 +349,238 @@ for (let at = 0; at < total; at++) {
 
 // ---------------------------------------------------------------- 4 · the layout at three widths
 for (const [width, height] of [
-    [1920, 1080],
+    [1920, 965],
     [1280, 800],
     [390, 844],
 ]) {
     await page.setViewportSize({ width, height });
     await openDialog();
-    // The first section's frame must have loaded to measure its component.
-    await page.waitForFunction(() => document.querySelector('dialog.rv-dialog .rv-lane iframe')?.contentDocument?.querySelector('[data-review-item]'), null, { timeout: 15000 }).catch(() => {});
-    await page.waitForTimeout(1200);
-    const layout = await page.evaluate(() => {
+    // The frames on screen must have loaded and laid their section out to measure the component and its toolbar.
+    await page
+        .waitForFunction(
+            () => document.querySelector('dialog.rv-dialog .rv-lane iframe')?.contentDocument?.querySelector('[data-rv-compact]'),
+            null,
+            {
+                timeout: 15000,
+            },
+        )
+        .catch(() => {});
+    await page.waitForTimeout(1500);
+    const layout = await page.evaluate((L) => {
         const dialog = /** @type {HTMLDialogElement} */ (document.querySelector('dialog.rv-dialog'));
         const box = dialog.getBoundingClientRect();
-        const norm = (/** @type {string} */ t) => t.replace(/\s+/g, ' ').trim();
-        const looks = [...dialog.querySelectorAll('[data-rv-list] .rv-row__look')].map((el) => norm(el.textContent || ''));
-        const lane = dialog.querySelector('.rv-lane iframe');
-        const doc = /** @type {HTMLIFrameElement | null} */ (lane)?.contentDocument;
-        const section = doc?.querySelector('[data-review-item]');
-        const forId = section?.querySelector('[data-review-controls]')?.getAttribute('data-review-controls-for');
-        const component = forId ? section?.querySelector(`#${CSS.escape(forId)}`) : null;
-        const top = component && lane ? lane.getBoundingClientRect().top + component.getBoundingClientRect().top - box.top : null;
-        // The component is the most important part of the screen (Kenny, 2026-10-18 15:26): its frame is the largest area of
-        // the dialog, it is centred in the stage, and no chrome of the kit lies over it.
+        const shown = (/** @type {Element} */ el) => {
+            const view = el.ownerDocument.defaultView;
+            for (let p = /** @type {Element | null} */ (el); p; p = p.parentElement) {
+                const cs = /** @type {Window} */ (view).getComputedStyle(p);
+                if (cs.display === 'none' || cs.visibility === 'hidden' || Number(cs.opacity) === 0) return false;
+            }
+            const r = el.getBoundingClientRect();
+            return r.width >= 1 && r.height >= 1;
+        };
+        const stage = /** @type {HTMLElement} */ (dialog.querySelector('[data-rv-stage]'));
         const view = /** @type {HTMLElement} */ (dialog.querySelector('.rv-dialog__view')).getBoundingClientRect();
-        const clip = (/** @type {DOMRect} */ r) => ({
+        const clip = (/** @type {{ left: number, right: number, top: number, bottom: number }} */ r) => ({
             left: Math.max(r.left, view.left),
             right: Math.min(r.right, view.right),
             top: Math.max(r.top, view.top),
             bottom: Math.min(r.bottom, view.bottom),
         });
-        const frameBox = lane ? clip(lane.getBoundingClientRect()) : null;
-        const area = (/** @type {{ left: number, right: number, top: number, bottom: number } | null} */ r) => (r ? Math.max(0, r.right - r.left) * Math.max(0, r.bottom - r.top) : 0);
-        const chrome = ['.rv-dialog__head', '.rv-dialog__side'].map((sel) => {
-            const r = dialog.querySelector(sel)?.getBoundingClientRect();
-            return r ? r.width * r.height : 0;
-        });
-        let centred = null;
+        const area = (/** @type {{ left: number, right: number, top: number, bottom: number }} */ r) =>
+            Math.max(0, r.right - r.left) * Math.max(0, r.bottom - r.top);
+        // 1 · how far the dialog stands from each edge of the window
+        const inset = Math.max(box.top, box.left, innerWidth - box.right, innerHeight - box.bottom);
+        // 2 · one header row: the head is the only visible part above the body, and its height
+        const head = /** @type {HTMLElement} */ (dialog.querySelector('.rv-dialog__head'));
+        const rows = [...dialog.children].filter((el) => shown(el) && !el.matches('.rv-dialog__grid, [popover], .rvk-pop, .rvk-toast')).length;
+        const side = /** @type {HTMLElement} */ (dialog.querySelector('.rv-dialog__side'));
+        // 3 · the components' frames: the first one's top, all of them together the largest area, each centred in the stage
+        const frames = /** @type {HTMLIFrameElement[]} */ ([...dialog.querySelectorAll('.rv-lane iframe')]).filter(shown);
+        const ranked = frames.map((f) => ({ f, r: f.getBoundingClientRect() })).filter(({ r }) => area(clip(r)) > 0);
+        const main = ranked[0];
+        const st = stage.getBoundingClientRect();
+        let largestOther = 0;
+        let largestName = '';
+        if (main)
+            for (const el of dialog.querySelectorAll('*')) {
+                if (el.closest('.rv-lane') || frames.some((f) => el.contains(f)) || !shown(el) || /^(script|style)$/i.test(el.tagName)) continue;
+                const r = el.getBoundingClientRect();
+                const a = area({
+                    left: Math.max(r.left, box.left),
+                    right: Math.min(r.right, box.right),
+                    top: Math.max(r.top, box.top),
+                    bottom: Math.min(r.bottom, box.bottom),
+                });
+                if (a > largestOther) {
+                    largestOther = a;
+                    largestName = `${el.tagName.toLowerCase()}.${[...el.classList].join('.')}`;
+                }
+            }
         let covered = false;
-        if (component && lane) {
-            const c = component.getBoundingClientRect();
-            const l = lane.getBoundingClientRect();
-            const outer = { left: l.left + c.left, right: l.left + c.right, top: l.top + c.top, bottom: l.top + c.bottom };
-            const shown = clip(/** @type {DOMRect} */ (/** @type {unknown} */ (outer)));
-            centred = Math.abs((outer.left + outer.right) / 2 - (view.left + view.right) / 2) / view.width;
-            if (area(shown) > 0) {
-                const hit = document.elementFromPoint((shown.left + shown.right) / 2, (shown.top + shown.bottom) / 2);
-                covered = hit !== lane;
+        if (main) {
+            const c = clip(main.r);
+            if (area(c) > 0) covered = document.elementFromPoint((c.left + c.right) / 2, (c.top + c.bottom) / 2) !== main.f;
+        }
+        // 4 · the toolbars: per component exactly one, one row, on the frame's top edge, never inside another box of controls
+        /** @type {string[]} */
+        const toolbars = [];
+        for (const { f, r } of ranked) {
+            const doc = f.contentDocument;
+            if (!doc || area(clip(r)) <= 0) continue;
+            const key = f.closest('[data-rv-pair]')?.getAttribute('data-rv-pair') || '?';
+            const boxes = [...doc.querySelectorAll('[data-review-controls]')].filter(shown);
+            /** @type {Map<string, number>} */
+            const per = new Map();
+            for (const b of boxes)
+                per.set(b.getAttribute('data-review-controls-for') || '', (per.get(b.getAttribute('data-review-controls-for') || '') ?? 0) + 1);
+            for (const [id, n] of per) if (n !== 1) toolbars.push(`${key}: ${n} toolbars for #${id}`);
+            for (const b of boxes) {
+                if (b.parentElement?.closest('[data-review-controls]')) toolbars.push(`${key}: a toolbar inside another box of controls`);
+                const groups = [...b.querySelectorAll('[role="group"]')].filter(shown).filter((g) => !g.parentElement?.closest('[role="group"]'));
+                const tops = groups.map((g) => g.getBoundingClientRect().top);
+                const spread = tops.length ? Math.max(...tops) - Math.min(...tops) : 0;
+                if (spread > L.rowSpreadMax)
+                    toolbars.push(`${key}: the toolbar's ${groups.length} groups stand on more than one row (${Math.round(spread)} px apart)`);
+                // Label and buttons on one line: every part of the group shares one band of height.
+                const labelled = groups.filter((g) => {
+                    const items = [...g.children].filter(shown).map((c) => c.getBoundingClientRect());
+                    return items.length > 1 && Math.max(...items.map((i) => i.top)) >= Math.min(...items.map((i) => i.bottom));
+                });
+                if (labelled.length) toolbars.push(`${key}: ${labelled.length} group(s) put their label and buttons on more than one line`);
+                if (boxes.length === 1 && b.getBoundingClientRect().top > L.toolbarEdgeMax)
+                    toolbars.push(
+                        `${key}: the toolbar stands ${Math.round(b.getBoundingClientRect().top)} px under the frame's top edge (at most ${L.toolbarEdgeMax})`,
+                    );
             }
         }
-        return {
-            frameArea: area(frameBox),
-            chromeArea: Math.max(...chrome),
-            centred,
-            covered,
-            width: box.width / innerWidth,
-            height: box.height / innerHeight,
-            dialogScroll: dialog.scrollWidth - dialog.clientWidth,
-            pageScroll: document.documentElement.scrollWidth - innerWidth,
-            duplicates: looks.length - new Set(looks).size,
-            componentShare: top === null ? null : top / box.height,
-            componentTop: top === null ? null : Math.round(top),
+        // 5 · no empty region of 120 by 120 px or more, in the dialog and in the frames
+        const CONTENT = 'img,canvas,svg,video,input,select,textarea,button,iframe,picture';
+        const hasText = (/** @type {Element} */ el) => {
+            const walk = el.ownerDocument.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+            for (let n = walk.nextNode(); n; n = walk.nextNode()) if (n.nodeValue?.trim() && n.parentElement && shown(n.parentElement)) return true;
+            return false;
         };
-    });
+        /** @type {string[]} */
+        const empty = [];
+        const scan = (/** @type {ParentNode} */ root, /** @type {number} */ dx, /** @type {number} */ dy, /** @type {string} */ where) => {
+            /** @type {Element[]} */
+            const kept = [];
+            for (const el of root.querySelectorAll('*')) {
+                if (/^(script|style|option|html|body|head|link|meta|title)$/i.test(el.tagName) || !shown(el)) continue;
+                const r = el.getBoundingClientRect();
+                const c = {
+                    left: Math.max(r.left + dx, box.left),
+                    right: Math.min(r.right + dx, box.right),
+                    top: Math.max(r.top + dy, box.top),
+                    bottom: Math.min(r.bottom + dy, box.bottom),
+                };
+                if (c.right - c.left < L.emptyMin || c.bottom - c.top < L.emptyMin) continue;
+                if (el.matches(CONTENT) || hasText(el) || [...el.querySelectorAll(CONTENT)].some(shown) || kept.some((k) => k.contains(el))) continue;
+                kept.push(el);
+                empty.push(
+                    `${where}${el.tagName.toLowerCase()}.${[...el.classList].slice(0, 2).join('.')} ${Math.round(c.right - c.left)}x${Math.round(c.bottom - c.top)}`,
+                );
+            }
+        };
+        scan(dialog, 0, 0, '');
+        for (const { f, r } of ranked) if (f.contentDocument) scan(f.contentDocument, r.left, r.top, 'in a frame: ');
+        // A blank band across a frame: from top to bottom, every stretch of 120 px or more in which nothing is drawn (no
+        // text, no control, no picture, no painted leaf such as a bar or a box), the body and every wrapper aside, so room
+        // a demo keeps free under its component counts (Kenny, 2026-10-18 16:27: "al die rode vlakken die open zijn").
+        for (const { f, r } of ranked) {
+            const doc = f.contentDocument;
+            if (!doc || area(clip(r)) <= 0) continue;
+            const painted = (/** @type {Element} */ el) => {
+                const cs = /** @type {Window} */ (doc.defaultView).getComputedStyle(el);
+                return (
+                    (cs.backgroundColor !== 'rgba(0, 0, 0, 0)' && cs.backgroundColor !== 'transparent') ||
+                    parseFloat(cs.borderTopWidth) > 0 ||
+                    cs.backgroundImage !== 'none'
+                );
+            };
+            const marks = [...doc.querySelectorAll('[data-rv-compact] *')]
+                .filter((el) => shown(el) && !/^(script|style)$/i.test(el.tagName))
+                .filter(
+                    (el) =>
+                        el.matches(CONTENT) ||
+                        [...el.childNodes].some((n) => n.nodeType === 3 && n.nodeValue?.trim()) ||
+                        (!el.querySelector('*') && painted(el)),
+                )
+                .map((el) => el.getBoundingClientRect())
+                .sort((a, b) => a.top - b.top);
+            let reach = 0;
+            for (const m of marks) {
+                if (m.top - reach >= L.emptyMin)
+                    empty.push(
+                        `a blank band in the frame of ${f.closest('[data-rv-pair]')?.getAttribute('data-rv-pair')}, ${Math.round(reach)} to ${Math.round(m.top)} px`,
+                    );
+                reach = Math.max(reach, m.bottom);
+            }
+            if (r.height - reach >= L.emptyMin)
+                empty.push(
+                    `a blank band at the foot of the frame of ${f.closest('[data-rv-pair]')?.getAttribute('data-rv-pair')}, ${Math.round(reach)} to ${Math.round(r.height)} px`,
+                );
+        }
+        // 6 · no dialog inside the dialog
+        const nested =
+            [...dialog.querySelectorAll('dialog[open]')].length +
+            frames.filter((f) => f.contentDocument?.querySelector('dialog.rv-dialog, dialog[open].rv-dialog') || /rv-preview/.test(f.src)).length;
+        // 7 · the look-at paragraph once per step
+        const norm = (/** @type {string} */ t) => t.replace(/\s+/g, ' ').trim();
+        const looks = [...dialog.querySelectorAll('[data-rv-look]:not([hidden]) [data-rv-look-text], [data-rv-list] .rv-row__look')]
+            .map((el) => norm(el.textContent || ''))
+            .filter(Boolean);
+        return {
+            inset,
+            rows,
+            headH: head.getBoundingClientRect().height,
+            panelW: shown(side) ? side.getBoundingClientRect().width : 0,
+            frameTop: main ? main.r.top - box.top : null,
+            frameArea: ranked.reduce((sum, { r }) => sum + area(clip(r)), 0),
+            largestOther,
+            largestName,
+            centre: ranked.length ? Math.max(...ranked.map(({ r }) => Math.abs(r.left - st.left - (st.right - r.right)))) : null,
+            covered,
+            toolbars,
+            empty,
+            nested,
+            duplicates: looks.length - new Set(looks).size,
+            dialogScroll: dialog.scrollWidth - dialog.clientWidth,
+            pageScroll: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+            frameScroll: frames
+                .map((f) => (f.contentDocument ? f.contentDocument.documentElement.scrollWidth - f.contentDocument.documentElement.clientWidth : 0))
+                .reduce((a, b) => Math.max(a, b), 0),
+        };
+    }, LAYOUT);
     const at = `at ${width}x${height}`;
-    if (layout.dialogScroll > 1 || layout.pageScroll > 1) fault(`${at}: the dialog scrolls sideways (${layout.dialogScroll} px in the dialog, ${layout.pageScroll} px on the page)`);
-    if (ON.has('fill') && (layout.width < MIN_FILL || layout.height < MIN_FILL))
-        fault(`${at}: the dialog uses ${(layout.width * 100).toFixed(1)}% of the width and ${(layout.height * 100).toFixed(1)}% of the height (at least ${MIN_FILL * 100}%)`);
-    if (ON.has('look') && layout.duplicates > 0) fault(`${at}: ${layout.duplicates} look-at paragraph(s) repeat inside one step; it is shown once for the theme`);
-    if (RVUI && layout.frameArea < layout.chromeArea)
-        fault(`${at}: the component's frame shows ${Math.round(layout.frameArea)} px² and the kit's own chrome ${Math.round(layout.chromeArea)} px²; the component must be the largest area`);
-    if (layout.centred !== null && layout.centred > 0.05) fault(`${at}: the component is ${(layout.centred * 100).toFixed(1)}% of the stage's width off its centre`);
+    const desktop = width > 768;
+    const r1 = (/** @type {number} */ n) => Math.round(n * 10) / 10;
+    console.log(
+        `  ${at}: inset ${r1(layout.inset)} px, header ${layout.rows} row ${r1(layout.headH)} px, panel ${r1(layout.panelW)} px, frame top ${layout.frameTop === null ? '-' : r1(layout.frameTop)} px, frame ${Math.round(layout.frameArea)} px² vs next ${Math.round(layout.largestOther)} px², off centre ${layout.centre === null ? '-' : r1(layout.centre)} px`,
+    );
+    if (layout.inset > (desktop ? LAYOUT.insetDesktop : LAYOUT.insetPhone))
+        fault(
+            `${at}: the dialog stands ${r1(layout.inset)} px from the window's edge (at most ${desktop ? LAYOUT.insetDesktop : LAYOUT.insetPhone})`,
+        );
+    if (layout.rows !== 1) fault(`${at}: the dialog shows ${layout.rows} rows above its body; there is one header row`);
+    if (desktop && layout.headH > LAYOUT.headerMax) fault(`${at}: the header row is ${r1(layout.headH)} px high (at most ${LAYOUT.headerMax})`);
+    if (desktop && layout.panelW > LAYOUT.panelMax) fault(`${at}: the verdict panel is ${r1(layout.panelW)} px wide (at most ${LAYOUT.panelMax})`);
+    if (layout.frameTop === null) fault(`${at}: no component frame is on screen`);
+    else if (desktop && layout.frameTop > LAYOUT.frameTopMax)
+        fault(`${at}: the component's frame starts ${r1(layout.frameTop)} px under the dialog's top (at most ${LAYOUT.frameTopMax})`);
+    if (layout.frameArea < layout.largestOther)
+        fault(`${at}: the components' frames are not the largest area on screen (${layout.largestName} is larger)`);
+    if (layout.centre !== null && layout.centre > LAYOUT.centreMax)
+        fault(`${at}: the component's frame is ${r1(layout.centre)} px off the stage's centre`);
     if (layout.covered) fault(`${at}: something of the kit's chrome lies over the component`);
-    if (width === 1920 && RVUI && layout.componentShare !== null && layout.componentShare > MAX_COMPONENT_SHARE)
-        fault(`${at}: the component of the first section starts ${layout.componentTop} px under the dialog's top (${(layout.componentShare * 100).toFixed(0)}% of its height, at most ${MAX_COMPONENT_SHARE * 100}%)`);
+    for (const line of layout.toolbars) fault(`${at}: ${line}`);
+    for (const line of layout.empty) fault(`${at}: an empty region: ${line}`);
+    if (layout.nested) fault(`${at}: a dialog is shown inside the dialog`);
+    if (layout.duplicates > 0) fault(`${at}: ${layout.duplicates} look-at paragraph(s) repeat inside one step; it is shown once`);
+    if (layout.dialogScroll > 1 || layout.pageScroll > 1 || layout.frameScroll > 1)
+        fault(
+            `${at}: something scrolls sideways (${layout.dialogScroll} px in the dialog, ${layout.pageScroll} px on the page, ${layout.frameScroll} px in a frame)`,
+        );
 }
 await page.setViewportSize({ width: 1600, height: 950 });
 

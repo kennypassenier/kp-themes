@@ -369,7 +369,7 @@ dialog.rv-dialog.kp-dialog {
 /* The section's words on one line; More opens them at the lane's full width. A line that does not fit fades out at its
    end instead of being cut with an ellipsis. */
 .rv-lane__intro {
-    flex: 1 1 12rem;
+    flex: 1 1 6rem;
     min-inline-size: 0;
     margin: 0;
     overflow: hidden;
@@ -381,6 +381,32 @@ dialog.rv-dialog.kp-dialog {
 
 .rv-lane__head:has(> .rv-lane__more:not([hidden])) .rv-lane__intro {
     mask-image: linear-gradient(to right, #000 calc(100% - 3rem), transparent);
+}
+
+/* The section's Expected text, opened with More, under the words at the lane's whole width. */
+.rv-lane__expected {
+    flex: 1 1 100%;
+    order: 10;
+    margin: 0 0 0.375rem;
+    padding: 0.375rem 0.75rem;
+    border-inline-start: 3px solid var(--border);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--muted-foreground);
+}
+
+.rv-lane__expected :is(p, ul, ol) {
+    margin-block: 0.25rem;
+    max-inline-size: none;
+}
+
+.rv-lane__expected b {
+    color: var(--foreground);
+}
+
+/* Open, the head is read in place, not carried along over the component. */
+.rv-lane[data-rv-open] .rv-lane__head {
+    position: static;
 }
 
 .rv-lane[data-rv-open] .rv-lane__intro {
@@ -547,6 +573,9 @@ html[data-rv-lane] .cat-main {
 
 [data-rv-ctl] [role='group'] > :is(b, strong, label, .kc-label, span:not(.kp-segmented)) {
     flex: none;
+    /* The demo's own label column (a min width that lines labels up under each other) has no meaning in one row. */
+    min-inline-size: 0 !important;
+    inline-size: auto !important;
     margin: 0;
     font-size: 0.75rem;
     font-weight: 600;
@@ -568,27 +597,12 @@ html[data-rv-lane] .cat-main {
     --kp-seg-size: 0.75rem;
 }
 
-/* The Expected block, under the component, at the frame's full width. */
-[data-rv-compact] > [data-rv-expected] {
-    max-inline-size: none !important;
-    margin: 0.75rem 0 0 !important;
-    padding: 0.5rem 0.75rem !important;
-    border: 0 !important;
-    border-inline-start: 3px solid var(--border) !important;
-    border-radius: 0 !important;
-    background: none !important;
-    font-size: 0.8125rem;
-    line-height: 1.5;
-    color: var(--muted-foreground);
-}
-
-[data-rv-expected] :is(p, ul, ol) {
-    max-inline-size: none !important;
-    margin-block: 0.25rem;
-}
-
-[data-rv-expected] b {
-    color: var(--foreground);
+/* Room a demo keeps free under a picker for its opening panel stays out of the dialog while nothing in it is open: the
+   frame grows when the panel opens (block-tools.js isolate) instead of showing an empty area (Kenny, 2026-10-18 16:27). A
+   sample shown opened keeps its room, so its list never lies over what follows. A demo marks such room with
+   `data-review-room`; a class named `…-room` or `…--tall` (the kpadopt5/6 pickers and groups) counts as such. */
+[data-rv-compact] :is([data-review-room], [class*='-room'], [class*='--tall']):not(:has([popover]:popover-open, [aria-expanded='true'])) {
+    min-block-size: 0 !important;
 }
 
 /* --- The verdict panel: what to look at once, one compact row per section, Previous / Next / Approve pinned at its foot. */
@@ -823,8 +837,9 @@ html[data-rv-lane] .cat-main {
     white-space: nowrap;
 }
 
-.rv-dialog__wide {
+.rv-dialog .rv-dialog__wide {
     grid-column: 1 / -1;
+    white-space: normal;
 }
 
 /* A catalogue block, in its own document so it wears its own theme. */
@@ -951,11 +966,11 @@ html[data-rv-lane] .cat-main {
         background: var(--border-strong, var(--border));
     }
 
-    .rv-dialog[data-rv-sheet='closed'] .rv-dialog__scroll {
+    .rv-dialog[data-rv-sheet-state='closed'] .rv-dialog__scroll {
         display: none;
     }
 
-    .rv-dialog[data-rv-sheet='open'] .rv-dialog__side {
+    .rv-dialog[data-rv-sheet-state='open'] .rv-dialog__side {
         position: absolute;
         inset-inline: 0;
         inset-block-end: 0;

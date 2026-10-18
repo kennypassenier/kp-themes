@@ -463,8 +463,43 @@ export async function isolate(frame, item, theme) {
     let echoes = 0;
     // The body's own height and overflow, never the document's scroll height: that is at least the frame's own height,
     // so a section that got shorter (the dialog lays it out once it has loaded) left a blank band under it.
+    // Room for a panel that opens over what follows (a picker's list, a menu): given the moment an opener is pressed or
+    // focused, so the panel finds space under its opener instead of flipping over the section, and taken back once
+    // nothing is open (Kenny, 2026-10-18 16:27: no empty areas held in reserve). An open panel's own bottom counts too.
+    const OPENERS = '[role="combobox"], [aria-haspopup]:not([aria-haspopup="false"]), [popovertarget], [data-kp-combobox] input';
+    const ROOM = 448;
+    let room = 0;
+    const panels = () =>
+        [...section.querySelectorAll('[popover]:popover-open, dialog[open], [role="listbox"], [role="menu"]')].filter((el) => {
+            const r = el.getBoundingClientRect();
+            // A list that floats over what follows; one in the flow is part of the section's own height.
+            return r.width > 0 && r.height > 0 && /^(fixed|absolute)$/.test(getComputedStyle(el).position);
+        });
+    let granted = 0;
+    const opening = (/** @type {Event} */ event) => {
+        const from = /** @type {Element} */ (event.target);
+        if (!from.closest?.(OPENERS) || from.closest('[data-review-controls]') || room) return;
+        room = ROOM;
+        granted = performance.now();
+        fit();
+    };
+    /** Something of the section is open or about to open: an opener holds the focus, or a panel is shown. */
+    const inUse = () =>
+        Boolean(doc.activeElement?.closest?.(OPENERS) && section.contains(doc.activeElement)) || panels().some((el) => !el.closest('[data-rv-off]'));
+    section.addEventListener('pointerdown', opening, true);
+    section.addEventListener('focusin', opening, true);
+    const settleRoom = () => {
+        if (room && performance.now() - granted > 800 && !inUse()) {
+            room = 0;
+            fit();
+        }
+    };
+    section.addEventListener('focusout', () => setTimeout(settleRoom, 300));
+    setInterval(() => frame.isConnected && settleRoom(), 1000);
     const fit = () => {
-        const next = Math.ceil(Math.max(doc.body.scrollHeight, doc.body.getBoundingClientRect().height));
+        const content = Math.max(doc.body.scrollHeight, doc.body.getBoundingClientRect().height);
+        const panelBottom = Math.max(0, ...panels().map((el) => el.getBoundingClientRect().bottom + 16));
+        const next = Math.ceil(Math.max(content + room, panelBottom));
         const grew = next - last;
         echoes = grew > 0 && grew === step ? echoes + 1 : 0;
         step = grew;
@@ -473,5 +508,16 @@ export async function isolate(frame, item, theme) {
         frame.style.blockSize = `${next}px`;
     };
     new ResizeObserver(fit).observe(doc.body);
+    // A panel that opens over what follows (a picker's list) changes no box the observer sees: the frame follows the
+    // section's changes too, once a frame, so it grows while the panel is open and shrinks after.
+    let queued = false;
+    new MutationObserver(() => {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(() => {
+            queued = false;
+            fit();
+        });
+    }).observe(section, { subtree: true, childList: true, attributes: true, attributeFilter: ['class', 'hidden', 'open', 'aria-expanded', 'style'] });
     fit();
 }

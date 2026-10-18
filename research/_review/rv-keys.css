@@ -124,6 +124,13 @@
     box-shadow: 0 0.5rem 1.5rem color-mix(in srgb, var(--foreground) 22%, transparent);
 }
 
+/* The kit's own overlays are not a theme's arriving part: no theme reveal (a clip-path wipe) runs on them. */
+.rvk-pop,
+.rvk-toast {
+    clip-path: none !important;
+    animation: none !important;
+}
+
 .rvk-pop[hidden],
 .rvk-toast[hidden] {
     display: none;
@@ -132,7 +139,7 @@
 .rvk-pop {
     inset-block-start: calc(var(--rv-head-h, 44px) + 0.25rem);
     inset-inline-end: 0.5rem;
-    inline-size: min(30rem, calc(100% - 1rem));
+    inline-size: min(calc(var(--rv-panel-w, 20rem) - 1rem), calc(100% - 1rem));
     max-block-size: calc(100% - var(--rv-head-h, 44px) - 1rem);
     display: grid;
     grid-template-rows: auto minmax(0, 1fr);
@@ -195,7 +202,7 @@
 .rvk-toast {
     inset-block-end: 7.5rem;
     inset-inline-end: 0.5rem;
-    inline-size: min(var(--rv-panel-w, 20rem), calc(100% - 1rem));
+    inline-size: min(calc(var(--rv-panel-w, 20rem) - 1rem), calc(100% - 1rem));
     display: flex;
     flex-wrap: wrap;
     align-items: center;

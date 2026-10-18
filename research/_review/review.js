@@ -1126,8 +1126,8 @@ dialog.innerHTML = `
         <span class="kp-badge rv-head__state" data-rv-state></span>
         <span class="rv-head__counts" data-rv-counts></span>
         <span class="rv-head__mini" role="group" aria-label="Step" data-rv-mini hidden>
-            <button type="button" class="kp-button kp-button--sm" data-rv-go="-1" aria-label="Previous step (←)" title="Previous step (←)">←</button>
-            <button type="button" class="kp-button kp-button--sm" data-rv-go="1" aria-label="Next step (→)" title="Next step (→)">→</button>
+            <button type="button" class="kp-button kp-button--sm" data-rv-mini-go="-1" aria-label="Previous step (←)" title="Previous step (←)">←</button>
+            <button type="button" class="kp-button kp-button--sm" data-rv-mini-go="1" aria-label="Next step (→)" title="Next step (→)">→</button>
             <button type="button" class="kp-button kp-button--sm kp-button--primary" data-rv-mini-approve>↑ Approve</button>
         </span>
         <span class="rv-head__tools" data-rv-tools>
@@ -1222,7 +1222,7 @@ const sheetButton = $('[data-rv-sheet]');
 function paintPanel() {
     const onPhone = phone();
     dialog.setAttribute('data-rv-panel', onPhone || panelOpen ? 'open' : 'closed');
-    dialog.setAttribute('data-rv-sheet', onPhone && sheetOpen ? 'open' : 'closed');
+    dialog.setAttribute('data-rv-sheet-state', onPhone && sheetOpen ? 'open' : 'closed');
     $('[data-rv-mini]').hidden = onPhone || panelOpen;
     const shown = onPhone ? sheetOpen : panelOpen;
     panelButton.setAttribute('aria-pressed', String(shown));
@@ -1826,11 +1826,18 @@ const isExpected = (/** @type {Element} */ el) => /(^|\s)\S*-expect(ed)?(\s|$)/.
 /**
  * What of a section goes to the lane's head: its heading, the paragraphs of its intro, and a "what changed" block. Read
  * from the section's own markup, so the head is filled before its frame has loaded.
- * @param {HTMLElement} section @returns {{ hide: Element[], changed: string[], intro: string[] }}
+ * @param {HTMLElement} section @returns {{ hide: Element[], changed: string[], intro: string[], expected: string }}
  */
 function shellOf(section) {
-    /** @type {{ hide: Element[], changed: string[], intro: string[] }} */
-    const out = { hide: [], changed: [], intro: [] };
+    /** @type {{ hide: Element[], changed: string[], intro: string[], expected: string }} */
+    const out = { hide: [], changed: [], intro: [], expected: '' };
+    // The Expected block leaves the frame too, for the lane's More (Kenny, 2026-10-18 16:27: no open areas in the frame;
+    // the component area holds only the component).
+    const expected = [...section.children].find(isExpected);
+    if (expected) {
+        out.hide.push(expected);
+        out.expected = expected.innerHTML;
+    }
     const paragraphs = (/** @type {Element} */ el) =>
         (el.matches('p') ? [el] : [...el.querySelectorAll('p')]).map((p) => p.innerHTML.trim()).filter(Boolean);
     for (const el of section.children) {
@@ -1870,6 +1877,7 @@ function layoutSection(section) {
     };
     mark(section, 'data-rv-compact');
     for (const el of shellOf(section).hide) mark(el, 'data-rv-shell');
+    const boxes = section.querySelectorAll('[data-review-controls]').length;
     for (const box of /** @type {NodeListOf<HTMLElement>} */ (section.querySelectorAll('[data-review-controls]'))) {
         const id = box.getAttribute('data-review-controls-for');
         // A page that names no component (an older demo) still shows its controls: at the block that follows them.
@@ -1891,14 +1899,51 @@ function layoutSection(section) {
         }
         if (box.nextElementSibling !== block) put(box, section, block);
         if (target) mark(target, 'data-rv-component');
+        // The section's only toolbar goes on the frame's top edge, directly above its component: what the demo put between
+        // them (a status line, a readout) moves under the component.
+        if (boxes === 1) {
+            if (section.firstElementChild !== box) put(box, section, section.firstElementChild);
+            const between = [];
+            for (let el = box.nextElementSibling; el && el !== block; el = el.nextElementSibling) between.push(el);
+            let after = block;
+            for (const el of between) {
+                if (el.matches('script, style, template, [data-rv-shell], [data-review-look]')) continue;
+                put(el, section, after.nextSibling ? after.nextSibling : null);
+                after = el;
+            }
+        }
         toolbar(box, mark, undo);
     }
-    // The Expected block under the component (before the catalogue's own judge panel, which the dialog hides).
-    const expected = [...section.children].find(isExpected);
-    if (expected) {
-        put(expected, section, [...section.children].find((el) => el.matches('.cat-judge')) ?? null);
-        mark(expected, 'data-rv-expected');
-    }
+    // A sample shown opened keeps exactly the room its open list needs, no more: the demo's own reserve (sized for the
+    // longest list) left a blank band under a shorter one.
+    const ROOMS = '[data-review-room], [class*="-room"], [class*="--tall"]';
+    const fitRooms = () => {
+        if (!section.isConnected) return;
+        for (const room of /** @type {NodeListOf<HTMLElement>} */ (section.querySelectorAll(ROOMS))) {
+            const open = [...room.querySelectorAll('[popover]:popover-open')].map((el) => el.getBoundingClientRect()).filter((r) => r.height > 0);
+            if (!open.length) {
+                room.style.removeProperty('min-block-size');
+                continue;
+            }
+            room.style.removeProperty('min-block-size');
+            const need = Math.max(...open.map((r) => r.bottom)) - room.getBoundingClientRect().top + 12;
+            room.style.setProperty('min-block-size', `${Math.ceil(need)}px`);
+        }
+    };
+    const view = section.ownerDocument.defaultView;
+    const onToggle = () => view?.requestAnimationFrame(fitRooms);
+    section.addEventListener('toggle', onToggle, true);
+    view?.requestAnimationFrame(fitRooms);
+    // Panels the demo opened while it booted were placed before the lane was laid out: a resize places them again.
+    const later = view?.setTimeout(() => {
+        view.dispatchEvent(new view.Event('resize'));
+        view.requestAnimationFrame(fitRooms);
+    }, 600);
+    undo.push(() => {
+        view?.clearTimeout(later);
+        section.removeEventListener('toggle', onToggle, true);
+        for (const room of /** @type {NodeListOf<HTMLElement>} */ (section.querySelectorAll(ROOMS))) room.style.removeProperty('min-block-size');
+    });
     return () => {
         for (const step of undo.reverse()) step();
     };
@@ -1982,28 +2027,35 @@ function laneShell(pair, step, kind) {
             <h3 class="rv-lane__title"></h3>
             <p class="rv-lane__intro" data-rv-lane-intro hidden></p>
             <button type="button" class="kp-button kp-button--sm kp-button--ghost rv-lane__more" aria-expanded="false" data-rv-lane-more hidden>More</button>
+            <div class="rv-lane__expected" data-rv-lane-expected hidden></div>
         </header>`;
     /** @type {HTMLElement} */ (card.querySelector('.rv-lane__title')).textContent = partTitle(pair, step);
-    const shell = pair.item ? shellOf(pair.item.section) : { changed: [], intro: [] };
+    const shell = pair.item ? shellOf(pair.item.section) : { changed: [], intro: [], expected: '' };
+    const expected = /** @type {HTMLElement} */ (card.querySelector('[data-rv-lane-expected]'));
+    if (shell.expected) expected.innerHTML = shell.expected;
     const intro = /** @type {HTMLElement} */ (card.querySelector('[data-rv-lane-intro]'));
     const more = /** @type {HTMLButtonElement} */ (card.querySelector('[data-rv-lane-more]'));
-    if (shell.changed.length || shell.intro.length) {
-        intro.hidden = false;
+    if (shell.changed.length || shell.intro.length || shell.expected) {
+        intro.hidden = !(shell.changed.length || shell.intro.length);
         intro.innerHTML = [
             ...shell.changed.map((html) => `<span class="rv-lane__changed">${html}</span>`),
             ...shell.intro.map((html) => `<span>${html}</span>`),
         ].join(' ');
-        // More only while the words do not fit on their line; open, they take the lane's whole width.
+        // More opens the words at the lane's whole width and the section's Expected under them; without an Expected block it
+        // is there only while the words do not fit on their line.
+        more.title = shell.expected ? 'The section’s full words and what to expect' : 'The section’s full words';
         const fits = () => {
             if (card.hasAttribute('data-rv-open')) return;
-            more.hidden = intro.scrollWidth <= intro.clientWidth + 1;
+            more.hidden = !shell.expected && intro.scrollWidth <= intro.clientWidth + 1;
         };
         new ResizeObserver(fits).observe(intro);
+        fits();
         more.addEventListener('click', () => {
             const open = !card.hasAttribute('data-rv-open');
             card.toggleAttribute('data-rv-open', open);
             more.setAttribute('aria-expanded', String(open));
             more.textContent = open ? 'Less' : 'More';
+            expected.hidden = !open || !shell.expected;
             if (!open) fits();
         });
     }
@@ -2554,7 +2606,7 @@ async function show(at) {
                 ? document.querySelector('main h1, h1')?.textContent?.replace(/\s+/g, ' ').trim() || document.title
                 : step.title;
         $('[data-rv-meta]').textContent = [
-            step.topic ? `theme ${step.topicAt} of ${step.topicThemes}` : '',
+            step.topic && step.topicThemes > 1 ? `theme ${step.topicAt} of ${step.topicThemes}` : '',
             step.aspect ? '' : count(step.topic || step.theme ? shownSections : shownPairs.length, step.topic || step.theme ? 'section' : 'block'),
             judgedHere ? `${judgedHere} approved, not shown` : '',
         ]
@@ -2706,8 +2758,8 @@ function answerAspect(step) {
 dialog.addEventListener('click', (event) => {
     const target = /** @type {HTMLElement} */ (event.target);
     if (target.closest('[data-rv-close]')) return dialog.close();
-    const go = target.closest('[data-rv-go]');
-    if (go) return show(index + Number(go.getAttribute('data-rv-go')));
+    const go = target.closest('[data-rv-go], [data-rv-mini-go]');
+    if (go) return show(index + Number(go.getAttribute('data-rv-go') ?? go.getAttribute('data-rv-mini-go')));
     const step = steps[index];
     if (target.closest('[data-rv-flip-prev]')) return flip(step, -1);
     if (target.closest('[data-rv-flip-next]')) return flip(step, 1);
