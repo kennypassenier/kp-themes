@@ -355,6 +355,19 @@ function lookBlock(id, themes) {
  * @type {Record<string, string | { changed: string, expect: string }>}
  */
 const CHANGED = {
+    'choose/usual':
+        'In your last review (18/10) the choices you picked did not show up. They were added, but into a row of tags the page had ' +
+        'written as hidden, and nothing ever showed it. The picker now shows that row as soon as it holds a pick, in every theme: ' +
+        'pick Headache and Fatigue and both stand as tags above the field, each with its <b>Not today</b> button.',
+    'choose/usual-band':
+        'In your last review (18/10) the choices you picked did not show up. They were added, but into a row of tags the page had ' +
+        'written as hidden, and nothing ever showed it. The picker now shows that row as soon as it holds a pick: pick Headache ' +
+        'and Fatigue and both stand as tags above the field, each with its <b>Not today</b> button.',
+    'choose/usual-states':
+        'In your last review (18/10) the two samples shown opened kept opening and closing when only part of them was in view. The ' +
+        'page closed them whenever less than 90% was on screen, and opening them made their box taller, so half in view they ' +
+        'closed, shrank, were in view again and reopened, several times a second. They now open once, the first time they come ' +
+        'on screen, and stay open wherever you scroll.',
     'fields/time-field':
         'You saw the list open by itself when you pressed <b>Presets loading</b> or <b>Presets failed</b>. That was the demo, not ' +
         'the field: after giving the list its state, the demo pressed the field&rsquo;s clock button (and a second press closed it ' +
