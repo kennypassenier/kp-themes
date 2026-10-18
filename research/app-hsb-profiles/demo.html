@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en-GB" data-theme="formal" data-review="app-hsb-profiles" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>HTTPSwitchboard: the profiles view · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main hp-page">
+            <header class="hp-intro">
+                <h1>HTTPSwitchboard: the profiles view</h1>
+                <p class="cat-intro">
+                    HTTPSwitchboard takes a message in one shape and delivers it in another. Each <b>profile</b> is one such route: where the message
+                    comes from, how it is rewritten, where it goes. This page shows how the profiles part of its status page would look with kp-themes
+                    11.0.0: the main view (a map or cards, you set the default), the path of one profile, and the card that opens on a profile name.
+                </p>
+                <p>
+                    Mock on this page: the sample data. The profile <b>alertmanager</b> follows the real configuration (kyu topic
+                    <code>alerts.raw</code>, subscription <code>switchboard</code>, Home Assistant as the destination); <b>uptime-kuma</b> is an
+                    invented second profile. The webhook address is a credential and is never shown. Judge in the review dialog; nothing moves until you
+                    press a button.
+                </p>
+            </header>
+
+            <!-- ================================================================ the profiles view -->
+            <section
+                class="hp-sec"
+                id="profiles"
+                data-review-item="profiles"
+                data-review-topic="profiles"
+                data-review-topic-title="Profiles view: map or cards"
+                data-review-components="uses-map entity-grid"
+                data-review-title="The profiles view: a map or cards"
+                data-review-choices='[{ "id": "profiles-default-view", "label": "Which view the profiles section opens with", "once": true, "default": "cards", "options": [
+                    { "value": "cards", "label": "Cards", "hint": "Recommended. One card per profile with its figures, its flags, the share delivered and its actions (Recheck this profile, Copy test command). It answers what is wrong and what to press." },
+                    { "value": "map", "label": "Map", "hint": "Sources on the left, destinations on the right, one line per profile. It answers what is connected to what and where it stops; there are no figures or actions on it." }] }]'
+                aria-labelledby="h-profiles"
+            >
+                <div class="hp-sec__head">
+                    <h2 id="h-profiles">The profiles view: a map or cards</h2>
+                    <p>Shows every profile and whether it is working, as a map of what feeds what or as one card per profile; the same data, two looks.</p>
+                </div>
+                <div class="hp-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Cards</b> (<code>.kp-entity-grid</code>): <b>alertmanager</b> and <b>uptime-kuma</b>, each with its state in words,
+                            the figures <b>Delivered</b>, <b>Failed</b> and <b>Average</b>, flags for the source kind and the destination kind (and
+                            the problem, when there is one), a meter with the share delivered, and the buttons <b>Recheck this profile</b> and
+                            <b>Copy test command</b>. Both cards are the same height in every health state.
+                        </li>
+                        <li>
+                            <b>Map</b> (<code>.kp-uses</code>): the sources on the left (<b>kyu topic alerts.raw</b>, <b>POST /uptime-kuma</b>), the
+                            destinations on the right, one line per profile. A profile still <b>starting</b> has a dashed line; a node that is
+                            refused or failing is toned. Hover or focus a node: its line lights and the rest dims; press it to pin.
+                        </li>
+                        <li>
+                            <b>Health</b> (alertmanager; uptime-kuma has no hub, so it only follows Starting and Failing): Working, Starting
+                            (nothing tried yet), Failing (deliveries fail, messages wait on the hub), Denied (the hub refused our credentials),
+                            Hub down (the hub cannot be reached). The state word, the flags and the tones change; the cards do not change size.
+                        </li>
+                        <li>
+                            <b>Data</b>: Loading lays the busy card over the whole view; Empty and Error fill the same footprint with a plate and a
+                            normal-size action (<b>Reload profiles</b>, <b>Retry</b>).
+                        </li>
+                        <li>
+                            <b>Recheck this profile</b> puts that one profile back to Starting (the page's own log under the cards says what was
+                            pressed). Pressing a Health button clears it again.
+                        </li>
+                        <li>
+                            <b>The choice</b> (tick in the dialog): which view opens first. Both are real options, the buttons below flip them, and
+                            nothing is required.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        White cards with a hairline, navy for the primary and the pinned line; state words in plain ink with a coloured mark, never
+                        colour alone. Look at the figures (a gap between the number and its label), the flags (no text touching the edge of its
+                        plate), the meter, and that the two buttons stand in the same place on both cards. On the map: the dashed line of a starting
+                        profile, the toned node where it stops, and the long sub lines wrapping inside their nodes.
+                    </p>
+                </div>
+                <div class="hp-controls" data-review-controls data-review-controls-for="profiles-component">
+                    <div role="group" aria-label="View">
+                        <b>View</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hp-view="cards">Cards</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hp-view="map">Map</button>
+                    </div>
+                    <div role="group" aria-label="Health">
+                        <b>Health</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hp-health="working">Working</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hp-health="starting">Starting</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hp-health="failing">Failing</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hp-health="denied">Denied</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hp-health="hubdown">Hub down</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hp-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hp-data="loading">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hp-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hp-data="error">Error</button>
+                    </div>
+                </div>
+                <div class="hp-frame hp-frame--profiles" id="profiles-component">
+                    <div class="kp-entity-grid" data-kp-entity-grid data-kp-entity-min="22rem" data-kp-entity-meters="1" id="hp-grid"></div>
+                    <div
+                        class="kp-matrix"
+                        data-kp-matrix
+                        data-kp-view="lines"
+                        data-kp-matrix-owned
+                        data-kp-remember="hsb-profiles"
+                        aria-label="Which source feeds which destination"
+                        id="hp-map"
+                        hidden
+                    ></div>
+                    <pre class="hp-log" id="hp-log" aria-live="polite">Press a card button or a node; the event it fires shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ the path of one profile -->
+            <section
+                class="hp-sec"
+                id="trace"
+                data-review-item="trace"
+                data-review-topic="trace"
+                data-review-topic-title="Path trace of a profile"
+                data-review-components="trace steplist"
+                data-review-title="The path of one profile, and where it stops"
+                aria-labelledby="h-trace"
+            >
+                <div class="hp-sec__head">
+                    <h2 id="h-trace">The path of one profile, and where it stops</h2>
+                    <p>Follows one message from its sender to Home Assistant and stops at the first hop that refuses it, saying which one and why.</p>
+                </div>
+                <div class="hp-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Four hops in a row: the sender, the door (the kyu topic for alertmanager, <code>POST /uptime-kuma</code> for
+                            uptime-kuma), the translation, and Home Assistant. A summary line above them says the outcome in a sentence.
+                        </li>
+                        <li>
+                            <b>Working</b>: every hop is allowed. <b>Starting</b>: nothing is measured yet, every hop says &ldquo;Not measured&rdquo;.
+                            <b>Failing</b>: Home Assistant refuses (the receiver fails), the summary names it. <b>Denied</b>: the hub refused our
+                            credentials, so the kyu hop fails and the two after it read &ldquo;Not reached&rdquo;. <b>Hub down</b>: the same place,
+                            another reason. uptime-kuma has no hub, so Denied and Hub down leave it working.
+                        </li>
+                        <li>The refusing rule is a chip you can press (the line below the trace says what was pressed); <b>Copy</b> copies the trace as text.</li>
+                        <li>
+                            <b>Loading</b> lays the busy card over placeholder hops; <b>Empty</b> and <b>Error</b> fill the same height with a plate;
+                            <b>Retry</b> loads it again.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        The allowed hops carry a check, the refused one a cross, the skipped ones are dimmed; the mark and the word are both there.
+                        Look at the gap between the hop's note and the edge of its plate and that the trace keeps its height in every state.
+                    </p>
+                </div>
+                <div class="hp-controls" data-review-controls data-review-controls-for="trace-component">
+                    <div role="group" aria-label="Profile">
+                        <b>Profile</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hp-trace-profile="alertmanager">alertmanager</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hp-trace-profile="uptime-kuma">uptime-kuma</button>
+                    </div>
+                    <div role="group" aria-label="Health">
+                        <b>Health</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hp-trace-health="working">Working</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hp-trace-health="starting">Starting</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hp-trace-health="failing">Failing</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hp-trace-health="denied">Denied</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hp-trace-health="hubdown">Hub down</button>
+                    </div>
+                    <div role="group" aria-label="Data">
+                        <b>Data</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hp-trace-data="ready">Loaded</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hp-trace-data="running">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hp-trace-data="empty">Empty</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hp-trace-data="error">Error</button>
+                    </div>
+                </div>
+                <div class="hp-frame hp-trace" id="trace-component">
+                    <div class="hp-trace__head"><b id="hp-trace-name">alertmanager</b><span class="kp-badge" id="hp-trace-badge">working</span></div>
+                    <div class="kp-trace" data-kp-trace data-kp-trace-copy id="hp-trace"></div>
+                    <pre class="hp-log" id="hp-trace-log" aria-live="polite">Press the rule chip on a refused hop; the event shows here.</pre>
+                </div>
+            </section>
+
+            <!-- ================================================================ the hover card -->
+            <section
+                class="hp-sec"
+                id="hover"
+                data-review-item="hover"
+                data-review-topic="hover"
+                data-review-topic-title="Hover card on a profile name"
+                data-review-components="hovercard"
+                data-review-title="The card on a profile name"
+                aria-labelledby="h-hover"
+            >
+                <div class="hp-sec__head">
+                    <h2 id="h-hover">The card on a profile name</h2>
+                    <p>Opens the full shape of a profile (where it comes from, where it goes, what it carries) when you rest on its name, without leaving the page.</p>
+                </div>
+                <div class="hp-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Rest the pointer on a profile name (here, and on the card names in the section above): after a short pause a card opens
+                            under it with <b>Source</b>, <b>Destination</b> (the host only, never the webhook path), <b>Content type</b>,
+                            <b>Template</b>, <b>Received</b>, <b>Delivered</b>, <b>Failed</b> and <b>Last success</b> (dd/mm/yyyy HH:MM). Focus with the
+                            keyboard opens it at once; Escape closes it; the pointer may rest on the card.
+                        </li>
+                        <li>
+                            The buttons <b>Show the card</b> open it without a pointer, so the opened state is on screen. The card is the opaque
+                            plate of the theme, readable wherever it stands.
+                        </li>
+                        <li><b>Health</b> changes the status row and the counters in the card the next time it opens.</li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        An opaque white plate with a hairline and formal's soft shadow, the labels in one column as wide as the longest label, and no
+                        text against the plate's edge. The name's row keeps its place with the card open or closed.
+                    </p>
+                </div>
+                <div class="hp-controls" data-review-controls data-review-controls-for="hover-component">
+                    <div role="group" aria-label="Show the card">
+                        <b>Show the card</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hp-hover-open="alertmanager">alertmanager</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hp-hover-open="uptime-kuma">uptime-kuma</button>
+                    </div>
+                    <div role="group" aria-label="Health">
+                        <b>Health</b>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="true" data-hp-hover-health="working">Working</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hp-hover-health="failing">Failing</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hp-hover-health="denied">Denied</button>
+                        <button type="button" class="kp-button kp-button--sm" aria-pressed="false" data-hp-hover-health="hubdown">Hub down</button>
+                    </div>
+                </div>
+                <div class="hp-frame" id="hover-component">
+                    <ul class="hp-names" aria-label="Profiles">
+                        <li>
+                            <a class="hp-names__name" href="#alertmanager" data-kp-hovercard="" data-hp-profile="alertmanager">alertmanager</a>
+                            <span class="kp-badge kp-badge--success" data-hp-hover-badge="alertmanager">working</span>
+                            <span class="hp-names__hint">kyu topic alerts.raw to Home Assistant</span>
+                        </li>
+                        <li>
+                            <a class="hp-names__name" href="#uptime-kuma" data-kp-hovercard="" data-hp-profile="uptime-kuma">uptime-kuma</a>
+                            <span class="kp-badge kp-badge--success" data-hp-hover-badge="uptime-kuma">working</span>
+                            <span class="hp-names__hint">POST /uptime-kuma to Home Assistant (mock)</span>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+
+        <script type="application/json" data-review-round>
+            { "round": "app-hsb-profiles-d16be435-4692-4214-8575-ed3ef0a53c26" }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
