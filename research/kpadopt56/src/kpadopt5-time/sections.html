@@ -818,15 +818,14 @@
                     <p><b>Expected:</b> the lists that open from a field are on the popover&rsquo;s paper surface, readable.</p>
                     <ul>
                         <li>
-                            Press <b>Ready</b>, <b>Loading choices</b> and <b>Wrong time</b> in the box above the sentences: the first sentence
+                            Press <b>Ready</b>, <b>Loading choices</b>, <b>Wrong time</b> and <b>Paused</b> in the box above the sentences: the first sentence
                             follows. <b>Loading choices</b>: the stack field shows its own grey, moving bar at the width it had and cannot be used;
                             the words round it <b>do not move</b>. <b>Wrong time</b>: the time field is underlined in red and the line
-                            <b>At (HH:MM, 24 hours): Type a time of day, 00:00 to 23:59.</b> stands under the sentence; <b>Ready</b> clears both.
+                            <b>At (HH:MM, 24 hours): Type a time of day, 00:00 to 23:59.</b> stands under the sentence; <b>Ready</b> clears both. <b>Paused</b>: the first sentence and its <b>Save schedule</b> button go off with the reason <b>The schedule is paused</b>; <b>Ready</b> turns them back on.
                         </li>
                         <li>
                             <b>Disabled</b>: the words are muted, the fields dashed and dimmed, the reason <b>The schedule is paused</b> stands under
-                            them, and <b>Save schedule</b> is dimmed and cannot be pressed. <b>Resumed</b> (in the box above that sentence) turns the
-                            sentence and the button back on and takes the reason away; <b>Paused</b> puts them back.
+                            them. Its <b>Save schedule</b> is dimmed and cannot be pressed.
                         </li>
                         <li>
                             <b>A long stack name</b> (home-automation-gateway-stack): the field is too wide to share the line, so it takes a line of
@@ -845,6 +844,7 @@
                         <button type="button" class="kp-button" aria-pressed="true" data-kt-sentence-state="ready">Ready</button>
                         <button type="button" class="kp-button" aria-pressed="false" data-kt-sentence-state="loading">Loading choices</button>
                         <button type="button" class="kp-button" aria-pressed="false" data-kt-sentence-state="invalid">Wrong time</button>
+                        <button type="button" class="kp-button" aria-pressed="false" data-kt-sentence-state="paused">Paused</button>
                     </div>
                 </div>
                 <div class="kt-stack">
@@ -903,18 +903,12 @@
                                     >.
                                 </p>
                             </fieldset>
-                            <div class="kt-actions"><button type="submit" class="kp-button kp-button--primary">Save schedule</button></div>
+                            <div class="kt-actions"><button type="submit" class="kp-button kp-button--primary" id="kt-sentence-live-save">Save schedule</button></div>
                         </form>
                     </div>
                     <div class="kt-pair">
                         <div class="kt-case">
                             <p class="kt-label">Disabled, with its reason</p>
-                            <div data-review-controls>
-                                <div role="group" aria-label="State of the paused sentence" class="kt-actions">
-                                    <button type="button" class="kp-button" aria-pressed="true" data-kt-pause-state="paused">Paused</button>
-                                    <button type="button" class="kp-button" aria-pressed="false" data-kt-pause-state="resumed">Resumed</button>
-                                </div>
-                            </div>
                             <form class="kt-form" action="#" data-kt-form>
                                 <fieldset
                                     class="kp-sentence"
@@ -963,7 +957,7 @@
                                         >.
                                     </p>
                                 </fieldset>
-                                <div class="kt-actions"><button type="submit" class="kp-button kp-button--primary" id="kt-sentence-off-save" disabled>Save schedule</button></div>
+                                <div class="kt-actions"><button type="submit" class="kp-button kp-button--primary" disabled>Save schedule</button></div>
                             </form>
                         </div>
                         <div class="kt-case">

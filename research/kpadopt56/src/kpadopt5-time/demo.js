@@ -186,21 +186,24 @@ const shows = (item) => {
     const stack = live?.querySelector('[name="stack"]')?.closest('.kp-sentence__field');
     const apply = (/** @type {string} */ state) => {
         if (!live || !stack) return;
+        // Paused: the fieldset, its reason line and the save button go off together; any other state turns them back on.
+        const paused = state === 'paused';
+        live.toggleAttribute('disabled', paused);
+        document.getElementById('kt-sentence-live-save')?.toggleAttribute('disabled', paused);
+        let why = live.querySelector('.kp-sentence__reason');
+        if (paused && !why) {
+            why = document.createElement('p');
+            why.className = 'kp-sentence__reason';
+            why.textContent = 'The schedule is paused';
+            live.append(why);
+        }
+        if (why) /** @type {HTMLElement} */ (why).hidden = !paused;
         setSentenceFieldState(stack, state === 'loading' ? 'loading' : 'ready');
         setSentenceInvalid(live, 'at', state === 'invalid' ? 'Type a time of day, 00:00 to 23:59.' : null);
     };
     stateButtons('data-kt-sentence-state', apply);
     // The look and the size are options of the component (attributes): the sentence follows an attribute change.
     const first = document.getElementById('kt-sentence-a');
-    // Paused / resumed: the fieldset, its reason line and the save button go off and on together.
-    const off = document.getElementById('kt-sentence-off');
-    const offSave = document.getElementById('kt-sentence-off-save');
-    stateButtons('data-kt-pause-state', (value) => {
-        const paused = value === 'paused';
-        off?.toggleAttribute('disabled', paused);
-        offSave?.toggleAttribute('disabled', paused);
-        for (const line of off?.querySelectorAll('.kp-sentence__reason') ?? []) line.hidden = !paused;
-    });
     stateButtons('data-kt-sentence-look', (value) => first?.setAttribute('data-kp-look', value));
     stateButtons('data-kt-sentence-size', (value) => first?.setAttribute('data-kp-sentence-size', value));
 }
