@@ -37,43 +37,43 @@
    },
    "s9-uses": {
     "ready": 476,
-    "loading": 12,
-    "empty": 188,
-    "error": 188,
-    "hLoading": 464,
-    "hEmpty": 288,
-    "hError": 288
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
    },
    "s9-entity": {
     "ready": 458,
-    "loading": 2,
-    "empty": 202,
-    "error": 202,
-    "hLoading": 456,
-    "hEmpty": 256,
-    "hError": 256
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 458,
+    "hEmpty": 458,
+    "hError": 458
    },
    "s9-claim": {
     "ready": 629,
     "loading": 0,
-    "empty": 136,
-    "error": 136,
+    "empty": 0,
+    "error": 0,
     "hLoading": 629,
-    "hEmpty": 493,
-    "hError": 493
+    "hEmpty": 629,
+    "hError": 629
    },
    "s9-notices": {
     "ready": 1043,
-    "loading": 459,
-    "empty": 459,
-    "error": 459,
-    "hLoading": 584,
-    "hEmpty": 584,
-    "hError": 584
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
    },
    "s10-gallery": {
     "h": 456,
-    "dy": 201,
+    "dy": 0,
     "dx": 0,
     "own": 0
    },
@@ -96,39 +96,38 @@
     "own": 0
    },
    "s10-inspector": {
-    "h": 1198,
+    "h": 1378,
     "dy": 42,
-    "dx": 58,
+    "dx": 0,
     "own": 42
    },
    "s11-quote": {
-    "h": 151,
-    "fill": 65,
+    "h": 168,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
+    "fs": 24,
     "btn": 36
    },
    "s11-today": {
     "h": 314,
-    "fill": 31,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
+    "fs": 24,
     "btn": 36
    },
    "s11-lede": {
-    "h": 215,
-    "fill": 63,
+    "h": 229,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
-    "btn": 28
+    "fs": 24,
+    "btn": 36
    },
    "s12-chart": {
     "h": 242,
-    "fill": 0,
-    "off": null,
-    "fs": null,
-    "btn": null,
-    "none": true
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
    },
    "s12-usual-empty": {
     "h": 64,
@@ -145,10 +144,10 @@
     "btn": 36
    },
    "s12-ops": {
-    "h": 1232,
-    "fill": 6,
-    "off": 279,
-    "fs": 16,
+    "h": 768,
+    "fill": 79,
+    "off": 57,
+    "fs": 24,
     "btn": 28
    },
    "s13-md": {
@@ -233,11 +232,11 @@
    "s9-claim": {
     "ready": 629,
     "loading": 0,
-    "empty": 136,
-    "error": 136,
+    "empty": 0,
+    "error": 0,
     "hLoading": 629,
-    "hEmpty": 493,
-    "hError": 493
+    "hEmpty": 629,
+    "hError": 629
    },
    "s9-notices": {
     "ready": 1043,
@@ -302,9 +301,9 @@
    "s12-chart": {
     "h": 242,
     "fill": 79,
-    "off": 35,
+    "off": 26,
     "fs": 24,
-    "btn": null
+    "btn": 36
    },
    "s12-usual-empty": {
     "h": 64,
@@ -337,20 +336,20 @@
    "s14-slider": {
     "h": 236,
     "ctrl": 44,
-    "card": 54,
-    "over": 10
+    "card": 0,
+    "over": 0
    },
    "s14-time": {
     "h": 236,
     "ctrl": 61,
-    "card": 54,
+    "card": 0,
     "over": 0
    },
    "s14-version": {
     "h": 236,
     "ctrl": 18,
-    "card": 54,
-    "over": 36
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {
@@ -399,43 +398,43 @@
    },
    "s9-uses": {
     "ready": 476,
-    "loading": 12,
-    "empty": 188,
-    "error": 188,
-    "hLoading": 464,
-    "hEmpty": 288,
-    "hError": 288
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
    },
    "s9-entity": {
     "ready": 456,
     "loading": 0,
-    "empty": 200,
-    "error": 200,
+    "empty": 0,
+    "error": 0,
     "hLoading": 456,
-    "hEmpty": 256,
-    "hError": 256
+    "hEmpty": 456,
+    "hError": 456
    },
    "s9-claim": {
     "ready": 650,
     "loading": 0,
-    "empty": 127,
-    "error": 127,
+    "empty": 0,
+    "error": 0,
     "hLoading": 650,
-    "hEmpty": 523,
-    "hError": 523
+    "hEmpty": 650,
+    "hError": 650
    },
    "s9-notices": {
     "ready": 1043,
-    "loading": 459,
-    "empty": 459,
-    "error": 459,
-    "hLoading": 584,
-    "hEmpty": 584,
-    "hError": 584
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
    },
    "s10-gallery": {
     "h": 456,
-    "dy": 202,
+    "dy": 0,
     "dx": 0,
     "own": 0
    },
@@ -458,39 +457,38 @@
     "own": 0
    },
    "s10-inspector": {
-    "h": 1209,
+    "h": 1533,
     "dy": 42,
-    "dx": 64,
+    "dx": 0,
     "own": 42
    },
    "s11-quote": {
-    "h": 151,
-    "fill": 65,
+    "h": 178,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
+    "fs": 24,
     "btn": 36
    },
    "s11-today": {
     "h": 342,
-    "fill": 28,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
+    "fs": 24,
     "btn": 36
    },
    "s11-lede": {
-    "h": 244,
-    "fill": 63,
+    "h": 258,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
-    "btn": 28
+    "fs": 24,
+    "btn": 36
    },
    "s12-chart": {
     "h": 242,
-    "fill": 0,
-    "off": null,
-    "fs": null,
-    "btn": null,
-    "none": true
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
    },
    "s12-usual-empty": {
     "h": 64,
@@ -508,10 +506,10 @@
     "btn": 36
    },
    "s12-ops": {
-    "h": 1217,
-    "fill": 6,
-    "off": 286,
-    "fs": 16,
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
     "btn": 28
    },
    "s13-md": {
@@ -596,11 +594,11 @@
    "s9-claim": {
     "ready": 650,
     "loading": 0,
-    "empty": 127,
-    "error": 127,
+    "empty": 0,
+    "error": 0,
     "hLoading": 650,
-    "hEmpty": 523,
-    "hError": 523
+    "hEmpty": 650,
+    "hError": 650
    },
    "s9-notices": {
     "ready": 1043,
@@ -625,7 +623,7 @@
    },
    "s10-claim": {
     "h": 650,
-    "dy": 37,
+    "dy": 36,
     "dx": 0,
     "own": 0
    },
@@ -636,13 +634,13 @@
     "own": 0
    },
    "s10-inspector": {
-    "h": 1453,
+    "h": 1533,
     "dy": 42,
     "dx": 0,
     "own": 42
    },
    "s11-quote": {
-    "h": 168,
+    "h": 178,
     "fill": 100,
     "off": 0,
     "fs": 24,
@@ -665,9 +663,9 @@
    "s12-chart": {
     "h": 242,
     "fill": 79,
-    "off": 35,
+    "off": 26,
     "fs": 24,
-    "btn": null
+    "btn": 36
    },
    "s12-usual-empty": {
     "h": 64,
@@ -701,20 +699,20 @@
    "s14-slider": {
     "h": 227,
     "ctrl": 44,
-    "card": 52,
-    "over": 8
+    "card": 0,
+    "over": 0
    },
    "s14-time": {
     "h": 227,
     "ctrl": 50,
-    "card": 52,
-    "over": 2
+    "card": 0,
+    "over": 0
    },
    "s14-version": {
     "h": 227,
     "ctrl": 20,
-    "card": 52,
-    "over": 32
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {
@@ -763,43 +761,43 @@
    },
    "s9-uses": {
     "ready": 476,
-    "loading": 12,
-    "empty": 188,
-    "error": 188,
-    "hLoading": 464,
-    "hEmpty": 288,
-    "hError": 288
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
    },
    "s9-entity": {
     "ready": 452,
     "loading": 0,
-    "empty": 196,
-    "error": 196,
+    "empty": 0,
+    "error": 0,
     "hLoading": 452,
-    "hEmpty": 256,
-    "hError": 256
+    "hEmpty": 452,
+    "hError": 452
    },
    "s9-claim": {
     "ready": 677,
     "loading": 0,
-    "empty": 152,
-    "error": 152,
+    "empty": 0,
+    "error": 0,
     "hLoading": 677,
-    "hEmpty": 525,
-    "hError": 525
+    "hEmpty": 677,
+    "hError": 677
    },
    "s9-notices": {
     "ready": 1043,
-    "loading": 459,
-    "empty": 459,
-    "error": 459,
-    "hLoading": 584,
-    "hEmpty": 584,
-    "hError": 584
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
    },
    "s10-gallery": {
     "h": 456,
-    "dy": 202,
+    "dy": 0,
     "dx": 0,
     "own": 0
    },
@@ -822,39 +820,38 @@
     "own": 0
    },
    "s10-inspector": {
-    "h": 1224,
+    "h": 1688,
     "dy": 42,
-    "dx": 65,
+    "dx": 0,
     "own": 42
    },
    "s11-quote": {
-    "h": 149,
-    "fill": 65,
+    "h": 176,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
+    "fs": 24,
     "btn": 36
    },
    "s11-today": {
     "h": 340,
-    "fill": 28,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
+    "fs": 24,
     "btn": 36
    },
    "s11-lede": {
-    "h": 246,
-    "fill": 63,
+    "h": 260,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
-    "btn": 28
+    "fs": 24,
+    "btn": 36
    },
    "s12-chart": {
     "h": 242,
-    "fill": 0,
-    "off": null,
-    "fs": null,
-    "btn": null,
-    "none": true
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
    },
    "s12-usual-empty": {
     "h": 64,
@@ -871,10 +868,10 @@
     "btn": 36
    },
    "s12-ops": {
-    "h": 1207,
-    "fill": 6,
-    "off": 283,
-    "fs": 16,
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
     "btn": 28
    },
    "s13-md": {
@@ -959,11 +956,11 @@
    "s9-claim": {
     "ready": 677,
     "loading": 0,
-    "empty": 152,
-    "error": 152,
+    "empty": 0,
+    "error": 0,
     "hLoading": 677,
-    "hEmpty": 525,
-    "hError": 525
+    "hEmpty": 677,
+    "hError": 677
    },
    "s9-notices": {
     "ready": 1043,
@@ -999,13 +996,13 @@
     "own": 0
    },
    "s10-inspector": {
-    "h": 1608,
+    "h": 1688,
     "dy": 42,
     "dx": 0,
     "own": 42
    },
    "s11-quote": {
-    "h": 166,
+    "h": 176,
     "fill": 100,
     "off": 0,
     "fs": 24,
@@ -1028,9 +1025,9 @@
    "s12-chart": {
     "h": 242,
     "fill": 79,
-    "off": 35,
+    "off": 26,
     "fs": 24,
-    "btn": null
+    "btn": 36
    },
    "s12-usual-empty": {
     "h": 64,
@@ -1063,20 +1060,20 @@
    "s14-slider": {
     "h": 235,
     "ctrl": 44,
-    "card": 52,
-    "over": 8
+    "card": 0,
+    "over": 0
    },
    "s14-time": {
     "h": 235,
     "ctrl": 54,
-    "card": 52,
+    "card": 0,
     "over": 0
    },
    "s14-version": {
     "h": 235,
     "ctrl": 27,
-    "card": 52,
-    "over": 25
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {
@@ -1125,43 +1122,43 @@
    },
    "s9-uses": {
     "ready": 476,
-    "loading": 12,
-    "empty": 188,
-    "error": 188,
-    "hLoading": 464,
-    "hEmpty": 288,
-    "hError": 288
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
    },
    "s9-entity": {
     "ready": 523,
     "loading": 0,
-    "empty": 267,
-    "error": 267,
+    "empty": 0,
+    "error": 0,
     "hLoading": 523,
-    "hEmpty": 256,
-    "hError": 256
+    "hEmpty": 523,
+    "hError": 523
    },
    "s9-claim": {
     "ready": 692,
     "loading": 0,
-    "empty": 167,
-    "error": 167,
+    "empty": 0,
+    "error": 0,
     "hLoading": 692,
-    "hEmpty": 525,
-    "hError": 525
+    "hEmpty": 692,
+    "hError": 692
    },
    "s9-notices": {
     "ready": 1043,
-    "loading": 459,
-    "empty": 459,
-    "error": 459,
-    "hLoading": 584,
-    "hEmpty": 584,
-    "hError": 584
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
    },
    "s10-gallery": {
     "h": 456,
-    "dy": 202,
+    "dy": 0,
     "dx": 0,
     "own": 0
    },
@@ -1184,39 +1181,38 @@
     "own": 0
    },
    "s10-inspector": {
-    "h": 1292,
+    "h": 1900,
     "dy": 30,
-    "dx": 70,
+    "dx": 0,
     "own": 30
    },
    "s11-quote": {
-    "h": 180,
-    "fill": 65,
+    "h": 214,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
+    "fs": 24,
     "btn": 36
    },
    "s11-today": {
     "h": 378,
-    "fill": 28,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
+    "fs": 24,
     "btn": 36
    },
    "s11-lede": {
-    "h": 277,
-    "fill": 63,
+    "h": 308,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
-    "btn": 28
+    "fs": 24,
+    "btn": 36
    },
    "s12-chart": {
     "h": 242,
-    "fill": 0,
-    "off": null,
-    "fs": null,
-    "btn": null,
-    "none": true
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
    },
    "s12-usual-empty": {
     "h": 64,
@@ -1234,10 +1230,10 @@
     "btn": 36
    },
    "s12-ops": {
-    "h": 1412,
-    "fill": 8,
-    "off": 322,
-    "fs": 16,
+    "h": 768,
+    "fill": 79,
+    "off": 56,
+    "fs": 24,
     "btn": 28
    },
    "s13-md": {
@@ -1322,11 +1318,11 @@
    "s9-claim": {
     "ready": 692,
     "loading": 0,
-    "empty": 167,
-    "error": 167,
+    "empty": 0,
+    "error": 0,
     "hLoading": 692,
-    "hEmpty": 525,
-    "hError": 525
+    "hEmpty": 692,
+    "hError": 692
    },
    "s9-notices": {
     "ready": 1043,
@@ -1347,7 +1343,7 @@
     "h": 1290,
     "dy": 196,
     "dx": 204,
-    "own": 24
+    "own": 8
    },
    "s10-claim": {
     "h": 692,
@@ -1362,7 +1358,7 @@
     "own": 0
    },
    "s10-inspector": {
-    "h": 1740,
+    "h": 1900,
     "dy": 30,
     "dx": 0,
     "own": 30
@@ -1391,9 +1387,9 @@
    "s12-chart": {
     "h": 242,
     "fill": 79,
-    "off": 35,
+    "off": 26,
     "fs": 24,
-    "btn": null
+    "btn": 36
    },
    "s12-usual-empty": {
     "h": 64,
@@ -1425,22 +1421,22 @@
     "btn": 36
    },
    "s14-slider": {
-    "h": 233,
+    "h": 229,
     "ctrl": 44,
-    "card": 52,
-    "over": 8
+    "card": 0,
+    "over": 0
    },
    "s14-time": {
-    "h": 233,
+    "h": 229,
     "ctrl": 50,
-    "card": 52,
-    "over": 2
+    "card": 0,
+    "over": 0
    },
    "s14-version": {
-    "h": 233,
+    "h": 229,
     "ctrl": 20,
-    "card": 52,
-    "over": 32
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {
@@ -1490,42 +1486,42 @@
    "s9-uses": {
     "ready": 476,
     "loading": 89,
-    "empty": 188,
-    "error": 188,
+    "empty": 0,
+    "error": 0,
     "hLoading": 565,
-    "hEmpty": 288,
-    "hError": 288
+    "hEmpty": 476,
+    "hError": 476
    },
    "s9-entity": {
     "ready": 456,
     "loading": 0,
-    "empty": 200,
-    "error": 200,
+    "empty": 0,
+    "error": 0,
     "hLoading": 456,
-    "hEmpty": 256,
-    "hError": 256
+    "hEmpty": 456,
+    "hError": 456
    },
    "s9-claim": {
     "ready": 644,
     "loading": 0,
-    "empty": 150,
-    "error": 150,
+    "empty": 0,
+    "error": 0,
     "hLoading": 644,
-    "hEmpty": 494,
-    "hError": 494
+    "hEmpty": 644,
+    "hError": 644
    },
    "s9-notices": {
     "ready": 1043,
-    "loading": 459,
-    "empty": 459,
-    "error": 459,
-    "hLoading": 584,
-    "hEmpty": 584,
-    "hError": 584
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
    },
    "s10-gallery": {
     "h": 456,
-    "dy": 202,
+    "dy": 0,
     "dx": 0,
     "own": 0
    },
@@ -1548,39 +1544,38 @@
     "own": 0
    },
    "s10-inspector": {
-    "h": 1214,
-    "dy": 42,
-    "dx": 59,
-    "own": 42
+    "h": 1394,
+    "dy": 43,
+    "dx": 0,
+    "own": 43
    },
    "s11-quote": {
-    "h": 151,
-    "fill": 65,
+    "h": 168,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
+    "fs": 24,
     "btn": 36
    },
    "s11-today": {
     "h": 354,
-    "fill": 27,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
+    "fs": 24,
     "btn": 36
    },
    "s11-lede": {
-    "h": 243,
-    "fill": 63,
+    "h": 257,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
-    "btn": 28
+    "fs": 24,
+    "btn": 36
    },
    "s12-chart": {
     "h": 242,
-    "fill": 0,
-    "off": null,
-    "fs": null,
-    "btn": null,
-    "none": true
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
    },
    "s12-usual-empty": {
     "h": 64,
@@ -1597,10 +1592,10 @@
     "btn": 36
    },
    "s12-ops": {
-    "h": 1217,
-    "fill": 6,
-    "off": 286,
-    "fs": 16,
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
     "btn": 28
    },
    "s13-md": {
@@ -1685,11 +1680,11 @@
    "s9-claim": {
     "ready": 644,
     "loading": 0,
-    "empty": 150,
-    "error": 150,
+    "empty": 0,
+    "error": 0,
     "hLoading": 644,
-    "hEmpty": 494,
-    "hError": 494
+    "hEmpty": 644,
+    "hError": 644
    },
    "s9-notices": {
     "ready": 1043,
@@ -1726,9 +1721,9 @@
    },
    "s10-inspector": {
     "h": 1394,
-    "dy": 42,
+    "dy": 43,
     "dx": 0,
-    "own": 42
+    "own": 43
    },
    "s11-quote": {
     "h": 168,
@@ -1754,9 +1749,9 @@
    "s12-chart": {
     "h": 242,
     "fill": 79,
-    "off": 35,
+    "off": 26,
     "fs": 24,
-    "btn": null
+    "btn": 36
    },
    "s12-usual-empty": {
     "h": 64,
@@ -1789,20 +1784,20 @@
    "s14-slider": {
     "h": 246,
     "ctrl": 44,
-    "card": 52,
-    "over": 8
+    "card": 0,
+    "over": 0
    },
    "s14-time": {
     "h": 246,
     "ctrl": 62,
-    "card": 52,
+    "card": 0,
     "over": 0
    },
    "s14-version": {
     "h": 246,
     "ctrl": 30,
-    "card": 52,
-    "over": 22
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {
@@ -1851,43 +1846,43 @@
    },
    "s9-uses": {
     "ready": 476,
-    "loading": 12,
-    "empty": 12,
-    "error": 188,
-    "hLoading": 464,
-    "hEmpty": 464,
-    "hError": 288
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
    },
    "s9-entity": {
     "ready": 456,
     "loading": 0,
-    "empty": 200,
-    "error": 200,
+    "empty": 0,
+    "error": 0,
     "hLoading": 456,
-    "hEmpty": 256,
-    "hError": 256
+    "hEmpty": 456,
+    "hError": 456
    },
    "s9-claim": {
     "ready": 671,
     "loading": 0,
-    "empty": 178,
-    "error": 178,
+    "empty": 0,
+    "error": 0,
     "hLoading": 671,
-    "hEmpty": 493,
-    "hError": 493
+    "hEmpty": 671,
+    "hError": 671
    },
    "s9-notices": {
     "ready": 1043,
-    "loading": 459,
-    "empty": 459,
-    "error": 459,
-    "hLoading": 584,
-    "hEmpty": 584,
-    "hError": 584
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
    },
    "s10-gallery": {
     "h": 456,
-    "dy": 204,
+    "dy": 0,
     "dx": 0,
     "own": 0
    },
@@ -1910,39 +1905,38 @@
     "own": 0
    },
    "s10-inspector": {
-    "h": 1198,
+    "h": 1378,
     "dy": 42,
-    "dx": 58,
+    "dx": 0,
     "own": 42
    },
    "s11-quote": {
-    "h": 151,
-    "fill": 65,
+    "h": 168,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
+    "fs": 24,
     "btn": 36
    },
    "s11-today": {
     "h": 342,
-    "fill": 28,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
+    "fs": 24,
     "btn": 36
    },
    "s11-lede": {
-    "h": 215,
-    "fill": 63,
+    "h": 229,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
-    "btn": 28
+    "fs": 24,
+    "btn": 36
    },
    "s12-chart": {
     "h": 242,
-    "fill": 0,
-    "off": null,
-    "fs": null,
-    "btn": null,
-    "none": true
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
    },
    "s12-usual-empty": {
     "h": 64,
@@ -1959,10 +1953,10 @@
     "btn": 36
    },
    "s12-ops": {
-    "h": 1217,
-    "fill": 6,
-    "off": 286,
-    "fs": 16,
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
     "btn": 28
    },
    "s13-md": {
@@ -2047,11 +2041,11 @@
    "s9-claim": {
     "ready": 671,
     "loading": 0,
-    "empty": 178,
-    "error": 178,
+    "empty": 0,
+    "error": 0,
     "hLoading": 671,
-    "hEmpty": 493,
-    "hError": 493
+    "hEmpty": 671,
+    "hError": 671
    },
    "s9-notices": {
     "ready": 1043,
@@ -2072,25 +2066,25 @@
     "h": 1127,
     "dy": 163,
     "dx": 204,
-    "own": 31
+    "own": 19
    },
    "s10-claim": {
     "h": 671,
-    "dy": 36,
+    "dy": 21,
     "dx": 0,
     "own": 0
    },
    "s10-avail": {
     "h": 478,
-    "dy": 10,
+    "dy": 3,
     "dx": 78,
     "own": 0
    },
    "s10-inspector": {
     "h": 1378,
-    "dy": 71,
+    "dy": 42,
     "dx": 0,
-    "own": 71
+    "own": 42
    },
    "s11-quote": {
     "h": 168,
@@ -2116,9 +2110,9 @@
    "s12-chart": {
     "h": 242,
     "fill": 79,
-    "off": 35,
+    "off": 26,
     "fs": 24,
-    "btn": null
+    "btn": 36
    },
    "s12-usual-empty": {
     "h": 64,
@@ -2143,28 +2137,28 @@
    },
    "s13-md": {
     "h": 386,
-    "fill": 83,
-    "off": 138,
+    "fill": 85,
+    "off": 137,
     "fs": 24,
     "btn": 36
    },
    "s14-slider": {
     "h": 227,
     "ctrl": 44,
-    "card": 48,
-    "over": 4
+    "card": 0,
+    "over": 0
    },
    "s14-time": {
     "h": 227,
     "ctrl": 52,
-    "card": 48,
+    "card": 0,
     "over": 0
    },
    "s14-version": {
     "h": 227,
     "ctrl": 20,
-    "card": 42,
-    "over": 22
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {
@@ -2213,183 +2207,6 @@
    },
    "s9-uses": {
     "ready": 476,
-    "loading": 12,
-    "empty": 188,
-    "error": 188,
-    "hLoading": 464,
-    "hEmpty": 288,
-    "hError": 288
-   },
-   "s9-entity": {
-    "ready": 456,
-    "loading": 0,
-    "empty": 200,
-    "error": 200,
-    "hLoading": 456,
-    "hEmpty": 256,
-    "hError": 256
-   },
-   "s9-claim": {
-    "ready": 619,
-    "loading": 0,
-    "empty": 128,
-    "error": 128,
-    "hLoading": 619,
-    "hEmpty": 491,
-    "hError": 491
-   },
-   "s9-notices": {
-    "ready": 1043,
-    "loading": 459,
-    "empty": 459,
-    "error": 459,
-    "hLoading": 584,
-    "hEmpty": 584,
-    "hError": 584
-   },
-   "s10-gallery": {
-    "h": 456,
-    "dy": 202,
-    "dx": 0,
-    "own": 0
-   },
-   "s10-ops": {
-    "h": 1127,
-    "dy": 163,
-    "dx": 204,
-    "own": 19
-   },
-   "s10-claim": {
-    "h": 619,
-    "dy": 20,
-    "dx": 0,
-    "own": 0
-   },
-   "s10-avail": {
-    "h": 488,
-    "dy": 3,
-    "dx": 78,
-    "own": 0
-   },
-   "s10-inspector": {
-    "h": 1211,
-    "dy": 42,
-    "dx": 58,
-    "own": 42
-   },
-   "s11-quote": {
-    "h": 151,
-    "fill": 65,
-    "off": 0,
-    "fs": 16,
-    "btn": 36
-   },
-   "s11-today": {
-    "h": 324,
-    "fill": 30,
-    "off": 0,
-    "fs": 16,
-    "btn": 36
-   },
-   "s11-lede": {
-    "h": 237,
-    "fill": 63,
-    "off": 0,
-    "fs": 16,
-    "btn": 28
-   },
-   "s12-chart": {
-    "h": 242,
-    "fill": 0,
-    "off": null,
-    "fs": null,
-    "btn": null,
-    "none": true
-   },
-   "s12-usual-empty": {
-    "h": 64,
-    "fill": 100,
-    "off": 0,
-    "fs": 24,
-    "btn": 36
-   },
-   "s12-usual-error": {
-    "h": 64,
-    "fill": 100,
-    "off": 0,
-    "fs": 24,
-    "btn": 36
-   },
-   "s12-ops": {
-    "h": 1217,
-    "fill": 6,
-    "off": 286,
-    "fs": 16,
-    "btn": 28
-   },
-   "s13-md": {
-    "h": 386,
-    "fill": 85,
-    "off": 137,
-    "fs": 24,
-    "btn": 36
-   },
-   "s14-slider": {
-    "h": 227,
-    "ctrl": 44,
-    "card": 0,
-    "over": 0
-   },
-   "s14-time": {
-    "h": 227,
-    "ctrl": 50,
-    "card": 0,
-    "over": 0
-   },
-   "s14-version": {
-    "h": 227,
-    "ctrl": 20,
-    "card": 0,
-    "over": 0
-   }
-  },
-  "prop": {
-   "s1-refresh": {
-    "over": 0,
-    "scrolls": 285
-   },
-   "s1-inspector": {
-    "over": 0,
-    "cardClip": 0,
-    "broken": 0
-   },
-   "s2-version": {
-    "over": 0
-   },
-   "s3-checklist": {
-    "label": 104,
-    "broken": 0,
-    "over": 0
-   },
-   "s4-entity": {
-    "broken": 0,
-    "over": 0
-   },
-   "s5-chart": {
-    "over": 0,
-    "label": 65
-   },
-   "s6-availability": {
-    "name": 290
-   },
-   "s7-shortcuts": {
-    "over": 0
-   },
-   "s8-badge": {
-    "radius": 2
-   },
-   "s9-uses": {
-    "ready": 476,
     "loading": 0,
     "empty": 0,
     "error": 0,
@@ -2409,11 +2226,11 @@
    "s9-claim": {
     "ready": 619,
     "loading": 0,
-    "empty": 128,
-    "error": 128,
+    "empty": 0,
+    "error": 0,
     "hLoading": 619,
-    "hEmpty": 491,
-    "hError": 491
+    "hEmpty": 619,
+    "hError": 619
    },
    "s9-notices": {
     "ready": 1043,
@@ -2478,9 +2295,9 @@
    "s12-chart": {
     "h": 242,
     "fill": 79,
-    "off": 35,
+    "off": 26,
     "fs": 24,
-    "btn": null
+    "btn": 36
    },
    "s12-usual-empty": {
     "h": 64,
@@ -2513,20 +2330,196 @@
    "s14-slider": {
     "h": 227,
     "ctrl": 44,
-    "card": 52,
-    "over": 8
+    "card": 0,
+    "over": 0
    },
    "s14-time": {
     "h": 227,
     "ctrl": 50,
-    "card": 52,
-    "over": 2
+    "card": 0,
+    "over": 0
    },
    "s14-version": {
     "h": 227,
     "ctrl": 20,
-    "card": 52,
-    "over": 32
+    "card": 0,
+    "over": 0
+   }
+  },
+  "prop": {
+   "s1-refresh": {
+    "over": 0,
+    "scrolls": 285
+   },
+   "s1-inspector": {
+    "over": 0,
+    "cardClip": 0,
+    "broken": 0
+   },
+   "s2-version": {
+    "over": 0
+   },
+   "s3-checklist": {
+    "label": 104,
+    "broken": 0,
+    "over": 0
+   },
+   "s4-entity": {
+    "broken": 0,
+    "over": 0
+   },
+   "s5-chart": {
+    "over": 0,
+    "label": 65
+   },
+   "s6-availability": {
+    "name": 290
+   },
+   "s7-shortcuts": {
+    "over": 0
+   },
+   "s8-badge": {
+    "radius": 2
+   },
+   "s9-uses": {
+    "ready": 476,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
+   },
+   "s9-entity": {
+    "ready": 456,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 456,
+    "hEmpty": 456,
+    "hError": 456
+   },
+   "s9-claim": {
+    "ready": 619,
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 619,
+    "hEmpty": 619,
+    "hError": 619
+   },
+   "s9-notices": {
+    "ready": 1043,
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
+   },
+   "s10-gallery": {
+    "h": 456,
+    "dy": 0,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-ops": {
+    "h": 1127,
+    "dy": 163,
+    "dx": 204,
+    "own": 19
+   },
+   "s10-claim": {
+    "h": 619,
+    "dy": 20,
+    "dx": 0,
+    "own": 0
+   },
+   "s10-avail": {
+    "h": 488,
+    "dy": 3,
+    "dx": 78,
+    "own": 0
+   },
+   "s10-inspector": {
+    "h": 1451,
+    "dy": 42,
+    "dx": 0,
+    "own": 42
+   },
+   "s11-quote": {
+    "h": 168,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-today": {
+    "h": 324,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s11-lede": {
+    "h": 251,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-chart": {
+    "h": 242,
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-empty": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-usual-error": {
+    "h": 64,
+    "fill": 100,
+    "off": 0,
+    "fs": 24,
+    "btn": 36
+   },
+   "s12-ops": {
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
+    "btn": 28
+   },
+   "s13-md": {
+    "h": 386,
+    "fill": 85,
+    "off": 137,
+    "fs": 24,
+    "btn": 36
+   },
+   "s14-slider": {
+    "h": 227,
+    "ctrl": 44,
+    "card": 0,
+    "over": 0
+   },
+   "s14-time": {
+    "h": 227,
+    "ctrl": 50,
+    "card": 0,
+    "over": 0
+   },
+   "s14-version": {
+    "h": 227,
+    "ctrl": 20,
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {
@@ -2575,43 +2568,43 @@
    },
    "s9-uses": {
     "ready": 476,
-    "loading": 12,
-    "empty": 188,
-    "error": 188,
-    "hLoading": 464,
-    "hEmpty": 288,
-    "hError": 288
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
    },
    "s9-entity": {
     "ready": 456,
     "loading": 0,
-    "empty": 200,
-    "error": 200,
+    "empty": 0,
+    "error": 0,
     "hLoading": 456,
-    "hEmpty": 256,
-    "hError": 256
+    "hEmpty": 456,
+    "hError": 456
    },
    "s9-claim": {
     "ready": 639,
     "loading": 0,
-    "empty": 146,
-    "error": 146,
+    "empty": 0,
+    "error": 0,
     "hLoading": 639,
-    "hEmpty": 493,
-    "hError": 493
+    "hEmpty": 639,
+    "hError": 639
    },
    "s9-notices": {
     "ready": 1043,
-    "loading": 459,
-    "empty": 459,
-    "error": 459,
-    "hLoading": 584,
-    "hEmpty": 584,
-    "hError": 584
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
    },
    "s10-gallery": {
     "h": 456,
-    "dy": 202,
+    "dy": 0,
     "dx": 0,
     "own": 0
    },
@@ -2634,39 +2627,38 @@
     "own": 0
    },
    "s10-inspector": {
-    "h": 1219,
+    "h": 1479,
     "dy": 42,
-    "dx": 58,
+    "dx": 0,
     "own": 42
    },
    "s11-quote": {
-    "h": 151,
-    "fill": 70,
+    "h": 168,
+    "fill": 100,
     "off": 0,
-    "fs": 20,
+    "fs": 24,
     "btn": 36
    },
    "s11-today": {
     "h": 342,
-    "fill": 30,
+    "fill": 100,
     "off": 0,
-    "fs": 20,
+    "fs": 24,
     "btn": 36
    },
    "s11-lede": {
-    "h": 215,
-    "fill": 68,
+    "h": 229,
+    "fill": 100,
     "off": 0,
-    "fs": 20,
-    "btn": 28
+    "fs": 24,
+    "btn": 36
    },
    "s12-chart": {
     "h": 242,
-    "fill": 0,
-    "off": null,
-    "fs": null,
-    "btn": null,
-    "none": true
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
    },
    "s12-usual-empty": {
     "h": 64,
@@ -2683,10 +2675,10 @@
     "btn": 36
    },
    "s12-ops": {
-    "h": 1217,
-    "fill": 6,
-    "off": 286,
-    "fs": 16,
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
     "btn": 28
    },
    "s13-md": {
@@ -2771,11 +2763,11 @@
    "s9-claim": {
     "ready": 639,
     "loading": 0,
-    "empty": 146,
-    "error": 146,
+    "empty": 0,
+    "error": 0,
     "hLoading": 639,
-    "hEmpty": 493,
-    "hError": 493
+    "hEmpty": 639,
+    "hError": 639
    },
    "s9-notices": {
     "ready": 1043,
@@ -2811,7 +2803,7 @@
     "own": 0
    },
    "s10-inspector": {
-    "h": 1399,
+    "h": 1479,
     "dy": 42,
     "dx": 0,
     "own": 42
@@ -2840,9 +2832,9 @@
    "s12-chart": {
     "h": 242,
     "fill": 79,
-    "off": 35,
+    "off": 26,
     "fs": 24,
-    "btn": null
+    "btn": 36
    },
    "s12-usual-empty": {
     "h": 64,
@@ -2875,20 +2867,20 @@
    "s14-slider": {
     "h": 230,
     "ctrl": 44,
-    "card": 52,
-    "over": 8
+    "card": 0,
+    "over": 0
    },
    "s14-time": {
     "h": 230,
     "ctrl": 50,
-    "card": 52,
-    "over": 2
+    "card": 0,
+    "over": 0
    },
    "s14-version": {
     "h": 230,
     "ctrl": 18,
-    "card": 52,
-    "over": 34
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {
@@ -2937,43 +2929,43 @@
    },
    "s9-uses": {
     "ready": 476,
-    "loading": 12,
-    "empty": 188,
-    "error": 188,
-    "hLoading": 464,
-    "hEmpty": 288,
-    "hError": 288
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
    },
    "s9-entity": {
     "ready": 464,
     "loading": 0,
-    "empty": 208,
-    "error": 208,
+    "empty": 0,
+    "error": 0,
     "hLoading": 464,
-    "hEmpty": 256,
-    "hError": 256
+    "hEmpty": 464,
+    "hError": 464
    },
    "s9-claim": {
     "ready": 705,
     "loading": 0,
-    "empty": 175,
-    "error": 175,
+    "empty": 0,
+    "error": 0,
     "hLoading": 705,
-    "hEmpty": 530,
-    "hError": 530
+    "hEmpty": 705,
+    "hError": 705
    },
    "s9-notices": {
     "ready": 1043,
-    "loading": 459,
-    "empty": 459,
-    "error": 459,
-    "hLoading": 584,
-    "hEmpty": 584,
-    "hError": 584
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
    },
    "s10-gallery": {
     "h": 456,
-    "dy": 191,
+    "dy": 0,
     "dx": 0,
     "own": 0
    },
@@ -2996,39 +2988,38 @@
     "own": 0
    },
    "s10-inspector": {
-    "h": 1277,
+    "h": 1722,
     "dy": 43,
-    "dx": 80,
+    "dx": 0,
     "own": 43
    },
    "s11-quote": {
-    "h": 155,
-    "fill": 76,
+    "h": 176,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
+    "fs": 24,
     "btn": 36
    },
    "s11-today": {
     "h": 374,
-    "fill": 30,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
+    "fs": 24,
     "btn": 36
    },
    "s11-lede": {
-    "h": 249,
-    "fill": 73,
+    "h": 267,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
-    "btn": 28
+    "fs": 24,
+    "btn": 36
    },
    "s12-chart": {
     "h": 242,
-    "fill": 0,
-    "off": null,
-    "fs": null,
-    "btn": null,
-    "none": true
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
    },
    "s12-usual-empty": {
     "h": 64,
@@ -3045,10 +3036,10 @@
     "btn": 36
    },
    "s12-ops": {
-    "h": 1279,
-    "fill": 7,
-    "off": 277,
-    "fs": 16,
+    "h": 768,
+    "fill": 77,
+    "off": 65,
+    "fs": 24,
     "btn": 28
    },
    "s13-md": {
@@ -3133,11 +3124,11 @@
    "s9-claim": {
     "ready": 705,
     "loading": 0,
-    "empty": 175,
-    "error": 175,
+    "empty": 0,
+    "error": 0,
     "hLoading": 705,
-    "hEmpty": 530,
-    "hError": 530
+    "hEmpty": 705,
+    "hError": 705
    },
    "s9-notices": {
     "ready": 1043,
@@ -3173,7 +3164,7 @@
     "own": 0
    },
    "s10-inspector": {
-    "h": 1562,
+    "h": 1722,
     "dy": 43,
     "dx": 0,
     "own": 43
@@ -3202,9 +3193,9 @@
    "s12-chart": {
     "h": 242,
     "fill": 79,
-    "off": 35,
+    "off": 26,
     "fs": 24,
-    "btn": null
+    "btn": 36
    },
    "s12-usual-empty": {
     "h": 64,
@@ -3237,20 +3228,20 @@
    "s14-slider": {
     "h": 237,
     "ctrl": 44,
-    "card": 74,
-    "over": 30
+    "card": 0,
+    "over": 0
    },
    "s14-time": {
     "h": 237,
     "ctrl": 56,
-    "card": 74,
-    "over": 18
+    "card": 0,
+    "over": 0
    },
    "s14-version": {
     "h": 237,
     "ctrl": 28,
-    "card": 74,
-    "over": 46
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {
@@ -3299,43 +3290,43 @@
    },
    "s9-uses": {
     "ready": 476,
-    "loading": 12,
-    "empty": 188,
-    "error": 188,
-    "hLoading": 464,
-    "hEmpty": 288,
-    "hError": 288
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
    },
    "s9-entity": {
     "ready": 469,
     "loading": 0,
-    "empty": 213,
-    "error": 213,
+    "empty": 0,
+    "error": 0,
     "hLoading": 469,
-    "hEmpty": 256,
-    "hError": 256
+    "hEmpty": 469,
+    "hError": 469
    },
    "s9-claim": {
     "ready": 687,
     "loading": 0,
-    "empty": 160,
-    "error": 160,
+    "empty": 0,
+    "error": 0,
     "hLoading": 687,
-    "hEmpty": 527,
-    "hError": 527
+    "hEmpty": 687,
+    "hError": 687
    },
    "s9-notices": {
     "ready": 1043,
-    "loading": 459,
-    "empty": 459,
-    "error": 459,
-    "hLoading": 584,
-    "hEmpty": 584,
-    "hError": 584
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
    },
    "s10-gallery": {
     "h": 456,
-    "dy": 199,
+    "dy": 0,
     "dx": 0,
     "own": 0
    },
@@ -3358,39 +3349,38 @@
     "own": 0
    },
    "s10-inspector": {
-    "h": 1252,
+    "h": 1617,
     "dy": 42,
-    "dx": 76,
+    "dx": 0,
     "own": 42
    },
    "s11-quote": {
-    "h": 149,
-    "fill": 68,
+    "h": 166,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
+    "fs": 24,
     "btn": 36
    },
    "s11-today": {
     "h": 363,
-    "fill": 27,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
+    "fs": 24,
     "btn": 36
    },
    "s11-lede": {
-    "h": 241,
-    "fill": 66,
+    "h": 255,
+    "fill": 100,
     "off": 0,
-    "fs": 16,
-    "btn": 28
+    "fs": 24,
+    "btn": 36
    },
    "s12-chart": {
     "h": 242,
-    "fill": 0,
-    "off": null,
-    "fs": null,
-    "btn": null,
-    "none": true
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
    },
    "s12-usual-empty": {
     "h": 64,
@@ -3407,10 +3397,10 @@
     "btn": 36
    },
    "s12-ops": {
-    "h": 1229,
-    "fill": 6,
-    "off": 275,
-    "fs": 16,
+    "h": 768,
+    "fill": 79,
+    "off": 56,
+    "fs": 24,
     "btn": 28
    },
    "s13-md": {
@@ -3495,11 +3485,11 @@
    "s9-claim": {
     "ready": 687,
     "loading": 0,
-    "empty": 160,
-    "error": 160,
+    "empty": 0,
+    "error": 0,
     "hLoading": 687,
-    "hEmpty": 527,
-    "hError": 527
+    "hEmpty": 687,
+    "hError": 687
    },
    "s9-notices": {
     "ready": 1043,
@@ -3535,7 +3525,7 @@
     "own": 0
    },
    "s10-inspector": {
-    "h": 1537,
+    "h": 1617,
     "dy": 42,
     "dx": 0,
     "own": 42
@@ -3564,9 +3554,9 @@
    "s12-chart": {
     "h": 242,
     "fill": 79,
-    "off": 35,
+    "off": 26,
     "fs": 24,
-    "btn": null
+    "btn": 36
    },
    "s12-usual-empty": {
     "h": 64,
@@ -3599,20 +3589,20 @@
    "s14-slider": {
     "h": 231,
     "ctrl": 44,
-    "card": 58,
-    "over": 14
+    "card": 0,
+    "over": 0
    },
    "s14-time": {
     "h": 231,
     "ctrl": 52,
-    "card": 58,
-    "over": 6
+    "card": 0,
+    "over": 0
    },
    "s14-version": {
     "h": 231,
     "ctrl": 22,
-    "card": 58,
-    "over": 36
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {
@@ -3661,43 +3651,43 @@
    },
    "s9-uses": {
     "ready": 476,
-    "loading": 12,
-    "empty": 188,
-    "error": 188,
-    "hLoading": 464,
-    "hEmpty": 288,
-    "hError": 288
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
    },
    "s9-entity": {
     "ready": 456,
     "loading": 0,
-    "empty": 200,
-    "error": 200,
+    "empty": 0,
+    "error": 0,
     "hLoading": 456,
-    "hEmpty": 256,
-    "hError": 256
+    "hEmpty": 456,
+    "hError": 456
    },
    "s9-claim": {
     "ready": 687,
     "loading": 0,
-    "empty": 162,
-    "error": 162,
+    "empty": 0,
+    "error": 0,
     "hLoading": 687,
-    "hEmpty": 525,
-    "hError": 525
+    "hEmpty": 687,
+    "hError": 687
    },
    "s9-notices": {
     "ready": 1043,
-    "loading": 459,
-    "empty": 459,
-    "error": 459,
-    "hLoading": 584,
-    "hEmpty": 584,
-    "hError": 584
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
    },
    "s10-gallery": {
     "h": 456,
-    "dy": 186,
+    "dy": 0,
     "dx": 0,
     "own": 0
    },
@@ -3709,7 +3699,7 @@
    },
    "s10-claim": {
     "h": 687,
-    "dy": 37,
+    "dy": 38,
     "dx": 0,
     "own": 0
    },
@@ -3720,45 +3710,44 @@
     "own": 0
    },
    "s10-inspector": {
-    "h": 1240,
-    "dy": 42,
-    "dx": 66,
-    "own": 42
+    "h": 1631,
+    "dy": 55,
+    "dx": 0,
+    "own": 55
    },
    "s11-quote": {
-    "h": 151,
-    "fill": 61,
+    "h": 178,
+    "fill": 100,
     "off": 0,
-    "fs": 13,
+    "fs": 24,
     "btn": 36
    },
    "s11-today": {
     "h": 336,
-    "fill": 27,
+    "fill": 100,
     "off": 0,
-    "fs": 13,
+    "fs": 24,
     "btn": 36
    },
    "s11-lede": {
-    "h": 215,
-    "fill": 59,
+    "h": 229,
+    "fill": 100,
     "off": 0,
-    "fs": 13,
-    "btn": 28
+    "fs": 24,
+    "btn": 36
    },
    "s12-chart": {
     "h": 242,
-    "fill": 0,
-    "off": null,
-    "fs": null,
-    "btn": null,
-    "none": true
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
    },
    "s12-usual-empty": {
     "h": 64,
     "fill": 100,
     "off": 0,
-    "fs": 24,
+    "fs": 20,
     "btn": 36
    },
    "s12-usual-error": {
@@ -3769,10 +3758,10 @@
     "btn": 36
    },
    "s12-ops": {
-    "h": 1217,
-    "fill": 6,
-    "off": 286,
-    "fs": 16,
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
     "btn": 28
    },
    "s13-md": {
@@ -3857,11 +3846,11 @@
    "s9-claim": {
     "ready": 687,
     "loading": 0,
-    "empty": 162,
-    "error": 162,
+    "empty": 0,
+    "error": 0,
     "hLoading": 687,
-    "hEmpty": 525,
-    "hError": 525
+    "hEmpty": 687,
+    "hError": 687
    },
    "s9-notices": {
     "ready": 1043,
@@ -3886,7 +3875,7 @@
    },
    "s10-claim": {
     "h": 687,
-    "dy": 38,
+    "dy": 37,
     "dx": 0,
     "own": 0
    },
@@ -3897,13 +3886,13 @@
     "own": 0
    },
    "s10-inspector": {
-    "h": 1525,
-    "dy": 42,
+    "h": 1631,
+    "dy": 55,
     "dx": 0,
-    "own": 42
+    "own": 55
    },
    "s11-quote": {
-    "h": 168,
+    "h": 178,
     "fill": 100,
     "off": 0,
     "fs": 24,
@@ -3926,15 +3915,15 @@
    "s12-chart": {
     "h": 242,
     "fill": 79,
-    "off": 35,
+    "off": 26,
     "fs": 24,
-    "btn": null
+    "btn": 36
    },
    "s12-usual-empty": {
     "h": 64,
     "fill": 100,
     "off": 0,
-    "fs": 24,
+    "fs": 20,
     "btn": 36
    },
    "s12-usual-error": {
@@ -3961,20 +3950,20 @@
    "s14-slider": {
     "h": 232,
     "ctrl": 44,
-    "card": 84,
-    "over": 40
+    "card": 0,
+    "over": 0
    },
    "s14-time": {
     "h": 232,
     "ctrl": 54,
-    "card": 84,
-    "over": 30
+    "card": 0,
+    "over": 0
    },
    "s14-version": {
     "h": 232,
     "ctrl": 24,
-    "card": 84,
-    "over": 60
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {
@@ -4023,43 +4012,43 @@
    },
    "s9-uses": {
     "ready": 476,
-    "loading": 12,
-    "empty": 188,
-    "error": 188,
-    "hLoading": 464,
-    "hEmpty": 288,
-    "hError": 288
+    "loading": 0,
+    "empty": 0,
+    "error": 0,
+    "hLoading": 476,
+    "hEmpty": 476,
+    "hError": 476
    },
    "s9-entity": {
     "ready": 456,
     "loading": 0,
-    "empty": 200,
-    "error": 200,
+    "empty": 0,
+    "error": 0,
     "hLoading": 456,
-    "hEmpty": 256,
-    "hError": 256
+    "hEmpty": 456,
+    "hError": 456
    },
    "s9-claim": {
     "ready": 650,
     "loading": 0,
-    "empty": 127,
-    "error": 127,
+    "empty": 0,
+    "error": 0,
     "hLoading": 650,
-    "hEmpty": 523,
-    "hError": 523
+    "hEmpty": 650,
+    "hError": 650
    },
    "s9-notices": {
     "ready": 1043,
-    "loading": 459,
-    "empty": 459,
-    "error": 459,
-    "hLoading": 584,
-    "hEmpty": 584,
-    "hError": 584
+    "loading": 275,
+    "empty": 275,
+    "error": 275,
+    "hLoading": 768,
+    "hEmpty": 768,
+    "hError": 768
    },
    "s10-gallery": {
     "h": 456,
-    "dy": 202,
+    "dy": 0,
     "dx": 0,
     "own": 0
    },
@@ -4071,7 +4060,7 @@
    },
    "s10-claim": {
     "h": 650,
-    "dy": 36,
+    "dy": 37,
     "dx": 0,
     "own": 0
    },
@@ -4082,39 +4071,38 @@
     "own": 0
    },
    "s10-inspector": {
-    "h": 1209,
-    "dy": 42,
-    "dx": 70,
-    "own": 42
+    "h": 1594,
+    "dy": 55,
+    "dx": 0,
+    "own": 55
    },
    "s11-quote": {
-    "h": 151,
-    "fill": 61,
+    "h": 168,
+    "fill": 100,
     "off": 0,
-    "fs": 13,
+    "fs": 24,
     "btn": 36
    },
    "s11-today": {
     "h": 336,
-    "fill": 27,
+    "fill": 100,
     "off": 0,
-    "fs": 13,
+    "fs": 24,
     "btn": 36
    },
    "s11-lede": {
-    "h": 244,
-    "fill": 60,
+    "h": 258,
+    "fill": 100,
     "off": 0,
-    "fs": 13,
-    "btn": 28
+    "fs": 24,
+    "btn": 36
    },
    "s12-chart": {
     "h": 242,
-    "fill": 0,
-    "off": null,
-    "fs": null,
-    "btn": null,
-    "none": true
+    "fill": 79,
+    "off": 26,
+    "fs": 24,
+    "btn": 36
    },
    "s12-usual-empty": {
     "h": 64,
@@ -4132,15 +4120,15 @@
     "btn": 36
    },
    "s12-ops": {
-    "h": 1217,
-    "fill": 6,
-    "off": 286,
-    "fs": 16,
+    "h": 768,
+    "fill": 81,
+    "off": 50,
+    "fs": 24,
     "btn": 28
    },
    "s13-md": {
-    "h": 420,
-    "fill": 86,
+    "h": 396,
+    "fill": 85,
     "off": 137,
     "fs": 24,
     "btn": 36
@@ -4220,11 +4208,11 @@
    "s9-claim": {
     "ready": 650,
     "loading": 0,
-    "empty": 127,
-    "error": 127,
+    "empty": 0,
+    "error": 0,
     "hLoading": 650,
-    "hEmpty": 523,
-    "hError": 523
+    "hEmpty": 650,
+    "hError": 650
    },
    "s9-notices": {
     "ready": 1043,
@@ -4260,10 +4248,10 @@
     "own": 0
    },
    "s10-inspector": {
-    "h": 1488,
-    "dy": 42,
+    "h": 1594,
+    "dy": 55,
     "dx": 0,
-    "own": 42
+    "own": 55
    },
    "s11-quote": {
     "h": 168,
@@ -4289,9 +4277,9 @@
    "s12-chart": {
     "h": 242,
     "fill": 79,
-    "off": 35,
+    "off": 26,
     "fs": 24,
-    "btn": null
+    "btn": 36
    },
    "s12-usual-empty": {
     "h": 64,
@@ -4316,8 +4304,8 @@
     "btn": 28
    },
    "s13-md": {
-    "h": 420,
-    "fill": 86,
+    "h": 396,
+    "fill": 85,
     "off": 137,
     "fs": 24,
     "btn": 36
@@ -4325,20 +4313,20 @@
    "s14-slider": {
     "h": 228,
     "ctrl": 44,
-    "card": 52,
-    "over": 8
+    "card": 0,
+    "over": 0
    },
    "s14-time": {
     "h": 228,
     "ctrl": 51,
-    "card": 52,
-    "over": 1
+    "card": 0,
+    "over": 0
    },
    "s14-version": {
     "h": 228,
     "ctrl": 21,
-    "card": 52,
-    "over": 31
+    "card": 0,
+    "over": 0
    }
   },
   "modal": {

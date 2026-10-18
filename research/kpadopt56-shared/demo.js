@@ -8,7 +8,6 @@ import { setChartData } from '../../js/chart.js';
 import { setAvailability, availabilityDays, availabilityRange } from '../../js/availability.js';
 import { registerShortcuts } from '../../js/shortcuts.js';
 import { STATE_SLOTS, initStates } from './states.js';
-import { attachProposed } from './proposed.js';
 
 const THEMES = ['formal', 'dark', 'cyberpunk', 'synthwave', 'pastel', 'forest', 'blueprint', 'solstice', 'brutalism', 'deco', 'nostromo', 'titanium'];
 const $$ = (/** @type {string} */ s, /** @type {ParentNode} */ r = document) => /** @type {HTMLElement[]} */ ([...r.querySelectorAll(s)]);
@@ -144,7 +143,6 @@ for (const el of $$('[data-kp-checklist]')) setChecklistItems(el, CHECKS);
 for (const el of $$('[data-kp-entity-grid]')) setEntityGrid(el, ENTITIES);
 for (const el of $$('[data-kp-chart]')) setChartData(el, chartData());
 for (const el of $$('[data-kp-availability]')) setAvailability(el, AVAILABILITY);
-attachProposed();
 initStates();
 for (const button of $$('[data-modal]')) {
     const sheet = /** @type {HTMLDialogElement} */ (button.closest('.col').querySelector('dialog.kp-shortcuts'));
@@ -181,21 +179,21 @@ const METRICS = {
     's14-slider': INLINE, 's14-time': INLINE, 's14-version': INLINE,
 };
 const NOTES = {
-    's9-uses': 'The proposal is behaviour (proposed.js, holdFootprint): the host keeps the height it had while ready as a minimum while it loads, is empty or has failed. Nothing is changed in any component: every one of them already writes its state as data-kp-state on its host.',
-    's9-claim': 'The checklist draws "empty" as a ready list without rows (no data-kp-state), so a hold that follows that attribute cannot see it, and the failed list is drawn under the old rows when it comes straight from ready. This component already has its own floor, --kp-checklist-min-rows (10 rows); the honest proposal for it is to leave it to that knob (a page sets the number of rows it expects). The numbers on both sides are therefore the same.',
+    's9-uses': 'In the package now (js/footprint.js): the host keeps the height it had while ready as a minimum while it loads, is empty or has failed, capped by --kp-footprint-max. Pastel\'s loading stays 89 px taller than the loaded map: its skeleton is higher than the data, and a minimum never shrinks it.',
+    's9-claim': 'The checklist now writes data-kp-state="empty" for a list without items, so the footprint holds it, and a list set to error straight from ready shows the failed plate alone. Both sides are the package.',
     's9-notices': 'The hold is capped at --kp-footprint-max (48rem, 768 px): a page 1043 px high is held at 768, because a plate centred in 1000 px or more is out of sight. The cap is a knob; without it the state is exactly as high as the loaded page.',
-    's10-claim': 'By design: the card is centred over the rows, as the busy data table centres it over its rows with the toolbar left readable and usable above. Not proposed to change.',
-    's10-avail': 'By design: the card is centred over the cells; the names column stays readable beside it, so the card is half that column to the right of the component centre. Not proposed to change.',
-    's10-ops': 'An operations page has no single data area: every card is its own area and lays its own busy card, centred in itself (the last column). Not proposed to change.',
-    's10-inspector': 'The 58 px was the S1 fault (the bar sticking out widened the stage): the Proposed side carries the S1 rule too, and the card is centred sideways. The remaining height difference is the S1 rows wrapping on a narrow card.',
+    's10-claim': 'By design: the card is centred over the rows, as the busy data table centres it over its rows with the toolbar left readable and usable above.',
+    's10-avail': 'By design: the card is centred over the cells; the names column stays readable beside it.',
+    's10-ops': 'An operations page has no single data area: every card is its own area and lays its own busy card, centred in itself (the last column).',
+    's10-inspector': 'The 58 px was the S1 fault (the bar sticking out widened the stage); with S1 in the package the card is centred sideways.',
     's11-quote': 'The card grows a little while failed (the plate needs room for a heading, a sentence and a normal Retry); its height is in the first column.',
-    's11-lede': 'The lede card\'s Retry is the small size today (28 px) and the normal size (36 px) in the proposal.',
-    's12-chart': 'The Retry the other plates carry would be a small JavaScript addition in js/chart.js (an event on the chart, as the other components fire); not part of this sketch.',
+    's11-lede': 'The lede card\'s Retry is the normal size (36 px) on both sides now.',
+    's12-chart': 'The failed chart is a plate with a Retry that fires kp-chart-retry (the package, both sides).',
     's12-usual-empty': 'Not a fault: the picker\'s empty and failed states are heading-size plates in its list panel (measured against that panel). The 13 px line of the states round was the input row, which is all there is of the component outside the panel.',
     's12-usual-error': 'Same as empty: a plate in the panel, nothing to propose.',
-    's12-ops': 'The failure is measured against the whole page. The proposal drops the stale cards and lets the alert take their place; if Kenny wants the old cards under a failure, the alert stays a band (today\'s behaviour).',
-    's13-md': 'Not reproduced in the package: a failed detail pane draws a full alert plate (85 percent of the area, heading size, a normal Retry) in every theme. The "no failure" of the states round came from the demo page: after the Empty button its handler selects an item, which starts a load that ends 700 ms later in Ready, over the failed state. Nothing to propose for the package; the demo wiring is the fix.',
-    's14-slider': 'The question is whether a card belongs here. The package\'s card is a spinner and a line of words on a plate, about 54 px high; a slider is 44 px, a time field 61 px, a version badge 18 px.',
+    's12-ops': 'The failed page: data-kp-ops-failed="plate" (the default) lets the alert take the body at the height the page had; "keep" brings back the cards under a band.',
+    's13-md': 'Not a package fault: the failed detail plate was overwritten by the demo page\'s own load (a state button\'s select started a 700 ms load that ended in Ready). The demo wiring is fixed (research/kpadopt56/src/kpadopt5-ops/demo.js).',
+    's14-slider': 'Inline controls keep their own skeleton: the package\'s card is about 54 px high, a slider 44 px, a time field 61 px, a version badge 18 px. Both sides are the same.',
     's7-shortcuts': 'Opened as a modal on a 390 x 844 phone (the package as it is used), the sheet measured top 19, bottom 825 of 844 in every theme, scrolling inside itself: the package is fine, only the demo frame lets the 41-row sheet run out.',
     's8-badge': 'Only titanium has a chamfer; the radius of every other theme is its own and the proposal is scoped to titanium, so those rows do not change.',
     's1-refresh': 'Overflow is measured against the 308 px of content a phone frame has (the part pages measured 186 px in formal against their section edge; the difference is the margin).',

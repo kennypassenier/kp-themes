@@ -112,7 +112,8 @@ for (const theme of THEMES) {
         for (const state of ORDER) {
             if (!ids.some(({ what }) => what === 'height' || (what === 'busy' && ['ready', 'loading'].includes(state)) || what.endsWith(`:${state}`) || (what.startsWith('inline') && ['ready', 'loading'].includes(state)) || (what.startsWith('plate') && state === 'ready'))) continue;
             await page.evaluate(([i, n, s]) => window.kpDriveState(i, n, s), [item, name, state]);
-            await page.waitForTimeout(state === 'ready' ? 1600 : 1400);
+            // 3.5 s for a state: a busy card or a plate that arrives (forest's, synthwave's) is still moving at 1.4 s, and the copy read second looked off by up to 15 px.
+            await page.waitForTimeout(state === 'ready' ? 1600 : 3500);
             for (const side of ['now', 'proposal']) {
                 raw[side][state] = {};
                 for (const kind of new Set(ids.map(({ what }) => (what === 'height' ? 'height' : what.split(':')[0] === 'plate' ? 'plate' : what.startsWith('inline') ? 'inline:' : what)))) {

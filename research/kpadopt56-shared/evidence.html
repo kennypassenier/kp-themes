@@ -12,40 +12,7 @@
         <link rel="stylesheet" href="../../css/formal-register.css" data-kp-register="formal" />
         <link rel="stylesheet" href="page.css" />
         <style id="proposals">
-/* S1: the bar may be narrower than the track; the track then scrolls along its own line (the package already does that
-   once it is told it is too wide: [data-kp-segmented-overflow]). */
-.proposal .kp-refresh,
-.proposal .kp-inspector { grid-template-columns: minmax(0, 1fr); }
-.proposal .kp-refresh__chooser,
-.proposal .kp-inspector__filter { min-inline-size: 0; max-inline-size: 100%; }
-/* ...and once the card has its real width, a narrow request row (method, status, source, time) cannot stay on one line in the
-   wide-lettered themes and tears its badges: it wraps whole items onto a second line, the path on a line of its own. */
-@container kp-inspector (max-width: 40rem) {
-    .proposal .kp-inspector__row { display: inline-flex; flex-wrap: wrap; align-items: baseline; }
-    .proposal .kp-inspector__path { order: 1; flex: 1 0 100%; }
-    .proposal .kp-inspector__time { margin-inline-start: auto; }
-}
-
-/* S2: a version badge is at most as wide as its row; only a part wider than that breaks inside the word. */
-.proposal .kp-badge--version { max-inline-size: 100%; box-sizing: border-box; }
-.proposal .kp-version__from,
-.proposal .kp-version__to { min-inline-size: 0; overflow-wrap: anywhere; }
-
-/* S3: the detail's column takes what the detail needs but at most half of the row, and the detail wraps inside it,
-   so the label keeps its words whole. */
-.proposal .kp-checklist__row { grid-template-columns: auto minmax(0, 1fr) fit-content(50%); }
-.proposal .kp-checklist__detail { white-space: normal; overflow-wrap: anywhere; }
-
-/* S4: an action column is never narrower than its button's word, and a button never breaks inside a word. (The actions'
-   row is one button high on every card by design, so it cannot wrap: where the words do not fit, see the numbers.) */
-.proposal .kp-entity__actions { grid-template-columns: repeat(var(--kp-entity-cols, 4), minmax(min-content, 1fr)); }
-.proposal .kp-entity__actions .kp-button { overflow-wrap: normal; }
-
-/* S5: the chart keeps room on its right for the last date label, which is centred on the last tick. */
-.proposal .kp-chart { padding-inline-end: 3rem; }
-
-/* S6: the row that carries the three answer buttons (yours) puts them under your name instead of beside it. */
-.proposal .kp-availability__column-row:has(> .kp-availability__column-answers) { grid-template-columns: minmax(0, 1fr); }
+/* S1 to S6 are in the package now ([t56-sharedfix-1018]): the Proposed box carries no rule for them, so Now and Proposed are the same package. */
 
 /* S7 is the demo's frame, not the package: the frame scrolls instead of letting the long sheet run out of it. */
 .proposal .stage { block-size: 24rem; overflow: auto; }
@@ -56,43 +23,9 @@
 /* S8: titanium's badge is a chamfered plate, not a pill: the radius under the clip goes to zero (titanium only). */
 [data-theme='titanium'] .proposal .kp-badge { border-radius: 0; }
 
-/* S9 is behaviour, not style: see proposed.js (holdFootprint). */
-
-/* S10: the gallery's busy card is laid over the whole gallery, not over the 43 px strip of skeleton lines. (The layer is already
-   inside the gallery and absolutely placed; the script's four offsets only say which part of it to cover, so `inset: 0` wins.) */
-.proposal .kp-gallery > .kp-gallery__busy { inset: 0; }
-
-/* S11: a card's failure is the same plate every other failed area is: centred, heading size, filling the stage, a normal Retry. */
-.proposal .kp-card__state:has(> .kp-card__failure) { align-content: stretch; }
-.proposal .kp-card__state > .kp-card__failure {
-    display: grid; place-content: center; justify-items: center; gap: var(--kp-space-sm, 0.5rem);
-    box-sizing: border-box; inline-size: 100%; block-size: 100%; padding: var(--kp-space-lg, 1.5rem);
-    font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem)); line-height: 1.35; text-align: center; text-wrap: balance;
-}
-.proposal .kp-card__failure > .kp-alert__body { justify-items: center; flex: none; }
-.proposal .kp-card__state > .kp-card__failure .kp-card__state-title {
-    font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem)); font-weight: 600; line-height: 1.35;
-}
-.proposal .kp-card__failure .kp-card__state-text { font-size: var(--kp-text-md, 1rem); }
-.proposal .kp-card__failure > .kp-card__retry { min-block-size: 2.25rem; }
-
-/* S12: a failed chart is the alert plate (heading size, tinted, bordered) over the plot's height, not a dot and a line. */
-.proposal .kp-chart__state[data-kp-state='error'] {
-    padding: var(--kp-space-lg, 1.5rem); border: 1px solid color-mix(in oklab, var(--destructive) 55%, transparent);
-    background: color-mix(in oklab, var(--destructive) 8%, transparent);
-    font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem)); font-weight: 600; line-height: 1.35;
-}
-.proposal .kp-chart__state[data-kp-state='error'] .kp-chart__state-text { max-inline-size: 36ch; }
-/* S12: a failed operations page shows the failure, whole: the stale cards go, the alert takes the page's body, centred. */
-.proposal .kp-ops[data-kp-state='error'] > :is(.kp-ops__kpis, .kp-ops__toolbar, .kp-ops__body) { display: none; }
-.proposal .kp-ops[data-kp-state='error'] > .kp-ops__attention { display: grid; flex: 1 1 auto; min-block-size: 24rem; }
-.proposal .kp-ops[data-kp-state='error'] .kp-attention__item {
-    grid-template-columns: minmax(0, 1fr); place-content: center; justify-items: center; text-align: center; padding: var(--kp-space-xl, 2rem);
-}
-.proposal .kp-ops[data-kp-state='error'] .kp-attention__text > strong { font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem)); }
-.proposal .kp-ops[data-kp-state='error'] .kp-attention__actions { justify-content: center; }
-
-/* S13 needs no rule: the package draws the failure (see the numbers). S14 is a question, not a rule (see proposed.js). */
+/* S9 to S12 and S14 are in the package now ([t56-statefix-1018]: js/footprint.js, the gallery's busy card, the state plates in the last
+   layer, the chart's Retry, data-kp-ops-failed), so the Proposed box carries no rule for them and Now and Proposed are the same package. */
+/* S13 needs no rule: the package draws the failure (see the numbers). S14 is answered: inline controls stay as they are. */
 /* PROPOSALS */
         </style>
         <script src="measured.js"></script>
@@ -104,8 +37,9 @@
                 <p>
                     Fourteen faults that sit in the approved package (<code>css/components.css</code>, <code>js/</code> and one theme register), not in the demo pages; items 1 to 8 are about size and overflow, items 9 to 14 about the loading, empty and failed states.
                     Each is drawn twice from the real package: <b>Now</b> as it is, <b>Proposed</b> with one small rule that applies only inside the
-                    Proposed box. Pick a theme to check the proposal in it. Under every pair the measured numbers for all twelve themes. Nothing in
-                    the package has been changed; this page is evidence for your decision per item.
+                    Proposed box. Pick a theme to check the proposal in it. Under every pair the measured numbers for all twelve themes. Items 1 to 6 and
+                    9 to 14 are in the package since [t56-sharedfix-1018] and [t56-statefix-1018]: for them both boxes are the package and the numbers
+                    show Now equal to Proposed; this page is the evidence.
                 </p>
                 <div class="shared__themes" role="group" aria-label="Theme" id="themes"></div>
             </header>
@@ -380,13 +314,13 @@
         </section>
         <section class="item" id="s14" aria-labelledby="h-s14" style="--bleed: 0px">
             <h2 id="h-s14">14. Inline controls load without a busy card (S14)</h2>
-            <p class="item__what">A slider, a time field and a version badge show a small skeleton of their own while they load and no busy card, where a data area gets the theme&rsquo;s card. Does a card belong on a control one line high? The Proposed side lays the package&rsquo;s own busy card over each of them to find out; the numbers say how much taller than the control it is.</p>
+            <p class="item__what">A slider, a time field and a version badge show a small skeleton of their own while they load and no busy card, where a data area gets the theme&rsquo;s card. Does a card belong on a control one line high? It does not (measured 2026-10-18: a card is 42 to 84 px high and covers a control of 18 to 62 px), so inline controls stay as they are and the rule in DEMO_RULES chapter 4 is for data areas.</p>
             <h3>Slider, time field and version badge</h3>
             <div class="statebar" data-statebar="inline" role="group" aria-label="State of the inline controls"><b>State:</b></div>
             <div class="pair" data-width="640">
                 <div class="col now"><p class="col__label">Now (the package as it is)</p>
                     <div class="frame frame--640"><div data-slot="inline"></div></div></div>
-                <div class="col proposal"><p class="col__label">Proposed (a busy card over each control)</p>
+                <div class="col proposal"><p class="col__label">Proposed (the same)</p>
                     <div class="frame frame--640"><div data-slot="inline"></div></div></div>
             </div>
             <div class="measured" data-measured="s14-slider"></div>

@@ -1,7 +1,7 @@
 // research/kpadopt56-shared, items 9 to 14 (the shared STATE faults): the markup and the data of the real package components in
 // their loading / empty / failed states, drawn twice (Now and Proposed), and one driver that presses a state on both copies at once.
-// Nothing here changes a component: the Proposed copy differs only by the <style id="proposals"> in evidence.html and by
-// proposed.js, both scoped to `.proposal`. The data is the part pages' own (research/kpadopt56/src/*/demo.js), cut down.
+// Nothing here changes a component: the Proposed copy differs only by the <style id="proposals"> in evidence.html, scoped to `.proposal`
+// (which holds no rule for items 9 to 14 since they are in the package). The data is the part pages' own (research/kpadopt56/src/*/demo.js), cut down.
 import { setMatrix } from '../../js/heat.js';
 import { setEntityGrid, setEntityGridState } from '../../js/entity-card.js';
 import { setChecklistItems, setChecklistState } from '../../js/checklist.js';
@@ -333,7 +333,6 @@ const componentOf = (slot) => /** @type {HTMLElement} */ (slot.firstElementChild
 export function driveState(item, name, state) {
     for (const slot of $$(`[data-slot="${name}"]`, item)) DRIVERS[name](componentOf(slot), state);
     for (const b of $$(`[data-statebar="${name}"] button`, item)) b.setAttribute('aria-pressed', String(b.dataset.state === state));
-    /** @type {any} */ (window).kpProposedAfter?.(item, name, state);
 }
 
 /** Draw the state buttons and the first (ready) state; call once the package's boot is done. */
