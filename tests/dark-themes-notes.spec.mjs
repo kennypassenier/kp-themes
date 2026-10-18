@@ -264,10 +264,10 @@ for (const name of [theme('dark'), theme('titanium')]) {
 /* ───────────────────────────── 3 · synthwave's Try again keeps its frame, and only it */
 
 test.describe(
-    "synthwave: the data table's Try again on the destructive plate [Kenny's note, 2026-09-15, narrowed in scope-94]",
+    "synthwave: the buttons on the destructive plate [Kenny's note, 2026-09-15, scope-94; widened by Kenny, 2026-10-19]",
     { tag: [`@theme:${theme('synthwave')}`, '@component:datatable', '@component:button'] },
     () => {
-        test("the data table's Try again frames in the alert label's own ink, at least 3:1 on the plate; every other button on a red alert keeps a button's own frame [scope-94]", async ({
+        test('every button on a red alert is a dark key with the near-white frame [scope-94, superseded for buttons on a red alert by Kenny, 2026-10-19]', async ({
             page,
         }) => {
             // Before d50f11a9: the frame was the primary pink, rgb(255, 71, 130), on
@@ -278,6 +278,11 @@ test.describe(
             // expectation narrowed with it: the label's ink reaches only the data
             // table's retry control in its failed slot, and the plain Try again of
             // #empty draws the frame the same button draws outside any alert.
+            // Kenny, 2026-10-19 (page synth-alert-buttons, approved with "Dark keys
+            // on every red alert"): scope-94's narrowing is superseded for buttons
+            // on a red alert. Every button there, the plain Try again of #empty
+            // included, is the t56 dark key: the plate's ink as the ground and the
+            // near-white frame.
             // Drill [KT3]: d50f11a9's wide selector put back → red on "empty Try
             // again: a button's own frame".
             await openCatalogue(page, '/catalogue/table.html', 'synthwave', { reducedMotion: 'reduce' });
@@ -312,15 +317,15 @@ test.describe(
             expect([...new Set(read.map((r) => r.block))].sort()).toEqual(['datatable-states', 'empty']);
             expect([...new Set(read.filter((r) => r.retry).map((r) => r.block))]).toEqual(['datatable-states']);
             for (const r of read) {
-                if (r.retry) {
-                    expect(r.frame, `${r.block} ${r.text}: the frame is the label's ink`).toEqual(r.label);
-                    // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
-                    const frameOnPlate = contrast(r.frame, r.plate);
-                    if (frameOnPlate < 3) reportContrast(test.info(), `synthwave ${r.block} ${r.text} frame on plate: ${frameOnPlate.toFixed(2)}:1`);
-                } else {
-                    expect(r.frame, `${r.block} ${r.text}: a button's own frame`).toEqual(r.own);
-                    expect(r.frame, `${r.block} ${r.text}: not the label's ink`).not.toEqual(r.label);
-                }
+                // The data table's retry in its failed slot included: one frame for every button.
+                expect(
+                    r.frame.map((c) => Math.round(c * 255)),
+                    `${r.block} ${r.text}: the near-white frame of the dark key`,
+                ).toEqual([250, 249, 251]);
+                expect(r.frame, `${r.block} ${r.text}: not the pink frame a button draws outside an alert`).not.toEqual(r.own);
+                // Contrast is a guideline, not a gate (Kenny, form v44; fix-104).
+                const frameOnPlate = contrast(r.frame, r.plate);
+                if (frameOnPlate < 3) reportContrast(test.info(), `synthwave ${r.block} ${r.text} frame on plate: ${frameOnPlate.toFixed(2)}:1`);
             }
         });
     },
