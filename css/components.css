@@ -25402,7 +25402,9 @@
 
     .kp-claim {
         display: grid;
-        grid-template-columns: minmax(0, 1fr) auto;
+        /* The people never get less than their longest unbroken piece ("Vandenbroucke-"): the control beside them takes what
+         * is left, so a name wraps at its spaces and hyphens and is not cut inside a word [t56-words-1018]. */
+        grid-template-columns: minmax(min-content, 1fr) auto;
         align-items: center;
         gap: var(--kp-space-xs, 0.25rem) var(--kp-space-sm, 0.5rem);
         box-sizing: border-box;
@@ -25433,7 +25435,10 @@
 
     .kp-claim__name {
         min-inline-size: 0;
-        overflow-wrap: anywhere;
+        /* break-word, not anywhere: anywhere makes the name's smallest size one letter, so it was squeezed first. A name of
+         * more than 24rem without a break still breaks, at that width. */
+        max-inline-size: 24rem;
+        overflow-wrap: break-word;
     }
 
     .kp-claim__gap {
