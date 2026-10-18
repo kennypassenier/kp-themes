@@ -30630,6 +30630,15 @@
         flex: none;
     }
 
+    /* The "+N" opener never shrinks below its text: squeezed in the nowrap flag row it broke "+2" over two lines. */
+    .kp-entity__more-flags {
+        flex: none;
+    }
+
+    .kp-entity__plus {
+        white-space: nowrap;
+    }
+
     .kp-entity__meters {
         display: grid !important;
         grid-template-columns: auto minmax(0, 1fr) auto;
