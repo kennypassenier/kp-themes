@@ -23522,7 +23522,9 @@
     }
 
     /* Failed to read: the stars' place is one plate of the same size, the words centred and a normal-size Retry. */
-    .kp-rating[data-kp-state='error'] .kp-rating__body {
+    /* The failed plate covers the rating's whole box, not the body's: an input is as wide as its row (100%) while its body is only as
+     * wide as the stars, so the plate was a patch the width of the stars [t56-statefix-1018]. */
+    .kp-rating[data-kp-state='error'] {
         position: relative;
     }
 
@@ -27809,5 +27811,15 @@
     .kp-gallery__tile.kp-skeleton {
         block-size: auto;
         min-block-size: 0;
+    }
+}
+
+/* A failed rating's plate is laid over the rating's whole box [t56-statefix-1018]. A register gives `.kp-alert` its own `position`
+ * (pastel's is relative, for its printed pass) and beats the absolute placement in kp.components, which put the plate back in the
+ * flow, narrow and taller than the stars it was to cover; restated in the last layer. */
+@layer kp.layout {
+    .kp-rating[data-kp-state='error'] .kp-rating__failure:not([hidden]) {
+        position: absolute;
+        inset: 0;
     }
 }

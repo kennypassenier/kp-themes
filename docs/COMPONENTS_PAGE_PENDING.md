@@ -118,3 +118,4 @@ the key-figure label wrap and the side navigation's `data-kp-sidenav-opener`; th
 - Shared state fixes [t56-statefix-1018]: `.kp-stateplate__action` (Retry, Add) is at the control size, `--kp-text-md`, not the plate heading size. No new option.
 - Shared state fixes [t56-statefix-1018]: the loading gallery tiles keep the loaded tiles square footprint in every theme. No new option.
 - Shared state fixes [t56-statefix-1018]: a failed checklist (`.kp-checklist__empty`) centres its words and a normal Retry (`.kp-claim__retry`, 2.25rem) instead of a strip across the box. No new option.
+- Shared state fixes [t56-statefix-1018]: a failed rating (`data-kp-state="error"`) covers the rating`s whole box with its plate, not only the stars. No new option.

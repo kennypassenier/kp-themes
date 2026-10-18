@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- **Fixed: a failed rating's plate fills the rating** [t56-statefix-1018; found by the pastel, forest and blueprint states round]. The plate was laid over the rating's body, which is only as wide as the stars, so a failed input row showed a small patch in a wide box; it is now laid over the rating's whole box (the input's full width), the stars and words still keeping their room under it.
 - **Fixed: the Retry of a failed checklist is a normal button in the middle** [t56-statefix-1018; found by the pastel, forest and blueprint states round]. The failed (and empty) box of `.kp-checklist` is a grid whose items stretched, so Retry was a strip across the box; the box now centres its items and Retry is 2.25rem high, at the control size (with the state plate's action size). The box keeps its dashed or solid frame and its minimum rows.
 - **Fixed: a waiting gallery tile keeps its square** [t56-statefix-1018; found by the pastel, forest and blueprint states round]. A register sets `.kp-skeleton` to a line of 1 to 1.5 rem and beats the gallery's `block-size: auto`, so the loading tiles were 16 to 24 px high (formal drew 24 px of 146); the rule is restated in the last layer and the tiles are as tall as the loaded ones.
 - **Fixed: the action of a state plate is a normal button** [t56-statefix-1018; found by the pastel, forest and blueprint states round]. `.kp-stateplate__action` inherited the plate's heading size, so Retry and Add were 23.7 px text in every theme; it is now `--kp-text-md` (1rem). A register's own button size still wins.
