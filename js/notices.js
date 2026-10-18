@@ -270,9 +270,13 @@ function wire(el) {
         const actions = make('div', 'kp-notices__actions');
         // Same function, same place [Kenny, 2026-10-17 22:09]: Mark read / Mark unread is the first slot of the actions
         // grid in every row, the fix (when the notice has one) the second, so the buttons stand under each other.
-        const mine = /** @type {HTMLButtonElement} */ (
-            make('button', 'kp-button kp-button--sm kp-button--ghost kp-notices__mark-read', isRead(n) ? s().noticesMarkUnread : s().noticesMarkRead)
-        );
+        // The button is as wide as the longer of its two words in the button's own type, so it never spills and the second slot
+        // starts in the same place in every row, whichever word a row shows [t56-words-1018].
+        const mine = /** @type {HTMLButtonElement} */ (make('button', 'kp-button kp-button--sm kp-button--ghost kp-notices__mark-read'));
+        const face = make('span', 'kp-notices__mark-face');
+        face.style.setProperty('--kp-notices-sizer', JSON.stringify(isRead(n) ? s().noticesMarkRead : s().noticesMarkUnread));
+        face.append(make('span', 'kp-notices__mark-label', isRead(n) ? s().noticesMarkUnread : s().noticesMarkRead));
+        mine.append(face);
         mine.type = 'button';
         mine.setAttribute('data-kp-notice-read', n.key);
         actions.append(mine);

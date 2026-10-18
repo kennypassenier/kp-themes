@@ -42628,8 +42628,12 @@ function wire11(el14) {
     const actions = make23("div", "kp-notices__actions");
     const mine = (
       /** @type {HTMLButtonElement} */
-      make23("button", "kp-button kp-button--sm kp-button--ghost kp-notices__mark-read", isRead(n) ? s2().noticesMarkUnread : s2().noticesMarkRead)
+      make23("button", "kp-button kp-button--sm kp-button--ghost kp-notices__mark-read")
     );
+    const face = make23("span", "kp-notices__mark-face");
+    face.style.setProperty("--kp-notices-sizer", JSON.stringify(isRead(n) ? s2().noticesMarkRead : s2().noticesMarkUnread));
+    face.append(make23("span", "kp-notices__mark-label", isRead(n) ? s2().noticesMarkUnread : s2().noticesMarkRead));
+    mine.append(face);
     mine.type = "button";
     mine.setAttribute("data-kp-notice-read", n.key);
     actions.append(mine);
