@@ -183,14 +183,14 @@ Without a snapshot, or for a section new in this round, the button is not shown 
 ## Key helpers: legend, focus, undo, rejected so far, bulk
 
 `rv-keys.js` (with `rv-keys.css`) adds four helpers to the dialog, each a per-viewer option (localStorage
-`kp-review-keys`, switched at runtime from the **Keys** button in the dialog's head or with
+`kp-review-keys`, switched at runtime in the dialog's help popover (the ? button) or with
 `kpReviewKeys.set('<option>', true)`). The keys are physical key codes (`event.code`), listed in `KEYS` in the module. All are left-hand AZERTY keys (DEMO_RULES 7): Q S X C W B G; labels are AZERTY, the codes `KeyA KeyS KeyX KeyC KeyZ KeyB KeyG`.
 
-| Option     | Default | What                                                                                                                                                                       |
-| ---------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `legend`   | on      | one always-visible line of the keys, under the dialog's head                                                                                                               |
-| `undo`     | on      | **W** undoes the last approve or reject and returns to that step with its boxes; the journal gets an entry `kind: "undo"`, nothing is deleted                              |
-| `rejected` | on      | **B** (or the button) opens "Rejected so far", an overlay on the stage: rejections with notes, changed defaults, removed options; each line jumps to its pair; Esc closes it |
+| Option     | Default | What                                                                                                                                                                                 |
+| ---------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `legend`   | on      | the list of keys in the dialog's help popover                                                                                                                                        |
+| `undo`     | on      | **W** undoes the last approve or reject and returns to that step with its boxes; the journal gets an entry `kind: "undo"`, nothing is deleted                                        |
+| `rejected` | on      | **B** (or the button) opens "Rejected so far", an overlay on the stage: rejections with notes, changed defaults, removed options; each line jumps to its pair; Esc closes it         |
 | `bulk`     | off     | **G** approves the rest of a theme, offered only after 3 approvals in a row in it; a confirm line gives the pair count; journal and answer say "approved unseen, N pairs"; 10 s undo |
 
 On a topic step, **Down** or **C** rejects the focused section (before: aspect pages only; **C** also means "none of these" on an
@@ -414,56 +414,58 @@ script that measures other motion the same way.
 
 A demo marks every container of the buttons that drive ONE component with
 `data-review-controls data-review-controls-for="<id of the component>"`, inside the judged section that holds the
-component. The dialog shows that container itself (never a copy) directly above the component, and puts the section's
-Expected block under the component, so the component is the first thing on screen (`placeControls` in review.js,
-`.rv-ctl` in review.css). A container outside every section, or one naming no component of its section, is shown
-nowhere. A component carries at most four control groups; more means the section is split (Kenny, 2026-10-18 07:11).
-`check-kit.mjs` fails a page that breaks any of it. The part builders (research/kpadopt56/build-parts.mjs, research/kpadopt56-formal/build.mjs)
-write the attribute with `research/kpadopt56/controls-for.mjs` and emit only the sections a page asks.
+component. In the dialog that container itself (never a copy) is the component's one toolbar: on the top edge of the
+component's frame, directly above the component, every group's label and buttons side by side on one row (state buttons
+as the package's segmented control, other buttons small), scrolling along its line when it is wider than the frame
+(`layoutSection` and `toolbar` in review.js, `[data-rv-ctl]` in review.css). A container outside every section, or one
+naming no component of its section, is shown nowhere. A component carries at most four control groups; more means the
+section is split (Kenny, 2026-10-18 07:11). `check-kit.mjs` fails a page that breaks any of it. The part builders
+(research/kpadopt56/build-parts.mjs, research/kpadopt56-formal/build.mjs) write the attribute with
+`research/kpadopt56/controls-for.mjs` and emit only the sections a page asks.
 
-## The dialog's layout options
+## The dialog's layout
 
-Kenny, 2026-10-18 15:15: "We should make it 99% fullscreen ... I want maximum coverage and use of the screen, quality of life for me as an
-approver and strong features", and 15:26: "the component itself is the most important part of the screen, so it must always be clearly visible
-and central". Every improvement is an option of the kit (`UI_OPTIONS` in review.js), off by default so a live part looks as it did, switched
-in the dialog's **View** menu, kept per viewer in localStorage `kp-review-ui`, or forced for one visit by the link: `?rvui=all`, `?rvui=none`,
-`?rvui=fill,look`, `?rvui=all,-jump`. An option is an attribute on the dialog and on every frame's root (`data-rvui-<id>="on|off"`), so
-review.css reads it in both places.
+Kenny, 2026-10-18 15:15 to 16:27: "Kijk naar de screenshot en zeg me dat dat 99% schermvullend is die dialoog? ... Ik
+verwacht een rewrite van deze demo van scratch." The dialog has one layout, no options (DEMO_RULES ch. 7 lists the
+measured targets):
 
-| Option     | What it does                                                                                                              |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------- |
-| `fill`     | the dialog takes 99% of the window; header, margins and gaps tighter                                                      |
-| `titles`   | the section title once per frame: the topic heading is only read aloud, the section's own heading is not drawn           |
-| `look`     | a look-at paragraph that several sections of a step share is shown once under the theme's name                            |
-| `controls` | the controls of a component flow side by side, label and buttons on one line, in the package's `kp-button--sm`            |
-| `intro`    | the section's intro and Expected text at the frame's full width, a tighter frame margin                                   |
-| `rail`     | the side column about 17% wide, Previous, Next and Approve pinned at its foot                                             |
-| `jump`     | a chip per section in the header, the one in view marked (also its row)                                                   |
+- **The window**: 4 px from every edge on a desktop, edge to edge on a phone.
+- **One header row** (`.rv-dialog__head`, at most 44 px): the step (`Step n/N`), the theme, the topic's title once,
+  what is shown ("theme 3 of 11 · 3 sections"), the step's state, the counts left (rv-progress.js, in the
+  `[data-rv-counts]` slot, the full sentence as its title), and four icon buttons: **Rejected so far** with its exact
+  count (B), **Help** (? or the key `?`: what the step asks, every key, the key helpers' switches), the **verdict panel**
+  (folds the panel away so a wide component takes the whole width; folded, Previous, Next and Approve stand in the header
+  row; on a phone it opens the bottom sheet) and **Close** (Escape). The panel's state is kept per viewer
+  (`kp-review-panel`).
+- **The stage**, one lane per section (`.rv-lane`): a slim head with the section's own title (without the topic's words
+  in front), its intro and "what changed" on one line and **More**, which opens the full words and the section's
+  Expected text, and the tools (previous version, play open and close, speed). Under it the component's frame: the
+  section in its theme (`?rv-lane`), laid out by `layoutSection`: heading, intro and Expected hidden in the frame (they
+  are in the head), the one toolbar on the frame's top edge, the component under it. The frame takes its body's height,
+  so nothing blank stays under a section. Room a demo reserves under a picker for its opening list (`data-review-room`,
+  or a class named `…-room` / `…--tall`) is dropped while nothing in it is open; a sample shown opened keeps exactly the
+  room its list needs; pressing or focusing an opener gives the frame room first, so the list opens under its field
+  (block-tools.js `isolate`).
+- **The verdict panel** (at most 320 px): what to look at in this theme, once per step (a paragraph that differs stays in
+  its section's row), one row per section (title, Not approved under it, reason chips and the note once rejected, the
+  default sets with their Remove), and Previous, Next and Approve pinned at its foot. On a phone it is a bottom sheet:
+  closed, one bar with the three buttons under the stage; opened, it rises over the stage (Escape closes it).
 
-The stage is never split horizontally between components or themes (Kenny, 2026-10-18 15:18). A frame preview of the dialog inside a page
-(`?rv-preview`) does not follow another window's theme change. **research/review-kit-v2** shows each option live, at 1920, 1280 or 390 px, and
-asks only the default.
+The stage is never split horizontally between components or themes (Kenny, 2026-10-18 15:18). Modules hook in through
+slots the shell hands them (`mountKeys({ slots: { tools, help, status } })`, `mountProgress({ slot })`) and the events
+`rv:open`, `rv:step` (`{ index, step, pairs }`) and `rv:verdict` (`{ pair, change }`) on `window`.
 
-**Extension points** for modules that add to the dialog (a line, a key, a chip row), all without editing review.js: `window.rvKit.registerUiOption({ id,
-label, about, default })` adds a switch to the View menu (kept per viewer, and an attribute on the dialog and every frame like the layout
-options; `rvKit.ui[id]` is its value) and `rv:open`, `rv:step` (`{ index, step, pairs }`), `rv:verdict` (`{ pair, change }`) and `rv:ui` (`{ id, on }`)
-fire on `window`. A module's own entry in research/review-kit-v2/options.json gives it a section in the demo.
+`check-kit.mjs <port> <page>` measures all of it at 1920x965, 1280x800 and 390x844 on the first open step and prints the
+numbers per width.
 
-**Previews.** A page opened as a preview inside another page (`?rv-preview=1`, `rv-preview.js`, imported first by review.js and loaded first on the
-Agenda) keeps the kit's own storage keys (`kp-demo-review:*`, `kp-review-*`, `kp-flow-*`) in memory: it shows no verdict or setting the viewer has kept,
-writes none, and starts from `?rvopt=<JSON of storage key to value>`, which is how research/review-kit-v2 shows an option on or off or a part half
-judged. It takes no focus from the page around it and ignores the theme that page changes.
-
-`check-kit.mjs <port> <page> --rvui all` adds the layout checks: the dialog fills at least 97% of the viewport at 1920x1080, 1280x800 and 390x844, no
-look-at paragraph repeats in a step, the first component starts within the first 40% of the dialog's height at 1920x1080, nothing scrolls
-sideways at any of the three widths, the component's frame is the largest area of the dialog, centred in the stage, and uncovered.
 ## Progress options: the remaining line and Continue
 
 Two options of the kit, both per viewer (localStorage `kp-review-option:<name>`, `on` or `off`), both **on** by default, switchable at run time
 (the Agenda's "Review options", or the attribute `data-rv-<name>="on|off"` on `<html>`), all in `rv-progress.js` and `rv-progress.css`:
 
-- `remaining`: one plain line in the dialog's head, "Step n of N here · this part: X of Y pairs left · all open reviews: A of B left · about
-  H:MM left at your pace", and the same counts on every Agenda row. Counts are the current round's, from `progress.js` `progressOf` over each
+- `remaining`: the counts in the dialog's header row, "X/Y left here · A/B in all reviews · ~H:MM" (its title and accessible name the
+  full sentence "Step n of N here · this part: X of Y pairs left · all open reviews: A of B left · about H:MM left at your pace"), and the
+  same counts on every Agenda row. Counts are the current round's, from `progress.js` `progressOf` over each
   demo's markup and the stored verdicts, the Agenda's own data. The pace is the median of the last 20 step durations (dialog open, tab visible,
   in use), shown once five exist (`kp-review-pace`).
 - `resume`: per part the step, the scroll and (kept by the kit, `:kept`) the pressed states (`kp-demo-review:<demo>:resume`); the Agenda shows one
