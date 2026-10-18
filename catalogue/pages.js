@@ -138,6 +138,12 @@ export const PAGES = [
                 label: 'HTTPSwitchboard: figures and history',
                 about: 'What the HTTPSwitchboard status page could show over the last 24 hours, in formal only: four key figures with their trend that count up as messages arrive, one strip of hour cells per profile with a hover card, and a list that stays current by a refresh chooser or by live push with a count of new alerts. The hourly history is a new capability of the service.',
             },
+            // Kenny, 2026-10-19 (app-hsb-health-1019): HTTPSwitchboard's adoption plan rows 4, 5, 12 and 14 (docs/KP_THEMES_11_ADOPTION.md), formal only until he approves it.
+            {
+                href: 'research/app-hsb-health/demo.html',
+                label: 'HTTPSwitchboard: health and problems',
+                about: 'How the status page tells a person that a profile needs them: the attention band and the problem alert (what, why, what now, with a Copy command), the "last delivery" freshness line, the kyu hub connection banner, and the profiles card loading, empty and failed. 5 sections (5 pairs, formal), with the defaults for you to confirm.',
+            },
         ],
     },
     {
