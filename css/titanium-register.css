@@ -2138,6 +2138,15 @@
         text-align: start;
     }
 
+    /* The "too few days" sentence on a chart is a machined plate with its words centred on a plain card: the twill stays on the
+       edge only, never behind the words [t56-eye-1018]. */
+    [data-theme='titanium'] .kp-chart__few-plate {
+        background:
+            linear-gradient(var(--card), var(--card)) top / 100% calc(100% - 2px) no-repeat,
+            var(--kp-iris);
+        text-align: center;
+    }
+
     [data-theme='titanium'] .kp-empty__title {
         font-family: var(--theme-font-display);
         letter-spacing: -0.01em;
@@ -5413,4 +5422,17 @@
     [data-theme='titanium'] .kp-code__tools > .kp-segmented {
         flex: none;
     }
+}
+
+/* A destructive button that stands on a destructive plate (the urgent and the refused question card, a failed plate with its
+   action) is drawn like the card's other button: a destructive fill on a destructive plate, or red ink on orange, left it
+   without a plate [t56-eye-1018]. */
+@layer kp.signature {
+    [data-theme='titanium'] .kp-alert--destructive .kp-button--destructive:not(:disabled) {
+        background: var(--card);
+        border-color: var(--border-strong);
+        color: var(--foreground);
+        box-shadow: inset 3px 0 0 var(--destructive);
+    }
+
 }

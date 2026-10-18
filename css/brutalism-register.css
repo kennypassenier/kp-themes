@@ -506,6 +506,22 @@
         background: transparent;
     }
 
+    /* A ghost that stands alone in a row of its own (the weekday quick picks, the "+N" flags opener) is a small slab: a 2 px
+       line on a 3 px shadow like the small icon button, so it reads as a control and not as a label [t56-eye-1018]. */
+    [data-theme='brutalism'] :is(.kp-weekdays__preset, .kp-entity__plus).kp-button--ghost {
+        border: 2px solid var(--border-strong);
+        background: var(--card);
+        box-shadow: 3px 3px 0 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] :is(.kp-weekdays__preset, .kp-entity__plus).kp-button--ghost:not(:active, :disabled):hover {
+        background: var(--foreground);
+    }
+
+    [data-theme='brutalism'] :is(.kp-weekdays__preset, .kp-entity__plus).kp-button--ghost:not(:active, :disabled):focus-visible {
+        background: var(--card);
+    }
+
     [data-theme='brutalism'] .kp-button:disabled {
         background: var(--muted);
         color: var(--muted-foreground);
@@ -2602,6 +2618,20 @@
         block-size: 2.25rem;
         margin-block-end: 0.3rem;
         font-size: 1.05rem;
+    }
+
+    /* The "too few days" sentence on a chart is a slab with its words, not an empty state: no zero stamp, and the room under
+       it is kept for the axis dates, so the slab never covers them [t56-eye-1018]. */
+    [data-theme='brutalism'] .kp-chart__few {
+        padding-block-end: 2rem;
+    }
+
+    [data-theme='brutalism'] .kp-chart__few-plate {
+        padding-block: 0.75rem;
+    }
+
+    [data-theme='brutalism'] .kp-chart__few-plate::before {
+        display: none;
     }
 
     [data-theme='brutalism'] .kp-empty__title {
@@ -6328,5 +6358,19 @@
             letter-spacing: 0.04em;
             padding-inline: 0.75rem;
         }
+    }
+}
+
+/* The time box in a sentence is 5.5 characters wide in the package, and this theme's field plate takes 0.8 rem of side padding, so
+   the last digit ran into the edge ("03:0"). The box is the five characters plus its own padding and a margin
+   [t56-eye-1018]. */
+@layer kp.signature {
+    [data-theme='brutalism'] .kp-time--inline .kp-time__input.kp-field__input {
+        padding-inline: 0.5em;
+        inline-size: calc(4.8ch + 1.75em);
+    }
+
+    [data-theme='brutalism'] .kp-time--inline .kp-time__skeleton {
+        inline-size: calc(4.8ch + 1.75em);
     }
 }

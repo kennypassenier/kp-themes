@@ -45375,6 +45375,22 @@
         background: transparent;
     }
 
+    /* A ghost that stands alone in a row of its own (the weekday quick picks, the "+N" flags opener) is a small slab: a 2 px
+       line on a 3 px shadow like the small icon button, so it reads as a control and not as a label [t56-eye-1018]. */
+    [data-theme='brutalism'] :is(.kp-weekdays__preset, .kp-entity__plus).kp-button--ghost {
+        border: 2px solid var(--border-strong);
+        background: var(--card);
+        box-shadow: 3px 3px 0 0 var(--border-strong);
+    }
+
+    [data-theme='brutalism'] :is(.kp-weekdays__preset, .kp-entity__plus).kp-button--ghost:not(:active, :disabled):hover {
+        background: var(--foreground);
+    }
+
+    [data-theme='brutalism'] :is(.kp-weekdays__preset, .kp-entity__plus).kp-button--ghost:not(:active, :disabled):focus-visible {
+        background: var(--card);
+    }
+
     [data-theme='brutalism'] .kp-button:disabled {
         background: var(--muted);
         color: var(--muted-foreground);
@@ -47471,6 +47487,20 @@
         block-size: 2.25rem;
         margin-block-end: 0.3rem;
         font-size: 1.05rem;
+    }
+
+    /* The "too few days" sentence on a chart is a slab with its words, not an empty state: no zero stamp, and the room under
+       it is kept for the axis dates, so the slab never covers them [t56-eye-1018]. */
+    [data-theme='brutalism'] .kp-chart__few {
+        padding-block-end: 2rem;
+    }
+
+    [data-theme='brutalism'] .kp-chart__few-plate {
+        padding-block: 0.75rem;
+    }
+
+    [data-theme='brutalism'] .kp-chart__few-plate::before {
+        display: none;
     }
 
     [data-theme='brutalism'] .kp-empty__title {
@@ -51200,6 +51230,20 @@
     }
 }
 
+/* The time box in a sentence is 5.5 characters wide in the package, and this theme's field plate takes 0.8 rem of side padding, so
+   the last digit ran into the edge ("03:0"). The box is the five characters plus its own padding and a margin
+   [t56-eye-1018]. */
+@layer kp.signature {
+    [data-theme='brutalism'] .kp-time--inline .kp-time__input.kp-field__input {
+        padding-inline: 0.5em;
+        inline-size: calc(4.8ch + 1.75em);
+    }
+
+    [data-theme='brutalism'] .kp-time--inline .kp-time__skeleton {
+        inline-size: calc(4.8ch + 1.75em);
+    }
+}
+
 /* The header's mega menu is held on screen while a transition on its panel runs
    (js/components.js settleClosing): this number is that transition, 1 open and 0
    shut, run over the panel's cut. At the top level because Firefox does not
@@ -53338,6 +53382,15 @@
             0 var(--kp-sig-ti-c)
         );
         text-align: start;
+    }
+
+    /* The "too few days" sentence on a chart is a machined plate with its words centred on a plain card: the twill stays on the
+       edge only, never behind the words [t56-eye-1018]. */
+    [data-theme='titanium'] .kp-chart__few-plate {
+        background:
+            linear-gradient(var(--card), var(--card)) top / 100% calc(100% - 2px) no-repeat,
+            var(--kp-iris);
+        text-align: center;
     }
 
     [data-theme='titanium'] .kp-empty__title {
@@ -56615,6 +56668,19 @@
     [data-theme='titanium'] .kp-code__tools > .kp-segmented {
         flex: none;
     }
+}
+
+/* A destructive button that stands on a destructive plate (the urgent and the refused question card, a failed plate with its
+   action) is drawn like the card's other button: a destructive fill on a destructive plate, or red ink on orange, left it
+   without a plate [t56-eye-1018]. */
+@layer kp.signature {
+    [data-theme='titanium'] .kp-alert--destructive .kp-button--destructive:not(:disabled) {
+        background: var(--card);
+        border-color: var(--border-strong);
+        color: var(--foreground);
+        box-shadow: inset 3px 0 0 var(--destructive);
+    }
+
 }
 
 /* The redaction plate's alpha, registered so it can be transitioned: an
@@ -74670,9 +74736,14 @@
         border-color: hsl(from var(--primary) h s l / 0.3);
         text-decoration: none;
     }
+    /* The words of a waiting part are a brass nameplate on the doors: lacquer under them and a gold hairline round them, so the
+       seams and the lozenges run behind the plate and never through a letter [t56-eye-1018]. */
     [data-theme='deco'] .kp-datatable__busy-words {
         position: relative;
         z-index: 4;
+        padding: 0.2em 0.75em;
+        background: var(--kp-sig-deco-lac);
+        box-shadow: inset 0 0 0 1px hsl(from var(--primary) h s l / 0.55);
     }
     [data-theme='deco'] .kp-quote__text::before {
         --kp-glyph-quote: '\25C6';
@@ -74752,6 +74823,20 @@
     }
     [data-theme='deco'] .kp-code__head {
         min-inline-size: 0;
+    }
+}
+
+/* The time box in a sentence is 5.5 characters wide in the package, and this theme's field plate takes 0.7 rem of side padding, so
+   the last digit ran into the edge ("03:0"). The box is the five characters plus its own padding and a margin
+   [t56-eye-1018]. */
+@layer kp.signature {
+    [data-theme='deco'] .kp-time--inline .kp-time__input.kp-field__input {
+        padding-inline: 0.5em;
+        inline-size: calc(4.8ch + 1.75em);
+    }
+
+    [data-theme='deco'] .kp-time--inline .kp-time__skeleton {
+        inline-size: calc(4.8ch + 1.75em);
     }
 }
 
@@ -80878,6 +80963,111 @@
     }
 }
 
+/* ── A failed area is flagged, never filled [G13, t56-eye-1018] ──
+   Blueprint's own (themes/blueprint/CHARACTER.md, G5 and G13): a statuses only flag. A failed part carries the drafting flag
+   before its title (a filled ▲ in the tone's lit ink with the word FAILED in the lettering), stands on the sheet's two axes
+   drawn in that ink, and is on no plate and in no frame all round. The package's flat `--destructive` fill (a salmon slab)
+   is no part of the sheet, so every destructive alert and the empty plate a failure borrows are this one drawing. */
+@layer kp.signature {
+    [data-theme='blueprint'] {
+        --kp-bp-fail-ink: hsl(from var(--destructive) h s 70%);
+    }
+
+    [data-theme='blueprint'] .kp-alert--destructive {
+        --kp-bp-axes-img:
+            linear-gradient(var(--kp-bp-fail-ink), var(--kp-bp-fail-ink)), linear-gradient(var(--kp-bp-fail-ink), var(--kp-bp-fail-ink)),
+            repeating-linear-gradient(90deg, var(--kp-bp-fail-ink) 0 1px, transparent 1px 8px),
+            repeating-linear-gradient(0deg, var(--kp-bp-fail-ink) 0 1px, transparent 1px 8px),
+            repeating-linear-gradient(90deg, var(--kp-bp-fail-ink) 0 1px, transparent 1px 40px),
+            repeating-linear-gradient(0deg, var(--kp-bp-fail-ink) 0 1px, transparent 1px 40px);
+        background-color: transparent;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+        background-repeat: no-repeat;
+        border-color: transparent;
+        box-shadow: none;
+        color: var(--foreground);
+    }
+
+    [data-theme='blueprint'] .kp-alert--destructive:is(.kp-stateplate, .kp-runs__failure, .kp-dated__failure, .kp-transfer__failure)::before,
+    [data-theme='blueprint'] .kp-empty[data-kp-tone='error']::before {
+        content: '\25B2\00a0' 'FAILED';
+        display: block;
+        inline-size: auto;
+        block-size: auto;
+        margin: 0 auto 0.25rem;
+        background: none;
+        color: var(--kp-bp-fail-ink);
+        font-family: var(--theme-font-mono);
+        font-size: var(--kp-text-xs, 0.75rem);
+        font-style: oblique 15deg;
+        letter-spacing: 0.12em;
+        text-align: center;
+    }
+
+    [data-theme='blueprint'] .kp-empty[data-kp-tone='error'] {
+        border-color: transparent;
+        background-image: var(--kp-bp-axes-img);
+        background-size: var(--kp-bp-axes-size);
+        background-position: var(--kp-bp-axes-pos);
+        background-repeat: no-repeat;
+    }
+
+    [data-theme='blueprint'] .kp-alert--destructive :is(.kp-stateplate__title, .kp-runs__failure-title, strong) {
+        color: var(--foreground);
+    }
+}
+
+/* ── The time field's waiting place is a traced frame [t56-eye-1018] ──
+   The field is waiting at its own final width and height (a 36 px box), not a line of text, so it is the sheet's block
+   place: the pen traces the four sides, as it does round every other block. The line's two ticks and one baseline, drawn
+   on a box this size, read as two stray strokes. */
+@layer kp.signature {
+    [data-theme='blueprint'] .kp-time__skeleton:not(.kp-skeleton--block)::before {
+        content: none;
+    }
+
+    [data-theme='blueprint'] .kp-time__skeleton:not(.kp-skeleton--block) {
+        --kp-bp-r: 4;
+        position: absolute;
+        block-size: var(--kp-control-height, 2.25rem);
+        margin: 0;
+    }
+
+    [data-theme='blueprint'] .kp-time--inline .kp-time__skeleton:not(.kp-skeleton--block) {
+        block-size: 1.5em;
+    }
+
+    [data-theme='blueprint'] .kp-time__skeleton:not(.kp-skeleton--block)::after {
+        --kp-bp-px: calc(clamp(0, var(--kp-bp-r), 1) - clamp(0, var(--kp-bp-r) - 2, 1));
+        --kp-bp-py: calc(clamp(0, var(--kp-bp-r) - 1, 1) - clamp(0, var(--kp-bp-r) - 3, 1));
+        inset: -8px;
+        background-image:
+            var(--kp-bp-pen-img), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)),
+            linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)), linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace)),
+            linear-gradient(var(--kp-bp-c-trace), var(--kp-bp-c-trace));
+        background-size:
+            var(--kp-bp-pen-size),
+            calc(clamp(0, var(--kp-bp-r), 1) * (100% - 16px)) 1px,
+            1px calc(clamp(0, var(--kp-bp-r) - 1, 1) * (100% - 16px)),
+            calc(clamp(0, var(--kp-bp-r) - 2, 1) * (100% - 16px)) 1px,
+            1px calc(clamp(0, var(--kp-bp-r) - 3, 1) * (100% - 16px));
+        background-position:
+            var(--kp-bp-pen-pos),
+            8px 8px,
+            right 8px top 8px,
+            right 8px bottom 8px,
+            left 8px bottom 8px;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        [data-theme='blueprint'] .kp-time__skeleton:not(.kp-skeleton--block) {
+            animation: kp-sig-blueprint-frame var(--kp-sig-bp-loop) linear infinite;
+        }
+    }
+}
+
 @layer kp.register {
     /* @kp-soft/themes — css/nostromo-register.css
    The nostromo register, 5.0.0 [S48, LIFT_PLAN nostromo row]: cassette
@@ -83554,8 +83744,10 @@
     }
 
     [data-theme='nostromo'] .kp-datatable__busy-panel::after {
+        /* The glass is content-box: 1.5rem inside its 3 px bezel. The word fills that inside, so it sits in the middle of the
+           screen and the scanline mask never leaves it cut at the foot [t56-eye-1018]. */
         inset: auto calc(0.75rem + 3px) calc(0.75rem + 3px);
-        block-size: calc(1.5rem - 6px);
+        block-size: 1.5rem;
         padding-inline: 0.55rem;
     }
 
@@ -86949,6 +87141,33 @@
         background: var(--kp-no-seam, var(--muted));
         box-shadow: var(--kp-sig-no-well, inset 0 1px 2px hsl(from var(--foreground) h s l / 0.3));
     }
+}
+
+/* The time box in a sentence is 5.5 characters wide in the package, and this theme's field plate takes a thin 4.5 px of side padding, so
+   the last digit ran into the edge ("03:0"). The box is the five characters plus its own padding and a margin
+   [t56-eye-1018]. */
+@layer kp.signature {
+    [data-theme='nostromo'] .kp-time--inline .kp-time__input.kp-field__input {
+        padding-inline: 0.5em;
+        inline-size: calc(4.8ch + 1.75em);
+    }
+
+    [data-theme='nostromo'] .kp-time--inline .kp-time__skeleton {
+        inline-size: calc(4.8ch + 1.75em);
+    }
+}
+
+/* A destructive button that stands on a destructive plate (the urgent and the refused question card, a failed plate with its
+   action) is drawn like the card's other button: a destructive fill on a destructive plate, or red ink on orange, left it
+   without a plate [t56-eye-1018]. */
+@layer kp.signature {
+    [data-theme='nostromo'] .kp-alert--destructive .kp-button--destructive:not(:disabled) {
+        background: var(--card);
+        border-color: var(--border-strong);
+        color: var(--foreground);
+        box-shadow: inset 4px 0 0 var(--destructive);
+    }
+
 }
 
 /* The numbers dark's motion is made of, registered at the top level because
@@ -97847,8 +98066,9 @@
 
     /* A failed area is the red sky (G13, the busy failure decided as r2-so-failure-1): the dark card plate, the wash rising
        from its foot, the foot edge and a 1 px ring in the red, the words in the lifted red ink. The package's flat
-       `--destructive` fill (a salmon block over the whole component) is no part of solstice's light. */
-    [data-theme='solstice'] .kp-alert--destructive:is(.kp-stateplate, .kp-rating__failure) {
+       `--destructive` fill (a salmon block over the whole component) is no part of solstice's light, so EVERY destructive
+       alert is the red sky, whichever part draws it (stateplate, runs, dated, card, transfer, rating) [t56-eye-1018]. */
+    [data-theme='solstice'] .kp-alert--destructive {
         background:
             linear-gradient(to top, hsl(from var(--destructive) h s l / 0.3), transparent 75%),
             var(--card);
@@ -97857,9 +98077,17 @@
         box-shadow: inset 0 -2px 0 hsl(from var(--destructive) h s 50%);
     }
 
-    [data-theme='solstice'] .kp-alert--destructive:is(.kp-stateplate, .kp-rating__failure) .kp-stateplate__title,
+    [data-theme='solstice'] .kp-alert--destructive:is(.kp-stateplate, .kp-runs__failure, .kp-dated__failure, .kp-transfer__failure) :is(.kp-stateplate__title, strong),
     [data-theme='solstice'] .kp-alert--destructive.kp-rating__failure .kp-rating__failure-text {
         color: hsl(from var(--destructive) h s 68%);
+    }
+
+    /* The failure sentence is set in the display serif at heading size, like the stateplate's, whichever part draws it. */
+    [data-theme='solstice'] .kp-alert--destructive:is(.kp-runs__failure, .kp-dated__failure, .kp-transfer__failure) strong {
+        font-family: var(--theme-font-display);
+        font-weight: 400;
+        font-size: calc(var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem)) * 1.15);
+        line-height: 1.25;
     }
 
     [data-theme='solstice'] .kp-grid {
@@ -98551,6 +98779,9 @@
 
     [data-theme='solstice'] .kp-spinner {
         --kp-sig-dur: 2400ms;
+        /* The arc and the sun scale with the spinner (0.5 rem and 0.4 rem at the default 1.25 rem), so the sun of a busy
+           card's 2.5 rem spinner is not a 6 px dot on a 30 px line [t56-eye-1018]. */
+        --kp-sig-so-r: calc(var(--kp-spinner-size, 1.25rem) * 0.4);
         position: relative;
         overflow: hidden;
         border: 0;
@@ -98561,7 +98792,7 @@
         background:
             linear-gradient(var(--border-strong), var(--border-strong)) 50% 80% / 100% 1.5px no-repeat,
             radial-gradient(
-                circle 0.5rem at 50% 80%,
+                circle var(--kp-sig-so-r) at 50% 80%,
                 transparent calc(100% - 1px),
                 hsl(from var(--primary) h s l / 0.3) calc(100% - 1px) 100%,
                 transparent 100%
@@ -98572,14 +98803,14 @@
     [data-theme='solstice'] .kp-spinner::after {
         content: '';
         position: absolute;
-        inset-inline-start: calc(50% - 0.2rem);
-        inset-block-start: calc(80% - 0.2rem);
-        inline-size: 0.4rem;
-        block-size: 0.4rem;
+        inset-inline-start: calc(50% - var(--kp-sig-so-r) * 0.4);
+        inset-block-start: calc(80% - var(--kp-sig-so-r) * 0.4);
+        inline-size: calc(var(--kp-sig-so-r) * 0.8);
+        block-size: calc(var(--kp-sig-so-r) * 0.8);
         border-radius: 50%;
         background: var(--primary);
         box-shadow: 0 0 0 2px hsl(from var(--primary) h s l / 0.25);
-        transform: translateY(-0.5rem);
+        transform: translateY(calc(var(--kp-sig-so-r) * -1));
     }
 
     [data-theme='solstice'] .kp-skeleton:not(.kp-skeleton--circle, .kp-skeleton--block) {
@@ -98952,7 +99183,7 @@
     @keyframes kp-sig-solstice-solstice-arc {
         0% {
             opacity: 0;
-            transform: rotate(-100deg) translateY(-0.5rem);
+            transform: rotate(-100deg) translateY(calc(var(--kp-sig-so-r) * -1));
         }
 
         10%,
@@ -98963,7 +99194,7 @@
         90%,
         100% {
             opacity: 0;
-            transform: rotate(100deg) translateY(-0.5rem);
+            transform: rotate(100deg) translateY(calc(var(--kp-sig-so-r) * -1));
         }
     }
 
@@ -100027,6 +100258,17 @@
         --kp-kbd-foot: 2px;
     }
     [data-theme='solstice'] .kp-segmented--chips > .kp-segmented__item[aria-pressed='true'] {
+        box-shadow: 0 0 14px hsl(from var(--primary) h s l / 0.4);
+    }
+    /* A pressed toggle is the sun lit, as a pressed chip of the segmented set is: the amber plate in the dark ink, never the
+       cream face with cream words [t56-eye-1018]. */
+    [data-theme='solstice'] .kp-button[data-kp-toggle][aria-pressed='true'],
+    [data-theme='solstice'] .kp-button[data-kp-toggle][data-kp-look='chip'][aria-pressed='true'] {
+        --kp-toggle-on: var(--primary);
+        --kp-toggle-on-ink: var(--background);
+        background: var(--primary);
+        border-color: var(--primary);
+        color: var(--background);
         box-shadow: 0 0 14px hsl(from var(--primary) h s l / 0.4);
     }
 }
@@ -101843,6 +102085,17 @@
     }
     [data-theme='solstice'] .kp-code__head {
         min-inline-size: 0;
+    }
+}
+
+/* A destructive button on a destructive plate (the urgent and the refused question card) stands on the dark card with the
+   red as its foot edge, like the card's other button, not red ink on a red sky [t56-eye-1018]. */
+@layer kp.signature {
+    [data-theme='solstice'] .kp-alert--destructive .kp-button--destructive:not(:disabled) {
+        background: var(--card);
+        border-color: var(--border-strong);
+        color: var(--foreground);
+        box-shadow: inset 0 -2px 0 hsl(from var(--destructive) h s 50%);
     }
 }
 
