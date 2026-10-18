@@ -55,6 +55,44 @@
 
 /* S8: titanium's badge is a chamfered plate, not a pill: the radius under the clip goes to zero (titanium only). */
 [data-theme='titanium'] .proposal .kp-badge { border-radius: 0; }
+
+/* S9 is behaviour, not style: see proposed.js (holdFootprint). */
+
+/* S10: the gallery's busy card is laid over the whole gallery, not over the 43 px strip of skeleton lines. (The layer is already
+   inside the gallery and absolutely placed; the script's four offsets only say which part of it to cover, so `inset: 0` wins.) */
+.proposal .kp-gallery > .kp-gallery__busy { inset: 0; }
+
+/* S11: a card's failure is the same plate every other failed area is: centred, heading size, filling the stage, a normal Retry. */
+.proposal .kp-card__state:has(> .kp-card__failure) { align-content: stretch; }
+.proposal .kp-card__state > .kp-card__failure {
+    display: grid; place-content: center; justify-items: center; gap: var(--kp-space-sm, 0.5rem);
+    box-sizing: border-box; inline-size: 100%; block-size: 100%; padding: var(--kp-space-lg, 1.5rem);
+    font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem)); line-height: 1.35; text-align: center; text-wrap: balance;
+}
+.proposal .kp-card__failure > .kp-alert__body { justify-items: center; flex: none; }
+.proposal .kp-card__state > .kp-card__failure .kp-card__state-title {
+    font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem)); font-weight: 600; line-height: 1.35;
+}
+.proposal .kp-card__failure .kp-card__state-text { font-size: var(--kp-text-md, 1rem); }
+.proposal .kp-card__failure > .kp-card__retry { min-block-size: 2.25rem; }
+
+/* S12: a failed chart is the alert plate (heading size, tinted, bordered) over the plot's height, not a dot and a line. */
+.proposal .kp-chart__state[data-kp-state='error'] {
+    padding: var(--kp-space-lg, 1.5rem); border: 1px solid color-mix(in oklab, var(--destructive) 55%, transparent);
+    background: color-mix(in oklab, var(--destructive) 8%, transparent);
+    font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem)); font-weight: 600; line-height: 1.35;
+}
+.proposal .kp-chart__state[data-kp-state='error'] .kp-chart__state-text { max-inline-size: 36ch; }
+/* S12: a failed operations page shows the failure, whole: the stale cards go, the alert takes the page's body, centred. */
+.proposal .kp-ops[data-kp-state='error'] > :is(.kp-ops__kpis, .kp-ops__toolbar, .kp-ops__body) { display: none; }
+.proposal .kp-ops[data-kp-state='error'] > .kp-ops__attention { display: grid; flex: 1 1 auto; min-block-size: 24rem; }
+.proposal .kp-ops[data-kp-state='error'] .kp-attention__item {
+    grid-template-columns: minmax(0, 1fr); place-content: center; justify-items: center; text-align: center; padding: var(--kp-space-xl, 2rem);
+}
+.proposal .kp-ops[data-kp-state='error'] .kp-attention__text > strong { font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem)); }
+.proposal .kp-ops[data-kp-state='error'] .kp-attention__actions { justify-content: center; }
+
+/* S13 needs no rule: the package draws the failure (see the numbers). S14 is a question, not a rule (see proposed.js). */
 /* PROPOSALS */
         </style>
         <script src="measured.js"></script>
@@ -64,7 +102,7 @@
             <header class="shared__intro">
                 <h1>Shared package faults: Now beside Proposed</h1>
                 <p>
-                    Eight faults that sit in the approved package (<code>css/components.css</code> and one theme register), not in the demo pages.
+                    Fourteen faults that sit in the approved package (<code>css/components.css</code>, <code>js/</code> and one theme register), not in the demo pages; items 1 to 8 are about size and overflow, items 9 to 14 about the loading, empty and failed states.
                     Each is drawn twice from the real package: <b>Now</b> as it is, <b>Proposed</b> with one small rule that applies only inside the
                     Proposed box. Pick a theme to check the proposal in it. Under every pair the measured numbers for all twelve themes. Nothing in
                     the package has been changed; this page is evidence for your decision per item.
@@ -174,6 +212,186 @@
                     <div class="frame frame--390"><div data-slot="badges"></div></div></div>
             </div>
             <div class="measured" data-measured="s8-badge"></div>
+        </section>
+        <section class="item" id="s9" aria-labelledby="h-s9" style="--bleed: 0px">
+            <h2 id="h-s9">9. A list that loads, is empty or fails shrinks to a stub (S9)</h2>
+            <p class="item__what">While a component loads, is empty or has failed it is only as high as its small plate (the <code>min-rows</code> footprint), not as high as it was with data, so everything under it jumps (formal at 1280: uses map 476 to 288 px, entity grid 928 to 256, packing list 673 to 524, notices page 1320 to 584). The proposal makes the component hold the height it had when it was last ready, up to a cap. Press a state under each pair.</p>
+            <h3>Uses map (<code>.kp-matrix</code>)</h3>
+            <div class="statebar" data-statebar="uses" role="group" aria-label="State of: Uses map (<code>.kp-matrix</code>)"><b>State:</b></div>
+            <div class="pair" data-width="1280">
+                <div class="col now"><p class="col__label">Now (the package as it is)</p>
+                    <div class="frame frame--1280"><div data-slot="uses"></div></div></div>
+                <div class="col proposal"><p class="col__label">Proposed</p>
+                    <div class="frame frame--1280"><div data-slot="uses"></div></div></div>
+            </div>
+            <div class="measured" data-measured="s9-uses"></div>
+            <h3>Entity grid (<code>.kp-entity-grid</code>)</h3>
+            <div class="statebar" data-statebar="entity" role="group" aria-label="State of: Entity grid (<code>.kp-entity-grid</code>)"><b>State:</b></div>
+            <div class="pair" data-width="1280">
+                <div class="col now"><p class="col__label">Now (the package as it is)</p>
+                    <div class="frame frame--1280"><div data-slot="entity"></div></div></div>
+                <div class="col proposal"><p class="col__label">Proposed</p>
+                    <div class="frame frame--1280"><div data-slot="entity"></div></div></div>
+            </div>
+            <div class="measured" data-measured="s9-entity"></div>
+            <h3>Packing list with claims (<code>.kp-checklist</code>)</h3>
+            <div class="statebar" data-statebar="claim" role="group" aria-label="State of: Packing list with claims (<code>.kp-checklist</code>)"><b>State:</b></div>
+            <div class="pair" data-width="1280">
+                <div class="col now"><p class="col__label">Now (the package as it is)</p>
+                    <div class="frame frame--1280"><div data-slot="claim"></div></div></div>
+                <div class="col proposal"><p class="col__label">Proposed</p>
+                    <div class="frame frame--1280"><div data-slot="claim"></div></div></div>
+            </div>
+            <div class="measured" data-measured="s9-claim"></div>
+            <h3>Notices page (<code>data-kp-notices-look="page"</code>)</h3>
+            <div class="statebar" data-statebar="notices" role="group" aria-label="State of: Notices page (<code>data-kp-notices-look="page"</code>)"><b>State:</b></div>
+            <div class="pair" data-width="1280">
+                <div class="col now"><p class="col__label">Now (the package as it is)</p>
+                    <div class="frame frame--1280"><div data-slot="notices"></div></div></div>
+                <div class="col proposal"><p class="col__label">Proposed</p>
+                    <div class="frame frame--1280"><div data-slot="notices"></div></div></div>
+            </div>
+            <div class="measured" data-measured="s9-notices"></div>
+        </section>
+        <section class="item" id="s10" aria-labelledby="h-s10" style="--bleed: 0px">
+            <h2 id="h-s10">10. The busy card is not in the middle of the component (S10)</h2>
+            <p class="item__what">The loading card is laid over a part of the component (the skeleton, the body, the list), not over the whole of it, so it sits high, low or to the side of the component&rsquo;s centre (formal: gallery 180 px too high, claim row 37 px low, availability grid 78 px to the right, request inspector at 390 58 px to the right, ops page 291 px high). Press Loading.</p>
+            <h3>Gallery (<code>.kp-gallery</code>)</h3>
+            <div class="statebar" data-statebar="gallery" role="group" aria-label="State of: Gallery (<code>.kp-gallery</code>)"><b>State:</b></div>
+            <div class="pair" data-width="1280">
+                <div class="col now"><p class="col__label">Now (the package as it is)</p>
+                    <div class="frame frame--1280"><div data-slot="gallery"></div></div></div>
+                <div class="col proposal"><p class="col__label">Proposed</p>
+                    <div class="frame frame--1280"><div data-slot="gallery"></div></div></div>
+            </div>
+            <div class="measured" data-measured="s10-gallery"></div>
+            <h3>Operations page (<code>.kp-ops</code>)</h3>
+            <div class="statebar" data-statebar="ops" role="group" aria-label="State of: Operations page (<code>.kp-ops</code>)"><b>State:</b></div>
+            <div class="pair" data-width="1280">
+                <div class="col now"><p class="col__label">Now (the package as it is)</p>
+                    <div class="frame frame--1280"><div data-slot="ops"></div></div></div>
+                <div class="col proposal"><p class="col__label">Proposed</p>
+                    <div class="frame frame--1280"><div data-slot="ops"></div></div></div>
+            </div>
+            <div class="measured" data-measured="s10-ops"></div>
+            <h3>Packing list with claims</h3>
+            <div class="statebar" data-statebar="claim" role="group" aria-label="State of: Packing list with claims"><b>State:</b></div>
+            <div class="pair" data-width="1280">
+                <div class="col now"><p class="col__label">Now (the package as it is)</p>
+                    <div class="frame frame--1280"><div data-slot="claim"></div></div></div>
+                <div class="col proposal"><p class="col__label">Proposed</p>
+                    <div class="frame frame--1280"><div data-slot="claim"></div></div></div>
+            </div>
+            <div class="measured" data-measured="s10-claim"></div>
+            <h3>Availability grid (<code>.kp-availability</code>)</h3>
+            <div class="statebar" data-statebar="avail" role="group" aria-label="State of: Availability grid (<code>.kp-availability</code>)"><b>State:</b></div>
+            <div class="pair" data-width="1280">
+                <div class="col now"><p class="col__label">Now (the package as it is)</p>
+                    <div class="frame frame--1280"><div data-slot="avail"></div></div></div>
+                <div class="col proposal"><p class="col__label">Proposed</p>
+                    <div class="frame frame--1280"><div data-slot="avail"></div></div></div>
+            </div>
+            <div class="measured" data-measured="s10-avail"></div>
+            <h3>Request inspector at 390 px (<code>.kp-inspector</code>)</h3>
+            <div class="statebar" data-statebar="inspector" role="group" aria-label="State of: Request inspector at 390 px (<code>.kp-inspector</code>)"><b>State:</b></div>
+            <div class="pair" data-width="390">
+                <div class="col now"><p class="col__label">Now (the package as it is)</p>
+                    <div class="frame frame--390"><div data-slot="inspector"></div></div></div>
+                <div class="col proposal"><p class="col__label">Proposed</p>
+                    <div class="frame frame--390"><div data-slot="inspector"></div></div></div>
+            </div>
+            <div class="measured" data-measured="s10-inspector"></div>
+        </section>
+        <section class="item" id="s11" aria-labelledby="h-s11" style="--bleed: 0px">
+            <h2 id="h-s11">11. A card&rsquo;s failure is a thin alert row, not a plate (S11)</h2>
+            <p class="item__what">When a card (quote, today, schedules lede) fails, its note is a normal alert row with the words on the left and Retry on the right: it does not fill the card and its title is body size, where a failed list is a heading-size plate that fills its component. Press Failed.</p>
+            <h3>Quote card (<code>.kp-quote</code>)</h3>
+            <div class="statebar" data-statebar="quote" role="group" aria-label="State of: Quote card (<code>.kp-quote</code>)"><b>State:</b></div>
+            <div class="pair" data-width="640">
+                <div class="col now"><p class="col__label">Now (the package as it is)</p>
+                    <div class="frame frame--640"><div data-slot="quote"></div></div></div>
+                <div class="col proposal"><p class="col__label">Proposed</p>
+                    <div class="frame frame--640"><div data-slot="quote"></div></div></div>
+            </div>
+            <div class="measured" data-measured="s11-quote"></div>
+            <h3>Today card (<code>.kp-card</code> around a status list)</h3>
+            <div class="statebar" data-statebar="today" role="group" aria-label="State of: Today card (<code>.kp-card</code> around a status list)"><b>State:</b></div>
+            <div class="pair" data-width="640">
+                <div class="col now"><p class="col__label">Now (the package as it is)</p>
+                    <div class="frame frame--640"><div data-slot="today"></div></div></div>
+                <div class="col proposal"><p class="col__label">Proposed</p>
+                    <div class="frame frame--640"><div data-slot="today"></div></div></div>
+            </div>
+            <div class="measured" data-measured="s11-today"></div>
+            <h3>Card with a lede (<code>.kp-card</code>)</h3>
+            <div class="statebar" data-statebar="lede" role="group" aria-label="State of: Card with a lede (<code>.kp-card</code>)"><b>State:</b></div>
+            <div class="pair" data-width="640">
+                <div class="col now"><p class="col__label">Now (the package as it is)</p>
+                    <div class="frame frame--640"><div data-slot="lede"></div></div></div>
+                <div class="col proposal"><p class="col__label">Proposed</p>
+                    <div class="frame frame--640"><div data-slot="lede"></div></div></div>
+            </div>
+            <div class="measured" data-measured="s11-lede"></div>
+        </section>
+        <section class="item" id="s12" aria-labelledby="h-s12" style="--bleed: 0px">
+            <h2 id="h-s12">12. Failed or empty is a small line, not a plate (S12)</h2>
+            <p class="item__what">A chart annotation that fails, the usual-symptoms picker when empty or failed and the operations page when it fails each say it in one small line (13 to 74 px in an area of 190 to 1745 px) instead of the theme&rsquo;s plate. Press Empty or Failed.</p>
+            <h3>Chart (<code>.kp-chart</code>)</h3>
+            <div class="statebar" data-statebar="chart" role="group" aria-label="State of: Chart (<code>.kp-chart</code>)"><b>State:</b></div>
+            <div class="pair" data-width="1280">
+                <div class="col now"><p class="col__label">Now (the package as it is)</p>
+                    <div class="frame frame--1280"><div data-slot="chart"></div></div></div>
+                <div class="col proposal"><p class="col__label">Proposed</p>
+                    <div class="frame frame--1280"><div data-slot="chart"></div></div></div>
+            </div>
+            <div class="measured" data-measured="s12-chart"></div>
+            <h3>Usual symptoms picker (<code>data-kp-usual</code>)</h3>
+            <div class="statebar" data-statebar="usual" role="group" aria-label="State of: Usual symptoms picker (<code>data-kp-usual</code>)"><b>State:</b></div>
+            <div class="pair" data-width="640">
+                <div class="col now"><p class="col__label">Now (the package as it is)</p>
+                    <div class="frame frame--640 frame--room"><div data-slot="usual"></div></div></div>
+                <div class="col proposal"><p class="col__label">Proposed</p>
+                    <div class="frame frame--640 frame--room"><div data-slot="usual"></div></div></div>
+            </div>
+            <div class="measured" data-measured="s12-usual-empty"></div>
+            <div class="measured" data-measured="s12-usual-error"></div>
+            <h3>Operations page (<code>.kp-ops</code>)</h3>
+            <div class="statebar" data-statebar="ops" role="group" aria-label="State of: Operations page (<code>.kp-ops</code>)"><b>State:</b></div>
+            <div class="pair" data-width="1280">
+                <div class="col now"><p class="col__label">Now (the package as it is)</p>
+                    <div class="frame frame--1280"><div data-slot="ops"></div></div></div>
+                <div class="col proposal"><p class="col__label">Proposed</p>
+                    <div class="frame frame--1280"><div data-slot="ops"></div></div></div>
+            </div>
+            <div class="measured" data-measured="s12-ops"></div>
+        </section>
+        <section class="item" id="s13" aria-labelledby="h-s13" style="--bleed: 0px">
+            <h2 id="h-s13">13. Master-detail shows no failure at all (S13)</h2>
+            <p class="item__what">When the detail pane fails to load, the pane stays as it was and no alert is drawn: the person cannot tell that anything went wrong. Press Failed.</p>
+            <h3>Master-detail (<code>data-kp-master-detail</code>)</h3>
+            <div class="statebar" data-statebar="md" role="group" aria-label="State of: Master-detail (<code>data-kp-master-detail</code>)"><b>State:</b></div>
+            <div class="pair" data-width="1280">
+                <div class="col now"><p class="col__label">Now (the package as it is)</p>
+                    <div class="frame frame--1280"><div data-slot="md"></div></div></div>
+                <div class="col proposal"><p class="col__label">Proposed</p>
+                    <div class="frame frame--1280"><div data-slot="md"></div></div></div>
+            </div>
+            <div class="measured" data-measured="s13-md"></div>
+        </section>
+        <section class="item" id="s14" aria-labelledby="h-s14" style="--bleed: 0px">
+            <h2 id="h-s14">14. Inline controls load without a busy card (S14)</h2>
+            <p class="item__what">A slider, a time field and a version badge show a small skeleton of their own while they load and no busy card, where a data area gets the theme&rsquo;s card. Does a card belong on a control one line high? The Proposed side lays the package&rsquo;s own busy card over each of them to find out; the numbers say how much taller than the control it is.</p>
+            <h3>Slider, time field and version badge</h3>
+            <div class="statebar" data-statebar="inline" role="group" aria-label="State of the inline controls"><b>State:</b></div>
+            <div class="pair" data-width="640">
+                <div class="col now"><p class="col__label">Now (the package as it is)</p>
+                    <div class="frame frame--640"><div data-slot="inline"></div></div></div>
+                <div class="col proposal"><p class="col__label">Proposed (a busy card over each control)</p>
+                    <div class="frame frame--640"><div data-slot="inline"></div></div></div>
+            </div>
+            <div class="measured" data-measured="s14-slider"></div>
+            <div class="measured" data-measured="s14-time"></div>
+            <div class="measured" data-measured="s14-version"></div>
         </section>
         </main>
         <script type="module" src="demo.js"></script>

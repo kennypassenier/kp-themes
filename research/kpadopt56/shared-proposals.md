@@ -247,3 +247,243 @@ Measured, Now vs Proposed:
 | nostromo | 2 | 2 |
 | titanium | 999 | 0 |
 
+
+
+---
+
+# The state faults (S9 to S14)
+
+Found by the states round (`git show theme/t56-c:research/kpadopt56/designer-solstice-states.md`, its "shared" list); they are in formal too. Evidence: the same page, items 9 to 14; numbers: `node research/kpadopt56-shared/measure-states.mjs <port>` (Firefox, 12 themes, merges into `measured.json`). The page draws the real package components with their own setters in each state (cut-down data), so heights differ a little from the states round's (its frames were narrower or its lists longer); the faults and their direction are the same. States are pressed in the order ready, loading, empty, failed, as the part pages' buttons are. The Proposed side carries the S1 to S8 rules too, so a cell in a component those touch (the inspector, the checklist, the availability grid) can differ from Now for that reason; where a "worse" cell is flagged below, that is the cause I could not rule out (forest and synthwave in S10 are reproducible and I did not isolate them).
+
+A "differs by" number is |height in the state - height with data|, lower is better. "Off the centre" is the distance of the busy card's centre from the component's centre.
+
+## S9. A component holds the height it had while a state shows
+
+Where the state is set: every data component writes its state as `data-kp-state` on its host (`js/uses-map.js:174`, `js/entity-card.js:436`, `js/checklist.js:360`, `js/notices.js:292`, `js/gallery.js:169`, `js/availability.js:384`, `js/request-inspector.js:515`), so no component has to change. Proposal, **JS** (new module `js/footprint.js`, one entry in `js/auto.js` for the components above, or for every `[data-kp-state]` host that is not a `.kp-card`): the sketch is `holdFootprint()` in `research/kpadopt56-shared/proposed.js`.
+
+```js
+export function holdFootprint(host) {
+    let held = 0;
+    const isReady = () => { const s = host.getAttribute('data-kp-state'); return !s || s === 'ready'; };
+    new ResizeObserver(() => { if (isReady()) held = host.getBoundingClientRect().height; }).observe(host);
+    new MutationObserver(() => {
+        if (isReady() || !held) host.style.removeProperty('min-block-size');
+        else host.style.setProperty('min-block-size', `min(${asMin(held)}px, var(--kp-footprint-max, 48rem))`);
+    }).observe(host, { attributes: true, attributeFilter: ['data-kp-state'] });
+}
+```
+(`asMin` takes padding and border off for a content-box host.) It is capped at `--kp-footprint-max` (48rem): a plate in the middle of 1000 px or more is out of sight. The first load has nothing to hold. No CSS can do this: the last ready height is a runtime value.
+
+Limits, honestly: (1) the checklist draws "empty" as a ready list without rows, so the hold cannot see it; it already has its own floor `--kp-checklist-min-rows` (10), and the claim row numbers do not change (see below); (2) pastel's uses map is 89 px higher while loading than with data (its skeleton, a theme matter); a minimum never shrinks it.
+
+Measured, difference from the loaded height, px (Now / Proposed), uses map and entity grid:
+
+| theme | uses loading now | prop | uses empty now | prop | uses failed now | prop | entity empty now | prop | entity failed now | prop |
+|---|---|---|---|---|---|---|---|---|---|---|
+| formal | 12 | 0 | 188 | 0 | 188 | 0 | 202 | 0 | 202 | 0 |
+| dark | 12 | 0 | 188 | 0 | 188 | 0 | 200 | 0 | 200 | 0 |
+| cyberpunk | 12 | 0 | 188 | 0 | 188 | 0 | 196 | 0 | 196 | 0 |
+| synthwave | 12 | 0 | 188 | 0 | 188 | 0 | 267 | 0 | 267 | 0 |
+| pastel | 89 | 89 | 188 | 0 | 188 | 0 | 200 | 0 | 200 | 0 |
+| forest | 12 | 0 | 12 | 0 | 188 | 0 | 200 | 0 | 200 | 0 |
+| blueprint | 12 | 0 | 188 | 0 | 188 | 0 | 200 | 0 | 200 | 0 |
+| solstice | 12 | 0 | 188 | 0 | 188 | 0 | 200 | 0 | 200 | 0 |
+| brutalism | 12 | 0 | 188 | 0 | 188 | 0 | 208 | 0 | 208 | 0 |
+| deco | 12 | 0 | 188 | 0 | 188 | 0 | 213 | 0 | 213 | 0 |
+| nostromo | 12 | 0 | 188 | 0 | 188 | 0 | 200 | 0 | 200 | 0 |
+| titanium | 12 | 0 | 188 | 0 | 188 | 0 | 200 | 0 | 200 | 0 |
+
+Notices page (capped at 768 px; loaded 1043 px) and packing list (unchanged):
+
+| theme | notices loading now | prop | notices empty now | prop | notices failed now | prop | claim empty now | prop | claim failed now | prop |
+|---|---|---|---|---|---|---|---|---|---|---|
+| formal | 459 | 275 | 459 | 275 | 459 | 275 | 136 | 136 | 136 | 136 |
+| dark | 459 | 275 | 459 | 275 | 459 | 275 | 127 | 127 | 127 | 127 |
+| cyberpunk | 459 | 275 | 459 | 275 | 459 | 275 | 152 | 152 | 152 | 152 |
+| synthwave | 459 | 275 | 459 | 275 | 459 | 275 | 167 | 167 | 167 | 167 |
+| pastel | 459 | 275 | 459 | 275 | 459 | 275 | 150 | 150 | 150 | 150 |
+| forest | 459 | 275 | 459 | 275 | 459 | 275 | 178 | 178 | 178 | 178 |
+| blueprint | 459 | 275 | 459 | 275 | 459 | 275 | 128 | 128 | 128 | 128 |
+| solstice | 459 | 275 | 459 | 275 | 459 | 275 | 146 | 146 | 146 | 146 |
+| brutalism | 459 | 275 | 459 | 275 | 459 | 275 | 175 | 175 | 175 | 175 |
+| deco | 459 | 275 | 459 | 275 | 459 | 275 | 160 | 160 | 160 | 160 |
+| nostromo | 459 | 275 | 459 | 275 | 459 | 275 | 162 | 162 | 162 | 162 |
+| titanium | 459 | 275 | 459 | 275 | 459 | 275 | 127 | 127 | 127 | 127 |
+
+Worse cells: none. Recommendation: **change via JS** for the matrix, entity grid, notices, gallery, availability and inspector; leave the checklist to its `--kp-checklist-min-rows` knob; decide the cap (48rem here).
+
+## S10. The busy card centred over the whole component
+
+Cause: each component hands `openBusyCard()` the part it thinks is the data. Findings, per component:
+
+- **Gallery (real fault).** `js/gallery.js:266` passes `area: () => [grid]`, and while loading the grid is a 43 px strip of skeleton lines, so the card sits at the top and its panel (54 px) is cut at 43 px. Proposal, **CSS** (`css/components.css`, with the gallery's other rules): `.kp-gallery > .kp-gallery__busy { inset: 0; }` (or the one-word JS change `area: () => [el]`). The layer is already inside the gallery and positioned; the four offsets the script writes only say which part to cover, so `inset: 0` wins.
+- **Claim row (21 to 40 px low), availability grid (78 px right):** by design. The card is centred over the rows or cells, the way the busy data table centres it over its rows and leaves the toolbar or the names column readable. Centring over the whole component would veil the toolbar and the names. Recommendation: leave.
+- **Operations page:** no single data area; every card is its own area and lays its own card, centred in itself (the "own" column is 0 to 31 px). Recommendation: leave.
+- **Request inspector at 390:** the 58 px (64 to 80 in the wide-lettered themes) was the S1 fault; with S1 the card is centred sideways (0 in all twelve).
+
+| theme | gallery off centre (up/down) now | prop | inspector at 390, sideways now | prop | claim up/down now | prop | availability sideways now | prop |
+|---|---|---|---|---|---|---|---|---|
+| formal | 201 | 0 | 58 | 0 | 21 | 21 | 78 | 78 |
+| dark | 202 | 0 | 64 | 0 | 37 | 37 | 78 | 78 |
+| cyberpunk | 202 | 0 | 65 | 0 | 37 | 37 | 78 | 78 |
+| synthwave | 202 | 0 | 70 | 0 | 37 | 37 | 78 | 78 |
+| pastel | 202 | 0 | 59 | 0 | 22 | 22 | 78 | 78 |
+| forest | 204 | 0 | 58 | 0 | 21 | 36 | 78 | 78 |
+| blueprint | 202 | 0 | 58 | 0 | 20 | 20 | 78 | 78 |
+| solstice | 202 | 0 | 58 | 0 | 21 | 21 | 78 | 78 |
+| brutalism | 191 | 0 | 80 | 0 | 40 | 40 | 78 | 78 |
+| deco | 199 | 0 | 76 | 0 | 38 | 38 | 78 | 78 |
+| nostromo | 186 | 0 | 66 | 0 | 37 | 38 | 78 | 78 |
+| titanium | 202 | 0 | 70 | 0 | 36 | 37 | 78 | 78 |
+
+Operations page, first card against the page / each card against itself (px, now and proposed):
+
+| theme | page up/down now | prop | page sideways now | prop | own card now | prop |
+|---|---|---|---|---|---|---|
+| formal | 155 | 155 | 204 | 204 | 19 | 19 |
+| dark | 163 | 163 | 204 | 204 | 19 | 19 |
+| cyberpunk | 161 | 161 | 204 | 204 | 19 | 19 |
+| synthwave | 196 | 196 | 204 | 204 | 8 | 24 |
+| pastel | 163 | 163 | 204 | 204 | 19 | 19 |
+| forest | 163 | 163 | 204 | 204 | 19 | 31 |
+| blueprint | 163 | 163 | 204 | 204 | 19 | 19 |
+| solstice | 163 | 163 | 204 | 204 | 19 | 19 |
+| brutalism | 152 | 152 | 204 | 204 | 19 | 19 |
+| deco | 152 | 153 | 204 | 204 | 19 | 19 |
+| nostromo | 163 | 163 | 204 | 204 | 19 | 19 |
+| titanium | 163 | 163 | 204 | 204 | 19 | 19 |
+
+Worse cells (Proposed higher than Now, in components these proposals do not touch, so the S1/S3/S6 rules or the S9 hold are the suspect): synthwave, forest and deco in the operations page's own-card column, forest and nostromo/titanium (1 px) in the claim row, forest in the availability grid and the inspector (42 to 71). The gallery has none. Recommendation: **change (CSS)** for the gallery; **leave** for the others.
+
+## S11. A card's failure is a plate, not an alert row
+
+Today `js/card-state.js buildNote()` makes the failure `.kp-alert.kp-card__failure`, an alert row (words left, Retry right) at body size, so it does not fill the stage. Proposal, **CSS + one class** (`css/components.css`, next to `.kp-card__failure`; or give the alert `kp-stateplate` in `buildNote` and drop the row rules): the card's failure takes the state plate's treatment.
+
+```css
+.kp-card__state:has(> .kp-card__failure) { align-content: stretch; }
+.kp-card__state > .kp-card__failure {
+    display: grid; place-content: center; justify-items: center; gap: var(--kp-space-sm, 0.5rem);
+    box-sizing: border-box; inline-size: 100%; block-size: 100%; padding: var(--kp-space-lg, 1.5rem);
+    font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem)); line-height: 1.35; text-align: center; text-wrap: balance;
+}
+.kp-card__failure > .kp-alert__body { justify-items: center; flex: none; }
+.kp-card__state > .kp-card__failure .kp-card__state-title { font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem)); font-weight: 600; line-height: 1.35; }
+.kp-card__failure > .kp-card__retry { min-block-size: 2.25rem; }
+```
+The title rule needs that specificity: nostromo and titanium (13 px) and solstice (20 px) set the title's size in their registers. Cost: the card grows while failed, because the plate needs room for a heading, a sentence and a normal Retry (quote 151 to 168 px; lede 215 to 229; synthwave's quote 180 to 214); today-card unchanged. The lede card's Retry goes from 28 to 36 px.
+
+Measured (note fills the stage %, title px; Now / Proposed):
+
+| theme | quote fill % now | prop | quote title px now | prop | today fill % now | prop | lede fill % now | prop | lede Retry px now | prop |
+|---|---|---|---|---|---|---|---|---|---|---|
+| formal | 65 | 100 | 16 | 24 | 31 | 100 | 63 | 100 | 28 | 36 |
+| dark | 65 | 100 | 16 | 24 | 28 | 100 | 63 | 100 | 28 | 36 |
+| cyberpunk | 65 | 100 | 16 | 24 | 28 | 100 | 63 | 100 | 28 | 36 |
+| synthwave | 65 | 100 | 16 | 24 | 28 | 100 | 63 | 100 | 28 | 36 |
+| pastel | 65 | 100 | 16 | 24 | 27 | 100 | 63 | 100 | 28 | 36 |
+| forest | 65 | 100 | 16 | 24 | 28 | 100 | 63 | 100 | 28 | 36 |
+| blueprint | 65 | 100 | 16 | 24 | 30 | 100 | 63 | 100 | 28 | 36 |
+| solstice | 70 | 100 | 20 | 24 | 30 | 100 | 68 | 100 | 28 | 36 |
+| brutalism | 76 | 100 | 16 | 24 | 30 | 100 | 73 | 100 | 28 | 36 |
+| deco | 68 | 100 | 16 | 24 | 27 | 100 | 66 | 100 | 28 | 36 |
+| nostromo | 61 | 100 | 13 | 24 | 27 | 100 | 59 | 100 | 28 | 36 |
+| titanium | 61 | 100 | 13 | 24 | 27 | 100 | 60 | 100 | 28 | 36 |
+
+Worse cells: none (the card height is information). Recommendation: **change**.
+
+## S12. Small lines instead of a plate
+
+- **Chart failed (real fault).** `.kp-chart__state[data-kp-state='error']` is a dot and a 13 px sentence, nothing painted, no action. Proposal, **CSS** (`css/components.css`, after the `.kp-chart__state` rules): tinted, bordered plate, heading size.
+
+```css
+.kp-chart__state[data-kp-state='error'] {
+    padding: var(--kp-space-lg, 1.5rem); border: 1px solid color-mix(in oklab, var(--destructive) 55%, transparent);
+    background: color-mix(in oklab, var(--destructive) 8%, transparent);
+    font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem)); font-weight: 600; line-height: 1.35;
+}
+.kp-chart__state[data-kp-state='error'] .kp-chart__state-text { max-inline-size: 36ch; }
+```
+A Retry would be a small addition in `js/chart.js` (an event on the chart, like the other components); not in the sketch.
+- **Usual picker empty and failed: not a fault.** Both are heading-size `.kp-stateplate` plates in the picker's list panel (100 percent of that panel, 24 px title). The 13 px line of the states round was the input row, the only part of the component outside the panel. Nothing to propose. (In dark, synthwave and titanium the empty plate has neither fill nor border, so the "painted plate" measure prints 0 there; the words are the same plate.)
+- **Operations page failed (real fault).** The page keeps its stale cards and shows one 74 px attention band at the top (6 percent of the page). Proposal, **CSS** (`css/components.css`, with the `.kp-ops` rules): in `data-kp-state='error'` the cards go and the alert takes the body, centred.
+
+```css
+.kp-ops[data-kp-state='error'] > :is(.kp-ops__kpis, .kp-ops__toolbar, .kp-ops__body) { display: none; }
+.kp-ops[data-kp-state='error'] > .kp-ops__attention { display: grid; flex: 1 1 auto; min-block-size: 24rem; }
+.kp-ops[data-kp-state='error'] .kp-attention__item { grid-template-columns: minmax(0, 1fr); place-content: center; justify-items: center; text-align: center; padding: var(--kp-space-xl, 2rem); }
+.kp-ops[data-kp-state='error'] .kp-attention__text > strong { font-size: var(--kp-stateplate-text, clamp(1.125rem, 1rem + 0.6vw, 1.5rem)); }
+.kp-ops[data-kp-state='error'] .kp-attention__actions { justify-content: center; }
+```
+It relies on the page writing `data-kp-state` on `.kp-ops` (the demo does). The old text "What is shown is from earlier" no longer fits when the cards go. Cost: the stale data is no longer visible during a failure; if Kenny wants it kept, the band stays (today).
+
+Measured (painted note, % of its area; title px; Now / Proposed):
+
+| theme | chart fill % now | prop | chart title px now | prop | ops page fill % now | prop | ops page title px now | prop | ops page height now | prop |
+|---|---|---|---|---|---|---|---|---|---|---|
+| formal | 0 | 79 | None | 24 | 6 | 79 | 16 | 24 | 1232 | 768 |
+| dark | 0 | 79 | None | 24 | 6 | 81 | 16 | 24 | 1217 | 768 |
+| cyberpunk | 0 | 79 | None | 24 | 6 | 81 | 16 | 24 | 1207 | 768 |
+| synthwave | 0 | 79 | None | 24 | 8 | 79 | 16 | 24 | 1412 | 768 |
+| pastel | 0 | 79 | None | 24 | 6 | 81 | 16 | 24 | 1217 | 768 |
+| forest | 0 | 79 | None | 24 | 6 | 81 | 16 | 24 | 1217 | 768 |
+| blueprint | 0 | 79 | None | 24 | 6 | 81 | 16 | 24 | 1217 | 768 |
+| solstice | 0 | 79 | None | 24 | 6 | 81 | 16 | 24 | 1217 | 768 |
+| brutalism | 0 | 79 | None | 24 | 7 | 77 | 16 | 24 | 1279 | 768 |
+| deco | 0 | 79 | None | 24 | 6 | 79 | 16 | 24 | 1229 | 768 |
+| nostromo | 0 | 79 | None | 24 | 6 | 81 | 16 | 24 | 1217 | 768 |
+| titanium | 0 | 79 | None | 24 | 6 | 81 | 16 | 24 | 1217 | 768 |
+
+Worse cells: none. Recommendation: **change (CSS)** for the chart and the operations page; **leave** the usual picker.
+
+## S13. Master-detail shows no failure at all
+
+Not reproduced in the package. A failed detail pane draws `.kp-alert.kp-stateplate` over the whole detail area (85 percent of the component in the wide layout, 24 px title, a 36 px Retry) in every theme. The states round's "no failure" came from the demo page: `research/kpadopt56/src/kpadopt5-ops/demo.js` (`data-ko-md-state`) selects an item after the Empty button, which fires `kp-pane-select`, whose listener starts a load that ends 700 ms later in Ready, over the failed state it had just set. The fix is the demo wiring (do not reload on a selection made by the state button), not the package. Recommendation: **leave** (no package change).
+
+| theme | detail plate fill % now | prop | title px now | prop | Retry px now | prop |
+|---|---|---|---|---|---|---|
+| formal | 85 | 85 | 24 | 24 | 36 | 36 |
+| dark | 85 | 85 | 24 | 24 | 36 | 36 |
+| cyberpunk | 85 | 85 | 24 | 24 | 36 | 36 |
+| synthwave | 79 | 79 | 24 | 24 | 36 | 36 |
+| pastel | 85 | 85 | 24 | 24 | 36 | 36 |
+| forest | 85 | 83 | 24 | 24 | 36 | 36 |
+| blueprint | 85 | 85 | 24 | 24 | 36 | 36 |
+| solstice | 85 | 85 | 24 | 24 | 36 | 36 |
+| brutalism | 85 | 85 | 24 | 24 | 36 | 36 |
+| deco | 85 | 85 | 24 | 24 | 36 | 36 |
+| nostromo | 85 | 85 | 24 | 24 | 36 | 36 |
+| titanium | 86 | 86 | 24 | 24 | 36 | 36 |
+
+## S14. Inline loadings have no busy card
+
+The Proposed side lays the package's own busy card (`openBusyCard`) over each control to answer whether one belongs. It does not: the card is a spinner and a line of words on a plate, 42 to 84 px high, over controls 18 to 62 px high, so it covers the whole control (and the skeleton that shows the control's shape), and over a version badge it is up to three times as high as the line it sits in. The inline controls keep their own skeleton in place, which is exactly the shape of the loaded control; that is the right loading picture for them. The rule in DEMO_RULES chapter 4 is about data areas ("grid, matrix, week, timeline, list read as a whole"), which these are not. Recommendation: **leave**, and word the rule that way (a busy card belongs on a data area, not on a control one line high; an inline control loads as its own skeleton). The sentence field and the acknowledge gate are the same kind (one inline field, one checkbox line) and were not drawn here.
+
+Card taller than the control, px (Proposed only; Now has no card):
+
+| theme | slider card now | prop | time field card now | prop | version badge card now | prop |
+|---|---|---|---|---|---|---|
+| formal | 0 | 10 | 0 | 0 | 0 | 36 |
+| dark | 0 | 8 | 0 | 2 | 0 | 32 |
+| cyberpunk | 0 | 8 | 0 | 0 | 0 | 25 |
+| synthwave | 0 | 8 | 0 | 2 | 0 | 32 |
+| pastel | 0 | 8 | 0 | 0 | 0 | 22 |
+| forest | 0 | 4 | 0 | 0 | 0 | 22 |
+| blueprint | 0 | 8 | 0 | 2 | 0 | 32 |
+| solstice | 0 | 8 | 0 | 2 | 0 | 34 |
+| brutalism | 0 | 30 | 0 | 18 | 0 | 46 |
+| deco | 0 | 14 | 0 | 6 | 0 | 36 |
+| nostromo | 0 | 40 | 0 | 30 | 0 | 60 |
+| titanium | 0 | 8 | 0 | 1 | 0 | 31 |
+
+"Worse" is flagged on every row on purpose: it is the evidence for leaving.
+
+## Summary of S9 to S14
+
+| item | recommendation |
+|---|---|
+| S9 height held while a state shows | change via JS (hold the last ready height, cap 48rem); checklist: leave to its min-rows knob |
+| S10 busy card centred | change (CSS) for the gallery only; claim, availability, ops: leave (by design); inspector: solved by S1 |
+| S11 card failure | change (CSS + class) |
+| S12 small lines | change (CSS) for chart and ops page; usual picker: not a fault |
+| S13 master-detail failure | leave (the package is fine; the demo wiring hid it) |
+| S14 inline loadings | leave (a card is larger than the control) |
