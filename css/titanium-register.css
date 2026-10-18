@@ -5358,43 +5358,6 @@
     }
 }
 
-/* ── kpadopt5/6 fit: the request inspector's row in a narrow card [t56-titanium-1018] ── */
-@layer kp.signature {
-    /* In the card of a phone the row is 250 px and method, status, source and time cannot share one line in this
-       theme's wide letters (the source tag was squeezed to single letters over the date). Method and status take the
-       first line, the path the next, the source and the time share the last, the time always at its end. */
-    @container kp-inspector (max-width: 40rem) {
-        [data-theme='titanium'] .kp-inspector__row {
-            grid-template-columns: auto minmax(0, 1fr);
-            grid-template-areas:
-                'method status'
-                'path path'
-                'source time';
-        }
-        [data-theme='titanium'] .kp-inspector__status {
-            justify-self: start;
-        }
-        [data-theme='titanium'] .kp-inspector__time {
-            justify-self: end;
-            text-align: end;
-        }
-    }
-}
-
-/* ── kpadopt5/6 fit: the checklist's detail on a phone [t56-titanium-1018] ── */
-@layer kp.signature {
-    /* The detail never wraps in the shared part; in this theme's mono it is wider than the row and ran off the plate
-       (cut at the screen edge) while it squeezed the label to a column of single letters. On a phone it wraps in a
-       column of at most 9rem, at its end. */
-    @media (max-width: 34rem) {
-        [data-theme='titanium'] .kp-checklist__detail {
-            max-inline-size: 9rem;
-            white-space: normal;
-            overflow-wrap: anywhere;
-        }
-    }
-}
-
 /* ── kpadopt5/6 parts: titanium's own corners [t56-titanium-1018] ── */
 @layer kp.signature {
     /* Square corners (G7): a tag, a count, a counter, a groove and a swatch are cut metal, not pills. The marks that
@@ -5436,33 +5399,6 @@
         border-color: var(--background);
         background: var(--muted);
         box-shadow: inset 0 1px 0 hsl(from var(--background) h s l / 0.8), 0 1px 0 hsl(from var(--foreground) h s l / 0.1);
-    }
-}
-
-/* ── kpadopt5/6 fit: the version chip with a long unbroken version [t56-titanium-1018] ── */
-@layer kp.signature {
-    /* A 64-character hash has no place to break; in this theme's wide mono it ran out of its box. Only when no break
-       place is left on the line may it break inside the string. */
-    [data-theme='titanium'] .kp-badge--version {
-        max-inline-size: 100%;
-    }
-    [data-theme='titanium'] :is(.kp-version__from, .kp-version__to) {
-        min-inline-size: 0;
-        overflow-wrap: anywhere;
-    }
-}
-
-/* ── kpadopt5/6 fit: bars of controls in a card on a phone [t56-titanium-1018] ── */
-@layer kp.signature {
-    /* The card is a grid whose one track took the width of its widest unbreakable line, so a bar of segments or buttons
-       pushed the card's content out of the card. The track is the card's width; the bar's own wrapping and the track's
-       scrolling then do their work. */
-    [data-theme='titanium'] :is(.kp-inspector, .kp-refresh) {
-        grid-template-columns: minmax(0, 1fr);
-    }
-    [data-theme='titanium'] :is(.kp-inspector__bar, .kp-refresh__bar, .kp-refresh__chooser) {
-        min-inline-size: 0;
-        max-inline-size: 100%;
     }
 }
 
