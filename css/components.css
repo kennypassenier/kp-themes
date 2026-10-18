@@ -26975,8 +26975,11 @@
         block-size: 100%;
     }
 
+    /* Above the commands that stay (a failed palette): as high as the list was minus those commands, so the palette keeps its loaded
+     * footprint [t56-shared3-1018]. */
     .kp-palette__nomatch[data-kp-above] {
-        min-block-size: 11rem;
+        box-sizing: border-box;
+        min-block-size: var(--kp-palette-plate-height, 11rem);
     }
 }
 

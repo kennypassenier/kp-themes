@@ -15001,8 +15001,22 @@ function createIntentFilter(dialog, list, status) {
   const setHidden = (el14, hidden) => {
     if (el14.hidden !== hidden) el14.hidden = hidden;
   };
+  let ownListCap = null;
+  const capList = (px4) => {
+    ownListCap = list.style.getPropertyValue("--kp-palette-list-max-height");
+    const cs = getComputedStyle(list);
+    const frame3 = cs.boxSizing === "border-box" ? 0 : parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom) + parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth);
+    list.style.setProperty("--kp-palette-list-max-height", `${Math.max(px4 - frame3, 0)}px`);
+  };
+  const releaseListCap = () => {
+    if (ownListCap === null) return;
+    if (ownListCap) list.style.setProperty("--kp-palette-list-max-height", ownListCap);
+    else list.style.removeProperty("--kp-palette-list-max-height");
+    ownListCap = null;
+  };
   const hidePlate = () => {
     if (plate) plate.hidden = true;
+    releaseListCap();
     setHidden(list, false);
   };
   const showPlate = (kind, title, text, replacesList) => {
@@ -15016,16 +15030,22 @@ function createIntentFilter(dialog, list, status) {
         ...kind === "error" ? { actionLabel: s2.paletteRetry, onAction: () => dialog.dispatchEvent(new CustomEvent("kp-palette-retry", { bubbles: true })) } : {}
       })
     );
-    holder.style.setProperty("--kp-palette-plate-height", `${Math.max(footprint, 0)}px`);
     holder.toggleAttribute("data-kp-above", !replacesList);
     holder.hidden = false;
     setHidden(list, replacesList);
+    releaseListCap();
+    const staying = replacesList || list.hidden ? 0 : list.offsetHeight;
+    holder.style.setProperty("--kp-palette-plate-height", "0px");
+    const needed = holder.offsetHeight;
+    const room = Math.max(footprint - staying, needed);
+    holder.style.setProperty("--kp-palette-plate-height", `${room}px`);
+    if (staying > 0 && staying + room > footprint) capList(Math.max(footprint - room, 0));
   };
   const run = (rawQuery) => {
     const s2 = getStrings();
     const mode2 = modeOptions();
     const want = queryWords(rawQuery, mode2);
-    if (!list.hidden && list.offsetHeight > 0) footprint = list.offsetHeight;
+    if (!list.hidden && list.offsetHeight > 0 && (plate === null || plate.hidden)) footprint = list.offsetHeight;
     const options = (
       /** @type {HTMLElement[]} */
       [...list.querySelectorAll(OPTION_SELECTOR)]
