@@ -30,18 +30,21 @@ const ENGINES_IN_REGISTER = new Set(
     ).flatMap((themes) => Object.values(themes).flatMap((engines) => Object.keys(engines))),
 );
 
+/** One row per theme, read from the order file rather than counted here. */
+const THEME_NAMES = JSON.parse(readFileSync(new URL('../themes/order.json', import.meta.url), 'utf8'));
+
 const status = (page) => page.locator('[data-cat-round-status]');
 const banner = (page) => page.locator('[data-cat-round-banner]');
 
 test.describe('the round page [fix-48]', { tag: ['@component:catalogue'] }, () => {
-    test('with nothing judged it says what is left, per theme', async ({ page, context }) => {
+    test('with nothing judged it says what is left, per theme', { tag: ['@sweep'] }, async ({ page, context }) => {
         await useEmptyRegister(context);
         await page.setViewportSize({ width: 1440, height: 900 });
         await page.goto('/catalogue/round.html');
         await expect(status(page)).toContainText(/0 of \d+ block\/theme pair\(s\) carry a verdict/, { timeout: 60_000 });
         await expect(banner(page)).toContainText('Not yet through');
         const rows = page.locator('[data-cat-round-rows] tr');
-        await expect(rows).toHaveCount(16);
+        await expect(rows).toHaveCount(THEME_NAMES.length);
         await expect(rows.first()).toContainText('Formal');
         await expect(rows.first()).toContainText('open the first one');
     });
