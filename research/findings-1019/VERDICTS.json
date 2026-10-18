@@ -1,4 +1,207 @@
 {
     "demo": "findings-1019",
-    "rounds": []
+    "rounds": [
+        {
+            "round": "1",
+            "page": "findings-a0354fda-34dc-4617-b1ce-91ca20d2329a",
+            "allJudged": true,
+            "comment": "Kenny, 2026-10-19 01:52: 48 of 48 judged, 48 approved, 0 not approved, 0 open. Approved in full: formal, dark, cyberpunk, synthwave, pastel, forest, blueprint, solstice, brutalism, deco, nostromo, titanium.",
+            "approved": [
+                {
+                    "item": "command-narrow",
+                    "theme": "formal"
+                },
+                {
+                    "item": "command-narrow",
+                    "theme": "dark"
+                },
+                {
+                    "item": "command-narrow",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "command-narrow",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "command-narrow",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "command-narrow",
+                    "theme": "forest"
+                },
+                {
+                    "item": "command-narrow",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "command-narrow",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "command-narrow",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "command-narrow",
+                    "theme": "deco"
+                },
+                {
+                    "item": "command-narrow",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "command-narrow",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "focus-nav-narrow",
+                    "theme": "formal"
+                },
+                {
+                    "item": "focus-nav-narrow",
+                    "theme": "dark"
+                },
+                {
+                    "item": "focus-nav-narrow",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "focus-nav-narrow",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "focus-nav-narrow",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "focus-nav-narrow",
+                    "theme": "forest"
+                },
+                {
+                    "item": "focus-nav-narrow",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "focus-nav-narrow",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "focus-nav-narrow",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "focus-nav-narrow",
+                    "theme": "deco"
+                },
+                {
+                    "item": "focus-nav-narrow",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "focus-nav-narrow",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "flash-grow",
+                    "theme": "formal"
+                },
+                {
+                    "item": "flash-grow",
+                    "theme": "dark"
+                },
+                {
+                    "item": "flash-grow",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "flash-grow",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "flash-grow",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "flash-grow",
+                    "theme": "forest"
+                },
+                {
+                    "item": "flash-grow",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "flash-grow",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "flash-grow",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "flash-grow",
+                    "theme": "deco"
+                },
+                {
+                    "item": "flash-grow",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "flash-grow",
+                    "theme": "titanium"
+                },
+                {
+                    "item": "lede-fold-link",
+                    "theme": "formal"
+                },
+                {
+                    "item": "lede-fold-link",
+                    "theme": "dark"
+                },
+                {
+                    "item": "lede-fold-link",
+                    "theme": "cyberpunk"
+                },
+                {
+                    "item": "lede-fold-link",
+                    "theme": "synthwave"
+                },
+                {
+                    "item": "lede-fold-link",
+                    "theme": "pastel"
+                },
+                {
+                    "item": "lede-fold-link",
+                    "theme": "forest"
+                },
+                {
+                    "item": "lede-fold-link",
+                    "theme": "blueprint"
+                },
+                {
+                    "item": "lede-fold-link",
+                    "theme": "solstice"
+                },
+                {
+                    "item": "lede-fold-link",
+                    "theme": "brutalism"
+                },
+                {
+                    "item": "lede-fold-link",
+                    "theme": "deco"
+                },
+                {
+                    "item": "lede-fold-link",
+                    "theme": "nostromo"
+                },
+                {
+                    "item": "lede-fold-link",
+                    "theme": "titanium"
+                }
+            ],
+            "notApproved": [],
+            "choices": []
+        }
+    ]
 }

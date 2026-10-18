@@ -1,5 +1,7 @@
 # research/findings-1019: four package faults found while the components page was checked
 
+**Decided (2026-10-19 01:52):** Kenny approved every pair. Recorded in `VERDICTS.json`; the page is not offered again.
+
 Round `findings-a0354fda-34dc-4617-b1ce-91ca20d2329a` (2026-10-19): 4 sections, 48 pairs (each in the twelve themes). They change
 components Kenny had approved, so they come back through the review dialog with a "What changed since you approved it" text
 (DEMO_RULES ch. 7 and 9). Fixes are in the package (css/components.css, js/), published with the next patch after 11.0.0.
