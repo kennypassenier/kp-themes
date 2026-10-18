@@ -1755,6 +1755,9 @@
         padding: 0.1rem 0.35rem;
         opacity: 0;
         pointer-events: none;
+        /* Out of the box tree until pointed at: an invisible tab hanging past a small button at the right edge still made the
+           section scroll sideways (7 px at 390 px, choose / intent-states). */
+        display: none;
     }
 
     [data-theme='brutalism'] .kp-button::after {
@@ -1789,6 +1792,7 @@
     [data-theme='brutalism'] .kp-alert:hover::after,
     [data-theme='brutalism'] .kp-badge:hover::after,
     [data-theme='brutalism'] .kp-sidenav:hover::after {
+        display: block;
         opacity: 1;
     }
 
