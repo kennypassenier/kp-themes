@@ -6024,4 +6024,17 @@
             line-height: 1.25;
         }
     }
+
+    /* A checklist row's detail is lettering in capitals (mono, tracked) and the package keeps it on one line; a long one
+       ("check-in after 15:00, reference 8841") took the whole row and left its label one letter wide, and the group stuck out
+       32 px (kpadopt6-media/print-checklist, 390 px). The label keeps at least 6rem and the detail wraps in what is left. */
+    [data-theme='blueprint'] .kp-checklist__row {
+        grid-template-columns: auto minmax(6rem, 1fr) minmax(0, auto);
+    }
+
+    [data-theme='blueprint'] .kp-checklist__detail {
+        min-inline-size: 0;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
 }

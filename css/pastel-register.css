@@ -5742,4 +5742,17 @@
             letter-spacing: 0;
         }
     }
+
+    /* A checklist row's detail ("check-in after 15:00, reference 8841-KP") is kept on one line by the package; a long one took the
+       whole row and left its label 0 to 8 px wide (kpadopt6-media/print-checklist, 390 px). The label keeps at least 6rem and the
+       detail wraps in what is left. */
+    [data-theme='pastel'] .kp-checklist__row {
+        grid-template-columns: auto minmax(6rem, 1fr) minmax(0, auto);
+    }
+
+    [data-theme='pastel'] .kp-checklist__detail {
+        min-inline-size: 0;
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
 }
