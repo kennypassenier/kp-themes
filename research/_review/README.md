@@ -401,3 +401,19 @@ Expected block under the component, so the component is the first thing on scree
 nowhere. A component carries at most four control groups; more means the section is split (Kenny, 2026-10-18 07:11).
 `check-kit.mjs` fails a page that breaks any of it. The part builders (research/kpadopt56/build-parts.mjs, research/kpadopt56-formal/build.mjs)
 write the attribute with `research/kpadopt56/controls-for.mjs` and emit only the sections a page asks.
+
+## Review flow options (kit-flow-1018)
+
+Per-viewer options, kept in `localStorage` (`kp-flow-options-v1`) and switched at runtime in the Agenda's "Review flow
+options" panel. They never touch a verdict or the journal. Code: `flow.js` (options, run, chain), `reasons.js` (chips),
+`flow.css`, `catalogue/flow-agenda.js` (the panel).
+
+| Option    | Values            | Default  | What it does                                                                                          |
+| --------- | ----------------- | -------- | ----------------------------------------------------------------------------------------------------- |
+| `after`   | `agenda` / `next` | `agenda` | After the last open step: back to the Agenda, or on to the next part with open pairs (2 s line, Esc). |
+| `tonight` | boolean           | `false`  | Shows the "Start Tonight" entry on the Agenda: a playlist over the existing part pages.               |
+| `order`   | `part` / `theme`  | `part`   | Tonight order: part by part, or theme by theme (each part page asks only that theme in that visit).   |
+| `chips`   | boolean           | `true`   | Reason chips under "Not approved"; a click or keys 1 to 6 adds or removes the tag in the note.        |
+
+Hooks in shared files are marked `kit-flow hook`: `review.js` (imports, `flow.init`, `finished()`, `nextOpenStep`,
+`attachReasons`, the arrival line), `agenda.js` (`publishFlow`), `agenda.html` (`data-flow-slot`).

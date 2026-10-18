@@ -26,8 +26,11 @@ import {
     dropReceivedAnswer,
     journalDemos,
     journalOf,
+    progressOf,
     rebuildAnswer,
+    storedFor,
 } from '../research/_review/progress.js';
+import { updateFlow } from './flow-agenda.js'; // kit-flow hook
 import { composeBlocks, counted, demoStatus, dependentsOf, inOrder, labelOf, readDecided, readDemo, researchPages, reviewUrl } from './waiting.js';
 
 const ROOT = new URL('../', import.meta.url);
@@ -428,6 +431,7 @@ function render() {
     renderStart(open, reading);
     renderAnswers();
     renderSaved();
+    publishFlow(reading); // kit-flow hook
     document.title = `${reading ? '…' : open.length} waiting · Agenda · kp-themes catalogue`;
 }
 
@@ -484,6 +488,23 @@ function renderStart(/** @type {View[]} */ open, /** @type {boolean} */ reading)
 function openItem(/** @type {View} */ view) {
     if (view.href) location.assign(view.href);
     else view.press?.();
+}
+
+/** kit-flow hook: the open demos in Agenda order, with the themes that still have a pair open, for flow-agenda.js. */
+function publishFlow(/** @type {boolean} */ reading) {
+    const entries = demos
+        .filter((demo) => demo.shape && demoStatus(demo.shape).progress.pairsLeft > 0)
+        .map((demo) => {
+            const shape = /** @type {NonNullable<typeof demo.shape>} */ (demo.shape);
+            const stored = storedFor(shape.id);
+            return {
+                id: shape.id,
+                label: demo.page.label,
+                href: reviewUrl(demo.page.href, SELF),
+                themes: shape.themes.filter((theme) => progressOf({ ...shape, themes: [theme], extras: [] }, stored).pairsLeft > 0),
+            };
+        });
+    updateFlow(entries, reading);
 }
 
 /* ---------------------------------------------------------------- answers */
