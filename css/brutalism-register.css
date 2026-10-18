@@ -5258,6 +5258,8 @@
         background:
             repeating-linear-gradient(45deg, var(--destructive) 0 6px, var(--border-strong) 6px 12px) 0 100% / 100% 0.5rem no-repeat,
             var(--card);
+        /* The plate is the white slab; the package's cream destructive-foreground left "why" unreadable on it. */
+        color: var(--foreground);
     }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='brutalism'] .kp-card[data-kp-state='ready'] > .kp-card__stage > .kp-card__data {

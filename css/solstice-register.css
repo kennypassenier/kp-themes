@@ -3680,6 +3680,11 @@
         background:
             linear-gradient(var(--destructive), var(--destructive)) 0 100% / 100% 1px no-repeat,
             linear-gradient(to top, hsl(from var(--destructive) h s l / 0.2), transparent 70%);
+        /* On the card's dark sky the package's destructive-foreground (a dark red) left "why" unreadable. */
+        color: var(--foreground);
+    }
+    [data-theme='solstice'] .kp-card[data-kp-state='error'] > .kp-card__stage > .kp-card__state .kp-card__state-title {
+        color: hsl(from var(--destructive) h s 68%);
     }
     @media (prefers-reduced-motion: no-preference) {
         [data-theme='solstice'] .kp-card[data-kp-state='ready'] > .kp-card__stage > .kp-card__data {
