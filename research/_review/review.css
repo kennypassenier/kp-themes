@@ -730,6 +730,26 @@ html[data-rv-lane] .cat-main {
     margin: 0;
 }
 
+/* "Every theme" (Kenny, 2026-10-18 19:08): a small checkbox under the note of a rejected row; a row copied from another
+   theme says so in one muted line. */
+.rv-row__every {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+}
+
+.rv-row__every[hidden],
+.rv-row__copied[hidden] {
+    display: none;
+}
+
+.rv-row__copied {
+    margin: 0;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--muted-foreground);
+}
+
 .rv-row .kf-chip {
     padding: 0.125rem 0.5rem;
     font-size: 0.75rem;

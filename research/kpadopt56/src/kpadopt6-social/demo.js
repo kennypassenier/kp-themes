@@ -348,17 +348,51 @@ for (const field of $$('[data-kp-time]')) {
     });
 }
 const timeMain = $('#ks-time');
-timeMain?.addEventListener('kp-time-retry', () => {
-    setTimePresets(timeMain, 'loading');
-    setTimeout(() => {
-        setTimePresets(timeMain, [
-            { label: 'Night', value: '03:00' },
-            { label: 'Morning', value: '08:00' },
-        ]);
-        const b = $('[data-ks-time-presets="ready"]');
-        if (b) pick(b);
-    }, 1200);
-});
+// The list shown open: a field of its own whose list stays open on the page, so a state of "The list" is seen at once
+// without the buttons opening the first field's list (Kenny, 2026-10-18 19:08: "bij presets loading, presets failed
+// opent altijd de menu zelf ook?"). A press on a list state only gives the lists their presets; the package redraws an
+// open list in place (setTimePresets) and leaves a closed one closed.
+const timeOpened = $('#ks-time-opened');
+const TIME_PRESETS = [
+    { label: 'Night', value: '03:00' },
+    { label: 'Morning', value: '08:00' },
+    { label: 'Evening', value: '19:30' },
+];
+/** Gives the first field and the shown-open list the same presets state. @param {typeof TIME_PRESETS | 'loading' | 'error'} presets */
+function setListState(presets) {
+    for (const field of [timeMain, timeOpened]) if (field) setTimePresets(field, presets);
+}
+/** Whether the shown-open list's case, with the room under its field, is in view (an IntersectionObserver keeps it). */
+let timeOpenedInView = !('IntersectionObserver' in window);
+/**
+ * Opens the shown-open list again when anything closed it (a click elsewhere, a pick, Escape). Opened through the
+ * field's own Alt+Down, which takes no focus. It stays closed on a phone-width window (there the list is a sheet over
+ * the whole screen, which may never stay open by itself), while its case is not in view (a list opened at the window's
+ * foot flips above its field and would lie over the fields and the buttons), and under an open dialog (the review
+ * dialog over the demo page: a raised list would stand over the dialog). The room under the field depends on the width
+ * alone, so giving or taking it never moves the case in or out of view.
+ */
+function keepOpened() {
+    if (!timeOpened || !timeOpened.isConnected) return;
+    const wide = !window.matchMedia('(max-width: 40rem)').matches;
+    timeOpened.closest('[data-ks-time-opened-case]')?.toggleAttribute('data-ks-shown', wide);
+    const shown = wide && timeOpenedInView && !document.querySelector('dialog[open]');
+    const open = timeOpened.hasAttribute('data-kp-open');
+    // The field's own way to close: a press outside it.
+    if (!shown && open) document.body.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true }));
+    if (!shown || open) return;
+    timeOpened.querySelector('.kp-time__input')?.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowDown', altKey: true, bubbles: true }));
+}
+for (const field of [timeMain, timeOpened]) {
+    field?.addEventListener('kp-time-retry', () => {
+        setListState('loading');
+        setTimeout(() => {
+            setListState(TIME_PRESETS.slice(0, 2));
+            const b = $('[data-ks-time-presets="ready"]');
+            if (b) pick(b);
+        }, 1200);
+    });
+}
 onReady(() => {
     for (const button of $$('[data-ks-time-state]')) {
         button.addEventListener('click', () => {
@@ -388,16 +422,35 @@ onReady(() => {
         button.addEventListener('click', () => {
             pick(button);
             const state = button.getAttribute('data-ks-time-presets') ?? 'ready';
-            if (!timeMain) return;
-            if (state === 'ready')
-                setTimePresets(timeMain, [
-                    { label: 'Night', value: '03:00' },
-                    { label: 'Morning', value: '08:00' },
-                    { label: 'Evening', value: '19:30' },
-                ]);
-            else setTimePresets(timeMain, /** @type {'loading' | 'error'} */ (state));
-            /** @type {HTMLElement | null} */ (timeMain.querySelector('.kp-time__toggle'))?.click();
+            setListState(state === 'ready' ? TIME_PRESETS : /** @type {'loading' | 'error'} */ (state));
         });
+    }
+    if (timeOpened) {
+        // A press on the section's own state buttons is not a press "outside" the lists: it leaves an open list open (the
+        // shown-open one, and the first field's when it is open), which then shows the new state in place instead of
+        // closing and arriving again. Caught on the window, before the fields' own outside-press listener on the document.
+        const controls = timeOpened.closest('section')?.querySelector('[data-review-controls]');
+        window.addEventListener(
+            'pointerdown',
+            (event) => {
+                if (controls && event.target instanceof Node && controls.contains(event.target)) event.stopPropagation();
+            },
+            true,
+        );
+        // Whatever else closed it, the shown-open list is open again once the press or the focus has settled.
+        for (const type of ['click', 'focusout', 'keyup']) document.addEventListener(type, () => setTimeout(keepOpened, 0));
+        window.matchMedia('(max-width: 40rem)').addEventListener('change', keepOpened);
+        new MutationObserver(keepOpened).observe(document.body, { subtree: true, attributes: true, attributeFilter: ['open'] });
+        const opened = timeOpened.closest('[data-ks-time-opened-case]');
+        if (opened && 'IntersectionObserver' in window)
+            new IntersectionObserver(
+                (entries) => {
+                    timeOpenedInView = entries.some((entry) => entry.intersectionRatio >= 0.9);
+                    keepOpened();
+                },
+                { threshold: [0, 0.9, 1] },
+            ).observe(opened);
+        keepOpened();
     }
     $('[data-ks-time-open]')?.addEventListener('click', () => {
         /** @type {HTMLElement | null} */ (timeMain?.querySelector('.kp-time__toggle'))?.click();

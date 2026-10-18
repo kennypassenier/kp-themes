@@ -40,11 +40,9 @@
             <header class="k56-intro">
                 <h1>The fifth and sixth adoption rounds, part 13 of 14: Pictures, documents and printing</h1>
                 <p class="cat-intro">
-                    This round asks only the 11 pairs you did not approve in your last review (1 section); each says under
-                    <b>What changed since your last review</b> what was done about your words. Formal is approved. Things you look at or take away:
-                    the picture gallery, the document preview, anchors on headings and rows, a QR code, and a printed checklist. The first round asked
-                    the eleven other themes for 9 sections (99 pairs), one theme per step in the review dialog. The sections were approved in formal
-                    in several rounds; each is shown here in its latest version, with the defaults you chose.
+                    Formal is approved. Things you look at or take away: the picture gallery, the document preview, anchors on headings and rows, a QR
+                    code, and a printed checklist. This round asks only what you did not approve in your last review: 1 section (11 pairs), one theme
+                    per step in the review dialog; each says under <b>What changed since your last review</b> what was done about your words.
                 </p>
                 <p>
                     Every section says under <b>Expected</b> what you should see and what each control does (written for formal; the line under
@@ -62,13 +60,6 @@
                 data-review-title="Document preview: a dossier&rsquo;s files"
                 aria-labelledby="h-docpreview-open"
             >
-                <div class="km-sec__head">
-                    <h2 id="h-docpreview-open">Document preview: a dossier&rsquo;s files</h2>
-                    <p>
-                        <code>&lt;button data-kp-preview="file.pdf"&gt;</code> (js/docpreview.js) opens a file in the viewer without downloading it;
-                        the small page icon <code>.kp-docglyph</code> says &ldquo;a document&rdquo;.
-                    </p>
-                </div>
                 <div class="k56-changed">
                     <p>
                         <b>What changed since your last review:</b> In your last review (18/10) the preview that opens was far too low and showed
@@ -77,6 +68,13 @@
                         any dialog of a section) is open, the frame is as tall as the review dialog has room for and the section is brought to the
                         top, so the preview is 779 px high with a stage of 640 px at 1920 by 965, as it would be in an app; it shrinks back when you
                         close it. And a tall picture was cut at the foot of the stage; the stage now holds the whole picture, scaled to fit.
+                    </p>
+                </div>
+                <div class="km-sec__head">
+                    <h2 id="h-docpreview-open">Document preview: a dossier&rsquo;s files</h2>
+                    <p>
+                        <code>&lt;button data-kp-preview="file.pdf"&gt;</code> (js/docpreview.js) opens a file in the viewer without downloading it;
+                        the small page icon <code>.kp-docglyph</code> says &ldquo;a document&rdquo;.
                     </p>
                 </div>
                 <div class="km-expected">

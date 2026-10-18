@@ -297,12 +297,14 @@ export function mountKeys(api) {
     /**
      * Called by review.js BEFORE it changes the verdicts of these pairs (a box, Approve, an aspect answer).
      * @param {string[]} keys @param {string} label
+     * @param {Record<string, object | null>} [given] the state an undo puts a key back to, where it is not the one now
+     *   (an "Every theme" Approve: the source pair goes back to open, not to the Not approved its box already set)
      */
-    function snap(keys, label) {
+    function snap(keys, label, given = {}) {
         if (!options.undo) return;
         const state = api.state();
         const before = {};
-        for (const key of keys) before[key] = state[key] ? JSON.parse(JSON.stringify(state[key])) : null;
+        for (const key of keys) before[key] = key in given ? given[key] : state[key] ? JSON.parse(JSON.stringify(state[key])) : null;
         stack.push({ kind: 'verdict', round: api.round(), index: api.index(), keys, before, label });
         stack = stack.slice(-STACK_MAX);
         persist();
@@ -602,5 +604,5 @@ export function mountKeys(api) {
 
     paintLegend();
     paintPop();
-    return { snap, shown, answerLines, fromFrame };
+    return { snap, shown, answerLines, fromFrame, say };
 }

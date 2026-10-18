@@ -199,6 +199,51 @@ note, so the keys keep working. Keys pressed inside a lane frame are handed up l
 carries six lines marked `[kit-keys]`; the entries `kind: "undo" | "bulk"` are read by `progress.js` (`rebuildAnswer`)
 and the Agenda's "Saved verdicts".
 
+## Every theme: one problem, said once
+
+Kenny, 2026-10-18 19:08: a problem often sits in every theme. Under the note of a rejected row (only on a page that asks the
+section in more than one theme) a small checkbox **Every theme** appears; its tooltip says what it does. When the verdict is
+given (Approve), the same section (same item id) in all other themes of the page gets the same verdict and note:
+
+- each copy is its own journal entry, `kind: "all-themes"`, `source: "<theme the tick was made in>"`; the pair's state carries
+  `copiedFrom`. The journal stays append-only and `rebuildAnswer` names the group once too;
+- the copies count as judged, so steps that hold nothing else open are skipped, and the counts move; a pair already rejected
+  in the reviewer's own words is left alone, an open or approved one is overwritten (W puts it back);
+- W undoes the whole group (source and copies, one journal `undo` entry each);
+- a copied row opened again (Previous, or in a step that still has other open sections) shows the copy with "Copied from
+  <theme>"; changing its box or note makes it that theme's own, and the answer then lists it separately;
+- the answer lists the group once: `- <item> · every theme: <note>`.
+
+`check-kit.mjs <port> <page>` checks it on a page of two or more themes (`--only-every` runs only that part, about 15 s).
+
+### A demo's own keys in a lane [lane-keys]
+
+Kenny, 2026-10-18 18:42, on the shortcut engine: "er gebeurt niks als ik g typ" and "het niet meer werkt vanaf ik ergens op
+klik". The frame handed every G up (the bulk key), and with the focus on the dialog no key reached the demo. Who owns a key
+now (review.js, the block marked `[lane-keys]`):
+
+| Focus                                                   | Key                                                         | Goes to                                                          |
+| ------------------------------------------------------- | ----------------------------------------------------------- | ---------------------------------------------------------------- |
+| in a lane (a click on the component)                    | a key the demo registered (`js/shortcuts.js`)               | the demo, also G, X, C and `?`: the dialog's letter yields there |
+| in a lane, in the component itself                      | any other dialog key (FRAME_KEYS, V, L)                     | the component first; the dialog only if it did not take it       |
+| in a lane, on the section's controls; or Escape         | any other dialog key (FRAME_KEYS, V, L, Escape)             | the dialog, at once                                              |
+| one theme on stage (no lanes), in the component itself  | a dialog key (not Escape)                                   | the component first; the dialog only if it did not take it       |
+| on the dialog (header, verdict panel, the lane's head)  | a dialog key (arrows, Enter, Escape, `?`, Q S X C W B, V L) | the dialog                                                       |
+| on the dialog                                           | a printable key the dialog did not use                      | the lane most in view, played on its body                        |
+| anywhere, while a demo's chord waits for its second key | the next key                                                | that lane (so the "c" of "g c" never rejects a section)          |
+
+"Did not take it" is the bubble rule [mlp-r2-1018] (Kenny's dark verdict on row-keyboard-select, 2026-10-18 19:08: X
+toggled Not approved instead of ticking the row): the key is held in the capture phase, the component hears it, and in the
+window's bubble phase the dialog acts on it only when `event.defaultPrevented` is false. So a component keeps its own keys
+(a table's j, k, x) without registering them in `js/shortcuts.js`, and a key it ignores (C, S, Q from a table row) still
+judges. In a lane frame this is review.js `lane()` (step 3 of its key path, after the `shortcutClaims` check and the
+"not a dialog key" check); on a one-theme page it is rv-keys.js (`ownedByComponent`). A component that stops a key's
+propagation keeps it too. The two rules stack: a registered key never reaches the dialog, an unregistered one only when the
+component let it pass.
+
+The lane asks the engine `shortcutClaims(event)` and hears `kp-shortcut-pending`; the dialog tells each lane which part of
+it is in view (`rv-lane-view`, set as `--kp-shortcuts-view-top/-height`), so the chord's cap stands where Kenny looks.
+
 ## Play open and close, slowly
 
 A section that opens and closes something also has **Play open and close (L)** and a speed, **1×** or **¼×**. The kit presses the

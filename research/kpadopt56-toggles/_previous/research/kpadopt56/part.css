@@ -1,0 +1,36 @@
+/* research/kpadopt56: the frame of every part page of the fifth and sixth adoption rounds in the other themes. Everything
+   with a kp- class is the package; these k56- rules lay out the intro. Each source demo keeps its own rules in
+   src/<demo>/page.css (kb-, kp5-, kt-, k5-, ko-, kc-, ks-, km-, kv-). */
+
+.k56-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.k56-intro {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.k56-intro :is(h1, p) {
+    margin: 0;
+}
+
+.k56-intro p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+/* A later round: what was done about Kenny's words, above the section (the review dialog moves it to the lane's head). */
+.k56-changed {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+}
+
+.k56-changed p {
+    margin: 0;
+}

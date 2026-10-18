@@ -32,13 +32,20 @@
 //    a frame; no dialog is shown inside the dialog (no nested preview); the look-at paragraph stands once per step; and
 //    nothing scrolls sideways.
 //
+// 6. "Every theme" (Kenny, 2026-10-18 19:08: "een kleine checkbox bij die note input ... dat dit voor elk thema telt"), on a
+//    page that asks one section in more than one theme, in a fresh profile: ticking it on a rejected section and giving
+//    the verdict puts the same verdict and note on the same section in every other theme, as journal entries of kind
+//    "all-themes"; a topic of that section alone is skipped; the answer names the group once; a copied row opened again
+//    shows the copy and changes on its own; W undoes the whole group.
+//
 // Run (a static server on the repository root first):
-//   node research/_review/check-kit.mjs <port> <research/topic/demo.html>
+//   node research/_review/check-kit.mjs <port> <research/topic/demo.html> [--only-every]
 import { createRequire } from 'node:module';
 
 const require = createRequire('/home/kenny/Projects/kp-themes/node_modules/');
 const { firefox } = require('playwright-core');
-const [port, path] = process.argv.slice(2);
+const [port, path, ...flags] = process.argv.slice(2);
+const ONLY_EVERY = flags.includes('--only-every');
 if (!port || !path) {
     console.error('usage: node research/_review/check-kit.mjs <port> <research/topic/demo.html>');
     process.exit(2);
@@ -438,6 +445,137 @@ async function checkPresses(where) {
     }
 }
 
+/** Section 6: the "Every theme" tick, in a profile of its own (nothing the other sections wrote counts). */
+async function checkEveryTheme() {
+    await context.unroute(URL_).catch(() => {});
+    await go(URL_);
+    await page.evaluate(() => localStorage.clear());
+    await openDialog();
+    const demoId = await page.evaluate(() => document.documentElement.dataset.review || '');
+    const sections = await page.evaluate(() => {
+        const themes = (document.documentElement.dataset.reviewThemes || '').split(',').filter(Boolean);
+        const topics = new Map();
+        for (const el of document.querySelectorAll('[data-review-item]')) {
+            const topic = /** @type {HTMLElement} */ (el).dataset.reviewTopic || `item:${/** @type {HTMLElement} */ (el).dataset.reviewItem}`;
+            topics.set(topic, [...(topics.get(topic) || []), el]);
+        }
+        const lone = [...topics.values()].find((members) => members.length === 1)?.[0];
+        return {
+            themes: themes.length,
+            lone: lone
+                ? {
+                      item: /** @type {HTMLElement} */ (lone).dataset.reviewItem,
+                      title: /** @type {HTMLElement} */ (lone).dataset.reviewTopicTitle || /** @type {HTMLElement} */ (lone).dataset.reviewTitle || '',
+                  }
+                : null,
+        };
+    });
+    if (sections.themes < 2) {
+        console.log('  every theme: the page asks one theme, nothing to check');
+        return;
+    }
+    // Walk to the step of a section that is a topic of its own (else the first step).
+    if (sections.lone) {
+        for (let i = 0; i < 200; i++) {
+            const title = await page.evaluate(() => document.querySelector('dialog.rv-dialog [data-rv-title]')?.textContent || '');
+            if (title.includes(sections.lone.title)) break;
+            const was = await page.evaluate(() => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent);
+            await page.click('dialog.rv-dialog [data-rv-go="1"]');
+            await page.waitForFunction((w) => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent !== w, was, { timeout: 15000 });
+            await page.waitForTimeout(250);
+        }
+    }
+    const stepTitle = await page.evaluate(() => document.querySelector('dialog.rv-dialog [data-rv-title]')?.textContent || '');
+    const row = page.locator('dialog.rv-dialog [data-rv-list] .rv-row').first();
+    const key = (await row.getAttribute('data-rv-key')) || '';
+    const [sourceTheme, item] = key.split('|');
+    const NOTE_EVERY = `every-theme check ${Date.now() % 100000}`;
+    const everyBox = row.locator('[data-rv-every]');
+    if (await everyBox.isVisible()) fault(`every theme: the tick shows before the section is rejected`);
+    await row.locator('[data-rv-reject]').check();
+    if (!(await everyBox.isVisible())) {
+        fault(`every theme: no "Every theme" tick beside the note of ${key}`);
+        return;
+    }
+    await row.locator('[data-rv-row-note]').fill(NOTE_EVERY);
+    await row.locator('[data-rv-row-note]').dispatchEvent('input');
+    await everyBox.check();
+    const before = await page.evaluate(() => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent);
+    await page.click('dialog.rv-dialog [data-rv-approve]');
+    await page.waitForFunction((w) => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent !== w, before, { timeout: 15000 }).catch(() => {});
+    await page.waitForTimeout(900);
+    const read = () =>
+        page.evaluate(
+            ({ id, it }) => {
+                const state = JSON.parse(localStorage.getItem(`kp-demo-review:${id}`) || '{}');
+                const journal = JSON.parse(localStorage.getItem(`kp-demo-review:${id}:journal`) || '[]');
+                const keys = Object.keys(state).filter((k) => k.endsWith(`|${it}`));
+                return {
+                    state: Object.fromEntries(keys.map((k) => [k, { verdict: state[k].verdict, note: state[k].note, copiedFrom: state[k].copiedFrom }])),
+                    journal: journal.filter((/** @type {any} */ e) => e.pair.endsWith(`|${it}`)).map((/** @type {any} */ e) => ({ pair: e.pair, verdict: e.verdict, note: e.note, kind: e.kind, source: e.source })),
+                    answer: document.querySelector('[data-rv-answer]')?.textContent || '',
+                    position: document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent || '',
+                    title: document.querySelector('dialog.rv-dialog [data-rv-title]')?.textContent || '',
+                };
+            },
+            { id: demoId, it: item },
+        );
+    let now = await read();
+    const themesOfItem = Object.keys(now.state).map((k) => k.split('|')[0]);
+    if (themesOfItem.length !== sections.themes) fault(`every theme: ${item} has ${themesOfItem.length} verdicts, the page asks ${sections.themes} themes`);
+    for (const [k, v] of Object.entries(now.state)) {
+        if (v.verdict !== 'rejected' || v.note !== NOTE_EVERY) fault(`every theme: ${k} reads "${v.verdict}: ${v.note}", not the source's verdict and note`);
+        if (k.split('|')[0] !== sourceTheme && v.copiedFrom !== sourceTheme) fault(`every theme: ${k} does not say it was copied from ${sourceTheme}`);
+    }
+    const copies = now.journal.filter((e) => e.kind === 'all-themes');
+    if (copies.length !== sections.themes - 1 || copies.some((e) => e.source !== sourceTheme || e.verdict !== 'rejected' || e.note !== NOTE_EVERY))
+        fault(`every theme: the journal holds ${copies.length} entries of kind "all-themes" for ${item}, expected ${sections.themes - 1} from ${sourceTheme}`);
+    const lines = now.answer.split('\n').filter((l) => l.includes(`${item} · every theme: ${NOTE_EVERY}`));
+    if (lines.length !== 1) fault(`every theme: the answer names the group ${lines.length} times, not once`);
+    if (now.answer.split('\n').some((l) => l.startsWith(`- ${item} · `) && !l.includes('every theme') && l.includes(NOTE_EVERY)))
+        fault(`every theme: the answer still lists ${item} per theme`);
+    if (sections.lone && stepTitle.includes(sections.lone.title) && now.title.includes(sections.lone.title))
+        fault(`every theme: the steps of ${item}'s topic in the other themes were not skipped (still on "${now.title}")`);
+    // A copied row opened again shows the copy and can be changed on its own.
+    const target = Object.keys(now.state).find((k) => k.split('|')[0] !== sourceTheme) || '';
+    const pairRow = `dialog.rv-dialog [data-rv-list] .rv-row[data-rv-key="${target}"]`;
+    for (let i = 0; i < 200 && !(await page.locator(pairRow).count()); i++) {
+        const was = await page.evaluate(() => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent);
+        await page.click('dialog.rv-dialog [data-rv-go="-1"]');
+        await page.waitForFunction((w) => document.querySelector('dialog.rv-dialog [data-rv-position]')?.textContent !== w, was, { timeout: 15000 });
+        await page.waitForTimeout(250);
+    }
+    const copyRow = page.locator(pairRow);
+    if (!(await copyRow.count())) fault(`every theme: the copy ${target} cannot be opened again with Previous`);
+    else {
+        if (!(await copyRow.locator('[data-rv-reject]').isChecked()) || (await copyRow.locator('[data-rv-row-note]').inputValue()) !== NOTE_EVERY)
+            fault(`every theme: the copy ${target} shows another verdict or note than the source`);
+        if (!(await copyRow.locator('[data-rv-copied]').isVisible())) fault(`every theme: the copy ${target} does not say where it came from`);
+        await copyRow.locator('[data-rv-row-note]').fill(`${NOTE_EVERY} own`);
+        await copyRow.locator('[data-rv-row-note]').dispatchEvent('input');
+        await page.waitForTimeout(900);
+        now = await read();
+        if (now.state[target]?.note !== `${NOTE_EVERY} own` || now.state[target]?.copiedFrom) fault(`every theme: the copy ${target} cannot be changed on its own`);
+        if (!now.answer.includes(`- ${item} · ${target.split('|')[0]}: ${NOTE_EVERY} own`)) fault(`every theme: the answer lacks the changed copy ${target} as its own line`);
+    }
+    // W (AZERTY) undoes the whole group.
+    await page.locator('dialog.rv-dialog [data-rv-approve]').focus();
+    await page.keyboard.press('KeyZ');
+    await page.waitForTimeout(1200);
+    now = await read();
+    const left = Object.entries(now.state).filter(([, v]) => v.verdict);
+    if (left.length) fault(`every theme: after W ${left.length} of the group's pairs still have a verdict (${left.map(([k]) => k).join(', ')})`);
+    if (now.journal.filter((e) => e.kind === 'undo').length < sections.themes - 1) fault(`every theme: W did not journal an undo for each pair of the group`);
+    console.log(`  every theme: ${item} from ${sourceTheme}, ${sections.themes - 1} copies${sections.lone ? ', topic skipped' : ''}, undone`);
+}
+if (ONLY_EVERY) {
+    await checkEveryTheme();
+    await browser.close();
+    console.log(`${path}: ${faults.length ? `${faults.length} fault(s)` : 'clear'}`);
+    for (const line of [...new Set(faults)]) console.log(`  ${line}`);
+    process.exit(faults.length ? 1 : 0);
+}
+
 // ---------------------------------------------------------------- 1 · every step
 await openDialog();
 const demo = await page.evaluate(() => document.documentElement.dataset.review || '');
@@ -790,6 +928,9 @@ const noted = await page.evaluate(() => {
 if (!noted.some((entry) => entry?.demo === demo)) fault(`new round ${next.round}: the received log does not note the answer of ${demo} ${now}`);
 if (await page.evaluate(() => Boolean(document.querySelector('[data-agenda-received], [data-agenda-received-seen]'))))
     fault('the Agenda shows a received notice or a Seen button');
+
+// ---------------------------------------------------------------- 6 · "Every theme"
+await checkEveryTheme();
 
 await browser.close();
 console.log(`${path}: ${faults.length ? `${faults.length} fault(s)` : 'clear'}`);

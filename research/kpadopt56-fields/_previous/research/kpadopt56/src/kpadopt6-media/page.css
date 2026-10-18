@@ -1,0 +1,324 @@
+/* research/kpadopt5-time: the page's own frame. Everything with a kp- class is the package; these km- rules only lay the
+   sections out, frame the widths and draw the readouts. */
+
+.km-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.km-intro,
+.km-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.km-intro :is(h1, p),
+.km-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.km-intro p,
+.km-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.km-toc ol {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-lg, 1.5rem);
+    margin: 0;
+    padding-inline-start: 1.5rem;
+}
+
+.km-toc li {
+    padding-inline-start: var(--kp-space-xs, 0.25rem);
+}
+
+.km-toc__count {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    white-space: nowrap;
+}
+
+/* A topic opens with its own heading, ruled off from the topic above it. */
+.km-topic {
+    margin: var(--kp-space-lg, 1.5rem) 0 0;
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 2px solid var(--border);
+    scroll-margin-block-start: var(--kp-space-xl, 2rem);
+}
+
+.km-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+/* The "Expected:" block: what to see and what each control does. */
+.km-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.km-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.km-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.km-label {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 600;
+}
+
+.km-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* Two or three columns side by side where there is room, one under the other on a phone. */
+.km-pair {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.km-pair > * {
+    min-inline-size: 0;
+}
+
+/* One labelled example: its caption over the component. */
+.km-case {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 0;
+}
+
+/* A frame of a fixed width: what the component does at that width, whatever the page's. */
+.km-frame {
+    box-sizing: border-box;
+    max-inline-size: 100%;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px dashed var(--border-strong, var(--border));
+    border-radius: var(--radius, 0.5rem);
+}
+
+.km-frame--phone {
+    inline-size: min(390px, 100%);
+}
+
+/* The last event a section's component fired, as the page received it. */
+.km-log {
+    box-sizing: border-box;
+    min-block-size: calc(2lh + 2 * var(--kp-space-sm, 0.5rem));
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-radius: var(--kp-radius-sm, 0.25rem);
+    background: var(--muted);
+    color: var(--muted-foreground);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--kp-text-xs, 0.75rem);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.km-stack {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+}
+
+/* A frame tall enough for an opened menu to stand in it. */
+.km-frame--menu {
+    min-block-size: 24rem;
+}
+
+.km-form {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.km-frame--narrow {
+    inline-size: min(26rem, 100%);
+}
+
+/* A page in a box that scrolls: the bar docks at the box's foot (data-kp-dock="container"). */
+.km-scrollframe {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+}
+
+.km-scroll {
+    box-sizing: border-box;
+    display: grid;
+    align-content: start;
+    gap: var(--kp-space-lg, 1.5rem);
+    block-size: 30rem;
+    padding: var(--kp-space-md, 1rem);
+    overflow: auto;
+}
+
+/* A page that shows its states needs no scrolling: it is as tall as its rows. */
+.km-scroll--flat {
+    block-size: auto;
+    overflow: visible;
+}
+
+/* --- research/kpadopt6-media: this wave's own frames ------------------------------------------------------------------ */
+
+.km-files {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+/* One file of a dossier: its glyph, its name and facts, and the button that previews it. One grid, so the buttons stand in one column. */
+.km-file {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) 11rem;
+    align-items: center;
+    gap: var(--kp-space-md, 1rem);
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 1rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.km-file__name {
+    display: grid;
+    gap: 2px;
+    min-inline-size: 0;
+    overflow-wrap: anywhere;
+}
+
+.km-file__facts {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.km-file .kp-button {
+    inline-size: 100%;
+}
+
+.km-glyphs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--kp-space-lg, 1.5rem);
+}
+
+.km-glyph {
+    display: grid;
+    justify-items: center;
+    gap: var(--kp-space-xs, 0.25rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+/* A map or a gallery in a box as wide as a phone. */
+.km-frame--wide {
+    inline-size: 100%;
+}
+
+/* The printed sheet, shown on screen: the page's real print rules in a frame of true A4 size (210 by 297 mm, the 15 mm
+   margin of css/_print.css's @page drawn inside it), scaled down as a whole to the box it stands in, so the sheet keeps the
+   proportions, line breaks and margins paper gets (Kenny, 2026-10-18 17:45: the earlier sheets laid the print rules into a
+   narrow frame with no page margin, so the date stamp touched the sheet's left edge). demo.js sets --km-sheet-scale. */
+.km-sheet-box {
+    position: relative;
+    inline-size: 100%;
+    aspect-ratio: 210 / 297;
+    overflow: hidden;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--kp-radius-sm, 0.25rem);
+    background: #fff;
+}
+
+.km-sheet {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    display: block;
+    inline-size: 210mm;
+    block-size: 297mm;
+    border: 0;
+    background: #fff;
+    color-scheme: light;
+    transform: scale(var(--km-sheet-scale, 1));
+    transform-origin: 0 0;
+}
+
+/* Two sheets a row where there is room (the two lists, then the two states), one under the other on a phone; a sheet is
+   never wider than A4 itself. */
+.km-sheets {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 40rem));
+    justify-content: center;
+    gap: var(--kp-space-lg, 1.5rem);
+}
+
+.km-article {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+    max-inline-size: 60ch;
+}
+
+.km-article :is(h2, h3, p) {
+    margin: 0;
+}
+
+.km-article--scroll {
+    block-size: 22rem;
+    overflow: auto;
+    padding-inline-end: var(--kp-space-md, 1rem);
+    align-content: start;
+}
+
+.km-textarea-row {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.km-chip-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+@media (max-width: 40em) {
+    .km-file {
+        grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .km-file .kp-button {
+        grid-column: 1 / -1;
+    }
+}

@@ -90,11 +90,14 @@ const PARTS = [
             ['kpadopt6-ops', 'toggle-states'],
             ['kpadopt5-basics', 'shortcut-engine'],
         ],
+        // Sections this round asks in formal too: the package change alters approved work there (Kenny, 2026-10-18 18:42).
+        formal: ['toggle', 'toggle-states', 'shortcut-engine'],
     },
     {
         topic: 'fields',
         title: 'Fields and inputs',
-        summary: 'Entering a value: a slider with a typed value beside it, a time of day, a text box that grows, a JSON box that checks what you type, and a star rating.',
+        summary:
+            'Entering a value: a slider with a typed value beside it, a time of day, a text box that grows, a JSON box that checks what you type, and a star rating.',
         items: [
             ['kpadopt5-time', 'slider'],
             ['kpadopt5-time', 'slider-states'],
@@ -110,7 +113,8 @@ const PARTS = [
     {
         topic: 'updates',
         title: 'Updating safely',
-        summary: 'What an update list needs: the size of a version jump, a tick before it may start, what needs what, and how often the list refreshes.',
+        summary:
+            'What an update list needs: the size of a version jump, a tick before it may start, what needs what, and how often the list refreshes.',
         items: [
             ['kpadopt6-ops', 'version'],
             ['kpadopt6-ops', 'version-states'],
@@ -124,7 +128,8 @@ const PARTS = [
     {
         topic: 'confirm',
         title: 'Saving, undoing and answering',
-        summary: 'What happens after you act: the unsaved-changes bar, a toast with Undo, a button that shows its result, a question that waits for your answer, and the bar over a selection.',
+        summary:
+            'What happens after you act: the unsaved-changes bar, a toast with Undo, a button that shows its result, a question that waits for your answer, and the bar over a selection.',
         items: [
             ['kpadopt5-time', 'unsaved'],
             ['kpadopt5-time', 'unsaved-states'],
@@ -139,7 +144,8 @@ const PARTS = [
     {
         topic: 'lists',
         title: 'Lists, records and pages',
-        summary: 'Rows and what sits in them: ticking with the keyboard, who brings what, a list with its detail, new lines on a live list and payloads.',
+        summary:
+            'Rows and what sits in them: ticking with the keyboard, who brings what, a list with its detail, new lines on a live list and payloads.',
         items: [
             ['kpadopt5-rows', 'row-keyboard-select'],
             ['kpadopt6-social', 'claim-row-states'],
@@ -164,7 +170,8 @@ const PARTS = [
     {
         topic: 'status',
         title: 'Messages and status',
-        summary: 'Telling the reader what is going on: a problem with its reason and its remedy, the offline banner, a transfer with its time left, the notification centre, the line under a heading, and the today card.',
+        summary:
+            'Telling the reader what is going on: a problem with its reason and its remedy, the offline banner, a transfer with its time left, the notification centre, the line under a heading, and the today card.',
         items: [
             ['kpadopt5-basics', 'problem-alert'],
             ['kpadopt5-ops', 'connection'],
@@ -207,7 +214,8 @@ const PARTS = [
     {
         topic: 'availability',
         title: 'Who can come',
-        summary: 'People over days or periods, in five sections of the same grid: its states, how people answer, the best column, the rows and the summary, and the phone and density.',
+        summary:
+            'People over days or periods, in five sections of the same grid: its states, how people answer, the best column, the rows and the summary, and the phone and density.',
         items: [
             ['kpadopt6-social', 'availability-grid-states'],
             ['kpadopt6-social', 'availability-grid-answering'],
@@ -219,7 +227,8 @@ const PARTS = [
     {
         topic: 'media',
         title: 'Pictures, documents and printing',
-        summary: 'Things you look at or take away: the picture gallery, the document preview, anchors on headings and rows, a QR code, and a printed checklist.',
+        summary:
+            'Things you look at or take away: the picture gallery, the document preview, anchors on headings and rows, a QR code, and a printed checklist.',
         items: [
             ['kpadopt6-media', 'gallery-grid'],
             ['kpadopt6-media', 'gallery-states'],
@@ -255,6 +264,10 @@ const PARTS = [
  * @type {Record<string, { main: string, states: string }>}
  */
 const LOOK = {
+    formal: {
+        main: 'Formal is a ledger: navy rules on paper, plates that keep their small corner, a rule drawn 2 px inside a control when you point at it, and a press that doubles that rule and nothing else. Check that the pressed face still reads as pressed with the second rule, that the button’s words (and tick) stand in the middle and the button does not grow when pressed, and that nothing sits against a rule.',
+        states: 'In formal, waiting is the ledger’s lines ruled one after the other; empty and failed are one centred plate at normal size with a normal-size button. Check each sample keeps the component’s footprint, the rules stay square, and at phone width nothing is cut or touches an edge.',
+    },
     dark: {
         main: 'Dark is a spectral instrument: near-black with a faint grid, chamfered corners and one film of cyan-to-magenta light along the edges that matter. Check that this part wears that film on its frames and focus, that anything opening or arriving is swept in from the left over its own box and never just faded, and that text keeps clear of every edge.',
         states: 'In dark, waiting is a comet with a film tail over the whole component; empty and failed are one centred plate at normal size with a normal-size button. Check each sample keeps the component’s footprint, the chamfered corners hold, and at phone width nothing is cut or touches an edge.',
@@ -301,12 +314,84 @@ const LOOK = {
     },
 };
 
+const read = (/** @type {string} */ path) => readFileSync(fileURLToPath(new URL(path, here)), 'utf8');
+/** @param {string} text */
+const escapeHtml = (text) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+/** @type {Map<string, { id: string, text: string }[]>} */
+const sections = new Map();
+for (const demo of Object.keys(DEMOS)) {
+    const html = read(`src/${demo}/sections.html`);
+    /** @type {{ id: string, text: string }[]} */
+    const list = [];
+    for (const m of html.matchAll(/<!-- ===== item: (\S+) \(from [^)]*\) -->\n([\s\S]*?)\n\n(?=<!-- ===== item: |$)/g))
+        list.push({ id: m[1], text: m[2] });
+    sections.set(demo, list);
+}
+
+// Every one of the 79 sections is in exactly one part.
+const placed = new Map(PARTS.flatMap((p) => p.items).map(([d, i]) => [`${d}/${i}`, 0]));
+for (const [demo, list] of sections) for (const s of list) if (!placed.has(`${demo}/${s.id}`)) throw new Error(`${demo}/${s.id} is in no part`);
+for (const part of PARTS) {
+    for (const [demo, id] of part.items) {
+        if (!sections.get(demo)?.some((s) => s.id === id)) throw new Error(`${part.topic}: ${demo}/${id} has no source`);
+        placed.set(`${demo}/${id}`, (placed.get(`${demo}/${id}`) ?? 0) + 1);
+    }
+    if (part.items.length * THEMES.length + (part.formal?.length ?? 0) > MAX_PAIRS) throw new Error(`${part.topic}: more than ${MAX_PAIRS} pairs`);
+}
+for (const [key, n] of placed) if (n !== 1) throw new Error(`${key} is in ${n} parts`);
+
+/** The look-at block of a section: one line per theme asked. @param {string} id @param {string[]} themes */
+function lookBlock(id, themes) {
+    const kind = id.endsWith('-states') ? 'states' : 'main';
+    return `<div data-review-look>\n${themes.map((t) => `<p data-for="${t}">${escapeHtml(LOOK[t][kind])}</p>`).join('\n')}\n</div>`;
+}
+
 /**
- * What changed since Kenny's last review, for a section a later round asks again (keyed `<topic>/<section id>`): shown on
- * the page above the Expected block ("What changed since your last review"), and as one more Expected bullet.
- * @type {Record<string, { changed: string, expect: string }>}
+ * What a later round of a part says it changed in a section, for the lane's head (the kit reads a `…-changed` block):
+ * keyed `<topic>/<section id>`, the round's own words about Kenny's verdict. A section without an entry shows none.
+ * An entry is either the words alone, or `{ changed, expect }`: the words plus one more bullet for the Expected block
+ * (`<b>Changed:</b> …`), what Kenny should now see.
+ * @type {Record<string, string | { changed: string, expect: string }>}
  */
 const CHANGED = {
+    'fields/time-field':
+        'You saw the list open by itself when you pressed <b>Presets loading</b> or <b>Presets failed</b>. That was the demo, not ' +
+        'the field: after giving the list its state, the demo pressed the field&rsquo;s clock button (and a second press closed it ' +
+        'again). Now the buttons under <b>The list</b> only change what the list holds and open nothing. To see the state at once, a ' +
+        'fourth field stands under the sentence, <b>The list, shown open</b>: its list stays open on the page and follows the ' +
+        'button you press. The first field shows the same when you open it yourself, or with <b>Show it open</b>.',
+    'fields/autosize-grow':
+        'Your note here was the same words as on the time field (a list that opens by itself), and this box has no list or ' +
+        'menu, so it may have been meant for the time field. Looked at in dark anyway, side by side with cyberpunk and formal: ' +
+        'the box grows from 3 lines to 20 and stops there (494 px, a scroll bar inside), 5 lines is 5 lines and Clear gives ' +
+        'the height back, the same as in the other themes. One real fault was found and fixed: the demo&rsquo;s script ' +
+        'stopped with an error once the states section had left the page (it filled a read-only box that only stands ' +
+        'there); the box itself was not affected. If something else in dark is wrong here, a word in the note is enough.',
+    'toggles/toggle':
+        'You saw <b>Only errors</b> centred while it was off, but pressed, with <b>Showing errors only</b> under it, the pair sat ' +
+        'low in the button. The room that centres the words while the button is off stayed over them when the hint appeared. Now a ' +
+        'press splits that room in two, half over the pair and half under it, so the words and the hint stand in the middle as one ' +
+        'group, and the button keeps its height and width to the pixel (measured in all twelve themes, with the tick off and on: ' +
+        'the middle of what you see is within 1 px of the middle of the button, pressed and released). In formal the rule under ' +
+        'the words also ran under the hint and sat on its capitals; now only <b>Only errors</b> is ruled, a small gap keeps the rule ' +
+        'off the hint, and the hint stays clear of the double rule along the edge. Released, nothing changed, and the other ten ' +
+        'themes keep what you approved: only the pressed button with its hint moved to the middle.',
+    'toggles/toggle-states':
+        'You approved this section, and it is asked again because the package fix changes it. A pressed toggle now shows its pressed ' +
+        'face in every theme (in nine of the twelve it looked like a released one before), its words and tick stand in the middle, ' +
+        'and the button is as wide as its longest line from the start. In formal the toggle is 61 px tall instead of 46, its words ' +
+        'and tick are centred, and it does not grow when pressed, so formal is asked again too.',
+    'toggles/shortcut-engine':
+        'You typed <b>g</b> and nothing happened, and the keys stopped after a click. The review dialog took them: <b>g</b> is ' +
+        'also the dialog&rsquo;s own key, so the demo never heard it, and with the focus on the dialog no key reached the demo at ' +
+        'all. Now the demo&rsquo;s own keys work wherever you clicked: on the component they are the demo&rsquo;s (the dialog&rsquo;s ' +
+        '<b>G</b>, <b>X</b> and <b>C</b> give way there), and on the dialog&rsquo;s header or panel every key the dialog does not use ' +
+        'goes to the demo; the second key of a chord always goes to the demo. The cap <b>g …</b> stood at the top; where it stands is ' +
+        'now an option of the component, <b>Chord cap</b> above it: <b>Centre</b> (the default, in the middle of what you see) or ' +
+        '<b>Bottom centre</b>. ' +
+        'In formal this is asked again too, because the cap&rsquo;s position changed there as well: the chord cap now stands in the ' +
+        'middle of the view, with bottom centre as the other option.',
     'media/docpreview-open': {
         changed:
             'In your last review (18/10) the preview that opens was far too low and showed almost nothing of the file. Two causes. The review dialog shows each section in a frame as tall as the section (219 px here), and the preview takes 90% of the window it stands in, so it was 197 px high with a stage of 58 px. Now, while a preview (or any dialog of a section) is open, the frame is as tall as the review dialog has room for and the section is brought to the top, so the preview is 779 px high with a stage of 640 px at 1920 by 965, as it would be in an app; it shrinks back when you close it. And a tall picture was cut at the foot of the stage; the stage now holds the whole picture, scaled to fit.',
@@ -324,69 +409,66 @@ const CHANGED = {
     },
 };
 
-const read = (/** @type {string} */ path) => readFileSync(fileURLToPath(new URL(path, here)), 'utf8');
-/** @param {string} text */
-const escapeHtml = (text) => text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-
-/** @type {Map<string, { id: string, text: string }[]>} */
-const sections = new Map();
-for (const demo of Object.keys(DEMOS)) {
-    const html = read(`src/${demo}/sections.html`);
-    /** @type {{ id: string, text: string }[]} */
-    const list = [];
-    for (const m of html.matchAll(/<!-- ===== item: (\S+) \(from [^)]*\) -->\n([\s\S]*?)\n\n(?=<!-- ===== item: |$)/g)) list.push({ id: m[1], text: m[2] });
-    sections.set(demo, list);
-}
-
-// Every one of the 79 sections is in exactly one part.
-const placed = new Map(PARTS.flatMap((p) => p.items).map(([d, i]) => [`${d}/${i}`, 0]));
-for (const [demo, list] of sections) for (const s of list) if (!placed.has(`${demo}/${s.id}`)) throw new Error(`${demo}/${s.id} is in no part`);
-for (const part of PARTS) {
-    for (const [demo, id] of part.items) {
-        if (!sections.get(demo)?.some((s) => s.id === id)) throw new Error(`${part.topic}: ${demo}/${id} has no source`);
-        placed.set(`${demo}/${id}`, (placed.get(`${demo}/${id}`) ?? 0) + 1);
-    }
-    if (part.items.length * THEMES.length > MAX_PAIRS) throw new Error(`${part.topic}: ${part.items.length * THEMES.length} pairs, more than ${MAX_PAIRS}`);
-}
-for (const [key, n] of placed) if (n !== 1) throw new Error(`${key} is in ${n} parts`);
-
-/** The look-at block of a section: one line per theme asked. @param {string} id @param {readonly string[]} themes */
-function lookBlock(id, themes) {
-    const kind = id.endsWith('-states') ? 'states' : 'main';
-    return `<div data-review-look>\n${themes.map((t) => `<p data-for="${t}">${escapeHtml(LOOK[t][kind])}</p>`).join('\n')}\n</div>`;
-}
-
 /**
- * A section ready for its page: its look-at lines for the themes asked, its themes when it is asked in fewer than all, its
- * topic's title when the section that carried it left the page, and what changed since the last review.
- * @param {string} text a section @param {string} id
- * @param {{ themes: readonly string[], title?: string, changed?: { changed: string, expect: string } }} how
+ * @param {string} text a section @param {string} id @param {string} topic the part
+ * @param {string[]} themes the themes this round asks it in
  */
-function ready(text, id, how) {
+function ready(text, id, topic, themes, pageThemes = THEMES) {
     const looks = text.match(/<div data-review-look>[\s\S]*?<\/div>/g) ?? [];
     if (looks.length !== 1) throw new Error(`${id}: ${looks.length} look-at blocks`);
     if (/<div[\s\S]*<div data-review-look>/.test(looks[0])) throw new Error(`${id}: look-at block is nested`);
-    text = text.replace(looks[0], lookBlock(id, how.themes));
-    const extra = [
-        how.themes.length < THEMES.length ? ` data-review-themes="${how.themes.join(',')}"` : '',
-        how.title && !/data-review-topic-title="/.test(text) ? ` data-review-topic-title="${how.title}"` : '',
-    ].join('');
-    if (extra) text = text.replace(/(data-review-item="[^"]*")/, `$1${extra}`);
-    if (how.changed) {
-        // What changed, on the page, before the Expected block; and the change as one more Expected bullet.
-        const expected = /<div class="[a-z0-9]+-expect(?:ed)?">/.exec(text);
+    let out = text.replace(looks[0], lookBlock(id, themes));
+    // A section asked in fewer themes than the part names them (a later round: the approved themes left the page).
+    if (themes.join() !== pageThemes.join()) out = out.replace(/<section\b/, `<section data-review-themes="${themes.join(',')}"`);
+    const entry = CHANGED[`${topic}/${id}`];
+    const changed = typeof entry === 'string' ? entry : entry?.changed;
+    if (changed)
+        out = out.replace(
+            /<section\b[^>]*>/,
+            (open) => `${open}\n<div class="k56-changed"><p><b>What changed since your last review:</b> ${changed}</p></div>`,
+        );
+    if (typeof entry === 'object') {
+        // The change as one more Expected bullet.
+        const expected = /<div class="[a-z0-9]+-expect(?:ed)?">/.exec(out);
         if (!expected) throw new Error(`${id}: no Expected block`);
-        const box = `<div class="k56-changed"><p><b>What changed since your last review:</b> ${how.changed.changed}</p></div>\n`;
-        text = text.slice(0, expected.index) + box + text.slice(expected.index);
-        const close = text.indexOf('</ul>', text.indexOf(expected[0]));
+        const close = out.indexOf('</ul>', expected.index);
         if (close < 0) throw new Error(`${id}: Expected block has no list`);
-        text = `${text.slice(0, close)}<li><b>Changed:</b> ${how.changed.expect}</li>\n${text.slice(close)}`;
+        out = `${out.slice(0, close)}<li><b>Changed:</b> ${entry.expect}</li>\n${out.slice(close)}`;
     }
     // Every control group names the component it drives and stands at it in the dialog (Kenny, 2026-10-18 07:09).
-    return declareControls(text, id);
+    return declareControls(out, id);
 }
 
-const TEMPLATE_HEAD = (/** @type {string} */ id, /** @type {string} */ title, /** @type {string[]} */ styles, /** @type {readonly string[]} */ themes) => `<!doctype html>
+/**
+ * Which themes a round still asks each section in: a later round shows only the pairs Kenny has not approved (DEMO_RULES
+ * ch. 6, gates/check-rereview.mjs). The latest round naming a pair wins; an `allJudged` round approved every pair of its
+ * page it does not list as not approved; a `reopened` pair is asked again.
+ * @param {any} verdicts @param {string[]} items
+ * @returns {Map<string, string[]>} section id → open themes, in the part's order
+ */
+function openThemes(verdicts, items, formal = /** @type {string[]} */ ([])) {
+    /** @type {Map<string, string>} */
+    const latest = new Map();
+    for (const round of verdicts.rounds ?? []) {
+        if (round.allJudged) for (const item of items) for (const theme of THEMES) latest.set(`${theme}|${item}`, 'approved');
+        for (const p of round.approved ?? []) latest.set(`${p.theme}|${p.item}`, 'approved');
+        for (const p of round.notApproved ?? []) latest.set(`${p.theme}|${p.item}`, 'not approved');
+    }
+    for (const r of verdicts.reopened ?? []) if (String(r.reason ?? '').trim()) latest.delete(`${r.theme}|${r.item}`);
+    return new Map(
+        items.map((item) => [
+            item,
+            [...(formal.includes(item) ? ['formal'] : []), ...THEMES].filter((theme) => latest.get(`${theme}|${item}`) !== 'approved'),
+        ]),
+    );
+}
+
+const TEMPLATE_HEAD = (
+    /** @type {string} */ id,
+    /** @type {string} */ title,
+    /** @type {string[]} */ styles,
+    /** @type {string[]} */ themes,
+) => `<!doctype html>
 <html lang="en" data-theme="formal" data-review="${id}" data-review-themes="${themes.join(',')}">
     <head>
         <meta charset="utf-8" />
@@ -432,41 +514,43 @@ for (const [i, part] of PARTS.entries()) {
     const current = existsSync(out) ? /"round":\s*"([^"]+)"/.exec(readFileSync(out, 'utf8'))?.[1] : undefined;
     const roundId = current && !received.includes(current) && /[0-9a-f]{8}-[0-9a-f]{4}-/.test(current) ? current : `${part.topic}-${randomUUID()}`;
 
-    // A later round asks only the pairs Kenny has not approved (DEMO_RULES ch. 6, gates/check-rereview.mjs): the latest round
-    // naming a pair wins, and an `allJudged` round approved every pair of its page it does not list as not approved.
-    /** @type {Map<string, 'approved' | 'not approved'>} */
-    const latest = new Map();
-    for (const round of verdicts.rounds ?? []) {
-        if (round.allJudged) for (const [, item] of part.items) for (const t of THEMES) latest.set(`${t}|${item}`, 'approved');
-        for (const p of round.approved ?? []) latest.set(`${p.theme}|${p.item}`, 'approved');
-        for (const p of round.notApproved ?? []) latest.set(`${p.theme}|${p.item}`, 'not approved');
-    }
-    const shown = part.items
-        .map(([demo, item]) => ({ demo, item, themes: THEMES.filter((t) => latest.get(`${t}|${item}`) !== 'approved') }))
-        .filter((s) => s.themes.length);
-    if (!shown.length) {
-        // Every pair approved: the part is decided and archived; its last page stays as Kenny judged it.
-        console.log(`${id}: every pair approved, page left as it is`);
+    const open = openThemes(
+        verdicts,
+        part.items.map(([, itemId]) => itemId),
+        part.formal,
+    );
+    const asked = part.items.filter(([, itemId]) => (open.get(itemId) ?? []).length > 0);
+    if (!asked.length) {
+        console.log(`${id}: every pair approved, the page is left as it is (Decided)`);
         continue;
     }
-    const sourceOf = (/** @type {keyof typeof DEMOS} */ d, /** @type {string} */ item) =>
-        /** @type {{ text: string }} */ (sections.get(d)?.find((s) => s.id === item)).text;
-    const topicOf = (/** @type {string} */ text) => /data-review-topic="([^"]+)"/.exec(text)?.[1];
-    // A topic's title rides on its first section shown, also when the section that carried it was approved and left.
-    const titleOf = (/** @type {string | undefined} */ topic) =>
-        part.items.map(([d, item]) => sourceOf(d, item)).find((text) => topicOf(text) === topic && /data-review-topic-title="/.test(text))
-            ?.match(/data-review-topic-title="([^"]*)"/)?.[1];
-    const pageThemes = THEMES.filter((t) => shown.some((s) => s.themes.includes(t)));
-    const pairs = shown.reduce((n, s) => n + s.themes.length, 0);
-    const demos = [...new Set(shown.map((s) => s.demo))];
-    const body = shown
-        .map((s, n) => {
-            const text = sourceOf(s.demo, s.item);
-            const topic = topicOf(text);
-            const first = shown.findIndex((o) => topicOf(sourceOf(o.demo, o.item)) === topic) === n;
-            return ready(text, s.item, { themes: s.themes, title: first ? titleOf(topic) : undefined, changed: CHANGED[`${part.topic}/${s.item}`] });
+    const pageThemes = [...(asked.some(([, itemId]) => (open.get(itemId) ?? []).includes('formal')) ? ['formal'] : []), ...THEMES];
+    const demos = [...new Set(asked.map(([d]) => d))];
+    /** A topic's title rides on its first section shown, also when the section that carried it was approved and left. */
+    const topicTitles = new Map();
+    for (const [d, itemId] of part.items) {
+        const text = /** @type {{ text: string }} */ (sections.get(d)?.find((s) => s.id === itemId)).text;
+        const topic = /data-review-topic="([^"]+)"/.exec(text)?.[1];
+        const title = /data-review-topic-title="([^"]+)"/.exec(text)?.[1];
+        if (topic && title && !topicTitles.has(topic)) topicTitles.set(topic, title);
+    }
+    const body = asked
+        .map(([d, itemId]) => {
+            let text = ready(
+                /** @type {{ text: string }} */ (sections.get(d)?.find((s) => s.id === itemId)).text,
+                itemId,
+                part.topic,
+                open.get(itemId) ?? [],
+                pageThemes,
+            );
+            const topic = /data-review-topic="([^"]+)"/.exec(text)?.[1];
+            if (topic && topicTitles.has(topic) && !/data-review-topic-title="/.test(text))
+                text = text.replace(/data-review-topic="[^"]+"/, (m) => `${m} data-review-topic-title="${topicTitles.get(topic)}"`);
+            if (topic) topicTitles.delete(topic);
+            return text;
         })
         .join('\n\n');
+    const pairs = asked.reduce((n, [, itemId]) => n + (open.get(itemId) ?? []).length, 0);
     // A part page holds ONLY the sections it asks (Kenny, 2026-10-18 07:11): no laid-aside sections of the other
     // components of its demos, so no foreign control group or content can reach the review dialog. The demos' scripts
     // tolerate a section that is not on the page.
@@ -478,7 +562,8 @@ for (const [i, part] of PARTS.entries()) {
     for (const [k, n] of seen) if (n > 1) problems.push(`${id}: the id "${k}" stands ${n} times`);
     for (const topic of new Set([...body.matchAll(/data-review-topic="([^"]+)"/g)].map((m) => m[1]))) {
         const first = body.split(/(?=<section\b)/).find((s) => s.includes(`data-review-topic="${topic}"`)) ?? '';
-        if (!/data-review-topic-title="/.test(first)) problems.push(`${id}: the first section of topic "${topic}" carries no data-review-topic-title`);
+        if (!/data-review-topic-title="/.test(first))
+            problems.push(`${id}: the first section of topic "${topic}" carries no data-review-topic-title`);
     }
 
     const styles = ['../kpadopt56/part.css', ...demos.map((d) => `../kpadopt56/src/${d}/page.css`)];
@@ -489,13 +574,13 @@ for (const [i, part] of PARTS.entries()) {
     const intro = `            <header class="k56-intro">
                 <h1>The fifth and sixth adoption rounds, part ${i + 1} of ${PARTS.length}: ${escapeHtml(part.title)}</h1>
                 <p class="cat-intro">
-                    ${
+                    ${pageThemes.includes('formal') ? 'Formal is approved, except where the package change below alters what you approved there.' : 'Formal is approved.'} ${escapeHtml(part.summary)} ${
                         received.length
-                            ? `This round asks only the ${pairs} pair${pairs === 1 ? '' : 's'} you did not approve in your last review (${shown.length} section${shown.length === 1 ? '' : 's'}); each says under <b>What changed since your last review</b> what was done about your words. `
-                            : ''
-                    }Formal is approved. ${escapeHtml(part.summary)} ${received.length ? 'The first round asked' : 'This part asks'} the eleven other themes for ${part.items.length} sections (${part.items.length * THEMES.length}
+                            ? `This round asks only what you did not approve in your last review: ${asked.length} section${asked.length === 1 ? '' : 's'} (${pairs} pairs), one theme per step in the review dialog; each says under <b>What changed since your last review</b> what was done about your words.`
+                            : `This part asks the eleven other themes for ${part.items.length} sections (${part.items.length * THEMES.length}
                     pairs), one theme per step in the review dialog. The sections were approved in formal in several rounds; each is shown here in
-                    its latest version, with the defaults you chose.
+                    its latest version, with the defaults you chose.`
+                    }
                 </p>
                 <p>
                     Every section says under <b>Expected</b> what you should see and what each control does (written for formal; the line under
@@ -540,7 +625,7 @@ ${autoFirst.map(script).join('\n')}${autoFirst.length ? '\n' : ''}        <scrip
                 `of the formal reviews are not asked again, because a default belongs to the component, not to a theme. Split off on Kenny's ` +
                 `rule of 2026-10-17: a review asks at most 100 pairs, so the 79 sections are grouped by kind of component.\n`,
         );
-    console.log(`${id}: ${shown.length} sections, ${pairs} pairs, round ${roundId}`);
+    console.log(`${id}: ${asked.length} sections, ${pairs} pairs, round ${roundId}`);
 }
 if (problems.length) {
     console.error(`build-parts: ${problems.length} problem(s)\n  ${problems.join('\n  ')}`);

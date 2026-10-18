@@ -6,6 +6,10 @@ export declare const UNKNOWN_MS = 1500;
 export declare const SHORTCUTS_LIVE_SHEET = "[data-kp-shortcuts][data-kp-shortcuts-live]";
 /** Fired on the document, bubbling, when a registered shortcut ran: `{ keys, what }`. */
 export declare const SHORTCUT_EVENT = "kp-shortcut-run";
+/** Fired on the document when a chord starts or stops waiting for its next key: `{ keys, waiting, ms }`. */
+export declare const SHORTCUT_PENDING_EVENT = "kp-shortcut-pending";
+/** Where the chord's cap stands: the middle of the screen (default) or the middle of its foot. */
+export declare const SHORTCUT_HINT_PLACES: readonly ['centre', 'bottom-centre'];
 /** Keys that need AltGr on an AZERTY keyboard. */
 export declare const ALTGR_KEYS: readonly string[];
 export type Shortcut = {
@@ -63,6 +67,11 @@ export type EngineOptions = {
      * the sheet's group order; others follow in registration order
      */
     groupOrder?: string[];
+    /**
+     * where the chord's cap stands (default: the root's
+     * `data-kp-shortcuts-hint`, else `centre`)
+     */
+    hintPlace?: 'centre' | 'bottom-centre';
 };
 /**
  * Change the engine's defaults for the whole page.
@@ -99,6 +108,14 @@ export type Entry = {
     scope: string | Element;
     order: number;
 };
+/**
+ * Whether the engine would take this key: a chord waits for its next key, or a registered shortcut that is on screen
+ * starts with it (a letter not while a person types in a field). For a page embedded in another, which hands its
+ * keys up to the page around it unless they are its own.
+ * @param {KeyboardEvent} event
+ * @returns {boolean}
+ */
+export declare function shortcutClaims(event: KeyboardEvent): boolean;
 /**
  * Register a list of shortcuts under a scope.
  *

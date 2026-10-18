@@ -1,0 +1,244 @@
+/* research/kpadopt6-calm: the page's own frame. Everything with a kp- class is the package; these kt- rules only lay the
+   sections out, frame the widths and draw the readouts. */
+
+.kc-page {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-xl, 2rem);
+    max-inline-size: 90rem;
+}
+
+.kc-intro,
+.kc-sec__head {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+}
+
+.kc-intro :is(h1, p),
+.kc-sec__head :is(h2, p) {
+    margin: 0;
+}
+
+.kc-intro p,
+.kc-sec__head p {
+    max-inline-size: 80ch;
+    color: var(--muted-foreground);
+}
+
+.kc-toc ol {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+    gap: var(--kp-space-xs, 0.25rem) var(--kp-space-lg, 1.5rem);
+    margin: 0;
+    padding-inline-start: 1.5rem;
+}
+
+.kc-toc li {
+    padding-inline-start: var(--kp-space-xs, 0.25rem);
+}
+
+.kc-toc__count {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    white-space: nowrap;
+}
+
+/* A topic opens with its own heading, ruled off from the topic above it. */
+.kc-topic {
+    margin: var(--kp-space-lg, 1.5rem) 0 0;
+    padding-block-start: var(--kp-space-md, 1rem);
+    border-block-start: 2px solid var(--border);
+    scroll-margin-block-start: var(--kp-space-xl, 2rem);
+}
+
+.kc-sec {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+    min-inline-size: 0;
+    padding: var(--kp-space-lg, 1.5rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--card);
+    color: var(--card-foreground);
+}
+
+/* The "Expected:" block: what to see and what each control does. */
+.kc-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-inline-start: 3px solid var(--primary);
+    background: var(--muted);
+    color: var(--foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+}
+
+.kc-expected p {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+}
+
+.kc-expected ul {
+    display: grid;
+    gap: var(--kp-space-xs, 0.25rem);
+    margin: 0;
+    padding-inline-start: 1.25rem;
+}
+
+.kc-label {
+    margin: 0 0 var(--kp-space-xs, 0.25rem);
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    font-weight: 600;
+}
+
+.kc-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+/* Two or three columns side by side where there is room, one under the other on a phone. */
+.kc-pair {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(22rem, 100%), 1fr));
+    gap: var(--kp-space-lg, 1.5rem);
+    align-items: start;
+}
+
+.kc-pair > * {
+    min-inline-size: 0;
+}
+
+/* One labelled example: its caption over the component. */
+.kc-case {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: var(--kp-space-xs, 0.25rem);
+    min-inline-size: 0;
+}
+
+/* A frame of a fixed width: what the component does at that width, whatever the page's. */
+.kc-frame {
+    box-sizing: border-box;
+    max-inline-size: 100%;
+    padding: var(--kp-space-md, 1rem);
+    border: 1px dashed var(--border-strong, var(--border));
+    border-radius: var(--radius, 0.5rem);
+}
+
+.kc-frame--phone {
+    inline-size: min(390px, 100%);
+}
+
+/* The last event a section's component fired, as the page received it. */
+.kc-log {
+    box-sizing: border-box;
+    min-block-size: calc(2lh + 2 * var(--kp-space-sm, 0.5rem));
+    margin: 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    border-radius: var(--kp-radius-sm, 0.25rem);
+    background: var(--muted);
+    color: var(--muted-foreground);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--kp-text-xs, 0.75rem);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.kc-stack {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kp-space-md, 1rem);
+}
+
+/* A frame tall enough for an opened menu to stand in it. */
+.kc-frame--menu {
+    min-block-size: 24rem;
+}
+
+.kc-form {
+    display: grid;
+    gap: var(--kp-space-md, 1rem);
+}
+
+.kc-frame--narrow {
+    inline-size: min(26rem, 100%);
+}
+
+/* A page in a box that scrolls: the bar docks at the box's foot (data-kp-dock="container"). */
+.kc-scrollframe {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    background: var(--background);
+}
+
+.kc-scroll {
+    box-sizing: border-box;
+    display: grid;
+    align-content: start;
+    gap: var(--kp-space-lg, 1.5rem);
+    block-size: 30rem;
+    padding: var(--kp-space-md, 1rem);
+    overflow: auto;
+}
+
+/* A page that shows its states needs no scrolling: it is as tall as its rows. */
+.kc-scroll--flat {
+    block-size: auto;
+    overflow: visible;
+}
+
+/* A labelled row of the demo: the item's name beside the component, in one shared column. */
+.kc-row {
+    display: grid;
+    grid-template-columns: minmax(8rem, 11rem) auto;
+    align-items: center;
+    column-gap: var(--kp-space-md, 1rem);
+}
+
+.kc-rowlabel {
+    color: var(--muted-foreground);
+    font-size: var(--kp-text-sm, 0.8125rem);
+    overflow-wrap: anywhere;
+}
+
+.kc-actions--below {
+    margin-block-start: var(--kp-space-sm, 0.5rem);
+}
+
+/* A one-step view needs a height to stand in; the demo gives it one. */
+.kc-focus {
+    --kp-focus-steps-height: 38rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+}
+
+.kc-frame--phone .kc-focus {
+    --kp-focus-steps-height: 52rem;
+}
+
+/* The long-answer case must show every answer: its body would otherwise scroll with the disabled last answer under the footer. */
+#kc-focus-l {
+    --kp-focus-steps-height: 54rem;
+}
+
+/* Pickers open a list under themselves: the frames that hold them are tall enough for it. */
+.kc-pair--tall {
+    min-block-size: 32rem;
+}
+
+/* A case whose picker puts a panel over what follows keeps that room for it. */
+.kc-case--room {
+    min-block-size: 28rem;
+    align-content: start;
+}
+
+@media (max-width: 30rem) {
+    .kc-row {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: var(--kp-space-xs, 0.25rem);
+    }
+}
