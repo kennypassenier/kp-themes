@@ -119,6 +119,9 @@ gate round node gates/check-round.mjs || exit 1
 # the verdict register is well formed, names known blocks, and matches the hash recipe [scope-68]
 gate verdicts node gates/check-verdicts.mjs || exit 1
 
+# a re-review shows only what is not approved yet, and the page's received rounds match the verdict register [KT7, lost-answer-1017]
+gate rereview node gates/check-rereview.mjs || exit 1
+
 # every theme answers every hook (S45, AR36)
 gate hooks node gates/check-hooks.mjs || exit 1
 
