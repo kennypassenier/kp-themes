@@ -93,6 +93,12 @@ export const PAGES = [
         // (Kenny, 2026-10-07: only fresh verdicts left to give).
         group: 'Research to look at',
         pages: [
+            // Kenny, 2026-10-19 (gap-entity-tiles-1019): the homelab admin dashboard found two things missing from the entity card, a 24-hour trend line on a stack card and the Apps page's tile (one link, a favourite star, a description, lines). Both are options of the entity card, demoed in formal first; hand-written page: research/gap-entity-tiles.
+            {
+                href: 'research/gap-entity-tiles/demo.html',
+                label: 'Entity card: a trend line on a stack card, and the app tile with a favourite star',
+                about: 'Two options of the entity card that the dashboard still draws by hand: a 24-hour line under the meters, and a tile that is one link with a star that never follows it, a state dot, a description and lines. 3 sections (3 pairs, formal): the trend line, the tile, and the tile in its states and on a phone.',
+            },
             // Kenny, 2026-10-08: the anchor round for the nine themes without one, the grotesk way (one question, six to ten candidates, each in its own scene, as a progress bar and as a button press, the recommendation first).
             // Kenny, 2026-10-08: what makes formal, light and deco themselves, the forest way (the analysis in themes/<theme>/CHARACTER.md), the nineteen questions each, every option a live scene that follows from the theme's decided anchor, the recommendation first.
             // Kenny, 2026-10-08 (update 1): deco's grammar did not convince him ("fancy, distinguished … lots of gold accents and fancy blue backgrounds … elegance without being too in your face"); thirteen questions redrawn as thin gold on lacquer with the wallpaper, his six picks kept.

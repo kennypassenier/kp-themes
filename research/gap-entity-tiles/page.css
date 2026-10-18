@@ -1,0 +1,60 @@
+/* research/gap-entity-tiles: the frame of the page. Everything with a kp- class is the package. */
+
+.gt-page {
+    max-inline-size: 72rem;
+    margin-inline: auto;
+}
+
+.gt-head,
+.gt-expected {
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+}
+
+.gt-head :is(h2, p) {
+    margin-block: 0 var(--kp-space-xs, 0.25rem);
+}
+
+.gt-expected ul {
+    margin-block: var(--kp-space-xs, 0.25rem) 0;
+    padding-inline-start: 1.25rem;
+}
+
+.gt-controls {
+    display: grid;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.gt-controls > [role='group'] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--kp-space-sm, 0.5rem);
+}
+
+.gt-controls > [role='group'] > b {
+    min-inline-size: 7rem;
+}
+
+/* The log of the last event the component fired (mock readout of this page). */
+.gt-log {
+    margin: var(--kp-space-sm, 0.5rem) 0 0;
+    padding: var(--kp-space-sm, 0.5rem) var(--kp-space-md, 0.75rem);
+    min-block-size: 3.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius, 0.5rem);
+    color: var(--muted-foreground);
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: var(--kp-text-xs, 0.75rem);
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+/* The width the board is laid out in: wide is the page, phone is one column of 20 rem. */
+.gt-frame {
+    min-inline-size: 0;
+}
+
+.gt-frame[data-gt-width='phone'] {
+    max-inline-size: 20rem;
+    margin-inline: auto;
+}

@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="en-GB" data-theme="formal" data-review="gap-entity-tiles" data-review-themes="formal">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Entity card: trend line and app tile · kp-themes research demo</title>
+        <link rel="stylesheet" href="../../css/fonts.css" />
+        <link rel="stylesheet" href="../../css/themes.css" />
+        <link rel="stylesheet" href="../../css/components.css" />
+        <link rel="stylesheet" href="../../css/layout.css" />
+        <link rel="stylesheet" href="../../css/utilities.css" />
+        <script>
+            (function () {
+                var d = document.documentElement;
+                var t = new URLSearchParams(location.search).get('theme');
+                try {
+                    // A theme in the link is kept, so the catalogue's own
+                    // boot, which reads the stored theme, does not undo it.
+                    if (t) localStorage.setItem('theme', t);
+                    t = t || localStorage.getItem('theme');
+                } catch (e) {}
+                if (t) d.setAttribute('data-theme', t);
+                var theme = d.getAttribute('data-theme') || 'formal';
+                document.write('<link rel="stylesheet" href="../../css/' + theme + '-register.css" data-kp-register="' + theme + '">');
+            })();
+        </script>
+        <link rel="stylesheet" href="../../catalogue/catalogue.css" />
+        <link rel="stylesheet" href="./page.css" />
+    </head>
+    <body>
+        <a class="kp-skip-link" href="#main">Skip to content</a>
+
+        <main id="main" class="cat-main gt-page">
+            <header>
+                <h1>Entity card: a trend line and an app tile</h1>
+                <p class="cat-intro">
+                    The admin dashboard still draws two things next to the entity card by hand: the 24-hour CPU line on each stack card, and the tile
+                    of the Apps page (one link, a favourite star, a description, a few lines). Both are now options of the entity card, shown here in
+                    formal only. Judge them in the review dialog: three sections, one step each. The stacks, the readings and the log lines are sample
+                    data of this page (mock); the cards, the line, the star and every state are the package.
+                </p>
+            </header>
+
+            <section
+                id="trend"
+                data-review-item="trend"
+                data-review-topic="entity-card"
+                data-review-topic-title="Entity card: trend line and app tile"
+                data-review-components="entity-grid entity"
+                data-review-title="Stack card with a trend line"
+                aria-labelledby="h-trend"
+            >
+                <div class="gt-head">
+                    <h2 id="h-trend">Stack card with a trend line</h2>
+                    <p>
+                        Each stack card gets one more row under its meters: a label, the last 24 hours as a line, and the current value. It is the
+                        same line the key-figure tiles draw. The row is there on every card as soon as one card has readings, so the cards stay level.
+                    </p>
+                </div>
+                <div class="gt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Four stack cards (jellyfin, sonarr, traefik, paperless), each with RAM and disk meters and, under them, <b>CPU 24 h</b>
+                            with a line over a soft area and its value (<b>34%</b>) at the end of the row, on the same columns as the meters. All four
+                            cards are exactly as high as each other.
+                        </li>
+                        <li>
+                            <b>Trend line: Hidden</b> takes the row away on every card at once; <b>A full day</b> brings it back.
+                            <b>Sonarr has one reading</b> keeps sonarr&rsquo;s row and says <b>no line yet</b> in the same box, since a line needs two
+                            readings. <b>Live: Add a reading</b> draws every line again from one more number; the cards are the same elements, so
+                            nothing moves.
+                        </li>
+                        <li>
+                            <b>State: Loading</b> shows skeleton cards under the busy card, <b>Not measured</b> says so in the figures and the trend
+                            row, <b>Failed</b> turns each card destructive with a Retry where the buttons were. The card keeps its height in each
+                            state.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal&rsquo;s card is a page of the ledger: the identity row is ruled off, the rows under it share their columns. Look at the
+                        line: does it read as a quiet 24-hour shape beside the meters, is its value legible at the row end, and does the row sit on
+                        the meters&rsquo; columns without making the card feel crowded?
+                    </p>
+                </div>
+                <div class="gt-controls" data-review-controls data-review-controls-for="gt-trend-grid">
+                    <div role="group" aria-label="Trend line">
+                        <b>Trend line:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gt-trend="day" aria-pressed="true">
+                            A full day for every stack
+                        </button>
+                        <button type="button" class="kp-button kp-button--sm" data-gt-trend="one" aria-pressed="false">Sonarr has one reading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gt-trend="off" aria-pressed="false">Hidden</button>
+                    </div>
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gt-state="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gt-state="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gt-state="empty" aria-pressed="false">Not measured</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gt-state="error" aria-pressed="false">Failed</button>
+                    </div>
+                    <div role="group" aria-label="Live">
+                        <b>Live:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gt-add-reading>Add a reading</button>
+                    </div>
+                </div>
+                <div class="kp-entity-grid" data-kp-entity-grid data-kp-entity-min="22rem" id="gt-trend-grid"></div>
+                <pre class="gt-log" id="gt-trend-log" aria-live="polite">Press Restart or Logs on a card: its event shows here.</pre>
+            </section>
+
+            <section
+                id="tile"
+                data-review-item="tile"
+                data-review-topic="entity-card"
+                data-review-components="entity-grid entity"
+                data-review-title="App tile: one link, a favourite star"
+                aria-labelledby="h-tile"
+            >
+                <div class="gt-head">
+                    <h2 id="h-tile">App tile: one link, a favourite star</h2>
+                    <p>
+                        The Apps page as a board of tiles. The whole tile opens the app; the star in its corner marks a favourite and never opens the
+                        link. A tile holds the mark, the name, the state in a dot and a word, a description and a few facts at the foot.
+                    </p>
+                </div>
+                <div class="gt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            Eight tiles, favourites first (<b>Jellyfin</b> and <b>Traefik</b> start starred), every tile exactly as high as the
+                            tallest. Each has the mark made from its name, the name, a hollow star (a filled star in a dark square once pressed), the
+                            state as a dot and a word (<b>up</b>, <b>degraded</b>, <b>starting</b>, <b>down</b>), the description, and under it the
+                            lines: a count and the last log line. The lines of every tile in a row stand on one line at the foot.
+                        </li>
+                        <li>
+                            <b>Click anywhere on a tile</b> (not the star): the readout says the app opened and the page stays (this page is a mock,
+                            it does not leave). <b>Press the star, or the key S while the tile has the focus</b>: the star flips, the readout says so,
+                            and the link did not open. Tab goes tile by tile (one stop each) and then to the next star.
+                        </li>
+                        <li>
+                            <b>Opens in: A new tab</b> adds a small &nearr; before the star and tells a screen reader. <b>Favourites</b> sets the
+                            stars in the data (the board is drawn again in place). <b>Star button: Hidden</b> takes the star away from every tile.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Formal reads as a register of services. Look at the tile as one object: is it clear that all of it is a link, is the star
+                        clearly separate and clearly pressed or not, and do the lines at the foot make the board feel like a grid? The hovered tile
+                        and the tile with the focus each show their own edge.
+                    </p>
+                </div>
+                <div class="gt-controls" data-review-controls data-review-controls-for="gt-tile-grid">
+                    <div role="group" aria-label="Opens in">
+                        <b>Opens in:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gt-ext="same" aria-pressed="true">This tab</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gt-ext="new" aria-pressed="false">A new tab</button>
+                    </div>
+                    <div role="group" aria-label="Favourites">
+                        <b>Favourites:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gt-fav="two" aria-pressed="true">Jellyfin and Traefik</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gt-fav="none" aria-pressed="false">None</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gt-fav="all" aria-pressed="false">All eight</button>
+                    </div>
+                    <div role="group" aria-label="Star button">
+                        <b>Star button:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gt-star="on" aria-pressed="true">Shown</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gt-star="off" aria-pressed="false">Hidden</button>
+                    </div>
+                </div>
+                <div class="kp-entity-grid" data-kp-entity-grid data-kp-entity-kind="tile" id="gt-tile-grid"></div>
+                <pre class="gt-log" id="gt-tile-log" aria-live="polite">Click a tile, press a star, or focus a tile and press S.</pre>
+            </section>
+
+            <section
+                id="states"
+                data-review-item="states"
+                data-review-topic="entity-card"
+                data-review-components="entity-grid entity"
+                data-review-title="App tile: states and width"
+                aria-labelledby="h-states"
+            >
+                <div class="gt-head">
+                    <h2 id="h-states">App tile: states and width</h2>
+                    <p>
+                        What the board does while the apps are read, when nothing is known, when one app cannot be read and when all of them fail, and
+                        how it folds on a phone.
+                    </p>
+                </div>
+                <div class="gt-expected">
+                    <p><b>Expected:</b></p>
+                    <ul>
+                        <li>
+                            <b>Loading</b>: six skeleton tiles with the final geometry, under the busy card. <b>Not measured</b>: every tile keeps its
+                            name, state and description, and its lines row says so. <b>One tile failed</b>: Sonarr&rsquo;s state turns to a red dot
+                            and <b>failed</b>, and its description and lines are replaced by <b>reading failed</b> and a Retry of normal size; the
+                            board does not change height. The mock log line of the failure sits in the Retry&rsquo;s tooltip.
+                        </li>
+                        <li>
+                            <b>Grid failed</b> and <b>No apps</b> are the package&rsquo;s state plates, centred and at heading size, filling the
+                            board&rsquo;s footprint, with a normal Retry or Add button.
+                        </li>
+                        <li>
+                            <b>Width: Phone</b> narrows the board to one column of 20 rem: nothing is cut, long words wrap, the star stays reachable.
+                        </li>
+                    </ul>
+                </div>
+                <div data-review-look>
+                    <p data-for="formal">
+                        Check each state against the loaded board: same frame, same height, nothing jumping. In the failed tile the Retry must be a
+                        normal button and the sentence must be legible, with air on every side of its text.
+                    </p>
+                </div>
+                <div class="gt-controls" data-review-controls data-review-controls-for="gt-states-frame">
+                    <div role="group" aria-label="State">
+                        <b>State:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gt-board="ready" aria-pressed="true">Ready</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gt-board="loading" aria-pressed="false">Loading</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gt-board="empty" aria-pressed="false">Not measured</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gt-board="one" aria-pressed="false">One tile failed</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gt-board="error" aria-pressed="false">Grid failed</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gt-board="none" aria-pressed="false">No apps</button>
+                    </div>
+                    <div role="group" aria-label="Width">
+                        <b>Width:</b>
+                        <button type="button" class="kp-button kp-button--sm" data-gt-width="wide" aria-pressed="true">Wide</button>
+                        <button type="button" class="kp-button kp-button--sm" data-gt-width="phone" aria-pressed="false">Phone (20 rem)</button>
+                    </div>
+                </div>
+                <div class="gt-frame" id="gt-states-frame" data-gt-width="wide">
+                    <div class="kp-entity-grid" data-kp-entity-grid data-kp-entity-kind="tile" id="gt-states-grid"></div>
+                </div>
+                <pre class="gt-log" id="gt-states-log" aria-live="polite">Press Retry on the failed tile: its event shows here.</pre>
+            </section>
+        </main>
+        <script type="application/json" data-review-round>
+            { "round": "gap-entity-tiles-0970f212-7e57-48dd-b3cd-4abb906edd72" }
+        </script>
+        <script type="module" src="../../js/auto.js"></script>
+        <script type="module" src="./demo.js"></script>
+        <script type="module" src="../_review/review.js"></script>
+        <script src="../../catalogue/boot-check.js"></script>
+        <script type="module" src="../../catalogue/catalogue.js"></script>
+    </body>
+</html>
